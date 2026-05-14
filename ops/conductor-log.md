@@ -3121,3 +3121,5 @@ IMPORTANT:
 | 2026-05-14 18:38 UTC | Exp 1674: KAN Hardware Inference Complexity (RM/BO | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 18:40 UTC | Exp 1674: KAN Hardware Inference Complexity (RM/BO | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 18:42 UTC | Exp 1675: Apply KAN complexity metrics to S2KAN ti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1674-kan-hardware-complexity) |
+| 2026-05-14 18:42 UTC | Exp 1676: KANELÉ LUT-based Approximation for S2KAN | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-14 18:44 UTC | Exp 1675: Apply KAN complexity metrics to S2KAN ti | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1674-kan-hardware-complexity) |
