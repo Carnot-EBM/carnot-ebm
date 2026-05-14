@@ -3167,3 +3167,4 @@ IMPORTANT:
 | 2026-05-14 21:46 UTC | Exp 1687: KV260 Vivado Synthesis & Discrete SB RTL | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 21:48 UTC | Exp 1687: KV260 Vivado Synthesis & Discrete SB RTL | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 21:50 UTC | Exp 1687: KV260 Vivado Synthesis & Discrete SB RTL | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-14 21:54 UTC | Exp 1688: CASAL Primal-Dual sampler implementation | OK | 97 passed, 1 warning in 7.55s |
