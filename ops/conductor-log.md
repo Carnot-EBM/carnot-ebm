@@ -3107,3 +3107,4 @@ IMPORTANT:
 | 2026-05-14 17:19 UTC | Exp 2105: GateMate A1 toolchain bring-up + Ising-t | OK | 81 passed, 1 warning in 4.57s |
 | 2026-05-14 17:31 UTC | Exp 2106: THRML/Carnot Parity v3 — retry of .165 e | OK | 81 passed, 1 warning in 5.57s |
 | 2026-05-14 17:36 UTC | Exp 2107: Phase 4 active inference v3 — n=8 alpha_ | OK | 81 passed, 1 warning in 5.02s |
+| 2026-05-14 17:50 UTC | Exp 2108: 4/delta Bound — measure Carnot's verify- | OK | 81 passed, 1 warning in 4.56s |
