@@ -3156,3 +3156,4 @@ IMPORTANT:
 | 2026-05-14 20:59 UTC | Exp 1682: THRML/Carnot joint bias investigation —  | OK | 81 passed, 1 warning in 5.43s |
 | 2026-05-14 21:01 UTC | Exp 1683: PyPI publish dry-run — Phase 1 ship-trac | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 21:03 UTC | Exp 1683: PyPI publish dry-run — Phase 1 ship-trac | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-14 21:05 UTC | Exp 1683: PyPI publish dry-run — Phase 1 ship-trac | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
