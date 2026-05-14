@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.thrml_parity_bias_investigation.v1",
+  "n_spins": 128,
+  "J": 1.0,
+  "beta_c": 1.0,
+  "sweep_a_N": [
+    10000,
+    30000,
+    100000
+  ],
+  "sweep_a_bias": [
+    -0.04058684790575395,
+    -0.04023424373908724,
+    -0.03925372290575391
+  ],
+  "sweep_b_beta": [
+    1.05,
+    1.2,
+    1.5
+  ],
+  "sweep_b_bias": [
+    -0.05844948256992616,
+    -0.04058684790575395,
+    -0.007181511640110383
+  ],
+  "bias_fit_verdict": "systematic",
+  "random_seed": 1682,
+  "reproducibility_checksum": "62059d134868f4ecd4bdef040f802a870e87ca148bcb207920c53b8de0dafb6b",
+  "actual_agent_backend": "gemini",
+  "methodology_note": "exp1677 found ~0.04 joint underestimate at beta=1.2*beta_c, N=10000. This task investigates whether that's finite-N (paper-v6 says nothing) or systematic (paper-v6 \u00a76 disclosure required).",
+  "acceptance_gate_passed": true,
+  "honest_verdict": "complete: sweep_finished_with_verdict_systematic"
+}

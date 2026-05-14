@@ -388,3 +388,19 @@ Sub-requirements:
 **When** the `"thrml_tsu"` backend is requested
 **Then** it returns an instance of `TSUSampler`
 **And** it writes `results/experiment_2059_thrml_integration.json`.
+
+### REQ-SAMPLE-1682: Falsifiable hypothesis test of joint underestimate in Curie-Weiss sampling
+
+Carnot MUST provide an experiment script `scripts/experiment_1682_thrml_bias.py` to sweep Curie-Weiss parameters.
+
+Sub-requirements:
+- REQ-SAMPLE-1682-1: The script SHALL sweep sample size N in [10000, 30000, 100000] at beta=1.2*beta_c on n=128.
+- REQ-SAMPLE-1682-2: The script SHALL sweep beta in [1.05*beta_c, 1.2*beta_c, 1.5*beta_c] at N=10000 on n=128.
+- REQ-SAMPLE-1682-3: The script SHALL compute bias and fit bias[N] vs 1/sqrt(N) to output a verdict of finite_n, systematic, or mixed.
+- REQ-SAMPLE-1682-4: The script SHALL write `results/experiment_1682_thrml_bias.json`.
+
+### SCENARIO-SAMPLE-1682: Bias sweep test produces JSON
+
+**Given** the bias investigation script
+**When** it executes
+**Then** it outputs the JSON artifact with required sweeps and a fit verdict.
