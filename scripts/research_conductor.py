@@ -4338,8 +4338,22 @@ def research_step(
         )
 
     if not success:
-        logger.error("%s failed: %s", AGENT_DISPLAY, output[:200])
-        log_step(task["title"], "FAIL", f"{AGENT_DISPLAY} error: {output[:60]}")
+        # 2026-05-14 fix: use the per-task effective agent display rather than
+        # the module-level AGENT_DISPLAY constant. The constant reflects the
+        # env startup AGENT_TYPE which can differ from the per-task
+        # agent_type:codex|gemini|claude. Before this fix, codex tasks
+        # failing due to quota-exhaustion logged as "Gemini CLI error"
+        # which misled the operator into diagnosing a gemini-CLI bug when
+        # the actual failure was codex quota.
+        effective_agent_display = AGENT_DISPLAY_BY_TYPE.get(
+            task_agent_type or AGENT_TYPE, AGENT_DISPLAY
+        )
+        logger.error("%s failed: %s", effective_agent_display, output[:200])
+        log_step(
+            task["title"],
+            "FAIL",
+            f"{effective_agent_display} error: {output[:60]}",
+        )
         return False
 
     # Check if the agent made any changes

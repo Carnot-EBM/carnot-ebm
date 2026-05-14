@@ -3096,3 +3096,4 @@ IMPORTANT:
 | 2026-05-14 16:11 UTC | Exp 2100: THRML/Carnot Parity v2 — Curie-Weiss n=1 | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-14 16:13 UTC | Exp 2100: THRML/Carnot Parity v2 — Curie-Weiss n=1 | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-14 16:16 UTC | Exp 2101: Phase 4 active inference v2 — alpha_t >  | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-14 16:18 UTC | Exp 2101: Phase 4 active inference v2 — alpha_t >  | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
