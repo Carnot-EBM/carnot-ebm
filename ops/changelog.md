@@ -5727,3 +5727,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 2107: Phase 4 active inference v3 — n=8 alpha_t with k=6 vs k=1 contrast (✅ Complete) — honest_verdict=complete: hypothesis validated, delta_alpha > 0.05; results/experiment_2107_phase4_v3.json
 - 2026-05-14: Exp 2108: 4/delta Bound — measure Carnot's verify-repair empirical convergence (✅ Complete) — honest_verdict=complete: four_delta_bound_validated_empirical_delta_0.86_mean_n_1.2_predicted_4.67; results/experiment_2108_four_delta_bound.json
 - 2026-05-14: Exp 2109: Milestone .166 Retrospective (✅ Complete) — honest_verdict=complete: retro generated for milestone 166, all tasks summarized, agent backend routing issue escalated.; results/experiment_2109_retro.json
+- 2026-05-14: Exp 1670: PiNet convex operator splitting forward pass prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1670_pinet_splitting.json
