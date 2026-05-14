@@ -1,0 +1,66 @@
+"""
+Experiment 2104: Milestone 2026.05.165 Retrospective Generator.
+
+This module encodes the results of the 4 falsifiable-gate tasks for Milestone .165.
+"""
+import json
+import os
+from typing import Any, Dict
+
+
+def get_retro_results() -> Dict[str, Any]:
+    """Return the structured retrospective results for Milestone 165."""
+    return {
+        "schema": "carnot.milestone_research_retro.v1",
+        "milestone": "2026.05.165",
+        "tasks_summary": [
+            {
+                "exp_id": "exp2100-thrml-parity-curie-weiss-n128",
+                "hypothesis": "Carnot's native sampler and THRML 0.1.3's JAX-native sampler should both converge to the analytic equilibrium mean of a ferromagnetic Curie-Weiss model at n=128 spins",
+                "gate_threshold": "abs(empirical_mean_carnot - analytic_mean) < 0.05 AND abs(empirical_mean_thrml - analytic_mean) < 0.05 AND ks_p_value > 0.05",
+                "empirical_result": "blocked_due_to_missing_artifact",
+                "gate_passed": False
+            },
+            {
+                "exp_id": "exp2101-phase4-active-inference-smoke-v2",
+                "hypothesis": "mu_P stays strictly positive over 100 MLD steps when the verifier ensemble is k=6 base verifiers, AND collapses (mu_P -> 0) when the ensemble is k=1",
+                "gate_threshold": "inf_t_alpha_k6 > 0.10 AND inf_t_alpha_k1 < 0.05 AND delta_alpha > 0.05",
+                "empirical_result": "blocked_due_to_missing_artifact",
+                "gate_passed": False
+            },
+            {
+                "exp_id": "exp2102-nla-16th-verifier-prototype-v2",
+                "hypothesis": "adding a white-box internal-state probe as the 16th verifier should detect adversarial outputs that all 15 black-box verifiers miss",
+                "gate_threshold": "tpr_lift = nla_TPR_at_FPR5 - best_blackbox_TPR_at_FPR5 > 0.05",
+                "empirical_result": "blocked_due_to_missing_artifact",
+                "gate_passed": False
+            },
+            {
+                "exp_id": "exp2103-pypi-publish-dry-run",
+                "hypothesis": "running `python -m build .` locally produces both a .whl and a .tar.gz with valid metadata, AND that `twine check dist/*` reports no metadata errors",
+                "gate_threshold": "sdist_built: true AND wheel_built: true AND twine_check_passed: true AND both_artifacts_have_correct_name_prefix",
+                "empirical_result": "shipped: pypi_publish_dry_run_sdist_wheel_twine_check_all_passed",
+                "gate_passed": True
+            }
+        ],
+        "gates_passed_count": 1,
+        "gates_failed_count": 3,
+        "paper_v6_carryforward_items": [
+            "exp2100 results for the THRML §6 limitation update (blocked, needs rerun)",
+            "exp2101 phase 4 active inference results (blocked, needs rerun)",
+            "exp2102 nla 16th verifier probe (blocked, needs rerun)"
+        ],
+        "adversarial_verify_flag_count": 0,
+        "honest_verdict": "complete: milestone_165_retro_1_of_4_gates_passed_adv_verify_0_flags",
+    }
+
+
+def write_results(output_path: str) -> None:
+    """Write the results to a JSON file."""
+    results = get_retro_results()
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(results, f, indent=2)
+
+if __name__ == "__main__":  # pragma: no cover
+    write_results("results/experiment_2104_retro.json")
