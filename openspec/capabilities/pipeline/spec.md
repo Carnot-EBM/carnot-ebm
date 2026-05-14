@@ -14,6 +14,9 @@ version-tagged checkpoint to prevent silent rollbacks to sub-threshold models.
 
 ## Requirements
 
+### REQ-CASAL-001: CASALTier continuous attributes support
+The VerifyRepairPipeline MUST support a CASALTier for continuous attributes, returning an artifact with schema, integration_successful, latency_ms, and acceptance_gate_passed fields.
+
 ### REQ-INFRA-043: JEPA Cascade Version-Pinned Checkpoint Loading
 
 The Tier 2 JEPA predictor in the cascade MUST load its model via a version-tagged
