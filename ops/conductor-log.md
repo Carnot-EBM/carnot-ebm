@@ -3162,3 +3162,4 @@ IMPORTANT:
 | 2026-05-14 21:27 UTC | Milestone 2026.05.170 activated | OK | 12 tasks queued |
 | 2026-05-14 21:29 UTC | Exp 1685: PyPI publish actual — Phase 1 ship-track | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 21:31 UTC | Exp 1685: PyPI publish actual — Phase 1 ship-track | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-14 21:33 UTC | Exp 1685: PyPI publish actual — Phase 1 ship-track | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
