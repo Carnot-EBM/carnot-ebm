@@ -13,5 +13,18 @@
   "run_duration_s": 0,
   "actual_agent_backend": "gemini",
   "acceptance_gate_passed": true,
-  "honest_verdict": "complete: PolarFire SoC smoke test successfully executed semantic_consistency_verifier"
+  "honest_verdict": "complete: PolarFire SoC smoke test successfully executed semantic_consistency_verifier",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "warn",
+      "detail": "tpr_observed=1.0 on 10 samples is implausibly clean. Real classifiers exhibit non-zero error at small N."
+    },
+    {
+      "kind": "GATE_PASSED_WITHOUT_DATA",
+      "severity": "critical",
+      "detail": "acceptance_gate_passed=true but these fields are null/zero: run_duration_s=0"
+    }
+  ]
 }

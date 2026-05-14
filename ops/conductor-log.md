@@ -3151,3 +3151,4 @@ IMPORTANT:
 | 2026-05-14 20:34 UTC | Exp 1679: Milestone .168 Retrospective | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: -color support is r |
 | 2026-05-14 20:40 UTC | Exp 1679: Milestone .168 Retrospective | OK | 82 passed, 1 warning in 4.81s |
 | 2026-05-14 20:42 UTC | Milestone 2026.05.169 activated | OK | 5 tasks queued |
+| 2026-05-14 20:46 UTC | Exp 1680: PolarFire SoC verifier smoke v2 — minima | OK | 81 passed, 1 warning in 5.46s |
