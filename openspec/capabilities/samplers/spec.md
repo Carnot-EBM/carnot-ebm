@@ -138,6 +138,32 @@ Sub-requirements:
 **Then** turnover tests pass and the adapter scales correctly
 **And** it writes `results/experiment_1834_thrml_turnover.json`.
 
+### REQ-SAMPLE-1686: Exp 1682 Beta-Dependent Bias Correction
+
+Carnot MUST expose a bias-correction function and a corrected-mean estimator for
+the parallel Ising Gibbs sampler, calibrated from Exp 1682's finding that the
+systematic per-spin underestimate is linear in beta.
+
+Sub-requirements:
+- REQ-SAMPLE-1686-1: `ising_mean_bias_correction(beta)` SHALL return the additive
+  scalar correction derived from the OLS linear fit to Exp 1682 sweep_b data
+  (n_spins=128, J=1/(n-1), Curie-Weiss). Calibration domain: beta in [1.05, 1.5].
+- REQ-SAMPLE-1686-2: `corrected_magnetization_mean(samples, beta)` SHALL compute
+  the per-spin sample mean and add the scalar correction uniformly across all spins.
+- REQ-SAMPLE-1686-3: The correction SHALL be implemented in
+  `python/carnot/samplers/parallel_ising.py` without modifying the existing
+  `sample()` API (backward-compatible).
+- REQ-SAMPLE-1686-4: A results artifact SHALL be written to
+  `results/experiment_1686_thrml_bias_fix.json` with schema, bias_correction_applied,
+  old_bias, new_bias, and acceptance_gate_passed fields.
+
+### SCENARIO-SAMPLE-1686: Corrected Mean Reduces Systematic Underestimate
+
+**Given** a ParallelIsingSampler run at a calibration beta in [1.05, 1.5]
+**When** `corrected_magnetization_mean()` is called on the resulting samples
+**Then** the returned mean differs from the raw mean by the expected linear correction
+**And** the corrected bias is strictly smaller in magnitude than the raw bias.
+
 ### REQ-SAMPLE-1845: Simulated HILED Interface for KV260
 
 Carnot MUST provide a simulated Hardware-In-The-Loop Energy Decoding (HILED) boundary inside `python/carnot/samplers/hiled.py`. This interface acts as a simulator target for Potts integration targeting the KV260 execution pipeline.

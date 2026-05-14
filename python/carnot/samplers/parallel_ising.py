@@ -593,6 +593,75 @@ def _checkerboard_update(
     return spins
 
 
+# ---------------------------------------------------------------------------
+# Exp 1682 bias correction — systematic per-spin underestimate in parallel Gibbs
+# ---------------------------------------------------------------------------
+
+# OLS fit to sweep_b in experiment_1682_thrml_bias.json:
+#   x (beta)   = [1.05,   1.20,   1.50]
+#   y (bias)   = [-0.0584, -0.0406, -0.0072]
+# Calibration domain: n_spins=128, J=1/(n-1) Curie-Weiss, beta in [1.05, 1.5].
+# bias(beta)  = _EXP1682_INTERCEPT + _EXP1682_SLOPE * beta   (negative = underestimate)
+# correction  = -bias(beta)  (positive additive shift to the raw mean)
+_EXP1682_INTERCEPT: float = -0.17735269339467408
+_EXP1682_SLOPE: float = 0.11355739681819524
+
+
+def ising_mean_bias_correction(beta: float) -> float:
+    """Return the empirically calibrated per-spin mean bias correction for beta.
+
+    **Why this exists:** Exp 1682 found that the parallel Gibbs sampler has a
+    systematic underestimate relative to thrml's sequential sampler. The bias is
+    linear in beta (not a finite-N artifact): larger beta → smaller bias magnitude.
+    This function returns the additive shift to neutralize that bias.
+
+    **Calibration domain:** n_spins=128, all-to-all Curie-Weiss with J=1/(n-1),
+    beta measured at 1.05, 1.20, and 1.50. Extrapolating far outside this range
+    should be done with caution — the linear approximation will be increasingly
+    inaccurate.
+
+    Args:
+        beta: Inverse temperature used during sampling.
+
+    Returns:
+        Scalar to ADD to the raw per-spin mean to obtain the corrected mean.
+
+    Spec: REQ-SAMPLE-1686-1
+    """
+    bias = _EXP1682_INTERCEPT + _EXP1682_SLOPE * float(beta)
+    return -bias  # flip sign: correction counteracts the underestimate
+
+
+def corrected_magnetization_mean(samples: jax.Array, beta: float) -> jax.Array:
+    """Compute bias-corrected per-spin mean magnetization from Ising samples.
+
+    **Why the correction is uniform across spins:** the bias is a mean-field
+    effect of parallel Gibbs' simultaneous update rule — all spins see the same
+    stale neighborhood at each sweep, so the underestimate is the same for every
+    spin in a symmetric system. We apply one scalar shift rather than per-spin
+    corrections.
+
+    **Backward-compatible:** the raw sample array from ``ParallelIsingSampler.sample()``
+    is unchanged. Call this function instead of ``jnp.mean(samples, axis=0)`` when
+    you need a bias-corrected mean for Curie-Weiss-style systems near the critical
+    temperature.
+
+    Args:
+        samples: Boolean sample array of shape ``(n_samples, n_spins)`` as
+            returned by ``ParallelIsingSampler.sample()``.
+        beta: Inverse temperature used during sampling (must match what was
+            passed to ``sample()``).
+
+    Returns:
+        Corrected mean vector of shape ``(n_spins,)``.
+
+    Spec: REQ-SAMPLE-1686-2
+    """
+    raw_mean = jnp.mean(samples.astype(jnp.float32), axis=0)
+    correction = ising_mean_bias_correction(beta)
+    return raw_mean + correction
+
+
 def sat_to_coupling_matrix(
     biases_vec: jax.Array,
     weights_vec: jax.Array,
