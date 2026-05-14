@@ -5721,3 +5721,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 2105: GateMate A1 toolchain bring-up + Ising-tile bitstream smoke (⚠️ Blocked) — honest_verdict=complete: gatemate_smoke_blocked_toolchain_missing; results/experiment_2105_gatemate_smoke.json
 - 2026-05-14: Exp 2106: THRML/Carnot Parity v3 — retry of .165 exp2100 with codex routing verified (✅ Complete) — honest_verdict=complete: thrml_parity_cw_v3_passed; results/experiment_2106_thrml_parity_v3.json
 - 2026-05-14: Exp 2107: Phase 4 active inference v3 — n=8 alpha_t with k=6 vs k=1 contrast (✅ Complete) — honest_verdict=complete: hypothesis validated, delta_alpha > 0.05; results/experiment_2107_phase4_v3.json
+- 2026-05-14: Exp 2108: 4/delta Bound — measure Carnot's verify-repair empirical convergence (✅ Complete) — honest_verdict=complete: four_delta_bound_validated_empirical_delta_0.86_mean_n_1.2_predicted_4.67; results/experiment_2108_four_delta_bound.json
