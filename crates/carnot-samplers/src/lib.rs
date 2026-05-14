@@ -33,6 +33,9 @@
 //!
 //! Spec: REQ-SAMPLE-001, REQ-SAMPLE-002, REQ-SAMPLE-003
 
+pub mod casal;
+pub mod ebft;
+
 use carnot_core::{EnergyFunction, Float};
 use ndarray::Array1;
 use ndarray_rand::RandomExt;
