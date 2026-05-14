@@ -1,0 +1,287 @@
+milestone: "2026.05.166"
+milestone_title: "Phase 2 hardware bring-up + THRML/Phase-4 v3 carry-forward + 4/delta bound validation"
+milestone_doc: "outer-loop pre-staged 2026-05-14 16:11Z (local /loop auto-draft after .165 activation)"
+
+# Operator-pre-staged per CLAUDE.md Pre-Staged Roadmap Convention.
+#
+# Context for .166:
+# - .165 just activated 16:05Z with the prior pre-stage's tasks.
+#   exp2100 (THRML parity v2) already hit gemini-CLI bail-out at 16:09Z.
+#   Other .165 tasks likely to face the same gemini-CLI prompt-echo bug.
+# - Phase 2 hardware NOW PHYSICALLY ON BENCH: PolarFire SoC Discovery
+#   Kit enumerated as USB 1514:2008 (Microsemi FlashPro5, /dev/ttyUSB0),
+#   plus a DirtyJTAG adapter (USB 1209:c0ca, /dev/ttyACM0+1) for the
+#   GateMate A1-EVB-2M which doesn't auto-enumerate. Per operator
+#   2026-05-14 message: both boards attached.
+# - Two literature finds from study-phase sweeps land in .166:
+#   1. arXiv:2512.02080 The 4/delta Bound (verifier-loop convergence)
+#   2. arXiv:2605.12874 SAE description-collision (NLA probe audit)
+#
+# Agent routing concern: per-task agent_type:codex may NOT be honored
+# when env AGENT_TYPE=gemini. exp2091, exp2100 both bailing as gemini
+# despite codex YAML. Carrying-forward tasks must work AROUND this
+# until structural fix lands; we note in REQUIRED ARTIFACT FIELDS that
+# the agent should report which backend actually ran the task.
+
+scope_reduction_compliance:
+  - "5 tasks total (4 research/hardware + 1 retro); not 13-14 synthesis"
+  - "First Phase-2 hardware task with PHYSICAL board on bench (vs prior FPGA tasks that were code-only)"
+  - "Two new literature-grounded tasks (arXiv:2512.02080 4/delta Bound, arXiv:2605.12874 SAE collision)"
+  - "All compute-bound tasks include random_seed + reproducibility_checksum + n_samples justification"
+  - "Carry-forward of THRML + Phase 4 explicitly cites .165 prior_failures (likely on gemini-CLI bail)"
+
+tasks:
+  - id: exp2105-gatemate-a1-toolchain-smoke
+    title: "Exp 2105: GateMate A1 toolchain bring-up + Ising-tile bitstream smoke"
+    deliverable: results/experiment_2105_gatemate_smoke.json
+    agent_type: codex
+    max_turns: 100
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md project rules (especially
+      Decentralization-Respecting Design Constraints rule 5 on hardware
+      portability; "Phase Prototype + Empirical Validation + Adversarial
+      Check Discipline").
+
+      CONTEXT (falsifiable hypothesis): the Cologne Chip GateMate A1-EVB-2M
+      is physically on bench (operator confirmation 2026-05-14). A
+      DirtyJTAG adapter (USB 1209:c0ca, /dev/ttyACM0+1) is available.
+      The open-source GateMate toolchain (yosys + nextpnr-himbaechel +
+      p_r) should produce a synthesizable bitstream for a minimal
+      n=16 quadratic Ising tile and flash it via openFPGALoader. This
+      is a Phase-2 hardware POC unblocker — first time the loop has had
+      a non-KV260 Cologne Chip board physically present.
+
+      EXISTING CODE TO READ FIRST:
+      - rtl/ (any prior Verilog/SystemVerilog Ising fabric)
+      - ops/known-issues.md "Phase 2 PRIORITY" section
+      - results/experiment_1041*, results/experiment_1068*,
+        results/experiment_1081* (KV260 Potts/Ising precedents)
+
+      CONCRETE STEPS:
+      1. Check toolchain availability: `which yosys nextpnr-himbaechel
+         openFPGALoader` — if missing, document install commands but
+         do NOT install system-wide; emit honest_verdict
+         "complete: gatemate_smoke_blocked_toolchain_missing".
+      2. Verify USB enumeration: `lsusb | grep -iE "cologne|gateMate|0403:"`.
+         The board may not enumerate directly (no FT2232H on bare
+         EVB-2M); confirm via DirtyJTAG path (/dev/ttyACM0 USB
+         1209:c0ca) OR document that the board needs a separate USB
+         programmer wired to its JTAG header.
+      3. Write a minimal n=16 quadratic Ising tile in Verilog
+         (rtl/gatemate_ising_n16.v) — d-flip-flop array + XOR-based
+         energy delta computation + clocked sign update. Synthesize
+         with yosys for the GateMate A1 target.
+      4. Run nextpnr-himbaechel for place-and-route. Record:
+         - lut_utilization (out of ~5k LUT4s on A1)
+         - max_clock_mhz from STA report
+         - bitstream_size_bytes
+      5. IF a JTAG path to the board is confirmed working, attempt to
+         flash with openFPGALoader. Record success/failure. If JTAG
+         wiring is incomplete (DirtyJTAG to GateMate JTAG header not
+         physically connected), emit
+         "complete: gatemate_smoke_pnr_only_jtag_wiring_pending".
+      6. ACCEPTANCE GATE (all must hold for SUCCESS):
+         - synthesis_completed: true
+         - pnr_completed: true
+         - lut_utilization < 0.30 (n=16 should be tiny)
+         - bitstream_emitted: true
+      7. Write results/experiment_2105_gatemate_smoke.json with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.gatemate_smoke.v1"
+         - board: "Cologne Chip GateMate A1-EVB-2M"
+         - toolchain: {yosys_version, nextpnr_version, openFPGALoader_version}
+         - usb_enumeration: <output of lsusb FPGA lines>
+         - n_spins: 16
+         - random_seed: <int>
+         - reproducibility_checksum: <hash of rtl + yosys.ys + p_r script>
+         - synthesis_completed: <bool>
+         - pnr_completed: <bool>
+         - lut_utilization: <float, 0-1>
+         - max_clock_mhz: <float>
+         - bitstream_size_bytes: <int>
+         - bitstream_path: "<rel path>" or null
+         - jtag_flashed: <bool> or null if path not confirmed
+         - n_samples: 1 (smoke test — one synthesis run)
+         - n_samples_justification: "Synthesis determinism is the check;
+           N=1 sufficient. If it fails, the failure mode reveals the bug."
+         - actual_agent_backend: "<codex|gemini|claude>" — REPORT WHICH BACKEND THE CONDUCTOR ACTUALLY ROUTED THIS TO
+         - acceptance_gate_passed: <bool>
+         - honest_verdict: MUST start with "complete:" / "success:" /
+           "shipped:" / "passed:" per Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2106-thrml-parity-v3-retry
+    title: "Exp 2106: THRML/Carnot Parity v3 — retry of .165 exp2100 with codex routing verified"
+    deliverable: results/experiment_2106_thrml_parity_v3.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp2100-thrml-parity-curie-weiss-n128
+        verdict: gemini_cli_bail_out
+        addressed_by: "exp2100 bailed in .165 within 4 minutes with the gemini-CLI prompt-echo signature, despite agent_type:codex in the YAML. Hypothesis: per-task agent_type override is being ignored by the conductor when env AGENT_TYPE=gemini. This v3 explicitly reports actual_agent_backend in the artifact so we can verify which backend the conductor used. Same falsifiable hypothesis and 10k+ sample budget."
+        retire_if_same_verdict: true
+      - experiment_id: exp1850-thrml-carnot-parity-n128
+        verdict: "complete: thrml_carnot_parity_n128_gate_failed_kl_0.28"
+        addressed_by: "Same as exp2100's addressed_by: undersampled at 100 samples; v3 uses Curie-Weiss substrate + 10k+ samples + analytic ground truth."
+        retire_if_same_verdict: true
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md project rules. This task's
+      prompt is intentionally minimal to avoid the conductor's
+      "STOP-WHEN-DONE RULE" trailer pattern that may be triggering the
+      gemini-CLI bail-out on .165's exp2100.
+
+      CONTEXT (falsifiable hypothesis): Carnot's native sampler and
+      THRML 0.1.3's JAX-native sampler should both converge to the
+      analytic equilibrium mean of a ferromagnetic Curie-Weiss n=128
+      Ising model. Gates: abs(empirical_mean_X - analytic_mean) < 0.05
+      for both X=carnot AND X=thrml; ks_p_value(carnot, thrml) > 0.05.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/ising.py
+      - results/experiment_1850_thrml_parity_n128.json (corrigendum)
+      - results/experiment_2100_thrml_parity_v2.json (if it exists from .165)
+
+      CONCRETE STEPS:
+      1. Curie-Weiss substrate: J_ij = J/n for all pairs, h=0, beta > beta_c.
+      2. N=10000 independent draws from each sampler; distinct seeds.
+      3. Compute: empirical_mean_carnot, empirical_mean_thrml,
+         analytic_mean (closed form), ks_p_value, kl_divergence.
+      4. ACCEPTANCE GATE: all three above.
+      5. Write artifact with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.thrml_parity_curie_weiss.v2"
+         - n_spins: 128, n_samples: 10000
+         - random_seed_carnot, random_seed_thrml, reproducibility_checksum
+         - analytic_mean, analytic_energy
+         - empirical_mean_carnot, empirical_mean_thrml
+         - ks_p_value, kl_divergence
+         - acceptance_gate_passed
+         - actual_agent_backend: "<codex|gemini|claude>"
+         - honest_verdict: prefix "complete:" or "success:".
+
+  - id: exp2107-phase4-alpha-v3
+    title: "Exp 2107: Phase 4 active inference v3 — n=8 alpha_t with k=6 vs k=1 contrast"
+    deliverable: results/experiment_2107_phase4_v3.json
+    agent_type: codex
+    max_turns: 100
+    prior_failures:
+      - experiment_id: exp2101-phase4-active-inference-smoke-v2
+        verdict: pending_or_gemini_cli_bail
+        addressed_by: "exp2101 is in flight as part of .165 and will likely face the same gemini-CLI bail pattern as exp2100. v3 carries forward the same falsifiable gate (delta_alpha > 0.05) with explicit actual_agent_backend reporting."
+        retire_if_same_verdict: true
+      - experiment_id: exp1849-phase4-active-inference-smoke
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp1849 (.144) was doomed-rerun-blocked. v2 / v3 carry the full prior_failures chain back to exp1165."
+        retire_if_same_verdict: true
+      - experiment_id: exp1165-phase4-active-inference-pilot-v1
+        verdict: phase4_better_than_baseline
+        addressed_by: "Pilot lacked falsifiable gate. v3 has tight gate (delta_alpha > 0.05) with k=6 vs k=1 contrast."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT (falsifiable hypothesis): on n=8 Ising substrate, the
+      verifier-as-free-energy ensemble keeps inf_t alpha_t > 0.10
+      when k=6 verifiers, AND collapses to inf_t alpha_t < 0.05 when
+      k=1. Gate: delta_alpha = (inf_t_alpha_k6 - inf_t_alpha_k1) > 0.05.
+
+      CONCRETE STEPS: 100 MLD steps each for k=6 and k=1 configs; same
+      seed; same n=8 substrate. Record per-step mu_P; compute inf_t.
+
+      REQUIRED ARTIFACT FIELDS: schema "carnot.phase4_active_inference.v3",
+      n_spins=8, mld_steps=100, random_seed, reproducibility_checksum,
+      verifier_ensemble_k6/k1, inf_t_alpha_k6, inf_t_alpha_k1,
+      delta_alpha, optimization_direction "minimize", acceptance_gate_passed,
+      actual_agent_backend, honest_verdict prefix "complete:".
+
+  - id: exp2108-four-delta-bound-empirical-validation
+    title: "Exp 2108: 4/delta Bound — measure Carnot's verify-repair empirical convergence"
+    deliverable: results/experiment_2108_four_delta_bound.json
+    agent_type: codex
+    max_turns: 100
+    prompt: |
+      MANDATORY WORKFLOW: read CLAUDE.md rules. This task is grounded in
+      arXiv:2512.02080 "The 4/delta Bound: Designing Predictable
+      LLM-Verifier Systems for Formal Method Guarantee" (Dantas,
+      Cordeiro, Sun, Junior; Dec 2025) — see research-studying.md
+      sweep 2026-05-14T08:20Z entry.
+
+      CONTEXT (falsifiable hypothesis): Carnot's verify-repair pipeline
+      is structurally an absorbing Markov chain (constraint extraction
+      -> verification -> repair attempt -> re-verify). The 4/delta
+      Bound predicts E[n] <= 4/delta iterations where delta is the
+      per-stage success probability. We hypothesize that **Carnot's
+      empirical mean number of repair iterations on a held-out
+      benchmark <= 4/delta_empirical**, where delta_empirical is
+      measured from the last 50 successful repair traces in
+      research-complete.yaml or from results/experiment_*.json
+      artifacts containing per-stage success counters.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline.verify_and_repair)
+      - research-complete.yaml (historical iteration counts)
+
+      CONCRETE STEPS:
+      1. Scan research-complete.yaml + results/experiment_*.json for
+         the last 50 verify-repair runs that include per-iteration
+         outcome data (success / fail / retry). If <50 are available,
+         use whatever exists and document n_runs explicitly.
+      2. Compute delta_empirical = (count of successful stage
+         transitions) / (count of total stage attempts).
+      3. Compute mean_iterations = mean across runs of (n iterations
+         to terminal state).
+      4. Compute predicted_bound = 4 / delta_empirical.
+      5. ACCEPTANCE GATE: mean_iterations <= predicted_bound. If yes,
+         Carnot's pipeline conforms to the Dantas et al. theoretical
+         bound. If no, the deviation is a finding worth reporting
+         (Carnot may be over- or under-performing the bound).
+      6. Write artifact with REQUIRED ARTIFACT FIELDS:
+         - schema: "carnot.four_delta_bound_empirical.v1"
+         - n_runs: <int>
+         - delta_empirical: <float>
+         - mean_iterations: <float>
+         - predicted_bound: <float>
+         - acceptance_gate_passed: <bool>
+         - random_seed: 0 (deterministic data scan)
+         - reproducibility_checksum: <hash of input artifact list>
+         - n_samples: <n_runs, justified above>
+         - n_samples_justification: "Using historical runs since no
+           live data was generated. n_runs is bounded by available
+           archived runs."
+         - methodology_note: "Result interpretation requires context
+           about whether Carnot's verify-repair pipeline maps cleanly
+           onto Dantas et al.'s 4-stage Markov chain. If structural
+           mismatch is identified, that's a paper-v6 disclosure item."
+         - actual_agent_backend: "<codex|gemini|claude>"
+         - honest_verdict: prefix "complete:". Example:
+           "complete: four_delta_bound_validated_empirical_delta_0.65_mean_n_3.8_predicted_6.15"
+
+  - id: exp2109-milestone-166-retro
+    title: "Exp 2109: Milestone .166 Retrospective"
+    deliverable: results/experiment_2109_retro.json
+    agent_type: codex
+    max_turns: 50
+    prompt: |
+      CONTEXT: Close out .166 (4 research/hardware tasks).
+
+      EXISTING FILES TO READ FIRST:
+      - results/experiment_2105_gatemate_smoke.json
+      - results/experiment_2106_thrml_parity_v3.json
+      - results/experiment_2107_phase4_v3.json
+      - results/experiment_2108_four_delta_bound.json
+
+      TASK: For each task above, state hypothesis -> gate threshold ->
+      empirical result -> any surprising finding. Note: if multiple
+      tasks share an "actual_agent_backend != codex" pattern, escalate
+      it in this retro's meta_reflection section — the agent-routing
+      structural issue is a recurring theme.
+
+      Run `python3 scripts/adversarial_verify.py --milestone-range 2105 2109
+      --json` and report flag count.
+
+      REQUIRED ARTIFACT FIELDS:
+      - schema: "carnot.milestone_research_retro.v1"
+      - milestone: "2026.05.166"
+      - tasks_summary: [...]
+      - gates_passed_count, gates_failed_count
+      - actual_agent_backend_distribution: {codex: N, gemini: M, claude: K}
+      - paper_v6_carryforward_items: [...]
+      - adversarial_verify_flag_count
+      - honest_verdict: prefix "complete:".
