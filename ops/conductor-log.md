@@ -3104,3 +3104,4 @@ IMPORTANT:
 | 2026-05-14 16:51 UTC | Exp 2103: PyPI publish dry-run — verify the publis | OK | 81 passed, 1 warning in 4.16s |
 | 2026-05-14 17:02 UTC | Exp 2104: Milestone .165 Retrospective | OK | 81 passed, 1 warning in 5.48s |
 | 2026-05-14 17:04 UTC | Milestone 2026.05.166 activated | OK | 5 tasks queued |
+| 2026-05-14 17:19 UTC | Exp 2105: GateMate A1 toolchain bring-up + Ising-t | OK | 81 passed, 1 warning in 4.57s |
