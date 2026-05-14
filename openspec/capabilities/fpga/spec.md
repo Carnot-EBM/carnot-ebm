@@ -891,3 +891,31 @@ Experiment 1989 MUST run sampler preconditioning and resource accounting over va
 **Then:** It maps nodes to p-dits, outputs Kona-style limits, emits `hardware_execution_claim=false`, and writes `results/experiment_1989_p_dit_hardware_preflight.json`.
 
 **Implementation status:** Implemented (Exp 1989)
+
+---
+
+### REQ-HW-058
+
+**Title:** GateMate A1-EVB-2M toolchain preflight and n=16 Ising tile synthesis
+
+**Description:**
+Experiment 2105 MUST produce a hardware smoke test artifact for the Cologne Chip GateMate A1-EVB-2M board using the open-source toolchain (yosys, nextpnr-himbaechel, openFPGALoader). The artifact MUST check toolchain availability, Verilog synthesis of a minimal n=16 quadratic Ising tile, PnR LUT utilization, and bitstream generation. It MUST emit `honest_verdict="complete: gatemate_smoke_blocked_toolchain_missing"` if tools are missing, preserving the toolchain boundary.
+
+**Acceptance criteria:**
+- `results/experiment_2105_gatemate_smoke.json` is generated.
+- The artifact records toolchain versions, USB enumeration, and PnR status.
+- `honest_verdict` reflects whether the toolchain is available and/or bitstream generated.
+
+**Implementation status:** Implemented (Exp 2105)
+
+---
+
+### SCENARIO-HW-058
+
+**Scenario:** GateMate toolchain preflight and synthesis.
+
+**Given:** An n=16 Ising Verilog tile and the open-source GateMate toolchain environment.
+**When:** The Exp 2105 smoke test runs.
+**Then:** It checks tool availability, attempts synthesis, and writes `results/experiment_2105_gatemate_smoke.json` with an honest verdict.
+
+**Implementation status:** Implemented (Exp 2105)
