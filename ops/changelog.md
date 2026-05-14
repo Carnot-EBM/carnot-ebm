@@ -5751,3 +5751,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1690: Integrate CASAL as Fast-Path Tier in VerifyRepairPipeline (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1690_verify_repair_casal.json
 - 2026-05-14: Exp 1691: Implement EBFT loss function in JAX (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1691_ebft_loss.json
 - 2026-05-14: Exp 1692: Run EBFT continuous self-learning loop using Gemma 4 (✅ Complete) — honest_verdict=complete: EBFT autoresearch loop decreased validation energy on surrogate corpus; acceptance gate passed (energy_delta=1.55 > 0); results/experiment_1692_ebft_loop.json
+- 2026-05-14: Exp 1693: Transpile JAX EBFT/CASAL structures to Rust (⚠️ Research Finding) — honest_verdict=success: Ported CASAL sampler and EBFT loss core structures to Rust successfully.; results/experiment_1693_transpile_rust.json
