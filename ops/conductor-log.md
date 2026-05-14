@@ -3143,3 +3143,4 @@ IMPORTANT:
 | 2026-05-14 19:20 UTC | Exp 1683: Self-learning regression audit (zero sou | OK | 81 passed, 1 warning in 4.95s |
 | 2026-05-14 19:22 UTC | Milestone 2026.05.168 activated | OK | 5 tasks queued |
 | 2026-05-14 19:34 UTC | Exp 1675: PolarFire SoC verifier sovereignty smoke | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
+| 2026-05-14 19:46 UTC | Exp 1675: PolarFire SoC verifier sovereignty smoke | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
