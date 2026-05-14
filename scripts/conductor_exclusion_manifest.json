@@ -161,7 +161,12 @@
     {
       "experiment_id": 1087,
       "completed_milestone": "2026.04.84",
-      "reason": "2026-05-01 user directive: gemini backend paused due to gemini-3.1-pro-preview 429 rate-limiting. Empirical test in interactive session this morning confirmed even single read-only file-inspection tasks trip 429s — the underlying research question this experiment was meant to answer is already answered. Future planners must NOT propose agent_type: gemini tasks until upstream quota improves (see ops/known-issues.md for re-enable conditions). The infrastructure for gemini-worktree routing remains in scripts/research_conductor.py:166 as parking-lot code; lifting the pause is a documentation update, not new infrastructure work."
+      "reason": "2026-05-01 user directive: gemini backend paused due to gemini-3.1-pro-preview 429 rate-limiting. Empirical test in interactive session this morning confirmed even single read-only file-inspection tasks trip 429s \u2014 the underlying research question this experiment was meant to answer is already answered. Future planners must NOT propose agent_type: gemini tasks until upstream quota improves (see ops/known-issues.md for re-enable conditions). The infrastructure for gemini-worktree routing remains in scripts/research_conductor.py:166 as parking-lot code; lifting the pause is a documentation update, not new infrastructure work."
+    },
+    {
+      "experiment_id": 2091,
+      "completed_milestone": "2026.05.164",
+      "reason": "gemini CLI consistent bail-out pattern (prompt-echo, 60+ retries 2h+ wall time); LaTeX markup fix did not resolve. Retired pending agent-routing investigation."
     }
   ]
 }
