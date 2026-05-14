@@ -8,6 +8,54 @@ loop) executes the current experiments.
 **Updated:** 2026-05-14 (3 sweeps today)
 **Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound (new from 2026-05-14T08:20Z sweep)
 
+## Sweep 2026-05-14T12:40Z (Claude outer-loop /loop job 875c06b4 fire #4)
+
+**Queries fired:**
+- arxiv abs:"probabilistic computing" OR "Ising machine" OR "stochastic circuit" OR "p-bit" → **timeout 60s**
+- arxiv cat:cs.LG AND abs:"Ising" AND abs:"sampling" → **HTTP 503 Service Unavailable**
+- HN search: `energy based model` (timestamp > 1746500000)
+
+**arxiv API is degraded this fire.** Both queries failed (one timeout, one 503).
+HN was the only successful source.
+
+**Candidates surfaced (10 HN stories, 1 promoted):**
+
+### NEW Rank LOW-MEDIUM: Kona EBM Sudoku Benchmark (logicalintelligence.com, Feb 2026)
+- **Score:** 4×3×4×3 = **144**
+- **Source:** HN (2 points, low signal, but content is high-signal)
+- **URL:** logicalintelligence.com/blog/energy-based-model-sudoku-demo
+- **Why it matters:** Headline claim **96% vs 2% on Sudoku** — Carnot's Phase-3
+  parity target (per CLAUDE.md Project Vision: "Functional parity with Kona")
+  has new published benchmark numbers. Worth checking:
+  1. Whether Carnot's existing sudoku verifier (per `python/carnot/verify/sudoku.py`)
+     can run the same benchmark format
+  2. The "96%" methodology: is it solve-rate, verification-accuracy, or
+     constraint-satisfaction? Kona is closed-weight; Carnot adaptation TBD.
+- **Status:** NOT pre-stage material (Phase-3 parity is a long-horizon target;
+  current focus is Phase 1 ship + adversarial-verify rigor).
+
+### Additional HN candidates (not promoted; score < 100):
+- ebmsovereign.com Energy-Guard OS — 88.7% leak detection EBM (security domain,
+  off-topic for Carnot's reasoning verification mission)
+- 2024 iopscience.iop.org "Introduction to latent variable EBMs" — foundational,
+  already implicitly used in Phase-3 DBAE-EBM design (memory)
+- "Logical Intelligence" startup page (LeCun-linked, EBM-based) — already cited
+  in CLAUDE.md
+- Other HN hits: self-promotional / off-topic (Sudoku demos, anomaly detection
+  blog posts, YouTube content)
+
+### Sweep-#4 takeaways
+
+- **arxiv API health is unreliable** at this hour. Two queries failed in a
+  row. Future fires should be defensive: try one arxiv query, fall back to
+  HN/openreview/semantic scholar promptly.
+- **HN-only fires have lower yield**. arxiv is the load-bearing source for
+  serious literature.
+- Worth augmenting the cron prompt with a semantic-scholar fallback URL:
+  `https://api.semanticscholar.org/graph/v1/paper/search?query=...&limit=10&fields=title,abstract,year,citationCount`
+
+---
+
 ## Operator-flagged 2026-05-14T11:00Z: Iron Layer (github.com/bwahacker/iron-layer)
 
 **Source:** Operator-flagged during conversation, not via sweep. Worth recording as peer methodology.
