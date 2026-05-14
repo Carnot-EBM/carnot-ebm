@@ -3094,3 +3094,4 @@ IMPORTANT:
 | 2026-05-14 16:05 UTC | Milestone 2026.05.165 activated | OK | 5 tasks queued |
 | 2026-05-14 16:09 UTC | Exp 2100: THRML/Carnot Parity v2 — Curie-Weiss n=1 | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-14 16:11 UTC | Exp 2100: THRML/Carnot Parity v2 — Curie-Weiss n=1 | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-14 16:13 UTC | Exp 2100: THRML/Carnot Parity v2 — Curie-Weiss n=1 | FAIL | Gemini CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
