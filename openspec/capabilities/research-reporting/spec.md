@@ -4038,3 +4038,17 @@ Soft Bellman, and TSU integrations. The artifact shall include:
 ### REQ-REPORT-2089: Milestone 163 Retrospective
 
 The Exp 2089 milestone 163 retrospective workflow shall summarize the performance of SMT/LLM constraint extraction and JEPA scaffolding. It shall write `results/experiment_2089_retro.json` with the milestone schema, `criteria_met`, `notable_successes`, and `honest_verdict`.
+
+
+### REQ-REPORT-168: Milestone 2026.05.168 Terminal Retrospective
+
+The Exp 1679 `.168` milestone retrospective workflow shall write `results/experiment_1679_retro.json` containing:
+- schema set to `carnot.milestone_research_retro.v1`
+- milestone set to `2026.05.168`
+- `tasks_summary` extracting hypothesis, gate threshold, empirical result, and surprising finding for Exp 1675 through 1678.
+- `gates_passed_count` and `gates_failed_count`
+- `actual_agent_backend_distribution`
+- `paper_v6_carryforward_items` highlighting the first physical-board sovereignty data point (Exp 1676)
+- `hardware_sovereignty_data_points` mapping board to gate_passed
+- `adversarial_verify_flag_count` from `scripts/adversarial_verify.py`
+- `honest_verdict` prefixed with `complete:`
