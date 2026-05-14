@@ -4052,3 +4052,15 @@ The Exp 1679 `.168` milestone retrospective workflow shall write `results/experi
 - `hardware_sovereignty_data_points` mapping board to gate_passed
 - `adversarial_verify_flag_count` from `scripts/adversarial_verify.py`
 - `honest_verdict` prefixed with `complete:`
+
+### REQ-REPORT-169: Milestone 2026.05.169 Retrospective Artifact
+The Exp 1684 `.169` milestone retrospective workflow shall write `results/experiment_1684_retro.json` containing:
+- schema set to `carnot.milestone_research_retro.v1`
+- milestone set to `2026.05.169`
+- `tasks_summary` extracting hypothesis, gate threshold, empirical result, and carryforward for Exp 1680 through 1683.
+- `gates_passed_count` and `gates_failed_count`
+- `actual_agent_backend_distribution`
+- `paper_v6_carryforward_items` highlighting the paper-v6 §6 disclosure required for THRML bias systematic underestimate (Exp 1682)
+- `phase1_ship_progress_pp_remaining` showing delta from .168 to .169
+- `adversarial_verify_flag_count` from `scripts/adversarial_verify.py`
+- `honest_verdict` prefixed with `complete:`
