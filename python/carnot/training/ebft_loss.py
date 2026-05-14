@@ -39,3 +39,20 @@ class EBFTLoss:
         
         loss = jnp.mean(expert_energy) - jnp.mean(rollout_energy)
         return loss
+
+def ebft_loss(model_features: jnp.ndarray, target_features: jnp.ndarray) -> jnp.ndarray:
+    """Computes the EBFT feature-matching objective.
+    
+    EBFT implicitly defines an energy function over sequences by matching 
+    model features to target features.
+    
+    Args:
+        model_features: Array of model features, shape (batch_size, feature_dim).
+        target_features: Array of target features, shape (batch_size, feature_dim).
+        
+    Returns:
+        Scalar loss value minimizing feature divergence.
+    """
+    model_expected = jnp.mean(model_features, axis=0)
+    target_expected = jnp.mean(target_features, axis=0)
+    return jnp.sum(jnp.square(model_expected - target_expected))

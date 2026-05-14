@@ -42,3 +42,26 @@ def test_ebft_loss_gradient():
     # Loss: (p0+p1) - (2p0+2p1) = -p0 - p1
     # Grad wrt p0, p1 = [-1.0, -1.0]
     assert jnp.allclose(grad, jnp.array([-1.0, -1.0]))
+
+def test_ebft_loss_feature_matching_gradient():
+    """REQ-TRAIN-007: Test gradient flow for the feature-matching ebft_loss."""
+    from carnot.training.ebft_loss import ebft_loss
+    
+    # Simulate a small neural network predicting features
+    def predict_features(params, inputs):
+        return jnp.dot(inputs, params)
+        
+    params = jnp.array([[1.0, -1.0], [0.5, 0.5]])
+    inputs = jnp.array([[1.0, 2.0], [2.0, 1.0]])
+    target_features = jnp.array([[2.0, 0.0], [2.0, 0.0]])
+    
+    def loss_fn(p):
+        model_features = predict_features(p, inputs)
+        return ebft_loss(model_features, target_features)
+        
+    loss_val = loss_fn(params)
+    grad_val = jax.grad(loss_fn)(params)
+    
+    assert loss_val.shape == ()
+    assert grad_val.shape == params.shape
+    assert not jnp.all(grad_val == 0)
