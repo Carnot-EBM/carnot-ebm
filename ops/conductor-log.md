@@ -3140,3 +3140,5 @@ IMPORTANT:
 | 2026-05-14 19:11 UTC | Exp 1682: SCG-MEM + ETS combined evaluation on loc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1680-scg-mem-adapter.scg_ready (actual= |
 | 2026-05-14 19:13 UTC | Exp 1682: SCG-MEM + ETS combined evaluation on loc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1680-scg-mem-adapter.scg_ready (actual= |
 | 2026-05-14 19:15 UTC | Exp 1682: SCG-MEM + ETS combined evaluation on loc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1680-scg-mem-adapter.scg_ready (actual= |
+| 2026-05-14 19:20 UTC | Exp 1683: Self-learning regression audit (zero sou | OK | 81 passed, 1 warning in 4.95s |
+| 2026-05-14 19:22 UTC | Milestone 2026.05.168 activated | OK | 5 tasks queued |
