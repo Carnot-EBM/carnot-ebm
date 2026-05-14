@@ -18,7 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,423 experiment records tracked through Exp 2089**. `research-complete.yaml` currently archives **2,238** task records across **176** artifact-backed completed milestone records through 2026.05.163; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.163 on 2026-05-13.
+Current public research record: **2,443 experiment records tracked through Exp 2109**. `research-complete.yaml` currently archives **2,258** task records across **179** artifact-backed completed milestone records through 2026.05.166; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.166 on 2026-05-13.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -507,6 +507,7 @@ experiment artifact under `results/`.
 | SMGI & Energy-Guided Decoding | Integrated SMGI certified update logic and implemented EGD using mandated SOTA GGUFs | Exps 1631/1636 |
 | Current Python test collection | **24,316** Python tests collected in the latest broad attempt; collection-only snapshot, not a full-suite pass claim | Exp 1943, 2026-05-12 |
 | Local Claude/Codex usage snapshot | Codex reads the newest local `token_count` event; Claude aggregates local token usage and reads only subscription/tier metadata from credentials; free-form quota prose is ignored instead of guessed; focused regression tests pass | 2026-05-04 changelog |
+| Milestone .166 closeout | Retrospective completed. Tasks include ETS scaling, NPU execution, THRML parity, and 4/delta bound verification. | Exp 2109 |
 
 Deeper analysis of these — including everything that **didn't** work and
 why — is in the [technical report](docs/technical-report.md). Per-milestone
@@ -547,7 +548,7 @@ claim we publish.
 ## Where to go next
 
 - **[Technical report](docs/technical-report.md)** — the full research arc
-  through Exp 1995 across 166 archived completed milestone records plus the
+  through Exp 2109 across 166 archived completed milestone records plus the
   latest .148 result artifacts, with a
   plain-English timeline of what we tried, what failed, what stuck.
 - **[Roadmap](docs/roadmap.md)** — current milestone, upcoming milestones,

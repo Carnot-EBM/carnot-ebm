@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,448 Experiments Across the Public Record, 176 Archived Milestone Records, 24,614 Python Test Items Collected (Results and Ops Retros Through Exp 2089)
+## A Technical Report — 2,468 Experiments Across the Public Record, 179 Archived Milestone Records, 24,584 Python Test Items Collected (Results and Ops Retros Through Exp 2109)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -30,11 +30,11 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **2,423
-experiment records tracked through Exp 2089, with 2,238 task records in 176
-artifact-backed completed milestone records archived through 2026.05.163 and
-checked-in result artifacts extending through milestone .163** — run between
+experiment records tracked through Exp 2089, with 2,258 task records in 179
+artifact-backed completed milestone records archived through 2026.05.166 and
+checked-in result artifacts extending through milestone .166** — run between
 February and May 2026. `research-complete.yaml` currently archives **171**
-completed milestone records through 2026.05.163; checked-in result artifacts
+completed milestone records through 2026.05.166; checked-in result artifacts
 and `ops/changelog.md` now extend through
 `results/experiment_2027_milestone_158_retro.json`. Milestone .161 completed
 **25** experiments in **26.5** minutes, with GPUs correctly idled at 0%
@@ -5430,3 +5430,20 @@ Experiment 2083 completed the integration of SMT Solvers for KAN4CBC robustness 
 
 **Hardware and Scaffolding**
 Experiment 2088 established the AMD XDNA NPU SDK toolchain. Experiment 2089 completed the milestone with SMT JEPA scaffolding.
+
+## Milestones 164–166 — Energy-Guided Test-Time Scaling, NPU Execution, and Empirical Convergence (Exps 2090–2109, May 2026)
+
+**Energy-Guided Test-Time Scaling (ETS)**
+Experiments 2094 and 2096 introduced Energy-Guided Test-Time Scaling (ETS), demonstrating Tier 2 memory updating via ETS feedback.
+
+**Live GPU EBT vs Autoregressive Evaluation**
+Experiment 2095 established Live GPU Evaluation of Energy-Based Training vs Autoregressive models.
+
+**Hardware: NPU Execution of JEPA Predictor**
+Experiment 2097 successfully ported the JEPA predictor to execute on the AMD XDNA NPU, fulfilling NPU hardware acceleration requirements.
+
+**THRML/Carnot Parity and Phase 4 Active Inference**
+Experiments 2100 and 2106 achieved THRML/Carnot Parity v2 and v3 (Curie-Weiss n=128), proving semantic equivalence with analytic ground truth. Experiments 2101 and 2107 evaluated Phase 4 active inference.
+
+**Verify-Repair Empirical Convergence**
+Experiment 2108 validated the 4/delta Bound, measuring Carnot's verify-repair empirical convergence successfully.
