@@ -3077,3 +3077,5 @@ IMPORTANT:
 | 2026-05-14 15:06 UTC | Exp 2094: Energy-Guided Test-Time Scaling (ETS) | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-14 15:13 UTC | Exp 2094: Energy-Guided Test-Time Scaling (ETS) | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-14 15:15 UTC | Exp 2095: Live GPU EBT vs Autoregressive Evaluatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2093-ebt-prototype) |
+| 2026-05-14 15:15 UTC | Exp 2096: Tier 2 Memory Updating via ETS Feedback | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-14 15:17 UTC | Exp 2095: Live GPU EBT vs Autoregressive Evaluatio | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2093-ebt-prototype) |
