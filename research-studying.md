@@ -8,6 +8,49 @@ loop) executes the current experiments.
 **Updated:** 2026-05-14 (3 sweeps today)
 **Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound (new from 2026-05-14T08:20Z sweep)
 
+## Operator-flagged 2026-05-14T11:00Z: Iron Layer (github.com/bwahacker/iron-layer)
+
+**Source:** Operator-flagged during conversation, not via sweep. Worth recording as peer methodology.
+
+### Iron Layer — Prompt-Injection Honeypot Labeler (bwahacker, ~Apr 2026)
+- **Score:** 4×3×4×3 = **144** (moderate; not pre-stage material but worth tracking)
+- **Repo:** github.com/bwahacker/iron-layer
+- **What it is:** Detonates untrusted text inside an isolated sandbox with a canary LLM (Claude Haiku 4.5) wired to a wildcard MCP server that **fakes** dangerous tool execution. Records which dangerous-intent buckets (`filesystem-read`, `code-exec`, `network-egress`, `exfil-email`, `secret-access`, etc.) the injected text coaxed out. Output: JSONL pairs `(raw_input_text → tickled_signals)` for downstream classifier training (Featrix).
+- **Why it matters to Carnot (5 angles):**
+  1. **Adversarial corpus generator for exp2102 NLA probe v2.** Pre-staged
+     `.165 task explicitly needs n>=30 adversarial examples spanning factual /
+     logical / arithmetic classes. Iron Layer's JSONL output format is
+     directly suitable as adversarial eval data. Candidate corpus source.
+  2. **Signal normalization pattern.** Iron Layer's clean bucket taxonomy
+     (`filesystem-read`, `code-exec`, etc.) could inspire a similar
+     normalization layer for Carnot's verifier-ensemble output schema in
+     paper-v6 §3.
+  3. **Sandbox-canary pattern.** Structurally similar to Carnot's
+     `CARNOT_USE_SANDBOX=1` gvisor pattern. When Carnot eventually runs
+     adversarial outputs through the verifier ensemble, an Iron-Layer-style
+     canary sandbox would let us "execute" suspect outputs without
+     real-world side effects.
+  4. **Deterministic lures via hashing.** Same principle as Carnot's
+     `reproducibility_checksum`. Prior art for hash-deterministic adversarial
+     inputs — worth citing in the Adversarial Artifact Verification CLAUDE.md
+     rule.
+  5. **Specification gaming connection.** Iron Layer is the operational
+     artifact of arXiv:2605.02269 ("Specification Gaming in Reasoning
+     Models") — the injection text gamings the canary's apparently-helpful
+     behavior. Reinforces the load-bearing nature of that paper.
+- **Decentralization concern:** uses closed-weight Claude Haiku 4.5 for the
+  canary. Per CLAUDE.md decentralization Rule 1 (local-first using open
+  models), Carnot adaptation would need a local model (Qwen3.5-0.8B as the
+  canary). Adapting is straightforward — the methodology is model-agnostic.
+- **License unknown** from README excerpt; need to verify before integration.
+- **Status:** NOT pre-stage material — Phase 1 ship, Phase 4 active inference,
+  THRML parity v2, and NLA probe v2 are higher-priority. Recorded here for
+  reference if exp2102 NLA probe v2 needs more adversarial data than we can
+  synthesize manually, OR if a future "verifier-ensemble taxonomy paper" milestone
+  draws on it as peer methodology.
+
+---
+
 ## Sweep 2026-05-14T08:20Z (Claude outer-loop /loop job 875c06b4 fire #3)
 
 **Queries fired:**
