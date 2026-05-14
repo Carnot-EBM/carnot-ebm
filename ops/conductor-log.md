@@ -3163,3 +3163,4 @@ IMPORTANT:
 | 2026-05-14 21:29 UTC | Exp 1685: PyPI publish actual — Phase 1 ship-track | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 21:31 UTC | Exp 1685: PyPI publish actual — Phase 1 ship-track | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 21:33 UTC | Exp 1685: PyPI publish actual — Phase 1 ship-track | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-14 21:44 UTC | Exp 1686: THRML/Carnot joint bias correction imple | OK | 97 passed, 1 warning in 7.20s |
