@@ -1,48 +1,59 @@
-# Carnot Research Roadmap: Milestone 2026.05.167 (vNEXT)
+# Research Roadmap vNEXT (Milestone 2026.05.170)
 
-**Milestone:** 2026.05.167
-**Theme:** Differentiable Constraint Projection, KAN Hardware Prep, and Continuous Self-Learning
+**Date:** 2026-05-14
+**Status:** DRAFT
 
-## 1. What the Previous Milestone Proved (.166)
-Milestone `.166` completed its core objectives but identified **synthesis tasks as the primary bottleneck** for optimization. The hardware tracks (dual RTX 3090 SOTA runtime, KV260 Discrete SB RTL, and THRML compatibility) were stabilized but deferred aggressive expansion to avoid out-of-scope hardware claims. Continuous self-learning requires a structural integrity update to ensure zero soundness mistakes and avoid recursive drift during policy promotion.
+## 1. Context and Retrospective
+
+Milestone `.169` successfully laid the groundwork across multiple parallel tracks:
+- **Hardware Sovereignty:** Proved PolarFire SoC passive execution of the pure-Python verifier subset.
+- **Phase 4 Active Inference:** Scaled continuous active inference to $n=16, 32$, evaluating the $\Delta\alpha$ scaling limits.
+- **THRML Bias Investigation:** Differentiated between finite-N and systematic bias in the `carnot` vs `thrml` joint underestimate.
+- **Phase 1 Ship Track:** Successfully executed a dry-run PyPI build and Twine verification.
+
+However, three major gaps remain between our current architecture and the PRD vision:
+1. **Continuous Self-Learning (Gap 1):** The autoresearch loop is currently constrained to searching the architecture space; it lacks a native gradient-based fine-tuning mechanism (like Energy-Based Fine-Tuning) to incrementally update the LLM solver component directly against the energy landscape.
+2. **Hard Constraint Satisfaction in Continuous Space (Gap 2):** While Ising and Boolean verifiers provide hard discrete constraints, the Phase 3 continuous models rely on soft penalties and Langevin sampling. Recent 2025/2026 literature (e.g., CASAL) introduces primal-dual split augmented sampling to guarantee hard physical and mathematical constraints during generative modeling.
+3. **Phase 2 Asymptotic Hardware Execution (Gap 3):** The transition to discrete SB RTL (KV260) or Extropic TSU must move beyond simulated bounds and record true latency to establish the performance baseline needed before Phase 3 training.
 
 ## 2. Milestone Objectives
-1. **Bridge the Synthesis Bottleneck:** Implement HardNet++ and PiNet-style differentiable projection layers to enforce constraints within the neural forward pass, falling back to Z3/PySAT only for final formal verification.
-2. **KAN Hardware Preparedness:** Apply the new hardware-oriented inference complexity metrics (RM, BOP, NABS) and PWA MILP abstraction to KAN units to provide definitive KV260 accounting without requiring full Vivado synthesis.
-3. **Advanced Continuous Self-Learning (FR-11):** Implement Schema-Constrained Generation (SCG-MEM) for memory traces and Energy-Guided Test-Time Scaling (ETS) using the mandated local SOTA GGUFs to ensure safe, scalable self-improvement.
 
-## 3. Architecture Overview
-```mermaid
-graph TD
-    A[Unstructured Prompt] --> B[ROCE Extractor]
-    B --> C{Differentiable Projection Layer}
-    C -->|PiNet/HardNet++| D[Constraint Graph / KAN Tier]
-    D --> E[Energy-Guided Generation - Qwen3.6 / Gemma-4]
-    E --> F[Z3 / PySAT Verifier]
-    F -->|Zero False Accepts| G[Valid Output]
-    F -->|Reject| C
-    G --> H[Continuous Self-Learning / SCG-MEM]
-```
+Milestone `.170` aims to close these gaps by injecting 2025/2026 state-of-the-art EBM methods into the Carnot framework, while shipping mature Phase 1 components.
 
-## 4. Phase Descriptions
+### Objective 1: Implement CASAL for Hard Constraints
+Integrate strictly constrained generative modeling via Split Augmented Langevin Sampling (CASAL) to replace soft-penalty Langevin samplers, providing zero-false-accept guarantees in continuous EBMs.
 
-### Phase 1: Differentiable Constraint Projection
-Targets the symbolic synthesis bottleneck by moving constraint satisfaction into continuous neural layers. 
-- **Experiments 1670-1673:** Prototype PiNet (Douglas-Rachford splitting) and HardNet++ (damped local linearization) on CPU. Validate that continuous projections exactly match PySAT boundaries for linear constraints. 
+### Objective 2: Continuous Self-Learning with EBFT
+Implement the Energy-Based Fine-Tuning (EBFT) feature-matching objective to allow the EBM to generate semantic feedback for the `unsloth/gemma-4-26B-A4B-it-GGUF` and `unsloth/Qwen3.6-35B-A3B-GGUF` solvers, enabling unsupervised self-improvement.
 
-### Phase 2: Hardware-Oriented Inference & KAN Deployment Prep
-Moves KAN infrastructure from theory towards actionable hardware translation by adhering to the established bounds (no new unauthenticated hardware execution claims).
-- **Experiments 1674-1677:** Implements RM, BOP, NABS accounting; tests piecewise affine abstractions (MILP); and prototypes KANELÉ LUT-based logic for the S2KAN tier.
+### Objective 3: Accelerate KAEMEnergy via SineKAN
+Replace the B-spline inverse-transform sampling in the KAEMEnergy fast-path with periodic sine grids (SineKAN) or Feature-Enriched KANs (FEKAN), targeting a 10x inference speedup.
 
-### Phase 3: Energy-Guided Generation & Trace Constraints
-Links the energy functions directly to the decoding process of local SOTA GGUF models. 
-- **Experiments 1678-1681:** Probes FAR (Continuous Latent Generation) for rapid inference, then applies Energy-Guided Decoding to `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+## 3. Phase Descriptions and Task Graph
 
-### Phase 4: Continuous Self-Learning Integration
-Ensures FR-11 is stable by structurally constraining memory and scaling test-time search.
-- **Experiments 1682-1683:** Enforces Schema-Constrained Generation (SCG-MEM) during policy trace collection. Concludes with a rigorous soundness-mistake audit.
+The 12 experiments in this milestone are structured across four phases.
 
-## 5. Hardware Requirements
-- **Local CPU/RAM:** Standard computation for PySAT, JAX PiNet simulations, and KAN accounting.
-- **GPU (Dual RTX 3090):** Required for executing the mandated SOTA GGUF models in Phase 3 and Phase 4 (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`).
-- **FPGA:** No active board claims allowed. KAN LUT translations will remain strictly at the software simulation and synthesis-accounting level (RM/BOP/NABS).
+### Phase 1: Foundation, Ship, and Fixes
+- **Exp 1685:** PyPI Publish Actual (`twine upload`).
+- **Exp 1686:** THRML bias correction (implementing fixes found in .169).
+- **Exp 1687:** KV260 Vivado Synthesis & bitfile generation retry.
+
+### Phase 2: Continuous Hard Constraints (CASAL)
+- **Exp 1688:** CASAL Primal-Dual sampler implementation in `carnot.samplers`.
+- **Exp 1689:** CASAL vs MCMC Langevin verification on $n=16, 32$ continuous landscapes.
+- **Exp 1690:** Integration of CASAL as a Phase 3 continuous fast-path verifier.
+
+### Phase 3: Continuous Self-Learning (EBFT)
+- **Exp 1691:** Implement the EBFT loss function in JAX.
+- **Exp 1692:** E2E Autoresearch loop trial: fine-tune the solver parameter subset using EBFT on held-out constraints (using `unsloth/gemma-4-26B-A4B-it-GGUF`).
+- **Exp 1693:** Transpile the successful JAX EBFT/CASAL structures to `carnot-samplers` (Rust).
+
+### Phase 4: KAN Acceleration & Retro
+- **Exp 1694:** Implement SineKAN/FEKAN substitute for KAEMEnergy splines.
+- **Exp 1695:** Benchmark SineKAN vs baseline KAEMEnergy.
+- **Exp 1696:** Milestone .170 Retrospective.
+
+## 4. Hardware Requirements
+- **Local:** Dual RTX 3090 (for running Qwen 3.6 35B and Gemma 4 31B GGUFs).
+- **Edge:** KV260 board (if available, for Exp 1687 execution).
+- **Compute:** CPU-bound tasks rely on standard parallelism. JAX targets CPU or ROCm/CUDA.
