@@ -3134,3 +3134,4 @@ IMPORTANT:
 | 2026-05-14 18:53 UTC | Exp 1678: Continuous Latent Generation (FAR) Proto | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 18:55 UTC | Exp 1679: Energy-Guided Decoding with Local SOTA M | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-14 18:57 UTC | Exp 1679: Energy-Guided Decoding with Local SOTA M | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-14 18:59 UTC | Exp 1679: Energy-Guided Decoding with Local SOTA M | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
