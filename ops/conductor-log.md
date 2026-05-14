@@ -3073,3 +3073,4 @@ IMPORTANT:
 | 2026-05-14 14:39 UTC | Exp 2092: HardNet++ Non-Linear Constraint Enforcem | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2091-pinet-projection-layer.violation_r |
 | 2026-05-14 14:46 UTC | Exp 2093: Energy-Based Transformer (EBT) Baseline  | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-14 14:53 UTC | Exp 2093: Energy-Based Transformer (EBT) Baseline  | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
+| 2026-05-14 14:59 UTC | Exp 2094: Energy-Guided Test-Time Scaling (ETS) | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
