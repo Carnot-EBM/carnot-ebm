@@ -5739,3 +5739,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1679: Milestone .168 Retrospective (✅ Complete) — honest_verdict=complete: successfully generated milestone 2026.05.168 retro.; results/experiment_1679_retro.json
 - 2026-05-14: Exp 1680: PolarFire SoC verifier smoke v2 — minimal-deps retry (✅ Complete) — honest_verdict=complete: PolarFire SoC smoke test successfully executed semantic_consistency_verifier; results/experiment_1680_polarfire_smoke_v2.json
 - 2026-05-14: Exp 1681: Phase 4 active inference scaling sweep — n=8/16/32 (✅ Complete) — honest_verdict=complete: Scaling simulation finished with collapse_scale=None and acceptance=True.; results/experiment_1681_phase4_scaling.json
+- 2026-05-14: Exp 1682: THRML/Carnot joint bias investigation — varied beta sweep (✅ Complete) — honest_verdict=complete: sweep_finished_with_verdict_systematic; results/experiment_1682_thrml_bias.json
