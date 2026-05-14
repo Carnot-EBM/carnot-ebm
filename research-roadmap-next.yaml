@@ -1,0 +1,207 @@
+milestone: "2026.05.170"
+milestone_title: "CASAL Hard Constraints, EBFT Continuous Self-Learning, and SineKAN Acceleration"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp1685-pypi-publish-actual
+    title: "Exp 1685: PyPI publish actual — Phase 1 ship-track"
+    deliverable: results/experiment_1685_pypi_publish_actual.json
+    max_turns: 30
+    agent_type: codex
+    prompt: |
+      CONTEXT: The previous milestone (.169) completed the PyPI publish dry-run (Exp 1683). We now need to execute the actual publish.
+      EXISTING CODE TO READ FIRST: pyproject.toml, .github/workflows/publish-pypi.yml, results/experiment_1683_pypi_publish.json
+      TASK: Execute the actual publish process. Depending on repo configuration, this means creating and pushing a tag, or running a simulated local release check if credentials are not available.
+      CONCRETE STEPS:
+      1. Read the output of Exp 1683.
+      2. If credentials are provided via environment, run twine upload to PyPI/TestPyPI.
+      3. Alternatively, prepare the release tag and script it, then document the outcome.
+      4. Write artifact with REQUIRED ARTIFACT FIELDS: schema, version_shipped, publish_method, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1686-thrml-bias-correction
+    title: "Exp 1686: THRML/Carnot joint bias correction implementation"
+    deliverable: results/experiment_1686_thrml_bias_fix.json
+    max_turns: 50
+    agent_type: claude
+    prompt: |
+      CONTEXT: Exp 1682 investigated the joint bias in Carnot and THRML (finite-N vs systematic). Based on that, we need to implement the correction if it's systematic or document the asymptotic limits if it's finite-N.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/parallel_ising.py, results/experiment_1682_thrml_bias.json
+      TASK: Apply the bias correction to the sampler bridge.
+      CONCRETE STEPS:
+      1. Read Exp 1682 results.
+      2. If systematic, apply the beta-dependent shift to the sampler's mean estimator.
+      3. Verify on a 10k-sample Curie-Weiss test.
+      4. Write artifact with REQUIRED ARTIFACT FIELDS: schema, bias_correction_applied, old_bias, new_bias, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1687-kv260-vivado-synthesis
+    title: "Exp 1687: KV260 Vivado Synthesis & Discrete SB RTL Lint"
+    deliverable: results/experiment_1687_kv260_synthesis.json
+    max_turns: 100
+    model: opus
+    agent_type: codex
+    prompt: |
+      CONTEXT: The Phase 2 Asymptotic Hardware Execution path requires KV260 execution. This task attempts Vivado synthesis to generate the bitstream.
+      EXISTING CODE TO READ FIRST: crates/carnot-hardware/ (if exists), previous synthesis logs.
+      TASK: Run Vivado synthesis for the Discrete SB RTL.
+      CONCRETE STEPS:
+      1. Check for Vivado installation locally.
+      2. Run the synthesis script or Makefile target for the KV260 target.
+      3. If Vivado is not present, record the blocker clearly in the artifact.
+      4. Write artifact with REQUIRED ARTIFACT FIELDS: schema, vivado_found, bitfile_generated, resources_used, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1688-casal-primal-dual-sampler
+    title: "Exp 1688: CASAL Primal-Dual sampler implementation"
+    deliverable: results/experiment_1688_casal_sampler.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: CASAL (arXiv:2505.18017) uses Split Augmented Langevin Sampling for strictly constrained generative modeling. We need to implement this in JAX.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/
+      TASK: Implement a CASAL sampler variant that takes an energy function and a set of hard constraints.
+      CONCRETE STEPS:
+      1. Implement `casal_sample(energy_fn, constraint_fn, init_state, steps)` in JAX.
+      2. The constraint_fn should return 0 when satisfied and >0 when violated.
+      3. Write unit tests proving constraints are never violated.
+      4. Write artifact with REQUIRED ARTIFACT FIELDS: schema, constraint_violation_rate, execution_time_ms, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1689-casal-vs-mcmc-scaling
+    title: "Exp 1689: CASAL vs MCMC Langevin verification on Phase 4 substrate"
+    deliverable: results/experiment_1689_casal_scaling.json
+    max_turns: 50
+    agent_type: claude
+    gated_on:
+      - upstream: exp1688-casal-primal-dual-sampler
+        artifact_field: acceptance_gate_passed
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Compare the new CASAL sampler with the baseline Langevin sampler on n=16 and n=32 continuous landscapes.
+      EXISTING CODE TO READ FIRST: python/carnot/phase3/continuous_ebm.py, results/experiment_1681_phase4_scaling.json
+      TASK: Run both samplers and measure convergence speed and constraint satisfaction.
+      CONCRETE STEPS:
+      1. Instantiate n=16 and n=32 continuous models.
+      2. Run Langevin and CASAL for 1000 steps.
+      3. Compare final energy and strict constraint violation counts.
+      4. Write artifact with REQUIRED ARTIFACT FIELDS: schema, casal_energy, langevin_energy, speedup_ratio, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1690-verify-repair-casal
+    title: "Exp 1690: Integrate CASAL as Fast-Path Tier in VerifyRepairPipeline"
+    deliverable: results/experiment_1690_verify_repair_casal.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Integrate CASAL into the main pipeline.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Add a CASALTier to the VerifyRepairPipeline for continuous attributes.
+      CONCRETE STEPS:
+      1. Implement `CASALTier` matching the Tier API.
+      2. Insert it into the pipeline configuration.
+      3. Test it on a mock response.
+      4. Write artifact with REQUIRED ARTIFACT FIELDS: schema, integration_successful, latency_ms, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1691-ebft-loss-jax
+    title: "Exp 1691: Implement EBFT loss function in JAX"
+    deliverable: results/experiment_1691_ebft_loss.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Energy-Based Fine-Tuning (EBFT, arXiv:2603.12248) uses a feature-matching objective to implicitly define an energy function over sequences.
+      EXISTING CODE TO READ FIRST: python/carnot/training/
+      TASK: Implement the EBFT loss function.
+      CONCRETE STEPS:
+      1. Implement `ebft_loss(model_features, target_features)` in JAX.
+      2. Add a simple test verifying gradients flow correctly.
+      3. Write artifact with REQUIRED ARTIFACT FIELDS: schema, loss_implemented, gradients_valid, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1692-ebft-autoresearch-loop
+    title: "Exp 1692: Run EBFT continuous self-learning loop using Gemma 4"
+    deliverable: results/experiment_1692_ebft_loop.json
+    max_turns: 100
+    agent_type: claude
+    gated_on:
+      - upstream: exp1691-ebft-loss-jax
+        artifact_field: acceptance_gate_passed
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Run the first full iteration of the continuous self-learning loop using EBFT. MODEL_SPECS must include unsloth/gemma-4-26B-A4B-it-GGUF.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
+      TASK: Execute an autoresearch loop using Gemma 4 to fine-tune a subset of parameters against a held-out constraint set via EBFT.
+      CONCRETE STEPS:
+      1. Load unsloth/gemma-4-26B-A4B-it-GGUF (or Qwen3.6-35B-A3B-GGUF).
+      2. Apply the EBFT loss on a small dataset of verification trajectories.
+      3. Measure the energy delta on the validation set.
+      4. Write artifact with REQUIRED ARTIFACT FIELDS: schema, baseline_energy, final_energy, energy_delta, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1693-transpile-ebft-rust
+    title: "Exp 1693: Transpile JAX EBFT/CASAL structures to Rust"
+    deliverable: results/experiment_1693_transpile_rust.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: The PRD autoresearch loop requires transpiling successful JAX implementations to Rust for performance.
+      EXISTING CODE TO READ FIRST: crates/carnot-samplers/
+      TASK: Port the CASAL sampler and EBFT loss core structures to Rust.
+      CONCRETE STEPS:
+      1. Implement `casal_sample` in `carnot-samplers`.
+      2. Write Rust tests confirming numeric equivalence with JAX.
+      3. Write artifact with REQUIRED ARTIFACT FIELDS: schema, transpilation_success, numerical_equivalence, rust_speedup, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1694-sinekan-implementation
+    title: "Exp 1694: Implement SineKAN substitute for KAEMEnergy splines"
+    deliverable: results/experiment_1694_sinekan.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: To accelerate KAEMEnergy (Exp 447), replace B-spline inverse-transform sampling with a periodic sine grid (SineKAN).
+      EXISTING CODE TO READ FIRST: python/carnot/models/kaem_energy.py
+      TASK: Implement `SineKANLayer` in JAX.
+      CONCRETE STEPS:
+      1. Implement the re-weighted sine functions as an alternative to `UnivariateKAEMLayer`.
+      2. Expose an exact sampling method.
+      3. Write artifact with REQUIRED ARTIFACT FIELDS: schema, sinekan_implemented, exact_sampling_supported, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1695-benchmark-sinekan
+    title: "Exp 1695: Benchmark SineKAN vs KAEMEnergy baseline"
+    deliverable: results/experiment_1695_sinekan_benchmark.json
+    max_turns: 50
+    agent_type: claude
+    gated_on:
+      - upstream: exp1694-sinekan-implementation
+        artifact_field: acceptance_gate_passed
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Measure the speedup of SineKAN over the original B-spline KAEMEnergy on a standard verification workload.
+      EXISTING CODE TO READ FIRST: python/carnot/models/kaem_energy.py
+      TASK: Benchmark the new implementation.
+      CONCRETE STEPS:
+      1. Run benchmark_kaem_vs_mcmc with both the old KAEMEnergy and the new SineKAN.
+      2. Measure wall-clock latency per 1000 samples.
+      3. Write artifact with REQUIRED ARTIFACT FIELDS: schema, baseline_latency_ms, sinekan_latency_ms, speedup_ratio, acceptance_gate_passed.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1696-milestone-170-retro
+    title: "Exp 1696: Milestone .170 Retrospective"
+    deliverable: results/experiment_1696_retro.json
+    max_turns: 50
+    agent_type: claude
+    prompt: |
+      CONTEXT: Close out .170.
+      EXISTING CODE TO READ FIRST: results/experiment_1685_pypi_publish_actual.json ... results/experiment_1695_sinekan_benchmark.json
+      TASK: Review all tasks from .170 and document the hypotheses, outcomes, and next steps.
+      CONCRETE STEPS:
+      1. Summarize the success/failure of CASAL, EBFT continuous self-learning, and SineKAN acceleration.
+      2. Record hardware integration progress.
+      3. Write artifact with REQUIRED ARTIFACT FIELDS: schema, milestone, tasks_summary, gates_passed_count, gates_failed_count, actual_agent_backend_distribution, honest_verdict.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.

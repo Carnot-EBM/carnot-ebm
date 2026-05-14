@@ -1,3 +1,28 @@
+## 2026-05-14 Post-.169 Planning Sweep (Milestone 2026.05.170)
+
+This sweep was run after milestone `.169` completed. The literature search revealed new 2025-2026 papers focusing on Energy Matching, Energy-Based Fine-Tuning, hard constraints with Split Augmented Langevin Sampling, and specialized KAN architectures (SineKAN, FEKAN).
+
+### CASAL: Strictly Constrained Generative Modeling via Split Augmented Langevin Sampling
+- **Paper:** "CASAL" (Blanke et al., arXiv:2505.18017).
+- **What:** Introduces a primal-dual sampling algorithm enforcing hard mathematical constraints in generative models, using variational formulation of Langevin dynamics and Lagrangian duality.
+- **Relevance to Carnot:** Extends our continuous Langevin samplers (Phase 3/4) to guarantee zero-false-accept hard constraint satisfaction without needing an external solver rejection step.
+
+### Energy-Based Fine-Tuning of Language Models (EBFT)
+- **Paper:** "Matching Features, Not Tokens: Energy-Based Fine-Tuning of Language Models" (Jelassi et al., arXiv:2603.12248).
+- **What:** Uses a feature-matching objective that implicitly defines an energy function over entire sequences, providing dense semantic feedback during training without a separate task-specific verifier.
+- **Relevance to Carnot:** Supports the Continuous Self-Learning loop by providing an EBM-native fine-tuning loss for the LLM solver component that aligns with the verification energy.
+
+### Energy Matching (Unifying Flow Matching and EBMs)
+- **Paper:** "Energy Matching: Unifying Flow Matching and Energy-Based Models" (Balcerak et al., arXiv:2504.10612) and GEM (Graph Energy Matching, arXiv:2603.23398).
+- **What:** A framework that unifies flow matching with EBMs, allowing integration of partial observations and priors via scalar energy terms. GEM extends this to discrete graph domains.
+- **Relevance to Carnot:** Suggests a bridge between Carnot's continuous energy samplers and flow matching, potentially accelerating Phase 3's continuous-to-discrete mappings.
+
+### KAN Architectural Variants (FEKAN, HKAN, SineKAN, Cheby-KAN)
+- **Papers:** FEKAN (2026), HKAN (2026), SineKAN (Jan 2025), Cheby-KAN (May 2025).
+- **What:** A proliferation of Kolmogorov-Arnold Network variants replacing B-splines with periodic sines, feature-enriched curves, or hierarchical backprop-free training to improve speed and convergence.
+- **Relevance to Carnot:** Carnot's KAEMEnergy (Exp 447) fast-path can potentially be 10x accelerated by replacing the inverse-transform sampling with SineKAN or HKAN variants, fitting well into the Phase 2 asymptotic hardware mandate.
+
+
 ## 2026-05-14 Post-.163 Planning Sweep (Milestone 2026.05.164)
 
 This sweep was run after milestone `.163` completed. The literature search revealed major advances in Energy-Based Transformers (EBTs), hard constraint projection layers for general nonlinear constraints, and training-free energy-guided decoding for structural and physical alignment.
