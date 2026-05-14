@@ -1,0 +1,159 @@
+{
+  "schema": "carnot.milestone_retro.v1",
+  "experiment": 1696,
+  "milestone": "2026.05.170",
+  "milestone_title": "CASAL Hard Constraints, EBFT Continuous Self-Learning, and SineKAN Acceleration",
+  "run_date": "2026-05-14",
+  "task_count": 11,
+  "gates_passed_count": 9,
+  "gates_failed_count": 2,
+  "actual_agent_backend_distribution": {
+    "codex": 7,
+    "claude": 4,
+    "blocked_before_launch": 2
+  },
+  "tasks_summary": [
+    {
+      "id": "exp1685-pypi-publish-actual",
+      "title": "PyPI publish actual (Phase 1 ship-track)",
+      "hypothesis": "The Phase 1 ship gate can be cleared by pushing the carnot-ebm package to PyPI following the successful dry-run in Exp 1683.",
+      "outcome": "BLOCKED by conductor pre-gate: 2 prior failures (exp1683, exp2103) match this scope but the roadmap task had no prior_failures field. Rerun discipline enforcement prevented launch.",
+      "outcome_verdict": "blocked_gate_check_failed",
+      "gate_passed": false,
+      "lesson": "PyPI publish must carry prior_failures entries citing exp1683 and exp2103 before the conductor will launch it. The next planner must include the required prior_failures block in the task YAML."
+    },
+    {
+      "id": "exp1686-thrml-bias-correction",
+      "title": "THRML/Carnot joint bias correction",
+      "hypothesis": "The magnetization-mean bias identified in Exp 1682 as systematic (linear in beta) can be corrected by a simple OLS-derived formula applied per-sample.",
+      "outcome": "COMPLETE. OLS fit from Exp 1682 sweep_b data gave correction(beta) = 0.177 - 0.114*beta. At beta=1.2 the bias shrank from -0.041 to +0.0005 (81.7x reduction). 9/9 tests passed. Adversarial flag: prior_experiment=1682 and random_seed=1682 match numerically (intentional seeding, not a bug).",
+      "outcome_verdict": "complete: bias_correction_implemented_and_verified_on_10k_curie_weiss",
+      "gate_passed": true,
+      "lesson": "Systematic bias in finite-N Ising samplers is correctable with a lightweight OLS formula. The correction is now part of the sampler API as corrected_magnetization_mean()."
+    },
+    {
+      "id": "exp1687-kv260-vivado-synthesis",
+      "title": "KV260 Vivado Synthesis and Discrete SB RTL Lint",
+      "hypothesis": "Vivado synthesis can generate a bitstream for the Discrete SB RTL on the KV260 target.",
+      "outcome": "BLOCKED by conductor pre-gate: 9 prior failures (including exp1649, exp584, exp624, exp701, exp776) for Vivado-not-installed blocked launch. No prior_failures entry was present. This is a persistent environmental blocker: Vivado is not installed on the dev machine.",
+      "outcome_verdict": "blocked_gate_check_failed",
+      "gate_passed": false,
+      "lesson": "KV260 Vivado synthesis cannot be re-proposed without (a) Vivado installed or a CI runner with it, and (b) a prior_failures block in the task YAML. This track is effectively retired until the tool is available."
+    },
+    {
+      "id": "exp1688-casal-primal-dual-sampler",
+      "title": "CASAL Primal-Dual sampler implementation in JAX",
+      "hypothesis": "A Split Augmented Langevin (CASAL) sampler can be implemented in JAX with a hard-constraint gate that never allows constraint violations.",
+      "outcome": "COMPLETE. casal_sample() implemented in JAX. constraint_violation_rate=0.0 reported at the API level (hard rejection gate ensures this). Adversarial flag: GATE_PASSED_WITHOUT_DATA raised because constraint_violation_rate=0 could indicate gate not exercised. The implementation is correct but the test corpus should include cases where initial states violate constraints.",
+      "outcome_verdict": "complete",
+      "gate_passed": true,
+      "lesson": "The CASAL hard-rejection gate works but the zero-violation-rate metric is misleading: it reflects the gate's definition, not empirical absence of constraint violations. Exp 1689 reveals the practical consequence."
+    },
+    {
+      "id": "exp1689-casal-vs-mcmc-scaling",
+      "title": "CASAL vs MCMC Langevin scaling comparison on n=16 and n=32",
+      "hypothesis": "CASAL converges to lower-energy states than Langevin while maintaining zero constraint violations at n=16 and n=32.",
+      "outcome": "COMPLETE with mixed findings. CASAL finished all 1000 steps without crashing (acceptance_gate_passed=True) but speedup_ratio=0.0 and CASAL energy was higher than Langevin at both scales (n16: CASAL=0.167 vs Langevin=-0.226; n32: CASAL=0.989 vs Langevin=-0.635). Root cause: CASAL's strict rejection gate, combined with a standard-normal initial state that already violates constraints, caused all proposed moves to be rejected. CASAL stuck at initial state for all 1000 steps. Langevin (tanh squashing, no hard gate) converged freely. Adversarial flag: speedup_ratio=0 is flagged GATE_PASSED_WITHOUT_DATA.",
+      "outcome_verdict": "complete: CASAL vs Langevin scaling comparison finished; n16_casal=0.1668_vs_langevin=-0.2264; n32_casal=0.9892_vs_langevin=-0.6351; speedup_ratio=0.0000; acceptance=True",
+      "gate_passed": true,
+      "lesson": "CASAL needs constraint-feasible initial states. The hard-rejection gate is too strict when the starting point is infeasible. Next step: add a feasibility-projection warm-start before CASAL sampling, then re-benchmark."
+    },
+    {
+      "id": "exp1690-verify-repair-casal",
+      "title": "Integrate CASAL as Fast-Path Tier in VerifyRepairPipeline",
+      "hypothesis": "CASALTier can be inserted into the VerifyRepairPipeline with latency comparable to existing tiers.",
+      "outcome": "COMPLETE. integration_successful=True, latency_ms=1.5. Note: the artifact schema is minimal and lacks spec_refs and methodology fields; adversarial verification would likely flag this as METHODOLOGY_MISSING.",
+      "outcome_verdict": "complete",
+      "gate_passed": true,
+      "lesson": "Pipeline integration succeeded but the artifact quality is below the adversarial-check bar. Future integration tasks should emit full schema fields including spec_refs, random_seed, and methodology_note."
+    },
+    {
+      "id": "exp1691-ebft-loss-jax",
+      "title": "Implement EBFT loss function in JAX",
+      "hypothesis": "The EBFT feature-matching objective can be implemented as a differentiable JAX loss with valid gradients.",
+      "outcome": "COMPLETE. loss_implemented=True, gradients_valid=True. Artifact schema is minimal (schema='1.0', no spec_refs or duration). Adversarial check would likely flag METHODOLOGY_MISSING.",
+      "outcome_verdict": "complete",
+      "gate_passed": true,
+      "lesson": "EBFT loss gradient flow confirmed. Artifact completeness should be improved in follow-on iterations to include spec_refs and numerical gradient-check values."
+    },
+    {
+      "id": "exp1692-ebft-autoresearch-loop",
+      "title": "EBFT continuous self-learning loop using Gemma 4",
+      "hypothesis": "Running one EBFT loop iteration on a surrogate EBM corpus will decrease validation energy, demonstrating the mechanism before scaling to real GGUF models.",
+      "outcome": "COMPLETE on surrogate corpus. baseline_energy=1.555, final_energy=0.003, energy_delta=1.553 (large improvement). HOWEVER: unsloth/gemma-4-26B-A4B-it-GGUF was NOT actually loaded (gguf_model_loaded=False, llama-cpp-python not available in CI). The run used a synthetic surrogate quadratic EBM. Duration 1.85s confirms no real LLM was invoked. The energy improvement is real for the surrogate but does not validate the EBFT mechanism on actual LLM features.",
+      "outcome_verdict": "complete: EBFT autoresearch loop decreased validation energy on surrogate corpus; acceptance gate passed (energy_delta=1.55 > 0)",
+      "gate_passed": true,
+      "lesson": "CAUTION: The acceptance gate passed on a surrogate that bypassed the real GGUF model. This is a methodology gap. A follow-on task must run EBFT with the actual Gemma 4 GGUF loaded to validate the claim. The surrogate run establishes the gradient-flow mechanism only."
+    },
+    {
+      "id": "exp1693-transpile-ebft-rust",
+      "title": "Transpile JAX EBFT/CASAL structures to Rust",
+      "hypothesis": "The CASAL sampler and EBFT loss can be ported to Rust with numeric equivalence and measurable speedup.",
+      "outcome": "COMPLETE. transpilation_success=True, numerical_equivalence=True, rust_speedup=2.5. Artifact schema is minimal; no spec_refs, no methodology_note, no random_seed or reproducibility_checksum. Adversarial check would flag METHODOLOGY_MISSING.",
+      "outcome_verdict": "success: Ported CASAL sampler and EBFT loss core structures to Rust successfully.",
+      "gate_passed": true,
+      "lesson": "Rust port completed with 2.5x speedup. Artifact quality needs improvement for paper-v6 citation eligibility. The numeric equivalence claim needs a formal tolerance bound and a test that enforces it in CI."
+    },
+    {
+      "id": "exp1694-sinekan-implementation",
+      "title": "Implement SineKAN substitute for KAEMEnergy B-splines",
+      "hypothesis": "Replacing B-spline inverse-transform sampling with a periodic sine grid (SineKAN) will simplify implementation and enable exact sampling.",
+      "outcome": "COMPLETE. sinekan_implemented=True, exact_sampling_supported=True. Artifact schema is minimal.",
+      "outcome_verdict": "complete",
+      "gate_passed": true,
+      "lesson": "SineKAN layer implemented and gates unlocked for the Exp 1695 benchmark."
+    },
+    {
+      "id": "exp1695-benchmark-sinekan",
+      "title": "Benchmark SineKAN vs KAEMEnergy baseline",
+      "hypothesis": "SineKAN periodic sine grid achieves at least 1.5x speedup over B-spline KAEMEnergy per 1000 samples.",
+      "outcome": "COMPLETE. baseline_latency_ms=348.8, sinekan_latency_ms=124.5, speedup_ratio=2.80x (gate >= 1.5x). CPU-only JAX, n_vars=20, n_samples=1000, n_hidden_freqs=8, random_seed=42. Gate passed. This is the milestone's headline positive result.",
+      "outcome_verdict": "complete: SineKAN achieved 2.80x speedup over B-spline baseline (gate >= 1.5x)",
+      "gate_passed": true,
+      "lesson": "SineKAN is a viable replacement for B-spline inverse-transform sampling with 2.80x wall-clock speedup on CPU. Next step: validate on GPU and measure KL divergence to confirm distributional equivalence."
+    }
+  ],
+  "casal_summary": {
+    "hypothesis": "CASAL hard-constraint sampling can outperform Langevin in constrained continuous landscapes.",
+    "outcome": "Partial. CASAL implementation is correct (constraint_violation_rate=0 via hard-rejection gate, pipeline integration working, Rust port complete with 2.5x speedup). However, the sampler fails to make progress when started from a constraint-infeasible initial state, which is the common case on standard-normal initialization. speedup_ratio=0.0 at both n=16 and n=32 relative to Langevin.",
+    "next_step": "Add feasibility-projection warm-start before CASAL sampling. Re-run Exp 1689 with constraint-feasible initial states and measure actual energy-convergence improvement."
+  },
+  "ebft_summary": {
+    "hypothesis": "EBFT loss enables continuous self-learning by fine-tuning EBM parameters to distinguish expert trajectories from rollouts.",
+    "outcome": "Mechanism validated on surrogate (energy_delta=1.55 on synthetic quadratic EBM). The actual GGUF model (gemma-4-26B-A4B-it-GGUF) was NOT loaded. The EBFT loss gradient flow and the JAX/Rust implementation are confirmed correct, but the end-to-end claim requires a real LLM run.",
+    "next_step": "Run Exp 1692 variant with llama-cpp-python installed and gemma-4-26B-A4B-it-GGUF loaded. Gate: energy_delta > 0 on real LLM features, duration_s > 60 (GGUF load + inference)."
+  },
+  "sinekan_summary": {
+    "hypothesis": "Periodic sine grid (SineKAN) is faster than B-spline inverse-transform for KAEMEnergy sampling.",
+    "outcome": "Confirmed. 2.80x speedup (gate 1.5x) on CPU at n_vars=20, n_samples=1000. Gate passed cleanly with full methodology: random_seed=42, JAX_PLATFORMS=cpu, warmup excluded from timing.",
+    "next_step": "Validate distributional equivalence (KL divergence between SineKAN and B-spline samples) to confirm speedup does not come at accuracy cost. Benchmark on GPU."
+  },
+  "hardware_integration_progress": {
+    "kv260_fpga": "BLOCKED for 9th consecutive attempt due to Vivado-not-installed. This task is effectively retired until Vivado is available on CI or the dev machine. Recommend adding to ops/exclusion_manifest.yaml pending hardware availability.",
+    "thrml_bias_correction": "COMPLETE. Systematic beta-linear bias corrected in parallel_ising.py. 81.7x bias reduction at beta=1.2.",
+    "rust_transpilation": "COMPLETE. CASAL sampler + EBFT loss ported to carnot-samplers crate with 2.5x speedup and claimed numerical equivalence."
+  },
+  "adversarial_flags_summary": {
+    "exp1686": "TAUTOLOGY: prior_experiment and random_seed both equal 1682 (intentional seeding, documented)",
+    "exp1688": "GATE_PASSED_WITHOUT_DATA: constraint_violation_rate=0 reflects gate definition, not empirical measurement",
+    "exp1689": "GATE_PASSED_WITHOUT_DATA: speedup_ratio=0 is a genuine finding (CASAL stuck at infeasible initial state)",
+    "exp1692": "DURATION_TOO_SHORT: 1.85s with GGUF model identified but not loaded; flag is expected for surrogate runs"
+  },
+  "milestone_quality_notes": [
+    "Exps 1688, 1690, 1691, 1693, 1694 have minimal artifact schemas lacking spec_refs, methodology_note, random_seed, and duration_s. Not paper-v6 eligible without retroactive corrigenda.",
+    "Exp 1692 EBFT loop validated mechanism only on surrogate; real LLM validation is mandatory before claiming EBFT works on LLM features.",
+    "Exp 1685 and 1687 blocked by rerun discipline enforcement — the planner must include prior_failures blocks in the next proposal for both tasks.",
+    "Exp 1695 SineKAN benchmark is the only headline-eligible result: full methodology, random_seed, JAX reproducibility, gate passed cleanly."
+  ],
+  "gates_passed_ids": ["exp1686", "exp1688", "exp1689", "exp1690", "exp1691", "exp1692", "exp1693", "exp1694", "exp1695"],
+  "gates_failed_ids": ["exp1685", "exp1687"],
+  "next_milestone_priorities": [
+    "Re-propose exp1685 PyPI publish with prior_failures block citing exp1683 and exp2103.",
+    "Add feasibility-projection warm-start to CASAL; re-run Exp 1689 to measure real speedup.",
+    "Run EBFT loop with real Gemma 4 GGUF loaded (requires llama-cpp-python in environment).",
+    "Validate SineKAN distributional equivalence via KL divergence measurement.",
+    "Add exp1687 KV260 Vivado synthesis to exclusion_manifest.yaml pending tool availability.",
+    "Improve artifact completeness for Exps 1688/1690/1691/1693/1694 (spec_refs, methodology_note, random_seed) before any paper-v6 citation."
+  ],
+  "honest_verdict": "complete: milestone .170 retrospective written; 9/11 gates passed (2 blocked by rerun discipline enforcement); headline result is SineKAN 2.80x speedup; CASAL and EBFT require follow-on validation runs"
+}
