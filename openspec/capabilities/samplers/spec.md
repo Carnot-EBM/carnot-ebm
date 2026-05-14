@@ -430,3 +430,20 @@ Sub-requirements:
 **Given** the bias investigation script
 **When** it executes
 **Then** it outputs the JSON artifact with required sweeps and a fit verdict.
+
+### REQ-SAMPLE-1688: CASAL Sampler Implementation
+
+Carnot MUST provide a `casal_sample(energy_fn, constraint_fn, init_state, steps)` implementation in JAX that uses Split Augmented Langevin Sampling (arXiv:2505.18017) for strictly constrained generative modeling.
+
+Sub-requirements:
+- REQ-SAMPLE-1688-1: The `constraint_fn` SHALL return 0 when satisfied and >0 when violated.
+- REQ-SAMPLE-1688-2: `casal_sample` SHALL enforce hard constraints such that the output state never violates them (violation rate = 0.0).
+- REQ-SAMPLE-1688-3: The experiment script SHALL write `results/experiment_1688_casal_sampler.json` containing the fields: `schema`, `constraint_violation_rate`, `execution_time_ms`, and `acceptance_gate_passed`.
+
+### SCENARIO-SAMPLE-1688: CASAL Sampler respects constraints
+
+**Given** an energy function and a set of hard constraints
+**When** the CASAL sampler is executed
+**Then** the constraint violation rate is 0.0
+**And** the required JSON artifact is produced.
+
