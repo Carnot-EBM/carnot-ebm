@@ -5666,3 +5666,16 @@ with `baseline_energy`, `final_energy`, `energy_delta`, and `acceptance_gate_pas
 **And** `acceptance_gate_passed` is True
 
 **Spec traces:** REQ-LOOP-001
+
+## REQ-CSL-1778: Establish Continuous Self-Learning Baseline
+
+**Given** the need for continuous self-learning
+**When** the baseline script evaluates traces
+**Then** it MUST apply current static skill scoring
+**And** establish a baseline for retention/forgetting
+**And** the output artifact MUST include `schema: "carnot.csl.baseline.v1"` and `baseline_soundness_mistakes` (int).
+
+### SCENARIO-CSL-1778: Baseline evaluation produces sound output
+**Given** multi-turn traces are available
+**When** the CSL baseline evaluator runs
+**Then** it produces a JSON artifact with `schema` equal to "carnot.csl.baseline.v1" and `baseline_soundness_mistakes` as an integer.

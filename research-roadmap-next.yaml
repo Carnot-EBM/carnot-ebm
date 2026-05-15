@@ -91,10 +91,10 @@ tasks:
         - reproducibility_checksum: sha256 of (exp1715 artifact path +
           paper-v6 §3 edit + research-references diff + known-issues edit)
         - preconditions_checked: list
-        - model_specs: {source_artifact: "exp1715",
+        - model_specs: {{source_artifact: "exp1715",
           files_edited: ["paper-v6 §3", "research-references.md",
           "ops/known-issues.md"], word_count_added: int,
-          affected_prior_experiments: ["exp1678", "exp1681", "exp1693"]}
+          affected_prior_experiments: ["exp1678", "exp1681", "exp1693"]}}
         - n_samples: 1
         - n_samples_justification: "Codification task; n=1 codification artifact."
         - paper_v6_section_3_corrigendum_word_count: int
@@ -190,9 +190,9 @@ tasks:
         - reproducibility_checksum: sha256 of (corpus hash + probe weights
           from exp1694 + ensemble code git_rev)
         - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
           n_test: 60, k_baseline: 15, k_with_nla: 16,
-          probe_weights_from: "exp1694"}
+          probe_weights_from: "exp1694"}}
         - n_samples: 60
         - n_samples_justification: "60 held-out test examples gives Wilson
           95% CI of width ~0.20 on per-k pass rate; lift CI width ~0.28.
@@ -249,7 +249,7 @@ tasks:
         - python/carnot/phase4/ (current alpha_t implementation)
         - arXiv:2605.12536 (cite only; abstract sufficient for derivation
           starting point — outer-loop notes that the maximum-caliber
-          variational form is alpha_t' = -ln Z + sum_i E[A_i log p(s_t|s_{t-1})])
+          variational form is alpha_t' = -ln Z + sum_i E[A_i log p(s_t|s_{{t-1}})])
 
       TASK: Implement alpha_t' replacement + re-run the ablation.
 
@@ -294,16 +294,16 @@ tasks:
         - random_seed: 171821 (NOT 1721 or 4)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {n_spins: 32, ensemble_k_total: 6,
+        - model_specs: {{n_spins: 32, ensemble_k_total: 6,
           random_fraction_grid: [0, 0.333, 0.667, 1.0], mld_steps: 100,
           n_seeds: 30, n_cells: 4,
-          alpha_t_variant: "max_caliber_v1"}
+          alpha_t_variant: "max_caliber_v1"}}
         - n_samples: 12000
         - n_samples_justification: "30 seeds × 100 MLD × 4 cells. Same
           as exp1715 for apples-to-apples comparison."
-        - random_fraction_grid_results_alpha_t_prime: list of {random_fraction,
+        - random_fraction_grid_results_alpha_t_prime: list of {{random_fraction,
           inf_t_alpha_k6_prime, inf_t_alpha_k1_prime, delta_alpha_prime,
-          delta_alpha_prime_bootstrap_ci_95}
+          delta_alpha_prime_bootstrap_ci_95}}
         - monotonic_decay_observed_alpha_t_prime: bool
         - artifact_detected_alpha_t_prime: bool
         - alpha_t_prime_implementation_file: "python/carnot/phase4/alpha_t_max_caliber.py"
@@ -371,13 +371,13 @@ tasks:
         - random_seed: 171822
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestone: "2026.05.177",
+        - model_specs: {{audit_target_milestone: "2026.05.177",
           adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
+          artifacts_scanned: int, artifacts_flagged: int}}
         - n_samples: int (count of flagged artifacts)
         - n_samples_justification: "Audit task; n is the flagged-artifact count."
-        - audit_outcomes: dict experiment_id -> {classification, rationale,
-          follow_up_action}
+        - audit_outcomes: dict experiment_id -> {{classification, rationale,
+          follow_up_action}}
         - corrigenda_added: list of artifact paths amended
         - acceptance_gate_passed: bool (all flagged classified)
         - acceptance_gate_criteria: "All .177 flagged artifacts classified
