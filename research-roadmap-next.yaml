@@ -80,17 +80,17 @@ tasks:
         - random_seed: 172681 (NOT 1781 or 90)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
           slow_weights: ["base_llm", "k=16_verifier_ensemble"],
           fast_weights: "verifier_output_summary_context",
           baseline: "fr11_verifier_as_reward",
           tasks: ["gsm8k_30", "bbh_30", "math_30"],
-          continual_switch_order: "A_B_C_then_A"}
+          continual_switch_order: "A_B_C_then_A"}}
         - n_samples: 90
         - n_samples_justification: "30 per task × 3 tasks. Wilson 95% CI
           width ~0.30 per pass rate, matching paper's eval granularity."
-        - fast_slow_passrate_per_task: dict task -> {passrate, wilson_95_ci}
-        - fr11_passrate_per_task: dict task -> {passrate, wilson_95_ci}
+        - fast_slow_passrate_per_task: dict task -> {{passrate, wilson_95_ci}}
+        - fr11_passrate_per_task: dict task -> {{passrate, wilson_95_ci}}
         - sample_efficiency_ratio: float
         - kl_drift_fast_slow, kl_drift_fr11, kl_drift_ratio: float
         - plasticity_fast_slow, plasticity_fr11: float
@@ -164,10 +164,10 @@ tasks:
         - random_seed: 172682
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {package_name: "carnot-ebm", version: str,
+        - model_specs: {{package_name: "carnot-ebm", version: str,
           publish_target: "pypi" | "testpypi" | "blocked",
           wheel_filename: str, sdist_filename: str,
-          wheel_sha256: str, sdist_sha256: str}
+          wheel_sha256: str, sdist_sha256: str}}
         - n_samples: 1
         - n_samples_justification: "Ship task."
         - pypi_url: str or null
@@ -225,12 +225,12 @@ tasks:
         - random_seed: 172683
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestones: ["2026.05.184",
+        - model_specs: {{audit_target_milestones: ["2026.05.184",
           "2026.05.185"], adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
+          artifacts_scanned: int, artifacts_flagged: int}}
         - n_samples: int
         - n_samples_justification: "Audit; n is flagged-artifact count."
-        - audit_outcomes: dict experiment_id -> {classification, rationale}
+        - audit_outcomes: dict experiment_id -> {{classification, rationale}}
         - corrigenda_added: list
         - acceptance_gate_passed: bool
         - acceptance_gate_criteria: "All flagged classified; corrigenda appended."
@@ -303,14 +303,14 @@ tasks:
         - random_seed: 172684
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {methods_compared: ["ensemble_alpha_original",
+        - model_specs: {{methods_compared: ["ensemble_alpha_original",
           "thermodynamic_metric_v1", "fast_slow_variant_v1"],
           comparison_criteria: ["substrate_discriminability",
-          "sample_efficiency", "kl_drift", "implementation_cost"]}
+          "sample_efficiency", "kl_drift", "implementation_cost"]}}
         - n_samples: 3
         - n_samples_justification: "Comparison; n is method count."
-        - method_scorecards: dict method -> dict criterion -> {pass: bool,
-          rationale: str}
+        - method_scorecards: dict method -> dict criterion -> {{pass: bool,
+          rationale: str}}
         - recommended_canonical_method: str
         - known_issues_entry_added: bool
         - acceptance_gate_passed: bool

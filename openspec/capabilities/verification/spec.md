@@ -2885,3 +2885,12 @@ The system shall implement QAOD orthogonal decomposition of answer representatio
 ### SCENARIO-VERIFY-1740: QAOD vs NLA Head-to-Head
 
 Given the exp1716 60-example test corpus, when QAOD is evaluated against NLA-SAE, then it reports head-to-head TPR/FPR in results/experiment_1740_qaod_vs_nla_head_to_head.json.
+
+### REQ-VERIFY-1771: SKM Projection Baseline
+
+The system shall implement an SKM-style iterative projection baseline for Carnot's linear constraints on 50 linear equality/inequality constraints from the CCTU benchmark. The SKM randomized projection algorithm MUST verify that post-projection outputs achieve strictly zero constraint violations.
+The artifact MUST be written to `results/experiment_1771_tskm_projection.json` with schema `carnot.tskm_projection.v1`, run_date `20260515`, boolean `zero_violations_achieved`, float `mean_projection_steps`, and an `honest_verdict`.
+
+### SCENARIO-VERIFY-1771: SKM Iterative Projection Achieves Zero Violations
+
+Given 50 CCTU linear constraints, when the SKM randomized projection algorithm executes, then post-projection outputs achieve strictly zero constraint violations and the required JSON artifact is produced.

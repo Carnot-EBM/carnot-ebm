@@ -392,6 +392,61 @@ def _percentile(values: Sequence[int], percentile: float) -> float:
     return ordered[lower] * (1.0 - weight) + ordered[upper] * weight
 
 
+def project_skm_randomized(
+    system: LinearConstraintSystem,
+    start: Sequence[float],
+    *,
+    max_iterations: int = 1000,
+    tolerance: float = TOLERANCE,
+    seed: int = 42,
+) -> ProjectionResult:
+    """Project ``start`` onto ``system`` with a randomized Kaczmarz-Motzkin loop.
+
+    Each iteration picks a violated row uniformly at random and projects onto it.
+    
+    Spec: REQ-VERIFY-1771.
+    """
+    rng = np.random.default_rng(seed)
+    x = np.asarray(start, dtype=float).copy()
+    history: list[float] = []
+    iterations = 0
+
+    while iterations <= max_iterations:
+        violations = system.violations(x)
+        max_violation = float(np.max(violations))
+        history.append(max_violation)
+
+        if max_violation <= tolerance:
+            return ProjectionResult(
+                vector=tuple(float(value) for value in x),
+                iterations=iterations,
+                converged=True,
+                max_constraint_violation=max_violation,
+                violation_history=tuple(history),
+            )
+
+        if iterations == max_iterations:
+            return ProjectionResult(
+                vector=tuple(float(value) for value in x),
+                iterations=iterations,
+                converged=False,
+                max_constraint_violation=max_violation,
+                violation_history=tuple(history),
+            )
+
+        violated_indices = np.where(violations > tolerance)[0]
+        if len(violated_indices) == 0:
+            break
+        row_index = int(rng.choice(violated_indices))
+
+        row = system.matrix[row_index]
+        overshoot = float(row @ x - system.bounds[row_index])
+        x = x - (overshoot / float(row @ row)) * row
+        iterations += 1
+
+    raise AssertionError("bounded SKM loop exited unexpectedly")  # pragma: no cover
+
+
 __all__ = [
     "HELPER_PATH",
     "REQUIRED_ARTIFACT_FIELDS",
@@ -404,4 +459,5 @@ __all__ = [
     "evaluate_toy_cases",
     "ising_linear_verdict",
     "project_skm",
+    "project_skm_randomized",
 ]
