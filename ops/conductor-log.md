@@ -3517,3 +3517,4 @@ IMPORTANT:
 | 2026-05-15 20:44 UTC | Phase 0: Fix broken pretests blocking conductor ex | OK | 81 passed, 1 warning in 5.51s |
 | 2026-05-15 20:46 UTC | Phase 0: Milestone .187 retrospective (Cascade Fai | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1798-fix-broken-pretests.success (actua |
 | 2026-05-15 20:48 UTC | Phase 0: Milestone .187 retrospective (Cascade Fai | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1798-fix-broken-pretests.success (actua |
+| 2026-05-15 20:50 UTC | Phase 0: Milestone .187 retrospective (Cascade Fai | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1798-fix-broken-pretests.success (actua |
