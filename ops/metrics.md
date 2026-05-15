@@ -2603,3 +2603,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-05-15T02:36:44Z | 2026-05-15T02:37:42Z | Write operational retrospective for milestone 2026.05.173 | TBD |
+
+## Session: 2026-05-15 Milestone 1719 Codification
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-15T07:22:14Z | 2026-05-15T07:22:35Z | Codify bijection invariance findings from experiment 1715 into paper-v6, research-references, and known-issues. Precondition check failed, paper-v6 section 3 not locatable. Created blocked artifact. | TBD |
