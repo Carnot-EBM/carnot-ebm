@@ -3263,3 +3263,4 @@ IMPORTANT:
 | 2026-05-15 04:17 UTC | Exp 1709: THRML+Carnot near-critical sampler failu | OK | 97 passed, 1 warning in 7.49s |
 | 2026-05-15 04:21 UTC | Exp 1710: Phase 4 alpha_t n-dependence adversarial | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1710_phase4_ |
 | 2026-05-15 04:26 UTC | Exp 1710: Phase 4 alpha_t n-dependence adversarial | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1710_phase4_ |
+| 2026-05-15 04:38 UTC | Exp 1710: Phase 4 alpha_t n-dependence adversarial | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
