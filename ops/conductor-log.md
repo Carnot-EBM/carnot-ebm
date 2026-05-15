@@ -3304,3 +3304,4 @@ IMPORTANT:
 | 2026-05-15 07:37 UTC | Exp 1720: NLA 16th verifier Task 4 (final) — ensem | OK | 145 passed, 1 warning in 5.89s |
 | 2026-05-15 07:45 UTC | Exp 1721: Phase 4 alpha_t replacement derivation f | OK | 81 passed, 1 warning in 5.53s |
 | 2026-05-15 07:51 UTC | Exp 1722: .177 findings audit + corrigenda | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
+| 2026-05-15 07:57 UTC | Exp 1722: .177 findings audit + corrigenda | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
