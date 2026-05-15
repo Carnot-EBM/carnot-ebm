@@ -3519,3 +3519,4 @@ IMPORTANT:
 | 2026-05-15 20:48 UTC | Phase 0: Milestone .187 retrospective (Cascade Fai | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1798-fix-broken-pretests.success (actua |
 | 2026-05-15 20:50 UTC | Phase 0: Milestone .187 retrospective (Cascade Fai | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1798-fix-broken-pretests.success (actua |
 | 2026-05-15 20:52 UTC | Phase 1: Carnot Fast-Slow Variant Prototype (arXiv | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1798-fix-broken-pretests.success (actua |
+| 2026-05-15 20:54 UTC | Phase 1: Carnot Fast-Slow Variant Prototype (arXiv | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1798-fix-broken-pretests.success (actua |
