@@ -641,3 +641,23 @@ It MUST evaluate complete end-to-end trace validity rates against the prior v5 b
 **And** produces a valid `results/experiment_1954_tri_sota_e2e_v6.json` artifact containing completion metrics.
 
 **Spec traces:** REQ-E2E-1954
+
+### REQ-BENCH-1771: Constraint-Aware Retrieval Module (CARM) Benchmark
+
+Carnot MUST provide a benchmark suite of unstructured instruction prompts and their ground truth deterministic constraint representations for the Constraint-Aware Retrieval Module (CARM).
+The suite MUST contain exactly 20 cases covering tool-use, arithmetic, and logic constraints.
+The generator script MUST write the deliverable to `results/experiment_1771_care_test_suite.json` and `results/carm_benchmark_cases.json` with `schema="carnot.carm.benchmark.v1"` and `num_cases=20`.
+
+**Acceptance criteria:**
+- Script generates the benchmark cases.
+- JSON output contains `schema`, `num_cases` (20), and an array of cases.
+- Cases cover tool-use, arithmetic, and logic.
+
+### SCENARIO-BENCH-1771: CARM Benchmark Suite Generation
+
+**Given** the need for a CARM benchmark
+**When** the benchmark generation script runs
+**Then** it produces a valid JSON artifact with the correct schema and case count
+**And** the generated test cases are successfully validated by the unit test suite.
+
+**Spec traces:** REQ-BENCH-1771
