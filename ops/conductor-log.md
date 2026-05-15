@@ -3344,3 +3344,4 @@ IMPORTANT:
 | 2026-05-15 11:57 UTC | Exp 1744: Milestone .180 Retrospective | OK | Deliverable already exists in repo |
 | 2026-05-15 11:57 UTC | Milestone 2026.05.181 activated | OK | 5 tasks queued |
 | 2026-05-15 12:02 UTC | Exp 1740: QAOD vs NLA-SAE head-to-head on shared g | OK | 81 passed, 1 warning in 5.89s |
+| 2026-05-15 12:11 UTC | Exp 1741: Phase 4 GENUINE substrate scaling sweep  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1741_phase4_ |
