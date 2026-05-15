@@ -3253,3 +3253,4 @@ IMPORTANT:
 | 2026-05-15 03:31 UTC | Exp 2108: Kona-Parity Sudoku Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2107-gradient-based-trace-editor) |
 | 2026-05-15 03:41 UTC | Exp 2110: Integration of PiNet with CASAL | OK | 97 passed, 1 warning in 7.44s |
 | 2026-05-15 03:43 UTC | Exp 2108: Kona-Parity Sudoku Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2107-gradient-based-trace-editor) |
+| 2026-05-15 03:48 UTC | Exp 2111: Energy-Based Fine-Tuning (EBFT) with Lat | OK | 81 passed, 1 warning in 5.26s |
