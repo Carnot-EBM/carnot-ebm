@@ -4068,3 +4068,9 @@ The Exp 1684 `.169` milestone retrospective workflow shall write `results/experi
 ### REQ-REPORT-1717: Findings Audit 1717
 
 The repository shall provide an audit script `scripts/audit_1717.py` that verifies experiments in the `.174` and `.175` ranges, classifies any adversarial flags, and appends a `corrigendum_2026_05_176_audit` to flagged artifacts. It must output `results/experiment_1717_findings_audit.json`.
+
+
+### REQ-REPORT-1796: Findings Audit 1796
+**Given** the artifact sources in `results/` for .186 and .187,
+**When** Exp 1796 runs,
+**Then** it writes all required REQ-REPORT-1796 fields, identifies flagged artifacts using `adversarial_verify.py`, applies correct classifications, appends corrigenda fields to the flagged artifacts, and produces an honest_verdict prefixed with `complete:`.
