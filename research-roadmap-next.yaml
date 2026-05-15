@@ -86,9 +86,9 @@ tasks:
         - reproducibility_checksum: sha256 of (corpus hash + NLA weights
           + QAOD implementation git_rev)
         - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
           n_test: 60, probes_compared: ["nla_sae_v3", "qaod_v1"],
-          test_corpus_from: "exp1716"}
+          test_corpus_from: "exp1716"}}
         - n_samples: 60
         - n_samples_justification: "Same 60-example corpus as exp1716
           for apples-to-apples comparison. Wilson 95% CI width ~0.20
@@ -146,7 +146,7 @@ tasks:
       whether Phase 4 free-energy reduction genuinely scales with n.
 
       FALSIFIABLE HYPOTHESIS: delta_alpha_prime measured at n in
-      {8, 16, 32, 64} produces statistically distinguishable values
+      {{8, 16, 32, 64}} produces statistically distinguishable values
       (overlap < 5% between at least 2 of 3 adjacent n bootstrap CIs).
       If overlap >= 5% on all 3 adjacent pairs, alpha_t' is ALSO
       scale-invariant — Phase 4 substrate-scaling becomes inaccessible
@@ -170,7 +170,7 @@ tasks:
            b. exp1721 artifact readable — else
               `blocked_no_replacement_baseline`.
            Record preconditions_checked.
-        1. For each n in {8, 16, 32, 64}: run 30 seeds × 100 MLD steps
+        1. For each n in {{8, 16, 32, 64}}: run 30 seeds × 100 MLD steps
            with k=6 verifier ensemble + k=1 baseline. Compute
            inf_t_alpha_k6_prime, inf_t_alpha_k1_prime per seed.
         2. Aggregate: delta_alpha_prime(n) = bootstrap mean over 30 seeds.
@@ -188,17 +188,17 @@ tasks:
         - random_seed: 172041 (NOT 1741 or 64)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {n_grid: [8, 16, 32, 64], ensemble_k_total: 6,
+        - model_specs: {{n_grid: [8, 16, 32, 64], ensemble_k_total: 6,
           ensemble_k_baseline: 1, mld_steps: 100, n_seeds: 30,
-          alpha_t_variant: "max_caliber_v1"}
+          alpha_t_variant: "max_caliber_v1"}}
         - n_samples: 12000
         - n_samples_justification: "30 seeds per n-point gives CI width
           ~0.18/sqrt(30) ~ 0.03 — matches 5% overlap detection at 4
           n-points."
-        - per_n_results: list of {n, inf_t_alpha_k6_prime,
+        - per_n_results: list of {{n, inf_t_alpha_k6_prime,
           inf_t_alpha_k1_prime, delta_alpha_prime,
-          delta_alpha_prime_bootstrap_ci_95}
-        - adjacent_pair_overlap_pct: list of {pair, overlap_pct}
+          delta_alpha_prime_bootstrap_ci_95}}
+        - adjacent_pair_overlap_pct: list of {{pair, overlap_pct}}
         - scale_invariance_detected: bool
         - statistically_distinguishable_pairs: int
         - acceptance_gate_passed: bool (statistically_distinguishable_pairs >= 2)
@@ -273,8 +273,8 @@ tasks:
         - reproducibility_checksum: sha256 of (energy_fn git_rev +
           n_spins + initial_state seed + lr)
         - preconditions_checked: list
-        - model_specs: {n_spins: 16, n_iters: 100, lr: 0.01,
-          energy_source: "k=6_verifier_ensemble"}
+        - model_specs: {{n_spins: 16, n_iters: 100, lr: 0.01,
+          energy_source: "k=6_verifier_ensemble"}}
         - n_samples: 30 (30 random seeds for stability)
         - n_samples_justification: "30 seeds gives Wilson CI on
           convergence rate; <30 too noisy on this stochastic loop."
@@ -336,12 +336,12 @@ tasks:
         - random_seed: 172043
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestones: ["2026.05.179",
+        - model_specs: {{audit_target_milestones: ["2026.05.179",
           "2026.05.180"], adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
+          artifacts_scanned: int, artifacts_flagged: int}}
         - n_samples: int (flagged count)
         - n_samples_justification: "Audit; n is flagged-artifact count."
-        - audit_outcomes: dict experiment_id -> {classification, rationale}
+        - audit_outcomes: dict experiment_id -> {{classification, rationale}}
         - corrigenda_added: list
         - acceptance_gate_passed: bool
         - acceptance_gate_criteria: "All flagged classified; corrigenda appended."
