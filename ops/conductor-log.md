@@ -3531,3 +3531,4 @@ IMPORTANT:
 | 2026-05-15 21:09 UTC | Phase 2: KAEM Spline Interpretability Extraction | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1803-kaem-univariate-spline-prototype.s |
 | 2026-05-15 21:11 UTC | Phase 2: KAEM Spline Interpretability Extraction | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1803-kaem-univariate-spline-prototype.s |
 | 2026-05-15 21:13 UTC | Phase 2: KAEM Spline Interpretability Extraction | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1803-kaem-univariate-spline-prototype.s |
+| 2026-05-15 21:18 UTC | Phase 2: Energy-Based Transformer (EBT) System 2 V | OK | 83 passed, 1 warning in 5.42s |
