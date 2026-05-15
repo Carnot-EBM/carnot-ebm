@@ -3311,3 +3311,4 @@ IMPORTANT:
 | 2026-05-15 08:41 UTC | Plan milestone 2026.05.179 | OK | 11 tasks proposed |
 | 2026-05-15 08:43 UTC | Milestone 2026.05.179 activated | OK | 11 tasks queued |
 | 2026-05-15 08:47 UTC | Codify exp1715 bijection-invariance finding into p | OK | cache hit: 81 passed, 1 warning in 5.17s |
+| 2026-05-15 08:51 UTC | Theoretical LM-EBM Bijection Re-derivation (arXiv: | OK | 81 passed, 1 warning in 5.68s |
