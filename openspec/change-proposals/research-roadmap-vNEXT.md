@@ -1,63 +1,39 @@
-# Carnot Research Roadmap: vNEXT (Milestone 2026.05.174)
+# Milestone 2026.05.177: Neuro-Symbolic Extraction, Compositional Energy, and KAN Hardware
 
-**Title:** Phase 2 Continuous Latent Trace Editing and Verification-Compute Routing
-**Target:** 2026-05-174
-**Status:** DRAFT
+## 1. Context and Outcomes of Milestone 2026.05.176
+Milestone .176 resolved the legacy audit gaps and integrated Phase 4 carry-forwards, setting the stage for broader structural alignment and robust extraction. 
+The current biggest gaps between our state and the PRD vision are:
+1. **Extraction Gap:** We lack a reliable constraint-aware retrieval module (CARM) to accurately bridge unstructured instructions to our deterministic executable validators.
+2. **Compositional Reasoning:** Complex multi-constraint optimization still degrades. We need Compositional Energy Minimization (CEM) to decompose and aggregate energy landscapes.
+3. **Continuous Self-Learning:** Retained policy updates require rigorous non-forgetting checks (zero soundness mistakes) during continuous feedback loops.
 
-## 1. What the Previous Milestone Proved
+## 2. Phase Architecture
 
-Milestone `.173` successfully closed out the Phase 1 Ship-Track Density tasks. Key outcomes included scaling the zero-false-accept constraint stack to multi-turn drift, turning FR-11 query-time updates into verified memory growth without soundness mistakes, and stabilizing the local SOTA GGUF runtime. However, we identified three critical gaps to close before Phase 3 (Globally Scored Reasoning) can become a reality:
-1. **Verification-Compute Routing:** Generating a full sequence before validating is too costly and leads to high residual drift.
-2. **Kona-Parity Continuous Latent Trace Editing:** Traditional LLM reasoning is autoregressive and discrete. EBMs like Kona 1.0 succeed by reasoning in continuous latent space where energy-minimization enables non-autoregressive generation and local editing.
-3. **Hardware Execution Target Migration:** Extropic's Z1 chip is confirmed for Early Access 2026 as a mass-manufacturable CMOS TSU. Carnot must transition its THRML simulation stubs to support DTM (Denoising Thermodynamic Model) architectures.
+### Phase 1: Constraint-Aware Retrieval & Extraction (CARE)
+We will adapt the ConstraintLLM principles to extract verifier constraints directly from complex prompts.
+- **Goal:** Improve parser yield and constraint recall over raw LLM drafting.
+- **Method:** Integrate a Constraint-Aware Retrieval Module that fetches known verifiable properties before schema generation.
 
-## 2. Architecture Diagram
+### Phase 2: Compositional Energy Minimization (CEM)
+Instead of forcing the LLM to resolve all constraints simultaneously, decompose constraints into local energy landscapes.
+- **Goal:** Ensure stable multi-constraint resolution.
+- **Method:** Implement an iterative parallel energy minimization step over separated constraints.
 
-```mermaid
-graph TD
-    subgraph Generation Layer
-        LLM[Mandated SOTA GGUF] --> CCTU[CCTU Benchmark]
-        LLM -.->|Trace generation| Monitor(Interwhen Monitor)
-        Monitor -.->|Interrupt| SP(HoVer Safe-Prefix Continuation)
-    end
+### Phase 3: Continuous Self-Learning Pipeline
+Deploy an online learning workflow that evaluates skill promotion using zero soundness mistakes as an absolute gate.
+- **Goal:** Retain capabilities without regression.
+- **Method:** Policy replay verification under rigorous asymmetric-cost utility scoring.
 
-    subgraph Kona-Parity Latent Reasoning
-        NAG[Non-Autoregressive Latent Generator]
-        CASAL[CASAL Primal-Dual Sampler]
-        NAG -->|Continuous Trace| CASAL
-        CASAL -->|Global Energy Score| TraceEditor[Gradient-Based Trace Editor]
-    end
+### Phase 4: KAN Hardware Substrate Blueprinting
+Prepare the KAN energy tiers for FPGA deployment by moving to LUT-friendly representations.
+- **Goal:** Validate KAN scalability for KV260 execution without synthesis.
+- **Method:** Implement KANELÉ-style Look-Up Table evaluations and measure BOPs/NABS.
 
-    subgraph Hardware Stub Layer
-        DTM[DTM Architecture Interface] --> THRML[THRML TSU Simulator]
-        THRML --> Z1[Z1 Accounting / Readiness]
-    end
-
-    Generation Layer --> Kona-Parity Latent Reasoning
-    Kona-Parity Latent Reasoning --> Hardware Stub Layer
-```
-
-## 3. Phase Descriptions
-
-### Phase 1: Verification-Compute Routing and Telemetry (Exps 2101-2104)
-Implement test-time monitoring to interrupt generation when intermediate constraints fail, reducing wasted compute. Implement HoVer-style safe-prefix continuation so we do not discard entire traces when only the suffix drifts. Automate prompt-to-constraint validation (ConstrainPrompt) to expand verification coverage without manual coding.
-
-### Phase 2: Continuous Trace Editing (Kona Parity) (Exps 2105-2108)
-Transition from step-by-step token prediction to trace-level non-autoregressive generation in a continuous latent space. Incorporate gradient-based refinement and global energy scoring to emulate Kona 1.0 capabilities, benchmarking on structured tasks like Sudoku.
-
-### Phase 3: Differentiable Constraint Layers (Exps 2109-2111)
-Rescue the PiNet Douglas-Rachford splitting prototype. Use it alongside the CASAL primal-dual sampler to guarantee zero-violation safety in the continuous domain. Transition the continuous self-learning loop to Energy-Based Fine-Tuning (EBFT) using feature matching rather than token-level CE loss.
-
-### Phase 4: Hardware Readiness (Z1) (Exps 2112-2114)
-Align the THRML simulator stack with the expected Extropic Z1 SDK interfaces, specifically for Denoising Thermodynamic Models (DTMs). Perform a no-synthesis hardware resource accounting for probabilistic sampling on Z1, ensuring we remain within bounds. Perform the retrospective.
+## 3. Dependency Graph
+- Phase 1 (Extraction) → Phase 2 (Compositional)
+- Phase 2 (Compositional) → Phase 3 (Continuous Learning)
+- Phase 4 (Hardware) runs orthogonally.
 
 ## 4. Hardware Requirements
-- **Local GPUs:** Dual RTX 3090 (or similar) mandated for running local SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`).
-- **Hardware Claims:** No synthesis or authenticated execution claims are permitted for Extropic Z1, XTR-0, or Kona hardware in this milestone. Use CPU-based THRML simulations only.
-
-## 5. Dependency Graph
-
-- Phase 1 (2101-2104) is foundational for dynamic routing.
-- Phase 2 (2105-2108) builds continuous space reasoning.
-- Phase 3 (2109-2111) depends on Phase 2 continuous traces.
-- Phase 4 (2112-2114) depends on Phase 2 models to run through THRML stubs.
+- **Local:** Dual RTX 3090 (Mandated SOTA GGUF inference)
+- **Substrate:** CPU/Python simulation for KAN evaluation. No direct board claims.
