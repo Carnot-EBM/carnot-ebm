@@ -67,6 +67,16 @@ from carnot.models.lowrank_kaem import (
     LowRankProjector,
 )
 from carnot.models.otv_verifier import OTVTrainer, OTVVerificationHead
+from carnot.models.pinet_layer import (
+    DouglasRachfordPiNetLayer,
+    LinearConstraintSet,
+    PiNetProjectionResult,
+    ProjectionCase,
+    build_experiment_1662_artifact,
+    build_toy_projection_cases,
+    evaluate_toy_projection_cases,
+    write_experiment_1662_artifact,
+)
 from carnot.models.potts_machine import (
     PottsCoupling,
     PottsMachineVerifier,
@@ -147,6 +157,14 @@ __all__ = [
     "LowRankProjector",
     "LogicalTrace",
     "LogicalTraceStep",
+    "DouglasRachfordPiNetLayer",
+    "LinearConstraintSet",
+    "PiNetProjectionResult",
+    "ProjectionCase",
+    "build_experiment_1662_artifact",
+    "build_toy_projection_cases",
+    "evaluate_toy_projection_cases",
+    "write_experiment_1662_artifact",
     "PottsCoupling",
     "PottsMachineVerifier",
     "PottsState",
