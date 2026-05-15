@@ -3250,3 +3250,11 @@ Spec: REQ-RETRO-181
 **Then** it MUST output `results/operational_retro_2026_05_181.json` containing the appropriate performance metrics, preconditions_checked, and an honest_verdict.
 
 Spec: SCENARIO-RETRO-181
+
+### REQ-RETRO-187: Milestone 2026.05.187 Retrospective
+The system SHALL generate a retrospective JSON artifact for milestone 2026.05.187.
+
+### SCENARIO-RETRO-187: Validate 187 Retro
+GIVEN the 187 retrospective is generated
+WHEN the artifact is parsed
+THEN it contains the required honest_verdict and schema fields.
