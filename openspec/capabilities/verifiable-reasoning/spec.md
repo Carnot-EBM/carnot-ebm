@@ -18986,3 +18986,51 @@ false-accept rate, and projection tax per model.
 **And** `dual_gpu_used` is `false`
 
 **Implementation Status:** Implemented (Exp 2152)
+
+## REQ-VERIFY-175: InterwhenTokenMonitor — Async Token-Level Polling with PySAT Constraint Verification (Exp 1776)
+
+**Summary:** Carnot SHALL provide an `InterwhenTokenMonitor` class in
+`python/carnot/pipeline/interwhen_token_monitor.py` that wraps a generation
+callback with a background polling thread and uses PySAT (CNF/SAT solver) to
+detect constraint violations in the partial token trace before generation
+completes.
+
+**Requirements:**
+
+- REQ-VERIFY-175-1: `InterwhenTokenMonitor.__init__(poll_every_n, constraints)`
+  SHALL accept `poll_every_n: int` (polling interval in tokens) and
+  `constraints: list[dict]` (CCTU-format constraint dicts with `id`, `type`,
+  and `validator` fields).
+- REQ-VERIFY-175-2: `InterwhenTokenMonitor.monitor_generation(token_sequence)`
+  SHALL iterate over the token sequence, polling every `poll_every_n` tokens,
+  and return a `TokenMonitorResult` recording whether generation was interrupted
+  and at which token index.
+- REQ-VERIFY-175-3: `InterwhenTokenMonitor._check_pysat(partial_tokens)` SHALL
+  construct a PySAT CNF formula from the CCTU constraints that are definitively
+  violated given the partial trace, and return `True` (satisfiable, continue) or
+  `False` (unsatisfiable, interrupt).
+- REQ-VERIFY-175-4: `TokenMonitorResult` SHALL expose `interrupted: bool`,
+  `interrupt_token_idx: int | None`, `tokens_avoided: int`,
+  `compute_avoided_pct: float`, and `violations_detected: list[str]`.
+- REQ-VERIFY-175-5: The experiment `scripts/experiment_1776_interwhen_monitor.py`
+  SHALL run the monitor on a 10-item deterministic subset of `cctu_micro_benchmark_25.json`
+  using pre-baked correct and incorrect response pairs, and write
+  `results/experiment_1776_interwhen_monitor.json` with schema
+  `carnot.interwhen_monitor.v1`.
+- REQ-VERIFY-175-6: `compute_avoided_pct` across incorrect items MUST be > 0
+  when the monitor correctly interrupts before generation end, and
+  `zero_new_false_accepts` MUST be True (the monitor SHALL NOT interrupt
+  generation of correct responses that violate no constraints).
+
+### SCENARIO-VERIFY-175: Async Token Monitor Interrupts on CCTU Constraint Violation
+
+**Given** a CCTU benchmark item with length constraint max=50 words
+**When** the pre-baked incorrect response emits more than 50 words
+**And** the monitor polls every N tokens
+**Then** `TokenMonitorResult.interrupted` is `True`
+**And** `tokens_avoided > 0` (some tokens after the violation were not generated)
+**And** for correct responses `TokenMonitorResult.interrupted` is `False`
+
+**Implementation Status:** Implemented (Exp 1776)
+
+**Spec traces:** REQ-VERIFY-175, SCENARIO-VERIFY-175, Exp 1776
