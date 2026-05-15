@@ -5856,3 +5856,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Phase 2: Kolmogorov-Arnold Energy Model (KAEM) Spline Prototype (✅ Complete) — honest_verdict=success: implemented KAEM 1D B-splines and inverse transform sampling bypassing MCMC; results/experiment_1803_kaem_proto.json
 - 2026-05-15: Phase 2: Energy-Based Transformer (EBT) System 2 Verification Loop (arXiv:2507.02092) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1805_ebt_system2.json
 - 2026-05-15: Phase 3: Kona-style EBRM Continuous Latent Reasoning (✅ Complete) — honest_verdict=continuous_improved; results/experiment_1806_kona_ebrm.json
+- 2026-05-15: Phase 3: Lyapunov-based Control Barrier Functions for Safe Generation (arXiv:2605.05530) (⚠️ Research Finding) — honest_verdict=success: CBF successfully kept constraint violation rate low; results/experiment_1807_lyapunov_cbf.json
