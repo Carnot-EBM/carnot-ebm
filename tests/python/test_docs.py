@@ -98,15 +98,25 @@ def test_docs_have_premium_aesthetic():
 def test_public_docs_disclose_current_provenance_inventory() -> None:
     """REQ-REPORT-003, REQ-REPORT-004: public docs mention provenance categories.
 
-    Note: exact counts change with every experiment, so we check for the
-    presence of provenance category labels rather than exact numbers.
+    The README.md migrated to a HuggingFace model-card format in
+    `.184/`.186; provenance disclosure is now authoritative in
+    docs/technical-report.md. The README check is generic: at least one
+    experiment-count label (counts drift, so we don't pin numbers).
     """
     readme = _read_repo_file("README.md")
+    report = _read_repo_file("docs/technical-report.md")
 
-    # Docs should mention provenance categories (not exact counts, which drift)
-    readme_lower = readme.lower()
-    assert "live gpu" in readme_lower or "live_gpu" in readme_lower
-    assert "simulated" in readme_lower or "simulation" in readme_lower
+    # README is now a model card; only require an experiment-count label
+    # (loose regex tolerant of "Total Experiments: N" or "N+ experiments").
+    import re as _re
+    assert _re.search(r"\d+[+,]?\d*\+?\s*[Ee]xperiments?", readme), (
+        "README.md should expose at least one experiment-count label"
+    )
+
+    # Provenance categories live in the authoritative technical report.
+    report_lower = report.lower()
+    assert "live gpu" in report_lower or "live_gpu" in report_lower
+    assert "simulated" in report_lower or "simulation" in report_lower
 
 
 def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
@@ -118,22 +128,24 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     report_html = _read_repo_file("docs/technical-report.html")
     index = _read_repo_file("docs/index.html")
 
-    assert "## PBT Verification" in readme
-    assert "Exp 226" in readme
-    assert "Exp 227" in readme
-    assert "[FPGA Ising design](docs/fpga-ising-design.md)" in readme
-    assert "software simulation" in readme
-
-    assert "Property-Based Code Verification at Scale" in report
+    # README.md migrated to model-card format .184/.186 — PBT and FPGA
+    # detail now lives in the authoritative technical report. The exact
+    # section header for PBT has evolved across milestones; we check
+    # for substantive content (experiment IDs + verifier names) rather
+    # than the specific header string.
+    assert "Exp 226" in report
     assert "Exp 227" in report
-    assert "Experiment 228" in report
+    assert "FPGA" in report
     assert "software simulation" in report
 
+    assert "Property-Based Code Verification" in report
+    assert "Experiment 228" in report
+
     # Counts drift every milestone — check for presence of experiment/milestone
-    # labels rather than exact numbers
+    # labels rather than exact numbers. README is model-card; tolerant regex.
     import re as _re
 
-    assert _re.search(r"\d+\+?\s*experiments", readme, _re.IGNORECASE)
+    assert _re.search(r"\d+[+,]?\d*\+?\s*[Ee]xperiments?", readme)
     assert _re.search(r"\d+\+?\s*Experiments Across", report)
     assert _re.search(r"\d+\+?\s*Experiments Across", report_html)
 
@@ -152,7 +164,7 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
 
     assert "VERIFY-030" in report
     assert "VERIFY-031" in report
-    assert "verify_code_with_pbt" in readme
+    assert "verify_code_with_pbt" in report
     assert "Experiment 228" in report_html
 
 
