@@ -5767,3 +5767,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 2112: Z1 SDK and DTM Stub Alignment (✅ Complete) — honest_verdict=complete: dtm_stub_interface_aligned_z1_continuous_dtm_signature_simulator_only; results/experiment_2112_z1_dtm.json
 - 2026-05-15: Exp 2114: Milestone .174 Retrospective (✅ Complete) — honest_verdict=complete: retro_generated_kona_parity_achieved; results/experiment_2114_retro.json
 - 2026-05-15: Exp 1709: THRML+Carnot near-critical sampler failure investigation (retry — .172 exp1698 was SKIPPED) (✅ Complete) — honest_verdict=complete: gate_passed; results/experiment_1709_thrml_critical_fluctuation.json
+- 2026-05-15: Exp 1710: Phase 4 alpha_t n-dependence adversarial audit (retry — .172 exp1699 SKIPPED) (⚠️ Blocked) — honest_verdict=blocked_phase4_alpha_t_implementation_missing; results/experiment_1710_phase4_alpha_t_audit.json
