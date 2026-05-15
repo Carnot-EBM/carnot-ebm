@@ -5782,3 +5782,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 1716: NLA 16th verifier eval-awareness test (carry-forward .172 exp1700, never ran) (✅ Complete) — honest_verdict=Completed eval-awareness test. Gap: -0.042 (Safe).; results/experiment_1716_nla_eval_awareness.json
 - 2026-05-15: Exp 1717: .174 + .175 findings audit + corrigenda (✅ Complete) — honest_verdict=complete: Audit finished. Flagged 2 artifacts (2101, 2110) as REAL_BUG. Corrigenda appended. Proposed follow-up tasks.; results/experiment_1717_findings_audit.json
 - 2026-05-15: Exp 1718: Milestone .176 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_1718_eval_hiled_glorokan.json
+- 2026-05-15: Exp 1771: Phase 1 - Setup CARM Test Cases and Ground Truth (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1771_care_test_suite.json
