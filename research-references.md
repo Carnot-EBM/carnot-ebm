@@ -12871,3 +12871,15 @@ This sweep was run after milestone `.173` completed. The literature search revea
 - **Kona & Aleph (Logical Intelligence)**: Commercial EBRM paired with Aleph (Lean 4 orchestration) demonstrating 96.2% on expert Sudoku via continuous latent space reasoning rather than autoregressive guessing.
 - **A Conceptual and Mathematical Account of a Novel Self-Learning Engine... (Ananta)**: Introduces EB-SLE integrating EBMs with symbolic verification to prevent reward hacking.
 - **Self-Distillation Enables Continual Learning** (arXiv:2601.19897): Uses energy-based objectives to prevent catastrophic forgetting in reasoning models during continuous learning.
+
+## 2026-05-15 Additional Planning Sweep (Milestone 2026.05.185)
+
+### Agentic Reinforcement Learning Informed by Token-Level Energy
+- **Paper:** "Resolving Action Bottleneck: Agentic Reinforcement Learning Informed by Token-Level Energy" (arXiv:2605.14558)
+- **What:** Uses token-level energy metrics to inform and guide reinforcement learning for agentic tasks.
+- **Relevance to Carnot:** Extends the Phase-4 objective by embedding energy functions directly into the action space of the self-learning framework.
+
+### Fast-Slow Training for Continual Adaptation
+- **Paper:** "Learning, Fast and Slow: Towards LLMs That Adapt Continually" (arXiv:2605.12484)
+- **What:** Introduces a fast-slow training architecture allowing LLMs to adapt continually without catastrophic forgetting.
+- **Relevance to Carnot:** Directly supports Carnot's continuous self-learning constraint (FR-11) and provides a concrete methodology for updating fast-weights.

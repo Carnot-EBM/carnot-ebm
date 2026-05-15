@@ -1,43 +1,40 @@
-# Carnot Research Roadmap: Milestone 2026.05.183
-**Date:** 2026-05-15
-**Milestone:** 2026.05.183
-**Status:** DRAFT
+# Carnot Research Roadmap — Milestone 2026.05.185
 
-## 1. What Previous Milestone (2026.05.182) Proved
-- **Measurement-Level Rescue:** `exp1745` investigated the Phase 4 per-step alpha disaggregation after `exp1741` proved the infimum `alpha_t'` was completely scale-invariant across substrates. The scale invariance suggests the aggregation metric was fundamentally hiding the substrate effect.
-- **QAOD/NLA TPR Collapse:** `exp1746` diagnosed the 0.73 to 0.47 True Positive Rate collapse in the QAOD vs NLA head-to-head. It confirmed a corpus mismatch / label-noise issue.
-- **EBT Mode Collapse:** `exp1747` investigated the suspicious 128% energy decrease in the EBT gradient refinement loop, pointing to a mode-collapse where the energy function was unbounded below.
-- **Phase 1 Ship-Track:** The HuggingFace mirror attempt (`exp1748`) remained a critical, often-stranded carry-forward.
+**Title:** Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification
+**Author:** outer-loop-claude
+**Status:** Active
 
-## 2. Architecture & Strategic Shifts
-Our primary gaps between current state and the PRD vision are:
-1. **Measurement of Constraint Reasoning:** Phase 4 needs a new measurement paradigm since `alpha_t'` is scale-invariant. We are pivoting to **Thermodynamically Constrained Neural Generation** metrics based on recent 2026 literature.
-2. **Robust EBM Optimization:** We must bound the energy descent in EBTs to prevent mode collapse (the 128% decrease anomaly).
-3. **Continuous Self-Learning (FR-11):** Memory growth and self-learning loops suffer from mode collapse over time. We will introduce **Dynamic Resolution** to stabilize continuous policy updates.
+## Overview
 
-## 3. Phase Descriptions
+Milestone .184 landed the Fast-Slow Variant prototype (Exp 1761), attempted the stranded PyPI push (Exp 1762), audited .183 findings (Exp 1763), and produced a decision artifact comparing the thermodynamic metric to the Fast-Slow variant (Exp 1764). 
 
-### Phase 0: Carry Forwards & Fixes
-- Retry HuggingFace publication with honest fallback.
-- Sync QAOD/NLA corpus and rerun head-to-head correctly.
+Milestone .185 transitions from prototyping to scaling the Fast-Slow paradigm to the mandated local SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`). It bridges the gap in the Continuous Self-Learning (FR-11) requirement by embedding Token-Level Energy (arXiv:2605.14558) and Fast-Slow training (arXiv:2605.12484) to prevent catastrophic forgetting. Additionally, it addresses Phase 2 hardware-efficient verification with a KAN-to-PWA (Piecewise Affine) compiler for MILP-based formal property bounds.
 
-### Phase 1: Bounded Energy Descent
-- Enforce hard bounds on the EBT gradient refinement loop to prevent mode collapse.
+## Top 3 Priority Gaps
 
-### Phase 2: Thermodynamic Constrained Measurement
-- Implement a new thermodynamic penalty metric for Phase 4.
-- Sweep substrate scaling (n=8/16/32/64) using this new metric to finally prove scale dependence.
+1. **Continuous Self-Learning Stability:** Previous FR-11 iterations suffered from mode collapse or zero utility delta. We must scale the Fast-Slow Variant (arXiv:2605.12484) and Token-Level Energy metrics (arXiv:2605.14558) to stabilize learning without forgetting.
+2. **Hardware-Efficient Formal Bounds:** KAN verification remains ad-hoc. The PWA abstraction (arXiv:2602.06737) and E-MVL sparse RTL (arXiv:2604.04606) provide a concrete path for formal MILP verification and KV260 hardware synthesis without blowing out LUT budgets.
+3. **Structured Constraint Extraction:** We need an automated compiler that translates ROCE-extracted constraints (arXiv:2605.01124) into KAN representations and verifies them asynchronously during text generation (interwhen, arXiv:2602.11202).
 
-### Phase 3: SOTA GGUF Thermo-Decoding
-- Apply thermodynamic penalty sampling to the mandated SOTA local GGUF models.
+## Phase Plan
 
-### Phase 4: Continuous Self-Learning (FR-11)
-- Apply Dynamic Resolution during continuous learning to guarantee no soundness mistakes or mode collapse.
+### Phase 1: SOTA Fast-Slow & Telemetry
+Scale the fast-weight context buffers to mandated GGUF models. Implement token-level energy metrics to provide fine-grained verification signals during generation.
 
-### Phase 5: Hardware & Retrospective
-- Perform no-synthesis substrate-aware KAN accounting for the KV260.
-- Milestone retrospective.
+### Phase 2: Formal Bounds & Extraction
+Compile extracted ROCE constraints into formal Piecewise Affine (PWA) abstractions. Validate these abstractions against existing Z3/PySAT benchmarks.
 
-## 4. Hardware Requirements
-- Dual RTX 3090 (for running mandated SOTA GGUF models).
-- CPU/Simulator for KAN and Thermodynamic metric evaluations. No Vivado or KV260 board-execution required for this milestone.
+### Phase 3: Hardware Translation & Continuous Loop
+Synthesize the sparse E-MVL v4 RTL for KV260 accounting. Integrate the Fast-Slow continuous learning mechanism into the main autoresearch loop.
+
+### Phase 4: Integration & Audit
+Run the E2E verification cascade, audit the newly integrated verifiers, and generate the end-of-milestone operational retrospective.
+
+## Hardware Requirements
+- **Local:** Dual RTX 3090 (for SOTA GGUF inference and token-level telemetry computation)
+- **KV260:** CPU-only no-synthesis accounting for the E-MVL RTL constraints.
+
+## Dependency Graph
+- Exp 1766 (Token Energy) -> Exp 1768 (SOTA Fast-Slow) -> Exp 1772 (Continual EBM)
+- Exp 1769 (ROCE-to-KAN) -> Exp 1770 (PWA KAN) -> Exp 1771 (T-SKM Projection)
+- Exp 1774 (E-MVL RTL) -> Exp 1776 (interwhen Test-Time)
