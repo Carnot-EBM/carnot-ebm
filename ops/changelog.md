@@ -5806,3 +5806,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Continuous Self-Learning Loop with NLA Signal Integration (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_1728_system2_benchmark.json
 - 2026-05-15: Compositional Energy Minimization (CEM) Substrate Prototype (arXiv:2510.20607) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1729_kanele.json
 - 2026-05-15: CEM Scale-Up to n=64 with KANELÉ Hardware-Accounting (gated on exp1729) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1730_cikan_fpga.json
+- 2026-05-15: SOTA GGUF Parity Benchmark with k=16 Ensemble (Qwen3.6 & Gemma-4) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1731_fpga_audit.json
