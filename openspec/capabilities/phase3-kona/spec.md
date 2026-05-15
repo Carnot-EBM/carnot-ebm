@@ -2039,3 +2039,15 @@ The repository shall provide an audit module in `python/carnot/phase3/architectu
 - Detects architectural divergence between the continuous execution results and the discrete verification mandate (PRD FR-12).
 - Emits `results/experiment_2051_architecture_audit.json` containing `experiment` (int), `run_date` (str), `analyzed_tasks` (list), and `divergence_conflicts` (list).
 - Provides a function `audit_continuous_execution(results_dir)` that returns a dictionary matching the artifact schema.
+
+### REQ-KONA-040: Non-Autoregressive Reasoning Model
+
+The repository shall provide an Energy-Based Reasoning Model (EBRM) in `python/carnot/models/kona_ebrm.py` that maps a simple logic puzzle into a continuous latent space and applies an energy function to detect inconsistencies, editing the trace via gradient descent.
+
+### SCENARIO-KONA-040: Exp 1806 Writes Kona EBRM Artifact
+
+**Given** a logic puzzle mapped to a continuous latent space
+**When** Exp 1806 applies gradient descent to refine the entire reasoning trace simultaneously
+**Then** it writes `results/experiment_1806_kona_ebrm.json` with all REQ-KONA-040 required fields.
+
+**Spec traces:** REQ-KONA-040
