@@ -168,6 +168,7 @@ class ParallelIsingSampler:
         coupling_matrix: jax.Array,
         beta: float | jax.Array = 10.0,
         init_spins: jax.Array | None = None,
+        h_schedule: int = 0,
     ) -> jax.Array:
         """Run parallel Gibbs sampling with annealing on an Ising model.
 
@@ -199,6 +200,7 @@ class ParallelIsingSampler:
                 an annealing schedule is provided.
             init_spins: Initial spin configuration, shape (n_spins,), boolean.
                 If None, initialized randomly.
+            h_schedule: 0=none, 1=h=1e-3 first 1k then 0, 2=h=1e-3 annealed to 0 over 5k.
 
         Returns:
             Samples array of shape (n_samples, n_spins), boolean.
@@ -222,9 +224,16 @@ class ParallelIsingSampler:
 
         # Ensure coupling matrix is float32 and zero-diagonal.
         J = jnp.asarray(coupling_matrix, dtype=jnp.float32)
-        b = jnp.asarray(biases, dtype=jnp.float32)
+        b_base = jnp.asarray(biases, dtype=jnp.float32)
 
         schedule = self.schedule or AnnealingSchedule(beta_init=float(beta), beta_final=float(beta))
+        
+        def get_h_bias(step):
+            if h_schedule == 1:
+                return jnp.where(step < 1000, 1e-3, 0.0)
+            elif h_schedule == 2:
+                return jnp.where(step < 5000, 1e-3 * (1.0 - step / 5000.0), 0.0)
+            return 0.0
 
         # --- Phase 1: Warmup with annealing ---
         if self.use_checkerboard:
@@ -234,6 +243,7 @@ class ParallelIsingSampler:
             def sweep_fn(carry, step_key):
                 s, step = carry
                 beta_t = schedule.beta_at_step(step, self.n_warmup)
+                b = b_base + get_h_bias(step)
                 k1, k2 = jrandom.split(step_key)
                 s = _checkerboard_update(s, b, J, beta_t, k1, k2, even_mask, odd_mask)
                 return (s, step + 1), None
@@ -243,6 +253,7 @@ class ParallelIsingSampler:
             def sweep_fn(carry, step_key):
                 s, step = carry
                 beta_t = schedule.beta_at_step(step, self.n_warmup)
+                b = b_base + get_h_bias(step)
                 s = _parallel_update(s, b, J, beta_t, step_key)
                 return (s, step + 1), None
 
@@ -257,12 +268,12 @@ class ParallelIsingSampler:
 
             def sample_sweep_fn(s, step_key):
                 k1, k2 = jrandom.split(step_key)
-                return _checkerboard_update(s, b, J, beta_final, k1, k2, even_mask, odd_mask)
+                return _checkerboard_update(s, b_base, J, beta_final, k1, k2, even_mask, odd_mask)
 
         else:
 
             def sample_sweep_fn(s, step_key):
-                return _parallel_update(s, b, J, beta_final, step_key)
+                return _parallel_update(s, b_base, J, beta_final, step_key)
 
         def collect_fn(carry, sample_key):
             s = carry

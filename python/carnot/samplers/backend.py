@@ -230,6 +230,7 @@ class CpuBackend:
         steps_per_sample = int(config.get("steps_per_sample", 20))
         use_checkerboard = bool(config.get("use_checkerboard", True))
         n_warmup = int(config.get("n_warmup", 500))
+        h_schedule = int(config.get("h_schedule", 0))
 
         sampler = ParallelIsingSampler(
             n_warmup=n_warmup,
@@ -240,7 +241,7 @@ class CpuBackend:
         )
         b = jnp.asarray(biases, dtype=jnp.float32)
         couplings_jax = jnp.asarray(couplings, dtype=jnp.float32)
-        samples = sampler.sample(self._next_key(), b, couplings_jax, beta=beta)
+        samples = sampler.sample(self._next_key(), b, couplings_jax, beta=beta, h_schedule=h_schedule)
         return np.asarray(samples)
 
 
