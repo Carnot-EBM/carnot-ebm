@@ -518,6 +518,38 @@ as a cron-prompt bug to fix later):
 
 ## Active Research Queue (Ranked)
 
+### Rank 0b: Token-Level Energy for Agentic RL — ActFocus Reweighting (NEW 2026-05-15T04:45Z)
+- **Score:** 4×4×3×4 = **192**
+- **Source:** arXiv:2605.14558v1 (He, Zhu, Zhou, Gu, Liu, Huang, Zou, Wipf, Yu, Wu; May 14 2026)
+- **Idea:** Token-level energy-based credit assignment in agentic RL.
+  Training signals concentrate on action tokens despite their scarcity.
+  ActFocus reweighting reports 65.2pp gain over PPO with no compute
+  overhead.
+- **Hypothesis to investigate:** Does ActFocus reweighting transfer to
+  Carnot's FR-11 (verifier-as-reward RL) flow? If yes, near-term
+  high-leverage operational lift on the same .96-.150+ retros that
+  have run on FR-11 without breakthrough.
+- **Caveat:** 65.2pp gain is a substantial claim — replicate
+  adversarial-verify-aware; treat as IMPLAUSIBLE_PERFECT-adjacent if
+  Carnot replication shows gains > 30pp without methodology disclosure.
+- **Where to land:** queue for .177+ FR-11 follow-up experiment.
+
+### Rank 0c: IIT ↔ FEP Maximum-Caliber Bridge — Alternative alpha_t Derivation (NEW 2026-05-15T04:45Z)
+- **Score:** 4×4×3×4 = **192**
+- **Source:** arXiv:2605.12536v1 (Alexander Kearney; May 3 2026)
+- **Idea:** Maximum-caliber variational principle bridges FEP and IIT;
+  shows information emerges from prediction error under predictive
+  coding.
+- **Hypothesis to investigate:** alpha_t may have a maximum-caliber
+  derivation that is NOT bijection-invariant under arXiv:2512.15605.
+  If true, the .176 exp1715 audit's invariance finding (if confirmed)
+  would NOT invalidate Phase 4 — it would just be using the wrong
+  variational principle.
+- **Where to land:** paper-v6 §3 Phase 4 theoretical framing,
+  cited alongside arXiv:2512.15605.
+- **Cross-reference:** depends on .176 exp1715 outcome — if
+  artifact_detected=true, this is the replacement candidate framing.
+
 ### URGENT Rank 0a: AR-LMs are Secretly EBMs — Theoretical Scaffolding for Phase 3 (NEW 2026-05-15)
 - **Score:** 5×5×4×5 = **500**
 - **Source:** arXiv:2512.15605v3 (Blondel, Sander, Vivier-Ardisson, Liu, Roulet)
