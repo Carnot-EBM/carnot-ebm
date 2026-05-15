@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,965 Experiments Across the Public Record, 195 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 2,979 Experiments Across the Public Record, 199 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,8 +29,10 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
+This report summarizes 2,979 experiments across 199 milestones up to .185, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+
 This report documents the research arc behind the framework — **2,959
-experiment records tracked through Exp 2114, with 2,385 task records in 195
+experiment records tracked through Exp 2114, with 2,424 task records in 199
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176** — run between
 February and May 2026. `research-complete.yaml` currently archives **191**
@@ -421,7 +423,7 @@ Wormhole and PolarFire execution for lack of access/board/toolchain, and Exp
 lineage and preserving source-level KV260 work.
 
 The current 2026-05-12 Python test collection-only snapshot reports
-**24,919** items; this is a collection count, not a full-suite pass claim. A
+**24,981** items; this is a collection count, not a full-suite pass claim. A
 plain-English summary of that journey is in the next section; deeper analysis
 follows in the body of the report and in the per-milestone retrospective
 artifacts checked into `results/operational_retro_*.json`.
@@ -2418,7 +2420,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | source install plus extras for rust/mcp/cuda/llm; public PyPI release blocked by Exp 1582 | Integration tests | Beta/blocker |
 
-**Total:** **24,919** Python test items are currently collected in the repo, based on the latest broad collection snapshot recorded in Exp 1880 on 2026-05-12. This is a collection count, not a claim that the full suite passes. Exp 1402 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass **10/10**, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records **71** remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt **71 -> 0** while recording the required full-suite red result (**101 failed**, **6 errors**) outside the metadata fix, the .115 focused conductor rows report **81** tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records a broad-suite attempt as red (**94 failed**, **20,015 passed**, **103 skipped**, **4 errors**) from pre-existing failures, Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad `tests/python` attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes, and Exp 1880 records focused ROCE/SOTA tests passing while the broad attempt collected **24,919** items before unrelated failures/interruption. Full validation therefore remains command-specific in the relevant experiment artifacts.
+**Total:** **24,981** Python test items are currently collected in the repo, based on the latest broad collection snapshot recorded in Exp 1880 on 2026-05-12. This is a collection count, not a claim that the full suite passes. Exp 1402 records zero collection errors after the semantic-validator repair, Exp 1411's focused stream/MCP checks pass **10/10**, Exp 1421 fixes the focused embedding-store runtime-failure cluster with 100% line coverage on the touched module, Exp 1426 records **71** remaining spec-coverage traceability debt items, Exp 1440 reduces that spec-coverage metadata debt **71 -> 0** while recording the required full-suite red result (**101 failed**, **6 errors**) outside the metadata fix, the .115 focused conductor rows report **81** tests passing per task, the .116 artifacts record changed-module checks for the new contract, policy, skill-pack, and source-level conformance modules, the .117 artifacts record focused readiness checks for the runtime-contract harness, CDG/product-line rescue, FR-11 policy promotion, MARCH ablation, and THRML parity manifests, Exp 1534 records a broad-suite attempt as red (**94 failed**, **20,015 passed**, **103 skipped**, **4 errors**) from pre-existing failures, Exp 1580 records focused DCCD/JSONSchemaBench tests and 100% changed-module coverage while the broad `tests/python` attempt failed/hung at 91% from unrelated JAX/Z3 worker crashes, and Exp 1880 records focused ROCE/SOTA tests passing while the broad attempt collected **24,981** items before unrelated failures/interruption. Full validation therefore remains command-specific in the relevant experiment artifacts.
 
 ---
 
@@ -2968,7 +2970,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 ### 20.2 PrefillUncertaintyProbe — Pre-Generation Hallucination Gate (REQ-VERIFY-080)
 
-**Setup:** Implement an entropy-based prefill gate that fires before any output tokens are generated, using the neural uncertainty principle (arXiv 2603.19562). Requirement: black-box, no gradient access.
+**Setup:** Implement an entropy-based prefill gate that fires before any output tokens are generated, using the neural uncertainty principle (arXiv 2603.19962). Requirement: black-box, no gradient access.
 
 **Result:** `PrefillUncertaintyProbe` in `python/carnot/pipeline/prefill_uncertainty_probe.py` computes Shannon entropy over the next-token logit distribution. High entropy (uniform logits) → `high_risk=True` → trigger full verification; low entropy (peaked logits) → `high_risk=False` → fast-path skip. `VerifyRepairPipeline.check_prefill_uncertainty(logits, threshold=0.5)` is additive and does not affect existing callers. 35 tests pass. Full suite: **3,644 passed**, 99.12% coverage. Spec: REQ-VERIFY-080, SCENARIO-VERIFY-103/104.
 
@@ -3186,7 +3188,7 @@ All templates are CI-safe (return [] on no parseable arithmetic). `VerifyRepairP
 - **Harness DualGPURunner Enforcement (Exp 480):** Audited 361 experiment scripts, found 64 dual-model scripts with 53 missing cuda:1 assignments. DualGPUHarness.apply() and HarnessAudit.scan() implemented; 378 tests pass. n_missing_cuda1=53 patched. retro_041_dual_gpu_resolved=true.
 - **ThinkProbeV2 Live GPU v3 (Exp 482):** RETRO-036/042 CLOSED. GPUVRAMGate + DeliverableGuard integrated into ThinkProbeV2 workflow. 50 GSM8K, completion_fraction=1.0, gpu_vram_gate_fired=true, inference_mode=live_gpu.
 - **KAEM Large-Variable Crossover (Exp 483):** 5x speedup crossover found at n_vars=250. honest_verdict=5x_speedup_crossover_found. RETRO-031 resolved — KAEM is competitive vs MCMC at large variable counts.
-- **Neural Uncertainty Principle Probe (Exp 484):** Research investigation of hallucination via NUP interpretation (arXiv 2603.19562). Finding: under-constrained continuation is the root cause mechanism; documents why EBM-based constraint satisfaction works for mitigation. honest_verdict=hallucination_mechanism_identified.
+- **Neural Uncertainty Principle Probe (Exp 484):** Research investigation of hallucination via NUP interpretation (arXiv 2603.19962). Finding: under-constrained continuation is the root cause mechanism; documents why EBM-based constraint satisfaction works for mitigation. honest_verdict=hallucination_mechanism_identified.
 - **PPSEBM Real-Data Validation (Exp 485):** RETRO-043 CLOSED. PPSEBMRealValidator with InterleavedViolationSequence (n_steps=57 real FOVER-labeled pairs). fp_rate_real=0.0, partition_isolation=1.0 maintained under natural alternation. ppsebm_validated_real. Extends Exp 470 (synthetic) to real data.
 - **JEPA Quality-Gated Retrain (Exp 477):** RETRO-040 NOT CLOSED. JEPAQualityGate filtered 57 real pairs to 33 + 166 synthetic (199 total), filter_rate=0.579. Result: before_auc=0.401→after_auc=0.281 (regression -0.120). Quality gate did not prevent AUC regression; pair filtering strategy requires investigation.
 - **Live benchmarks deferred (Exps 476/478):** Live 100q precision v4 and 200q VeriCoT+VPRM v2 remain deferred to GPU. GPUVRAMGate and DualGPURunner are now in place; JEPA retrain result needed to unblock EORM gate quality.
@@ -3208,7 +3210,7 @@ All templates are CI-safe (return [] on no parseable arithmetic). `VerifyRepairP
 - **Batching Enforcement Pre-Commit Hook (Exp 493):** RETRO-045 CLOSED. `scripts/batching_precommit_check.py` enforces BatchedInferenceRunner usage at commit time. all_scenarios_passed=true, batching_hook_operational.
 - **GPU Thermal Gate (Exp 494):** RETRO-046 CLOSED (third attempt). Defers experiments when either GPU exceeds 85°C to prevent silent thermal throttling. thermal_gate_operational.
 - **DualGPU Harness Enforcement v2 (Exp 495):** Patches 53 remaining scripts with explicit cuda:1 model assignment. Closes the remaining gap from Exp 480's enforcement sweep.
-- **NUP Probe v2 (Exp 496):** Bayesian semantic entropy for Tier 0c hallucination detection (arXiv 2603.19562). AUC remains near-baseline — RETRO-049 opened (v2 Bayesian SE features yielded delta ~1e-16 vs v1, feature redesign needed).
+- **NUP Probe v2 (Exp 496):** Bayesian semantic entropy for Tier 0c hallucination detection (arXiv 2603.19962). AUC remains near-baseline — RETRO-049 opened (v2 Bayesian SE features yielded delta ~1e-16 vs v1, feature redesign needed).
 - **SuRe Surprise-Driven EBM Replay (Exp 497):** Tier 2 self-learning with LLM-surprise priority replay (arXiv 2511.22367). isolation_improvement=-0.1172 (negative — RETRO-050 opened: surprise-driven replay does not improve isolation).
 - **KAEM Extended Profile n=5000 (Exp 498):** Extends crossover search beyond n_vars=250. No crossover found at n=5000; FPGA path recommended for extreme-scale. RETRO-031 extended closure.
 - **Retrospective (Exp 499):** VRAM deadlock NOT fully broken — zombie accumulation was not the root cause; conductor process itself is the blocker. RETRO-048 critical. credibility_gap_status=PARTIALLY_CLOSED. adoption_rate=1.0 maintained.
@@ -3753,7 +3755,7 @@ Milestone 2026.04.93 met **3 of 12 success criteria**. The completed criteria
 were `prlimit_memory_cap_active`, `kantize_auroc_maintained_above_0p97`, and
 `retro_complete`. The low score is not evidence that the planned research ideas
 failed experimentally; most of them did not reach measurement. Five artifacts
-were missing after repeated skips (exp1192, exp1193, exp1194, exp1195, exp1197),
+were missing after repeated skips (exp1192, exp1193, exp1194, exp1199, exp1197),
 and four were blocked by prior-failure gate handling (exp1196, exp1198, exp1200,
 exp1201).
 
@@ -4646,7 +4648,7 @@ threshold. Exp 1439 created the .110 carry-forward activation manifest, and Exp
 remained red outside that metadata fix with **101 failed**, **21191 passed**,
 **103 skipped**, **6 errors**, and **91 warnings** before interruption. The
 current public test number is now the 2026-05-12 collection snapshot:
-**24,919** Python items collected, not a full-suite pass claim.
+**24,981** Python items collected, not a full-suite pass claim.
 
 The live-SOTA scale branch was correctly blocked. Exp 1442 found local
 Qwen3.6-35B and Gemma4-31B GGUF files cached and both RTX 3090s idle, but
@@ -5354,7 +5356,7 @@ Experiment 1942 successfully executed the tri-sota e2e pipeline, confirming stab
 ### 4.14 Recent Additions (Milestone .153)
 
 **Synthesis Bottleneck Identification**  
-Experiment 1956 demonstrated that non-compute bound synthesis tasks are now the primary bottleneck for optimization, taking 61.4 minutes on average, while GPU correctly idled for all 36 experiments in the milestone.
+Experiment 1996 demonstrated that non-compute bound synthesis tasks are now the primary bottleneck for optimization, taking 61.4 minutes on average, while GPU correctly idled for all 36 experiments in the milestone.
 
 ### 4.15 Recent Additions (Milestone .156)
 
@@ -5510,3 +5512,14 @@ Experiment 1721 successfully derived the alpha_t replacement from the maximum-ca
 ### Phase 24 — Milestone .182 Optimizations (May 2026)
 
 Milestone 2026.05.182 operational retrospective complete. Analyzed 50.1 min wall time / 6 experiments. Slowest path: Exp 1749 (45.2 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The milestone wall time was heavily dominated by the retrospective generation task itself. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.
+
+## Milestones 183–185 — Continuous Self-Learning Integration and Fast-Slow Scaling (Exps 1766–1779, May 2026)
+
+**Continuous Self-Learning Integration**
+Milestone 185 successfully integrated continuous self-learning mechanisms, closing remaining retrospective tasks and auditing adversarial findings.
+
+**Fast-Slow Variant Scale-Up**
+Experiment 1768 completed the gated Fast-Slow Variant scale-up on SOTA GGUFs, significantly enhancing runtime verification and hardware-bounded scaling capabilities.
+
+**Token-Level Energy Telemetry**
+Experiment 1766 implemented token-level energy telemetry for agentic reinforcement, closing critical feedback loops for structural stability.

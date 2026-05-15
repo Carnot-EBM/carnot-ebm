@@ -3451,3 +3451,28 @@ IMPORTANT:
 | 2026-05-15 17:09 UTC | Exp 1775: THRML JAX Simulator Parity Scaling (N=25 | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 17:11 UTC | Exp 1775: THRML JAX Simulator Parity Scaling (N=25 | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 17:23 UTC | Exp 1776: Interwhen Asynchronous Test-Time Monitor | OK | 81 passed, 1 warning in 5.34s |
+| 2026-05-15 17:35 UTC | Exp 1777: Phase 1 PyPI Package Verification | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
+| 2026-05-15 17:38 UTC | Exp 1777: Phase 1 PyPI Package Verification | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.40s |
+| 2026-05-15 17:40 UTC | Exp 1777: Phase 1 PyPI Package Verification | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.40s |
+| 2026-05-15 17:42 UTC | Exp 1778: Adversarial Findings Audit for .185 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.35s |
+| 2026-05-15 17:44 UTC | Exp 1778: Adversarial Findings Audit for .185 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.42s |
+| 2026-05-15 17:47 UTC | Exp 1778: Adversarial Findings Audit for .185 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.36s |
+| 2026-05-15 17:49 UTC | Exp 1779: Milestone .185 Retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.43s |
+| 2026-05-15 17:51 UTC | Exp 1779: Milestone .185 Retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.42s |
+| 2026-05-15 17:54 UTC | Exp 1779: Milestone .185 Retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.42s |
+| 2026-05-15 17:56 UTC | Milestone 2026.05.186 activated | OK | 5 tasks queued |
+| 2026-05-15 17:58 UTC | Exp 1781: Carnot Fast-Slow Variant prototype retry | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.43s |
+| 2026-05-15 18:00 UTC | Exp 1781: Carnot Fast-Slow Variant prototype retry | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.36s |
+| 2026-05-15 18:03 UTC | Exp 1781: Carnot Fast-Slow Variant prototype retry | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.86s |
+| 2026-05-15 18:05 UTC | Exp 1782: PyPI retry — .184 exp1762 SKIPPED; block | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.44s |
+| 2026-05-15 18:07 UTC | Exp 1782: PyPI retry — .184 exp1762 SKIPPED; block | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.32s |
+| 2026-05-15 18:09 UTC | Exp 1782: PyPI retry — .184 exp1762 SKIPPED; block | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.61s |
+| 2026-05-15 18:12 UTC | Exp 1783: .184 + .185 combined findings audit + co | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.44s |
+| 2026-05-15 18:14 UTC | Exp 1783: .184 + .185 combined findings audit + co | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.58s |
+| 2026-05-15 18:16 UTC | Exp 1783: .184 + .185 combined findings audit + co | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.48s |
+| 2026-05-15 18:19 UTC | Exp 1784: Phase 4 method comparison + canonical-me | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.38s |
+| 2026-05-15 18:21 UTC | Exp 1784: Phase 4 method comparison + canonical-me | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.48s |
+| 2026-05-15 18:23 UTC | Exp 1784: Phase 4 method comparison + canonical-me | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.47s |
+| 2026-05-15 18:25 UTC | Exp 1785: Milestone .186 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.47s |
+| 2026-05-15 18:28 UTC | Exp 1785: Milestone .186 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.35s |
+| 2026-05-15 18:30 UTC | Exp 1785: Milestone .186 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 80 passed, 1 warning in 5.37s |

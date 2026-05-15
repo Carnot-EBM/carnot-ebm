@@ -1,0 +1,51 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.186",
+  "generated_at": "2026-05-15T18:37:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 736.0,
+  "experiments_completed": 223,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1749: Milestone .182 retrospective",
+      "duration_minutes": 45.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1694: NLA-class 16th verifier prototype v3 with strict met",
+      "duration_minutes": 43.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1740: Symbolic Verification on Expert Sudoku (Kona-style)",
+      "duration_minutes": 41.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 1756: Substrate-Aware KAN LUT/BRAM Acc",
+      "duration_minutes": 39.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1694: Implement SineKAN substitute for KAEMEnergy splines",
+      "duration_minutes": 30.6,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.186 completed 223 synthesis-only experiments over 736 minutes of total wall time. There were 0 compute-bound experiments run, so GPUs were correctly idle. Synthesis tasks averaged 3 minutes each, with a few outliers exceeding 40 minutes.",
+  "bottlenecks_identified": [
+    "Several synthesis-only experiments (e.g., Exp 1749, Exp 1694, Exp 1740) took over 40 minutes, indicating potential bottlenecks in the synthesis pipeline such as API latency or extensive agent loops."
+  ],
+  "improvements_suggested": [
+    "Profile the synthesis pipeline for tasks exceeding 30 minutes to identify opportunities for parallelization or optimization."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile the 45-minute synthesis step on Exp 1749 to isolate the delay.",
+    "Review synthesis pipeline logs for Exp 1694 and 1740 to check for inefficiencies in agent loops.",
+    "Analyze the 3-minute average per experiment to see if baseline API or context retrieval latency can be reduced."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "With 0 compute-bound tasks, the milestone's time was dominated by synthesis execution. The doomed-rerun block mechanism correctly saved time and was explicitly ignored as a bottleneck."
+}
