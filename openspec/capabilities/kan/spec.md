@@ -1366,3 +1366,21 @@ Given a small mock KAN tier,
 When the LUT transformation logic runs,
 Then it outputs the LUT evaluation formats and `results/experiment_1781_kan_lut.json` is written with `lut_conversion_success: true`.
 
+## REQ-KAN-1782: Benchmark hardware accounting for KAN LUTs
+
+The KAN capability MUST implement a benchmark for hardware accounting of KAN LUTs. It MUST measure Bit Operations (BOPs) and Number of Additions and Bit-Shifts (NABS) and explicitly claim no hardware execution.
+
+**Rationale:**
+    To ensure we have hardware accounting benchmarks before attempting hardware synthesis or execution.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1782_kan_benchmark.py` implements the hardware accounting logic.
+    - `results/experiment_1782_kan_benchmark.json` is generated with `schema: "carnot.kan.benchmark.v1"`, `bops`, `nabs`, and `hardware_execution_claim: false`.
+    - Tests verify the benchmark logic and achieve 100% test coverage for the new code.
+
+### SCENARIO-KAN-1782: Measure BOPs and NABS for KAN LUTs
+
+Given a mock KAN tier or LUT,
+When the benchmark logic runs,
+Then it outputs BOPs and NABS, and `results/experiment_1782_kan_benchmark.json` is written with `hardware_execution_claim: false`.
+
