@@ -12896,3 +12896,20 @@ This sweep was run after milestone `.173` completed. The literature search revea
 - **AISTATS 2026** — "Unsupervised Ensemble Learning Through Deep Energy-based Models".
 - **Preprint (2026)** — "LSEBMCL: A Latent Space Energy-Based Model for Continual Learning". Uses EBMs as outer-generators via Langevin dynamics to prevent catastrophic forgetting.
 - **Logical Intelligence (2026)** — "Energy-Based Models for AI Reasoning: Beyond LLM Limitations" (Bodnia, Hanin). Introduces Kona (EBRM).
+
+## 2026.05.188 Planning Agent Findings (2025-2026 ArXiv Survey)
+
+- **Energy-Based Transformers are Scalable Learners and Thinkers** (Gladstone et al., July 2025, arXiv:2507.02092)
+  - Replaces autoregression with iterative energy minimization, enabling "System 2 Thinking" where the model thinks longer on harder problems.
+- **Generalizable Reasoning through Compositional Energy Minimization** (Oarga & Du, NeurIPS 2025)
+  - Proposes learning energy landscapes over solution spaces of small subproblems, enabling out-of-distribution algorithmic reasoning.
+- **Energy Generative Modeling: A Lyapunov-based Energy Matching Perspective** (Wang et al., May 2026, arXiv:2605.05530)
+  - Bridges EBMs with Nonlinear Control Theory, using Control Barrier Functions for safety-guaranteed constrained generation.
+- **Kona (Logical Intelligence)** (Bodnia & Hanin, Jan 2026)
+  - Non-autoregressive Energy-Based Reasoning Model (EBRM) that generates reasoning traces in continuous latent space with local energy edits.
+- **Kolmogorov-Arnold Energy Model (KAEM)** (Zettascale, 2025/2026)
+  - Replaces MLP energy functions with univariate splines (KART), enabling exact inference without MCMC and better interpretability.
+- **LSEBMCL: A Latent Space Energy-Based Model for Continual Learning** (Xiaodi Li et al., Jan 2025, arXiv:2501.05495)
+  - Uses latent space EBMs as an outer-generator to prevent catastrophic forgetting by sampling pseudo-exemplars.
+- **PPSEBM: An Energy-Based Model with Progressive Parameter Selection for Continual Learning** (Xiaodi Li et al., Dec 2025, arXiv:2512.15658)
+  - Integrates EBM generative replay with progressive parameter selection to retain past knowledge.
