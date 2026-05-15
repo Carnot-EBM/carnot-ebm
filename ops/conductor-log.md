@@ -3270,3 +3270,4 @@ IMPORTANT:
 | 2026-05-15 04:57 UTC | Exp 1712: .174 + .172/.173 SKIP recovery — adversa | OK | 81 passed, 1 warning in 5.22s |
 | 2026-05-15 05:02 UTC | Exp 1713: Milestone .175 retrospective | OK | 81 passed, 1 warning in 5.54s |
 | 2026-05-15 05:04 UTC | Milestone 2026.05.176 activated | OK | 5 tasks queued |
+| 2026-05-15 05:07 UTC | Exp 1714: Codify exp1709 near-critical sampler fin | OK | cache hit: 81 passed, 1 warning in 5.54s |
