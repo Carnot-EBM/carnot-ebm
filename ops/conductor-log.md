@@ -3500,3 +3500,4 @@ IMPORTANT:
 | 2026-05-15 19:38 UTC | Phase 2: Hybrid Energy-Distance Weighted Prompt Le | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:41 UTC | Phase 2: Hybrid Energy-Distance Weighted Prompt Le | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:43 UTC | Phase 2: Hybrid Energy-Distance Weighted Prompt Le | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 19:45 UTC | Phase 2: Symbolic-KAN Discrete Structure Prototypi | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
