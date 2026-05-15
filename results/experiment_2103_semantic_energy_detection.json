@@ -1,0 +1,42 @@
+{
+  "experiment": 2103,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-15",
+  "started_at": "2026-05-15T02:57:57.700048+00:00",
+  "finished_at": "2026-05-15T02:57:57.700048+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 2103: Semantic Energy for Hallucination Detection",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1481-semantic-energy-feasibility-audit",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: retired_semantic_energy_confounded_by_superficial_baseline"
+    },
+    {
+      "upstream": "exp506-semantic-energy-tier0d",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: semantic_energy_no_improvement"
+    },
+    {
+      "upstream": "exp772-semantic-energy-probe",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: semantic_energy_below_baseline"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
