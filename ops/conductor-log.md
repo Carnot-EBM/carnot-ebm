@@ -3401,3 +3401,4 @@ IMPORTANT:
 | 2026-05-15 15:22 UTC | Exp 1757: FR-11 Continuous Self-Learning with Dyna | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-15 15:24 UTC | Exp 1758: Energy-Guided Decoding on Qwen 3.6-35B-A | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 15:26 UTC | Exp 1758: Energy-Guided Decoding on Qwen 3.6-35B-A | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 15:28 UTC | Exp 1758: Energy-Guided Decoding on Qwen 3.6-35B-A | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
