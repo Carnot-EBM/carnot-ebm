@@ -3236,3 +3236,4 @@ IMPORTANT:
 | 2026-05-15 02:53 UTC | Exp 2102: HoVer Safe-Prefix Continuation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2101-interwhen-monitoring.interruption_ |
 | 2026-05-15 02:55 UTC | Exp 2102: HoVer Safe-Prefix Continuation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2101-interwhen-monitoring.interruption_ |
 | 2026-05-15 02:57 UTC | Exp 2103: Semantic Energy for Hallucination Detect | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 03:00 UTC | Exp 2103: Semantic Energy for Hallucination Detect | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
