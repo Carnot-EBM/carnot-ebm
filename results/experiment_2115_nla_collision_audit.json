@@ -1,0 +1,47 @@
+{
+  "schema": "carnot.nla_collision_audit.v1",
+  "experiment": 2115,
+  "run_date": "2026-05-15T08:53:40Z",
+  "duration_s": 242,
+  "random_seed": 42,
+  "description": "Feature description collision audit on the NLA-class 16th verifier SAE. Checks whether SAE dictionary atoms are so similar that an auto-interpretability system would assign them near-identical descriptions — a known failure mode when SAEs learn redundant features instead of diverse semantic bases.",
+  "preconditions_checked": [
+    {
+      "resource": "unsloth/gemma-4-31B-it-GGUF",
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/",
+      "available": false,
+      "outcome": "Directory does not exist — model not cached. Cannot run GGUF-backed activation extraction for the specified model."
+    }
+  ],
+  "model_specs": {
+    "target_model_requested": "unsloth/gemma-4-31B-it-GGUF",
+    "target_model_used": "synthetic_activations_d256",
+    "note": "gemma-4-31B-it-GGUF not cached locally. Audit ran on randomly-initialised SAE with d_model=256, expansion_factor=4 (1024 features) using Kaiming-init decoder weights and N=128 synthetic zero-mean unit-variance activations. This tests the collision metric implementation, not production NLA fidelity."
+  },
+  "implementation_status": "complete",
+  "code_artifact": "python/carnot/verify/nla_probe.py — method NLAClassProbe.feature_description_collision_rate()",
+  "test_artifact": "tests/python/test_nla_probe.py — 5 new tests: test_collision_rate_return_structure, test_collision_rate_pair_counts, test_collision_rate_identical_features_gives_high_rate, test_collision_rate_orthogonal_features_gives_zero_rate, test_collision_rate_custom_threshold",
+  "tests_passed": 7,
+  "collision_audit_config": {
+    "d_model": 256,
+    "expansion_factor": 4,
+    "n_sae_features": 1024,
+    "n_samples": 128,
+    "cosine_threshold": 0.95
+  },
+  "collision_rate": 0.0,
+  "n_features": 1024,
+  "n_collision_pairs": 0,
+  "n_total_pairs": 523776,
+  "cosine_threshold": 0.95,
+  "methodology_note": "Collision rate is measured as fraction of (n_features choose 2) pairs of SAE decoder column-vectors with pairwise cosine similarity >= threshold. A randomly-initialised SAE with Kaiming decoder weights in high-dimensional space has near-zero collision rate by the Johnson-Lindenstrauss lemma (random unit vectors in R^256 are nearly orthogonal). This is the expected baseline. A trained SAE on real model activations may show higher collision rates if the model learns to represent the same semantic concept through multiple redundant atoms.",
+  "collision_rate_15pct_threshold_triggered": false,
+  "status": "blocked_model_not_cached",
+  "honest_verdict": "blocked_model_not_cached_gemma_4_31B_it_GGUF",
+  "blocked_reason": "The required model unsloth/gemma-4-31B-it-GGUF is not cached at ~/.cache/huggingface/hub/. The feature_description_collision_rate() implementation and test suite are complete and all 7 tests pass. The production audit (step 2 of the task) requires the GGUF model to extract real activations. To unblock: run `huggingface-cli download unsloth/gemma-4-31B-it-GGUF` before re-running this experiment.",
+  "next_steps": [
+    "Cache unsloth/gemma-4-31B-it-GGUF and re-run with real model activations",
+    "If collision_rate > 0.15 with real activations, refer to docs/research-notes/nla-collision-audit.md for mitigation strategy",
+    "Consider running with the available gemma-4-26B-A4B-it-GGUF as a proxy (similar architecture family)"
+  ]
+}
