@@ -3255,3 +3255,4 @@ IMPORTANT:
 | 2026-05-15 03:43 UTC | Exp 2108: Kona-Parity Sudoku Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2107-gradient-based-trace-editor) |
 | 2026-05-15 03:48 UTC | Exp 2111: Energy-Based Fine-Tuning (EBFT) with Lat | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-15 03:55 UTC | Exp 2112: Z1 SDK and DTM Stub Alignment | OK | 81 passed, 1 warning in 5.51s |
+| 2026-05-15 03:57 UTC | Exp 2113: Z1 Hardware P-Bit Accounting | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
