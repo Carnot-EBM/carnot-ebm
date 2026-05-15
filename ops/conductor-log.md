@@ -3251,3 +3251,5 @@ IMPORTANT:
 | 2026-05-15 03:25 UTC | Exp 2108: Kona-Parity Sudoku Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2107-gradient-based-trace-editor) |
 | 2026-05-15 03:29 UTC | Exp 2109: PiNet Convex Splitting Layer Rescue | OK | 81 passed, 1 warning in 5.30s |
 | 2026-05-15 03:31 UTC | Exp 2108: Kona-Parity Sudoku Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2107-gradient-based-trace-editor) |
+| 2026-05-15 03:41 UTC | Exp 2110: Integration of PiNet with CASAL | OK | 97 passed, 1 warning in 7.44s |
+| 2026-05-15 03:43 UTC | Exp 2108: Kona-Parity Sudoku Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2107-gradient-based-trace-editor) |
