@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2501-experiments-across-the-public-record-188-archived-milestone-records-24761-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
+<h2 id="a-technical-report-2501-experiments-across-the-public-record-191-archived-milestone-records-24761-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -184,11 +184,11 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
 <p>This report documents the research arc behind the framework — <strong>2,501
-experiment records tracked through Exp 2114, with 2,263 task records in 181
-artifact-backed completed milestone records archived through 2026.05.172 and
-checked-in result artifacts extending through milestone .174</strong> — run between
-February and May 2026. <code>research-complete.yaml</code> currently archives <strong>171</strong>
-completed milestone records through 2026.05.174; checked-in result artifacts
+experiment records tracked through Exp 2114, with 2,359 task records in 191
+artifact-backed completed milestone records archived through 2026.05.174 and
+checked-in result artifacts extending through milestone .176</strong> — run between
+February and May 2026. <code>research-complete.yaml</code> currently archives <strong>191</strong>
+completed milestone records through 2026.05.176; checked-in result artifacts
 and <code>ops/changelog.md</code> now extend through
 <code>results/experiment_2027_milestone_158_retro.json</code>. Milestone .161 completed
 <strong>25</strong> experiments in <strong>26.5</strong> minutes, with GPUs correctly idled at 0%
@@ -6736,6 +6736,13 @@ Experiment 2112 completed Z1 SDK and DTM Stub Alignment. The DTM stub interface 
 Experiment 2113 attempted Z1 Hardware P-Bit Accounting but ran into a Doomed Rerun Block due to prior failure scope mismatches.</p>
 <p><strong>Milestone .174 Retrospective</strong>
 Experiment 2114 verified that the Kona parity generation loops were successfully achieved across the latest operational batches.</p>
+<h2 id="milestones-166176-operational-retrospectives-and-synthesis-bottlenecks-exps-21052114-may-2026">Milestones 166–176 — Operational Retrospectives and Synthesis Bottlenecks (Exps 2105–2114, May 2026)</h2>
+<p><strong>Milestone 166 Operational Retrospective</strong>
+Analyzed 41 min wall time across 10 experiments. GPUs correctly idled at 0% utilization throughout since all 10 tasks were synthesis-only. The slowest paths were purely synthesis tasks, with Exp 2105 taking 14 minutes.</p>
+<p><strong>Milestone 169 Operational Retrospective</strong>
+Analyzed 20.1 min wall time across 11 experiments (avg ~2 min). GPUs correctly idled at 0% utilization throughout. Synthesis tasks remained the primary bottleneck for optimization.</p>
+<p><strong>Milestone 176 Operational Retrospective</strong>
+Analyzed 19.3 min wall time across 10 experiments. GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. The slowest path was Exp 1716 (8.7 min, synthesis-only).</p>
 </article>
 
 <footer>

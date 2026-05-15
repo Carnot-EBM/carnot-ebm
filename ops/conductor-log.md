@@ -3307,3 +3307,4 @@ IMPORTANT:
 | 2026-05-15 07:57 UTC | Exp 1722: .177 findings audit + corrigenda | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-15 08:03 UTC | Exp 1722: .177 findings audit + corrigenda | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
 | 2026-05-15 08:09 UTC | Exp 1723: Milestone .178 retrospective | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-C5NJ2YR |
+| 2026-05-15 08:25 UTC | Exp 1723: Milestone .178 retrospective | OK | 81 passed, 1 warning in 5.17s |

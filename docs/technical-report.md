@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -30,11 +30,11 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **2,501
-experiment records tracked through Exp 2114, with 2,263 task records in 181
-artifact-backed completed milestone records archived through 2026.05.172 and
-checked-in result artifacts extending through milestone .174** — run between
-February and May 2026. `research-complete.yaml` currently archives **171**
-completed milestone records through 2026.05.174; checked-in result artifacts
+experiment records tracked through Exp 2114, with 2,359 task records in 191
+artifact-backed completed milestone records archived through 2026.05.174 and
+checked-in result artifacts extending through milestone .176** — run between
+February and May 2026. `research-complete.yaml` currently archives **191**
+completed milestone records through 2026.05.176; checked-in result artifacts
 and `ops/changelog.md` now extend through
 `results/experiment_2027_milestone_158_retro.json`. Milestone .161 completed
 **25** experiments in **26.5** minutes, with GPUs correctly idled at 0%
@@ -5480,3 +5480,15 @@ Experiment 2113 attempted Z1 Hardware P-Bit Accounting but ran into a Doomed Rer
 
 **Milestone .174 Retrospective**
 Experiment 2114 verified that the Kona parity generation loops were successfully achieved across the latest operational batches.
+
+
+## Milestones 166–176 — Operational Retrospectives and Synthesis Bottlenecks (Exps 2105–2114, May 2026)
+
+**Milestone 166 Operational Retrospective**
+Analyzed 41 min wall time across 10 experiments. GPUs correctly idled at 0% utilization throughout since all 10 tasks were synthesis-only. The slowest paths were purely synthesis tasks, with Exp 2105 taking 14 minutes.
+
+**Milestone 169 Operational Retrospective**
+Analyzed 20.1 min wall time across 11 experiments (avg ~2 min). GPUs correctly idled at 0% utilization throughout. Synthesis tasks remained the primary bottleneck for optimization.
+
+**Milestone 176 Operational Retrospective**
+Analyzed 19.3 min wall time across 10 experiments. GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. The slowest path was Exp 1716 (8.7 min, synthesis-only).

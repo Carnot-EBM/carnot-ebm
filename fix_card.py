@@ -1,18 +1,18 @@
-import re
+with open("docs/index.html", "r") as f:
+    html = f.read()
 
-with open('docs/index.html', 'r', encoding='utf-8') as f:
-    content = f.read()
+old_card = """<h3 class="r-title">Milestone 2026.05.166 Operational Retrospective</h3>
+        <p class="r-desc">Milestone .172 completed 6 experiments in 41 minutes. All 10 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout. The slowest paths were purely synthesis tasks, remaining the primary bottleneck for optimization.</p>
+        <div class="r-stats"><span class="r-before">Analyzed 41 min wall time</span> <span class="r-after">Exp 2114</span></div>"""
 
-# I will replace the 161 section entirely or by string replacement.
-content = content.replace("25/25", "23/23")
-content = content.replace("experiments completed in .161", "experiments completed in .162")
-content = content.replace("Milestone 2026.05.163 Operational Retrospective", "Milestone 2026.05.162 Operational Retrospective") # My previous regex replaced 161 with 163 here
-content = content.replace("Milestone 2026.05.161 Operational Retrospective", "Milestone 2026.05.162 Operational Retrospective")
-content = content.replace("Milestone .161 completed 25 experiments in 118.9 minutes. GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck.", "Milestone .162 completed 23 experiments in 45.2 minutes. GPU utilization on the 3 compute-bound tasks was efficient, and no anomalous idling was flagged. Doomed-rerun blocks successfully saved time.")
-content = content.replace("Analyzed 92.5 min wall time", "Analyzed 45.2 min wall time")
-content = content.replace("Exp 2065", "Exp 2089") # wait, the regex might have already replaced Exp 2065 with Exp 2089
+new_card = """<h3 class="r-title">Milestone 2026.05.176 Operational Retrospective</h3>
+        <p class="r-desc">Milestone .176 completed 10 experiments in 19.3 minutes. GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. The slowest path was a synthesis task, remaining the primary bottleneck for optimization.</p>
+        <div class="r-stats"><span class="r-before">Analyzed 19.3 min wall time</span> <span class="r-after">Exp 2114</span></div>"""
 
-with open('docs/index.html', 'w', encoding='utf-8') as f:
-    f.write(content)
-
-print("HTML card completely updated.")
+if old_card in html:
+    html = html.replace(old_card, new_card)
+    with open("docs/index.html", "w") as f:
+        f.write(html)
+    print("Card updated successfully.")
+else:
+    print("Card NOT FOUND!")
