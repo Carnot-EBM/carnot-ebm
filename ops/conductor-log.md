@@ -3222,3 +3222,4 @@ IMPORTANT:
 | 2026-05-15 02:10 UTC | Exp 1706: Phase 1 independent reproducer engagemen | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.06s |
 | 2026-05-15 02:12 UTC | Exp 1706: Phase 1 independent reproducer engagemen | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.12s |
 | 2026-05-15 02:14 UTC | Exp 1706: Phase 1 independent reproducer engagemen | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.24s |
+| 2026-05-15 02:16 UTC | Exp 1707: IPFS sovereignty mirror POC (per CLAUDE. | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
