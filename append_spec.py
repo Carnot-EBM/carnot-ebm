@@ -1,16 +1,19 @@
-with open('openspec/capabilities/self-learning/spec.md', 'a') as f:
-    f.write("""
+with open('openspec/capabilities/pipeline/spec.md', 'a') as f:
+    f.write('''
+### REQ-PIPELINE-EMPIRICAL-DELTA: Empirical Delta Calculation
 
-## REQ-LEARN-1680: Enforce strict schema limits on continuous memory using SCG-MEM
+The pipeline MUST provide a function `compute_empirical_delta(results_dir: Path) -> float` to compute the single-step absorption probability (delta) from recent verify-repair runs by reading JSON logs containing iteration counts and success markers.
 
-**Given** an FR-11 self-learning traces stream
-**When** the memory embeddings are generated
-**Then** it MUST apply schema constraints (valid JSON/cognitive schema) using SCG-MEM structural enforcer
-**And** write the constrained output to `results/experiment_1680_scg_mem.json`.
+**Acceptance criteria:**
+- `compute_empirical_delta` is implemented in `carnot.pipeline.empirical_delta`.
+- Returns the ratio of successful repairs to total repair iterations.
+- If no logs exist, returns 0.0.
 
-### SCENARIO-LEARN-1680: SCG-MEM Structural Enforcer Execution
+### SCENARIO-PIPELINE-EMPIRICAL-DELTA: Computes delta
 
-**Given** an initialized `ScgAdapter`
-**When** generated memory embeddings are processed
-**Then** schema constraints are applied and the valid deliverable is written.
-""")
+**Given** a directory containing repair JSON logs
+**When** `compute_empirical_delta` is called
+**Then** it returns the correct float delta.
+
+**Spec traces:** REQ-PIPELINE-EMPIRICAL-DELTA
+''')
