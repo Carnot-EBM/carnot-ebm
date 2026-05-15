@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -30,11 +30,11 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **2,501
-experiment records tracked through Exp 2114, with 2,359 task records in 191
+experiment records tracked through Exp 2114, with 2,364 task records in 192
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176** — run between
 February and May 2026. `research-complete.yaml` currently archives **191**
-completed milestone records through 2026.05.176; checked-in result artifacts
+completed milestone records through 2026.05.179; checked-in result artifacts
 and `ops/changelog.md` now extend through
 `results/experiment_2027_milestone_158_retro.json`. Milestone .161 completed
 **25** experiments in **26.5** minutes, with GPUs correctly idled at 0%
@@ -5492,3 +5492,17 @@ Analyzed 20.1 min wall time across 11 experiments (avg ~2 min). GPUs correctly i
 
 **Milestone 176 Operational Retrospective**
 Analyzed 19.3 min wall time across 10 experiments. GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. The slowest path was Exp 1716 (8.7 min, synthesis-only).
+\n
+## Milestones 177–179 — Continuous Self-Learning and KAN Abstractions (Exps 1720–1782, May 2026)
+
+**Continuous Self-Learning Non-Forgetting**
+Experiment 1779 implemented non-forgetting soundness checks for continuous learning, and Experiment 1780 ran the FR-11 continuous self-learning loop with rigorous checks.
+
+**NLA-Class Verifier Integration**
+Experiment 1720 successfully integrated the ensemble as production verifier #16.
+
+**KANELÉ LUT Abstractions**
+Experiments 1781 and 1782 drafted and benchmarked Python LUT abstractions for KANs based on KANELÉ against baselines, demonstrating new Phase 4 hardware-accounting capabilities.
+
+**Phase 4 Alpha Replacement**
+Experiment 1721 successfully derived the alpha_t replacement from the maximum-caliber FEP<->IIT bridge, confirming monotonic decay and breaking the bijection-invariance artifact.

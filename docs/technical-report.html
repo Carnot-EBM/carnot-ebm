@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2501-experiments-across-the-public-record-191-archived-milestone-records-24761-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
+<h2 id="a-technical-report-2501-experiments-across-the-public-record-191-archived-milestone-records-24316-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -184,11 +184,11 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
 <p>This report documents the research arc behind the framework — <strong>2,501
-experiment records tracked through Exp 2114, with 2,359 task records in 191
+experiment records tracked through Exp 2114, with 2,364 task records in 192
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176</strong> — run between
 February and May 2026. <code>research-complete.yaml</code> currently archives <strong>191</strong>
-completed milestone records through 2026.05.176; checked-in result artifacts
+completed milestone records through 2026.05.179; checked-in result artifacts
 and <code>ops/changelog.md</code> now extend through
 <code>results/experiment_2027_milestone_158_retro.json</code>. Milestone .161 completed
 <strong>25</strong> experiments in <strong>26.5</strong> minutes, with GPUs correctly idled at 0%
@@ -6742,7 +6742,17 @@ Analyzed 41 min wall time across 10 experiments. GPUs correctly idled at 0% util
 <p><strong>Milestone 169 Operational Retrospective</strong>
 Analyzed 20.1 min wall time across 11 experiments (avg ~2 min). GPUs correctly idled at 0% utilization throughout. Synthesis tasks remained the primary bottleneck for optimization.</p>
 <p><strong>Milestone 176 Operational Retrospective</strong>
-Analyzed 19.3 min wall time across 10 experiments. GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. The slowest path was Exp 1716 (8.7 min, synthesis-only).</p>
+Analyzed 19.3 min wall time across 10 experiments. GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. The slowest path was Exp 1716 (8.7 min, synthesis-only).
+\n</p>
+<h2 id="milestones-177179-continuous-self-learning-and-kan-abstractions-exps-17201782-may-2026">Milestones 177–179 — Continuous Self-Learning and KAN Abstractions (Exps 1720–1782, May 2026)</h2>
+<p><strong>Continuous Self-Learning Non-Forgetting</strong>
+Experiment 1779 implemented non-forgetting soundness checks for continuous learning, and Experiment 1780 ran the FR-11 continuous self-learning loop with rigorous checks.</p>
+<p><strong>NLA-Class Verifier Integration</strong>
+Experiment 1720 successfully integrated the ensemble as production verifier #16.</p>
+<p><strong>KANELÉ LUT Abstractions</strong>
+Experiments 1781 and 1782 drafted and benchmarked Python LUT abstractions for KANs based on KANELÉ against baselines, demonstrating new Phase 4 hardware-accounting capabilities.</p>
+<p><strong>Phase 4 Alpha Replacement</strong>
+Experiment 1721 successfully derived the alpha_t replacement from the maximum-caliber FEP&lt;-&gt;IIT bridge, confirming monotonic decay and breaking the bijection-invariance artifact.</p>
 </article>
 
 <footer>
