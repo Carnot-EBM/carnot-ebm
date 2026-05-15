@@ -907,3 +907,6 @@ The PyPI publish dry run MUST produce an artifact at `results/experiment_2103_py
 | REQ-PUBLISH-023 | Proposed | Exp 1579 ICLR 2026 OT verification framework adoption |
 | REQ-PUBLISH-024 | Proposed | Exp 1582 Phase 1 software ship readiness ledger |
 | REQ-PUBLISH-025 | Implemented | Exp 2103 PyPI publish dry run artifact |
+
+### REQ-PUBLISH-026: HuggingFace Publish Retry
+The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".

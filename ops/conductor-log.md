@@ -3375,3 +3375,19 @@ IMPORTANT:
 | 2026-05-15 14:07 UTC | Exp 1749: Milestone .182 retrospective | OK | 86 passed, 1 warning in 14.53s |
 | 2026-05-15 14:28 UTC | Plan milestone 2026.05.183 | OK | 11 tasks proposed |
 | 2026-05-15 14:30 UTC | Milestone 2026.05.183 activated | OK | 11 tasks queued |
+| 2026-05-15 14:44 UTC | Exp 1750: Phase 1 HuggingFace mirror retry (Final  | FAIL | Post-tests failed: 2 failed, 81 passed, 1 warning in 5.57s |
+| 2026-05-15 14:47 UTC | Exp 1750: Phase 1 HuggingFace mirror retry (Final  | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.48s |
+| 2026-05-15 14:49 UTC | Exp 1750: Phase 1 HuggingFace mirror retry (Final  | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.59s |
+| 2026-05-15 14:51 UTC | Exp 1751: QAOD/NLA corpus synchronization | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.42s |
+| 2026-05-15 14:53 UTC | Exp 1751: QAOD/NLA corpus synchronization | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.59s |
+| 2026-05-15 14:56 UTC | Exp 1751: QAOD/NLA corpus synchronization | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.51s |
+| 2026-05-15 14:58 UTC | Exp 1752: QAOD vs NLA head-to-head on synced corpu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1751-qaod-nla-corpus-sync) |
+| 2026-05-15 14:58 UTC | Exp 1753: Bounded Energy Descent for EBT | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.41s |
+| 2026-05-15 15:00 UTC | Exp 1752: QAOD vs NLA head-to-head on synced corpu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1751-qaod-nla-corpus-sync) |
+| 2026-05-15 15:00 UTC | Exp 1753: Bounded Energy Descent for EBT | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.48s |
+| 2026-05-15 15:02 UTC | Exp 1752: QAOD vs NLA head-to-head on synced corpu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1751-qaod-nla-corpus-sync) |
+| 2026-05-15 15:03 UTC | Exp 1753: Bounded Energy Descent for EBT | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.32s |
+| 2026-05-15 15:05 UTC | Exp 1754: Thermodynamic Penalty Metric Implementat | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.43s |
+| 2026-05-15 15:07 UTC | Exp 1754: Thermodynamic Penalty Metric Implementat | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.41s |
+| 2026-05-15 15:09 UTC | Exp 1754: Thermodynamic Penalty Metric Implementat | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.42s |
+| 2026-05-15 15:11 UTC | Exp 1755: Substrate-size scaling sweep with Thermo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1754-phase4-thermodynamic-metric) |
