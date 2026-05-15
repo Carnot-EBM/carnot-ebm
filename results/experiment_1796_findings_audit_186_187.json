@@ -1,0 +1,60 @@
+{
+  "schema": "carnot.findings_audit_corrigenda.v3",
+  "experiment": 1796,
+  "run_date": "2026-05-15T20:00:23.246527Z",
+  "duration_s": 0.014230966567993164,
+  "random_seed": 1796187,
+  "reproducibility_checksum": "7d6abf03b6cbd15c8b90e2941ca52e1aff52944d0ba4f08c51301bab63450437",
+  "preconditions_checked": [
+    "scripts/adversarial_verify.py importable"
+  ],
+  "model_specs": {
+    "audit_target_milestones": [
+      "2026.05.186",
+      "2026.05.187"
+    ],
+    "adversarial_verify_version": "7b819d28fd3ca55d9279c0a18efe60272ed45fc7"
+  },
+  "n_samples": 17,
+  "n_samples_justification": "Audit task; n is artifact count.",
+  "audit_outcomes": {
+    "1861": {
+      "classification": "TAUTOLOGY",
+      "rationale": "py_loss and rs_loss agree to >5 sig figs.",
+      "follow_up_action": "Fix loss computation."
+    },
+    "1862": {
+      "classification": "METHODOLOGY_MISSING",
+      "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+      "follow_up_action": "Add missing methodology fields."
+    },
+    "1864": {
+      "classification": "METHODOLOGY_MISSING",
+      "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+      "follow_up_action": "Add missing methodology fields."
+    },
+    "1876": {
+      "classification": "METHODOLOGY_MISSING",
+      "rationale": "Missing model_specs/target_model, random_seed, reproducibility_checksum.",
+      "follow_up_action": "Add missing methodology fields."
+    },
+    "1877": {
+      "classification": "DURATION_TOO_SHORT",
+      "rationale": "duration_s=0.0 but artifact references compute-bound markers. Also missing methodology.",
+      "follow_up_action": "Fix simulation timing and add methodology."
+    }
+  },
+  "corrigenda_added": [
+    "results/experiment_1861_equivalence.json",
+    "results/experiment_1862_e2e.json",
+    "results/experiment_1864_roce.json",
+    "results/experiment_1876_146_completion_147_gate_contract.json",
+    "results/experiment_1877_artifact_contract_normalization.json"
+  ],
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "All flagged artifacts classified with defensible rationale; corrigenda appended.",
+  "methodology_note": "Audit task. Classify honestly.",
+  "optimization_direction": "neither - audit task",
+  "status": "complete",
+  "honest_verdict": "complete: Audit finished. Flagged artifacts processed. Corrigenda appended."
+}
