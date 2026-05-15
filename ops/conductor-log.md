@@ -3502,3 +3502,5 @@ IMPORTANT:
 | 2026-05-15 19:43 UTC | Phase 2: Hybrid Energy-Distance Weighted Prompt Le | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:45 UTC | Phase 2: Symbolic-KAN Discrete Structure Prototypi | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:47 UTC | Phase 2: Symbolic-KAN Discrete Structure Prototypi | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 19:49 UTC | Phase 2: Symbolic-KAN Discrete Structure Prototypi | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 19:51 UTC | Phase 3: QAOD vs NLA head-to-head on synced corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
