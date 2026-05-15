@@ -3420,3 +3420,4 @@ IMPORTANT:
 | 2026-05-15 16:02 UTC | Exp 1763: .183 findings audit + corrigenda | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.08s |
 | 2026-05-15 16:04 UTC | Exp 1764: Phase 4 thermodynamic metric vs Fast-Slo | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.04s |
 | 2026-05-15 16:06 UTC | Exp 1764: Phase 4 thermodynamic metric vs Fast-Slo | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.17s |
+| 2026-05-15 16:08 UTC | Exp 1764: Phase 4 thermodynamic metric vs Fast-Slo | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.13s |
