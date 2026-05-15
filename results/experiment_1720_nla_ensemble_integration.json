@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.nla_ensemble_integration.v1",
+  "experiment": 1720,
+  "run_date": "2026-05-15T07:35:57Z",
+  "duration_s": 105.4,
+  "random_seed": 171820,
+  "reproducibility_checksum": "c030c47a6c9e63a2090636391d022d57c7658940f7a8f17b8ced03d9ad88f133",
+  "preconditions_checked": [
+    {
+      "resource": "carnot.verify.nla_verifier_v3.NLAVerifierV3",
+      "available": true
+    },
+    {
+      "resource": "carnot.pipeline.verify_repair.VerifyRepairPipeline",
+      "available": true
+    },
+    {
+      "resource": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "available": true
+    }
+  ],
+  "model_specs": {
+    "target_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "n_test": 60,
+    "k_baseline": 15,
+    "k_with_nla": 16,
+    "probe_weights_from": "exp1694"
+  },
+  "n_samples": 60,
+  "n_samples_justification": "60 held-out test examples gives Wilson 95% CI of width ~0.20 on per-k pass rate; lift CI width ~0.28. Sufficient for 3pp threshold detection at reasonable power.",
+  "k15_baseline_agreement_rate": 0.6,
+  "k16_with_nla_agreement_rate": 0.8166666666666667,
+  "lift": 0.21666666666666667,
+  "lift_wilson_95_ci": [
+    0.05870269984253676,
+    0.3746306334907966
+  ],
+  "per_verifier_pass_rate": {
+    "v1": 0.5166666666666667,
+    "v2": 0.5,
+    "v3": 0.5666666666666667,
+    "v4": 0.6666666666666666,
+    "v5": 0.5666666666666667,
+    "v6": 0.5166666666666667,
+    "v7": 0.5333333333333333,
+    "v8": 0.48333333333333334,
+    "v9": 0.4666666666666667,
+    "v10": 0.5,
+    "v11": 0.5166666666666667,
+    "v12": 0.45,
+    "v13": 0.55,
+    "v14": 0.5166666666666667,
+    "v15": 0.5666666666666667,
+    "nla_verifier": 0.8166666666666667
+  },
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Lift >= 3pp AND statistically positive.",
+  "methodology_note": "If lift < 0, NLA probe adds noise \u2014 should stay experimental. Disclose honestly; do NOT promote a counter-productive verifier to production.",
+  "optimization_direction": "maximize_lift",
+  "honest_verdict": "complete_acceptance_passed"
+}

@@ -568,6 +568,8 @@ class VerifyRepairPipeline:
         # can dispatch to both GPUs concurrently for ~2x throughput.
         self._second_model_spec: dict[str, str] | None = second_model_spec
 
+        self.verifier_list = [f"v{i}" for i in range(1, 16)] + ["nla_verifier"]
+
         if model is not None:
             self._load_model(model)
 
