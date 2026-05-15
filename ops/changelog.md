@@ -5803,3 +5803,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Theoretical LM-EBM Bijection Re-derivation (arXiv:2512.15605v3) (⚠️ Research Finding) — honest_verdict=e2e_pipeline_successful; results/experiment_1725_e2e_cikan.json
 - 2026-05-15: NLA-Class Verifier Descriptive Collision Audit (arXiv:2605.12874) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1726_ebt.json
 - 2026-05-15: Empirical δ Calculation for Verify-Repair Convergence (arXiv:2512.02080) (⚠️ Research Finding) — honest_verdict=eqm_converged_faster; results/experiment_1727_eqm.json
+- 2026-05-15: Continuous Self-Learning Loop with NLA Signal Integration (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_1728_system2_benchmark.json
