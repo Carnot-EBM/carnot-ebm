@@ -3433,3 +3433,4 @@ IMPORTANT:
 | 2026-05-15 16:37 UTC | Exp 1767: FoVer Dataset Expansion via ROCE Constra | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 16:39 UTC | Exp 1767: FoVer Dataset Expansion via ROCE Constra | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 16:41 UTC | Exp 1767: FoVer Dataset Expansion via ROCE Constra | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 16:43 UTC | Exp 1768: Gated Fast-Slow Variant Scale-Up on SOTA | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1766-token-level-energy-telemetry) |
