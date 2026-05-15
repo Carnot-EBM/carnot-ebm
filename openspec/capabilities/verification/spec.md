@@ -2866,3 +2866,14 @@ When the PWA abstraction and formal bounds are generated,
 Then a valid Z3 script (.smt2 format) is produced with the MSE property assertion,
 And a positive theoretical upper bound is calculated using interval arithmetic,
 And the JSON artifact records `pwa_abstraction_generated=true` and `status="complete"`.
+
+### REQ-VERIFY-1742: EB-SLE Reward Hacking Prevention Prototype
+Carnot MUST implement an EB-SLE constraint that specifically detects reward hacking.
+The verifier MUST check whether the repaired generation merely loops or exploits syntax vs solving the problem.
+It MUST evaluate against known failure cases from prior milestones using MODEL_SPECS: unsloth/Qwen3.6-35B-A3B-GGUF.
+
+### SCENARIO-VERIFY-1742: EB-SLE Hack Detection
+Given an initial response and a repaired response,
+When the repair generation loops or exploits syntax,
+Then the EB-SLE Hack Verifier returns True,
+And the JSON artifact records `ebsle_hack_detected=true` and `status="complete"`.
