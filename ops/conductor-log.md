@@ -3352,3 +3352,4 @@ IMPORTANT:
 | 2026-05-15 12:45 UTC | Milestone 2026.05.182 activated | OK | 5 tasks queued |
 | 2026-05-15 12:49 UTC | Exp 1745: Phase 4 per-step alpha disaggregation —  | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-15 13:01 UTC | Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47  | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
+| 2026-05-15 13:15 UTC | Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47  | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: nerateContent?alt=s |
