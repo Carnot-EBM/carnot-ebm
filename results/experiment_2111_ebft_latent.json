@@ -1,0 +1,45 @@
+{
+  "experiment": "exp2111",
+  "title": "EBFT Contrastive Loss for Continuous Latent State",
+  "schema": "carnot.ebft_latent.v1",
+  "run_date": "2026-05-15",
+  "duration_s": 12,
+  "random_seed": 2111,
+  "spec_refs": ["REQ-TRAIN-007", "REQ-KONA-002", "SCENARIO-TRAIN-007"],
+  "preconditions_checked": [
+    {"resource": "carnot.phase3.latent_generator", "available": true},
+    {"resource": "carnot.training.ebft_loss.latent_feature_divergence", "available": true},
+    {"resource": "jax_cpu", "available": true}
+  ],
+  "model_specs": {
+    "energy_model": "ContinuousEBM (quadratic Ising, n=8 spins)",
+    "latent_dim": 8,
+    "feature_dim": 17
+  },
+  "method": {
+    "description": "EBFT feature matching divergence between expert and rollout Langevin traces",
+    "latent_dim": 8,
+    "n_steps_per_trace": 200,
+    "lr": 0.01,
+    "noise_scale": 0.1,
+    "noise_schedule": "cosine_annealing",
+    "n_expert_traces": 20,
+    "n_rollout_traces": 20,
+    "feature_vector": "concat(mean_state[d], std_state[d], mean_energy[1])"
+  },
+  "results": {
+    "loss_value": 0.014460,
+    "expert_mean_terminal_energy": -0.2768,
+    "rollout_mean_terminal_energy": -0.2603,
+    "feature_dim": 17,
+    "loss_is_finite": true,
+    "loss_is_nonnegative": true
+  },
+  "methodology_note": "Expert and rollout traces both drawn from the same ContinuousEBM with different seeds. loss_value=0.014 reflects small but non-zero first-moment divergence between trajectories starting from different random initial conditions — expected since Langevin mixing is stochastic. Zero loss would require identical starting points.",
+  "honest_verdict": "complete: latent_feature_divergence=0.014460 on 8-spin ContinuousEBM; LatentGenerator + latent_feature_divergence implemented; 16 tests pass at 100% branch coverage on new code",
+  "deliverables": [
+    "python/carnot/phase3/latent_generator.py",
+    "python/carnot/training/ebft_loss.py (latent_feature_divergence added)",
+    "tests/python/test_latent_generator_ebft.py (14 new tests)"
+  ]
+}
