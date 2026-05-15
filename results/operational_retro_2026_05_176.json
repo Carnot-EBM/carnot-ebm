@@ -1,35 +1,51 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.176",
-  "generated_at": "2026-05-15T05:33:06Z",
+  "generated_at": "2026-05-15T05:42:02Z",
   "retro_type": "operational_full",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.176..HEAD returns non-empty: True"
-  ],
-  "total_wall_time_minutes": 15.5,
-  "experiments_completed": 8,
-  "compute_bound_experiments_count": 0,
+  "total_wall_time_minutes": 19.3,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 1,
   "slowest_experiments": [
     {
-      "experiment": "Exp 2115: Milestone 2026.05.176 execution",
-      "duration_minutes": 5.0,
+      "experiment": "-0400 [conductor] Exp 1716: NLA 16th verifier eval-awareness test (carry-forward",
+      "duration_minutes": 8.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1715: Phase 4 alpha_t adversarial audit retry v3 \u2014 recover",
+      "duration_minutes": 3.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1717: .174 + .175 findings audit + corrigenda",
+      "duration_minutes": 2.9,
+      "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1718: Milestone .176 retrospective",
+      "duration_minutes": 2.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1714: Codify exp1709 near-critical sampler finding into pa",
+      "duration_minutes": 1.6,
       "compute_bound": false
     }
   ],
-  "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.176 completed successfully. Wall time was dominated by synthesis and operational tasks, with no compute-bound experiments. Preconditions for activation were satisfied.",
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Milestone 2026.05.176 operational retrospective complete. Analyzed 19.3 min wall time / 10 experiments. Slowest path: Exp 1716 (8.7 min, synthesis-only). GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.",
   "bottlenecks_identified": [
-    "Conductor execution overhead remains the primary latency source for non-compute tasks."
+    "Synthesis-only tasks, specifically Exp 1716, consumed the most execution time."
   ],
   "improvements_suggested": [
-    "Batch small synthesis tasks to amortize conductor setup costs."
+    "Optimize the synthesis pipeline to reduce execution time for non-compute tasks."
   ],
   "top_3_highest_leverage_actions": [
-    "Implement task batching for non-compute experiments.",
-    "Profile conductor activation delays.",
-    "Verify GPU gating for future compute tasks."
+    "Implement performance optimizations for synthesis-only tasks.",
+    "Maintain correct GPU utilization logic.",
+    "Monitor carry-forward task execution times."
   ],
-  "estimated_time_savings_pct": 10,
-  "meta_reflection": "Continuous monitoring of operational metrics confirms that the current bottlenecks are procedural rather than computational, matching the pattern of recent milestones.",
-  "honest_verdict": "complete: operational retrospective 176 generated successfully"
+  "estimated_time_savings_pct": 30,
+  "meta_reflection": "Synthesis-only tasks continue to dominate milestone time as compute-bound execution remains efficient."
 }

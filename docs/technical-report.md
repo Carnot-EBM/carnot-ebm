@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,496 Experiments Across the Public Record, 186 Archived Milestone Records, 24,678 Python Test Items Collected (Results and Ops Retros Through Exp 2109)
+## A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,12 +29,12 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,496
-experiment records tracked through Exp 2109, with 2,258 task records in 179
+This report documents the research arc behind the framework — **2,501
+experiment records tracked through Exp 2114, with 2,263 task records in 181
 artifact-backed completed milestone records archived through 2026.05.172 and
-checked-in result artifacts extending through milestone .166** — run between
+checked-in result artifacts extending through milestone .174** — run between
 February and May 2026. `research-complete.yaml` currently archives **171**
-completed milestone records through 2026.05.166; checked-in result artifacts
+completed milestone records through 2026.05.174; checked-in result artifacts
 and `ops/changelog.md` now extend through
 `results/experiment_2027_milestone_158_retro.json`. Milestone .161 completed
 **25** experiments in **26.5** minutes, with GPUs correctly idled at 0%
@@ -753,7 +753,7 @@ artifacts checked into `results/operational_retro_*.json`.
   solved **15/15** (Exp 1210). This is synthetic evidence, not an ARC-AGI-3
   leaderboard score.
 - **Milestone 2026.04.92 closed at 10/13 criteria:** publication hold remains
-  active, Exp 1179 and Exp 1180 artifacts are missing, k=6 and DoT are retired,
+  active, Exp 1181 and Exp 1180 artifacts are missing, k=6 and DoT are retired,
   and Phase 4 must beat a non-trivial baseline before becoming a claim
   (Exp 1190).
 - **Prlimit memory cap active:** `RLIMIT_AS=8GB` is now deployed from
@@ -3692,7 +3692,7 @@ blocked on llama.cpp GPU offload, and k=6 is measured but worse than k=5.
 Milestone 2026.04.92 met **10 of 13 success criteria**. The missed criteria
 were the llama.cpp GPU-offload fix, the five critical paper-integrity fixes,
 and the arXiv v6 bundle. Two planned artifacts are absent in this checkout:
-Exp 1179 and Exp 1180. The milestone is therefore partial, not publication
+Exp 1181 and Exp 1180. The milestone is therefore partial, not publication
 ready, but it produced several useful narrowing findings.
 
 **Pytest memory watchdog (Exp 1178):** Per-test RSS tracking shipped with a
@@ -3744,7 +3744,7 @@ claim is now "ties BFS on this synthetic set," not "beats a strong baseline."
 **Milestone .92 summary (Exp 1190):** 10/13 criteria met. Top successes:
 memory watchdog, 13/18 paper-integrity fixes, Hex operational, k=6 diagnosis,
 and a stronger Phase 4 limitation measurement. Top gaps: publication hold
-active, Exp 1179 and Exp 1180 artifacts missing, GRPO v5 still blocked on
+active, Exp 1181 and Exp 1180 artifacts missing, GRPO v5 still blocked on
 llama.cpp GPU offload, k=6 retired, DoT retired, and Latent-GRPO currently flat.
 
 ### Phase 18 — KANtize Edge Quantization and .93 Gate Failure Diagnosis (Milestone .93, Exps 1191–1202)
@@ -5462,3 +5462,21 @@ Experiments 1692 (Curie-Weiss n=128 parity with analytic ground truth) and 1698 
 
 **Phase 1 Ship Readiness**
 Experiment 1701 completed the Phase 1 ship criteria by preparing the MCP server and CLI integrator-guide documentation, supported by Exp 1695's Phase 1 HuggingFace primary publication.
+
+
+## Milestones 169–174 — Hardware P-Bit Accounting and Z1 DTM Stubs (Exps 2110–2114, May 2026)
+
+**Integration of PiNet with CASAL**
+Experiment 2110 successfully integrated PiNet with CASAL, showing zero constraint violations across 100 trials, validating the stable synthesis pathways.
+
+**Energy-Based Fine-Tuning (EBFT) with Latent Features**
+Experiment 2111 extended Energy-Based Fine-Tuning (EBFT) with Latent Features. The LatentGenerator achieved a latent feature divergence of 0.014460 on the 8-spin ContinuousEBM.
+
+**Z1 SDK and DTM Stub Alignment**
+Experiment 2112 completed Z1 SDK and DTM Stub Alignment. The DTM stub interface aligned successfully with the Z1 continuous DTM signature. Note that this was performed in a simulator-only environment.
+
+**Z1 Hardware P-Bit Accounting**
+Experiment 2113 attempted Z1 Hardware P-Bit Accounting but ran into a Doomed Rerun Block due to prior failure scope mismatches.
+
+**Milestone .174 Retrospective**
+Experiment 2114 verified that the Kona parity generation loops were successfully achieved across the latest operational batches.
