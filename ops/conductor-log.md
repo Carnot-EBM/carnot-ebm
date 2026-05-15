@@ -3496,3 +3496,4 @@ IMPORTANT:
 | 2026-05-15 19:30 UTC | Phase 1: Fast-Slow Variant Scale-Up on SOTA GGUFs  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1789-fast-slow-variant-prototype.protot |
 | 2026-05-15 19:32 UTC | Phase 2: Continual Self-Learning via LSEBMCL (Late | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:34 UTC | Phase 2: Continual Self-Learning via LSEBMCL (Late | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 19:36 UTC | Phase 2: Continual Self-Learning via LSEBMCL (Late | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
