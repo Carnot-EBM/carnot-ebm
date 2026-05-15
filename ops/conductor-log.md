@@ -3406,3 +3406,4 @@ IMPORTANT:
 | 2026-05-15 15:32 UTC | Exp 1759: Energy-Guided Decoding on Gemma-4-31B | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 15:34 UTC | Exp 1759: Energy-Guided Decoding on Gemma-4-31B | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 15:36 UTC | Exp 1760: Milestone .183 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.26s |
+| 2026-05-15 15:38 UTC | Exp 1760: Milestone .183 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.19s |
