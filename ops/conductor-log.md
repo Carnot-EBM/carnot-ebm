@@ -3347,3 +3347,4 @@ IMPORTANT:
 | 2026-05-15 12:11 UTC | Exp 1741: Phase 4 GENUINE substrate scaling sweep  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1741_phase4_ |
 | 2026-05-15 12:17 UTC | Exp 1741: Phase 4 GENUINE substrate scaling sweep  | OK | 81 passed, 1 warning in 5.22s |
 | 2026-05-15 12:24 UTC | Exp 1742: EBT-style gradient refinement loop retry | OK | 81 passed, 1 warning in 5.21s |
+| 2026-05-15 12:29 UTC | Exp 1743: .179 + .180 findings audit + corrigenda | OK | 81 passed, 1 warning in 5.30s |
