@@ -1,31 +1,30 @@
 import yaml
-import re
 
-with open('research-complete.yaml', 'r', encoding='utf-8') as f:
-    data = yaml.safe_load(f)
+try:
+    with open('research-complete.yaml', 'r') as f:
+        data = yaml.safe_load(f)
+        
+    milestones = data.get('milestones', [])
+    num_milestones = len(milestones)
+    
+    num_tasks = 0
+    for milestone in milestones:
+        num_tasks += len(milestone.get('tasks', []))
+        
+    print(f"YAML Milestones: {num_milestones}")
+    print(f"YAML Tasks: {num_tasks}")
+except Exception as e:
+    print(f"Error parsing YAML: {e}")
 
-milestones = data.get('milestones', [])
-print(f"Milestone count: {len(milestones)}")
+try:
+    with open('ops/changelog.md', 'r') as f:
+        content = f.read()
+    import re
+    # Find all Exp XXX in changelog.md that are not inside the yaml already
+    # Let's just find the max Exp
+    exp_matches = re.findall(r'Exp (\d+):', content)
+    highest_exp = max([int(x) for x in exp_matches]) if exp_matches else 0
+    print(f"Changelog Highest Exp: {highest_exp}")
+except Exception as e:
+    pass
 
-total_tasks = sum(len(m.get('tasks', [])) for m in milestones)
-print(f"Total tasks in yaml: {total_tasks}")
-
-highest_exp = 0
-for m in milestones:
-    for t in m.get('tasks', []):
-        title = t.get('title', '')
-        match = re.search(r'Exp\s+(\d+)', title, re.IGNORECASE)
-        if match:
-            highest_exp = max(highest_exp, int(match.group(1)))
-
-print(f"Highest Exp in yaml: {highest_exp}")
-
-with open('ops/changelog.md', 'r', encoding='utf-8') as f:
-    changelog = f.read()
-
-for match in re.finditer(r'Exp\s+(\d+)', changelog, re.IGNORECASE):
-    highest_exp = max(highest_exp, int(match.group(1)))
-
-print(f"Highest Exp overall: {highest_exp}")
-
-print(f"Latest milestone ID in yaml: {milestones[-1].get('id') if milestones else 'None'}")

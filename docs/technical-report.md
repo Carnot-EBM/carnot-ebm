@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,501 Experiments Across the Public Record, 191 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 2,522 Experiments Across the Public Record, 194 Archived Milestone Records, 24,316 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,8 +29,8 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,501
-experiment records tracked through Exp 2114, with 2,364 task records in 192
+This report documents the research arc behind the framework — **2,522
+experiment records tracked through Exp 2114, with 2,385 task records in 194
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176** — run between
 February and May 2026. `research-complete.yaml` currently archives **191**
