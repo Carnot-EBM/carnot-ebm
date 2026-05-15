@@ -1,28 +1,33 @@
-import sys
+import os
 
-new_content = """
-## 2026-05-13 Post-.157 Planning Sweep (Milestone 2026.05.158)
+with open('research-references.md', 'r') as f:
+    content = f.read()
 
-This sweep was run after milestone `.157` completed. The literature search revealed advances in self-adaptive continuous learning, spatio-temporal KANs, and uncertainty quantification for hallucination detection.
+new_content = """## 2026-05-15 Post-.176 Planning Sweep (Milestone 2026.05.177)
 
-### SEAL: Self-Adaptive Learning for Continuous Improvement
-- **Paper:** "SEAL: Self-Adaptive Learning" (NeurIPS 2025).
-- **What:** A framework that enables models to generate their own synthetic data post-deployment, allowing continuous self-learning, knowledge repair, and adaptation to real-time data distributions without manual labeling.
-- **Relevance to Carnot:** Directly targets the PRD's Continuous Self-Learning (FR-11) requirement. By treating Carnot's deterministic verifier stack as the reward/filter mechanism for SEAL-generated synthetic data, we can achieve safe continuous learning.
-- **Concrete experiment hook:** Implement a SEAL-style self-adaptive learning loop where local SOTA models generate reasoning traces, the verifier stack filters them (zero false accepts), and the valid traces are added to the continuous learning buffer.
+This sweep was run after milestone `.176` completed. The literature search revealed major advances in compositional energy minimization, constraint-aware retrieval, discrete auto-regressive biasing, and KAN hardware acceleration.
 
-### STKAN: Spatio-Temporal Decomposition Learning
-- **Paper:** "Spatio-Temporal Decomposition Learning with Kolmogorov-Arnold Networks" (ICLR 2026).
-- **What:** Extends KANs to spatio-temporal data by modeling dependencies separately, achieving state-of-the-art forecasting accuracy with better interpretability than MLPs.
-- **Relevance to Carnot:** Provides a new axis for Tier 4 Adaptive Energy Landscapes, especially for multi-turn reasoning traces which have an inherent temporal (step-by-step) structure.
-- **Concrete experiment hook:** Design an STKAN-inspired energy model for scoring sequential constraint reasoning traces.
+### Compositional Energy Minimization (CEM)
+- **Paper:** "Generalizable Reasoning through Compositional Energy Minimization" (arXiv:2510.20607).
+- **What:** Proposes learning energy landscapes for small, tractable subproblems, which are summed at inference to create a global energy landscape for complex tasks (e.g., 3-SAT) optimized via Parallel Energy Minimization.
+- **Relevance to Carnot:** Directly aligns with Carnot's Phase 4 compositional constraint checking.
 
-### Uncertainty Quantification for Hallucination Detection
-- **Paper:** "Uncertainty Quantification for Hallucination Detection in LLMs" (2025).
-- **What:** Uses latent correctness signals and explicit confidence verbalization to reliably detect hallucinations.
-- **Relevance to Carnot:** Complements the "Spilled Energy" telemetry. We can combine latent uncertainty signals with explicit energy scores to route failing generations to the deterministic verifier stack for repair.
-"""
+### ConstraintLLM and Constraint-Aware Retrieval
+- **Paper:** "ConstraintLLM: A Neuro-Symbolic Framework for Industrial-Level Constraint Programming" (arXiv:2510.05774).
+- **What:** Fine-tunes LLMs for Constraint Programming using a Constraint-Aware Retrieval Module (CARM) and Tree-of-Thoughts to generate executable CP models.
+- **Relevance to Carnot:** Essential for the constraint extraction gap. Incorporating logic-aware retrieval into Carnot's parser pipeline.
 
-with open("research-references.md", "a") as f:
+### Discrete Auto-Regressive Biasing (DAB)
+- **Paper:** "Controlled LLM Decoding via Discrete Auto-regressive Biasing" (arXiv:2502.03685).
+- **What:** Identifies that energy-based decoding struggles in continuous space and proposes leveraging gradients in the discrete token domain to improve constraint satisfaction.
+- **Relevance to Carnot:** Enhances the energy-guided decoding loop by addressing continuous space limitations during generation.
+
+### KAN Hardware Evaluation (BiKA and KANELÉ)
+- **Papers:** BiKA (arXiv:2602.23455) and KANELÉ (arXiv:2512.12850).
+- **What:** BiKA proposes a multiply-free KAN architecture using binary learnable thresholds. KANELÉ uses LUTs for high clock-frequency evaluation.
+- **Relevance to Carnot:** Gives concrete hardware blueprints to synthesize Carnot's KAN tiers on KV260 FPGAs.
+
+""" + content
+
+with open('research-references.md', 'w') as f:
     f.write(new_content)
-print("Appended new findings to research-references.md")
