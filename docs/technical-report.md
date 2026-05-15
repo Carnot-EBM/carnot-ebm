@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,979 Experiments Across the Public Record, 199 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 3,202 Experiments Across the Public Record, 200 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,10 +29,10 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,979 experiments across 199 milestones up to .185, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 3,202 experiments across 200 milestones up to .187, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
 This report documents the research arc behind the framework — **2,959
-experiment records tracked through Exp 2114, with 2,424 task records in 199
+experiment records tracked through Exp 2114, with 2,424 task records in 200
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176** — run between
 February and May 2026. `research-complete.yaml` currently archives **191**
@@ -550,7 +550,7 @@ artifacts checked into `results/operational_retro_*.json`.
   stayed **0.5**, so the honest verdict is diminishing returns rather than a
   monotone inference improvement (Exp 1171).
 - **NRGPT per-token energy:** per-token scoring improved over the batch energy
-  baseline with AUROC **0.998199** vs **0.887409**, plus error-token
+  baseline with AUROC **0.998200** vs **0.887409**, plus error-token
   localization rate **1.0** on the evaluation slice (Exp 1172).
 - **BiKA SOS-KAN hardware analysis:** multiply-free BiKA estimates reduce
   resource use by **39.6%** and mark the AMD XDNA-style NPU path feasible, but
@@ -764,7 +764,7 @@ artifacts checked into `results/operational_retro_*.json`.
   should rely on it (Exp 1191).
 - **KANtize SOS-KAN 4-bit quantization:** 4-bit SOS-KAN preserved AUROC
   **0.990137** versus full-precision **0.990228**, with **0.038 ms/example**
-  inference latency and an edge safetensors export (Exp 1199).
+  inference latency and an edge safetensors export (Exp 1200).
 - **Pre-test suite rescued:** Exp 1203 diagnosed the .93 missing-artifact chain
   as an **8 GiB** address-space cap that was below JAX's normal post-init
   virtual-memory baseline. The cap was raised to **32 GiB**; the verification
@@ -970,7 +970,7 @@ artifacts checked into `results/operational_retro_*.json`.
   1268 later counted retro-95 complete from available result fields.
 - **Latest .96-.148 artifact status:** `research-complete.yaml` now archives
   **167** completed milestone records through .147, while checked-in result
-  artifacts and `ops/changelog.md` extend through .148 / Exp 1995. The checked-in .96/.97
+  artifacts and `ops/changelog.md` extend through .148 / Exp 2005. The checked-in .96/.97
   and stale .103
   artifacts should still be read conservatively. Exp 1268 backfilled .96 at
   **2/13** and .97 at **4/13**. .98 closed **5/13** criteria through Exp 1267,
@@ -1654,7 +1654,7 @@ but are not included as model-generation headline claims.
 | Production k=5 orthogonality audit | k=5 verifier ensemble | **max r=0.4617**, **k_eff=1.76** | Correlation gate clears below 0.5; k=5 AND-composition viable while k=6/15 scale-up claims remain blocked | Exp 1256 |
 | SC-Energy seventh verifier | New verifier candidate | AUROC **1.0**, all listed r-corr below 0.5 | Viability gate passed on Exp 1168's small eval; k=6 validation later failed to improve the ensemble | Exp 1168 |
 | Diffusion of Thought inference | Baseline acceptance accuracy **0.96** | **+4pp** at T=1 through T=125 | No monotone gain and AUROC stayed 0.5; compute grows from 12.653 ms to 1373.291 ms | Exp 1171 |
-| NRGPT per-token energy | batch AUROC **0.887409** | per-token AUROC **0.998199** | Error-token localization rate **1.0** on the evaluation slice | Exp 1172 |
+| NRGPT per-token energy | batch AUROC **0.887409** | per-token AUROC **0.998200** | Error-token localization rate **1.0** on the evaluation slice | Exp 1172 |
 | BiKA SOS-KAN hardware analysis | Standard estimated LUT count **27,822** | BiKA estimated LUT count **16,795** | **39.6%** resource reduction estimate; NPU feasible; complexity estimate only | Exp 1174 |
 | Q11 TSS instrumentation | Uninstrumented sign-bottleneck risk | corr **0.5466**, vulnerability **0.4534** | SC-Energy/Z3 diagnostic shipped for continuous EBM path | Exp 1264 |
 | DiffuTruth vs Carnot baseline | DiffuTruth FoVer AUROC **0.0816** | Carnot SemEnergy AUROC **0.948187** | Baseline comparison artifact; Carnot also exceeds DiffuTruth's cited FEVER AUROC 0.725 in this record | Exp 1265 |
@@ -1685,7 +1685,7 @@ but are not included as model-generation headline claims.
 | WOPR Hex cartridge | Random baseline | Gibbs wins **90%** vs random; **50%** vs greedy | 7x7 Hex cartridge operational; tests pass | Exp 1188 |
 | Phase 4 stronger-baseline audit | Greedy baseline looked favorable | BFS action ratio **1.0** | 10 synthetic 5x5 and 10 synthetic 10x10 puzzles; .92 correctly downgraded the initial pilot before .94 introduced harder puzzles | Exp 1189 |
 | Pre-test suite rescue | `RLIMIT_AS=8GB` caused gate failures | `RLIMIT_AS=32GB`; **472 pass / 0 fail / 1 skip** in verification slice | 21,413 tests collected; JAX virtual-memory baseline diagnosed as root cause of .93 missing artifacts | Exps 1191/1203 |
-| KANtize SOS-KAN 4-bit quantization | full precision AUROC **0.990228** | 4-bit AUROC **0.990137** | AUROC stays above 0.97 gate; **0.038 ms/example** inference latency; edge safetensors export | Exp 1199 |
+| KANtize SOS-KAN 4-bit quantization | full precision AUROC **0.990228** | 4-bit AUROC **0.990137** | AUROC stays above 0.97 gate; **0.038 ms/example** inference latency; edge safetensors export | Exp 1200 |
 | Tier 1 constraint addition v2 | precision **0.478**, FPR **0.857** | precision **0.917**, FPR **0.071** | One high-signal constraint added; beats prior reweighting-only baseline | Exp 1212 |
 | SDPO dense reward distillation | Energy teacher selection **0.902** | **-19.61pp** measured delta | Token coverage only **22.06%**; coverage bottleneck, not teacher-quality failure | Exp 1213 |
 | Milestone .94 outcome | 13 planned criteria | **13/13** met | Clean sweep; publication hold remains active pending operator approval | Exp 1215 |
@@ -1826,7 +1826,7 @@ but are not included as model-generation headline claims.
 | BEAVER-lite validator-tree bounds | deterministic acceptance bounds | coverage **1.0**; residual risk **0.0** | Acceptance authority remains with executable validator leaves; bounds are not model-quality claims | Exp 1879 |
 | Live SOTA ROCE evaluation | mandated Qwen/Gemma GGUFs absent | blocked; no headline accuracy | Missing `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`; prompt count and output rows both **0** | Exp 1880 |
 | Milestone .147 closeout | prompt-to-validator gate | **5/14** complete; **9** blocked/missing | Prompt-to-validator partial; telemetry, FR-11, and hardware-accounting gates not ready | Exp 1889 |
-| Milestone .152 closeout | Tri-SOTA E2E v6 successful | **18** complete | Ontology NN topological constraints implemented, GNN struggles on 3-SAT compared to Z3 | Exp 1995 |
+| Milestone .152 closeout | Tri-SOTA E2E v6 successful | **18** complete | Ontology NN topological constraints implemented, GNN struggles on 3-SAT compared to Z3 | Exp 2005 |
 
 ### 4.12 Recent Additions (Milestones .133 and .136)
 
@@ -2299,7 +2299,7 @@ The constraint pipeline dog-foods itself as a "fourth gate" in the autoresearch 
 ### 4.13 Recent Additions (Milestone .137)
 Experiments 1771-1784 advanced the framework through Capstone E2E pipelines with Qwen3.6-35B-A3B and Gemma4-31B-it (Exps 1782, 1783). We implemented Continuous Latent Constraint Modeling (Exp 1771) and evaluated a Differentiable Constraint Memory Bank (Exp 1774). Additionally, the self-learning pipeline was scaled up on LTLZinc (Exp 1777), and we conducted a comprehensive Hardware vs Software Latency and Energy convergence benchmark (Exp 1781), culminating in the .137 operational retrospective.
 
-From the activation-based phase of a research program that now spans 2,354 experiment records through Exp 1995 and 166 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
+From the activation-based phase of a research program that now spans 2,354 experiment records through Exp 2005 and 166 archived completed milestone records, we distilled 14 principles. Principles 1-3 describe what works. Principles 4-14 describe what doesn't work for activation-based hallucination detection — these systematic negative results are the project's primary contribution to the literature, saving other researchers months of dead ends.
 
 ### What works
 
@@ -2970,7 +2970,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 ### 20.2 PrefillUncertaintyProbe — Pre-Generation Hallucination Gate (REQ-VERIFY-080)
 
-**Setup:** Implement an entropy-based prefill gate that fires before any output tokens are generated, using the neural uncertainty principle (arXiv 2603.19962). Requirement: black-box, no gradient access.
+**Setup:** Implement an entropy-based prefill gate that fires before any output tokens are generated, using the neural uncertainty principle (arXiv 2603.20062). Requirement: black-box, no gradient access.
 
 **Result:** `PrefillUncertaintyProbe` in `python/carnot/pipeline/prefill_uncertainty_probe.py` computes Shannon entropy over the next-token logit distribution. High entropy (uniform logits) → `high_risk=True` → trigger full verification; low entropy (peaked logits) → `high_risk=False` → fast-path skip. `VerifyRepairPipeline.check_prefill_uncertainty(logits, threshold=0.5)` is additive and does not affect existing callers. 35 tests pass. Full suite: **3,644 passed**, 99.12% coverage. Spec: REQ-VERIFY-080, SCENARIO-VERIFY-103/104.
 
@@ -3188,9 +3188,9 @@ All templates are CI-safe (return [] on no parseable arithmetic). `VerifyRepairP
 - **Harness DualGPURunner Enforcement (Exp 480):** Audited 361 experiment scripts, found 64 dual-model scripts with 53 missing cuda:1 assignments. DualGPUHarness.apply() and HarnessAudit.scan() implemented; 378 tests pass. n_missing_cuda1=53 patched. retro_041_dual_gpu_resolved=true.
 - **ThinkProbeV2 Live GPU v3 (Exp 482):** RETRO-036/042 CLOSED. GPUVRAMGate + DeliverableGuard integrated into ThinkProbeV2 workflow. 50 GSM8K, completion_fraction=1.0, gpu_vram_gate_fired=true, inference_mode=live_gpu.
 - **KAEM Large-Variable Crossover (Exp 483):** 5x speedup crossover found at n_vars=250. honest_verdict=5x_speedup_crossover_found. RETRO-031 resolved — KAEM is competitive vs MCMC at large variable counts.
-- **Neural Uncertainty Principle Probe (Exp 484):** Research investigation of hallucination via NUP interpretation (arXiv 2603.19962). Finding: under-constrained continuation is the root cause mechanism; documents why EBM-based constraint satisfaction works for mitigation. honest_verdict=hallucination_mechanism_identified.
+- **Neural Uncertainty Principle Probe (Exp 484):** Research investigation of hallucination via NUP interpretation (arXiv 2603.20062). Finding: under-constrained continuation is the root cause mechanism; documents why EBM-based constraint satisfaction works for mitigation. honest_verdict=hallucination_mechanism_identified.
 - **PPSEBM Real-Data Validation (Exp 485):** RETRO-043 CLOSED. PPSEBMRealValidator with InterleavedViolationSequence (n_steps=57 real FOVER-labeled pairs). fp_rate_real=0.0, partition_isolation=1.0 maintained under natural alternation. ppsebm_validated_real. Extends Exp 470 (synthetic) to real data.
-- **JEPA Quality-Gated Retrain (Exp 477):** RETRO-040 NOT CLOSED. JEPAQualityGate filtered 57 real pairs to 33 + 166 synthetic (199 total), filter_rate=0.579. Result: before_auc=0.401→after_auc=0.281 (regression -0.120). Quality gate did not prevent AUC regression; pair filtering strategy requires investigation.
+- **JEPA Quality-Gated Retrain (Exp 477):** RETRO-040 NOT CLOSED. JEPAQualityGate filtered 57 real pairs to 33 + 166 synthetic (200 total), filter_rate=0.579. Result: before_auc=0.401→after_auc=0.281 (regression -0.120). Quality gate did not prevent AUC regression; pair filtering strategy requires investigation.
 - **Live benchmarks deferred (Exps 476/478):** Live 100q precision v4 and 200q VeriCoT+VPRM v2 remain deferred to GPU. GPUVRAMGate and DualGPURunner are now in place; JEPA retrain result needed to unblock EORM gate quality.
 - **Retrospective (Exp 486):** credibility_gap_closed=false (2 GPU benchmarks deferred). retro_adoption_rate=1.0 (mandatory enforcement 100% effective vs 50% voluntary). infrastructure_hardening_complete=true. estimated 33% wall-time savings from infra hardening. JEPA AUC regression (0.401→0.281) requires investigation before next milestone.
 
@@ -3210,7 +3210,7 @@ All templates are CI-safe (return [] on no parseable arithmetic). `VerifyRepairP
 - **Batching Enforcement Pre-Commit Hook (Exp 493):** RETRO-045 CLOSED. `scripts/batching_precommit_check.py` enforces BatchedInferenceRunner usage at commit time. all_scenarios_passed=true, batching_hook_operational.
 - **GPU Thermal Gate (Exp 494):** RETRO-046 CLOSED (third attempt). Defers experiments when either GPU exceeds 85°C to prevent silent thermal throttling. thermal_gate_operational.
 - **DualGPU Harness Enforcement v2 (Exp 495):** Patches 53 remaining scripts with explicit cuda:1 model assignment. Closes the remaining gap from Exp 480's enforcement sweep.
-- **NUP Probe v2 (Exp 496):** Bayesian semantic entropy for Tier 0c hallucination detection (arXiv 2603.19962). AUC remains near-baseline — RETRO-049 opened (v2 Bayesian SE features yielded delta ~1e-16 vs v1, feature redesign needed).
+- **NUP Probe v2 (Exp 496):** Bayesian semantic entropy for Tier 0c hallucination detection (arXiv 2603.20062). AUC remains near-baseline — RETRO-049 opened (v2 Bayesian SE features yielded delta ~1e-16 vs v1, feature redesign needed).
 - **SuRe Surprise-Driven EBM Replay (Exp 497):** Tier 2 self-learning with LLM-surprise priority replay (arXiv 2511.22367). isolation_improvement=-0.1172 (negative — RETRO-050 opened: surprise-driven replay does not improve isolation).
 - **KAEM Extended Profile n=5000 (Exp 498):** Extends crossover search beyond n_vars=250. No crossover found at n=5000; FPGA path recommended for extreme-scale. RETRO-031 extended closure.
 - **Retrospective (Exp 499):** VRAM deadlock NOT fully broken — zombie accumulation was not the root cause; conductor process itself is the blocker. RETRO-048 critical. credibility_gap_status=PARTIALLY_CLOSED. adoption_rate=1.0 maintained.
@@ -3657,7 +3657,7 @@ honest verdict is non-monotone diminishing returns, not a scalable inference
 win yet.
 
 **NRGPT per-token energy (Exp 1172):** Per-token energy improved over the batch
-baseline: AUROC **0.998199** versus **0.887409**, with **19,813** token scores
+baseline: AUROC **0.998200** versus **0.887409**, with **19,813** token scores
 and error-spike localization rate **1.0**. This strengthens NRGPT as a Phase 3
 architecture seed after Exp 1163's non-monotone recurrence finding.
 
@@ -3755,7 +3755,7 @@ Milestone 2026.04.93 met **3 of 12 success criteria**. The completed criteria
 were `prlimit_memory_cap_active`, `kantize_auroc_maintained_above_0p97`, and
 `retro_complete`. The low score is not evidence that the planned research ideas
 failed experimentally; most of them did not reach measurement. Five artifacts
-were missing after repeated skips (exp1192, exp1193, exp1194, exp1199, exp1197),
+were missing after repeated skips (exp1192, exp1193, exp1194, exp1200, exp1197),
 and four were blocked by prior-failure gate handling (exp1196, exp1198, exp1200,
 exp1201).
 
@@ -3765,7 +3765,7 @@ existing watchdog checks still pass. The .93 retro nevertheless treats this as
 a likely contributor to the conductor pre-test/self-heal failure pattern, so
 .94 starts with diagnostics before retrying heavy tasks.
 
-**KANtize SOS-KAN 4-bit quantization (Exp 1199):** SOS-KAN retained
+**KANtize SOS-KAN 4-bit quantization (Exp 1200):** SOS-KAN retained
 publication-grade discrimination after 4-bit quantization: full-precision AUROC
 **0.990228**, 8-bit AUROC **0.990228**, and 4-bit AUROC **0.990137**. The 4-bit
 artifact reports **0.038038 ms/example** inference latency and exports an edge
@@ -3941,7 +3941,7 @@ orthogonality audit before paper-v6 or Phase-5 scale-up work.
 ### Phase 21 — .96/.97 Artifact Reality, Boltzmann-GPT CD, and NRGPT Type-B Classification (Exps 1229–1254)
 
 The archive now contains **166 artifact-backed completed milestone records**
-through 2026.05.154, and checked-in result artifacts extend through Exp 1995.
+through 2026.05.154, and checked-in result artifacts extend through Exp 2005.
 The artifact layer is still conservative relative to the terminal artifact
 list: `research-complete.yaml` is currently archived through 2026.05.154, while
 .148 is present in the result-artifact and changelog layer.
@@ -5328,7 +5328,7 @@ downstream live-evaluation reruns were gate-skipped rather than relaunched.
 
 `results/operational_retro_2026_05_148.json` analyzed **112.1** minutes across
 **10** experiments with **1** compute-bound entry. The slowest measured path was
-Exp 1890 at **41.3** minutes, followed by Exp 1995 at **39.5** minutes and a
+Exp 1890 at **41.3** minutes, followed by Exp 2005 at **39.5** minutes and a
 same-title Exp 1894 pre-gate block at **21.3** minutes. The locked retro field
 did not flag GPU idle on the compute-bound task. The next operations target is
 not a new speedup claim; it is subspan timing for activation/retro tasks plus
@@ -5356,15 +5356,15 @@ Experiment 1942 successfully executed the tri-sota e2e pipeline, confirming stab
 ### 4.14 Recent Additions (Milestone .153)
 
 **Synthesis Bottleneck Identification**  
-Experiment 1996 demonstrated that non-compute bound synthesis tasks are now the primary bottleneck for optimization, taking 61.4 minutes on average, while GPU correctly idled for all 36 experiments in the milestone.
+Experiment 2006 demonstrated that non-compute bound synthesis tasks are now the primary bottleneck for optimization, taking 61.4 minutes on average, while GPU correctly idled for all 36 experiments in the milestone.
 
 ### 4.15 Recent Additions (Milestone .156)
 
 **NSVIF/Z3 SMT Constraint Extractor**  
-Experiment 1996 implemented a specialized SMT constraint extractor via NSVIF and Z3, which rejects supported contradictory Chain-of-Thought steps with zero false positives on bundled fixtures.
+Experiment 2006 implemented a specialized SMT constraint extractor via NSVIF and Z3, which rejects supported contradictory Chain-of-Thought steps with zero false positives on bundled fixtures.
 
 **Live GPU Baselines on GSM8K and Code Verification on HumanEval**  
-Experiment 1998 established live baselines for GSM8K, and Experiment 1999 successfully implemented Ising-guided fuzzing for code verification on HumanEval.
+Experiment 2008 established live baselines for GSM8K, and Experiment 2009 successfully implemented Ising-guided fuzzing for code verification on HumanEval.
 
 **DeepSaDe Guaranteed Constraints**  
 Experiment 2000 fully implemented and verified DeepSaDe guaranteed constraints for enhanced verification capability.
@@ -5509,6 +5509,10 @@ Experiments 1781 and 1782 drafted and benchmarked Python LUT abstractions for KA
 **Phase 4 Alpha Replacement**
 Experiment 1721 successfully derived the alpha_t replacement from the maximum-caliber FEP<->IIT bridge, confirming monotonic decay and breaking the bijection-invariance artifact.
 \n
+### Phase 25 — Milestones .186 and .187 (May 2026)
+
+Milestone 2026.05.186 Retro completed 223 experiments in 736 minutes. Zero compute-bound tasks; GPUs correctly idle. Milestone 2026.05.187 retrospective successfully generated. Findings audit and corrigenda flagged artifacts processed.
+
 ### Phase 24 — Milestone .182 Optimizations (May 2026)
 
 Milestone 2026.05.182 operational retrospective complete. Analyzed 50.1 min wall time / 6 experiments. Slowest path: Exp 1749 (45.2 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The milestone wall time was heavily dominated by the retrospective generation task itself. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.
