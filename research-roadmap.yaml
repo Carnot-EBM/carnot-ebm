@@ -1,324 +1,214 @@
-milestone: "2026.05.187"
-milestone_title: "Pretest Recovery, Fast-Slow Variant Scale-Up, and EBM Continual Learning"
+milestone: "2026.05.188"
+milestone_title: "Test Harness Recovery, KAEM Integration, and System 2 Energy-Based Transformers"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp1786-fix-broken-pretests
-    title: "Phase 0: Fix broken pretests blocking conductor execution"
+  - id: exp1798-fix-broken-pretests
+    title: "Phase 0: Fix broken pretests blocking conductor execution (Opus fallback)"
     model: opus
+    agent_type: claude
     max_turns: 50
-    priority: critical
     prompt: |
-      CONTEXT: The entire .186 milestone skipped due to "Pre-tests failing, self-heal failed: 2 failed, 80 passed".
-      EXISTING CODE TO READ FIRST: tests/python/
-      TASK: Identify the 2 failing tests using pytest. Fix the underlying code or the tests themselves to restore the 100% pass baseline.
+      CONTEXT: The previous milestone (.187) cascade-failed because the test harness is currently broken, blocking all downstream autonomous research.
+      EXISTING CODE TO READ FIRST: `tests/python/`, `ops/conductor-log.md`
+      TASK: Execute a deep debugging pass to identify and resolve the failing Python pretests.
       CONCRETE STEPS:
-      1. Run `pytest tests/python` to identify the failing tests.
-      2. Analyze the failure output and trace it to the recent changes.
-      3. Fix the code or tests.
-      4. Run `pytest tests/python` again until 100% tests pass.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-      - tests_fixed: bool — set to TRUE if all tests pass. ALWAYS write this field.
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
+      1. Run `python scripts/check_spec_coverage.py` and `pytest tests/python --cov=python/carnot`.
+      2. Identify the root cause of the failing tests reported in `.187` conductor log.
+      3. Implement the fixes ensuring 100% test coverage and compliance with `_bmad/traceability.md`.
+      4. Write deliverable to `results/experiment_1798_pretest_fix.json`
 
       Current date is {date}. Project root is {project_root}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1787-milestone-186-retro
-    title: "Phase 0: Milestone .186 retrospective (Cascade Failure Analysis)"
+  - id: exp1799-milestone-187-retro
+    title: "Phase 0: Milestone .187 retrospective (Cascade Failure Analysis)"
+    max_turns: 20
+    gated_on:
+      - upstream: exp1798-fix-broken-pretests
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Milestone .187 failed with a timeout, resulting in widespread skip cascades.
+      EXISTING CODE TO READ FIRST: `ops/conductor-log.md`, `results/experiment_1798_pretest_fix.json`
+      TASK: Conduct a retrospective on the `.187` milestone.
+      CONCRETE STEPS:
+      1. Read the conductor logs to map the dependency failure tree.
+      2. Document the exact test failure that broke the harness and why self-healing failed.
+      3. Write retro analysis to `results/operational_retro_2026_05_187.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1800-fast-slow-variant-prototype
+    title: "Phase 1: Carnot Fast-Slow Variant Prototype (arXiv:2605.12484) Retry"
+    agent_type: claude
+    gated_on:
+      - upstream: exp1798-fix-broken-pretests
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: The Fast-Slow variant was blocked in .187. We must now prototype it.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`
+      TASK: Implement the Fast-Slow architecture prototype to separate fast autoregressive prediction from slow energy-based verification.
+      CONCRETE STEPS:
+      1. Modify Boltzmann implementation to output both a fast predicted token and a slow energy score.
+      2. Verify behavior using small scale tests.
+      3. Write results to `results/experiment_1800_fast_slow_proto.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1801-fast-slow-variant-scaleup
+    title: "Phase 1: Fast-Slow Variant Scale-Up on SOTA GGUFs"
+    gated_on:
+      - upstream: exp1800-fast-slow-variant-prototype
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Scaling up the newly prototyped Fast-Slow variant to SOTA open-weights models.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, `python/carnot/models/boltzmann.py`
+      TASK: Execute a scale-up evaluation of the Fast-Slow variant.
+      CONCRETE STEPS:
+      1. Run the inference pipeline using `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      2. Compare inference speed and energy calibration against baseline.
+      3. Save the results and metrics to `results/experiment_1801_fast_slow_scaleup.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1802-fr11-lsebmcl-generative-replay
+    title: "Phase 1: Continual Learning Generative Replay via LSEBMCL (arXiv:2501.05495)"
+    prompt: |
+      CONTEXT: The FR-11 continuous self-learning track suffers from catastrophic forgetting. LSEBMCL offers a latent generative replay solution.
+      EXISTING CODE TO READ FIRST: `python/carnot/training/continual.py`
+      TASK: Implement an outer-generator EBM to sample pseudo-exemplars of previous tasks.
+      CONCRETE STEPS:
+      1. Draft an LSEBMCL sampler that runs Langevin dynamics in latent space to hallucinate past experiences.
+      2. Train a small Gibbs tier model sequentially on two distinct distributions, interleaved with pseudo-exemplars.
+      3. Write evaluation metrics on forgetting to `results/experiment_1802_lsebmcl_replay.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1803-kaem-univariate-spline-prototype
+    title: "Phase 2: Kolmogorov-Arnold Energy Model (KAEM) Spline Prototype"
+    agent_type: codex
+    prompt: |
+      CONTEXT: Replacing MLP-based energy functions with KAEM univariate splines (KART) for exact inference and interpretability (Zettascale 2025/2026).
+      EXISTING CODE TO READ FIRST: `python/carnot/models/ising.py`
+      TASK: Implement the Kolmogorov-Arnold Energy Model structure.
+      CONCRETE STEPS:
+      1. Develop a KAEM energy function module using 1D B-splines instead of dense layers.
+      2. Implement the inverse transform sampling method allowed by univariate splines to bypass MCMC.
+      3. Save implementation and local unit test results to `results/experiment_1803_kaem_proto.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1804-kaem-interpretability-visualizer
+    title: "Phase 2: KAEM Spline Interpretability Extraction"
+    gated_on:
+      - upstream: exp1803-kaem-univariate-spline-prototype
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Visualizing the learned energy landscape of the KAEM prototype.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/ising.py`
+      TASK: Extract the learned univariate splines to demonstrate the interpretability of KAEM.
+      CONCRETE STEPS:
+      1. Write an extractor script to plot the energy surface across each latent dimension.
+      2. Analyze the landscape to confirm exact inference validity.
+      3. Write visual summaries and metadata to `results/experiment_1804_kaem_vis.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1805-ebt-system-2-verification
+    title: "Phase 2: Energy-Based Transformer (EBT) System 2 Verification Loop (arXiv:2507.02092)"
+    prompt: |
+      CONTEXT: EBTs replace simple next-token autoregression with an iterative energy minimization loop to enable "System 2 thinking".
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`
+      TASK: Implement a standalone EBT loop that verifies candidates using `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Build a sampler that iterates over prediction candidates, minimizing their energy score with the Gemma-4 model.
+      2. Demonstrate that more optimization steps lead to higher constraint satisfaction.
+      3. Write summary to `results/experiment_1805_ebt_system2.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1806-kona-ebrm-reasoning-traces
+    title: "Phase 3: Kona-style EBRM Continuous Latent Reasoning"
+    prompt: |
+      CONTEXT: Based on Logical Intelligence's Kona (Jan 2026), explore continuous latent reasoning traces with local energy edits.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/gibbs.py`
+      TASK: Create a non-autoregressive Reasoning Model that refines an entire reasoning trace simultaneously.
+      CONCRETE STEPS:
+      1. Map a simple logic puzzle into a continuous latent space.
+      2. Apply an energy function to detect inconsistencies in the trace, editing it via gradient descent.
+      3. Write results to `results/experiment_1806_kona_ebrm.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1807-lyapunov-control-barrier-functions
+    title: "Phase 3: Lyapunov-based Control Barrier Functions for Safe Generation (arXiv:2605.05530)"
+    prompt: |
+      CONTEXT: Using Nonlinear Control Theory to enforce hard safety constraints during generative sampling.
+      EXISTING CODE TO READ FIRST: `python/carnot/training/samplers.py`
+      TASK: Integrate Lyapunov Control Barrier Functions as additive penalty terms in the Langevin sampler.
+      CONCRETE STEPS:
+      1. Define a strict logical constraint (e.g., token X must never appear after Y).
+      2. Implement a Control Barrier Function that artificially raises the energy near the constraint violation.
+      3. Run the sampler and log violation rates to `results/experiment_1807_lyapunov_cbf.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1808-token-level-energy-telemetry-retry
+    title: "Phase 3: Token-Level Energy Telemetry for Agentic Reinforcement Retry"
+    prompt: |
+      CONTEXT: This task DOOMED in .187 and .186. We must implement telemetry extraction.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`
+      TASK: Expose the raw energy values computed at each token generation step.
+      CONCRETE STEPS:
+      1. Instrument the generation pipeline to emit a continuous telemetry stream of energy scores.
+      2. Save a sample telemetry trace.
+      3. Output to `results/experiment_1808_energy_telemetry.json`.
+
+      Current date is {date}. Project root is {project_root}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1809-findings-audit-188
+    title: "Phase 3: Findings audit and corrigenda (.187 and .188)"
     max_turns: 20
     prompt: |
-      CONTEXT: Milestone .186 failed completely due to pre-test failures.
-      EXISTING CODE TO READ FIRST: ops/conductor-log.md
-      TASK: Write the retrospective for .186 documenting the gate cascade and skipped tasks.
+      CONTEXT: Audit the generated research findings from .187 skip cascade and new .188 progress.
+      EXISTING CODE TO READ FIRST: `ops/status.md`, `research-complete.yaml`
+      TASK: Verify traceability and correctness of findings.
       CONCRETE STEPS:
-      1. Review the failures in ops/conductor-log.md.
-      2. Draft the retrospective following standard format.
-      3. Save to results/experiment_1787_milestone_186_retro.json.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-      
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
+      1. Cross-reference `results/*.json` produced in this milestone against PRD constraints.
+      2. Generate the corrigenda.
+      3. Write to `results/experiment_1809_findings_audit.json`.
 
       Current date is {date}. Project root is {project_root}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1788-pypi-package-retry
-    title: "Phase 0: Phase 1 PyPI package release retry (Blocked since .175)"
-    agent_type: codex
-    gated_on:
-      - upstream: exp1786-fix-broken-pretests
-        artifact_field: tests_fixed
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: PyPI package release `carnot-ebm` was repeatedly skipped due to broken tests.
-      EXISTING CODE TO READ FIRST: pyproject.toml
-      TASK: Complete the PyPI package release tasks once tests pass.
-      CONCRETE STEPS:
-      1. Verify `pyproject.toml` is configured for `carnot-ebm`.
-      2. Build the package.
-      3. Ensure `pip install` works in a test venv.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1789-fast-slow-variant-prototype
-    title: "Phase 1: Carnot Fast-Slow Variant Prototype (arXiv:2605.12484)"
-    agent_type: codex
-    gated_on:
-      - upstream: exp1786-fix-broken-pretests
-        artifact_field: tests_fixed
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Implement the Carnot Fast-Slow Variant (frozen slow weights + fast verifier-summary context) inspired by arXiv:2605.12484.
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Build the prototype for Fast-Slow Training (FST).
-      CONCRETE STEPS:
-      1. Create a minimal prototype integrating frozen base LLM with fast-weight context derived from verifier-output summaries.
-      2. Define the training signal as energy reduction across verify-repair iterations.
-      3. Test the sample efficiency vs RL baseline.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-      - prototype_ready: bool — set to TRUE if prototype tests pass. ALWAYS write this field.
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1790-fast-slow-variant-scaleup
-    title: "Phase 1: Fast-Slow Variant Scale-Up on SOTA GGUFs (Qwen3.6-35B, Gemma-4-31B)"
-    gated_on:
-      - upstream: exp1789-fast-slow-variant-prototype
-        artifact_field: prototype_ready
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Scale up the Fast-Slow Variant using SOTA GGUF models via dual GPU harness.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/dual_gpu_harness.py
-      TASK: Execute the Fast-Slow Training loop on unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF.
-      CONCRETE STEPS:
-      1. MUST include unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-31B-it-GGUF in MODEL_SPECS.
-      2. Use `carnot.pipeline.dual_gpu_harness.DualGPUHarness` for parallel inference.
-      3. Measure sample efficiency and KL drift on a continual-learning task switch.
-      4. Validate if sample efficiency >= 2x baseline.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-      - scaleup_complete: bool — set to TRUE if evaluation is complete. ALWAYS write this field.
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1791-fr11-continual-learning-lsebmcl
-    title: "Phase 2: Continual Self-Learning via LSEBMCL (Latent Space EBMs)"
-    agent_type: codex
-    prompt: |
-      CONTEXT: Prevent catastrophic forgetting in FR-11 using Latent Space Energy-Based Models for Continual Learning (LSEBMCL).
-      EXISTING CODE TO READ FIRST: python/carnot/training/
-      TASK: Implement generative replay using EBM outer-generators via Langevin dynamics.
-      CONCRETE STEPS:
-      1. Integrate LSEBMCL methodology into the FR-11 continuous self-learning loop.
-      2. Set up Langevin dynamics sampling for previous task representations in latent space.
-      3. Evaluate forgetting rate on a multi-stage reasoning task.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1792-fr11-energy-distance-prompt-learning
-    title: "Phase 2: Hybrid Energy-Distance Weighted Prompt Learning (HEDP)"
-    agent_type: codex
-    prompt: |
-      CONTEXT: Enhance domain separability in CL using HEDP energy regularization (arXiv:2605.08xxx).
-      EXISTING CODE TO READ FIRST: python/carnot/models/
-      TASK: Implement energy-regularized prompt learning to decouple task-shared and task-specific subspaces.
-      CONCRETE STEPS:
-      1. Build HEDP logic.
-      2. Fuse energy-based cues with distance-based cues for domain selection.
-      3. Test against domain-incremental scenarios without data replay.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1793-symbolic-kan-discrete-structure
-    title: "Phase 2: Symbolic-KAN Discrete Structure Prototyping"
-    agent_type: codex
-    prompt: |
-      CONTEXT: Evaluate Symbolic-KAN (arXiv:2603.23854) for discovering discrete structures in Carnot's constraints.
-      EXISTING CODE TO READ FIRST: python/carnot/verify/
-      TASK: Build a prototype embedding discrete symbolic structures within a KAN.
-      CONCRETE STEPS:
-      1. Implement Symbolic-KAN representation.
-      2. Test on closed-form equation discovery for energy penalty functions.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1794-qaod-vs-nla-synced-corpus
-    title: "Phase 3: QAOD vs NLA head-to-head on synced corpus (Retry from .183)"
-    gated_on:
-      - upstream: exp1786-fix-broken-pretests
-        artifact_field: tests_fixed
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Execute the delayed QAOD vs NLA verifier head-to-head.
-      EXISTING CODE TO READ FIRST: python/carnot/verify/
-      TASK: Run evaluation of QAOD and NLA on the synchronized adversarial corpus.
-      CONCRETE STEPS:
-      1. Load synchronized QAOD/NLA corpus.
-      2. Execute evaluation.
-      3. Report AUROC and false positive rates.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1795-token-level-energy-telemetry
-    title: "Phase 3: Token-Level Energy Telemetry for Agentic Models"
-    agent_type: codex
-    prompt: |
-      CONTEXT: Implement fine-grained token-level energy telemetry tracking (delayed since .185).
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/
-      TASK: Add token-level energy logging.
-      CONCRETE STEPS:
-      1. Add telemetry hooks to track energy delta per generated token.
-      2. Output metrics to `ops/metrics.md` or a standard logging artifact.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1796-findings-audit-186-187
-    title: "Phase 3: Findings audit and corrigenda (.186 and .187)"
+  - id: exp1810-milestone-188-retrospective
+    title: "Phase 3: Milestone 2026.05.188 Retrospective"
     max_turns: 20
     prompt: |
-      CONTEXT: Audit all findings for the recent milestones.
-      EXISTING CODE TO READ FIRST: ops/conductor-log.md
-      TASK: Analyze findings and write corrigenda.
+      CONTEXT: Wrap up the milestone and prepare for .189.
+      EXISTING CODE TO READ FIRST: `ops/status.md`, `ops/changelog.md`
+      TASK: Write the milestone retrospective.
       CONCRETE STEPS:
-      1. Review experiment results from 186 and 187.
-      2. Write audit report.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
-
-      Current date is {date}. Project root is {project_root}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1797-milestone-187-retrospective
-    title: "Phase 3: Milestone 2026.05.187 Retrospective"
-    max_turns: 20
-    prompt: |
-      CONTEXT: Close out the milestone.
-      EXISTING CODE TO READ FIRST: ops/conductor-log.md
-      TASK: Generate standard milestone retrospective.
-      CONCRETE STEPS:
-      1. Summarize successes and failures from milestone .187.
-      2. Output retrospective JSON artifact.
-      
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: prefixed with complete:/success:/passed:/shipped: per CLAUDE.md Verdict Terminal-Prefix Discipline
-      - status: "complete"
-
-      The honest_verdict field MUST start with one of these terminal prefixes:
-        complete:    or  complete_
-        success:     or  success_
-        passed:      or  passed_
-        shipped:     or  shipped_
+      1. Analyze the success rate of the KAEM and EBT integrations.
+      2. Verify that pre-tests remain at 100% passing.
+      3. Write the retro to `results/operational_retro_2026_05_188.json`.
 
       Current date is {date}. Project root is {project_root}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
