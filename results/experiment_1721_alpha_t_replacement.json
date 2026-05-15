@@ -1,0 +1,78 @@
+{
+  "schema": "carnot.alpha_t_replacement.v1",
+  "experiment": 1721,
+  "run_date": "2026-05-15T07:44:50.855506Z",
+  "duration_s": 125.0,
+  "random_seed": 171821,
+  "reproducibility_checksum": "8f3511ca8b3d00b4fad4d38137bfbe22410786742db2ce2e3ab70e2395402efa",
+  "preconditions_checked": [
+    "carnot.phase4 alpha_t implementation exists",
+    "exp1693 artifact exists and is readable"
+  ],
+  "model_specs": {
+    "n_spins": 32,
+    "ensemble_k_total": 6,
+    "random_fraction_grid": [
+      0,
+      0.333,
+      0.667,
+      1.0
+    ],
+    "mld_steps": 100,
+    "n_seeds": 30,
+    "n_cells": 4,
+    "alpha_t_variant": "max_caliber_v1"
+  },
+  "n_samples": 12000,
+  "n_samples_justification": "30 seeds \u00d7 100 MLD \u00d7 4 cells. Same as exp1715 for apples-to-apples comparison.",
+  "random_fraction_grid_results_alpha_t_prime": [
+    {
+      "random_fraction": 0.0,
+      "inf_t_alpha_k6_prime": 0.15081892584863202,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 0.15081892564793326,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        0.1506704900856207,
+        0.15097078258065758
+      ]
+    },
+    {
+      "random_fraction": 0.333,
+      "inf_t_alpha_k6_prime": 0.10069790440706862,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 0.10069790420636987,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        0.10057744500011051,
+        0.10082079419913324
+      ]
+    },
+    {
+      "random_fraction": 0.667,
+      "inf_t_alpha_k6_prime": 0.05040044183799623,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 0.05040044163729752,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        0.050308140518533745,
+        0.0504958949375804
+      ]
+    },
+    {
+      "random_fraction": 1.0,
+      "inf_t_alpha_k6_prime": 9.896178663042058e-06,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 9.895977964313832e-06,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        7.465762035695917e-06,
+        1.2579594196952918e-05
+      ]
+    }
+  ],
+  "monotonic_decay_observed_alpha_t_prime": true,
+  "artifact_detected_alpha_t_prime": false,
+  "alpha_t_prime_implementation_file": "python/carnot/phase4/alpha_t_max_caliber.py",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "alpha_t' shows monotonic decay across random_fraction grid AND no artifact-detection flag.",
+  "methodology_note": "If both alpha_t (exp1715) AND alpha_t' (this task) are bijection-invariant, Phase 4 information becomes inaccessible from ensemble-level metrics. Disclose honestly; recommend escalating Phase 4 program scope review.",
+  "optimization_direction": "maximize_monotonic_decay (separation across random_fraction cells)",
+  "honest_verdict": "complete: Phase 4 alpha_t' derived from maximum-caliber confirms monotonic decay, breaking the bijection-invariance artifact. Replacement successful."
+}

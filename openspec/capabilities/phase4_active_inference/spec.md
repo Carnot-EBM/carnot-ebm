@@ -27,3 +27,9 @@
 
 ### SCENARIO-PHASE4-3
 **Description:** Running a 4-cell random-verifier ablation audit correctly computes `delta_alpha` and bootstrap CIs for each fraction, and sets the `monotonic_decay_observed` and `artifact_detected` flags based on the results.
+
+### REQ-PHASE4-005: Maximum-Caliber Alpha_t Replacement
+**Description:** The system SHALL implement `alpha_t'` derived from the maximum-caliber formulation (prediction error), where `alpha_t'` monotonically decays as random verifiers replace real verifiers in the ensemble.
+
+### SCENARIO-PHASE4-4
+**Description:** Running a 4-cell random-verifier ablation audit using the maximum-caliber `alpha_t'` results in monotonic decay of `delta_alpha` (`monotonic_decay_observed=true`) and absence of the bijection-invariance artifact (`artifact_detected=false`).
