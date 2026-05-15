@@ -3298,3 +3298,4 @@ IMPORTANT:
 | 2026-05-15 07:09 UTC | Exp 1781: Phase 4 - Draft Python LUT abstractions  | OK | 81 passed, 1 warning in 4.98s |
 | 2026-05-15 07:15 UTC | Exp 1782: Phase 4 - Benchmark KANELÉ LUT represent | OK | 81 passed, 1 warning in 5.52s |
 | 2026-05-15 07:17 UTC | Milestone 2026.05.178 activated | OK | 5 tasks queued |
+| 2026-05-15 07:23 UTC | Exp 1719: Codify exp1715 bijection-invariance find | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1719_bijecti |
