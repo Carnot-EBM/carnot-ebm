@@ -3316,3 +3316,4 @@ IMPORTANT:
 | 2026-05-15 09:07 UTC | Empirical δ Calculation for Verify-Repair Converge | OK | 81 passed, 1 warning in 5.32s |
 | 2026-05-15 09:14 UTC | Continuous Self-Learning Loop with NLA Signal Inte | OK | 81 passed, 1 warning in 5.17s |
 | 2026-05-15 09:19 UTC | Compositional Energy Minimization (CEM) Substrate  | OK | 81 passed, 1 warning in 5.46s |
+| 2026-05-15 09:26 UTC | CEM Scale-Up to n=64 with KANELÉ Hardware-Accounti | OK | 81 passed, 1 warning in 5.40s |
