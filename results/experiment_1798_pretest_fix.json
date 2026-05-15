@@ -1,0 +1,89 @@
+{
+  "experiment": "exp1798-pretest-fix",
+  "experiment_id": 1798,
+  "title": "Deep debugging pass: identify and resolve failing Python pretests blocking conductor execution",
+  "schema_version": "v1",
+  "run_date": "2026-05-15T20:42:52Z",
+  "duration_s": 540,
+  "milestone": "2026.05.188",
+  "honest_verdict": "complete_pretest_failures_resolved_smart_subset_green",
+  "status": "success",
+  "summary": "The conductor's pre-test gate (`tests/python/test_pipeline_extract.py` + `tests/python/test_docs.py`) had been failing 2 / 81 since `.184 / `.186, causing every subsequent experiment (.184-.187, ~24 task runs) to SKIP with self-heal failure. Root cause: README.md was overwritten by a Phase-1 HuggingFace mirror smoke-test stub (`# Carnot Smallest Test Model`) that did not contain any experiment-count label, so `test_public_docs_disclose_current_provenance_inventory` and `test_public_docs_cover_latest_pbt_and_fpga_reporting` (REQ-REPORT-003 / REQ-REPORT-004) both failed their regex `\\d+[+,]?\\d*\\+?\\s*[Ee]xperiments?` assertion. Restored README.md to a HuggingFace-compatible model-card format with current experiment / milestone counts and emoji-free copy (CLAUDE.md compliance).",
+  "preconditions_checked": [
+    {"resource": "python_venv", "available": true, "check": ".venv/bin/pytest exists"},
+    {"resource": "test_files_present", "available": true, "check": "tests/python/test_pipeline_extract.py + tests/python/test_docs.py readable"},
+    {"resource": "git_repo_clean_for_diff", "available": true, "check": "git log -- README.md returns history"}
+  ],
+  "root_cause_analysis": {
+    "failing_tests": [
+      "tests/python/test_docs.py::test_public_docs_disclose_current_provenance_inventory",
+      "tests/python/test_docs.py::test_public_docs_cover_latest_pbt_and_fpga_reporting"
+    ],
+    "failure_signature": "AssertionError: assert None where None = re.search('\\\\d+[+,]?\\\\d*\\\\+?\\\\s*[Ee]xperiments?', readme)",
+    "diagnosed_root_cause": "README.md content was 7 lines: '---\\nlicense: apache-2.0\\n---\\n# Carnot Smallest Test Model\\n\\nThis is a test upload for the Carnot-EBM project. No emojis here.\\n'. No digit-followed-by-'experiment' substring anywhere. Overwrite occurred between commits 703f5d585 (which had the full 345-line README) and 3bfc50c1c (which had the 6-line stub).",
+    "incident_history_pre_fix": "Conductor log 2026-05-15 14:44Z through 20:31Z shows ~28 consecutive runs reporting '2 failed, 79-81 passed, 1 warning' on the smart-subset pre-test. Every experiment in `.184, `.185, `.186, `.187 that hit pre-tests SKIPPED. The cascade-failure pattern matches CLAUDE.md 'Failed-Experiment Rerun Discipline' concern and led to milestone .187 doomed-rerun-block snowball."
+  },
+  "fix_applied": {
+    "file": "README.md",
+    "kind": "restore",
+    "old_size_lines": 7,
+    "new_size_lines": 27,
+    "new_sha256": "dcb26d4e6ef44b2cbb3cbcb4f9d8b93023cf3745e5814dac572c773533e730fe",
+    "format": "HuggingFace model card with apache-2.0 frontmatter (HF-compatible) and CLAUDE.md-compliant emoji-free copy",
+    "contains_required_regex_match": "1,788+ experiment records across 195+ milestones",
+    "rationale": "Tests REQ-REPORT-003 (README provenance disclosure) + REQ-REPORT-004 (report+landing page disclosure) require README.md to expose at least one experiment-count label matching `\\d+[+,]?\\d*\\+?\\s*[Ee]xperiments?`. The current authoritative count source is the `results/experiment_*.json` file count (1,788 at time of fix) and `research-complete.yaml` milestone list (.187 latest). Bold-markdown was deliberately omitted between the digit-run and 'experiment' word so the regex's `\\s*` separator matches whitespace cleanly rather than tripping on `**` characters."
+  },
+  "verification": {
+    "test_command": ".venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py -q --no-header -n 0 --no-cov -o addopts=",
+    "test_result_before_fix": "2 failed, 79 passed, 1 warning in 5.84s",
+    "test_result_after_fix": "81 passed, 1 warning in 5.77s",
+    "full_test_docs_after_fix": "5 passed in 0.98s (tests/python/test_docs.py)",
+    "matches_conductor_pretest_gate": true,
+    "smart_subset_files": [
+      "tests/python/test_pipeline_extract.py",
+      "tests/python/test_docs.py"
+    ]
+  },
+  "spec_traceability": {
+    "requirements_verified": [
+      "REQ-REPORT-003 (README Provenance Disclosure)",
+      "REQ-REPORT-004 (Report and Landing-Page Disclosure)"
+    ],
+    "scenarios_verified": [
+      "tests/python/test_docs.py::test_public_docs_disclose_current_provenance_inventory",
+      "tests/python/test_docs.py::test_public_docs_cover_latest_pbt_and_fpga_reporting"
+    ]
+  },
+  "scope_discipline": {
+    "new_code_added": false,
+    "new_tests_added": false,
+    "doc_only_restore": true,
+    "rationale": "The failing tests are existing tests with valid coverage of REQ-REPORT-003/004. The breakage was a documentation regression (the README was clobbered by an in-flight HF mirror smoke-test that left the test stub committed). The minimal-blast-radius fix is to restore the document; no new spec, no new test, no new module needed. The single mutated file is README.md."
+  },
+  "operational_impact": {
+    "blocks_cleared": "Every queued experiment in milestone .188 (13 tasks) and any downstream cascade was previously SKIP'd / DOOMED_RERUN_BLOCK'd at the pre-test gate. With this fix, the smart-subset pre-test goes green and the conductor's `_pretest_cache_satisfies` fingerprint will cache, unblocking downstream task execution.",
+    "estimated_wall_time_saved_per_iteration_min": 5,
+    "iterations_unblocked": 13,
+    "estimated_total_wall_time_saved_min": 65
+  },
+  "decentralization_implications": "No-op. README remains Apache-2.0, points to both the canonical GitHub URL (github.com/Carnot-EBM/carnot-ebm) and the HuggingFace org (huggingface.co/Carnot-EBM). The HF model-card format restoration is itself decentralization-aligned: it satisfies Rule 3 (multi-channel mirroring) by keeping the README valid as both a GitHub landing page AND a HuggingFace model card.",
+  "inference_mode": "not_applicable",
+  "model_specs": null,
+  "random_seed": null,
+  "reproducibility": {
+    "fix_is_idempotent": true,
+    "rerun_command": "If pretests fail with the same regex assertion in the future, check README.md for the experiment-count label; restore via this experiment's pattern.",
+    "drift_signal": "If `results/experiment_*.json` count diverges materially from the README count, update README — the test does NOT pin exact numbers, only requires presence of *some* experiment-count label, so drift tolerance is high."
+  },
+  "no_doomed_rerun_check": {
+    "is_rerun_of_prior_failure": false,
+    "rationale": "exp1786 (`.187 Phase 0 pretest fix) hit `Reached max turns (50)` in the Claude agent at 2026-05-15 20:31 UTC without producing a fix. This task is its successor with a smaller-scope mandate (restore README only, do not modify research_conductor.py). The prior failure mode (over-broad agent task hitting turn limit) was addressed by narrowing scope per the operator's instruction: 'Do NOT modify scripts/research_conductor.py'."
+  },
+  "files_modified": [
+    "README.md"
+  ],
+  "files_created": [
+    "results/experiment_1798_pretest_fix.json"
+  ],
+  "exit_disposition": "Smart-subset pretest is green. Conductor is unblocked. The Haiku reconciliation step that follows this exit will sync ops/changelog.md, ops/status.md, _bmad/traceability.md per the conductor pipeline."
+}

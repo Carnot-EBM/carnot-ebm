@@ -92,15 +92,15 @@ tasks:
         - random_seed: 172911 (NOT 1811 or 90)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
           slow_weights: ["base_llm", "k=16_verifier_ensemble"],
           fast_weights: "verifier_output_summary_context",
           baseline: "fr11_verifier_as_reward",
-          tasks: ["gsm8k_30", "bbh_30", "math_30"]}
+          tasks: ["gsm8k_30", "bbh_30", "math_30"]}}
         - n_samples: 90
         - n_samples_justification: "30 per task × 3 tasks; Wilson 95% CI
           width ~0.30 per passrate."
-        - fast_slow_passrate_per_task: dict task -> {passrate, wilson_95_ci}
+        - fast_slow_passrate_per_task: dict task -> {{passrate, wilson_95_ci}}
         - fr11_passrate_per_task: dict
         - sample_efficiency_ratio: float
         - kl_drift_fast_slow, kl_drift_fr11, kl_drift_ratio: float
@@ -177,8 +177,8 @@ tasks:
         - random_seed: 172912
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {package_name: "carnot-ebm", version, publish_target,
-          wheel_filename, sdist_filename, wheel_sha256, sdist_sha256}
+        - model_specs: {{package_name: "carnot-ebm", version, publish_target,
+          wheel_filename, sdist_filename, wheel_sha256, sdist_sha256}}
         - n_samples: 1
         - n_samples_justification: "Ship task."
         - pypi_url: str or null
@@ -239,9 +239,9 @@ tasks:
         - random_seed: 172913
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestone: "2026.05.188",
+        - model_specs: {{audit_target_milestone: "2026.05.188",
           adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
+          artifacts_scanned: int, artifacts_flagged: int}}
         - n_samples: int (flagged count)
         - n_samples_justification: "Audit; n is flagged-artifact count."
         - audit_outcomes: dict
@@ -317,10 +317,10 @@ tasks:
         - random_seed: 172914
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {methods_compared: ["ensemble_alpha_original",
+        - model_specs: {{methods_compared: ["ensemble_alpha_original",
           "thermodynamic_metric_v1", "fast_slow_variant_v1"],
           comparison_criteria: ["substrate_discriminability",
-          "sample_efficiency", "kl_drift", "implementation_cost"]}
+          "sample_efficiency", "kl_drift", "implementation_cost"]}}
         - n_samples: 3
         - n_samples_justification: "Comparison; n is method count."
         - method_scorecards: dict
