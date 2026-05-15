@@ -3569,3 +3569,4 @@ IMPORTANT:
 | 2026-05-15 23:29 UTC | Exp 1824: Phase 1 PyPI retry — 5th attempt, NO ups | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.23s |
 | 2026-05-15 23:32 UTC | Exp 1824: Phase 1 PyPI retry — 5th attempt, NO ups | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.12s |
 | 2026-05-15 23:34 UTC | Exp 1824: Phase 1 PyPI retry — 5th attempt, NO ups | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.18s |
+| 2026-05-15 23:36 UTC | Exp 1825: Milestone .190 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.08s |
