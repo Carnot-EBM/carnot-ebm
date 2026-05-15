@@ -642,6 +642,50 @@ as a cron-prompt bug to fix later):
 
 ## Active Research Queue (Ranked)
 
+### Rank 0a-prime: Fast-Slow Training (FST) — Carnot's Verify-Repair Loop Validated as Dual-Timescale Architecture (NEW 2026-05-15T13:15Z, operator-flagged)
+- **Score:** 5×4×4×5 = **400**
+- **Source:** arXiv:2605.12484 (May 2026) — "Learning, Fast and Slow:
+  Towards LLMs That Adapt Continually"
+- **Idea:** Treat LLM training as two timescales. "Slow weights" = model
+  parameters (RL updates); "fast weights" = optimized context (in-context
+  learning). Combining both yields 3× sample efficiency over RL-only,
+  70% less KL divergence from base, less catastrophic forgetting, and
+  successful continual learning where parameter-only RL stalls.
+- **Direct mapping onto Carnot's architecture:** Slow weights = k=16
+  verifier ensemble + base LLM (frozen at inference). Fast weights =
+  the verifier-output-summary that re-prompts the LLM on the next
+  verify-repair iteration. Carnot's value proposition has been
+  "second-pair-of-eyes verification at inference time" — this paper
+  provides peer-validated theoretical scaffolding for that exact
+  architecture pattern.
+- **Phase 4 rescue hypothesis:** the .181 exp1741 + .182 exp1745
+  finding that alpha_t and alpha_t' are BOTH bijection-invariant at
+  the ensemble-output level may be because we're measuring at the
+  wrong scale. The fast-slow framing suggests measuring
+  free-energy reduction on FAST WEIGHTS (context shaped by verifier),
+  not slow weights (base model). If exp1745 confirms ensemble-level
+  invariance, switching the measurement target to fast-weight context
+  is the cleaner rescue.
+- **FR-11 rethink:** Paper's central empirical finding is that
+  parameter-only RL is strictly worse than fast-slow split on sample
+  efficiency, drift, AND continual learning. FR-11 (verifier-as-reward
+  RL) has stalled across .96-.150+ retros — possibly because it routes
+  the verifier signal into slow weights (RL gradients) when the right
+  destination is fast weights (context optimization).
+- **Continual self-learning angle:** Carnot's CSL experiments (.177
+  exp1779-1780, .180 exp1791) had mixed results. The paper provides a
+  concrete mechanism: CSL works when the fast-slow split is in place —
+  new tasks land in fast weights; slow weights only update slowly.
+  Worth re-auditing CSL artifacts through this lens.
+- **Where to land:** paper-v6 §3 architecture validation cite + concrete
+  .183+ experiment (Carnot Fast-Slow Variant; see ops/known-issues.md
+  RESEARCH-STUDYING CANDIDATES).
+- **Cross-references:** complements but is structurally different from
+  arXiv:2512.15605 (AR-LM↔EBM bijection theory) and arXiv:2605.14558
+  (Token-Level Energy ActFocus). The bijection paper says "AR-LMs ARE
+  EBMs"; this paper says "you should layer fast-weight context on top
+  of slow-weight LMs/EBMs and train them at different timescales."
+
 ### Rank 0b: Token-Level Energy for Agentic RL — ActFocus Reweighting (NEW 2026-05-15T04:45Z)
 - **Score:** 4×4×3×4 = **192**
 - **Source:** arXiv:2605.14558v1 (He, Zhu, Zhou, Gu, Liu, Huang, Zou, Wipf, Yu, Wu; May 14 2026)
