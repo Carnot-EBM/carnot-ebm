@@ -919,3 +919,40 @@ Experiment 2105 MUST produce a hardware smoke test artifact for the Cologne Chip
 **Then:** It checks tool availability, attempts synthesis, and writes `results/experiment_2105_gatemate_smoke.json` with an honest verdict.
 
 **Implementation status:** Implemented (Exp 2105)
+
+---
+
+### REQ-HW-059
+
+**Title:** E-MVL sparse K=16 RTL arithmetic accounting for KV260 Ising v4
+
+**Description:**
+Experiment 1774 MUST perform a no-synthesis hardware accounting pass for the
+E-MVL Ising sampler v4 RTL described in `hardware/kv260/ising_sampler_v4_spec.md`.
+The pass computes RM (Real Multiplications), NABS (Additions/Shifts), and BOP
+(Bit Operations) per sweep for both the dense baseline (N=128 full coupling) and
+the sparse K=16 E-MVL architecture. It derives LUT fabric pressure using the
+analytic constants in the v4 spec and verifies that the sparse estimate lies within
+the 117,120-LUT XCK26 budget.
+
+**Acceptance criteria:**
+- `results/experiment_1774_kv260_emvl_rtl.json` is generated.
+- `kv260_no_synthesis_claim: true` is set in the artifact.
+- `estimated_lut_count` reflects the sparse K=16 v4 total LUT estimate.
+- `within_budget: true` (sparse total < 117,120 LUTs).
+- `honest_verdict` starts with `complete:`.
+
+**Implementation status:** Implemented (Exp 1774)
+
+---
+
+### SCENARIO-HW-059
+
+**Scenario:** E-MVL K=16 RTL accounting verifies budget compliance without synthesis.
+
+**Given:** The v4 spec's analytic LUT constants and N=128, K=16 architecture parameters.
+**When:** Exp 1774 runs `emvl_rtl_accounting.run_experiment()`.
+**Then:** The artifact records `within_budget=True`, `estimated_lut_count` < 117,120,
+and `honest_verdict` prefixed with `complete:`.
+
+**Implementation status:** Implemented (Exp 1774)
