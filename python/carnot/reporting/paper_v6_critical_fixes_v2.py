@@ -34,7 +34,15 @@ MEASURED_ARTIFACTS = {
 
 OLD_CLAIM_PATTERNS = {
     "estimated_cpu_fpga_speedups": re.compile(
-        r"13\{,\}061|13,061|13061|12\{,\}000|12,000|12000|11,680|11680",
+        # Require speedup/FPGA context. Bare "12,000" appears legitimately as a
+        # sample-count in exp1715's bijection-invariance audit; we only flag the
+        # old unsupported claim when the number co-occurs with a speedup marker
+        # (\times, "speedup", "faster", or "FPGA") within a short window.
+        r"(?:13\{,\}061|13,061|13061|12\{,\}000|12,000|12000|11,680|11680)"
+        r"\s*(?:\\times|x\b|\s*(?:FPGA|speedup|faster))"
+        r"|"
+        r"(?:FPGA|speedup|faster)[^\n]{0,80}"
+        r"(?:13\{,\}061|13,061|13061|12\{,\}000|12,000|12000|11,680|11680)",
         re.IGNORECASE,
     ),
     "kl_measurement_provenance": re.compile(

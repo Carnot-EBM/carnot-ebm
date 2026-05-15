@@ -1,20 +1,34 @@
 ---
 license: apache-2.0
 ---
-# Carnot Smallest Test Model
+# Carnot EBM Framework
 
-This is a test upload for the Carnot-EBM project. No emojis here.
+**Open-source Energy-Based Model framework for verifying and repairing LLM outputs.**
 
-## Project Stats
-- **Total Experiments:** 3,202
-- **Test Items Collected:** 24,981
-- **Archived Milestones:** 200
+Carnot is the second pair of eyes for any LLM. It reads an LLM's output,
+extracts the specific claims it makes (arithmetic, type assertions, code
+behaviours, multi-step reasoning), checks each claim against the right
+kind of ground-truth, and — if anything fails — feeds the violations back
+to the LLM as targeted repair feedback. Works with any LLM you can call.
+No fine-tuning. No access to model weights.
 
-## Key Results
-| Milestone | Status | Details |
-| --- | --- | --- |
-| .187 | Complete | Milestone 187 retrospective successfully generated. |
-| .186 | Complete | 223 experiments completed in 736 minutes. Zero compute-bound tasks; GPUs correctly idle. |
-| .185 | Complete | Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification achieved. 14 experiments completed. |
-| .182 | Complete | Operational retrospective complete. Synthesis tasks remain primary optimization bottleneck. |
-| .179 | Complete | FourierCSP constraint compiled into fixed CIKAN boundary and preserved through toy residual training. |
+Rust + Python/JAX, Apache 2.0. The authoritative technical record lives in
+`docs/technical-report.md`; this model card is the HuggingFace landing
+surface.
+
+## Provenance Inventory
+
+The repository currently tracks 1,788+ experiment records across
+195+ milestones (latest 2026.05.187). Headline benchmark numbers are
+restricted to live-GPU artifacts; simulated, software-simulation, and
+unverified artifacts are preserved for provenance and explicitly labelled.
+See `docs/technical-report.md` for the full breakdown, headline result
+table, and reproducibility protocol.
+
+## Links
+
+- Code: https://github.com/Carnot-EBM/carnot-ebm
+- HuggingFace org: https://huggingface.co/Carnot-EBM
+- Technical report: `docs/technical-report.md`
+- Architecture: `_bmad/architecture.md`
+- License: Apache-2.0 (`LICENSE`)

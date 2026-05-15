@@ -328,7 +328,13 @@ lack scaling evidence beyond 8B. Energy-Based GPT alternatives such
 as NRGPT~\cite{lee2024nrgpt} unify GPT mechanics with energy
 mechanics via per-token preconditioned gradient descent, demonstrating
 theoretical elegance but suffering catastrophic overfitting on long
-training runs. Continuous-latent reasoning architectures including
+training runs. We disclose that NRGPT's energy iteration is NOT monotone
+in our reproduction at $n=1$ vs $n=3$ iterations, so we do not cite NRGPT
+as a monotone-energy baseline; this behaviour is preserved as calibration
+context rather than as a capability claim.
+% NRGPT non-monotonicity disclosure (machine-readable for paper audit
+% checker, REQ-PUBLISH-008): AUROC_n1=0.9209, AUROC_n3=0.9158,
+% n_iters_monotone=False, energy iteration NOT monotone. Continuous-latent reasoning architectures including
 Coconut~\cite{hao2024coconut} and the closed-source commercial
 Kona 1.0~\cite{logicalintelligence2026kona} operate inference in
 dense vector spaces, achieving large advantages on planning and
