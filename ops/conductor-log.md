@@ -3395,3 +3395,4 @@ IMPORTANT:
 | 2026-05-15 15:13 UTC | Exp 1755: Substrate-size scaling sweep with Thermo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1754-phase4-thermodynamic-metric) |
 | 2026-05-15 15:13 UTC | Exp 1756: Substrate-Aware KAN LUT/BRAM Accounting | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 15:15 UTC | Exp 1755: Substrate-size scaling sweep with Thermo | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1754-phase4-thermodynamic-metric) |
+| 2026-05-15 15:16 UTC | Exp 1756: Substrate-Aware KAN LUT/BRAM Accounting | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
