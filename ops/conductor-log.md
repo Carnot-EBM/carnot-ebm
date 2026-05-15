@@ -3221,3 +3221,4 @@ IMPORTANT:
 | 2026-05-15 02:08 UTC | Exp 1705: HuggingFace mirror retry (Phase 1 ship)  | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.06s |
 | 2026-05-15 02:10 UTC | Exp 1706: Phase 1 independent reproducer engagemen | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.06s |
 | 2026-05-15 02:12 UTC | Exp 1706: Phase 1 independent reproducer engagemen | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.12s |
+| 2026-05-15 02:14 UTC | Exp 1706: Phase 1 independent reproducer engagemen | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.24s |
