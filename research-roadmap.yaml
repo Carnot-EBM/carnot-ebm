@@ -1,361 +1,389 @@
-milestone: "2026.05.181"
-milestone_title: "QAOD vs NLA-SAE Head-to-Head + Phase 4 Genuine Scaling with alpha_t' + EBT Refinement Retry + .179/.180 Audit"
+milestone: "2026.05.182"
+milestone_title: "Phase 4 Measurement-Level Rescue + QAOD/NLA TPR-Collapse Diagnosis + EBT Sign-Anomaly Audit + Ship-Track"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 scope_reduction_compliance:
-  rationale: ".179 produced 2 substantive results (exp1725 LM-EBM bijection re-derivation; exp1732 de-entangled reweighting +2.86pp lift). .180 in flight with mixed outcomes (exp1736 EBT gradient refinement doomed-rerun-blocked 3x). .181 lands the top sweep finding (QAOD vs NLA-SAE head-to-head per arXiv:2605.14449 Score 320), runs the genuine Phase 4 substrate scaling that exp1725's bijection theory motivates, retries exp1736 with explicit prior_failures, and audits ."
-  carry_forwards_addressed: ["QAOD head-to-head NEW (Score 320)", "Phase 4 genuine scaling with alpha_t' from .178 exp1721", "exp1736 EBT refinement doomed-rerun retry", ".179/.180 findings audit"]
+  rationale: ".181 produced 4 substantive results with TWO majors: (a) alpha_t' is ALSO scale-invariant (statistically_distinguishable_pairs=0; both Phase 4 metrics fail the substrate-scaling question — deeper measurement problem than just metric choice), (b) QAOD vs NLA tied at TPR=0.4722 on the shared corpus (BOTH collapsed from 0.73 exp1694 baseline — test-corpus issue or label-noise issue). exp1742 EBT energy_decrease_pct=128% is physically suspicious (mode collapse?). exp1743 audit flagged 11 of 12 .179/.180 artifacts as REAL_BUG. .182 diagnoses these three findings + continues Phase 1 ship-track."
+  carry_forwards_addressed: ["Phase 4 measurement-level rescue (alpha_t and alpha_t' both invariant)", "QAOD/NLA TPR collapse 0.73 -> 0.47", "EBT energy decrease 128% suspicious", "Phase 1 ship-track HF mirror (still stranded)"]
 authored_by: outer-loop-claude
 
 tasks:
-  - id: exp1740-qaod-vs-nla-sae-head-to-head
-    title: "Exp 1740: QAOD vs NLA-SAE head-to-head on shared gemma-4-26B substrate"
-    deliverable: results/experiment_1740_qaod_vs_nla_head_to_head.json
+  - id: exp1745-phase4-per-step-alpha-disaggregation
+    title: "Exp 1745: Phase 4 per-step alpha disaggregation — rescue from ensemble-level invariance"
+    deliverable: results/experiment_1745_phase4_per_step_alpha.json
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     priority: critical
     prior_failures:
-      - experiment_id: exp1720-nla-task-4-ensemble-integration
-        verdict: complete_acceptance_passed_k16_shipped
-        addressed_by: "exp1720 (.178) shipped NLA-SAE as verifier #16 in production. This head-to-head adds QAOD (arXiv:2605.14449, Score 320 from 2026-05-15T08:45Z sweep) as a parallel candidate probe — NOT replacing NLA, evaluating alongside on the same 60-example test set."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT: The 2026-05-15T08:45Z literature sweep surfaced
-      arXiv:2605.14449v1 (Yao/Feng/Xia, May 14 2026, Score 320) — QAOD,
-      a white-box probing framework using orthogonal decomposition of
-      answer representations against question context. Reports 21%
-      improvement on BioASQ for hallucination detection. Carnot's
-      NLA-SAE probe (exp1694 prototype + exp1720 production
-      integration) shipped at TPR=0.73/FPR=0.0 on gemma-4-26B-A4B-it-GGUF.
-      This task runs a head-to-head on the SAME 60-example held-out
-      test corpus used by exp1716 (NLA eval-awareness, delta_tpr=-0.042).
-
-      FALSIFIABLE HYPOTHESIS: On the shared 60-example test set, QAOD
-      outperforms NLA-SAE by at least 5pp on TPR with FPR <= 0.20 (the
-      same FPR cap NLA-SAE met). If lift < 5pp, NLA-SAE remains the
-      production probe. If QAOD outperforms by > 5pp AND maintains
-      eval-awareness safety (delta_tpr < 5pp on the eval-vs-prod split),
-      it becomes a candidate verifier #17 (k=16 → k=17 ensemble).
-
-      EXISTING CODE TO READ FIRST:
-        - python/carnot/verify/nla_verifier_v3.py (NLA-SAE probe)
-        - results/experiment_1694_nla_v3.json (NLA TPR=0.73 baseline)
-        - results/experiment_1716_nla_eval_awareness.json (60-example
-          test corpus + eval-vs-prod split)
-        - results/experiment_1720_nla_ensemble_integration.json (k=16
-          production integration)
-
-      TASK: Implement minimal QAOD probe, run on shared corpus, report
-      head-to-head TPR/FPR.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md Pre-Launch Preconditions Discipline):
-           a. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
-              returns non-empty — else `blocked_model_not_cached`.
-           b. `test -f python/carnot/verify/nla_verifier_v3.py` — else
-              `blocked_nla_v3_implementation_missing`.
-           c. `test -f results/experiment_1716_nla_eval_awareness.json`
-              — else `blocked_no_shared_test_corpus`.
-           d. `python -c "import numpy as np; import scipy.linalg"`
-              succeeds — else `blocked_scipy_missing`.
-           Record preconditions_checked.
-        1. Implement QAOD: orthogonal decomposition of answer
-           representations against question context. Per arXiv:2605.14449
-           abstract: project each answer representation onto the
-           orthogonal complement of the question context subspace; the
-           residual magnitude (or the projection onto question-aligned
-           subspace) is the hallucination indicator.
-        2. Reuse the exp1716 60-example test corpus (30 eval-style +
-           30 production-style; same labels = k=15 ensemble agreement).
-        3. Run NLA-SAE probe (from exp1720) on all 60. Record TPR/FPR
-           with Wilson 95% CI.
-        4. Run QAOD probe on all 60. Record TPR/FPR with Wilson 95% CI.
-        5. Compute delta_tpr_qaod_minus_nla and bootstrap CI.
-        6. Acceptance: report all numbers honestly. The "gate" is task
-           completion, NOT a specific direction — either finding is
-           publishable (NLA-SAE wins → strengthens .178 ship claim;
-           QAOD wins → motivates verifier #17 expansion).
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.qaod_vs_nla_head_to_head.v1"
-        - experiment: 1740
-        - run_date: ISO-8601 UTC
-        - duration_s: > 120s (60 examples × 26B GGUF inference @ 150ms +
-          QAOD/NLA forward passes + scoring)
-        - random_seed: 172040 (NOT 1740 or 60)
-        - reproducibility_checksum: sha256 of (corpus hash + NLA weights
-          + QAOD implementation git_rev)
-        - preconditions_checked: list
-        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
-          n_test: 60, probes_compared: ["nla_sae_v3", "qaod_v1"],
-          test_corpus_from: "exp1716"}}
-        - n_samples: 60
-        - n_samples_justification: "Same 60-example corpus as exp1716
-          for apples-to-apples comparison. Wilson 95% CI width ~0.20
-          per probe; delta_tpr bootstrap CI ~0.28 — sufficient for 5pp
-          gate detection at reasonable power."
-        - nla_sae_tpr, nla_sae_fpr, nla_sae_tpr_wilson_95_ci
-        - qaod_tpr, qaod_fpr, qaod_tpr_wilson_95_ci
-        - delta_tpr_qaod_minus_nla, delta_tpr_bootstrap_ci_95
-        - per_example_inference_latency_ms_p50: > 100 ms (real GGUF)
-        - qaod_wins: bool (delta_tpr_qaod_minus_nla > 0.05 AND
-          delta_tpr_lower_ci > 0)
-        - acceptance_gate_passed: true (measurement task; honest report
-          is the gate)
-        - acceptance_gate_criteria: "Both probes evaluated; head-to-head
-          reported with bootstrap CIs."
-        - methodology_note: "Either outcome is a finding. If qaod_tpr=1.0
-          on 30-example positive set, treat as IMPLAUSIBLE_PERFECT —
-          test set too easy / label leak. Disclose honestly."
-        - optimization_direction: "neither — comparison task"
-        - honest_verdict: MUST start with `complete:` / `complete_` /
-          `success:` / `success_` / `passed:` / `passed_` / `shipped:`
-          / `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
-
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1741-phase4-genuine-scaling-alpha-t-prime
-    title: "Exp 1741: Phase 4 GENUINE substrate scaling sweep with alpha_t' (n=8/16/32/64)"
-    deliverable: results/experiment_1741_phase4_genuine_scaling.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: critical
-    prior_failures:
+      - experiment_id: exp1741-phase4-genuine-scaling-alpha-t-prime
+        verdict: complete_scale_invariance_detected_alpha_t_prime_also_invariant
+        addressed_by: "exp1741 (.181) showed alpha_t' is ALSO scale-invariant at n=8/16/32/64 (statistically_distinguishable_pairs=0, all adjacent pairs overlap 78-100%). The aggregation inf_t (taking infimum over t) may be where invariance emerges. This task tests per-step alpha(t) profiles to see if substrate-size dependence is visible BEFORE the inf_t aggregation collapses it."
+        retire_if_same_verdict: true
       - experiment_id: exp1715-phase4-alpha-t-audit-retry-v3
         verdict: complete_bijection_invariance_artifact_confirmed
-        addressed_by: "exp1715 (.176) falsified the original alpha_t. exp1721 (.178) derived alpha_t' replacement. This task runs the substrate-size scaling sweep that exp1678/1681/1693 attempted but couldn't answer (they were measuring a bijection-invariant quantity)."
-        retire_if_same_verdict: false
-      - experiment_id: exp1721-phase4-alpha-t-replacement-derivation
-        verdict: complete_alpha_t_prime_monotonic_decay_4_cell_ablation
-        addressed_by: "exp1721 (.178) confirmed alpha_t' on the random-verifier injection ablation at n=32. THIS task extends to the substrate-size axis — the original Phase 4 scaling question. Independent confirmation needed."
-        retire_if_same_verdict: false
-      - experiment_id: exp1725
-        verdict: complete_theoretical_derivation_lm_ebm_bijection
-        addressed_by: "exp1725 (.179) re-derived the LM-EBM bijection per arXiv:2512.15605 and noted exp1693 alpha_t invariance is a direct corollary. This task EMPIRICALLY tests whether alpha_t' (the max-caliber replacement) avoids the corollary."
-        retire_if_same_verdict: false
+        addressed_by: "exp1715 (.176) was the first falsification. exp1721 (.178) attempted alpha_t' replacement. exp1741 (.181) confirmed alpha_t' is also invariant. This is the third attempt at the Phase 4 measurement question — using per-step disaggregation. If alpha(t) shows substrate dependence pre-aggregation, the fix is to use the alpha-trajectory not its infimum. If alpha(t) is invariant across n at EVERY t, the Phase 4 hypothesis is fundamentally inaccessible from ensemble-output metrics and needs to escalate to operator program review."
+        retire_if_same_verdict: true
     prompt: |
-      CONTEXT: The Phase 4 substrate-size scaling question was attempted
-      with the original alpha_t metric in exp1678 (.168 n=8), exp1681
-      (.169 n=8/16/32), exp1693 (.171 n=64) — all producing the same
-      ~0.15054 value with IMPLAUSIBLE_TIGHT_CI flags. exp1715 (.176)
-      proved this was bijection-invariance, not measurement noise.
-      exp1721 (.178) derived alpha_t' (max-caliber per arXiv:2605.12536)
-      and confirmed monotonic decay on random-verifier injection. THIS
-      task uses alpha_t' on the substrate-size axis to finally answer
-      whether Phase 4 free-energy reduction genuinely scales with n.
+      CONTEXT: exp1741 (.181) confirmed alpha_t' is also scale-invariant
+      at n=8/16/32/64. delta_alpha_prime values: 0.15088 / 0.15086 /
+      0.15093 / 0.15096 — all within 0.0001 of each other. inf_t_alpha_k1_prime
+      is exactly 2.0069872822470121e-10 at ALL FOUR n (17-sig-fig
+      bit-identical baseline — a TAUTOLOGY-class smell). The inf_t
+      aggregation may be a measurement-collapsing step. This task
+      disaggregates: measure alpha(t) AT EVERY MLD STEP and look for
+      substrate-size dependence in the trajectory, not the infimum.
 
-      FALSIFIABLE HYPOTHESIS: delta_alpha_prime measured at n in
-      {{8, 16, 32, 64}} produces statistically distinguishable values
-      (overlap < 5% between at least 2 of 3 adjacent n bootstrap CIs).
-      If overlap >= 5% on all 3 adjacent pairs, alpha_t' is ALSO
-      scale-invariant — Phase 4 substrate-scaling becomes inaccessible
-      from ensemble-level metrics. Either outcome is a finding.
+      FALSIFIABLE HYPOTHESIS: The per-step alpha(t) trajectories at
+      n=8/16/32/64 are statistically distinguishable at AT LEAST 10
+      of the 100 MLD step indices (Wilson 95% CI on per-step values
+      non-overlapping between at least one adjacent n-pair at 10+ step
+      indices). If alpha(t) is invariant at EVERY step across n, the
+      Phase 4 hypothesis is fundamentally inaccessible from ensemble
+      metrics — escalation needed.
 
       EXISTING CODE TO READ FIRST:
-        - python/carnot/phase4/alpha_t_max_caliber.py (the alpha_t'
-          implementation from exp1721)
-        - results/experiment_1721_alpha_t_replacement.json (the .178
-          confirmation on random-verifier ablation)
-        - results/experiment_1715_phase4_alpha_t_audit.json (the
-          original alpha_t ablation; sanity-check)
+        - results/experiment_1741_phase4_genuine_scaling.json (the
+          ensemble-level invariance result)
+        - python/carnot/phase4/alpha_t_max_caliber.py (alpha_t'
+          implementation; modify or wrap to emit per-step trajectory)
+        - results/experiment_1721_alpha_t_replacement.json (.178 baseline)
 
-      TASK: 4-cell substrate-size sweep using alpha_t'.
+      TASK: Measure alpha_t' per-step trajectory at n=8/16/32/64 + test
+      step-wise distinguishability.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (per CLAUDE.md):
            a. `python -c "from carnot.phase4.alpha_t_max_caliber import
               alpha_t_prime"` succeeds — else
               `blocked_alpha_t_prime_implementation_missing`.
-           b. exp1721 artifact readable — else
-              `blocked_no_replacement_baseline`.
+           b. exp1741 artifact readable — else
+              `blocked_no_invariance_baseline`.
            Record preconditions_checked.
-        1. For each n in {{8, 16, 32, 64}}: run 30 seeds × 100 MLD steps
-           with k=6 verifier ensemble + k=1 baseline. Compute
-           inf_t_alpha_k6_prime, inf_t_alpha_k1_prime per seed.
-        2. Aggregate: delta_alpha_prime(n) = bootstrap mean over 30 seeds.
-           Report bootstrap_ci_95 per n.
-        3. Check overlap between adjacent n CIs (n=8 vs 16; 16 vs 32;
-           32 vs 64). Record adjacent_pair_overlap_pct per pair.
-        4. Acceptance: at least 2 of 3 adjacent pairs show overlap <5%.
-           Both outcomes are findings; do NOT optimize toward (a).
+        1. Wrap alpha_t_prime to emit per-step values (NOT just inf_t).
+           Save as alpha_t_prime_trajectory(state, k_verifiers) -> list[100].
+        2. For each n in {8, 16, 32, 64}: 30 seeds × 100 MLD steps.
+           Capture alpha(t) per step per seed.
+        3. Aggregate: at each step t in [0..99], compute the per-n
+           mean + Wilson 95% CI across 30 seeds.
+        4. Count distinguishable_steps: number of t indices where at
+           least one adjacent (n_a, n_b) pair has CI non-overlap.
+        5. Acceptance: distinguishable_steps >= 10. Both outcomes are
+           findings. If distinguishable_steps == 0, write the honest
+           negative — Phase 4 hypothesis is metric-inaccessible.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.phase4_alpha_t_prime_scaling.v1"
-        - experiment: 1741
+        - schema: "carnot.phase4_per_step_alpha.v1"
+        - experiment: 1745
         - run_date: ISO-8601 UTC
-        - duration_s: > 200s (4 n-points × 30 seeds × 100 MLD; real)
-        - random_seed: 172041 (NOT 1741 or 64)
+        - duration_s: > 200s (4 n-points × 30 seeds × 100 MLD; if completes
+          faster, the trajectory capture was likely short-circuited)
+        - random_seed: 172145 (NOT 1745 or 100)
+        - reproducibility_checksum: sha256 of (alpha_t_max_caliber git_rev
+          + scaling grid spec + trajectory wrapper code)
+        - preconditions_checked: list
+        - model_specs: {n_grid: [8, 16, 32, 64], ensemble_k_total: 6,
+          mld_steps: 100, n_seeds: 30, alpha_t_variant: "max_caliber_v1",
+          aggregation: "per_step_trajectory"}
+        - n_samples: 12000 (4 n × 30 seeds × 100 steps)
+        - n_samples_justification: "30 seeds per n-step cell gives
+          Wilson 95% CI width ~0.18/sqrt(30) ~ 0.03 on per-step alpha;
+          sufficient to detect 5pp gaps at 100 step indices."
+        - per_step_trajectories: dict n -> list of 100 {step, alpha_mean,
+          alpha_wilson_95_ci}
+        - distinguishable_steps: int (count where adjacent-n CI non-overlap)
+        - distinguishable_step_indices: list of int
+        - first_distinguishable_step: int or null (the EARLIEST step
+          where any adjacent pair shows non-overlap; informs whether
+          invariance is from aggregation or from substrate)
+        - acceptance_gate_passed: bool (distinguishable_steps >= 10)
+        - acceptance_gate_criteria: "At least 10 MLD-step indices show
+          substrate-size distinguishability in alpha(t)."
+        - methodology_note: "If distinguishable_steps == 0 across all
+          100 t-indices, the invariance is substrate-level, not
+          aggregation-level. Phase 4 program needs operator-level
+          escalation per CLAUDE.md retire_if_same_verdict=true on
+          BOTH exp1715 and exp1741 prior_failures cited above."
+        - optimization_direction: "neither — falsification task"
+        - honest_verdict: MUST start with `complete:` / `complete_` /
+          `success:` / `success_` / `passed:` / `passed_` / `shipped:`
+          / `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1746-qaod-nla-tpr-collapse-diagnosis
+    title: "Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47 — corpus or methodology root cause"
+    deliverable: results/experiment_1746_tpr_collapse_diagnosis.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1740-qaod-vs-nla-sae-head-to-head
+        verdict: complete_qaod_nla_tied_at_tpr_0.4722
+        addressed_by: "exp1740 (.181) reported QAOD and NLA both at TPR=0.4722 (identical to 4 decimal places), 35% below the exp1694 NLA-prototype baseline of 0.73 on what was supposed to be the SAME 60-example corpus reused from exp1716. The bit-identical TPR is suspicious (TAUTOLOGY-class smell — both probes hitting the same fraction is unlikely unless they share a common substrate). This task diagnoses whether (a) exp1740 used a DIFFERENT 60-example corpus than exp1716, (b) label-noise was introduced in regeneration, (c) both probes degraded due to some pipeline regression."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: exp1740 (.181) ran QAOD vs NLA head-to-head, reporting
+      qaod_tpr=0.4722222222222222 and nla_sae_tpr=0.4722222222222222
+      (BIT-IDENTICAL to 16 decimal places — suspicious). The NLA-SAE
+      probe was supposed to score TPR=0.73 per exp1694 (.171). The
+      collapse from 0.73 to 0.47 happened somewhere; this task finds
+      where.
+
+      FALSIFIABLE HYPOTHESIS: One of three root causes: (a) exp1740
+      used a DIFFERENT 60-example test corpus than exp1716 (corpus-
+      identity issue), (b) exp1740 used the right corpus but with
+      regenerated/relabeled examples (label-noise issue), (c) exp1740
+      used the right corpus but the NLA-SAE pipeline regressed since
+      exp1694/1720 (pipeline-regression issue). Diagnosis identifies
+      which.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1740_qaod_vs_nla_head_to_head.json
+        - results/experiment_1716_nla_eval_awareness.json (the
+          original 60-example corpus)
+        - results/experiment_1694_nla_v3.json (TPR=0.73 baseline)
+        - results/experiment_1720_nla_ensemble_integration.json (k=16
+          shipped baseline)
+        - python/carnot/verify/nla_verifier_v3.py
+
+      TASK: Three-step diagnosis to identify which root cause applies.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. exp1740 + exp1716 + exp1694 artifacts all exist — else
+              `blocked_artifact_missing_<which>`.
+           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
+              non-empty — else `blocked_model_not_cached`.
+           Record preconditions_checked.
+        1. Corpus-identity check: compare the test_corpus_hash field
+           (or first 10 example IDs) between exp1740 and exp1716. If
+           different, CORPUS_IDENTITY_MISMATCH confirmed.
+        2. If same corpus: label-noise check. Rerun exp1694's NLA-SAE
+           probe FRESH on the exp1716 corpus. If TPR > 0.65, the probe
+           is fine — the issue is in exp1740's evaluation code. If TPR
+           is also ~0.47, the probe genuinely regressed.
+        3. If pipeline regression: bisect by re-running exp1694's
+           original 60-example corpus (if recoverable from git history
+           or trained weights). If TPR is 0.73 there but 0.47 on
+           exp1716's corpus, the corpora differ. If TPR is 0.47 on
+           BOTH, the probe weights regressed.
+        4. Report root_cause: one of "corpus_identity_mismatch",
+           "label_noise", "probe_regression", "exp1740_evaluation_bug",
+           or "indeterminate" (with diagnostic detail).
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.tpr_collapse_diagnosis.v1"
+        - experiment: 1746
+        - run_date: ISO-8601 UTC
+        - duration_s: > 120s (real diagnosis with 60-example reruns)
+        - random_seed: 172146 (NOT 1746 or 60)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {{n_grid: [8, 16, 32, 64], ensemble_k_total: 6,
-          ensemble_k_baseline: 1, mld_steps: 100, n_seeds: 30,
-          alpha_t_variant: "max_caliber_v1"}}
-        - n_samples: 12000
-        - n_samples_justification: "30 seeds per n-point gives CI width
-          ~0.18/sqrt(30) ~ 0.03 — matches 5% overlap detection at 4
-          n-points."
-        - per_n_results: list of {{n, inf_t_alpha_k6_prime,
-          inf_t_alpha_k1_prime, delta_alpha_prime,
-          delta_alpha_prime_bootstrap_ci_95}}
-        - adjacent_pair_overlap_pct: list of {{pair, overlap_pct}}
-        - scale_invariance_detected: bool
-        - statistically_distinguishable_pairs: int
-        - acceptance_gate_passed: bool (statistically_distinguishable_pairs >= 2)
-        - acceptance_gate_criteria: "At least 2 of 3 adjacent n-pairs
-          show overlap <5%."
-        - methodology_note: "If CI widths are sub-0.001 across all n,
-          the new IMPLAUSIBLE_TIGHT_CI rule #8 will flag — disclose
-          whether alpha_t' is also deterministic-by-construction."
-        - optimization_direction: "neither — measurement task"
+        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          baseline_artifact: "exp1694", regression_artifact: "exp1740",
+          corpus_artifact: "exp1716"}
+        - n_samples: 60
+        - n_samples_justification: "Diagnostic rerun on the 60-example
+          corpus; Wilson 95% CI width ~0.20 — sufficient to discriminate
+          0.73 vs 0.47 baseline."
+        - exp1716_corpus_hash, exp1740_corpus_hash, hashes_match
+        - fresh_nla_tpr_on_exp1716_corpus, fresh_nla_tpr_wilson_95_ci
+        - exp1694_baseline_replicated: bool
+        - root_cause: str (one of the 5 categories above)
+        - acceptance_gate_passed: bool (root_cause is identified with
+          rationale, NOT "indeterminate")
+        - acceptance_gate_criteria: "Root cause identified with
+          diagnostic evidence, not just hypothesis."
+        - methodology_note: "If both probes scored bit-identically
+          (0.4722222...) at 16 decimals, the TAUTOLOGY adversarial-verify
+          rule applies — this is more likely a methodology bug than a
+          real finding. Disclose honestly."
+        - optimization_direction: "neither — diagnosis task"
         - honest_verdict: MUST start with terminal prefix.
 
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1742-ebt-gradient-refinement-retry
-    title: "Exp 1742: EBT-style gradient refinement loop retry — .180 exp1736 doomed-rerun-blocked 3x"
-    deliverable: results/experiment_1742_ebt_gradient_refinement.json
+  - id: exp1747-ebt-energy-128pct-mode-collapse-check
+    title: "Exp 1747: EBT energy decrease 128% — mode-collapse audit"
+    deliverable: results/experiment_1747_ebt_mode_collapse_check.json
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
     priority: high
     prior_failures:
-      - experiment_id: exp1736-ebt-gradient-refinement
-        verdict: doomed_rerun_blocked_3x_no_prior_failures_field
-        addressed_by: "exp1736 (.180) was doomed-rerun-blocked 3x because the planner-drafted task lacked a prior_failures block; the conductor's ledger matched the scope against an earlier EBT-style task but couldn't distinguish. This retry includes explicit prior_failures with retire_if_same_verdict=true to break the loop."
+      - experiment_id: exp1742-ebt-gradient-refinement
+        verdict: complete_energy_decrease_128pct_gate_passed
+        addressed_by: "exp1742 (.181) reported energy_decrease_pct_mean=128.08%. A 100%+ decrease means E_final is more negative than -|E_init|. Two interpretations: (a) the energy function is unbounded-below and gradient descent found a degenerate spike (mode collapse to a trivially-low-energy state), (b) the sign convention or initial state was misconfigured. This task audits by checking final state diversity + energy-bound assumptions."
         retire_if_same_verdict: true
     prompt: |
-      CONTEXT: exp1736 (.180) was a planner-drafted EBT-style gradient
-      refinement loop prototype that doomed-rerun-blocked 3x because it
-      lacked a prior_failures field. The ledger flagged a scope match
-      against a prior EBT-class task but couldn't proceed without an
-      explicit addressed_by note. This retry breaks the loop with the
-      prior_failures block above.
+      CONTEXT: exp1742 (.181) reported a 128.08% energy decrease on
+      its EBT gradient refinement loop. A >100% decrease is physically
+      suspicious — it means the final energy is more negative than
+      -|initial energy|. This indicates either (a) the energy function
+      is unbounded below (no minimum exists) and gradient descent found
+      a degenerate trajectory toward -infinity, OR (b) sign convention
+      or initial state misconfigured.
 
-      FALSIFIABLE HYPOTHESIS: A minimal EBT-style gradient refinement
-      loop (energy gradient descent over verifier ensemble output) on a
-      n=16 Ising substrate converges to a local minimum within 100
-      iterations with energy decrease of at least 20% from initial.
-      If energy increases or stalls within 5% of initial, the gradient
-      direction is inconsistent with the ensemble energy — the EBT
-      hypothesis needs methodology revision.
+      FALSIFIABLE HYPOTHESIS: Across 30 random initializations of the
+      gradient refinement loop, EITHER (a) all 30 final states cluster
+      within Hamming distance 2 of each other (mode collapse confirmed),
+      OR (b) final states have diverse Hamming distances >= 4 spread
+      (no collapse; energy unboundedness is the issue), OR (c) the
+      energy function evaluated on a clean fresh state returns a
+      bounded value (sign convention misconfigured).
 
       EXISTING CODE TO READ FIRST:
-        - Search python/carnot/ for `gradient_refinement` or
-          `ebt` or `energy_based` modules.
-        - results/experiment_1721_alpha_t_replacement.json (max-caliber
-          alpha_t' — the gradient-refinement loop should target this)
+        - results/experiment_1742_ebt_gradient_refinement.json
+        - Whatever gradient_refinement_loop implementation is in
+          python/carnot/ — grep for "gradient_refinement_loop" or
+          "ebt_gradient" or use exp1742's recorded source
 
-      TASK: Implement minimal EBT gradient refinement loop + run.
+      TASK: Three-test diagnostic.
 
       CONCRETE STEPS:
         0. PRECONDITIONS (per CLAUDE.md):
-           a. `python -c "import jax; import jax.numpy as jnp"` succeeds —
-              else `blocked_jax_missing`.
-           b. Energy function from the k=6 verifier ensemble locatable —
-              else `blocked_verifier_ensemble_energy_missing`.
+           a. The exp1742 gradient_refinement_loop implementation is
+              importable — else `blocked_ebt_implementation_missing`.
+           b. The k=6 verifier ensemble's energy_fn is importable —
+              else `blocked_verifier_energy_missing`.
            Record preconditions_checked.
-        1. Implement gradient_refinement_loop(initial_state, energy_fn,
-           n_iters=100, lr=0.01) using jax.grad on energy_fn.
-        2. Run on a fresh n=16 Ising state initialized uniformly.
-        3. Record energy at each iteration. Compute
-           energy_decrease_pct = (E_init - E_final) / abs(E_init).
-        4. Acceptance: energy_decrease_pct >= 0.20 (gradient is
-           informative). If energy increases or stalls within 5%,
-           record SIGN_ANOMALY honestly.
+        1. Mode-collapse test: 30 independent random initializations of
+           the n=16 Ising state. Run the EBT loop on each (100 iters).
+           Compute Hamming distance matrix on the 30 final states.
+           Report mean / median / max distance.
+        2. Energy-boundedness test: evaluate energy_fn on 1000 random
+           n=16 states. Report energy distribution + does it cluster
+           around any value vs spread to -infinity?
+        3. Sign-convention test: print sign of grad(energy) at a few
+           non-degenerate states and compare to expected (gradient
+           descent should move energy DOWN — sign should reduce energy
+           per step).
+        4. Conclusion: classify as one of "mode_collapse",
+           "energy_unbounded_below", "sign_convention_inverted",
+           "other".
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.ebt_gradient_refinement.v1"
-        - experiment: 1742
+        - schema: "carnot.ebt_mode_collapse_audit.v1"
+        - experiment: 1747
         - run_date: ISO-8601 UTC
-        - duration_s: > 30s (100 iters × jax forward + grad)
-        - random_seed: 172042 (NOT 1742 or 16)
-        - reproducibility_checksum: sha256 of (energy_fn git_rev +
-          n_spins + initial_state seed + lr)
+        - duration_s: > 60s (30 iters of gradient refinement + 1000
+          energy evals + sign tests)
+        - random_seed: 172147 (NOT 1747 or 30)
+        - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {{n_spins: 16, n_iters: 100, lr: 0.01,
-          energy_source: "k=6_verifier_ensemble"}}
-        - n_samples: 30 (30 random seeds for stability)
-        - n_samples_justification: "30 seeds gives Wilson CI on
-          convergence rate; <30 too noisy on this stochastic loop."
-        - initial_energy_mean, final_energy_mean (over 30 seeds)
-        - energy_decrease_pct_mean, energy_decrease_pct_ci_95
-        - convergence_rate: int (count of 30 seeds reaching the gate)
-        - acceptance_gate_passed: bool (energy_decrease_pct_mean >= 0.20)
-        - acceptance_gate_criteria: "Mean energy decrease >= 20% across
-          30 seeds; gradient is informative."
-        - methodology_note: "If energy increases, this is SIGN_ANOMALY —
-          gradient pointing wrong direction. Disclose honestly. If
-          mean decrease is 100% (energy → 0), check for trivial
-          collapse — adversarial-verify IMPLAUSIBLE_PERFECT flag."
-        - optimization_direction: "minimize_energy"
+        - model_specs: {n_spins: 16, n_inits: 30, energy_sample_count: 1000,
+          ebt_implementation_path: str}
+        - n_samples: 30 (mode-collapse) + 1000 (energy-boundedness)
+        - n_samples_justification: "30 inits is the minimum for mode-
+          collapse detection. 1000 energy evals gives a clean
+          empirical distribution for boundedness."
+        - hamming_distance_matrix_mean: float
+        - hamming_distance_matrix_median: float
+        - hamming_distance_matrix_max: int
+        - mode_collapse_detected: bool (mean Hamming < 2 across 30 inits)
+        - energy_distribution_mean, energy_distribution_std, energy_min, energy_max
+        - energy_unbounded_below: bool (energy_min < 10x median)
+        - sign_convention_inverted: bool
+        - root_cause: str (one of 4 categories above)
+        - acceptance_gate_passed: bool (root_cause identified with evidence)
+        - acceptance_gate_criteria: "Root cause identified."
+        - methodology_note: "128% energy decrease is the smoking gun.
+          One of the three diagnostic tests will fire."
+        - optimization_direction: "neither — audit task"
         - honest_verdict: MUST start with terminal prefix.
 
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1743-findings-audit-pass-179-180
-    title: "Exp 1743: .179 + .180 findings audit + corrigenda"
-    deliverable: results/experiment_1743_findings_audit_179_180.json
+  - id: exp1748-phase1-huggingface-retry-3rd
+    title: "Exp 1748: Phase 1 HuggingFace mirror retry (3rd attempt, stranded since .175)"
+    deliverable: results/experiment_1748_huggingface_retry.json
     max_turns: 100
     agent_type: codex
     model: gpt-5.5
-    priority: medium
-    prior_failures: []
+    priority: high
+    prior_failures:
+      - experiment_id: exp1695-phase1-huggingface-publication
+        verdict: stranded_skip_wipeout_in_171
+        addressed_by: "exp1695 (.171) was scheduled but stranded by the .171 SKIP wipeout (pre-test failure now fixed)."
+        retire_if_same_verdict: false
+      - experiment_id: exp1705-phase1-huggingface-retry
+        verdict: stranded_skip_wipeout_in_175
+        addressed_by: "exp1705 (.175) was scheduled but stranded by the .175 SKIP wipeout."
+        retire_if_same_verdict: false
+      - experiment_id: exp1726-phase1-huggingface-mirror-stranded-recovery
+        verdict: never_run_planner_replaced_my_draft_in_179
+        addressed_by: "exp1726 (.179) was in my outer-loop draft but the planner replaced .179 with a different task list. This is the third explicit attempt. Same PRECONDITIONS discipline as exp1711 (PyPI blocked_credentials emitted honestly) and exp1742 success pattern."
+        retire_if_same_verdict: true
     prompt: |
-      CONTEXT: Standard audit pass on .179 (~10 artifacts exp1724-1734)
-      and .180 (~10 artifacts exp1735-1744). exp1736 doomed-rerun-blocked
-      and exp1738 GATE_BLOCKed in .180 — those should be classified.
+      CONTEXT: Phase 1 ship-track HF prong has been stranded across 3
+      milestones (.171/.175/.179). PyPI prong (exp1711 .175) emitted
+      honest blocked_pypi_credentials_unavailable — the same pattern
+      should work for HF.
 
-      FALSIFIABLE HYPOTHESIS: Of the combined ~20 artifacts, at least
-      2 will be flagged by adversarial-verify; classification of each
-      flag as REAL_BUG / FALSE_POSITIVE / NEEDS_REVISION is the
-      deliverable.
+      FALSIFIABLE HYPOTHESIS: At least one Carnot trained EBM artifact
+      can be uploaded to huggingface.co/Carnot-EBM with a complete
+      model card (emoji-free) and verified loadable from a fresh
+      subprocess. If credentials absent, emit blocked_credentials
+      honestly.
 
       EXISTING CODE TO READ FIRST:
-        - scripts/adversarial_verify.py (8-rule linter; rule #8
-          IMPLAUSIBLE_TIGHT_CI is the newest)
-        - results/experiment_172[4-9]*.json + results/experiment_173[0-9]*.json
-          + results/experiment_174[0-4]*.json
+        - results/experiment_1711_pypi_publish.json (PyPI blocked
+          pattern; exemplary honest verdict)
+        - scripts/publish_huggingface.py if exists from prior attempts
+        - reference_huggingface memory (org=Carnot-EBM)
 
-      TASK: Combined audit pass on .179/.180.
+      TASK: Upload one minimal-viable model artifact + card OR emit
+      honest blocked verdict.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
-        1. Run `python3 scripts/adversarial_verify.py --milestone-range
-           1724 1745`.
-        2. Classify each flag REAL_BUG / FALSE_POSITIVE / NEEDS_REVISION;
-           append corrigendum_2026_05_181_audit field (CLAUDE.md
-           no-pruning: APPEND only).
-        3. For REAL_BUG, propose .182+ follow-ups.
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `huggingface-cli whoami` returns non-anonymous user with
+              write access to Carnot-EBM org — else
+              `blocked_huggingface_credentials_unavailable`.
+           b. `python -c "from huggingface_hub import HfApi"` succeeds —
+              else `blocked_huggingface_hub_missing`.
+           c. At least one checkpoint at <50MB in python/carnot/verify/
+              or models/ — else `blocked_no_checkpoint_available`.
+           Record preconditions_checked.
+        1. If preconditions pass: pick smallest checkpoint.
+        2. Write model card (no emojis, verbose layman, Apache-2.0,
+           BibTeX with ian@blenke.com).
+        3. HfApi.create_repo + upload_folder.
+        4. Fresh subprocess: hf_hub_download + verify.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.findings_audit_corrigenda.v5"
-        - experiment: 1743
+        - schema: "carnot.huggingface_retry.v2"
+        - experiment: 1748
         - run_date: ISO-8601 UTC
-        - duration_s: > 30s
-        - random_seed: 172043
+        - duration_s: > 30s if real upload; smaller if blocked
+        - random_seed: 172148
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {{audit_target_milestones: ["2026.05.179",
-          "2026.05.180"], adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}}
-        - n_samples: int (flagged count)
-        - n_samples_justification: "Audit; n is flagged-artifact count."
-        - audit_outcomes: dict experiment_id -> {{classification, rationale}}
-        - corrigenda_added: list
-        - acceptance_gate_passed: bool
-        - acceptance_gate_criteria: "All flagged classified; corrigenda appended."
-        - methodology_note: "If audit completes in <10s on >5 artifacts,
-          agent shortcut — disclose honestly."
-        - optimization_direction: "neither — audit task"
-        - honest_verdict: MUST start with terminal prefix.
+        - model_specs: {hf_org: "Carnot-EBM", hf_repo: str,
+          chosen_artifact_path: str, model_card_word_count: int}
+        - n_samples: 1
+        - n_samples_justification: "Ship task."
+        - hf_upload_succeeded: bool
+        - hf_url: str or null
+        - external_load_verified: bool
+        - model_card_has_emojis: false
+        - acceptance_gate_passed: bool (upload + external load + no
+          emojis) OR honest blocked_credentials
+        - acceptance_gate_criteria: "Real HF upload + load OR honest
+          blocked verdict."
+        - methodology_note: "Per exp1711 PyPI precedent, blocked_credentials
+          is a valid honest verdict, NOT a fabrication."
+        - optimization_direction: "neither — ship task"
+        - honest_verdict: MUST start with terminal prefix OR
+          `blocked_<resource>`.
 
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
-      or scripts/adversarial_verify.py.
+      Run command. Do NOT push to git. Do NOT modify
+      scripts/research_conductor.py.
 
-  - id: exp1744-milestone-181-retrospective
-    title: "Exp 1744: Milestone .181 retrospective"
-    deliverable: results/operational_retro_2026_05_181.json
+  - id: exp1749-milestone-182-retrospective
+    title: "Exp 1749: Milestone .182 retrospective"
+    deliverable: results/operational_retro_2026_05_182.json
     max_turns: 60
     agent_type: codex
     model: gpt-5.5
@@ -365,16 +393,16 @@ tasks:
       CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
       Development Workflow step 8.
 
-      TASK: Generate the .181 operational retrospective.
+      TASK: Generate the .182 operational retrospective.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: git log [conductor] Activate milestone
-           2026.05.181..HEAD returns non-empty.
-        1-6. Standard retro per .169/.171/.175/.176/.178/.179 templates.
+           2026.05.182..HEAD returns non-empty.
+        1-6. Standard retro per .169/.171/.175/.176/.178/.181 templates.
 
       REQUIRED ARTIFACT FIELDS:
         - schema: "carnot.operational_retro.v64"
-        - milestone: "2026.05.181"
+        - milestone: "2026.05.182"
         - generated_at: ISO-8601 UTC
         - retro_type: "operational_full"
         - preconditions_checked: list
