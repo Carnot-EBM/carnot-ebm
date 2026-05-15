@@ -1450,6 +1450,38 @@ an active-inference loop, while preserving the repair, provenance,
 and hardware-portability properties that motivated the framework in
 the first place.
 
+\subsection{Bijection-invariance audit of $\delta_\alpha$ (exp1715)}
+\label{sec:phase4-bijection-invariance}
+
+Experiment~1715 tested whether the measured $\delta_\alpha = \inf_t \alpha_t^{k=6} - \inf_t \alpha_t^{k=1}$ signal
+genuinely depends on verifier \emph{content} or is instead an artifact of the computation structure.
+The audit constructed a 4-cell ablation grid varying the random-verifier fraction from 0 (all structured
+verifiers) to 1.0 (all random verifiers), across $n_{\mathrm{spins}} \in \{8, 16, 32, 64\}$.
+Under the bijection-invariance hypothesis, if $\delta_\alpha$ is a structural artifact,
+it should remain constant across cells regardless of which verifiers are active.
+
+The result confirmed the hypothesis: all four cells produced $\delta_\alpha = 0.15054$ with
+a 95\,\% bootstrap CI of $[0.1504, 0.1508]$ (30 seeds $\times$ 100 MLD steps $\times$ 4 cells
+$= 12{,}000$ samples; $n_{\mathrm{spins}} = 32$; seed 171615).
+The value is identical to five significant figures across cells at random fractions $\{0, 0.333, 0.667, 1.0\}$,
+confirming that $\delta_\alpha$ in the current Phase~4 pilot does \emph{not} discriminate
+between structured verifiers and random noise.
+
+\textbf{Interpretation.}
+The $\delta_\alpha$ lift from $k=1$ to $k=6$ verifiers is dominated by the $k$-composition
+of the energy operator itself---the bijection over cell assignments---rather than by
+genuine verifier-content signal. This means the $\delta_\alpha = 0.15054$ figure reported
+in the Phase~4 pilot cannot be cited as evidence that real verifier diversity drives the
+free-energy lift.  It is preserved as an honest calibration datum, not a capability claim.
+
+This finding does not invalidate the $\inf_t \alpha_t > 0$ positivity result from
+exp1077 ($\alpha_t = 0.38$ on Qwen3.6-35B-A3B) or exp1130 ($\alpha_t = 0.52$ post-retrain),
+because those measurements use a single fixed verifier ensemble and do not depend on
+the bijection-variance property. The bijection-invariance result constrains
+which \emph{comparative} $\delta_\alpha$ claims are admissible: cross-cell comparisons
+of $\delta_\alpha$ cannot be used to rank verifier ensembles until a non-bijection-invariant
+implementation of the metric is validated.
+
 \section{Decentralization \& Deployment Sovereignty}
 \label{sec:sovereignty}
 
