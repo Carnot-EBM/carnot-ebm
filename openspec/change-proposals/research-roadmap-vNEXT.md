@@ -1,39 +1,37 @@
-# Milestone 2026.05.177: Neuro-Symbolic Extraction, Compositional Energy, and KAN Hardware
+# Research Roadmap vNEXT (Milestone 2026.05.179)
+## Phase 4 Bijection Integration, NLA Integrity Audit, and CEM Substrate
 
-## 1. Context and Outcomes of Milestone 2026.05.176
-Milestone .176 resolved the legacy audit gaps and integrated Phase 4 carry-forwards, setting the stage for broader structural alignment and robust extraction. 
-The current biggest gaps between our state and the PRD vision are:
-1. **Extraction Gap:** We lack a reliable constraint-aware retrieval module (CARM) to accurately bridge unstructured instructions to our deterministic executable validators.
-2. **Compositional Reasoning:** Complex multi-constraint optimization still degrades. We need Compositional Energy Minimization (CEM) to decompose and aggregate energy landscapes.
-3. **Continuous Self-Learning:** Retained policy updates require rigorous non-forgetting checks (zero soundness mistakes) during continuous feedback loops.
+### 1. Previous Milestone Recap (.178)
+Milestone .178 successfully validated the Phase 4 alpha_t replacement via maximum-caliber and finalized the NLA 16th verifier Task 4. The codification of the bijection-invariance findings (exp1719) hit a locatable error and is carried forward.
 
-## 2. Phase Architecture
+### 2. Strategic Objectives for .179
+- **Integrate the LM-EBM Bijection:** Connect Carnot's verifier-as-free-energy theory to the formal autoregressive-EBM bijection discovered in recent arXiv literature (arXiv:2512.15605v3).
+- **NLA Verifier Integrity:** Perform descriptive collision audits to prevent auto-interpretability inflation, and reweight the expanded k=16 ensemble to avoid behavioral entanglement.
+- **Compositional Energy Minimization (CEM):** Build the CEM substrate for Phase 4, allowing complex constraint solving by summing smaller independent energy landscapes.
+- **Continuous Self-Learning Feedback:** Route the NLA white-box signals into the continuous self-learning loop (FR-11) as a high-quality feedback mechanism.
+- **Mandated Hardware & SOTA Inference:** Benchmark the Qwen3.6-35B-A3B and Gemma-4 31B models on the full k=16 ensemble via DualGPURunner, and calculate KANELÉ LUT-based hardware accounting for CEM.
 
-### Phase 1: Constraint-Aware Retrieval & Extraction (CARE)
-We will adapt the ConstraintLLM principles to extract verifier constraints directly from complex prompts.
-- **Goal:** Improve parser yield and constraint recall over raw LLM drafting.
-- **Method:** Integrate a Constraint-Aware Retrieval Module that fetches known verifiable properties before schema generation.
+### 3. Phases
+**Phase 1: Carry-Forward & Theoretical Grounding**
+- Codify the bijection-invariance finding into paper-v6.
+- Empirical δ Calculation for Verify-Repair Convergence.
+- Theoretical LM-EBM Bijection Re-derivation.
 
-### Phase 2: Compositional Energy Minimization (CEM)
-Instead of forcing the LLM to resolve all constraints simultaneously, decompose constraints into local energy landscapes.
-- **Goal:** Ensure stable multi-constraint resolution.
-- **Method:** Implement an iterative parallel energy minimization step over separated constraints.
+**Phase 2: NLA Integrity & Continuous Learning**
+- NLA-Class Verifier Descriptive Collision Audit.
+- Continuous Self-Learning Loop with NLA Signal Integration.
+- Behavioral Entanglement Reweighting for the k=16 Ensemble.
 
-### Phase 3: Continuous Self-Learning Pipeline
-Deploy an online learning workflow that evaluates skill promotion using zero soundness mistakes as an absolute gate.
-- **Goal:** Retain capabilities without regression.
-- **Method:** Policy replay verification under rigorous asymmetric-cost utility scoring.
+**Phase 3: CEM Substrate & Verification**
+- CEM Substrate Prototype.
+- Scale CEM to n=64 with KANELÉ Hardware Accounting.
+- Formal Verification of NLA Abstractions via PWA/MILP.
 
-### Phase 4: KAN Hardware Substrate Blueprinting
-Prepare the KAN energy tiers for FPGA deployment by moving to LUT-friendly representations.
-- **Goal:** Validate KAN scalability for KV260 execution without synthesis.
-- **Method:** Implement KANELÉ-style Look-Up Table evaluations and measure BOPs/NABS.
+**Phase 4: SOTA Dual-GPU Parity & Retrospective**
+- SOTA GGUF Parity Benchmark with k=16 Ensemble.
+- Milestone .179 Retrospective.
 
-## 3. Dependency Graph
-- Phase 1 (Extraction) → Phase 2 (Compositional)
-- Phase 2 (Compositional) → Phase 3 (Continuous Learning)
-- Phase 4 (Hardware) runs orthogonally.
-
-## 4. Hardware Requirements
-- **Local:** Dual RTX 3090 (Mandated SOTA GGUF inference)
-- **Substrate:** CPU/Python simulation for KAN evaluation. No direct board claims.
+### 4. Hardware Requirements
+- Local Dual RTX 3090s for the SOTA GGUF Parity (DualGPURunner mandatory).
+- CPU-only for CEM prototype and theoretical formalizations.
+- KANELÉ hardware accounting runs entirely in CPU simulation/heuristic scripts (no Vivado synthesis required).
