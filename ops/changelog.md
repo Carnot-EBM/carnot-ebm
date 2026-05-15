@@ -5762,3 +5762,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 2101: Interwhen Asynchronous Monitoring for CCTU (⚠️ Blocked) — honest_verdict=blocked_model_not_cached_qwen3_6_35b_a3b; results/experiment_2101_interwhen.json
 - 2026-05-15: Exp 2104: ConstrainPrompt Compiler (⚠️ Research Finding) — honest_verdict=The ConstrainPrompt-style compiler successfully translates natural language rules into executable Python validators, achieving high accuracy on standard logic tests.; results/experiment_2104_constrainprompt.json
 - 2026-05-15: Exp 2109: PiNet Convex Splitting Layer Rescue (✅ Complete) — honest_verdict=pinet_layer_projection_complete; results/experiment_2109_pinet_rescue.json
+- 2026-05-15: Exp 2110: Integration of PiNet with CASAL (✅ Complete) — honest_verdict=complete: zero constraint violations across 100 CASAL+PiNet trials; results/experiment_2110_casal_pinet.json
