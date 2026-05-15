@@ -3240,3 +3240,4 @@ IMPORTANT:
 | 2026-05-15 03:02 UTC | Exp 2103: Semantic Energy for Hallucination Detect | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 03:10 UTC | Exp 2104: ConstrainPrompt Compiler | OK | 81 passed, 1 warning in 5.46s |
 | 2026-05-15 03:12 UTC | Exp 2105: Non-Autoregressive Latent Trace Generati | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 03:15 UTC | Exp 2105: Non-Autoregressive Latent Trace Generati | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
