@@ -375,6 +375,60 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 
 ---
 
+## REQ-LEARN-2151: NLA Confidence Gate on FR-11 Policy Retention
+
+**Given** the FR-11 self-learning loop proposes a policy candidate
+**When** the NLA-gated retention gate evaluates the candidate
+**Then** the candidate is retained ONLY when `nla_confidence > 0.7`
+**And** candidates with `nla_confidence <= 0.7` are rejected before entering the policy pool
+**And** `soundness_mistakes` remains 0 after all retained candidates are evaluated
+
+This gate prevents overfit or mode-collapsed policies from entering the
+active pool.  High NLA confidence means the SAE can faithfully reconstruct
+model activations for the candidate repair — a proxy for well-understood,
+non-hallucinated feature directions.
+
+### REQ-LEARN-2151 Sub-requirements
+
+- REQ-LEARN-2151-1: `NLAGatedSelfLearner.__init__` SHALL accept `nla_threshold`
+  (default 0.7) and `max_iterations` (default 10).
+- REQ-LEARN-2151-2: `NLAGatedSelfLearner.run_iteration` SHALL retain each
+  candidate whose `nla_confidence` is STRICTLY GREATER than `nla_threshold`.
+  Candidates at or below the threshold are counted in `n_rejected_by_nla`.
+- REQ-LEARN-2151-3: `NLAGatedSelfLearner.run_loop` SHALL run AT MOST
+  `max_iterations` iterations regardless of how many batches are supplied.
+- REQ-LEARN-2151-4: `NLAGatedLoopResult` SHALL accumulate `total_retained`,
+  `total_rejected`, and `soundness_mistakes` across all iterations.
+
+---
+
+## SCENARIO-LEARN-2151: Mixed-Confidence Batch Selects High-Confidence Candidates Only
+
+**Given** a batch of 5 candidates where 3 have `nla_confidence > 0.7`
+**When** `run_iteration` is called
+**Then** exactly 3 candidates are retained
+**And** 2 candidates are rejected
+**And** `soundness_mistakes` == 0
+
+---
+
+## SCENARIO-LEARN-2152: soundness_mistakes Stays Zero When Retained Candidates Are Correct
+
+**Given** a 10-iteration loop where every retained candidate has `is_correct=True`
+**When** the loop completes
+**Then** `soundness_mistakes` == 0 across the entire run
+**And** `iterations_run` == 10
+
+---
+
+## Implementation Status (NLA Gate)
+
+| Requirement  | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-2151 | Implemented (pipeline/nla_gated_self_learning.py) | test_nla_gated_self_learning.py |
+
+---
+
 ## REQ-PSV-010: PSV Diagnosis Experiments Must Test At Least 2 Falsifiable Hypotheses
 
 **Given** PSV self-play has degraded for 2+ consecutive milestones
