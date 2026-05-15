@@ -1,0 +1,35 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.176",
+  "generated_at": "2026-05-15T05:33:06Z",
+  "retro_type": "operational_full",
+  "preconditions_checked": [
+    "git log [conductor] Activate milestone 2026.05.176..HEAD returns non-empty: True"
+  ],
+  "total_wall_time_minutes": 15.5,
+  "experiments_completed": 8,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp 2115: Milestone 2026.05.176 execution",
+      "duration_minutes": 5.0,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.176 completed successfully. Wall time was dominated by synthesis and operational tasks, with no compute-bound experiments. Preconditions for activation were satisfied.",
+  "bottlenecks_identified": [
+    "Conductor execution overhead remains the primary latency source for non-compute tasks."
+  ],
+  "improvements_suggested": [
+    "Batch small synthesis tasks to amortize conductor setup costs."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement task batching for non-compute experiments.",
+    "Profile conductor activation delays.",
+    "Verify GPU gating for future compute tasks."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "Continuous monitoring of operational metrics confirms that the current bottlenecks are procedural rather than computational, matching the pattern of recent milestones.",
+  "honest_verdict": "complete: operational retrospective 176 generated successfully"
+}
