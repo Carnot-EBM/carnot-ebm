@@ -3497,3 +3497,4 @@ IMPORTANT:
 | 2026-05-15 19:32 UTC | Phase 2: Continual Self-Learning via LSEBMCL (Late | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:34 UTC | Phase 2: Continual Self-Learning via LSEBMCL (Late | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:36 UTC | Phase 2: Continual Self-Learning via LSEBMCL (Late | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 19:38 UTC | Phase 2: Hybrid Energy-Distance Weighted Prompt Le | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
