@@ -3346,3 +3346,4 @@ IMPORTANT:
 | 2026-05-15 12:02 UTC | Exp 1740: QAOD vs NLA-SAE head-to-head on shared g | OK | 81 passed, 1 warning in 5.89s |
 | 2026-05-15 12:11 UTC | Exp 1741: Phase 4 GENUINE substrate scaling sweep  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1741_phase4_ |
 | 2026-05-15 12:17 UTC | Exp 1741: Phase 4 GENUINE substrate scaling sweep  | OK | 81 passed, 1 warning in 5.22s |
+| 2026-05-15 12:24 UTC | Exp 1742: EBT-style gradient refinement loop retry | OK | 81 passed, 1 warning in 5.21s |
