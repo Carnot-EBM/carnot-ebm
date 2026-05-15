@@ -5807,3 +5807,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Compositional Energy Minimization (CEM) Substrate Prototype (arXiv:2510.20607) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1729_kanele.json
 - 2026-05-15: CEM Scale-Up to n=64 with KANELÉ Hardware-Accounting (gated on exp1729) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1730_cikan_fpga.json
 - 2026-05-15: SOTA GGUF Parity Benchmark with k=16 Ensemble (Qwen3.6 & Gemma-4) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1731_fpga_audit.json
+- 2026-05-15: Behavioral Entanglement Reweighting for k=16 Ensemble (arXiv:2604.07650) (⚠️ Research Finding) — honest_verdict=success_deentangled_reweighting_provided_2.86_pct_lift; results/experiment_1732_k16_reweighting.json
