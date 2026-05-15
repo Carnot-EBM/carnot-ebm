@@ -1,0 +1,42 @@
+{
+  "experiment": 1793,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-15",
+  "started_at": "2026-05-15T19:45:04.546754+00:00",
+  "finished_at": "2026-05-15T19:45:04.546754+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 2: Symbolic-KAN Discrete Structure Prototyping",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1791-symbolic-kan-rtl",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: success: RTL structural logic validated theoretically and mapped to Verilog/TCL "
+    },
+    {
+      "upstream": "exp1792-kv260-symbolic-kan-synth",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp2071-symbolic-kan",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: success_verified_symbolic_gating"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
