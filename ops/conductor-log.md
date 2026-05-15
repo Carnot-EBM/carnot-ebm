@@ -3432,3 +3432,4 @@ IMPORTANT:
 | 2026-05-15 16:35 UTC | Exp 1766: Token-Level Energy Telemetry for Agentic | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 16:37 UTC | Exp 1767: FoVer Dataset Expansion via ROCE Constra | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 16:39 UTC | Exp 1767: FoVer Dataset Expansion via ROCE Constra | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 16:41 UTC | Exp 1767: FoVer Dataset Expansion via ROCE Constra | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
