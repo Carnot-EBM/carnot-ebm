@@ -34,6 +34,10 @@ def main():
         status="success",
         code_files=[__file__, str(Path(__file__).resolve().parents[1] / "python" / "carnot" / "ebt_system2.py")]
     )
+    
+    import json
+    tmpl._output_path.parent.mkdir(parents=True, exist_ok=True)
+    tmpl._output_path.write_text(json.dumps(artifact, indent=2))
 
     tmpl.assert_deliverable_written()
 
