@@ -5,8 +5,64 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-15 (8 sweeps in 24h)
-**Current Focus:** Phase 4 measurement confirmed substrate-inaccessible at ensemble level (.182 exp1745); Fast-Slow Variant (arXiv:2605.12484 Score 400) is the explicit rescue, queued as .186 exp1781; operator-flagged QAOD head-to-head (.181 exp1740) corpus-mismatch diagnosis complete (.182 exp1746); sweep dedupe protocol shipped 2026-05-15T13:00Z (scripts/sweep_dedupe.py + memory entry); **NEW 2026-05-15T16:50Z: first sweep with dedupe filter active — 17 of 21 candidates filtered as known, validating the protocol**.
+**Updated:** 2026-05-15 (9 sweeps in 24h)
+**Current Focus:** Fast-Slow Variant entering 4th launch attempt as .189 exp1811 (NO upstream gates after .187/.188 gate-cascade pattern); harness-fit risk now empirically dominant failure mode (planner-drafted `gated_on: tests_fixed == True` cascading blocked_gate_check_failed); dedupe protocol stable at 81%+ filter rate across 2 successive fires; **NEW 2026-05-15T20:35Z: cluster-saturation now systemic — 13 of 16 known-skipped at ingest, 0 new promotions**.
+
+## Sweep 2026-05-15T20:35Z (Claude outer-loop, hour-mod-4=0; clusters 1 EBM + 0 verifier-ensembles)
+
+**Queries fired (rotated to clusters with productive history):**
+- arxiv abs:"energy based model" AND ("reasoning" OR "verification" OR "LLM") → 8 fetched (5 known + 1 new + 2 out-of-domain)
+- arxiv abs:"verifier ensemble" OR "null space attack" OR "specification gaming" → 8 fetched (8 known)
+- HN skipped (4 prior 0-hits today; no broader-query authorization)
+
+**Dedupe filter (2nd deployment of scripts/sweep_dedupe.py):**
+16 candidates fetched, 13 already-known filtered at ingest, 3 truly-new
+candidates surfaced. 53 IDs now in known-set (up from 49 at 16:50Z fire).
+
+**Result: 0 NEW promotions.** All 3 newly-surfaced candidates marginal
+or out-of-domain:
+
+- **arXiv:2604.14733** "Differentiable Object Pose Connectivity Metrics
+  for Regrasp Sequence Optimization" (Qin/Wan/Harada, Apr 2026).
+  Score 1×3×1×1 = **3**. Robotic manipulation EBM, not LLM domain.
+  Skipped.
+- **arXiv:2602.03640** "Tutorial on Reasoning for IR & IR for Reasoning"
+  (Hoveyda et al., Feb 2026). Score 3×2×2×2 = **24**. IR-context
+  survey; mildly cites EBM approaches but no novel methodology for
+  Carnot. Skipped.
+- **arXiv:2601.02594** "Annealed Langevin Posterior Sampling (ALPS)"
+  (Chand/Jacob, Jan 2026). Score 3×3×2×3 = **54**. Multiscale EBM
+  for IMAGE inverse problems; out-of-domain BUT the annealed-Langevin
+  sampling primitive is potentially adaptable to Carnot's THRML
+  near-critical sampler failure (.175 exp1709 — fundamental limit at
+  beta=1.05 unfixed in 54-cell ablation). Marginally relevant; note
+  but don't promote.
+
+### Sweep takeaways
+
+1. **Saturation confirmed across 2 successive fires.** 16:50Z dedupe
+   filter rate: 81% (17/21). 20:35Z dedupe filter rate: 81% (13/16).
+   The 4 fixed-cluster queries have fully mapped the recent-window
+   arxiv state. Future productive sweeps require either (a) the
+   operator-discussed cluster-URL broadening (process-reward-model,
+   token-energy, transcoder, predictive-coding terms), (b) extension
+   to broader arxiv categories beyond cs.LG, OR (c) shift to a
+   different signal channel (PaperWithCode, OpenReview venue tracking).
+2. **arXiv:2601.02594 ALPS annealed-Langevin is the closest hit to
+   exp1709's open question.** The near-critical sampler limit at
+   beta=1.05 (no intervention closed the gap in 54-cell burn-in ×
+   h_schedule ablation) is exactly the kind of failure mode that
+   annealing schedules attack. NOT promoting to active queue
+   (Score 54 too low) but flagging the cross-cite potential — if
+   .190+ revisits exp1709 with ALPS-style multiscale annealing,
+   this paper becomes the methodology reference.
+3. **Operator-flagged additions remain the highest-yield channel.**
+   The auto-rotation surfaced 0 promotions across 2 successive sweeps;
+   meanwhile operator-flagged arXiv:2605.12484 (Fast-Slow, Score 400)
+   from 13:15Z remains the single most impactful literature input of
+   the day. The signal: routine arxiv rotation does not surface novel
+   directions at the current state-of-the-art window; targeted
+   operator review is where new ideas come from.
 
 ## Sweep 2026-05-15T16:50Z (Claude outer-loop, hour-mod-4=0; clusters 2/0/3 — FIRST with dedupe filter)
 
