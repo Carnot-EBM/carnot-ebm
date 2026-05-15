@@ -3542,3 +3542,5 @@ IMPORTANT:
 | 2026-05-15 22:11 UTC | Phase 3: Milestone 2026.05.188 Retrospective | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-15 22:24 UTC | Phase 3: Milestone 2026.05.188 Retrospective | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: not detected. Using |
 | 2026-05-15 22:26 UTC | Milestone 2026.05.189 activated | OK | 5 tasks queued |
+| 2026-05-15 22:40 UTC | Exp 1811: Carnot Fast-Slow Variant prototype — 4th | FAIL | Post-tests failed: 2 failed, 79 passed, 1 warning in 5.62s |
+| 2026-05-15 22:42 UTC | Exp 1811: Carnot Fast-Slow Variant prototype — 4th | OK | Deliverable already exists in repo |
