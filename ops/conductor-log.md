@@ -3533,3 +3533,4 @@ IMPORTANT:
 | 2026-05-15 21:13 UTC | Phase 2: KAEM Spline Interpretability Extraction | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1803-kaem-univariate-spline-prototype.s |
 | 2026-05-15 21:18 UTC | Phase 2: Energy-Based Transformer (EBT) System 2 V | OK | 83 passed, 1 warning in 5.42s |
 | 2026-05-15 21:24 UTC | Phase 3: Kona-style EBRM Continuous Latent Reasoni | OK | 81 passed, 1 warning in 5.36s |
+| 2026-05-15 21:34 UTC | Phase 3: Lyapunov-based Control Barrier Functions  | OK | 97 passed, 1 warning in 7.15s |
