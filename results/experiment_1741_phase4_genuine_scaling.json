@@ -1,0 +1,90 @@
+{
+  "schema": "carnot.phase4_alpha_t_prime_scaling.v1",
+  "experiment": 1741,
+  "run_date": "2026-05-15T12:10:56.121299+00:00",
+  "duration_s": 201.0005328655243,
+  "random_seed": 172041,
+  "reproducibility_checksum": "0390c97f1f35206e3887a5f320ec8accb7f3cd2cd1678d3d1456d6d5a25a5768",
+  "preconditions_checked": [
+    "alpha_t_prime implementation present",
+    "exp1721 artifact exists"
+  ],
+  "model_specs": {
+    "n_grid": [
+      8,
+      16,
+      32,
+      64
+    ],
+    "ensemble_k_total": 6,
+    "ensemble_k_baseline": 1,
+    "mld_steps": 100,
+    "n_seeds": 30,
+    "alpha_t_variant": "max_caliber_v1"
+  },
+  "n_samples": 12000,
+  "n_samples_justification": "30 seeds per n-point gives CI width ~0.18/sqrt(30) ~ 0.03 \u2014 matches 5% overlap detection at 4 n-points.",
+  "per_n_results": [
+    {
+      "n": 8,
+      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        0.15075058101994754,
+        0.15107642697870532
+      ]
+    },
+    {
+      "n": 16,
+      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        0.15074166163490765,
+        0.15107209549479272
+      ]
+    },
+    {
+      "n": 32,
+      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        0.15075919569302815,
+        0.15105660126530573
+      ]
+    },
+    {
+      "n": 64,
+      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
+      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime_bootstrap_ci_95": [
+        0.15074998896548802,
+        0.15107271287445925
+      ]
+    }
+  ],
+  "adjacent_pair_overlap_pct": [
+    {
+      "pair": "8 vs 16",
+      "overlap_pct": 98.67069583151698
+    },
+    {
+      "pair": "16 vs 32",
+      "overlap_pct": 100.0
+    },
+    {
+      "pair": "32 vs 64",
+      "overlap_pct": 100.0
+    }
+  ],
+  "scale_invariance_detected": true,
+  "statistically_distinguishable_pairs": 0,
+  "acceptance_gate_passed": false,
+  "acceptance_gate_criteria": "At least 2 of 3 adjacent n-pairs show overlap <5%.",
+  "methodology_note": "If CI widths are sub-0.001 across all n, the new IMPLAUSIBLE_TIGHT_CI rule #8 will flag \u2014 disclose whether alpha_t' is also deterministic-by-construction.",
+  "optimization_direction": "neither \u2014 measurement task",
+  "honest_verdict": "DONE: Measurement complete. Acceptance gate failed (scale invariance detected)."
+}
