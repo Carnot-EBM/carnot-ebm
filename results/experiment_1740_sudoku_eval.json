@@ -334,5 +334,18 @@
   "spec_traces": [
     "REQ-VERIFY-1740",
     "SCENARIO-VERIFY-1740"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "sudoku_solve_rate=0.94 and ebm_solve_rate=0.94 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
