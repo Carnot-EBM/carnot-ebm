@@ -3291,3 +3291,4 @@ IMPORTANT:
 | 2026-05-15 06:36 UTC | Exp 1777: Phase 2 - Add Discrete Auto-Regressive B | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.36s |
 | 2026-05-15 06:38 UTC | Exp 1776: Phase 2 - Evaluate CEM against monolithi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1775-cem-solver) |
 | 2026-05-15 06:38 UTC | Exp 1777: Phase 2 - Add Discrete Auto-Regressive B | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.64s |
+| 2026-05-15 06:44 UTC | Exp 1778: Phase 3 - Baseline online skill evaluati | OK | 83 passed, 1 warning in 5.38s |
