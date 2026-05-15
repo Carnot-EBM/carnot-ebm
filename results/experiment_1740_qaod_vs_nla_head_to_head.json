@@ -45,5 +45,23 @@
   "acceptance_gate_criteria": "Both probes evaluated; head-to-head reported with bootstrap CIs.",
   "methodology_note": "Either outcome is a finding. If qaod_tpr=1.0 on 30-example positive set, treat as IMPLAUSIBLE_PERFECT \u2014 test set too easy / label leak. Disclose honestly.",
   "optimization_direction": "neither \u2014 comparison task",
-  "honest_verdict": "complete: QAOD vs NLA head-to-head evaluation finished. NLA retains lead."
+  "honest_verdict": "complete: QAOD vs NLA head-to-head evaluation finished. NLA retains lead.",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "nla_sae_tpr=0.4722222222222222 and qaod_tpr=0.4722222222222222 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "delta_tpr_qaod_minus_nla=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "GATE_PASSED_WITHOUT_DATA",
+      "severity": "critical",
+      "detail": "acceptance_gate_passed=true but these fields are null/zero: delta_tpr_qaod_minus_nla=0"
+    }
+  ]
 }
