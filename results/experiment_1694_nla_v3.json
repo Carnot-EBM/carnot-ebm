@@ -1,0 +1,34 @@
+{
+  "schema": "carnot.nla_16th_verifier_v3.v1",
+  "experiment": 1694,
+  "run_date": "2026-05-15T00:36:09.185060Z",
+  "duration_s": 62.007484912872314,
+  "random_seed": 171194,
+  "reproducibility_checksum": "cb9337ac449bc37857c28ba55079429cab7ce16406152761460a30d490dd84a2",
+  "model_specs": {
+    "target_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "sae_source": "trained_locally_1k_examples",
+    "n_train": 30,
+    "n_test": 30,
+    "total_examples": 60
+  },
+  "n_samples": 60,
+  "n_samples_justification": "60 examples (30 pos + 30 neg) gives Wilson 95% CI of width approximately 0.30 on TPR at 0.7; this is a prototype, not a production claim \u2014 calibration corpus is small to ship the methodology.",
+  "tpr_observed": 0.7333333333333333,
+  "fpr_observed": 0.0,
+  "tpr_wilson_95_ci": [
+    0.48049110342313245,
+    0.8910272389681717
+  ],
+  "fpr_wilson_95_ci": [
+    0.0,
+    0.20388926630434784
+  ],
+  "per_example_inference_latency_ms_p50": 150.5,
+  "sae_feature_count_active": 704,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "TPR in [0.55, 0.85] AND FPR <= 0.20",
+  "methodology_note": "TPR == 1.0 on this small held-out set is the adversarial-verify IMPLAUSIBLE_PERFECT trigger; if observed, the methodology_note must explain (overfitting on the small training set, label leakage, or actual ceiling \u2014 only the first two are bugs, the third needs replication on a larger corpus to confirm).",
+  "optimization_direction": "maximize_tpr_subject_to_fpr_cap",
+  "honest_verdict": "Completed NLA-class 16th verifier prototype successfully."
+}

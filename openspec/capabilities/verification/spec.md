@@ -2824,3 +2824,11 @@ The repository shall establish real baselines with instruction-tuned models on G
 Given 200 GSM8K questions and the new SMT extractor,
 When the models run inference with `live_gpu` mode,
 Then the baselines TP and FP rates are calculated and saved to the JSON artifact.
+
+### REQ-VERIFY-1694: NLA-Class 16th Verifier Prototype
+
+The repository shall provide an NLA-class 16th verifier prototype that trains a sparse autoencoder on a small held-out corpus and predicts verifier ensemble agreement.
+
+### SCENARIO-VERIFY-1694: SAE Predicts Ensemble Agreement
+
+Given a 60-example held-out set, the SAE probe predicts ensemble agreement and reports Wilson 95% CIs for TPR and FPR.
