@@ -3185,3 +3185,26 @@ IMPORTANT:
 | 2026-05-15 00:03 UTC | Exp 1694: NLA-class 16th verifier prototype v3 wit | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: cuting tool glob: P |
 | 2026-05-15 00:29 UTC | Exp 1694: NLA-class 16th verifier prototype v3 wit | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1344s (300s silence). Last out |
 | 2026-05-15 00:36 UTC | Exp 1694: NLA-class 16th verifier prototype v3 wit | OK | 101 passed, 1 warning in 7.22s |
+| 2026-05-15 00:56 UTC | Exp 1695: Phase 1 HuggingFace primary publication  | FAIL | Post-tests failed: 2 failed, 79 passed, 1 warning in 5.19s |
+| 2026-05-15 00:58 UTC | Exp 1695: Phase 1 HuggingFace primary publication | OK | Deliverable already exists in repo |
+| 2026-05-15 00:58 UTC | Exp 1696: .170 adversarial-verify findings audit + | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.00s |
+| 2026-05-15 01:01 UTC | Exp 1696: .170 adversarial-verify findings audit + | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.15s |
+| 2026-05-15 01:03 UTC | Exp 1696: .170 adversarial-verify findings audit + | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.13s |
+| 2026-05-15 01:05 UTC | Exp 1697: Milestone .171 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.16s |
+| 2026-05-15 01:07 UTC | Exp 1697: Milestone .171 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.24s |
+| 2026-05-15 01:10 UTC | Exp 1697: Milestone .171 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.17s |
+| 2026-05-15 01:12 UTC | Milestone 2026.05.172 activated | OK | 6 tasks queued |
+| 2026-05-15 01:14 UTC | Exp 1698: THRML+Carnot near-critical sampler failu | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.23s |
+| 2026-05-15 01:16 UTC | Exp 1698: THRML+Carnot near-critical sampler failu | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.08s |
+| 2026-05-15 01:19 UTC | Exp 1698: THRML+Carnot near-critical sampler failu | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.10s |
+| 2026-05-15 01:21 UTC | Exp 1699: Phase 4 alpha_t n-dependence adversarial | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.16s |
+| 2026-05-15 01:23 UTC | Exp 1699: Phase 4 alpha_t n-dependence adversarial | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.13s |
+| 2026-05-15 01:26 UTC | Exp 1699: Phase 4 alpha_t n-dependence adversarial | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.09s |
+| 2026-05-15 01:28 UTC | Exp 1700: NLA 16th verifier eval-awareness test (3 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.16s |
+| 2026-05-15 01:30 UTC | Exp 1700: NLA 16th verifier eval-awareness test (3 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.10s |
+| 2026-05-15 01:32 UTC | Exp 1700: NLA 16th verifier eval-awareness test (3 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.13s |
+| 2026-05-15 01:35 UTC | Exp 1701: Phase 1 ship — MCP server + CLI integrat | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.02s |
+| 2026-05-15 01:37 UTC | Exp 1701: Phase 1 ship — MCP server + CLI integrat | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.15s |
+| 2026-05-15 01:39 UTC | Exp 1701: Phase 1 ship — MCP server + CLI integrat | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.12s |
+| 2026-05-15 01:42 UTC | Exp 1702: .171 adversarial-verify findings audit + | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.32s |
+| 2026-05-15 01:44 UTC | Exp 1702: .171 adversarial-verify findings audit + | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.11s |
