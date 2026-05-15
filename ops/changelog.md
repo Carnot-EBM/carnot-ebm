@@ -5787,3 +5787,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall (✅ Complete) — honest_verdict=complete: CARM dual-model evaluated; results/experiment_1773_care_evaluation.json
 - 2026-05-15: Exp 1774: Phase 2 - Decompose multi-constraint problem into local energy subsets (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1774_cem_decomposition.json
 - 2026-05-15: Exp 1778: Phase 3 - Baseline online skill evaluation on execution traces (⚠️ Research Finding) — honest_verdict=baseline_established; results/experiment_1778_csl_baseline.json
+- 2026-05-15: Exp 1779: Phase 3 - Implement non-forgetting soundness check for continuous learning (✅ Complete) — honest_verdict=check_implemented; results/experiment_1779_csl_nonforgetting.json
