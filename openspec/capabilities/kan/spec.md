@@ -1348,3 +1348,21 @@ Given a MILP KAN representation,
 When a simple robustness property is asserted and verified via Z3,
 Then the solver execution time and boolean result are logged to `results/experiment_2083_kan4cbc.json`.
 
+## REQ-KAN-1781: KANelE Look-Up Table (LUT) evaluations
+
+The KAN capability MUST implement KANelE Look-Up Table evaluations in Python.
+
+**Rationale:**
+    Transforming a small KAN tier to LUT format is essential for KANelE hardware accounting and FPGA deployment blueprints without requiring immediate hardware synthesis.
+
+**Acceptance criteria:**
+    - `scripts/experiment_1781_kan_lut.py` implements the conversion of a small KAN tier to LUT format.
+    - `results/experiment_1781_kan_lut.json` is generated with `schema: "carnot.kan.lut.v1"` and `lut_conversion_success: true`.
+    - Tests verify the conversion logic and achieve 100% test coverage for the new code.
+
+### SCENARIO-KAN-1781: Transform a small KAN tier to LUT format
+
+Given a small mock KAN tier,
+When the LUT transformation logic runs,
+Then it outputs the LUT evaluation formats and `results/experiment_1781_kan_lut.json` is written with `lut_conversion_success: true`.
+
