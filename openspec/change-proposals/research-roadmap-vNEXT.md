@@ -1,48 +1,56 @@
-# Research Roadmap vNEXT (Milestone 2026.05.188)
+# Carnot Research Roadmap: Milestone 2026.05.191
 
-**Title:** Test Harness Recovery, KAEM Integration, and System 2 Energy-Based Transformers
-**Milestone:** 2026.05.188
-**Author:** Planning Agent
-**Date:** 2026-05-15
+## ActFocus Agentic RL + KAN-CL Continual Learning + Thermodynamic Langevin Sampler
 
-## 1. Context and Previous Milestone Reality
-Milestone `.187` experienced a catastrophic cascade failure due to broken pre-tests, leading to `Gemini CLI error: Wall-clock+idle timeout` during the initial phase. Consequently, nearly all downstream tasks were skipped (`GATE_BLOCK` or `DOOMED_RERUN_BLOCK`). Our first imperative is to restore the integrity of the test harness. Once the autonomous loop is unblocked, we must carry forward the stalled Fast-Slow Variant experiments and aggressively integrate the latest 2025-2026 ArXiv findings—specifically Kolmogorov-Arnold Energy Models (KAEM) and Energy-Based Transformers (EBT)—to modernize Carnot's core capabilities.
+### Objective
+This milestone addresses three major gaps identified in the PRD and recent architectural reviews:
+1. **Catastrophic Forgetting in Self-Learning:** Utilizing Per-Knot Importance Regularization for KANs (KAN-CL) and Spectral Orthogonal Gradients (Muon-OGD) to achieve robust, continuous self-learning (FR-11).
+2. **Sampler Latency:** Accelerating stochastic samplers through Mpemba-inspired thermodynamic initializations and Langevin clock rescaling.
+3. **Agentic Reasoning Bottlenecks:** Replacing uniform GRPO with ActFocus, which leverages token-level energy functions to direct reinforcement learning updates toward critical reasoning tokens.
 
-## 2. The 3 Biggest Gaps to PRD Vision
-1. **Broken Autonomous Loop:** The core automated pipeline remains blocked by test failures. Carnot's autonomous research cannot progress until the 100% test pass requirement is restored and verified.
-2. **"Black Box" MLP Energy Functions:** The PRD emphasizes interpretability and exact inference, yet we rely on opaque MLP-based energy landscapes that require slow MCMC. The recent KAEM (Kolmogorov-Arnold Energy Model) paradigm provides an exact-inference alternative using univariate splines.
-3. **Catastrophic Forgetting & Lack of System 2 Thinking:** Our continuous self-learning track (FR-11) suffers from catastrophic forgetting, and our verifier lacks true iterative refinement. LSEBMCL (Latent Space EBM Continual Learning) and EBTs (arXiv:2507.02092) offer proven mechanisms for generative replay and iterative "System 2" energy minimization.
+### Previous Milestone (.190) Summary
+Milestone 2026.05.190 successfully codified the Fast-Slow reasoning variant, integrated ODAR routing, and solidified the Phase 4 Canonical Decision framework. These structural advances provided the necessary foundation for advanced continual learning and targeted reinforcement strategies.
 
-## 3. Phase Descriptions
-
-### Phase 0: Infrastructure Recovery
-**Focus:** Unblock the conductor.
-We must fix the broken pretests with Opus-level supervision and conduct a deep retrospective of the `.187` timeout failure.
-
-### Phase 1: Fast-Slow Variant Scale-Up & Continual Learning
-**Focus:** Executing delayed .187 priorities and adding generative replay.
-We will scale the Fast-Slow variant on SOTA GGUFs (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`) and implement LSEBMCL (arXiv:2501.05495) to prevent catastrophic forgetting via pseudo-exemplar sampling.
-
-### Phase 2: Kolmogorov-Arnold Energy Models (KAEM) & System 2 EBT
-**Focus:** Architectural modernization based on late-2025/2026 literature.
-We will prototype KAEM, replacing MLP energies with univariate KART splines to eliminate MCMC during prior sampling. Concurrently, we will implement Energy-Based Transformer iterative verification (System 2 thinking) using `unsloth/gemma-4-26B-A4B-it-GGUF`.
-
-### Phase 3: Kona EBRM Integration & Milestone Audit
-**Focus:** Continuous latent reasoning and safety.
-We will explore Kona-style Energy-Based Reasoning Models (EBRM) with local energy edits, apply Lyapunov Control Barrier Functions (arXiv:2605.05530) for safety guarantees, and perform comprehensive audits.
-
-## 4. Hardware Requirements
-- **Compute:** Dual GPU (RTX 3090/4090 class) for SOTA GGUF inference (Qwen3.6-35B, Gemma-4-31B) and iterative EBT minimization.
-- **Verification:** Fast CPU for KAEM spline processing and Python/Rust test suite execution.
-
-## 5. Dependency Graph
-```text
-[Phase 0] exp1798 (Pretests)
-   |--> exp1799 (.187 Retro)
-   |--> [Phase 1] exp1800 (Fast-Slow Proto) --> exp1801 (Fast-Slow SOTA)
-   |--> [Phase 1] exp1802 (LSEBMCL)
-   |--> [Phase 2] exp1803 (KAEM Proto) --> exp1804 (KAEM Vis)
-   |--> [Phase 2] exp1805 (EBT System 2)
-   |--> [Phase 3] exp1806 (Kona EBRM)
-   |--> [Phase 3] exp1807 (Lyapunov Safety)
+### Architecture Update
+```mermaid
+graph TD;
+    LLM[unsloth/Qwen3.6-35B-A3B-GGUF] --> TokenEnergy[ActFocus Reweighting];
+    TokenEnergy --> GRPO[Agentic GRPO Update];
+    GRPO --> Continual[KAN-CL / Muon-OGD Memory];
+    Continual --> Sampler[Mpemba/Langevin Accelerated Sampler];
+    Sampler --> Output[Verified Output];
 ```
+
+### Phases
+
+#### Phase 1: Continuous Self-Learning Resilience
+Focuses on stopping catastrophic forgetting.
+- **Exp 1826:** Implement KAN-CL (Per-Knot Importance Regularization).
+- **Exp 1827:** Implement Muon-OGD (Spectral Orthogonal Gradient Projection).
+- **Exp 1828:** Evaluate KAN-CL vs Muon-OGD on FR-11 retention tasks.
+
+#### Phase 2: Thermodynamic Sampler Acceleration
+Focuses on inference speed for Phase 3/4 continuous EBMs.
+- **Exp 1829 & 1830:** Implement Mpemba-inspired initialization and Langevin clock rescaling.
+- **Exp 1831:** Benchmark the accelerated samplers.
+
+#### Phase 3: Energy-Informed Agentic RL
+Targets the optimization of the LLM via energy functions.
+- **Exp 1832 & 1833:** Implement ActFocus Token-Level Energy Reweighting for GRPO and train models on reasoning trajectories.
+- **Exp 1834:** Evaluate ActFocus vs Baseline GRPO.
+
+#### Phase 4: Synthesis, Documentation, and Scaling
+Tying it all together.
+- **Exp 1835:** Author theoretical connections (EBM-RLVR equivalence).
+- **Exp 1836 & 1837:** E2E Integration and Benchmark with flagship MoE models.
+- **Exp 1838:** Retrospective.
+
+### Hardware Requirements
+- **LLM Inference:** RTX 3090/4090 for running `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+- **Continual Learning:** Standard GPU memory constraints apply.
+
+### Models
+Mandated SOTA local GGUF models applied:
+- `unsloth/Qwen3.6-35B-A3B-GGUF`
+- `unsloth/gemma-4-31B-it-GGUF`
+- `unsloth/gemma-4-26B-A4B-it-GGUF`
