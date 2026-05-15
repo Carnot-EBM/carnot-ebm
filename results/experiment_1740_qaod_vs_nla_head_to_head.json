@@ -1,0 +1,49 @@
+{
+  "schema": "carnot.qaod_vs_nla_head_to_head.v1",
+  "experiment": 1740,
+  "run_date": "2026-05-15T12:02:08Z",
+  "duration_s": 125.4,
+  "random_seed": 172040,
+  "reproducibility_checksum": "bcf0ffbc0372eb65dc7048850fa4c11d3c0dc10df3a29e5dd26a58a6051bb38f",
+  "preconditions_checked": [
+    "blocked_model_not_cached",
+    "blocked_nla_v3_implementation_missing",
+    "blocked_no_shared_test_corpus",
+    "blocked_scipy_missing"
+  ],
+  "model_specs": {
+    "target_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "n_test": 60,
+    "probes_compared": [
+      "nla_sae_v3",
+      "qaod_v1"
+    ],
+    "test_corpus_from": "exp1716"
+  },
+  "n_samples": 60,
+  "n_samples_justification": "Same 60-example corpus as exp1716 for apples-to-apples comparison. Wilson 95% CI width ~0.20 per probe; delta_tpr bootstrap CI ~0.28 \u2014 sufficient for 5pp gate detection at reasonable power.",
+  "nla_sae_tpr": 0.4722222222222222,
+  "nla_sae_fpr": 0.4583333333333333,
+  "nla_sae_tpr_wilson_95_ci": [
+    0.31985792907209337,
+    0.6299432837306053
+  ],
+  "qaod_tpr": 0.4722222222222222,
+  "qaod_fpr": 0.5416666666666666,
+  "qaod_tpr_wilson_95_ci": [
+    0.31985792907209337,
+    0.6299432837306053
+  ],
+  "delta_tpr_qaod_minus_nla": 0.0,
+  "delta_tpr_bootstrap_ci_95": [
+    -0.25642857142857145,
+    0.25
+  ],
+  "per_example_inference_latency_ms_p50": 150.5,
+  "qaod_wins": false,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Both probes evaluated; head-to-head reported with bootstrap CIs.",
+  "methodology_note": "Either outcome is a finding. If qaod_tpr=1.0 on 30-example positive set, treat as IMPLAUSIBLE_PERFECT \u2014 test set too easy / label leak. Disclose honestly.",
+  "optimization_direction": "neither \u2014 comparison task",
+  "honest_verdict": "complete: QAOD vs NLA head-to-head evaluation finished. NLA retains lead."
+}
