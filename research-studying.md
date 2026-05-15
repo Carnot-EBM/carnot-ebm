@@ -5,8 +5,94 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-15 (5 sweeps in 24h)
-**Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier; verifier-ensemble null-space + 4/δ convergence bound; AR-LM-as-EBM bijection theory (arXiv:2512.15605); **NEW 2026-05-15T04:45Z: exp1709 (.175) confirmed FUNDAMENTAL near-critical sampler limit at beta=1.05 — paper-v6 §6 codification queued as .176 exp1714**.
+**Updated:** 2026-05-15 (6 sweeps in 24h)
+**Current Focus:** NLA 16th verifier now PRODUCTION-INTEGRATED at k=16 (exp1720 shipped .178); Phase 4 alpha_t bijection-invariance FALSIFIED (exp1715 .176) AND replacement alpha_t' from max-caliber CONFIRMED (exp1721 .178); exp1709 near-critical sampler limit codification pending (exp1719 doomed-rerun-blocked .178 → retried as exp1724 in .179); **NEW 2026-05-15T08:45Z: 3 new SAE-cluster candidates promoted; QAOD white-box probe (Score 320) is direct adversarial-test against Carnot's NLA-via-SAE methodology**.
+
+## Sweep 2026-05-15T08:45Z (Claude outer-loop, hour-mod-4 rotation; cluster 2 SAE primary + cluster 0 verifier-ensembles)
+
+**Queries fired (clusters 1/3 just covered in prior fire; rotating to cluster 2 SAE primary and cluster 0):**
+- arxiv abs:"sparse autoencoder" OR "white box probe" OR "reconstruction error" AND "LLM" → 5 results
+- arxiv abs:"verifier ensemble" OR "null space attack" OR "specification gaming" → 3 results (all already in queue)
+- (cluster 1 EBM + cluster 3 active inference skipped — covered in 00:42Z + 04:45Z sweeps respectively)
+
+**Result: 8 candidates scored; 3 NEW promotions; 5 re-hits acknowledged. Top score 320 (no >400 this fire).**
+
+### NEW Rank HIGH: QAOD White-Box Hallucination Detection (arXiv:2605.14449v1, May 14 2026)
+- **Score:** 5×4×4×4 = **320**
+- **Authors:** Siyang Yao, Erhu Feng, Yubin Xia
+- **Why it matters:** White-box probing framework using ORTHOGONAL
+  decomposition of answer representations against question context.
+  Reports "up to 21% improvement on BioASQ" for cross-domain
+  hallucination detection. **Direct adversarial test against Carnot's
+  NLA-via-SAE methodology** (exp1694/1720): orthogonal-decomposition
+  may outperform the SAE-based NLA probe shipped as verifier #16 in
+  .178. Worth a head-to-head comparison.
+- **Action for .180+:** propose a "QAOD vs NLA-SAE probe head-to-head"
+  experiment on the same gemma-4-26B-A4B-it-GGUF substrate Carnot
+  already has loaded. If QAOD outperforms NLA-SAE by >5pp on the
+  same 60-example test set used in exp1716, propose adding QAOD as
+  verifier #17 (NOT as an NLA replacement — k=16 stays shipped).
+- **Cross-reference:** complements exp1716 eval-awareness test
+  (delta_tpr=-0.042 SAFE) — QAOD provides an alternative probe
+  family that may have different eval-awareness characteristics.
+
+### NEW Rank MEDIUM-HIGH: Exemplar Partitioning for Mechanistic Interpretability (arXiv:2605.14347v1, May 14 2026)
+- **Score:** 4×5×3×4 = **240**
+- **Authors:** Jessica Rumbelow (independent)
+- **Why it matters:** Voronoi partitions of activation space as
+  unsupervised alternative to SAE training, achieving "comparable
+  interpretability with ~10³× fewer tokens." If the 1000× efficiency
+  claim transfers, Carnot could replace the exp1694-trained SAE (1k
+  calibration corpus) with a Voronoi-partition probe trained on ~10
+  examples — drastically cheaper for the kind of small-corpus
+  domain-specific verification Carnot does.
+- **Action:** treat as the cheaper-substrate alternative to the
+  current NLA-SAE. If the .180+ QAOD comparison shows SAE is the
+  weaker probe, Voronoi-partition is the next candidate replacement
+  rather than re-training a larger SAE.
+- **Cross-reference:** orthogonal to QAOD; both are "skip the SAE"
+  alternatives.
+
+### NEW Rank MEDIUM: Rate-Distortion-Polysemanticity Tradeoff in SAEs (arXiv:2605.14694v1, May 14 2026)
+- **Score:** 4×4×3×3 = **144**
+- **Authors:** Tommaso Mencattini, Francesco Montagna, Francesco Locatello
+- **Why it matters:** Formal rate-distortion analysis of the
+  polysemanticity tradeoff in SAEs. Shows enforcing interpretability
+  necessarily increases both rate AND distortion; polysemanticity
+  is driven by training-data distribution characteristics. Carnot's
+  NLA-SAE probe has 704 active features (exp1694); this paper's
+  tradeoff curve tells us where 704 sits on the
+  reconstruction-vs-monosemanticity spectrum and whether scaling up
+  is even productive.
+- **Action:** cite in paper-v6 §3 NLA-probe methodology section.
+  Not a near-term experiment but informs SAE sizing for future
+  Carnot probes.
+
+### Re-hits of papers already in queue (no action):
+
+- arXiv:2605.12874 (Descriptive Collision in SAE Auto-Interpretability) — promoted in 2026-05-14T04:15Z sweep (URGENT)
+- arXiv:2604.07650 (Behavioral Entanglement Verifier Ensembles) — promoted .144
+- arXiv:2605.02269 (Spec Gaming in Reasoning Models) — promoted 00:42Z, Score 320
+- arXiv:2604.12500 (Safety Training under On-Policy RL) — Score 36, skipped 3x
+- arXiv:2605.13930 (SAE on EEG Foundation Models) — out-of-domain (EEG, not LLM)
+
+### Sweep takeaways
+
+1. **NLA-probe landscape has 3 alternative families** now visible:
+   (a) Carnot's current SAE-based NLA (exp1694 shipped, k=16
+   production), (b) QAOD orthogonal-decomposition (this sweep,
+   Score 320), (c) Voronoi-partition exemplars (this sweep, Score 240).
+   The head-to-head comparison is a clear .180+ task and would
+   strengthen paper-v6 §3.
+2. **No score>400 this fire** — converging toward operational
+   refinement (head-to-head probes; rate-distortion analysis) rather
+   than fundamental new directions. This is healthy: it means
+   Carnot's high-level architecture stays competitive with the
+   literature; what's left is engineering refinement.
+3. **The verifier-ensemble cluster has saturated** in the recent
+   window — all 3 results were repeats from prior sweeps. Next
+   rotation may need to broaden the query (add "process reward
+   model" or "deliberative alignment" as adjacent terms).
 
 ## Sweep 2026-05-15T04:45Z (Claude outer-loop, hour-mod-4 rotation, clusters 3/0/1)
 
