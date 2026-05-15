@@ -1,303 +1,432 @@
-milestone: "2026.05.177"
-milestone_title: "Neuro-Symbolic Extraction, Compositional Energy, and KAN Hardware"
+milestone: "2026.05.178"
+milestone_title: "Phase 4 Bijection-Invariance Finding Codification + NLA Task-4 Integration + .177 Findings Audit"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 scope_reduction_compliance:
-  rationale: "Aligns with PRD gaps: addresses extraction, multi-constraint degradation, and hardware substrate preparation. Reduces scope by bounding KAN work to python logic without hardware board claims."
-  carry_forwards_addressed: []
+  rationale: "exp1715 (.176) CONFIRMED the bijection-invariance hypothesis from arXiv:2512.15605: delta_alpha does not genuinely depend on substrate size — the prior .168/.169/.171 Phase 4 'scaling' claims at n=8/16/32/64 were measurement artifacts. This major falsification needs paper-v6 corrigendum and Phase 4 alpha_t replacement derivation BEFORE downstream Phase 5 work compounds the error. .178 prioritizes codification + replacement + the NLA 4-task chain's final integration step (Task 4 of 4; exp1716 closed Task 3 with eval-awareness gap -0.042 = SAFE)."
+  carry_forwards_addressed: ["exp1715 bijection-invariance codification", "NLA Task 4 ensemble integration", ".177 findings audit"]
 authored_by: outer-loop-claude
 
 tasks:
-  - id: exp1771-care-test-suite
-    title: "Exp 1771: Phase 1 - Setup CARM Test Cases and Ground Truth"
-    deliverable: results/experiment_1771_care_test_suite.json
-    max_turns: 20
+  - id: exp1719-bijection-invariance-codification
+    title: "Exp 1719: Codify exp1715 bijection-invariance finding into paper-v6 §3 + Phase 4 corrigendum"
+    deliverable: results/experiment_1719_bijection_codification.json
+    max_turns: 100
     agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures: []
     prompt: |
-      CONTEXT: The extraction gap requires a Constraint-Aware Retrieval Module (CARM). We need a benchmark suite first.
-      
-      EXISTING CODE TO READ FIRST:
-        - openspec/change-proposals/research-roadmap-vNEXT.md
-      
-      TASK: Create 20 unstructured instruction prompts and their ground truth deterministic constraint representations.
-      
-      CONCRETE STEPS:
-        1. Write a python script to generate `results/carm_benchmark_cases.json`.
-        2. Ensure the cases cover tool-use, arithmetic, and logic constraints.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.carm.benchmark.v1"
-        - num_cases: 20
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: exp1715 (.176) ran the 4-cell random-verifier-injection
+      ablation and confirmed `complete: Bijection-invariance artifact
+      confirmed; delta_alpha does not genuinely [depend on n]`. This
+      MAJOR finding falsifies four prior Phase 4 scaling claims: exp1678
+      (.168 baseline), exp1681 (.169 n=8/16/32 sweep), exp1693 (.171
+      n=64), and the implicit reading of exp1715 itself as "Phase 4
+      scales." All three were detecting bijection invariance per
+      arXiv:2512.15605, not genuine free-energy reduction.
 
-  - id: exp1772-care-prototype
-    title: "Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models"
-    deliverable: results/experiment_1772_care_prototype.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: We must bridge the extraction gap using CARM principles.
-      
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1771_care_test_suite.json
-      
-      TASK: Implement a prototype Constraint-Aware Retrieval Module that uses SOTA models to extract constraints.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1772_carm_prototype.py`.
-        2. Use MODEL_SPECS with `unsloth/Qwen3.6-35B-A3B-GGUF`.
-        3. Evaluate extraction accuracy on the test suite.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.carm.prototype.v1"
-        - extraction_accuracy: float
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      FALSIFIABLE HYPOTHESIS: The exp1715 finding can be codified into
+      (a) a paper-v6 §3 corrigendum block on the Phase 4 framing,
+      (b) a research-references.md entry tying the bijection paper
+      (arXiv:2512.15605) to the exp1715 falsification, and (c) an
+      ops/known-issues.md MANDATORY entry warning future planners NOT
+      to propose Phase 4 "scaling" experiments without first verifying
+      the alpha_t computation has a non-bijection-invariant derivation.
 
-  - id: exp1773-care-evaluation
-    title: "Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall"
-    deliverable: results/experiment_1773_care_evaluation.json
-    max_turns: 50
-    gated_on:
-      - upstream: exp1772-care-prototype
-        artifact_field: extraction_accuracy
-        op: '>='
-        value: 0.5
-    prompt: |
-      CONTEXT: Evaluate the full CARM extraction suite using mandated local SOTA models.
-      
       EXISTING CODE TO READ FIRST:
-        - scripts/experiment_1772_carm_prototype.py
-      
-      TASK: Run full suite with `unsloth/gemma-4-31B-it-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1773_carm_eval.py`.
-        2. Compare extraction recall against ground truth.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.carm.evaluation.v1"
-        - recall_rate: float
-        - false_accept_rate: float
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+        - results/experiment_1715_phase4_alpha_t_audit.json (the falsification)
+        - results/experiment_1693_phase4_n64.json (the n=64 measurement
+          flagged IMPLAUSIBLE_TIGHT_CI per rule #8)
+        - results/experiment_1681_phase4_scaling.json (the n=8/16/32 sweep)
+        - results/experiment_1678_phase4_baseline.json (n=8 baseline)
+        - arXiv:2512.15605 (the bijection paper; reference only)
+        - openspec/papers/paper-v6/ (paper §3 substrate framing location)
+        - research-references.md
+        - ops/known-issues.md
 
-  - id: exp1774-cem-decomposition
-    title: "Exp 1774: Phase 2 - Decompose multi-constraint problem into local energy subsets"
-    deliverable: results/experiment_1774_cem_decomposition.json
-    max_turns: 30
+      TASK: Codification across three documents.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md Pre-Launch Preconditions Discipline):
+           a. `test -f results/experiment_1715_phase4_alpha_t_audit.json`
+              succeeds — else `blocked_exp1715_artifact_missing`.
+           b. paper-v6 §3 locatable — else
+              `blocked_paperv6_section3_not_locatable`.
+           Record preconditions_checked.
+        1. Read exp1715 end-to-end. Extract verbatim:
+             - random_fraction_grid_results (all 4 cells)
+             - monotonic_decay_observed (false)
+             - artifact_detected (true)
+             - bootstrap CIs per cell
+        2. Draft a 3-paragraph paper-v6 §3 corrigendum:
+             - Paragraph A: state the bijection-invariance finding
+               (alpha_t metric is bijection-invariant under AR-LM↔EBM
+               bijection per arXiv:2512.15605; verified empirically
+               via exp1715 random-verifier-injection ablation).
+             - Paragraph B: list the four affected prior experiments
+               (exp1678, exp1681, exp1693, original reading of exp1715)
+               with explicit acknowledgment that "Phase 4 scales" was a
+               measurement artifact, NOT a falsified hypothesis (the
+               hypothesis itself remains testable; just not with the
+               current alpha_t computation).
+             - Paragraph C: replacement-path forward. Cite arXiv:2605.12536
+               (IIT↔FEP maximum-caliber bridge) as the candidate
+               alternative variational principle that may yield a
+               non-bijection-invariant alpha_t. Future work.
+           NO emojis per CLAUDE.md.
+        3. Add an entry to research-references.md citing both papers
+           + the exp1715 falsification result.
+        4. Add a NEW MANDATORY-NEXT-MILESTONE entry to ops/known-issues.md
+           titled "Phase 4 alpha_t Bijection-Invariance Artifact Confirmed
+           (.178+ MANDATORY: do not propose Phase 4 substrate-scaling
+           experiments without alpha_t replacement derivation)."
+           APPEND only; CLAUDE.md no-pruning.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.bijection_codification.v1"
+        - experiment: 1719
+        - run_date: ISO-8601 UTC
+        - duration_s: > 60s (prose drafting + 3 file edits)
+        - random_seed: 171819 (no random sampling; methodology field)
+        - reproducibility_checksum: sha256 of (exp1715 artifact path +
+          paper-v6 §3 edit + research-references diff + known-issues edit)
+        - preconditions_checked: list
+        - model_specs: {{source_artifact: "exp1715",
+          files_edited: ["paper-v6 §3", "research-references.md",
+          "ops/known-issues.md"], word_count_added: int,
+          affected_prior_experiments: ["exp1678", "exp1681", "exp1693"]}}
+        - n_samples: 1
+        - n_samples_justification: "Codification task; n=1 codification artifact."
+        - paper_v6_section_3_corrigendum_word_count: int
+        - research_references_entries_added: int
+        - known_issues_mandatory_added: bool
+        - exp1715_numerical_values_preserved: bool (grep edited files for
+          verbatim random_fraction_grid_results values)
+        - has_emojis_in_paper_v6: false
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "3 documents updated + verbatim values
+          preserved + emoji-free + MANDATORY entry added."
+        - methodology_note: "If word_count_added < 200 across all 3 files,
+          codification was a stub — disclose honestly."
+        - optimization_direction: "neither — codification task"
+        - honest_verdict: MUST start with terminal prefix per CLAUDE.md
+          Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push to git. Do NOT modify
+      scripts/research_conductor.py.
+
+  - id: exp1720-nla-task-4-ensemble-integration
+    title: "Exp 1720: NLA 16th verifier Task 4 (final) — ensemble integration as production verifier #16"
+    deliverable: results/experiment_1720_nla_ensemble_integration.json
+    max_turns: 100
     agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1716-nla-eval-awareness-carry-forward
+        verdict: complete_eval_awareness_safe_gap_negative_4.2pp
+        addressed_by: "exp1716 (.176) closed Task 3 of the 4-task chain with delta_tpr=-0.042 (within 5pp gate, eval-awareness-SAFE). This Task 4 integrates the exp1694-trained probe as verifier #16 in the production k=15 ensemble, growing it to k=16. NOT a duplicate; this is the next chain step."
+        retire_if_same_verdict: false
+      - experiment_id: exp1694-nla-class-16th-verifier-prototype-v3
+        verdict: complete_prototype_tpr_0.73_fpr_0
+        addressed_by: "exp1694 (.171) shipped the prototype probe. This task integrates that probe into VerifyRepairPipeline as the 16th verifier and tests end-to-end."
+        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: Complex multi-constraint optimization degrades. We need Compositional Energy Minimization (CEM).
-      
-      EXISTING CODE TO READ FIRST:
-        - openspec/change-proposals/research-roadmap-vNEXT.md
-      
-      TASK: Write a logic decomposition engine that splits a monolithic constraint graph into localized energy landscapes.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1774_cem_decomposition.py`.
-        2. Validate on existing CCTU tools.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.cem.decomposition.v1"
-        - num_subsets: int
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: NLA-class 16th verifier 4-task chain per CLAUDE.md operator
+      directive 2026-05-09. Task 1 (design), Task 2 (prototype = exp1694),
+      Task 3 (eval-awareness = exp1716) all shipped. This is Task 4
+      (final): integrate the exp1694-trained probe into Carnot's k=15
+      verifier ensemble as verifier #16, producing k=16 in production.
 
-  - id: exp1775-cem-solver
-    title: "Exp 1775: Phase 2 - Implement Compositional Energy Minimization solver over subsets"
-    deliverable: results/experiment_1775_cem_solver.json
-    max_turns: 50
+      FALSIFIABLE HYPOTHESIS: With the NLA probe added as verifier #16,
+      Carnot's joint verifier ensemble agreement rate on a 60-example
+      held-out test set improves by at least 3pp over k=15 baseline,
+      measured as (#examples where >= 8 of k pass for k=16) − (#examples
+      where >= 8 of k pass for k=15). If lift < 3pp, NLA adds noise
+      rather than signal and should remain experimental.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/nla_verifier_v3.py (the exp1694 probe)
+        - python/carnot/pipeline/verify_repair.py (the k=15 ensemble
+          integration point)
+        - results/experiment_1694_nla_v3.json (TPR=0.73, FPR=0.0)
+        - results/experiment_1716_nla_eval_awareness.json (delta_tpr=-0.042)
+        - feedback_nla_class_16th_verifier_committed memory entry
+
+      TASK: Wire the NLA probe into the production verifier ensemble.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `python -c "from carnot.verify.nla_verifier_v3 import
+              NLAVerifierV3"` succeeds — else `blocked_nla_v3_import_failed`.
+           b. `python -c "from carnot.pipeline.verify_repair import
+              VerifyRepairPipeline"` succeeds — else
+              `blocked_verify_repair_pipeline_import_failed`.
+           c. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
+              returns non-empty — else `blocked_model_not_cached`.
+           Record preconditions_checked.
+        1. Add NLA verifier to the k=15 list in VerifyRepairPipeline
+           (the integration point — grep for `verifiers` or `verifier_list`
+           in pipeline/verify_repair.py).
+        2. Build a 60-example held-out test corpus (NOT the same examples
+           used by exp1694 train OR exp1716 eval-awareness train).
+        3. Run the ensemble at k=15 (baseline) and k=16 (with NLA probe
+           added). For each example, record per-verifier pass/fail AND
+           the joint k-of-N agreement count.
+        4. Compute lift: (#examples passing >=8 of 16 with NLA) −
+           (#examples passing >=8 of 15 baseline). Report Wilson 95% CI.
+        5. Acceptance: lift >= 0.03 (3pp) AND lift_wilson_lower > 0
+           (lift is statistically positive). If lift < 0 or CI contains
+           zero, the NLA probe should not be promoted to production —
+           emit verdict honestly.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.nla_ensemble_integration.v1"
+        - experiment: 1720
+        - run_date: ISO-8601 UTC
+        - duration_s: > 100s (60 examples * (k=15 baseline + k=16 with NLA)
+          + ensemble logic + GGUF inference at 150ms each = > 100s minimum)
+        - random_seed: 171820 (NOT 1720 or 60)
+        - reproducibility_checksum: sha256 of (corpus hash + probe weights
+          from exp1694 + ensemble code git_rev)
+        - preconditions_checked: list
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          n_test: 60, k_baseline: 15, k_with_nla: 16,
+          probe_weights_from: "exp1694"}}
+        - n_samples: 60
+        - n_samples_justification: "60 held-out test examples gives Wilson
+          95% CI of width ~0.20 on per-k pass rate; lift CI width ~0.28.
+          Sufficient for 3pp threshold detection at reasonable power."
+        - k15_baseline_agreement_rate: float
+        - k16_with_nla_agreement_rate: float
+        - lift: float
+        - lift_wilson_95_ci: [lower, upper]
+        - per_verifier_pass_rate: dict verifier_name -> rate
+        - acceptance_gate_passed: bool (lift >= 0.03 AND
+          lift_wilson_lower > 0)
+        - acceptance_gate_criteria: "Lift >= 3pp AND statistically positive."
+        - methodology_note: "If lift < 0, NLA probe adds noise — should
+          stay experimental. Disclose honestly; do NOT promote a
+          counter-productive verifier to production."
+        - optimization_direction: "maximize_lift"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push to git (operator review desired). Do NOT
+      modify scripts/research_conductor.py.
+
+  - id: exp1721-phase4-alpha-t-replacement-derivation
+    title: "Exp 1721: Phase 4 alpha_t replacement derivation from maximum-caliber FEP↔IIT bridge"
+    deliverable: results/experiment_1721_alpha_t_replacement.json
+    max_turns: 100
     agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1715-phase4-alpha-t-audit-retry-v3
+        verdict: complete_bijection_invariance_artifact_confirmed
+        addressed_by: "exp1715 falsified the current alpha_t computation as bijection-invariant. arXiv:2605.12536 (Kearney, IIT↔FEP maximum-caliber bridge) is the candidate replacement framing. This task derives + prototypes a NEW alpha_t' that is provably NOT bijection-invariant under arXiv:2512.15605, then re-runs the random-verifier-injection ablation to confirm monotonic decay (artifact_detected=false in the new metric)."
+        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: Implement the solver that runs parallel energy minimization across the decomposed subsets.
-      
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_1774_cem_decomposition.py
-      
-      TASK: Implement Parallel Energy Minimization (PEM) over the decomposed energy landscapes.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1775_cem_solver.py`.
-        2. Ensure energy sum correctly models the global landscape.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.cem.solver.v1"
-        - solver_success: bool
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: exp1715 (.176) confirmed the Phase 4 alpha_t metric is
+      bijection-invariant — random-verifier injection did NOT degrade
+      delta_alpha across 4 ablation cells. arXiv:2605.12536 (Kearney,
+      May 3 2026) bridges FEP and IIT via maximum-caliber variational;
+      this paper's framework yields information measures via prediction
+      error under predictive coding, which is NOT obviously bijection-
+      invariant.
 
-  - id: exp1776-cem-evaluation
-    title: "Exp 1776: Phase 2 - Evaluate CEM against monolithic baseline using SOTA models"
-    deliverable: results/experiment_1776_cem_evaluation.json
-    max_turns: 50
-    gated_on:
-      - upstream: exp1775-cem-solver
-        artifact_field: solver_success
-        op: '=='
-        value: true
-    prompt: |
-      CONTEXT: Evaluate CEM on multi-constraint tasks using SOTA GGUFs.
-      
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_1775_cem_solver.py
-      
-      TASK: Run inference and repair using the new CEM solver with `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1776_cem_eval.py`.
-        2. Record multi-constraint satisfaction rate.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.cem.evaluation.v1"
-        - satisfaction_rate_monolithic: float
-        - satisfaction_rate_cem: float
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      FALSIFIABLE HYPOTHESIS: A maximum-caliber-derived alpha_t' (based
+      on Kearney's prediction-error formulation) produces monotonically
+      decaying delta_alpha across the random-verifier injection ablation
+      (random_fraction in [0, 1/3, 2/3, 1] → delta_alpha' should drop
+      from ~0.15 toward ~0). If alpha_t' is also bijection-invariant,
+      Phase 4 active-inference is fundamentally not measurable from
+      ensemble-level information — the hypothesis becomes inaccessible.
 
-  - id: exp1777-dab-integration
-    title: "Exp 1777: Phase 2 - Add Discrete Auto-Regressive Biasing (DAB) to generation loop"
-    deliverable: results/experiment_1777_dab_integration.json
-    max_turns: 50
-    prompt: |
-      CONTEXT: To improve constraint satisfaction during generation, use DAB.
-      
       EXISTING CODE TO READ FIRST:
-        - openspec/change-proposals/research-roadmap-vNEXT.md
-      
-      TASK: Implement DAB in the structured decoding loop using local SOTA models.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1777_dab.py`.
-        2. Use `unsloth/gemma-4-31B-it-GGUF`.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.dab.v1"
-        - dab_success_rate: float
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+        - results/experiment_1715_phase4_alpha_t_audit.json (the
+          falsification + 4-cell ablation results)
+        - python/carnot/phase4/ (current alpha_t implementation)
+        - arXiv:2605.12536 (cite only; abstract sufficient for derivation
+          starting point — outer-loop notes that the maximum-caliber
+          variational form is alpha_t' = -ln Z + sum_i E[A_i log p(s_t|s_{{t-1}})])
 
-  - id: exp1778-csl-baseline
-    title: "Exp 1778: Phase 3 - Baseline online skill evaluation on execution traces"
-    deliverable: results/experiment_1778_csl_baseline.json
-    max_turns: 30
-    prompt: |
-      CONTEXT: For continuous self-learning, we need a baseline of execution traces.
-      
-      EXISTING CODE TO READ FIRST:
-        - openspec/change-proposals/research-roadmap-vNEXT.md
-      
-      TASK: Collect multi-turn traces and apply current static skill scoring.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1778_csl_baseline.py`.
-        2. Establish current retention/forgetting baseline.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.csl.baseline.v1"
-        - baseline_soundness_mistakes: int
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      TASK: Implement alpha_t' replacement + re-run the ablation.
 
-  - id: exp1779-csl-nonforgetting
-    title: "Exp 1779: Phase 3 - Implement non-forgetting soundness check for continuous learning"
-    deliverable: results/experiment_1779_csl_nonforgetting.json
-    max_turns: 30
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `test -f results/experiment_1715_phase4_alpha_t_audit.json` —
+              else `blocked_exp1715_baseline_missing`.
+           b. `python -c "from carnot.phase4 import alpha_t"` succeeds OR
+              grep-locatable — else `blocked_phase4_module_not_found`.
+           c. scipy + numpy importable — else
+              `blocked_scipy_numpy_missing`.
+           Record preconditions_checked.
+        1. Read exp1715's ablation: 4 cells × 30 seeds × 100 MLD steps.
+           Re-use the substrate seeds and verifier ensembles so the
+           comparison is apples-to-apples.
+        2. Derive alpha_t' from maximum-caliber: alpha_t' should depend
+           explicitly on the prediction-error term E[A log p(s|history)]
+           where A_i are the verifier-output indicator variables. The
+           AR-LM↔EBM bijection (arXiv:2512.15605) acts on the marginal
+           p(s) — alpha_t' depends on the CONDITIONAL p(s|history,A),
+           which under the bijection is NOT preserved. This is the
+           non-invariance.
+        3. Implement alpha_t' as a separate function (do NOT modify the
+           current alpha_t — adversarial-verify's no-pruning policy).
+           Add file python/carnot/phase4/alpha_t_max_caliber.py.
+        4. Re-run the exp1715 ablation with alpha_t': 4 cells, same
+           seeds, same verifier ensembles, same MLD steps. Record
+           random_fraction_grid_results_alpha_t_prime.
+        5. Compute monotonic_decay_observed_alpha_t_prime AND
+           artifact_detected_alpha_t_prime per the exp1715 pattern.
+        6. Acceptance: monotonic_decay_observed_alpha_t_prime = true
+           AND artifact_detected_alpha_t_prime = false. If both flip
+           the right way, alpha_t' is a successful replacement.
+           If neither does, the maximum-caliber derivation needs more
+           work — emit verdict honestly.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.alpha_t_replacement.v1"
+        - experiment: 1721
+        - run_date: ISO-8601 UTC
+        - duration_s: > 120s (derivation + implementation + ablation)
+        - random_seed: 171821 (NOT 1721 or 4)
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{n_spins: 32, ensemble_k_total: 6,
+          random_fraction_grid: [0, 0.333, 0.667, 1.0], mld_steps: 100,
+          n_seeds: 30, n_cells: 4,
+          alpha_t_variant: "max_caliber_v1"}}
+        - n_samples: 12000
+        - n_samples_justification: "30 seeds × 100 MLD × 4 cells. Same
+          as exp1715 for apples-to-apples comparison."
+        - random_fraction_grid_results_alpha_t_prime: list of {{random_fraction,
+          inf_t_alpha_k6_prime, inf_t_alpha_k1_prime, delta_alpha_prime,
+          delta_alpha_prime_bootstrap_ci_95}}
+        - monotonic_decay_observed_alpha_t_prime: bool
+        - artifact_detected_alpha_t_prime: bool
+        - alpha_t_prime_implementation_file: "python/carnot/phase4/alpha_t_max_caliber.py"
+        - acceptance_gate_passed: bool (monotonic_decay AND NOT artifact_detected)
+        - acceptance_gate_criteria: "alpha_t' shows monotonic decay
+          across random_fraction grid AND no artifact-detection flag."
+        - methodology_note: "If both alpha_t (exp1715) AND alpha_t'
+          (this task) are bijection-invariant, Phase 4 information
+          becomes inaccessible from ensemble-level metrics. Disclose
+          honestly; recommend escalating Phase 4 program scope review."
+        - optimization_direction: "maximize_monotonic_decay (separation
+          across random_fraction cells)"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push to git. Do NOT modify
+      scripts/research_conductor.py.
+
+  - id: exp1722-findings-audit-pass-177
+    title: "Exp 1722: .177 findings audit + corrigenda"
+    deliverable: results/experiment_1722_findings_audit_177.json
+    max_turns: 100
     agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures: []
     prompt: |
-      CONTEXT: Policy updates must be rigorous.
-      
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_1778_csl_baseline.py
-      
-      TASK: Implement the non-forgetting soundness check logic.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1779_csl_check.py`.
-        2. Validate on synthetic trace updates.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.csl.check.v1"
-        - check_implemented: true
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: .177 was the planner-drafted 12-task milestone running
+      from 05:49Z 2026-05-15. Multiple SKIPs observed in the conductor
+      log between 06:27Z and 06:36Z due to the same pretest-failure
+      pattern that caused the .172/.173 wipeout. The outer-loop fix
+      (tests/python/test_cem_solver.py PlanNode/PlanEdge/PlanGraph
+      signature update) shipped 2026-05-15 ~06:50Z restoring 83/83
+      pretest pass. .177 will likely have partial outputs to audit.
 
-  - id: exp1780-csl-loop
-    title: "Exp 1780: Phase 3 - Run FR-11 continuous self-learning loop with rigorous checks"
-    deliverable: results/experiment_1780_csl_loop.json
-    max_turns: 50
-    gated_on:
-      - upstream: exp1779-csl-nonforgetting
-        artifact_field: check_implemented
-        op: '=='
-        value: true
-    prompt: |
-      CONTEXT: Run the self-learning loop safely.
-      
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_1779_csl_check.py
-      
-      TASK: Run FR-11 loop with `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1780_csl_loop.py`.
-        2. Evaluate utility delta and soundness mistakes.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.csl.loop.v1"
-        - utility_delta: float
-        - soundness_mistakes: int
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      FALSIFIABLE HYPOTHESIS: At least 1 of the .177 artifacts will be
+      flagged by adversarial-verify (the .174 base rate was 2/14 ~ 14%,
+      and the .177 planner-drafted research-breadth shape is similar).
+      Specifically: tasks that completed past the SKIP loop (exp1771-
+      1774 per the log) may have GATE_PASSED_WITHOUT_DATA or
+      DURATION_TOO_SHORT signatures.
 
-  - id: exp1781-kan-lut
-    title: "Exp 1781: Phase 4 - Draft Python LUT abstractions for KANs based on KANELÉ"
-    deliverable: results/experiment_1781_kan_lut.json
-    max_turns: 30
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py (8-rule linter; rule #8
+          IMPLAUSIBLE_TIGHT_CI is the newest)
+        - results/experiment_177*.json (.177 artifacts)
+
+      TASK: Audit + corrigenda pass on .177 artifacts.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
+        1. Run `python3 scripts/adversarial_verify.py --milestone-range
+           1771 1785` (covers exp1771-1784 from .177 by id range).
+        2. For each flag, classify as REAL_BUG / FALSE_POSITIVE /
+           NEEDS_REVISION + append corrigendum_2026_05_178_audit field
+           (CLAUDE.md no-pruning: APPEND, don't modify originals).
+        3. For each REAL_BUG, propose .179+ follow-up tasks.
+        4. Update ops/changelog.md with audit summary.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.findings_audit_corrigenda.v3"
+        - experiment: 1722
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s (audit task — running the linter + classifying
+          flags + writing corrigenda takes >30s for non-trivial flag count)
+        - random_seed: 171822
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{audit_target_milestone: "2026.05.177",
+          adversarial_verify_version: git_rev,
+          artifacts_scanned: int, artifacts_flagged: int}}
+        - n_samples: int (count of flagged artifacts)
+        - n_samples_justification: "Audit task; n is the flagged-artifact count."
+        - audit_outcomes: dict experiment_id -> {{classification, rationale,
+          follow_up_action}}
+        - corrigenda_added: list of artifact paths amended
+        - acceptance_gate_passed: bool (all flagged classified)
+        - acceptance_gate_criteria: "All .177 flagged artifacts classified
+          with defensible rationale; corrigenda appended."
+        - methodology_note: "Audit task. If audit completes in <10s
+          on a milestone with >5 artifacts, agent likely shortcut —
+          disclose honestly."
+        - optimization_direction: "neither — audit task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
+      or scripts/adversarial_verify.py (propose changes only).
+
+  - id: exp1723-milestone-178-retrospective
+    title: "Exp 1723: Milestone .178 retrospective"
+    deliverable: results/operational_retro_2026_05_178.json
+    max_turns: 60
     agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
     prompt: |
-      CONTEXT: We must blueprint KANelE LUT structures for hardware accounting.
-      
-      EXISTING CODE TO READ FIRST:
-        - openspec/change-proposals/research-roadmap-vNEXT.md
-      
-      TASK: Implement KANelE Look-Up Table evaluations in Python.
-      
-      CONCRETE STEPS:
-        1. Write `scripts/experiment_1781_kan_lut.py`.
-        2. Transform a small KAN tier to LUT format.
-      
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.kan.lut.v1"
-        - lut_conversion_success: bool
-      
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8.
 
-  - id: exp1782-kan-benchmark
-    title: "Exp 1782: Phase 4 - Benchmark KANELÉ LUT representation BOPs and NABS against baseline"
-    deliverable: results/experiment_1782_kan_benchmark.json
-    max_turns: 40
-    gated_on:
-      - upstream: exp1781-kan-lut
-        artifact_field: lut_conversion_success
-        op: '=='
-        value: true
-    prompt: |
-      CONTEXT: Benchmark hardware accounting for KAN LUTs.
-      
-      EXISTING CODE TO READ FIRST:
-        - scripts/experiment_1781_kan_lut.py
-      
-      TASK: Measure Bit Operations (BOPs) and Number of Additions and Bit-Shifts (NABS).
-      
+      TASK: Generate the .178 operational retrospective.
+
       CONCRETE STEPS:
-        1. Write `scripts/experiment_1782_kan_benchmark.py`.
-        2. Generate explicit hardware_execution_claim=false metrics.
-      
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.178..HEAD returns non-empty.
+        1-6. Standard retro fields per templates from .169/.171/.175/.176.
+
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.kan.benchmark.v1"
-        - bops: int
-        - nabs: int
-        - hardware_execution_claim: false
-      
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.178"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_full"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - gpu_idle_on_compute_bound_tasks: bool or null
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
