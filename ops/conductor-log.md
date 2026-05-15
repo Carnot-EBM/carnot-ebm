@@ -3563,3 +3563,4 @@ IMPORTANT:
 | 2026-05-15 23:16 UTC | Exp 1822: Carnot ODAR-style routing prototype (arX | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.25s |
 | 2026-05-15 23:19 UTC | Exp 1822: Carnot ODAR-style routing prototype (arX | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.21s |
 | 2026-05-15 23:21 UTC | Exp 1822: Carnot ODAR-style routing prototype (arX | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.10s |
+| 2026-05-15 23:23 UTC | Exp 1823: Phase 4 canonical-metric decision — name | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.09s |
