@@ -3372,3 +3372,4 @@ IMPORTANT:
     at async file:///usr/lib/node_modules |
 | 2026-05-15 13:55 UTC | Plan next milestone | FAIL | Gemini CLI error: 5NJ2YRH.js:309138:14)
     at async file:///usr/lib/node_modu |
+| 2026-05-15 14:07 UTC | Exp 1749: Milestone .182 retrospective | OK | 86 passed, 1 warning in 14.53s |

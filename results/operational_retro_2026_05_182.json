@@ -1,39 +1,50 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.182",
-  "generated_at": "2026-05-15T14:04:22Z",
+  "generated_at": "2026-05-15T14:19:51Z",
   "retro_type": "operational_full",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.182..HEAD returns non-empty: True"
-  ],
-  "total_wall_time_minutes": 36.8,
-  "experiments_completed": 2,
+  "total_wall_time_minutes": 50.1,
+  "experiments_completed": 6,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [
     {
-      "experiment": "Exp 1745: Phase 4 per-step alpha disaggregation \u2014 rescue from ensemble-level invariance",
-      "duration_minutes": 3.35,
+      "experiment": "-0400 [conductor] Exp 1749: Milestone .182 retrospective",
+      "duration_minutes": 45.2,
       "compute_bound": false
     },
     {
-      "experiment": "Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47 \u2014 corpus or methodology root cause",
-      "duration_minutes": 2.08,
+      "experiment": "-0400 [conductor] Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47 \u2014 corpus or ",
+      "duration_minutes": 2.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1745: Phase 4 per-step alpha disaggregation \u2014 rescue from ",
+      "duration_minutes": 2.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] In-process docs for Exp 1749: Milestone .182 retrospective",
+      "duration_minutes": 0.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] In-process docs for Exp 1745: Phase 4 per-step alpha disaggreg",
+      "duration_minutes": 0.0,
       "compute_bound": false
     }
   ],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Analyzed 36.8 min wall time across 2 experiments (Exp 1745 and Exp 1746). No compute-bound tasks were run this milestone; both were short synthesis/diagnosis tasks taking < 4 minutes execution each but a significant portion of agent wall time.",
+  "summary": "The milestone completed 6 experiments in 50.1 minutes, with no compute-bound experiments conducted. All tasks were synthesis-only, and the GPUs correctly remained idle. The bulk of the wall time (45.2 minutes) was spent on generating the retrospective itself (Exp 1749).",
   "bottlenecks_identified": [
-    "Synthesis and agent cognitive overhead account for the majority of the 36.8 minutes wall time."
+    "Exp 1749 (the milestone retrospective) accounted for 45.2 minutes out of the 50.1 minute total wall time, making it the primary bottleneck.",
+    "No data available this milestone for compute-bound bottlenecks."
   ],
   "improvements_suggested": [
-    "Continue to optimize agent planning loops to reduce the gap between experiment duration (2-3 mins) and wall time (36 mins)."
+    "Investigate and optimize the tooling responsible for generating retrospectives to reduce its 45-minute execution time."
   ],
   "top_3_highest_leverage_actions": [
-    "Profile conductor cognitive loops to minimize non-experiment wall time.",
-    "Consolidate diagnosis tasks to run concurrently when possible."
+    "Optimize retrospective generation (Exp 1749) since it dominates milestone wall time."
   ],
-  "estimated_time_savings_pct": 20,
-  "meta_reflection": "The milestone completed necessary diagnosis on the TPR collapse and alpha invariance quickly in raw execution time, but with substantial overhead. No GPU compute-bound performance to reflect on.",
-  "honest_verdict": "complete: operational retrospective 182 generated successfully. Both experiments successfully executed with minimal GPU reliance."
+  "estimated_time_savings_pct": 90,
+  "meta_reflection": "All milestone execution time was spent on synthesis, with the retrospective task itself dominating. The GPU correctly remained idle during these synthesis tasks."
 }
