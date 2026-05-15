@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technical Report - A Technical Report — 3,202 Experiments Across the Public Record, 200 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 3,202 Experiments Across the Public Record, 200 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --border: rgba(255, 255, 255, 0.08);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+
+    .bg-nodes {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+      background-image: radial-gradient(circle at 2px 2px, rgba(255,255,255,0.02) 1px, transparent 0);
+      background-size: 60px 60px;
+    }
+
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.8); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border); padding: 0 1.5rem;
+    }
+    .nav-inner {
+      max-width: 900px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; height: 64px;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; color: var(--text); text-decoration: none;
+    }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; align-items: center; }
+    .nav-links a {
+      color: var(--text-muted); text-decoration: none; font-size: 0.85rem; font-weight: 500; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+
+    article { max-width: 900px; margin: 0 auto; padding: 8rem 1.5rem 4rem; }
+
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3rem); font-weight: 800; line-height: 1.1; margin-bottom: 1rem;
+      letter-spacing: -0.03em;
+    }
+    .subtitle { font-size: 1.25rem; color: var(--text-muted); margin-bottom: 2rem; }
+    .meta { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 4rem; padding-bottom: 2rem; border-bottom: 1px solid var(--border); }
+    .meta strong { color: var(--text); }
+
+    .abstract {
+      background: var(--bg-glass); border: 1px solid var(--border); border-radius: 16px;
+      padding: 2.5rem; margin-bottom: 4rem;
+    }
+    .abstract h3 { font-family: var(--font-heading); font-size: 1.25rem; margin-bottom: 1rem; color: var(--accent); }
+    .abstract p { font-size: 1rem; color: var(--text-muted); }
+
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem; font-weight: 700; margin: 4rem 0 1.5rem;
+      color: var(--text); letter-spacing: -0.02em;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem; font-weight: 700; margin: 2.5rem 0 1rem;
+      color: var(--text);
+    }
+    h4 {
+      font-family: var(--font-heading); font-size: 1.1rem; font-weight: 600; margin: 2rem 0 0.75rem;
+      color: var(--text);
+    }
+    p { margin-bottom: 1.5rem; color: var(--text-muted); font-size: 1.05rem; }
+    ul, ol { margin-bottom: 1.5rem; padding-left: 1.5rem; color: var(--text-muted); }
+    li { margin-bottom: 0.75rem; }
+    strong { color: var(--text); }
+    em { font-style: italic; }
+    hr { border: none; border-top: 1px solid var(--border); margin: 3rem 0; }
+
+    pre {
+      background: #030712; border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem; overflow-x: auto; margin: 2rem 0;
+      font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; color: #cbd5e1;
+    }
+    pre code { background: none; padding: 0; border-radius: 0; font-size: inherit; }
+    code { font-family: var(--font-mono); background: rgba(255,255,255,0.05); padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    .kw { color: var(--accent-reason); }
+    .fn { color: var(--accent-verify); }
+    .str { color: #22c55e; }
+    .cm { color: #475569; font-style: italic; }
+
+    table { width: 100%; border-collapse: collapse; margin: 2rem 0; font-size: 0.95rem; overflow-x: auto; display: block; }
+    th { text-align: left; padding: 1rem; border-bottom: 2px solid var(--border); color: var(--text); font-family: var(--font-heading); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.1em; white-space: nowrap; }
+    td { padding: 1rem; border-bottom: 1px solid var(--border); color: var(--text-muted); }
+
+    .principle {
+      background: var(--bg-glass); border-left: 4px solid var(--accent);
+      padding: 1.5rem 2rem; margin: 1.5rem 0; border-radius: 0 12px 12px 0;
+    }
+    .principle strong { color: var(--accent); display: block; margin-bottom: 0.5rem; font-family: var(--font-heading); }
+
+    .arch-diagram {
+      background: var(--bg-glass); border: 1px solid var(--border); border-radius: 12px;
+      padding: 1.5rem; overflow-x: auto; margin: 2rem 0;
+      font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; color: #cbd5e1;
+      white-space: pre;
+    }
+
+    footer {
+      max-width: 900px; margin: 0 auto; padding: 6rem 1.5rem 3rem;
+      border-top: 1px solid var(--border); text-align: center;
+    }
+    .f-links { display: flex; justify-content: center; gap: 3rem; margin-bottom: 3rem; flex-wrap: wrap; }
+    .f-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; transition: color 0.2s; }
+    .f-links a:hover { color: var(--text); }
+    .f-copy { font-size: 0.8rem; color: var(--text-muted); opacity: 0.5; }
+
+    @media (max-width: 640px) {
+      h1 { font-size: 2.25rem; }
+      article { padding-top: 6rem; }
+      .nav-links { gap: 0.75rem; }
+      .nav-links a { font-size: 0.75rem; }
+      table { font-size: 0.8rem; }
+      th, td { padding: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="bg-nodes"></div>
+
+<nav>
+  <div class="nav-inner">
+    <a href="./" class="nav-logo">Carnot</a>
+    <ul class="nav-links">
+      <li><a href="./">Home</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/getting-started.md">Get Started</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/concepts.md">Concepts</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/api-reference.md">API</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
