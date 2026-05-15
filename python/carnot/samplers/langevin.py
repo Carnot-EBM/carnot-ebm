@@ -154,6 +154,7 @@ class LangevinSampler:
         init: jax.Array,
         n_steps: int,
         key: jax.Array | None = None,
+        cbf_fn: Callable[[jax.Array], jax.Array] | None = None,
     ) -> jax.Array:
         """Run Langevin dynamics and return only the final sample.
 
@@ -201,6 +202,8 @@ class LangevinSampler:
             key, subkey = jrandom.split(key)
             # Compute gradient dE/dx at the current state
             grad = energy_fn.grad_energy(x)
+            if cbf_fn is not None:
+                grad = grad + jax.grad(cbf_fn)(x)
             # Clip gradient if clip_norm is set (prevents NaN on steep surfaces)
             grad = self._clip_gradient(grad)
             # Sample isotropic Gaussian noise
@@ -222,6 +225,7 @@ class LangevinSampler:
         init: jax.Array,
         n_steps: int,
         key: jax.Array | None = None,
+        cbf_fn: Callable[[jax.Array], jax.Array] | None = None,
     ) -> jax.Array:
         """Run Langevin dynamics and return the full chain of states.
 
@@ -261,6 +265,8 @@ class LangevinSampler:
             x, key = carry
             key, subkey = jrandom.split(key)
             grad = energy_fn.grad_energy(x)
+            if cbf_fn is not None:
+                grad = grad + jax.grad(cbf_fn)(x)
             # Clip gradient if clip_norm is set (prevents NaN on steep surfaces)
             grad = self._clip_gradient(grad)
             noise = jrandom.normal(subkey, x.shape)

@@ -498,3 +498,20 @@ the same constraint as the constraint_fn
 **And** the violation rate across 100 independent trials is 0.0
 **And** the artifact is written to `results/experiment_2110_casal_pinet.json`.
 
+### REQ-SAMPLE-1807: Lyapunov Control Barrier Functions in Langevin Sampler
+
+Carnot MUST provide a way to integrate Lyapunov Control Barrier Functions (CBFs) as
+additive penalty terms in the Langevin sampler to enforce hard safety constraints.
+
+Sub-requirements:
+- REQ-SAMPLE-1807-1: The Langevin sampler SHALL optionally accept a strict logical constraint and a corresponding Control Barrier Function.
+- REQ-SAMPLE-1807-2: The Control Barrier Function SHALL artificially raise the energy near the constraint violation.
+- REQ-SAMPLE-1807-3: The experiment script SHALL write `results/experiment_1807_lyapunov_cbf.json` containing the fields: `schema`, `violation_rate`, and `acceptance_gate_passed`.
+
+### SCENARIO-SAMPLE-1807: CBF reduces constraint violations
+
+**Given** an energy function and a Control Barrier Function defining a hard constraint
+**When** the modified Langevin sampler is executed
+**Then** the constraint violation rate is logged
+**And** the required JSON artifact is produced to `results/experiment_1807_lyapunov_cbf.json`.
+
