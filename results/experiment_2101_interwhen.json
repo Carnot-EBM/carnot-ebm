@@ -1,0 +1,46 @@
+{
+  "experiment": 2101,
+  "title": "InterwhenMonitor prototype: mid-generation constraint violation detection",
+  "run_date": "2026-05-15T02:49:10Z",
+  "schema": "carnot-experiment-v1",
+  "duration_s": 0,
+  "status": "blocked",
+  "honest_verdict": "blocked_model_not_cached_qwen3_6_35b_a3b",
+  "preconditions_checked": [
+    {
+      "resource": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ returns non-empty .gguf files",
+      "available": false,
+      "detail": "Directory exists but contains only 'refs' — no .gguf files present. Model weight download required before evaluation can proceed."
+    }
+  ],
+  "deliverables_completed": [
+    "python/carnot/pipeline/interwhen_monitor.py — InterWhenMonitor class (pre-existing, confirmed correct)",
+    "python/carnot/pipeline/verify_repair.py — interwhen_monitor parameter + advisory certificate block integrated",
+    "tests/python/pipeline/test_interwhen_integration.py — 8 tests, all passing"
+  ],
+  "interruption_rate": null,
+  "early_detection_rate": null,
+  "n_cases_evaluated": 0,
+  "n_cases_planned": 10,
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B-GGUF",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "status": "not_cached"
+    }
+  ],
+  "implementation_summary": {
+    "interwhen_monitor_module": "python/carnot/pipeline/interwhen_monitor.py",
+    "classes_exposed": ["InterWhenViolation", "InterWhenMonitor"],
+    "methods": ["split_at_boundaries", "monitor_partial", "monitor_full_response", "any_violation"],
+    "pipeline_integration": "VerifyRepairPipeline.__init__ now accepts interwhen_monitor=Any|None. When set, verify() calls monitor_full_response(response) and records n_violations, early_detection_count, total_sentences, early_detection_rate in certificate['interwhen_monitor']. Advisory only — does not override result.verified.",
+    "spec_refs": ["REQ-VERIFY-130", "REQ-VERIFY-131", "SCENARIO-VERIFY-168", "SCENARIO-VERIFY-169", "SCENARIO-VERIFY-170"],
+    "test_count": 8,
+    "tests_passing": 8
+  },
+  "blocked_reason": "PRECONDITION FAILED: unsloth/Qwen3.6-35B-A3B-GGUF .gguf files not present in HuggingFace cache. The 10-case evaluation against constraint violations requires a live GGUF model load. Per CLAUDE.md Pre-Launch Preconditions Discipline, experiment aborts here rather than fabricating results. Re-run after: huggingface-cli download unsloth/Qwen3.6-35B-A3B-GGUF",
+  "acceptance_gate_passed": false,
+  "acceptance_gate_condition": "interruption_rate > 0.0 on >= 10 constraint cases with live GGUF inference",
+  "methodology_note": "Module and pipeline integration are complete and tested. The blocked verdict is an honest environment signal, not a capability failure. Once the model is cached, re-run this experiment to populate interruption_rate and early_detection_rate metrics."
+}

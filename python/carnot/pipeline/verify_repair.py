@@ -445,6 +445,7 @@ class VerifyRepairPipeline:
         and_compose_verifier: Any | None = None,
         probability_calibration_verifier: ProbabilityCalibrationVerifier | None = None,
         casal_tier: Any | None = None,
+        interwhen_monitor: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -531,6 +532,10 @@ class VerifyRepairPipeline:
             self._and_compose_verifier = and_compose_verifier
             
         self._casal_tier = casal_tier
+        # InterwhenMonitor for mid-generation sentence-boundary violation detection
+        # (REQ-VERIFY-130, arXiv 2602.11202).  Advisory only: violations recorded in
+        # certificate but never override result.verified.
+        self._interwhen_monitor = interwhen_monitor
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -1648,6 +1653,23 @@ class VerifyRepairPipeline:
         if self._casal_tier is not None:
             _casal_res = self._casal_tier.verify(question, response)
             result.certificate["casal_tier"] = _casal_res
+
+        # InterwhenMonitor advisory (REQ-VERIFY-130, REQ-VERIFY-131).
+        # Replays the response sentence-by-sentence and records any arithmetic
+        # violations detected mid-stream.  Advisory only — does not change
+        # result.verified.  Exposes early_detection_rate so callers can measure
+        # whether violations were caught before the final sentence (the key
+        # advantage of the Interwhen approach over post-hoc verification).
+        if self._interwhen_monitor is not None:
+            _iw_violations = self._interwhen_monitor.monitor_full_response(response)
+            _total_sentences = len(self._interwhen_monitor.split_at_boundaries(response))
+            _early = [v for v in _iw_violations if v.sentence_index < max(_total_sentences - 1, 0)]
+            result.certificate["interwhen_monitor"] = {
+                "n_violations": len(_iw_violations),
+                "early_detection_count": len(_early),
+                "total_sentences": _total_sentences,
+                "early_detection_rate": len(_early) / len(_iw_violations) if _iw_violations else 0.0,
+            }
 
         # Tier 0h SpectralAttentionProbe advisory (REQ-VERIFY-146).
         # When CARNOT_SPECTRAL_PROBE=1, extract CoT steps from the response and run
