@@ -97,6 +97,33 @@ historical record per CLAUDE.md no-pruning policy.
 **Maintained by:** the local /loop job `875c06b4` (study-phase sweep every 4h at :13).
 Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full ranking + scoring at `research-studying.md`. Promoted here only if score > 400 OR genuinely novel-to-Carnot.
 
+### 2026-05-15T21:30Z sweep candidate (score 400 — promote to known-issues per protocol)
+
+- **arXiv:2602.23681** — "ODAR: Principled Adaptive Routing for LLM
+  Reasoning via Active Inference" (Ma, Gao, Jia, Qin, Li, Ma, Jia, Ren,
+  Liu; Feb 27 2026). **Score 5×4×4×5 = 400.** Surfaced via the new
+  `sweep_semscholar.py` channel (Semantic Scholar keyword search beyond
+  arxiv-only rotation). Adaptive routing for LLM reasoning that uses a
+  **"free-energy-principled, risk-sensitive fusion mechanism"** to
+  select between fast and deliberative agents, tested across 23
+  benchmarks with reduced computational overhead vs uniform sampling.
+  **Strategic significance for Carnot**: ODAR DIRECTLY MERGES the
+  Phase 4 (active inference) and Fast-Slow Variant tracks that have
+  been parallel until now. Carnot's Phase 4 program has chased
+  alpha_t measurement across 5 experiments (exp1715/1721/1741/1745/
+  1811) without convergence — exp1745 confirmed ensemble-output
+  metrics are substrate-inaccessible; ODAR demonstrates that a
+  DIFFERENT free-energy-derived target (routing mechanism, not
+  metric measurement) succeeds. **Concrete .190+ proposal**:
+  "Carnot ODAR-style Routing" — adopt the free-energy-principled
+  risk-sensitive fusion in place of verify-repair's argmax selection.
+  Acceptance gate: match ODAR's "reduced computational overhead"
+  claim relative to uniform-iteration verify-repair on a 30-example
+  reasoning corpus. Full scoring at research-studying.md Sweep
+  2026-05-15T21:30Z. Cross-references arXiv:2605.12536 (IIT↔FEP
+  max-caliber bridge — the basis of exp1721's alpha_t' theoretical
+  derivation; ODAR is the operational counterpart).
+
 ### 2026-05-15 operator-flagged candidate (13:15Z; score 400 — promote to known-issues per protocol)
 
 - **arXiv:2605.12484** — "Learning, Fast and Slow: Towards LLMs That Adapt
