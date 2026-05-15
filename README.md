@@ -18,7 +18,7 @@ call. No fine-tuning. No access to model weights.
 Rust + Python/JAX, Apache 2.0, local editable install via `pip install -e ".[dev]"`.
 The public PyPI package remains a Phase-1 ship blocker as of Exp 1582.
 
-Current public research record: **2,501 experiment records tracked through Exp 2114**. `research-complete.yaml` currently archives **2,359** task records across **191** artifact-backed completed milestone records through 2026.05.176; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.176 on 2026-05-15.
+Current public research record: **2,959 experiment records tracked through Exp 2114**. `research-complete.yaml` currently archives **2,364** task records across **192** artifact-backed completed milestone records through 2026.05.179; checked-in result artifacts and `ops/changelog.md` extend through milestone 2026.05.179 on 2026-05-15.
 
 Milestone .106 delivered the critical fix to thinking-mode certificate
 generation: Exp 1366 (CRANE tag-first prefix injection) reached
@@ -359,7 +359,7 @@ experiment artifact under `results/`.
 | Latent-GRPO energy reward | Invalid-sample masking + one-sided noise produced **0.0pp** delta (**46% → 46%**) on the 100-row FoVer proxy | Exp 1187 |
 | WOPR Hex game cartridge | 7x7 Hex cartridge operational; Gibbs energy player beat random **90%** of games and tied greedy at **50%** | Exp 1188 |
 | Phase 4 active-inference harder-puzzle audit | After the .92 BFS tie, .94 generated 15 synthetic 15x15 scrambled puzzles where BFS hit the **100,000-state cap on 15/15**; blocked Gibbs solved **15/15** | Exps 1189/1210 |
-| Prlimit memory cap | `RLIMIT_AS=8GB` from Exp 1191 caused conductor pre-test failures on JAX-heavy collection; Exp 1203 raised the cap to **32 GiB** and unblocked the gate | Exps 1191/1203 |
+| Prlimit memory cap | `RLIMIT_AS=8GB` from Exp 1192 caused conductor pre-test failures on JAX-heavy collection; Exp 1203 raised the cap to **32 GiB** and unblocked the gate | Exps 1192/1203 |
 | KANtize SOS-KAN 4-bit quantization | 4-bit SOS-KAN preserved **AUROC=0.990137** vs full-precision **0.990228**, with **0.038 ms/example** inference latency and edge safetensors export | Exp 1199 |
 | Pre-test suite rescue | RLIMIT_AS raised **8 GiB → 32 GiB**; pre-test gate collected **21,413** tests with **472 passed**, **0 failed**, **1 skipped** in the verification slice | Exp 1203 |
 | Tier 1 constraint addition v2 | Added 1 high-signal constraint; precision improved **0.478 → 0.917** and FPR dropped **0.857 → 0.071** on 50 held-out cases | Exp 1212 |
