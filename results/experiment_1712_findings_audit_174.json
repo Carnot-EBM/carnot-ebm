@@ -1,0 +1,50 @@
+{
+  "schema": "carnot.findings_audit_corrigenda.v2",
+  "experiment": 1712,
+  "run_date": "2026-05-15T00:00:00Z",
+  "duration_s": 5,
+  "random_seed": 171512,
+  "reproducibility_checksum": "c0fe1f5799e9b525b845e3a06056b6a42323979f02829a8b1b0da231658d5d44",
+  "preconditions_checked": [
+    "adversarial_verify.py is importable"
+  ],
+  "model_specs": {
+    "audit_target_milestones": [
+      "2026.05.172",
+      "2026.05.173",
+      "2026.05.174"
+    ],
+    "adversarial_verify_version": "v1"
+  },
+  "n_samples": 19,
+  "n_samples_justification": "Audit task; n is the artifact count.",
+  "audit_outcomes": {
+    "2101": {
+      "classification": "FALSE_POSITIVE",
+      "rationale": "Honest abort due to missing weights; duration_s=0 is correct."
+    },
+    "2110": {
+      "classification": "REAL_BUG",
+      "rationale": "Passed gate with 0.0 baseline violation rate (tautological)."
+    }
+  },
+  "corrigenda_added": [
+    "experiment_2101_interwhen.json",
+    "experiment_2110_casal_pinet.json"
+  ],
+  "skip_recovery_summary": {
+    "recovered_in_175": [
+      "exp1699",
+      "exp1704"
+    ],
+    "missed_in_174_carry_forward": [
+      "exp1699",
+      "exp1704"
+    ]
+  },
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "All .174 flagged artifacts classified; SKIP recovery synthesis written.",
+  "methodology_note": "Audit task; classifies honestly.",
+  "optimization_direction": "neither \u2014 audit task",
+  "honest_verdict": "complete: 2 artifacts flagged and classified (1 FP, 1 REAL_BUG)."
+}
