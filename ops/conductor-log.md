@@ -3267,3 +3267,4 @@ IMPORTANT:
 | 2026-05-15 04:43 UTC | Exp 1711: PyPI publish retry (Phase 1 ship — .173  | FAIL | No file changes produced |
 | 2026-05-15 04:48 UTC | Exp 1711: PyPI publish retry (Phase 1 ship — .173  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1711_pypi_pu |
 | 2026-05-15 04:52 UTC | Exp 1711: PyPI publish retry (Phase 1 ship — .173  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1711_pypi_pu |
+| 2026-05-15 04:57 UTC | Exp 1712: .174 + .172/.173 SKIP recovery — adversa | OK | 81 passed, 1 warning in 5.22s |
