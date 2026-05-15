@@ -29,3 +29,9 @@ The system must support an Energy-Based Transformer computation layer bridging M
 
 ## SCENARIO-NRGPT-005: EBT Layer Latency Overhead
 When extracting hidden states on queries using the EBT Layer MoE Bridge, the system evaluates and records the latency overhead in the deliverable JSON.
+
+## REQ-EBT-1742-1: EBT-Style Gradient Refinement Loop
+The system must support a minimal EBT-style gradient refinement loop using JAX to perform energy gradient descent over a continuous state.
+
+## SCENARIO-EBT-1742-1: Ising Substrate Convergence
+Given a 16-spin Ising substrate acting as a proxy for an EBT energy landscape, the gradient refinement loop converges within 100 iterations, yielding an energy decrease of at least 20%.
