@@ -1660,3 +1660,5 @@
 | REQ-CARM-1772-1 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | Implemented | results/experiment_1772_care_prototype.json |
 | REQ-CARM-1772-2 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | Implemented | results/experiment_1772_care_prototype.json |
 | SCENARIO-CARM-1772-1 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | Implemented | results/experiment_1772_care_prototype.json |
+| REQ-CARM-1773-1 | Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall | Implemented | results/experiment_1773_care_evaluation.json |
+| SCENARIO-CARM-1773-1 | Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall | Implemented | results/experiment_1773_care_evaluation.json |
