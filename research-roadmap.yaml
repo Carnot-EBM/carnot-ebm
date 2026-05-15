@@ -1,226 +1,367 @@
-milestone: "2026.05.174"
-milestone_title: "Phase 2 Continuous Latent Trace Editing and Verification-Compute Routing"
+milestone: "2026.05.175"
+milestone_title: "Carry-Forward Recovery: THRML Critical-Fluctuation, Phase 4 alpha_t Audit, PyPI Publish — all SKIPPED in .172/.173 due to transient pretest failures"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
-scope_reduction: "Strict enforcement: only one repair salvage loop, no new hardware syntheses."
+scope_reduction_compliance:
+  rationale: "Recovery milestone: .172 (6 tasks) and .173 (5 tasks) BOTH SKIPPED every research/ship task between 2026-05-15 01:33Z and 02:27Z due to transient pretest failures (2 failed / 79 passed). The pretest passes again now (verified 2026-05-15 02:42Z) but the planner-drafted .174 chose research-breadth (exp2101-2113) and did NOT carry forward the .172/.173 high-priority items. This milestone carries them forward explicitly."
+  carry_forwards_addressed: [".172 exp1698 THRML critical-fluctuation", ".172 exp1699 Phase 4 alpha_t audit", ".172 exp1700 NLA eval-awareness", ".173 exp1704 PyPI publish"]
+authored_by: outer-loop-claude
 
 tasks:
-  - id: exp2101-interwhen-monitoring
-    title: "Exp 2101: Interwhen Asynchronous Monitoring for CCTU"
-    prompt: |
-      CONTEXT: We must reduce the generation-verification gap. The literature (interwhen) suggests periodic polling of reasoning traces rather than waiting for completion.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
-      TASK: Implement an asynchronous test-time monitor prototype that polls a generated trace and interrupts on constraint violation.
-      CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/interwhen_monitor.py` exposing `InterwhenMonitor`.
-      2. Integrate it into the `VerifyRepairPipeline`.
-      3. Evaluate on 10 constraint cases using `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      4. Write `results/experiment_2101_interwhen.json` with `interruption_rate` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
-
-  - id: exp2102-hover-safe-prefix
-    title: "Exp 2102: HoVer Safe-Prefix Continuation"
-    gated_on:
-      - upstream: exp2101-interwhen-monitoring
-        artifact_field: interruption_rate
-        op: '>='
-        value: 0.0
-    prompt: |
-      CONTEXT: When a monitor interrupts generation, regenerating from scratch is expensive. HoVer uses energy scoring to find the last safe prefix.
-      EXISTING CODE TO READ FIRST: python/carnot/pipeline/interwhen_monitor.py
-      TASK: Implement a safe-prefix truncator and generation continuation mechanic based on Carnot energy.
-      CONCRETE STEPS:
-      1. Add `safe_prefix_truncate` to `VerifyRepairPipeline` that truncates at the first high-energy span.
-      2. Use `unsloth/gemma-4-31B-it-GGUF` to continue generation from the prefix.
-      3. Write `results/experiment_2102_hover.json` with `compute_saved_pct` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
-
-  - id: exp2103-semantic-energy-detection
-    title: "Exp 2103: Semantic Energy for Hallucination Detection"
-    prompt: |
-      CONTEXT: Time-series logit telemetry (HALT) was confounded. We need a semantic energy detector.
-      EXISTING CODE TO READ FIRST: python/carnot/telemetry/
-      TASK: Implement Semantic Energy hallucination detection that clusters outputs and scores semantic confidence using local SOTA top-k logprobs.
-      CONCRETE STEPS:
-      1. Create `python/carnot/telemetry/semantic_energy.py`.
-      2. Run inference with `unsloth/gemma-4-26B-A4B-it-GGUF` to get top-k logprobs.
-      3. Calculate semantic energy metrics and compare against format-validity baselines.
-      4. Write `results/experiment_2103_semantic_energy.json` with `auroc` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
-
-  - id: exp2104-constrainprompt-compiler
-    title: "Exp 2104: ConstrainPrompt Compiler"
-    prompt: |
-      CONTEXT: We must expand executable constraints without manual authoring.
-      EXISTING CODE TO READ FIRST: python/carnot/solvers/
-      TASK: Build a ConstrainPrompt-style compiler that takes natural language rules and generates executable Python validators.
-      CONCRETE STEPS:
-      1. Create `python/carnot/solvers/constrain_prompt.py`.
-      2. Compile 10 NL rules into validators using `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      3. Test the generated validators on known good/bad outputs.
-      4. Write `results/experiment_2104_constrainprompt.json` with `compile_success_rate` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+  - id: exp1709-thrml-critical-fluctuation-retry
+    title: "Exp 1709: THRML+Carnot near-critical sampler failure investigation (retry — .172 exp1698 was SKIPPED)"
+    deliverable: results/experiment_1709_thrml_critical_fluctuation.json
+    max_turns: 100
     agent_type: codex
     model: gpt-5.5
-
-  - id: exp2105-latent-trace-generation
-    title: "Exp 2105: Non-Autoregressive Latent Trace Generation Prototype"
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1698-thrml-critical-fluctuation-investigation
+        verdict: skipped_pretest_failing_in_172
+        addressed_by: "exp1698 (.172) was SKIPPED 3 retries between 01:33-01:42Z due to a transient pretest failure (2 failed/79 passed). Pretest now passes (81/81 verified 02:42Z). The original task scope is unchanged and still high-value (top MANDATORY THRML corrigendum per ops/known-issues.md). Re-launching with identical methodology + PRECONDITIONS block per the new CLAUDE.md Pre-Launch Preconditions Discipline."
+        retire_if_same_verdict: false
+      - experiment_id: exp1692-thrml-curie-weiss-ground-truth
+        verdict: complete_gate_failed_both_samplers_miss_ground_truth_near_critical
+        addressed_by: "exp1692 (.171) showed Carnot and THRML BOTH miss analytic Curie-Weiss ground truth at beta=1.05 and 1.20 by 0.11-0.24, but BOTH match at beta=1.50. This is the canonical symptom of inadequate symmetry-breaking burn-in. The 54-cell ablation in this task (burn-in × h-schedule × sampler × beta) is the right bisection."
+        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: To achieve Kona parity, we must transition to non-autoregressive trace generation in continuous space.
-      EXISTING CODE TO READ FIRST: python/carnot/phase3/
-      TASK: Build a continuous latent trace generator stub that emits fixed-length continuous sequences instead of discrete tokens.
-      CONCRETE STEPS:
-      1. Create `python/carnot/phase3/latent_generator.py`.
-      2. Define a transformation from problem statement to a fixed-dimensional latent tensor.
-      3. Write `results/experiment_2105_latent_generation.json` with `schema` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
+      CONTEXT: exp1698 (.172) was the original spec for this task; it was
+      SKIPPED due to a transient pretest failure (now resolved). The full
+      task spec is preserved in the .172 milestone YAML in git history
+      (commit bd40545cc) and the deliverable was results/experiment_1698_
+      thrml_critical_fluctuation.json with schema carnot.thrml_critical_
+      fluctuation.v1.
 
-  - id: exp2106-continuous-problem-mapping
-    title: "Exp 2106: Continuous Latent Space Problem Mapping"
-    gated_on:
-      - upstream: exp2105-latent-trace-generation
-        artifact_field: schema
-        op: contains
-        value: "carnot"
-    prompt: |
-      CONTEXT: The continuous latent sequence needs to represent constraint domains (like Sudoku).
-      EXISTING CODE TO READ FIRST: python/carnot/phase3/latent_generator.py
-      TASK: Map a 9x9 Sudoku instance into a continuous tensor representation and define an energy function for constraint violations.
+      FALSIFIABLE HYPOTHESIS: The exp1692 ground-truth gap is caused by
+      inadequate symmetry-breaking burn-in (NOT a fundamental sampler bug).
+      Either (a) running with 50,000 burn-in steps closes the gap at
+      beta=1.20, OR (b) running with h=1e-3 symmetry-breaking field closes
+      the gap, OR (c) neither helps and the gap is a fundamental
+      sampler limitation that affects Z1 hardware-mapping (paper-v6 §6
+      disclosure).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1692_thrml_curie_weiss_ground_truth.json
+        - results/experiment_1686_thrml_bias_fix.json
+        - python/carnot/samplers/parallel_ising.py
+        - The exp1698 spec in git: `git show bd40545cc:research-roadmap-next.yaml`
+          contains the full original CONCRETE STEPS.
+
+      TASK: Run a 3x3x2 ablation (burn-in × h_schedule × sampler) at 3 beta
+      points = 54 sampler runs at 10k samples each, comparing empirical
+      magnetization vs analytic Curie-Weiss ground truth.
+
       CONCRETE STEPS:
-      1. Implement `ContinuousSudokuEnergy` in `python/carnot/phase3/continuous_sudoku.py`.
-      2. Ensure it provides differentiable gradients with respect to the latent state.
-      3. Write `results/experiment_2106_problem_mapping.json` with `gradient_available` and `honest_verdict`.
+        0. PRECONDITIONS (check BEFORE any subsequent step, per CLAUDE.md
+           Pre-Launch Preconditions Discipline):
+           a. `python -c "import thrml; print(thrml.__version__)"` succeeds
+              — if not, emit `blocked_thrml_not_installed` and exit.
+           b. `python -c "from python.carnot.samplers.parallel_ising import
+              corrected_magnetization_mean"` succeeds (exp1686 bias correction
+              shipped) — if not, emit `blocked_parallel_ising_correction_missing`
+              and exit.
+           c. `python -c "import scipy.optimize"` succeeds — if not, emit
+              `blocked_scipy_missing`.
+           Record preconditions_checked in artifact.
+        1-7. Per the original exp1698 spec (54-cell ablation; 10k samples
+           per cell; report empirical mean vs ground truth; identify
+           smallest gap-closing intervention or declare fundamental limit).
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.thrml_critical_fluctuation.v1"
+        - experiment: 1709
+        - run_date: ISO-8601 UTC
+        - duration_s: actual wall time (MUST be > 300s for 54 cells * 10k
+          samples; if completes faster, the ablation grid was likely
+          short-circuited — disclose honestly)
+        - random_seed: 171509 (NOT 1709 or 128 — avoid TAUTOLOGY)
+        - reproducibility_checksum: sha256 of (substrate params + ablation
+          grid spec + sampler library versions + git_rev)
+        - preconditions_checked: list of {{resource, available, check_command}}
+        - model_specs: {{n_spins: 128, J: "1/127 all-to-all Curie-Weiss",
+          beta_points: [1.05, 1.20, 1.50], burn_in_grid: [500, 5000, 50000],
+          h_schedule_grid: 3, n_samples_per_cell: 10000, ablation_cells: 54}}
+        - n_samples: 540000
+        - n_samples_justification: "10k per cell × 54 cells. See exp1698
+          spec for full rationale."
+        - analytic_ground_truth_mean: dict beta -> m_star (must match
+          exp1692 values within 0.001: 0.685/0.829/0.929)
+        - ablation_results: list of {{sampler, beta, burn_in, h_schedule,
+          empirical_mean, delta_m}}
+        - smallest_intervention_closing_gap: dict beta -> intervention or null
+        - bimodal_distribution_observed: dict beta -> bool
+        - acceptance_gate_passed: true (measurement task; gate is
+          completion of all 54 cells with reported delta_m)
+        - acceptance_gate_criteria: "54-cell ablation completed; each cell
+          reports empirical mean + delta_m vs ground truth."
+        - methodology_note: "Low-beta empirical_mean near 0.5 is the
+          symmetric-phase behavior, not a fabrication. Record histogram
+          shape to distinguish bimodal-symmetry-breaking-failure from
+          unimodal-disorder."
+        - optimization_direction: "minimize_delta_m_subject_to_ablation_completion"
+        - honest_verdict: MUST start with terminal prefix (`complete:` etc.)
+          per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1710-phase4-alpha-t-adversarial-audit-retry
+    title: "Exp 1710: Phase 4 alpha_t n-dependence adversarial audit (retry — .172 exp1699 SKIPPED)"
+    deliverable: results/experiment_1710_phase4_alpha_t_audit.json
+    max_turns: 100
     agent_type: codex
     model: gpt-5.5
-
-  - id: exp2107-gradient-based-trace-editor
-    title: "Exp 2107: Gradient-Based Continuous Trace Editor"
-    gated_on:
-      - upstream: exp2106-continuous-problem-mapping
-        artifact_field: gradient_available
-        op: ==
-        value: true
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1699-phase4-alpha-t-adversarial-audit
+        verdict: skipped_pretest_failing_in_172
+        addressed_by: "exp1699 (.172) was SKIPPED 3 retries due to transient pretest failure (now resolved). Original scope unchanged and still high-value (falsifies whether Phase 4 alpha_t=0.15054 invariance across n=8/16/32/64 is genuine or a measurement artifact — adversarial-verify now flags this with the new IMPLAUSIBLE_TIGHT_CI rule #8 per the 2026-05-15 update to scripts/adversarial_verify.py)."
+        retire_if_same_verdict: true
+      - experiment_id: exp1693-phase4-active-inference-n64
+        verdict: complete_no_collapse_observed_but_suspicious_invariance
+        addressed_by: "exp1693 reported delta_alpha=0.15054 at n=64 with bootstrap CI [0.15040, 0.15070] — IMPLAUSIBLE_TIGHT_CI per new adversarial-verify rule #8 (21x tighter than sample-variance floor). Random-verifier-injection ablation in this task falsifies whether delta_alpha actually depends on verifier content."
+        retire_if_same_verdict: true
     prompt: |
-      CONTEXT: Kona edits reasoning traces by minimizing energy globally.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/casal.py
-      TASK: Apply the CASAL sampler or standard gradient descent to edit the continuous trace and minimize the `ContinuousSudokuEnergy`.
-      CONCRETE STEPS:
-      1. Initialize a random latent Sudoku state.
-      2. Run CASAL for 1000 steps to minimize constraint energy.
-      3. Project the continuous state back to discrete integers to check validity.
-      4. Write `results/experiment_2107_trace_editor.json` with `final_energy`, `validity_pct`, and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
+      CONTEXT: exp1699 (.172) was the original spec for this task; SKIPPED
+      due to transient pretest failure. Full spec in git: `git show
+      bd40545cc:research-roadmap-next.yaml`. Schema unchanged.
 
-  - id: exp2108-kona-parity-benchmark
-    title: "Exp 2108: Kona-Parity Sudoku Benchmark"
-    gated_on:
-      - upstream: exp2107-gradient-based-trace-editor
-        artifact_field: validity_pct
-        op: '>='
-        value: 0.0
-    prompt: |
-      CONTEXT: Kona claims 96.2% on Sudoku using EBRM. We must benchmark our latent trace editor.
-      EXISTING CODE TO READ FIRST: python/carnot/phase3/continuous_sudoku.py
-      TASK: Scale Exp 2107 to 50 hard Sudoku puzzles.
-      CONCRETE STEPS:
-      1. Run the latent trace generator and CASAL energy minimization on 50 instances.
-      2. Record execution time and success rate.
-      3. Write `results/experiment_2108_kona_parity.json` with `success_rate`, `avg_latency_ms`, and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    max_turns: 50
-    agent_type: claude
+      FALSIFIABLE HYPOTHESIS: If alpha_t genuinely measures verifier-induced
+      free-energy reduction, then random-verifier injection should drop
+      delta_alpha monotonically toward zero. If delta_alpha stays at ~0.15
+      EVEN with all-random verifiers, the Phase 4 measurement is an artifact.
 
-  - id: exp2109-pinet-rescue
-    title: "Exp 2109: PiNet Convex Splitting Layer Rescue"
-    prompt: |
-      CONTEXT: PiNet (Exp 2091) failed due to CLI routing and markup issues. It remains a key structural layer for convex constraints.
-      EXISTING CODE TO READ FIRST: python/carnot/models/pinet_layer.py
-      TASK: Rescue and stabilize the PiNet Douglas-Rachford projection layer.
-      CONCRETE STEPS:
-      1. Fix `python/carnot/models/pinet_layer.py` integration issues.
-      2. Write unit tests confirming projection satisfies convex inequalities.
-      3. Write `results/experiment_2109_pinet_rescue.json` with `projection_success` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    max_turns: 50
-    model: opus
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1693_phase4_n64.json
+        - results/experiment_1681_phase4_scaling.json
+        - python/carnot/phase4/* (read whatever alpha_t implementation exists)
 
-  - id: exp2110-casal-pinet-integration
-    title: "Exp 2110: Integration of PiNet with CASAL"
-    gated_on:
-      - upstream: exp2109-pinet-rescue
-        artifact_field: projection_success
-        op: ==
-        value: true
-    prompt: |
-      CONTEXT: We must guarantee zero-violation safety in continuous sampling.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/casal.py, python/carnot/models/pinet_layer.py
-      TASK: Integrate the PiNet projection layer into the CASAL sampler step to strictly enforce bounds.
-      CONCRETE STEPS:
-      1. Modify `casal_sample` to call `pinet_layer.project` on the state at each primal step.
-      2. Evaluate convergence and constraint violation rates.
-      3. Write `results/experiment_2110_casal_pinet.json` with `violation_rate` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
+      TASK: 4-cell random-verifier-injection ablation at n=32 substrate.
 
-  - id: exp2111-ebft-latent-features
-    title: "Exp 2111: Energy-Based Fine-Tuning (EBFT) with Latent Features"
-    prompt: |
-      CONTEXT: EBFT uses feature matching rather than token-level loss. We will apply this to our latent generator.
-      EXISTING CODE TO READ FIRST: python/carnot/phase3/latent_generator.py
-      TASK: Implement an EBFT contrastive loss for the continuous latent state.
       CONCRETE STEPS:
-      1. Create `python/carnot/training/ebft_loss.py`.
-      2. Implement feature matching divergence between real reasoning traces and model-generated latent traces.
-      3. Write `results/experiment_2111_ebft_latent.json` with `loss_value` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `python -c "from python.carnot.phase4 import alpha_t"` succeeds
+              OR the alpha_t function is locatable via grep — if not, emit
+              `blocked_phase4_alpha_t_implementation_missing` and exit.
+           b. `python -c "import numpy as np; import scipy; print(scipy.__version__)"`
+              succeeds — if not, emit `blocked_scipy_missing`.
+           Record preconditions_checked.
+        1-6. Per the original exp1699 spec. random_fraction grid
+           [0, 1/3, 2/3, 1], 30 seeds each, n=32 substrate, 100 MLD steps,
+           report delta_alpha + bootstrap CI per cell + monotonic_decay_observed
+           + artifact_detected flags.
 
-  - id: exp2112-z1-sdk-dtm-stub
-    title: "Exp 2112: Z1 SDK and DTM Stub Alignment"
-    prompt: |
-      CONTEXT: Extropic Z1 requires a Denoising Thermodynamic Model (DTM) architecture. We must align our THRML simulation stubs to support this.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/z1_drift_compatibility.py
-      TASK: Refactor the THRML Ising/Gibbs wrapper to support continuous DTM signatures required for Z1.
-      CONCRETE STEPS:
-      1. Create `python/carnot/samplers/dtm_stub.py`.
-      2. Add standard `sample_thermodynamic` interface.
-      3. Write `results/experiment_2112_z1_dtm.json` with `interface_aligned` and `honest_verdict`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    agent_type: claude
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.phase4_alpha_t_audit.v1"
+        - experiment: 1710
+        - run_date: ISO-8601 UTC
+        - duration_s: must be > 60s (4 cells * 30 seeds at n=32 in real
+          measurement)
+        - random_seed: 171510 (NOT 1710 or 32)
+        - reproducibility_checksum: sha256 of (verifier ensemble fingerprint
+          + random_verifier_seed + alpha_t implementation git_rev)
+        - preconditions_checked: list
+        - model_specs: {{n_spins: 32, ensemble_k_total: 6,
+          random_fraction_grid: [0, 0.333, 0.667, 1.0], mld_steps: 100,
+          n_seeds: 30, n_cells: 4}}
+        - n_samples: 12000
+        - n_samples_justification: "30 seeds × 100 MLD × 4 cells. n_seeds=30
+          chosen for CLT bootstrap CI validity. n=32 chosen to eliminate
+          substrate-size confound from prior n=8/16/32/64 measurements."
+        - random_fraction_grid_results: list of {{random_fraction, inf_t_alpha_k6,
+          inf_t_alpha_k1, delta_alpha, delta_alpha_bootstrap_ci_95}}
+        - monotonic_decay_observed: bool
+        - artifact_detected: bool
+        - acceptance_gate_passed: true (falsification task; both outcomes
+          are findings — confirmation of n-dependence OR artifact detection)
+        - acceptance_gate_criteria: "4-cell ablation reported with bootstrap
+          CIs; monotonicity and artifact-detection flags set per actual data."
+        - methodology_note: "If delta_alpha stays at ~0.15 across all four
+          cells, this is a structural finding. The new IMPLAUSIBLE_TIGHT_CI
+          adversarial-verify rule will flag any CI tighter than sigma/sqrt(N)
+          — disclose intentional invariance honestly in this field."
+        - optimization_direction: "neither — falsification audit"
+        - honest_verdict: MUST start with terminal prefix.
 
-  - id: exp2113-z1-hardware-accounting
-    title: "Exp 2113: Z1 Hardware P-Bit Accounting"
-    gated_on:
-      - upstream: exp2112-z1-sdk-dtm-stub
-        artifact_field: interface_aligned
-        op: ==
-        value: true
-    prompt: |
-      CONTEXT: We need to know if our latent models fit on the Z1 architecture.
-      EXISTING CODE TO READ FIRST: python/carnot/samplers/dtm_stub.py
-      TASK: Perform no-synthesis hardware resource accounting (P-bit logic limits) for our continuous Sudoku energy function.
-      CONCRETE STEPS:
-      1. Calculate estimated BOP/RM/NABS metrics for a single thermodynamic step.
-      2. Write `results/experiment_2113_z1_accounting.json` with `estimated_pbits_needed`, `hardware_execution_claim=false`, and `honest_verdict`.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    max_turns: 30
-    agent_type: claude
 
-  - id: exp2114-retro
-    title: "Exp 2114: Milestone .174 Retrospective"
+  - id: exp1711-pypi-publish-retry-with-preconditions
+    title: "Exp 1711: PyPI publish retry (Phase 1 ship — .173 exp1704 SKIPPED)"
+    deliverable: results/experiment_1711_pypi_publish.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1704-phase1-pypi-publish-with-preconditions
+        verdict: skipped_pretest_failing_in_173
+        addressed_by: "exp1704 (.173) was SKIPPED due to transient pretest failure. Spec unchanged with full PRECONDITIONS step 0 per CLAUDE.md Pre-Launch Preconditions Discipline. Pretest now passes (verified 02:42Z 2026-05-15)."
+        retire_if_same_verdict: true
+      - experiment_id: exp1685-pypi-publish-actual
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp1685 (.170) doomed-rerun-blocked. exp1704 (.173) added the prior_failures chain. This retry continues the chain."
+        retire_if_same_verdict: true
+      - experiment_id: exp1683-pypi-publish-dry-run
+        verdict: doomed_rerun_blocked_failure_ledger_match
+        addressed_by: "Chain: exp2103 → exp1683 → exp1685 → exp1704 → exp1711. retire_if_same_verdict=true on this 5th attempt prevents an indefinite loop."
+        retire_if_same_verdict: true
     prompt: |
-      CONTEXT: We must analyze the successes and failures of Milestone .174.
-      EXISTING CODE TO READ FIRST: ops/status.md, results/
-      TASK: Write a retrospective summarizing Continuous Latent Trace Editing, Z1 preparations, and verification routing.
+      CONTEXT: exp1704 (.173) was the original PyPI publish task with
+      explicit preconditions and prior_failures chain; SKIPPED due to
+      transient pretest failure. Full spec in git: `git show
+      6880e1be1:research-roadmap-next.yaml`. Pretest now passes.
+
+      FALSIFIABLE HYPOTHESIS: With (a) explicit PyPI credentials precondition,
+      (b) TestPyPI fallback, (c) twine upload, carnot-ebm package can be
+      either uploaded to PyPI (success path) or honestly reported as blocked
+      (failure path). Fabrication is not a valid outcome.
+
+      EXISTING CODE TO READ FIRST:
+        - pyproject.toml (verify name="carnot-ebm")
+        - results/experiment_1704_pypi_publish.json (if exists)
+        - scripts/publish_pypi.py if exists
+
+      TASK: Execute PyPI publish via twine OR emit blocked verdict.
+
       CONCRETE STEPS:
-      1. Collate metrics from experiments 2101-2113.
-      2. Assess whether Kona-parity was achieved.
-      3. Write `results/experiment_2114_retro.json` with `highest_leverage_actions`, `estimated_time_savings_pct`, `meta_reflection`, and `honest_verdict`.
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `pyproject.toml` has `name = "carnot-ebm"` — else blocked.
+           b. `python -m build --version` succeeds — else blocked.
+           c. `twine --version` succeeds — else blocked.
+           d. PyPI or TestPyPI credentials via env, keyring, or .pypirc —
+              else `blocked_pypi_credentials_unavailable`.
+           Record preconditions_checked.
+        1-6. Per the original exp1704 spec: build, twine check, upload,
+           verify install from fresh subprocess.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.pypi_publish.v2"
+        - experiment: 1711
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s for real upload
+        - random_seed: 171511
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{package_name: "carnot-ebm", version, publish_target,
+          wheel_filename, sdist_filename, wheel_sha256, sdist_sha256}}
+        - n_samples: 1
+        - n_samples_justification: "Ship task."
+        - pypi_url, external_install_verified
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "Real upload + verified install."
+        - methodology_note: "Per CLAUDE.md preconditions discipline, missing
+          credentials → blocked verdict, NOT fabrication."
+        - optimization_direction: "neither — ship task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push to git. Do NOT modify
+      scripts/research_conductor.py.
+
+  - id: exp1712-findings-audit-pass-174
+    title: "Exp 1712: .174 + .172/.173 SKIP recovery — adversarial-verify findings audit"
+    deliverable: results/experiment_1712_findings_audit_174.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures: []
+    prompt: |
+      CONTEXT: .172 and .173 both produced ZERO scientific artifacts (all
+      tasks SKIPPED due to transient pretest failure). .174 is the
+      planner-drafted 14-task milestone running now (exp2101-2114). This
+      audit pass scans .174's artifacts when they land + flags the .172/
+      .173 SKIP recovery in known-issues for future planner attention.
+
+      FALSIFIABLE HYPOTHESIS: The .174 artifact set (when complete) will
+      include at least 1 IMPLAUSIBLE_TIGHT_CI or DURATION_TOO_SHORT flag
+      from the new adversarial-verify rule #8 shipped 2026-05-15, given
+      the 14-task breadth and the project's ~10-25% historical flag rate.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py (the 8-rule linter; rule #8
+          IMPLAUSIBLE_TIGHT_CI is the newest)
+        - results/experiment_21*.json (.174 artifacts as they land)
+
+      TASK: Audit + corrigenda pass on .174 artifacts.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: scripts/adversarial_verify.py is importable.
+        1. Run `python3 scripts/adversarial_verify.py --milestone-range
+           2101 2114`.
+        2. For each flag, classify as REAL_BUG / FALSE_POSITIVE /
+           NEEDS_REVISION and append corrigendum field to artifact.
+        3. Also produce a synthesis of the .172/.173 SKIP incident: which
+           originally-scoped tasks got recovered via .175 (this milestone)
+           vs which got abandoned in the planner's .174 carry-forward miss.
+        4. Update ops/changelog.md with the SKIP-recovery audit log entry.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.findings_audit_corrigenda.v2"
+        - experiment: 1712
+        - run_date: ISO-8601 UTC
+        - duration_s: actual
+        - random_seed: 171512
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{audit_target_milestones: ["2026.05.172",
+          "2026.05.173", "2026.05.174"], adversarial_verify_version: str}}
+        - n_samples: int (count of audited artifacts)
+        - n_samples_justification: "Audit task; n is the artifact count."
+        - audit_outcomes: dict experiment_id -> {{classification, rationale}}
+        - corrigenda_added: list
+        - skip_recovery_summary: dict {{recovered_in_175: [...],
+          missed_in_174_carry_forward: [...]}}
+        - acceptance_gate_passed: bool (all flagged classified + summary
+          written)
+        - acceptance_gate_criteria: "All .174 flagged artifacts classified;
+          SKIP recovery synthesis written."
+        - methodology_note: "Audit task; classifies honestly."
+        - optimization_direction: "neither — audit task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
+      or scripts/adversarial_verify.py (propose changes only).
+
+  - id: exp1713-milestone-175-retrospective
+    title: "Exp 1713: Milestone .175 retrospective"
+    deliverable: results/operational_retro_2026_05_175.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
+    prompt: |
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8. This is the SKIP-recovery milestone
+      so the retro should explicitly track which carry-forwards landed
+      vs which remained SKIPPED.
+
+      TASK: Generate the .175 operational retrospective.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.175..HEAD returns a non-empty commit range.
+        1. Tabulate .175 experiments completed (carry-forward landing rate).
+        2. Compare .172/.173 SKIP roster vs .175 recoveries: report
+           recovery_rate = (recovered_tasks) / (skipped_tasks).
+        3. Identify operational improvements for .176.
+        4. Update ops/changelog.md + ops/status.md.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.175"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_skip_recovery"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - skip_recovery_rate: float (.172/.173 SKIPs recovered / total SKIPs)
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-    max_turns: 50
-    agent_type: gemini
