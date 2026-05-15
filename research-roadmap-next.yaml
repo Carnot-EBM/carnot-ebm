@@ -102,9 +102,9 @@ tasks:
           paper-v6 §6 edit content + research-references diff +
           known-issues edit)
         - preconditions_checked: list
-        - model_specs: {source_artifact: "exp1709",
+        - model_specs: {{source_artifact: "exp1709",
           files_edited: ["paper-v6 §6", "research-references.md",
-          "ops/known-issues.md"], word_count_added: int}
+          "ops/known-issues.md"], word_count_added: int}}
         - n_samples: 1 (codification task)
         - n_samples_justification: "Ship/codification task; n=1 codification artifact."
         - paper_v6_section_6_word_count_added: int
@@ -203,16 +203,16 @@ tasks:
         - reproducibility_checksum: sha256 of (verifier ensemble + random
           seed + alpha_t implementation git_rev)
         - preconditions_checked: list
-        - model_specs: {n_spins: 32, ensemble_k_total: 6,
+        - model_specs: {{n_spins: 32, ensemble_k_total: 6,
           random_fraction_grid: [0, 0.333, 0.667, 1.0], mld_steps: 100,
-          n_seeds: 30, n_cells: 4}
+          n_seeds: 30, n_cells: 4}}
         - n_samples: 12000
         - n_samples_justification: "30 seeds × 100 MLD × 4 cells. Bootstrap
           CI on delta_alpha at N=30 has natural width ~0.18/sqrt(30)~0.03
           on metric scale; sub-0.001 CIs trigger IMPLAUSIBLE_TIGHT_CI."
-        - random_fraction_grid_results: list of {random_fraction,
+        - random_fraction_grid_results: list of {{random_fraction,
           inf_t_alpha_k6, inf_t_alpha_k1, delta_alpha,
-          delta_alpha_bootstrap_ci_95}
+          delta_alpha_bootstrap_ci_95}}
         - monotonic_decay_observed: bool
         - artifact_detected: bool
         - acceptance_gate_passed: true (falsification task — both outcomes
@@ -291,8 +291,8 @@ tasks:
         - reproducibility_checksum: sha256 of (corpus hash + probe weights
           from exp1694 + sklearn version)
         - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
-          probe_weights_from: "exp1694", n_eval: 50, n_production: 50}
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          probe_weights_from: "exp1694", n_eval: 50, n_production: 50}}
         - n_samples: 100
         - n_samples_justification: "100 examples gives Wilson 95% CI of
           width ~0.20 per half; delta_tpr bootstrap CI width ~0.28 —
@@ -369,12 +369,12 @@ tasks:
         - random_seed: 171617
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestones: ["2026.05.174",
-          "2026.05.175"], adversarial_verify_version: git_rev}
+        - model_specs: {{audit_target_milestones: ["2026.05.174",
+          "2026.05.175"], adversarial_verify_version: git_rev}}
         - n_samples: int (count of audited artifacts)
         - n_samples_justification: "Audit task; n is artifact count."
-        - audit_outcomes: dict experiment_id -> {classification, rationale,
-          follow_up_action}
+        - audit_outcomes: dict experiment_id -> {{classification, rationale,
+          follow_up_action}}
         - corrigenda_added: list of artifact paths amended
         - acceptance_gate_passed: bool (all flagged classified AND no
           adversarial_verify.py shipped without operator approval)
