@@ -1,37 +1,39 @@
-# Research Roadmap vNEXT (Milestone 2026.05.179)
-## Phase 4 Bijection Integration, NLA Integrity Audit, and CEM Substrate
+# Research Roadmap: Milestone 2026.05.180
 
-### 1. Previous Milestone Recap (.178)
-Milestone .178 successfully validated the Phase 4 alpha_t replacement via maximum-caliber and finalized the NLA 16th verifier Task 4. The codification of the bijection-invariance findings (exp1719) hit a locatable error and is carried forward.
+## Theme: Inference-Time Energy Optimization, Symbolic Verification, and Self-Distillation
 
-### 2. Strategic Objectives for .179
-- **Integrate the LM-EBM Bijection:** Connect Carnot's verifier-as-free-energy theory to the formal autoregressive-EBM bijection discovered in recent arXiv literature (arXiv:2512.15605v3).
-- **NLA Verifier Integrity:** Perform descriptive collision audits to prevent auto-interpretability inflation, and reweight the expanded k=16 ensemble to avoid behavioral entanglement.
-- **Compositional Energy Minimization (CEM):** Build the CEM substrate for Phase 4, allowing complex constraint solving by summing smaller independent energy landscapes.
-- **Continuous Self-Learning Feedback:** Route the NLA white-box signals into the continuous self-learning loop (FR-11) as a high-quality feedback mechanism.
-- **Mandated Hardware & SOTA Inference:** Benchmark the Qwen3.6-35B-A3B and Gemma-4 31B models on the full k=16 ensemble via DualGPURunner, and calculate KANELÉ LUT-based hardware accounting for CEM.
+**Status:** PLANNED
+**Milestone:** 2026.05.180
 
-### 3. Phases
-**Phase 1: Carry-Forward & Theoretical Grounding**
-- Codify the bijection-invariance finding into paper-v6.
-- Empirical δ Calculation for Verify-Repair Convergence.
-- Theoretical LM-EBM Bijection Re-derivation.
+### 1. Executive Summary
+Building on the successful Phase 4 Bijection Integration and CEM Substrate in milestone .179, this milestone closes the three largest gaps to our PRD vision:
+1. **Inference-Time Optimization:** Standard autoregressive models fail on hard constraints. We will adapt Energy-Based Transformer (EBT) techniques (arXiv:2507.02092) and TTT-Discover (arXiv:2601.16175) to perform gradient-based energy minimization at test time.
+2. **Symbolic Verification Integration:** Inspired by Logical Intelligence's Kona/Aleph architecture, we will prototype a bridge to Lean 4 for formal symbolic verification of extracted constraints, moving beyond pure Ising/KAN checks for mathematical domains.
+3. **Continuous Self-Learning Stability:** Utilizing recent findings on EBMs for continual learning (arXiv:2601.19897) and EB-SLE, we will implement an FR-11 self-distillation loop that prevents catastrophic forgetting.
 
-**Phase 2: NLA Integrity & Continuous Learning**
-- NLA-Class Verifier Descriptive Collision Audit.
-- Continuous Self-Learning Loop with NLA Signal Integration.
-- Behavioral Entanglement Reweighting for the k=16 Ensemble.
+### 2. Architecture Impact
+- **Test-Time Training (TTT) Router:** A new pipeline stage that dynamically allocates compute (optimization steps) based on the initial energy of the LLM output.
+- **Lean 4 Verifier Backend:** A new `VerifierBackend` complementing `IsingEBM` and `KAN` for strict formal logic constraints.
+- **Self-Distillation Memory:** Updates the FR-11 continuous self-learning loop to maintain an energy-based memory of past constraints to prevent forgetting.
 
-**Phase 3: CEM Substrate & Verification**
-- CEM Substrate Prototype.
-- Scale CEM to n=64 with KANELÉ Hardware Accounting.
-- Formal Verification of NLA Abstractions via PWA/MILP.
+### 3. Phases and Experiments
 
-**Phase 4: SOTA Dual-GPU Parity & Retrospective**
-- SOTA GGUF Parity Benchmark with k=16 Ensemble.
-- Milestone .179 Retrospective.
+**Phase 0: Foundation & Archival**
+- exp1735: Archive .179, setup .180 metrics and tracking.
 
-### 4. Hardware Requirements
-- Local Dual RTX 3090s for the SOTA GGUF Parity (DualGPURunner mandatory).
-- CPU-only for CEM prototype and theoretical formalizations.
-- KANELÉ hardware accounting runs entirely in CPU simulation/heuristic scripts (no Vivado synthesis required).
+**Phase 1: Inference-Time Energy Optimization (EBT & TTT)**
+- exp1736: EBT-style Gradient Refinement Loop Prototype
+- exp1737: Entropic Utility Search Prototype (TTT-Discover)
+- exp1738: SOTA EBT/TTT Evaluation on GSM8K
+
+**Phase 2: Symbolic Verification Bridge (Kona/Aleph inspired)**
+- exp1739: Lean 4 Verifier Backend Prototype
+- exp1740: Symbolic Verification on Expert Sudoku
+
+**Phase 3: Continuous Self-Learning & Self-Distillation**
+- exp1741: FR-11 Live Policy Promotion with Self-Distillation (Continuous Self-Learning)
+- exp1742: EB-SLE Reward Hacking Prevention Prototype
+
+**Phase 4: Hardware & Retrospective**
+- exp1743: TSU/FPGA Hardware Accounting for Lean 4 pre-processing
+- exp1744: Milestone .180 Retrospective
