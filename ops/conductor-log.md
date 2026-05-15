@@ -3332,3 +3332,5 @@ IMPORTANT:
 | 2026-05-15 10:36 UTC | Exp 1738: SOTA EBT/TTT Evaluation on Hard Subset | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1736-ebt-gradient-refinement) |
 | 2026-05-15 10:41 UTC | Exp 1739: Lean 4 Verifier Backend Prototype | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-15 10:43 UTC | Exp 1738: SOTA EBT/TTT Evaluation on Hard Subset | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1736-ebt-gradient-refinement) |
+| 2026-05-15 11:04 UTC | Exp 1740: Symbolic Verification on Expert Sudoku ( | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-15 11:06 UTC | Exp 1738: SOTA EBT/TTT Evaluation on Hard Subset | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1736-ebt-gradient-refinement) |
