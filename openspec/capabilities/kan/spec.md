@@ -1384,3 +1384,29 @@ Given a mock KAN tier or LUT,
 When the benchmark logic runs,
 Then it outputs BOPs and NABS, and `results/experiment_1782_kan_benchmark.json` is written with `hardware_execution_claim: false`.
 
+## REQ-KAN-1803: KAEM Energy Function and Inverse Transform Sampling
+
+The KAN capability MUST implement a Kolmogorov-Arnold Energy Model (KAEM) structure
+using 1D B-splines instead of dense layers for its energy function. It MUST also
+implement an inverse transform sampling method allowed by the univariate splines
+to bypass MCMC.
+
+**Rationale:**
+    Replacing MLP-based energy functions with KAEM univariate splines (KART) allows
+    for exact inference and interpretability without relying on MCMC sampling.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kaem.py` exposes the `KAEMEnergy` model.
+    - The model uses 1D B-splines for energy evaluation.
+    - The model provides an `inverse_transform_sample` method that bypasses MCMC.
+    - Tests verify the energy function and inverse transform sampling, referencing `REQ-KAN-1803` and `SCENARIO-KAN-1803`.
+    - `results/experiment_1803_kaem_proto.json` is generated upon success.
+
+### SCENARIO-KAN-1803: KAEM exact inference via inverse transform sampling
+
+Given an initialized KAEM model using 1D B-splines,
+When inverse transform sampling is invoked to draw samples,
+Then it generates samples analytically without MCMC, tests pass with 100% coverage,
+and `results/experiment_1803_kaem_proto.json` is written.
+
+
