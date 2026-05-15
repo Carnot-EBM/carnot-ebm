@@ -3301,3 +3301,4 @@ IMPORTANT:
 | 2026-05-15 07:23 UTC | Exp 1719: Codify exp1715 bijection-invariance find | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1719_bijecti |
 | 2026-05-15 07:25 UTC | Exp 1719: Codify exp1715 bijection-invariance find | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 07:27 UTC | Exp 1719: Codify exp1715 bijection-invariance find | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 07:37 UTC | Exp 1720: NLA 16th verifier Task 4 (final) — ensem | OK | 145 passed, 1 warning in 5.89s |
