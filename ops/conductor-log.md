@@ -3428,3 +3428,4 @@ IMPORTANT:
 | 2026-05-15 16:29 UTC | Exp 1765: Milestone .184 retrospective | OK | Deliverable already exists in repo |
 | 2026-05-15 16:29 UTC | Milestone 2026.05.185 activated | OK | 13 tasks queued |
 | 2026-05-15 16:31 UTC | Exp 1766: Token-Level Energy Telemetry for Agentic | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 16:33 UTC | Exp 1766: Token-Level Energy Telemetry for Agentic | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
