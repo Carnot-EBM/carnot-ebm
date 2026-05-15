@@ -48,3 +48,9 @@ to K=32 centroids preserves retrieval AUROC > 0.75 on 50 held-out queries.
 | REQ-STORE-010 | IMPLEMENTED | python/carnot/stores/embedding_constraint_store.py |
 | REQ-STORE-011 | IMPLEMENTED | python/carnot/stores/embedding_constraint_store.py |
 | REQ-STORE-020 | IMPLEMENTED | Exp 865 |
+
+### REQ-CONSTRAIN-001 — Natural language constraint compilation
+The system MUST be able to compile natural language rules into executable Python validators using an LLM.
+
+### SCENARIO-CONSTRAIN-001 — Compile and validate
+Given a natural language rule, the compiler returns a callable Python validator that correctly evaluates boolean assignments.
