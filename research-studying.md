@@ -5,8 +5,82 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-15 (4 sweeps in 24h)
-**Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound; **NEW 2026-05-15: AR-LM-as-EBM bijection theory (arXiv:2512.15605) directly motivates Phase 3 substrate framing — TOP HIT this sweep**.
+**Updated:** 2026-05-15 (5 sweeps in 24h)
+**Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier; verifier-ensemble null-space + 4/δ convergence bound; AR-LM-as-EBM bijection theory (arXiv:2512.15605); **NEW 2026-05-15T04:45Z: exp1709 (.175) confirmed FUNDAMENTAL near-critical sampler limit at beta=1.05 — paper-v6 §6 codification queued as .176 exp1714**.
+
+## Sweep 2026-05-15T04:45Z (Claude outer-loop, hour-mod-4 rotation, clusters 3/0/1)
+
+**Queries fired (cluster 3 active-inference skipped last fire — picked up this fire):**
+- arxiv abs:"active inference" OR "free energy" AND "LLM" → 3 results
+- arxiv abs:"verifier ensemble" OR "null space attack" OR "specification gaming" → 3 results (all 3 already in queue from prior sweeps)
+- arxiv abs:"energy based model" AND ("reasoning" OR "verification" OR "LLM") → 5 results (4 already in queue; 1 new from 2026-05-14)
+- hn.algolia "verifier energy LLM" → 0 hits
+
+**Result: 11 candidates scored; 2 NEW promotions (both Score 192); 9 re-hits acknowledged. No score>400 this fire.**
+
+### NEW Rank MEDIUM-HIGH: Token-Level Energy for Agentic RL (arXiv:2605.14558v1, May 14 2026 — yesterday)
+- **Score:** 4×4×3×4 = **192**
+- **Authors:** Langzhou He, Junyou Zhu, Yue Zhou, Zhengyao Gu, Junhua Liu,
+  Wei-Chieh Huang, Henry Peng Zou, David Wipf, Philip S. Yu, Qitian Wu
+- **Why it matters:** Token-level energy-based credit assignment in agentic
+  RL reveals that training signals concentrate on action tokens despite
+  their scarcity. Proposes the **ActFocus** reweighting mechanism, reporting
+  a 65.2pp gain over PPO with no computational overhead. Directly relevant
+  to Carnot's FR-11 (verifier-as-reward RL) work which has been an open
+  retro question across .96-.150+. The token-level energy framing is
+  compatible with Carnot's verifier-output-as-energy interpretation; if the
+  ActFocus reweighting transfers to verifier-driven RL, it could be a
+  near-term lift.
+- **Caveat:** the 65.2pp PPO gain is a SUBSTANTIAL claim; should be treated
+  as adversarial-verify-worthy if Carnot replicates. Replication budget:
+  one Carnot agentic-RL experiment with + without ActFocus reweighting on
+  the same FR-11-style verifier signal.
+- **Action:** queue for .177+ as a candidate FR-11 follow-up experiment.
+
+### NEW Rank MEDIUM-HIGH: IIT ↔ FEP Maximum-Caliber Bridge (arXiv:2605.12536v1, May 3 2026)
+- **Score:** 4×4×3×4 = **192**
+- **Authors:** Alexander Kearney
+- **Why it matters:** Establishes mathematical connection between the Free
+  Energy Principle (Phase 4 substrate) and Integrated Information Theory
+  through maximum-caliber variational principles. Demonstrates that
+  information emerges from prediction error under predictive coding.
+  Directly relevant to Carnot's Phase 4 active-inference framing — the
+  alpha_t metric needs theoretical grounding (the exp1693 suspicious
+  invariance + the AR-LM↔EBM bijection paper suggest alpha_t may be
+  bijection-invariant by construction). This paper's maximum-caliber
+  framing may provide an alternative derivation of alpha_t that is NOT
+  bijection-invariant — worth investigating before .176 exp1715 retries
+  the alpha_t audit.
+- **Action:** cite in paper-v6 §3 (Phase 4 theoretical framing) alongside
+  arXiv:2512.15605. If exp1715 confirms bijection-invariance artifact,
+  the maximum-caliber derivation in this paper is the replacement candidate.
+
+### Re-hits of papers already in queue (no action):
+
+- arXiv:2604.07650 (Behavioral Entanglement) — promoted .144
+- arXiv:2605.02269 (Spec Gaming in Reasoning Models) — promoted 04:42Z sweep
+- arXiv:2604.12500 (Safety Training under On-Policy RL) — Score 36, skipped twice
+- arXiv:2512.15605v3 (AR-LMs are Secretly EBMs) — promoted 00:42Z sweep, Score 500
+- arXiv:2512.18730v1 (Theoretical Lens RL-Tuned LLMs) — promoted, Score 192
+- arXiv:2601.21064v3 (Textual Equilibrium Propagation) — noted, Score 144
+- arXiv:2602.18671v4 (Spilled Energy) — already integrated as `verify_spilled_energy`
+
+### Sweep takeaways
+
+1. **No score>400 this fire** — the queue is converging on the AR-LM↔EBM
+   bijection (2512.15605) as the top theoretical anchor. Two new Score-192
+   candidates (token-level energy for agentic RL; IIT↔FEP bridge) are
+   complementary: ActFocus is a near-term operational lift; IIT↔FEP is
+   theoretical framing for Phase 4 alpha_t derivation.
+2. **Active inference cluster has thinned out** — only 3 results in the
+   most-recent listing, of which 2 are weakly LLM-related. The cluster
+   may need a broader query (e.g., add "predictive coding", "perception-
+   action loop", "world model").
+3. **exp1709 finding from .175 ALREADY beats the literature on its
+   specific question** — analytic Curie-Weiss ground-truth comparison at
+   n=128 with 10k samples isn't matched in any of the sampling papers
+   surveyed this fire. The .176 exp1714 codification has at least one
+   independently-novel contribution.
 
 ## Sweep 2026-05-15T00:42Z (Claude outer-loop, hour-mod-4 rotation, clusters 0/1/2)
 
