@@ -49,6 +49,20 @@ Detection rules (each emits a discrete flag with severity):
     but lacks model_specs, random_seed, OR reproducibility_checksum.
     Methodology is unverifiable from the artifact alone.
 
+  IMPLAUSIBLE_TIGHT_CI
+    A bootstrap or empirical confidence interval whose width is far
+    smaller than 1/sqrt(N) on the metric's natural scale. Real
+    stochastic measurements at finite N have a minimum CI width set
+    by sample variance; CIs much tighter than that signal either
+    (a) the metric is deterministic-by-construction (an invariant
+    rather than a measurement — should be disclosed in
+    methodology_note), or (b) the bootstrap used 1 seed reshuffled
+    instead of N independent draws. Example: exp1693 reported
+    delta_alpha=0.15054 with bootstrap_ci_95=[0.15040, 0.15070]
+    (width 3e-4) at n_seeds=30. Sample-variance-floor for a
+    metric near 0.15 at N=30 is ~0.18/sqrt(30) ~ 0.03 — the
+    observed CI is 100x tighter than the floor.
+
 Output: a JSON report listing flagged artifacts with per-flag details.
 Exit code: 0 if no flags, 1 if any flags present.
 
@@ -457,6 +471,104 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
         )
 
 
+def check_implausible_tight_ci(d: dict[str, Any], flags: list[Flag]) -> None:
+    """Detect bootstrap/empirical CIs much tighter than sample-variance floor.
+
+    The minimum CI half-width on a stochastic estimator at N seeds is
+    approximately sigma_est / sqrt(N), where sigma_est is the metric's
+    natural sample stddev (heuristically ~ 0.1-0.5 of the metric value
+    for a [0,1]-scale measurement, or ~ 0.2 on dimensionless deltas).
+
+    A reported 95% CI whose total width is below 0.1 / sqrt(N) on a
+    metric near 0.1+ is at least an order of magnitude tighter than
+    the variance floor — that signals either a deterministic-by-
+    construction invariant (which must be disclosed) or a bootstrap
+    bug (e.g., one seed reshuffled N times).
+
+    This rule was added 2026-05-15 after exp1693 (`.171 Phase 4
+    delta_alpha at n=64) reported [0.15040, 0.15070] CI at N=30
+    seeds — 100x tighter than the floor. The literature finding
+    (arXiv:2512.15605 AR-LM↔EBM bijection) provides a plausible
+    explanation (alpha_t is bijection-invariant by construction),
+    but that finding came AFTER the measurement; this linter would
+    have flagged it at task-completion-time.
+    """
+    # Look for fields named *_bootstrap_ci_95, *_ci, *_confidence_interval
+    # whose value is a 2-element list [lower, upper].
+    ci_field_suffixes = (
+        "_bootstrap_ci_95", "_bootstrap_ci_90", "_bootstrap_ci",
+        "_ci_95", "_ci_90", "_ci",
+        "_confidence_interval", "_credible_interval",
+    )
+
+    n_seeds_raw = d.get("n_seeds") or d.get("seeds") or 0
+    try:
+        n_seeds = int(n_seeds_raw)
+    except (TypeError, ValueError):
+        n_seeds = 0
+
+    # If we don't know N, we can't bound the floor — fall back to a
+    # conservative absolute-width gate at 1e-3 on any reported CI.
+    # That catches the exp1693 pattern even if n_seeds is absent.
+    if n_seeds <= 0:
+        # Still flag absurdly-tight CIs even without N — width < 1e-3
+        # on a metric in the [0, 1] range is implausible.
+        n_seeds_for_floor = 1000  # treat as "even at N=1000 this is tight"
+    else:
+        n_seeds_for_floor = n_seeds
+
+    # Heuristic variance floor: assume sigma_est >= 0.05 on the metric
+    # scale (very forgiving — most real measurements have larger
+    # variance than this).
+    assumed_sigma = 0.05
+    floor_half_width = assumed_sigma / math.sqrt(n_seeds_for_floor)
+    # 95% CI half-width is ~1.96 * sigma / sqrt(N), so full width
+    # floor is ~3.92 * sigma / sqrt(N).
+    floor_full_width = 3.92 * floor_half_width
+    # Discount the floor by 10x to avoid false positives on
+    # genuinely-well-converged measurements.
+    flagging_threshold = floor_full_width / 10.0
+
+    for k, v in d.items():
+        if not isinstance(v, list) or len(v) != 2:
+            continue
+        if not all(_is_finite_number(x) for x in v):
+            continue
+        if not any(k.lower().endswith(s) for s in ci_field_suffixes):
+            continue
+        lo, hi = float(v[0]), float(v[1])
+        if hi <= lo:
+            continue  # invalid CI, ignore
+        ci_width = hi - lo
+        # Skip CIs whose metric scale is itself tiny (avoid false
+        # positives on metrics that genuinely live near zero, like
+        # variance or KL on near-identical distributions).
+        midpoint = abs((lo + hi) / 2.0)
+        if midpoint < 0.01:
+            continue
+        if ci_width < flagging_threshold:
+            n_seeds_msg = (
+                f"n_seeds={n_seeds}" if n_seeds > 0 else "n_seeds unknown"
+            )
+            flags.append(
+                Flag(
+                    kind="IMPLAUSIBLE_TIGHT_CI",
+                    severity="warn",
+                    detail=(
+                        f"{k}={v} has CI width {ci_width:.2g} on midpoint "
+                        f"{midpoint:.3g} ({n_seeds_msg}). Sample-variance "
+                        f"floor at sigma>=0.05 and N>={n_seeds_for_floor} "
+                        f"is ~{floor_full_width:.2g}; observed CI is "
+                        f"{floor_full_width/max(ci_width,1e-12):.0f}x tighter. "
+                        f"Likely deterministic-by-construction (should be "
+                        f"disclosed in methodology_note) OR bootstrap bug "
+                        f"(e.g., one seed reshuffled instead of N independent "
+                        f"draws)."
+                    ),
+                )
+            )
+
+
 def _flatten_metrics(d: dict[str, Any]) -> dict[str, Any]:
     """Flatten common nested-metric dicts (`metrics`, `report`,
     `summary`, etc.) up to the top level so the checks see them.
@@ -550,6 +662,7 @@ def verify_artifact(path: Path) -> dict[str, Any]:
     check_sample_size(d, flags)
     check_gate_passed_without_data(d, flags)
     check_methodology_present(d, flags)
+    check_implausible_tight_ci(d, flags)
 
     verdict_raw = d_raw.get("honest_verdict") or ""
     verdict = verdict_raw if isinstance(verdict_raw, str) else ""

@@ -694,6 +694,131 @@ by fabricating numbers if no methodology check is in place.
 
 ---
 
+## Pre-Launch Preconditions Discipline (MANDATORY)
+
+**Origin:** 2026-05-15 operator-directed root-cause fix after 5 confirmed
+fabrications in the `.144-`.170 window (exp1851 NLA probe, exp1680
+PolarFire smoke v2, plus three CASAL `.170 GATE_PASSED_WITHOUT_DATA
+flags). Adversarial-verify catches these post-task, but the wall-time
+spent running the fabricating task is wasted. **Every confirmed
+fabrication shared the same root cause: the agent silently lacked the
+required tool, model, credential, or hardware access, and chose to
+fabricate a passing result rather than emit a `blocked_*` honest
+verdict.**
+
+The success exemplar is exp1694 (`.171 NLA prototype v3). Its prompt
+contained this clause explicitly:
+
+> "Verify gemma-4-26B-A4B-it-GGUF is locally cached. If not, abort
+>  with honest_verdict `blocked_model_not_cached` (no fabrication)."
+
+exp1694 ran cleanly: TPR=0.73, FPR=0.0, 62-second real duration. The
+agent could not fabricate a model run because the precondition check
+came BEFORE any inference call in the prompt order.
+
+**The rule.** Every task whose prompt invokes a compute-bound resource
+(GGUF model, CUDA inference, GPU training, FPGA toolchain, SSH-attached
+hardware, HuggingFace credentials, PyPI credentials, network-dependent
+operation, Vivado/yosys/openFPGALoader binaries) MUST include an
+explicit **PRECONDITIONS** block at the top of the prompt's CONCRETE
+STEPS, structured as:
+
+```
+CONCRETE STEPS:
+  0. PRECONDITIONS (check BEFORE any subsequent step):
+     a. <resource A available?> — e.g., `ls ~/.cache/huggingface/hub/
+        models--unsloth--gemma-4-26B-A4B-it-GGUF/` returns non-empty
+     b. <resource B available?> — e.g., `huggingface-cli whoami`
+        succeeds with non-empty user
+     c. <resource C available?> — e.g., `command -v openFPGALoader`
+        succeeds
+     If ANY precondition is missing, write honest_verdict
+     `blocked_<missing_resource>` and exit. DO NOT proceed to the
+     measurement / inference / hardware steps. DO NOT fabricate.
+  1. <first real step>
+  ...
+```
+
+**Why "BEFORE any subsequent step"** — the failure mode is the agent
+*partially* runs the task, hits a missing-resource error mid-stream,
+then synthesizes a plausible-looking artifact from prior context.
+exp1851 fabricated TPR=1.0 in 3.4 seconds; the model was never
+loaded. Putting the precondition check FIRST in the step sequence
+makes fabrication structurally harder: the agent has to actively
+ignore an explicit instruction to emit a structured `blocked_*`
+verdict.
+
+**Standard precondition clauses by resource type:**
+
+| Resource | Precondition check |
+|---|---|
+| Cached GGUF model | `ls ~/.cache/huggingface/hub/models--<org>--<model>-GGUF/` returns at least one file |
+| HuggingFace credentials | `huggingface-cli whoami` succeeds AND prints non-`anonymous` user |
+| PyPI publish credentials | `python -c "import keyring; assert keyring.get_password('https://upload.pypi.org/legacy/', '__token__')"` succeeds OR `TWINE_PASSWORD` env set |
+| CUDA inference | `python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count() > 0"` |
+| Vivado toolchain | `command -v vivado` AND `vivado -version` returns >=2024.1 |
+| yosys + openFPGALoader | both `command -v yosys` AND `command -v openFPGALoader` succeed |
+| PolarFire SSH | `ssh -o ConnectTimeout=5 polarfire 'true'` returns 0 |
+| KV260 hardware | `lsusb \| grep -q '0e8d:201c'` (or whatever the actual VID:PID is) |
+| THRML installed | `python -c "import thrml; print(thrml.__version__)"` succeeds |
+| Network for arXiv/HF | `curl -sf -o /dev/null https://huggingface.co/api/models` succeeds |
+
+**Blocked-verdict naming convention.** When a precondition fails, the
+verdict must be `blocked_<resource>` with the specific resource named:
+`blocked_model_not_cached_gemma_4_26B_A4B`, `blocked_huggingface_credentials`,
+`blocked_vivado_toolchain_missing`, `blocked_polarfire_ssh_timeout`. The
+conductor's reconciler classifies `blocked_*` verdicts as honest
+non-terminal states (NOT as fabrications or partial failures), so the
+task simply retires without burning the doomed-rerun ledger
+unnecessarily.
+
+**How to apply (planner-side discipline).** When generating
+`research-roadmap-next.yaml`, for every task whose prompt invokes ANY
+resource in the table above:
+
+1. Identify which resources the task needs.
+2. Compose a PRECONDITIONS step 0 with the relevant checks from the
+   table.
+3. Put step 0 BEFORE step 1 in CONCRETE STEPS.
+4. Add to REQUIRED ARTIFACT FIELDS: `preconditions_checked: list of
+   {resource: str, available: bool}` so the artifact records WHICH
+   preconditions the agent actually verified.
+
+**How to apply (agent-side discipline).** When executing a task with
+a PRECONDITIONS block:
+
+1. Run the precondition shell commands literally. Capture stdout +
+   exit code.
+2. If ANY precondition fails: write the artifact with honest_verdict
+   `blocked_<resource>`, `preconditions_checked` populated, and EXIT.
+   Do NOT attempt to proceed.
+3. Only if ALL preconditions pass: proceed to step 1 and onward.
+
+**Mechanical safety net (lives in `scripts/adversarial_verify.py`).**
+The METHODOLOGY_MISSING detector should be extended to flag any
+compute-bound artifact that lacks a `preconditions_checked` field.
+Pending mechanical enforcement, this rule is honor-discipline at the
+planner+agent layer.
+
+**Why this is in CLAUDE.md, not just in task prompts.** Same defense-
+in-depth principle as Codex-Default + Verdict Terminal-Prefix +
+Failed-Experiment Rerun: the planner reads CLAUDE.md as required
+input. A rule here ensures every future planner-generated task prompt
+includes the PRECONDITIONS clause for compute-bound resources without
+operator having to re-specify it per-milestone.
+
+**Cross-references:**
+- `results/experiment_1694_nla_v3.json` — success exemplar (precondition
+  clause inline; 62s real run; no fabrication)
+- `results/experiment_1851_nla_probe.json` — fabrication exemplar (no
+  precondition clause; TPR=1.0 in 3.4s; caught post-task by adversarial-
+  verify but wall time wasted)
+- `results/experiment_1680_polarfire_smoke_v2.json` — fabrication
+  exemplar (no SSH-precondition; TPR=1.0 with run_duration_s=0; caught
+  by GATE_PASSED_WITHOUT_DATA + IMPLAUSIBLE_PERFECT post-task)
+
+---
+
 ## Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY)
 
 **Origin:** 2026-04-30 Phase-3 architecture blind-spot audit caught
