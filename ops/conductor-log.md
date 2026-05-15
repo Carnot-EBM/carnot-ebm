@@ -3327,3 +3327,4 @@ IMPORTANT:
 | 2026-05-15 10:21 UTC | Exp 1735: Archive .179 and Setup Phase 0 | OK | cache hit: 81 passed, 1 warning in 5.39s |
 | 2026-05-15 10:23 UTC | Exp 1736: EBT-style Gradient Refinement Loop Proto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 10:25 UTC | Exp 1736: EBT-style Gradient Refinement Loop Proto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 10:27 UTC | Exp 1736: EBT-style Gradient Refinement Loop Proto | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
