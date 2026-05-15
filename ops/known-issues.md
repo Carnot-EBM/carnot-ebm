@@ -97,6 +97,23 @@ historical record per CLAUDE.md no-pruning policy.
 **Maintained by:** the local /loop job `875c06b4` (study-phase sweep every 4h at :13).
 Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full ranking + scoring at `research-studying.md`. Promoted here only if score > 400 OR genuinely novel-to-Carnot.
 
+### 2026-05-15 sweep candidate (score > 400 — promote to known-issues per protocol)
+
+- **arXiv:2512.15605v3** — Autoregressive LMs are Secretly EBMs
+  (Blondel, Sander, Vivier-Ardisson, Liu, Roulet; Google DeepMind / INRIA / EPFL;
+  Dec 2025, v3 May 2026). **Score 500 — highest sweep score in Carnot's
+  literature record to date.** Establishes an explicit BIJECTION between
+  autoregressive LMs and EBMs with distillation error bounds, and connects
+  both to maximum-entropy RL. **Direct relevance to Carnot's Phase-3 endgame**
+  (foundation model based on hardware-acceleratable EBM/EBT) — the bijection
+  is the theoretical scaffolding Phase 3 was missing. **Working hypothesis
+  (to falsify):** the exp1693 (.171) Phase 4 delta_alpha=0.15054 invariance
+  across n=8/16/32/64 may be a corollary of this bijection (alpha_t is
+  bijection-invariant). exp1699 (.172) random-verifier-injection audit will
+  partially test this. Future milestone task: re-derive Carnot's verifier-as-
+  free-energy interpretation through the bijection. Full scoring at
+  `research-studying.md` Sweep 2026-05-15T00:42Z.
+
 ### 2026-05-14 sweep candidates (top scores)
 
 - **arXiv:2604.07650** — Behavioral Entanglement + Reweighting Verifier Ensembles

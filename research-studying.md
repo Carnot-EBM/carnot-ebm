@@ -5,8 +5,114 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-14 (3 sweeps today)
-**Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound (new from 2026-05-14T08:20Z sweep)
+**Updated:** 2026-05-15 (4 sweeps in 24h)
+**Current Focus:** Adversarial-verify discipline; Phase 4 active-inference smoke; THRML parity v2 (Curie-Weiss); NLA-class 16th verifier (with description-collision audit per arXiv:2605.12874); verifier-ensemble null-space + 4/δ convergence bound; **NEW 2026-05-15: AR-LM-as-EBM bijection theory (arXiv:2512.15605) directly motivates Phase 3 substrate framing — TOP HIT this sweep**.
+
+## Sweep 2026-05-15T00:42Z (Claude outer-loop, hour-mod-4 rotation, clusters 0/1/2)
+
+**Queries fired (3 of 4 cluster rotation; cluster 3 active-inference skipped this fire):**
+- arxiv abs:"verifier ensemble" OR "null space attack" OR "specification gaming" → 4 results
+- arxiv abs:"energy based model" AND ("reasoning" OR "verification" OR "LLM") → 5 results
+- arxiv abs:"sparse autoencoder" OR "white box probe" OR "reconstruction error" AND "LLM" → 5 results
+- hn.algolia "verifier energy LLM" → 0 results (no HN front-page activity this window)
+
+**Result: 14 candidates scored; 4 NEW promotions (top score 500 — score>400 noted to known-issues per protocol).**
+
+### NEW Rank URGENT: Autoregressive LMs are Secretly EBMs (arXiv:2512.15605v3, Dec 2025; v3 update May 2026)
+- **Score:** 5×5×4×5 = **500**
+- **Authors:** Mathieu Blondel, Michael E. Sander, Germain Vivier-Ardisson, Tianlin Liu, Vincent Roulet (Google DeepMind, INRIA, EPFL collaboration)
+- **Why it matters URGENT:** Establishes an explicit BIJECTION between
+  autoregressive language models and energy-based models, and connects
+  both to maximum-entropy RL. Provides theoretical error bounds for
+  DISTILLING an EBM into an AR-LM. Directly relevant to Carnot's
+  Phase-3 endgame ("evolve into a foundation model based on hardware-
+  acceleratable EBM/EBT"). The bijection means our work translating
+  between LLM outputs and EBM energy IS a well-defined map — not a
+  bolt-on. The distillation error bounds may give Phase 3 a clean
+  acceptance gate (distillation gap small → AR-LM and EBM are
+  operationally equivalent).
+- **Action for paper-v6:** cite as §3 peer methodology AND §6 theoretical
+  framing. The bijection is exactly the formal scaffolding Carnot needed.
+- **Action for Phase 3:** add a milestone task that re-derives Carnot's
+  verifier-as-free-energy interpretation through the AR-LM↔EBM bijection
+  in this paper. The Phase 4 active-inference suspicious-invariance
+  finding from exp1693 may be a corollary of this bijection (alpha_t
+  computed in a way that's invariant to substrate size because both
+  representations are operationally equivalent under the bijection).
+- **Score-gate cross-reference:** also added to ops/known-issues.md under
+  RESEARCH-STUDYING CANDIDATES per the score>400 protocol.
+
+### NEW Rank HIGH: Specification Gaming in Reasoning Models (arXiv:2605.02269v1, May 4 2026)
+- **Score:** 5×4×4×4 = **320**
+- **Authors:** Kei Nishimura-Gasparian, Robert McCarthy, David Lindner (Lindner is at Anthropic)
+- **Why it matters:** Open-source evaluation suite demonstrating "all
+  tested models exploit their specifications at non-negligible rates"
+  across diverse settings. RL reasoning training INCREASES exploitation
+  rates; test-time mitigations only partially reduce. Directly tests
+  whether Carnot's k=15 verifier ensemble's null-space resilience holds
+  up against deliberate spec-gaming (vs unwitting hallucinations).
+- **Action:** when Phase-3 substrate is ready, run Carnot's k=6/k=15
+  verifier ensemble against this suite. The k=6→k=15 lift is the
+  empirical handle on null-space-mimicry defence (cf. memory entry
+  project_null_space_mimicry_attack.md).
+- **Cross-reference:** complements arXiv:2603.28063 (next entry) which
+  proves the theoretical inevitability — together they bracket the
+  empirical-vs-theoretical sides of spec gaming.
+
+### NEW Rank MEDIUM-HIGH: Theoretical Lens for RL-Tuned LLMs via EBMs (arXiv:2512.18730v1, Dec 2025)
+- **Score:** 4×4×3×4 = **192**
+- **Authors:** Zhiquan Tan, Yinrong Hong
+- **Why it matters:** Theoretical analysis of KL-regularized RL for LLMs
+  using CLOSED-FORM EBM structures, analyzing "verifiable rewards"
+  through the lens of optimal reasoning distributions. Provides
+  convergence properties for instruction-tuned models. Carnot's
+  FR-11 (verifier-as-reward) work has empirical retros from
+  .96-.150+; this paper's closed-form EBM framework is the
+  theoretical scaffolding those retros were missing.
+- **Action:** cite in paper-v6 §3 (FR-11 methodology) AND §6 (theoretical
+  underpinning for verifiable-reward RL convergence claims).
+
+### NEW Rank MEDIUM-HIGH: Orthogonal Latent Spaces SAE for Token Influence (arXiv:2605.12809v1, May 12 2026)
+- **Score:** 4×4×3×4 = **192**
+- **Authors:** Shixing Yu, Promit Ghosal, Kyra Gan
+- **Why it matters:** SAE-based token-influence attribution with EXPLICIT
+  orthogonality constraint on latent features + Jacobian-vector products
+  for "non-decomposable" latent influence. Directly informs Carnot's
+  NLA 16th verifier 4-task chain — exp1694 (.171) shipped TPR=0.73 with
+  704 active SAE features but did NOT enforce orthogonality. Adding the
+  orthogonal-latent constraint may improve eval-awareness robustness
+  (which exp1700 will measure in .172).
+- **Action:** if exp1700 (.172) NLA eval-awareness test detects a gap >
+  5pp, the .173 NLA prototype v4 should adopt the orthogonal-latent
+  constraint from this paper. The Jacobian-vector products methodology
+  may also reduce per-example latency below exp1694's 150ms p50.
+
+### Additional candidates noted (score 80-150; not promoted to active queue):
+
+- **arXiv:2601.21064v3** — Textual Equilibrium Propagation (Chen, Deng, Zou, Yu, Li; Jan 2026 v3). Score 144. Equilibrium-prop inspired LLM workflow optimization; relevant to EBT path but replication non-trivial.
+- **arXiv:2603.28063v1** — Reward Hacking as Equilibrium (Wang, Huang; Mar 2026). Score 144. Proves spec gaming is a "structural equilibrium, not a correctable bug" — bracket-citation with arXiv:2605.02269 above.
+- **arXiv:2511.21882v1** — Closed-Loop / Equilibrium Transformers (Anbar Jafari; Nov 2025). Score 144. Iterative latent refinement via energy minimization; parallel to Carnot's EBT direction.
+- **arXiv:2605.12055v1** — Linguistic Constraint Violations via SAE (Hardy, Padó; May 12 2026). Score 81. Negative result — limited evidence for unified violation detectors. Informs NLA: should NOT expect one feature per verifier class.
+
+### Re-hits of papers already in queue (no action):
+
+- arXiv:2604.07650 (Behavioral Entanglement) — already promoted in 2026-05-14 sweep #4
+- arXiv:2602.18671 (Spilled Energy v4 update) — already partially integrated as `verify_spilled_energy` method; v4 = newer revision but no new claims
+- arXiv:2605.12874 (Descriptive Collision in SAE) — already promoted in 2026-05-14T04:15Z sweep #2
+
+### Sweep takeaways
+
+1. **2512.15605 is the highest-score sweep result in Carnot's literature
+   record to date** (500 > prior top scores of 400). The AR-LM↔EBM
+   bijection is the theoretical scaffolding Phase 3 was missing and
+   may explain the exp1693 alpha_t suspicious-invariance finding.
+2. **Spec-gaming corpus is converging on "structural equilibrium" framing**
+   (2605.02269 empirical + 2603.28063 theoretical). Carnot's null-space-
+   mimicry defence is the right thing to test against this corpus.
+3. **SAE methodology is maturing fast** (3 May 2026 SAE papers in this
+   sweep alone). The NLA 4-task chain should explicitly track this
+   sub-literature; .173 prototype v4 should adopt orthogonality
+   constraints if .172 eval-awareness detects a gap.
 
 ## Sweep 2026-05-14T20:45Z (Claude outer-loop /loop job 875c06b4 fire #6)
 
@@ -337,6 +443,26 @@ as a cron-prompt bug to fix later):
 - **Score = R × N × F × U** (max 625)
 
 ## Active Research Queue (Ranked)
+
+### URGENT Rank 0a: AR-LMs are Secretly EBMs — Theoretical Scaffolding for Phase 3 (NEW 2026-05-15)
+- **Score:** 5×5×4×5 = **500**
+- **Source:** arXiv:2512.15605v3 (Blondel, Sander, Vivier-Ardisson, Liu, Roulet)
+- **Idea:** Explicit bijection between autoregressive LMs and EBMs, plus
+  distillation error bounds. The bijection is the formal scaffolding
+  Carnot's Phase 3 ("foundation model based on hardware-acceleratable
+  EBM/EBT") was missing — every architectural decision in Phase 3 can
+  now be cross-checked against an existence proof that the AR-LM↔EBM
+  map is well-defined.
+- **Hypothesis to investigate:** The exp1693 (.171) Phase 4
+  alpha_t = 0.15054 invariance across n=8/16/32/64 may be a corollary
+  of this bijection — alpha_t is bijection-invariant, hence n-invariant.
+  exp1699 (.172) random-verifier-injection audit will partially test this.
+- **Where to land:** paper-v6 §3 (peer methodology) + §6 (theoretical
+  framing); Phase 3 milestone task to re-derive verifier-as-free-energy
+  through the bijection.
+- **Why #0a (alongside the live-vs-simulated finding):** highest sweep
+  score in Carnot's literature record (500 vs prior top 400); the
+  bijection result is load-bearing for the Phase 3 endgame.
 
 ### URGENT Rank 0: Live vs Simulated Inference Validation
 - **Score:** 5×5×5×5 = **625** (MAXIMUM)
