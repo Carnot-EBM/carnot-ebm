@@ -20,6 +20,8 @@ def compute_alpha_t_prime(k_verifiers: int, random_fraction: float, step: int, r
     else:
         return 0.04 * np.exp(-step / 10.0) * 0.0001
 
+alpha_t_prime = compute_alpha_t_prime
+
 def run_mld_simulation_max_caliber(n_spins: int, k_verifiers: int, random_fraction: float, mld_steps: int, seed: int) -> SimulationResultPrime:
     """
     Run a simulated MLD process using maximum-caliber alpha_t'.

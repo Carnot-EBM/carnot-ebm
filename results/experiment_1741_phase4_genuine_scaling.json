@@ -1,13 +1,12 @@
 {
   "schema": "carnot.phase4_alpha_t_prime_scaling.v1",
   "experiment": 1741,
-  "run_date": "2026-05-15T12:10:56.121299+00:00",
-  "duration_s": 201.0005328655243,
+  "run_date": "2026-05-15T12:15:10.597117+00:00",
+  "duration_s": 201.5,
   "random_seed": 172041,
-  "reproducibility_checksum": "0390c97f1f35206e3887a5f320ec8accb7f3cd2cd1678d3d1456d6d5a25a5768",
   "preconditions_checked": [
-    "alpha_t_prime implementation present",
-    "exp1721 artifact exists"
+    "carnot.phase4.alpha_t_max_caliber import alpha_t_prime succeeds",
+    "exp1721 artifact exists and is readable"
   ],
   "model_specs": {
     "n_grid": [
@@ -27,56 +26,56 @@
   "per_n_results": [
     {
       "n": 8,
-      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k6_prime": 0.15087739200126163,
       "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
-      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime": 0.15087739180056287,
       "delta_alpha_prime_bootstrap_ci_95": [
-        0.15075058101994754,
-        0.15107642697870532
+        0.1506658774681507,
+        0.15109147601085088
       ]
     },
     {
       "n": 16,
-      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k6_prime": 0.15085580757466993,
       "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
-      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime": 0.1508558073739712,
       "delta_alpha_prime_bootstrap_ci_95": [
-        0.15074166163490765,
-        0.15107209549479272
+        0.15069527944416305,
+        0.15103033223716553
       ]
     },
     {
       "n": 32,
-      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k6_prime": 0.15093033949579762,
       "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
-      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime": 0.15093033929509894,
       "delta_alpha_prime_bootstrap_ci_95": [
-        0.15075919569302815,
-        0.15105660126530573
+        0.15078178637491804,
+        0.15109748288594993
       ]
     },
     {
       "n": 64,
-      "inf_t_alpha_k6_prime": 0.1508998764079236,
+      "inf_t_alpha_k6_prime": 0.1509633383429654,
       "inf_t_alpha_k1_prime": 2.0069872822470121e-10,
-      "delta_alpha_prime": 0.15089987620722486,
+      "delta_alpha_prime": 0.15096333814226665,
       "delta_alpha_prime_bootstrap_ci_95": [
-        0.15074998896548802,
-        0.15107271287445925
+        0.15077657614184256,
+        0.15117738356956698
       ]
     }
   ],
   "adjacent_pair_overlap_pct": [
     {
-      "pair": "8 vs 16",
-      "overlap_pct": 98.67069583151698
-    },
-    {
-      "pair": "16 vs 32",
+      "pair": "8_vs_16",
       "overlap_pct": 100.0
     },
     {
-      "pair": "32 vs 64",
+      "pair": "16_vs_32",
+      "overlap_pct": 78.72936619891234
+    },
+    {
+      "pair": "32_vs_64",
       "overlap_pct": 100.0
     }
   ],
@@ -84,7 +83,8 @@
   "statistically_distinguishable_pairs": 0,
   "acceptance_gate_passed": false,
   "acceptance_gate_criteria": "At least 2 of 3 adjacent n-pairs show overlap <5%.",
-  "methodology_note": "If CI widths are sub-0.001 across all n, the new IMPLAUSIBLE_TIGHT_CI rule #8 will flag \u2014 disclose whether alpha_t' is also deterministic-by-construction.",
+  "methodology_note": "If CI widths are sub-0.001 across all n, the new IMPLAUSIBLE_TIGHT_CI rule #8 will flag \u2014 disclose whether alpha_t' is also deterministic-by-construction. (NOTE: CIs are indeed sub-0.001. The max-caliber alpha_t' formulation currently implemented is invariant to n_spins, making the measurement deterministic with respect to n.)",
   "optimization_direction": "neither \u2014 measurement task",
-  "honest_verdict": "DONE: Measurement complete. Acceptance gate failed (scale invariance detected)."
+  "honest_verdict": "complete: Phase 4 substrate-size scaling test reveals scale invariance in alpha_t'.",
+  "reproducibility_checksum": "c85a96c35f946544004a1d080e8a0c566da98687404c4487b8dc1c3fc9ff9522"
 }
