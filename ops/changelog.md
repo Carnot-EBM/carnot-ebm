@@ -5764,3 +5764,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 2109: PiNet Convex Splitting Layer Rescue (✅ Complete) — honest_verdict=pinet_layer_projection_complete; results/experiment_2109_pinet_rescue.json
 - 2026-05-15: Exp 2110: Integration of PiNet with CASAL (✅ Complete) — honest_verdict=complete: zero constraint violations across 100 CASAL+PiNet trials; results/experiment_2110_casal_pinet.json
 - 2026-05-15: Exp 2111: Energy-Based Fine-Tuning (EBFT) with Latent Features (✅ Complete) — honest_verdict=complete: latent_feature_divergence=0.014460 on 8-spin ContinuousEBM; LatentGenerator + latent_feature_divergence implemented; 16 tests pass at 100% branch coverage on new code; results/experiment_2111_ebft_latent.json
+- 2026-05-15: Exp 2112: Z1 SDK and DTM Stub Alignment (✅ Complete) — honest_verdict=complete: dtm_stub_interface_aligned_z1_continuous_dtm_signature_simulator_only; results/experiment_2112_z1_dtm.json
