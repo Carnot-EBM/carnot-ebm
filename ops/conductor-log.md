@@ -3337,3 +3337,4 @@ IMPORTANT:
 | 2026-05-15 11:24 UTC | Exp 1740: Symbolic Verification on Expert Sudoku ( | OK | 116 passed, 1 warning in 7.00s |
 | 2026-05-15 11:39 UTC | Exp 1741: FR-11 Live Policy Promotion with Self-Di | OK | 81 passed, 1 warning in 5.56s |
 | 2026-05-15 11:45 UTC | Exp 1742: EB-SLE Reward Hacking Prevention | OK | 81 passed, 1 warning in 5.94s |
+| 2026-05-15 11:47 UTC | Exp 1743: FPGA/TSU Hardware Accounting for Symboli | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
