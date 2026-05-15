@@ -4064,3 +4064,7 @@ The Exp 1684 `.169` milestone retrospective workflow shall write `results/experi
 - `phase1_ship_progress_pp_remaining` showing delta from .168 to .169
 - `adversarial_verify_flag_count` from `scripts/adversarial_verify.py`
 - `honest_verdict` prefixed with `complete:`
+
+### REQ-REPORT-1717: Findings Audit 1717
+
+The repository shall provide an audit script `scripts/audit_1717.py` that verifies experiments in the `.174` and `.175` ranges, classifies any adversarial flags, and appends a `corrigendum_2026_05_176_audit` to flagged artifacts. It must output `results/experiment_1717_findings_audit.json`.
