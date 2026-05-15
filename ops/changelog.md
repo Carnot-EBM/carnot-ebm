@@ -5815,3 +5815,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 
 - Milestone 2026.05.179 operational retrospective complete. No experiment commits found since activation of 2026.05.179. Both GPUs are idle at 0% utilization.
 - 2026-05-15: Exp 1735: Archive .179 and Setup Phase 0 (✅ Complete) — honest_verdict=complete: milestone .179 archived and .180 working area verified clean; results/experiment_1735_setup.json
+- 2026-05-15: Exp 1737: Entropic Utility Search Prototype (TTT-Discover) (⚠️ Research Finding) — honest_verdict=success_ttt_discover_prototype_evaluated; results/experiment_1737_ttt_discover.json
