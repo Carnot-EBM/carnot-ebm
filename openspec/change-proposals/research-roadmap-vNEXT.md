@@ -1,40 +1,28 @@
-# Carnot Research Roadmap — Milestone 2026.05.185
+# Research Roadmap vNEXT (Milestone 2026.05.187)
 
-**Title:** Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification
-**Author:** outer-loop-claude
-**Status:** Active
+**Title:** Pretest Recovery, Fast-Slow Variant Scale-Up, and EBM Continual Learning
+**Milestone:** 2026.05.187
+**Author:** Planning Agent
+**Date:** 2026-05-15
 
-## Overview
+## 1. Context and Previous Milestone Reality
+Milestone `.186` encountered a critical cascade failure: every task was skipped due to a broken pre-test environment (2 failing tests). The immediate priority is restoring the test harness integrity before any further research can proceed. Once unblocked, we must execute the delayed scale-up of the Fast-Slow variant (arXiv:2605.12484) and integrate recent 2026 advancements in Energy-Based Continual Learning (LSEBMCL) to address persistent PRD goals.
 
-Milestone .184 landed the Fast-Slow Variant prototype (Exp 1761), attempted the stranded PyPI push (Exp 1762), audited .183 findings (Exp 1763), and produced a decision artifact comparing the thermodynamic metric to the Fast-Slow variant (Exp 1764). 
+## 2. The 3 Biggest Gaps to PRD Vision
+1. **Broken Autonomous Loop:** The core automated pipeline is blocked by test failures. Carnot's autonomous research cannot progress until the 100% test pass requirement is restored.
+2. **Phase 4 Thermodynamic Validation vs Fast-Slow Training:** The PRD requires hardware-accelerated sampling and continual self-learning. The newly identified Fast-Slow Training (FST) variant aligns perfectly with Carnot's verifier-summary architecture, but its scale-up on SOTA local GGUF models remains stalled.
+3. **Catastrophic Forgetting in FR-11:** Carnot's continuous self-learning track (FR-11) needs robust mitigation against forgetting. Recent 2026 papers on Latent Space EBMs (LSEBMCL) offer a direct path to generative replay via Langevin dynamics without mode collapse.
 
-Milestone .185 transitions from prototyping to scaling the Fast-Slow paradigm to the mandated local SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`). It bridges the gap in the Continuous Self-Learning (FR-11) requirement by embedding Token-Level Energy (arXiv:2605.14558) and Fast-Slow training (arXiv:2605.12484) to prevent catastrophic forgetting. Additionally, it addresses Phase 2 hardware-efficient verification with a KAN-to-PWA (Piecewise Affine) compiler for MILP-based formal property bounds.
+## 3. Phase Descriptions
+### Phase 0: Infrastructure Recovery
+Restore the test harness to a 100% passing state and execute the blocked `.186` retro alongside the delayed PyPI release.
+### Phase 1: Fast-Slow Variant Scale-Up
+Implement and scale the Fast-Slow Training architecture using `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+### Phase 2: EBM-Driven Continual Learning
+Integrate LSEBMCL and Hybrid Energy-Distance mechanisms into the FR-11 loop to solve catastrophic forgetting.
+### Phase 3: Verification & Audits
+Execute QAOD vs NLA head-to-head evaluations, audit the findings, measure token-level energy telemetry, and conclude the milestone.
 
-## Top 3 Priority Gaps
-
-1. **Continuous Self-Learning Stability:** Previous FR-11 iterations suffered from mode collapse or zero utility delta. We must scale the Fast-Slow Variant (arXiv:2605.12484) and Token-Level Energy metrics (arXiv:2605.14558) to stabilize learning without forgetting.
-2. **Hardware-Efficient Formal Bounds:** KAN verification remains ad-hoc. The PWA abstraction (arXiv:2602.06737) and E-MVL sparse RTL (arXiv:2604.04606) provide a concrete path for formal MILP verification and KV260 hardware synthesis without blowing out LUT budgets.
-3. **Structured Constraint Extraction:** We need an automated compiler that translates ROCE-extracted constraints (arXiv:2605.01124) into KAN representations and verifies them asynchronously during text generation (interwhen, arXiv:2602.11202).
-
-## Phase Plan
-
-### Phase 1: SOTA Fast-Slow & Telemetry
-Scale the fast-weight context buffers to mandated GGUF models. Implement token-level energy metrics to provide fine-grained verification signals during generation.
-
-### Phase 2: Formal Bounds & Extraction
-Compile extracted ROCE constraints into formal Piecewise Affine (PWA) abstractions. Validate these abstractions against existing Z3/PySAT benchmarks.
-
-### Phase 3: Hardware Translation & Continuous Loop
-Synthesize the sparse E-MVL v4 RTL for KV260 accounting. Integrate the Fast-Slow continuous learning mechanism into the main autoresearch loop.
-
-### Phase 4: Integration & Audit
-Run the E2E verification cascade, audit the newly integrated verifiers, and generate the end-of-milestone operational retrospective.
-
-## Hardware Requirements
-- **Local:** Dual RTX 3090 (for SOTA GGUF inference and token-level telemetry computation)
-- **KV260:** CPU-only no-synthesis accounting for the E-MVL RTL constraints.
-
-## Dependency Graph
-- Exp 1766 (Token Energy) -> Exp 1768 (SOTA Fast-Slow) -> Exp 1772 (Continual EBM)
-- Exp 1769 (ROCE-to-KAN) -> Exp 1770 (PWA KAN) -> Exp 1771 (T-SKM Projection)
-- Exp 1774 (E-MVL RTL) -> Exp 1776 (interwhen Test-Time)
+## 4. Hardware Requirements
+- Dual GPU (RTX 3090/4090 class) for SOTA GGUF inference (Qwen3.6-35B, Gemma-4-31B).
+- CPU for test recovery and symbolic validation.
