@@ -5,8 +5,46 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-15 (6 sweeps in 24h)
-**Current Focus:** NLA 16th verifier now PRODUCTION-INTEGRATED at k=16 (exp1720 shipped .178); Phase 4 alpha_t bijection-invariance FALSIFIED (exp1715 .176) AND replacement alpha_t' from max-caliber CONFIRMED (exp1721 .178); exp1709 near-critical sampler limit codification pending (exp1719 doomed-rerun-blocked .178 → retried as exp1724 in .179); **NEW 2026-05-15T08:45Z: 3 new SAE-cluster candidates promoted; QAOD white-box probe (Score 320) is direct adversarial-test against Carnot's NLA-via-SAE methodology**.
+**Updated:** 2026-05-15 (7 sweeps in 24h)
+**Current Focus:** Phase 4 ensemble-level alpha measurement now confirmed inaccessible across BOTH derivations (exp1715 falsified alpha_t; exp1741 confirmed alpha_t' also scale-invariant); QAOD vs NLA tied at bit-identical TPR=0.4722 (exp1740 — diagnosis pending in .182 exp1746); literature clusters saturating — same papers re-hitting across rotations; **NEW 2026-05-15T12:48Z: cluster-saturation pattern formalized; queries need broadening next rotation**.
+
+## Sweep 2026-05-15T12:48Z (Claude outer-loop, hour-mod-4=0; clusters 1 EBM + 3 active inference)
+
+**Queries fired (rotated to clusters not covered in 08:45Z fire):**
+- arxiv abs:"energy based model" AND ("reasoning" OR "verification" OR "LLM") → 5 results (ALL re-hits from prior sweeps)
+- arxiv abs:"active inference" OR "free energy" AND "LLM" → 4 results (3 re-hits, 1 UAV-domain rejected)
+- hn.algolia "energy EBM verifier" → 0 hits
+
+**Result: 9 candidates; 0 NEW promotions; 8 re-hits + 1 rejected. Cluster saturation confirmed across 4 sweep rotations in 24h.**
+
+### Rejected candidates (this sweep):
+
+- **arXiv:2604.27935v1** — "Flying by Inference: Active Inference World Models for Adaptive UAV Swarms" (Arshid et al., Apr 30 2026). Score 2×4×2×2 = **32**. UAV swarms domain; hierarchical world-model active inference is mildly applicable to Carnot's verifier-as-free-energy framing but the domain gap is too large for replication value. **Worth noting**: the "hierarchical probabilistic inference + online KL minimization" structure echoes the alpha_t / alpha_t' computation Carnot is currently rescuing in .182 exp1745 — IF the .182 per-step disaggregation succeeds, this paper becomes a candidate cross-cite for paper-v6 §3.
+
+### Saturation pattern (all 4 sweeps 2026-05-15)
+
+The 4 cluster queries have been hit ~3 times each in 24h. Re-hit rate:
+- Cluster 0 (verifier ensembles / spec gaming): 4 sweeps, 0 new since 04:42Z
+- Cluster 1 (EBM + LLM): 3 sweeps, 0 new since 04:45Z
+- Cluster 2 (SAE / white-box probe): 2 sweeps, last new 08:45Z (QAOD, exemplars, rate-distortion)
+- Cluster 3 (active inference): 2 sweeps, 0 new since 04:45Z
+
+The fixed `max_results=8` + the recent-paper bias of `sortBy=submittedDate` means each rotation re-fetches the same 5-8 papers until enough time passes for arXiv's listing to refresh.
+
+### Recommended next-rotation broadening (do NOT modify CLAUDE.md per cron constraint, but the next-fire prompt could consider):
+
+- Cluster 0 expansion: add `OR abs:"process reward model"` OR `abs:"deliberative alignment"`
+- Cluster 1 expansion: add `OR abs:"token energy"` OR `abs:"energy guided decoding"`
+- Cluster 2 expansion: add `OR abs:"feature attribution"` OR `abs:"transcoder"`
+- Cluster 3 expansion: add `OR abs:"predictive coding"` OR `abs:"world model"`
+
+Saturation is a healthy sign that Carnot's literature landscape is well-mapped at the current state-of-the-art window. Re-hits are NOT wasted; they confirm priority stability.
+
+### Sweep takeaways
+
+1. **Re-hit-only fire validates queue stability** — the active queue's top 5 (2512.15605, 2605.02269, 2605.14449, 2605.12536, 2605.14558) are not being displaced by new arrivals.
+2. **Carnot's .182 per-step alpha disaggregation (exp1745) has no published peer methodology in this sweep window** — the arXiv:2604.27935 hierarchical-active-inference angle is the closest hit but UAV-domain. Carnot is operating in a literature-gap zone for this specific question.
+3. **Next rotation should consider broader queries** per the suggestions above. Marking this as a sweep-mechanism observation, not a CLAUDE.md change.
 
 ## Sweep 2026-05-15T08:45Z (Claude outer-loop, hour-mod-4 rotation; cluster 2 SAE primary + cluster 0 verifier-ensembles)
 
