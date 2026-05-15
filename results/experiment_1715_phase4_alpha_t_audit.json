@@ -1,0 +1,77 @@
+{
+  "schema": "carnot.phase4_alpha_t_audit.v1",
+  "experiment": 1715,
+  "run_date": "2026-05-15T05:12:39.060925Z",
+  "duration_s": 65.0,
+  "random_seed": 171615,
+  "reproducibility_checksum": "e9f7743d3ab9b6301149b38ca9dbacb480d675249fbe012c81471c8bf568144d",
+  "preconditions_checked": [
+    "carnot.phase4 alpha_t implementation exists",
+    "exp1693 artifact exists and is readable"
+  ],
+  "model_specs": {
+    "n_spins": 32,
+    "ensemble_k_total": 6,
+    "random_fraction_grid": [
+      0,
+      0.333,
+      0.667,
+      1.0
+    ],
+    "mld_steps": 100,
+    "n_seeds": 30,
+    "n_cells": 4
+  },
+  "n_samples": 12000,
+  "n_samples_justification": "30 seeds \u00d7 100 MLD \u00d7 4 cells. Bootstrap CI on delta_alpha at N=30 has natural width ~0.18/sqrt(30)~0.03 on metric scale; sub-0.001 CIs trigger IMPLAUSIBLE_TIGHT_CI.",
+  "random_fraction_grid_results": [
+    {
+      "random_fraction": 0.0,
+      "inf_t_alpha_k6": 0.15055882707322962,
+      "inf_t_alpha_k1": 2.006987282247011e-06,
+      "delta_alpha": 0.15055682008594737,
+      "delta_alpha_bootstrap_ci_95": [
+        0.1503612890146621,
+        0.15078833247926363
+      ]
+    },
+    {
+      "random_fraction": 0.333,
+      "inf_t_alpha_k6": 0.15055882707322962,
+      "inf_t_alpha_k1": 2.006987282247011e-06,
+      "delta_alpha": 0.15055682008594737,
+      "delta_alpha_bootstrap_ci_95": [
+        0.1503612890146621,
+        0.15078833247926363
+      ]
+    },
+    {
+      "random_fraction": 0.667,
+      "inf_t_alpha_k6": 0.15055882707322962,
+      "inf_t_alpha_k1": 2.006987282247011e-06,
+      "delta_alpha": 0.15055682008594737,
+      "delta_alpha_bootstrap_ci_95": [
+        0.1503612890146621,
+        0.15078833247926363
+      ]
+    },
+    {
+      "random_fraction": 1.0,
+      "inf_t_alpha_k6": 0.15055882707322962,
+      "inf_t_alpha_k1": 2.006987282247011e-06,
+      "delta_alpha": 0.15055682008594737,
+      "delta_alpha_bootstrap_ci_95": [
+        0.1503612890146621,
+        0.15078833247926363
+      ]
+    }
+  ],
+  "monotonic_decay_observed": false,
+  "artifact_detected": true,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "4-cell ablation reported with bootstrap CIs; flags set per actual data.",
+  "methodology_note": "If delta_alpha invariant across 4 cells AND bootstrap_ci_95 widths are sub-0.001 across all 4, this confirms the bijection-invariance hypothesis from arXiv:2512.15605 \u2014 disclose honestly in this field. Alternatively if monotonic decay observed, Phase 4 hypothesis confirmed empirically.",
+  "optimization_direction": "neither \u2014 falsification audit",
+  "status": "complete",
+  "honest_verdict": "complete: Bijection-invariance artifact confirmed; delta_alpha does not genuinely depend on verifier content."
+}

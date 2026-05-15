@@ -21,3 +21,9 @@
 
 ### SCENARIO-PHASE4-2
 **Description:** Running scaling simulation on n=8, 16, 32 yields recorded delta_alpha scaling points, correctly identifying if and where delta_alpha collapses below 0.05.
+
+### REQ-PHASE4-004: Verifier Ablation Audit
+**Description:** The system SHALL support running a random-verifier injection ablation audit to test if `delta_alpha` genuinely depends on verifier content.
+
+### SCENARIO-PHASE4-3
+**Description:** Running a 4-cell random-verifier ablation audit correctly computes `delta_alpha` and bootstrap CIs for each fraction, and sets the `monotonic_decay_observed` and `artifact_detected` flags based on the results.
