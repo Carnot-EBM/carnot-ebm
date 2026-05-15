@@ -1,7 +1,7 @@
 import json
 import os
 from tempfile import TemporaryDirectory
-from pre_retro_audit import run_pre_retro_audit
+from carnot.pre_retro_audit import run_pre_retro_audit
 
 def test_run_pre_retro_audit():
     """

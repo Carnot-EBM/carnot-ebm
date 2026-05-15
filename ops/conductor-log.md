@@ -3479,3 +3479,11 @@ IMPORTANT:
 | 2026-05-15 18:42 UTC | Plan milestone 2026.05.187 | OK | 12 tasks proposed |
 | 2026-05-15 18:44 UTC | Exp 1785: Milestone .186 retrospective | OK | Deliverable already exists in repo |
 | 2026-05-15 18:44 UTC | Milestone 2026.05.187 activated | OK | 12 tasks queued |
+| 2026-05-15 19:12 UTC | Phase 0: Fix broken pretests blocking conductor ex | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1572s (300s silence). Last out |
+| 2026-05-15 19:15 UTC | Phase 0: Fix broken pretests blocking conductor ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-15 19:17 UTC | Phase 0: Fix broken pretests blocking conductor ex | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-15 19:19 UTC | Phase 0: Milestone .186 retrospective (Cascade Fai | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-15 19:22 UTC | Phase 0: Milestone .186 retrospective (Cascade Fai | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-15 19:24 UTC | Phase 0: Milestone .186 retrospective (Cascade Fai | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-15 19:26 UTC | Phase 0: Phase 1 PyPI package release retry (Block | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
+| 2026-05-15 19:26 UTC | Phase 1: Carnot Fast-Slow Variant Prototype (arXiv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
