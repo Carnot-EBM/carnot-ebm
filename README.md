@@ -6,13 +6,15 @@ license: apache-2.0
 This is a test upload for the Carnot-EBM project. No emojis here.
 
 ## Project Stats
-- **Total Experiments:** 2,979
+- **Total Experiments:** 3,202
 - **Test Items Collected:** 24,981
-- **Archived Milestones:** 199
+- **Archived Milestones:** 200
 
 ## Key Results
 | Milestone | Status | Details |
 | --- | --- | --- |
+| .187 | Complete | Milestone 187 retrospective successfully generated. |
+| .186 | Complete | 223 experiments completed in 736 minutes. Zero compute-bound tasks; GPUs correctly idle. |
 | .185 | Complete | Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification achieved. 14 experiments completed. |
 | .182 | Complete | Operational retrospective complete. Synthesis tasks remain primary optimization bottleneck. |
 | .179 | Complete | FourierCSP constraint compiled into fixed CIKAN boundary and preserved through toy residual training. |
