@@ -3546,3 +3546,4 @@ IMPORTANT:
 | 2026-05-15 22:42 UTC | Exp 1811: Carnot Fast-Slow Variant prototype — 4th | OK | Deliverable already exists in repo |
 | 2026-05-15 22:42 UTC | Exp 1812: PyPI retry — 4th attempt, NO upstream ga | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.16s |
 | 2026-05-15 22:44 UTC | Exp 1812: PyPI retry — 4th attempt, NO upstream ga | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.23s |
+| 2026-05-15 22:47 UTC | Exp 1812: PyPI retry — 4th attempt, NO upstream ga | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.15s |
