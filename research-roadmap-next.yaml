@@ -1,0 +1,369 @@
+milestone: "2026.05.186"
+milestone_title: "Carry-Forward from .184 SKIP Wipeout: Fast-Slow Variant + PyPI + Audit + Phase 4 Decision"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction_compliance:
+  rationale: ".184 entire milestone (exp1761-1765, all 5 tasks) SKIPPED due to recurring pretest failure pattern (2 failed, 79 passed). Root cause this time: README.md was truncated to a HuggingFace-style frontmatter+title in commit aebb2960d (.184 retro), losing the test_docs.py-required sections (live gpu / PBT Verification / Exp 226 / Exp 227 / verify_code_with_pbt). Pretest fix shipped 2026-05-15 16:30Z restoring known-good README + verify_code_with_pbt mention. .185 was planner-drafted (13 tasks) and DOES NOT carry forward .184's critical Fast-Slow Variant — needs explicit recovery here in .186."
+  carry_forwards_addressed: ["exp1761 Fast-Slow Variant prototype (the Phase 4 rescue path; operator-flagged Score 400)", "exp1762 PyPI retry (blocked_credentials chain)", "exp1763 .183 findings audit", "exp1764 Phase 4 method comparison decision artifact"]
+authored_by: outer-loop-claude
+
+tasks:
+  - id: exp1781-carnot-fast-slow-variant-retry
+    title: "Exp 1781: Carnot Fast-Slow Variant prototype retry — .184 exp1761 SKIPPED"
+    deliverable: results/experiment_1781_fast_slow_variant.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1761-carnot-fast-slow-variant-prototype
+        verdict: skipped_pretest_failing_in_184_readme_truncation
+        addressed_by: "exp1761 (.184) was SKIPPED due to README.md truncation in .184 retro losing test_docs.py-required sections. Pretest fix shipped 2026-05-15 16:30Z (restored known-good README + added verify_code_with_pbt mention). Same task scope; PRECONDITIONS step 0 unchanged."
+        retire_if_same_verdict: false
+      - experiment_id: exp1745-phase4-per-step-alpha-disaggregation
+        verdict: complete_phase4_metric_inaccessible_at_ensemble_level
+        addressed_by: "exp1745 (.182) confirmed Phase 4 invariance is substrate-level (distinguishable_steps=0). Fast-Slow Variant (arXiv:2605.12484 Score 400) is the explicit rescue path: measure on fast-weight context, not ensemble output."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: arXiv:2605.12484 (operator-flagged 2026-05-15 13:15Z,
+      Score 400) introduces Fast-Slow Training (FST). Carnot's
+      verify-repair loop maps natively: SLOW = k=16 ensemble + base LLM
+      (frozen); FAST = verifier-output-summary context that re-prompts
+      iteration-to-iteration. exp1745 (.182) confirmed ensemble-output
+      Phase 4 metrics are substrate-inaccessible — Fast-Slow is the
+      explicit rescue.
+
+      FALSIFIABLE HYPOTHESIS: A minimal Carnot Fast-Slow Variant on a
+      3-task continual-learning switch (GSM8K → BBH → MATH-subset)
+      achieves AT LEAST 2x sample efficiency to a fixed verification-
+      pass-rate target AND <=0.5x KL drift from base LLM vs FR-11
+      (verifier-as-reward RL) baseline, with no catastrophic forgetting
+      (pass rate on prior task degrades < 5pp after switching).
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/verify_repair.py (the SLOW-weight ensemble)
+        - python/carnot/pipeline/ebft_autoresearch_loop.py if exists
+          (FR-11 baseline)
+        - results/experiment_1745_phase4_per_step_alpha.json (the
+          motivation: ensemble-level alpha is inaccessible)
+
+      TASK: Implement Fast-Slow Variant + 3-task continual-learning
+      benchmark.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `python -c "from carnot.pipeline.verify_repair import
+              VerifyRepairPipeline"` succeeds — else
+              `blocked_verify_repair_pipeline_missing`.
+           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
+              non-empty — else `blocked_model_not_cached`.
+           c. At least one FR-11 baseline run in results/ (grep for
+              fr11 or fr_11) — else `blocked_no_fr11_baseline`.
+           Record preconditions_checked.
+        1. Implement fast_slow_variant(prompt, base_llm, verifier_ensemble,
+           max_iters=10) with a fast-weight context buffer that
+           accumulates verifier-failure-summaries across iterations.
+           Slow weights NEVER update.
+        2. Build 3-task corpus: 30 GSM8K + 30 BBH + 30 MATH = 90 examples.
+        3. Run both pipelines (Fast-Slow + FR-11 baseline) on A → B → C
+           sequence. Log pass-rate, iters-to-pass per example, KL
+           divergence from base.
+        4. Post-sequence: re-run task A. Measure plasticity gap.
+        5. Acceptance: sample_efficiency_ratio (FS_iters / FR11_iters
+           on task B) >= 2.0 AND kl_drift_ratio <= 0.5 AND no catastrophic
+           forgetting.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.fast_slow_variant.v1"
+        - experiment: 1781
+        - run_date: ISO-8601 UTC
+        - duration_s: > 300s
+        - random_seed: 172681 (NOT 1781 or 90)
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          slow_weights: ["base_llm", "k=16_verifier_ensemble"],
+          fast_weights: "verifier_output_summary_context",
+          baseline: "fr11_verifier_as_reward",
+          tasks: ["gsm8k_30", "bbh_30", "math_30"],
+          continual_switch_order: "A_B_C_then_A"}
+        - n_samples: 90
+        - n_samples_justification: "30 per task × 3 tasks. Wilson 95% CI
+          width ~0.30 per pass rate, matching paper's eval granularity."
+        - fast_slow_passrate_per_task: dict task -> {passrate, wilson_95_ci}
+        - fr11_passrate_per_task: dict task -> {passrate, wilson_95_ci}
+        - sample_efficiency_ratio: float
+        - kl_drift_fast_slow, kl_drift_fr11, kl_drift_ratio: float
+        - plasticity_fast_slow, plasticity_fr11: float
+        - catastrophic_forgetting_fast_slow: bool
+        - catastrophic_forgetting_fr11: bool
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "Sample-eff >= 2x AND KL drift <= 0.5x
+          AND no catastrophic forgetting."
+        - methodology_note: "If sample_efficiency_ratio > 5x with no
+          methodology_note, treat as IMPLAUSIBLE_PERFECT — paper headline
+          is 3x; lift > 5x on Carnot's setup without explanation is a
+          fabrication signal."
+        - optimization_direction: "maximize_sample_efficiency_minimize_kl_drift"
+        - honest_verdict: MUST start with `complete:` / `complete_` /
+          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
+          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1782-pypi-retry-honest-blocked-pattern
+    title: "Exp 1782: PyPI retry — .184 exp1762 SKIPPED; blocked_credentials honest pattern"
+    deliverable: results/experiment_1782_pypi_retry.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1762-phase1-pypi-retry-with-blocked-honest-pattern
+        verdict: skipped_pretest_failing_in_184_readme_truncation
+        addressed_by: "exp1762 (.184) was SKIPPED with the entire .184 milestone. Pretest fix shipped 2026-05-15 16:30Z. Same task scope."
+        retire_if_same_verdict: false
+      - experiment_id: exp1711-pypi-publish
+        verdict: blocked_pypi_credentials_unavailable
+        addressed_by: "exp1711 (.175) emitted exemplary honest blocked verdict. Full chain: exp2103 -> 1683 -> 1685 -> 1704 -> 1711 -> 1762 -> 1782."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Phase 1 ship-track PyPI prong. Last successful run was
+      exp1711 (.175) which emitted honest blocked_pypi_credentials_unavailable.
+      .184 retry (exp1762) was wiped out by the README pretest SKIP. This
+      retry maintains the same blocked-credentials discipline.
+
+      FALSIFIABLE HYPOTHESIS: Either credentials are available (real
+      upload + verify) OR they remain absent (honest blocked verdict).
+      Fabrication is not valid.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1711_pypi_publish.json (exemplary blocked pattern)
+        - pyproject.toml (name="carnot-ebm")
+
+      TASK: PyPI upload OR honest blocked verdict.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `pyproject.toml` has `name = "carnot-ebm"` — else blocked.
+           b. `python -m build --version` succeeds — else blocked.
+           c. `twine --version` succeeds — else blocked.
+           d. PyPI/TestPyPI credentials via env/keyring/pypirc — else
+              `blocked_pypi_credentials_unavailable`.
+           Record preconditions_checked.
+        1. `python -m build` → dist/.
+        2. SHA-256 of both artifacts.
+        3. `twine check dist/*`.
+        4. `twine upload dist/*`.
+        5. Fresh subprocess verify: `pip install carnot-ebm` + `import carnot`.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.pypi_publish.v3"
+        - experiment: 1782
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s real OR smaller-blocked-acceptable
+        - random_seed: 172682
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {package_name: "carnot-ebm", version: str,
+          publish_target: "pypi" | "testpypi" | "blocked",
+          wheel_filename: str, sdist_filename: str,
+          wheel_sha256: str, sdist_sha256: str}
+        - n_samples: 1
+        - n_samples_justification: "Ship task."
+        - pypi_url: str or null
+        - external_install_verified: bool
+        - acceptance_gate_passed: bool OR honest blocked
+        - acceptance_gate_criteria: "Real upload + verify OR honest blocked."
+        - methodology_note: "blocked_credentials is honest, NOT fabrication."
+        - optimization_direction: "neither — ship task"
+        - honest_verdict: MUST start with terminal prefix OR `blocked_<resource>`.
+
+      Run command. Do NOT push to git. Do NOT modify
+      scripts/research_conductor.py.
+
+  - id: exp1783-findings-audit-184-185-combined
+    title: "Exp 1783: .184 + .185 combined findings audit + corrigenda"
+    deliverable: results/experiment_1783_findings_audit_184_185.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures:
+      - experiment_id: exp1763-findings-audit-pass-183
+        verdict: skipped_pretest_failing_in_184
+        addressed_by: "exp1763 (.184) was SKIPPED. .184 produced ZERO artifacts. .185 has 13 tasks in flight at .186 draft time. Combined audit covers .184 (empty), .185 (13 tasks), and any .186-pre-cycle artifacts."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: .184 entire milestone SKIPPED due to README pretest
+      regression. .185 has 13 planner-drafted tasks running. This audit
+      covers the combined .184 (empty)/.185 artifact set.
+
+      FALSIFIABLE HYPOTHESIS: At least 2 .185 artifacts will be flagged
+      by adversarial-verify. Classify each REAL_BUG / FALSE_POSITIVE /
+      NEEDS_REVISION.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py (8-rule linter)
+        - results/experiment_176[6-9]*.json + experiment_177[0-9]*.json
+          + experiment_178[0-5]*.json (.185 task ID range)
+
+      TASK: Audit + corrigenda.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
+        1. `python3 scripts/adversarial_verify.py --milestone-range
+           1766 1785`.
+        2. Classify each flag; append corrigendum_2026_05_186_audit
+           (CLAUDE.md no-pruning: APPEND only).
+        3. For REAL_BUG, propose .187+ follow-ups.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.findings_audit_corrigenda.v7"
+        - experiment: 1783
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 172683
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {audit_target_milestones: ["2026.05.184",
+          "2026.05.185"], adversarial_verify_version: git_rev,
+          artifacts_scanned: int, artifacts_flagged: int}
+        - n_samples: int
+        - n_samples_justification: "Audit; n is flagged-artifact count."
+        - audit_outcomes: dict experiment_id -> {classification, rationale}
+        - corrigenda_added: list
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "All flagged classified; corrigenda appended."
+        - methodology_note: "If audit completes in <10s on >5 artifacts,
+          agent shortcut — disclose honestly."
+        - optimization_direction: "neither — audit task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
+      or scripts/adversarial_verify.py.
+
+  - id: exp1784-phase4-method-comparison-decision
+    title: "Exp 1784: Phase 4 method comparison + canonical-metric decision — .184 exp1764 SKIPPED"
+    deliverable: results/experiment_1784_phase4_method_comparison.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1764-phase4-thermodynamic-vs-fast-slow-comparison
+        verdict: skipped_pretest_failing_in_184
+        addressed_by: "exp1764 (.184) SKIPPED. Pretest fix shipped. Same task scope; preconditions now require both thermodynamic-metric artifacts (.183 or .185) AND Fast-Slow Variant artifact (.186 exp1781) to exist."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Phase 4 has 3 candidate measurement methods now:
+      (a) ensemble-alpha-original (falsified at exp1715/1721/1741/1745),
+      (b) thermodynamic-metric (planner-drafted in .183 exp1754/1755),
+      (c) Fast-Slow Variant (.186 exp1781, the operator-flagged rescue
+      from arXiv:2605.12484). After all 3 produce artifacts, this task
+      issues a decision: which becomes Phase 4 canonical for .187+
+      planning.
+
+      FALSIFIABLE HYPOTHESIS: Exactly one of the 3 methods will show
+      substrate-discriminability AND sample-efficiency-lift on the
+      Phase 4 hypothesis. If none, Phase 4 program needs operator
+      escalation via a known-issues MANDATORY entry.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1754_phase4_thermodynamic_metric.json (if exists)
+        - results/experiment_1755_phase4_substrate_scaling_thermo.json (if exists)
+        - results/experiment_1781_fast_slow_variant.json (from .186)
+        - results/experiment_1745_phase4_per_step_alpha.json (the
+          ensemble-level failure baseline)
+
+      TASK: 3-method comparison + decision artifact.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `test -f results/experiment_1781_fast_slow_variant.json` —
+              else `blocked_fast_slow_artifact_not_ready_run_after_1781`.
+           b. At least one of exp1754/1755 readable — else
+              `blocked_thermodynamic_artifacts_missing`.
+           Record preconditions_checked.
+        1. Tabulate 3 methods on:
+             - substrate-size discriminability
+             - sample efficiency vs FR-11
+             - KL drift from base
+             - implementation cost
+        2. Score pass/fail per criterion.
+        3. Issue decision: canonical method for .187+ planner.
+        4. Append note to ops/known-issues.md MANDATORY entry "Phase 4
+           Canonical Metric Decision (.186+ MANDATORY)" naming the
+           winner (or operator escalation if all 3 fail).
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.phase4_method_comparison.v1"
+        - experiment: 1784
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 172684
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {methods_compared: ["ensemble_alpha_original",
+          "thermodynamic_metric_v1", "fast_slow_variant_v1"],
+          comparison_criteria: ["substrate_discriminability",
+          "sample_efficiency", "kl_drift", "implementation_cost"]}
+        - n_samples: 3
+        - n_samples_justification: "Comparison; n is method count."
+        - method_scorecards: dict method -> dict criterion -> {pass: bool,
+          rationale: str}
+        - recommended_canonical_method: str
+        - known_issues_entry_added: bool
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "All 3 scored + decision + known-issues entry."
+        - methodology_note: "If all 3 fail, escalate to operator via
+          known-issues MANDATORY (Phase 4 program scope review)."
+        - optimization_direction: "neither — decision artifact"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push to git. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1785-milestone-186-retrospective
+    title: "Exp 1785: Milestone .186 retrospective"
+    deliverable: results/operational_retro_2026_05_186.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
+    prompt: |
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8.
+
+      TASK: Generate the .186 operational retrospective.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.186..HEAD returns non-empty.
+        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.182/.184 templates.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.186"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_full"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - gpu_idle_on_compute_bound_tasks: bool or null
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+        - DO NOT TRUNCATE README.md OR ANY DOC FILE during the retro
+          summary write. The .184 retro truncated README.md to 14 lines,
+          wiping the test_docs.py-required sections (live gpu, PBT
+          Verification, Exp 226, Exp 227, verify_code_with_pbt). The
+          fix shipped 2026-05-15 16:30Z; the retro agent MUST treat
+          README.md as APPEND-ONLY for retrospective text.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
