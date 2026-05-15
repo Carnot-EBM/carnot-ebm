@@ -2877,3 +2877,11 @@ Given an initial response and a repaired response,
 When the repair generation loops or exploits syntax,
 Then the EB-SLE Hack Verifier returns True,
 And the JSON artifact records `ebsle_hack_detected=true` and `status="complete"`.
+
+### REQ-VERIFY-1740: QAOD Verifier
+
+The system shall implement QAOD orthogonal decomposition of answer representations against question context. The residual magnitude is the hallucination indicator.
+
+### SCENARIO-VERIFY-1740: QAOD vs NLA Head-to-Head
+
+Given the exp1716 60-example test corpus, when QAOD is evaluated against NLA-SAE, then it reports head-to-head TPR/FPR in results/experiment_1740_qaod_vs_nla_head_to_head.json.
