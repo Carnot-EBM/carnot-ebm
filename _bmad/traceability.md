@@ -1657,3 +1657,6 @@
 | SCENARIO-REPORT-1798 | Scaffolding | Exp 1798 Generates Phase 4 Synthesis Retrospective | Exp 1798 |
 | REQ-KAN-1858 | Implemented | GloroKAN Lipschitz Bounds in S2KAN | Exp 1858 |
 | SCENARIO-KAN-1858 | Implemented | S2KAN Lipschitz bounds | Exp 1858 |
+| REQ-CARM-1772-1 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | Implemented | results/experiment_1772_care_prototype.json |
+| REQ-CARM-1772-2 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | Implemented | results/experiment_1772_care_prototype.json |
+| SCENARIO-CARM-1772-1 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | Implemented | results/experiment_1772_care_prototype.json |
