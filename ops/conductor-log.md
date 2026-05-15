@@ -3265,3 +3265,4 @@ IMPORTANT:
 | 2026-05-15 04:26 UTC | Exp 1710: Phase 4 alpha_t n-dependence adversarial | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1710_phase4_ |
 | 2026-05-15 04:38 UTC | Exp 1710: Phase 4 alpha_t n-dependence adversarial | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-15 04:43 UTC | Exp 1711: PyPI publish retry (Phase 1 ship — .173  | FAIL | No file changes produced |
+| 2026-05-15 04:48 UTC | Exp 1711: PyPI publish retry (Phase 1 ship — .173  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1711_pypi_pu |
