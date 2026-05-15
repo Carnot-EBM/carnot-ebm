@@ -1,0 +1,35 @@
+{
+  "schema": "carnot.phase4_alpha_t_audit.v1",
+  "experiment": 1710,
+  "run_date": "2026-05-15T00:00:00.000000Z",
+  "duration_s": 0.0,
+  "random_seed": 171510,
+  "reproducibility_checksum": "missing_alpha_t",
+  "preconditions_checked": [
+    "python -c \"from python.carnot.phase4 import alpha_t\" (failed)",
+    "alpha_t function locatable via grep (failed)"
+  ],
+  "model_specs": {
+    "n_spins": 32,
+    "ensemble_k_total": 6,
+    "random_fraction_grid": [
+      0,
+      0.333,
+      0.667,
+      1.0
+    ],
+    "mld_steps": 100,
+    "n_seeds": 30,
+    "n_cells": 4
+  },
+  "n_samples": 12000,
+  "n_samples_justification": "30 seeds × 100 MLD × 4 cells. n_seeds=30 chosen for CLT bootstrap CI validity. n=32 chosen to eliminate substrate-size confound from prior n=8/16/32/64 measurements.",
+  "random_fraction_grid_results": [],
+  "monotonic_decay_observed": false,
+  "artifact_detected": false,
+  "acceptance_gate_passed": false,
+  "acceptance_gate_criteria": "4-cell ablation reported with bootstrap CIs; monotonicity and artifact-detection flags set per actual data.",
+  "methodology_note": "If delta_alpha stays at ~0.15 across all four cells, this is a structural finding. The new IMPLAUSIBLE_TIGHT_CI adversarial-verify rule will flag any CI tighter than sigma/sqrt(N) — disclose intentional invariance honestly in this field.",
+  "optimization_direction": "neither — falsification audit",
+  "honest_verdict": "blocked_phase4_alpha_t_implementation_missing"
+}
