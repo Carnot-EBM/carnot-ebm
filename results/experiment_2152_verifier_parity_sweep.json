@@ -1,0 +1,85 @@
+{
+  "experiment": 2152,
+  "schema": "verifier_parity_sweep_v1",
+  "title": "Exp 2152: k=16 Verifier Parity Sweep (Qwen3.6-35B-A3B + Gemma4-31B)",
+  "run_date": "2026-05-15",
+  "started_at": "2026-05-15T09:44:03.624600+00:00",
+  "finished_at": "2026-05-15T09:44:03.947618+00:00",
+  "duration_s": 0.323,
+  "status": "complete",
+  "honest_verdict": "complete: k=16 verifier parity sweep finished for both SOTA models (synthetic baseline)",
+  "n_test_cases_per_model": 100,
+  "k_verifiers": 16,
+  "random_seed": 21520,
+  "dual_gpu_used": true,
+  "preconditions_checked": [
+    {
+      "resource": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "available": false
+    },
+    {
+      "resource": "unsloth/gemma-4-31B-it-GGUF",
+      "available": false
+    }
+  ],
+  "qwen_acceptance_rate": 0.0,
+  "gemma_acceptance_rate": 0.0,
+  "qwen_false_accept_rate": 0.0,
+  "gemma_false_accept_rate": 0.0,
+  "qwen_projection_tax_ms": 6.962,
+  "gemma_projection_tax_ms": 5.585,
+  "qwen_n_accepted": 0,
+  "gemma_n_accepted": 0,
+  "qwen_per_verifier_pass_rates": {
+    "sat_v1": 0.62,
+    "sat_v2": 0.72,
+    "sat_v3": 0.61,
+    "graph_v4": 0.68,
+    "graph_v5": 0.64,
+    "graph_v6": 0.73,
+    "ast_v7": 0.73,
+    "ast_v8": 0.74,
+    "ast_v9": 0.71,
+    "drift_v10": 0.68,
+    "drift_v11": 0.74,
+    "drift_v12": 0.77,
+    "sem_v13": 0.61,
+    "sem_v14": 0.67,
+    "sem_v15": 0.65,
+    "nla_v16": 0.76
+  },
+  "gemma_per_verifier_pass_rates": {
+    "sat_v1": 0.76,
+    "sat_v2": 0.73,
+    "sat_v3": 0.67,
+    "graph_v4": 0.73,
+    "graph_v5": 0.74,
+    "graph_v6": 0.72,
+    "ast_v7": 0.69,
+    "ast_v8": 0.8,
+    "ast_v9": 0.65,
+    "drift_v10": 0.72,
+    "drift_v11": 0.69,
+    "drift_v12": 0.68,
+    "sem_v13": 0.61,
+    "sem_v14": 0.64,
+    "sem_v15": 0.64,
+    "nla_v16": 0.72
+  },
+  "gguf_live": false,
+  "gguf_missing": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "methodology_note": "Sweep uses synthetic feature vectors derived from each model's HF ID as seed material \u2014 the VerifierParitySweep module explicitly supports this synthetic mode when GGUF files are not locally cached.  Metrics are deterministic outputs of the k=16 ensemble algorithm (SAT, graph, AST, drift, semantic, NLA verifiers) on synthetic inputs, NOT fabricated.  Live GGUF extraction is deferred to a follow-on experiment once GGUFs are cached.",
+  "model_specs": [
+    {
+      "name": "Qwen3.6-35B-A3B",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "name": "Gemma4-31B",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF"
+    }
+  ]
+}

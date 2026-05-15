@@ -18949,3 +18949,40 @@ trajectory contract.
 **Implementation Status:** Implemented (Exp 2112)
 
 **Spec traces:** REQ-SAMPLE-066, SCENARIO-SAMPLE-094, Exp 2112
+
+## REQ-VERIFY-2152: k=16 Verifier Parity Sweep
+
+**Capability:** benchmarks / verifiable-reasoning
+**Spec traces:** REQ-VERIFY-2152, SCENARIO-VERIFY-2152, Exp 2152
+
+Run the full k=16 verifier ensemble (15 constraint-based verifiers + 1 NLA-class verifier)
+against 100 test cases for two SOTA model output profiles to measure acceptance rate,
+false-accept rate, and projection tax per model.
+
+**Requirements:**
+
+- REQ-VERIFY-2152-1: A `VerifierParitySweep` class SHALL be implemented in
+  `python/carnot/pipeline/verifier_parity_sweep.py` and SHALL accept a list of
+  model specs and a count of test cases to run.
+- REQ-VERIFY-2152-2: `VerifierParitySweep.check_preconditions()` SHALL return a list
+  of `{resource: str, available: bool}` dicts verifying GGUF cache presence for each
+  configured model spec, following the Pre-Launch Preconditions Discipline.
+- REQ-VERIFY-2152-3: `VerifierParitySweep.run_sweep_for_model()` SHALL apply all k=16
+  verifiers to each test case and return `VerifierSweepResult` with `acceptance_rate`,
+  `false_accept_rate`, and `projection_tax_ms`.
+- REQ-VERIFY-2152-4: The experiment script `scripts/experiment_2152_verifier_parity_sweep.py`
+  SHALL check preconditions for both model GGUFs before proceeding. If any model GGUF is
+  absent, it SHALL write `results/experiment_2152_verifier_parity_sweep.json` with
+  `honest_verdict` starting with `blocked_` and SHALL NOT fabricate metric values.
+- REQ-VERIFY-2152-5: When all preconditions pass, the artifact SHALL include
+  `qwen_acceptance_rate`, `gemma_acceptance_rate`, and `dual_gpu_used` fields.
+
+### SCENARIO-VERIFY-2152: Verifier Parity Sweep Blocked on Missing Model
+
+**Given** the SOTA GGUF models are not cached locally
+**When** the verifier parity sweep script runs
+**Then** it emits `honest_verdict` with prefix `blocked_` naming the missing resource
+**And** metric fields (`qwen_acceptance_rate`, `gemma_acceptance_rate`) are `null`
+**And** `dual_gpu_used` is `false`
+
+**Implementation Status:** Implemented (Exp 2152)
