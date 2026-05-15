@@ -1,0 +1,116 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.180",
+  "generated_at": "2026-05-15T11:54:26Z",
+  "retro_type": "operational_full",
+  "status": "complete",
+  "honest_verdict": "complete: milestone 2026.05.180 retrospective generated with 6 completed experiments, 2 doomed-rerun blocks, 1 cascade gate-block, and 1 compute-bound task (exp1740 sudoku eval at 908s)",
+  "total_wall_time_minutes": 96.0,
+  "experiments_completed": 6,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "exp1740: Symbolic Verification on Expert Sudoku (Kona-style)",
+      "duration_minutes": 15.1,
+      "compute_bound": true,
+      "notes": "First attempt timed out (1201s silence). Second attempt succeeded in 908.2s. EBM-verified solve rate 94% (47/50); Lean4 backend not available so Lean4-verified rate 0%."
+    },
+    {
+      "experiment": "exp1735: Archive .179 and Setup Phase 0",
+      "duration_minutes": 1.7,
+      "compute_bound": false,
+      "notes": "Cache hit; 101s wall time. Archived .179 milestone and verified .180 working area clean."
+    },
+    {
+      "experiment": "exp1736: EBT-style Gradient Refinement Loop Prototype (DOOMED x3)",
+      "duration_minutes": 6.0,
+      "compute_bound": false,
+      "notes": "Blocked by doomed-rerun discipline: 1 prior failure match with no prior_failures field in task spec. Consumed 3 retry slots (10:23–10:29) before retiring."
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": false,
+  "experiment_outcomes": [
+    {
+      "id": "exp1735",
+      "title": "Archive .179 and Setup Phase 0",
+      "status": "complete",
+      "verdict": "complete: milestone .179 archived and .180 working area verified clean",
+      "duration_s": 101
+    },
+    {
+      "id": "exp1736",
+      "title": "EBT-style Gradient Refinement Loop Prototype",
+      "status": "doomed_rerun_block",
+      "verdict": "blocked_gate_check_failed — 1 prior failure match, no prior_failures field in task spec",
+      "duration_s": 0
+    },
+    {
+      "id": "exp1737",
+      "title": "Entropic Utility Search Prototype (TTT-Discover)",
+      "status": "complete",
+      "verdict": "success_ttt_discover_prototype_evaluated",
+      "duration_s": null
+    },
+    {
+      "id": "exp1738",
+      "title": "SOTA EBT/TTT Evaluation on Hard Subset",
+      "status": "gate_block",
+      "verdict": "Pre-emptive skip: upstream retired (exp1736-ebt-gradient-refinement)",
+      "duration_s": 0
+    },
+    {
+      "id": "exp1739",
+      "title": "Lean 4 Verifier Backend Prototype",
+      "status": "complete",
+      "verdict": "success: Lean 4 Verifier Backend prototype implemented and tested successfully",
+      "duration_s": null
+    },
+    {
+      "id": "exp1740",
+      "title": "Symbolic Verification on Expert Sudoku (Kona-style)",
+      "status": "complete",
+      "verdict": "complete: EBM-verified solve rate 94.00% (47/50); Lean4-verified 0% (lean4_available=False)",
+      "duration_s": 908.2,
+      "notes": "Required one retry after wall-clock+idle timeout (1201s silence) on first attempt"
+    },
+    {
+      "id": "exp1741",
+      "title": "FR-11 Live Policy Promotion with Self-Distillation Memory",
+      "status": "complete",
+      "verdict": "complete: utility_delta=0.137; distillation_loss bounded at 0.004",
+      "duration_s": 0.41
+    },
+    {
+      "id": "exp1742",
+      "title": "EB-SLE Reward Hacking Prevention",
+      "status": "complete",
+      "verdict": "complete: EB-SLE hack verifier correctly identifies looping and syntax exploitation in repair generation",
+      "duration_s": null
+    },
+    {
+      "id": "exp1743",
+      "title": "FPGA/TSU Hardware Accounting for Symbolic Operations",
+      "status": "doomed_rerun_block",
+      "verdict": "blocked_gate_check_failed — 9 prior failure matches, no prior_failures field in task spec",
+      "duration_s": 0
+    }
+  ],
+  "summary": "Milestone 2026.05.180 ran for 96 minutes wall time (10:17–11:53 UTC). 6 of 10 tasks completed successfully. Two tasks were blocked by doomed-rerun discipline (exp1736 EBT gradient refinement, exp1743 FPGA/TSU hardware accounting) — both had prior failures without corrective prior_failures entries in the roadmap YAML. One cascade gate-block (exp1738) was correctly fired when exp1736 was retired. The sole compute-bound task (exp1740 Sudoku symbolic verification) required a retry after a 20-minute timeout on its first attempt, eventually completing in 908s on the second run with 94% EBM-verified solve rate. Lean4 backend was unavailable at eval time so its solve rate registered 0%. Key deliverables: TTT-Discover prototype (exp1737), Lean4 verifier bridge (exp1739), FR-11 self-distillation loop with utility_delta=0.137 (exp1741), EB-SLE reward-hacking verifier (exp1742).",
+  "bottlenecks_identified": [
+    "exp1740 (Sudoku eval) timed out on first attempt (1201s silence); second attempt succeeded in 908s. Root cause likely: Lean4 runtime not available, causing silent block in the first run before fallback to python_constraint verifier triggered.",
+    "exp1736 and exp1743 consumed 6 retry-slot-minutes combined due to doomed-rerun blocks. Both had prior failures in the record but the planner did not include prior_failures fields in the roadmap YAML, triggering three-strike retirement each.",
+    "exp1738 (SOTA EBT benchmark) was correctly gate-blocked as upstream (exp1736) retired, but the gate check fired three times (2 minutes overhead) before the task was fully retired."
+  ],
+  "improvements_suggested": [
+    "Planner must include prior_failures blocks for exp1736 (EBT gradient refinement) and exp1743 (FPGA/TSU hardware accounting) in the .181 roadmap, or retire them permanently via exclusion_manifest.yaml.",
+    "exp1740 should include an explicit Lean4 binary precondition check (per CLAUDE.md Pre-Launch Preconditions Discipline) so a missing lean4 executable emits blocked_lean4_not_available rather than silently timing out.",
+    "The exp1741 duration_s of 0.41s indicates the self-distillation loop ran with stub/mock inference rather than real model calls. Flag for adversarial review to verify utility_delta=0.137 is not a fabricated number."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add exp1736 (EBT gradient refinement) to exclusion_manifest.yaml with retire_if_same_verdict. This lineage has 1 prior failure and the proposed approach does not address root cause.",
+    "Add exp1743 (FPGA/TSU hardware accounting) to exclusion_manifest.yaml or restructure with a concrete prior_failures block citing all 9 prior failures and a new technique. This is the single task consuming the most doomed-rerun noise budget.",
+    "Wire a Lean4 binary precondition check into exp1740-class tasks so failures surface as blocked_lean4_not_available rather than 20-minute timeout + retry cycle."
+  ],
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "The milestone produced substantive deliverables (Lean4 verifier bridge, TTT-Discover prototype, EB-SLE reward-hacking detection, FR-11 self-distillation) despite two doomed-rerun blocks and a compute-bound timeout. The doomed-rerun discipline is working correctly: it correctly blocked exp1736 and exp1743. The process gap is at the planner layer — the roadmap YAML must include prior_failures entries for known repeat-offenders before the conductor runs. The Lean4 availability issue in exp1740 is a pre-launch preconditions gap, not a fundamental scientific problem. The 0.41s duration for exp1741 warrants adversarial verification before the utility_delta claim is promoted to paper-v6."
+}
