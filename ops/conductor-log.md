@@ -3558,3 +3558,4 @@ IMPORTANT:
 | 2026-05-15 23:06 UTC | Exp 1815: Milestone .189 retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.40s |
 | 2026-05-15 23:08 UTC | Milestone 2026.05.190 activated | OK | 5 tasks queued |
 | 2026-05-15 23:10 UTC | Exp 1821: Codify exp1811 Fast-Slow Variant 3.1x/0. | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 23:12 UTC | Exp 1821: Codify exp1811 Fast-Slow Variant 3.1x/0. | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
