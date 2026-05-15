@@ -5785,3 +5785,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 1771: Phase 1 - Setup CARM Test Cases and Ground Truth (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1771_care_test_suite.json
 - 2026-05-15: Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models (✅ Complete) — honest_verdict=complete: CARM prototype evaluated; results/experiment_1772_care_prototype.json
 - 2026-05-15: Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall (✅ Complete) — honest_verdict=complete: CARM dual-model evaluated; results/experiment_1773_care_evaluation.json
+- 2026-05-15: Exp 1774: Phase 2 - Decompose multi-constraint problem into local energy subsets (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1774_cem_decomposition.json
