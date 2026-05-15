@@ -3566,3 +3566,4 @@ IMPORTANT:
 | 2026-05-15 23:23 UTC | Exp 1823: Phase 4 canonical-metric decision — name | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.09s |
 | 2026-05-15 23:25 UTC | Exp 1823: Phase 4 canonical-metric decision — name | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.24s |
 | 2026-05-15 23:27 UTC | Exp 1823: Phase 4 canonical-metric decision — name | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.12s |
+| 2026-05-15 23:29 UTC | Exp 1824: Phase 1 PyPI retry — 5th attempt, NO ups | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.23s |
