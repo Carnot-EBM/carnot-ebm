@@ -3436,3 +3436,5 @@ IMPORTANT:
 | 2026-05-15 16:43 UTC | Exp 1768: Gated Fast-Slow Variant Scale-Up on SOTA | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1766-token-level-energy-telemetry) |
 | 2026-05-15 16:43 UTC | Exp 1769: ROCE-to-KAN Representation Compiler | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 16:45 UTC | Exp 1768: Gated Fast-Slow Variant Scale-Up on SOTA | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1766-token-level-energy-telemetry) |
+| 2026-05-15 16:45 UTC | Exp 1769: ROCE-to-KAN Representation Compiler | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 16:47 UTC | Exp 1768: Gated Fast-Slow Variant Scale-Up on SOTA | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1766-token-level-energy-telemetry) |
