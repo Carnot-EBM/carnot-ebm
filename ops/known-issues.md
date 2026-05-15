@@ -97,6 +97,33 @@ historical record per CLAUDE.md no-pruning policy.
 **Maintained by:** the local /loop job `875c06b4` (study-phase sweep every 4h at :13).
 Candidates surfaced from arxiv/HN/Semantic Scholar literature scans. Full ranking + scoring at `research-studying.md`. Promoted here only if score > 400 OR genuinely novel-to-Carnot.
 
+### 2026-05-15 operator-flagged candidate (13:15Z; score 400 — promote to known-issues per protocol)
+
+- **arXiv:2605.12484** — "Learning, Fast and Slow: Towards LLMs That Adapt
+  Continually" (May 2026). **Score 400.** Operator-flagged 2026-05-15
+  13:15Z after Google share-link review. Introduces Fast-Slow Training
+  (FST): slow weights = model parameters (RL); fast weights = optimized
+  context (ICL). FST reports 3x sample efficiency vs RL-only, 70% less
+  KL drift from base, less catastrophic forgetting, and successful
+  continual learning where parameter-only RL stalls.
+  **Direct mapping onto Carnot's verify-repair architecture**: slow =
+  k=16 verifier ensemble + base LLM (frozen at inference); fast = the
+  verifier-output-summary that re-prompts the LLM iteration-to-iteration.
+  Carnot's value proposition gains peer-validated theoretical
+  scaffolding. **Triple downstream impact** noted in research-studying.md:
+  (a) paper-v6 §3 architecture-validation cite, (b) potential Phase 4
+  alpha_t rescue if .182 exp1745 confirms ensemble-level invariance
+  (switch measurement target to fast-weight context), (c) FR-11 rethink
+  — paper shows parameter-only RL is strictly worse than fast-slow on
+  sample efficiency + drift + continual learning, explaining the
+  .96-.150+ FR-11 retro stalls. **Concrete .183+ proposal**: "Carnot
+  Fast-Slow Variant" — slow weights frozen (k=16 ensemble + base LLM);
+  fast weights = verifier-output-summary prepended to next prompt;
+  training signal = energy reduction across verify-repair iterations.
+  Acceptance gate: sample efficiency >= 2x baseline AND KL drift <= 0.5x
+  baseline on a 3-task continual-learning switch. Full scoring at
+  research-studying.md Rank 0a-prime.
+
 ### 2026-05-15 sweep candidate (score > 400 — promote to known-issues per protocol)
 
 - **arXiv:2512.15605v3** — Autoregressive LMs are Secretly EBMs
