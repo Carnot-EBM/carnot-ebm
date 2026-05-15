@@ -3182,3 +3182,5 @@ IMPORTANT:
 | 2026-05-14 23:33 UTC | Milestone 2026.05.171 activated | OK | 6 tasks queued |
 | 2026-05-14 23:44 UTC | Exp 1692: THRML/Carnot Curie-Weiss n=128 parity wi | OK | cache hit: 81 passed, 1 warning in 5.81s |
 | 2026-05-14 23:50 UTC | Exp 1693: Phase 4 active-inference delta_alpha at  | OK | 81 passed, 1 warning in 5.10s |
+| 2026-05-15 00:03 UTC | Exp 1694: NLA-class 16th verifier prototype v3 wit | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: cuting tool glob: P |
+| 2026-05-15 00:29 UTC | Exp 1694: NLA-class 16th verifier prototype v3 wit | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1344s (300s silence). Last out |
