@@ -5,8 +5,61 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-15 (7 sweeps in 24h)
-**Current Focus:** Phase 4 ensemble-level alpha measurement now confirmed inaccessible across BOTH derivations (exp1715 falsified alpha_t; exp1741 confirmed alpha_t' also scale-invariant); QAOD vs NLA tied at bit-identical TPR=0.4722 (exp1740 — diagnosis pending in .182 exp1746); literature clusters saturating — same papers re-hitting across rotations; **NEW 2026-05-15T12:48Z: cluster-saturation pattern formalized; queries need broadening next rotation**.
+**Updated:** 2026-05-15 (8 sweeps in 24h)
+**Current Focus:** Phase 4 measurement confirmed substrate-inaccessible at ensemble level (.182 exp1745); Fast-Slow Variant (arXiv:2605.12484 Score 400) is the explicit rescue, queued as .186 exp1781; operator-flagged QAOD head-to-head (.181 exp1740) corpus-mismatch diagnosis complete (.182 exp1746); sweep dedupe protocol shipped 2026-05-15T13:00Z (scripts/sweep_dedupe.py + memory entry); **NEW 2026-05-15T16:50Z: first sweep with dedupe filter active — 17 of 21 candidates filtered as known, validating the protocol**.
+
+## Sweep 2026-05-15T16:50Z (Claude outer-loop, hour-mod-4=0; clusters 2/0/3 — FIRST with dedupe filter)
+
+**Queries fired (rotated to clusters with stalest coverage):**
+- arxiv abs:"sparse autoencoder" OR "white box probe" OR "reconstruction error" AND "LLM" → 8 fetched
+- arxiv abs:"verifier ensemble" OR "null space attack" OR "specification gaming" → 8 fetched
+- arxiv abs:"active inference" OR "free energy" AND "LLM" → 5 fetched
+- HN skipped (3 prior 0-hits in 24h; no broader query yet authorized)
+
+**Dedupe filter (NEW workflow step 2.5, first deployment):**
+21 candidates fetched, 17 already-known filtered at ingest via
+`python3 scripts/sweep_dedupe.py --filter`, 4 truly-new candidates
+surfaced for scoring.
+
+**Result: 0 NEW promotions.** All 4 newly-surfaced candidates either
+out-of-domain or low-score:
+
+- **arXiv:2602.19160** "LLM Reasoning from General Game Playing"
+  (Świechowski et al., Feb 2026). Score 3x3x2x2 = **36**. LLM logical-
+  error taxonomy in GGP environments; mildly applicable for adversarial
+  corpus design but not critical path. Skipped.
+- **arXiv:2602.18082** "AndroWasm" — Android malware obfuscation,
+  out-of-domain false positive on the "specification gaming" filter
+  (the paper uses the phrase in security context). Skipped.
+- **arXiv:2601.23206** "Game content via small LMs" — game content
+  generation, out-of-domain. Skipped.
+- **arXiv:2605.12784** "ToolMol" drug discovery agentic framework —
+  molecular agentic, out-of-domain. Skipped.
+
+**Dedupe protocol validated.** Pre-dedupe, this sweep would have
+re-scored 17 papers we've already ranked across the prior 7 sweeps
+(2604.07650, 2605.02269, 2604.12500, 2603.28063, 2605.12874, 2605.14694,
+2605.14449, 2605.14347, 2605.13930, 2605.12809, 2605.12770, 2605.12245,
+2605.07639, 2605.12536, 2605.12495, 2605.11638, 2603.08806). Post-dedupe,
+only 4 new candidates scored — saving ~70% of the prose budget per the
+operator-confirmed efficiency win 2026-05-15.
+
+### Sweep takeaways
+
+1. **Dedupe filter works as designed** (17/21 = 81% filter rate). The
+   protocol is now stable; future sweeps will report in the
+   "N fetched / M known-skipped / P scored / Q promoted" compact format.
+2. **The 3 out-of-domain false positives** (AndroWasm, game content,
+   ToolMol) confirm the operator-precedence bug noted in the
+   12:48Z sweep entry — narrow `abs:"phrase"` matches hit unrelated
+   papers when the phrase has alternate meanings. Adding explicit
+   AND-grouping (per the operator-discussed cron-URL upgrade) would
+   filter these at fetch.
+3. **0 promotions ≠ low-yield**. The 81% dedupe rate means the queue
+   is well-mapped and stable. Operator-flagged manual additions
+   (e.g., arXiv:2605.12484 Fast-Slow at Score 400) remain the
+   highest-yield input channel for surfacing genuinely-new ideas
+   the auto-rotation misses.
 
 ## Sweep 2026-05-15T12:48Z (Claude outer-loop, hour-mod-4=0; clusters 1 EBM + 3 active inference)
 
