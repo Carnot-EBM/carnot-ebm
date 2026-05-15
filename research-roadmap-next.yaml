@@ -1,0 +1,226 @@
+milestone: "2026.05.174"
+milestone_title: "Phase 2 Continuous Latent Trace Editing and Verification-Compute Routing"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction: "Strict enforcement: only one repair salvage loop, no new hardware syntheses."
+
+tasks:
+  - id: exp2101-interwhen-monitoring
+    title: "Exp 2101: Interwhen Asynchronous Monitoring for CCTU"
+    prompt: |
+      CONTEXT: We must reduce the generation-verification gap. The literature (interwhen) suggests periodic polling of reasoning traces rather than waiting for completion.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/verify_repair.py
+      TASK: Implement an asynchronous test-time monitor prototype that polls a generated trace and interrupts on constraint violation.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/interwhen_monitor.py` exposing `InterwhenMonitor`.
+      2. Integrate it into the `VerifyRepairPipeline`.
+      3. Evaluate on 10 constraint cases using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      4. Write `results/experiment_2101_interwhen.json` with `interruption_rate` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2102-hover-safe-prefix
+    title: "Exp 2102: HoVer Safe-Prefix Continuation"
+    gated_on:
+      - upstream: exp2101-interwhen-monitoring
+        artifact_field: interruption_rate
+        op: '>='
+        value: 0.0
+    prompt: |
+      CONTEXT: When a monitor interrupts generation, regenerating from scratch is expensive. HoVer uses energy scoring to find the last safe prefix.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/interwhen_monitor.py
+      TASK: Implement a safe-prefix truncator and generation continuation mechanic based on Carnot energy.
+      CONCRETE STEPS:
+      1. Add `safe_prefix_truncate` to `VerifyRepairPipeline` that truncates at the first high-energy span.
+      2. Use `unsloth/gemma-4-31B-it-GGUF` to continue generation from the prefix.
+      3. Write `results/experiment_2102_hover.json` with `compute_saved_pct` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2103-semantic-energy-detection
+    title: "Exp 2103: Semantic Energy for Hallucination Detection"
+    prompt: |
+      CONTEXT: Time-series logit telemetry (HALT) was confounded. We need a semantic energy detector.
+      EXISTING CODE TO READ FIRST: python/carnot/telemetry/
+      TASK: Implement Semantic Energy hallucination detection that clusters outputs and scores semantic confidence using local SOTA top-k logprobs.
+      CONCRETE STEPS:
+      1. Create `python/carnot/telemetry/semantic_energy.py`.
+      2. Run inference with `unsloth/gemma-4-26B-A4B-it-GGUF` to get top-k logprobs.
+      3. Calculate semantic energy metrics and compare against format-validity baselines.
+      4. Write `results/experiment_2103_semantic_energy.json` with `auroc` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2104-constrainprompt-compiler
+    title: "Exp 2104: ConstrainPrompt Compiler"
+    prompt: |
+      CONTEXT: We must expand executable constraints without manual authoring.
+      EXISTING CODE TO READ FIRST: python/carnot/solvers/
+      TASK: Build a ConstrainPrompt-style compiler that takes natural language rules and generates executable Python validators.
+      CONCRETE STEPS:
+      1. Create `python/carnot/solvers/constrain_prompt.py`.
+      2. Compile 10 NL rules into validators using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      3. Test the generated validators on known good/bad outputs.
+      4. Write `results/experiment_2104_constrainprompt.json` with `compile_success_rate` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: codex
+    model: gpt-5.5
+
+  - id: exp2105-latent-trace-generation
+    title: "Exp 2105: Non-Autoregressive Latent Trace Generation Prototype"
+    prompt: |
+      CONTEXT: To achieve Kona parity, we must transition to non-autoregressive trace generation in continuous space.
+      EXISTING CODE TO READ FIRST: python/carnot/phase3/
+      TASK: Build a continuous latent trace generator stub that emits fixed-length continuous sequences instead of discrete tokens.
+      CONCRETE STEPS:
+      1. Create `python/carnot/phase3/latent_generator.py`.
+      2. Define a transformation from problem statement to a fixed-dimensional latent tensor.
+      3. Write `results/experiment_2105_latent_generation.json` with `schema` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2106-continuous-problem-mapping
+    title: "Exp 2106: Continuous Latent Space Problem Mapping"
+    gated_on:
+      - upstream: exp2105-latent-trace-generation
+        artifact_field: schema
+        op: contains
+        value: "carnot"
+    prompt: |
+      CONTEXT: The continuous latent sequence needs to represent constraint domains (like Sudoku).
+      EXISTING CODE TO READ FIRST: python/carnot/phase3/latent_generator.py
+      TASK: Map a 9x9 Sudoku instance into a continuous tensor representation and define an energy function for constraint violations.
+      CONCRETE STEPS:
+      1. Implement `ContinuousSudokuEnergy` in `python/carnot/phase3/continuous_sudoku.py`.
+      2. Ensure it provides differentiable gradients with respect to the latent state.
+      3. Write `results/experiment_2106_problem_mapping.json` with `gradient_available` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: codex
+    model: gpt-5.5
+
+  - id: exp2107-gradient-based-trace-editor
+    title: "Exp 2107: Gradient-Based Continuous Trace Editor"
+    gated_on:
+      - upstream: exp2106-continuous-problem-mapping
+        artifact_field: gradient_available
+        op: ==
+        value: true
+    prompt: |
+      CONTEXT: Kona edits reasoning traces by minimizing energy globally.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/casal.py
+      TASK: Apply the CASAL sampler or standard gradient descent to edit the continuous trace and minimize the `ContinuousSudokuEnergy`.
+      CONCRETE STEPS:
+      1. Initialize a random latent Sudoku state.
+      2. Run CASAL for 1000 steps to minimize constraint energy.
+      3. Project the continuous state back to discrete integers to check validity.
+      4. Write `results/experiment_2107_trace_editor.json` with `final_energy`, `validity_pct`, and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2108-kona-parity-benchmark
+    title: "Exp 2108: Kona-Parity Sudoku Benchmark"
+    gated_on:
+      - upstream: exp2107-gradient-based-trace-editor
+        artifact_field: validity_pct
+        op: '>='
+        value: 0.0
+    prompt: |
+      CONTEXT: Kona claims 96.2% on Sudoku using EBRM. We must benchmark our latent trace editor.
+      EXISTING CODE TO READ FIRST: python/carnot/phase3/continuous_sudoku.py
+      TASK: Scale Exp 2107 to 50 hard Sudoku puzzles.
+      CONCRETE STEPS:
+      1. Run the latent trace generator and CASAL energy minimization on 50 instances.
+      2. Record execution time and success rate.
+      3. Write `results/experiment_2108_kona_parity.json` with `success_rate`, `avg_latency_ms`, and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    max_turns: 50
+    agent_type: claude
+
+  - id: exp2109-pinet-rescue
+    title: "Exp 2109: PiNet Convex Splitting Layer Rescue"
+    prompt: |
+      CONTEXT: PiNet (Exp 2091) failed due to CLI routing and markup issues. It remains a key structural layer for convex constraints.
+      EXISTING CODE TO READ FIRST: python/carnot/models/pinet_layer.py
+      TASK: Rescue and stabilize the PiNet Douglas-Rachford projection layer.
+      CONCRETE STEPS:
+      1. Fix `python/carnot/models/pinet_layer.py` integration issues.
+      2. Write unit tests confirming projection satisfies convex inequalities.
+      3. Write `results/experiment_2109_pinet_rescue.json` with `projection_success` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    max_turns: 50
+    model: opus
+
+  - id: exp2110-casal-pinet-integration
+    title: "Exp 2110: Integration of PiNet with CASAL"
+    gated_on:
+      - upstream: exp2109-pinet-rescue
+        artifact_field: projection_success
+        op: ==
+        value: true
+    prompt: |
+      CONTEXT: We must guarantee zero-violation safety in continuous sampling.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/casal.py, python/carnot/models/pinet_layer.py
+      TASK: Integrate the PiNet projection layer into the CASAL sampler step to strictly enforce bounds.
+      CONCRETE STEPS:
+      1. Modify `casal_sample` to call `pinet_layer.project` on the state at each primal step.
+      2. Evaluate convergence and constraint violation rates.
+      3. Write `results/experiment_2110_casal_pinet.json` with `violation_rate` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2111-ebft-latent-features
+    title: "Exp 2111: Energy-Based Fine-Tuning (EBFT) with Latent Features"
+    prompt: |
+      CONTEXT: EBFT uses feature matching rather than token-level loss. We will apply this to our latent generator.
+      EXISTING CODE TO READ FIRST: python/carnot/phase3/latent_generator.py
+      TASK: Implement an EBFT contrastive loss for the continuous latent state.
+      CONCRETE STEPS:
+      1. Create `python/carnot/training/ebft_loss.py`.
+      2. Implement feature matching divergence between real reasoning traces and model-generated latent traces.
+      3. Write `results/experiment_2111_ebft_latent.json` with `loss_value` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2112-z1-sdk-dtm-stub
+    title: "Exp 2112: Z1 SDK and DTM Stub Alignment"
+    prompt: |
+      CONTEXT: Extropic Z1 requires a Denoising Thermodynamic Model (DTM) architecture. We must align our THRML simulation stubs to support this.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/z1_drift_compatibility.py
+      TASK: Refactor the THRML Ising/Gibbs wrapper to support continuous DTM signatures required for Z1.
+      CONCRETE STEPS:
+      1. Create `python/carnot/samplers/dtm_stub.py`.
+      2. Add standard `sample_thermodynamic` interface.
+      3. Write `results/experiment_2112_z1_dtm.json` with `interface_aligned` and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    agent_type: claude
+
+  - id: exp2113-z1-hardware-accounting
+    title: "Exp 2113: Z1 Hardware P-Bit Accounting"
+    gated_on:
+      - upstream: exp2112-z1-sdk-dtm-stub
+        artifact_field: interface_aligned
+        op: ==
+        value: true
+    prompt: |
+      CONTEXT: We need to know if our latent models fit on the Z1 architecture.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/dtm_stub.py
+      TASK: Perform no-synthesis hardware resource accounting (P-bit logic limits) for our continuous Sudoku energy function.
+      CONCRETE STEPS:
+      1. Calculate estimated BOP/RM/NABS metrics for a single thermodynamic step.
+      2. Write `results/experiment_2113_z1_accounting.json` with `estimated_pbits_needed`, `hardware_execution_claim=false`, and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    max_turns: 30
+    agent_type: claude
+
+  - id: exp2114-retro
+    title: "Exp 2114: Milestone .174 Retrospective"
+    prompt: |
+      CONTEXT: We must analyze the successes and failures of Milestone .174.
+      EXISTING CODE TO READ FIRST: ops/status.md, results/
+      TASK: Write a retrospective summarizing Continuous Latent Trace Editing, Z1 preparations, and verification routing.
+      CONCRETE STEPS:
+      1. Collate metrics from experiments 2101-2113.
+      2. Assess whether Kona-parity was achieved.
+      3. Write `results/experiment_2114_retro.json` with `highest_leverage_actions`, `estimated_time_savings_pct`, `meta_reflection`, and `honest_verdict`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+    max_turns: 50
+    agent_type: gemini

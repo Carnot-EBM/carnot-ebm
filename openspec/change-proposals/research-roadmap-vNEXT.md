@@ -1,59 +1,63 @@
-# Research Roadmap vNEXT (Milestone 2026.05.170)
+# Carnot Research Roadmap: vNEXT (Milestone 2026.05.174)
 
-**Date:** 2026-05-14
+**Title:** Phase 2 Continuous Latent Trace Editing and Verification-Compute Routing
+**Target:** 2026-05-174
 **Status:** DRAFT
 
-## 1. Context and Retrospective
+## 1. What the Previous Milestone Proved
 
-Milestone `.169` successfully laid the groundwork across multiple parallel tracks:
-- **Hardware Sovereignty:** Proved PolarFire SoC passive execution of the pure-Python verifier subset.
-- **Phase 4 Active Inference:** Scaled continuous active inference to $n=16, 32$, evaluating the $\Delta\alpha$ scaling limits.
-- **THRML Bias Investigation:** Differentiated between finite-N and systematic bias in the `carnot` vs `thrml` joint underestimate.
-- **Phase 1 Ship Track:** Successfully executed a dry-run PyPI build and Twine verification.
+Milestone `.173` successfully closed out the Phase 1 Ship-Track Density tasks. Key outcomes included scaling the zero-false-accept constraint stack to multi-turn drift, turning FR-11 query-time updates into verified memory growth without soundness mistakes, and stabilizing the local SOTA GGUF runtime. However, we identified three critical gaps to close before Phase 3 (Globally Scored Reasoning) can become a reality:
+1. **Verification-Compute Routing:** Generating a full sequence before validating is too costly and leads to high residual drift.
+2. **Kona-Parity Continuous Latent Trace Editing:** Traditional LLM reasoning is autoregressive and discrete. EBMs like Kona 1.0 succeed by reasoning in continuous latent space where energy-minimization enables non-autoregressive generation and local editing.
+3. **Hardware Execution Target Migration:** Extropic's Z1 chip is confirmed for Early Access 2026 as a mass-manufacturable CMOS TSU. Carnot must transition its THRML simulation stubs to support DTM (Denoising Thermodynamic Model) architectures.
 
-However, three major gaps remain between our current architecture and the PRD vision:
-1. **Continuous Self-Learning (Gap 1):** The autoresearch loop is currently constrained to searching the architecture space; it lacks a native gradient-based fine-tuning mechanism (like Energy-Based Fine-Tuning) to incrementally update the LLM solver component directly against the energy landscape.
-2. **Hard Constraint Satisfaction in Continuous Space (Gap 2):** While Ising and Boolean verifiers provide hard discrete constraints, the Phase 3 continuous models rely on soft penalties and Langevin sampling. Recent 2025/2026 literature (e.g., CASAL) introduces primal-dual split augmented sampling to guarantee hard physical and mathematical constraints during generative modeling.
-3. **Phase 2 Asymptotic Hardware Execution (Gap 3):** The transition to discrete SB RTL (KV260) or Extropic TSU must move beyond simulated bounds and record true latency to establish the performance baseline needed before Phase 3 training.
+## 2. Architecture Diagram
 
-## 2. Milestone Objectives
+```mermaid
+graph TD
+    subgraph Generation Layer
+        LLM[Mandated SOTA GGUF] --> CCTU[CCTU Benchmark]
+        LLM -.->|Trace generation| Monitor(Interwhen Monitor)
+        Monitor -.->|Interrupt| SP(HoVer Safe-Prefix Continuation)
+    end
 
-Milestone `.170` aims to close these gaps by injecting 2025/2026 state-of-the-art EBM methods into the Carnot framework, while shipping mature Phase 1 components.
+    subgraph Kona-Parity Latent Reasoning
+        NAG[Non-Autoregressive Latent Generator]
+        CASAL[CASAL Primal-Dual Sampler]
+        NAG -->|Continuous Trace| CASAL
+        CASAL -->|Global Energy Score| TraceEditor[Gradient-Based Trace Editor]
+    end
 
-### Objective 1: Implement CASAL for Hard Constraints
-Integrate strictly constrained generative modeling via Split Augmented Langevin Sampling (CASAL) to replace soft-penalty Langevin samplers, providing zero-false-accept guarantees in continuous EBMs.
+    subgraph Hardware Stub Layer
+        DTM[DTM Architecture Interface] --> THRML[THRML TSU Simulator]
+        THRML --> Z1[Z1 Accounting / Readiness]
+    end
 
-### Objective 2: Continuous Self-Learning with EBFT
-Implement the Energy-Based Fine-Tuning (EBFT) feature-matching objective to allow the EBM to generate semantic feedback for the `unsloth/gemma-4-26B-A4B-it-GGUF` and `unsloth/Qwen3.6-35B-A3B-GGUF` solvers, enabling unsupervised self-improvement.
+    Generation Layer --> Kona-Parity Latent Reasoning
+    Kona-Parity Latent Reasoning --> Hardware Stub Layer
+```
 
-### Objective 3: Accelerate KAEMEnergy via SineKAN
-Replace the B-spline inverse-transform sampling in the KAEMEnergy fast-path with periodic sine grids (SineKAN) or Feature-Enriched KANs (FEKAN), targeting a 10x inference speedup.
+## 3. Phase Descriptions
 
-## 3. Phase Descriptions and Task Graph
+### Phase 1: Verification-Compute Routing and Telemetry (Exps 2101-2104)
+Implement test-time monitoring to interrupt generation when intermediate constraints fail, reducing wasted compute. Implement HoVer-style safe-prefix continuation so we do not discard entire traces when only the suffix drifts. Automate prompt-to-constraint validation (ConstrainPrompt) to expand verification coverage without manual coding.
 
-The 12 experiments in this milestone are structured across four phases.
+### Phase 2: Continuous Trace Editing (Kona Parity) (Exps 2105-2108)
+Transition from step-by-step token prediction to trace-level non-autoregressive generation in a continuous latent space. Incorporate gradient-based refinement and global energy scoring to emulate Kona 1.0 capabilities, benchmarking on structured tasks like Sudoku.
 
-### Phase 1: Foundation, Ship, and Fixes
-- **Exp 1685:** PyPI Publish Actual (`twine upload`).
-- **Exp 1686:** THRML bias correction (implementing fixes found in .169).
-- **Exp 1687:** KV260 Vivado Synthesis & bitfile generation retry.
+### Phase 3: Differentiable Constraint Layers (Exps 2109-2111)
+Rescue the PiNet Douglas-Rachford splitting prototype. Use it alongside the CASAL primal-dual sampler to guarantee zero-violation safety in the continuous domain. Transition the continuous self-learning loop to Energy-Based Fine-Tuning (EBFT) using feature matching rather than token-level CE loss.
 
-### Phase 2: Continuous Hard Constraints (CASAL)
-- **Exp 1688:** CASAL Primal-Dual sampler implementation in `carnot.samplers`.
-- **Exp 1689:** CASAL vs MCMC Langevin verification on $n=16, 32$ continuous landscapes.
-- **Exp 1690:** Integration of CASAL as a Phase 3 continuous fast-path verifier.
-
-### Phase 3: Continuous Self-Learning (EBFT)
-- **Exp 1691:** Implement the EBFT loss function in JAX.
-- **Exp 1692:** E2E Autoresearch loop trial: fine-tune the solver parameter subset using EBFT on held-out constraints (using `unsloth/gemma-4-26B-A4B-it-GGUF`).
-- **Exp 1693:** Transpile the successful JAX EBFT/CASAL structures to `carnot-samplers` (Rust).
-
-### Phase 4: KAN Acceleration & Retro
-- **Exp 1694:** Implement SineKAN/FEKAN substitute for KAEMEnergy splines.
-- **Exp 1695:** Benchmark SineKAN vs baseline KAEMEnergy.
-- **Exp 1696:** Milestone .170 Retrospective.
+### Phase 4: Hardware Readiness (Z1) (Exps 2112-2114)
+Align the THRML simulator stack with the expected Extropic Z1 SDK interfaces, specifically for Denoising Thermodynamic Models (DTMs). Perform a no-synthesis hardware resource accounting for probabilistic sampling on Z1, ensuring we remain within bounds. Perform the retrospective.
 
 ## 4. Hardware Requirements
-- **Local:** Dual RTX 3090 (for running Qwen 3.6 35B and Gemma 4 31B GGUFs).
-- **Edge:** KV260 board (if available, for Exp 1687 execution).
-- **Compute:** CPU-bound tasks rely on standard parallelism. JAX targets CPU or ROCm/CUDA.
+- **Local GPUs:** Dual RTX 3090 (or similar) mandated for running local SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`).
+- **Hardware Claims:** No synthesis or authenticated execution claims are permitted for Extropic Z1, XTR-0, or Kona hardware in this milestone. Use CPU-based THRML simulations only.
+
+## 5. Dependency Graph
+
+- Phase 1 (2101-2104) is foundational for dynamic routing.
+- Phase 2 (2105-2108) builds continuous space reasoning.
+- Phase 3 (2109-2111) depends on Phase 2 continuous traces.
+- Phase 4 (2112-2114) depends on Phase 2 models to run through THRML stubs.
