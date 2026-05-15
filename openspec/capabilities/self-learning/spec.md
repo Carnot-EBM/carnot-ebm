@@ -5691,3 +5691,15 @@ with `baseline_energy`, `final_energy`, `energy_delta`, and `acceptance_gate_pas
 **Given** synthetic trace updates are available
 **When** the CSL check evaluator runs
 **Then** it produces a JSON artifact with `schema` equal to "carnot.csl.check.v1" and `check_implemented` as True.
+
+## REQ-CSL-1780: Run FR-11 CSL loop with unsloth/Qwen3.6-35B-A3B-GGUF
+
+**Given** the non-forgetting framework
+**When** the CSL loop script executes the self-learning loop with model `unsloth/Qwen3.6-35B-A3B-GGUF`
+**Then** it MUST produce a JSON artifact in `results/experiment_1780_csl_loop.json`
+**And** the output artifact MUST include `schema: "carnot.csl.loop.v1"`, `utility_delta` (float), and `soundness_mistakes` (int).
+
+### SCENARIO-CSL-1780: FR-11 CSL loop evaluates utility and soundness
+**Given** a loop execution environment
+**When** the CSL loop evaluator runs
+**Then** it produces a JSON artifact with `schema` equal to "carnot.csl.loop.v1", a float `utility_delta`, and an integer `soundness_mistakes`.
