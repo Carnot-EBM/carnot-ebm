@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,202 Experiments Across the Public Record, 200 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 3,213 Experiments Across the Public Record, 202 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -5527,3 +5527,8 @@ Experiment 1768 completed the gated Fast-Slow Variant scale-up on SOTA GGUFs, si
 
 **Token-Level Energy Telemetry**
 Experiment 1766 implemented token-level energy telemetry for agentic reinforcement, closing critical feedback loops for structural stability.
+
+
+### Phase 25 — Milestone .189 Recovery and Fast-Slow Variant (May 2026)
+
+Milestone 2026.05.189 completed successfully, recovering from the .187/.188 gate-cascade. Key experiments included the Carnot Fast-Slow Variant prototype without upstream gates (Exp 1811) and the Phase 4 method decision (Exp 1814).
