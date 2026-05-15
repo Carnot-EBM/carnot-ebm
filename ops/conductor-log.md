@@ -3398,3 +3398,4 @@ IMPORTANT:
 | 2026-05-15 15:16 UTC | Exp 1756: Substrate-Aware KAN LUT/BRAM Accounting | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 15:18 UTC | Exp 1757: FR-11 Continuous Self-Learning with Dyna | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-15 15:20 UTC | Exp 1757: FR-11 Continuous Self-Learning with Dyna | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-15 15:22 UTC | Exp 1757: FR-11 Continuous Self-Learning with Dyna | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |

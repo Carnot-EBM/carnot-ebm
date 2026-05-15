@@ -1,0 +1,42 @@
+{
+  "experiment": 1758,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-15",
+  "started_at": "2026-05-15T15:24:11.600682+00:00",
+  "finished_at": "2026-05-15T15:24:11.600682+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1758: Energy-Guided Decoding on Qwen 3.6-35B-A3B",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1959-tri-sota-constrained-eval",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp1983-energy-guided-decoding-sota",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp886-constrained-decoding-prefilter",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: no_fp_reduction"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
