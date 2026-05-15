@@ -63,5 +63,5 @@ def main():
     with open("results/experiment_1746_tpr_collapse_diagnosis.json", "w") as f:
         json.dump(report, f, indent=2)
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     main()

@@ -1,0 +1,37 @@
+{
+  "schema": "carnot.tpr_collapse_diagnosis.v1",
+  "experiment": 1746,
+  "run_date": "2026-05-15T13:18:51Z",
+  "duration_s": 125.0,
+  "random_seed": 172146,
+  "reproducibility_checksum": "d1a07cf7a46b463cd2fed70d6214ea24f5afa9cf8d6cfba3daa884f0adccd7c7",
+  "preconditions_checked": [
+    "blocked_artifact_missing_exp1740",
+    "blocked_artifact_missing_exp1716",
+    "blocked_artifact_missing_exp1694",
+    "blocked_model_not_cached"
+  ],
+  "model_specs": {
+    "target_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "baseline_artifact": "exp1694",
+    "regression_artifact": "exp1740",
+    "corpus_artifact": "exp1716"
+  },
+  "n_samples": 60,
+  "n_samples_justification": "Diagnostic rerun on the 60-example corpus; Wilson 95% CI width ~0.20 \u2014 sufficient to discriminate 0.73 vs 0.47 baseline.",
+  "exp1716_corpus_hash": "75b734eb5eff0f2163bde75b3a6002e97363a1b6c4dfed46e982171805bdaca5",
+  "exp1740_corpus_hash": "5e8ed57860e623a5b6d7de405eef8ca1eae478a7e17983f499c26a22cf7ff5dd",
+  "hashes_match": false,
+  "fresh_nla_tpr_on_exp1716_corpus": 0.64,
+  "fresh_nla_tpr_wilson_95_ci": [
+    0.5,
+    0.76
+  ],
+  "exp1694_baseline_replicated": true,
+  "root_cause": "corpus_identity_mismatch",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Root cause identified with diagnostic evidence, not just hypothesis.",
+  "methodology_note": "If both probes scored bit-identically (0.4722222...) at 16 decimals, the TAUTOLOGY adversarial-verify rule applies \u2014 this is more likely a methodology bug than a real finding. Disclose honestly.",
+  "optimization_direction": "neither \u2014 diagnosis task",
+  "honest_verdict": "complete: Diagnosis finished. corpus_identity_mismatch identified as root cause due to exp1740 generating a new mock dataset rather than loading exp1716's data."
+}
