@@ -3509,3 +3509,4 @@ IMPORTANT:
 | 2026-05-15 19:53 UTC | Phase 3: Token-Level Energy Telemetry for Agentic  | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 19:55 UTC | Phase 3: QAOD vs NLA head-to-head on synced corpus | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
 | 2026-05-15 19:55 UTC | Phase 3: Token-Level Energy Telemetry for Agentic  | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 20:01 UTC | Phase 3: Findings audit and corrigenda (.186 and . | OK | 81 passed, 1 warning in 5.29s |
