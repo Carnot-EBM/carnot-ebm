@@ -12822,3 +12822,25 @@ This sweep was run after milestone `.173` completed. The literature search revea
 - **Reference:** Stanley, H. E. (1971). Introduction to Phase Transitions and Critical Phenomena. Oxford University Press. (Provides the standard reference for the m = tanh(beta * m) self-consistency equation).
 - **Source Artifacts:** `results/experiment_1709_thrml_critical_fluctuation.json`, `results/experiment_1692_thrml_curie_weiss_ground_truth.json`
 - **Relevance to Carnot:** Codifies the baseline expectations for the analytic Curie-Weiss mean-field behavior. Experiment 1709 demonstrates that at beta=1.50, delta_m=0.006 is achieved with 500-step burn-in (exact `delta_m`: 0.005814120984296567). At beta=1.20, delta_m=0.019 is achieved with 50,000-step burn-in (exact `delta_m`: 0.01933614741784284). However, at beta=1.05, `smallest_intervention_closing_gap["1.05"] = null`, with bimodality observed at both 1.05 and 1.20.
+
+## 2026-05-15 Pre-.179 Planning Sweep
+
+### Equilibrium Matching: Generative Modeling with Implicit Energy-Based Models
+- **Paper:** arXiv:2510.02300
+- **What:** Learns an equilibrium gradient of an implicit energy landscape, enabling optimization-driven generation without noise schedules.
+- **Relevance to Carnot:** Extends the continuous latent generation pathway for Phase 4.
+
+### Learning Iterative Reasoning through Energy Diffusion (IRED)
+- **Paper:** arXiv:2406.11179
+- **What:** Solves complex tasks (Sudoku, matrix completion) by iteratively optimizing a sequence of learned annealed energy landscapes.
+- **Relevance to Carnot:** Directly aligns with Carnot's iterative solver and energy-guided reasoning loops.
+
+### Formal Synthesis of Safe KAN Controllers with Barrier Certificates
+- **Paper:** arXiv:2410.16281
+- **What:** Uses KAN symbolization to enable formal verification using SMT solvers (dReal).
+- **Relevance to Carnot:** Crucial for formally verifying safety properties of Carnot's KAN-based energy tiers via SMT.
+
+### Exploring the Limitations of KANs in Classification
+- **Paper:** arXiv:2407.17790
+- **What:** FPGA hardware implementation comparison (Vitis HLS) showing KANs consume significantly more BRAMs/DSPs than MLPs.
+- **Relevance to Carnot:** Sets baseline expectations and justifies no-synthesis complexity accounting for KAN architectures before deployment.
