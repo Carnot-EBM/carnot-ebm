@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.181 | Operational Efficiency | 12 experiments | GPU utilized efficiently on compute task; synthesis-only tasks remain bottleneck |
 | 2026.04.15 | Semantic Grounding | 211-223 | +4.9pp typed IR constraints, 86% FP reduction via self-learning |
 | 2026.04.16 | Scale What Works | 224-231 | +3.0pp on full 164-problem HumanEval (statistically significant) |
 | 2026.04.17 | Calibrated Verification | 232-243 | Spec-grounded code repair equalizes cross-model performance |

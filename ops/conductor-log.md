@@ -3348,3 +3348,4 @@ IMPORTANT:
 | 2026-05-15 12:17 UTC | Exp 1741: Phase 4 GENUINE substrate scaling sweep  | OK | 81 passed, 1 warning in 5.22s |
 | 2026-05-15 12:24 UTC | Exp 1742: EBT-style gradient refinement loop retry | OK | 81 passed, 1 warning in 5.21s |
 | 2026-05-15 12:29 UTC | Exp 1743: .179 + .180 findings audit + corrigenda | OK | 81 passed, 1 warning in 5.30s |
+| 2026-05-15 12:34 UTC | Exp 1744: Milestone .181 retrospective | OK | 81 passed, 1 warning in 5.35s |

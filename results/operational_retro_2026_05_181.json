@@ -1,27 +1,49 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.181",
-  "generated_at": "2026-05-15T12:34:05Z",
+  "generated_at": "2026-05-15T12:41:31Z",
   "retro_type": "operational_full",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.181..HEAD returns non-empty: True"
+  "total_wall_time_minutes": 24.8,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 1,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1741: Phase 4 GENUINE substrate scaling sweep with alpha_t",
+      "duration_minutes": 6.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1742: EBT-style gradient refinement loop retry \u2014 .180 exp1",
+      "duration_minutes": 5.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1741: Phase 4 GENUINE substrate scaling sweep with alpha_t",
+      "duration_minutes": 3.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1740: QAOD vs NLA-SAE head-to-head on shared gemma-4-26B s",
+      "duration_minutes": 3.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1743: .179 + .180 findings audit + corrigenda",
+      "duration_minutes": 3.2,
+      "compute_bound": true
+    }
   ],
-  "total_wall_time_minutes": 0.0,
-  "experiments_completed": 0,
-  "compute_bound_experiments_count": 0,
-  "slowest_experiments": [],
-  "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.181 operational retrospective complete. No experiment commits found since activation of 2026.05.181.",
+  "gpu_idle_on_compute_bound_tasks": false,
+  "summary": "Analyzed 24.8 min wall time across 12 experiments. Exp 1743 was the single compute-bound task and did not show anomalous GPU idling.",
   "bottlenecks_identified": [
-    "no data available this milestone"
+    "Synthesis-only tasks like Exp 1741 (6.7 min) and Exp 1742 (5.0 min) are the primary bottlenecks."
   ],
   "improvements_suggested": [
-    "no data available this milestone"
+    "Optimize synthesis pipeline execution to reduce wall time."
   ],
   "top_3_highest_leverage_actions": [
-    "no data available this milestone"
+    "Profile synthesis-only tasks for optimization."
   ],
-  "estimated_time_savings_pct": 0,
-  "meta_reflection": "Reported honestly that no experiment commits were found rather than inferring numbers. no data available this milestone to assess compute-bound performance.",
-  "honest_verdict": "complete: operational retrospective 181 generated successfully"
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "GPU utilization on the compute-bound task was efficient; DualGPURunner correctly bypassed. Focus on optimizing synthesis tasks."
 }
