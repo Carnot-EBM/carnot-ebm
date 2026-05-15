@@ -3260,3 +3260,4 @@ IMPORTANT:
 | 2026-05-15 04:01 UTC | Exp 2113: Z1 Hardware P-Bit Accounting | DOOMED_RERUN_BLOCK | 7 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 04:05 UTC | Exp 2114: Milestone .174 Retrospective | OK | 81 passed, 1 warning in 5.25s |
 | 2026-05-15 04:08 UTC | Milestone 2026.05.175 activated | OK | 5 tasks queued |
+| 2026-05-15 04:17 UTC | Exp 1709: THRML+Carnot near-critical sampler failu | OK | 97 passed, 1 warning in 7.49s |
