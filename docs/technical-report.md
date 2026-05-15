@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,443 Experiments Across the Public Record, 179 Archived Milestone Records, 24,584 Python Test Items Collected (Results and Ops Retros Through Exp 2109)
+## A Technical Report — 2,496 Experiments Across the Public Record, 186 Archived Milestone Records, 24,678 Python Test Items Collected (Results and Ops Retros Through Exp 2109)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report documents the research arc behind the framework — **2,443
+This report documents the research arc behind the framework — **2,496
 experiment records tracked through Exp 2109, with 2,258 task records in 179
-artifact-backed completed milestone records archived through 2026.05.166 and
+artifact-backed completed milestone records archived through 2026.05.172 and
 checked-in result artifacts extending through milestone .166** — run between
 February and May 2026. `research-complete.yaml` currently archives **171**
 completed milestone records through 2026.05.166; checked-in result artifacts
@@ -5447,3 +5447,18 @@ Experiments 2100 and 2106 achieved THRML/Carnot Parity v2 and v3 (Curie-Weiss n=
 
 **Verify-Repair Empirical Convergence**
 Experiment 2108 validated the 4/delta Bound, measuring Carnot's verify-repair empirical convergence successfully.
+
+
+## Milestones 167–172 — CASAL, EBFT, Phase 1 Ship (Exps 1687–1703)
+
+**CASAL Primal-Dual Sampler and EBFT Continuous Learning**
+Experiments 1688 and 1692 introduced the CASAL Primal-Dual sampler and executed the EBFT continuous self-learning loop using Gemma 4, establishing new baselines for sampler verification.
+
+**SineKAN implementation**
+Experiment 1694 implemented and benchmarked SineKAN as a substitute for KAEMEnergy splines, optimizing the verification pipeline for constraints.
+
+**THRML/Carnot Curie-Weiss Parity and Critical Fluctuations**
+Experiments 1692 (Curie-Weiss n=128 parity with analytic ground truth) and 1698 (near-critical sampler failure investigation) advanced the empirical grounding of the Phase 4 substrate scaling.
+
+**Phase 1 Ship Readiness**
+Experiment 1701 completed the Phase 1 ship criteria by preparing the MCP server and CLI integrator-guide documentation, supported by Exp 1695's Phase 1 HuggingFace primary publication.

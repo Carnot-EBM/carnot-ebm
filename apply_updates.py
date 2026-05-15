@@ -1,44 +1,70 @@
+import sys
 import re
 
-files_to_update = ['README.md', 'docs/technical-report.md', 'docs/index.html']
-
-for filepath in files_to_update:
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            content = f.read()
-
-        # Update experiment counts
-        content = content.replace('2,049', '2,072')
-        content = content.replace('2049 Experiments', '2072 Experiments')
-        content = content.replace('2049 Experiments', '2072 Experiments')
+def update_file(filepath, replacements):
+    with open(filepath, 'r', encoding='utf-8') as f:
+        content = f.read()
+    
+    for old, new in replacements:
+        content = content.replace(old, new)
         
-        # Update experiment records tracking
-        content = content.replace('Exp 1721', 'Exp 1745')
-        content = content.replace('1721**', '1745**')
-        content = content.replace('through 1721', 'through 1745')
+    with open(filepath, 'w', encoding='utf-8') as f:
+        f.write(content)
 
-        # Update milestone counts
-        content = content.replace('146', '148')
-        
-        # Update milestone IDs
-        content = content.replace('.132', '.134')
-        content = content.replace('2026.05.132', '2026.05.134')
-        
-        # Update Python test count
-        content = content.replace('23,849', '24,113')
-        content = content.replace('23849', '24113')
+readme_reps = [
+    ('2,443 Experiment', '2,496 Experiment'),
+    ('179 archived', '186 archived'),
+    ('24,584', '24,678'),
+    ('Exp 2109', 'Exp 2109'),
+    ('milestone 2026.05.166', 'milestone 2026.05.172'),
+    ('Milestone .166 closeout', 'Milestone .172 closeout')
+]
 
-        # Update results table in README if needed
-        # We need to make sure the latest closeout reflects .134
-        if 'Milestone .132 closeout' in content:
-            content = re.sub(r'\|\s*Milestone \.132 closeout.*?\|\s*Exp 1721\s*\|', 
-                             r'| Milestone .134 closeout | Analyzed wall time / 10 experiments. Both RTX 3090s completely idle at 0% utilization. | Exp 1745 |', 
-                             content)
+index_reps = [
+    ('2,443</div><div class="stat-label">Experiment records', '2,496</div><div class="stat-label">Experiment records'),
+    ('179</div><div class="stat-label">archived records through .166', '186</div><div class="stat-label">archived records through .172'),
+    ('24,584</div><div class="stat-label">Python test items collected', '24,678</div><div class="stat-label">Python test items collected'),
+    ('10/10</div><div class="stat-label">experiments completed in .166', '6/6</div><div class="stat-label">experiments completed in .172'),
+    ('Milestone .166 completed 10 experiments', 'Milestone .172 completed 6 experiments'),
+]
 
-        with open(filepath, 'w', encoding='utf-8') as f:
-            f.write(content)
-            
-    except Exception as e:
-        print(f"Failed to update {filepath}: {e}")
+tr_reps = [
+    ('2,443 Experiments', '2,496 Experiments'),
+    ('179 Archived', '186 Archived'),
+    ('24,584 Python', '24,678 Python'),
+    ('2,443 experiment records', '2,496 experiment records'),
+    ('2,443\nexperiment records', '2,496\nexperiment records'),
+    ('179 artifact-backed', '186 artifact-backed'),
+    ('archived through 2026.05.166', 'archived through 2026.05.172'),
+    ('Milestone .166 completed', 'Milestone .172 completed')
+]
 
-print("Update complete")
+update_file('README.md', readme_reps)
+update_file('docs/index.html', index_reps)
+update_file('docs/technical-report.md', tr_reps)
+
+with open('docs/technical-report.md', 'r', encoding='utf-8') as f:
+    tr_content = f.read()
+
+new_findings = """
+## Milestones 167–172 — CASAL, EBFT, Phase 1 Ship (Exps 1687–1703)
+
+**CASAL Primal-Dual Sampler and EBFT Continuous Learning**
+Experiments 1688 and 1692 introduced the CASAL Primal-Dual sampler and executed the EBFT continuous self-learning loop using Gemma 4, establishing new baselines for sampler verification.
+
+**SineKAN implementation**
+Experiment 1694 implemented and benchmarked SineKAN as a substitute for KAEMEnergy splines, optimizing the verification pipeline for constraints.
+
+**THRML/Carnot Curie-Weiss Parity and Critical Fluctuations**
+Experiments 1692 (Curie-Weiss n=128 parity with analytic ground truth) and 1698 (near-critical sampler failure investigation) advanced the empirical grounding of the Phase 4 substrate scaling.
+
+**Phase 1 Ship Readiness**
+Experiment 1701 completed the Phase 1 ship criteria by preparing the MCP server and CLI integrator-guide documentation, supported by Exp 1695's Phase 1 HuggingFace primary publication.
+"""
+
+if "Milestones 167–172" not in tr_content:
+    tr_content += "\n" + new_findings
+    with open('docs/technical-report.md', 'w', encoding='utf-8') as f:
+        f.write(tr_content)
+
+print("Updated files successfully.")
