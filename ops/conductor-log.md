@@ -3450,3 +3450,4 @@ IMPORTANT:
 | 2026-05-15 17:09 UTC | Exp 1772: Gradient-Guided Epsilon Continual EBM Le | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1768-fast-slow-variant-scaleup) |
 | 2026-05-15 17:09 UTC | Exp 1775: THRML JAX Simulator Parity Scaling (N=25 | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 17:11 UTC | Exp 1775: THRML JAX Simulator Parity Scaling (N=25 | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 17:23 UTC | Exp 1776: Interwhen Asynchronous Test-Time Monitor | OK | 81 passed, 1 warning in 5.34s |
