@@ -3336,3 +3336,4 @@ IMPORTANT:
 | 2026-05-15 11:06 UTC | Exp 1738: SOTA EBT/TTT Evaluation on Hard Subset | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1736-ebt-gradient-refinement) |
 | 2026-05-15 11:24 UTC | Exp 1740: Symbolic Verification on Expert Sudoku ( | OK | 116 passed, 1 warning in 7.00s |
 | 2026-05-15 11:39 UTC | Exp 1741: FR-11 Live Policy Promotion with Self-Di | OK | 81 passed, 1 warning in 5.56s |
+| 2026-05-15 11:45 UTC | Exp 1742: EB-SLE Reward Hacking Prevention | OK | 81 passed, 1 warning in 5.94s |
