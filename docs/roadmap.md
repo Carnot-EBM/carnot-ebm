@@ -231,3 +231,4 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 | 2026.05.159 | Operational Retrospective | 2026-2038 | Zero compute-bound tasks, failure_ledger savings |
 | 2026.05.169 | Operational Retrospective | 1680-1684 | Synthesis-only milestone, zero compute-bound tasks |
 | 2026.05.173 | Operational Retrospective | 3 completed | Zero compute-bound tasks, doomed-rerun blocks saved time |
+| 2026.05.176 | Operational Efficiency | 10 experiments | GPU efficient on compute tasks; synthesis-only tasks remain bottleneck |

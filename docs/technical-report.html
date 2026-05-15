@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2,496 Experiments Across the Public Record, 186 Archived Milestone Records, 24,678 Python Test Items Collected (Results and Ops Retros Through Exp 2109)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2,496 Experiments Across the Public Record, 186 Archived Milestone Records, 24,678 Python Test Items Collected (Results and Ops Retros Through Exp 2109). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2496-experiments-across-the-public-record-186-archived-milestone-records-24678-python-test-items-collected-results-and-ops-retros-through-exp-2109">A Technical Report — 2,496 Experiments Across the Public Record, 186 Archived Milestone Records, 24,678 Python Test Items Collected (Results and Ops Retros Through Exp 2109)</h2>
+<h2 id="a-technical-report-2501-experiments-across-the-public-record-188-archived-milestone-records-24761-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,501 Experiments Across the Public Record, 188 Archived Milestone Records, 24,761 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -183,12 +183,12 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report documents the research arc behind the framework — <strong>2,496
-experiment records tracked through Exp 2109, with 2,258 task records in 179
+<p>This report documents the research arc behind the framework — <strong>2,501
+experiment records tracked through Exp 2114, with 2,263 task records in 181
 artifact-backed completed milestone records archived through 2026.05.172 and
-checked-in result artifacts extending through milestone .166</strong> — run between
+checked-in result artifacts extending through milestone .174</strong> — run between
 February and May 2026. <code>research-complete.yaml</code> currently archives <strong>171</strong>
-completed milestone records through 2026.05.166; checked-in result artifacts
+completed milestone records through 2026.05.174; checked-in result artifacts
 and <code>ops/changelog.md</code> now extend through
 <code>results/experiment_2027_milestone_158_retro.json</code>. Milestone .161 completed
 <strong>25</strong> experiments in <strong>26.5</strong> minutes, with GPUs correctly idled at 0%
@@ -888,7 +888,7 @@ artifacts checked into <code>results/operational_retro_*.json</code>.</p>
   solved <strong>15/15</strong> (Exp 1210). This is synthetic evidence, not an ARC-AGI-3
   leaderboard score.</li>
 <li><strong>Milestone 2026.04.92 closed at 10/13 criteria:</strong> publication hold remains
-  active, Exp 1179 and Exp 1180 artifacts are missing, k=6 and DoT are retired,
+  active, Exp 1181 and Exp 1180 artifacts are missing, k=6 and DoT are retired,
   and Phase 4 must beat a non-trivial baseline before becoming a claim
   (Exp 1190).</li>
 <li><strong>Prlimit memory cap active:</strong> <code>RLIMIT_AS=8GB</code> is now deployed from
@@ -5275,7 +5275,7 @@ blocked on llama.cpp GPU offload, and k=6 is measured but worse than k=5.</p>
 <p>Milestone 2026.04.92 met <strong>10 of 13 success criteria</strong>. The missed criteria
 were the llama.cpp GPU-offload fix, the five critical paper-integrity fixes,
 and the arXiv v6 bundle. Two planned artifacts are absent in this checkout:
-Exp 1179 and Exp 1180. The milestone is therefore partial, not publication
+Exp 1181 and Exp 1180. The milestone is therefore partial, not publication
 ready, but it produced several useful narrowing findings.</p>
 <p><strong>Pytest memory watchdog (Exp 1178):</strong> Per-test RSS tracking shipped with a
 session cumulative limit of <strong>8,192 MB</strong> and a per-test leak threshold of
@@ -5318,7 +5318,7 @@ claim is now "ties BFS on this synthetic set," not "beats a strong baseline."</p
 <p><strong>Milestone .92 summary (Exp 1190):</strong> 10/13 criteria met. Top successes:
 memory watchdog, 13/18 paper-integrity fixes, Hex operational, k=6 diagnosis,
 and a stronger Phase 4 limitation measurement. Top gaps: publication hold
-active, Exp 1179 and Exp 1180 artifacts missing, GRPO v5 still blocked on
+active, Exp 1181 and Exp 1180 artifacts missing, GRPO v5 still blocked on
 llama.cpp GPU offload, k=6 retired, DoT retired, and Latent-GRPO currently flat.</p>
 <h3 id="phase-18-kantize-edge-quantization-and-93-gate-failure-diagnosis-milestone-93-exps-11911202">Phase 18 — KANtize Edge Quantization and .93 Gate Failure Diagnosis (Milestone .93, Exps 1191–1202)</h3>
 <p>Milestone 2026.04.93 met <strong>3 of 12 success criteria</strong>. The completed criteria
@@ -6725,6 +6725,17 @@ Experiment 1694 implemented and benchmarked SineKAN as a substitute for KAEMEner
 Experiments 1692 (Curie-Weiss n=128 parity with analytic ground truth) and 1698 (near-critical sampler failure investigation) advanced the empirical grounding of the Phase 4 substrate scaling.</p>
 <p><strong>Phase 1 Ship Readiness</strong>
 Experiment 1701 completed the Phase 1 ship criteria by preparing the MCP server and CLI integrator-guide documentation, supported by Exp 1695's Phase 1 HuggingFace primary publication.</p>
+<h2 id="milestones-169174-hardware-p-bit-accounting-and-z1-dtm-stubs-exps-21102114-may-2026">Milestones 169–174 — Hardware P-Bit Accounting and Z1 DTM Stubs (Exps 2110–2114, May 2026)</h2>
+<p><strong>Integration of PiNet with CASAL</strong>
+Experiment 2110 successfully integrated PiNet with CASAL, showing zero constraint violations across 100 trials, validating the stable synthesis pathways.</p>
+<p><strong>Energy-Based Fine-Tuning (EBFT) with Latent Features</strong>
+Experiment 2111 extended Energy-Based Fine-Tuning (EBFT) with Latent Features. The LatentGenerator achieved a latent feature divergence of 0.014460 on the 8-spin ContinuousEBM.</p>
+<p><strong>Z1 SDK and DTM Stub Alignment</strong>
+Experiment 2112 completed Z1 SDK and DTM Stub Alignment. The DTM stub interface aligned successfully with the Z1 continuous DTM signature. Note that this was performed in a simulator-only environment.</p>
+<p><strong>Z1 Hardware P-Bit Accounting</strong>
+Experiment 2113 attempted Z1 Hardware P-Bit Accounting but ran into a Doomed Rerun Block due to prior failure scope mismatches.</p>
+<p><strong>Milestone .174 Retrospective</strong>
+Experiment 2114 verified that the Kona parity generation loops were successfully achieved across the latest operational batches.</p>
 </article>
 
 <footer>

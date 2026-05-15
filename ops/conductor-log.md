@@ -3274,3 +3274,4 @@ IMPORTANT:
 | 2026-05-15 05:13 UTC | Exp 1715: Phase 4 alpha_t adversarial audit retry  | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-15 05:23 UTC | Exp 1716: NLA 16th verifier eval-awareness test (c | OK | 81 passed, 1 warning in 5.39s |
 | 2026-05-15 05:28 UTC | Exp 1717: .174 + .175 findings audit + corrigenda | OK | 81 passed, 1 warning in 5.11s |
+| 2026-05-15 05:33 UTC | Exp 1718: Milestone .176 retrospective | OK | 81 passed, 1 warning in 5.41s |
