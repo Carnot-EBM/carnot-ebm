@@ -3441,3 +3441,4 @@ IMPORTANT:
 | 2026-05-15 16:48 UTC | Exp 1769: ROCE-to-KAN Representation Compiler | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 16:50 UTC | Exp 1770: PWA Abstractions for KAN Verification (a | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 16:52 UTC | Exp 1770: PWA Abstractions for KAN Verification (a | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 16:54 UTC | Exp 1770: PWA Abstractions for KAN Verification (a | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
