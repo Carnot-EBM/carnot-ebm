@@ -35,3 +35,9 @@ The system must support a minimal EBT-style gradient refinement loop using JAX t
 
 ## SCENARIO-EBT-1742-1: Ising Substrate Convergence
 Given a 16-spin Ising substrate acting as a proxy for an EBT energy landscape, the gradient refinement loop converges within 100 iterations, yielding an energy decrease of at least 20%.
+
+## REQ-EBT-1805: Standalone EBT System 2 Loop
+The system must support a standalone EBT loop that verifies candidates using unsloth/gemma-4-26B-A4B-it-GGUF, demonstrating that iterative energy minimization leads to higher constraint satisfaction.
+
+## SCENARIO-EBT-1805: Candidate Verification Loop
+Given prediction candidates, the standalone EBT loop optimizes their energy score with the Gemma-4 model, outputting a summary to results/experiment_1805_ebt_system2.json.
