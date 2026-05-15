@@ -1399,3 +1399,6 @@ Key contract:
 - **To understand project scope or requirements**: Read `_bmad/prd.md`
 - **To check what's built vs. spec'd**: Read `_bmad/traceability.md` (has implementation status per FR)
 - **Before reporting work as done**: Read `ops/e2e-test-plan.md` and execute relevant E2E tests
+
+
+corrigendum_2026_05_181_audit
