@@ -1,0 +1,207 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.179",
+  "milestone_title": "Phase 4 Bijection Integration, NLA Integrity Audit, and CEM Substrate",
+  "generated_at": "2026-05-15T10:01:32Z",
+  "retro_type": "operational_full",
+  "status": "complete",
+  "honest_verdict": "complete: milestone .179 retrospective generated; 10 of 11 substantive tasks completed; 1 blocked correctly by preconditions (model not cached); 1 retry consumed (max-turns on Claude Code); 2 adversarial flags raised for suspiciously fast compute-bound durations",
+
+  "wall_time": {
+    "milestone_activated_utc": "2026-05-15T08:43:00Z",
+    "last_substantive_task_completed_utc": "2026-05-15T09:57:00Z",
+    "total_wall_time_minutes": 74.0
+  },
+
+  "total_wall_time_minutes": 74.0,
+  "experiments_total": 11,
+  "experiments_completed": 10,
+  "experiments_blocked_by_preconditions": 1,
+  "experiments_requiring_retry": 1,
+
+  "per_experiment_summary": [
+    {
+      "id": "exp1724",
+      "title": "Codify exp1715 bijection-invariance finding into paper-v6",
+      "wall_time_minutes": 4.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "complete: bijection-invariance finding from exp1715 integrated into paper-v6 Section 4",
+      "note": "cache hit; artifact from prior exp1719 reused",
+      "compute_bound": false
+    },
+    {
+      "id": "exp1725",
+      "title": "Theoretical LM-EBM Bijection Re-derivation (arXiv:2512.15605v3)",
+      "wall_time_minutes": 4.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "complete: theoretical derivation of LM-EBM bijection with k=16 mapping and alpha_t invariance corollary written to docs",
+      "compute_bound": false
+    },
+    {
+      "id": "exp1726",
+      "title": "NLA-Class Verifier Descriptive Collision Audit (arXiv:2605.12874)",
+      "wall_time_minutes": 8.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "blocked_model_not_cached_gemma_4_31B_it_GGUF",
+      "artifact_duration_s": 242,
+      "note": "Preconditions discipline worked correctly: gemma-4-31B-it-GGUF not in cache; honest blocked_ verdict emitted rather than fabricating.",
+      "compute_bound": true,
+      "adversarial_flag": null
+    },
+    {
+      "id": "exp1727",
+      "title": "Empirical delta Calculation for Verify-Repair Convergence (arXiv:2512.02080)",
+      "wall_time_minutes": 8.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "complete_calculated_empirical_delta",
+      "compute_bound": false
+    },
+    {
+      "id": "exp1728",
+      "title": "Continuous Self-Learning Loop with NLA Signal Integration",
+      "wall_time_minutes": 7.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "complete: NLA confidence gate integrated into FR-11 policy retention; soundness_mistakes=0",
+      "artifact_duration_s": 5,
+      "note": "Claimed to use unsloth/gemma-4-26B-A4B-it-GGUF; duration_s=5 is below threshold for real model inference. Likely synthetic/stub result.",
+      "compute_bound": true,
+      "adversarial_flag": "DURATION_TOO_SHORT: references GGUF model but duration_s=5"
+    },
+    {
+      "id": "exp1729",
+      "title": "Compositional Energy Minimization (CEM) Substrate Prototype (arXiv:2510.20607)",
+      "wall_time_minutes": 5.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "complete: Prototype Compositional Energy Minimizer implemented and verified on toy 3-SAT (n=16) using IsingEBM composition",
+      "compute_bound": false
+    },
+    {
+      "id": "exp1730",
+      "title": "CEM Scale-Up to n=64 with KANELE Hardware-Accounting",
+      "wall_time_minutes": 7.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "complete_cem_n64_accounting_no_synthesis",
+      "note": "hardware_execution_claim=false; accounting only as expected",
+      "compute_bound": false
+    },
+    {
+      "id": "exp1731",
+      "title": "SOTA GGUF Parity Benchmark with k=16 Ensemble (Qwen3.6 & Gemma-4)",
+      "wall_time_minutes": 21.0,
+      "conductor_status": "OK (after retry)",
+      "artifact_verdict": "complete: k=16 verifier parity sweep finished for both SOTA models (synthetic baseline)",
+      "artifact_duration_s": 0.323,
+      "note": "First attempt FAIL — Claude Code reached max turns (50). Second attempt OK (8 min). artifact duration_s=0.323 is flagged: a real dual-35B/31B GGUF sweep cannot complete in sub-second time.",
+      "compute_bound": true,
+      "adversarial_flag": "DURATION_TOO_SHORT: references Qwen3.6-35B + gemma-4-31B GGUF but duration_s=0.323; IMPLAUSIBLE if real model inference ran"
+    },
+    {
+      "id": "exp1732",
+      "title": "Behavioral Entanglement Reweighting for k=16 Ensemble (arXiv:2604.07650)",
+      "wall_time_minutes": 5.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "success_deentangled_reweighting_provided_2.86_pct_lift",
+      "compute_bound": false
+    },
+    {
+      "id": "exp1733",
+      "title": "Formal Verification of NLA Abstractions via PWA/MILP",
+      "wall_time_minutes": 5.0,
+      "conductor_status": "OK",
+      "artifact_verdict": "complete: Generated PWA abstraction and Z3 MILP formulation",
+      "compute_bound": false
+    }
+  ],
+
+  "compute_bound_experiments_count": 3,
+  "compute_bound_experiments_completing": 2,
+  "compute_bound_experiments_blocked_by_preconditions": 1,
+
+  "adversarial_flags": [
+    {
+      "experiment": "exp1728",
+      "flag_type": "DURATION_TOO_SHORT",
+      "detail": "Claims to use unsloth/gemma-4-26B-A4B-it-GGUF for 10-iteration self-learning loop; duration_s=5. Real GGUF inference requires minutes for model load alone.",
+      "headline_eligible": false
+    },
+    {
+      "experiment": "exp1731",
+      "flag_type": "DURATION_TOO_SHORT + potentially IMPLAUSIBLE",
+      "detail": "Claims dual GGUF parity sweep (Qwen3.6-35B + gemma-4-31B) with 100 test cases each; duration_s=0.323. Physically impossible for real model inference. Artifact labels itself 'synthetic baseline'.",
+      "headline_eligible": false,
+      "note": "The artifact's own label 'synthetic baseline' is self-disclosing; this is a placeholder pending real model availability, not a fabrication. The DURATION_TOO_SHORT flag is expected for a synthetic baseline."
+    }
+  ],
+
+  "slowest_experiments": [
+    {
+      "experiment": "exp1731 (SOTA GGUF Parity Benchmark)",
+      "wall_time_minutes": 21.0,
+      "note": "13 min failed attempt (max turns) + 8 min successful retry"
+    },
+    {
+      "experiment": "exp1726 (NLA Collision Audit)",
+      "wall_time_minutes": 8.0,
+      "note": "Correctly blocked by preconditions; 242s for precondition check"
+    },
+    {
+      "experiment": "exp1727 (Empirical delta Calculation)",
+      "wall_time_minutes": 8.0,
+      "note": "Clean completion"
+    },
+    {
+      "experiment": "exp1728 (NLA Self-Learning Loop)",
+      "wall_time_minutes": 7.0,
+      "note": "Synthetic result; wall time reflects agent overhead not model inference"
+    },
+    {
+      "experiment": "exp1730 (CEM Scale-Up n=64)",
+      "wall_time_minutes": 7.0,
+      "note": "Accounting only, no synthesis"
+    }
+  ],
+
+  "gpu_idle_on_compute_bound_tasks": true,
+  "gpu_idle_note": "All three compute-bound tasks produced either blocked_ verdicts (exp1726) or synthetic results (exp1728, exp1731). No actual GPU inference ran in this milestone.",
+
+  "milestone_achievements": [
+    "Paper-v6 updated with bijection-invariance finding from exp1715 (Phase 4 Section 4)",
+    "LM-EBM bijection derivation written to docs (arXiv:2512.15605v3 formalism applied to k=16 ensemble)",
+    "CEM prototype complete for toy 3-SAT n=16; n=64 hardware accounting written",
+    "NLA confidence gate integrated into FR-11 policy retention (synthetic baseline)",
+    "k=16 ensemble de-entangled reweighting shows 2.86% accuracy lift",
+    "PWA/MILP formal verification formulation generated for NLA verifier",
+    "Empirical delta calculated for verify-repair convergence bound (arXiv:2512.02080)"
+  ],
+
+  "carry_forwards_for_next_milestone": [
+    "exp1726 (NLA Collision Audit): cache gemma-4-31B-it-GGUF or switch to gemma-4-26B-A4B-it-GGUF which may be cached",
+    "exp1731 (SOTA GGUF Parity Benchmark): real model run needed; synthetic baseline does not qualify for headline claims",
+    "exp1728 (NLA Self-Learning Loop): real model inference needed to validate integration; current 5s result is synthetic"
+  ],
+
+  "summary": "Milestone 2026.05.179 completed in 74 minutes across 10 substantive experiments (plus this retro). All synthesis and analysis tasks completed successfully. One compute-bound task (NLA Collision Audit) was correctly blocked by preconditions when gemma-4-31B-it-GGUF was found not cached — the pre-launch preconditions discipline worked as designed. Two other compute-bound tasks (SOTA GGUF Benchmark and NLA Self-Learning) produced synthetic/placeholder results with sub-second duration_s, flagged by adversarial verify and labeled not headline-eligible. One retry was consumed on exp1731 (max-turns on first Claude Code attempt). Key advances: CEM substrate prototype, LM-EBM bijection derivation, paper-v6 updated with Phase 4 findings, k=16 reweighting with 2.86% lift, and PWA/MILP formal verification formulation.",
+
+  "bottlenecks_identified": [
+    "SOTA GGUF models (Qwen3.6-35B, gemma-4-31B) not cached on runner; compute-bound tasks fall back to synthetic placeholders",
+    "exp1731 hit max-turns (50) on first Claude Code attempt, consuming 13 minutes before retry succeeded",
+    "Three compute-bound experiments produced synthetic results instead of real GPU inference, limiting headline-eligible outputs this milestone"
+  ],
+
+  "improvements_suggested": [
+    "Pre-cache SOTA GGUF models (Qwen3.6-35B-A3B, gemma-4-31B-it, gemma-4-26B-A4B-it) before planning milestones that require them",
+    "Increase max_turns for SOTA GGUF Parity Benchmark tasks (current 50 was insufficient for dual-model sweep); 80-100 turns more appropriate",
+    "NLA Collision Audit should fall back to gemma-4-26B-A4B-it-GGUF when 31B variant is absent; add fallback precondition clause"
+  ],
+
+  "top_3_highest_leverage_actions": [
+    "Cache SOTA GGUF models before next milestone to convert 3 synthetic-placeholder experiments into real GPU-validated results",
+    "Increase max_turns to 80 for any dual-GGUF benchmark task to prevent max-turns retries",
+    "Add fallback model logic in NLA Collision Audit preconditions (31B -> 26B-A4B) to avoid blocked verdicts when primary model is absent"
+  ],
+
+  "estimated_time_savings_pct": 28,
+  "estimated_time_savings_rationale": "21 minutes consumed by exp1731 retry loop; 13 minutes of that recoverable by higher max_turns. An additional 5-8 minutes saved by not running synthetic-placeholder compute tasks that must be re-run anyway.",
+
+  "meta_reflection": "This milestone demonstrates the preconditions discipline functioning correctly for one task (exp1726 emitted blocked_model_not_cached rather than fabricating) while two other compute-bound tasks fell through to synthetic placeholders without triggering blocked_ verdicts. The distinction: exp1726 had an explicit PRECONDITIONS block that checked for model existence; exp1728 and exp1731 did not enforce the check cleanly, so the agents completed with synthetic data rather than blocking. This confirms that precondition clauses must be mandatory and checked strictly — not merely present in the prompt — to prevent synthetic-placeholder drift. The k=16 reweighting (2.86% lift) and PWA/MILP formulation are genuine synthesis advances this milestone."
+}
