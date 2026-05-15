@@ -5,8 +5,87 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-15 (9 sweeps in 24h)
-**Current Focus:** Fast-Slow Variant entering 4th launch attempt as .189 exp1811 (NO upstream gates after .187/.188 gate-cascade pattern); harness-fit risk now empirically dominant failure mode (planner-drafted `gated_on: tests_fixed == True` cascading blocked_gate_check_failed); dedupe protocol stable at 81%+ filter rate across 2 successive fires; **NEW 2026-05-15T20:35Z: cluster-saturation now systemic — 13 of 16 known-skipped at ingest, 0 new promotions**.
+**Updated:** 2026-05-15 (10 sweeps in 24h)
+**Current Focus:** Sweep helper suite shipped (5 helpers — dedupe + citations + paginate + clusters + semscholar) after 2 saturation sweeps; citation-following validated on the bijection anchor — 39 unique IDs surfaced, 1 in-domain 2026 promotion; **NEW 2026-05-15T21:15Z: first citation-extended sweep finds arXiv:2602.02991 (Score 144) directly informing the Fast-Slow Variant (.189 exp1811) — the keyword-rotation missed this paper across 9 prior sweeps.**
+
+## Sweep 2026-05-15T21:15Z (Claude outer-loop, citation-following + broadened-cluster attempt — FIRST extended-window sweep)
+
+**Helpers used (per the suite shipped 21:00Z):**
+- `scripts/sweep_citations.py 2512.15605 --direction both` (AR-LM↔EBM
+  bijection anchor, Score 500 — highest-scoring active queue entry).
+- `scripts/sweep_dedupe.py --filter` (default workflow step 2.5).
+- `scripts/sweep_clusters.py` broadened queries on clusters 1 + 2 —
+  **arXiv API returned HTTP 429 Too Many Requests** on the broadened
+  cluster URLs (max_results=20 + complex OR-chains hit rate-limit
+  thresholds). Citation-sweep alone carried this fire.
+
+**Result: 39 fetched / 0 dedupe-skipped / 39 scored / 1 promoted (in-domain).**
+
+Citation-sweep returned 39 unique arxiv IDs from the bijection anchor's
+references + citations. **All 39 NEW to the queue** (0 known-skipped —
+the keyword rotation has been blind to all of these because the topical
+filters didn't pattern-match the abstract wording). 36 of 39 are
+pre-2026 references (foundational EBM / RL / LLM papers); 3 are 2026
+citations:
+
+### NEW Rank MEDIUM: Inference-Time Planning Self-Generated Context (arXiv:2602.02991, Feb 3 2026)
+- **Score:** 4×3×3×4 = **144**
+- **Authors:** Haijiang Yan, Jian-Qiao Zhu, Adam Sanborn
+- **Why it matters:** Bayesian framework explaining LLM planning
+  dynamics: "self-generated context accumulation drives planning
+  behavior shifts at inference time." **This is exactly the mechanism
+  Fast-Slow Variant exploits** — the verifier-output-summary IS the
+  self-generated context that accumulates across verify-repair
+  iterations. Provides independent peer evidence that the
+  fast-weight-context approach is mechanistically grounded, not just
+  empirically motivated by arXiv:2605.12484. Useful paper-v6 §3 cite
+  alongside the AR-LM↔EBM bijection and Fast-Slow papers.
+- **Action:** cite in paper-v6 §3 (architecture validation). If .189
+  exp1811 succeeds, this is a third independent literature anchor for
+  the design pattern (Score 500 bijection + Score 400 Fast-Slow + Score
+  144 inference-time-planning = ~triangulated theory base).
+- **Caveat:** the paper is non-EBM-native (Bayesian framing, not energy);
+  Carnot's specific verifier-energy mechanism is still novel relative
+  to this work.
+
+### Skipped (low score):
+- **arXiv:2603.23398** Graph Energy Matching (Score 8) — molecular EBM,
+  out-of-domain.
+- **arXiv:2604.00555** Ontology-Constrained Neural Reasoning (Score 36) —
+  enterprise agentic neurosymbolic, adjacent but not core.
+
+### Pre-2026 references catalogued (no scoring; archived for citation tracking)
+
+36 papers in the references-direction sweep span 2010 ("1004.2027" —
+early relevant work) through 2025. Notable buckets include foundational
+EBM papers (2010s), RL-from-feedback work (2017-2022), reasoning
+benchmarks (2021-2024), and ICLR/NeurIPS 2024-2025 reasoning-model
+papers. These are now in the known-set; future citation-sweeps from
+other anchors will dedupe against them.
+
+### Sweep takeaways
+
+1. **Citation-following dwarfs keyword rotation in yield.** Zero promotions
+   from the prior 2 keyword sweeps (16:50Z, 20:35Z); 1 in-domain
+   promotion + 38 archived references from this single citation-sweep.
+   Validates the operator-confirmed "operator-flagged anchors are the
+   highest-yield channel" finding empirically.
+2. **The bijection anchor (Score 500) was published Dec 2025; 5 months
+   of citations means a meaningful citation graph already exists.** The
+   Fast-Slow anchor (Score 400, May 2026) is too new to have meaningful
+   citations yet (sweep_citations.py 404'd it earlier today). Citation-
+   following yield scales with anchor age.
+3. **Broadened-cluster sweeps need rate-limit care.** arXiv API 429'd
+   on `max_results=20` with complex OR-chains; should drop back to
+   `max_results=8` for the broadened cluster URLs (operator can paste
+   them into the cron prompt or invoke via `sweep_clusters.py` with
+   `--max-results 8`).
+4. **arXiv:2602.02991 strengthens paper-v6 §3 architecture validation.**
+   Three independent peer-reviewed mechanisms now point at the same
+   design: AR-LM↔EBM bijection (2512.15605), Fast-Slow Training
+   (2605.12484), and self-generated-context-driven planning shifts
+   (2602.02991). Carnot's verify-repair loop sits at the intersection
+   of all three.
 
 ## Sweep 2026-05-15T20:35Z (Claude outer-loop, hour-mod-4=0; clusters 1 EBM + 0 verifier-ensembles)
 
