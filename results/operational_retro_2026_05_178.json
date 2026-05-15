@@ -1,40 +1,52 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.178",
-  "generated_at": "2026-05-15T08:24:55Z",
+  "generated_at": "2026-05-15T08:34:52Z",
   "retro_type": "operational_full",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.178..HEAD returns non-empty: True"
-  ],
-  "total_wall_time_minutes": 23.4,
-  "experiments_completed": 6,
+  "total_wall_time_minutes": 35.2,
+  "experiments_completed": 10,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [
     {
-      "experiment": "Exp 1720: NLA 16th verifier Task 4",
-      "duration_minutes": 12.0,
+      "experiment": "-0400 [conductor] Exp 1723: Milestone .178 retrospective",
+      "duration_minutes": 13.7,
       "compute_bound": false
     },
     {
-      "experiment": "Exp 1721: Phase 4 alpha_t replacement derivation",
-      "duration_minutes": 10.0,
+      "experiment": "-0400 [conductor] Exp 1720: NLA 16th verifier Task 4 (final) \u2014 ensemble integrat",
+      "duration_minutes": 8.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1721: Phase 4 alpha_t replacement derivation from maximum-",
+      "duration_minutes": 6.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1719: Codify exp1715 bijection-invariance finding into pap",
+      "duration_minutes": 3.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Doomed-rerun block: Exp 1719: Codify exp1715 bijection-invaria",
+      "duration_minutes": 2.0,
       "compute_bound": false
     }
   ],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.178 operational retrospective complete. Focus was primarily on non-compute synthesis tasks such as NLA verifier Task 4 and Phase 4 alpha_t derivation.",
+  "summary": "Milestone 2026.05.178 completed in 35.2 minutes across 10 experiments, averaging approximately 4 minutes each. All 10 experiments were synthesis-only, requiring no GPU compute, which correctly resulted in 0% GPU utilization during the milestone.",
   "bottlenecks_identified": [
-    "Synthesis and doc-generation logic remain the dominant bottleneck."
+    "The longest running task was Exp 1723 (retrospective) taking 13.7 minutes, followed by other synthesis tasks taking 3.5-8.0 minutes."
   ],
   "improvements_suggested": [
-    "Optimize asynchronous document generation further."
+    "Investigate why synthesis tasks, particularly retrospective generation, are taking up to 14 minutes to execute.",
+    "Explore caching or parallelizing synthesis steps to reduce execution time."
   ],
   "top_3_highest_leverage_actions": [
-    "Assess caching for derivations.",
-    "Refine background document processing.",
-    "Profile verification tasks to shrink setup time."
+    "Profile the synthesis-only execution paths (like Exp 1723) to identify the source of the 13.7-minute runtime.",
+    "Optimize LLM calls or I/O operations during synthesis to reduce the average task time.",
+    "Investigate options to run synthesis tasks in parallel where independent."
   ],
-  "estimated_time_savings_pct": 5,
-  "meta_reflection": "Milestone executed per expectations, dominated by verification and synthesis steps rather than raw compute.",
-  "honest_verdict": "complete: operational retrospective 178 generated successfully"
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "The milestone successfully executed purely synthesis-based tasks without incorrectly triggering compute-bound alerts. The primary focus for future efficiency should be optimizing synthesis generation times."
 }

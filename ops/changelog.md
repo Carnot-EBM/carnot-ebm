@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-15 (Milestone 2026.05.178 Operational Retrospective)
+
+- Milestone 2026.05.178 operational retrospective complete. Analyzed 35.2 min wall time / 10 experiments (avg 4 min). Slowest path: Exp 1723 (13.7 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The doomed-rerun block correctly prevented redundant work, saving time. Synthesis tasks remain the primary bottleneck for optimization.
+
 ## 2026-05-15 (Milestone 2026.05.176 Operational Retrospective)
 
 - Milestone 2026.05.176 operational retrospective complete. Analyzed 19.3 min wall time / 10 experiments. Slowest path: Exp 1716 (8.7 min, synthesis-only). GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
