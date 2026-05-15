@@ -5771,3 +5771,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 1710: Phase 4 alpha_t n-dependence adversarial audit (retry — .172 exp1699 SKIPPED) (⚠️ Blocked) — honest_verdict=blocked_phase4_alpha_t_implementation_missing; results/experiment_1710_phase4_alpha_t_audit.json
 - 2026-05-15: Exp 1711: PyPI publish retry (Phase 1 ship — .173 exp1704 SKIPPED) (⚠️ Blocked) — honest_verdict=blocked_pypi_credentials_unavailable; results/experiment_1711_pypi_publish.json
 - 2026-05-15: Exp 1711: PyPI publish retry (Phase 1 ship — .173 exp1704 SKIPPED) (⚠️ Blocked) — honest_verdict=blocked_pypi_credentials_unavailable; results/experiment_1711_pypi_publish.json
+- 2026-05-15: Exp 1712: .174 + .172/.173 SKIP recovery — adversarial-verify findings audit (✅ Complete) — honest_verdict=complete: 2 artifacts flagged and classified (1 FP, 1 REAL_BUG).; results/experiment_1712_findings_audit_174.json
