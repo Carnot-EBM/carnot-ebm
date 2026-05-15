@@ -3404,3 +3404,4 @@ IMPORTANT:
 | 2026-05-15 15:28 UTC | Exp 1758: Energy-Guided Decoding on Qwen 3.6-35B-A | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 15:30 UTC | Exp 1759: Energy-Guided Decoding on Gemma-4-31B | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 15:32 UTC | Exp 1759: Energy-Guided Decoding on Gemma-4-31B | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 15:34 UTC | Exp 1759: Energy-Guided Decoding on Gemma-4-31B | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
