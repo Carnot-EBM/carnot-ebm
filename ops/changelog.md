@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-15 (Milestone 2026.05.184 Operational Retrospective)
+
+- Milestone 2026.05.184 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+
 ## 2026-05-15 (Milestone 2026.05.182 Operational Retrospective)
 
 - Milestone 2026.05.182 operational retrospective complete. Analyzed 50.1 min wall time / 6 experiments. Slowest path: Exp 1749 (45.2 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The milestone wall time was heavily dominated by the retrospective generation task itself. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.
