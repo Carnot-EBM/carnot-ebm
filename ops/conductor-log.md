@@ -3261,3 +3261,4 @@ IMPORTANT:
 | 2026-05-15 04:05 UTC | Exp 2114: Milestone .174 Retrospective | OK | 81 passed, 1 warning in 5.25s |
 | 2026-05-15 04:08 UTC | Milestone 2026.05.175 activated | OK | 5 tasks queued |
 | 2026-05-15 04:17 UTC | Exp 1709: THRML+Carnot near-critical sampler failu | OK | 97 passed, 1 warning in 7.49s |
+| 2026-05-15 04:21 UTC | Exp 1710: Phase 4 alpha_t n-dependence adversarial | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1710_phase4_ |
