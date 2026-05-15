@@ -3535,3 +3535,4 @@ IMPORTANT:
 | 2026-05-15 21:24 UTC | Phase 3: Kona-style EBRM Continuous Latent Reasoni | OK | 81 passed, 1 warning in 5.36s |
 | 2026-05-15 21:34 UTC | Phase 3: Lyapunov-based Control Barrier Functions  | OK | 97 passed, 1 warning in 7.15s |
 | 2026-05-15 21:36 UTC | Phase 3: Token-Level Energy Telemetry for Agentic  | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 21:38 UTC | Phase 3: Token-Level Energy Telemetry for Agentic  | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
