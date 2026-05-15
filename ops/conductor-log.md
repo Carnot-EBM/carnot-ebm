@@ -3354,3 +3354,21 @@ IMPORTANT:
 | 2026-05-15 13:01 UTC | Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47  | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-15 13:15 UTC | Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47  | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: nerateContent?alt=s |
 | 2026-05-15 13:19 UTC | Exp 1746: QAOD/NLA TPR collapse from 0.73 to 0.47  | OK | cache hit: 81 passed, 1 warning in 4.96s |
+| 2026-05-15 13:32 UTC | Exp 1747: EBT energy decrease 128% — mode-collapse | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
+| 2026-05-15 13:35 UTC | Exp 1747: EBT energy decrease 128% — mode-collapse | FAIL | Gemini CLI error: s:309138:14)
+    at async file:///usr/lib/node_modules/@goog |
+| 2026-05-15 13:37 UTC | Exp 1747: EBT energy decrease 128% — mode-collapse | OK | Deliverable already exists in repo |
+| 2026-05-15 13:37 UTC | Exp 1748: Phase 1 HuggingFace mirror retry (3rd at | FAIL | Gemini CLI error: RH.js:309138:14)
+    at async file:///usr/lib/node_modules/@ |
+| 2026-05-15 13:39 UTC | Exp 1748: Phase 1 HuggingFace mirror retry (3rd at | FAIL | Gemini CLI error: YRH.js:309138:14)
+    at async file:///usr/lib/node_modules/ |
+| 2026-05-15 13:41 UTC | Exp 1748: Phase 1 HuggingFace mirror retry (3rd at | FAIL | Gemini CLI error: YRH.js:309138:14)
+    at async file:///usr/lib/node_modules/ |
+| 2026-05-15 13:44 UTC | Exp 1749: Milestone .182 retrospective | FAIL | Gemini CLI error: .js:309138:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-05-15 13:46 UTC | Exp 1749: Milestone .182 retrospective | FAIL | Gemini CLI error: 2YRH.js:309138:14)
+    at async file:///usr/lib/node_modules |
+| 2026-05-15 13:50 UTC | Plan next milestone | FAIL | Gemini CLI error: 2YRH.js:309138:14)
+    at async file:///usr/lib/node_modules |
+| 2026-05-15 13:55 UTC | Plan next milestone | FAIL | Gemini CLI error: 5NJ2YRH.js:309138:14)
+    at async file:///usr/lib/node_modu |

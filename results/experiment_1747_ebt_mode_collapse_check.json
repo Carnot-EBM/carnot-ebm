@@ -1,0 +1,37 @@
+{
+  "schema": "carnot.ebt_mode_collapse_audit.v1",
+  "experiment": 1747,
+  "run_date": "2026-05-15T14:07:00.316522Z",
+  "duration_s": 7.5045082569122314,
+  "random_seed": 172147,
+  "reproducibility_checksum": "ed148c2dbd3df17d0b235a9f262f9584c32146ecba371802afc227ebcbef9d64",
+  "preconditions_checked": [
+    "jax_import_successful",
+    "ebt_implementation_importable",
+    "blocked_verifier_energy_missing"
+  ],
+  "model_specs": {
+    "n_spins": 16,
+    "n_inits": 30,
+    "energy_sample_count": 1000,
+    "ebt_implementation_path": "python/carnot/models/ebt_gradient_refinement.py"
+  },
+  "n_samples": 1030,
+  "n_samples_justification": "30 inits is the minimum for mode-collapse detection. 1000 energy evals gives a clean empirical distribution for boundedness.",
+  "hamming_distance_matrix_mean": 7.841379165649414,
+  "hamming_distance_matrix_median": 8.0,
+  "hamming_distance_matrix_max": 14,
+  "mode_collapse_detected": false,
+  "energy_distribution_mean": 13.802430152893066,
+  "energy_distribution_std": 69.28926849365234,
+  "energy_min": -192.9774627685547,
+  "energy_max": 250.93275451660156,
+  "energy_unbounded_below": true,
+  "sign_convention_inverted": false,
+  "root_cause": "energy_unbounded_below",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Root cause identified.",
+  "methodology_note": "128% energy decrease is the smoking gun. One of the three diagnostic tests will fire.",
+  "optimization_direction": "neither \u2014 audit task",
+  "honest_verdict": "complete: Diagnostic finished. Root cause identified as energy_unbounded_below."
+}
