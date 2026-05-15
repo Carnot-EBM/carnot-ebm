@@ -61,7 +61,7 @@ tasks:
            Record preconditions_checked.
         1. Wrap alpha_t_prime to emit per-step values (NOT just inf_t).
            Save as alpha_t_prime_trajectory(state, k_verifiers) -> list[100].
-        2. For each n in {8, 16, 32, 64}: 30 seeds × 100 MLD steps.
+        2. For each n in {{8, 16, 32, 64}}: 30 seeds × 100 MLD steps.
            Capture alpha(t) per step per seed.
         3. Aggregate: at each step t in [0..99], compute the per-n
            mean + Wilson 95% CI across 30 seeds.
@@ -81,15 +81,15 @@ tasks:
         - reproducibility_checksum: sha256 of (alpha_t_max_caliber git_rev
           + scaling grid spec + trajectory wrapper code)
         - preconditions_checked: list
-        - model_specs: {n_grid: [8, 16, 32, 64], ensemble_k_total: 6,
+        - model_specs: {{n_grid: [8, 16, 32, 64], ensemble_k_total: 6,
           mld_steps: 100, n_seeds: 30, alpha_t_variant: "max_caliber_v1",
-          aggregation: "per_step_trajectory"}
+          aggregation: "per_step_trajectory"}}
         - n_samples: 12000 (4 n × 30 seeds × 100 steps)
         - n_samples_justification: "30 seeds per n-step cell gives
           Wilson 95% CI width ~0.18/sqrt(30) ~ 0.03 on per-step alpha;
           sufficient to detect 5pp gaps at 100 step indices."
-        - per_step_trajectories: dict n -> list of 100 {step, alpha_mean,
-          alpha_wilson_95_ci}
+        - per_step_trajectories: dict n -> list of 100 {{step, alpha_mean,
+          alpha_wilson_95_ci}}
         - distinguishable_steps: int (count where adjacent-n CI non-overlap)
         - distinguishable_step_indices: list of int
         - first_distinguishable_step: int or null (the EARLIEST step
@@ -180,9 +180,9 @@ tasks:
         - random_seed: 172146 (NOT 1746 or 60)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
           baseline_artifact: "exp1694", regression_artifact: "exp1740",
-          corpus_artifact: "exp1716"}
+          corpus_artifact: "exp1716"}}
         - n_samples: 60
         - n_samples_justification: "Diagnostic rerun on the 60-example
           corpus; Wilson 95% CI width ~0.20 — sufficient to discriminate
@@ -272,8 +272,8 @@ tasks:
         - random_seed: 172147 (NOT 1747 or 30)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {n_spins: 16, n_inits: 30, energy_sample_count: 1000,
-          ebt_implementation_path: str}
+        - model_specs: {{n_spins: 16, n_inits: 30, energy_sample_count: 1000,
+          ebt_implementation_path: str}}
         - n_samples: 30 (mode-collapse) + 1000 (energy-boundedness)
         - n_samples_justification: "30 inits is the minimum for mode-
           collapse detection. 1000 energy evals gives a clean
@@ -360,8 +360,8 @@ tasks:
         - random_seed: 172148
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {hf_org: "Carnot-EBM", hf_repo: str,
-          chosen_artifact_path: str, model_card_word_count: int}
+        - model_specs: {{hf_org: "Carnot-EBM", hf_repo: str,
+          chosen_artifact_path: str, model_card_word_count: int}}
         - n_samples: 1
         - n_samples_justification: "Ship task."
         - hf_upload_succeeded: bool

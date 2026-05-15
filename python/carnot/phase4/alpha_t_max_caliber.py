@@ -22,6 +22,16 @@ def compute_alpha_t_prime(k_verifiers: int, random_fraction: float, step: int, r
 
 alpha_t_prime = compute_alpha_t_prime
 
+def alpha_t_prime_trajectory(k_verifiers: int, random_fraction: float, mld_steps: int, seed: int) -> list[float]:
+    """
+    Wraps alpha_t_prime to emit per-step values (trajectory) over mld_steps.
+    """
+    rng = np.random.default_rng(seed)
+    return [
+        float(compute_alpha_t_prime(k_verifiers, random_fraction, step, rng))
+        for step in range(mld_steps)
+    ]
+
 def run_mld_simulation_max_caliber(n_spins: int, k_verifiers: int, random_fraction: float, mld_steps: int, seed: int) -> SimulationResultPrime:
     """
     Run a simulated MLD process using maximum-caliber alpha_t'.
