@@ -60,5 +60,10 @@
   "corrigendum": {
     "classification": "FALSE_POSITIVE",
     "rationale": "Honest abort due to missing weights; duration_s=0 is correct."
+  },
+  "corrigendum_2026_05_176_audit": {
+    "classification": "REAL_BUG",
+    "rationale": "Duration 0.0s for compute bound task is a bug, and methodology details are missing.",
+    "follow_up_action": "Re-run exp2101 with real compute."
   }
 }

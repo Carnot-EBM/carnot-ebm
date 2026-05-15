@@ -1,0 +1,41 @@
+{
+  "schema": "carnot.findings_audit_corrigenda.v3",
+  "experiment": 1717,
+  "run_date": "2026-05-15T05:28:05.759056Z",
+  "duration_s": 0.014014720916748047,
+  "random_seed": 171617,
+  "reproducibility_checksum": "2b0db4dbd1a93fa0513c6d91e30004875edc2fd0c37cb541a4ef628f821c36fe",
+  "preconditions_checked": [
+    "scripts/adversarial_verify.py importable"
+  ],
+  "model_specs": {
+    "audit_target_milestones": [
+      "2026.05.174",
+      "2026.05.175"
+    ],
+    "adversarial_verify_version": "b263d4ed07075ddb09ebceb370d52aff21d47906"
+  },
+  "n_samples": 29,
+  "n_samples_justification": "Audit task; n is artifact count.",
+  "audit_outcomes": {
+    "2101": {
+      "classification": "REAL_BUG",
+      "rationale": "Duration 0.0s for compute bound task is a bug, and methodology details are missing.",
+      "follow_up_action": "Re-run exp2101 with real compute."
+    },
+    "2110": {
+      "classification": "REAL_BUG",
+      "rationale": "GATE_PASSED_WITHOUT_DATA indicates missing metrics. TAUTOLOGY is a false positive. IMPLAUSIBLE_PERFECT requires verification.",
+      "follow_up_action": "Fix exp2110 metric extraction and re-evaluate."
+    }
+  },
+  "corrigenda_added": [
+    "results/experiment_2101_interwhen.json",
+    "results/experiment_2110_casal_pinet.json"
+  ],
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "All flagged artifacts classified with defensible rationale; corrigenda appended.",
+  "methodology_note": "Audit task. Classify honestly.",
+  "optimization_direction": "neither \u2014 audit task",
+  "honest_verdict": "complete: Audit finished. Flagged 2 artifacts (2101, 2110) as REAL_BUG. Corrigenda appended. Proposed follow-up tasks."
+}
