@@ -119,7 +119,7 @@ def fetch_references(anchor: str) -> list[str]:
     while True:
         url = (
             f"{SS_BASE}/ARXIV:{anchor}/references"
-            f"?fields=citedPaper.{FIELDS}&limit={PAGE_LIMIT}&offset={offset}"
+            f"?fields={CITED_FIELDS}&limit={PAGE_LIMIT}&offset={offset}"
         )
         data = _fetch_json(url)
         items = data.get("data") or []
