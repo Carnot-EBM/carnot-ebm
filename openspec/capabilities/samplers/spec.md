@@ -471,3 +471,30 @@ Sub-requirements:
 **And** the required JSON artifact is written with all required fields
 **And** `honest_verdict` begins with a terminal prefix (complete:/success:).
 
+### REQ-SAMPLE-2110: CASAL + PiNet Projection Integration
+
+Carnot MUST integrate the Douglas-Rachford PiNet projection layer into the CASAL
+sampler primal step to enforce hard linear constraints with geometric guarantees.
+
+Sub-requirements:
+- REQ-SAMPLE-2110-1: `casal_sample` SHALL accept an optional `pinet_layer` parameter
+  of type `DouglasRachfordPiNetLayer` (or None for the existing gradient-descent path).
+- REQ-SAMPLE-2110-2: When `pinet_layer` is provided, the primal projection step SHALL
+  call `pinet_layer.project_vector(proposed_state)` instead of the gradient-descent loop.
+- REQ-SAMPLE-2110-3: The acceptance gate (constraint_fn <= 1e-5) SHALL still apply
+  after PiNet projection to guarantee zero violation in the returned state.
+- REQ-SAMPLE-2110-4: Experiment 2110 SHALL measure the constraint violation rate over
+  100 independent trials and write `results/experiment_2110_casal_pinet.json` with
+  `violation_rate` and `honest_verdict` fields using a terminal prefix.
+- REQ-SAMPLE-2110-5: The integration SHALL be backward-compatible: existing calls with
+  no `pinet_layer` argument must produce identical results.
+
+### SCENARIO-SAMPLE-2110: CASAL + PiNet Achieves Zero Violation Rate
+
+**Given** a CASAL sampler configured with a DouglasRachfordPiNetLayer encoding
+the same constraint as the constraint_fn
+**When** `casal_sample` runs for 200 steps from a feasible initial state
+**Then** the final state satisfies the constraint (violation <= 1e-5)
+**And** the violation rate across 100 independent trials is 0.0
+**And** the artifact is written to `results/experiment_2110_casal_pinet.json`.
+
