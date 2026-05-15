@@ -5790,3 +5790,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-15: Exp 1779: Phase 3 - Implement non-forgetting soundness check for continuous learning (✅ Complete) — honest_verdict=check_implemented; results/experiment_1779_csl_nonforgetting.json
 - 2026-05-15: Exp 1780: Phase 3 - Run FR-11 continuous self-learning loop with rigorous checks (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1780_csl_loop.json
 - 2026-05-15: Exp 1781: Phase 4 - Draft Python LUT abstractions for KANs based on KANELÉ (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1781_kan_lut.json
+- 2026-05-15: Exp 1782: Phase 4 - Benchmark KANELÉ LUT representation BOPs and NABS against baseline (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1782_kan_benchmark.json
