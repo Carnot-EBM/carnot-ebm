@@ -3487,3 +3487,6 @@ IMPORTANT:
 | 2026-05-15 19:24 UTC | Phase 0: Milestone .186 retrospective (Cascade Fai | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-15 19:26 UTC | Phase 0: Phase 1 PyPI package release retry (Block | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
 | 2026-05-15 19:26 UTC | Phase 1: Carnot Fast-Slow Variant Prototype (arXiv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
+| 2026-05-15 19:26 UTC | Phase 1: Fast-Slow Variant Scale-Up on SOTA GGUFs  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1789-fast-slow-variant-prototype.protot |
+| 2026-05-15 19:28 UTC | Phase 0: Phase 1 PyPI package release retry (Block | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
+| 2026-05-15 19:28 UTC | Phase 1: Carnot Fast-Slow Variant Prototype (arXiv | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1786-fix-broken-pretests) |
