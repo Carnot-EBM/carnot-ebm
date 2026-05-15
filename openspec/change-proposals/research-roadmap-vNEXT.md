@@ -1,39 +1,43 @@
-# Research Roadmap: Milestone 2026.05.180
+# Carnot Research Roadmap: Milestone 2026.05.183
+**Date:** 2026-05-15
+**Milestone:** 2026.05.183
+**Status:** DRAFT
 
-## Theme: Inference-Time Energy Optimization, Symbolic Verification, and Self-Distillation
+## 1. What Previous Milestone (2026.05.182) Proved
+- **Measurement-Level Rescue:** `exp1745` investigated the Phase 4 per-step alpha disaggregation after `exp1741` proved the infimum `alpha_t'` was completely scale-invariant across substrates. The scale invariance suggests the aggregation metric was fundamentally hiding the substrate effect.
+- **QAOD/NLA TPR Collapse:** `exp1746` diagnosed the 0.73 to 0.47 True Positive Rate collapse in the QAOD vs NLA head-to-head. It confirmed a corpus mismatch / label-noise issue.
+- **EBT Mode Collapse:** `exp1747` investigated the suspicious 128% energy decrease in the EBT gradient refinement loop, pointing to a mode-collapse where the energy function was unbounded below.
+- **Phase 1 Ship-Track:** The HuggingFace mirror attempt (`exp1748`) remained a critical, often-stranded carry-forward.
 
-**Status:** PLANNED
-**Milestone:** 2026.05.180
+## 2. Architecture & Strategic Shifts
+Our primary gaps between current state and the PRD vision are:
+1. **Measurement of Constraint Reasoning:** Phase 4 needs a new measurement paradigm since `alpha_t'` is scale-invariant. We are pivoting to **Thermodynamically Constrained Neural Generation** metrics based on recent 2026 literature.
+2. **Robust EBM Optimization:** We must bound the energy descent in EBTs to prevent mode collapse (the 128% decrease anomaly).
+3. **Continuous Self-Learning (FR-11):** Memory growth and self-learning loops suffer from mode collapse over time. We will introduce **Dynamic Resolution** to stabilize continuous policy updates.
 
-### 1. Executive Summary
-Building on the successful Phase 4 Bijection Integration and CEM Substrate in milestone .179, this milestone closes the three largest gaps to our PRD vision:
-1. **Inference-Time Optimization:** Standard autoregressive models fail on hard constraints. We will adapt Energy-Based Transformer (EBT) techniques (arXiv:2507.02092) and TTT-Discover (arXiv:2601.16175) to perform gradient-based energy minimization at test time.
-2. **Symbolic Verification Integration:** Inspired by Logical Intelligence's Kona/Aleph architecture, we will prototype a bridge to Lean 4 for formal symbolic verification of extracted constraints, moving beyond pure Ising/KAN checks for mathematical domains.
-3. **Continuous Self-Learning Stability:** Utilizing recent findings on EBMs for continual learning (arXiv:2601.19897) and EB-SLE, we will implement an FR-11 self-distillation loop that prevents catastrophic forgetting.
+## 3. Phase Descriptions
 
-### 2. Architecture Impact
-- **Test-Time Training (TTT) Router:** A new pipeline stage that dynamically allocates compute (optimization steps) based on the initial energy of the LLM output.
-- **Lean 4 Verifier Backend:** A new `VerifierBackend` complementing `IsingEBM` and `KAN` for strict formal logic constraints.
-- **Self-Distillation Memory:** Updates the FR-11 continuous self-learning loop to maintain an energy-based memory of past constraints to prevent forgetting.
+### Phase 0: Carry Forwards & Fixes
+- Retry HuggingFace publication with honest fallback.
+- Sync QAOD/NLA corpus and rerun head-to-head correctly.
 
-### 3. Phases and Experiments
+### Phase 1: Bounded Energy Descent
+- Enforce hard bounds on the EBT gradient refinement loop to prevent mode collapse.
 
-**Phase 0: Foundation & Archival**
-- exp1735: Archive .179, setup .180 metrics and tracking.
+### Phase 2: Thermodynamic Constrained Measurement
+- Implement a new thermodynamic penalty metric for Phase 4.
+- Sweep substrate scaling (n=8/16/32/64) using this new metric to finally prove scale dependence.
 
-**Phase 1: Inference-Time Energy Optimization (EBT & TTT)**
-- exp1736: EBT-style Gradient Refinement Loop Prototype
-- exp1737: Entropic Utility Search Prototype (TTT-Discover)
-- exp1738: SOTA EBT/TTT Evaluation on GSM8K
+### Phase 3: SOTA GGUF Thermo-Decoding
+- Apply thermodynamic penalty sampling to the mandated SOTA local GGUF models.
 
-**Phase 2: Symbolic Verification Bridge (Kona/Aleph inspired)**
-- exp1739: Lean 4 Verifier Backend Prototype
-- exp1740: Symbolic Verification on Expert Sudoku
+### Phase 4: Continuous Self-Learning (FR-11)
+- Apply Dynamic Resolution during continuous learning to guarantee no soundness mistakes or mode collapse.
 
-**Phase 3: Continuous Self-Learning & Self-Distillation**
-- exp1741: FR-11 Live Policy Promotion with Self-Distillation (Continuous Self-Learning)
-- exp1742: EB-SLE Reward Hacking Prevention Prototype
+### Phase 5: Hardware & Retrospective
+- Perform no-synthesis substrate-aware KAN accounting for the KV260.
+- Milestone retrospective.
 
-**Phase 4: Hardware & Retrospective**
-- exp1743: TSU/FPGA Hardware Accounting for Lean 4 pre-processing
-- exp1744: Milestone .180 Retrospective
+## 4. Hardware Requirements
+- Dual RTX 3090 (for running mandated SOTA GGUF models).
+- CPU/Simulator for KAN and Thermodynamic metric evaluations. No Vivado or KV260 board-execution required for this milestone.

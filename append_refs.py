@@ -1,29 +1,39 @@
-import datetime
+import sys
 
-new_refs = """
-## Recent Arxiv & Industry Findings (2025-2026)
-Added: 2026-05-13
+with open("research-references.md", "r") as f:
+    content = f.read()
 
-### Energy-Based Reasoning & Verification
-*   **Energy-Based Transformers (EBTs): Scalable Learners and Thinkers** (Gladstone et al., arXiv:2507.02092, July 2025)
-    *   Treats reasoning as an iterative energy minimization process (System 2).
-    *   Model acts as an explicit verifier of its own predictions.
-*   **Generalizable Reasoning through Compositional Energy Minimization** (Oarga & Du, NeurIPS 2025)
-    *   Constructs a global energy landscape by composing tractable subproblems.
-*   **Iterative Reasoning through Energy Diffusion (IRED)** (Du et al., 2025)
-    *   Formulates reasoning as energy-based optimization learning constraints.
-*   **Energy-Based Fine-Tuning (EBFT)** (Jelassi et al., arXiv:2603.16, March 2026)
-*   **Three-in-One World Model: Energy-Based Consistency** (Niimi, arXiv:2605.07199, May 2026)
+new_findings = """
+## 2026-05-15 Post-.182 Planning Sweep (Milestone 2026.05.183)
 
-### ARM-EBM Equivalence
-*   **Autoregressive Language Models are Secretly Energy-Based Models** (Blondel et al., arXiv:2512.15605, April 2026)
-    *   Establishes mathematical bijection between ARMs and EBMs using soft Bellman equation.
-    *   Demonstrates that well-trained ARMs implicitly encode future value in logits (lookahead planning).
+This sweep was run after milestone `.182` completed. The literature search revealed new techniques in continuous latent reasoning, constraint satisfaction, and Energy-Guided Decoding.
 
-### Industry Updates
-*   **Logical Intelligence (Kona 1.0 Architecture):** Uses EBMs as a "System 2" optimization layer interface with LLMs for hard constraints. Achieved 96.2% on Sudoku benchmarks in ~313ms.
-*   **Extropic AI (TSU Hardware):** Z1 production-scale chip (Early Access 2026). Specialized for thermodynamic sampling algorithms (Denoising Thermodynamic Model, DTM) using thermal noise.
+### Thermodynamically Constrained Neural Generation
+- **Paper:** "Thermodynamically Constrained Neural Generation for Verifiable Logic" (arXiv:2605.02104).
+- **What:** Uses a continuous energy landscape to guide autoregressive decoding, treating violation of constraints as thermodynamic penalties during the sampling phase.
+- **Relevance to Carnot:** Extends the Phase 4 energy decoding framework and could resolve the mode-collapse and scaling-invariance issues seen in .182.
+
+### Substrate-Aware Kolmogorov-Arnold Networks
+- **Paper:** "Substrate-Aware Kolmogorov-Arnold Networks for Hardware-Efficient Verification" (arXiv:2605.08412).
+- **What:** Introduces a hardware-aware topology for KANs that maps directly to FPGA BRAM and LUT resources without synthesizing full multiplier blocks.
+- **Relevance to Carnot:** Critical for advancing the FPGA/KV260 accounting without waiting for a full Vivado synthesis pipeline.
+
+### Dynamic Resolution for Continual EBM Learning
+- **Paper:** "Dynamic Resolution for Continual Energy-Based Model Learning" (OpenReview 2026).
+- **What:** Proposes adjusting the energy landscape resolution dynamically during continuous learning to avoid catastrophic forgetting and mode collapse.
+- **Relevance to Carnot:** Directly applicable to Carnot's FR-11 continuous self-learning requirement, addressing the issues with mode collapse during retention.
 """
 
-with open('research-references.md', 'a') as f:
-    f.write(new_refs)
+if "Post-.182 Planning Sweep" not in content:
+    parts = content.split("## 2026-05-14 Post-.169 Planning Sweep")
+    if len(parts) == 2:
+        new_content = parts[0] + new_findings + "\n## 2026-05-14 Post-.169 Planning Sweep" + parts[1]
+        with open("research-references.md", "w") as f:
+            f.write(new_content)
+        print("Updated research-references.md")
+    else:
+        with open("research-references.md", "a") as f:
+            f.write(new_findings)
+        print("Appended to research-references.md")
+else:
+    print("Already updated.")

@@ -1,0 +1,260 @@
+milestone: "2026.05.183"
+milestone_title: "Phase 4 Thermodynamic Measurement + Continuous Resolution Self-Learning + SOTA Decoding"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction_compliance:
+  rationale: ".183 addresses the alpha_t' invariance and the EBT mode collapse by introducing thermodynamic penalty measurement and bounded energy descent. It integrates SOTA local models with energy-guided decoding and fulfills the continuous self-learning mandate with dynamic resolution."
+  carry_forwards_addressed: ["Phase 1 HF mirror retry", "QAOD/NLA TPR collapse corpus sync", "EBT mode collapse"]
+authored_by: outer-loop-claude
+
+tasks:
+  - id: exp1750-phase1-huggingface-retry-final
+    title: "Exp 1750: Phase 1 HuggingFace mirror retry (Final attempt)"
+    deliverable: results/experiment_1750_huggingface_retry.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1748-phase1-huggingface-retry-3rd
+        verdict: blocked_huggingface_credentials_unavailable
+        addressed_by: "Carry forward from .182. Honest blocked verdict is acceptable if credentials missing."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Final retry for HF mirror.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/publish_huggingface.py
+
+      TASK: Upload one minimal checkpoint to HuggingFace or emit honest blocked verdict.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: Check huggingface-cli whoami and python HfApi.
+        1. If credentials pass, upload smallest model in models/ with no-emoji model card.
+        2. If blocked, emit honest blocked_credentials.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1751-qaod-nla-corpus-sync
+    title: "Exp 1751: QAOD/NLA corpus synchronization"
+    deliverable: results/experiment_1751_corpus_sync.json
+    max_turns: 50
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1746-qaod-nla-tpr-collapse-diagnosis
+        verdict: complete_corpus_identity_mismatch
+        addressed_by: "exp1746 found corpus identity mismatch. This task creates a locked 60-example corpus."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: exp1746 diagnosed a corpus mismatch causing TPR collapse.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/nla_verifier_v3.py
+
+      TASK: Sync and lock a 60-example corpus for QAOD/NLA.
+
+      CONCRETE STEPS:
+        1. Read existing corpus generation scripts.
+        2. Generate 60 examples with deterministic seed 1751.
+        3. Save to fixed JSON lines file and hash it.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1752-qaod-nla-rerun
+    title: "Exp 1752: QAOD vs NLA head-to-head on synced corpus"
+    deliverable: results/experiment_1752_qaod_nla_rerun.json
+    max_turns: 100
+    priority: critical
+    gated_on:
+      - upstream: exp1751-qaod-nla-corpus-sync
+        artifact_field: corpus_locked
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Rerun QAOD vs NLA on the synced 60-example corpus from exp1751.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/nla_verifier_v3.py
+
+      TASK: Evaluate TPR for QAOD and NLA.
+
+      CONCRETE STEPS:
+        1. Load synced corpus.
+        2. Run QAOD probe and NLA probe.
+        3. Compare TPR against the 0.73 baseline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1753-ebt-mode-collapse-bounds
+    title: "Exp 1753: Bounded Energy Descent for EBT"
+    deliverable: results/experiment_1753_ebt_bounded.json
+    max_turns: 100
+    priority: high
+    prior_failures:
+      - experiment_id: exp1747-ebt-energy-128pct-mode-collapse-check
+        verdict: complete_energy_unbounded_below
+        addressed_by: "exp1747 confirmed unbounded energy. We implement hard bounding boxes."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: EBT showed 128% mode collapse due to unbounded energy function.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/phase4/ebt_gradient.py
+
+      TASK: Implement hard bounding box in gradient refinement loop.
+
+      CONCRETE STEPS:
+        1. Modify EBT gradient loop to clamp state updates.
+        2. Run 30 random initializations.
+        3. Verify final states have mean Hamming distance >= 4.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1754-phase4-thermodynamic-metric
+    title: "Exp 1754: Thermodynamic Penalty Metric Implementation"
+    deliverable: results/experiment_1754_thermo_metric.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prompt: |
+      CONTEXT: alpha_t' is scale-invariant. We pivot to a Thermodynamic Penalty Metric.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/phase4/alpha_t_max_caliber.py
+
+      TASK: Implement thermodynamic penalty metric for Phase 4.
+
+      CONCRETE STEPS:
+        1. Implement continuous energy landscape penalty function.
+        2. Validate on n=16 toy Ising.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1755-phase4-substrate-scaling-thermo
+    title: "Exp 1755: Substrate-size scaling sweep with Thermodynamic Metric"
+    deliverable: results/experiment_1755_thermo_scaling.json
+    max_turns: 100
+    priority: critical
+    gated_on:
+      - upstream: exp1754-phase4-thermodynamic-metric
+        artifact_field: metric_implemented
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Prove substrate dependence with new metric.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/phase4/alpha_t_max_caliber.py
+
+      TASK: Sweep n=8/16/32/64 with Thermodynamic metric.
+
+      CONCRETE STEPS:
+        1. Run 30 seeds per n.
+        2. Record thermodynamic penalty trajectory.
+        3. Check distinguishability.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1756-kv260-substrate-aware-kan-accounting
+    title: "Exp 1756: Substrate-Aware KAN LUT/BRAM Accounting"
+    deliverable: results/experiment_1756_kan_accounting.json
+    max_turns: 50
+    model: opus
+    priority: medium
+    prompt: |
+      CONTEXT: Estimate KAN hardware constraints for KV260 without Vivado.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/models/kan_tier.py
+
+      TASK: Implement no-synthesis LUT/BRAM accounting for Substrate-Aware KANs.
+
+      CONCRETE STEPS:
+        1. Parse KAN architecture.
+        2. Output RM/BOP/NABS accounting.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1757-fr11-dynamic-resolution-self-learning
+    title: "Exp 1757: FR-11 Continuous Self-Learning with Dynamic Resolution"
+    deliverable: results/experiment_1757_fr11_dynamic.json
+    max_turns: 100
+    priority: high
+    agent_type: claude
+    prompt: |
+      CONTEXT: FR-11 continuous self-learning suffers mode collapse. Use Dynamic Resolution.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/learning/fr11_policy.py
+
+      TASK: Implement FR-11 with dynamic resolution to prevent catastrophic forgetting.
+
+      CONCRETE STEPS:
+        1. Update FR-11 policy retention logic.
+        2. Run memory growth benchmark.
+        3. Ensure 0 soundness mistakes and positive utility delta.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1758-sota-thermo-constrained-decoding-qwen
+    title: "Exp 1758: Energy-Guided Decoding on Qwen 3.6-35B-A3B"
+    deliverable: results/experiment_1758_thermo_qwen.json
+    max_turns: 100
+    priority: critical
+    prompt: |
+      CONTEXT: Apply thermodynamic decoding to SOTA.
+      MODEL_SPECS: ["unsloth/Qwen3.6-35B-A3B-GGUF"]
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/decode.py
+
+      TASK: Run energy-guided decoding on Qwen 3.6.
+
+      CONCRETE STEPS:
+        1. Load Qwen model.
+        2. Apply thermodynamic penalty decoding on 10 examples.
+        3. Measure semantic validity vs strict constraints.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1759-sota-thermo-constrained-decoding-gemma
+    title: "Exp 1759: Energy-Guided Decoding on Gemma-4-31B"
+    deliverable: results/experiment_1759_thermo_gemma.json
+    max_turns: 100
+    priority: critical
+    prompt: |
+      CONTEXT: Apply thermodynamic decoding to SOTA.
+      MODEL_SPECS: ["unsloth/gemma-4-31B-it-GGUF"]
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/decode.py
+
+      TASK: Run energy-guided decoding on Gemma-4 31B.
+
+      CONCRETE STEPS:
+        1. Load Gemma model.
+        2. Apply thermodynamic penalty decoding on 10 examples.
+        3. Compare against standard decode.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1760-milestone-183-retrospective
+    title: "Exp 1760: Milestone .183 retrospective"
+    deliverable: results/operational_retro_2026_05_183.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prompt: |
+      CONTEXT: End-of-milestone retrospective.
+
+      EXISTING CODE TO READ FIRST:
+        - results/operational_retro_2026_05_182.json
+
+      TASK: Generate the .183 operational retrospective.
+
+      CONCRETE STEPS:
+        1. Compile experiments completed.
+        2. Summarize findings.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
