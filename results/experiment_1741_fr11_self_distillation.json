@@ -33,7 +33,11 @@
   "constraint_types_observed": 5,
   "implementation": {
     "module": "python/carnot/pipeline/self_learning.py",
-    "classes": ["ViolationEvent", "DistillationMemory", "SelfLearningTracker"],
+    "classes": [
+      "ViolationEvent",
+      "DistillationMemory",
+      "SelfLearningTracker"
+    ],
     "entrypoint": "run_fr11_distillation_loop"
   },
   "methodology": {
@@ -43,5 +47,18 @@
     "distillation_loss": "KL(teacher || student) where teacher=replay buffer distribution, student=normalised precision weights",
     "replay_buffer_capacity": 200
   },
-  "honest_verdict": "complete: self-distillation memory integrated into FR-11 loop; utility_delta=0.137 confirms utility improves over 50-query run; distillation_loss bounded at 0.004"
+  "honest_verdict": "complete: self-distillation memory integrated into FR-11 loop; utility_delta=0.137 confirms utility improves over 50-query run; distillation_loss bounded at 0.004",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.41 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
