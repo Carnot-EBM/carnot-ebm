@@ -1,419 +1,425 @@
-milestone: "2026.05.184"
-milestone_title: "Carnot Fast-Slow Variant Prototype + Phase 1 PyPI Retry + .183 Audit + Phase 4 Validation"
+milestone: "2026.05.185"
+milestone_title: "Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 scope_reduction_compliance:
-  rationale: ".182 diagnostics produced 3 clean root-causes: (a) exp1745 Phase 4 invariance is SUBSTRATE-LEVEL not aggregation-level (distinguishable_steps=0 even per-step — ensemble-output metrics fundamentally inaccessible), (b) exp1746 QAOD/NLA TPR collapse root cause is corpus_identity_mismatch (exp1740 generated DIFFERENT corpus than exp1716), (c) exp1747 EBT 128% energy decrease root cause is energy_unbounded_below (NOT mode collapse). .183 carries forward (a/b/c) as exp1751-1755. The GAP in .183 is the operator-flagged Fast-Slow Variant (arXiv:2605.12484 Score 400) which is the EXPLICIT Phase 4 rescue path given exp1745's measurement-inaccessibility verdict. .184 lands that prototype + the still-stranded Phase 1 PyPI prong + .183 audit."
-  carry_forwards_addressed: ["Fast-Slow Variant prototype (operator-flagged 400-score, Phase 4 rescue)", "Phase 1 PyPI prong (blocked_credentials since .175)", ".183 audit (11 tasks)", "Phase 4 thermodynamic metric validation if .183 exp1754/1755 ship"]
+  rationale: ".184 successfully prototyped the Fast-Slow Variant (arXiv:2605.12484) and completed the thermodynamic metric comparison. .185 scales the Fast-Slow variant to mandated local SOTA GGUF models and integrates Token-Level Energy (arXiv:2605.14558) to resolve the action bottleneck in FR-11 continual learning. It also pushes the Phase 2 formal verification goal via KAN PWA abstractions (arXiv:2602.06737)."
+  carry_forwards_addressed: ["Continuous Self-Learning Stability", "SOTA GGUF Fast-Slow Evaluation", "KAN PWA Verification", "KV260 E-MVL Sparse RTL Accounting"]
 authored_by: outer-loop-claude
 
 tasks:
-  - id: exp1761-carnot-fast-slow-variant-prototype
-    title: "Exp 1761: Carnot Fast-Slow Variant prototype (operator-flagged arXiv:2605.12484, Phase 4 rescue)"
-    deliverable: results/experiment_1761_fast_slow_variant.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
+  - id: exp1766-token-level-energy-telemetry
+    title: "Exp 1766: Token-Level Energy Telemetry for Agentic Reinforcement (arXiv:2605.14558)"
+    deliverable: results/experiment_1766_token_level_energy.json
+    max_turns: 50
     priority: critical
-    prior_failures:
-      - experiment_id: exp1745-phase4-per-step-alpha-disaggregation
-        verdict: complete_phase4_metric_inaccessible_at_ensemble_level
-        addressed_by: "exp1745 (.182) confirmed Phase 4 invariance is substrate-level: distinguishable_steps=0 even with per-step disaggregation. Ensemble-output metrics fundamentally cannot measure free-energy reduction. The Fast-Slow paper (arXiv:2605.12484, Score 400) provides an explicit alternative: measure on the FAST WEIGHTS (verifier-shaped context) not the slow weights (base LLM output). This task is the explicit rescue path."
-        retire_if_same_verdict: false
-      - experiment_id: exp1715-phase4-alpha-t-audit-retry-v3
-        verdict: complete_bijection_invariance_artifact_confirmed
-        addressed_by: "exp1715 (.176) was the original falsification. exp1721 (.178) max-caliber replacement also invariant. exp1741 (.181) confirmed scale invariance. exp1745 (.182) confirmed substrate-level. Four prior attempts on ensemble-output measurement failed. This task switches measurement target to fast-weight context per arXiv:2605.12484."
-        retire_if_same_verdict: false
+    prior_failures: []
     prompt: |
-      CONTEXT: arXiv:2605.12484 (May 2026, operator-flagged 2026-05-15
-      13:15Z, Score 400) introduces Fast-Slow Training (FST): slow weights
-      = model parameters (RL); fast weights = optimized context (ICL).
-      Reports 3x sample efficiency over RL-only, 70% less KL divergence
-      from base, less catastrophic forgetting, continual learning where
-      parameter-only RL stalls.
-
-      Carnot's verify-repair loop maps onto FST natively:
-        - SLOW weights = k=16 verifier ensemble + base LLM (FROZEN at inference)
-        - FAST weights = verifier-output-summary that re-prompts the LLM
-          on the next verify-repair iteration
-
-      This task implements a minimal Carnot Fast-Slow Variant + measures
-      the 3 paper-headline numbers (sample efficiency, KL drift, continual
-      learning plasticity).
-
-      FALSIFIABLE HYPOTHESIS: A minimal Carnot Fast-Slow Variant, when
-      compared head-to-head against FR-11 (verifier-as-reward RL baseline)
-      on a 3-task continual-learning switch (e.g., GSM8K → BBH → MATH
-      subset), achieves AT LEAST 2x sample efficiency to a fixed
-      verification-pass-rate target AND <=0.5x KL drift from the base LLM,
-      with no catastrophic forgetting (pass rate on prior task degrades
-      < 5pp after switching).
+      CONTEXT: arXiv:2605.14558 (May 2026) demonstrates that token-level energy metrics resolve the action bottleneck in agentic RL. Carnot needs this fine-grained signal to inform the Fast-Slow continuous learning loop without relying on coarse string-matching.
 
       EXISTING CODE TO READ FIRST:
-        - python/carnot/pipeline/verify_repair.py (the existing repair loop;
-          this is where the SLOW-weight ensemble lives)
-        - python/carnot/pipeline/ebft_autoresearch_loop.py if exists (the
-          FR-11 baseline for sample-efficiency comparison)
-        - results/experiment_1745_phase4_per_step_alpha.json (the
-          measurement-inaccessibility motivation)
-        - feedback_nla_class_16th_verifier_committed memory (NLA is
-          verifier #16 of slow weights)
+        - python/carnot/inference/composite_scorer.py
+        - results/experiment_1761_fast_slow_variant.json (if exists)
 
-      TASK: Implement the Fast-Slow Variant + 3-task continual-learning
-      benchmark.
+      TASK: Implement token-level energy telemetry for the SOTA GGUF runtime.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `python -c "from carnot.pipeline.verify_repair import
-              VerifyRepairPipeline"` succeeds — else
-              `blocked_verify_repair_pipeline_missing`.
-           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
-              non-empty — else `blocked_model_not_cached`.
-           c. At least one FR-11 baseline run exists in results/
-              (grep for fr11 or fr_11) — else
-              `blocked_no_fr11_baseline_for_comparison` (this is honest;
-              cannot ship the comparison without the baseline).
-           Record preconditions_checked.
-        1. Implement fast_slow_variant(prompt, base_llm, verifier_ensemble,
-           max_iters=10) that maintains a "fast-weight context" buffer:
-             - Initial context = empty.
-             - Each iter t: generate response with base_llm(prompt +
-               context_t-1), evaluate with verifier_ensemble → energy.
-               If energy below threshold, return. Otherwise, compute
-               textual-feedback (summarize the verifier failures) and
-               APPEND to context for iter t+1.
-             - Slow weights (base_llm, verifier_ensemble) NEVER UPDATE.
-        2. Build 3-task continual-learning benchmark:
-             - Task A: 30 GSM8K-style arithmetic word problems.
-             - Task B: 30 BBH-style logical-deduction problems.
-             - Task C: 30 MATH-subset competition problems.
-             - Same 90 examples for both FR-11 baseline AND fast-slow
-               variant.
-        3. Run both pipelines on the 3-task sequence (A → B → C). For
-           each task, log: verification-pass-rate, iters-to-pass per
-           example, base_llm KL divergence from initial.
-        4. After full sequence: re-run task A. Measure plasticity =
-           (passrate_A_after_C) - (passrate_A_initial). Same for FR-11.
-        5. Acceptance: sample efficiency (iters-to-pass on task B) for
-           Fast-Slow >= 2x FR-11 AND KL drift (post-sequence) <= 0.5x
-           FR-11 AND |plasticity_fastslow - plasticity_fr11| <= 0.05.
+        0. PRECONDITIONS: `unsloth/gemma-4-31B-it-GGUF` or `unsloth/Qwen3.6-35B-A3B-GGUF` models are cached locally.
+        1. Write a telemetry adapter that hooks into llama.cpp/GGUF logprobs to extract top-k logits per token.
+        2. Compute the token-level energy (negative log sum of top-k probabilities).
+        3. Evaluate on 50 samples from the FoVer dataset, logging the token-level energy trace alongside deterministic validator pass/fail labels.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.fast_slow_variant.v1"
-        - experiment: 1761
-        - run_date: ISO-8601 UTC
-        - duration_s: > 300s (90 examples × ~150ms inference × ~10 iters
-          per pipeline × 2 pipelines + KL eval; realistic floor)
-        - random_seed: 172461 (NOT 1761 or 90)
-        - reproducibility_checksum: sha256 of (corpus hash +
-          base_llm git_rev + verifier_ensemble fingerprint)
-        - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
-          slow_weights: ["base_llm", "k=16_verifier_ensemble"],
-          fast_weights: "verifier_output_summary_context",
-          baseline: "fr11_verifier_as_reward",
-          tasks: ["gsm8k_30", "bbh_30", "math_30"],
-          continual_switch_order: "A_B_C_then_A"}
-        - n_samples: 90 (30 per task × 3 tasks)
-        - n_samples_justification: "30 examples per task gives Wilson 95%
-          CI width ~0.30 on pass rate, matching the paper's evaluation
-          granularity. Continual-switch test needs >=3 tasks to detect
-          stall vs progress."
-        - fast_slow_passrate_per_task: dict task -> {passrate, wilson_95_ci}
-        - fr11_passrate_per_task: dict task -> {passrate, wilson_95_ci}
-        - sample_efficiency_ratio: float (fast_slow_iters / fr11_iters
-          on task B)
-        - kl_drift_fast_slow: float (vs base LLM)
-        - kl_drift_fr11: float
-        - kl_drift_ratio: float (fast_slow / fr11)
-        - plasticity_fast_slow: float (passrate_A_after_C - passrate_A_initial)
-        - plasticity_fr11: float
-        - catastrophic_forgetting_fast_slow: bool (plasticity < -0.05)
-        - catastrophic_forgetting_fr11: bool
-        - acceptance_gate_passed: bool (sample_efficiency_ratio >= 2.0
-          AND kl_drift_ratio <= 0.5 AND NOT catastrophic_forgetting_fast_slow)
-        - acceptance_gate_criteria: "Sample-eff >= 2x baseline AND KL drift
-          <= 0.5x baseline AND no catastrophic forgetting."
-        - methodology_note: "If sample_efficiency_ratio > 5x with no
-          methodology_note, treat as IMPLAUSIBLE_PERFECT — paper's
-          headline is 3x; lift > 5x on Carnot's setup without explanation
-          is a fabrication signal."
-        - optimization_direction: "maximize_sample_efficiency_minimize_kl_drift"
-        - honest_verdict: MUST start with `complete:` / `complete_` /
-          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
-          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+        - schema: "carnot.token_level_energy.v1"
+        - experiment: 1766
+        - run_date: "{date}"
+        - duration_s: int
+        - model_specs: {target_model: "unsloth/gemma-4-31B-it-GGUF"}
+        - n_samples: 50
+        - auroc_token_energy_vs_validator: float
+        - honest_verdict: MUST start with terminal prefix.
 
-      Run command. Do NOT push to git. Do NOT modify
-      scripts/research_conductor.py.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1762-phase1-pypi-retry-with-blocked-honest-pattern
-    title: "Exp 1762: Phase 1 PyPI retry (blocked since .175; HF parallel attempt in .183 exp1750)"
-    deliverable: results/experiment_1762_pypi_retry.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: high
-    prior_failures:
-      - experiment_id: exp1711-pypi-publish
-        verdict: blocked_pypi_credentials_unavailable
-        addressed_by: "exp1711 (.175) emitted honest blocked_credentials verdict — this is the exemplary pattern. This task retries with the same preconditions block per CLAUDE.md."
-        retire_if_same_verdict: false
-      - experiment_id: exp1704-phase1-pypi-publish-with-preconditions
-        verdict: stranded_skip_wipeout_in_173
-        addressed_by: "exp1704 (.173) stranded. exp1711 (.175) emitted honest blocked. This is the next attempt with the same discipline."
-        retire_if_same_verdict: false
-      - experiment_id: exp1685-pypi-publish-actual
-        verdict: blocked_gate_check_failed
-        addressed_by: "exp1685 (.170) blocked. Full chain: exp2103 -> exp1683 -> exp1685 -> exp1704 -> exp1711 -> exp1762. retire_if_same_verdict cleared each time the credentials state could potentially have changed."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT: Phase 1 ship-track PyPI prong. Last attempt (exp1711 .175)
-      emitted honest blocked_pypi_credentials_unavailable. If credentials
-      have been provisioned since, this task ships; if still missing,
-      another honest blocked verdict is the correct outcome (NOT a
-      fabrication).
-
-      FALSIFIABLE HYPOTHESIS: Either PyPI/TestPyPI credentials are
-      available (success path: real upload + external pip install
-      verification), OR they remain absent (failure path: honest blocked
-      verdict matching exp1711 pattern). Fabrication is not a valid
-      outcome.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1711_pypi_publish.json (the exemplary
-          blocked-credentials pattern)
-        - pyproject.toml (name="carnot-ebm" per CLAUDE.md memory)
-        - scripts/publish_huggingface.py if present (HF parallel pattern)
-
-      TASK: PyPI upload OR honest blocked verdict.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `pyproject.toml` has `name = "carnot-ebm"` — else
-              `blocked_pypi_name_misconfigured`.
-           b. `python -m build --version` succeeds — else
-              `blocked_pypi_build_toolchain_missing`.
-           c. `twine --version` succeeds — else
-              `blocked_pypi_twine_missing`.
-           d. PyPI credentials via env TWINE_PASSWORD OR keyring OR
-              ~/.pypirc — else `blocked_pypi_credentials_unavailable`.
-              Try TestPyPI credentials similarly.
-           Record preconditions_checked.
-        1. `python -m build` → dist/*.whl + dist/*.tar.gz.
-        2. Compute SHA-256 of both artifacts.
-        3. `twine check dist/*` — fix README rendering issues if any.
-        4. `twine upload dist/*` (or --repository-url for TestPyPI).
-        5. Fresh subprocess: `pip install carnot-ebm --target /tmp/x` +
-           `python -c "import sys; sys.path.insert(0, '/tmp/x'); import
-           carnot; print(carnot.__version__)"`.
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.pypi_publish.v3"
-        - experiment: 1762
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s if real upload; smaller if blocked is fine
-        - random_seed: 172462
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {package_name: "carnot-ebm", version: str,
-          publish_target: "pypi" | "testpypi" | "blocked",
-          wheel_filename: str, sdist_filename: str,
-          wheel_sha256: str, sdist_sha256: str}
-        - n_samples: 1
-        - n_samples_justification: "Ship task; n=1 publication artifact."
-        - pypi_url: str or null
-        - external_install_verified: bool
-        - acceptance_gate_passed: bool (pypi_url non-null AND
-          external_install_verified) OR honest blocked verdict
-        - acceptance_gate_criteria: "Real upload + verify install OR
-          honest blocked verdict."
-        - methodology_note: "Per exp1711 precedent, blocked_credentials
-          is a valid honest verdict — NOT a fabrication."
-        - optimization_direction: "neither — ship task"
-        - honest_verdict: MUST start with terminal prefix OR
-          `blocked_<resource>`.
-
-      Run command. Do NOT push to git. Do NOT modify
-      scripts/research_conductor.py.
-
-  - id: exp1763-findings-audit-pass-183
-    title: "Exp 1763: .183 findings audit + corrigenda"
-    deliverable: results/experiment_1763_findings_audit_183.json
-    max_turns: 100
+  - id: exp1767-fover-dataset-expansion
+    title: "Exp 1767: FoVer Dataset Expansion via ROCE Constraints"
+    deliverable: results/experiment_1767_fover_roce_expansion.json
+    max_turns: 50
     agent_type: codex
     model: gpt-5.5
     priority: medium
     prior_failures: []
     prompt: |
-      CONTEXT: .183 had 11 tasks (exp1750-1760) running broad scope:
-      Phase 1 HF retry, QAOD/NLA corpus sync + rerun, EBT bounds,
-      Phase 4 thermodynamic metric (alternative to alpha_t — separate
-      from the Fast-Slow rescue path), KV260 substrate, FR-11 self-
-      learning, thermodynamic decoding on Qwen + Gemma. Audit pass scans
-      all for adversarial-verify flags + classifies.
-
-      FALSIFIABLE HYPOTHESIS: Of the .183 artifacts, at least 2 will be
-      flagged (.179/.180 had 11/12 flagged; .181 had 3 anomalies). The
-      audit classifies each REAL_BUG / FALSE_POSITIVE / NEEDS_REVISION.
+      CONTEXT: The FoVer corpus needs to cover dynamic natural language constraints to support ROCE (Reasoning-Time Open Constraint Elicitation).
 
       EXISTING CODE TO READ FIRST:
-        - scripts/adversarial_verify.py (8-rule linter)
-        - results/experiment_175[0-9]*.json + experiment_1760*.json
+        - python/carnot/verify/python_types.py
+        - scripts/generate_qa_dataset.py
 
-      TASK: Audit + corrigenda pass.
+      TASK: Expand FoVer with 100 new metamorphic QA pairs focusing on structured reasoning rules.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
-        1. `python3 scripts/adversarial_verify.py --milestone-range
-           1750 1761`.
-        2. Classify each flag, append corrigendum_2026_05_184_audit
-           field (CLAUDE.md no-pruning: APPEND only).
-        3. For REAL_BUG, propose .185+ follow-ups.
+        0. PRECONDITIONS: PySAT and Z3 are importable.
+        1. Generate 100 logical constraints (e.g., temporal sequencing, numeric thresholds).
+        2. Formulate positive and negative samples for each constraint.
+        3. Verify all 100 negative and positive pairs deterministically with PySAT/Z3 validators.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.findings_audit_corrigenda.v6"
-        - experiment: 1763
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s
-        - random_seed: 172463
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {audit_target_milestone: "2026.05.183",
-          adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
-        - n_samples: int (flagged count)
-        - n_samples_justification: "Audit; n is flagged-artifact count."
-        - audit_outcomes: dict experiment_id -> {classification, rationale}
-        - corrigenda_added: list
-        - acceptance_gate_passed: bool
-        - acceptance_gate_criteria: "All flagged classified; corrigenda appended."
-        - methodology_note: "If audit completes in <10s on >5 artifacts,
-          agent shortcut — disclose honestly."
-        - optimization_direction: "neither — audit task"
+        - schema: "carnot.fover_roce_expansion.v1"
+        - experiment: 1767
+        - run_date: "{date}"
+        - n_total_pairs: 100
+        - zero_false_accepts: bool
         - honest_verdict: MUST start with terminal prefix.
 
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
-      or scripts/adversarial_verify.py.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1764-phase4-thermodynamic-vs-fast-slow-comparison
-    title: "Exp 1764: Phase 4 thermodynamic metric vs Fast-Slow Variant comparison (decision artifact)"
-    deliverable: results/experiment_1764_phase4_method_comparison.json
+  - id: exp1768-fast-slow-variant-scaleup
+    title: "Exp 1768: Gated Fast-Slow Variant Scale-Up on SOTA GGUFs"
+    deliverable: results/experiment_1768_fast_slow_scaleup.json
     max_turns: 100
+    gated_on:
+      - upstream: exp1766-token-level-energy-telemetry
+        artifact_field: auroc_token_energy_vs_validator
+        op: '>'
+        value: 0.60
+    priority: critical
+    prior_failures: []
+    prompt: |
+      CONTEXT: After Exp 1761 successfully prototyped the Fast-Slow Variant (arXiv:2605.12484), this task scales it to the mandated flagship local SOTA MoE (`unsloth/Qwen3.6-35B-A3B-GGUF`).
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/verify_repair.py
+        - results/experiment_1761_fast_slow_variant.json
+
+      TASK: Run the Fast-Slow repair loop on Qwen3.6-35B-A3B-GGUF using the 3-task continual learning benchmark (GSM8K, BBH, MATH).
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `unsloth/Qwen3.6-35B-A3B-GGUF` is cached and loadable.
+        1. Instantiate the Fast-Slow loop using the token-level energy metrics from Exp 1766 as a fast-weight heuristic.
+        2. Run the 3-task switch (A->B->C->A) benchmark with n=30 per task.
+        3. Calculate sample efficiency, KL drift, and catastrophic forgetting metrics.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.fast_slow_variant.v2"
+        - experiment: 1768
+        - run_date: "{date}"
+        - sample_efficiency_ratio: float
+        - plasticity_fast_slow: float
+        - catastrophic_forgetting_fast_slow: bool
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1769-roce-to-kan-compiler
+    title: "Exp 1769: ROCE-to-KAN Representation Compiler"
+    deliverable: results/experiment_1769_roce_to_kan.json
+    max_turns: 50
     agent_type: codex
     model: gpt-5.5
     priority: high
     prior_failures: []
     prompt: |
-      CONTEXT: .183 exp1754/1755 explore a thermodynamic metric as an
-      alternative Phase 4 measurement (separate from the Fast-Slow rescue
-      path which is exp1761 in .184). After both paths produce artifacts,
-      Carnot needs a decision artifact comparing them on the same
-      substrate. This task lands that comparison + recommends which
-      path Phase 4 should pursue downstream.
-
-      FALSIFIABLE HYPOTHESIS: Either (a) the thermodynamic metric
-      (exp1754/1755) shows substrate-size scaling that ensemble-output
-      alpha couldn't, (b) the Fast-Slow Variant (exp1761) achieves the
-      paper's 3x sample efficiency + 70% KL targets, or (c) neither path
-      produces a clean Phase 4 measurement. The decision artifact reports
-      which.
+      CONTEXT: Carnot needs to convert natural language rules into verifiable logic. This task implements a compiler that translates structured ROCE extractions into KAN matrix representations.
 
       EXISTING CODE TO READ FIRST:
-        - results/experiment_1754_phase4_thermodynamic_metric.json (if
-          exists from .183)
-        - results/experiment_1755_phase4_substrate_scaling_thermo.json
-          (if exists from .183)
-        - results/experiment_1761_fast_slow_variant.json (if exists from
-          .184's earlier exp1761)
-        - feedback_active_inference_phase4_committed memory entry
+        - python/carnot/verify/
+        - results/experiment_1767_fover_roce_expansion.json
 
-      TASK: Three-path comparison + Phase 4 program recommendation.
+      TASK: Build a deterministic ROCE-to-KAN compiler.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `test -f results/experiment_1761_fast_slow_variant.json` —
-              else `blocked_fast_slow_artifact_not_ready_run_after_1761`.
-           b. At least one of exp1754 or exp1755 artifact readable — else
-              `blocked_thermodynamic_artifacts_missing`.
-           Record preconditions_checked.
-        1. Tabulate the 3 methods (ensemble-alpha-original, thermodynamic-
-           metric, fast-slow-variant) on key metrics:
-             - Substrate-size discriminability (Phase 4 hypothesis testable?)
-             - Sample efficiency (vs FR-11 baseline if applicable)
-             - KL drift from base
-             - Practical implementation cost
-        2. Score each method: pass/fail on each criterion.
-        3. Issue decision artifact: which method becomes "Phase 4
-           canonical metric" for .185+ planner.
-        4. Append note to ops/known-issues.md MANDATORY entry "Phase 4
-           Canonical Metric Decision (.184+ MANDATORY)" with the
-           recommended method.
+        1. Write a compiler that maps 20 simple temporal/numeric ROCE constraints to KAN B-spline or polynomial bases.
+        2. Run 100 evaluations where the KAN representation accurately separates valid from invalid states with zero false accepts compared to a reference PySAT oracle.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.phase4_method_comparison.v1"
-        - experiment: 1764
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s
-        - random_seed: 172464
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {methods_compared: ["ensemble_alpha_original",
-          "thermodynamic_metric_v1", "fast_slow_variant_v1"],
-          comparison_criteria: ["substrate_discriminability",
-          "sample_efficiency", "kl_drift", "implementation_cost"]}
-        - n_samples: 3 (methods compared)
-        - n_samples_justification: "Comparison task; n is the method count."
-        - method_scorecards: dict method -> dict criterion -> {pass: bool,
-          rationale: str}
-        - recommended_canonical_method: str
-        - known_issues_entry_added: bool
-        - acceptance_gate_passed: bool (all 3 methods scored + decision rendered)
-        - acceptance_gate_criteria: "All 3 methods scored + canonical
-          decision recommendation written + known-issues entry appended."
-        - methodology_note: "If all 3 methods fail substrate-discriminability,
-          Phase 4 program needs operator-level scope review — escalate
-          via known-issues entry."
-        - optimization_direction: "neither — decision artifact"
+        - schema: "carnot.roce_kan_compiler.v1"
+        - experiment: 1769
+        - run_date: "{date}"
+        - compile_success_rate: float
+        - zero_false_accepts: bool
         - honest_verdict: MUST start with terminal prefix.
 
-      Run command. Do NOT push to git. Do NOT modify
-      scripts/research_conductor.py.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1765-milestone-184-retrospective
-    title: "Exp 1765: Milestone .184 retrospective"
-    deliverable: results/operational_retro_2026_05_184.json
-    max_turns: 60
+  - id: exp1770-pwa-abstraction-for-kan
+    title: "Exp 1770: PWA Abstractions for KAN Verification (arXiv:2602.06737)"
+    deliverable: results/experiment_1770_pwa_kan.json
+    max_turns: 50
+    agent_type: claude
+    priority: high
+    prior_failures: []
+    prompt: |
+      CONTEXT: arXiv:2602.06737 proposes Optimal Abstractions for Verifying KANs using Piecewise Affine (PWA) bounds and Mixed Integer Linear Programming (MILP).
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/models/
+        - results/experiment_1769_roce_to_kan.json
+
+      TASK: Implement a PWA abstraction layer for Carnot's KAN tiers to enable formal verification.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: The ROCE-to-KAN compiler (Exp 1769) produced valid artifacts.
+        1. Load a simple KAN representation.
+        2. Compute the PWA upper and lower bounds for the nonlinear units.
+        3. Export a MILP representation and solve it using Z3 to prove constraint satisfaction bound.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.pwa_kan_verification.v1"
+        - experiment: 1770
+        - run_date: "{date}"
+        - milp_solvable: bool
+        - bounds_certified: bool
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1771-hard-constraint-projection-skm
+    title: "Exp 1771: T-SKM Linear Constraint Projection Baseline"
+    deliverable: results/experiment_1771_tskm_projection.json
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures: []
+    prompt: |
+      CONTEXT: T-SKM-Net (arXiv:2512.10461) uses Sampling Kaczmarz-Motzkin for hard linear constraint projection without full network retraining.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/verify/
+
+      TASK: Implement an SKM-style iterative projection baseline for Carnot's linear constraints.
+
+      CONCRETE STEPS:
+        1. Select 50 linear equality/inequality constraints from the CCTU benchmark.
+        2. Implement the SKM randomized projection algorithm in Numpy or JAX.
+        3. Verify that post-projection outputs achieve strictly zero constraint violations.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.tskm_projection.v1"
+        - experiment: 1771
+        - run_date: "{date}"
+        - zero_violations_achieved: bool
+        - mean_projection_steps: float
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1772-fr11-gradient-guided-epsilon
+    title: "Exp 1772: Gradient-Guided Epsilon Continual EBM Learning"
+    deliverable: results/experiment_1772_fr11_epsilon.json
+    max_turns: 100
+    gated_on:
+      - upstream: exp1768-fast-slow-variant-scaleup
+        artifact_field: catastrophic_forgetting_fast_slow
+        op: '=='
+        value: false
+    priority: high
+    prior_failures: []
+    prompt: |
+      CONTEXT: Dynamic Resolution and Gradient-Guided Epsilon constraints address catastrophic forgetting in continual EBM learning.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/ebft_autoresearch_loop.py
+
+      TASK: Modify the FR-11 self-learning policy updater to respect a hard epsilon constraint on prior knowledge retention.
+
+      CONCRETE STEPS:
+        1. Load the policy updates generated by the Fast-Slow pipeline.
+        2. Implement a gradient projection step that enforces a hard epsilon constraint on the distance from the retained prior policy matrix.
+        3. Run a query-time memory update.
+        4. Validate that `soundness_mistakes` is strictly zero.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.fr11_epsilon_continual.v1"
+        - experiment: 1772
+        - run_date: "{date}"
+        - soundness_mistakes: 0
+        - utility_delta: float
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1774-kv260-emvl-sparse-rtl
+    title: "Exp 1774: KV260 E-MVL Sparse RTL Accounting"
+    deliverable: results/experiment_1774_kv260_emvl_rtl.json
+    max_turns: 30
+    agent_type: claude
+    priority: medium
+    prior_failures: []
+    prompt: |
+      CONTEXT: E-MVL (arXiv:2604.04606) allows sparse O(N*K) majority vote Ising coupling, solving the FPGA LUT explosion.
+
+      EXISTING CODE TO READ FIRST:
+        - hardware/kv260/ising_sampler_v4_spec.md
+
+      TASK: Perform a no-synthesis hardware accounting evaluation of the E-MVL RTL design.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: The `ising_sampler_v4_spec.md` exists.
+        1. Extract the arithmetic operations required for K=16, N=128 dense and sparse architectures.
+        2. Estimate the RM, BOP, and NABS (Real Multiplications, Bit Operations, Additions/Shifts).
+        3. Verify the estimated LUT count is well under the 117K XCK26 budget.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.kv260_emvl_accounting.v1"
+        - experiment: 1774
+        - run_date: "{date}"
+        - estimated_lut_count: int
+        - within_budget: bool
+        - kv260_no_synthesis_claim: true
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1775-thrml-parity-scaling-n256
+    title: "Exp 1775: THRML JAX Simulator Parity Scaling (N=256)"
+    deliverable: results/experiment_1775_thrml_parity_n256.json
+    max_turns: 50
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures: []
+    prompt: |
+      CONTEXT: Carnot requires independent RNG audits for THRML vs Carnot block-Gibbs samplers, scaling up to N=256 without making TSU hardware claims.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/models/gibbs.py
+
+      TASK: Run a simulator-only parity check between Carnot Gibbs and THRML at N=256 spins.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: `thrml` library is importable.
+        1. Initialize separate PRNG lineages for THRML and Carnot.
+        2. Generate a random N=256 coupling matrix J.
+        3. Draw 10,000 samples from both simulators.
+        4. Compute KL divergence and confirm it is bounded and non-zero (proving independence but statistical parity).
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.thrml_simulator_parity.v2"
+        - experiment: 1775
+        - run_date: "{date}"
+        - n_spins: 256
+        - kl_divergence: float
+        - independent_rng_confirmed: bool
+        - hardware_execution_claim: false
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1776-interwhen-test-time-monitor
+    title: "Exp 1776: Interwhen Asynchronous Test-Time Monitor"
+    deliverable: results/experiment_1776_interwhen_monitor.json
+    max_turns: 50
+    agent_type: claude
+    priority: high
+    prior_failures: []
+    prompt: |
+      CONTEXT: interwhen (arXiv:2602.11202) introduces an asynchronous polling mechanism for verifiable reasoning during test-time text generation.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/verify_repair.py
+
+      TASK: Prototype an interwhen-style test-time polling monitor over a deterministic CCTU benchmark subset.
+
+      CONCRETE STEPS:
+        1. Wrap a local SOTA model generation call with an async thread that polls the generated token trace every N tokens.
+        2. Extract verifiable states from the partial trace and evaluate with a PySAT monitor.
+        3. Interrupt and trigger early repair if the partial state violates constraints.
+        4. Log compute avoided versus false-accept rates.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.interwhen_monitor.v1"
+        - experiment: 1776
+        - run_date: "{date}"
+        - monitor_intervention_ready: bool
+        - zero_new_false_accepts: bool
+        - compute_avoided_pct: float
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1777-phase1-pypi-verification
+    title: "Exp 1777: Phase 1 PyPI Package Verification"
+    deliverable: results/experiment_1777_pypi_verification.json
+    max_turns: 20
     agent_type: codex
     model: gpt-5.5
     priority: low
     prior_failures: []
     prompt: |
-      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
-      Development Workflow step 8.
+      CONTEXT: Following the PyPI retry in .184, this task runs a final verification on the built artifacts to ensure no schema or import violations exist in the packaged wheel.
 
-      TASK: Generate the .184 operational retrospective.
+      EXISTING CODE TO READ FIRST:
+        - pyproject.toml
+
+      TASK: Verify the Carnot-EBM Python wheel package integrity.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: git log [conductor] Activate milestone
-           2026.05.184..HEAD returns non-empty.
-        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.182 templates.
+        1. `python -m build`
+        2. Install the generated `.whl` into a fresh temporary virtual environment.
+        3. Run a basic Pytest suite from the installed package to verify that `pyo3` rust bindings load properly.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.operational_retro.v64"
-        - milestone: "2026.05.184"
-        - generated_at: ISO-8601 UTC
-        - retro_type: "operational_full"
-        - preconditions_checked: list
-        - total_wall_time_minutes: float
+        - schema: "carnot.pypi_verification.v1"
+        - experiment: 1777
+        - run_date: "{date}"
+        - wheel_installable: bool
+        - tests_passed: bool
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1778-adversarial-findings-audit
+    title: "Exp 1778: Adversarial Findings Audit for .185"
+    deliverable: results/experiment_1778_findings_audit.json
+    max_turns: 20
+    agent_type: codex
+    priority: medium
+    prior_failures: []
+    prompt: |
+      CONTEXT: Mandatory adversarial verification scan on the generated milestone artifacts.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py
+
+      TASK: Run adversarial verify script over .185 milestone artifacts.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
+        1. `python3 scripts/adversarial_verify.py --milestone-range 1766 1777`
+        2. Output JSON containing flags, categorizing REAL_BUG vs FALSE_POSITIVE.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.findings_audit.v7"
+        - experiment: 1778
+        - run_date: "{date}"
+        - artifacts_scanned: int
+        - artifacts_flagged: int
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1779-milestone-185-retrospective
+    title: "Exp 1779: Milestone .185 Retrospective"
+    deliverable: results/operational_retro_2026_05_185.json
+    max_turns: 50
+    agent_type: claude
+    priority: low
+    prior_failures: []
+    prompt: |
+      CONTEXT: End of milestone retrospective per Development Workflow.
+
+      TASK: Generate .185 retrospective.
+
+      CONCRETE STEPS:
+        1. Consolidate results from the milestone tasks.
+        2. Generate the retrospective JSON payload.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v65"
+        - milestone: "2026.05.185"
+        - generated_at: "{date}"
         - experiments_completed: int
-        - compute_bound_experiments_count: int
-        - slowest_experiments: list
-        - gpu_idle_on_compute_bound_tasks: bool or null
-        - summary: str
-        - bottlenecks_identified: list
-        - improvements_suggested: list
-        - top_3_highest_leverage_actions: list
-        - estimated_time_savings_pct: int
-        - meta_reflection: str
         - honest_verdict: MUST start with terminal prefix.
 
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
