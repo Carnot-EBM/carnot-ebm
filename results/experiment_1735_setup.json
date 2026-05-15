@@ -1,0 +1,46 @@
+{
+  "experiment": 1735,
+  "title": "Exp 1735: Archive .179 and Setup Phase 0",
+  "schema": "carnot.milestone_setup.v1",
+  "run_date": "2026-05-15",
+  "started_at": "2026-05-15T10:19:19Z",
+  "finished_at": "2026-05-15T10:21:00Z",
+  "duration_s": 101,
+  "status": "complete",
+  "honest_verdict": "complete: milestone .179 archived and .180 working area verified clean",
+  "milestone_archived": "2026.05.179",
+  "milestone_activated": "2026.05.180",
+  "retro_artifact": "results/operational_retro_2026_05_179.json",
+  "retro_summary": {
+    "schema": "carnot.operational_retro.v64",
+    "total_wall_time_minutes": 0,
+    "experiments_completed": 0,
+    "compute_bound_experiments_count": 0,
+    "summary": "Milestone 2026.05.179 completed with 0 experiments — activation + retro only. No GPU work this milestone."
+  },
+  "status_md_179_entries": "none — ops/status.md last updated at milestone 2026.05.147; no .179-specific sections were present to archive. Conductor Haiku reconciliation will handle forward updates.",
+  "metrics_ledger_clean": true,
+  "metrics_ledger_last_entry": "2026-05-15T07:22:35Z (Session: Milestone 1719 Codification — blocked artifact written)",
+  "conductor_commits_verified": [
+    {
+      "hash": "5002e8dba",
+      "message": "[conductor] Milestone 2026.05.179 Retrospective"
+    },
+    {
+      "hash": "378265fae",
+      "message": "[conductor] Operational retrospective for milestone 2026.05.179"
+    },
+    {
+      "hash": "0185485c4",
+      "message": "[conductor] Activate milestone 2026.05.180"
+    }
+  ],
+  "working_area_ready": true,
+  "research_roadmap_milestone": "2026.05.180",
+  "next_experiment": "exp1736-ebt-gradient-refinement",
+  "preconditions_checked": [
+    {"resource": "retro_artifact_exists", "available": true},
+    {"resource": "roadmap_activated_to_180", "available": true},
+    {"resource": "metrics_ledger_clean", "available": true}
+  ]
+}
