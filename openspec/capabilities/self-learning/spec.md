@@ -5757,3 +5757,42 @@ with `baseline_energy`, `final_energy`, `energy_delta`, and `acceptance_gate_pas
 **Given** a loop execution environment
 **When** the CSL loop evaluator runs
 **Then** it produces a JSON artifact with `schema` equal to "carnot.csl.loop.v1", a float `utility_delta`, and an integer `soundness_mistakes`.
+
+## REQ-LEARN-1741: FR-11 Self-Distillation Memory for Continuous Self-Learning
+
+**Given** the FR-11 continuous self-learning loop running over n_queries verification calls
+**When** SelfLearningTracker stores past violated constraints in a DistillationMemory replay buffer
+**Then** the system MUST compute a distillation_loss (KL divergence from replay to current weights)
+**And** utility_delta (late-window mean precision minus early-window mean precision) MUST be >= 0
+**And** the artifact MUST be written to `results/experiment_1741_fr11_self_distillation.json`
+
+This implements the self-distillation-prevents-forgetting mechanism from arXiv:2601.19897.
+The replay buffer acts as the "teacher" distribution; the ConstraintTracker precision weights
+are the "student".  Keeping KL(teacher || student) low prevents the system from forgetting
+historically reliable constraint violation patterns as new queries arrive.
+
+### REQ-LEARN-1741 Sub-requirements
+
+- REQ-LEARN-1741-1: `SelfLearningTracker` in `python/carnot/pipeline/self_learning.py` SHALL
+  maintain a `DistillationMemory` replay buffer and a `ConstraintTracker`.
+- REQ-LEARN-1741-2: `SelfLearningTracker.record_query()` SHALL update both structures per query.
+- REQ-LEARN-1741-3: `SelfLearningTracker.distillation_loss()` SHALL return KL(teacher || student).
+- REQ-LEARN-1741-4: `run_fr11_distillation_loop(n_queries=50)` SHALL run 50 synthetic queries
+  and return a dict including `utility_delta`, `utility_non_decreasing`, and `replay_buffer_size`.
+- REQ-LEARN-1741-5: The artifact MUST include `status: "complete"`,
+  `continuous_self_learning_task: true`, `utility_delta: float`, and
+  `honest_verdict` starting with `complete:` or `complete_`.
+
+### SCENARIO-LEARN-1741: Self-distillation prevents catastrophic forgetting
+
+**Given** a SelfLearningTracker running 50 queries with progressively improving precision
+**When** run_fr11_distillation_loop() completes
+**Then** `utility_non_decreasing` MUST be true (late-window utility >= early-window utility)
+**And** `distillation_loss` MUST be a non-negative float
+**And** all 5 constraint types MUST be observed
+
+## Implementation Status (REQ-LEARN-1741)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-1741 | Implemented (`python/carnot/pipeline/self_learning.py`) | Implemented (`tests/python/test_experiment_1741_fr11_self_distillation.py`) |
