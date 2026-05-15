@@ -3524,3 +3524,5 @@ IMPORTANT:
 | 2026-05-15 20:58 UTC | Phase 1: Fast-Slow Variant Scale-Up on SOTA GGUFs | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1800-fast-slow-variant-prototype) |
 | 2026-05-15 20:58 UTC | Phase 1: Continual Learning Generative Replay via  | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 21:00 UTC | Phase 1: Fast-Slow Variant Scale-Up on SOTA GGUFs | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1800-fast-slow-variant-prototype) |
+| 2026-05-15 21:00 UTC | Phase 1: Continual Learning Generative Replay via  | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-15 21:02 UTC | Phase 1: Fast-Slow Variant Scale-Up on SOTA GGUFs | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1800-fast-slow-variant-prototype) |
