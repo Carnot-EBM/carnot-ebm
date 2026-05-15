@@ -1,4 +1,5 @@
 import json
+import sys
 from pathlib import Path
 from scripts.experiment_1710_phase4_alpha_t_audit import check_preconditions, run_audit
 
@@ -9,6 +10,68 @@ def test_check_preconditions():
     assert "alpha_t_importable" in preconditions
     assert "scipy_importable" in preconditions
     assert verdict == "blocked_phase4_alpha_t_implementation_missing"
+
+def test_check_preconditions_scipy_missing(monkeypatch):
+    """Test when scipy is missing."""
+    import builtins
+    real_import = builtins.__import__
+    def mock_import(name, *args, **kwargs):
+        if name == "carnot.phase4" or name == "scipy":
+            raise ImportError(f"No module named '{name}'")
+        return real_import(name, *args, **kwargs)
+    monkeypatch.setattr(builtins, "__import__", mock_import)
+    
+    # Actually, the logic in check_preconditions says:
+    # if not alpha_t_found: return blocked_phase4_alpha_t_implementation_missing
+    # So if both are missing, it returns blocked_phase4_alpha_t_implementation_missing.
+    # We need to simulate alpha_t_found = True and scipy_found = False.
+    
+    class DummyAlphaT:
+        alpha_t = None
+    
+    class DummyCarnotPhase4:
+        alpha_t = DummyAlphaT()
+    
+    def mock_import2(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "scipy":
+            raise ImportError("No module named 'scipy'")
+        if name == "carnot.phase4" and "alpha_t" in fromlist:
+            return DummyAlphaT()
+        return real_import(name, globals, locals, fromlist, level)
+        
+    monkeypatch.setattr(builtins, "__import__", mock_import2)
+    monkeypatch.setitem(sys.modules, "carnot.phase4", DummyCarnotPhase4())
+    
+    preconditions, verdict = check_preconditions()
+    assert verdict == "blocked_scipy_missing"
+
+def test_check_preconditions_success(monkeypatch):
+    """Test when both are found."""
+    import builtins
+    real_import = builtins.__import__
+    
+    class DummyAlphaT:
+        alpha_t = None
+        
+    class DummyScipy:
+        pass
+        
+    class DummyCarnotPhase4:
+        alpha_t = DummyAlphaT()
+        
+    def mock_import3(name, globals=None, locals=None, fromlist=(), level=0):
+        if name == "scipy":
+            return DummyScipy()
+        if name == "carnot.phase4" and "alpha_t" in fromlist:
+            return DummyAlphaT()
+        return real_import(name, globals, locals, fromlist, level)
+        
+    monkeypatch.setattr(builtins, "__import__", mock_import3)
+    monkeypatch.setitem(sys.modules, "scipy", DummyScipy())
+    monkeypatch.setitem(sys.modules, "carnot.phase4", DummyCarnotPhase4())
+    
+    preconditions, verdict = check_preconditions()
+    assert verdict == "success"
 
 def test_run_audit_artifact_schema(tmp_path, monkeypatch):
     """Test that run_audit generates a valid JSON artifact with the blocked verdict."""

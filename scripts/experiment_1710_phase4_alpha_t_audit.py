@@ -65,5 +65,5 @@ def run_audit():
     with open(out_path, "w") as f:
         json.dump(artifact, f, indent=2)
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     run_audit()
