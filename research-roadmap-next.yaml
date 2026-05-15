@@ -76,17 +76,17 @@ tasks:
         - random_seed: 171509 (NOT 1709 or 128 — avoid TAUTOLOGY)
         - reproducibility_checksum: sha256 of (substrate params + ablation
           grid spec + sampler library versions + git_rev)
-        - preconditions_checked: list of {resource, available, check_command}
-        - model_specs: {n_spins: 128, J: "1/127 all-to-all Curie-Weiss",
+        - preconditions_checked: list of {{resource, available, check_command}}
+        - model_specs: {{n_spins: 128, J: "1/127 all-to-all Curie-Weiss",
           beta_points: [1.05, 1.20, 1.50], burn_in_grid: [500, 5000, 50000],
-          h_schedule_grid: 3, n_samples_per_cell: 10000, ablation_cells: 54}
+          h_schedule_grid: 3, n_samples_per_cell: 10000, ablation_cells: 54}}
         - n_samples: 540000
         - n_samples_justification: "10k per cell × 54 cells. See exp1698
           spec for full rationale."
         - analytic_ground_truth_mean: dict beta -> m_star (must match
           exp1692 values within 0.001: 0.685/0.829/0.929)
-        - ablation_results: list of {sampler, beta, burn_in, h_schedule,
-          empirical_mean, delta_m}
+        - ablation_results: list of {{sampler, beta, burn_in, h_schedule,
+          empirical_mean, delta_m}}
         - smallest_intervention_closing_gap: dict beta -> intervention or null
         - bimodal_distribution_observed: dict beta -> bool
         - acceptance_gate_passed: true (measurement task; gate is
@@ -159,15 +159,15 @@ tasks:
         - reproducibility_checksum: sha256 of (verifier ensemble fingerprint
           + random_verifier_seed + alpha_t implementation git_rev)
         - preconditions_checked: list
-        - model_specs: {n_spins: 32, ensemble_k_total: 6,
+        - model_specs: {{n_spins: 32, ensemble_k_total: 6,
           random_fraction_grid: [0, 0.333, 0.667, 1.0], mld_steps: 100,
-          n_seeds: 30, n_cells: 4}
+          n_seeds: 30, n_cells: 4}}
         - n_samples: 12000
         - n_samples_justification: "30 seeds × 100 MLD × 4 cells. n_seeds=30
           chosen for CLT bootstrap CI validity. n=32 chosen to eliminate
           substrate-size confound from prior n=8/16/32/64 measurements."
-        - random_fraction_grid_results: list of {random_fraction, inf_t_alpha_k6,
-          inf_t_alpha_k1, delta_alpha, delta_alpha_bootstrap_ci_95}
+        - random_fraction_grid_results: list of {{random_fraction, inf_t_alpha_k6,
+          inf_t_alpha_k1, delta_alpha, delta_alpha_bootstrap_ci_95}}
         - monotonic_decay_observed: bool
         - artifact_detected: bool
         - acceptance_gate_passed: true (falsification task; both outcomes
@@ -240,8 +240,8 @@ tasks:
         - random_seed: 171511
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {package_name: "carnot-ebm", version, publish_target,
-          wheel_filename, sdist_filename, wheel_sha256, sdist_sha256}
+        - model_specs: {{package_name: "carnot-ebm", version, publish_target,
+          wheel_filename, sdist_filename, wheel_sha256, sdist_sha256}}
         - n_samples: 1
         - n_samples_justification: "Ship task."
         - pypi_url, external_install_verified
@@ -301,14 +301,14 @@ tasks:
         - random_seed: 171512
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestones: ["2026.05.172",
-          "2026.05.173", "2026.05.174"], adversarial_verify_version: str}
+        - model_specs: {{audit_target_milestones: ["2026.05.172",
+          "2026.05.173", "2026.05.174"], adversarial_verify_version: str}}
         - n_samples: int (count of audited artifacts)
         - n_samples_justification: "Audit task; n is the artifact count."
-        - audit_outcomes: dict experiment_id -> {classification, rationale}
+        - audit_outcomes: dict experiment_id -> {{classification, rationale}}
         - corrigenda_added: list
-        - skip_recovery_summary: dict {recovered_in_175: [...],
-          missed_in_174_carry_forward: [...]}
+        - skip_recovery_summary: dict {{recovered_in_175: [...],
+          missed_in_174_carry_forward: [...]}}
         - acceptance_gate_passed: bool (all flagged classified + summary
           written)
         - acceptance_gate_criteria: "All .174 flagged artifacts classified;
