@@ -3216,3 +3216,4 @@ IMPORTANT:
 | 2026-05-15 01:57 UTC | Exp 1704: PyPI publish (Phase 1 ship) — explicit p | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.02s |
 | 2026-05-15 01:59 UTC | Exp 1704: PyPI publish (Phase 1 ship) — explicit p | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.10s |
 | 2026-05-15 02:01 UTC | Exp 1704: PyPI publish (Phase 1 ship) — explicit p | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.52s |
+| 2026-05-15 02:03 UTC | Exp 1705: HuggingFace mirror retry (Phase 1 ship)  | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.18s |
