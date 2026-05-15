@@ -1,0 +1,196 @@
+milestone: "2026.05.191"
+milestone_title: "ActFocus Agentic RL + KAN-CL Continual Learning + Thermodynamic Langevin Sampler"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1826-kan-cl-implementation
+    title: "Exp 1826: Implement Per-Knot Importance Regularization for KAN continual learning"
+    deliverable: "python/carnot/models/kan_cl.py"
+    agent_type: codex
+    prompt: |
+      CONTEXT: The PRD mandates continuous self-learning, but past attempts suffered from catastrophic forgetting in the KAN energy tiers. A new paper (KAN-CL, arXiv 2605.11181) proposes per-knot importance regularization.
+      EXISTING CODE TO READ FIRST: python/carnot/models/kan.py
+      TASK: Implement the KAN-CL algorithm for our Kolmogorov-Arnold Network implementation in {project_root}.
+      CONCRETE STEPS:
+      1. Extend the KAN implementation in python/carnot/models/kan_cl.py.
+      2. Add importance weight tracking for B-spline knots during training.
+      3. Implement the regularization penalty term for subsequent learning phases.
+      4. Write a unit test ensuring the penalty computes correctly.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1827-muon-ogd-projection
+    title: "Exp 1827: Implement Muon-OGD Spectral Orthogonal Gradient Projection"
+    deliverable: "python/carnot/models/muon_ogd.py"
+    agent_type: codex
+    prompt: |
+      CONTEXT: We are exploring multiple paths for continuous learning (FR-11). Muon-OGD (arXiv 2604.14818) uses spectral orthogonal gradient projections to protect previously learned knowledge during LLM continual learning.
+      EXISTING CODE TO READ FIRST: python/carnot/models/continual_gibbs.py
+      TASK: Implement the Muon-OGD optimizer/wrapper for our continual learning stack.
+      CONCRETE STEPS:
+      1. Create python/carnot/models/muon_ogd.py.
+      2. Implement a custom Optax optimizer or wrapper that computes orthogonal projections of gradients based on a running memory matrix.
+      3. Add a basic smoke test.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1828-continual-learning-eval
+    title: "Exp 1828: Evaluate KAN-CL vs Muon-OGD on FR-11 retention task"
+    deliverable: "results/experiment_1828_cl_eval.json"
+    prompt: |
+      CONTEXT: We need to determine the canonical continual learning technique for Phase 4. We will evaluate KAN-CL and Muon-OGD on retention of logic constraints using the Fast-Slow Variant data from milestone .190.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/models/kan_cl.py, python/carnot/models/muon_ogd.py
+      TASK: Write an evaluation script that simulates sequential task learning and measures catastrophic forgetting.
+      CONCRETE STEPS:
+      1. Create scripts/experiment_1828_cl_eval.py.
+      2. Use unsloth/gemma-4-31B-it-GGUF as the baseline reference model in MODEL_SPECS.
+      3. Train sequentially on two disjoint constraint sets.
+      4. Measure retention on set 1 after training on set 2.
+      5. Output results to {project_root}/results/experiment_1828_cl_eval.json.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1829-actfocus-token-energy
+    title: "Exp 1829: Implement ActFocus Token-Level Energy Reweighting for GRPO"
+    deliverable: "python/carnot/pipeline/actfocus_grpo.py"
+    prompt: |
+      CONTEXT: Agentic RL approaches like GRPO treat all tokens equally. ActFocus (arXiv 2605.14558) weights tokens using an energy function to focus updates on reasoning/action bottlenecks.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/generation.py
+      TASK: Implement ActFocus token reweighting.
+      CONCRETE STEPS:
+      1. Create python/carnot/pipeline/actfocus_grpo.py.
+      2. Implement a function that computes token-level energy from logits and applies it as a masking/weighting factor for policy gradients.
+      3. Write unit tests validating that high-energy (surprising/critical) tokens receive larger weights.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1830-actfocus-grpo-training
+    title: "Exp 1830: Train model using ActFocus GRPO on reasoning trajectories"
+    deliverable: "results/experiment_1830_actfocus_train.json"
+    gated_on:
+      - upstream: exp1829-actfocus-token-energy
+        artifact_field: status
+        op: "=="
+        value: "success"
+    prompt: |
+      CONTEXT: We need to validate the ActFocus approach on a real model.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/pipeline/actfocus_grpo.py
+      TASK: Write a training loop for ActFocus GRPO.
+      CONCRETE STEPS:
+      1. Create scripts/experiment_1830_actfocus_train.py.
+      2. Load unsloth/gemma-4-26B-A4B-it-GGUF.
+      3. Simulate a short GRPO update step using ActFocus weights on a mocked batch of GSM8K-like reasoning trajectories.
+      4. Output the training dynamics (loss, weight distribution) to the deliverable file.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1831-actfocus-eval
+    title: "Exp 1831: Evaluate ActFocus GRPO against baseline GRPO"
+    deliverable: "results/experiment_1831_actfocus_eval.json"
+    gated_on:
+      - upstream: exp1830-actfocus-grpo-training
+        artifact_field: status
+        op: "=="
+        value: "success"
+    prompt: |
+      CONTEXT: Evaluate the generalization of ActFocus GRPO.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py
+      TASK: Create an evaluation script comparing the ActFocus-updated model vs baseline.
+      CONCRETE STEPS:
+      1. Create scripts/experiment_1831_actfocus_eval.py.
+      2. Use unsloth/Qwen3.6-35B-A3B-GGUF as the evaluation model constraint.
+      3. Measure constraint satisfaction rate and write to JSON.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1832-mpemba-thermo-init
+    title: "Exp 1832: Implement Mpemba-inspired Hybrid Digital-Thermodynamic Initialization"
+    deliverable: "python/carnot/samplers/thermo_init.py"
+    agent_type: codex
+    prompt: |
+      CONTEXT: Sampler latency is a bottleneck. arXiv 2605.13883 proposes digitally optimized initializations for thermodynamic computing inspired by the Mpemba effect (systems cooling faster from specific hot states).
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/backend.py
+      TASK: Implement Mpemba initialization for our Gibbs/Langevin samplers.
+      CONCRETE STEPS:
+      1. Create python/carnot/samplers/thermo_init.py.
+      2. Implement a function to generate non-equilibrium initial states that accelerate convergence to the target Boltzmann distribution.
+      3. Add tests verifying convergence speedup on a toy 2D energy landscape.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1833-langevin-clock-rescale
+    title: "Exp 1833: Implement Langevin clock acceleration via force and noise scaling"
+    deliverable: "python/carnot/samplers/langevin_clock.py"
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2605.12782 shows we can speed up the Langevin clock by scaling deterministic forces and adding specific noise structures.
+      EXISTING CODE TO READ FIRST: python/carnot/samplers/backend.py
+      TASK: Implement Langevin clock rescaling.
+      CONCRETE STEPS:
+      1. Create python/carnot/samplers/langevin_clock.py.
+      2. Implement a modified Langevin update step with the proposed scaling factors.
+      3. Write tests.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1834-accelerated-sampler-benchmark
+    title: "Exp 1834: Benchmark Mpemba and Clock Rescaled Langevin samplers"
+    deliverable: "results/experiment_1834_sampler_benchmark.json"
+    prompt: |
+      CONTEXT: We must quantify the latency reduction of the new thermodynamic and Langevin techniques.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py, python/carnot/samplers/thermo_init.py, python/carnot/samplers/langevin_clock.py
+      TASK: Benchmark sampler convergence time.
+      CONCRETE STEPS:
+      1. Create scripts/experiment_1834_sampler_benchmark.py.
+      2. Run the baseline, Mpemba, and Rescaled Langevin samplers on a standard 1000-variable Ising constraint graph.
+      3. Record time-to-solution and save to JSON.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1835-ebm-rlvr-theory
+    title: "Exp 1835: Author theory writeup formalizing EBM-RLVR equivalence"
+    deliverable: "docs/technical-report/ebm_rlvr_theory.md"
+    agent_type: gemini
+    prompt: |
+      CONTEXT: arXiv 2605.11059 formalizes that KL-regularized RL policies have an EBM structure. We need to integrate this into Carnot's technical report to justify our Phase 4 architecture.
+      EXISTING CODE TO READ FIRST: _bmad/architecture.md, ops/status.md
+      TASK: Author a theoretical section.
+      CONCRETE STEPS:
+      1. Create/update docs/technical-report/ebm_rlvr_theory.md.
+      2. Explain how our use of ActFocus and EBM gating is mathematically equivalent to KL-regularized RLVR.
+      3. Reference the exact theorems from the paper.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1836-e2e-integration-test
+    title: "Exp 1836: Integrate ActFocus + KAN-CL + Accelerated Langevin into E2E pipeline"
+    deliverable: "scripts/experiment_1836_e2e_integration.py"
+    max_turns: 30
+    prompt: |
+      CONTEXT: We need a unified script to run the full stack of new milestone .191 features.
+      EXISTING CODE TO READ FIRST: scripts/experiment_template.py
+      TASK: Create the E2E script scaffolding.
+      CONCRETE STEPS:
+      1. Create scripts/experiment_1836_e2e_integration.py that imports the new modules.
+      2. Ensure it runs a basic forward pass with no exceptions.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1837-e2e-benchmark
+    title: "Exp 1837: Run E2E pipeline on full GSM8K suite with flagship MoE"
+    deliverable: "results/experiment_1837_e2e_benchmark.json"
+    gated_on:
+      - upstream: exp1836-e2e-integration-test
+        artifact_field: status
+        op: "=="
+        value: "success"
+    prompt: |
+      CONTEXT: The capstone of milestone .191.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1836_e2e_integration.py
+      TASK: Execute the benchmark.
+      CONCRETE STEPS:
+      1. Create scripts/experiment_1837_e2e_benchmark.py.
+      2. Must use unsloth/Qwen3.6-35B-A3B-GGUF as the LLM.
+      3. Run the E2E verification pipeline on a subset of GSM8K and output results.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1838-milestone-191-retro
+    title: "Exp 1838: Operational retrospective for 2026.05.191"
+    deliverable: "results/operational_retro_2026_05_191.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Milestone wrap-up.
+      EXISTING CODE TO READ FIRST: ops/conductor-log.md
+      TASK: Summarize the milestone.
+      CONCRETE STEPS:
+      1. Create scripts/experiment_1838_retro.py to dump a JSON summary of the milestone success rates.
+      2. Output to results/operational_retro_2026_05_191.json.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.

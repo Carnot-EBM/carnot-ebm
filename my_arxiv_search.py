@@ -4,37 +4,34 @@ import xml.etree.ElementTree as ET
 import time
 
 queries = [
-    'all:"Energy-Based Model" AND all:reasoning',
-    'all:"Energy-Based" AND all:verification',
-    'all:"Constraint satisfaction" AND all:"neural network"',
-    'all:"Ising model" AND all:"machine learning"',
-    'all:"hallucination" AND all:"detection" AND all:"LLM"',
-    'all:"Kolmogorov-Arnold Network"',
+    'all:"Energy-Based Models" AND all:reasoning',
+    'all:"Energy-Based Models" AND all:verification',
+    'all:"constraint satisfaction" AND all:"neural networks"',
+    'all:"Kolmogorov-Arnold Networks"',
     'all:"Energy-guided decoding"',
-    'all:"constrained generation"',
+    'all:"continual learning" AND all:"constraint"',
+    'all:"thermodynamic computing"'
 ]
 
 results = []
 
 for q in queries:
-    encoded_q = urllib.parse.quote(q)
-    url = f'http://export.arxiv.org/api/query?search_query={encoded_q}&sortBy=submittedDate&sortOrder=desc&max_results=5'
+    # Adding date range might be tricky with arxiv API, so we fetch latest and filter.
+    url = f"http://export.arxiv.org/api/query?search_query={urllib.parse.quote(q)}&sortBy=submittedDate&sortOrder=descending&max_results=5"
     try:
-        req = urllib.request.urlopen(url)
-        xml_data = req.read()
-        root = ET.fromstring(xml_data)
-        
+        response = urllib.request.urlopen(url)
+        data = response.read().decode('utf-8')
+        root = ET.fromstring(data)
         for entry in root.findall('{http://www.w3.org/2005/Atom}entry'):
-            title = entry.find('{http://www.w3.org/2005/Atom}title').text.replace('\n', ' ')
+            title = entry.find('{http://www.w3.org/2005/Atom}title').text.replace('\n', ' ').strip()
+            summary = entry.find('{http://www.w3.org/2005/Atom}summary').text.replace('\n', ' ').strip()
             published = entry.find('{http://www.w3.org/2005/Atom}published').text
-            # Only 2025 and 2026
+            url_link = entry.find('{http://www.w3.org/2005/Atom}id').text
             if published.startswith('2025') or published.startswith('2026'):
-                summary = entry.find('{http://www.w3.org/2005/Atom}summary').text.replace('\n', ' ')
-                results.append(f"Title: {title}\nDate: {published}\nSummary: {summary}\n")
+                results.append(f"Title: {title}\nDate: {published}\nURL: {url_link}\nSummary: {summary}\n")
     except Exception as e:
-        print(f"Error querying {q}: {e}")
-    time.sleep(1) # Be nice to the API
+        results.append(f"Error for query {q}: {e}")
+    time.sleep(3)
 
 with open('my_arxiv_results.txt', 'w') as f:
-    f.write('\n'.join(results))
-print("Done")
+    f.write("\n---\n".join(results))
