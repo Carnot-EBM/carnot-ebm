@@ -77,5 +77,13 @@
   "acceptance_gate_criteria": "All flagged classified; corrigenda appended.",
   "methodology_note": "If audit completes in <10s on >5 artifacts, agent shortcut \u2014 disclose honestly. Completed offline audit locally based on CLI scan.",
   "optimization_direction": "neither \u2014 audit task",
-  "honest_verdict": "TERMINAL_VERDICT: Audit complete. 11/12 flags are real bugs or needs revision, 1 false positive. Corrigendum added."
+  "honest_verdict": "TERMINAL_VERDICT: Audit complete. 11/12 flags are real bugs or needs revision, 1 false positive. Corrigendum added.",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=35.0 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
