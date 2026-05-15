@@ -5759,3 +5759,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 - 2026-05-14: Exp 1693: Phase 4 active-inference delta_alpha at n=64 (substrate-size scaling extension) (✅ Complete) — honest_verdict=complete: Measured Phase 4 scaling at n=64 with bootstrap CI.; results/experiment_1693_phase4_n64.json
 - 2026-05-15: Exp 1694: NLA-class 16th verifier prototype v3 with strict methodology (✅ Complete) — honest_verdict=Completed NLA-class 16th verifier prototype successfully.; results/experiment_1694_nla_v3.json
 - **2026.05.173**: Operational Retrospective: 3 experiments completed in 6.2 minutes. 0 compute-bound experiments. GPUs correctly idled on synthesis-only tasks. Doomed-rerun blocks successfully avoided redundant execution without becoming wall-time bottlenecks.
+- 2026-05-15: Exp 2101: Interwhen Asynchronous Monitoring for CCTU (⚠️ Blocked) — honest_verdict=blocked_model_not_cached_qwen3_6_35b_a3b; results/experiment_2101_interwhen.json
