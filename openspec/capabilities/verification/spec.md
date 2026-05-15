@@ -2832,3 +2832,6 @@ The repository shall provide an NLA-class 16th verifier prototype that trains a 
 ### SCENARIO-VERIFY-1694: SAE Predicts Ensemble Agreement
 
 Given a 60-example held-out set, the SAE probe predicts ensemble agreement and reports Wilson 95% CIs for TPR and FPR.
+
+### REQ-VERIFY-1716: NLA Eval-Awareness Drift Check
+The repository shall test the NLA-class 16th verifier for eval-awareness drift by computing the TPR/FPR gap between an eval-style and production-style corpus of 100 examples total.
