@@ -1,0 +1,33 @@
+{
+  "experiment": 1821,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-15",
+  "started_at": "2026-05-15T23:10:35.860277+00:00",
+  "finished_at": "2026-05-15T23:10:35.860277+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1821: Codify exp1811 Fast-Slow Variant 3.1x/0.25x result into paper-v6 \u00a73 + known-issues",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: prior_failures must be a non-empty list",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1790-fast-slow-variant-scaleup",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp1800-fast-slow-variant-prototype",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
