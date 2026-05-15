@@ -3279,3 +3279,4 @@ IMPORTANT:
 | 2026-05-15 05:49 UTC | Milestone 2026.05.177 activated | OK | 12 tasks queued |
 | 2026-05-15 05:56 UTC | Exp 1771: Phase 1 - Setup CARM Test Cases and Grou | OK | 81 passed, 1 warning in 5.43s |
 | 2026-05-15 06:01 UTC | Exp 1772: Phase 1 - Prototype Constraint-Aware Ret | OK | 81 passed, 1 warning in 5.19s |
+| 2026-05-15 06:09 UTC | Exp 1773: Phase 1 - Run full CARM extraction suite | OK | 81 passed, 1 warning in 5.67s |
