@@ -12793,3 +12793,8 @@ This sweep was run after milestone `.173` completed. The literature search revea
 - **Paper:** "Energy-Based Dynamical Models for Neurocomputation, Learning, and Optimization" (arXiv:2604.05042).
 - **What:** Bridges classical Hopfield networks with modern proximal-descent dynamics, framing computation as a relaxation process toward equilibria in an energy landscape.
 - **Relevance to Carnot:** Offers a control-theoretic formulation that unifies Phase 3's continuous energy samplers and constraint adherence.
+
+### Analytic Curie-Weiss Mean-Field Reference and Critical Fluctuations
+- **Reference:** Stanley, H. E. (1971). Introduction to Phase Transitions and Critical Phenomena. Oxford University Press. (Provides the standard reference for the m = tanh(beta * m) self-consistency equation).
+- **Source Artifacts:** `results/experiment_1709_thrml_critical_fluctuation.json`, `results/experiment_1692_thrml_curie_weiss_ground_truth.json`
+- **Relevance to Carnot:** Codifies the baseline expectations for the analytic Curie-Weiss mean-field behavior. Experiment 1709 demonstrates that at beta=1.50, delta_m=0.006 is achieved with 500-step burn-in (exact `delta_m`: 0.005814120984296567). At beta=1.20, delta_m=0.019 is achieved with 50,000-step burn-in (exact `delta_m`: 0.01933614741784284). However, at beta=1.05, `smallest_intervention_closing_gap["1.05"] = null`, with bimodality observed at both 1.05 and 1.20.

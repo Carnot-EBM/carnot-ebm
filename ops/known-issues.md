@@ -4441,3 +4441,14 @@ Exp 944 MUST include all 8 entries below in its prior_failures field:
 The "addressed_by" field for each must explain what is substantively different in
 Exp 944 (new architecture, new corpus, new technique — not relabeling).
 Status: HUMAN_REQUIRED at planner layer — conductor will block again if omitted.
+
+### exp1709 Near-Critical Sampler Limit (.176+ MANDATORY Z1 + Phase 4 downstream)
+
+**Origin:** Findings from 54-cell ablation in `results/experiment_1709_thrml_critical_fluctuation.json` and ground-truth comparison in `results/experiment_1692_thrml_curie_weiss_ground_truth.json`.
+
+**What:** Carnot and THRML samplers miss the analytic Curie-Weiss equilibrium near the critical beta. The ablation grid shows:
+- At beta=1.50 (deep symmetry-broken): default 500-step burn-in recovers ground-truth within delta_m=0.006. (Exact `smallest_intervention_closing_gap["1.5"]` shows `delta_m`: 0.005814120984296567). `bimodal_distribution_observed["1.5"]` is false.
+- At beta=1.20 (intermediate): closing the gap to delta_m=0.019 requires a 50,000-step burn-in. (Exact `smallest_intervention_closing_gap["1.2"]` shows `delta_m`: 0.01933614741784284). `bimodal_distribution_observed["1.2"]` is true.
+- At beta=1.05 (near critical beta_c=1.0): NO intervention in the 54-cell ablation closes the gap (`smallest_intervention_closing_gap["1.05"] = null`). `bimodal_distribution_observed["1.05"]` is true.
+
+**Relevance to Carnot:** This is a ship-eligible finding for paper-v6 §6 (limitations) and has direct Z1 hardware-mapping implications because Z1 inherits the Carnot sampler primitive. Downstream planning must account for longer burn-in budgets at beta=1.20 and fundamental limits at beta=1.05. Explicit symmetry-breaking fields may be required if hardware supports them.
