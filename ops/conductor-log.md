@@ -3281,3 +3281,13 @@ IMPORTANT:
 | 2026-05-15 06:01 UTC | Exp 1772: Phase 1 - Prototype Constraint-Aware Ret | OK | 81 passed, 1 warning in 5.19s |
 | 2026-05-15 06:09 UTC | Exp 1773: Phase 1 - Run full CARM extraction suite | OK | 81 passed, 1 warning in 5.67s |
 | 2026-05-15 06:14 UTC | Exp 1774: Phase 2 - Decompose multi-constraint pro | OK | 81 passed, 1 warning in 5.16s |
+| 2026-05-15 06:27 UTC | Exp 1775: Phase 2 - Implement Compositional Energy | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: un_shell_command`.
+ |
+| 2026-05-15 06:29 UTC | Exp 1775: Phase 2 - Implement Compositional Energy | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.37s |
+| 2026-05-15 06:31 UTC | Exp 1775: Phase 2 - Implement Compositional Energy | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.28s |
+| 2026-05-15 06:33 UTC | Exp 1776: Phase 2 - Evaluate CEM against monolithi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1775-cem-solver) |
+| 2026-05-15 06:34 UTC | Exp 1777: Phase 2 - Add Discrete Auto-Regressive B | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.44s |
+| 2026-05-15 06:36 UTC | Exp 1776: Phase 2 - Evaluate CEM against monolithi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1775-cem-solver) |
+| 2026-05-15 06:36 UTC | Exp 1777: Phase 2 - Add Discrete Auto-Regressive B | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.36s |
+| 2026-05-15 06:38 UTC | Exp 1776: Phase 2 - Evaluate CEM against monolithi | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1775-cem-solver) |
+| 2026-05-15 06:38 UTC | Exp 1777: Phase 2 - Add Discrete Auto-Regressive B | SKIP | Pre-tests failing, self-heal failed: 2 failed, 81 passed, 1 warning in 5.64s |
