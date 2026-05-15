@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,959 Experiments Across the Public Record, 194 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 2,965 Experiments Across the Public Record, 195 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -30,7 +30,7 @@ Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
 This report documents the research arc behind the framework — **2,959
-experiment records tracked through Exp 2114, with 2,385 task records in 194
+experiment records tracked through Exp 2114, with 2,385 task records in 195
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176** — run between
 February and May 2026. `research-complete.yaml` currently archives **191**
@@ -5506,3 +5506,7 @@ Experiments 1781 and 1782 drafted and benchmarked Python LUT abstractions for KA
 
 **Phase 4 Alpha Replacement**
 Experiment 1721 successfully derived the alpha_t replacement from the maximum-caliber FEP<->IIT bridge, confirming monotonic decay and breaking the bijection-invariance artifact.
+\n
+### Phase 24 — Milestone .182 Optimizations (May 2026)
+
+Milestone 2026.05.182 operational retrospective complete. Analyzed 50.1 min wall time / 6 experiments. Slowest path: Exp 1749 (45.2 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The milestone wall time was heavily dominated by the retrospective generation task itself. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.

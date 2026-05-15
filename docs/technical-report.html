@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2,959 Experiments Across the Public Record, 194 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2,959 Experiments Across the Public Record, 194 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,965 Experiments Across the Public Record, 195 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,965 Experiments Across the Public Record, 195 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2959-experiments-across-the-public-record-194-archived-milestone-records-24919-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,959 Experiments Across the Public Record, 194 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
+<h2 id="a-technical-report-2965-experiments-across-the-public-record-195-archived-milestone-records-24919-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,965 Experiments Across the Public Record, 195 Archived Milestone Records, 24,919 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -184,7 +184,7 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
 <p>This report documents the research arc behind the framework — <strong>2,959
-experiment records tracked through Exp 2114, with 2,385 task records in 194
+experiment records tracked through Exp 2114, with 2,385 task records in 195
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176</strong> — run between
 February and May 2026. <code>research-complete.yaml</code> currently archives <strong>191</strong>
@@ -6752,7 +6752,10 @@ Experiment 1720 successfully integrated the ensemble as production verifier #16.
 <p><strong>KANELÉ LUT Abstractions</strong>
 Experiments 1781 and 1782 drafted and benchmarked Python LUT abstractions for KANs based on KANELÉ against baselines, demonstrating new Phase 4 hardware-accounting capabilities.</p>
 <p><strong>Phase 4 Alpha Replacement</strong>
-Experiment 1721 successfully derived the alpha_t replacement from the maximum-caliber FEP&lt;-&gt;IIT bridge, confirming monotonic decay and breaking the bijection-invariance artifact.</p>
+Experiment 1721 successfully derived the alpha_t replacement from the maximum-caliber FEP&lt;-&gt;IIT bridge, confirming monotonic decay and breaking the bijection-invariance artifact.
+\n</p>
+<h3 id="phase-24-milestone-182-optimizations-may-2026">Phase 24 — Milestone .182 Optimizations (May 2026)</h3>
+<p>Milestone 2026.05.182 operational retrospective complete. Analyzed 50.1 min wall time / 6 experiments. Slowest path: Exp 1749 (45.2 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The milestone wall time was heavily dominated by the retrospective generation task itself. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.</p>
 </article>
 
 <footer>
