@@ -1,0 +1,33 @@
+{
+  "experiment_id": 2112,
+  "title": "Exp 2112: Z1 SDK and DTM Stub Alignment",
+  "run_date": "20260515",
+  "status": "complete",
+  "interface_aligned": true,
+  "module_path": "python/carnot/samplers/dtm_stub.py",
+  "class_name": "DtmStub",
+  "backend_name": "dtm-stub-z1",
+  "new_interface": "sample_thermodynamic",
+  "sample_thermodynamic_signature": {
+    "inputs": {
+      "noisy_state": "np.ndarray[float32, (n_samples, n_spins)]",
+      "beta": "float",
+      "n_denoising_steps": "int (default 10)"
+    },
+    "output": "np.ndarray[float32, (n_samples, n_spins)] with values in [0.0, 1.0]"
+  },
+  "sampler_backend_protocol_compatible": true,
+  "sample_returns_boolean": true,
+  "minimize_energy_returns_boolean": true,
+  "hardware_execution_performed": false,
+  "hardware_claim_allowed": false,
+  "z1_hardware_execution": false,
+  "tsu_hardware_execution": false,
+  "simulator_only_no_hardware_claim": true,
+  "test_file": "tests/python/samplers/test_dtm_stub.py",
+  "tests_passed": 9,
+  "tests_failed": 0,
+  "coverage_dtm_stub_pct": 100,
+  "spec_refs": ["REQ-SAMPLE-066", "SCENARIO-SAMPLE-094"],
+  "honest_verdict": "complete: dtm_stub_interface_aligned_z1_continuous_dtm_signature_simulator_only"
+}

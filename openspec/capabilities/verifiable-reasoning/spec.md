@@ -18913,3 +18913,39 @@ The repository shall provide an audit module in `python/carnot/pipeline/experime
 - The presence of all deliverables from Exp 2053 to Exp 2063 in the `results/` directory.
 - The E2E tests passing for the verifier architecture.
 - The audit saves a JSON report `results/experiment_2064_audit.json` with `audit_passed` and `missing_deliverables`.
+
+## REQ-SAMPLE-066: Exp 2112 Z1 DTM Stub — Continuous Thermodynamic Sampling Interface
+
+**Summary:** Carnot SHALL provide a `DtmStub` class in
+`python/carnot/samplers/dtm_stub.py` that wraps the THRML Ising/Gibbs
+simulator to expose the continuous DTM (Denoising Thermodynamic Model)
+signature required for Z1 SDK alignment. The interface returns float-valued
+continuous states, not boolean spins, matching the Z1 hardware denoising
+trajectory contract.
+
+**Requirements:**
+
+- REQ-SAMPLE-066-1: `DtmStub` SHALL expose `sample_thermodynamic(noisy_state,
+  beta, n_denoising_steps)` returning a float32 ndarray of shape
+  `(n_samples, n_spins)` with values in [0.0, 1.0].
+- REQ-SAMPLE-066-2: `DtmStub.backend_name` SHALL return `"dtm-stub-z1"`.
+- REQ-SAMPLE-066-3: `DtmStub` SHALL also satisfy the discrete `SamplerBackend`
+  protocol (`sample` and `minimize_energy` returning boolean arrays) for
+  compatibility with existing Carnot pipelines.
+- REQ-SAMPLE-066-4: No hardware execution claim SHALL be present. The module
+  is simulator-only.
+- REQ-SAMPLE-066-5: `results/experiment_2112_z1_dtm.json` SHALL contain
+  `interface_aligned=true`, `hardware_execution_performed=false`, and an
+  `honest_verdict` prefixed with `complete:` or `complete_`.
+
+### SCENARIO-SAMPLE-094: Exp 2112 DTM Stub Interface Alignment
+
+**Given** the repository has no authenticated Extropic Z1/TSU transcript
+**When** `DtmStub.sample_thermodynamic` is called with a float noisy state
+**Then** it returns a float32 array of the same shape with values in [0, 1]
+**And** the artifact `results/experiment_2112_z1_dtm.json` records
+`interface_aligned=true` and `hardware_execution_performed=false`.
+
+**Implementation Status:** Implemented (Exp 2112)
+
+**Spec traces:** REQ-SAMPLE-066, SCENARIO-SAMPLE-094, Exp 2112
