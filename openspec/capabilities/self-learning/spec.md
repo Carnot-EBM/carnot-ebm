@@ -5679,3 +5679,15 @@ with `baseline_energy`, `final_energy`, `energy_delta`, and `acceptance_gate_pas
 **Given** multi-turn traces are available
 **When** the CSL baseline evaluator runs
 **Then** it produces a JSON artifact with `schema` equal to "carnot.csl.baseline.v1" and `baseline_soundness_mistakes` as an integer.
+
+## REQ-CSL-1779: Implement non-forgetting soundness check logic
+
+**Given** the need for continuous self-learning
+**When** the check script evaluates synthetic trace updates
+**Then** it MUST validate soundness
+**And** the output artifact MUST include `schema: "carnot.csl.check.v1"` and `check_implemented` (bool).
+
+### SCENARIO-CSL-1779: Non-forgetting soundness check produces correct artifact
+**Given** synthetic trace updates are available
+**When** the CSL check evaluator runs
+**Then** it produces a JSON artifact with `schema` equal to "carnot.csl.check.v1" and `check_implemented` as True.
