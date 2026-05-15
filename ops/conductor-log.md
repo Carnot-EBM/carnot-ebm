@@ -3318,3 +3318,4 @@ IMPORTANT:
 | 2026-05-15 09:19 UTC | Compositional Energy Minimization (CEM) Substrate  | OK | 81 passed, 1 warning in 5.46s |
 | 2026-05-15 09:26 UTC | CEM Scale-Up to n=64 with KANELÉ Hardware-Accounti | OK | 81 passed, 1 warning in 5.40s |
 | 2026-05-15 09:39 UTC | SOTA GGUF Parity Benchmark with k=16 Ensemble (Qwe | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-05-15 09:47 UTC | SOTA GGUF Parity Benchmark with k=16 Ensemble (Qwe | OK | 100 passed, 1 warning in 6.35s |
