@@ -3562,3 +3562,4 @@ IMPORTANT:
 | 2026-05-15 23:14 UTC | Exp 1821: Codify exp1811 Fast-Slow Variant 3.1x/0. | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-15 23:16 UTC | Exp 1822: Carnot ODAR-style routing prototype (arX | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.25s |
 | 2026-05-15 23:19 UTC | Exp 1822: Carnot ODAR-style routing prototype (arX | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.21s |
+| 2026-05-15 23:21 UTC | Exp 1822: Carnot ODAR-style routing prototype (arX | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.10s |
