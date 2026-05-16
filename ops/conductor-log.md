@@ -3735,3 +3735,4 @@ Error |
 | 2026-05-16 07:55 UTC | Exp 1985: Milestone .198 retrospective | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-16 08:07 UTC | Plan milestone 2026.05.199 | OK | 12 tasks proposed |
 | 2026-05-16 08:10 UTC | Milestone 2026.05.199 activated | OK | 12 tasks queued |
+| 2026-05-16 08:16 UTC | Exp 1991: eGPU Thunderbolt RX 7900 XTX ROCm/JAX in | OK | 81 passed, 1 warning in 5.35s |
