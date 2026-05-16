@@ -3282,3 +3282,15 @@ Spec: REQ-RETRO-199
 **Then** it MUST output `results/operational_retro_2026_05_199.json` containing the appropriate performance metrics, preconditions_checked, and an honest_verdict.
 
 Spec: SCENARIO-RETRO-199
+
+### REQ-RETRO-200: Milestone 2026.05.200 Operational Retrospective
+The system MUST generate an operational retrospective for milestone 2026.05.200 following the `carnot.operational_retro.v64` schema.
+
+Spec: REQ-RETRO-200
+
+### SCENARIO-RETRO-200: Generation of 2026.05.200 Retrospective
+
+**When** the retro generation task runs,
+**Then** it MUST output `results/operational_retro_2026_05_200.json` containing the appropriate performance metrics, preconditions_checked, meta_reflection, and an honest_verdict.
+
+Spec: SCENARIO-RETRO-200
