@@ -5861,3 +5861,4 @@ Completed 15 experiments in 28.9 minutes. There were 0 compute-bound experiments
 
 ## Milestone 2026.05.190
 Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 minutes. 0 compute-bound experiments were run.
+- 2026-05-16: Exp 1826: Implement Per-Knot Importance Regularization for KAN continual learning (✅ Complete) — honest_verdict=completed; results/experiment_1826_fail_fast.json
