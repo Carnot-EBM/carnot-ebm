@@ -3745,3 +3745,4 @@ Error |
 | 2026-05-16 08:51 UTC | Exp 1995: PiNet-style differentiable projection la | OK | 81 passed, 1 warning in 5.33s |
 | 2026-05-16 08:53 UTC | Exp 1996: Test CLaRa-V constraints with PiNet proj | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1995-pinet-differentiable-projection.ho |
 | 2026-05-16 08:56 UTC | Exp 1996: Test CLaRa-V constraints with PiNet proj | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1995-pinet-differentiable-projection.ho |
+| 2026-05-16 08:58 UTC | Exp 1996: Test CLaRa-V constraints with PiNet proj | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1995-pinet-differentiable-projection.ho |

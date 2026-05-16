@@ -1,0 +1,24 @@
+{
+  "experiment": 1997,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T09:00:01.787314+00:00",
+  "finished_at": "2026-05-16T09:00:01.787314+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1997: Integrate GEC into SEAL Continuous Self-Learning loop",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1993-gec-math-core-rust.honest_verdict (actual='terminal_success_gec_math_implemented' contains expected='complete')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1993-gec-math-core-rust",
+      "artifact_field": "honest_verdict",
+      "op": "contains",
+      "expected": "complete",
+      "actual": "terminal_success_gec_math_implemented",
+      "passed": false,
+      "reason": "actual='terminal_success_gec_math_implemented' contains expected='complete'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
