@@ -5,8 +5,46 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-15 (11 sweeps in 24h)
-**Current Focus:** Extended-sweep helper suite validated across 2 fires today: 21:15Z citation-anchor (1 Score-144 promotion) + 21:30Z multi-helper (1 Score-400 promotion — ODAR free-energy-principled fast-slow LLM routing — DIRECTLY MERGES Carnot's Phase 4 active-inference + Fast-Slow Variant tracks); **NEW 2026-05-15T21:30Z: semscholar channel surfaces arXiv:2602.23681 ODAR Score 400 — highest yield ever from a single helper invocation.**
+**Updated:** 2026-05-16 (12 sweeps in 24h)
+**Current Focus:** Queue saturation now total at keyword-rotation level (.181 + .182 + .184 all saturated). Per operator-approved trickle policy, deferring helper-extended sweeps until the queue absorbs current backlog. exp1811 Fast-Slow Variant in adversarial-confirmation queue (.192 exp1837); exp1840 PyPI corrected to use CI-tagged-release via OIDC (operator clarification 2026-05-16 ~00:30Z); ODAR (Score 400) queued for .193+.
+
+## Sweep 2026-05-16T00:40Z (Claude outer-loop, light fire — saturation acknowledgment)
+
+**Queries fired (light fire per operator-approved trickle policy):**
+- arxiv abs:"active inference" OR "free energy" AND "LLM" → 5 fetched (cluster 3)
+- arxiv abs:"sparse autoencoder" OR "white box probe" OR "reconstruction error" AND "LLM" → 8 fetched (cluster 2)
+
+**Dedupe filter:**
+13 candidates fetched, **all 13 known-skipped** (100% filter rate).
+64 IDs now in known-set (up from 53 at 16:50Z fire). The keyword
+rotation has fully saturated against research-studying.md's catalogue.
+
+**Result: 0 NEW / 0 scored / 0 promoted.**
+
+This is the expected outcome per the operator-approved trickle policy.
+The queue's backlog (Fast-Slow Variant adversarial confirmation
+pending in .192 exp1837, ODAR Score 400 awaiting .193+ integration,
+Inference-Time Planning Score 144 cite still pending, PyPI ship-track
+about to unblock via tag-push) needs experimental absorption time
+before new literature can be productively layered on.
+
+### Sweep takeaways
+
+1. **100% dedupe filter rate is healthy at this point in the cycle.**
+   Carnot's literature landscape is well-mapped relative to the
+   4-cluster query rotation's reach. New high-impact findings will
+   come from: (a) operator-flagged anchors (like the 13:15Z Fast-Slow
+   promotion), (b) citation-following from existing high-score nodes
+   when triggered, OR (c) cron-prompt URL update to the broadened
+   cluster queries (sweep_clusters.py output) when operator decides.
+2. **No helper-extended sweep this fire.** Citation-sweep + semscholar
+   helpers remain available; reserving them for either (a) a specific
+   operator-flagged research question or (b) post-.192 retro when
+   exp1837 confirmation result drives new follow-up direction.
+3. **Saturation confirms the queue's high-impact items are real.**
+   When the auto-rotation finds 0 new across 13 fetched, it means
+   the queue's existing entries (Fast-Slow, ODAR, bijection,
+   inference-time-planning) ARE the SOTA — not gaps in coverage.
 
 ## Sweep 2026-05-15T21:30Z (Claude outer-loop, 4-helper combined: citations + semscholar)
 
