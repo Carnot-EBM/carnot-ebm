@@ -154,3 +154,17 @@ class TestBoltzmannModel:
         model = BoltzmannModel(BoltzmannConfig(input_dim=5, hidden_dims=[4, 3]))
         x = jnp.ones(5)
         assert jnp.isfinite(model.energy(x))
+
+    def test_langevin_step_vectorized(self) -> None:
+        """REQ-SAMPLE-051: Vectorized Langevin step works on a batch."""
+        model = BoltzmannModel(BoltzmannConfig(input_dim=5, hidden_dims=[4, 3]))
+        key = jrandom.PRNGKey(42)
+        x_batch = jrandom.normal(key, (10, 5))
+        step_size = 0.01
+        
+        new_batch = model.langevin_step_vectorized(x_batch, step_size, key)
+        
+        assert new_batch.shape == (10, 5)
+        assert not jnp.allclose(x_batch, new_batch)
+        assert jnp.all(jnp.isfinite(new_batch))
+

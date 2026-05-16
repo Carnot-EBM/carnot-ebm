@@ -546,4 +546,20 @@ Sub-requirements:
 **Then** it successfully computes a modified Langevin step
 **And** returns a state matching the input shape.
 
+### REQ-SAMPLE-051: Vectorized Langevin dynamics on BoltzmannModel
+
+Carnot MUST provide a vectorized Langevin step for the `BoltzmannModel` to support GPU-accelerated parallel sampling.
+
+Sub-requirements:
+- REQ-SAMPLE-051-1: The `BoltzmannModel` SHALL expose a `langevin_step_vectorized(x_batch, step_size, key)` method.
+- REQ-SAMPLE-051-2: The method SHALL compute the Langevin step simultaneously across a batch of states via `jax.vmap`.
+- REQ-SAMPLE-051-3: Experiment 2010 SHALL compare CPU vs GPU mocked performance of the gradient step and output `results/experiment_2010_langevin.json`.
+
+### SCENARIO-SAMPLE-051: Vectorized Langevin Step Batch Execution
+
+**Given** a `BoltzmannModel` and a batch of states
+**When** `langevin_step_vectorized` is executed
+**Then** it successfully computes the next states for the entire batch simultaneously.
+
+
 
