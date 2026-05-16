@@ -1868,3 +1868,11 @@ evidence, not just missing metadata.
 **Credible results added:** GlobalConsistencyChecker, agent rollback, factual KB extraction,
 KAN verification, Z3+LLM on GSM8K arithmetic, cross-session memory, adversarial semantic grounding.
 **Remaining:** Exp 277 (combined signals) needs re-run with explicit JSON output; TruthfulQA deferred.
+
+### Sweep 2026-05-16T12:00Z
+- **Anchor**: arXiv:2603.28135
+- **New IDs**: 49
+- **Promotions**:
+  - arXiv:2601.17223 (Score 400)
+  - arXiv:2602.14189 (Score 320)
+  - arXiv:2604.16753 (Score 320)

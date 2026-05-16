@@ -3294,3 +3294,6 @@ Spec: REQ-RETRO-200
 **Then** it MUST output `results/operational_retro_2026_05_200.json` containing the appropriate performance metrics, preconditions_checked, meta_reflection, and an honest_verdict.
 
 Spec: SCENARIO-RETRO-200
+
+### REQ-AUTO-SWEEP-2013: Routine Citation Sweep
+The system shall execute a routine citation sweep to discover relevant papers and deduplicate against the known research queue.

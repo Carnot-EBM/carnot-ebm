@@ -4524,3 +4524,6 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
 Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+
+## RESEARCH-STUDYING CANDIDATES
+- arXiv:2601.17223 (Score 400) - Beyond Outcome Verification: Verifiable Process Reward Models for Structured Reasoning
