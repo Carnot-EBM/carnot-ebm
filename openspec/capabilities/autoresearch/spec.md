@@ -3258,3 +3258,15 @@ The system SHALL generate a retrospective JSON artifact for milestone 2026.05.18
 GIVEN the 187 retrospective is generated
 WHEN the artifact is parsed
 THEN it contains the required honest_verdict and schema fields.
+
+### REQ-RETRO-198: Milestone 2026.05.198 Operational Retrospective
+The system MUST generate an operational retrospective for milestone 2026.05.198 following the `carnot.operational_retro.v64` schema.
+
+Spec: REQ-RETRO-198
+
+### SCENARIO-RETRO-198: Generation of 2026.05.198 Retrospective
+
+**When** the retro generation task runs,
+**Then** it MUST output `results/operational_retro_2026_05_198.json` containing the appropriate performance metrics, preconditions_checked, and an honest_verdict.
+
+Spec: SCENARIO-RETRO-198
