@@ -5895,3 +5895,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 
 - Milestone 2026.05.196 operational retrospective complete. Analyzed 23.7 min wall time / 9 experiments. Slowest path: Exp 1931 (8.4 min, synthesis-only). GPU utilization on the 2 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
 - 2026-05-16: Exp 1970: Phase 1 - THRML Hybrid Thermodynamic Abstraction Hookup (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1970_thrml_hookup.json
+- 2026-05-16: Exp 1972: Phase 2 - EBT System-2 Energy Decoding Baseline (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1972_ebt_baseline.json
