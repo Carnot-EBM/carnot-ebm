@@ -1,0 +1,51 @@
+{
+  "experiment": 2001,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T10:27:28.759647+00:00",
+  "finished_at": "2026-05-16T10:27:28.759647+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 2001: Implement Spilled Energy Metrics (arXiv:2602.18671)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "4 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1003-spilled-energy-live-gpu-v4",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: live_below_threshold"
+    },
+    {
+      "upstream": "exp1469-halt-spilled-energy-telemetry-diagnostic",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: retired_non_headline_telemetry_flat_or_confounded"
+    },
+    {
+      "upstream": "exp1907-token-level-spilled-energy-diagnostic",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp1920-token-spilled-energy",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
