@@ -5967,3 +5967,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Phase 2: NRGPT Gradient-based Block Simulator (⚠️ Research Finding) — honest_verdict=success; results/experiment_2065_nrgpt_stub.json
 - 2026-05-16: Phase 3: EBRM (Energy-Based Reward Model) Training (✅ Complete) — honest_verdict=complete_ebrm_cd_trained; results/experiment_2066_ebrm_training.json
 - 2026-05-16: Phase 3: DTM Simulation for Carnot Samplers (✅ Complete) — honest_verdict=success: DTM simulator implemented and tested; results/experiment_2067_dtm_simulation.json
+- 2026-05-16: Phase 3: Extropic TSU DTM Algorithm Parity Test (⚠️ Research Finding) — honest_verdict=pass; results/experiment_2068_tsu_parity.json
