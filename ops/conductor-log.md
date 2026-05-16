@@ -3753,3 +3753,4 @@ Error |
 | 2026-05-16 09:12 UTC | Exp 1999: Evaluate GEC + CLaRa-V on GSM8K using Qw | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 09:14 UTC | Exp 1999: Evaluate GEC + CLaRa-V on GSM8K using Qw | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 09:16 UTC | Exp 1999: Evaluate GEC + CLaRa-V on GSM8K using Qw | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 09:22 UTC | Exp 2000: E2E pipeline verification of Phase 4 con | OK | 81 passed, 1 warning in 5.11s |
