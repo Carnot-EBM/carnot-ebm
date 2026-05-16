@@ -3884,3 +3884,4 @@ Error |
 | 2026-05-16 17:40 UTC | Phase 1: KAN4CBC SMT Verification Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2060-kan-symbolization-extractor.symbol |
 | 2026-05-16 17:42 UTC | Phase 1: KAN4CBC SMT Verification Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2060-kan-symbolization-extractor.symbol |
 | 2026-05-16 17:44 UTC | Phase 1: LUT-based KAN deployment simulation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 17:46 UTC | Phase 1: LUT-based KAN deployment simulation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
