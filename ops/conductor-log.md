@@ -3579,3 +3579,4 @@ IMPORTANT:
 | 2026-05-16 00:09 UTC | Exp 1827: Implement Muon-OGD Spectral Orthogonal G | OK | 81 passed, 1 warning in 5.25s |
 | 2026-05-16 00:11 UTC | Exp 1828: Evaluate KAN-CL vs Muon-OGD on FR-11 ret | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 00:13 UTC | Exp 1828: Evaluate KAN-CL vs Muon-OGD on FR-11 ret | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 00:15 UTC | Exp 1828: Evaluate KAN-CL vs Muon-OGD on FR-11 ret | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |

@@ -1,0 +1,24 @@
+{
+  "experiment": 1829,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T00:17:59.707230+00:00",
+  "finished_at": "2026-05-16T00:17:59.707230+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1829: Implement ActFocus Token-Level Energy Reweighting for GRPO",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1172-nrgpt-per-token-energy-inference",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: per_token_improves_auroc"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
