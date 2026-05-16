@@ -720,3 +720,14 @@ The output SHALL be saved to `results/experiment_2089_crane_decoder.json` with `
 **When** the CRANE decoder is executed
 **Then** it interleaves constrained and unconstrained decoding
 **And** the result is saved to `results/experiment_2089_crane_decoder.json`.
+
+### REQ-INFER-CRANE-2090: CRANE HumanEval Evaluation
+The system SHALL evaluate CRANE vs rigid start-to-finish grammar enforcement on 50 HumanEval problems requiring structured JSON output in `scripts/experiment_2090_crane_humaneval.py`.
+The experiment SHALL use model `unsloth/gemma-4-31B-it-GGUF`.
+The output SHALL be saved to `results/experiment_2090_crane_humaneval.json` with `pass_rate_delta > 0` and include fields `target`, `pipeline_invocations`, `simulated_energy_minimized`, `latency_ms`, `honest_verdict`, `crane_pass_rate`, `rigid_pass_rate`.
+
+### SCENARIO-INFER-CRANE-2090-001: CRANE HumanEval Run
+**Given** 50 HumanEval problems
+**When** evaluated with CRANE versus rigid grammar
+**Then** CRANE achieves a positive pass_rate_delta
+**And** the artifact `results/experiment_2090_crane_humaneval.json` is generated.
