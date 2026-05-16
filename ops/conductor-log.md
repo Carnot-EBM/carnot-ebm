@@ -3923,3 +3923,4 @@ Error |
 | 2026-05-16 20:14 UTC | Phase 2: NeSy MAP Inference Alternating Training | OK | 82 passed, 1 warning in 6.24s |
 | 2026-05-16 20:20 UTC | Phase 2: NeSy to SMT Verification Loop | OK | 81 passed, 1 warning in 4.81s |
 | 2026-05-16 20:22 UTC | Phase 3: ActFocus Token-Level Energy Reweighting | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 20:24 UTC | Phase 3: ActFocus Token-Level Energy Reweighting | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
