@@ -3942,3 +3942,4 @@ Error |
 | 2026-05-16 21:16 UTC | Phase 1: PEM vs Lagrangian on Hard Sudoku | OK | 81 passed, 1 warning in 4.69s |
 | 2026-05-16 21:21 UTC | Phase 2: HardNet Differentiable Enforcement Layer | OK | 81 passed, 1 warning in 5.59s |
 | 2026-05-16 21:28 UTC | Phase 2: HardNet Verification Pipeline Integration | OK | 145 passed, 1 warning in 4.86s |
+| 2026-05-16 21:35 UTC | Phase 2: HardNet Zero-False-Accept Graph Coloring | OK | 81 passed, 1 warning in 4.72s |
