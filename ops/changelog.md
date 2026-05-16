@@ -5931,3 +5931,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 2005: Auto-Dataset Generation via Z3 constraint checker (⚠️ Research Finding) — honest_verdict=success; results/experiment_2005_z3_generation.json
 - 2026-05-16: Exp 2008: ROCm Environment Probe & Bring-Up for RX 7900 XTX (⚠️ Research Finding) — honest_verdict=hardware_probe_success; results/experiment_2008_rocm_probe.json
 - 2026-05-16: Exp 2009: Dual-Model Execution Bench on ROCm (✅ Complete) — honest_verdict=hardware missing but mock probe works; results/experiment_2009_dual_model.json
+- 2026-05-16: Exp 2010: EBM Hardware-Accelerated Sampling (Langevin Dynamics) (✅ Complete) — honest_verdict=success: vectorized_langevin_benchmark_complete; results/experiment_2010_langevin.json
