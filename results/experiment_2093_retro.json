@@ -1,0 +1,88 @@
+{
+  "experiment_id": 2093,
+  "schema": "carnot.milestone_retro.v1",
+  "title": "Milestone Retrospective 2093",
+  "milestone": "2093",
+  "run_date": "20260516",
+  "started_at": "2026-05-16T22:13:51.700060+00:00",
+  "finished_at": "2026-05-16T22:13:51.700065+00:00",
+  "status": "complete",
+  "honest_verdict": "complete: milestone_retro_filed_pem_crane_closed_hardnet_blocked",
+  "criteria_results": {
+    "pem_gap_closed": true,
+    "hardnet_gap_closed": false,
+    "crane_gap_closed": true
+  },
+  "criteria_details": {
+    "pem_gap": {
+      "experiment": 2085,
+      "verdict": "PEM optimizer and Sudoku eval successful. Gap closed.",
+      "status": "complete"
+    },
+    "hardnet_gap": {
+      "experiment": 2092,
+      "verdict": "HardNet nonlinear and pipeline blocked. Gap partially closed but overall open.",
+      "status": "blocked"
+    },
+    "crane_gap": {
+      "experiment": 2090,
+      "verdict": "CRANE decoder and HumanEval successful. Gap closed.",
+      "status": "complete"
+    }
+  },
+  "criteria_met": 2,
+  "criteria_total": 3,
+  "findings_summary": "PEM and CRANE gaps successfully closed. HardNet nonlinear tasks blocked.",
+  "notable_successes": [
+    "PEM Sudoku evaluation and CRANE HumanEval successfully demonstrated."
+  ],
+  "bottlenecks_identified": [
+    "HardNet nonlinear layer and pipeline blocked by gate checks."
+  ],
+  "trajectory_optimization_lessons": [],
+  "hardware_accounting_lessons": [],
+  "recommendations": [
+    "Resolve HardNet gate blocks to proceed with nonlinear integration."
+  ],
+  "retro_complete": true,
+  "completed_task_count": 8,
+  "blocked_task_count": 5,
+  "failed_task_count": 2,
+  "completed_experiments": [
+    2083,
+    2084,
+    2085,
+    2086,
+    2088,
+    2089,
+    2090
+  ],
+  "blocked_experiments": [
+    2084,
+    2086,
+    2087,
+    2092
+  ],
+  "failed_experiments": [
+    2083,
+    2087
+  ],
+  "experiment_honest_verdicts": {
+    "exp2083_kan4cbc": "complete",
+    "exp2083_pem_composition": "failed",
+    "exp2084_code_verification_live_gpu": "blocked",
+    "exp2084_pem_optimizer": "success",
+    "exp2085_pem_sudoku_eval": "success",
+    "exp2086_hardnet_layer": "success",
+    "exp2086_tier1_memory_pattern_addition": "blocked",
+    "exp2087_hardnet_pipeline": "failed",
+    "exp2087_jepa_predictive_verification": "blocked",
+    "exp2088_hardnet_graph_coloring": "complete",
+    "exp2088_npu_setup": "success",
+    "exp2089_crane_decoder": "complete",
+    "exp2089_retro": "complete",
+    "exp2090_crane_humaneval": "success",
+    "exp2092_full_integration_benchmark": "blocked",
+    "exp2092_hardnet_nonlinear": "blocked"
+  }
+}
