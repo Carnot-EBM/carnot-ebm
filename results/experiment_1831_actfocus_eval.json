@@ -1,0 +1,24 @@
+{
+  "experiment": 1831,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T00:24:06.862095+00:00",
+  "finished_at": "2026-05-16T00:24:06.862095+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1831: Evaluate ActFocus GRPO against baseline GRPO",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1830-actfocus-grpo-training.status (actual='blocked' == expected='success')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1830-actfocus-grpo-training",
+      "artifact_field": "status",
+      "op": "==",
+      "expected": "success",
+      "actual": "blocked",
+      "passed": false,
+      "reason": "actual='blocked' == expected='success'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
