@@ -530,3 +530,20 @@ Sub-requirements:
 **When** a sampler is initialized using `mpemba_init` and compared to a standard random initialization
 **Then** the Mpemba-initialized sampler reaches a target energy threshold in fewer steps.
 
+### REQ-SAMPLE-2605-12782: Langevin Clock Rescaling
+
+Carnot MUST provide a modified Langevin sampler in `python/carnot/samplers/langevin_clock.py` that speeds up the Langevin clock by scaling deterministic forces and adding specific noise structures (arXiv:2605.12782).
+
+Sub-requirements:
+- REQ-SAMPLE-2605-12782-1: The module SHALL provide a `langevin_clock_step(state, grad, step_size, force_scale, noise_scale, key)` function.
+- REQ-SAMPLE-2605-12782-2: The update step SHALL compute the next state applying `force_scale` to the deterministic gradient and `noise_scale` to the random noise.
+- REQ-SAMPLE-2605-12782-3: Tests SHALL verify that the function returns a valid next state with the expected shapes.
+
+### SCENARIO-SAMPLE-2605-12782: Langevin Clock Rescaling Step Execution
+
+**Given** a state, gradient, step size, and scaling factors
+**When** `langevin_clock_step` is executed
+**Then** it successfully computes a modified Langevin step
+**And** returns a state matching the input shape.
+
+
