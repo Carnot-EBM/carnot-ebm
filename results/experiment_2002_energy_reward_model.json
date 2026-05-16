@@ -1,0 +1,33 @@
+{
+  "experiment": 2002,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T10:33:36.858836+00:00",
+  "finished_at": "2026-05-16T10:33:36.858836+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 2002: Implement Energy-Based Reward Model (EBRM, arXiv:2504.12317) Loss",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1187-latent-grpo-energy-reward",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: latent_grpo_no_delta"
+    },
+    {
+      "upstream": "exp1423-process-reward-model-v1-fover-1508",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: prmv1_trained_on_available_step_labels_with_478_promoted_traces_missing_local_la"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
