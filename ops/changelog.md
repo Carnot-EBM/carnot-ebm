@@ -5930,3 +5930,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) (⚠️ Research Finding) — honest_verdict=success_csr_metric_evaluated_and_correlated; results/experiment_2003_refind_csr.json
 - 2026-05-16: Exp 2005: Auto-Dataset Generation via Z3 constraint checker (⚠️ Research Finding) — honest_verdict=success; results/experiment_2005_z3_generation.json
 - 2026-05-16: Exp 2008: ROCm Environment Probe & Bring-Up for RX 7900 XTX (⚠️ Research Finding) — honest_verdict=hardware_probe_success; results/experiment_2008_rocm_probe.json
+- 2026-05-16: Exp 2009: Dual-Model Execution Bench on ROCm (✅ Complete) — honest_verdict=hardware missing but mock probe works; results/experiment_2009_dual_model.json
