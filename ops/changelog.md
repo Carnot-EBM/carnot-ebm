@@ -5928,3 +5928,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 1989: Phase 1 ship-track recovery — any .198 prong that didn't ship (⚠️ Research Finding) — honest_verdict=Terminal success. Both tasks shipped.; results/experiment_1989_phase1_recovery.json
 - 2026-05-16: Exp 1990: Milestone .200 retrospective (✅ Complete) — honest_verdict=complete; results/experiment_1990_non_autoregressive_interface_audit.json
 - 2026-05-16: Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) (⚠️ Research Finding) — honest_verdict=success_csr_metric_evaluated_and_correlated; results/experiment_2003_refind_csr.json
+- 2026-05-16: Exp 2005: Auto-Dataset Generation via Z3 constraint checker (⚠️ Research Finding) — honest_verdict=success; results/experiment_2005_z3_generation.json
