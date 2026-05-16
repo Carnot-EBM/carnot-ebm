@@ -47,3 +47,9 @@ The system must support a draft EBT decoding loop using local SOTA models (e.g. 
 
 ## SCENARIO-EBT-1972: Tracking multi-step energy minimization
 Given 10 prompt cases, the draft EBT decoding loop must integrate the EBT decoding protocol, track multi-step energy minimization, and save the artifact to results/experiment_1972_ebt_baseline.json.
+
+## REQ-EBT-203: Recursive Logic Subsystem (RLS) Verification Stub
+The system must provide an RLS feedback loop stub that evaluates partial reasoning traces and returns a scalar energy value to provide dense verification signals for Energy-Based Transformers (EBTs). It must penalize logical inconsistencies.
+
+## SCENARIO-EBT-203: RLS Stub Evaluation
+Given a partial reasoning trace, the RLS verifier evaluates it, returning a higher energy value for logical inconsistencies, and outputs the result in results/experiment_203_rls.json.

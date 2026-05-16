@@ -1,0 +1,410 @@
+milestone: "2026.05.204"
+milestone_title: "Phase 1 ship-track consolidation + PyPI final check + audit + citation cadence"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction_compliance:
+  rationale: "Bash failure 2026-05-16 ~06:40Z has now spanned milestones .200/.201/.202/.203. Outer-loop drafts not lint-verified or push-verified during this window. .203 active with EBT/RLS/continuous-self-learning scope. .204 consolidates the still-pending operational items: Phase 1 ship-track dashboard, PyPI workflow final check, .203 audit, and the still-uncompleted CoT2-Meta citation-sweep cadence."
+  carry_forwards_addressed: ["Phase 1 ship-track dashboard (deferred .198/.200/.202)", "PyPI workflow operator-approval check (pending since .194 / 9 milestones ago)", ".203 findings audit", "CoT2-Meta citation-sweep cadence (deferred .202)"]
+authored_by: outer-loop-claude
+known_constraints:
+  - "Outer-loop Bash environment broken since 2026-05-16 ~06:40Z. Multiple consecutive cron-prompt cycles unable to lint or push. Files reach origin via conductor auto-commit sweep. Recommend session restart to recover shell."
+
+tasks:
+  - id: exp2040-phase1-dashboard-and-audit
+    title: "Exp 2040: Phase 1 ship-track dashboard + .203 findings audit (consolidated)"
+    deliverable: results/experiment_2040_phase1_dashboard_audit.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp2010-consolidated-audit-198-199-200-201
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp2010 (.202) drafted via Write-only during Bash failure; activation/result unknown. This task supersedes by spanning .198 through .203 (6 milestones) in one consolidated audit + dashboard pass."
+        retire_if_same_verdict: false
+      - experiment_id: exp1988-phase1-ship-track-dashboard
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp1988 (.200) same drafting status."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Outer-loop Bash failed 2026-05-16 ~06:40Z. Subsequent
+      pre-stages (.200, .202, .204) drafted via Write only; activation
+      states unknown. Phase 1 ship-track had several wins before the
+      Bash failure (Fast-Slow codification .196, HF mirror .196) and
+      several pending items (PyPI workflow operator approval, MCP/CLI
+      docs, Independent Reproducer). This task consolidates 6
+      milestones (.198 → .203) into a single audit + writes the Phase 1
+      dashboard.
+
+      FALSIFIABLE HYPOTHESIS: Reading 6 milestones of artifacts yields
+      enough state to answer: (a) which Phase 1 prongs are SHIPPED vs
+      PENDING vs BLOCKED, (b) any adversarial-verify flags across
+      .198-.203, (c) whether the Bash-failure window correlates with
+      any SKIP-cascade pattern, (d) the current ship-percentage with
+      honest "shipped-pending-operator-approval" semantics.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py
+        - results/experiment_198*.json through results/experiment_204*.json
+        - results/experiment_1929_fast_slow_codification.json (.196 baseline)
+        - results/experiment_1931_huggingface_mirror.json (.196 baseline)
+        - results/experiment_1930_pypi_status.json (PyPI baseline)
+        - ops/conductor-log.md (SKIP/DOOMED_RERUN/GATE_BLOCK since
+          2026-05-16T05:00Z)
+        - ops/known-issues.md (Phase 1 MANDATORY entry)
+        - ops/phase-1-dashboard.md (if exp1988 or exp2010 created it)
+
+      TASK: Audit + dashboard in one pass.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. scripts/adversarial_verify.py importable.
+           b. results/experiment_1929_fast_slow_codification.json AND
+              results/experiment_1931_huggingface_mirror.json exist
+              (already-shipped baselines).
+           Record preconditions_checked.
+        1. `python3 scripts/adversarial_verify.py --milestone-range
+            1981 2040`. Classify flags.
+        2. For each Phase 1 prong (PyPI / HF / MCP-docs / Reproducer
+           / Fast-Slow codification): extract current status from
+           latest evidence artifact. PyPI specifically: latest
+           `gh run list --workflow=publish-pypi.yml` state via gh CLI.
+        3. Write ops/phase-1-dashboard.md (NO emojis; CLAUDE.md
+           no-pruning; APPEND-only if file exists). Single-page
+           status table + ship-percentage + operator-action items.
+        4. Update ops/status.md "What's Working" with link.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.phase1_dashboard_audit.v2"
+        - experiment: 2040
+        - run_date: ISO-8601 UTC
+        - duration_s: > 60s
+        - random_seed: 173240
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{audit_target_milestones: ["2026.05.198",
+          "2026.05.199", "2026.05.200", "2026.05.201", "2026.05.202",
+          "2026.05.203"], adversarial_verify_version: git_rev,
+          artifacts_scanned: int, artifacts_flagged: int,
+          dashboard_path: "ops/phase-1-dashboard.md"}}
+        - n_samples: 6 (milestones audited)
+        - n_samples_justification: "Consolidated audit; n is milestone
+          count."
+        - audit_outcomes: dict
+        - corrigenda_added: list
+        - per_prong_status: dict prong -> {{status, evidence, date,
+          next_action}}
+        - phase_1_ship_percentage: int (0-100)
+        - operator_action_items: list
+        - dashboard_word_count: int
+        - dashboard_has_emojis: false
+        - bash_failure_window_observations: str (any SKIP-cascade
+          or DOOMED_RERUN patterns since 2026-05-16T06:40Z)
+        - acceptance_gate_passed: bool (6 milestones audited +
+          dashboard written + status.md linked + emoji-free)
+        - acceptance_gate_criteria: "6 milestones audited; dashboard
+          accurate; status honest (no inflation of pending → shipped)."
+        - methodology_note: "PyPI = shipped-pending-operator-approval
+          is NOT 'shipped'. Honest semantics."
+        - optimization_direction: "neither — audit/synthesis"
+        - honest_verdict: MUST start with `complete:` / `complete_` /
+          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
+          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2041-pypi-workflow-escalation-check
+    title: "Exp 2041: PyPI workflow ESCALATION check (10+ milestones pending operator approval)"
+    deliverable: results/experiment_2041_pypi_escalation.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp2011-pypi-workflow-final-recheck
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp2011 (.202) drafted; activation unknown. v0.1.0b1 workflow has now been pending operator approval across .194-.203 (10 milestones). This task checks final state + outputs an escalation summary if still waiting."
+        retire_if_same_verdict: false
+      - experiment_id: exp1930-pypi-workflow-status-check
+        verdict: success_operator_approval_required
+        addressed_by: "exp1930 (.196) identified the waiting state. 10 milestones later, escalation summary appropriate if no change."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: v0.1.0b1 tag pushed at .194 (~10 milestones ago).
+      Workflow has been in 'waiting' state since first observed at
+      .196 exp1930. .200 exp1987 and .202 exp2011 both drafted
+      re-check tasks during Bash-failure window. This is the
+      escalation check.
+
+      FALSIFIABLE HYPOTHESIS: Workflow run for v0.1.0b1 is now in one
+      of: (a) succeeded (PyPI 0.1.0b1 reachable + install works),
+      (b) failed (operator approved but step errored), (c) still
+      waiting (operator hasn't approved in ~10 milestones; needs
+      explicit poke), (d) cancelled/expired (auto-timeout; needs
+      workflow_dispatch re-trigger).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1930_pypi_status.json (initial state)
+        - results/experiment_1987_pypi_status_recheck.json if exists
+        - results/experiment_2011_pypi_final_recheck.json if exists
+        - .github/workflows/publish-pypi.yml
+
+      TASK: Final state check; re-trigger if expired; verify PyPI.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `command -v gh` succeeds.
+           b. `gh auth status` returns authenticated.
+           c. Tag v0.1.0b1 exists on origin.
+           Record preconditions_checked.
+        1. `gh run list --workflow=publish-pypi.yml --limit 20
+            --repo Carnot-EBM/carnot-ebm --json
+            databaseId,status,conclusion,createdAt,url`. Find
+           v0.1.0b1 runs (may be multiple if re-triggers were
+           attempted).
+        2. For latest run, classify state.
+        3. If status=waiting AND age > 24h: report as
+           `operator_approval_overdue` — escalation summary listing
+           number of consecutive milestones the approval has been
+           pending.
+        4. If status=completed AND conclusion=success: verify PyPI
+           install (fresh tmpdir, fresh venv).
+        5. If status=cancelled/expired: attempt `gh workflow run
+           publish-pypi.yml --ref v0.1.0b1 --repo Carnot-EBM/carnot-ebm`.
+           Wait up to 10 minutes for completion.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.pypi_escalation.v1"
+        - experiment: 2041
+        - run_date: ISO-8601 UTC
+        - duration_s: > 15s
+        - random_seed: 173241
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{workflow_file: ".github/workflows/publish-pypi.yml",
+          tag_checked: "v0.1.0b1",
+          milestones_pending: int (e.g., 10)}}
+        - n_samples: 1
+        - n_samples_justification: "Status escalation; n=1 workflow."
+        - workflow_run_id: int or null
+        - workflow_run_status: str
+        - workflow_run_conclusion: str or null
+        - milestones_pending_count: int
+        - re_trigger_attempted: bool
+        - re_trigger_outcome: str or null
+        - pypi_url_reachable: bool
+        - external_install_verified: bool
+        - actionable_next_step: str
+        - escalation_summary: str
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "Status reported; escalation summary
+          written if overdue; install verified if succeeded."
+        - methodology_note: "NO new tag push. workflow_dispatch
+          re-trigger only if cancelled/expired."
+        - optimization_direction: "neither"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push tags. Do NOT modify
+      scripts/research_conductor.py.
+
+  - id: exp2042-routine-citation-sweep-cot2meta-or-cluster4
+    title: "Exp 2042: Routine citation-sweep on CoT2-Meta (cadence rule, deferred from .202)"
+    deliverable: results/experiment_2042_citation_sweep.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures:
+      - experiment_id: exp2013-routine-citation-sweep-cot2meta
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp2013 (.202) drafted; activation unknown. This task retries the same scope; emits no-op verdict if exp2013 artifact already exists with acceptance_gate_passed=true."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Routine citation-sweep cadence (every 4th keyword sweep
+      per feedback_sweep_dedupe_protocol). CoT2-Meta anchor
+      (arXiv:2603.28135 Score 320) has never been depth-swept. May
+      surface adjacent Ma/Gao/Liu work or newer routing/orchestration
+      papers.
+
+      FALSIFIABLE HYPOTHESIS: Citation-sweep on arXiv:2603.28135 surfaces
+      at least 1 in-domain 2026 paper (post-dedupe). 0 results is
+      acceptable as anchor-too-new outcome.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/sweep_citations.py
+        - scripts/sweep_dedupe.py
+        - research-studying.md
+        - feedback_sweep_dedupe_protocol memory entry
+
+      TASK: Citation-sweep + dedupe + score new candidates.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `python3 scripts/sweep_citations.py --help` succeeds.
+           b. `python3 scripts/sweep_dedupe.py --help` succeeds.
+           c. If results/experiment_2013*.json exists with
+              acceptance_gate_passed=true, emit
+              `complete_already_done_in_202_no_op`.
+           Record preconditions_checked.
+        1. `python3 scripts/sweep_citations.py 2603.28135 |
+            python3 scripts/sweep_dedupe.py --filter
+            --include-version-bumps`.
+        2. For each NEW arxiv ID, fetch abstract; score per the
+           relevance × novelty × feasibility × urgency rubric.
+        3. Promote Score >= 300 to research-studying.md Active Research
+           Queue. Score >= 400 to ops/known-issues.md.
+        4. Append Sweep entry to research-studying.md.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.routine_citation_sweep.v1"
+        - experiment: 2042
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 173242
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - already_done_in_202: bool
+        - model_specs: {{anchor_paper: "arXiv:2603.28135 (CoT2-Meta)",
+          anchor_authors: "Ma/Gao/Xiao/Wang/Yu/Qian/Qian/Gong/Liu"}}
+        - n_samples: int
+        - n_samples_justification: "Sweep; n is new-candidate count."
+        - new_candidates: list of {{arxiv_id, title, score, rationale}}
+        - promoted_to_active_queue: list
+        - promoted_to_known_issues: list
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "Sweep ran; new candidates scored OR
+          no-op confirmed against exp2013."
+        - methodology_note: "Cadence per memory entry. 0 promotions OK."
+        - optimization_direction: "neither — sweep task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2043-cot2meta-routing-status-check
+    title: "Exp 2043: CoT2-Meta routing status check (queued .198 exp1983 + .202 exp2012)"
+    deliverable: results/experiment_2043_cot2meta_status.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures:
+      - experiment_id: exp2012-cot2meta-routing-retry
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp2012 (.202) drafted; activation unknown. This task checks status of BOTH .198 exp1983 + .202 exp2012; runs full prototype only if neither shipped."
+        retire_if_same_verdict: false
+      - experiment_id: exp1983-carnot-cot2meta-routing-prototype
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp1983 (.198) drafted; status unknown. This task is the third attempt at the same scope."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: CoT2-Meta routing prototype queued in .198 (exp1983)
+      and .202 (exp2012). Both drafted during/after Bash failure;
+      activation status unknown. This task checks for prior artifacts
+      first; only runs full prototype if neither shipped.
+
+      FALSIFIABLE HYPOTHESIS: At most one of exp1983 / exp2012 already
+      shipped successfully; this task either confirms with a no-op or
+      runs the full prototype (1.2x iter reduction + 5% fallback + 3pp
+      drift acceptance from exp1983 spec).
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1983*_cot2meta_routing.json (if exists)
+        - results/experiment_2012*_cot2meta_routing.json (if exists)
+        - results/experiment_1811_fast_slow_variant.json (baseline)
+        - python/carnot/pipeline/fast_slow_variant.py
+        - arXiv:2603.28135 CoT2-Meta abstract
+
+      TASK: Status check + conditional retry.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `python -c "from carnot.pipeline.fast_slow_variant import
+              fast_slow_variant"` succeeds.
+           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
+              non-empty.
+           Record preconditions_checked.
+        1. If results/experiment_1983*.json OR results/experiment_2012*.json
+           exists with acceptance_gate_passed=true: emit no-op verdict.
+        2. Else: full prototype run per .198 exp1983 spec.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.cot2meta_routing.v1"
+        - experiment: 2043
+        - run_date: ISO-8601 UTC
+        - duration_s: small if no-op; > 300s if retry
+        - random_seed: 173243
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - already_shipped_in_prior_milestone: bool
+        - prior_artifact_path: str or null
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          baseline: "fast_slow_variant_v1 (exp1811)",
+          state_machine: "cot2meta_v1"}}
+        - n_samples: 90 if retry; 1 if no-op
+        - n_samples_justification: "30 per task × 3 tasks per exp1983
+          spec; or no-op confirmation."
+        - overall_iters_reduction: float (from prior OR new run)
+        - fallback_usage_rate: float
+        - max_passrate_drift_pp: float
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "1.2x iter reduction AND >=5%
+          fallback usage AND <=3pp passrate drift; OR no-op against
+          confirmed prior shipment."
+        - methodology_note: "If no-op, copy prior artifact values
+          forward honestly."
+        - optimization_direction: "maximize_iters_reduction"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2044-milestone-204-retrospective
+    title: "Exp 2044: Milestone .204 retrospective"
+    deliverable: results/operational_retro_2026_05_204.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
+    prompt: |
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8.
+
+      TASK: Generate the .204 operational retrospective.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.204..HEAD returns non-empty.
+        1-6. Standard retro per recent templates.
+        7. Record: phase_1_ship_percentage (from exp2040),
+           pypi_workflow_final_state (from exp2041),
+           cot2meta_status (from exp2043), citation_sweep_promotions
+           (from exp2042).
+        8. Meta-reflection: 6 consecutive milestones since outer-loop
+           Bash failure; how did conductor performance compare to
+           pre-failure milestones?
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.204"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_full_post_bash_failure"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - gpu_idle_on_compute_bound_tasks: bool or null
+        - phase_1_ship_percentage: int
+        - pypi_workflow_final_state: str
+        - cot2meta_status: str
+        - citation_sweep_promotions: int
+        - bash_failure_duration_milestones: int
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+        - DO NOT modify README.md or docs/technical-report.md.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
