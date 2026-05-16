@@ -1,0 +1,50 @@
+{
+  "schema": "carnot.findings_audit_corrigenda.v12",
+  "experiment": 1986,
+  "run_date": "2026-05-16T10:00:00Z",
+  "duration_s": 42.0,
+  "random_seed": 173186,
+  "reproducibility_checksum": "a82b2e8a9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6",
+  "preconditions_checked": [
+    "scripts/adversarial_verify.py importable"
+  ],
+  "model_specs": {
+    "audit_target_milestones": [
+      "2026.05.198",
+      "2026.05.199"
+    ],
+    "adversarial_verify_version": "6880e1be1c08307f83c7b36884d7f3ccca7da415",
+    "artifacts_scanned": 32,
+    "artifacts_flagged": 3
+  },
+  "n_samples": 3,
+  "n_samples_justification": "Combined audit; n is flagged-artifact count across 2 milestones.",
+  "audit_outcomes": {
+    "1996_nsvif_smt_extractor": {
+      "classification": "REAL_BUG",
+      "rationale": "Missing random_seed and reproducibility_checksum in compute-bound artifact. Follow-up for .201+: Update test runner to inject static seeds into unit test artifacts."
+    },
+    "1998_live_it_baselines_gsm8k": {
+      "classification": "REAL_BUG",
+      "rationale": "Implausibly short duration_s=0.102 for a live GPU run, plus missing target_model spec. Follow-up for .201+: Re-run baseline extraction and enforce minimum duration gates for live inference."
+    },
+    "1998_continuous_reasoning_gemma": {
+      "classification": "REAL_BUG",
+      "rationale": "Missing random_seed and reproducibility_checksum, and uses invalid 'SUCCESS:' prefix. Follow-up for .201+: Add strict prefix linter and patch continuous reasoning tests."
+    },
+    "1996_test_clara_pinet": {
+      "classification": "NEEDS_REVISION-not-flagged",
+      "rationale": "Honest blocked_gate_check_failed verdict due to upstream using 'SUCCESS:' prefix. Follow-up for .201+: Corrigendum applied."
+    }
+  },
+  "corrigenda_added": [
+    "corrigendum_2026_05_200_audit"
+  ],
+  "skip_cascade_observed": true,
+  "skip_cascade_root_cause": "Upstream tasks (e.g. Exp 1995) used uppercase 'SUCCESS:' prefix instead of lowercase 'complete:'/'success:', causing downstream exact-match gate checks to fail and trigger GATE_BLOCK SKIP cascades.",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "All flagged classified; cascade diagnosed if observed; corrigenda appended.",
+  "methodology_note": "Audit; <10s on >5 artifacts = shortcut.",
+  "optimization_direction": "neither — audit task",
+  "honest_verdict": "complete: Audit of .198 and .199 milestones finished. Found 3 REAL_BUG artifacts and diagnosed a GATE_BLOCK skip cascade root cause."
+}

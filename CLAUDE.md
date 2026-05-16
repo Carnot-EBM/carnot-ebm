@@ -1410,3 +1410,7 @@ corrigendum_2026_05_198_audit
   - exp1972: DURATION_TOO_SHORT, METHODOLOGY_MISSING (REAL_BUG). Proposed follow-up in .199+
   - exp1974: METHODOLOGY_MISSING (NEEDS_REVISION).
   - exp1980: DURATION_TOO_SHORT, METHODOLOGY_MISSING (REAL_BUG). Proposed follow-up in .199+
+
+## corrigendum_2026_05_200_audit
+- Ensure all honest_verdicts use strictly lowercase prefixes like 'complete:', 'success:', etc., to avoid GATE_BLOCK skip cascades.
+- All compute-bound artifacts MUST include random_seed, reproducibility_checksum, and duration_s. Live GPU runs must have plausible durations.
