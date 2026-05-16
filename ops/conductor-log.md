@@ -3811,3 +3811,4 @@ Error |
 | 2026-05-16 13:33 UTC | Phase 2: KAGNN Verifier for Graph Coloring | OK | 93 passed, 1 warning in 6.75s |
 | 2026-05-16 13:38 UTC | Phase 2: Evaluate KAGNN vs MLP Baseline | OK | 81 passed, 1 warning in 4.36s |
 | 2026-05-16 13:44 UTC | Phase 3: HardNet++ Differentiable Layer Implementa | OK | 101 passed, 1 warning in 9.27s |
+| 2026-05-16 13:50 UTC | Phase 3: Integrate HardNet++ into Carnot-Gibbs Tie | OK | 81 passed, 1 warning in 4.18s |
