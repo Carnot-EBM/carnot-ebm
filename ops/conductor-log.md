@@ -3905,3 +3905,6 @@ Error |
 | 2026-05-16 18:35 UTC | Phase 4: Milestone .206 Retrospective | FAIL | Claude Code error: Error: Reached max turns (20) |
 | 2026-05-16 18:37 UTC | Phase 4: SOTA E2E Benchmark on EBM-CoT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
 | 2026-05-16 18:37 UTC | Phase 4: CSL Delta Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2069-fr11-csl-ebrm-feedback) |
+| 2026-05-16 18:41 UTC | Phase 4: Milestone .206 Retrospective | OK | cache hit: 99 passed, 1 warning in 7.65s |
+| 2026-05-16 18:43 UTC | Phase 4: SOTA E2E Benchmark on EBM-CoT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
+| 2026-05-16 18:43 UTC | Phase 4: CSL Delta Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2069-fr11-csl-ebrm-feedback) |

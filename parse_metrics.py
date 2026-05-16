@@ -1,20 +1,9 @@
 import re
-import yaml
+with open("ops/changelog.md") as f:
+    text = f.read()
 
-with open('ops/changelog.md', 'r') as f:
-    cl = f.read()
+exps = [int(x) for x in re.findall(r'Exp (\d+)', text, re.IGNORECASE)]
+miles = re.findall(r'Milestone 2026\.\d+\.(\d+)', text, re.IGNORECASE)
 
-# count experiments
-exp_ids = set(re.findall(r'Exp (\d+):', cl))
-highest_exp = max([int(x) for x in exp_ids]) if exp_ids else 0
-
-print(f"Total experiments (unique): {len(exp_ids)}")
-print(f"Highest Exp ID: {highest_exp}")
-
-with open('ops/status.md', 'r') as f:
-    sm = f.read()
-    
-# Extract python tests
-tests_match = re.search(r'([\d,]+) Python tests', sm)
-print(f"Python tests in status.md: {tests_match.group(1) if tests_match else 'None'}")
-
+print("Highest Exp in changelog:", max(exps) if exps else "None")
+print("Highest Milestone in changelog:", max([int(x) for x in miles]) if miles else "None")
