@@ -5882,3 +5882,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 1912: .193 findings audit + corrigenda + SKIP-loop diagnosis (✅ Complete) — honest_verdict=success: Audit complete, 0 flags found. SKIP cascade diagnosed as markdown bold regex failure.; results/experiment_1912_findings_audit_193.json
 - 2026-05-16: Exp 1913: Milestone .194 retrospective (✅ Complete) — honest_verdict=position_paper_nexus_complete; results/experiment_1913_arch_paper.json
 - 2026-05-16: Exp 1914: .194 archive / .195 activation (✅ Complete) — honest_verdict=complete: initialized .195; results/experiment_1914_init.json
+- 2026-05-16: Exp 1919: Discrete Auto-Regressive Biasing (DAB) Decoder Adapter (✅ Complete) — honest_verdict=complete: built DAB adapter; results/experiment_1919_dab_adapter.json
