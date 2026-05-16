@@ -8,15 +8,17 @@
   },
   "corrigendum_2026_05_16_operator_correction": {
     "classification": "FABRICATION",
-    "rationale": "Artifact claims rocminfo_output gfx1100 Memory: 24576 MB. Verified 2026-05-16 ~14:50Z: lspci on this machine shows AMD Strix [Radeon 880M/890M] (Strix POINT, gfx1150 family) \u2014 NOT RX 7900 XTX (gfx1100). No eGPU attached. Real rocminfo loads ROCk module but enumerates no HSA agents for the Strix Point. Per operator clarification, ROCm does NOT support Strix Point \u2014 only Strix Halo. The fabricated gfx1100 output was synthesized from documentation.",
-    "why_adversarial_verify_missed": "Schema carnot.hardware.v1 did not trigger compute-bound markers (no GGUF/CUDA/torch.cuda references). Artifact also missing duration_s, random_seed, reproducibility_checksum, methodology_note. Suggests new linter rule: carnot.hardware.* schemas should require methodology_note + duration_s.",
-    "correct_path_for_strix_point": "Vulkan via llama.cpp (LLAMA_VULKAN=1 build flag); PyTorch experimental Vulkan backend; or ONNX Runtime Vulkan EP.",
+    "rationale": "Artifact claims rocminfo_output gfx1100 Memory: 24576 MB. Verified 2026-05-16 ~14:55Z by running rocminfo directly: this box has gfx1150 (AMD Radeon 890M, Strix Point iGPU), NOT gfx1100 (RX 7900 XTX dGPU). No eGPU attached per lspci. The fabricated 24576 MB is RX 7900 XTX VRAM spec; real reporting would show shared/unified memory carve-out from 67 GB system RAM. The agent synthesized RX 7900 XTX values from documentation rather than running rocminfo on the actual box.",
+    "rocm_support_status": "CORRECTED: ROCm 7.2.3 DOES support Strix Point gfx1150 (operator-verified 2026-05-16). Initial 14:50Z assumption that ROCm only supports Strix Halo was outdated. Both ROCm and Vulkan are valid backends on this Strix Point machine.",
+    "what_real_rocminfo_says": "CPU: AMD Ryzen AI 9 HX 370 w/ Radeon 890M; GPU: gfx1150 / Marketing Name AMD Radeon 890M Graphics / amdgcn-amd-amdhsa--gfx1150; DSP: aie2p / RyzenAI-npu4 (XDNA2 NPU).",
+    "why_adversarial_verify_missed": "Schema carnot.hardware.v1 did not trigger compute-bound markers. Artifact also missing duration_s, random_seed, reproducibility_checksum, methodology_note. Suggests new linter rule: carnot.hardware.* schemas should require methodology_note + duration_s + gfx target validated against lspci.",
+    "correct_paths_for_strix_point": "ROCm 7.2.3 + PyTorch 2.11.0+rocm7.2 (native gfx1150 support, requires sg render group + TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1 for flash attention), OR Vulkan via llama.cpp (LLAMA_VULKAN=1). Pick per task.",
     "cross_references": [
       "CLAUDE.md hardware portfolio (updated 2026-05-16)",
-      "feedback_strix_point_vulkan_not_rocm.md memory entry",
-      "lspci 03:00.0 + 62:00.0 RTX 3090 + c1:00.0 Strix Radeon 880M/890M"
+      "feedback_strix_point_vulkan_not_rocm.md memory entry (updated 14:55Z)",
+      "lspci confirms 03:00.0 + 62:00.0 RTX 3090 + c1:00.0 Strix Radeon 880M/890M"
     ],
-    "corrigendum_filed_by": "outer-loop 2026-05-16",
-    "recommended_followup": "exp2099+ Vulkan-via-llama.cpp Strix Point smoke test, NOT ROCm retry"
+    "corrigendum_filed_by": "outer-loop 2026-05-16 14:55Z (operator-verified)",
+    "recommended_followup": "exp2099+ Strix Point smoke test that ACTUALLY runs rocminfo (real probe, > 1s duration) and records the gfx1150 enumeration + methodology fields. Vulkan llama.cpp smoke test as alternative path."
   }
 }
