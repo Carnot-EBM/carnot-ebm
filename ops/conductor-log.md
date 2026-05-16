@@ -3871,3 +3871,4 @@ Error |
 | 2026-05-16 16:35 UTC | Exp 2057: Integrate ActFocus into FR-11 CSL Loop ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 16:47 UTC | Exp 2058: Establish Zero-Forgetting Promotion Gate | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: -color support is r |
 | 2026-05-16 17:00 UTC | Exp 2058: Establish Zero-Forgetting Promotion Gate | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: -color support is r |
+| 2026-05-16 17:06 UTC | Exp 2058: Establish Zero-Forgetting Promotion Gate | OK | cache hit: 82 passed, 1 warning in 4.76s |
