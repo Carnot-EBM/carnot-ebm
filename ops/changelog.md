@@ -5890,3 +5890,7 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 1930: PyPI workflow status check (v0.1.0b1 tag pushed; workflow waiting on operator approval) (⚠️ Research Finding) — honest_verdict=success: operator manual approval required at GH Environment 'pypi'; results/experiment_1930_pypi_status.json
 - 2026-05-16: Exp 1931: Phase 1 HuggingFace mirror — 4th attempt (stranded across .171/.175/.179/.186) (✅ Complete) — honest_verdict=complete: hf_upload_and_verify_success; results/experiment_1931_huggingface_mirror.json
 - 2026-05-16: Exp 1932: .195 findings audit + corrigenda (⚠️ Research Finding) — honest_verdict=success: 14 artifacts scanned, 1 flagged (exp1923). Corrigenda appended.; results/experiment_1932_findings_audit_195.json
+
+## 2026-05-16 (Milestone 2026.05.196 Operational Retrospective)
+
+- Milestone 2026.05.196 operational retrospective complete. Analyzed 23.7 min wall time / 9 experiments. Slowest path: Exp 1931 (8.4 min, synthesis-only). GPU utilization on the 2 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.
