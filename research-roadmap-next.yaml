@@ -1,0 +1,165 @@
+milestone: "2026.05.197"
+milestone_title: "Thermodynamic EBT Verification + Formal Proof Scaling"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp1970-thrml-hybrid-abstraction
+    title: "Exp 1970: Phase 1 - THRML Hybrid Thermodynamic Abstraction Hookup"
+    deliverable: results/experiment_1970_thrml_hookup.json
+    max_turns: 30
+    prompt: |
+      CONTEXT: Milestone .197 introduces thermodynamic hardware abstractions. We need to integrate THRML for hybrid digital-thermodynamic initialization.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, `carnot/samplers/`
+      TASK: Implement a basic THRML hookup for energy initialization and ensure it runs in simulator mode.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1970.py` that utilizes THRML abstractions.
+      2. Log the execution times and initialization offsets.
+      3. Save artifact to `results/experiment_1970_thrml_hookup.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1971-thrml-latency-audit
+    title: "Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Audit"
+    deliverable: results/experiment_1971_thrml_latency.json
+    gated_on:
+      - upstream: exp1970-thrml-hybrid-abstraction
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: We must verify if the THRML abstraction offers theoretical simulator advantages.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1970.py`
+      TASK: Compare the sampling latency of the new THRML hookup against our native CPU Gibbs sampler.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1971.py` to run n=128 latency tests.
+      2. Record CPU vs THRML latency bounds.
+      3. Save to `results/experiment_1971_thrml_latency.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1972-ebt-system2-decoding
+    title: "Exp 1972: Phase 2 - EBT System-2 Energy Decoding Baseline"
+    deliverable: results/experiment_1972_ebt_baseline.json
+    prompt: |
+      CONTEXT: Energy-Based Transformers (EBT) use energy scores for inference-time computation.
+      EXISTING CODE TO READ FIRST: `carnot/models/`, local GGUF wrappers.
+      TASK: Implement a draft EBT decoding loop using local SOTA models. MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1972.py` integrating the EBT decoding protocol.
+      2. Track multi-step energy minimization on 10 prompt cases.
+      3. Save artifact to `results/experiment_1972_ebt_baseline.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1973-ebt-gsm8k-scaling
+    title: "Exp 1973: Phase 2 - EBT Inference Scaling on GSM8K Subset"
+    deliverable: results/experiment_1973_ebt_gsm8k.json
+    gated_on:
+      - upstream: exp1972-ebt-system2-decoding
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Evaluate if EBT decoding actually improves reasoning.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1972.py`
+      TASK: Run the EBT baseline on a GSM8K 20-question subset.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1973.py`.
+      2. Measure acceptance rates and energy deltas.
+      3. Save to `results/experiment_1973_ebt_gsm8k.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1974-kona-logic-extraction
+    title: "Exp 1974: Phase 3 - Kona-inspired Continuous Latent Logic Extraction"
+    deliverable: results/experiment_1974_kona_extraction.json
+    prompt: |
+      CONTEXT: Formal verification requires zero-false-accept logic extraction.
+      EXISTING CODE TO READ FIRST: Constraint parsing modules.
+      TASK: Develop a logic extractor that maps unstructured prompts to continuous constraints. MUST use `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1974.py`.
+      2. Extract constraints from 15 unstructured tests.
+      3. Save to `results/experiment_1974_kona_extraction.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1975-formal-proof-bridge
+    title: "Exp 1975: Phase 3 - Formal Proof Validator Bridge Prototype"
+    deliverable: results/experiment_1975_formal_bridge.json
+    agent_type: codex
+    prompt: |
+      CONTEXT: We must bridge the extracted constraints into verifiable proofs.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1974.py`
+      TASK: Implement a Z3-compatible validator backend for the extracted constraints.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1975.py` to route logic rules to Z3.
+      2. Report false-accept rates (must be zero).
+      3. Save to `results/experiment_1975_formal_bridge.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1976-energy-flow-matching
+    title: "Exp 1976: Phase 3 - Energy Matching Latent Generation Probe"
+    deliverable: results/experiment_1976_energy_matching.json
+    max_turns: 30
+    prompt: |
+      CONTEXT: Energy matching unifies flow matching with EBMs.
+      EXISTING CODE TO READ FIRST: Flow/Latent generation modules.
+      TASK: Write a small probe to test energy matching abstractions in latent space.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1976.py` for continuous generation constraints.
+      2. Save artifact to `results/experiment_1976_energy_matching.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1977-kan-hardware-complexity
+    title: "Exp 1977: Phase 1 - KAN Hardware Complexity Metric Check (RM/BOP/NABS)"
+    deliverable: results/experiment_1977_kan_metrics.json
+    max_turns: 20
+    model: opus
+    prompt: |
+      CONTEXT: We need hardware accounting for KANs before synthesis.
+      EXISTING CODE TO READ FIRST: KAN models.
+      TASK: Add a no-synthesis hardware accounting pass for existing KAN energy tiers.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1977.py` to calculate RM/BOP/NABS metrics.
+      2. Save to `results/experiment_1977_kan_metrics.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1978-fr11-continuous-learning
+    title: "Exp 1978: Phase 4 - FR-11 Continuous Self-Learning Loop"
+    deliverable: results/experiment_1978_fr11_learning.json
+    prompt: |
+      CONTEXT: FR-11 requires continuous self-learning with verifier-governed memory promotion.
+      EXISTING CODE TO READ FIRST: Continual learning scripts, verifiers.
+      TASK: Run the continuous self-learning loop ensuring external feedback governance. MUST include at least one SOTA model like `unsloth/gemma-4-31B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1978.py`.
+      2. Log the `soundness_mistakes` and `completeness_mistakes`.
+      3. Save to `results/experiment_1978_fr11_learning.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1979-fr11-retention-audit
+    title: "Exp 1979: Phase 4 - Continuous Self-Learning Retention Audit"
+    deliverable: results/experiment_1979_fr11_audit.json
+    gated_on:
+      - upstream: exp1978-fr11-continuous-learning
+        artifact_field: soundness_mistakes
+        op: "=="
+        value: 0
+    prompt: |
+      CONTEXT: Ensure the FR-11 loop did not cause catastrophic forgetting or mode collapse.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1978.py`
+      TASK: Run a retention audit on the updated FR-11 policy.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1979.py` analyzing retention vs baseline.
+      2. Save to `results/experiment_1979_fr11_audit.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1980-e2e-cascade
+    title: "Exp 1980: E2E Cascade Validation of .197 Pipeline"
+    deliverable: results/experiment_1980_e2e_cascade.json
+    model: opus
+    max_turns: 100
+    prompt: |
+      CONTEXT: Final validation of the complete milestone pipeline.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1972.py`, `scripts/experiment_1975.py`, `scripts/experiment_1978.py`.
+      TASK: Combine the EBT decoding, formal proof validator, and continuous learning into one pipeline check. MUST use `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1980.py` tying the phases together.
+      2. Run the pipeline on 5 complex E2E queries.
+      3. Save to `results/experiment_1980_e2e_cascade.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
