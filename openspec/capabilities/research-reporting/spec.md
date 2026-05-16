@@ -4080,3 +4080,6 @@ The repository shall provide a script to generate the .194 operational retrospec
 
 ### REQ-REPORT-195: Milestone .195 Initialization Artifact
 The repository shall provide a module `carnot.reporting.experiment_1914_init` to generate the .195 initialization artifact JSON, outputting to `results/experiment_1914_init.json`. It must contain a schema of `carnot.init.v1`, experiment `1914`, `status_updated` boolean, and `honest_verdict` formatted as `complete: initialized .195`.
+
+### REQ-REPORT-1924: Milestone .195 Terminal Retrospective
+The repository shall provide a module `carnot.reporting.experiment_1924_retro` and a test `tests/python/test_experiment_1924_retro.py` that outputs the milestone retrospective to `results/experiment_1924_retro.json` containing schema `carnot.retro.v1`, experiment `1924`, `retrospective_summary`, and `honest_verdict` formatted as `complete: .195 finished`.
