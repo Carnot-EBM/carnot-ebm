@@ -1,0 +1,51 @@
+{
+  "experiment": 2051,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T15:55:25.829459+00:00",
+  "finished_at": "2026-05-16T15:55:25.829459+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 2051: Encode KAN PWA as Mixed Integer Linear Program (MILP) (Phase 1)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "4 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: prior_failures must be a non-empty list",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1372-optimal-kan-pwa-formal-verification",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: cpu_only_gskan_energy_bound_verified_no_hardware_claim"
+    },
+    {
+      "upstream": "exp2082-kan-milp-translation",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp972-kan-milp-formal-verification",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: kan_violations_found"
+    },
+    {
+      "upstream": "exp980-kan-milp-violation-fix",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
