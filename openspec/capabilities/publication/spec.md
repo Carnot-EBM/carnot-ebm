@@ -875,6 +875,10 @@ The PyPI publish dry run MUST produce an artifact at `results/experiment_2103_py
 
 The PyPI workflow status re-check MUST produce an artifact at `results/experiment_1987_pypi_status_recheck.json` conforming to `carnot.pypi_workflow_status_recheck.v1`. It MUST report whether the workflow run has transitioned from 'waiting' to 'succeeded' or 'failed', and verify external install if 'succeeded'.
 
+### REQ-PUBLISH-029: Phase 1 Recovery Audit
+
+The Phase 1 Recovery task MUST produce an artifact at `results/experiment_1989_phase1_recovery.json` that conforms to the `carnot.phase1_recovery.v1` schema. The artifact MUST check the shipping status of MCP/CLI Integrator Docs (exp1981) and Independent Reproducer (exp1982), reporting their individual status and passing its acceptance gate if both have successfully shipped.
+
 ### SCENARIO-PUBLISH-027: PyPI Publish Dry Run Passes
 
 **Given** the package build is deterministic and produces valid metadata
@@ -882,11 +886,12 @@ The PyPI workflow status re-check MUST produce an artifact at `results/experimen
 **Then** it writes a complete artifact with `twine_check_passed == true`,
 `acceptance_gate_passed == true`, and an `honest_verdict` indicating the dry run was successful.
 
-### SCENARIO-PUBLISH-028: PyPI Workflow Status Re-check correctly verifies and reports wait state
+### SCENARIO-PUBLISH-029: Phase 1 Recovery succeeds
 
-**Given** the PyPI publish workflow run is waiting for operator approval
-**When** the PyPI status recheck executes
-**Then** it records `workflow_run_status == "waiting"` and suggests actionable approval.
+**Given** the exp1981 and exp1982 artifacts both exist and passed their acceptance gates
+**When** the Phase 1 Recovery audit executes
+**Then** it writes a complete artifact with `acceptance_gate_passed == true` and an honest verdict indicating success.
+
 
 ## Implementation Status
 
