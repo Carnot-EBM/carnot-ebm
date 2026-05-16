@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-16 Milestone 2026.05.208 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-16T22:17:17Z | 2026-05-16T22:18:36Z | Wrote operational retrospective for milestone 2026.05.208. Zero experiments were completed. | TBD |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
+
+---
+
 ## Session: 2026-05-13 Milestone 2026.05.162 Planning
 
 ### Turn Log
