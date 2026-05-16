@@ -1130,7 +1130,8 @@ The longest outer-loop session of the project to date. The autonomous research c
 - prior_failures exhaustively declared for all 6 gate-blocked carry-forwards
 - Position paper MANDATORY first (parallel with infra) — arXiv deadline 2026-05-15
 
-### What's Working (as of .84)
+### What's Working
+- [Phase 1 Ship-Track Dashboard](phase-1-dashboard.md) (as of .84)
 - FR-11 alpha_t=0.38 SOTA MoE confirmed live GPU (Qwen3.6-35B-A3B)
 - HumanEval pass@1: 0% → 36% with Carnot correction on SOTA model (first positive)
 - 7349 step-level PRM training examples (3.7× target)
@@ -1197,7 +1198,8 @@ The longest outer-loop session of the project to date. The autonomous research c
 12. gallery_updated_hf_spaces (exp1088)
 13. retro_complete (exp1089)
 
-### What's Working (as of .83)
+### What's Working
+- [Phase 1 Ship-Track Dashboard](phase-1-dashboard.md) (as of .83)
 - FR-11 loop closed: alpha_t=0.78 with Qwen3.5-0.8B (must re-run with SOTA — see exp1077)
 - SOS-KAN v3 AUROC=0.9545 on 6548-pair FoVer corpus (certified nonnegativity)
 - Triple integration cascade: all 4 tiers active (Tier 0a→0b→2→3), 50/50 questions
@@ -1271,7 +1273,8 @@ The longest outer-loop session of the project to date. The autonomous research c
 14. fr11_alpha_t_live (exp1074)
 15. retro_complete (exp1076)
 
-### What's Working (as of .82)
+### What's Working
+- [Phase 1 Ship-Track Dashboard](phase-1-dashboard.md) (as of .82)
 - FoVer corpus: 6548 Z3-confirmed pairs (13x above 500-pair target)
 - Probe ensemble: SOS-KAN AUROC 0.9899, ThinkPRM 0.9885, NK-KAEM 0.9875
 - WOPR Sudoku: code complete, all 4 easter eggs pass local tests, Ising E=0 at iter 5130
@@ -1364,6 +1367,7 @@ The longest outer-loop session of the project to date. The autonomous research c
 - **RETRO-024 CLOSED (2026-04-18):** FR-11 EORM/JEPA real-data relay confirmed (Exp 443). Both models retrained on 57 real FOVER-labeled CoT steps. JEPA AUC improved 0.457→0.571 on real data.
 
 ### What's Working
+- [Phase 1 Ship-Track Dashboard](phase-1-dashboard.md)
 
 - ExperimentTimeoutWatchdog: deployed in all new experiments (RETRO-003 closed)
 - EnvironmentAutoFix: self-configuring GPU env injection (RETRO-022 workaround)
@@ -1430,6 +1434,7 @@ No live benchmark improvements. All precision/HumanEval/adversarial runs are sca
 - **RETRO-026 CLOSED (2026-04-17):** LongRunBenchmarkExecutor (`python/carnot/pipeline/long_run_executor.py`) splits large benchmarks into configurable batch sizes (default 50, fits within 40-min per-batch watchdog), checkpoints each batch atomically, and assembles honest partial_N_of_M or complete verdicts. `scripts/experiment_437_long_run_executor.py` demonstrates 150-question / 3-batch partitioning with checkpoint/resume. 25 tests pass, 100% module coverage.
 
 ### What's Working
+- [Phase 1 Ship-Track Dashboard](phase-1-dashboard.md)
 
 - ExperimentTimeoutWatchdog: deployed and used in all new experiments
 - EnvironmentAutoFix: self-configuring GPU env injection (RETRO-022 workaround)
@@ -1652,6 +1657,7 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
 4. Re-run adversarial benchmark (Exp 355) and extraction benchmark (Exp 358) with live GPU (source scripts/conductor_gpu_env.sh first)
 
 ## What's Working
+- [Phase 1 Ship-Track Dashboard](phase-1-dashboard.md)
 
 - **[Phase 1 Ship-Track Dashboard](phase-1-dashboard.md)**: Live tracking of PyPI, HF Mirror, MCP Docs, and Independent Reproducer prongs.
 
