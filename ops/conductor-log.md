@@ -3945,3 +3945,5 @@ Error |
 | 2026-05-16 21:35 UTC | Phase 2: HardNet Zero-False-Accept Graph Coloring | OK | 81 passed, 1 warning in 4.72s |
 | 2026-05-16 21:48 UTC | Phase 3: CRANE Augmented Grammar Adapter | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-16 21:53 UTC | Phase 3: CRANE Augmented Grammar Adapter | OK | 82 passed, 1 warning in 5.72s |
+| 2026-05-16 22:00 UTC | Phase 3: CRANE Decoder HumanEval Benchmark | OK | 81 passed, 1 warning in 4.74s |
+| 2026-05-16 22:02 UTC | Phase 3: Tier 1 CSL Grammar Updates | OK | Excluded by manifest: exp_id=2091 in manifest |
