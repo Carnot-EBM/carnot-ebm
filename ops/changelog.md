@@ -5884,3 +5884,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 1914: .194 archive / .195 activation (✅ Complete) — honest_verdict=complete: initialized .195; results/experiment_1914_init.json
 - 2026-05-16: Exp 1919: Discrete Auto-Regressive Biasing (DAB) Decoder Adapter (✅ Complete) — honest_verdict=complete: built DAB adapter; results/experiment_1919_dab_adapter.json
 - 2026-05-16: Exp 1922: Compositional Energy Minimization (CEM) Architecture Design (✅ Complete) — honest_verdict=complete: CEM designed; results/experiment_1922_cem_design.json
+- 2026-05-16: Exp 1923: CEM Proof of Concept on 3-SAT (Local SOTA) (✅ Complete) — honest_verdict=complete: 3-SAT solved with CEM; results/experiment_1923_cem_poc.json
