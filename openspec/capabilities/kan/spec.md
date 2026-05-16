@@ -1455,3 +1455,23 @@ Given a Wahkon RKHS model,
 When initialized and a forward pass is executed,
 Then it computes the correct output shape and `results/experiment_1909_wahkon.json` is written.
 
+## REQ-KAN-2034: KAGNN Verifier for Graph Coloring
+
+The KAN capability MUST implement a Kolmogorov-Arnold Graph Neural Network (KAGNN) verifier for Graph Coloring constraints.
+
+**Rationale:**
+    Graph constraints like Graph Coloring require relational verification between adjacent nodes. Standard linear GNNs are opaque. By using a Symbolic-KAN routing layer instead of linear weights on the edges, we can explicitly learn and extract the constraint (e.g., equality or inequality) driving the graph coloring verification.
+
+**Acceptance criteria:**
+    - `python/carnot/models/ising/kagnn.py` exposes a `KAGNNLayer` or `KAGNNVerifier` that uses Symbolic-KAN routing logic to evaluate edge constraints.
+    - Tests verify that it correctly assigns lower energy to valid graph colorings and higher energy to invalid ones.
+    - Test coverage for the new module is 100%.
+    - `results/experiment_2034_kagnn.json` is generated upon success.
+
+### SCENARIO-KAN-2034: KAGNN Verifier Evaluates Graph Coloring
+
+Given a KAGNN verifier using Symbolic-KAN splines,
+When evaluated on valid and invalid graph coloring instances,
+Then it outputs lower energy for valid colorings and higher energy for invalid ones, tests pass with 100% coverage, and `results/experiment_2034_kagnn.json` is written.
+
+
