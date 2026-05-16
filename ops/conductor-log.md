@@ -3962,3 +3962,4 @@ Error |
 | 2026-05-16 23:06 UTC | Phase 1: EqM vs PEM on Constraint Graphs | OK | 82 passed, 1 warning in 18.94s |
 | 2026-05-16 23:11 UTC | Phase 2: IRED Adaptive Optimizer | OK | 81 passed, 1 warning in 5.84s |
 | 2026-05-16 23:16 UTC | Phase 2: IRED Constraint Learning | OK | 81 passed, 1 warning in 4.47s |
+| 2026-05-16 23:22 UTC | Phase 2: IRED SOTA GGUF Integration | OK | 81 passed, 1 warning in 5.09s |
