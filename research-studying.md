@@ -5,8 +5,83 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-16 (12 sweeps in 24h)
-**Current Focus:** Queue saturation now total at keyword-rotation level (.181 + .182 + .184 all saturated). Per operator-approved trickle policy, deferring helper-extended sweeps until the queue absorbs current backlog. exp1811 Fast-Slow Variant in adversarial-confirmation queue (.192 exp1837); exp1840 PyPI corrected to use CI-tagged-release via OIDC (operator clarification 2026-05-16 ~00:30Z); ODAR (Score 400) queued for .193+.
+**Updated:** 2026-05-16 (13 sweeps in 24h)
+**Current Focus:** Fast-Slow Variant CONFIRMED via .194 exp1909 (all 4 adversarial-confirmation gates passed); Phase 4 program CLOSED (.194 exp1911 named Fast-Slow as canonical metric); PyPI v0.1.0b1 tag pushed (workflow waiting on operator approval at GH Environment); .196 codification (exp1929) queued to lock paper-v6 §3 citation. **NEW 2026-05-16T04:35Z: routine citation-sweep on ODAR anchor (cadence rule, every 4th keyword sweep) surfaces CoT2-Meta (arXiv:2603.28135 Score 320) by same authors as ODAR — coherent research program at Ma/Gao/Liu's group that Carnot is converging with.**
+
+## Sweep 2026-05-16T04:35Z (Claude outer-loop, routine citation-sweep on ODAR anchor — cadence rule)
+
+**Helpers used (per the routine-citation cadence shipped 2026-05-16T01:00Z):**
+- `sweep_citations.py 2602.23681` (ODAR anchor, Score 400; not yet
+  depth-swept since promotion at 21:30Z). Returned ~15 unique IDs.
+- `sweep_citations.py 2605.12484` (Fast-Slow anchor, Score 400) —
+  still 404 not-indexed in Semantic Scholar (paper too new at 4 days
+  old at promotion + 14 days now).
+- `sweep_dedupe.py --filter` (default workflow step 2.5).
+
+**Result: ~15 fetched / dedupe-skipped 13 / 2 scored / 1 promoted.**
+
+### NEW Rank HIGH: CoT2-Meta — Budgeted Metacognitive Control for Test-Time Reasoning (arXiv:2603.28135, Mar 30 2026)
+- **Score:** 5×4×4×4 = **320**
+- **Authors:** Siyuan Ma, Bo Gao, Zikai Xiao, Hailong Wang, Xinlei Yu,
+  Rui Qian, Jiayu Qian, Luqi Gong, **Yang Liu** (same Ma/Gao/Liu line
+  as ODAR)
+- **Why it matters:** Training-free framework integrating CoT generation
+  with metacognitive control decisions — **"expansion, pruning, repair,
+  stopping, fallback decisions"** for budgeted computational allocation
+  during reasoning. This is structurally an explicit ROUTING/ORCHESTRATION
+  framework over a verify-repair-stop loop: "expand" = generate
+  candidates, "prune" = verifier rejection, "repair" = exactly what
+  Carnot does, "stopping" = ODAR-style fast-path acceptance, "fallback"
+  = deliberative path. Same author group as ODAR (Ma/Gao/Liu) suggests
+  a coherent research program; CoT2-Meta is the operational framework,
+  ODAR is the routing-mechanism within it.
+- **Action:** Cite alongside ODAR (Score 400) in paper-v6 §3 as evidence
+  for the metacognitive-control architecture pattern. Concrete .197+
+  proposal: extend the Carnot ODAR routing (.190 exp1822 queued) with
+  the explicit expand/prune/repair/stop/fallback state-machine from
+  CoT2-Meta. Carnot's verify-repair loop currently lacks an explicit
+  "fallback" path — the LLM either passes the verifier or iterates;
+  the fallback (e.g., escalate to k=16 ensemble disagreement check or
+  human review) is implicit. CoT2-Meta provides the formalism.
+- **Cross-reference:** complements arXiv:2602.23681 ODAR (Score 400)
+  + arXiv:2605.12484 Fast-Slow (Score 400). Three coherent peer
+  anchors from the same year on the routing/orchestration theme.
+
+### Other scored (no promotion):
+
+- **arXiv:2511.09873** HierRouter — Coordinated Routing of Specialized
+  LLMs via RL (Gupta/Guo/Kannan/Prasanna, Nov 2025). Score 3×3×2×2 =
+  **36**. Adjacent (LLM routing) but RL-trained hierarchical routing
+  is high-cost to replicate; out-of-scope for Carnot's training-free
+  verify-repair architecture.
+
+### Pre-2026 references catalogued (no scoring; archived for citation tracking)
+
+~13 papers in the ODAR references-direction sweep span Feb 2025
+through Nov 2025 (foundational work on routing, reasoning RL, planning).
+These are now in the known-set for future citation-sweep dedupe.
+
+### Sweep takeaways
+
+1. **Routine citation-sweep cadence (every 4th keyword sweep) earns
+   its keep.** Today: keyword rotation at 100% saturation; citation-sweep
+   surfaced 1 Score-320 promotion. CoT2-Meta would NEVER have surfaced
+   via the 4 cluster queries — its abstract uses "metacognitive control"
+   and "expansion / pruning" not "verifier ensemble" / "energy based
+   model" terms.
+2. **Author-cluster signal:** Ma/Gao/Liu have published two highly-
+   relevant Carnot-adjacent papers (ODAR Feb 2026 + CoT2-Meta Mar 2026).
+   This is a research-program convergence worth following — citation-
+   sweep on CoT2-Meta in a future cycle may surface their newer work.
+3. **arXiv:2605.12484 Fast-Slow still not S2-indexed** (14 days old);
+   citation-sweep yield decays sharply with anchor age below 30 days.
+   Patience expected for the May 2026 anchors.
+4. **The fast-slow / ODAR / CoT2-Meta cluster** is now a coherent
+   sub-literature anchor for paper-v6 §3 architecture-validation. All
+   three converge on the same fast-deliberative routing pattern that
+   Carnot's verify-repair loop implements. The four-anchor triangulation
+   (bijection + Fast-Slow + ODAR + CoT2-Meta) is becoming a five-anchor
+   triangulation with inference-time-planning (2602.02991) as the fifth.
 
 ## Sweep 2026-05-16T00:40Z (Claude outer-loop, light fire — saturation acknowledgment)
 
