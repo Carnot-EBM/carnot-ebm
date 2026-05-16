@@ -2100,3 +2100,16 @@ The Exp 2071 artifact MUST be written to `results/experiment_2071_lagrangian_opt
 **When** the Lagrangian optimizer minimizes the energy
 **Then** hard bounds are enforced as high-energy penalties
 **And** the artifact is written to `results/experiment_2071_lagrangian_optimizer.json` with `lagrangian_ready=true`.
+
+### REQ-KONA-072: Lagrangian Optimizer for Hard Sudoku
+
+Carnot MUST apply the Phase 1 Lagrangian optimizer to solve hard Sudoku constraints entirely in the continuous domain. The Sudoku rules MUST be modeled as differentiable energy penalties, and the continuous grid state MUST be optimized until energy is minimized and mapped back to digits.
+The Exp 2072 artifact MUST be written to `results/experiment_2072_kona_sudoku.json` and include the field `solved_sudoku` set to `true`.
+
+### SCENARIO-KONA-072: Exp 2072 Evaluates Sudoku Lagrangian Optimizer
+
+**Given** a hard Sudoku puzzle modeled as differentiable energy penalties
+**When** the Lagrangian optimizer minimizes the energy in the continuous domain
+**Then** the continuous grid state is mapped back to valid digits
+**And** the artifact is written to `results/experiment_2072_kona_sudoku.json` with `solved_sudoku=true`.
+
