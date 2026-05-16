@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,255 Experiments Across the Public Record, 213 Archived Milestone Records, 25,087 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 3,260 Experiments Across the Public Record, 213 Archived Milestone Records, 25,136 Python Test Items Collected (Results and Ops Retros Through Exp 2152)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -31,7 +31,7 @@ adversarial-audit results are labeled by artifact provenance.
 
 This report summarizes 3,255 experiments across 213 milestones up to .200, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **3,255 experiment records tracked through Exp 2114, with 2,548 task records in 213 artifact-backed completed milestone records archived through 2026.05.200** — run between February and May 2026. `research-complete.yaml` currently archives **209** completed milestone records through 2026.05.200. Milestone 2026.05.194 completed **12** experiments in **19.8** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
+This report documents the research arc behind the framework — **3,260 experiment records tracked through Exp 2152, with 2,548 task records in 213 artifact-backed completed milestone records archived through 2026.05.200** — run between February and May 2026. `research-complete.yaml` currently archives **209** completed milestone records through 2026.05.200. Milestone 2026.05.194 completed **12** experiments in **19.8** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5551,3 +5551,8 @@ Experiments 1922-1923 introduced the Compositional Energy Minimization (CEM) Arc
 
 **THRML Hybrid Thermodynamic Abstraction & EBT System-2 Decoding**  
 Experiments 1970-1973 linked the Phase 1 THRML Hybrid Thermodynamic Abstraction Hookup and performed a THRML vs CPU Gibbs Latency Audit, as well as a Phase 2 EBT System-2 Energy Decoding Baseline and Inference Scaling on GSM8K Subset.
+
+
+### Phase 27 — Milestone .200 NLA Gated Self-Learning and Parity Sweeps (May 2026)
+
+Milestone 2026.05.200 operational retrospective complete. Analyzed 16.2 min wall time / 10 experiments. Experiments 2151 and 2152 demonstrated the successful integration of NLA confidence scores as a continuous self-learning feedback signal, requiring `nla_confidence > 0.7` to retain policy candidates. Additionally, a k=16 verifier parity sweep was successfully conducted for SOTA models (Qwen3.6-35B-A3B and Gemma4-31B).

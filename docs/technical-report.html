@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 3,255 Experiments Across the Public Record, 213 Archived Milestone Records, 25,087 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 3,255 Experiments Across the Public Record, 213 Archived Milestone Records, 25,087 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 3,260 Experiments Across the Public Record, 213 Archived Milestone Records, 25,136 Python Test Items Collected (Results and Ops Retros Through Exp 2152)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 3,260 Experiments Across the Public Record, 213 Archived Milestone Records, 25,136 Python Test Items Collected (Results and Ops Retros Through Exp 2152). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-3255-experiments-across-the-public-record-213-archived-milestone-records-25087-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 3,255 Experiments Across the Public Record, 213 Archived Milestone Records, 25,087 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
+<h2 id="a-technical-report-3260-experiments-across-the-public-record-213-archived-milestone-records-25136-python-test-items-collected-results-and-ops-retros-through-exp-2152">A Technical Report — 3,260 Experiments Across the Public Record, 213 Archived Milestone Records, 25,136 Python Test Items Collected (Results and Ops Retros Through Exp 2152)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -184,7 +184,7 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
 <p>This report summarizes 3,255 experiments across 213 milestones up to .200, featuring continuous self-learning integration and fast-slow KAN variant scale-up.</p>
-<p>This report documents the research arc behind the framework — <strong>3,255 experiment records tracked through Exp 2114, with 2,548 task records in 213 artifact-backed completed milestone records archived through 2026.05.200</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>209</strong> completed milestone records through 2026.05.200. Milestone 2026.05.194 completed <strong>12</strong> experiments in <strong>19.8</strong> minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.</p>
+<p>This report documents the research arc behind the framework — <strong>3,260 experiment records tracked through Exp 2152, with 2,548 task records in 213 artifact-backed completed milestone records archived through 2026.05.200</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>209</strong> completed milestone records through 2026.05.200. Milestone 2026.05.194 completed <strong>12</strong> experiments in <strong>19.8</strong> minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.</p>
 <p>The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -6772,6 +6772,8 @@ Experiments 1915-1916 implemented and evaluated the Dynamic Resolution Continual
 Experiments 1922-1923 introduced the Compositional Energy Minimization (CEM) Architecture Design, along with a Proof of Concept on 3-SAT using a Local SOTA.</p>
 <p><strong>THRML Hybrid Thermodynamic Abstraction &amp; EBT System-2 Decoding</strong><br>
 Experiments 1970-1973 linked the Phase 1 THRML Hybrid Thermodynamic Abstraction Hookup and performed a THRML vs CPU Gibbs Latency Audit, as well as a Phase 2 EBT System-2 Energy Decoding Baseline and Inference Scaling on GSM8K Subset.</p>
+<h3 id="phase-27-milestone-200-nla-gated-self-learning-and-parity-sweeps-may-2026">Phase 27 — Milestone .200 NLA Gated Self-Learning and Parity Sweeps (May 2026)</h3>
+<p>Milestone 2026.05.200 operational retrospective complete. Analyzed 16.2 min wall time / 10 experiments. Experiments 2151 and 2152 demonstrated the successful integration of NLA confidence scores as a continuous self-learning feedback signal, requiring <code>nla_confidence &gt; 0.7</code> to retain policy candidates. Additionally, a k=16 verifier parity sweep was successfully conducted for SOTA models (Qwen3.6-35B-A3B and Gemma4-31B).</p>
 </article>
 
 <footer>
