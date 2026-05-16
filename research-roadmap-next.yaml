@@ -1,0 +1,455 @@
+milestone: "2026.05.192"
+milestone_title: "Fast-Slow Variant ADVERSARIAL CONFIRMATION + delayed codification + Phase 4 closure + PyPI"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction_compliance:
+  rationale: "exp1811 (.189) shipped Fast-Slow Variant with 3.1x/0.25x numbers — operator agreed 2026-05-16 ~00:00Z that adversarial-confirmation (seed-rotation + corpus-rotation + baseline-audit replication) is required BEFORE paper-v6 §3 codification cites those numbers. The .190 codification (exp1821) didn't run (planner replaced .190 with different scope, then .191 went different directions again). .192 ships the confirmation FIRST, then gates codification + Phase 4 closure on confirmation passing. Plus carries forward PyPI ship-track (5th attempt, blocked by SKIP-loop in .190)."
+  carry_forwards_addressed: ["NEW Fast-Slow Variant adversarial-confirmation (operator-approved discipline)", "Fast-Slow codification (deferred from .190 exp1821; gates on confirmation)", "Phase 4 canonical decision (deferred from .190 exp1823; gates on confirmation + codification)", "PyPI prong (5th attempt)"]
+authored_by: outer-loop-claude
+
+tasks:
+  - id: exp1837-fast-slow-variant-adversarial-confirmation
+    title: "Exp 1837: Fast-Slow Variant ADVERSARIAL CONFIRMATION (seed + corpus + baseline rotation)"
+    deliverable: results/experiment_1837_fast_slow_confirmation.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1811-fast-slow-variant-prototype
+        verdict: complete_3.1x_sample_eff_0.25x_kl_drift_no_forgetting
+        addressed_by: "exp1811 (.189) shipped the FS Variant with paper-matching numbers on a single seed/corpus/baseline configuration. Per the new adversarial-confirmation discipline (memory entry feedback_adversarial_confirmation_protocol), Score-300+ findings require an independent replication BEFORE paper-v6 citation. This task is the explicit replication; it should NOT modify any of exp1811's code, only re-run with rotated seeds + corpus + baseline cross-check."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: exp1811 (.189) shipped the Carnot Fast-Slow Variant on
+      the 4th attempt with paper-matching numbers (sample_efficiency_ratio
+      = 3.1x; kl_drift_ratio = 0.25; FR-11 baseline catastrophic forgetting
+      on BBH 0.45 + MATH 0.35 while FS held 0.90 + 0.85; 350s real run).
+
+      Operator-agreed 2026-05-16 ~00:00Z that paper-v6 citation requires
+      adversarial confirmation — a second independent run with rotated
+      seed + rotated corpus + audited baseline. The new memory entry
+      `feedback_adversarial_confirmation_protocol.md` codifies the
+      discipline. This task is the FIRST application.
+
+      FALSIFIABLE HYPOTHESIS: An independent re-run of the exp1811
+      Fast-Slow Variant pipeline with (a) seed bumped from 172911 to
+      192737, (b) DIFFERENT 30-example slices for GSM8K/BBH/MATH (not
+      the exact examples used in exp1811), and (c) baseline-implementation
+      audit confirming FR-11 path is canonical (not a degraded variant)
+      produces a sample_efficiency_ratio within the exp1811 bootstrap CI
+      (assume +/-0.5x around 3.1x → confirmation range 2.6x–3.6x) AND
+      a kl_drift_ratio within +/-0.10 of exp1811's 0.25 (range 0.15–0.35)
+      AND FR-11 catastrophic forgetting reproduces on the rotated BBH +
+      MATH slices (passrate < 0.55 vs FS > 0.80).
+
+      If confirmation lands in-range: the result is paper-v6-citable.
+      If confirmation diverges: flag exp1811 as PRELIMINARY-NOT-HEADLINE
+      and queue a 3rd replication.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1811_fast_slow_variant.json (the original
+          numbers to match against)
+        - python/carnot/pipeline/fast_slow_variant.py (the implementation
+          shipped in .189; DO NOT MODIFY)
+        - python/carnot/pipeline/ebft_autoresearch_loop.py (or wherever
+          the FR-11 baseline lives — audit this for canonical-ness)
+        - feedback_adversarial_confirmation_protocol memory entry
+
+      TASK: Re-run exp1811 with the three rotations.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `python -c "from carnot.pipeline.fast_slow_variant import
+              fast_slow_variant"` succeeds — else
+              `blocked_fast_slow_implementation_missing`.
+           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
+              non-empty — else `blocked_model_not_cached`.
+           c. `test -f results/experiment_1811_fast_slow_variant.json`
+              — else `blocked_baseline_artifact_missing` (can't compare
+              without the original numbers).
+           Record preconditions_checked.
+        1. Baseline audit: git log + diff
+           python/carnot/pipeline/ebft_autoresearch_loop.py (or wherever
+           FR-11 path lives) since exp1811 ran. Was there any change?
+           Record `baseline_audit: {{commits_since_exp1811: int,
+           code_changed: bool, diff_summary: str}}` in artifact.
+        2. Build rotated corpus: 30 GSM8K + 30 BBH + 30 MATH from
+           DIFFERENT slices than exp1811. If exp1811 used examples
+           1-30 of each, use examples 31-60. Document which exact
+           slice in artifact.
+        3. Re-run the Fast-Slow Variant pipeline with random_seed=192737
+           (NOT 172911 from exp1811). Same model, same code, ONLY
+           seed + corpus change.
+        4. Re-run FR-11 baseline on the same rotated corpus.
+        5. Compute the same metrics as exp1811: per-task passrate,
+           sample_efficiency_ratio, kl_drift_ratio, plasticity, etc.
+        6. Compare against exp1811's numbers. Acceptance:
+             - sample_efficiency_ratio in [2.6, 3.6]
+             - kl_drift_ratio in [0.15, 0.35]
+             - FR-11 catastrophic forgetting reproduces on rotated BBH
+               + MATH slices (passrate < 0.55)
+             - Fast-Slow maintains > 0.80 on rotated BBH + MATH
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.fast_slow_confirmation.v1"
+        - experiment: 1837
+        - run_date: ISO-8601 UTC
+        - duration_s: > 300s (matching exp1811's 350s — real run)
+        - random_seed: 192737 (NOT 1837 NOR 172911; explicit rotation)
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - baseline_audit: {{commits_since_exp1811: int, code_changed: bool,
+          diff_summary: str}}
+        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          rotation_versus_exp1811: {seed: "172911→192737",
+          corpus: "examples_1-30→examples_31-60",
+          baseline: "audited_canonical"}}
+        - n_samples: 90
+        - n_samples_justification: "Same 30 per task × 3 tasks as exp1811
+          for apples-to-apples adversarial replication. Wilson 95% CI
+          width ~0.30 per passrate."
+        - confirmation_passrate_per_task: dict
+        - exp1811_passrate_per_task: dict (verbatim from exp1811 for
+          side-by-side comparison)
+        - confirmation_sample_efficiency_ratio: float
+        - confirmation_kl_drift_ratio: float
+        - confirmation_in_range_efficiency: bool (2.6 <= ratio <= 3.6)
+        - confirmation_in_range_kl: bool (0.15 <= ratio <= 0.35)
+        - fr11_catastrophic_forgetting_reproduced: bool (passrate < 0.55
+          on rotated BBH + MATH)
+        - fast_slow_held_threshold: bool (passrate > 0.80 on rotated
+          BBH + MATH)
+        - acceptance_gate_passed: bool (all four conditions above true)
+        - acceptance_gate_criteria: "Efficiency in [2.6, 3.6] AND KL
+          drift in [0.15, 0.35] AND FR-11 forgetting reproduced AND
+          FS held >0.80 on rotated BBH+MATH."
+        - methodology_note: "ADVERSARIAL CONFIRMATION TASK. The point is
+          to FAIL TO CONFIRM if exp1811's result was seed-lucky or
+          corpus-lucky. If all 4 conditions land in-range, the
+          confirmation supports paper-v6 citation. If any fail, flag
+          exp1811 as PRELIMINARY-NOT-HEADLINE and queue 3rd replication.
+          IMPLAUSIBLE_PERFECT trigger: if confirmation_ratio matches
+          exp1811's 3.1x to 5+ significant figures, that's TAUTOLOGY-
+          class — likely a methodology bug carrying over identically,
+          not genuine reproducibility."
+        - flagged_preliminary: bool (true if any confirmation condition
+          failed)
+        - third_replication_recommended: bool (same as flagged_preliminary)
+        - optimization_direction: "neither — falsification/confirmation task"
+        - honest_verdict: MUST start with `complete:` / `complete_` /
+          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
+          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
+      OR python/carnot/pipeline/fast_slow_variant.py (preserve the
+      original implementation for apples-to-apples).
+
+  - id: exp1838-fast-slow-codification-gated-on-confirmation
+    title: "Exp 1838: Codify exp1811 Fast-Slow Variant into paper-v6 §3 (DEFERRED from .190; gates on exp1837 confirmation)"
+    deliverable: results/experiment_1838_fast_slow_codification.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1821-fast-slow-codification-paperv6
+        verdict: planner_replaced_in_190
+        addressed_by: "exp1821 (.190) was in my outer-loop draft but the planner replaced .190 with KAN-CL / Muon-OGD / Mpemba / etc. scope. The codification deferred to .191 (still didn't happen) and now .192. This time we GATE on adversarial confirmation (exp1837) first per the new discipline."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: exp1811 (.189) shipped Fast-Slow Variant. exp1837 (THIS
+      milestone, runs BEFORE this task) is the adversarial confirmation.
+      If exp1837's acceptance_gate_passed=true, this task codifies the
+      paper-v6 §3 architecture-validation prose with the verbatim numbers.
+      If exp1837 flagged_preliminary=true, this task emits
+      `blocked_confirmation_failed_preliminary_flag` honestly and does
+      NOT codify — codification waits for a 3rd replication.
+
+      FALSIFIABLE HYPOTHESIS: With exp1837 confirmation in-range across
+      all 4 conditions (efficiency, KL drift, FR-11 forgetting reproduces,
+      FS holds threshold), the Fast-Slow Variant result is paper-v6-citable
+      and the architecture-validation prose can lock in the numbers.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1811_fast_slow_variant.json (original)
+        - results/experiment_1837_fast_slow_confirmation.json (replication;
+          run BEFORE this task)
+        - openspec/papers/paper-v6/section-3-architecture.md (or
+          docs/technical-report.md)
+        - research-references.md
+        - ops/known-issues.md
+        - feedback_adversarial_confirmation_protocol memory entry
+
+      TASK: Three-document codification, gated on confirmation.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `test -f results/experiment_1837_fast_slow_confirmation.json` —
+              else `blocked_confirmation_artifact_missing` (can't codify
+              without confirmation).
+           b. Read exp1837. If exp1837.flagged_preliminary == true OR
+              exp1837.acceptance_gate_passed == false: emit
+              `blocked_confirmation_failed_preliminary_flag` and exit.
+              DO NOT codify a result that didn't replicate.
+           c. paper-v6 §3 locatable via grep — else
+              `blocked_paperv6_section3_not_locatable`.
+           Record preconditions_checked.
+        1. Read both exp1811 and exp1837 artifacts. Extract verbatim:
+             - exp1811: sample_efficiency_ratio (3.1), kl_drift_ratio (0.25),
+               passrates per task, catastrophic_forgetting flags
+             - exp1837: confirmation_sample_efficiency_ratio,
+               confirmation_kl_drift_ratio, FR-11-forgetting-reproduced
+               status, rotation-versus-exp1811 metadata
+        2. Draft paper-v6 §3 corrigendum (4 paragraphs):
+             - A: state the result with verbatim numbers FROM BOTH RUNS
+               (original + replication; "x.x x measured with seed Y,
+               x.x x reproduced with seed Z on rotated corpus")
+             - B: contextualize against arXiv:2605.12484 paper baseline
+             - C: triangulation with 4 peer anchors (bijection 2512.15605,
+               Fast-Slow 2605.12484, ODAR 2602.23681, planning 2602.02991)
+             - D: limitation — saturation regime on GSM8K; rotation-
+               window evidence still small-N
+        3. Update research-references.md with the citation chain.
+        4. NEW MANDATORY-NEXT-MILESTONE entry in ops/known-issues.md:
+           "Fast-Slow Variant CONFIRMED — paper-v6 §3 citation locked
+           (.192+ MANDATORY: planner SHOULD use Fast-Slow Variant as
+           default verify-repair selection; FR-11 parameter-update RL
+           is now contraindicated for new continual-learning work)."
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.fast_slow_codification.v2"
+        - experiment: 1838
+        - run_date: ISO-8601 UTC
+        - duration_s: > 60s (prose + 3 file edits + diff review)
+        - random_seed: 173038
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - confirmation_artifact_path: "results/experiment_1837_fast_slow_confirmation.json"
+        - confirmation_gate_passed: bool (from exp1837)
+        - model_specs: {{source_artifacts: ["exp1811", "exp1837"],
+          files_edited: ["paper-v6 §3", "research-references.md",
+          "ops/known-issues.md"], word_count_added: int}}
+        - n_samples: 2 (the original + the confirmation; explicit pair)
+        - n_samples_justification: "Codification gated on confirmation;
+          n=2 represents both runs that informed the codified numbers."
+        - paper_v6_section_3_word_count_added: int
+        - both_runs_cited_in_paperv6: bool
+        - has_emojis_in_paper_v6: false (CLAUDE.md compliance)
+        - acceptance_gate_passed: bool (codification done AND both runs
+          cited AND emoji-free AND known-issues MANDATORY appended)
+        - acceptance_gate_criteria: "Both runs cited; paper-v6 §3 updated;
+          known-issues MANDATORY appended; emoji-free."
+        - methodology_note: "If exp1837 confirmation FAILED, this task
+          emits honest blocked verdict and does NOT codify. Codification
+          locked behind adversarial-confirmation gate per the new
+          discipline."
+        - optimization_direction: "neither — codification task"
+        - honest_verdict: MUST start with terminal prefix OR
+          `blocked_confirmation_failed_preliminary_flag`.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1839-phase4-canonical-decision-gated
+    title: "Exp 1839: Phase 4 canonical-metric decision (DEFERRED from .190; gates on exp1837 + exp1838)"
+    deliverable: results/experiment_1839_phase4_canonical_decision.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1823-phase4-canonical-decision
+        verdict: planner_replaced_in_190_then_191
+        addressed_by: "exp1823 (.190) and the .191 plan both moved Phase 4 closure off the table. This 3rd attempt gates on the Fast-Slow Variant being CONFIRMED (exp1837 + exp1838) before naming it canonical — earlier drafts named it canonical on single-run evidence alone."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Phase 4 program has chased alpha_t measurement across
+      5 experiments (exp1715/1721/1741/1745/1811). exp1745 confirmed
+      ensemble-output alpha is substrate-inaccessible. exp1811 shipped
+      Fast-Slow Variant. exp1837 (this milestone) is the adversarial
+      confirmation of exp1811's win. If both pass, Fast-Slow Variant
+      becomes the Phase 4 canonical mechanism.
+
+      FALSIFIABLE HYPOTHESIS: With exp1837 confirmation in-range AND
+      exp1838 codification complete, Fast-Slow Variant satisfies the
+      Phase 4 active-inference hypothesis EMPIRICALLY in a way that
+      alpha_t / alpha_t' / thermodynamic-metric did not, and the
+      canonical Phase 4 metric for .193+ planning is "Fast-Slow
+      Variant sample-efficiency-ratio + KL-drift-ratio relative to
+      FR-11 baseline". Phase 4 program closes as scope-complete.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1811_fast_slow_variant.json
+        - results/experiment_1837_fast_slow_confirmation.json (replication;
+          MUST exist for this task to proceed)
+        - results/experiment_1838_fast_slow_codification.json (codification)
+        - results/experiment_1745_phase4_per_step_alpha.json (the
+          alpha_t inaccessibility verdict)
+        - results/experiment_1721_alpha_t_replacement.json
+        - feedback_active_inference_phase4_committed memory entry
+
+      TASK: Decision artifact + paper-v6 §6 limitation reframe +
+      known-issues MANDATORY update.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `test -f results/experiment_1837_fast_slow_confirmation.json`
+              AND read exp1837.acceptance_gate_passed — if false, emit
+              `blocked_confirmation_failed` and exit.
+           b. `test -f results/experiment_1838_fast_slow_codification.json`
+              AND read exp1838.acceptance_gate_passed — if false, emit
+              `blocked_codification_failed` and exit.
+           c. `test -f results/experiment_1745_phase4_per_step_alpha.json`
+              — else `blocked_phase4_alpha_inaccessibility_baseline_missing`.
+           Record preconditions_checked.
+        1. Tabulate Phase 4 program history (5 alpha experiments + 1
+           Fast-Slow + 1 adversarial confirmation = 7 total).
+        2. Issue decision: Phase 4 canonical = Fast-Slow Variant's
+           sample-efficiency-ratio + KL-drift-ratio pair. Retired:
+           alpha_t / alpha_t' / thermodynamic-metric as candidates.
+        3. Update paper-v6 §6 (limitations): alpha_t inaccessibility is
+           a methodology limitation, NOT a Phase 4 hypothesis falsification.
+        4. Update ops/known-issues.md MANDATORY entry:
+           "Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-
+           ratio (CONFIRMED via exp1811 + exp1837). alpha_t variants
+           retired as canonical candidates."
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.phase4_canonical_decision.v2"
+        - experiment: 1839
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 173039
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{metric_history: ["alpha_t", "alpha_t_prime",
+          "thermodynamic_metric_v1", "fast_slow_variant_v1"],
+          empirical_winner: "fast_slow_variant_v1",
+          confirmation_evidence: ["experiment_1811",
+          "experiment_1837_confirmation"]}}
+        - n_samples: 5
+        - n_samples_justification: "Decision; n is the count of Phase 4
+          metric attempts."
+        - canonical_metric_named: str
+        - retired_candidates: list
+        - paper_v6_section_6_word_count_added: int
+        - known_issues_mandatory_added: bool
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "Decision rendered + paper-v6 §6
+          updated + known-issues MANDATORY appended."
+        - methodology_note: "Decision gated on confirmation per the new
+          adversarial-confirmation discipline. If exp1837 had failed,
+          this task would have emitted blocked verdict, not a
+          canonical-decision artifact."
+        - optimization_direction: "neither — decision artifact"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push to git. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1840-phase1-pypi-retry-6th-attempt
+    title: "Exp 1840: Phase 1 PyPI retry — 6th attempt; blocked_credentials honest pattern"
+    deliverable: results/experiment_1840_pypi_retry.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1824-phase1-pypi-retry-5th-attempt
+        verdict: skipped_pretest_failing_in_190
+        addressed_by: "exp1824 (.190) was SKIPPED in the .190 pretest wipeout (README regression). Pretest now passing 81/81. Same task scope."
+        retire_if_same_verdict: false
+      - experiment_id: exp1711-pypi-publish
+        verdict: blocked_pypi_credentials_unavailable
+        addressed_by: "exp1711 (.175) emitted exemplary honest blocked verdict. Full chain: exp2103 -> 1683 -> 1685 -> 1704 -> 1711 -> 1762 -> 1782 -> 1788 -> 1812 -> 1824 -> 1840."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Phase 1 ship-track PyPI prong. 6th attempt; same
+      blocked_credentials honest pattern.
+
+      FALSIFIABLE HYPOTHESIS: Either credentials available (real upload
+      + verify) OR absent (honest blocked verdict). Fabrication not valid.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1711_pypi_publish.json (exemplary pattern)
+        - pyproject.toml (name="carnot-ebm")
+
+      TASK: PyPI upload OR honest blocked.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `pyproject.toml` has `name = "carnot-ebm"` — else blocked.
+           b. `python -m build --version` succeeds — else blocked.
+           c. `twine --version` succeeds — else blocked.
+           d. PyPI credentials via env/keyring/pypirc — else
+              `blocked_pypi_credentials_unavailable`.
+           Record preconditions_checked.
+        1-5. Standard upload-or-blocked per the exp1711 pattern.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.pypi_publish.v3"
+        - experiment: 1840
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s real OR smaller-blocked
+        - random_seed: 173040
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{package_name: "carnot-ebm", version, publish_target,
+          wheel_filename, sdist_filename, wheel_sha256, sdist_sha256}}
+        - n_samples: 1
+        - n_samples_justification: "Ship task."
+        - pypi_url: str or null
+        - external_install_verified: bool
+        - acceptance_gate_passed: bool OR honest blocked
+        - acceptance_gate_criteria: "Real upload + verify OR honest blocked."
+        - methodology_note: "blocked_credentials honest, NOT fabrication."
+        - optimization_direction: "neither — ship task"
+        - honest_verdict: MUST start with terminal prefix OR `blocked_<resource>`.
+
+      Run command. Do NOT push to git. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1841-milestone-192-retrospective
+    title: "Exp 1841: Milestone .192 retrospective"
+    deliverable: results/operational_retro_2026_05_192.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
+    prompt: |
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8. .192 is high-significance: first
+      application of the adversarial-confirmation discipline; Phase 4
+      program closure (if confirmation passed). Retro should foreground
+      whether the confirmation gate held.
+
+      TASK: Generate the .192 operational retrospective.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.192..HEAD returns non-empty.
+        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.184/.187/.190
+             templates.
+        7. Record adversarial_confirmation_result: pass/fail (exp1837
+           outcome) — sets the precedent for future Score-300+ findings.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.192"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_full"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - gpu_idle_on_compute_bound_tasks: bool or null
+        - adversarial_confirmation_result: "pass" | "fail" | "blocked"
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+        - DO NOT modify README.md or docs/technical-report.md.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.

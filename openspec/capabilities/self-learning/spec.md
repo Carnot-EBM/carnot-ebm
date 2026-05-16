@@ -5796,3 +5796,14 @@ historically reliable constraint violation patterns as new queries arrive.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-1741 | Implemented (`python/carnot/pipeline/self_learning.py`) | Implemented (`tests/python/test_experiment_1741_fr11_self_distillation.py`) |
+
+## REQ-LEARN-1827: Muon-OGD Spectral Orthogonal Gradient Projection
+
+**Given** the FR-11 continual learning stack
+**When** optimizing parameters across multiple sequential tasks
+**Then** the stack MUST support Muon-OGD (arXiv 2604.14818) to project gradients orthogonally to previously learned knowledge, protecting prior constraints from catastrophic forgetting.
+
+### SCENARIO-LEARN-1827: Muon-OGD Orthogonal Projection
+**Given** an initialized Muon-OGD optimizer
+**When** sequential gradient updates are applied
+**Then** updates MUST be projected orthogonally against the running memory matrix of prior task gradients.
