@@ -8,6 +8,9 @@ Complex multi-constraint optimization degrades. We need Compositional Energy Min
 - REQ-CEM-002: The decomposed constraint graphs shall be validated against existing CCTU benchmark cases.
 - REQ-CEM-003: The decomposition artifact shall include a `schema` field with value `carnot.cem.decomposition.v1` and a `num_subsets` integer field.
 - REQ-CEM-004: The CompositionalEnergyMinimizer shall sum multiple independent IsingEBM instances.
+- REQ-CEM-COMP-01: The ComposedDABLogitsProcessor shall support summing energies of composed DAB processors.
+- REQ-CEM-COMP-02: The ComposedDABLogitsProcessor shall support max energy reduction.
+- REQ-CEM-COMP-03: The ComposedDABLogitsProcessor shall support learned or weighted temperature reduction.
 
 ## Scenarios
 - SCENARIO-CEM-001: Decompose a multi-constraint CCTU trace into localized landscapes and report the number of generated subsets.
