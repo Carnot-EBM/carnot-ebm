@@ -251,3 +251,5 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 | 2026.05.204 | Operational Efficiency | 221 experiments | GPUs correctly idle; 0 compute-bound tasks; synthesis tasks remain primary bottleneck |
 | 2026.05.205 | Operational Efficiency | 27 experiments | GPUs correctly idle; 0 compute-bound tasks; synthesis tasks remain primary bottleneck |
 | 2026.05.206 | Operational Efficiency | 0 experiments | No data available this milestone |
+
+| 2026.05.206 | Pipeline Inactive | 0 experiments | No data available this milestone |
