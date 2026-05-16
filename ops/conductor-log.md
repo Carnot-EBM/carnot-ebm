@@ -3667,3 +3667,4 @@ Error |
 | 2026-05-16 03:41 UTC | Exp 1909: Fast-Slow Variant adversarial confirmati | OK | 81 passed, 1 warning in 5.21s |
 | 2026-05-16 03:53 UTC | Exp 1910: Phase 1 PyPI publish via CI tagged relea | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-16 03:59 UTC | Exp 1910: Phase 1 PyPI publish via CI tagged relea | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1910_pypi_pu |
+| 2026-05-16 04:03 UTC | Exp 1910: Phase 1 PyPI publish via CI tagged relea | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_1910_pypi_pu |
