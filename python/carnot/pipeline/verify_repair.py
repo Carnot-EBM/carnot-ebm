@@ -446,6 +446,7 @@ class VerifyRepairPipeline:
         probability_calibration_verifier: ProbabilityCalibrationVerifier | None = None,
         casal_tier: Any | None = None,
         interwhen_monitor: Any | None = None,
+        use_hardnet: bool = False,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -536,6 +537,7 @@ class VerifyRepairPipeline:
         # (REQ-VERIFY-130, arXiv 2602.11202).  Advisory only: violations recorded in
         # certificate but never override result.verified.
         self._interwhen_monitor = interwhen_monitor
+        self._use_hardnet = use_hardnet
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -2741,6 +2743,19 @@ class VerifyRepairPipeline:
 
         # Check all constraints for violations (metadata-based check).
         for cr in constraints:
+            if getattr(self, "_use_hardnet", False) and "value" in cr.metadata and ("lower_bound" in cr.metadata or "upper_bound" in cr.metadata):
+                from carnot.models.hardnet_layer import HardNetLayer
+                import jax.numpy as jnp
+                lower_bound = cr.metadata.get("lower_bound", -float("inf"))
+                upper_bound = cr.metadata.get("upper_bound", float("inf"))
+                layer = HardNetLayer(lower_bound=lower_bound, upper_bound=upper_bound)
+                
+                val = jnp.array([cr.metadata["value"]], dtype=jnp.float32)
+                clamped = layer(val)
+                penalty = float(jnp.sum(jnp.abs(val - clamped)))
+                cr.metadata["energy"] = penalty
+                cr.metadata["satisfied"] = penalty == 0.0
+
             satisfied = cr.metadata.get("satisfied")
             metadata_energy = cr.metadata.get("energy")
             if isinstance(metadata_energy, int | float):
