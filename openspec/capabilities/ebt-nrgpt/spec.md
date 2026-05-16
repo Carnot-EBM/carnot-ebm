@@ -41,3 +41,9 @@ The system must support a standalone EBT loop that verifies candidates using uns
 
 ## SCENARIO-EBT-1805: Candidate Verification Loop
 Given prediction candidates, the standalone EBT loop optimizes their energy score with the Gemma-4 model, outputting a summary to results/experiment_1805_ebt_system2.json.
+
+## REQ-EBT-1972: Draft EBT Decoding Loop
+The system must support a draft EBT decoding loop using local SOTA models (e.g. unsloth/Qwen3.6-35B-A3B-GGUF) to track multi-step energy minimization on prompt cases.
+
+## SCENARIO-EBT-1972: Tracking multi-step energy minimization
+Given 10 prompt cases, the draft EBT decoding loop must integrate the EBT decoding protocol, track multi-step energy minimization, and save the artifact to results/experiment_1972_ebt_baseline.json.
