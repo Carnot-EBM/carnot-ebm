@@ -1431,4 +1431,27 @@ When inverse transform sampling is invoked to draw samples,
 Then it generates samples analytically without MCMC, tests pass with 100% coverage,
 and `results/experiment_1803_kaem_proto.json` is written.
 
+## REQ-KAN-1909: Wahkon RKHS Architecture
+
+The KAN capability MUST implement the Wahkon architecture (arXiv:2605.14041),
+which uses a Reproducing Kernel Hilbert Space (RKHS) alternative to standard
+KANs to provide finite-sample guarantees.
+
+**Rationale:**
+Standard KANs lack finite-sample guarantees. Wahkon introduces an RKHS
+formulation that offers bounds on finite-sample convergence while retaining
+the KAN-like additive structure.
+
+**Acceptance criteria:**
+- `python/carnot/pipeline/wahkon_rkhs.py` exposes a Wahkon RKHS model.
+- Tests verify the model's initialization and forward pass, referencing
+  `REQ-KAN-1909` and `SCENARIO-KAN-1909`.
+- Tests achieve 100% test coverage.
+- `results/experiment_1909_wahkon.json` is generated upon success.
+
+### SCENARIO-KAN-1909: Wahkon RKHS Model Initialization and Forward Pass
+
+Given a Wahkon RKHS model,
+When initialized and a forward pass is executed,
+Then it computes the correct output shape and `results/experiment_1909_wahkon.json` is written.
 
