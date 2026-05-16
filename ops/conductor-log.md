@@ -3861,3 +3861,4 @@ Error |
 | 2026-05-16 16:11 UTC | Exp 2053: Hook SOTA GGUF Continuous Embeddings (Ph | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 16:13 UTC | Exp 2054: Test-Time Gradient Descent for Latents ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 16:15 UTC | Exp 2054: Test-Time Gradient Descent for Latents ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 16:17 UTC | Exp 2054: Test-Time Gradient Descent for Latents ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
