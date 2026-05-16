@@ -3725,3 +3725,6 @@ Error |
 | 2026-05-16 07:15 UTC | Exp 1978: Phase 4 - FR-11 Continuous Self-Learning | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-16 07:17 UTC | Exp 1978: Phase 4 - FR-11 Continuous Self-Learning | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-16 07:19 UTC | Exp 1979: Phase 4 - Continuous Self-Learning Reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1978-fr11-continuous-learning) |
+| 2026-05-16 07:24 UTC | Exp 1980: E2E Cascade Validation of .197 Pipeline | OK | 81 passed, 1 warning in 5.26s |
+| 2026-05-16 07:26 UTC | Exp 1979: Phase 4 - Continuous Self-Learning Reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1978-fr11-continuous-learning) |
+| 2026-05-16 07:26 UTC | Milestone 2026.05.198 activated | OK | 5 tasks queued |
