@@ -1405,3 +1405,8 @@ corrigendum_2026_05_181_audit
 corrigendum_2026_05_194_audit
 - .193 audit completed; 0 artifacts flagged by adversarial verifier.
 corrigendum_2026_05_196_audit
+corrigendum_2026_05_198_audit
+- .197 audit completed; 3 artifacts flagged (exp1972, exp1974, exp1980).
+  - exp1972: DURATION_TOO_SHORT, METHODOLOGY_MISSING (REAL_BUG). Proposed follow-up in .199+
+  - exp1974: METHODOLOGY_MISSING (NEEDS_REVISION).
+  - exp1980: DURATION_TOO_SHORT, METHODOLOGY_MISSING (REAL_BUG). Proposed follow-up in .199+
