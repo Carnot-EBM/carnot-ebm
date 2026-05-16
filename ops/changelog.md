@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-16 (Milestone 2026.05.202 Operational Retrospective)
+
+- Milestone 2026.05.202 operational retrospective complete. Analyzed 17.1 min wall time / 10 experiments. Execution was stable with 0 compute-bound tasks and 10 synthesis-only tasks. GPUs correctly idled at 0% utilization throughout. Synthesis tasks remain the primary bottleneck for optimization.
+
 ## 2026-05-16 (Milestone 2026.05.200 Operational Retrospective)
 
 - Milestone 2026.05.200 operational retrospective complete. Analyzed 16.2 min wall time / 10 experiments. Execution was stable with 1 compute-bound task and 9 synthesis-only tasks. No anomalous GPU idling was flagged on the compute-bound task. Synthesis tasks remain the primary bottleneck for optimization.

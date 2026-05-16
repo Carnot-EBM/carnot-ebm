@@ -1,39 +1,52 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.202",
-  "generated_at": "2026-05-16T12:23:13Z",
-  "retro_type": "operational_full_consolidation",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.202..HEAD returns non-empty: True"
-  ],
-  "total_wall_time_minutes": 15.0,
-  "experiments_completed": 4,
+  "generated_at": "2026-05-16T12:30:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 17.1,
+  "experiments_completed": 10,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [
     {
-      "experiment": "Exp 2010",
-      "duration_minutes": 1.08,
+      "experiment": "-0400 [conductor] Exp 2013: Routine citation-sweep on CoT2-Meta anchor (cadence ",
+      "duration_minutes": 4.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2010: Consolidated 4-milestone audit (.198 through .201) +",
+      "duration_minutes": 4.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2011: PyPI workflow FINAL re-check (v0.1.0b1 awaiting oper",
+      "duration_minutes": 3.7,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2014: Milestone .202 retrospective",
+      "duration_minutes": 2.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2012: CoT2-Meta routing retry (queued .198 exp1983; status",
+      "duration_minutes": 1.4,
       "compute_bound": false
     }
   ],
   "gpu_idle_on_compute_bound_tasks": null,
-  "phase_1_ship_percentage": 80,
-  "pypi_workflow_final_state": "cancelled",
-  "cot2meta_routing_outcome": "complete_already_shipped_in_198",
-  "citation_sweep_promotions": 3,
-  "summary": "Milestone 2026.05.202 operational retrospective complete. This is a consolidation milestone.",
+  "summary": "In milestone 2026.05.202, 10 experiments were completed in 17.1 minutes. There were 0 compute-bound experiments, meaning the milestone was entirely synthesis-based. No data available this milestone for GPU usage efficiency.",
   "bottlenecks_identified": [
-    "PyPI workflow timeout."
+    "No bottlenecks identified. No data available this milestone for compute-bound tasks.",
+    "Synthesis-only tasks such as citation sweeps and audits were the main sources of time spent."
   ],
   "improvements_suggested": [
-    "Investigate GH CLI unavailability for PyPI workflow."
+    "Optimize synthesis-only tasks such as citation sweeps or milestone audits to decrease their respective durations."
   ],
   "top_3_highest_leverage_actions": [
-    "Approve PyPI at GH Environment",
-    "Review verified process reward models paper (2601.17223)",
-    "Investigate duration_s=0.5 anomaly in exp 2012"
+    "Optimize Exp 2013: Routine citation-sweep.",
+    "Optimize Exp 2010: Consolidated 4-milestone audit.",
+    "Optimize Exp 2011: PyPI workflow FINAL re-check."
   ],
-  "estimated_time_savings_pct": 5,
-  "meta_reflection": "Consolidation milestone successfully pulled data from recent experiments, tracking phase 1 ship percentage and sweeping citations. Detected a duration anomaly in exp 2012.",
-  "honest_verdict": "terminal: complete operational retrospective 202 generated successfully."
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "Since compute-bound experiments count is 0, the GPUs being idle is correct behavior and not a bottleneck. Optimization efforts should focus on synthesis script execution."
 }
