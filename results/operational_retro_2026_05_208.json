@@ -1,25 +1,26 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.208",
-  "generated_at": "2026-05-16T22:16:57Z",
+  "generated_at": "2026-05-16T22:25:28Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.208 had 0 experiments completed in 0 total wall time minutes. No compute-bound experiments were run.",
+  "summary": "No experiment commits were found since activation of 2026.05.208, resulting in 0 minutes of wall time and 0 compute-bound tasks. The GPUs correctly remained idle as no tasks were executed.",
   "bottlenecks_identified": [
-    "No experiments were executed during this milestone."
+    "No experiments were run during this milestone."
   ],
   "improvements_suggested": [
-    "Investigate scheduling or triggering mechanisms to ensure experiments are launched successfully."
+    "Investigate the lack of experiment scheduling or milestone activation procedures.",
+    "Verify pipeline queues and experiment backlogs."
   ],
   "top_3_highest_leverage_actions": [
-    "Fix experiment dispatch for the milestone",
-    "Verify pre-launch checks are not silently failing",
-    "Ensure proper workload allocation to GPUs"
+    "Verify milestone pipeline activation.",
+    "Ensure experiments are queued.",
+    "Check conductor health."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "No data is available this milestone due to zero experiment commits."
+  "meta_reflection": "With zero experiments scheduled, the operational bottleneck is firmly before the execution phase."
 }

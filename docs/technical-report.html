@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 2,815 Experiments Across the Public Record, 220 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 2,815 Experiments Across the Public Record, 220 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 2,827 Experiments Across the Public Record, 221 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 2,827 Experiments Across the Public Record, 221 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,9 +160,9 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-2815-experiments-across-the-public-record-220-archived-milestone-records-25215-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,815 Experiments Across the Public Record, 220 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
+<h2 id="a-technical-report-2827-experiments-across-the-public-record-221-archived-milestone-records-25215-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 2,827 Experiments Across the Public Record, 221 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
 <p><strong>Author:</strong> Ian Blenke
-<strong>Date:</strong> 2026-05-12
+<strong>Date:</strong> 2026-05-16
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
 <strong>License:</strong> Apache 2.0</p>
 <hr>
@@ -183,8 +183,8 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report summarizes 2,815 experiments across 220 milestones up to .206, featuring continuous self-learning integration and fast-slow KAN variant scale-up.</p>
-<p>This report documents the research arc behind the framework — <strong>2,815 experiment records tracked through Exp 2114, with 2,584 task records in 220 artifact-backed completed milestone records archived through 2026.05.206</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>220</strong> completed milestone records through 2026.05.206. Milestone 2026.05.206 completed <strong>0</strong> experiments in <strong>0</strong> minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.</p>
+<p>This report summarizes 2,827 experiments across 221 milestones up to .208, featuring continuous self-learning integration and fast-slow KAN variant scale-up.</p>
+<p>This report documents the research arc behind the framework — <strong>2,827 experiment records tracked through Exp 2114, with 2,584 task records in 220 artifact-backed completed milestone records archived through 2026.05.208</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>221</strong> completed milestone records through 2026.05.208. Milestone 2026.05.208 completed <strong>0</strong> experiments in <strong>0</strong> minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.</p>
 <p>The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -5595,7 +5595,7 @@ blocked, this uses FoVer fallback provenance rather than triggered SOTA
 certificate outputs.</p>
 <p><strong>FSNet and SnareNet continuous repair (Exps 1275-1276):</strong> FSNet's feasibility
 step reduces raw Langevin mean violations <strong>5 -&gt; 0</strong>, raw violation energy
-<strong>0.2061 -&gt; 0.0</strong>, and convergence steps <strong>160 -&gt; 1</strong> on the 16-state synthetic
+<strong>0.2081 -&gt; 0.0</strong>, and convergence steps <strong>160 -&gt; 1</strong> on the 16-state synthetic
 latent audit. SnareNet's adaptive repair layer raises soft constraint
 satisfaction from the FSNet arm's <strong>0.7696</strong> to <strong>0.9896</strong>, keeps hard
 constraint satisfaction at <strong>1.0</strong>, and uses <strong>16</strong> adaptive repair iterations.
@@ -6781,11 +6781,14 @@ Experiments 1970-1973 linked the Phase 1 THRML Hybrid Thermodynamic Abstraction 
 Across milestones 192 through 205, the pipeline analyzed numerous experiments heavily weighted toward synthesis-only tasks. Operations such as Exp 1970, Exp 1993, and Exp 2058 demonstrated that orchestration and synthesis remain the primary bottlenecks for scaling. Execution stability was confirmed, with GPUs correctly idling at 0% utilization during these synthesis-bound intervals.</p>
 <p><strong>Live Artifact Provenance Tracking</strong>
 Routine tracking of live GPU execution confirmed expected behavior without anomalous idling flags. Ongoing updates have maintained strict documentation of the provenance and integrity of hardware acceleration traces.</p>
-<h3 id="431-recent-additions-milestone-206">4.31 Recent Additions (Milestone .206)</h3>
-<p><strong>Milestone 2026.05.206 Operational Retrospective</strong><br>
-Milestone 2026.05.206 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.206. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.</p>
-<h3 id="milestone-202605206-positive-updates">Milestone 2026.05.206 Positive Updates</h3>
-<p>In milestone .206, the operational retrospective completed, analyzing 0 minutes of wall time and 0 experiments. No experiment commits were found since activation, leaving GPUs correctly idle. No new bottlenecks were identified.</p>
+<h3 id="431-recent-additions-milestone-208">4.31 Recent Additions (Milestone .208)</h3>
+<p><strong>Milestone 2026.05.208 Operational Retrospective</strong><br>
+Milestone 2026.05.208 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.208. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.</p>
+<h3 id="milestone-202605208-positive-updates">Milestone 2026.05.208 Positive Updates</h3>
+<p>In milestone .208, the operational retrospective completed, analyzing 0 minutes of wall time and 0 experiments. No experiment commits were found since activation, leaving GPUs correctly idle. No new bottlenecks were identified.</p>
+<h3 id="432-recent-additions-milestones-207-and-208">4.32 Recent Additions (Milestones .207 and .208)</h3>
+<p><strong>Milestones 2026.05.207 and 2026.05.208 Operational Retrospectives</strong>
+Both milestones' operational retrospectives completed, analyzing 0 min wall time / 0 experiments each. No experiment commits were found since activation, leaving GPUs correctly idle. No new bottlenecks were identified as no data was available in these milestones.</p>
 </article>
 
 
