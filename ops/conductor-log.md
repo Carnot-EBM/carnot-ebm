@@ -3600,3 +3600,5 @@ IMPORTANT:
 | 2026-05-16 00:58 UTC | Exp 1835: Author theory writeup formalizing EBM-RL | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.12s |
 | 2026-05-16 01:00 UTC | Exp 1836: Integrate ActFocus + KAN-CL + Accelerate | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.14s |
 | 2026-05-16 01:02 UTC | Exp 1836: Integrate ActFocus + KAN-CL + Accelerate | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.20s |
+| 2026-05-16 01:04 UTC | Exp 1836: Integrate ActFocus + KAN-CL + Accelerate | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.14s |
+| 2026-05-16 01:06 UTC | Exp 1837: Run E2E pipeline on full GSM8K suite wit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1836-e2e-integration-test) |
