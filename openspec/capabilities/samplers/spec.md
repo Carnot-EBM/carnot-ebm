@@ -515,3 +515,18 @@ Sub-requirements:
 **Then** the constraint violation rate is logged
 **And** the required JSON artifact is produced to `results/experiment_1807_lyapunov_cbf.json`.
 
+### REQ-SAMPLE-2605: Mpemba-inspired Initialization
+
+Carnot MUST provide Mpemba-inspired initialization for Gibbs and Langevin samplers in `python/carnot/samplers/thermo_init.py` to accelerate convergence to the target Boltzmann distribution (arXiv:2605.13883).
+
+Sub-requirements:
+- REQ-SAMPLE-2605-1: The module SHALL provide a function `mpemba_init(key, energy_fn, shape, hot_beta, target_beta)` that generates a non-equilibrium initial state.
+- REQ-SAMPLE-2605-2: The initial state SHALL be drawn from a modified distribution that accelerates convergence compared to a standard infinite-temperature initialization.
+- REQ-SAMPLE-2605-3: Tests SHALL verify that `mpemba_init` provides a convergence speedup on a toy 2D energy landscape.
+
+### SCENARIO-SAMPLE-2605: Mpemba Initialization Accelerates Convergence
+
+**Given** a toy 2D energy landscape and a target beta
+**When** a sampler is initialized using `mpemba_init` and compared to a standard random initialization
+**Then** the Mpemba-initialized sampler reaches a target energy threshold in fewer steps.
+
