@@ -1,0 +1,317 @@
+milestone: "2026.05.199"
+milestone_title: "Phase 4 CLaRa Integration, Self-Learning Strict Epsilon Constraints, and Hardware Unblocking"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+authored_by: outer-loop-claude
+
+tasks:
+  - id: exp1991-egpu-thunderbolt-rocm-smoke
+    title: "Exp 1991: eGPU Thunderbolt RX 7900 XTX ROCm/JAX initialization test"
+    deliverable: results/experiment_1991_egpu_rocm.json
+    max_turns: 100
+    model: opus
+    priority: critical
+    prompt: |
+      CONTEXT: The PRD and research-hardware-wishlist.md mandate live model inference benchmarking. Our eGPU path (RX 7900 XTX via Thunderbolt) is the highest priority hardware unblocker.
+
+      EXISTING CODE TO READ FIRST:
+        - research-hardware-wishlist.md
+
+      TASK: Verify if ROCm detects the eGPU and if JAX can initialize the gfx1100 device over Thunderbolt.
+
+      CONCRETE STEPS:
+        1. Run `rocminfo` and `python3 -c "import jax; print(jax.devices())"`.
+        2. Record the detected hardware and initialization state.
+        3. If successful, run a trivial JAX multiplication to verify execution.
+        4. Produce artifact with the hardware state and honest_verdict.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.hardware.v1"
+        - experiment: 1991
+        - honest_verdict: MUST start with terminal prefix.
+      
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1992-kv260-v4-sparse-rtl-prep
+    title: "Exp 1992: KV260 v4 RTL sparse E-MVL synthesis script prep"
+    deliverable: results/experiment_1992_kv260_v4_rtl.json
+    max_turns: 50
+    model: opus
+    agent_type: codex
+    prompt: |
+      CONTEXT: We must prepare the v4 RTL synthesis script for the KV260 FPGA, incorporating sparse E-MVL.
+
+      EXISTING CODE TO READ FIRST:
+        - research-hardware-wishlist.md (KV260 section)
+        - hardware/kv260/synth_ising.tcl (if exists)
+
+      TASK: Update the Vivado TCL synthesis script to target the v4 sparse E-MVL configuration.
+
+      CONCRETE STEPS:
+        1. Identify the existing KV260 TCL scripts.
+        2. Prepare `hardware/kv260/synth_ising_v4.tcl` with sparse configurations.
+        3. Save the script and record completion.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.rtl_prep.v2"
+        - experiment: 1992
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1993-gec-math-core-rust
+    title: "Exp 1993: Implement Gradient-Guided Epsilon Constraint (GEC) core math in Rust"
+    deliverable: results/experiment_1993_gec_math.json
+    max_turns: 80
+    agent_type: codex
+    prompt: |
+      CONTEXT: FR-11 continuous self-learning suffers from catastrophic forgetting. The NeurIPS 2025 "Gradient-Guided Epsilon Constraint" (GEC) method provides strict projection to prevent this.
+
+      EXISTING CODE TO READ FIRST:
+        - crates/carnot-core/src/math/ (or similar Rust math directory)
+        - research-references.md
+
+      TASK: Implement the GEC projection algorithm in Rust for the Carnot core.
+
+      CONCRETE STEPS:
+        1. Implement the mathematical projection operator that guarantees `nonforgetting_rate = 1.0` within `crates/carnot-core/src/math/gec.rs`.
+        2. Write Rust unit tests for the projection operator.
+        3. Ensure Python PyO3 bindings are exposed for the new math core.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.rust_impl.v1"
+        - experiment: 1993
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1994-clara-v-schema
+    title: "Exp 1994: CLaRa-V Continuous Latent Representation Schema"
+    deliverable: results/experiment_1994_clara_schema.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Bridging retrieval and generation with continuous latent reasoning (CLaRa-V) replaces discrete tokens. We need the data structures in Python to hold these continuous states.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/ (or relevant schema directories)
+        - research-references.md
+
+      TASK: Create the schema and Python dataclasses for CLaRa-V continuous latent variables.
+
+      CONCRETE STEPS:
+        1. Define `ContinuousLatentState` and `EnergyVector` schema representations.
+        2. Integrate these classes with the existing EBM abstraction layers.
+        3. Write unit tests for the schema initialization.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.schema.v3"
+        - experiment: 1994
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1995-pinet-differentiable-projection
+    title: "Exp 1995: PiNet-style differentiable projection layer for hard constraints"
+    deliverable: results/experiment_1995_pinet_projection.json
+    max_turns: 100
+    agent_type: codex
+    prompt: |
+      CONTEXT: PiNet (ICLR 2026) offers differentiable projection layers for convex constraints, bypassing slow symbolic solvers.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/models/
+        - research-references.md
+
+      TASK: Implement the PiNet differentiable projection in JAX for continuous latent states.
+
+      CONCRETE STEPS:
+        1. Write the JAX implementation of the Douglas-Rachford operator splitting method.
+        2. Map the continuous constraints from Exp 1994 into this projection layer.
+        3. Validate the gradients flow through the projection with a synthetic test.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.model_layer.v1"
+        - experiment: 1995
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1996-test-clara-pinet
+    title: "Exp 1996: Test CLaRa-V constraints with PiNet projection"
+    deliverable: results/experiment_1996_clara_pinet.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1995-pinet-differentiable-projection
+        artifact_field: honest_verdict
+        op: contains
+        value: "complete"
+    prompt: |
+      CONTEXT: Combine the outputs of Exp 1994 and Exp 1995 to verify continuous constraint enforcement.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/models/ (the new PiNet layer)
+        - python/carnot/pipeline/ (the new CLaRa schema)
+
+      TASK: Execute a synthetic constraint verification using CLaRa-V states and the PiNet projection.
+
+      CONCRETE STEPS:
+        1. Initialize a CLaRa-V state violating a convex constraint.
+        2. Pass the state through the PiNet projection.
+        3. Verify the output state mathematically satisfies the constraint.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.eval.v2"
+        - experiment: 1996
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1997-gec-seal-loop
+    title: "Exp 1997: Integrate GEC into SEAL Continuous Self-Learning loop"
+    deliverable: results/experiment_1997_gec_seal.json
+    max_turns: 80
+    gated_on:
+      - upstream: exp1993-gec-math-core-rust
+        artifact_field: honest_verdict
+        op: contains
+        value: "complete"
+    prompt: |
+      CONTEXT: The FR-11 self-learning loop (SEAL) needs the Rust GEC implementation from Exp 1993.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/ (SEAL implementation)
+        - crates/carnot-core/src/math/gec.rs
+
+      TASK: Update the policy buffer update mechanism to route through the GEC PyO3 binding.
+
+      CONCRETE STEPS:
+        1. Replace the existing naive gradient update in the SEAL loop with the GEC constrained update.
+        2. Run a small replay buffer test to ensure `nonforgetting_rate` equals 1.0.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.learning_loop.v1"
+        - experiment: 1997
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1998-continuous-reasoning-gemma
+    title: "Exp 1998: Continuous test-time reasoning via CLaRa-V on gemma-4-31B-it-GGUF"
+    deliverable: results/experiment_1998_continuous_reasoning_gemma.json
+    max_turns: 100
+    prompt: |
+      CONTEXT: Now we deploy the Phase 4 continuous reasoning generation on the flagship dense model.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/
+        - results/experiment_1996_clara_pinet.json
+
+      TASK: Evaluate continuous latent reasoning on the Sudoku benchmark using `unsloth/gemma-4-31B-it-GGUF`.
+
+      CONCRETE STEPS:
+        1. Load `unsloth/gemma-4-31B-it-GGUF` and bypass the discrete token head.
+        2. Interface the model's continuous states with the CLaRa-V and PiNet systems.
+        3. Evaluate 5 Sudoku problems, comparing energy-guided continuous decoding against baseline.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.benchmark.v4"
+        - experiment: 1998
+        - model_specs: {{target_model: "unsloth/gemma-4-31B-it-GGUF"}}
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1999-continuous-reasoning-qwen
+    title: "Exp 1999: Evaluate GEC + CLaRa-V on GSM8K using Qwen3.6-35B-A3B-GGUF"
+    deliverable: results/experiment_1999_continuous_reasoning_qwen.json
+    max_turns: 100
+    prompt: |
+      CONTEXT: The flagship MoE model should evaluate the combined GEC self-learning and CLaRa-V continuous paths.
+
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/
+
+      TASK: Run a GSM8K evaluation utilizing both GEC self-learning policy updates and CLaRa-V inference.
+
+      CONCRETE STEPS:
+        1. Execute 10 GSM8K math problems using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+        2. Track utility drift and iterative step reduction.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.benchmark.v4"
+        - experiment: 1999
+        - model_specs: {{target_model: "unsloth/Qwen3.6-35B-A3B-GGUF"}}
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2000-e2e-pipeline-verification
+    title: "Exp 2000: E2E pipeline verification of Phase 4 continuous sampling"
+    deliverable: results/experiment_2000_e2e_pipeline.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Mandatory E2E verification of new codebase capabilities.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/e2e-test-plan.md
+
+      TASK: Automate and execute the E2E test plan for the continuous phase 4 pipeline.
+
+      CONCRETE STEPS:
+        1. Update `ops/e2e-test-plan.md` to reflect the CLaRa-V paths.
+        2. Run the full verification suite across Python and Rust to ensure cross-language parity of the new code.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.e2e.v1"
+        - experiment: 2000
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2001-audit-198
+    title: "Exp 2001: .198 findings audit + corrigenda"
+    deliverable: results/experiment_2001_findings_audit_198.json
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Routine audit-cadence for the prior milestone.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py
+
+      TASK: Run the adversarial verifier across .198 artifacts.
+
+      CONCRETE STEPS:
+        1. Execute `python3 scripts/adversarial_verify.py --milestone-range 1980 1986`.
+        2. Classify flags and emit corrigenda.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.findings_audit_corrigenda.v11"
+        - experiment: 2001
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2002-milestone-199-retro
+    title: "Exp 2002: Milestone .199 retrospective"
+    deliverable: results/operational_retro_2026_05_199.json
+    max_turns: 60
+    agent_type: codex
+    prompt: |
+      CONTEXT: Standard end-of-milestone retrospective.
+
+      EXISTING CODE TO READ FIRST:
+        - ops/metrics.md
+
+      TASK: Generate the .199 operational retrospective.
+
+      CONCRETE STEPS:
+        1. Summarize milestone .199 execution wall time, bottlenecks, and GEC/CLaRa-V integration status.
+        2. Produce the standard operational retro artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - experiment: 2002
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
