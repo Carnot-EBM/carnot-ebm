@@ -1143,6 +1143,28 @@ Given a nonlinear KAN unit (e.g. spline callable),
 When the PWA abstraction is applied,
 Then it computes piecewise-linear approximations with affine bounds for each segment, tests pass with 100% coverage, and `results/experiment_1840_pwa_kan.json` is written.
 
+## REQ-KAN-1826: KAN-CL Per-Knot Importance Regularization
+
+The KAN capability MUST implement the KAN-CL algorithm (arXiv:2605.11181) for continual learning. This requires per-knot importance regularization to prevent catastrophic forgetting.
+
+**Rationale:**
+    Continuous self-learning suffers from catastrophic forgetting in KAN energy tiers.
+    By tracking the importance weight of each B-spline knot during training,
+    subsequent learning phases can apply a regularization penalty that anchors
+    important knots while allowing unimportant knots to adapt to new tasks.
+
+**Acceptance criteria:**
+    - `python/carnot/models/kan_cl.py` implements the KAN-CL importance tracker and regularization penalty.
+    - It tracks importance weights for B-spline knots during training.
+    - It computes a penalty term for subsequent learning phases based on the deviation from anchored control points, weighted by the tracked importance.
+    - Tests verify that the penalty is computed correctly and achieve 100% test coverage for the new module.
+
+### SCENARIO-KAN-1826: KAN-CL Penalty Computation
+
+Given an initial set of B-spline control points and their corresponding importance weights,
+When a subsequent learning phase proposes updated control points,
+Then the KAN-CL regularization term correctly computes a penalty proportional to the importance-weighted deviation, and tests pass with 100% coverage.
+
 
 ## REQ-KAN-1857: Softly Symbolified KANs (S2KAN) with Differentiable Gating
 
