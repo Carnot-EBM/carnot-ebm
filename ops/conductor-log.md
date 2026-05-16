@@ -3960,3 +3960,4 @@ Error |
 | 2026-05-16 22:44 UTC | Phase 1: EqM Compositional Module | OK | 81 passed, 1 warning in 5.74s |
 | 2026-05-16 22:58 UTC | Phase 1: EqM vs PEM on Constraint Graphs | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-16 23:06 UTC | Phase 1: EqM vs PEM on Constraint Graphs | OK | 82 passed, 1 warning in 18.94s |
+| 2026-05-16 23:11 UTC | Phase 2: IRED Adaptive Optimizer | OK | 81 passed, 1 warning in 5.84s |
