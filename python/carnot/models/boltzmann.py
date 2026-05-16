@@ -266,3 +266,17 @@ class BoltzmannModel(AutoGradMixin):
     @property
     def input_dim(self) -> int:
         return self.config.input_dim
+
+    def langevin_step_vectorized(self, x_batch: jax.Array, step_size: float, key: jax.Array) -> jax.Array:
+        """Execute a vectorized Langevin dynamics step on a batch of states.
+        
+        x_{t+1} = x_t - (step_size/2) * grad E(x_t) + sqrt(step_size) * z_t
+        """
+        # Vectorize the gradient computation over the batch dimension
+        grad_fn = jax.vmap(self.grad_energy)
+        grad = grad_fn(x_batch)
+        
+        noise = jax.random.normal(key, x_batch.shape)
+        x_new = x_batch - (step_size * 0.5) * grad + jnp.sqrt(step_size) * noise
+        return x_new
+
