@@ -2088,3 +2088,15 @@ The Exp 2058 artifact MUST include `schema` set to `carnot.csl_gate.v1`, `experi
 **When** `ZeroForgettingGate.evaluate` is called
 **Then** it returns True iff `post_failures` is a subset of `pre_failures` (i.e. no new failures)
 **And** the artifact is written to `results/experiment_2058_csl_gate.json` with the required fields.
+
+### REQ-KONA-071: Lagrangian Continuous Space Optimizer
+
+Carnot MUST provide a JAX-based continuous space optimizer using a Lagrangian formulation in `python/carnot/phase3/lagrangian_optimizer.py`. The optimizer MUST enforce hard bounds as high-energy penalties and support a global Lagrangian energy function that sums local symbolic constraint potentials.
+The Exp 2071 artifact MUST be written to `results/experiment_2071_lagrangian_optimizer.json` and include the field `lagrangian_ready` set to `true`.
+
+### SCENARIO-KONA-071: Exp 2071 Evaluates Lagrangian Optimizer
+
+**Given** a set of latent constraints and continuous bounds
+**When** the Lagrangian optimizer minimizes the energy
+**Then** hard bounds are enforced as high-energy penalties
+**And** the artifact is written to `results/experiment_2071_lagrangian_optimizer.json` with `lagrangian_ready=true`.
