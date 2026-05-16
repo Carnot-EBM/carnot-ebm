@@ -3973,3 +3973,4 @@ Error |
 | 2026-05-16 23:40 UTC | Phase 4: ASP-KAN-HAQ Hardware Accounting | DOOMED_RERUN_BLOCK | 16 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-16 23:42 UTC | Phase 3: CSL Zero-Forgetting Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2101-csl-ired-feedback) |
 | 2026-05-16 23:42 UTC | Phase 4: ASP-KAN-HAQ Hardware Accounting | DOOMED_RERUN_BLOCK | 16 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-16 23:44 UTC | Phase 4: ASP-KAN-HAQ Hardware Accounting | DOOMED_RERUN_BLOCK | 16 prior failure(s) match this task's scope but prior_failures field is missing  |
