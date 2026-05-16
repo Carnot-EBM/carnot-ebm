@@ -3919,3 +3919,4 @@ Error |
 | 2026-05-16 19:46 UTC | Phase 1: Continuous Trajectory Decoding via LLM | FAIL | No file changes produced |
 | 2026-05-16 19:53 UTC | Phase 1: Continuous Trajectory Decoding via LLM | OK | 81 passed, 1 warning in 5.46s |
 | 2026-05-16 19:57 UTC | Phase 2: NeSy Symbolic Encoder | OK | 81 passed, 1 warning in 4.02s |
+| 2026-05-16 20:09 UTC | Phase 2: NeSy MAP Inference Alternating Training | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |

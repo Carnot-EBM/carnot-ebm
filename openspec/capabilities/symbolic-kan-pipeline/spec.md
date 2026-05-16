@@ -31,6 +31,14 @@ The system shall support a Neuro-Symbolic Energy-Based Model (NeSy-EBM) symbolic
 
 **Rationale:** To encode symbolic logic directly into the neural architecture, deterministic constraints must be mapped to energy penalties.
 
+### REQ-SYMKAN-2075: NeSy-EBM MAP Inference Alternating Training
+
+The system shall support Maximum A Posteriori (MAP) inference alternating training for the NeSy framework.
+- The module `python/carnot/training/nesy_trainer.py` MUST implement an alternating optimization loop that updates neural weights and projects onto symbolic constraints.
+- It MUST provide full unit test coverage.
+
+**Rationale:** NeSy-EBMs train via MAP inference alternating training, learning both neural parameters and enforcing symbolic priors.
+
 ## Scenarios
 
 ### SCENARIO-SYMKAN-1751: End-to-End Evaluation of Symbolic-KAN Tier
@@ -45,3 +53,10 @@ The system shall support a Neuro-Symbolic Energy-Based Model (NeSy-EBM) symbolic
 **When** a logic predicate (e.g. `VAR_0 == VAR_1`) is compiled
 **Then** it returns a JAX-compatible energy function
 **And** the energy function produces low energy when constraints are met and high energy when violated.
+
+### SCENARIO-SYMKAN-2075: Alternating MAP Inference Training
+
+**Given** a neural model, an optimizer, and an energy function compiled from constraints
+**When** alternating MAP inference training is performed
+**Then** neural parameters are updated to minimize loss
+**And** latent representations are updated to minimize symbolic energy penalties.
