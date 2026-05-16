@@ -3898,3 +3898,4 @@ Error |
 | 2026-05-16 18:21 UTC | Phase 3: Extropic TSU DTM Algorithm Parity Test | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-16 18:26 UTC | Phase 3: Extropic TSU DTM Algorithm Parity Test | OK | 99 passed, 1 warning in 7.65s |
 | 2026-05-16 18:28 UTC | Phase 3: FR-11 CSL with EBRM feedback (Zero-forget | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 18:30 UTC | Phase 3: FR-11 CSL with EBRM feedback (Zero-forget | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
