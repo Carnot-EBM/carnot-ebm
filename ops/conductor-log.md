@@ -3659,3 +3659,4 @@ Error |
 | 2026-05-16 03:17 UTC | Exp 1911: E2E Integration of NEXUS + Muon-OGD + Fa | FAIL | Post-tests failed: 2 failed, 79 passed, 1 warning in 5.33s |
 | 2026-05-16 03:19 UTC | Exp 1911: E2E Integration of NEXUS + Muon-OGD + Fa | OK | Deliverable already exists in repo |
 | 2026-05-16 03:19 UTC | Exp 1912: gated on Exp 1911 success: Full E2E Benc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1911-e2e-integration.success (actual=No |
+| 2026-05-16 03:21 UTC | Exp 1912: gated on Exp 1911 success: Full E2E Benc | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1911-e2e-integration.success (actual=No |
