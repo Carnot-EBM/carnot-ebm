@@ -147,3 +147,31 @@ def test_f1_score_harmonic_mean() -> None:
 # REQ-EVAL-001
 def test_f1_score_zero_when_undefined() -> None:
     assert f1_score([0, 0, 1, 1], [0, 0, 0, 0]) == 0.0
+
+# REQ-EVAL-006, SCENARIO-EVAL-006
+def test_compute_csr_basic() -> None:
+    from carnot.eval.metrics import compute_csr
+    c = [0.5, 0.4]
+    nc = [1.0, 0.8]
+    # (1.0 - 0.5)/1.0 = 0.5; (0.8 - 0.4)/0.8 = 0.5. Mean = 0.5
+    assert compute_csr(c, nc) == pytest.approx(0.5)
+
+# REQ-EVAL-006
+def test_compute_csr_zero_division() -> None:
+    from carnot.eval.metrics import compute_csr
+    c = [0.5, 0.4]
+    nc = [0.0, 0.8]
+    # For nc=0, ratio=0.0. For nc=0.8, ratio=0.5. Mean = 0.25
+    assert compute_csr(c, nc) == pytest.approx(0.25)
+
+# REQ-EVAL-006
+def test_compute_csr_shape_mismatch() -> None:
+    from carnot.eval.metrics import compute_csr
+    with pytest.raises(ValueError, match="shape mismatch"):
+        compute_csr([1.0], [1.0, 2.0])
+
+# REQ-EVAL-006
+def test_compute_csr_empty() -> None:
+    from carnot.eval.metrics import compute_csr
+    assert compute_csr([], []) == 0.0
+

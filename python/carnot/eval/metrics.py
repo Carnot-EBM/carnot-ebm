@@ -114,3 +114,25 @@ def f1_score(y_true: ArrayLike, y_pred: ArrayLike) -> float:
     if precision == 0.0 and recall == 0.0:
         return 0.0
     return 2.0 * precision * recall / (precision + recall)
+
+
+def compute_csr(context_energy: ArrayLike, no_context_energy: ArrayLike) -> float:
+    """Context Sensitivity Ratio (CSR) for constraint satisfaction in generation.
+
+    Measures how much the energy drops when context is provided,
+    relative to the baseline no-context energy.
+    CSR = mean((no_context - context) / no_context).
+    
+    If no_context_energy is zero, the ratio for that element is 0.0.
+    
+    Spec: REQ-EVAL-006, SCENARIO-EVAL-006.
+    """
+    c = np.asarray(context_energy, dtype=np.float64)
+    nc = np.asarray(no_context_energy, dtype=np.float64)
+    if c.shape != nc.shape:
+        raise ValueError(f"shape mismatch: {c.shape} vs {nc.shape}")
+    if len(nc) == 0:
+        return 0.0
+    with np.errstate(divide='ignore', invalid='ignore'):
+        ratio = np.where(nc != 0, (nc - c) / nc, 0.0)
+    return float(np.mean(ratio))

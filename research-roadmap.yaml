@@ -13,7 +13,7 @@ tasks:
       1. Write `scripts/experiment_2001_spilled_energy.py`.
       2. Implement `calculate_spilled_energy(logits, target_tokens)` mapping Softmax to EBM.
       3. Evaluate using the cached_sota_pair() pattern: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-      4. Save results to {deliverable}.
+      4. Save results to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2002-energy-reward-model
@@ -27,7 +27,7 @@ tasks:
       1. Write `scripts/experiment_2002_ebrm_loss.py`.
       2. Implement `ebrm_loss_fn(energy_pos, energy_neg, margin)`.
       3. Run a synthetic dataset pass through the loss function to verify gradient flows.
-      4. Save loss metrics to {deliverable}.
+      4. Save loss metrics to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2003-refind-constraint-satisfaction
@@ -41,7 +41,7 @@ tasks:
       1. Write `scripts/experiment_2003_refind.py`.
       2. Implement `compute_csr(context_energy, no_context_energy)`.
       3. Validate on `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      4. Write {deliverable} with the correlation report.
+      4. Write {{deliverable}} with the correlation report.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2004-self-learning-epsilon-engine
@@ -54,7 +54,7 @@ tasks:
       CONCRETE STEPS:
       1. Write `scripts/experiment_2004_epsilon.py`.
       2. Implement a rolling window validation tracking and dynamic epsilon scalar.
-      3. Save step-by-step decay trace to {deliverable}.
+      3. Save step-by-step decay trace to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2005-auto-dataset-gen-z3
@@ -69,7 +69,7 @@ tasks:
       1. Write `scripts/experiment_2005_z3.py`.
       2. Generate puzzles and call the local Z3 verifier.
       3. Filter for 100% correct responses.
-      4. Save structured JSONL as the artifact, linked in {deliverable}.
+      4. Save structured JSONL as the artifact, linked in {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2006-self-distillation-qwen
@@ -88,7 +88,7 @@ tasks:
       1. Write `scripts/experiment_2006_distill.py`.
       2. Load the dataset from Exp 2005.
       3. Execute a single-epoch dummy DPO/SFT pass.
-      4. Save final loss to {deliverable}.
+      4. Save final loss to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2007-continuous-epsilon-decay-eval
@@ -101,7 +101,7 @@ tasks:
       CONCRETE STEPS:
       1. Write `scripts/experiment_2007_eval.py`.
       2. Compare acceptance rates and generation quality.
-      3. Save statistical delta to {deliverable}.
+      3. Save statistical delta to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2008-rocm-rx7900-bringup
@@ -117,7 +117,7 @@ tasks:
       1. Write `scripts/experiment_2008_rocm.py`.
       2. Query `rocminfo` and map memory limits.
       3. If no hardware found, generate a mock success indicating "hardware missing but probe works".
-      4. Save probe details to {deliverable}.
+      4. Save probe details to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2009-dual-model-bench-rocm
@@ -131,7 +131,7 @@ tasks:
       1. Write `scripts/experiment_2009_dual.py`.
       2. Mock VRAM allocation for the SOTA models if hardware absent.
       3. Determine theoretical max sequence length.
-      4. Save to {deliverable}.
+      4. Save to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2010-hardware-accel-langevin
@@ -144,7 +144,7 @@ tasks:
       CONCRETE STEPS:
       1. Write `scripts/experiment_2010_langevin.py`.
       2. Compare CPU vs GPU mocked performance of the gradient step.
-      3. Save benchmark to {deliverable}.
+      3. Save benchmark to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2011-e2e-fidelity-rocm
@@ -157,7 +157,7 @@ tasks:
       CONCRETE STEPS:
       1. Write `scripts/experiment_2011_fidelity.py`.
       2. Calculate divergence between CPU and mock GPU sampler.
-      3. Save KL divergence to {deliverable}.
+      3. Save KL divergence to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2012-e2e-test-plan-exec
@@ -170,7 +170,7 @@ tasks:
       CONCRETE STEPS:
       1. Write `scripts/experiment_2012_e2e.py` wrapping standard tests.
       2. Record pass/fail for Python-Rust bridge equivalent results.
-      3. Save report to {deliverable}.
+      3. Save report to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2013-update-prd-status
@@ -184,7 +184,7 @@ tasks:
       CONCRETE STEPS:
       1. Update `ops/status.md` preserving historical results.
       2. Update `_bmad/traceability.md` implementation statuses.
-      3. Generate a JSON summary into {deliverable}.
+      3. Generate a JSON summary into {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2014-milestone-201-retro
@@ -199,5 +199,5 @@ tasks:
       CONCRETE STEPS:
       1. Review conductor logs.
       2. Synthesize bottlenecks and highest leverage actions.
-      3. Save retro schema to {deliverable}.
+      3. Save retro schema to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
