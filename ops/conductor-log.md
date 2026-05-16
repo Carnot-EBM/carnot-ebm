@@ -3874,3 +3874,4 @@ Error |
 | 2026-05-16 17:06 UTC | Exp 2058: Establish Zero-Forgetting Promotion Gate | OK | cache hit: 82 passed, 1 warning in 4.76s |
 | 2026-05-16 17:08 UTC | Exp 2059: E2E Continuous Reasoning Eval on SOTA Mo | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 17:10 UTC | Exp 2059: E2E Continuous Reasoning Eval on SOTA Mo | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 17:12 UTC | Exp 2059: E2E Continuous Reasoning Eval on SOTA Mo | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
