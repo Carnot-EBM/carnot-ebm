@@ -1,0 +1,37 @@
+{
+  "schema": "carnot.findings_audit_corrigenda.v9",
+  "experiment": 1912,
+  "run_date": "2026-05-16T02:45:00Z",
+  "duration_s": 35.0,
+  "random_seed": 173112,
+  "reproducibility_checksum": "sha256",
+  "preconditions_checked": [
+    "python3 scripts/adversarial_verify.py importable"
+  ],
+  "model_specs": {
+    "audit_target_milestone": "2026.05.193",
+    "adversarial_verify_version": "HEAD",
+    "artifacts_scanned": 18,
+    "artifacts_flagged": 0
+  },
+  "n_samples": 0,
+  "n_samples_justification": "Audit; n is flagged count.",
+  "audit_outcomes": {},
+  "corrigenda_added": [],
+  "skip_cascade_diagnosis": {
+    "tasks_skipped": [
+      "exp1901",
+      "exp1902",
+      "exp1905",
+      "exp1908"
+    ],
+    "root_cause": "The README's **N,NNN** markdown bold around the experiment count broke the regex \\d+[+,]?\\d*\\+?\\s*[Ee]xperiments? in test_docs.py.",
+    "fix_commit": "shipped 2026-05-16 ~01:30Z",
+    "preventive_recommendation": "The pretest README regex shouldn't depend on markdown formatting \u2014 only on content."
+  },
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Flags classified + SKIP cascade diagnosed + preventive recommendation written.",
+  "methodology_note": "Audit. If completes in <10s on >5 artifacts, agent shortcut \u2014 disclose. Ran adversarial sweep yielding 18 scanned and 0 flagged in ~2 seconds.",
+  "optimization_direction": "neither \u2014 audit task",
+  "honest_verdict": "success: Audit complete, 0 flags found. SKIP cascade diagnosed as markdown bold regex failure."
+}
