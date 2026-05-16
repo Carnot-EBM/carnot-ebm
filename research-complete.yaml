@@ -11197,3 +11197,65 @@ milestones:
     title: 'Exp 1841: Milestone .192 retrospective'
     deliverable: results/operational_retro_2026_05_192.json
     result: OK (conductor)
+- id: 2026.05.193
+  title: NEXUS Continuous Grounding + AdamFLIP + Wahkon RKHS
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-05-16'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp1901-muon-ogd
+    title: 'Exp 1901: Implement Muon-OGD for Continual Learning'
+    deliverable: python/carnot/pipeline/muon_ogd.py
+    result: OK (conductor)
+  - id: exp1902-kan-cl
+    title: 'Exp 1902: Implement KAN-CL Per-Knot Regularization'
+    deliverable: python/carnot/pipeline/kan_cl.py
+    result: OK (conductor)
+  - id: exp1903-cl-benchmark
+    title: 'Exp 1903: gated on Exp 1901 and 1902: Benchmark Muon-OGD vs KAN-CL'
+    deliverable: results/experiment_1903_cl_benchmark.json
+    result: OK (conductor)
+  - id: exp1904-energy-guided
+    title: 'Exp 1904: Implement Energy-Guided Decoding'
+    deliverable: python/carnot/pipeline/energy_guided.py
+    result: OK (conductor)
+  - id: exp1905-adamflip
+    title: 'Exp 1905: Implement AdamFLIP Hard Constraints'
+    deliverable: python/carnot/pipeline/adamflip.py
+    result: OK (conductor)
+  - id: exp1906-adamflip-eval
+    title: 'Exp 1906: gated on Exp 1905 success: Evaluate AdamFLIP'
+    deliverable: results/experiment_1906_adamflip_eval.json
+    result: OK (conductor)
+  - id: exp1907-energy-fast-slow
+    title: 'Exp 1907: Integrate Energy-Guided Decoding into Fast-Slow Variant'
+    deliverable: results/experiment_1907_energy_fs.json
+    result: OK (conductor)
+  - id: exp1908-nexus
+    title: 'Exp 1908: Implement NEXUS Symbolic Continual Learning'
+    deliverable: python/carnot/pipeline/nexus_grounding.py
+    result: OK (conductor)
+  - id: exp1909-wahkon
+    title: 'Exp 1909: Implement Wahkon Deep RKHS Superposition Network'
+    deliverable: python/carnot/pipeline/wahkon_rkhs.py
+    result: OK (conductor)
+  - id: exp1910-wahkon-bench
+    title: 'Exp 1910: gated on Exp 1909 success: Benchmark Wahkon vs KAN'
+    deliverable: results/experiment_1910_wahkon_bench.json
+    result: OK (conductor)
+  - id: exp1911-e2e-integration
+    title: 'Exp 1911: E2E Integration of NEXUS + Muon-OGD + Fast-Slow'
+    deliverable: results/experiment_1911_e2e.json
+    result: OK (conductor)
+  - id: exp1912-full-benchmark
+    title: 'Exp 1912: gated on Exp 1911 success: Full E2E Benchmark with SOTA models'
+    deliverable: results/experiment_1912_benchmark.json
+    result: OK (conductor)
+  - id: exp1913-arch-update
+    title: 'Exp 1913: Architecture Updates and Position Paper'
+    deliverable: results/experiment_1913_arch_paper.json
+    result: OK (conductor)
+  - id: exp1914-milestone-retro
+    title: 'Exp 1914: Milestone Retrospective'
+    deliverable: results/experiment_1914_retro.json
+    result: OK (conductor)
