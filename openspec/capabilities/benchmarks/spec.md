@@ -683,3 +683,15 @@ It MUST record the hardware state and an honest verdict.
 **And** produces a valid `results/experiment_1991_egpu_rocm.json` artifact containing the schema, experiment ID, and an honest verdict.
 
 **Spec traces:** REQ-HARDWARE-1991
+
+### REQ-HARDWARE-2008: ROCm Probe eGPU Detection
+Carnot MUST provide a script `scripts/experiment_2008_rocm.py` that queries `rocminfo` and maps memory limits, generating a mock success if no hardware is found.
+The artifact MUST be saved to `results/experiment_2008_rocm_probe.json`.
+
+### SCENARIO-HARDWARE-2008: ROCm Probe Execution
+**Given** the ROCm probe script is executed
+**When** it queries `rocminfo`
+**Then** it writes probe details or a mock success indicating "hardware missing but probe works" to `results/experiment_2008_rocm_probe.json`
+
+**Spec traces:** REQ-HARDWARE-2008
+
