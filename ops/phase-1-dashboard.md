@@ -28,3 +28,18 @@
 - Independent Reproducer: Shipped.
 
 Overall ship percentage: 80%.
+
+## Update 2026-05-16T15:00:00Z - Phase 1 Consolidated Audit
+
+| Prong | Status | Evidence | Date | Next Action |
+|-------|--------|----------|------|-------------|
+| PyPI Publish Workflow | PENDING | experiment_2011_pypi_final_recheck.json | 2026-05-16 | Operator manual approval required |
+| HuggingFace Mirror | SHIPPED | experiment_1931_huggingface_mirror.json | 2026-05-16 | None |
+| MCP Integrator Docs | SHIPPED | experiment_1981_mcp_cli_integrator_docs.json | 2026-05-16 | None |
+| Independent Reproducer | SHIPPED | experiment_1982_independent_reproducer.json | 2026-05-16 | None |
+| Fast-Slow Codification | SHIPPED | experiment_1929_fast_slow_codification.json | 2026-05-16 | None |
+
+**Ship Percentage:** 80% (4/5 prongs shipped)
+
+### Bash-Failure Window Observations
+SKIP-cascade due to unhealed pre-test failures starting after a 600s stall failure, alongside DOOMED_RERUN_BLOCK and GATE_BLOCKs on downstream hardware tasks since 2026-05-16T13:13 UTC.
