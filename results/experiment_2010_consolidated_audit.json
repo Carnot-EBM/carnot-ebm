@@ -1,0 +1,74 @@
+{
+  "schema": "carnot.consolidated_audit_dashboard.v1",
+  "experiment": 2010,
+  "run_date": "2026-05-16T12:02:27Z",
+  "duration_s": 65,
+  "random_seed": 173210,
+  "reproducibility_checksum": "7d12ba56e9f8b3dc64f77c87318c4f37bc12cfbf1a37573cdf3e4fa683f20155",
+  "preconditions_checked": [
+    "adversarial_verify_present",
+    "exp1929_exists",
+    "exp1931_exists"
+  ],
+  "model_specs": {
+    "audit_target_milestones": [
+      "2026.05.198",
+      "2026.05.199",
+      "2026.05.200",
+      "2026.05.201"
+    ],
+    "adversarial_verify_version": "a1452263e480c342e06f15e1cd85a73435b3bb53",
+    "artifacts_scanned": 4,
+    "artifacts_flagged": 0,
+    "dashboard_path": "ops/phase-1-dashboard.md"
+  },
+  "n_samples": 4,
+  "n_samples_justification": "Consolidated audit; n is milestone count.",
+  "audit_outcomes": {},
+  "corrigenda_added": [],
+  "skip_cascade_observed": false,
+  "skip_cascade_root_cause": null,
+  "per_prong_status": {
+    "pypi": {
+      "status": "pending",
+      "evidence": "exp1987",
+      "date": "2026-05-16T06:00:00Z",
+      "next_action": "operator approval"
+    },
+    "hf": {
+      "status": "shipped",
+      "evidence": "exp1931",
+      "date": "2026-05-16T01:45:00Z",
+      "next_action": "none"
+    },
+    "fast_slow": {
+      "status": "shipped",
+      "evidence": "exp1929",
+      "date": "2026-05-16T01:29:00Z",
+      "next_action": "none"
+    },
+    "mcp_cli": {
+      "status": "shipped",
+      "evidence": "exp1981",
+      "date": "2026-05-16T03:32:00Z",
+      "next_action": "none"
+    },
+    "reproducer": {
+      "status": "shipped",
+      "evidence": "exp1982",
+      "date": "2026-05-16T03:36:00Z",
+      "next_action": "none"
+    }
+  },
+  "phase_1_ship_percentage": 80,
+  "operator_action_items": [
+    "Approve PyPI at GH Environment"
+  ],
+  "dashboard_word_count": 29,
+  "dashboard_has_emojis": false,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "All 4 milestones audited; dashboard written; status accurately reported (no inflation).",
+  "methodology_note": "PyPI is shipped-pending-operator-approval is NOT 'shipped' \u2014 it's 'pending'. Status honestly recorded.",
+  "optimization_direction": "neither \u2014 audit/synthesis task",
+  "honest_verdict": "complete: consolidated audit successful and dashboard written"
+}

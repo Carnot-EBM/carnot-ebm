@@ -17,3 +17,14 @@
 
 ### Cross-References
 * **Fast-Slow Codification:** Verified complete via `results/experiment_1929_fast_slow_codification.json`.
+
+## Update 2026-05-16T12:02:27.847409+00:00
+# Phase 1 Ship-Track Dashboard
+
+- PyPI: Pending operator approval.
+- Huggingface: Shipped.
+- Fast-Slow Codification: Shipped.
+- MCP/CLI Docs: Shipped.
+- Independent Reproducer: Shipped.
+
+Overall ship percentage: 80%.

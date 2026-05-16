@@ -4086,3 +4086,11 @@ The repository shall provide a module `carnot.reporting.experiment_1924_retro` a
 
 ### REQ-REPORT-2001: Findings Audit 2001
 The repository shall provide a module `carnot.pipeline.findings_audit_2001` and a test `tests/python/test_experiment_2001_findings_audit_198.py` to verify the `.198` artifact range (experiments 1980 through 1986). It shall output `results/experiment_2001_findings_audit_198.json` with schema `carnot.findings_audit_corrigenda.v11`, experiment `2001`, and `honest_verdict` starting with a terminal prefix (e.g. `complete:`).
+
+
+### REQ-REPORT-2010: Consolidated Phase 1 Audit
+The pipeline SHALL run a consolidated audit for milestones .198 to .201, generate a Phase 1 dashboard, and write results/experiment_2010_consolidated_audit.json.
+
+
+### REQ-REPORT-2010: Consolidated Phase 1 Audit
+The pipeline SHALL run a consolidated audit for milestones .198 to .201, generate a Phase 1 dashboard, and write results/experiment_2010_consolidated_audit.json.
