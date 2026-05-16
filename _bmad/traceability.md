@@ -1664,3 +1664,5 @@
 | SCENARIO-CARM-1773-1 | Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall | Implemented | results/experiment_1773_care_evaluation.json |
 | REQ-1980-E2E-CASCADE | Exp 1980: E2E Cascade Validation of .197 Pipeline | Implemented-Partial | results/experiment_1980_e2e_cascade.json |
 | SCENARIO-1980-E2E-CASCADE | Exp 1980: E2E Cascade Validation of .197 Pipeline | Implemented-Partial | results/experiment_1980_e2e_cascade.json |
+| REQ-EVAL-006 | Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) | Implemented-Partial | results/experiment_2003_refind_csr.json |
+| SCENARIO-EVAL-006 | Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) | Implemented-Partial | results/experiment_2003_refind_csr.json |
