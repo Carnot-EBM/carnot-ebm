@@ -3975,3 +3975,4 @@ Error |
 | 2026-05-16 23:42 UTC | Phase 4: ASP-KAN-HAQ Hardware Accounting | DOOMED_RERUN_BLOCK | 16 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-16 23:44 UTC | Phase 4: ASP-KAN-HAQ Hardware Accounting | DOOMED_RERUN_BLOCK | 16 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-16 23:46 UTC | Phase 4: Full E2E Integration Benchmark | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 23:48 UTC | Phase 4: Full E2E Integration Benchmark | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
