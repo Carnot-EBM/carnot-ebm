@@ -3674,3 +3674,4 @@ Error |
 | 2026-05-16 04:31 UTC | Plan milestone 2026.05.195 | OK | 11 tasks proposed |
 | 2026-05-16 04:33 UTC | Milestone 2026.05.195 activated | OK | 11 tasks queued |
 | 2026-05-16 04:39 UTC | Exp 1914: .194 archive / .195 activation | OK | 81 passed, 1 warning in 5.25s |
+| 2026-05-16 04:41 UTC | Exp 1915: Dynamic Resolution Continual EBM Learnin | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
