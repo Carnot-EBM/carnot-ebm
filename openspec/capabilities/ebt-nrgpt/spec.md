@@ -60,3 +60,9 @@ The system must support scoring partial reasoning traces via an EBT wrapper usin
 ## SCENARIO-EBT-2031: Energy-guided decoding loop
 Given an initial trace and a set of candidates, the wrapper computes the EBT energy objective using the RLS verifier to select the candidate with the lowest energy, outputting the result to results/experiment_2031.json.
 
+## REQ-INFER-2073: Continuous Trajectory to Token Probability Adapter
+The system SHALL provide an adapter in `python/carnot/inference/trajectory_decoder.py` that translates the optimized continuous thought trajectory back to token probabilities using a decoding loop conditioned on the continuous thought state. It SHALL define `MODEL_SPECS` for `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`, and save the artifact to `results/experiment_2073_trajectory_decoder.json`.
+
+## SCENARIO-INFER-2073: Trajectory decoding loop
+Given an optimized continuous thought trajectory, the adapter maps it to token probabilities, updating the decoding state, and saves the experiment artifact.
+
