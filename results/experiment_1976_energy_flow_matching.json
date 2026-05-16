@@ -1,0 +1,42 @@
+{
+  "experiment": 1976,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T07:01:13.735930+00:00",
+  "finished_at": "2026-05-16T07:01:13.735930+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1976: Phase 3 - Energy Matching Latent Generation Probe",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: no prior_failures field on task",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1860-energy-matching",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp1873-energy-matching-flow",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    },
+    {
+      "upstream": "exp452-energy-matching-v2",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": null,
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: retro_030_closed_no_improvement"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
