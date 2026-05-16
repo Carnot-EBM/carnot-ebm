@@ -1,0 +1,170 @@
+{
+  "schema": "carnot.milestone_retro.v1",
+  "experiment": 2107,
+  "milestone": "2026.05.209",
+  "milestone_title": "Equilibrium Matching, Adaptive Iterative Reasoning, and Hardware-Aware KAN Quantization",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T23:52:39Z",
+  "finished_at": "2026-05-16T23:54:00Z",
+  "duration_s": 81,
+  "honest_verdict": "retrospective_complete",
+
+  "task_summary": [
+    {
+      "exp_id": 2094,
+      "title": "Phase 0: Archive .208 and activate .209",
+      "verdict": "activation_complete",
+      "status": "success"
+    },
+    {
+      "exp_id": 2095,
+      "title": "Phase 1: Equilibrium Matching (EqM) Landscape Module",
+      "verdict": "success_eqm_landscape_implemented",
+      "status": "success",
+      "key_finding": "EqM landscape module implemented; eqm_landscape_ready=true"
+    },
+    {
+      "exp_id": 2096,
+      "title": "Phase 1: EqM Compositional Module",
+      "verdict": "success_eqm_composition_implemented",
+      "status": "success",
+      "key_finding": "EqM compositional module implemented; eqm_composition_ready=true"
+    },
+    {
+      "exp_id": 2097,
+      "title": "Phase 1: EqM vs PEM on Constraint Graphs",
+      "verdict": "SUCCESS: eqm_eval_complete",
+      "status": "success",
+      "key_finding": "EqM did NOT outperform PEM. EqM avg_energy=448.68 vs PEM avg_energy=437.45; eqm_satisfaction_rate=0.0 vs pem_satisfaction_rate=0.12; eqm_superior=false over 50 instances.",
+      "adversarial_flag": "NONE — evaluation ran over n=50 instances and produced plausible non-perfect results."
+    },
+    {
+      "exp_id": 2098,
+      "title": "Phase 2: IRED Adaptive Optimizer",
+      "verdict": "complete",
+      "status": "success",
+      "key_finding": "Adaptive gradient-norm epsilon stopping: 13 steps for simple constraints, 47 steps for hard — shows correct adaptive behaviour."
+    },
+    {
+      "exp_id": 2099,
+      "title": "Phase 2: IRED Constraint Learning",
+      "verdict": "complete",
+      "status": "success",
+      "key_finding": "IRED trained; final_loss=4.44e-08 (near-zero); output matches target to <0.25% relative error in 1 step."
+    },
+    {
+      "exp_id": 2100,
+      "title": "Phase 2: IRED SOTA GGUF Integration",
+      "verdict": "complete",
+      "status": "success",
+      "key_finding": "Claimed average_pass_rate=1.0 on both gemma-4-31B-it-GGUF and gemma-4-26B-A4B-it-GGUF over 10 problems each.",
+      "adversarial_flag": "IMPLAUSIBLE_PERFECT — pass_rate=1.0 on 10 problems with no model loading preconditions verified. This result requires independent replication before paper citation. Models may not have been locally cached; the artifact lacks preconditions_checked, random_seed, and duration_s fields. Treat as preliminary only."
+    },
+    {
+      "exp_id": 2101,
+      "title": "Phase 3: CSL IRED Feedback Loop",
+      "verdict": "blocked_gate_check_failed",
+      "status": "blocked",
+      "key_finding": "Blocked by conductor pre-gate: 1 prior failure (exp2069-fr11-csl-ebrm-feedback) matched task scope with no prior_failures block. Rerun discipline enforced correctly."
+    },
+    {
+      "exp_id": 2102,
+      "title": "Phase 3: CSL EqM Memory Promotion",
+      "verdict": "success_eqm_memory_cache_implemented",
+      "status": "success",
+      "key_finding": "EqM memory cache implemented; memory_promotion_successful=true."
+    },
+    {
+      "exp_id": 2103,
+      "title": "Phase 3: CSL Zero-Forgetting Evaluation / PyPI publish dry-run",
+      "verdict": "shipped: pypi_publish_dry_run_sdist_wheel_twine_check_all_passed",
+      "status": "success",
+      "key_finding": "PyPI dry-run passed: sdist=85.2 MB, wheel=4.9 MB, twine_check_passed=true for carnot_ebm-0.1.0b1. Phase 1 ship gate satisfied. No actual publish; operator must tag v0.1.0b1 to trigger workflow."
+    },
+    {
+      "exp_id": 2104,
+      "title": "Phase 4: ASP-KAN-HAQ Hardware Quantization",
+      "verdict": "asp_kan_ready=true (sparse artifact)",
+      "status": "partial",
+      "key_finding": "Artifact contains only asp_kan_ready=true with no supporting schema, methodology, or hardware area numbers. Insufficient for hardware area claims. Not adversarially verified."
+    },
+    {
+      "exp_id": 2105,
+      "title": "Phase 4: ASP-KAN-HAQ Hardware Accounting",
+      "verdict": "blocked_gate_check_failed",
+      "status": "blocked",
+      "key_finding": "Blocked by 16 prior failures matching this scope without prior_failures block. This is the most heavily blocked task in the manifest — 16 consecutive scope-matches. Strict rerun discipline correctly enforced."
+    },
+    {
+      "exp_id": 2106,
+      "title": "Phase 4: Full E2E Integration Benchmark",
+      "verdict": "blocked_gate_check_failed",
+      "status": "blocked",
+      "key_finding": "Blocked by 3 prior failures (exp1810, exp1912, exp2092) without prior_failures block. Cascade downstream of exp2105 block."
+    }
+  ],
+
+  "eqm_analysis": {
+    "implemented": true,
+    "components_shipped": ["landscape_module", "composition_module", "memory_cache"],
+    "continuous_reasoning_improved": false,
+    "reason": "exp2097 shows EqM produces higher energy (worse) and zero constraint satisfaction vs PEM's 12% over 50 instances. EqM as implemented does not improve continuous reasoning on constraint graphs relative to PEM. Root cause unknown — architecture may need energy-landscape redesign or a different objective. This is a research finding, not a fabrication.",
+    "adversarial_flag_on_exp2097": false,
+    "recommendation": "Do not cite EqM as improving continuous reasoning without further architectural iteration. The evaluation result (eqm_superior=false) IS the valid finding and should inform .210+ design."
+  },
+
+  "ired_analysis": {
+    "implemented": true,
+    "components_shipped": ["adaptive_optimizer", "constraint_learner", "sota_integration"],
+    "training_converged": true,
+    "final_loss": 4.4406892385495667e-08,
+    "adaptive_behaviour_validated": true,
+    "sota_integration_implausible_perfect": true,
+    "sota_integration_recommendation": "exp2100 claims 100% pass rate on SOTA GGUFs but lacks preconditions_checked, duration_s, and random_seed. This must be replicated with a PRECONDITIONS block before paper citation. Flag as IMPLAUSIBLE_PERFECT until confirmed."
+  },
+
+  "asp_kan_haq_analysis": {
+    "theoretical_hardware_area_reduced": false,
+    "reason": "exp2104 produced only a one-field artifact (asp_kan_ready=true) with no hardware area numbers, LUT/FF counts, or quantization methodology. exp2105 was blocked for the 16th consecutive run by the failed-experiment rerun discipline. No hardware area reduction was demonstrated this milestone.",
+    "consecutive_block_count": 16,
+    "recommendation": "Add exp2105 to the exclusion manifest. The ASP-KAN-HAQ Hardware Accounting scope has a structural problem (no hardware access, toolchain not available, or methodology not viable) that 16 prior failures have not resolved. Retire until operator provides a hardware-accessible environment or revised methodology."
+  },
+
+  "phase1_ship_status": {
+    "pypi_dry_run_passed": true,
+    "sdist_filename": "carnot_ebm-0.1.0b1.tar.gz",
+    "wheel_filename": "carnot_ebm-0.1.0b1-py3-none-any.whl",
+    "publish_instruction": "Tag v0.1.0b1 to trigger `.github/workflows/publish-pypi.yml` actual publish. HuggingFace mirror and IPFS pin still pending for Phase 1 ship completion."
+  },
+
+  "gate_block_summary": {
+    "tasks_blocked": 3,
+    "tasks_blocked_ids": [2101, 2105, 2106],
+    "primary_cause": "Rerun-discipline enforcement: tasks repeated prior-failed scope without prior_failures block.",
+    "systemic_issue": "The ASP-KAN-HAQ Hardware Accounting scope (exp2105) has been proposed 16 times without root-cause diagnosis. This scope must be retired per the Failed-Experiment Rerun Discipline — retire_if_same_verdict was triggered but no exclusion manifest entry was added for it in prior milestones."
+  },
+
+  "milestone_success_rate": {
+    "total_tasks": 13,
+    "completed": 8,
+    "blocked": 3,
+    "partial": 1,
+    "success_rate_pct": 61.5
+  },
+
+  "operational_findings": [
+    "EqM implementation is complete but the evaluation result is negative — EqM is strictly worse than PEM on energy and constraint satisfaction at this stage.",
+    "IRED optimizer shows valid adaptive behaviour; training converged; SOTA integration result is unverified and should not be cited.",
+    "ASP-KAN-HAQ Hardware Accounting is a permanently stalled scope: 16 block-chain with no root-cause diagnosis. Retire to exclusion manifest.",
+    "PyPI dry-run gate passed — Phase 1 ship is ready to trigger once operator tags the release.",
+    "Full E2E Integration Benchmark cannot proceed while ASP-KAN-HAQ is in the requires-chain. Either decouple the dependency or fix the upstream first."
+  ],
+
+  "next_milestone_priorities": [
+    "Retire exp2105 scope (ASP-KAN-HAQ Hardware Accounting) to exclusion manifest to stop blocking exp2106.",
+    "Redesign EqM energy landscape objective — current approach increases energy vs PEM. Investigate energy-aware composition loss.",
+    "Replicate exp2100 IRED SOTA integration with proper PRECONDITIONS block and preconditions_checked artifact fields.",
+    "Trigger Phase 1 PyPI publish via tagged release.",
+    "Decouple exp2106 Full E2E Integration Benchmark from retired ASP-KAN-HAQ dependency."
+  ]
+}
