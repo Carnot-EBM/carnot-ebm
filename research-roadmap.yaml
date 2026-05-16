@@ -1,524 +1,223 @@
-milestone: "2026.05.192"
-milestone_title: "Fast-Slow Variant ADVERSARIAL CONFIRMATION + delayed codification + Phase 4 closure + PyPI"
+milestone: "2026.05.193"
+milestone_title: "NEXUS Continuous Grounding + AdamFLIP + Wahkon RKHS"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
-scope_reduction_compliance:
-  rationale: "exp1811 (.189) shipped Fast-Slow Variant with 3.1x/0.25x numbers — operator agreed 2026-05-16 ~00:00Z that adversarial-confirmation (seed-rotation + corpus-rotation + baseline-audit replication) is required BEFORE paper-v6 §3 codification cites those numbers. The .190 codification (exp1821) didn't run (planner replaced .190 with different scope, then .191 went different directions again). .192 ships the confirmation FIRST, then gates codification + Phase 4 closure on confirmation passing. Plus carries forward PyPI ship-track (5th attempt, blocked by SKIP-loop in .190)."
-  carry_forwards_addressed: ["NEW Fast-Slow Variant adversarial-confirmation (operator-approved discipline)", "Fast-Slow codification (deferred from .190 exp1821; gates on confirmation)", "Phase 4 canonical decision (deferred from .190 exp1823; gates on confirmation + codification)", "PyPI prong (5th attempt)"]
-authored_by: outer-loop-claude
 
 tasks:
-  - id: exp1837-fast-slow-variant-adversarial-confirmation
-    title: "Exp 1837: Fast-Slow Variant ADVERSARIAL CONFIRMATION (seed + corpus + baseline rotation)"
-    deliverable: results/experiment_1837_fast_slow_confirmation.json
-    max_turns: 100
+  - id: exp1901-muon-ogd
+    title: "Exp 1901: Implement Muon-OGD for Continual Learning"
+    deliverable: python/carnot/pipeline/muon_ogd.py
+    max_turns: 50
     agent_type: codex
-    model: gpt-5.5
-    priority: critical
-    prior_failures:
-      - experiment_id: exp1811-fast-slow-variant-prototype
-        verdict: complete_3.1x_sample_eff_0.25x_kl_drift_no_forgetting
-        addressed_by: "exp1811 (.189) shipped the FS Variant with paper-matching numbers on a single seed/corpus/baseline configuration. Per the new adversarial-confirmation discipline (memory entry feedback_adversarial_confirmation_protocol), Score-300+ findings require an independent replication BEFORE paper-v6 citation. This task is the explicit replication; it should NOT modify any of exp1811's code, only re-run with rotated seeds + corpus + baseline cross-check."
-        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: exp1811 (.189) shipped the Carnot Fast-Slow Variant on
-      the 4th attempt with paper-matching numbers (sample_efficiency_ratio
-      = 3.1x; kl_drift_ratio = 0.25; FR-11 baseline catastrophic forgetting
-      on BBH 0.45 + MATH 0.35 while FS held 0.90 + 0.85; 350s real run).
-
-      Operator-agreed 2026-05-16 ~00:00Z that paper-v6 citation requires
-      adversarial confirmation — a second independent run with rotated
-      seed + rotated corpus + audited baseline. The new memory entry
-      `feedback_adversarial_confirmation_protocol.md` codifies the
-      discipline. This task is the FIRST application.
-
-      FALSIFIABLE HYPOTHESIS: An independent re-run of the exp1811
-      Fast-Slow Variant pipeline with (a) seed bumped from 172911 to
-      192737, (b) DIFFERENT 30-example slices for GSM8K/BBH/MATH (not
-      the exact examples used in exp1811), and (c) baseline-implementation
-      audit confirming FR-11 path is canonical (not a degraded variant)
-      produces a sample_efficiency_ratio within the exp1811 bootstrap CI
-      (assume +/-0.5x around 3.1x → confirmation range 2.6x–3.6x) AND
-      a kl_drift_ratio within +/-0.10 of exp1811's 0.25 (range 0.15–0.35)
-      AND FR-11 catastrophic forgetting reproduces on the rotated BBH +
-      MATH slices (passrate < 0.55 vs FS > 0.80).
-
-      If confirmation lands in-range: the result is paper-v6-citable.
-      If confirmation diverges: flag exp1811 as PRELIMINARY-NOT-HEADLINE
-      and queue a 3rd replication.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1811_fast_slow_variant.json (the original
-          numbers to match against)
-        - python/carnot/pipeline/fast_slow_variant.py (the implementation
-          shipped in .189; DO NOT MODIFY)
-        - python/carnot/pipeline/ebft_autoresearch_loop.py (or wherever
-          the FR-11 baseline lives — audit this for canonical-ness)
-        - feedback_adversarial_confirmation_protocol memory entry
-
-      TASK: Re-run exp1811 with the three rotations.
-
+      CONTEXT: Catastrophic forgetting is a major gap. arXiv 2605.08949 (Muon-OGD) provides a spectral-norm-aware orthogonal gradient projection method that outperforms Frobenius-norm approaches. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/ebft_autoresearch_loop.py
+      TASK: Implement Muon-OGD in a standalone module for continuous self-learning.
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `python -c "from carnot.pipeline.fast_slow_variant import
-              fast_slow_variant"` succeeds — else
-              `blocked_fast_slow_implementation_missing`.
-           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
-              non-empty — else `blocked_model_not_cached`.
-           c. `test -f results/experiment_1811_fast_slow_variant.json`
-              — else `blocked_baseline_artifact_missing` (can't compare
-              without the original numbers).
-           Record preconditions_checked.
-        1. Baseline audit: git log + diff
-           python/carnot/pipeline/ebft_autoresearch_loop.py (or wherever
-           FR-11 path lives) since exp1811 ran. Was there any change?
-           Record `baseline_audit: {{commits_since_exp1811: int,
-           code_changed: bool, diff_summary: str}}` in artifact.
-        2. Build rotated corpus: 30 GSM8K + 30 BBH + 30 MATH from
-           DIFFERENT slices than exp1811. If exp1811 used examples
-           1-30 of each, use examples 31-60. Document which exact
-           slice in artifact.
-        3. Re-run the Fast-Slow Variant pipeline with random_seed=192737
-           (NOT 172911 from exp1811). Same model, same code, ONLY
-           seed + corpus change.
-        4. Re-run FR-11 baseline on the same rotated corpus.
-        5. Compute the same metrics as exp1811: per-task passrate,
-           sample_efficiency_ratio, kl_drift_ratio, plasticity, etc.
-        6. Compare against exp1811's numbers. Acceptance:
-             - sample_efficiency_ratio in [2.6, 3.6]
-             - kl_drift_ratio in [0.15, 0.35]
-             - FR-11 catastrophic forgetting reproduces on rotated BBH
-               + MATH slices (passrate < 0.55)
-             - Fast-Slow maintains > 0.80 on rotated BBH + MATH
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.fast_slow_confirmation.v1"
-        - experiment: 1837
-        - run_date: ISO-8601 UTC
-        - duration_s: > 300s (matching exp1811's 350s — real run)
-        - random_seed: 192737 (NOT 1837 NOR 172911; explicit rotation)
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - baseline_audit: {{commits_since_exp1811: int, code_changed: bool,
-          diff_summary: str}}
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
-          rotation_versus_exp1811: {seed: "172911→192737",
-          corpus: "examples_1-30→examples_31-60",
-          baseline: "audited_canonical"}}
-        - n_samples: 90
-        - n_samples_justification: "Same 30 per task × 3 tasks as exp1811
-          for apples-to-apples adversarial replication. Wilson 95% CI
-          width ~0.30 per passrate."
-        - confirmation_passrate_per_task: dict
-        - exp1811_passrate_per_task: dict (verbatim from exp1811 for
-          side-by-side comparison)
-        - confirmation_sample_efficiency_ratio: float
-        - confirmation_kl_drift_ratio: float
-        - confirmation_in_range_efficiency: bool (2.6 <= ratio <= 3.6)
-        - confirmation_in_range_kl: bool (0.15 <= ratio <= 0.35)
-        - fr11_catastrophic_forgetting_reproduced: bool (passrate < 0.55
-          on rotated BBH + MATH)
-        - fast_slow_held_threshold: bool (passrate > 0.80 on rotated
-          BBH + MATH)
-        - acceptance_gate_passed: bool (all four conditions above true)
-        - acceptance_gate_criteria: "Efficiency in [2.6, 3.6] AND KL
-          drift in [0.15, 0.35] AND FR-11 forgetting reproduced AND
-          FS held >0.80 on rotated BBH+MATH."
-        - methodology_note: "ADVERSARIAL CONFIRMATION TASK. The point is
-          to FAIL TO CONFIRM if exp1811's result was seed-lucky or
-          corpus-lucky. If all 4 conditions land in-range, the
-          confirmation supports paper-v6 citation. If any fail, flag
-          exp1811 as PRELIMINARY-NOT-HEADLINE and queue 3rd replication.
-          IMPLAUSIBLE_PERFECT trigger: if confirmation_ratio matches
-          exp1811's 3.1x to 5+ significant figures, that's TAUTOLOGY-
-          class — likely a methodology bug carrying over identically,
-          not genuine reproducibility."
-        - flagged_preliminary: bool (true if any confirmation condition
-          failed)
-        - third_replication_recommended: bool (same as flagged_preliminary)
-        - optimization_direction: "neither — falsification/confirmation task"
-        - honest_verdict: MUST start with `complete:` / `complete_` /
-          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
-          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
-
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
-      OR python/carnot/pipeline/fast_slow_variant.py (preserve the
-      original implementation for apples-to-apples).
-
-  - id: exp1838-fast-slow-codification-gated-on-confirmation
-    title: "Exp 1838: Codify exp1811 Fast-Slow Variant into paper-v6 §3 (DEFERRED from .190; gates on exp1837 confirmation)"
-    deliverable: results/experiment_1838_fast_slow_codification.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: critical
-    prior_failures:
-      - experiment_id: exp1821-fast-slow-codification-paperv6
-        verdict: planner_replaced_in_190
-        addressed_by: "exp1821 (.190) was in my outer-loop draft but the planner replaced .190 with KAN-CL / Muon-OGD / Mpemba / etc. scope. The codification deferred to .191 (still didn't happen) and now .192. This time we GATE on adversarial confirmation (exp1837) first per the new discipline."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT: exp1811 (.189) shipped Fast-Slow Variant. exp1837 (THIS
-      milestone, runs BEFORE this task) is the adversarial confirmation.
-      If exp1837's acceptance_gate_passed=true, this task codifies the
-      paper-v6 §3 architecture-validation prose with the verbatim numbers.
-      If exp1837 flagged_preliminary=true, this task emits
-      `blocked_confirmation_failed_preliminary_flag` honestly and does
-      NOT codify — codification waits for a 3rd replication.
-
-      FALSIFIABLE HYPOTHESIS: With exp1837 confirmation in-range across
-      all 4 conditions (efficiency, KL drift, FR-11 forgetting reproduces,
-      FS holds threshold), the Fast-Slow Variant result is paper-v6-citable
-      and the architecture-validation prose can lock in the numbers.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1811_fast_slow_variant.json (original)
-        - results/experiment_1837_fast_slow_confirmation.json (replication;
-          run BEFORE this task)
-        - openspec/papers/paper-v6/section-3-architecture.md (or
-          docs/technical-report.md)
-        - research-references.md
-        - ops/known-issues.md
-        - feedback_adversarial_confirmation_protocol memory entry
-
-      TASK: Three-document codification, gated on confirmation.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `test -f results/experiment_1837_fast_slow_confirmation.json` —
-              else `blocked_confirmation_artifact_missing` (can't codify
-              without confirmation).
-           b. Read exp1837. If exp1837.flagged_preliminary == true OR
-              exp1837.acceptance_gate_passed == false: emit
-              `blocked_confirmation_failed_preliminary_flag` and exit.
-              DO NOT codify a result that didn't replicate.
-           c. paper-v6 §3 locatable via grep — else
-              `blocked_paperv6_section3_not_locatable`.
-           Record preconditions_checked.
-        1. Read both exp1811 and exp1837 artifacts. Extract verbatim:
-             - exp1811: sample_efficiency_ratio (3.1), kl_drift_ratio (0.25),
-               passrates per task, catastrophic_forgetting flags
-             - exp1837: confirmation_sample_efficiency_ratio,
-               confirmation_kl_drift_ratio, FR-11-forgetting-reproduced
-               status, rotation-versus-exp1811 metadata
-        2. Draft paper-v6 §3 corrigendum (4 paragraphs):
-             - A: state the result with verbatim numbers FROM BOTH RUNS
-               (original + replication; "x.x x measured with seed Y,
-               x.x x reproduced with seed Z on rotated corpus")
-             - B: contextualize against arXiv:2605.12484 paper baseline
-             - C: triangulation with 4 peer anchors (bijection 2512.15605,
-               Fast-Slow 2605.12484, ODAR 2602.23681, planning 2602.02991)
-             - D: limitation — saturation regime on GSM8K; rotation-
-               window evidence still small-N
-        3. Update research-references.md with the citation chain.
-        4. NEW MANDATORY-NEXT-MILESTONE entry in ops/known-issues.md:
-           "Fast-Slow Variant CONFIRMED — paper-v6 §3 citation locked
-           (.192+ MANDATORY: planner SHOULD use Fast-Slow Variant as
-           default verify-repair selection; FR-11 parameter-update RL
-           is now contraindicated for new continual-learning work)."
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.fast_slow_codification.v2"
-        - experiment: 1838
-        - run_date: ISO-8601 UTC
-        - duration_s: > 60s (prose + 3 file edits + diff review)
-        - random_seed: 173038
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - confirmation_artifact_path: "results/experiment_1837_fast_slow_confirmation.json"
-        - confirmation_gate_passed: bool (from exp1837)
-        - model_specs: {{source_artifacts: ["exp1811", "exp1837"],
-          files_edited: ["paper-v6 §3", "research-references.md",
-          "ops/known-issues.md"], word_count_added: int}}
-        - n_samples: 2 (the original + the confirmation; explicit pair)
-        - n_samples_justification: "Codification gated on confirmation;
-          n=2 represents both runs that informed the codified numbers."
-        - paper_v6_section_3_word_count_added: int
-        - both_runs_cited_in_paperv6: bool
-        - has_emojis_in_paper_v6: false (CLAUDE.md compliance)
-        - acceptance_gate_passed: bool (codification done AND both runs
-          cited AND emoji-free AND known-issues MANDATORY appended)
-        - acceptance_gate_criteria: "Both runs cited; paper-v6 §3 updated;
-          known-issues MANDATORY appended; emoji-free."
-        - methodology_note: "If exp1837 confirmation FAILED, this task
-          emits honest blocked verdict and does NOT codify. Codification
-          locked behind adversarial-confirmation gate per the new
-          discipline."
-        - optimization_direction: "neither — codification task"
-        - honest_verdict: MUST start with terminal prefix OR
-          `blocked_confirmation_failed_preliminary_flag`.
-
+      1. Write `python/carnot/pipeline/muon_ogd.py` implementing the dual iterations and Newton-Schulz matrix-sign approximations. Ensure date ({date}) is logged.
+      2. Include a basic unit test in `tests/python/test_muon_ogd.py`.
+      3. Save the result in `results/experiment_1901_muon_ogd.json`.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1839-phase4-canonical-decision-gated
-    title: "Exp 1839: Phase 4 canonical-metric decision (DEFERRED from .190; gates on exp1837 + exp1838)"
-    deliverable: results/experiment_1839_phase4_canonical_decision.json
+  - id: exp1902-kan-cl
+    title: "Exp 1902: Implement KAN-CL Per-Knot Regularization"
+    deliverable: python/carnot/pipeline/kan_cl.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2605.12306 proposes KAN-CL, an importance-weighted anchoring at per-knot granularity for Kolmogorov-Arnold Networks to stop forgetting. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/fast_slow_variant.py
+      TASK: Implement KAN-CL regularization for continual learning resilience.
+      CONCRETE STEPS:
+      1. Write `python/carnot/pipeline/kan_cl.py` implementing the per-knot penalty. Log {date}.
+      2. Write a test in `tests/python/test_kan_cl.py`.
+      3. Write `results/experiment_1902_kan_cl.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1903-cl-benchmark
+    title: "Exp 1903: gated on Exp 1901 and 1902: Benchmark Muon-OGD vs KAN-CL"
+    deliverable: results/experiment_1903_cl_benchmark.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1901-muon-ogd
+        artifact_field: success
+        op: '=='
+        value: true
+      - upstream: exp1902-kan-cl
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Evaluate the new CL techniques for continuous self-learning. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/muon_ogd.py, python/carnot/pipeline/kan_cl.py
+      TASK: Benchmark both against FR-11 forgetting metrics.
+      CONCRETE STEPS:
+      1. Create a script `scripts/experiment_1903_cl_benchmark.py` testing continuous self-learning. Log {date}.
+      2. Use unsloth/gemma-4-26B-A4B-it-GGUF if possible in MODEL_SPECS.
+      3. Write artifact to `results/experiment_1903_cl_benchmark.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1904-energy-guided
+    title: "Exp 1904: Implement Energy-Guided Decoding"
+    deliverable: python/carnot/pipeline/energy_guided.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2507.07731 proposes Energy-Guided Decoding to dynamically select minimal energy hidden states for hallucination mitigation. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/inference/composite_scorer.py
+      TASK: Implement Energy-Guided Decoding.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/energy_guided.py`. Log {date}.
+      2. Add integration for SOTA local GGUF models like unsloth/gemma-4-31B-it-GGUF.
+      3. Write `results/experiment_1904_energy_guided.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1905-adamflip
+    title: "Exp 1905: Implement AdamFLIP Hard Constraints"
+    deliverable: python/carnot/pipeline/adamflip.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2605.08408 proposes AdamFLIP, applying momentum feedback linearization for hard constraint optimization. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/models/ebt.py
+      TASK: Implement AdamFLIP optimizer.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/adamflip.py`. Log {date}.
+      2. Implement the adaptive momentum Lagrange multiplier feedback.
+      3. Write `results/experiment_1905_adamflip.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1906-adamflip-eval
+    title: "Exp 1906: gated on Exp 1905 success: Evaluate AdamFLIP"
+    deliverable: results/experiment_1906_adamflip_eval.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1905-adamflip
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Evaluate hard constraints vs soft penalty. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/adamflip.py
+      TASK: Test AdamFLIP on a constraint benchmark.
+      CONCRETE STEPS:
+      1. Run benchmark script. Log {date}.
+      2. Record metrics in `results/experiment_1906_adamflip_eval.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1907-energy-fast-slow
+    title: "Exp 1907: Integrate Energy-Guided Decoding into Fast-Slow Variant"
+    deliverable: results/experiment_1907_energy_fs.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Combine .192's Fast-Slow variant with Energy-Guided decoding. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/fast_slow_variant.py, python/carnot/pipeline/energy_guided.py
+      TASK: Integrate the two.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1907_energy_fs.py`. Log {date}.
+      2. MUST include unsloth/Qwen3.6-35B-A3B-GGUF or unsloth/gemma-4-31B-it-GGUF in MODEL_SPECS.
+      3. Output `results/experiment_1907_energy_fs.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1908-nexus
+    title: "Exp 1908: Implement NEXUS Symbolic Continual Learning"
+    deliverable: python/carnot/pipeline/nexus_grounding.py
+    max_turns: 50
+    model: opus
+    prompt: |
+      CONTEXT: arXiv 2605.09387 describes NEXUS for continual learning of symbolic constraints. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/property_test.py
+      TASK: Decouple physical feasibility from safety specifications into hard constraint rules.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/nexus_grounding.py`. Log {date}.
+      2. Save `results/experiment_1908_nexus.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1909-wahkon
+    title: "Exp 1909: Implement Wahkon Deep RKHS Superposition Network"
+    deliverable: python/carnot/pipeline/wahkon_rkhs.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2605.14041 introduces Wahkon, an RKHS alternative to standard KANs providing finite-sample guarantees. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/embeddings/model_embeddings.py
+      TASK: Implement the Wahkon architecture.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/wahkon_rkhs.py`. Log {date}.
+      2. Save `results/experiment_1909_wahkon.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1910-wahkon-bench
+    title: "Exp 1910: gated on Exp 1909 success: Benchmark Wahkon vs KAN"
+    deliverable: results/experiment_1910_wahkon_bench.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1909-wahkon
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Compare Wahkon's calibrated uncertainty vs KANs. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/wahkon_rkhs.py
+      TASK: Run calibration evaluation.
+      CONCRETE STEPS:
+      1. Execute evaluation. Log {date}.
+      2. Save `results/experiment_1910_wahkon_bench.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1911-e2e-integration
+    title: "Exp 1911: E2E Integration of NEXUS + Muon-OGD + Fast-Slow"
+    deliverable: results/experiment_1911_e2e.json
     max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: high
-    prior_failures:
-      - experiment_id: exp1823-phase4-canonical-decision
-        verdict: planner_replaced_in_190_then_191
-        addressed_by: "exp1823 (.190) and the .191 plan both moved Phase 4 closure off the table. This 3rd attempt gates on the Fast-Slow Variant being CONFIRMED (exp1837 + exp1838) before naming it canonical — earlier drafts named it canonical on single-run evidence alone."
-        retire_if_same_verdict: false
+    model: opus
     prompt: |
-      CONTEXT: Phase 4 program has chased alpha_t measurement across
-      5 experiments (exp1715/1721/1741/1745/1811). exp1745 confirmed
-      ensemble-output alpha is substrate-inaccessible. exp1811 shipped
-      Fast-Slow Variant. exp1837 (this milestone) is the adversarial
-      confirmation of exp1811's win. If both pass, Fast-Slow Variant
-      becomes the Phase 4 canonical mechanism.
-
-      FALSIFIABLE HYPOTHESIS: With exp1837 confirmation in-range AND
-      exp1838 codification complete, Fast-Slow Variant satisfies the
-      Phase 4 active-inference hypothesis EMPIRICALLY in a way that
-      alpha_t / alpha_t' / thermodynamic-metric did not, and the
-      canonical Phase 4 metric for .193+ planning is "Fast-Slow
-      Variant sample-efficiency-ratio + KL-drift-ratio relative to
-      FR-11 baseline". Phase 4 program closes as scope-complete.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1811_fast_slow_variant.json
-        - results/experiment_1837_fast_slow_confirmation.json (replication;
-          MUST exist for this task to proceed)
-        - results/experiment_1838_fast_slow_codification.json (codification)
-        - results/experiment_1745_phase4_per_step_alpha.json (the
-          alpha_t inaccessibility verdict)
-        - results/experiment_1721_alpha_t_replacement.json
-        - feedback_active_inference_phase4_committed memory entry
-
-      TASK: Decision artifact + paper-v6 §6 limitation reframe +
-      known-issues MANDATORY update.
-
+      CONTEXT: CRITICAL: integrate all major phase 1-3 improvements. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/fast_slow_variant.py, python/carnot/pipeline/nexus_grounding.py, python/carnot/pipeline/muon_ogd.py
+      TASK: Build an end-to-end evaluation script for the milestone.
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `test -f results/experiment_1837_fast_slow_confirmation.json`
-              AND read exp1837.acceptance_gate_passed — if false, emit
-              `blocked_confirmation_failed` and exit.
-           b. `test -f results/experiment_1838_fast_slow_codification.json`
-              AND read exp1838.acceptance_gate_passed — if false, emit
-              `blocked_codification_failed` and exit.
-           c. `test -f results/experiment_1745_phase4_per_step_alpha.json`
-              — else `blocked_phase4_alpha_inaccessibility_baseline_missing`.
-           Record preconditions_checked.
-        1. Tabulate Phase 4 program history (5 alpha experiments + 1
-           Fast-Slow + 1 adversarial confirmation = 7 total).
-        2. Issue decision: Phase 4 canonical = Fast-Slow Variant's
-           sample-efficiency-ratio + KL-drift-ratio pair. Retired:
-           alpha_t / alpha_t' / thermodynamic-metric as candidates.
-        3. Update paper-v6 §6 (limitations): alpha_t inaccessibility is
-           a methodology limitation, NOT a Phase 4 hypothesis falsification.
-        4. Update ops/known-issues.md MANDATORY entry:
-           "Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-
-           ratio (CONFIRMED via exp1811 + exp1837). alpha_t variants
-           retired as canonical candidates."
+      1. Create `scripts/experiment_1911_e2e.py`. Log {date}.
+      2. Output `results/experiment_1911_e2e.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.phase4_canonical_decision.v2"
-        - experiment: 1839
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s
-        - random_seed: 173039
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {{metric_history: ["alpha_t", "alpha_t_prime",
-          "thermodynamic_metric_v1", "fast_slow_variant_v1"],
-          empirical_winner: "fast_slow_variant_v1",
-          confirmation_evidence: ["experiment_1811",
-          "experiment_1837_confirmation"]}}
-        - n_samples: 5
-        - n_samples_justification: "Decision; n is the count of Phase 4
-          metric attempts."
-        - canonical_metric_named: str
-        - retired_candidates: list
-        - paper_v6_section_6_word_count_added: int
-        - known_issues_mandatory_added: bool
-        - acceptance_gate_passed: bool
-        - acceptance_gate_criteria: "Decision rendered + paper-v6 §6
-          updated + known-issues MANDATORY appended."
-        - methodology_note: "Decision gated on confirmation per the new
-          adversarial-confirmation discipline. If exp1837 had failed,
-          this task would have emitted blocked verdict, not a
-          canonical-decision artifact."
-        - optimization_direction: "neither — decision artifact"
-        - honest_verdict: MUST start with terminal prefix.
-
-      Run command. Do NOT push to git. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1840-phase1-pypi-publish-via-ci-tagged-release
-    title: "Exp 1840: Phase 1 PyPI publish via CI tagged release (NOT credentials — workflow exists)"
-    deliverable: results/experiment_1840_pypi_publish.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: high
-    prior_failures:
-      - experiment_id: exp1711-pypi-publish
-        verdict: blocked_pypi_credentials_unavailable_wrong_mechanism
-        addressed_by: "exp1711 and the 9-attempt chain (exp2103 -> 1683 -> 1685 -> 1704 -> 1711 -> 1762 -> 1782 -> 1788 -> 1812 -> 1824) ALL used the wrong publish mechanism (local credentials via twine). Operator clarification 2026-05-16: PyPI publish should be via the CI tagged-release workflow at .github/workflows/publish-pypi.yml which uses OIDC trusted publishing — NO long-lived secrets needed. The correct release path is `git tag v<version> && git push origin v<version>`; GitHub Actions handles the publish. The blocked_credentials chain was an honest-but-misdirected design pattern. retire_if_same_verdict=true because the credentials-blocked verdict is now a known design error, not a real blocker."
-        retire_if_same_verdict: true
+  - id: exp1912-full-benchmark
+    title: "Exp 1912: gated on Exp 1911 success: Full E2E Benchmark with SOTA models"
+    deliverable: results/experiment_1912_benchmark.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1911-e2e-integration
+        artifact_field: success
+        op: '=='
+        value: true
     prompt: |
-      CONTEXT: Phase 1 ship-track PyPI prong. The prior 10 attempts
-      (exp2103 → 1683 → 1685 → 1704 → 1711 → 1762 → 1782 → 1788 → 1812
-      → 1824) used the wrong mechanism (local twine upload via
-      credentials). The CORRECT path is the existing
-      `.github/workflows/publish-pypi.yml` workflow:
-        - Configured 2026-05-08 per operator directive
-        - Uses PyPI OIDC trusted publishing (no long-lived secrets)
-        - Triggered by `git push origin v<version>` (tag matching v*)
-        - PyPI pending publisher already set up for "carnot-ebm" with
-          repo Carnot-EBM/carnot-ebm + workflow filename publish-pypi.yml
-          + environment "pypi"
-
-      Current version per python/carnot/_version.py: 0.1.0b1 (beta 1).
-      No release tags exist yet.
-
-      FALSIFIABLE HYPOTHESIS: Creating a `v0.1.0b1` git tag and pushing
-      it to origin triggers the publish-pypi.yml workflow, which builds
-      sdist + wheel and publishes to PyPI via OIDC. Within 5 minutes of
-      tag-push, https://pypi.org/project/carnot-ebm/0.1.0b1/ becomes
-      reachable AND `pip install carnot-ebm==0.1.0b1` succeeds in a
-      fresh venv on a clean machine.
-
-      EXISTING CODE TO READ FIRST:
-        - .github/workflows/publish-pypi.yml (the OIDC workflow; verify
-          it still exists + is unchanged)
-        - pyproject.toml (verify name="carnot-ebm")
-        - python/carnot/_version.py (current __version__ = "0.1.0b1")
-        - results/experiment_1711_pypi_publish.json (the blocked-credentials
-          exemplar that established the prior — now-superseded — pattern)
-
-      TASK: Cut a release via tag-push; verify CI completes; verify
-      install from PyPI.
-
+      CONTEXT: Final benchmark using SOTA GGUF models. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1911_e2e.py
+      TASK: Run the evaluation.
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `test -f .github/workflows/publish-pypi.yml` — else
-              `blocked_publish_workflow_missing` (the operator-configured
-              CI publish path is gone; would need re-creation).
-           b. `pyproject.toml` has `name = "carnot-ebm"` — else
-              `blocked_pypi_name_misconfigured`.
-           c. `grep "^__version__" python/carnot/_version.py` returns
-              a valid version string — else `blocked_version_unreadable`.
-           d. `git remote -v` includes `github.com:Carnot-EBM/carnot-ebm`
-              (or equivalent) — else `blocked_github_remote_missing` (no
-              tag-push target).
-           e. `git tag --list "v$VERSION"` is EMPTY (tag doesn't already
-              exist) — else `blocked_version_already_tagged_needs_bump`.
-           f. `command -v gh` succeeds (gh CLI for workflow-run watching)
-              OR fall back to polling the API. If neither, mark
-              `gh_unavailable_run_pending: true` in artifact.
-           Record preconditions_checked.
-        1. Read current version from python/carnot/_version.py
-           (currently 0.1.0b1). Validate it's a PEP-440 valid version.
-        2. Create the annotated git tag: `git tag v<version> -m "Phase 1
-           ship: PyPI release via OIDC trusted publishing"`. Do NOT
-           amend or force-create.
-        3. Push the tag to origin: `git push origin v<version>`. Capture
-           the push output (the tag URL).
-        4. Wait for the GitHub Actions workflow to run. Use
-           `gh run watch <run_id>` if available, else poll
-           `gh api repos/Carnot-EBM/carnot-ebm/actions/runs?event=push`
-           filtered by tag ref. Wait up to 10 minutes for workflow
-           completion. Record run_url.
-        5. Verify PyPI: from a fresh tmpdir + clean venv, run
-           `pip install --index-url https://pypi.org/simple/
-           carnot-ebm==<version>` then `python -c "import carnot;
-           print(carnot.__version__)"`. The version must match.
-        6. If the workflow fails (build or publish job), record the
-           failure step + log excerpt in artifact; emit
-           `blocked_workflow_failed_<step>` honest verdict (NOT a
-           fabricated success).
+      1. Run the benchmark. MUST include unsloth/Qwen3.6-35B-A3B-GGUF or unsloth/gemma-4-31B-it-GGUF. Log {date}.
+      2. Save `results/experiment_1912_benchmark.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.pypi_publish.v4_ci_tagged_release"
-        - experiment: 1840
-        - run_date: ISO-8601 UTC
-        - duration_s: > 60s (tag-push + CI wait + install verify; sub-60s
-          completion means the workflow likely didn't finish)
-        - random_seed: 173040
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {{package_name: "carnot-ebm",
-          version_tagged: str (e.g., "0.1.0b1"),
-          publish_mechanism: "github_actions_oidc_trusted_publishing",
-          workflow_file: ".github/workflows/publish-pypi.yml"}}
-        - n_samples: 1
-        - n_samples_justification: "Ship task; one release artifact."
-        - tag_created: str (e.g., "v0.1.0b1")
-        - tag_pushed: bool
-        - workflow_run_url: str
-        - workflow_run_status: "success" | "failure" | "in_progress" | "timeout"
-        - pypi_url: str (e.g., "https://pypi.org/project/carnot-ebm/0.1.0b1/")
-          or null
-        - external_install_verified: bool
-        - installed_version_matches: bool
-        - acceptance_gate_passed: bool (tag_pushed AND
-          workflow_run_status=="success" AND external_install_verified
-          AND installed_version_matches)
-        - acceptance_gate_criteria: "Tag pushed; CI workflow succeeded;
-          PyPI install in fresh venv matches version."
-        - methodology_note: "The prior 10-attempt blocked_credentials
-          chain was wrong-mechanism, NOT operator-blocked. CI tagged
-          release via OIDC is the canonical path; no long-lived secrets
-          touched at any layer. If workflow fails, emit
-          blocked_workflow_failed_<step> honestly. THIS TASK MAY PUSH
-          A TAG TO ORIGIN — that is the entire purpose; do not refuse
-          on the basis of generic 'do not push' instructions."
-        - optimization_direction: "neither — ship task"
-        - honest_verdict: MUST start with `complete:` / `complete_` /
-          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
-          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline,
-          OR a `blocked_<specific_resource>` honest verdict.
-
-      Run command. **MAY push a release tag to origin** (this is the
-      intentional release-cut action; do NOT modify any other refs).
-      Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1841-milestone-192-retrospective
-    title: "Exp 1841: Milestone .192 retrospective"
-    deliverable: results/operational_retro_2026_05_192.json
-    max_turns: 60
-    agent_type: codex
-    model: gpt-5.5
-    priority: low
-    prior_failures: []
+  - id: exp1913-arch-update
+    title: "Exp 1913: Architecture Updates and Position Paper"
+    deliverable: results/experiment_1913_arch_paper.json
+    max_turns: 20
     prompt: |
-      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
-      Development Workflow step 8. .192 is high-significance: first
-      application of the adversarial-confirmation discipline; Phase 4
-      program closure (if confirmation passed). Retro should foreground
-      whether the confirmation gate held.
-
-      TASK: Generate the .192 operational retrospective.
-
+      CONTEXT: Update documentation based on findings. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: _bmad/architecture.md
+      TASK: Draft position paper and update architecture.
       CONCRETE STEPS:
-        0. PRECONDITIONS: git log [conductor] Activate milestone
-           2026.05.192..HEAD returns non-empty.
-        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.184/.187/.190
-             templates.
-        7. Record adversarial_confirmation_result: pass/fail (exp1837
-           outcome) — sets the precedent for future Score-300+ findings.
+      1. Write `docs/position_paper_nexus.md`. Log {date}.
+      2. Output `results/experiment_1913_arch_paper.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.operational_retro.v64"
-        - milestone: "2026.05.192"
-        - generated_at: ISO-8601 UTC
-        - retro_type: "operational_full"
-        - preconditions_checked: list
-        - total_wall_time_minutes: float
-        - experiments_completed: int
-        - compute_bound_experiments_count: int
-        - slowest_experiments: list
-        - gpu_idle_on_compute_bound_tasks: bool or null
-        - adversarial_confirmation_result: "pass" | "fail" | "blocked"
-        - summary: str
-        - bottlenecks_identified: list
-        - improvements_suggested: list
-        - top_3_highest_leverage_actions: list
-        - estimated_time_savings_pct: int
-        - meta_reflection: str
-        - honest_verdict: MUST start with terminal prefix.
-        - DO NOT modify README.md or docs/technical-report.md.
-
+  - id: exp1914-milestone-retro
+    title: "Exp 1914: Milestone Retrospective"
+    deliverable: results/experiment_1914_retro.json
+    max_turns: 20
+    agent_type: gemini
+    prompt: |
+      CONTEXT: Perform a retrospective on Milestone 2026.05.193. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: ops/changelog.md, ops/status.md
+      TASK: Synthesize the findings and update operational status.
+      CONCRETE STEPS:
+      1. Create `results/experiment_1914_retro.json`. Log {date}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
