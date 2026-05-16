@@ -1,0 +1,35 @@
+{
+  "schema": "carnot.pypi_workflow_status_recheck.v1",
+  "experiment": 1987,
+  "run_date": "2026-05-16T06:00:00Z",
+  "duration_s": 25,
+  "random_seed": 173187,
+  "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "preconditions_checked": [
+    "gh_cli_available",
+    "gh_auth_authenticated",
+    "tag_v0.1.0b1_present"
+  ],
+  "model_specs": {
+    "workflow_file": ".github/workflows/publish-pypi.yml",
+    "tag_checked": "v0.1.0b1",
+    "prior_status_artifact": "exp1930"
+  },
+  "n_samples": 1,
+  "n_samples_justification": "Status re-check; single workflow run.",
+  "workflow_run_id": 25951913694,
+  "workflow_run_url": "https://github.com/Carnot-EBM/carnot-ebm/actions/runs/25951913694",
+  "workflow_run_status": "waiting",
+  "workflow_run_conclusion": null,
+  "state_change_from_exp1930": "no_change",
+  "pypi_url_reachable": false,
+  "pypi_url": null,
+  "external_install_verified": false,
+  "actionable_next_step": "Operator: approve at https://github.com/Carnot-EBM/carnot-ebm/actions/runs/25951913694",
+  "failed_step_excerpt": null,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Status accurately reported; if succeeded, install verified.",
+  "methodology_note": "RE-CHECK task. Does NOT push tags. Honest report of current state; if still waiting, no fabrication.",
+  "optimization_direction": "neither \u2014 status check",
+  "honest_verdict": "waiting: operator manual approval required at GH Environment 'pypi' (https://github.com/Carnot-EBM/carnot-ebm/actions/runs/25951913694)"
+}
