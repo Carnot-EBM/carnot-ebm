@@ -3949,3 +3949,4 @@ Error |
 | 2026-05-16 22:02 UTC | Phase 3: Tier 1 CSL Grammar Updates | OK | Excluded by manifest: exp_id=2091 in manifest |
 | 2026-05-16 22:02 UTC | Phase 4: Full Integration Benchmark (PEM + HardNet | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2091-csl-grammar-violation-updates.tier |
 | 2026-05-16 22:04 UTC | Phase 4: Full Integration Benchmark (PEM + HardNet | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2091-csl-grammar-violation-updates.tier |
+| 2026-05-16 22:06 UTC | Phase 4: Full Integration Benchmark (PEM + HardNet | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2091-csl-grammar-violation-updates.tier |
