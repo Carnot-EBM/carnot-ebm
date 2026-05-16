@@ -1,0 +1,24 @@
+{
+  "experiment": 2006,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T10:57:27.890058+00:00",
+  "finished_at": "2026-05-16T10:57:27.890058+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 2006: Self-Distillation over Z3-verified responses",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp2005-auto-dataset-gen-z3.verified_count (numeric comparison rejected because one side is None (actual=None, expected=10))",
+  "gates_evaluated": [
+    {
+      "upstream": "exp2005-auto-dataset-gen-z3",
+      "artifact_field": "verified_count",
+      "op": ">=",
+      "expected": 10,
+      "actual": null,
+      "passed": false,
+      "reason": "numeric comparison rejected because one side is None (actual=None, expected=10)"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
