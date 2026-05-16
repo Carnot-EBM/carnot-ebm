@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 3,330 experiments across 219 milestones up to .205, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 3,330 experiments across 220 milestones up to .206, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **3,330 experiment records tracked through Exp 2214, with 2,583 task records in 220 artifact-backed completed milestone records archived through 2026.05.206** — run between February and May 2026. `research-complete.yaml` currently archives **219** completed milestone records through 2026.05.205. Milestone 2026.05.205 completed **27** experiments in **80.4** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
+This report documents the research arc behind the framework — **3,330 experiment records tracked through Exp 2114, with 2,583 task records in 220 artifact-backed completed milestone records archived through 2026.05.206** — run between February and May 2026. `research-complete.yaml` currently archives **220** completed milestone records through 2026.05.206. Milestone 2026.05.206 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,

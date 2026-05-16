@@ -3,7 +3,7 @@ license: apache-2.0
 ---
 # Carnot EBM Framework
 
-This project tracks **3,330** experiment records through Exp 2214 across **220** milestone records (latest 2026.05.206).
+This project tracks **3,330** experiment records through Exp 2114 across **220** milestone records (latest 2026.05.206).
 
 ## Key Results Table
 | Milestone | Status | Description |
