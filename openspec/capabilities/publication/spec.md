@@ -871,12 +871,22 @@ software gates are ready.
 
 The PyPI publish dry run MUST produce an artifact at `results/experiment_2103_pypi_publish_dry_run.json` that conforms to the `carnot.phase1_pypi_publish_dry_run.v1` schema. The artifact MUST record the sdist and wheel sizes, the result of `twine check`, and an honest verdict indicating readiness without actually publishing to PyPI.
 
+### REQ-PUBLISH-026: PyPI Workflow Status Re-check
+
+The PyPI workflow status re-check MUST produce an artifact at `results/experiment_1987_pypi_status_recheck.json` conforming to `carnot.pypi_workflow_status_recheck.v1`. It MUST report whether the workflow run has transitioned from 'waiting' to 'succeeded' or 'failed', and verify external install if 'succeeded'.
+
 ### SCENARIO-PUBLISH-027: PyPI Publish Dry Run Passes
 
 **Given** the package build is deterministic and produces valid metadata
 **When** the PyPI publish dry run executes
 **Then** it writes a complete artifact with `twine_check_passed == true`,
 `acceptance_gate_passed == true`, and an `honest_verdict` indicating the dry run was successful.
+
+### SCENARIO-PUBLISH-028: PyPI Workflow Status Re-check correctly verifies and reports wait state
+
+**Given** the PyPI publish workflow run is waiting for operator approval
+**When** the PyPI status recheck executes
+**Then** it records `workflow_run_status == "waiting"` and suggests actionable approval.
 
 ## Implementation Status
 
