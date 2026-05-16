@@ -3863,3 +3863,4 @@ Error |
 | 2026-05-16 16:15 UTC | Exp 2054: Test-Time Gradient Descent for Latents ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 16:17 UTC | Exp 2054: Test-Time Gradient Descent for Latents ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 16:22 UTC | Exp 2055: Prototype EBRM Latent-Space Energy Minim | OK | 81 passed, 1 warning in 4.32s |
+| 2026-05-16 16:24 UTC | Exp 2056: ActFocus Token-Level Energy Redistributi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
