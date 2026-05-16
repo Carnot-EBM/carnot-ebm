@@ -3772,3 +3772,4 @@ Error |
 | 2026-05-16 10:33 UTC | Exp 2002: Implement Energy-Based Reward Model (EBR | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 10:35 UTC | Exp 2002: Implement Energy-Based Reward Model (EBR | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 10:37 UTC | Exp 2002: Implement Energy-Based Reward Model (EBR | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 10:42 UTC | Exp 2003: REFIND Constraint Satisfaction (arXiv:25 | OK | 100 passed, 1 warning in 5.51s |
