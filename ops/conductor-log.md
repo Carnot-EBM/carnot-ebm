@@ -3693,3 +3693,5 @@ Error |
 | 2026-05-16 05:03 UTC | Exp 1921: DAB + SOTA GGUF Live Generation benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1920-thermo-constrained-gen) |
 | 2026-05-16 05:07 UTC | Exp 1922: Compositional Energy Minimization (CEM)  | OK | 81 passed, 1 warning in 5.32s |
 | 2026-05-16 05:09 UTC | Exp 1921: DAB + SOTA GGUF Live Generation benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1920-thermo-constrained-gen) |
+| 2026-05-16 05:12 UTC | Exp 1923: CEM Proof of Concept on 3-SAT (Local SOT | OK | 81 passed, 1 warning in 5.31s |
+| 2026-05-16 05:14 UTC | Exp 1921: DAB + SOTA GGUF Live Generation benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1920-thermo-constrained-gen) |
