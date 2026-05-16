@@ -5908,3 +5908,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 ## 2026-05-16 (Milestone 2026.05.198 Operational Retrospective)
 
 - Milestone 2026.05.198 operational retrospective complete. Analyzed 18.6 min wall time / 10 experiments. Slowest path: Exp 1985 (8 min, synthesis-only). GPU utilization on the 2 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.
+- 2026-05-16: Exp 1991: eGPU Thunderbolt RX 7900 XTX ROCm/JAX initialization test (⚠️ Research Finding) — honest_verdict=hardware_not_detected_egpu_missing; results/experiment_1991_egpu_rocm.json
