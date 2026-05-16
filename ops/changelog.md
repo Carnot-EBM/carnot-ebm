@@ -5927,3 +5927,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 1988: Phase 1 ship-track dashboard — operator-visible single-page status of all 4 prongs (⚠️ Research Finding) — honest_verdict=success: Phase 1 dashboard created with 50% ship percentage (2/4 prongs).; results/experiment_1988_phase1_dashboard.json
 - 2026-05-16: Exp 1989: Phase 1 ship-track recovery — any .198 prong that didn't ship (⚠️ Research Finding) — honest_verdict=Terminal success. Both tasks shipped.; results/experiment_1989_phase1_recovery.json
 - 2026-05-16: Exp 1990: Milestone .200 retrospective (✅ Complete) — honest_verdict=complete; results/experiment_1990_non_autoregressive_interface_audit.json
+- 2026-05-16: Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) (⚠️ Research Finding) — honest_verdict=success_csr_metric_evaluated_and_correlated; results/experiment_2003_refind_csr.json
