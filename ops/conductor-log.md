@@ -3597,3 +3597,4 @@ IMPORTANT:
 | 2026-05-16 00:51 UTC | Exp 1834: Benchmark Mpemba and Clock Rescaled Lang | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.04s |
 | 2026-05-16 00:53 UTC | Exp 1835: Author theory writeup formalizing EBM-RL | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.16s |
 | 2026-05-16 00:55 UTC | Exp 1835: Author theory writeup formalizing EBM-RL | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.47s |
+| 2026-05-16 00:58 UTC | Exp 1835: Author theory writeup formalizing EBM-RL | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.12s |
