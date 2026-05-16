@@ -6002,3 +6002,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Phase 2: HardNet Verification Pipeline Integration (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2087_hardnet_pipeline.json
 - 2026-05-16: Phase 2: HardNet Zero-False-Accept Graph Coloring (✅ Complete) — honest_verdict=complete: hardnet_graph_coloring_zero_false_accepts; results/experiment_2088_hardnet_graph_coloring.json
 - 2026-05-16: Phase 3: CRANE Augmented Grammar Adapter (✅ Complete) — honest_verdict=Augmented Grammar Decoder implemented: interleaved constrained/unconstrained decoding.; results/experiment_2089_crane_decoder.json
+- 2026-05-16: Phase 3: CRANE Decoder HumanEval Benchmark (⚠️ Research Finding) — honest_verdict=CRANE evaluated vs rigid grammar on 50 HumanEval problems.; results/experiment_2090_crane_humaneval.json
