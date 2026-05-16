@@ -109,7 +109,7 @@ def test_public_docs_disclose_current_provenance_inventory() -> None:
     # README is now a model card; only require an experiment-count label
     # (loose regex tolerant of "Total Experiments: N" or "N+ experiments").
     import re as _re
-    assert _re.search(r"\d+[+,]?\d*\+?\s*[Ee]xperiments?", readme), (
+    assert _re.search(r"\d+[+,]?\d*\+?\s*\*?\*?\s*[Ee]xperiments?", readme), (
         "README.md should expose at least one experiment-count label"
     )
 
@@ -145,7 +145,7 @@ def test_public_docs_cover_latest_pbt_and_fpga_reporting() -> None:
     # labels rather than exact numbers. README is model-card; tolerant regex.
     import re as _re
 
-    assert _re.search(r"\d+[+,]?\d*\+?\s*[Ee]xperiments?", readme)
+    assert _re.search(r"\d+[+,]?\d*\+?\s*\*?\*?\s*[Ee]xperiments?", readme)
     assert _re.search(r"\d+\+?\s*Experiments Across", report)
     assert _re.search(r"\d+\+?\s*Experiments Across", report_html)
 
