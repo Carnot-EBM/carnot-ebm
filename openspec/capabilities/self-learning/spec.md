@@ -5807,3 +5807,20 @@ historically reliable constraint violation patterns as new queries arrive.
 **Given** an initialized Muon-OGD optimizer
 **When** sequential gradient updates are applied
 **Then** updates MUST be projected orthogonally against the running memory matrix of prior task gradients.
+
+## REQ-LEARN-2066: EBRM Training Loop via Contrastive Divergence
+
+**Summary:** Carnot SHALL implement a lightweight Energy-Based Reward Model (EBRM) training loop using Contrastive Divergence on synthetic logical derivations.
+
+- REQ-LEARN-2066-1: The repository SHALL provide `python/carnot/training/ebrm_trainer.py`.
+- REQ-LEARN-2066-2: The module SHALL contain an `EBRMTrainer` class using a small JAX MLP to act as the Energy Reward Model.
+- REQ-LEARN-2066-3: The trainer SHALL implement a Contrastive Divergence step taking synthetic logical traces and generating an energy loss.
+- REQ-LEARN-2066-4: A script `scripts/experiment_2066_ebrm_training.py` SHALL be implemented to train the artifact.
+- REQ-LEARN-2066-5: The script SHALL output an artifact `results/experiment_2066_ebrm_training.json` with `ebrm_trained=true`.
+
+### SCENARIO-LEARN-2066: EBRM Trainer executes CD Loop
+
+**Given** the `EBRMTrainer` initialized with a small JAX MLP
+**When** the `train()` method is called with synthetic logical traces
+**Then** the energy model weights MUST be updated using Contrastive Divergence
+**And** it outputs a complete deliverable to `results/experiment_2066_ebrm_training.json` with `ebrm_trained=true`.
