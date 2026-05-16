@@ -1,0 +1,388 @@
+milestone: "2026.05.200"
+milestone_title: "Combined .198/.199 audit + PyPI status re-check + Phase 1 dashboard + ship-track recovery"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction_compliance:
+  rationale: ".198 attempted to land MCP/CLI docs (exp1981) + Independent Reproducer (exp1982) + CoT2-Meta routing (exp1983) as the final Phase 1 ship completion. Status unknown at .200 pre-stage time because the outer-loop Bash environment broke mid-session (every shell command returns exit 1, no output) — Read/Write tools still functional, so this draft proceeds, but the harness-fit linter could not be run before commit. The conductor's auto-commit chain typically sweeps up research-roadmap-next.yaml even when outer-loop git operations fail. .200 covers: combined .198/.199 audit, PyPI workflow status re-check (may be approved by now), Phase 1 dashboard task (operator-visible single-page status of all 4 prongs), and ship-track recovery for any .198 task that didn't land."
+  carry_forwards_addressed: ["combined .198/.199 audit (status unknown due to bash failure)", "PyPI workflow status re-check", "Phase 1 dashboard (operator-visible status)", "Ship-track recovery if .198 tasks were replaced/SKIPPED"]
+authored_by: outer-loop-claude
+known_constraints:
+  - "Outer-loop Bash environment failed mid-session 2026-05-16 ~06:40Z — every shell command returns exit 1 with no output. Read/Write tools still functional. Harness-fit linter NOT run before commit; conductor's pre-emit validation handles structural correctness. If yaml is malformed at conductor pickup, planner will overwrite per Pre-Staged Roadmap Convention fallback."
+
+tasks:
+  - id: exp1986-combined-audit-198-199
+    title: "Exp 1986: Combined .198 + .199 findings audit + corrigenda"
+    deliverable: results/experiment_1986_findings_audit_198_199.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures: []
+    prompt: |
+      CONTEXT: Combined audit of .198 (exp1981-1985: Phase 1 MCP docs +
+      Independent Reproducer + CoT2-Meta routing + audit + retro) and
+      .199 (exp1991+: eGPU/CLaRa/strict-epsilon scope per outer-loop draft).
+      Routine audit cadence; double-milestone scope because the .200
+      outer-loop pre-stage couldn't run the linter due to bash failure
+      and wanted to consolidate audit coverage.
+
+      FALSIFIABLE HYPOTHESIS: At least 3 .198/.199 artifacts will be
+      flagged by the 9-rule adversarial-verify linter. Classify each
+      REAL_BUG / FALSE_POSITIVE / NEEDS_REVISION. Special check: any
+      `blocked_*` honest verdicts get NEEDS_REVISION-not-flagged
+      classification (they're honest, not bugs).
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py (9-rule linter; rule #8
+          IMPLAUSIBLE_TIGHT_CI is the newest)
+        - results/experiment_198[1-5]*.json + experiment_199[0-9]*.json
+        - ops/conductor-log.md (for any SKIP/DOOMED_RERUN/GATE_BLOCK
+          pattern in .198/.199)
+
+      TASK: Audit + corrigenda + SKIP-cascade diagnosis if applicable.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
+        1. `python3 scripts/adversarial_verify.py --milestone-range
+           1981 2000`.
+        2. Classify each flag; append corrigendum_2026_05_200_audit
+           (CLAUDE.md no-pruning: APPEND only).
+        3. Scan ops/conductor-log.md for SKIP/DOOMED_RERUN/GATE_BLOCK
+           entries since 2026-05-16T06:00Z; if any, diagnose root cause.
+        4. For REAL_BUG findings, propose .201+ follow-ups.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.findings_audit_corrigenda.v12"
+        - experiment: 1986
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 173186
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {audit_target_milestones: ["2026.05.198",
+          "2026.05.199"], adversarial_verify_version: git_rev,
+          artifacts_scanned: int, artifacts_flagged: int}
+        - n_samples: int (flagged count)
+        - n_samples_justification: "Combined audit; n is flagged-artifact
+          count across 2 milestones."
+        - audit_outcomes: dict experiment_id -> {classification, rationale}
+        - corrigenda_added: list
+        - skip_cascade_observed: bool
+        - skip_cascade_root_cause: str or null
+        - acceptance_gate_passed: bool (all flagged classified)
+        - acceptance_gate_criteria: "All flagged classified; cascade
+          diagnosed if observed; corrigenda appended."
+        - methodology_note: "Audit; <10s on >5 artifacts = shortcut."
+        - optimization_direction: "neither — audit task"
+        - honest_verdict: MUST start with `complete:` / `complete_` /
+          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
+          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
+      or scripts/adversarial_verify.py.
+
+  - id: exp1987-pypi-workflow-status-recheck
+    title: "Exp 1987: PyPI workflow status RE-CHECK (v0.1.0b1 awaiting operator approval since .194)"
+    deliverable: results/experiment_1987_pypi_status_recheck.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1930-pypi-workflow-status-check
+        verdict: success_operator_approval_required
+        addressed_by: "exp1930 (.196) identified the GitHub Actions workflow as waiting on operator manual approval at the `pypi` environment. This task re-checks N hours later — operator may have approved, workflow may have succeeded and PyPI 0.1.0b1 may now be reachable. NOT another tag-push; just status re-check + install verification."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: exp1930 (.196) found the v0.1.0b1 workflow run waiting on
+      operator approval at GH Environment 'pypi'. N hours later, the
+      operator may have approved. This task RE-CHECKS — if pypi is now
+      reachable, verify install in fresh venv; if still waiting,
+      re-report the actionable next step (operator approve at <url>).
+
+      FALSIFIABLE HYPOTHESIS: The workflow run for tag v0.1.0b1 has
+      transitioned from 'waiting' to one of: (a) approved-and-succeeded
+      (PyPI 0.1.0b1 reachable; install works), (b) approved-and-failed
+      (workflow ran but a step failed), (c) still-waiting (operator
+      hasn't approved yet). This task identifies which.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1930_pypi_status.json (the prior status check)
+        - .github/workflows/publish-pypi.yml
+        - feedback_pypi_publish_via_ci_tagged_release memory entry
+
+      TASK: Re-check workflow status; verify PyPI if succeeded.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `command -v gh` succeeds — else
+              `blocked_gh_cli_unavailable_use_web_check`.
+           b. `gh auth status` returns authenticated — else
+              `blocked_gh_auth_needed`.
+           c. `git ls-remote --tags origin | grep "v0.1.0b1"` returns
+              the tag hash — else `blocked_tag_unexpectedly_missing`.
+           Record preconditions_checked.
+        1. `gh run list --workflow=publish-pypi.yml --limit 5
+            --repo Carnot-EBM/carnot-ebm --json
+            databaseId,status,conclusion,createdAt,url`. Identify the
+           v0.1.0b1 run.
+        2. Classify:
+           - status=waiting → output "Operator: approve at <url>".
+           - status=completed AND conclusion=success → verify PyPI:
+             fresh tmpdir, `pip install --index-url
+             https://pypi.org/simple/ carnot-ebm==0.1.0b1`, then
+             `python -c "import carnot; print(carnot.__version__)"`.
+           - status=completed AND conclusion=failure → fetch failed-
+             step log: `gh run view <id> --log-failed
+             --repo Carnot-EBM/carnot-ebm` (truncate 50 lines).
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.pypi_workflow_status_recheck.v1"
+        - experiment: 1987
+        - run_date: ISO-8601 UTC
+        - duration_s: > 15s
+        - random_seed: 173187
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {workflow_file: ".github/workflows/publish-pypi.yml",
+          tag_checked: "v0.1.0b1",
+          prior_status_artifact: "exp1930"}
+        - n_samples: 1
+        - n_samples_justification: "Status re-check; single workflow run."
+        - workflow_run_id: int or null
+        - workflow_run_url: str
+        - workflow_run_status: "waiting" | "in_progress" | "success" | "failure"
+        - workflow_run_conclusion: str or null
+        - state_change_from_exp1930: "no_change" | "now_succeeded" | "now_failed"
+        - pypi_url_reachable: bool
+        - pypi_url: str or null
+        - external_install_verified: bool
+        - actionable_next_step: str
+        - failed_step_excerpt: str or null
+        - acceptance_gate_passed: bool (status identified AND actionable
+          next step set)
+        - acceptance_gate_criteria: "Status accurately reported; if
+          succeeded, install verified."
+        - methodology_note: "RE-CHECK task. Does NOT push tags. Honest
+          report of current state; if still waiting, no fabrication."
+        - optimization_direction: "neither — status check"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push tags. Do NOT modify
+      scripts/research_conductor.py.
+
+  - id: exp1988-phase1-ship-track-dashboard
+    title: "Exp 1988: Phase 1 ship-track dashboard — operator-visible single-page status of all 4 prongs"
+    deliverable: results/experiment_1988_phase1_dashboard.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures: []
+    prompt: |
+      CONTEXT: Phase 1 ship-track has 4 prongs per CLAUDE.md Project
+      Vision + ops/known-issues.md ".121+ MANDATORY". As of .197+:
+      Fast-Slow codification done (.196 exp1929), HF mirror done
+      (.196 exp1931 → huggingface.co/Carnot-EBM/ThinkPRM-v3), PyPI tag
+      pushed (.194 exp1910) but awaiting operator approval. MCP/CLI
+      docs + Independent Reproducer attempts in .198. This task
+      synthesizes the current state into a single operator-visible
+      dashboard at ops/phase-1-dashboard.md so the operator doesn't
+      have to grep multiple artifacts.
+
+      FALSIFIABLE HYPOTHESIS: A single-page dashboard at
+      ops/phase-1-dashboard.md can accurately report the status of all
+      4 ship-track prongs (PyPI / HF / MCP-docs / Independent-Reproducer)
+      with links to evidence artifacts and a single overall
+      ship-percentage figure.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1929_fast_slow_codification.json (paper-v6 §3)
+        - results/experiment_1930_pypi_status.json (PyPI workflow status)
+        - results/experiment_1931_huggingface_mirror.json (HF URL)
+        - results/experiment_1981*_mcp*.json (MCP docs, if shipped)
+        - results/experiment_1982*_reproducer*.json (Reproducer, if shipped)
+        - ops/known-issues.md (Phase 1 MANDATORY entry)
+        - ops/phase-1-reproducers.md (if exists)
+
+      TASK: Write ops/phase-1-dashboard.md + update ops/status.md to
+      cite it.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. results/experiment_1929_fast_slow_codification.json exists
+              — else `blocked_fast_slow_codification_artifact_missing`.
+           b. results/experiment_1931_huggingface_mirror.json exists —
+              else `blocked_hf_mirror_artifact_missing`.
+           Record preconditions_checked.
+        1. Read each prong's evidence artifact. Extract:
+           per-prong status (shipped/pending/blocked), URL/artifact-path,
+           date.
+        2. Write ops/phase-1-dashboard.md:
+             - Header: "Phase 1 Ship-Track Status" + last-updated date
+             - 4-row table: prong / status / evidence URL / date / next-action
+             - Single ship-percentage figure (count_shipped / 4 × 100%)
+             - Operator action items: bullet list (e.g., "approve PyPI
+               workflow at <url>")
+             - Cross-references to relevant memory entries
+             - NO emojis per CLAUDE.md
+        3. Update ops/status.md "What's Working" section to LINK to
+           ops/phase-1-dashboard.md (do NOT replace prior content).
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.phase1_dashboard.v1"
+        - experiment: 1988
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 173188
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {dashboard_path: "ops/phase-1-dashboard.md",
+          prongs_audited: ["pypi", "huggingface", "mcp_docs",
+          "independent_reproducer"]}
+        - n_samples: 4
+        - n_samples_justification: "Dashboard; n is prong count."
+        - per_prong_status: dict prong -> {status: str, evidence: str,
+          date: str, next_action: str}
+        - phase_1_ship_percentage: int (0-100)
+        - operator_action_items: list
+        - dashboard_word_count: int
+        - dashboard_has_emojis: false
+        - acceptance_gate_passed: bool (4 prongs audited + dashboard
+          written + status.md linked + emoji-free)
+        - acceptance_gate_criteria: "All 4 prongs audited; dashboard
+          single-page; emoji-free; status.md cross-references."
+        - methodology_note: "Dashboard reflects current state honestly.
+          PyPI is shipped-pending-operator-approval is NOT 'shipped' —
+          it's 'pending'. No status inflation."
+        - optimization_direction: "neither — synthesis task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1989-phase1-ship-track-recovery
+    title: "Exp 1989: Phase 1 ship-track recovery — any .198 prong that didn't ship"
+    deliverable: results/experiment_1989_phase1_recovery.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures:
+      - experiment_id: exp1981-phase1-mcp-cli-integrator-docs
+        verdict: status_unknown_at_200_prestage
+        addressed_by: "exp1981 (.198) MCP docs task status unknown at .200 pre-stage because outer-loop Bash failure prevented checking results. If shipped successfully, this task no-ops; if not, retry."
+        retire_if_same_verdict: false
+      - experiment_id: exp1982-phase1-independent-reproducer-github-actions
+        verdict: status_unknown_at_200_prestage
+        addressed_by: "exp1982 (.198) Reproducer task status unknown; same conditional retry."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: .198 had exp1981 (MCP/CLI docs) + exp1982 (Independent
+      Reproducer) as Phase 1 ship-track completion tasks. Status
+      unknown at .200 pre-stage. This task checks both; retries any
+      that didn't ship cleanly.
+
+      FALSIFIABLE HYPOTHESIS: Of exp1981 + exp1982, each is either
+      (a) shipped (artifact exists, acceptance_gate_passed=true), or
+      (b) not-shipped (artifact missing, blocked, or
+      acceptance_gate_passed=false). For each (b) case, retry with
+      same no-gate + direct-preconditions discipline.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1981*_mcp*.json (if exists)
+        - results/experiment_1982*_reproducer*.json (if exists)
+        - .github/workflows/phase1-reproducer.yml (if drafted by .198)
+        - docs/integrator-guide.md (if drafted by .198)
+
+      TASK: Status-check each .198 ship task; conditional retry.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. The audit artifacts from exp1986 are readable OR can be
+              read directly from results/ — else
+              `blocked_no_audit_baseline`. (Allowed to proceed
+              without exp1986 by directly checking the .198 artifacts.)
+           Record preconditions_checked.
+        1. For exp1981 MCP/CLI docs:
+           a. Check results/experiment_1981*.json exists +
+              acceptance_gate_passed=true. If yes, mark `mcp_docs_status:
+              shipped` and skip retry.
+           b. If artifact missing or blocked/failed, retry the MCP/CLI
+              docs work per the exp1981 spec.
+        2. For exp1982 Independent Reproducer:
+           a. Check results/experiment_1982*.json exists +
+              acceptance_gate_passed=true.
+           b. If artifact missing or blocked/failed, retry per exp1982 spec.
+        3. Record per-task: status, retry_needed, retry_outcome.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.phase1_recovery.v1"
+        - experiment: 1989
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s if no retries needed; > 120s if retries
+        - random_seed: 173189
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {tasks_audited: ["exp1981", "exp1982"]}
+        - n_samples: 2
+        - n_samples_justification: "Recovery; n is task count."
+        - exp1981_mcp_docs_status: "shipped" | "missing" | "blocked" | "retried"
+        - exp1982_reproducer_status: "shipped" | "missing" | "blocked" | "retried"
+        - retries_performed: list
+        - acceptance_gate_passed: bool (both .198 tasks either shipped
+          OR retried with outcome recorded)
+        - acceptance_gate_criteria: "Both .198 tasks' final status
+          recorded honestly; any not-shipped were retried."
+        - methodology_note: "Recovery task. If both .198 tasks shipped,
+          this task is mostly a no-op artifact recording confirmation.
+          If neither shipped, retry attempts may be long-running."
+        - optimization_direction: "neither — recovery task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1990-milestone-200-retrospective
+    title: "Exp 1990: Milestone .200 retrospective"
+    deliverable: results/operational_retro_2026_05_200.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
+    prompt: |
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8. .200 is a meta-milestone: combined
+      audit + status checks + dashboard + recovery. Should be tractable
+      for a single retro pass.
+
+      TASK: Generate the .200 operational retrospective.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.200..HEAD returns non-empty.
+        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.184/.187/.190/.194/.196/.198
+             templates.
+        7. Note in meta_reflection: this is the 200th milestone — a
+           process-history landmark worth noting.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.200"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_full_milestone_200_landmark"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - gpu_idle_on_compute_bound_tasks: bool or null
+        - phase_1_ship_track_percentage: int
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+        - DO NOT modify README.md or docs/technical-report.md.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
