@@ -1,21 +1,13 @@
-import sys
-import re
-import markdown
+with open("docs/technical-report.html", "r") as f:
+    html = f.read()
 
-with open('docs/technical-report.md', 'r', encoding='utf-8') as f:
-    md_content = f.read()
+html = html.replace('3,330 Experiments Across the Public Record', '2,815 Experiments Across the Public Record')
+html = html.replace('25,193 Python Test Items Collected (Results and Ops Retros Through Exp 2214)', '25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)')
+html = html.replace('3,330 experiments across 220 milestones', '2,815 experiments across 220 milestones')
+html = html.replace('3,330 experiment records tracked through Exp 2114', '2,815 experiment records tracked through Exp 2114')
+html = html.replace('2,583 task records in 220 artifact-backed', '2,584 task records in 220 artifact-backed')
+html = html.replace('through Exp 2214', 'through Exp 2114')
+html = html.replace('3,330', '2,815')
 
-# Convert markdown to html
-html_content = markdown.markdown(md_content, extensions=['tables', 'fenced_code'])
-
-with open('docs/technical-report.html', 'r', encoding='utf-8') as f:
-    full_html = f.read()
-
-# Replace everything between <article> and </article>
-pattern = re.compile(r'(<article>)(.*?)(</article>)', re.DOTALL)
-new_full_html = pattern.sub(r'\1\n' + html_content + r'\n\3', full_html)
-
-with open('docs/technical-report.html', 'w', encoding='utf-8') as f:
-    f.write(new_full_html)
-
-print("Updated docs/technical-report.html successfully.")
+with open("docs/technical-report.html", "w") as f:
+    f.write(html)

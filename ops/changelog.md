@@ -1,5 +1,10 @@
 # Carnot — Changelog
 
+## 2026-05-16 (Milestone 2026.05.207 Operational Retrospective)
+
+- Milestone 2026.05.207 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.207. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+# Carnot — Changelog
+
 ## 2026-05-16 (Milestone 2026.05.206 Operational Retrospective)
 
 ## 2026-05-16 (Milestone 2026.05.206 Operational Retrospective)

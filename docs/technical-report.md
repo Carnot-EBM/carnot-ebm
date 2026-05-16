@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,330 Experiments Across the Public Record, 220 Archived Milestone Records, 25,193 Python Test Items Collected (Results and Ops Retros Through Exp 2214)
+## A Technical Report — 2,815 Experiments Across the Public Record, 220 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 3,330 experiments across 220 milestones up to .206, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 2,815 experiments across 220 milestones up to .206, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **3,330 experiment records tracked through Exp 2114, with 2,583 task records in 220 artifact-backed completed milestone records archived through 2026.05.206** — run between February and May 2026. `research-complete.yaml` currently archives **220** completed milestone records through 2026.05.206. Milestone 2026.05.206 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
+This report documents the research arc behind the framework — **2,815 experiment records tracked through Exp 2114, with 2,584 task records in 220 artifact-backed completed milestone records archived through 2026.05.206** — run between February and May 2026. `research-complete.yaml` currently archives **220** completed milestone records through 2026.05.206. Milestone 2026.05.206 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5576,3 +5576,6 @@ Routine tracking of live GPU execution confirmed expected behavior without anoma
 
 **Milestone 2026.05.206 Operational Retrospective**  
 Milestone 2026.05.206 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.206. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+
+### Milestone 2026.05.206 Positive Updates
+In milestone .206, the operational retrospective completed, analyzing 0 minutes of wall time and 0 experiments. No experiment commits were found since activation, leaving GPUs correctly idle. No new bottlenecks were identified.

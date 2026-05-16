@@ -1,40 +1,33 @@
 import re
 
-def update_file(filepath, replacements):
-    with open(filepath, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    for old, new in replacements:
-        content = content.replace(old, new)
-        
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(content)
+with open("docs/index.html", "r") as f:
+    html = f.read()
 
-readme_replacements = [
-    ('2,979', '3,202'),
-    ('199', '200'),
-    ('.185', '.187'),
-    ('| .185 | Complete | Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification achieved. 14 experiments completed. |', '| .187 | Complete | Milestone 187 retrospective successfully generated. |\n| .186 | Complete | 223 experiments completed in 736 minutes. Zero compute-bound tasks; GPUs correctly idle. |\n| .185 | Complete | Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification achieved. 14 experiments completed. |')
-]
-update_file('README.md', readme_replacements)
+html = html.replace('3,330</div><div class="stat-label">Experiment records through Exp 2214', '2,815</div><div class="stat-label">Experiment records through Exp 2114')
+html = html.replace('25,193</div><div class="stat-label">Python test items collected', '25,215</div><div class="stat-label">Python test items collected')
+html = html.replace('<span class="r-after">Exp 2214</span>', '<span class="r-after">Exp 2114</span>')
 
-index_replacements = [
-    ('2,979', '3,202'),
-    ('199', '200'),
-    ('through .185', 'through .187'),
-    ('experiments completed in .185', 'experiments completed in .186'),
-    ('<div class="stat-num">14</div>', '<div class="stat-num">223</div>'),
-    ('Milestone 2026.05.185 Operational Retrospective', 'Milestone 2026.05.187 Operational Retrospective'),
-    ('Milestone 2026.05.185 operational retrospective complete. Continuous Self-Learning Integration, Fast-Slow Scaling, and KAN Verification achieved.', 'Milestone 2026.05.187 operational retrospective complete. Milestone 187 retrospective successfully generated. Milestone 186 completed 223 experiments.')
-]
-update_file('docs/index.html', index_replacements)
+with open("docs/index.html", "w") as f:
+    f.write(html)
 
-technical_report_replacements = [
-    ('2,979', '3,202'),
-    ('199', '200'),
-    ('up to .185', 'up to .187'),
-    ('Phase 24 — Milestone .182 Optimizations (May 2026)', 'Phase 25 — Milestones .186 and .187 (May 2026)\n\nMilestone 2026.05.186 Retro completed 223 experiments in 736 minutes. Zero compute-bound tasks; GPUs correctly idle. Milestone 2026.05.187 retrospective successfully generated. Findings audit and corrigenda flagged artifacts processed.\n\n### Phase 24 — Milestone .182 Optimizations (May 2026)')
-]
-update_file('docs/technical-report.md', technical_report_replacements)
+with open("docs/technical-report.md", "r") as f:
+    tr = f.read()
 
-print("Updated README.md, docs/index.html, and docs/technical-report.md")
+tr = tr.replace('3,330 Experiments Across the Public Record', '2,815 Experiments Across the Public Record')
+tr = tr.replace('25,193 Python Test Items Collected (Results and Ops Retros Through Exp 2214)', '25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)')
+tr = tr.replace('3,330 experiments across 220 milestones', '2,815 experiments across 220 milestones')
+tr = tr.replace('3,330 experiment records tracked through Exp 2114', '2,815 experiment records tracked through Exp 2114')
+tr = tr.replace('2,583 task records in 220 artifact-backed', '2,584 task records in 220 artifact-backed')
+
+# The prompt also asks to "Add new sections for any major new findings not yet documented."
+# The changelog mentions ".206 Operational Retrospective complete". So I'll append a section to docs/technical-report.md if not there.
+
+new_section = """
+### Milestone 2026.05.206 Positive Updates
+In milestone .206, the operational retrospective completed, analyzing 0 minutes of wall time and 0 experiments. No experiment commits were found since activation, leaving GPUs correctly idle. No new bottlenecks were identified.
+"""
+if "Milestone 2026.05.206 Positive Updates" not in tr:
+    tr += new_section
+
+with open("docs/technical-report.md", "w") as f:
+    f.write(tr)
