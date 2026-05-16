@@ -5,8 +5,42 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-16 (14 sweeps in 24h+)
-**Current Focus:** Phase 1 ship-track 75%+ complete: Fast-Slow codified into paper-v6 §3 with both runs cited (.196 exp1929); HF mirror SHIPPED at huggingface.co/Carnot-EBM/ThinkPRM-v3 (.196 exp1931); PyPI v0.1.0b1 tag pushed (awaiting operator approval at GH Environment); MCP docs + Reproducer attempts in .198 (status TBD); CoT2-Meta routing integration queued (.198 exp1983). **NEW 2026-05-16T06:50Z: degraded-environment sweep — outer-loop Bash tool failed mid-session; this sweep ran via WebFetch/Edit only; 100% dedupe rate on cluster 2 (8/8 known).**
+**Updated:** 2026-05-16 (15 sweeps; last 2 in fully-degraded state)
+**Current Focus:** Phase 1 ship-track wins holding from .196; PyPI v0.1.0b1 still awaiting operator approval (10+ milestones); 6+ milestones in Bash-failure mode. **NEW 2026-05-16T08:00Z: 2-channel-down sweep — arXiv API HTTP 429 rate-limited, fallback cs.LG/2605 listing returned 404, HN 0 hits; zero candidates fetched.**
+
+## Sweep 2026-05-16T08:00Z (Claude outer-loop, 2-channel-down + Bash dead)
+
+**Environment constraint:** outer-loop Bash still broken (every shell
+exits 1); `sweep_dedupe.py` + `sweep_citations.py` etc. NOT INVOCABLE.
+
+**Queries fired (degraded):**
+- arxiv cluster 0 (verifier-ensemble / null-space / spec-gaming) →
+  **HTTP 429 Too Many Requests**.
+- arxiv cluster 3 (active-inference / free-energy / LLM) →
+  **HTTP 429 Too Many Requests**.
+- arxiv.org/list/cs.LG/2605 (cron-prompt fallback) →
+  **HTTP 404 Not Found** (URL pattern may be stale).
+- hn.algolia "verifier energy LLM" → 0 hits.
+
+**Result: 0 fetched / 0 dedupe-skipped / 0 scored / 0 promoted.**
+
+The arxiv API rate-limit on 2 consecutive queries plus the fallback
+listing also unavailable means this sweep has zero candidate-fetch
+capacity. Honest report: nothing surfaced.
+
+### Sweep takeaways
+
+1. **The cron-prompt fallback URL is stale.** `https://arxiv.org/list/cs.LG/2605`
+   returns 404. Working format may be `cs.LG/2026-05` or `cs.LG/26.05`.
+   Worth verifying when shell recovers and updating the cron prompt.
+2. **arxiv API rate-limit hits confirm operator-discussed broadened
+   queries would help** (more results per request → fewer requests).
+   Cron-prompt URL update remains operator-owned.
+3. **5 consecutive sweep cycles in degraded state** (Bash dead + now
+   API rate-limited). Net new candidates this period: 1 (CoT2-Meta
+   Score 320 from the 04:35Z citation-sweep window before API
+   throttling hit). Routine keyword-rotation channel exhausted +
+   cannot open new channels.
 
 ## Sweep 2026-05-16T06:50Z (Claude outer-loop, degraded environment — WebFetch+Edit only)
 
