@@ -3575,3 +3575,4 @@ IMPORTANT:
 | 2026-05-15 23:56 UTC | Plan milestone 2026.05.191 | OK | 13 tasks proposed |
 | 2026-05-15 23:58 UTC | Exp 1825: Milestone .190 retrospective | OK | Deliverable already exists in repo |
 | 2026-05-15 23:58 UTC | Milestone 2026.05.191 activated | OK | 13 tasks queued |
+| 2026-05-16 00:04 UTC | Exp 1826: Implement Per-Knot Importance Regulariza | OK | 81 passed, 1 warning in 5.28s |
