@@ -4077,3 +4077,6 @@ The repository shall provide an audit script `scripts/audit_1717.py` that verifi
 
 ### REQ-REPORT-194: Milestone .194 Operational Retrospective
 The repository shall provide a script to generate the .194 operational retrospective JSON, outputting to `results/operational_retro_2026_05_194.json`. It must contain a schema of `carnot.operational_retro.v64`, milestone `2026.05.194`, and specific flag fields `adversarial_confirmation_result`, `pypi_ship_result`, and `phase4_closure_result`.
+
+### REQ-REPORT-195: Milestone .195 Initialization Artifact
+The repository shall provide a module `carnot.reporting.experiment_1914_init` to generate the .195 initialization artifact JSON, outputting to `results/experiment_1914_init.json`. It must contain a schema of `carnot.init.v1`, experiment `1914`, `status_updated` boolean, and `honest_verdict` formatted as `complete: initialized .195`.
