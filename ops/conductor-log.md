@@ -3588,3 +3588,4 @@ IMPORTANT:
 | 2026-05-16 00:26 UTC | Exp 1830: Train model using ActFocus GRPO on reaso | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1829-actfocus-token-energy) |
 | 2026-05-16 00:26 UTC | Exp 1831: Evaluate ActFocus GRPO against baseline  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1830-actfocus-grpo-training.status (act |
 | 2026-05-16 00:28 UTC | Exp 1830: Train model using ActFocus GRPO on reaso | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1829-actfocus-token-energy) |
+| 2026-05-16 00:28 UTC | Exp 1831: Evaluate ActFocus GRPO against baseline  | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1830-actfocus-grpo-training.status (act |
