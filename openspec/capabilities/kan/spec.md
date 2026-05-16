@@ -1475,3 +1475,21 @@ When evaluated on valid and invalid graph coloring instances,
 Then it outputs lower energy for valid colorings and higher energy for invalid ones, tests pass with 100% coverage, and `results/experiment_2034_kagnn.json` is written.
 
 
+
+## REQ-KAN-2035: Comparative Evaluation of KAGNN vs MLP
+
+The KAN capability MUST evaluate the tangible efficiency or accuracy benefit of KAGNN against an MLP baseline.
+
+**Rationale:**
+    To validate that KAGNN provides a tangible efficiency or accuracy benefit over a standard MLP for constraint verification on graph coloring.
+
+**Acceptance criteria:**
+    - `scripts/eval_kagnn_vs_mlp.py` generates a synthetic dataset of constraint graphs and runs a comparative evaluation between KAGNN and an MLP baseline.
+    - Tests verify the evaluation script or the underlying logic.
+    - `results/exp2035_kagnn_eval.json` is generated upon success containing the evaluation results.
+
+### SCENARIO-KAN-2035: KAGNN vs MLP Comparative Evaluation
+
+Given a synthetic dataset of constraint graphs,
+When the comparative evaluation is run,
+Then it outputs the results comparing KAGNN and MLP, and `results/exp2035_kagnn_eval.json` is written.
