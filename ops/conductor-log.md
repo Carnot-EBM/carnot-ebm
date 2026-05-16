@@ -3676,3 +3676,5 @@ Error |
 | 2026-05-16 04:39 UTC | Exp 1914: .194 archive / .195 activation | OK | 81 passed, 1 warning in 5.25s |
 | 2026-05-16 04:41 UTC | Exp 1915: Dynamic Resolution Continual EBM Learnin | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 04:43 UTC | Exp 1915: Dynamic Resolution Continual EBM Learnin | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 04:45 UTC | Exp 1915: Dynamic Resolution Continual EBM Learnin | DOOMED_RERUN_BLOCK | 5 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 04:47 UTC | Exp 1916: FR-11 Continual Learning Live Data Evalu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1915-dynamic-resolution-continual-learnin |
