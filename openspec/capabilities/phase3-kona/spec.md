@@ -2059,7 +2059,19 @@ Carnot MUST provide a Python dataclass schema for CLaRa-V continuous latent vari
 
 The Exp 1994 artifact MUST include `schema` set to `carnot.schema.v3`, `experiment` set to `1994`, and an `honest_verdict` starting with `SUCCESS:`.
 
-### SCENARIO-KONA-040: CLaRa-V Schema Integration
+### REQ-KONA-041: Exp 1995 PiNet Projection for Continuous Latent States
+
+Carnot MUST provide a JAX implementation mapping the CLaRa-V `ContinuousLatentState` to the Douglas-Rachford operator splitting PiNet layer.
+The module `python/carnot/models/pinet_1995.py` MUST contain this logic.
+The Exp 1995 artifact MUST include `schema` set to `carnot.model_layer.v1`, `experiment` set to `1995`, and an `honest_verdict` starting with a terminal prefix.
+Gradient flow MUST be validated with a synthetic test.
+
+### SCENARIO-KONA-041: PiNet Projection of CLaRa-V State
+
+**Given** a CLaRa-V `ContinuousLatentState` with associated continuous constraints
+**When** the PiNet projection layer is applied to the state
+**Then** the gradients flow through the projection
+**And** the artifact is written to `results/experiment_1995_pinet_projection.json` with the required fields.
 
 **Given** a continuous latent state and an initialized `ContinuousEBM`
 **When** the `evaluate_ebm_energy` method is called on the state
