@@ -3709,3 +3709,4 @@ Error |
 | 2026-05-16 06:32 UTC | Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1970-thrml-hybrid-abstraction.success ( |
 | 2026-05-16 06:34 UTC | Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1970-thrml-hybrid-abstraction.success ( |
 | 2026-05-16 06:36 UTC | Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1970-thrml-hybrid-abstraction.success ( |
+| 2026-05-16 06:42 UTC | Exp 1972: Phase 2 - EBT System-2 Energy Decoding B | OK | 81 passed, 1 warning in 5.21s |
