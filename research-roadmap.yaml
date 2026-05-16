@@ -1,14 +1,14 @@
-milestone: "2026.05.206"
-milestone_title: "KAN Formal Verification, EBM-CoT Latent Calibration, and Thermodynamic Sampling"
+milestone: "2026.05.207"
+milestone_title: "NeSy-EBM Integration, Continuous Latent Reasoning, and Thermodynamic Benchmarks"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: "exp2059-archive-and-activate"
-    title: "Phase 0: Archive .205 and activate .206"
+  - id: "exp2070-archive-and-activate"
+    title: "Phase 0: Archive .206 and activate .207"
     max_turns: 20
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: We are beginning milestone 2026.05.206. We must archive the previous milestone and update the tracking docs.
+      CONTEXT: We are beginning milestone 2026.05.207. We must archive the previous milestone and update the tracking docs.
       
       EXISTING CODE TO READ FIRST:
       - ops/status.md
@@ -18,319 +18,257 @@ tasks:
       TASK: Rename the vNEXT roadmap doc to match the current milestone and record the activation in ops/status.md and ops/changelog.md.
       
       CONCRETE STEPS:
-      1. Move openspec/change-proposals/research-roadmap-vNEXT.md to openspec/change-proposals/research-roadmap-v2026.05.206.md
-      2. Update ops/changelog.md to log the start of milestone 2026.05.206.
+      1. Move openspec/change-proposals/research-roadmap-vNEXT.md to openspec/change-proposals/research-roadmap-v2026.05.207.md
+      2. Update ops/changelog.md to log the start of milestone 2026.05.207.
       3. Update ops/status.md to reflect the new active milestone and Phase 0 completion.
-      4. Write the terminal deliverable artifact results/experiment_2059_activation.json with honest_verdict="activation_complete".
+      4. Write the terminal deliverable artifact results/experiment_2070_activation.json with honest_verdict="activation_complete".
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2060-kan-symbolization-extractor"
-    title: "Phase 1: KAN Symbolization Extractor"
+  - id: "exp2071-lagrangian-energy-landscape"
+    title: "Phase 1: Kona-Style Lagrangian Energy Landscape"
     max_turns: 50
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: Carnot's KAN tiers currently lack a way to extract exact symbolic formulas. KAN4CBC relies on symbolization of 1D splines to generate SMT-verifiable expressions.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/kaem_energy.py
-      
-      TASK: Implement a KANSymbolizer class that extracts piecewise algebraic expressions from trained KAN energy functions.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/verify/kan_symbolizer.py.
-      2. Implement a method to extract knot points and polynomial coefficients from UnivariateKAEMLayer.
-      3. Generate a symbolic AST (Abstract Syntax Tree) string representing the constraints.
-      4. Write tests with 100% coverage in tests/python/verify/test_kan_symbolizer.py.
-      5. Save results to results/experiment_2060_kan_symbolizer.json including artifact field symbolization_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2061-kan4cbc-smt-integration"
-    title: "Phase 1: KAN4CBC SMT Verification Integration"
-    gated_on:
-      - upstream: "exp2060-kan-symbolization-extractor"
-        artifact_field: "symbolization_ready"
-        op: "=="
-        value: true
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: With the KAN symbolizer implemented, we need to pass these expressions to Z3 to formally verify that no False Accepts are possible under given inputs.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/kan_symbolizer.py
-      - python/carnot/pipeline/extract.py
-      
-      TASK: Implement SMT verification via Z3 for KAN symbolic formulas.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/verify/kan_smt_verifier.py.
-      2. Translate the KAN symbolic AST into z3.Real/z3.Int variables and assertions.
-      3. Implement verify_zero_false_accept() that queries the solver for constraint violations.
-      4. Write test coverage in tests/python/verify/test_kan_smt_verifier.py.
-      5. Output results to results/experiment_2061_kan_smt.json.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2062-lut-kan-simulation"
-    title: "Phase 1: LUT-based KAN deployment simulation"
-    max_turns: 30
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: KANELÉ (arXiv:2512.12850) shows that KAN splines can map to FPGA LUTs. We need to measure the projected KV260 hardware resource usage for our KAN verification models.
-      
-      EXISTING CODE TO READ FIRST:
-      - hardware/kv260/ising_sampler_v4_spec.md
-      - python/carnot/models/kaem_energy.py
-      
-      TASK: Write a hardware accounting script that calculates LUTs and BRAM utilization for Carnot's KAN models if synthesized via LUT formulation.
-      
-      CONCRETE STEPS:
-      1. Create scripts/hardware_account_lut_kan.py.
-      2. The script should load a sample KAN model and compute the number of required 6-input LUTs for the spline resolutions.
-      3. Ensure it runs and outputs a report.
-      4. Save to results/experiment_2062_lut_kan_accounting.json.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2063-ebm-cot-latent-calibration"
-    title: "Phase 2: EBM-CoT Latent Calibration Hook"
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: EBM-CoT (arXiv:2511.07124) applies energy-based calibration to latent thought embeddings. We must hook our energy tiers to the LLM's continuous representations.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py
-      
-      TASK: Implement an adapter that takes hidden states from local SOTA GGUFs and applies energy gradients to them.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/inference/ebm_cot_adapter.py.
-      2. Implement a method that perturbs the latent state based on the gradient of the energy function.
-      3. In MODEL_SPECS, include 'unsloth/Qwen3.6-35B-A3B-GGUF' and 'unsloth/gemma-4-26B-A4B-it-GGUF'.
-      4. Write a unit test ensuring the adapter modifies embeddings in the correct direction.
-      5. Save to results/experiment_2063_ebm_cot_adapter.json with ebm_cot_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2064-geometric-regulation-ising"
-    title: "Phase 2: Geometric Regulation via Ising"
-    gated_on:
-      - upstream: "exp2063-ebm-cot-latent-calibration"
-        artifact_field: "ebm_cot_ready"
-        op: "=="
-        value: true
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: Geometric Regulation (arXiv:2605.00435) prevents mode collapse in latent generation by using an Ising model phase transition metric.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/ebm_cot_adapter.py
-      
-      TASK: Augment the EBM-CoT adapter with Geometric Regulation to maintain trajectory dimensionality.
-      
-      CONCRETE STEPS:
-      1. Add a geometric regularizer penalty based on the pairwise Ising coupling variance in ebm_cot_adapter.py.
-      2. If dimensionality collapses, increase temperature (simulated annealing).
-      3. Add tests demonstrating escaping mode collapse.
-      4. Save to results/experiment_2064_geometric_regulation.json.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2065-nrgpt-gradient-block"
-    title: "Phase 2: NRGPT Gradient-based Block Simulator"
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: NRGPT (arXiv:2602.15002) uses the gradient of a parameterized energy function as the transformer generation step.
+      CONTEXT: Kona treats reasoning as a continuous global Lagrangian optimization problem to find state valleys satisfying all constraints.
       
       EXISTING CODE TO READ FIRST:
       - python/carnot/phase3/continuous_ebm.py
       
-      TASK: Implement an NRGPT continuous generation stub that proves energy descent maps to sequence generation.
+      TASK: Implement a global Lagrangian energy function that sums local symbolic constraint potentials for a latent space reasoning optimizer.
       
       CONCRETE STEPS:
-      1. Create python/carnot/phase3/nrgpt_stub.py.
-      2. Implement a step function returning the negative gradient of the Phase 3 energy space.
-      3. Write a test showing the sequence of gradients converges.
-      4. Save to results/experiment_2065_nrgpt_stub.json.
+      1. Create python/carnot/phase3/lagrangian_optimizer.py.
+      2. Implement a JAX-based continuous space optimizer using a Lagrangian formulation that enforces hard bounds as high-energy penalties.
+      3. Ensure test coverage in tests/python/phase3/test_lagrangian_optimizer.py.
+      4. Save to results/experiment_2071_lagrangian_optimizer.json with lagrangian_ready=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2066-ebrm-training"
-    title: "Phase 3: EBRM (Energy-Based Reward Model) Training"
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: The continuous self-learning loop needs stable rewards. Energy-Based Reward Models (EBRM) are robust against reward hacking.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/training/
-      
-      TASK: Implement a lightweight EBRM training loop using Contrastive Divergence on logical derivations.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/training/ebrm_trainer.py.
-      2. Train a small JAX MLP to act as the Energy Reward Model on synthetic logical traces.
-      3. Save the trained artifact and write test coverage.
-      4. Save to results/experiment_2066_ebrm_training.json with ebrm_trained=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2067-dtm-simulation"
-    title: "Phase 3: DTM Simulation for Carnot Samplers"
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: Denoising Thermodynamic Models (DTM) repurpose EBMs for thermodynamic computing. We need a CPU simulator of this process.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/samplers/parallel_ising.py
-      
-      TASK: Implement a DTM simulator integrating Langevin thermal noise with Carnot's energy function.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/samplers/dtm_sampler.py.
-      2. Implement the DTM algorithm (arXiv:2510.23972) mapping state updates to thermal noise profiles.
-      3. Write tests validating sampling convergence properties.
-      4. Save to results/experiment_2067_dtm_simulation.json with dtm_sim_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2068-extropic-tsu-dtm-parity"
-    title: "Phase 3: Extropic TSU DTM Algorithm Parity Test"
+  - id: "exp2072-kona-sudoku-solver"
+    title: "Phase 1: Kona-Parity Sudoku Latent Solver"
     gated_on:
-      - upstream: "exp2067-dtm-simulation"
-        artifact_field: "dtm_sim_ready"
-        op: "=="
-        value: true
-    max_turns: 100
-    agent_type: "codex"
-    model: "opus"
-    prompt: |
-      CONTEXT: Ensure our DTM simulator complies with the Extropic TSU interfaces. This is a hardware parity task escalated to Opus.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/samplers/backend.py
-      - python/carnot/samplers/dtm_sampler.py
-      
-      TASK: Audit the DTM sampler against the SamplerBackend protocol and Extropic TSU simulator stubs.
-      
-      CONCRETE STEPS:
-      1. Create tests/python/samplers/test_tsu_dtm_parity.py.
-      2. Verify that our DTM sampler correctly wraps into a SamplerBackend payload.
-      3. Run the tests.
-      4. Save to results/experiment_2068_tsu_parity.json.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2069-fr11-csl-ebrm-feedback"
-    title: "Phase 3: FR-11 CSL with EBRM feedback (Zero-forgetting)"
-    gated_on:
-      - upstream: "exp2066-ebrm-training"
-        artifact_field: "ebrm_trained"
+      - upstream: "exp2071-lagrangian-energy-landscape"
+        artifact_field: "lagrangian_ready"
         op: "=="
         value: true
     max_turns: 50
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: The FR-11 Continuous Self-Learning loop requires zero-forgetting. We integrate the EBRM as the primary promotion gate for new skills.
+      CONTEXT: To replicate Kona's 96.2% success rate, we need to bypass autoregressive guessing on hard Sudoku.
       
       EXISTING CODE TO READ FIRST:
-      - python/carnot/training/ebrm_trainer.py
+      - python/carnot/phase3/lagrangian_optimizer.py
       
-      TASK: Wire the EBRM model into the trace2skill promotion gate.
+      TASK: Apply the Phase 1 Lagrangian optimizer to solve hard Sudoku constraints entirely in the continuous domain.
       
       CONCRETE STEPS:
-      1. Update the self-learning pipeline to evaluate candidate policies via the EBRM.
-      2. If EBRM energy > baseline, reject the policy.
-      3. Write end-to-end tests for the zero-forgetting gate.
-      4. Save to results/experiment_2069_fr11_csl_ebrm.json with csl_ebrm_ready=true and continuous_self_learning_task=true.
+      1. Create scripts/experiment_2072_kona_sudoku.py.
+      2. Model the Sudoku rules as differentiable energy penalties.
+      3. Optimize the continuous grid state until energy is minimized and map back to digits.
+      4. Save results to results/experiment_2072_kona_sudoku.json including solved_sudoku=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2070-sota-e2e-benchmark-ebm-cot"
-    title: "Phase 4: SOTA E2E Benchmark on EBM-CoT"
-    gated_on:
-      - upstream: "exp2063-ebm-cot-latent-calibration"
-        artifact_field: "ebm_cot_ready"
-        op: "=="
-        value: true
+  - id: "exp2073-continuous-trajectory-decoding"
+    title: "Phase 1: Continuous Trajectory Decoding via LLM"
     max_turns: 50
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: Evaluate the complete EBM-CoT adapter pipeline on SATQuest using SOTA models.
+      CONTEXT: After optimizing the latent thought trajectory via EBMs, we must route it back into SOTA language models for sequence decoding.
       
       EXISTING CODE TO READ FIRST:
       - python/carnot/inference/ebm_cot_adapter.py
       
-      TASK: Run a verification benchmark on live SOTA GGUFs using the continuous EBM-CoT hook.
+      TASK: Implement an adapter that translates the optimized continuous thought trajectory back to token probabilities.
       
       CONCRETE STEPS:
-      1. Create scripts/run_benchmark_ebm_cot.py.
-      2. Must use MODEL_SPECS: ['unsloth/gemma-4-31B-it-GGUF', 'unsloth/gemma-4-26B-A4B-it-GGUF'].
-      3. Capture solve rates and energy reductions.
-      4. Save to results/experiment_2070_sota_benchmark.json with sota_benchmark_ready=true.
+      1. Create python/carnot/inference/trajectory_decoder.py.
+      2. In MODEL_SPECS, include 'unsloth/Qwen3.6-35B-A3B-GGUF' and 'unsloth/gemma-4-31B-it-GGUF'.
+      3. Implement a decoding loop that uses the continuous thought state as conditioning.
+      4. Save results to results/experiment_2073_trajectory_decoder.json.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2071-csl-delta-evaluation"
-    title: "Phase 4: CSL Delta Evaluation"
+  - id: "exp2074-nesy-symbolic-encoder"
+    title: "Phase 2: NeSy Symbolic Encoder"
+    max_turns: 50
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: Neuro-Symbolic Energy-Based Models (NeSy-EBMs) encode symbolic logic directly into the neural architecture.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/kan_symbolizer.py
+      
+      TASK: Create a symbolic encoder module that maps deterministic constraints (like SMT rules) into differentiable energy penalty tensors.
+      
+      CONCRETE STEPS:
+      1. Create python/carnot/embeddings/nesy_encoder.py.
+      2. Implement a system to parse basic logic predicates and compile them to JAX tensors.
+      3. Provide full unit test coverage.
+      4. Save to results/experiment_2074_nesy_encoder.json with nesy_encoder_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2075-nesy-map-inference"
+    title: "Phase 2: NeSy MAP Inference Alternating Training"
     gated_on:
-      - upstream: "exp2069-fr11-csl-ebrm-feedback"
-        artifact_field: "csl_ebrm_ready"
+      - upstream: "exp2074-nesy-symbolic-encoder"
+        artifact_field: "nesy_encoder_ready"
         op: "=="
         value: true
-      - upstream: "exp2070-sota-e2e-benchmark-ebm-cot"
-        artifact_field: "sota_benchmark_ready"
+    max_turns: 50
+    prompt: |
+      CONTEXT: NeSy-EBMs train via MAP inference alternating training, learning both neural parameters and enforcing symbolic priors.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/embeddings/nesy_encoder.py
+      - python/carnot/training/ebrm_trainer.py
+      
+      TASK: Implement MAP inference alternating training for the NeSy framework.
+      
+      CONCRETE STEPS:
+      1. Create python/carnot/training/nesy_trainer.py.
+      2. Implement an alternating optimization loop updating neural weights and projecting onto the symbolic constraints.
+      3. Save to results/experiment_2075_nesy_map_inference.json with map_inference_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2076-nesy-smt-verification-loop"
+    title: "Phase 2: NeSy to SMT Verification Loop"
+    gated_on:
+      - upstream: "exp2075-nesy-map-inference"
+        artifact_field: "map_inference_ready"
         op: "=="
         value: true
     max_turns: 50
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: We must prove that FR-11 continuous self-learning actually improves the EBM-CoT SOTA evaluation without forgetting.
+      CONTEXT: Prove that the NeSy mapping correctly produces results that have zero-false-accepts when checked via formal SMT.
       
       EXISTING CODE TO READ FIRST:
-      - scripts/run_benchmark_ebm_cot.py
+      - python/carnot/verify/kan_smt_verifier.py
+      - python/carnot/training/nesy_trainer.py
       
-      TASK: Perform a before/after (delta) evaluation on the SOTA benchmark using the CSL updated policy.
+      TASK: Connect MAP inference outputs to the KAN4CBC SMT verifier, proving zero-false-accepts on a neuro-symbolic toy problem.
       
       CONCRETE STEPS:
-      1. Run the benchmark pipeline comparing baseline vs. EBRM-promoted policy.
-      2. Log the utility delta.
-      3. Save to results/experiment_2071_csl_delta.json.
+      1. Create scripts/experiment_2076_nesy_verification.py.
+      2. Train a small model to solve a path-continuity problem using NeSy.
+      3. Verify the generated paths via the SMT verifier to confirm zero false accepts.
+      4. Save to results/experiment_2076_nesy_verification.json.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2072-milestone-retro"
-    title: "Phase 4: Milestone .206 Retrospective"
-    max_turns: 20
-    agent_type: "claude"
-    model: "sonnet"
+  - id: "exp2077-actfocus-energy-reweighting"
+    title: "Phase 3: ActFocus Token-Level Energy Reweighting"
+    max_turns: 50
     prompt: |
-      CONTEXT: Final task of milestone 2026.05.206.
+      CONTEXT: ActFocus addresses the action bottleneck by assigning credit appropriately in multi-turn logic sequences via token-level energy gradients.
       
       EXISTING CODE TO READ FIRST:
-      - results/experiment_*.json
+      - python/carnot/inference/composite_scorer.py
       
-      TASK: Analyze all terminal artifacts from this milestone and generate the operational retrospective.
+      TASK: Implement ActFocus token-level energy reweighting for Continuous Self-Learning updates.
       
       CONCRETE STEPS:
-      1. Create results/operational_retro_2026_05_206.json adhering to the standard schema.
-      2. Ensure timing slices and GPU utilization details are logged.
+      1. Create python/carnot/training/actfocus_reweighting.py.
+      2. Implement the gradient reweighting logic mapping global energy to local token actions.
+      3. Ensure test coverage in tests/python/training/test_actfocus.py.
+      4. Save to results/experiment_2077_actfocus.json with actfocus_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2078-dynamic-resolution-ebm"
+    title: "Phase 3: Dynamic Resolution Scaling for Continual Learning"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Dynamic resolution EBMs prevent catastrophic forgetting during continuous learning by dynamically scaling the energy landscape fidelity.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/boltzmann.py
+      
+      TASK: Implement dynamic resolution scaling for Carnot's Boltzmann tier.
+      
+      CONCRETE STEPS:
+      1. Modify python/carnot/models/boltzmann.py or create a wrapper class to adjust latent fidelity dynamically based on task novelty.
+      2. Write a test proving that previously learned minima are preserved when new minima are introduced at a higher resolution.
+      3. Save to results/experiment_2078_dynamic_resolution.json.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2079-csl-pipeline-integration"
+    title: "Phase 3: E2E Continuous Self-Learning (CSL) Loop"
+    gated_on:
+      - upstream: "exp2077-actfocus-energy-reweighting"
+        artifact_field: "actfocus_ready"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: FR-11 demands a continuous self-learning loop. We will integrate ActFocus and dynamic resolution using a SOTA MoE model.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/training/actfocus_reweighting.py
+      
+      TASK: Build the end-to-end FR-11 CSL pipeline integrating ActFocus and dynamic resolution.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2079_csl_pipeline.py.
+      2. Load 'unsloth/gemma-4-26B-A4B-it-GGUF' and simulate an online learning stream of new constraints.
+      3. Apply ActFocus to assign credit, demonstrating learning without catastrophic forgetting on older constraints.
+      4. Save to results/experiment_2079_csl_pipeline.json.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2080-dtm-thermodynamic-sampler"
+    title: "Phase 4: Stochastic Gradient Lattice Random Walk (SGLRW) Sampler"
+    max_turns: 50
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: The DTM simulation from .206 needs to be upgraded to the Stochastic Gradient Lattice Random Walk (SGLRW) algorithm for hardware emulation.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/samplers/parallel_ising.py
+      
+      TASK: Upgrade the DTM simulation to a JAX-optimized hardware-ready SGLRW sampler.
+      
+      CONCRETE STEPS:
+      1. Create python/carnot/samplers/sglrw_sampler.py.
+      2. Implement the low-precision stochastic gradient lattice algorithm mirroring thermodynamic computing noise models.
+      3. Write tests and save to results/experiment_2080_sglrw_sampler.json with sglrw_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2081-dual-rtx-benchmark"
+    title: "Phase 4: Live GSM8K Thermodynamic Benchmark on Dual RTX 3090"
+    gated_on:
+      - upstream: "exp2080-dtm-thermodynamic-sampler"
+        artifact_field: "sglrw_ready"
+        op: "=="
+        value: true
+    max_turns: 100
+    model: "opus"
+    prompt: |
+      CONTEXT: CRITICAL: We need a live dual-GPU hardware test to unblock large-scale benchmarking. We will run the SGLRW sampler against GSM8K.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/samplers/sglrw_sampler.py
+      - scripts/run_benchmark.py
+      
+      TASK: Run the SGLRW sampler natively on the dual RTX 3090 setup against a 100-sample GSM8K partition.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2081_dual_rtx_gsm8k.py.
+      2. Use 'unsloth/Qwen3.6-35B-A3B-GGUF'.
+      3. Probe for ROCm/CUDA availability on multiple devices and distribute the EBM sampler.
+      4. Record hardware latency and generative accuracy on 100 GSM8K problems.
+      5. Write artifact FIRST (bootstrap-and-bail risk). Save to results/experiment_2081_dual_rtx_benchmark.json.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
