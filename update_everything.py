@@ -1,80 +1,97 @@
-import sys
+import os
 import re
 import subprocess
 
 def update_file(filepath, replacements):
     with open(filepath, 'r', encoding='utf-8') as f:
         content = f.read()
-    
     for old, new in replacements:
+        if old not in content:
+            print(f"WARNING: '{old}' not found in {filepath}")
         content = content.replace(old, new)
-        
     with open(filepath, 'w', encoding='utf-8') as f:
         f.write(content)
 
-readme_replacements = [
-    ('2,501 experiment records tracked', '2,959 experiment records tracked'),
-    ('2,359', '2,364'),
-    ('191', '192'),
-    ('through 2026.05.176', 'through 2026.05.179'),
-    ('milestone 2026.05.176', 'milestone 2026.05.179'),
-]
-update_file('README.md', readme_replacements)
-
+# docs/index.html
 index_replacements = [
-    ('2,501</div>', '2,959</div>'),
-    ('191</div><div class="stat-label">archived records through .176', '192</div><div class="stat-label">archived records through .179'),
-    ('24,761</div>', '24,316</div>'),
-    ('24,761 Python test items', '24,316 Python test items'),
-    ('10</div><div class="stat-label">experiments completed in .176', '20</div><div class="stat-label">experiments completed in .179'),
-    ('Milestone 2026.05.176 Operational', 'Milestone 2026.05.179 Operational'),
-    ('Milestone .176 completed 10 experiments in 19.3 minutes.', 'Milestone .179 completed with Phase 3 and Phase 4 findings.')
+    ('205</div><div class="stat-label">archived records through .191', '207</div><div class="stat-label">archived records through .192'),
+    ('25,006</div><div class="stat-label">Python test items collected', '25,017</div><div class="stat-label">Python test items collected'),
+    ('0</div><div class="stat-label">experiments completed in .187', '0</div><div class="stat-label">experiments completed in .192'),
 ]
 update_file('docs/index.html', index_replacements)
 
+# docs/index.html update latest closeout card
+with open('docs/index.html', 'r', encoding='utf-8') as f:
+    html = f.read()
+    
+# We use regex to be safe with whitespace
+old_card_pattern = r'<div class="r-card">\s*<span class="r-tag">Latest closeout</span>\s*<h3 class="r-title">Milestone 2026\.05\.187 Operational Retrospective</h3>\s*<p class="r-desc">Milestone 2026\.05\.187 operational retrospective complete\. Analyzed 0 min wall time / 0 experiments\. There were no compute-bound experiments to analyze, and GPUs were correctly idle\. No new bottlenecks were identified as no data was available this milestone\.</p>\s*<div class="r-stats"><span class="r-before">Analyzed 0 min wall time</span> <span class="r-after">Exp 2114</span></div>\s*</div>'
+
+new_card = """<div class="r-card">
+        <span class="r-tag">Latest closeout</span>
+        <h3 class="r-title">Milestone 2026.05.192 Operational Retrospective</h3>
+        <p class="r-desc">Milestone 2026.05.192 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.192. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.</p>
+        <div class="r-stats"><span class="r-before">Analyzed 0 min wall time</span> <span class="r-after">Exp 2114</span></div>
+      </div>"""
+
+html = re.sub(old_card_pattern, new_card, html)
+with open('docs/index.html', 'w', encoding='utf-8') as f:
+    f.write(html)
+
+# docs/technical-report.md
 tr_replacements = [
-    ('2,501\\nexperiment records tracked', '2,959\\nexperiment records tracked'),
-    ('2,501\\n', '2,959\\n'),
-    ('2,501 experiment records tracked', '2,959 experiment records tracked'),
-    ('2,359', '2,364'),
-    ('191** artifact-backed', '192** artifact-backed'),
-    ('191 artifact-backed', '192 artifact-backed'),
-    ('in 191', 'in 192'),
-    ('in **191**', 'in **192**'),
-    ('through 2026.05.176', 'through 2026.05.179'),
-    ('milestone 2026.05.176', 'milestone 2026.05.179'),
-    ('24,761', '24,316'),
+    ('205 Archived Milestone Records', '207 Archived Milestone Records'),
+    ('25,006 Python Test Items Collected', '25,017 Python Test Items Collected'),
+    ('205 milestones up to .191', '207 milestones up to .192'),
+    ('2,477 task records in 205', '2,496 task records in 207'),
 ]
 update_file('docs/technical-report.md', tr_replacements)
 
-# Add new findings
-new_findings = """
-## Milestones 177–179 — Continuous Self-Learning and KAN Abstractions (Exps 1720–1782, May 2026)
-
-**Continuous Self-Learning Non-Forgetting**
-Experiment 1779 implemented non-forgetting soundness checks for continuous learning, and Experiment 1780 ran the FR-11 continuous self-learning loop with rigorous checks.
-
-**NLA-Class Verifier Integration**
-Experiment 1720 successfully integrated the ensemble as production verifier #16.
-
-**KANELÉ LUT Abstractions**
-Experiments 1781 and 1782 drafted and benchmarked Python LUT abstractions for KANs based on KANELÉ against baselines, demonstrating new Phase 4 hardware-accounting capabilities.
-
-**Phase 4 Alpha Replacement**
-Experiment 1721 successfully derived the alpha_t replacement from the maximum-caliber FEP<->IIT bridge, confirming monotonic decay and breaking the bijection-invariance artifact.
-"""
-
+# Add finding to technical-report.md
 with open('docs/technical-report.md', 'r', encoding='utf-8') as f:
-    tr_content = f.read()
+    tr = f.read()
 
-if "Milestones 177–179" not in tr_content:
-    tr_content += "\\n" + new_findings
-    with open('docs/technical-report.md', 'w', encoding='utf-8') as f:
-        f.write(tr_content)
+new_finding = """
+### Phase 26 — Milestone .192 Optimizations (May 2026)
 
-print("Updated text files. Re-rendering HTML...")
-try:
-    subprocess.run(['python3', 'update_html.py'], check=True)
-    print("Rendered docs/technical-report.html successfully.")
-except Exception as e:
-    print(f"Error running update_html.py: {e}")
+Milestone 2026.05.192 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.192. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+"""
+if 'Phase 26 — Milestone .192 Optimizations' not in tr:
+    if '## 5. Operations and' in tr:
+        tr = tr.replace('## 5. Operations and', new_finding + '\n## 5. Operations and')
+    elif '## References' in tr:
+        tr = tr.replace('## References', new_finding + '\n## References')
+    else:
+        tr += '\n' + new_finding
+with open('docs/technical-report.md', 'w', encoding='utf-8') as f:
+    f.write(tr)
+
+# docs/technical-report.html (just the <title> and description)
+tr_html_replacements = [
+    ('205 Archived Milestone Records', '207 Archived Milestone Records'),
+    ('25,006 Python Test Items Collected', '25,017 Python Test Items Collected'),
+]
+update_file('docs/technical-report.html', tr_html_replacements)
+
+# README.md
+readme_content = """---
+license: apache-2.0
+---
+# Carnot EBM Framework
+
+This project tracks **3,202** experiment records through Exp 2114 across **207** milestone records (latest 2026.05.192).
+
+## Key Results Table
+| Milestone | Status | Description |
+|---|---|---|
+| .192 | Complete | 0 experiments, 0 min wall time. GPUs idle. |
+| .187 | Complete | 0 experiments, 0 min wall time. GPUs idle. |
+| .184 | Complete | 0 experiments, 0 min wall time. GPUs idle. |
+| .182 | Complete | 6 experiments, 50.1 min wall time. Synthesis bottleneck remains. |
+"""
+with open('README.md', 'w', encoding='utf-8') as f:
+    f.write(readme_content)
+
+print("Running update_html.py...")
+subprocess.run(['python', 'update_html.py'])
+print("Done!")

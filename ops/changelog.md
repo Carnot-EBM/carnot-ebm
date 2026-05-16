@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-16 (Milestone 2026.05.194 Operational Retrospective)
+
+- Milestone 2026.05.194 operational retrospective complete. Analyzed 19.8 min wall time / 12 experiments. All 12 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout. Synthesis tasks (Exp 1909, 1910, 1911) remain the primary bottleneck for optimization.
+
 ## 2026-05-15 (Milestone 2026.05.192 Operational Retrospective)
 
 - Milestone 2026.05.192 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.192. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.

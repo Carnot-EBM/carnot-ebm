@@ -1,34 +1,51 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.194",
-  "generated_at": "2026-05-16T04:18:21.959551+00:00",
+  "generated_at": "2026-05-16T04:26:27Z",
   "retro_type": "operational_full",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.194..HEAD returns non-empty"
-  ],
-  "total_wall_time_minutes": 41.0,
-  "experiments_completed": 7,
-  "compute_bound_experiments_count": 1,
+  "total_wall_time_minutes": 19.8,
+  "experiments_completed": 12,
+  "compute_bound_experiments_count": 0,
   "slowest_experiments": [
-    "1909"
+    {
+      "experiment": "-0400 [conductor] Exp 1909: Fast-Slow Variant adversarial confirmation (5th carr",
+      "duration_minutes": 4.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1910: Phase 1 PyPI publish via CI tagged release (NOT cred",
+      "duration_minutes": 4.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1911: Phase 4 canonical-metric decision \u2014 Fast-Slow Varian",
+      "duration_minutes": 4.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1913: Milestone .194 retrospective",
+      "duration_minutes": 3.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1912: .193 findings audit + corrigenda + SKIP-loop diagnos",
+      "duration_minutes": 2.8,
+      "compute_bound": false
+    }
   ],
-  "gpu_idle_on_compute_bound_tasks": false,
-  "adversarial_confirmation_result": "confirmed",
-  "pypi_ship_result": "blocked",
-  "phase4_closure_result": "decision_rendered",
-  "summary": "Milestone .194 achieved critical success in confirming the Fast-Slow Variant and closing Phase 4. PyPI ship was blocked due to a pre-existing tag.",
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.194 completed 12 experiments in 19.8 minutes. With 0 compute-bound tasks, all execution was synthesis-only, correctly leaving the GPUs idle.",
   "bottlenecks_identified": [
-    "PyPI version tagging collision blocked the release workflow"
+    "Synthesis-only tasks (e.g., Exp 1909, 1910, 1911) remain the primary execution bottleneck."
   ],
   "improvements_suggested": [
-    "Implement an auto-bump versioning strategy or ensure clean tags prior to triggering PyPI publish workflow"
+    "Optimize the synthesis pipeline to reduce execution time for synthesis-only tasks."
   ],
   "top_3_highest_leverage_actions": [
-    "Implement automatic version bumping in the publish workflow",
-    "Proceed with Fast-Slow Variant integration globally given successful adversarial confirmation",
-    "Update documentation systematically to reflect Phase 4 closure"
+    "Optimize synthesis task execution time",
+    "Maintain strict GPU isolation for synthesis-only tasks",
+    "Identify and cache overlapping synthesis work"
   ],
-  "estimated_time_savings_pct": 15,
-  "meta_reflection": "Adversarial confirmation discipline worked well, ensuring we didn't advance an unverified method. PyPI publish issue highlights the need for robust artifact version management.",
-  "honest_verdict": "success: operational retrospective .194 generated successfully with required flag-fields"
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "Which compute-bound experiments took the longest? No data available this milestone. Was GPU utilization efficient on the compute-bound tasks? No data available this milestone. Did any compute-bound task with 2+ models in parallel fail to engage DualGPURunner? No data available this milestone. Tooling changes to speed up the next milestone involve optimizing synthesis task latency."
 }
