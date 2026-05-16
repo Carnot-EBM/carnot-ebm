@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.pypi_workflow_status_check.v1",
+  "experiment": 1930,
+  "run_date": "2026-05-16T05:34:00Z",
+  "duration_s": 25,
+  "random_seed": 173130,
+  "reproducibility_checksum": "b2de8d67d37ddb78077b51db8bd45e8e76abf61c66185df9f544ee0475042a35",
+  "preconditions_checked": [
+    "blocked_gh_cli_unavailable_use_web_check",
+    "tag_on_origin"
+  ],
+  "model_specs": {
+    "workflow_file": ".github/workflows/publish-pypi.yml",
+    "tag_checked": "v0.1.0b1",
+    "tag_commit_origin": "5a681a190cce5b33a14f247c2d14464d041f99ef"
+  },
+  "n_samples": 1,
+  "n_samples_justification": "Status check task; n=1.",
+  "workflow_run_id": 25951913694,
+  "workflow_run_url": "https://github.com/Carnot-EBM/carnot-ebm/actions/runs/25951913694",
+  "workflow_run_status": "waiting",
+  "workflow_run_conclusion": null,
+  "pypi_url_reachable": false,
+  "pypi_url": null,
+  "external_install_verified": false,
+  "actionable_next_step": "operator_approve",
+  "failed_step_excerpt": null,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Workflow status accurately reported with an actionable next step for the operator.",
+  "methodology_note": "STATUS CHECK task. This does NOT push tags or re-publish. exp1910 pushed v0.1.0b1; this task only reports the downstream state. If status=waiting, the actionable next step is operator manual approval at GH Environment 'pypi'.",
+  "optimization_direction": "neither — status check",
+  "honest_verdict": "success: operator manual approval required at GH Environment 'pypi'"
+}
