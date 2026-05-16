@@ -3958,3 +3958,4 @@ Error |
 | 2026-05-16 22:35 UTC | Phase 0: Archive .208 and activate .209 | OK | 81 passed, 1 warning in 4.82s |
 | 2026-05-16 22:40 UTC | Phase 1: Equilibrium Matching (EqM) Landscape Modu | OK | 81 passed, 1 warning in 5.26s |
 | 2026-05-16 22:44 UTC | Phase 1: EqM Compositional Module | OK | 81 passed, 1 warning in 5.74s |
+| 2026-05-16 22:58 UTC | Phase 1: EqM vs PEM on Constraint Graphs | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |

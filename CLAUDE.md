@@ -247,6 +247,114 @@ conductor pre-launch check are scoped at
 (separate proposal). Until that ships, this rule is enforced by
 honest discipline at the planner layer alone.
 
+## Exclusion-Manifest Cross-Check Before Planning (MANDATORY)
+
+**Origin:** 2026-05-16 `.208 gate-block cascade. Smoking gun was
+exp2091, retired in `.164 (44 milestones earlier) per
+`ops/exclusion_manifest.yaml`:
+
+```yaml
+- experiment_id: 2091
+  completed_milestone: "2026.05.164"
+  reason: "gemini CLI consistent bail-out pattern ... 60+ retries
+           / 2h wall time"
+```
+
+The `.208 planner re-proposed exp2091's scope ("Tier 1 CSL Grammar
+Updates") as a fresh task. Three downstream Phase 4 Full Integration
+Benchmark tasks declared `requires: exp2091.tier` — when exp2091 was
+GATE_BLOCKed at activation by the exclusion-manifest enforcer in
+`scripts/research_conductor.py`, those three tasks cascade-blocked.
+Net: 4 of 13 `.208 tasks burned wall-time on a doomed retired
+experiment-id chain that the manifest already classified as
+permanently retired.
+
+The existing **Failed-Experiment Rerun Discipline** (above) governs
+*scope-similar* reruns at the planner-discipline layer. This rule
+is one step tighter: it governs *experiment-id-matched* reruns at
+the **per-id manifest level**, where the conductor will mechanically
+GATE_BLOCK even if the planner respects the broader rerun discipline
+in spirit.
+
+**The rule.** Before drafting `research-roadmap-next.yaml`, the
+planner MUST:
+
+1. **Read `ops/exclusion_manifest.yaml` in full.** The file is
+   short — every retired experiment_id with its retirement
+   milestone and reason fits in a single read.
+2. **For each task being drafted, check whether the task scope
+   matches the scope of any retired experiment_id** by name,
+   description, deliverable shape, or technique. Substring matching
+   on the retired experiment's name/description is sufficient for a
+   first-pass check (e.g., a draft titled "Tier 1 CSL Grammar
+   Updates v2" must match against exp2091's "Tier 1 CSL Grammar
+   Updates").
+3. **If a scope-match is found, REFUSE to propose the task** unless
+   the YAML includes BOTH:
+   - A `prior_failures:` block per Failed-Experiment Rerun
+     Discipline (names the retired exp_id, diagnosed root cause,
+     what is different now), AND
+   - An explicit `operator_override:` field with a one-line operator
+     directive citing where the override was granted (operator
+     message timestamp, known-issues.md entry, etc.).
+4. **For any task that requires the output of a retired
+   experiment** (declares `requires: expNNNN.<artifact>` where
+   expNNNN is on the manifest), REFUSE outright — the requires
+   chain is structurally dead because the conductor will GATE_BLOCK
+   expNNNN at activation. No override path; rewrite the chain to
+   not depend on retired output.
+
+**How to apply (planner-side discipline).** When generating
+`research-roadmap-next.yaml`:
+
+- Grep `ops/exclusion_manifest.yaml` for retired experiment_ids
+  and their reasons.
+- For every draft task, ask: "does this task's scope match any
+  retired experiment_id by name or deliverable shape?" If yes,
+  document the answer in the YAML's task `prior_failures:` block
+  per Failed-Experiment Rerun Discipline. If no `prior_failures:`
+  entry satisfies the rerun-discipline criteria AND no
+  `operator_override:` field cites a specific operator directive,
+  drop the task and propose something else.
+- For every draft task's `requires:` field, verify that no
+  experiment_id referenced is on the exclusion manifest. If any
+  is, rewrite the chain — don't propose dead dependencies.
+
+**Mechanical enforcement (lives in `scripts/research_conductor.py`).**
+The conductor's `_ensure_exclusion_manifest_loaded` check already
+GATE_BLOCKs retired experiment_ids at activation time. A future
+activation-guard extension SHOULD scan the planner-emitted YAML
+*before* the conductor begins activating tasks — refusing the whole
+milestone if any draft task scope-matches a retired id without
+`operator_override:`. Until that ships, this rule is enforced by
+honest discipline at the planner layer alone, with the manifest
+gate as the structural backstop that prevents wall-time burn.
+
+**Why this is in CLAUDE.md, not just in `ops/exclusion_manifest.yaml`.**
+The manifest is the mechanical enforcement target; the planner
+reads CLAUDE.md as required input on every plan generation. The
+`.208 incident demonstrated that the manifest alone is necessary
+but not sufficient: the planner kept proposing retired-id scope
+because nothing in its required inputs told it to check the
+manifest first. Putting the rule here forces the cross-check at
+*design time* — the cheap layer — instead of at activation time
+where the cascade has already burned wall-clock for the
+dependent tasks.
+
+**Cross-references:**
+- `ops/exclusion_manifest.yaml` — the manifest itself; current
+  retired experiment_ids include exp2091 (gemini CLI bail-out),
+  among others
+- **Failed-Experiment Rerun Discipline** (above) — the broader
+  scope-matched rerun rule; this Exclusion-Manifest rule is its
+  per-id specialization with `operator_override:` as the only
+  bypass
+- `scripts/research_conductor.py:_ensure_exclusion_manifest_loaded`
+  — the mechanical enforcer that GATE_BLOCKs at activation
+- `.208 cascade incident (2026-05-16) — three Phase 4 Full
+  Integration Benchmark tasks blocked via the exp2091 requires-
+  chain; documented in `ops/known-issues.md` and the .208 retro
+
 ## Operational Principles
 
 - **Meta-reflection:** After milestones, evaluate HOW work was executed, not just WHAT was produced. Feed operational improvements back into the process.

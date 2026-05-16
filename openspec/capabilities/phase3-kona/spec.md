@@ -2125,3 +2125,15 @@ The Exp 2085 artifact MUST be written to `results/experiment_2085_pem_sudoku_eva
 **Then** the PEM solver achieves a higher success rate
 **And** the artifact is written to `results/experiment_2085_pem_sudoku_eval.json` with a positive `success_rate_delta`.
 
+### REQ-KONA-2097: EqM vs PEM Comparison on Continuous Constraint Graphs
+
+Carnot MUST provide an empirical comparison between the Equilibrium Matching (EqM) landscape formulation and the Parallel Energy Minimization (PEM) optimizer on synthetic continuous constraint graphs. The evaluation MUST measure convergence speed and constraint satisfaction rate.
+The Exp 2097 artifact MUST be written to `results/experiment_2097_eqm_eval.json` and include the field `eqm_superior` as a boolean.
+
+### SCENARIO-KONA-2097: Exp 2097 Evaluates EqM on Continuous Graphs
+
+**Given** 50 instances of continuous constraint graphs
+**When** both the EqM ULA sampler and the PEM solver are applied
+**Then** convergence time and satisfaction rates are measured
+**And** the artifact is written to `results/experiment_2097_eqm_eval.json` with an `eqm_superior` boolean.
+
