@@ -3852,3 +3852,4 @@ Error |
 | 2026-05-16 15:49 UTC | Exp 2050: Implement Piecewise Affine (PWA) abstrac | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 15:51 UTC | Exp 2050: Implement Piecewise Affine (PWA) abstrac | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 15:53 UTC | Exp 2050: Implement Piecewise Affine (PWA) abstrac | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 15:55 UTC | Exp 2051: Encode KAN PWA as Mixed Integer Linear P | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
