@@ -1350,6 +1350,27 @@ When trained on a simple logic task (e.g., AND/XOR constraints),
 Then it discovers the correct symbols with measurable accuracy, tests pass,
 and `results/experiment_2071_symbolic_kan.json` is written.
 
+## REQ-KAN-2060: KAN Symbolizer for exact symbolic formulas
+
+The KAN capability MUST provide a way to extract exact symbolic formulas from trained KAN energy functions.
+
+**Rationale:**
+    KAN4CBC relies on symbolization of 1D splines to generate SMT-verifiable expressions. The symbolizer converts the piecewise representations into algebraic AST strings that can be evaluated or verified externally.
+
+**Acceptance criteria:**
+    - `python/carnot/verify/kan_symbolizer.py` implements `KANSymbolizer`.
+    - It extracts knot points and polynomial coefficients from `UnivariateKAEMLayer`.
+    - It generates a symbolic AST string representing the constraints.
+    - Test coverage is 100% in `tests/python/verify/test_kan_symbolizer.py`.
+    - Results are logged to `results/experiment_2060_kan_symbolizer.json`.
+
+### SCENARIO-KAN-2060: Extract symbolic piecewise expressions
+
+Given a trained `UnivariateKAEMLayer`,
+When `KANSymbolizer` is used to extract polynomials and an AST string,
+Then the correct piecewise linear intercepts and slopes are retrieved,
+and an SMT-verifiable AST string is returned.
+
 ## REQ-KAN-2083: KAN4CBC MILP Z3 Verification
 
 The KAN capability MUST implement formal verification properties for the MILP KAN using the Z3 SMT solver.
