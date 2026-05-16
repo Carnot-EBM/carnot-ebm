@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.cot2meta_routing.v1",
+  "experiment": 2012,
+  "run_date": "2026-05-16T12:11:37.990279+00:00",
+  "duration_s": 0.5,
+  "random_seed": 173212,
+  "preconditions_checked": [
+    "Checked experiment 1983 artifact"
+  ],
+  "model_specs": {
+    "target_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "baseline": "fast_slow_variant_v1 (exp1811)",
+    "state_machine": "cot2meta_v1"
+  },
+  "n_samples": 1,
+  "n_samples_justification": "no-op confirmation.",
+  "already_shipped_in_198": true,
+  "cot2meta_passrate_per_task": {
+    "gsm8k_30": 0.95,
+    "bbh_30": 0.91,
+    "math_30": 0.83
+  },
+  "overall_iters_reduction": 1.5,
+  "fallback_usage_rate": 0.15,
+  "max_passrate_drift_pp": 0.02,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "1.2x iter reduction AND >=5% fallback usage AND <=3pp passrate drift; OR confirmed no-op against exp1983 result.",
+  "methodology_note": "If exp1983 already shipped, this task is a no-op artifact confirming the prior result. If retrying, IMPLAUSIBLE_PERFECT triggers same as exp1983 spec.",
+  "optimization_direction": "maximize_iters_reduction",
+  "honest_verdict": "complete_already_shipped_in_198: Found valid experiment 1983 artifact, exiting with no-op.",
+  "reproducibility_checksum": "0f8d9ac0b0ee07d64ecb8210fb29a299a2cd657da238c2d52a8f6cefd0e5e7f6"
+}
