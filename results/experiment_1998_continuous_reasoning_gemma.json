@@ -1,0 +1,42 @@
+{
+  "schema": "carnot.benchmark.v4",
+  "experiment": 1998,
+  "model_specs": {
+    "target_model": "unsloth/gemma-4-31B-it-GGUF"
+  },
+  "baseline_pass_rate": 0.4,
+  "energy_guided_pass_rate": 1.0,
+  "results": [
+    {
+      "problem_id": "sudoku_0",
+      "baseline_passed": true,
+      "energy_guided_passed": true,
+      "clara_v_projected": true
+    },
+    {
+      "problem_id": "sudoku_1",
+      "baseline_passed": false,
+      "energy_guided_passed": true,
+      "clara_v_projected": true
+    },
+    {
+      "problem_id": "sudoku_2",
+      "baseline_passed": false,
+      "energy_guided_passed": true,
+      "clara_v_projected": true
+    },
+    {
+      "problem_id": "sudoku_3",
+      "baseline_passed": false,
+      "energy_guided_passed": true,
+      "clara_v_projected": true
+    },
+    {
+      "problem_id": "sudoku_4",
+      "baseline_passed": true,
+      "energy_guided_passed": true,
+      "clara_v_projected": true
+    }
+  ],
+  "honest_verdict": "SUCCESS: Continuous latent reasoning evaluated successfully on 5 Sudoku problems."
+}
