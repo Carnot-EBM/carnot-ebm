@@ -1,441 +1,165 @@
-milestone: "2026.05.196"
-milestone_title: "Fast-Slow codification (NOW UNBLOCKED) + PyPI workflow status + HF mirror + .195 audit"
+milestone: "2026.05.197"
+milestone_title: "Thermodynamic EBT Verification + Formal Proof Scaling"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
-scope_reduction_compliance:
-  rationale: "exp1909 (.194) CONFIRMED Fast-Slow Variant: all 4 acceptance gates passed (in-range efficiency + in-range KL + FR-11 forgetting reproduced + FS held threshold; flagged_preliminary=False). exp1911 closed the Phase 4 program (canonical metric named). exp1910 PyPI partially shipped: v0.1.0b1 tag IS on origin (5a681a190cce5b33a14f247c2d14464d041f99ef); GitHub Actions workflow run is in 'Waiting' state pending operator approval at the `pypi` environment (environment protection rule requires manual reviewer). PyPI itself shows 404 for carnot-ebm 0.1.0b1 — package NOT YET PUBLISHED. .196 codifies Fast-Slow (now safe per adversarial-confirmation discipline), checks PyPI workflow status, and pursues the HF mirror prong."
-  carry_forwards_addressed: ["Fast-Slow codification (NOW UNBLOCKED — exp1909 confirmation passed)", "PyPI workflow status check (NOT another tag push; tag exists; awaiting operator approval at GH Environment)", "HF mirror prong (Phase 1 ship-track; multiple prior attempts SKIPPED/replaced)", ".195 audit"]
-authored_by: outer-loop-claude
-
 tasks:
-  - id: exp1929-fast-slow-codification-confirmed
-    title: "Exp 1929: Codify exp1811 + exp1909 Fast-Slow Variant CONFIRMED result into paper-v6 §3"
-    deliverable: results/experiment_1929_fast_slow_codification.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: critical
-    prior_failures:
-      - experiment_id: exp1838-fast-slow-codification-gated-on-confirmation
-        verdict: planner_replaced_in_192
-        addressed_by: "exp1838 was in .192 outer-loop draft; planner replaced. Now exp1909 (.194) confirmation has PASSED all 4 gates — paper-v6 citation is unblocked per the adversarial-confirmation discipline."
-        retire_if_same_verdict: true
-      - experiment_id: exp1909-fast-slow-adversarial-confirmation
-        verdict: success_all_4_gates_passed
-        addressed_by: "exp1909 (.194) confirmation succeeded: in-range efficiency + in-range KL + FR-11 catastrophic forgetting reproduced + FS held threshold; flagged_preliminary=False. This task cites BOTH exp1811 and exp1909 in paper-v6 §3 prose."
-        retire_if_same_verdict: false
+  - id: exp1970-thrml-hybrid-abstraction
+    title: "Exp 1970: Phase 1 - THRML Hybrid Thermodynamic Abstraction Hookup"
+    deliverable: results/experiment_1970_thrml_hookup.json
+    max_turns: 30
     prompt: |
-      CONTEXT: exp1811 (.189) shipped Fast-Slow Variant with paper-matching
-      numbers (sample_efficiency_ratio=3.1x; kl_drift_ratio=0.25; FR-11
-      catastrophic forgetting reproduced). exp1909 (.194) ran the
-      adversarial-confirmation discipline with seed 192737 + corpus
-      rotation 31-60 + baseline audit and PASSED ALL 4 GATES:
-      confirmation_in_range_efficiency=True, confirmation_in_range_kl=True,
-      fr11_catastrophic_forgetting_reproduced=True, fast_slow_held_threshold=True,
-      flagged_preliminary=False. The result is now paper-v6-citable.
-
-      FALSIFIABLE HYPOTHESIS: The exp1811 + exp1909 pair can be codified
-      into (a) paper-v6 §3 architecture-validation prose with verbatim
-      numbers from BOTH runs, (b) research-references.md entry citing
-      arXiv:2605.12484 Fast-Slow Training as methodology origin with
-      Carnot's replication-confirmed numbers, and (c) ops/known-issues.md
-      MANDATORY entry locking in Fast-Slow as the default verify-repair
-      selection mechanism for .197+ planner.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1811_fast_slow_variant.json (original)
-        - results/experiment_1909_fast_slow_confirmation.json (replication;
-          MUST exist for this task — confirmation gate is the precondition)
-        - results/experiment_1911_phase4_canonical_decision.json
-          (Phase 4 canonical decision already named Fast-Slow Variant;
-          this codification updates the downstream paper-v6 prose)
-        - openspec/papers/paper-v6/section-3-architecture.md (or
-          docs/technical-report.md if §3 lives there)
-        - research-references.md
-        - ops/known-issues.md
-        - feedback_adversarial_confirmation_protocol memory entry
-
-      TASK: Three-document codification with BOTH runs cited.
-
+      CONTEXT: Milestone .197 introduces thermodynamic hardware abstractions. We need to integrate THRML for hybrid digital-thermodynamic initialization.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, `carnot/samplers/`
+      TASK: Implement a basic THRML hookup for energy initialization and ensure it runs in simulator mode.
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `test -f results/experiment_1811_fast_slow_variant.json` —
-              else `blocked_baseline_artifact_missing`.
-           b. `test -f results/experiment_1909_fast_slow_confirmation.json`
-              AND `read $art | jq .acceptance_gate_passed` returns true —
-              else `blocked_confirmation_artifact_missing_or_failed`.
-           c. paper-v6 §3 locatable via grep — else
-              `blocked_paperv6_section3_not_locatable`.
-           Record preconditions_checked.
-        1. Read BOTH artifacts. Extract verbatim:
-             - exp1811: sample_efficiency_ratio (3.1), kl_drift_ratio
-               (0.25), passrates per task, forgetting flags, seed
-               (172911)
-             - exp1909: confirmation_sample_efficiency_ratio,
-               confirmation_kl_drift_ratio, passrate per rotated task,
-               seed (192737), rotation metadata
-        2. Draft paper-v6 §3 architecture-validation paragraph
-           (4 paragraphs):
-             - A: state the result with verbatim numbers FROM BOTH RUNS
-               ("3.1× measured with seed 172911 on examples 1-30 per task,
-               <x.x>× replicated with seed 192737 on examples 31-60 per
-               task"; same shape for KL drift)
-             - B: contextualize against arXiv:2605.12484 paper baseline
-               (paper: 3×/70%; Carnot replication: <x>×/<y>%)
-             - C: triangulation with FOUR peer anchors (bijection
-               2512.15605, Fast-Slow 2605.12484, ODAR 2602.23681,
-               planning 2602.02991) + reference exp1909 as the
-               adversarial-confirmation evidence
-             - D: limitation — GSM8K saturated (both at 0.95 in exp1811;
-               check exp1909's GSM8K numbers for same pattern); BBH+MATH
-               were the discriminating tasks
-        3. Update research-references.md citing 2605.12484 as methodology
-           + 2602.23681 (ODAR) + 2602.02991 (planning) as reinforcing
-           peer evidence + the exp1811/exp1909 Carnot replication pair.
-        4. NEW MANDATORY-NEXT-MILESTONE entry in ops/known-issues.md:
-           "Fast-Slow Variant CONFIRMED (exp1811 + exp1909 replication
-           pair) — paper-v6 §3 citation locked. .197+ planner: use
-           Fast-Slow Variant as default verify-repair selection;
-           FR-11 parameter-update RL is contraindicated for new
-           continual-learning work per the catastrophic-forgetting
-           evidence reproduced across both runs."
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.fast_slow_codification.v2_confirmed"
-        - experiment: 1929
-        - run_date: ISO-8601 UTC
-        - duration_s: > 60s (prose + 3 file edits)
-        - random_seed: 173129
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - source_artifacts: ["exp1811", "exp1909"]
-        - both_runs_cited_in_paperv6: bool
-        - model_specs: {{files_edited: ["paper-v6 §3",
-          "research-references.md", "ops/known-issues.md"],
-          word_count_added: int}}
-        - n_samples: 2 (the original + confirmation; explicit pair)
-        - n_samples_justification: "Codification gated on confirmation;
-          n=2 represents both runs informing the codified numbers."
-        - paper_v6_section_3_word_count_added: int
-        - has_emojis_in_paper_v6: false (CLAUDE.md compliance)
-        - acceptance_gate_passed: bool (both runs cited AND emoji-free
-          AND known-issues MANDATORY appended)
-        - acceptance_gate_criteria: "Both runs cited; paper-v6 §3
-          updated; known-issues MANDATORY appended; emoji-free."
-        - methodology_note: "If word_count_added < 250 across 3 files,
-          codification was a stub — disclose honestly. The codification
-          is NOW unblocked because exp1909 confirmation passed per
-          the adversarial-confirmation discipline (memory entry
-          feedback_adversarial_confirmation_protocol)."
-        - optimization_direction: "neither — codification task"
-        - honest_verdict: MUST start with `complete:` / `complete_` /
-          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
-          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
-
+      1. Write `scripts/experiment_1970.py` that utilizes THRML abstractions.
+      2. Log the execution times and initialization offsets.
+      3. Save artifact to `results/experiment_1970_thrml_hookup.json`.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1930-pypi-workflow-status-check
-    title: "Exp 1930: PyPI workflow status check (v0.1.0b1 tag pushed; workflow waiting on operator approval)"
-    deliverable: results/experiment_1930_pypi_status.json
+  - id: exp1971-thrml-latency-audit
+    title: "Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Audit"
+    deliverable: results/experiment_1971_thrml_latency.json
+    gated_on:
+      - upstream: exp1970-thrml-hybrid-abstraction
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: We must verify if the THRML abstraction offers theoretical simulator advantages.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1970.py`
+      TASK: Compare the sampling latency of the new THRML hookup against our native CPU Gibbs sampler.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1971.py` to run n=128 latency tests.
+      2. Record CPU vs THRML latency bounds.
+      3. Save to `results/experiment_1971_thrml_latency.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1972-ebt-system2-decoding
+    title: "Exp 1972: Phase 2 - EBT System-2 Energy Decoding Baseline"
+    deliverable: results/experiment_1972_ebt_baseline.json
+    prompt: |
+      CONTEXT: Energy-Based Transformers (EBT) use energy scores for inference-time computation.
+      EXISTING CODE TO READ FIRST: `carnot/models/`, local GGUF wrappers.
+      TASK: Implement a draft EBT decoding loop using local SOTA models. MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1972.py` integrating the EBT decoding protocol.
+      2. Track multi-step energy minimization on 10 prompt cases.
+      3. Save artifact to `results/experiment_1972_ebt_baseline.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1973-ebt-gsm8k-scaling
+    title: "Exp 1973: Phase 2 - EBT Inference Scaling on GSM8K Subset"
+    deliverable: results/experiment_1973_ebt_gsm8k.json
+    gated_on:
+      - upstream: exp1972-ebt-system2-decoding
+        artifact_field: success
+        op: "=="
+        value: true
+    prompt: |
+      CONTEXT: Evaluate if EBT decoding actually improves reasoning.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1972.py`
+      TASK: Run the EBT baseline on a GSM8K 20-question subset.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1973.py`.
+      2. Measure acceptance rates and energy deltas.
+      3. Save to `results/experiment_1973_ebt_gsm8k.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1974-kona-logic-extraction
+    title: "Exp 1974: Phase 3 - Kona-inspired Continuous Latent Logic Extraction"
+    deliverable: results/experiment_1974_kona_extraction.json
+    prompt: |
+      CONTEXT: Formal verification requires zero-false-accept logic extraction.
+      EXISTING CODE TO READ FIRST: Constraint parsing modules.
+      TASK: Develop a logic extractor that maps unstructured prompts to continuous constraints. MUST use `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1974.py`.
+      2. Extract constraints from 15 unstructured tests.
+      3. Save to `results/experiment_1974_kona_extraction.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1975-formal-proof-bridge
+    title: "Exp 1975: Phase 3 - Formal Proof Validator Bridge Prototype"
+    deliverable: results/experiment_1975_formal_bridge.json
+    agent_type: codex
+    prompt: |
+      CONTEXT: We must bridge the extracted constraints into verifiable proofs.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1974.py`
+      TASK: Implement a Z3-compatible validator backend for the extracted constraints.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1975.py` to route logic rules to Z3.
+      2. Report false-accept rates (must be zero).
+      3. Save to `results/experiment_1975_formal_bridge.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1976-energy-flow-matching
+    title: "Exp 1976: Phase 3 - Energy Matching Latent Generation Probe"
+    deliverable: results/experiment_1976_energy_matching.json
+    max_turns: 30
+    prompt: |
+      CONTEXT: Energy matching unifies flow matching with EBMs.
+      EXISTING CODE TO READ FIRST: Flow/Latent generation modules.
+      TASK: Write a small probe to test energy matching abstractions in latent space.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1976.py` for continuous generation constraints.
+      2. Save artifact to `results/experiment_1976_energy_matching.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1977-kan-hardware-complexity
+    title: "Exp 1977: Phase 1 - KAN Hardware Complexity Metric Check (RM/BOP/NABS)"
+    deliverable: results/experiment_1977_kan_metrics.json
+    max_turns: 20
+    model: opus
+    prompt: |
+      CONTEXT: We need hardware accounting for KANs before synthesis.
+      EXISTING CODE TO READ FIRST: KAN models.
+      TASK: Add a no-synthesis hardware accounting pass for existing KAN energy tiers.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1977.py` to calculate RM/BOP/NABS metrics.
+      2. Save to `results/experiment_1977_kan_metrics.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1978-fr11-continuous-learning
+    title: "Exp 1978: Phase 4 - FR-11 Continuous Self-Learning Loop"
+    deliverable: results/experiment_1978_fr11_learning.json
+    prompt: |
+      CONTEXT: FR-11 requires continuous self-learning with verifier-governed memory promotion.
+      EXISTING CODE TO READ FIRST: Continual learning scripts, verifiers.
+      TASK: Run the continuous self-learning loop ensuring external feedback governance. MUST include at least one SOTA model like `unsloth/gemma-4-31B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1978.py`.
+      2. Log the `soundness_mistakes` and `completeness_mistakes`.
+      3. Save to `results/experiment_1978_fr11_learning.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1979-fr11-retention-audit
+    title: "Exp 1979: Phase 4 - Continuous Self-Learning Retention Audit"
+    deliverable: results/experiment_1979_fr11_audit.json
+    gated_on:
+      - upstream: exp1978-fr11-continuous-learning
+        artifact_field: soundness_mistakes
+        op: "=="
+        value: 0
+    prompt: |
+      CONTEXT: Ensure the FR-11 loop did not cause catastrophic forgetting or mode collapse.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1978.py`
+      TASK: Run a retention audit on the updated FR-11 policy.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_1979.py` analyzing retention vs baseline.
+      2. Save to `results/experiment_1979_fr11_audit.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1980-e2e-cascade
+    title: "Exp 1980: E2E Cascade Validation of .197 Pipeline"
+    deliverable: results/experiment_1980_e2e_cascade.json
+    model: opus
     max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: high
-    prior_failures:
-      - experiment_id: exp1910-phase1-pypi-publish-via-ci-tagged-release
-        verdict: blocked_workflow_run_pending_at_pypi_environment_approval
-        addressed_by: "exp1910 (.194) pushed the v0.1.0b1 tag successfully (visible at origin: 5a681a190cce5b33a14f247c2d14464d041f99ef) but the GitHub Actions workflow run entered 'Waiting' state — the `pypi` environment has a protection rule requiring manual reviewer approval (per .github/workflows/publish-pypi.yml line 77-79). PyPI itself confirms 404 for carnot-ebm/0.1.0b1 — package NOT YET PUBLISHED. This task does NOT push another tag (would fail with 'already tagged'); it CHECKS the workflow status + reports actionable next step."
-        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: exp1910 (.194) successfully pushed git tag v0.1.0b1 to
-      origin (commit 5a681a190cce5b33a14f247c2d14464d041f99ef on
-      Carnot-EBM/carnot-ebm). The publish-pypi.yml workflow triggered
-      but entered 'Waiting' state pending manual approval at the GitHub
-      `pypi` Environment (protection rule requires reviewer per the
-      workflow file lines 77-79: `environment: name: pypi, url:
-      https://pypi.org/p/carnot-ebm`). PyPI API returns 404 for
-      carnot-ebm 0.1.0b1 — package NOT YET PUBLISHED.
-
-      FALSIFIABLE HYPOTHESIS: The workflow run for tag v0.1.0b1 is
-      currently in one of three states: (a) still Waiting on operator
-      environment approval, (b) approved-and-completed (PyPI 0.1.0b1
-      reachable), or (c) approved-and-failed (workflow ran but build
-      or publish step failed). This task identifies which.
-
-      EXISTING CODE TO READ FIRST:
-        - .github/workflows/publish-pypi.yml (the OIDC workflow;
-          environment: pypi requires reviewer approval per lines 77-79)
-        - results/experiment_1910_pypi_publish.json (the prior
-          attempt's partial-success state)
-        - feedback_pypi_publish_via_ci_tagged_release memory entry
-
-      TASK: Check workflow status; report actionable next step.
-
+      CONTEXT: Final validation of the complete milestone pipeline.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_1972.py`, `scripts/experiment_1975.py`, `scripts/experiment_1978.py`.
+      TASK: Combine the EBT decoding, formal proof validator, and continuous learning into one pipeline check. MUST use `unsloth/Qwen3.6-35B-A3B-GGUF`.
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `command -v gh` succeeds — else
-              `blocked_gh_cli_unavailable_use_web_check`.
-           b. `gh auth status` returns authenticated — else
-              `blocked_gh_auth_needed`.
-           c. `git ls-remote --tags origin | grep "v0.1.0b1"` returns
-              the tag hash — else `blocked_tag_not_on_origin` (would
-              need exp1910 retry).
-           Record preconditions_checked.
-        1. List recent workflow runs:
-           `gh run list --workflow=publish-pypi.yml --limit 5
-            --repo Carnot-EBM/carnot-ebm --json
-            databaseId,status,conclusion,headBranch,event,createdAt,url`.
-        2. Identify the run triggered by tag v0.1.0b1 (event=push,
-           headBranch=refs/tags/v0.1.0b1 OR similar).
-        3. Classify status:
-           - status=waiting → operator approval needed. Output
-             actionable line: "Approve at <url>".
-           - status=completed AND conclusion=success → verify PyPI
-             via fresh subprocess: `pip install --index-url
-             https://pypi.org/simple/ carnot-ebm==0.1.0b1` in tmpdir.
-           - status=completed AND conclusion=failure → fetch the
-             failed-step logs: `gh run view <id> --log-failed
-             --repo Carnot-EBM/carnot-ebm` (truncated to 50 lines).
-        4. Optional: poll for up to 5 minutes if status=in_progress.
-        5. Output: workflow_status + workflow_url + pypi_status (404
-           if not published yet; reachable URL if published) +
-           actionable_next_step (e.g., "Operator: approve at <url>"
-           OR "Workflow succeeded; verify install").
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.pypi_workflow_status_check.v1"
-        - experiment: 1930
-        - run_date: ISO-8601 UTC
-        - duration_s: > 15s (gh + pip verify)
-        - random_seed: 173130
-        - reproducibility_checksum: sha256 of (workflow file + tag
-          ref + gh CLI version)
-        - preconditions_checked: list
-        - model_specs: {{workflow_file: ".github/workflows/publish-pypi.yml",
-          tag_checked: "v0.1.0b1", tag_commit_origin: str}}
-        - n_samples: 1 (status check; single workflow run)
-        - n_samples_justification: "Status check task; n=1."
-        - workflow_run_id: int or null
-        - workflow_run_url: str
-        - workflow_run_status: "waiting" | "in_progress" | "success" | "failure" | "not_triggered"
-        - workflow_run_conclusion: str or null
-        - pypi_url_reachable: bool
-        - pypi_url: str or null
-        - external_install_verified: bool
-        - actionable_next_step: str (one of: "operator_approve",
-          "verify_install", "investigate_workflow_failure", "no_action")
-        - failed_step_excerpt: str or null (only if conclusion=failure)
-        - acceptance_gate_passed: bool (status identified AND
-          actionable_next_step set; NOT gated on PyPI being published)
-        - acceptance_gate_criteria: "Workflow status accurately reported
-          with an actionable next step for the operator."
-        - methodology_note: "STATUS CHECK task. This does NOT push tags
-          or re-publish. exp1910 pushed v0.1.0b1; this task only reports
-          the downstream state. If status=waiting, the actionable next
-          step is operator manual approval at GH Environment 'pypi'."
-        - optimization_direction: "neither — status check"
-        - honest_verdict: MUST start with terminal prefix.
-
-      Run command. Do NOT push tags. Do NOT modify
-      scripts/research_conductor.py.
-
-  - id: exp1931-phase1-huggingface-mirror-retry-4th
-    title: "Exp 1931: Phase 1 HuggingFace mirror — 4th attempt (stranded across .171/.175/.179/.186)"
-    deliverable: results/experiment_1931_huggingface_mirror.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: high
-    prior_failures:
-      - experiment_id: exp1748-phase1-huggingface-retry-3rd
-        verdict: planner_replaced_or_skipped
-        addressed_by: "exp1748 (.182) drafted but the milestone was wiped by SKIP loop. exp1695/1705/1726 all stranded similarly across .171/.175/.179. This 4th attempt has NO upstream gate; direct preconditions + honest blocked verdict if credentials absent."
-        retire_if_same_verdict: false
-      - experiment_id: exp1695-phase1-huggingface-publication
-        verdict: never_run_in_171
-        addressed_by: "exp1695 (.171) never produced an artifact. Full chain: 1695 -> 1705 -> 1726 -> 1748 -> 1931. retire_if_same_verdict=true on 'never run' / 'planner replaced' verdicts to break the silent-replacement cycle."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT: Phase 1 ship-track HuggingFace mirror prong. Chain of
-      attempts: exp1695 (.171 stranded) → 1705 (.175 stranded) → 1726
-      (.179 stranded) → 1748 (.182 stranded) → 1931 (this attempt).
-      Pattern: 4-attempt history of being replaced by planner OR
-      wiped by SKIP loop. NO upstream gate; honest blocked verdict
-      acceptable if credentials absent.
-
-      FALSIFIABLE HYPOTHESIS: At least one Carnot trained EBM
-      checkpoint can be uploaded to huggingface.co/Carnot-EBM with
-      complete model card (no emojis), and verified loadable from a
-      fresh Python subprocess via huggingface_hub.hf_hub_download.
-
-      EXISTING CODE TO READ FIRST:
-        - results/experiment_1711_pypi_publish.json (the blocked-
-          credentials honest pattern; HF can use same shape)
-        - scripts/publish_huggingface.py if exists
-        - reference_huggingface memory entry (org=Carnot-EBM)
-        - feedback_phase_1_ship_decoupled memory entry
-        - .github/workflows/ — is there an HF-publish workflow?
-          If yes, follow the same CI-tagged-release pattern as
-          publish-pypi.yml; if no, use authenticated HF API call.
-
-      TASK: Upload one model artifact + card OR honest blocked verdict.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. Check for `.github/workflows/publish-huggingface.yml` or
-              similar — if exists, use CI-tagged-release pattern (like
-              PyPI). If NOT, fall through to API path:
-           b. `huggingface-cli whoami` returns non-anonymous user with
-              write access to Carnot-EBM org — else
-              `blocked_huggingface_credentials_unavailable`.
-           c. `python -c "from huggingface_hub import HfApi"` succeeds
-              — else `blocked_huggingface_hub_missing`.
-           d. At least one checkpoint under python/carnot/verify/ or
-              models/ at < 50MB — else `blocked_no_checkpoint_available`.
-           Record preconditions_checked.
-        1. Pick smallest checkpoint < 50MB.
-        2. Write model card: NO emojis, verbose layman explanations,
-           Apache-2.0 header, BibTeX citation with ian@blenke.com per
-           memory entry feedback_publication_email.
-        3. HfApi.create_repo + upload_folder.
-        4. Fresh subprocess verify: hf_hub_download + import test.
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.huggingface_mirror.v2"
-        - experiment: 1931
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s if real upload; smaller-blocked OK
-        - random_seed: 173131
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - publish_mechanism: "ci_tagged_release" | "hf_api_direct" | "blocked"
-        - model_specs: {{hf_org: "Carnot-EBM", hf_repo: str,
-          chosen_artifact_path: str, artifact_size_bytes: int,
-          model_card_word_count: int}}
-        - n_samples: 1
-        - n_samples_justification: "Ship task; n=1 artifact."
-        - hf_upload_succeeded: bool
-        - hf_url: str or null
-        - external_load_verified: bool
-        - model_card_has_emojis: false
-        - model_card_has_apache_license: true
-        - acceptance_gate_passed: bool (upload + external load + no
-          emojis) OR honest blocked
-        - acceptance_gate_criteria: "Real HF upload + external load +
-          emoji-free OR honest blocked verdict."
-        - methodology_note: "Per exp1711 PyPI precedent + 2026-05-16
-          PyPI-via-CI clarification, blocked_credentials is honest. If
-          a CI workflow for HF exists, use tag-push trigger like PyPI."
-        - optimization_direction: "neither — ship task"
-        - honest_verdict: MUST start with terminal prefix OR
-          `blocked_<resource>`.
-
-      Run command. Do NOT push tags unless an HF CI workflow with
-      tag-trigger exists (in which case follow that workflow's tag
-      pattern). Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1932-findings-audit-pass-195
-    title: "Exp 1932: .195 findings audit + corrigenda"
-    deliverable: results/experiment_1932_findings_audit_195.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: medium
-    prior_failures: []
-    prompt: |
-      CONTEXT: .195 (currently active) has 11 tasks (exp1914-1923).
-      Standard audit pass per the routine cadence.
-
-      FALSIFIABLE HYPOTHESIS: At least 2 .195 artifacts will be flagged
-      by the 8-rule adversarial-verify linter. Classify each
-      REAL_BUG / FALSE_POSITIVE / NEEDS_REVISION.
-
-      EXISTING CODE TO READ FIRST:
-        - scripts/adversarial_verify.py (8-rule linter; consider
-          IMPLAUSIBLE_TIGHT_CI for any bootstrap-CI claims)
-        - results/experiment_191[4-9]*.json + experiment_192[0-3]*.json
-
-      TASK: Audit + corrigenda.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
-        1. `python3 scripts/adversarial_verify.py --milestone-range
-           1914 1924`.
-        2. Classify each flag; append corrigendum_2026_05_196_audit
-           (CLAUDE.md no-pruning: APPEND only).
-        3. For REAL_BUG, propose .197+ follow-ups.
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.findings_audit_corrigenda.v10"
-        - experiment: 1932
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s
-        - random_seed: 173132
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {{audit_target_milestone: "2026.05.195",
-          adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}}
-        - n_samples: int
-        - n_samples_justification: "Audit; n is flagged count."
-        - audit_outcomes: dict
-        - corrigenda_added: list
-        - acceptance_gate_passed: bool
-        - acceptance_gate_criteria: "All flagged classified; corrigenda appended."
-        - methodology_note: "Audit. If <10s on >5 artifacts, agent shortcut."
-        - optimization_direction: "neither — audit task"
-        - honest_verdict: MUST start with terminal prefix.
-
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
-      or scripts/adversarial_verify.py.
-
-  - id: exp1933-milestone-196-retrospective
-    title: "Exp 1933: Milestone .196 retrospective"
-    deliverable: results/operational_retro_2026_05_196.json
-    max_turns: 60
-    agent_type: codex
-    model: gpt-5.5
-    priority: low
-    prior_failures: []
-    prompt: |
-      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
-      Development Workflow step 8. .196 is significant: first
-      codification of CONFIRMED Fast-Slow Variant (exp1929) + PyPI
-      workflow status check (exp1930) + HF mirror retry (exp1931).
-      Retro foregrounds whether Phase 1 ship-track moved.
-
-      TASK: Generate the .196 operational retrospective.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: git log [conductor] Activate milestone
-           2026.05.196..HEAD returns non-empty.
-        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.184/.187/.190/.194
-             templates.
-        7. Phase 1 ship-track status fields:
-             - fast_slow_codification_result: "shipped" | "blocked"
-             - pypi_workflow_status: "waiting" | "success" | "failure"
-             - hf_mirror_result: "shipped" | "blocked" | "stranded"
-
-      REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.operational_retro.v64"
-        - milestone: "2026.05.196"
-        - generated_at: ISO-8601 UTC
-        - retro_type: "operational_full"
-        - preconditions_checked: list
-        - total_wall_time_minutes: float
-        - experiments_completed: int
-        - compute_bound_experiments_count: int
-        - slowest_experiments: list
-        - gpu_idle_on_compute_bound_tasks: bool or null
-        - fast_slow_codification_result: str
-        - pypi_workflow_status: str
-        - hf_mirror_result: str
-        - summary: str
-        - bottlenecks_identified: list
-        - improvements_suggested: list
-        - top_3_highest_leverage_actions: list
-        - estimated_time_savings_pct: int
-        - meta_reflection: str
-        - honest_verdict: MUST start with terminal prefix.
-        - DO NOT modify README.md or docs/technical-report.md.
-
+      1. Write `scripts/experiment_1980.py` tying the phases together.
+      2. Run the pipeline on 5 complex E2E queries.
+      3. Save to `results/experiment_1980_e2e_cascade.json`.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
