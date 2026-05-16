@@ -3926,3 +3926,4 @@ Error |
 | 2026-05-16 20:24 UTC | Phase 3: ActFocus Token-Level Energy Reweighting | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 20:26 UTC | Phase 3: ActFocus Token-Level Energy Reweighting | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 20:28 UTC | Phase 3: Dynamic Resolution Scaling for Continual  | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 20:30 UTC | Phase 3: Dynamic Resolution Scaling for Continual  | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
