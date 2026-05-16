@@ -19043,3 +19043,14 @@ completes.
 
 ### SCENARIO-FAST-SLOW-1909: Confirm Metrics
 **When** Experiment 1909 is executed, **Then** it produces results/experiment_1909_fast_slow_confirmation.json with matching adversarial validation criteria.
+
+### REQ-VERIFY-1974: Logic Extraction With Gemma
+
+The system shall provide a logic extractor that maps unstructured prompts to continuous constraints.
+The logic extractor MUST use the `unsloth/gemma-4-26B-A4B-it-GGUF` model to generate JSON constraints.
+
+### SCENARIO-VERIFY-1974: Logic Extractor Parses Unstructured Text
+
+**Given** an unstructured prompt containing implicit continuous constraints
+**When** the LogicExtractor is invoked
+**Then** it returns a list of ContinuousConstraint objects with type, target, and float values.
