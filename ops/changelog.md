@@ -5899,3 +5899,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 1974: Phase 3 - Kona-inspired Continuous Latent Logic Extraction (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1974_kona_extraction.json
 - 2026-05-16: Exp 1975: Phase 3 - Formal Proof Validator Bridge Prototype (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1975_formal_bridge.json
 - 2026-05-16: Exp 1980: E2E Cascade Validation of .197 Pipeline (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_1980_e2e_cascade.json
+- 2026-05-16: Exp 1981: Phase 1 ship — MCP server + CLI integrator-guide documentation (3rd attempt) (⚠️ Research Finding) — honest_verdict=success: integrator docs shipped and verified; results/experiment_1981_mcp_cli_integrator_docs.json
