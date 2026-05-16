@@ -1215,12 +1215,27 @@ that GPU + NPU paths continue.
    pick CUDA: more VRAM, mature tooling, every paper/tool ships
    CUDA first.
 
-2. **AMD Strix Point gfx1150 APU (ROCm) — SECONDARY for portability**:
-   Integrated GPU on the dev laptop. PyTorch 2.11.0+rocm7.2 with
-   native gfx1150 support, 67 GB unified memory (shared with CPU).
-   Requires `sg render -c '...'` for GPU group access and
-   `TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1` for flash attention.
-   Use `.cuda()` on model and inputs.
+2. **AMD Strix Point gfx1150 APU (ROCm 7.x — verified 2026-05-16) — SECONDARY for portability**:
+   Integrated GPU on the dev laptop (Radeon 890M per lspci on dev box;
+   AMD Ryzen AI 9 HX 370 w/ Radeon 890M). ROCm 7.2.3 enumerates this
+   as an HSA agent: `Name: gfx1150 / Marketing Name: AMD Radeon 890M
+   Graphics / amdgcn-amd-amdhsa--gfx1150` (verified directly via
+   `rocminfo` 2026-05-16 ~14:55Z). The XDNA2 NPU (`aie2p` /
+   RyzenAI-npu4) is also enumerated as a ROCm DSP agent — a bonus
+   sovereignty channel.
+   PyTorch 2.11.0+rocm7.2 has native gfx1150 support, 67 GB unified
+   memory (shared with CPU). Requires `sg render -c '...'` for GPU
+   group access and `TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1` for
+   flash attention. Use `.cuda()` on model and inputs.
+   **Vulkan is an ALTERNATIVE path** for Strix Point (llama.cpp
+   `LLAMA_VULKAN=1` build, PyTorch's experimental Vulkan backend,
+   ONNX Runtime Vulkan EP) — useful when ROCm has operator-coverage
+   gaps. Both ROCm and Vulkan work; pick per task.
+   **Adversarial-verify note:** exp2008 (.201) fabricated
+   `rocminfo_output: gfx1100 Memory: 24576 MB` — that's RX 7900 XTX
+   specs, NOT what's on this box. The real gfx target is gfx1150 and
+   there's no eGPU. Any ROCm probe artifact claiming gfx1100 on this
+   dev box without a 7900 XTX attached is fabricated.
 
 3. **NPU (consumer edge devices) — SOVEREIGNTY ANCHOR**:
    2026-era consumer hardware ships with NPUs: Intel AI Boost, AMD

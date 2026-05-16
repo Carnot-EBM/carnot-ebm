@@ -2076,3 +2076,15 @@ Gradient flow MUST be validated with a synthetic test.
 **Given** a continuous latent state and an initialized `ContinuousEBM`
 **When** the `evaluate_ebm_energy` method is called on the state
 **Then** it returns the expected scalar energy correctly computed using the EBM's coupling and bias.
+
+### REQ-KONA-042: Zero-Forgetting Gate for Phase 3 Policy Retention
+
+Carnot MUST provide a strict promotion gate (`ZeroForgettingGate`) in `python/carnot/pipeline/csl_gate.py` that blocks the retention of a newly learned policy if it violates any prior constraint in the replay buffer. The gate MUST run pre/post tests on the replay buffer and only pass if no new failures are introduced.
+The Exp 2058 artifact MUST include `schema` set to `carnot.csl_gate.v1`, `experiment` set to `2058`, `acceptance_gate_passed` indicating if the gate passed, and an `honest_verdict` starting with a terminal prefix.
+
+### SCENARIO-KONA-042: Exp 2058 Evaluates Zero-Forgetting Gate
+
+**Given** a set of pre-failures and post-failures from evaluating a replay buffer
+**When** `ZeroForgettingGate.evaluate` is called
+**Then** it returns True iff `post_failures` is a subset of `pre_failures` (i.e. no new failures)
+**And** the artifact is written to `results/experiment_2058_csl_gate.json` with the required fields.
