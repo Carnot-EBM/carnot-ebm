@@ -95,9 +95,9 @@ tasks:
         - reproducibility_checksum: sha256 of (docs/integrator-guide.md
           content + README.md content + git_rev)
         - preconditions_checked: list
-        - model_specs: {docs_written: ["docs/integrator-guide.md",
+        - model_specs: {{docs_written: ["docs/integrator-guide.md",
           "README.md (linked, not replaced)"],
-          cli_commands_documented: list, mcp_tools_documented: list}
+          cli_commands_documented: list, mcp_tools_documented: list}}
         - n_samples: 1
         - n_samples_justification: "Ship task; self-test walkthrough."
         - walkthrough_wall_time_minutes_excluding_install: float
@@ -197,9 +197,9 @@ tasks:
         - reproducibility_checksum: sha256 of (workflow file content +
           git_rev)
         - preconditions_checked: list
-        - model_specs: {workflow_file: ".github/workflows/phase1-reproducer.yml",
+        - model_specs: {{workflow_file: ".github/workflows/phase1-reproducer.yml",
           runner: "ubuntu-latest", target_python: "3.11",
-          package_source: "pypi_pinned" | "clone_editable"}
+          package_source: "pypi_pinned" | "clone_editable"}}
         - n_samples: 1
         - n_samples_justification: "Ship task; one workflow."
         - workflow_drafted: bool
@@ -290,7 +290,7 @@ tasks:
                OR mark as "needs human review" (record but proceed)
         2. Wire the state machine into Fast-Slow Variant. Each iter:
            pick action via free-energy-principled fusion (ODAR rule):
-           action = argmax over {expand, prune, repair, stop, fallback}
+           action = argmax over {{expand, prune, repair, stop, fallback}}
            with risk-sensitive weighting.
         3. Run on the same 90-example corpus as exp1811. Log per-example:
            action_sequence, total_iters, final_action, fallback_triggered.
@@ -307,10 +307,10 @@ tasks:
         - random_seed: 173183 (NOT 1983 or 90)
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
           baseline: "fast_slow_variant_v1 (exp1811)",
           state_machine: "cot2meta_v1 (expand/prune/repair/stop/fallback)",
-          tasks: ["gsm8k_30", "bbh_30", "math_30"]}
+          tasks: ["gsm8k_30", "bbh_30", "math_30"]}}
         - n_samples: 90
         - n_samples_justification: "30 per task × 3 tasks matching
           exp1811."
@@ -374,9 +374,9 @@ tasks:
         - random_seed: 173184
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestone: "2026.05.197",
+        - model_specs: {{audit_target_milestone: "2026.05.197",
           adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
+          artifacts_scanned: int, artifacts_flagged: int}}
         - n_samples: int
         - n_samples_justification: "Audit; n is flagged count."
         - audit_outcomes: dict
