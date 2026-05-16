@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,227 Experiments Across the Public Record, 207 Archived Milestone Records, 25,017 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 3,218 Experiments Across the Public Record, 209 Archived Milestone Records, 25,017 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,21 +29,10 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 3,227 experiments across 207 milestones up to .192, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 3,218 experiments across 209 milestones up to .194, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **2,959
-experiment records tracked through Exp 2114, with 2,496 task records in 207
-artifact-backed completed milestone records archived through 2026.05.174 and
-checked-in result artifacts extending through milestone .176** — run between
-February and May 2026. `research-complete.yaml` currently archives **191**
-completed milestone records through 2026.05.179; checked-in result artifacts
-and `ops/changelog.md` now extend through
-`results/experiment_2027_milestone_158_retro.json`. Milestone .161 completed
-**25** experiments in **26.5** minutes, with GPUs correctly idled at 0%
-utilization and doomed-rerun blocks saving time. The slowest path was the Exp 2052
-retrospective.
-The .157 operational retrospective measured **102.0** minutes across
-**16** experiments, where GPU utilization on compute-bound tasks was efficient.
+This report documents the research arc behind the framework — **3,218 experiment records tracked through Exp 2114, with 2,512 task records in 209 artifact-backed completed milestone records archived through 2026.05.194** — run between February and May 2026. `research-complete.yaml` currently archives **209** completed milestone records through 2026.05.195. Milestone 2026.05.194 completed **12** experiments in **19.8** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
+
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -5546,3 +5535,7 @@ Milestones 187 through 191 successfully completed automated retrospectives (up t
 ### Phase 26 — Milestone .192 Optimizations (May 2026)
 
 Milestone 2026.05.192 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.192. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.
+
+### Phase 27 — Milestone .194 Optimizations
+
+Milestone 2026.05.194 operational retrospective complete. Analyzed 19.8 min wall time / 12 experiments. All 12 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout. Synthesis tasks (Exp 1909, 1910, 1911) remain the primary bottleneck for optimization.
