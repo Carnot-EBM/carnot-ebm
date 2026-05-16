@@ -28,5 +28,13 @@
   "methodology_note": "If exp1983 already shipped, this task is a no-op artifact confirming the prior result. If retrying, IMPLAUSIBLE_PERFECT triggers same as exp1983 spec.",
   "optimization_direction": "maximize_iters_reduction",
   "honest_verdict": "complete_already_shipped_in_198: Found valid experiment 1983 artifact, exiting with no-op.",
-  "reproducibility_checksum": "0f8d9ac0b0ee07d64ecb8210fb29a299a2cd657da238c2d52a8f6cefd0e5e7f6"
+  "reproducibility_checksum": "0f8d9ac0b0ee07d64ecb8210fb29a299a2cd657da238c2d52a8f6cefd0e5e7f6",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.5 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
