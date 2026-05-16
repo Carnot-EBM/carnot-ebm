@@ -1,0 +1,61 @@
+{
+  "schema": "carnot.phase1_dashboard.v1",
+  "experiment": 1988,
+  "run_date": "2026-05-16T12:05:00Z",
+  "duration_s": 45,
+  "random_seed": 173188,
+  "reproducibility_checksum": "sha256",
+  "preconditions_checked": [
+    "results/experiment_1929_fast_slow_codification.json exists",
+    "results/experiment_1931_huggingface_mirror.json exists"
+  ],
+  "model_specs": {
+    "dashboard_path": "ops/phase-1-dashboard.md",
+    "prongs_audited": [
+      "pypi",
+      "huggingface",
+      "mcp_docs",
+      "independent_reproducer"
+    ]
+  },
+  "n_samples": 4,
+  "n_samples_justification": "Dashboard; n is prong count.",
+  "per_prong_status": {
+    "pypi": {
+      "status": "pending",
+      "evidence": "https://github.com/Carnot-EBM/carnot-ebm/actions/runs/25951913694",
+      "date": "2026-05-16T05:34:00Z",
+      "next_action": "operator manual approval at GH Environment 'pypi'"
+    },
+    "huggingface": {
+      "status": "shipped",
+      "evidence": "https://huggingface.co/Carnot-EBM/ThinkPRM-v3",
+      "date": "2026-05-16T05:45:39Z",
+      "next_action": "None"
+    },
+    "mcp_docs": {
+      "status": "shipped",
+      "evidence": "docs/integrator-guide.md",
+      "date": "2026-05-16T12:00:00Z",
+      "next_action": "None"
+    },
+    "independent_reproducer": {
+      "status": "pending",
+      "evidence": "ops/phase-1-reproducers.md",
+      "date": "2026-05-16T07:35:54Z",
+      "next_action": "Pending remote trigger"
+    }
+  },
+  "phase_1_ship_percentage": 50,
+  "operator_action_items": [
+    "Approve PyPI workflow at https://github.com/Carnot-EBM/carnot-ebm/actions/runs/25951913694",
+    "Trigger or await remote trigger for Phase 1 Reproducer workflow"
+  ],
+  "dashboard_word_count": 138,
+  "dashboard_has_emojis": false,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "All 4 prongs audited; dashboard single-page; emoji-free; status.md cross-references.",
+  "methodology_note": "Dashboard reflects current state honestly. PyPI is shipped-pending-operator-approval is NOT 'shipped' — it's 'pending'. No status inflation.",
+  "optimization_direction": "neither — synthesis task",
+  "honest_verdict": "success: Phase 1 dashboard created with 50% ship percentage (2/4 prongs)."
+}
