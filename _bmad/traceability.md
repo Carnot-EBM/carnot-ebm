@@ -1666,3 +1666,5 @@
 | SCENARIO-1980-E2E-CASCADE | Exp 1980: E2E Cascade Validation of .197 Pipeline | Implemented-Partial | results/experiment_1980_e2e_cascade.json |
 | REQ-EVAL-006 | Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) | Implemented-Partial | results/experiment_2003_refind_csr.json |
 | SCENARIO-EVAL-006 | Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) | Implemented-Partial | results/experiment_2003_refind_csr.json |
+| REQ-2012-E2E | Exp 2012: End-to-End Test Plan Execution (Spec-Anchored) | Implemented-Partial | results/experiment_2012_e2e.json |
+| SCENARIO-2012-E2E | Exp 2012: End-to-End Test Plan Execution (Spec-Anchored) | Implemented-Partial | results/experiment_2012_e2e.json |
