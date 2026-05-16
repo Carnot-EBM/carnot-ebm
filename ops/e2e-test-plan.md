@@ -117,3 +117,19 @@ and model-weight immutability gates all pass.
 `certified_update_success=true`, at least one certified update is present,
 all certified updates pass replay and hash gates, and no update mutates model
 weights.
+
+### E2E-008: CLaRa-V Continuous Latent Space Evaluation
+
+**Objective:** Verify that CLaRa-V continuous latent variables map to ContinuousEBM instances and can be correctly evaluated for constraints and energy.
+
+**Spec refs:** `REQ-KONA-040`, `SCENARIO-KONA-041`.
+
+**Source artifacts:** `results/experiment_2000_e2e_pipeline.json`.
+
+**Steps:**
+1. Instantiate a ContinuousLatentState with constraints.
+2. Instantiate a ContinuousEBM.
+3. Evaluate the continuous latent state energies with the EBM.
+4. Ensure ContinuousLatentState can project using the DouglasRachfordPiNetLayer.
+
+**Pass criteria:** ContinuousLatentState initialization succeeds, energy is evaluated correctly using ContinuousEBM, PiNet projection runs without error, and output coordinates represent the applied constraints.
