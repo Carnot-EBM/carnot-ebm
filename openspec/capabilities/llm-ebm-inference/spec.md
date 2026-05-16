@@ -695,3 +695,16 @@ The masker SHALL output an artifact `results/experiment_1970_domino_fast_constra
 
 ### REQ-INFER-1958: GCoT-Decoding Reasoning Paths
 The system shall provide a GCoTBranchingSampler that maintains parallel latent reasoning traces, applies partial-trace energy to rank and cull branches, and implements backtracking when all active branches exceed the energy threshold.
+
+### REQ-INFER-SOTA-2009: Dual Model VRAM Allocator Test for ROCm
+The system SHALL provide a multi-model VRAM allocator test for ROCm in `scripts/experiment_2009_dual.py`.
+The allocator SHALL mock VRAM allocation for SOTA models `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` if hardware is absent.
+The allocator SHALL determine theoretical max sequence length based on total VRAM and model weights.
+The output SHALL be saved to `results/experiment_2009_dual_model.json` with all required schema fields including `honest_verdict` and calculated `max_sequence_length`.
+
+### SCENARIO-INFER-SOTA-2009-001: Dual Model VRAM Allocation
+**Given** the mandated models Qwen 35B and Gemma 31B
+**When** the dual model VRAM allocator is executed
+**Then** theoretical max sequence length is determined
+**And** the result is saved to `results/experiment_2009_dual_model.json`.
+
