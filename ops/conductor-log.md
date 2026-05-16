@@ -3784,3 +3784,4 @@ Error |
 | 2026-05-16 11:05 UTC | Exp 2007: Continuous Epsilon Decay Evaluation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 11:07 UTC | Exp 2007: Continuous Epsilon Decay Evaluation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 11:12 UTC | Exp 2008: ROCm Environment Probe & Bring-Up for RX | OK | 81 passed, 1 warning in 5.38s |
+| 2026-05-16 11:17 UTC | Exp 2009: Dual-Model Execution Bench on ROCm | OK | 81 passed, 1 warning in 5.35s |
