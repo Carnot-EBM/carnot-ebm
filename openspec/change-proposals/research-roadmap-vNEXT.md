@@ -1,69 +1,33 @@
-# Carnot Research Roadmap: vNEXT (2026.05.195)
+# Research Roadmap: Milestone 2026.05.197
 
-**Milestone:** 2026.05.195
-**Title:** Continuous Self-Learning Repair + Hardware LUT Accounting + DAB Generation
-**Status:** DRAFT
+**Milestone Title:** Thermodynamic EBT Verification + Formal Proof Scaling
+**Date:** 2026-05-16
 
-## 1. Context and Previous Milestone (.194)
+## 1. Context and Outcomes of .196
+The previous milestone (.196) successfully completed Fast-Slow codification, PyPI workflow checks, HF mirroring, and comprehensive audits. However, significant gaps remain between the current state and the PRD vision:
+1.  **Thermodynamic Hardware Scaling:** We need to natively integrate thermodynamic hardware abstractions (like THRML) to bypass CPU Gibbs sampling bottlenecks.
+2.  **EBT System-2 Verification:** Energy-Based Transformers (EBT) system-2 inference scaling is required to optimize energy dynamically across multi-step logic.
+3.  **Formal Mathematical Proofs:** Bridging the verifiable solver with rigorous formal proofs (e.g., Lean 4, via Kona/Aleph concepts) to achieve zero-false-accept logic extraction.
 
-Milestone 2026.05.194 successfully closed out several critical lingering loops:
-- **Fast-Slow Adversarial Confirmation (Exp 1909):** We confirmed the paper-matching 3.1x sample efficiency and 0.25x KL drift for the Fast-Slow Variant under adversarial rotation.
-- **Phase 4 Canonical Metric Decision (Exp 1911):** Established the canonical metrics for ongoing benchmarking.
-- **PyPI Release (Exp 1910):** Addressed the long-standing CI tagged release publish loop.
+## 2. Phase Descriptions
 
-However, three primary gaps remain between our current state and the core PRD vision:
-1. **Continuous Self-Learning (Tier 3 JEPA & FR-11):** While Fast-Slow handles sample efficiency, our FR-11 baseline exhibited catastrophic forgetting. We need dynamic resolution replay to fix this.
-2. **Hardware Accounting (LUT-based without full synthesis):** We deferred KV260 execution earlier due to toolchain issues, but we can do Vivado-free LUT accounting for our KAN models.
-3. **Energy-guided constrained generation:** The goal of breaking autoregressive limitations requires Discrete Auto-Regressive Biasing (DAB) and thermodynamic constraints to guide standard IT-models.
+### Phase 1: Thermodynamic Hardware Abstractions & THRML Integration
+Focus on adopting `thrml` for hybrid digital-thermodynamic sampling abstractions and perform parity tests against our local baselines, laying the groundwork for hardware deployment. We will also perform a KAN hardware complexity audit.
 
-## 2. Recent ArXiv Findings incorporated
+### Phase 2: EBT-Driven System 2 Verification
+Implement an Energy-Based Transformer decoding strategy on local SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`), optimizing energy at test-time to achieve System-2 level logic verification.
 
-Our recent literature scan (2025-2026) validates this direction:
-- **Compositional Energy Minimization (CEM):** Demonstrates that chaining local EBM constraints significantly reduces multi-step hallucinations in LLMs.
-- **Discrete Auto-Regressive Biasing (DAB):** Provides a mechanism to inject EBM constraint boundaries directly into decoding without retraining the base LLM.
-- **Substrate-Aware KANs (Hardware-Efficient):** New architectural primitives that map continuous latent variables to LUT-friendly boolean expressions.
+### Phase 3: Formal Verification Loop (Lean 4 constraint bridge)
+Develop zero-false-accept logic extraction inspired by Logical Intelligence's Kona/Aleph, synthesizing logic constraints into machine-checkable proofs (Z3/Lean compatible).
 
-## 3. Phase Descriptions
+### Phase 4: Multi-Agent EBM-CoT Self-Learning
+Enhance FR-11 continuous self-learning loops by implementing verifier-governed memory promotion to ensure non-forgetting and soundness without completeness degradation.
 
-### Phase 1: Self-Learning & State Resolution
-We must fix the catastrophic forgetting observed in the FR-11 baseline.
-- **Exp 1914:** .194 archive and .195 initialization.
-- **Exp 1915:** Implement Dynamic Resolution Continual EBM Learning Prototype.
-- **Exp 1916:** Evaluate FR-11 continuous learning on live data using the prototype.
-
-### Phase 2: Hardware-Aware KAN Accounting
-Provide empirical hardware claims without the risk of Vivado synthesis failures.
-- **Exp 1917:** Substrate-Aware KAN LUT Accounting (No Synthesis).
-- **Exp 1918:** Verify KAN boolean mapping correctness.
-
-### Phase 3: Constrained Generation (DAB + Thermodynamic)
-Integrate EBMs with our local SOTA GGUF models.
-- **Exp 1919:** Discrete Auto-Regressive Biasing (DAB) Decoder Adapter implementation.
-- **Exp 1920:** Thermodynamically Constrained Neural Generation Smoke Test.
-- **Exp 1921:** DAB + SOTA GGUF Live Generation benchmark with `unsloth/gemma-4-26B-A4B-it-GGUF`.
-
-### Phase 4: Integration and Retrospective
-- **Exp 1922:** Compositional Energy Minimization (CEM) Architecture Design.
-- **Exp 1923:** CEM Proof of Concept on 3-SAT (Local SOTA).
-- **Exp 1924:** .195 Milestone Retrospective.
+## 3. Dependency Graph
+- Phase 1 must succeed for Phase 4 energy accounting.
+- Phase 2 sets the runtime bounds for Phase 3 constraint elicitation.
+- Phase 4 depends on the formal verification loop (Phase 3) for valid skill promotion.
 
 ## 4. Hardware Requirements
-- Local CPU / RAM for basic tests.
-- 1x NVIDIA GPU with at least 24GB VRAM for GGUF execution.
-- GGUF SOTA Model: `unsloth/gemma-4-26B-A4B-it-GGUF` and/or `unsloth/Qwen3.6-35B-A3B-GGUF`.
-
-## 5. Dependency Graph
-```mermaid
-graph TD
-    E1914[Exp 1914: Init] --> E1915[Exp 1915: Dynamic Res]
-    E1915 --> E1916[Exp 1916: Live Eval]
-    E1914 --> E1917[Exp 1917: LUT Accounting]
-    E1917 --> E1918[Exp 1918: KAN Mapping]
-    E1914 --> E1919[Exp 1919: DAB Adapter]
-    E1919 --> E1920[Exp 1920: Thermo Gen]
-    E1920 --> E1921[Exp 1921: DAB + SOTA]
-    E1916 --> E1922[Exp 1922: CEM Design]
-    E1921 --> E1922
-    E1922 --> E1923[Exp 1923: CEM PoC]
-    E1923 --> E1924[Exp 1924: Retro]
-```
+- Local SOTA GGUFs: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`
+- Local simulator execution for THRML

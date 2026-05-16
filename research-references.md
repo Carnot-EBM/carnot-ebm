@@ -12924,3 +12924,22 @@ This sweep was run after milestone `.173` completed. The literature search revea
 - **Reinforcing Peer Evidence:**
   - arXiv:2602.23681 (ODAR: Principled Adaptive Routing)
   - arXiv:2602.02991 (Planning in LLMs)
+
+## 2026-05-16 Post-.196 Planning Sweep (Milestone 2026.05.197)
+
+This sweep incorporates the latest 2026 findings on Energy-Based Models, formal verification, and thermodynamic computing.
+
+### Energy-Based Transformers are Scalable Learners and Thinkers
+- **Paper:** "Energy-Based Transformers are Scalable Learners and Thinkers" (ICLR 2026).
+- **What:** EBTs frame reasoning as energy minimization, enabling System 2 inference-time compute.
+- **Relevance to Carnot:** Extends the Phase 4 energy decoding framework, allowing the model to optimize energy directly during multi-step reasoning.
+
+### Kona and Aleph Formal Verification
+- **Source:** Logical Intelligence (2026).
+- **What:** Uses EBMs to navigate energy landscapes of logic for machine-checkable formal proofs (e.g., Lean 4).
+- **Relevance to Carnot:** Bridges Carnot’s constraint extraction with formal theorem-prover loops, providing zero-false-accept logic extraction.
+
+### Digitally Optimized Initializations for Fast Thermodynamic Computing
+- **Paper:** "Digitally Optimized Initializations for Fast Thermodynamic Computing" (arXiv:2603.24183) & THRML framework.
+- **What:** Hybrid digital-thermodynamic algorithms to suppress slow relaxation modes, allowing physical systems to settle into Boltzmann distributions rapidly.
+- **Relevance to Carnot:** Provides a concrete integration target for Phase 1 scaling beyond CPU Gibbs sampling.
