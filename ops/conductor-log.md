@@ -3738,3 +3738,4 @@ Error |
 | 2026-05-16 08:16 UTC | Exp 1991: eGPU Thunderbolt RX 7900 XTX ROCm/JAX in | OK | 81 passed, 1 warning in 5.35s |
 | 2026-05-16 08:18 UTC | Exp 1992: KV260 v4 RTL sparse E-MVL synthesis scri | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 08:20 UTC | Exp 1992: KV260 v4 RTL sparse E-MVL synthesis scri | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 08:22 UTC | Exp 1992: KV260 v4 RTL sparse E-MVL synthesis scri | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
