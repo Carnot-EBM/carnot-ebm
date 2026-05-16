@@ -1,36 +1,51 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.200",
-  "generated_at": "2026-05-16T10:12:18Z",
-  "retro_type": "operational_full_milestone_200_landmark",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.200..HEAD returns non-empty: True"
-  ],
-  "total_wall_time_minutes": 60.0,
+  "generated_at": "2026-05-16T10:18:53Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 16.2,
   "experiments_completed": 10,
-  "compute_bound_experiments_count": 2,
+  "compute_bound_experiments_count": 1,
   "slowest_experiments": [
     {
-      "experiment": "Exp 2000",
-      "duration_minutes": 15.0,
+      "experiment": "-0400 [conductor] Exp 1986: Combined .198 + .199 findings audit + corrigenda",
+      "duration_minutes": 3.7,
       "compute_bound": true
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1987: PyPI workflow status RE-CHECK (v0.1.0b1 awaiting ope",
+      "duration_minutes": 3.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1988: Phase 1 ship-track dashboard \u2014 operator-visible sing",
+      "duration_minutes": 3.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1990: Milestone .200 retrospective",
+      "duration_minutes": 2.9,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1989: Phase 1 ship-track recovery \u2014 any .198 prong that di",
+      "duration_minutes": 2.4,
+      "compute_bound": false
     }
   ],
   "gpu_idle_on_compute_bound_tasks": false,
-  "phase_1_ship_track_percentage": 95,
-  "summary": "Milestone 2026.05.200 operational retrospective complete. This is the 200th milestone.",
+  "summary": "Milestone 2026.05.200 completed 10 experiments in 16.2 minutes total wall time, with 1 compute-bound experiment and 9 synthesis-only tasks.",
   "bottlenecks_identified": [
-    "Minor test flakiness."
+    "Synthesis tasks dominated the timeline, with several taking over 3 minutes."
   ],
   "improvements_suggested": [
-    "Improve test stability."
+    "Optimize synthesis-only workflows to reduce their average 2-4 minute duration."
   ],
   "top_3_highest_leverage_actions": [
-    "Celebrate 200th milestone.",
-    "Fix test flakiness.",
-    "Prepare for milestone 201."
+    "Profile synthesis tasks to identify non-compute latency.",
+    "Parallelize independent synthesis tasks if possible.",
+    "Review single-model compute tasks for further optimization."
   ],
-  "estimated_time_savings_pct": 5,
-  "meta_reflection": "This is the 200th milestone \u2014 a process-history landmark worth noting. It marks significant progress in the autoresearch pipeline.",
-  "honest_verdict": "terminal: complete operational retrospective 200 generated successfully. This is a historic milestone for the project."
+  "estimated_time_savings_pct": 15,
+  "meta_reflection": "Execution was stable with no GPU idle flagged on compute-bound tasks. DualGPURunner enforcement was correctly bypassed for single-model tasks."
 }

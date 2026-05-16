@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,234 Experiments Across the Public Record, 209 Archived Milestone Records, 25,061 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 3,255 Experiments Across the Public Record, 213 Archived Milestone Records, 25,087 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 3,234 experiments across 211 milestones up to .197, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 3,255 experiments across 213 milestones up to .200, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **3,234 experiment records tracked through Exp 2114, with 2,528 task records in 211 artifact-backed completed milestone records archived through 2026.05.197** — run between February and May 2026. `research-complete.yaml` currently archives **209** completed milestone records through 2026.05.195. Milestone 2026.05.194 completed **12** experiments in **19.8** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
+This report documents the research arc behind the framework — **3,255 experiment records tracked through Exp 2114, with 2,548 task records in 213 artifact-backed completed milestone records archived through 2026.05.200** — run between February and May 2026. `research-complete.yaml` currently archives **209** completed milestone records through 2026.05.200. Milestone 2026.05.194 completed **12** experiments in **19.8** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5538,7 +5538,7 @@ Milestone 2026.05.192 operational retrospective complete. Analyzed 0 min wall ti
 
 ### Phase 27 — Milestone .194 Optimizations
 
-Milestone 2026.05.194 operational retrospective complete. Analyzed 19.8 min wall time / 12 experiments. All 12 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout. Synthesis tasks (Exp 1909, 1910, 1911) remain the primary bottleneck for optimization.
+Milestone 2026.05.198 operational retrospective complete. Analyzed 18.6 min wall time / 10 experiments. Slowest path: Exp 1985 (8 min, synthesis-only). GPU utilization on the 2 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.
 
 
 ### 4.28 Recent Additions (Milestones .195 to .197)
