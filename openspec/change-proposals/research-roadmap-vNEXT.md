@@ -1,36 +1,52 @@
-# Research Roadmap: Milestone 2026.05.199
+# Research Roadmap: Milestone 2026.05.201
 
-**Milestone Title:** Phase 4 CLaRa Integration, Self-Learning Strict Epsilon Constraints, and Hardware Unblocking
-**Date:** 2026-05-16
+**Milestone Title:** Continuous Self-Learning, Hallucination Detection via Spilled Energy, and ROCm Bring-up
+**Date:** {date}
 
-## 1. Context and Outcomes of .198
-The previous milestone (.198) successfully completed the Phase 1 ship completion: MCP docs + reproducer + CoT2-Meta integration + .197 audit. While the structural foundations of verification routing (CoT2-Meta) are solidified, three primary gaps remain between our current capability and the PRD vision:
+## 1. Context and Outcomes of .200
+The previous milestone (.200) was an operational retrospective that audited the `.198` and `.199` executions. It verified the PyPI deployment workflow, checked the ship-track dashboard for Phase 1 components, and handled artifact recoveries. 
 
-1. **Continuous Self-Learning Forgetting:** The FR-11 requirement for continuous self-learning currently suffers from catastrophic forgetting in the policy buffer without rigorous parameter-level protection.
-2. **Continuous Latent Generation:** The Phase 4 CASAL integration is still reliant on discrete token generation. Recent advances in Continuous Latent Reasoning (CLaRa-V) provide the pathway to bridge Carnot's verification from discrete token generation to fully continuous latent space evaluation.
-3. **Hardware Acceleration Bottlenecks:** Both the KV260 FPGA bitfile synthesis and the eGPU ROCm paths are stalled, preventing actual hardware latency measurements for live continuous sampling.
+With `.200` completing all pending Phase 1 and framework audits, Carnot is now ready to resume core research into EBM reasoning and hardware acceleration. The largest gaps between the current state and the PRD vision are:
+1. **Continuous Self-Learning:** The PRD requires Carnot to operate as an autonomous learning system using Z3 and self-play. 
+2. **Robust Hallucination Detection:** True "System 2" capabilities rely on exact verification, requiring white-box evaluation of token trajectories. 
+3. **Hardware Acceleration:** The long-delayed ROCm and FPGA integration is essential for scaling Langevin dynamics and Gibbs sampling.
 
-This milestone introduces Gradient-Guided Epsilon Constraint (GEC) to mathematically enforce non-forgetting in self-learning, and CLaRa-V to push the verification mechanism into the continuous domain, alongside strategic hardware unblockers.
+## 2. Recent ArXiv Findings (May 2026)
+We incorporate three significant findings into this milestone:
+1. **Spilled Energy in LLMs (arXiv:2602.18671):** Provides a training-free framework for mapping autoregressive Softmax to EBM Spilled/Marginalized energy, crucial for Phase 1 hallucination detection.
+2. **Energy-Based Reward Models (EBRM) (arXiv:2504.12317):** Mitigates reward hacking in the continuous learning pipeline.
+3. **REFIND Context Sensitivity Ratio (arXiv:2502.01911):** Enhances constraint satisfaction during energy-guided decoding.
 
-## 2. Phase Descriptions
+## 3. Architecture Overview
+```mermaid
+graph TD
+    A[SOTA GGUF MoE/Dense] -->|Softmax Logits| B[Spilled Energy Metric]
+    B -->|Hallucination Signal| C[Z3 Verifier / Epsilon Engine]
+    C -->|Verified Constraint Data| D[EBRM Loss]
+    D -->|Self-Distillation| A
+    E[RX 7900 XTX / ROCm] -.->|Hardware Accel| A
+    E -.->|Langevin Dynamics| D
+```
 
-### Phase 1: Hardware Paths & Math Foundations
-Attempt to finally unblock the Thunderbolt RX 7900 XTX eGPU path via ROCm/JAX, and structure the KV260 v4 RTL parameters. Simultaneously, implement the core Rust mathematical primitives for the Gradient-Guided Epsilon Constraint (GEC) projection.
+## 4. Phase Descriptions
 
-### Phase 2: Verifier & Continuous Latent Constraints
-Develop the CLaRa-V continuous latent representation schema in Python and interface it with a PiNet-inspired differentiable projection layer to enforce hard constraints natively in the continuous space, bypassing symbolic synthesis overheads.
+### Phase 1: ArXiv 2026 Integration (Exp 2001-2003)
+Translates the newest ArXiv EBM metrics directly into `carnot.reporting` and `carnot.models.boltzmann`. This establishes our baseline evaluation metrics (Spilled Energy, CSR) and the core EBRM loss function before we begin generation.
 
-### Phase 3: E2E Self-Learning & Reasoning Generation
-Integrate GEC into the SEAL continuous self-learning loop. Execute the CLaRa-V continuous sampling tests using the flagship local GGUF models (`unsloth/gemma-4-31B-it-GGUF` and `unsloth/Qwen3.6-35B-A3B-GGUF`) to realize Phase 4 EBM-driven reasoning.
+### Phase 2: Continuous Self-Learning Pipeline (Exp 2004-2007)
+Implements the "Strict Epsilon Engine" that progressively tightens acceptance criteria for generated solutions. We use `codex` to orchestrate Z3 constraint verifications, generating an auto-curated dataset that is fed back into a dummy SFT/DPO pass via self-distillation.
 
-### Phase 4: Retro & Audit
-Perform standard E2E pipeline verification of the new Phase 4 continuous sampling path, audit the .198 findings, and conclude with the operational retro.
+### Phase 3: Hardware Integration (Exp 2008-2011)
+Tackles the hardware wishlist by probing for the Thunderbolt RX 7900 XTX eGPU and constructing ROCm-specific memory allocators for dual-model execution (`Qwen3.6-35B` + `gemma-4-31B`). Vectorizes the Langevin dynamic step to leverage the new memory bandwidth.
 
-## 3. Dependency Graph
-- Phase 1 (GEC Math) unblocks Phase 3 (GEC SEAL Loop).
-- Phase 2 (CLaRa-V Schema & PiNet) unblocks Phase 3 (Continuous Reasoning Generation).
-- Phase 4 depends on all prior phases successfully producing artifacts or explicitly failing via gate constraints.
+### Phase 4: Capstone Evaluation & Retrospective (Exp 2012-2014)
+Ensures total spec compliance via the mandate from `GEMINI.md`. Runs the full Python-Rust equivalent tests, updates the PRD traceability logs, and conducts the standard operational retrospective.
 
-## 4. Hardware Requirements
+## 5. Dependency Graph
+- Phase 1 (Metrics) must precede Phase 2 (Self-Learning). 
+- Exp 2006 (Self-Distillation) is strictly gated on Exp 2005 achieving >10 Z3-verified responses.
+- Phase 3 (Hardware) can be executed in parallel but relies on Phase 1's EBRM logic for the Langevin target.
+
+## 6. Hardware Requirements
+- **Compute:** Thunderbolt RX 7900 XTX eGPU (Targeted in Phase 3).
 - **Mandated Models:** `unsloth/Qwen3.6-35B-A3B-GGUF` (flagship MoE), `unsloth/gemma-4-31B-it-GGUF` (flagship dense), `unsloth/gemma-4-26B-A4B-it-GGUF` (middle MoE).
-- **Physical Targets:** Thunderbolt RX 7900 XTX eGPU for ROCm testing.

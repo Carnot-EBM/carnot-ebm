@@ -12947,3 +12947,14 @@ This sweep incorporates the latest 2026 findings on Energy-Based Models, formal 
 ## 2026-05-16 Post-.198 Planning Sweep
 - **CLaRa-V: Continuous Latent Reasoning for Verification** (arXiv:2605.15222, May 2026). Extends CLaRa with EBM energy functions for verification of reasoning steps in continuous latent space.
 - **Gradient-Guided Epsilon Constraint (GEC) for Continuous Constraints** (NeurIPS 2025). Strict gradient projection method ensuring catastrophic forgetting is avoided in constraint rule-bases.
+
+
+## 2026-05 ArXiv Scan Results
+
+- **Spilled Energy in Large Language Models (arXiv:2602.18671)**: Reinterprets LLM softmax as EBM. Spilled and Marginalized energy for training-free hallucination detection.
+- **HalluSAE (arXiv:2604.16429)**: Hallucinations as phase transitions in latent dynamics using Geometric Potential Energy (GPE) and SAEs.
+- **REFIND (arXiv:2502.01911)**: Retrieval-augmented Factuality hallucination detection via Context Sensitivity Ratio (CSR), treating retrieved docs as constraints.
+- **Energy-Guided Decoding for Object Hallucination (arXiv:2507.07731)**: Dynamic hidden state selection from minimal energy layer without visual distortion.
+- **Energy-Based Transformers are Scalable Learners and Thinkers (arXiv:2507.02092)**: EBTs for System 2 reasoning via unsupervised pretraining and energy minimization.
+- **Autoregressive Language Models are Secretly Energy-Based Models (arXiv:2512.15605)**: ARM-EBM formal equivalence.
+- **Energy-Based Reward Model (arXiv:2504.12317)**: EBRM calibrates reward models to mitigate reward hacking and noise in human feedback.
