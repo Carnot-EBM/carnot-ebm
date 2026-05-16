@@ -92,6 +92,25 @@ Items filed here are technologies, papers, repos, and ideas to consider
 in future research milestones. The research conductor and planning agent
 should read this file when designing new milestones.
 
+## 2026-05-16 Post-.205 Planning Sweep (Milestone 2026.05.206)
+
+This sweep was run after milestone `.205` completed. The literature search revealed significant advances in reasoning consistency, KAN safety verification, and hardware-efficient generative computing.
+
+### EBM-CoT and EBRM (Reasoning Consistency and Verification)
+- **Papers:** "Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit Chain-of-Thought" (arXiv:2511.07124) and "Energy-Based Reward Models" (2026).
+- **What:** EBM-CoT refines latent thought representations by calibrating the embedding space towards lower-energy, consistent regions. EBRM uses lightweight EBMs as post-hoc verifiers for outputs without reward hacking.
+- **Relevance to Carnot:** Extends Phase 2 continuous latent reasoning by moving energy constraints into the continuous latent space, and upgrades FR-11 continuous self-learning with stable reward structures.
+
+### KAN4CBC and KANELÉ (KAN Formal Synthesis and FPGA)
+- **Papers:** "Formal Synthesis of Safe Kolmogorov-Arnold Network Controllers with Barrier Certificates" (IJCAI 2025) and "KANELÉ: Efficient LUT-based Evaluation" (arXiv:2512.12850).
+- **What:** KAN4CBC leverages the symbolization properties of KANs to generate control barrier certificates verifiable by SMT solvers. KANELÉ deploys KANs efficiently using LUTs on FPGAs with 2700x speedup.
+- **Relevance to Carnot:** Provides the missing mathematical framework for Phase 1 KAN formal verification (zero-false-accept bounds) and the KV260 hardware synthesis path.
+
+### Denoising Thermodynamic Models and CLaRa
+- **Papers:** "An efficient probabilistic hardware architecture for diffusion-like models" (arXiv:2510.23972) and "CLaRa: Bridging Retrieval and Generation with Continuous Latent Reasoning" (arXiv:2511.18659).
+- **What:** DTMs repurpose EBMs for generative thermodynamic computing on Extropic-like TSU hardware. CLaRa unifies retrieval and generation in a continuous latent space for verifiable logic constraints without token bottlenecks.
+- **Relevance to Carnot:** Advances Phase 3/4 continuous self-learning and sets up the Extropic hardware parity.
+
 ## 2026-05-13 Post-.162 Planning Sweep (Milestone 2026.05.163)
 
 This sweep was run after milestone `.162` completed. The literature search revealed advances in Formal Verification of Kolmogorov-Arnold Networks (KANs), Piecewise Affine (PWA) abstractions, and Control Barrier Certificates.
