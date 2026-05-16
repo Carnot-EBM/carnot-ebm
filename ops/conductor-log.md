@@ -3712,3 +3712,4 @@ Error |
 | 2026-05-16 06:42 UTC | Exp 1972: Phase 2 - EBT System-2 Energy Decoding B | OK | 81 passed, 1 warning in 5.21s |
 | 2026-05-16 06:44 UTC | Exp 1973: Phase 2 - EBT Inference Scaling on GSM8K | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1972-ebt-system2-decoding.success (actu |
 | 2026-05-16 06:46 UTC | Exp 1973: Phase 2 - EBT Inference Scaling on GSM8K | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1972-ebt-system2-decoding.success (actu |
+| 2026-05-16 06:48 UTC | Exp 1973: Phase 2 - EBT Inference Scaling on GSM8K | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1972-ebt-system2-decoding.success (actu |
