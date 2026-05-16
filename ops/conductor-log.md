@@ -3775,3 +3775,4 @@ Error |
 | 2026-05-16 10:42 UTC | Exp 2003: REFIND Constraint Satisfaction (arXiv:25 | OK | 100 passed, 1 warning in 5.51s |
 | 2026-05-16 10:44 UTC | Exp 2004: Self-Learning Strict Epsilon Engine v1 | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-16 10:46 UTC | Exp 2004: Self-Learning Strict Epsilon Engine v1 | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-16 10:48 UTC | Exp 2004: Self-Learning Strict Epsilon Engine v1 | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
