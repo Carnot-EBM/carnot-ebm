@@ -3686,3 +3686,5 @@ Error |
 | 2026-05-16 04:53 UTC | Exp 1918: Verify KAN boolean mapping correctness | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1917-substrate-aware-kan-lut) |
 | 2026-05-16 04:55 UTC | Exp 1919: Discrete Auto-Regressive Biasing (DAB) D | OK | 81 passed, 1 warning in 5.46s |
 | 2026-05-16 04:57 UTC | Exp 1918: Verify KAN boolean mapping correctness | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1917-substrate-aware-kan-lut) |
+| 2026-05-16 04:57 UTC | Exp 1920: Thermodynamically Constrained Neural Gen | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 04:59 UTC | Exp 1918: Verify KAN boolean mapping correctness | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1917-substrate-aware-kan-lut) |
