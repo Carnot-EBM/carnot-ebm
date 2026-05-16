@@ -1,10 +1,12 @@
 # Carnot — Architecture
 
-**Last Reconciled:** 2026-05-05
+**Last Reconciled:** 2026-05-16
 
 ## Overview
 
 Carnot is a dual-language (Rust + Python/JAX) Energy Based Model framework organized as a Cargo workspace with a companion Python package. The Rust side provides performance-critical compute; the Python side provides JAX-based research workflows and exposes Rust internals via PyO3.
+
+*Position Paper Note:* See `docs/position_paper_nexus.md` for the latest strategic roadmap and architectural updates related to Phase 3 hardware acceleration and verification pipelines.
 
 ## System Architecture
 
