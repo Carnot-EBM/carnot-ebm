@@ -1402,3 +1402,5 @@ Key contract:
 
 
 corrigendum_2026_05_181_audit
+corrigendum_2026_05_194_audit
+- .193 audit completed; 0 artifacts flagged by adversarial verifier.
