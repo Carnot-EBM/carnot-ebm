@@ -3755,3 +3755,4 @@ Error |
 | 2026-05-16 09:16 UTC | Exp 1999: Evaluate GEC + CLaRa-V on GSM8K using Qw | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 09:22 UTC | Exp 2000: E2E pipeline verification of Phase 4 con | OK | 81 passed, 1 warning in 5.11s |
 | 2026-05-16 09:26 UTC | Exp 2001: .198 findings audit + corrigenda | OK | 81 passed, 1 warning in 5.24s |
+| 2026-05-16 09:31 UTC | Exp 2002: Milestone .199 retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/operational_retro_2026_ |
