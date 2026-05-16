@@ -1,0 +1,203 @@
+milestone: "2026.05.201"
+milestone_title: "Continuous Self-Learning, Hallucination Detection via Spilled Energy, and ROCm Bring-up"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp2001-spilled-energy-metrics
+    title: "Exp 2001: Implement Spilled Energy Metrics (arXiv:2602.18671)"
+    deliverable: "results/experiment_2001_spilled_energy.json"
+    prompt: |
+      CONTEXT: The PRD envisions EBMs escaping autoregressive limitations. Recent paper arXiv:2602.18671 introduces "Spilled Energy" across decoding steps for training-free hallucination detection.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`, `python/carnot/reporting/`
+      TASK: Implement the Spilled Energy calculation and evaluate on a tiny dataset of known hallucinations.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2001_spilled_energy.py`.
+      2. Implement `calculate_spilled_energy(logits, target_tokens)` mapping Softmax to EBM.
+      3. Evaluate using the cached_sota_pair() pattern: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      4. Save results to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2002-energy-reward-model
+    title: "Exp 2002: Implement Energy-Based Reward Model (EBRM, arXiv:2504.12317) Loss"
+    deliverable: "results/experiment_2002_ebrm_loss.json"
+    prompt: |
+      CONTEXT: We must integrate Energy-Based Reward Models (arXiv:2504.12317) to mitigate reward hacking and noise in human feedback.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/gibbs.py`
+      TASK: Create an EBRM loss function that calibrates the latent energy.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2002_ebrm_loss.py`.
+      2. Implement `ebrm_loss_fn(energy_pos, energy_neg, margin)`.
+      3. Run a synthetic dataset pass through the loss function to verify gradient flows.
+      4. Save loss metrics to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2003-refind-constraint-satisfaction
+    title: "Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911)"
+    deliverable: "results/experiment_2003_refind_csr.json"
+    prompt: |
+      CONTEXT: REFIND proposes Context Sensitivity Ratio (CSR) for constraint satisfaction in generation. We will adopt this as a metric.
+      EXISTING CODE TO READ FIRST: `python/carnot/reporting/metrics.py`
+      TASK: Implement CSR and evaluate its correlation with our existing energy metrics.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2003_refind.py`.
+      2. Implement `compute_csr(context_energy, no_context_energy)`.
+      3. Validate on `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      4. Write {deliverable} with the correlation report.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2004-self-learning-epsilon-engine
+    title: "Exp 2004: Self-Learning Strict Epsilon Engine v1"
+    deliverable: "results/experiment_2004_epsilon_engine.json"
+    prompt: |
+      CONTEXT: Per `research-program.md`, Continuous Self-Learning is a primary goal. The Strict Epsilon Engine controls acceptance criteria for self-generated data.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`
+      TASK: Build the Epsilon Engine that decays the constraint tolerance epsilon based on validation rate.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2004_epsilon.py`.
+      2. Implement a rolling window validation tracking and dynamic epsilon scalar.
+      3. Save step-by-step decay trace to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2005-auto-dataset-gen-z3
+    title: "Exp 2005: Auto-Dataset Generation via Z3 constraint checker"
+    deliverable: "results/experiment_2005_z3_generation.json"
+    agent_type: codex
+    prompt: |
+      CONTEXT: The continuous learning loop needs training data. We will use Codex to orchestrate Z3 constraint verification on generated code/logic blocks.
+      EXISTING CODE TO READ FIRST: `python/carnot/verifiers/`
+      TASK: Generate a batch of 100 logic puzzles, solve them with `unsloth/Qwen3.6-35B-A3B-GGUF`, and label via Z3.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2005_z3.py`.
+      2. Generate puzzles and call the local Z3 verifier.
+      3. Filter for 100% correct responses.
+      4. Save structured JSONL as the artifact, linked in {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2006-self-distillation-qwen
+    title: "Exp 2006: Self-Distillation over Z3-verified responses"
+    deliverable: "results/experiment_2006_self_distill.json"
+    gated_on:
+      - upstream: exp2005-auto-dataset-gen-z3
+        artifact_field: "verified_count"
+        op: ">="
+        value: 10
+    prompt: |
+      CONTEXT: Using the dataset from Exp 2005, perform self-distillation on `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/`
+      TASK: Simulate a fine-tuning step using the Z3 verified dataset.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2006_distill.py`.
+      2. Load the dataset from Exp 2005.
+      3. Execute a single-epoch dummy DPO/SFT pass.
+      4. Save final loss to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2007-continuous-epsilon-decay-eval
+    title: "Exp 2007: Continuous Epsilon Decay Evaluation"
+    deliverable: "results/experiment_2007_epsilon_eval.json"
+    prompt: |
+      CONTEXT: Evaluate if the epsilon decay from Exp 2004 improved model precision without mode collapse.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_2004_epsilon.py`
+      TASK: Run generation under decayed epsilon bounds vs static bounds.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2007_eval.py`.
+      2. Compare acceptance rates and generation quality.
+      3. Save statistical delta to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2008-rocm-rx7900-bringup
+    title: "Exp 2008: ROCm Environment Probe & Bring-Up for RX 7900 XTX"
+    deliverable: "results/experiment_2008_rocm_probe.json"
+    max_turns: 100
+    model: opus
+    prompt: |
+      CONTEXT: The hardware wishlist targets a Thunderbolt RX 7900 XTX eGPU for ROCm testing.
+      EXISTING CODE TO READ FIRST: `research-hardware-wishlist.md`
+      TASK: Create a probe to verify ROCm visibility and memory bandwidth.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2008_rocm.py`.
+      2. Query `rocminfo` and map memory limits.
+      3. If no hardware found, generate a mock success indicating "hardware missing but probe works".
+      4. Save probe details to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2009-dual-model-bench-rocm
+    title: "Exp 2009: Dual-Model Execution Bench on ROCm"
+    deliverable: "results/experiment_2009_dual_model.json"
+    prompt: |
+      CONTEXT: EBM requires simultaneous evaluation of `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      EXISTING CODE TO READ FIRST: `scripts/experiment_2008_rocm.py`
+      TASK: Build a multi-model VRAM allocator test for ROCm.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2009_dual.py`.
+      2. Mock VRAM allocation for the SOTA models if hardware absent.
+      3. Determine theoretical max sequence length.
+      4. Save to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2010-hardware-accel-langevin
+    title: "Exp 2010: EBM Hardware-Accelerated Sampling (Langevin Dynamics)"
+    deliverable: "results/experiment_2010_langevin.json"
+    prompt: |
+      CONTEXT: Implement Langevin dynamics optimized for ROCm matrix operations.
+      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`
+      TASK: Vectorize the Langevin step for GPU.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2010_langevin.py`.
+      2. Compare CPU vs GPU mocked performance of the gradient step.
+      3. Save benchmark to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2011-e2e-fidelity-rocm
+    title: "Exp 2011: Verify Model Fidelity Post-ROCm Port"
+    deliverable: "results/experiment_2011_fidelity.json"
+    prompt: |
+      CONTEXT: We must ensure no precision loss in the Langevin sampler on ROCm.
+      EXISTING CODE TO READ FIRST: `ops/e2e-test-plan.md`
+      TASK: Validate ROCm EBM sampling against CPU exact counts.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2011_fidelity.py`.
+      2. Calculate divergence between CPU and mock GPU sampler.
+      3. Save KL divergence to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2012-e2e-test-plan-exec
+    title: "Exp 2012: End-to-End Test Plan Execution (Spec-Anchored)"
+    deliverable: "results/experiment_2012_e2e.json"
+    prompt: |
+      CONTEXT: As mandated by GEMINI.md, all changes must be verified E2E.
+      EXISTING CODE TO READ FIRST: `ops/e2e-test-plan.md`, `scripts/check_spec_coverage.py`
+      TASK: Run full spec coverage and E2E EBM test suite.
+      CONCRETE STEPS:
+      1. Write `scripts/experiment_2012_e2e.py` wrapping standard tests.
+      2. Record pass/fail for Python-Rust bridge equivalent results.
+      3. Save report to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2013-update-prd-status
+    title: "Exp 2013: Update Dashboard & PRD Traceability"
+    deliverable: "results/experiment_2013_prd.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: The milestone is closing. We must update ops/status.md and _bmad/traceability.md.
+      EXISTING CODE TO READ FIRST: `ops/status.md`, `_bmad/traceability.md`
+      TASK: Reconcile specs and move completed work to 'What's Working'.
+      CONCRETE STEPS:
+      1. Update `ops/status.md` preserving historical results.
+      2. Update `_bmad/traceability.md` implementation statuses.
+      3. Generate a JSON summary into {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2014-milestone-201-retro
+    title: "Exp 2014: Milestone 201 Retrospective"
+    deliverable: "results/experiment_2014_retro.json"
+    agent_type: claude
+    max_turns: 50
+    prompt: |
+      CONTEXT: The final step of any milestone is the retrospective.
+      EXISTING CODE TO READ FIRST: `ops/changelog.md`, `ops/metrics.md`
+      TASK: Analyze the performance of Phase 1-3 tasks for Milestone 2026.05.201.
+      CONCRETE STEPS:
+      1. Review conductor logs.
+      2. Synthesize bottlenecks and highest leverage actions.
+      3. Save retro schema to {deliverable}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
