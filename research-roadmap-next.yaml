@@ -1,0 +1,223 @@
+milestone: "2026.05.193"
+milestone_title: "NEXUS Continuous Grounding + AdamFLIP + Wahkon RKHS"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp1901-muon-ogd
+    title: "Exp 1901: Implement Muon-OGD for Continual Learning"
+    deliverable: python/carnot/pipeline/muon_ogd.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: Catastrophic forgetting is a major gap. arXiv 2605.08949 (Muon-OGD) provides a spectral-norm-aware orthogonal gradient projection method that outperforms Frobenius-norm approaches. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/ebft_autoresearch_loop.py
+      TASK: Implement Muon-OGD in a standalone module for continuous self-learning.
+      CONCRETE STEPS:
+      1. Write `python/carnot/pipeline/muon_ogd.py` implementing the dual iterations and Newton-Schulz matrix-sign approximations. Ensure date ({date}) is logged.
+      2. Include a basic unit test in `tests/python/test_muon_ogd.py`.
+      3. Save the result in `results/experiment_1901_muon_ogd.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1902-kan-cl
+    title: "Exp 1902: Implement KAN-CL Per-Knot Regularization"
+    deliverable: python/carnot/pipeline/kan_cl.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2605.12306 proposes KAN-CL, an importance-weighted anchoring at per-knot granularity for Kolmogorov-Arnold Networks to stop forgetting. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/fast_slow_variant.py
+      TASK: Implement KAN-CL regularization for continual learning resilience.
+      CONCRETE STEPS:
+      1. Write `python/carnot/pipeline/kan_cl.py` implementing the per-knot penalty. Log {date}.
+      2. Write a test in `tests/python/test_kan_cl.py`.
+      3. Write `results/experiment_1902_kan_cl.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1903-cl-benchmark
+    title: "Exp 1903: gated on Exp 1901 and 1902: Benchmark Muon-OGD vs KAN-CL"
+    deliverable: results/experiment_1903_cl_benchmark.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1901-muon-ogd
+        artifact_field: success
+        op: '=='
+        value: true
+      - upstream: exp1902-kan-cl
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Evaluate the new CL techniques for continuous self-learning. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/muon_ogd.py, python/carnot/pipeline/kan_cl.py
+      TASK: Benchmark both against FR-11 forgetting metrics.
+      CONCRETE STEPS:
+      1. Create a script `scripts/experiment_1903_cl_benchmark.py` testing continuous self-learning. Log {date}.
+      2. Use unsloth/gemma-4-26B-A4B-it-GGUF if possible in MODEL_SPECS.
+      3. Write artifact to `results/experiment_1903_cl_benchmark.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1904-energy-guided
+    title: "Exp 1904: Implement Energy-Guided Decoding"
+    deliverable: python/carnot/pipeline/energy_guided.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2507.07731 proposes Energy-Guided Decoding to dynamically select minimal energy hidden states for hallucination mitigation. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/inference/composite_scorer.py
+      TASK: Implement Energy-Guided Decoding.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/energy_guided.py`. Log {date}.
+      2. Add integration for SOTA local GGUF models like unsloth/gemma-4-31B-it-GGUF.
+      3. Write `results/experiment_1904_energy_guided.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1905-adamflip
+    title: "Exp 1905: Implement AdamFLIP Hard Constraints"
+    deliverable: python/carnot/pipeline/adamflip.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2605.08408 proposes AdamFLIP, applying momentum feedback linearization for hard constraint optimization. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/models/ebt.py
+      TASK: Implement AdamFLIP optimizer.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/adamflip.py`. Log {date}.
+      2. Implement the adaptive momentum Lagrange multiplier feedback.
+      3. Write `results/experiment_1905_adamflip.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1906-adamflip-eval
+    title: "Exp 1906: gated on Exp 1905 success: Evaluate AdamFLIP"
+    deliverable: results/experiment_1906_adamflip_eval.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1905-adamflip
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Evaluate hard constraints vs soft penalty. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/adamflip.py
+      TASK: Test AdamFLIP on a constraint benchmark.
+      CONCRETE STEPS:
+      1. Run benchmark script. Log {date}.
+      2. Record metrics in `results/experiment_1906_adamflip_eval.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1907-energy-fast-slow
+    title: "Exp 1907: Integrate Energy-Guided Decoding into Fast-Slow Variant"
+    deliverable: results/experiment_1907_energy_fs.json
+    max_turns: 50
+    prompt: |
+      CONTEXT: Combine .192's Fast-Slow variant with Energy-Guided decoding. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/fast_slow_variant.py, python/carnot/pipeline/energy_guided.py
+      TASK: Integrate the two.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1907_energy_fs.py`. Log {date}.
+      2. MUST include unsloth/Qwen3.6-35B-A3B-GGUF or unsloth/gemma-4-31B-it-GGUF in MODEL_SPECS.
+      3. Output `results/experiment_1907_energy_fs.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1908-nexus
+    title: "Exp 1908: Implement NEXUS Symbolic Continual Learning"
+    deliverable: python/carnot/pipeline/nexus_grounding.py
+    max_turns: 50
+    model: opus
+    prompt: |
+      CONTEXT: arXiv 2605.09387 describes NEXUS for continual learning of symbolic constraints. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/verify/property_test.py
+      TASK: Decouple physical feasibility from safety specifications into hard constraint rules.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/nexus_grounding.py`. Log {date}.
+      2. Save `results/experiment_1908_nexus.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1909-wahkon
+    title: "Exp 1909: Implement Wahkon Deep RKHS Superposition Network"
+    deliverable: python/carnot/pipeline/wahkon_rkhs.py
+    max_turns: 50
+    agent_type: codex
+    prompt: |
+      CONTEXT: arXiv 2605.14041 introduces Wahkon, an RKHS alternative to standard KANs providing finite-sample guarantees. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/embeddings/model_embeddings.py
+      TASK: Implement the Wahkon architecture.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/wahkon_rkhs.py`. Log {date}.
+      2. Save `results/experiment_1909_wahkon.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1910-wahkon-bench
+    title: "Exp 1910: gated on Exp 1909 success: Benchmark Wahkon vs KAN"
+    deliverable: results/experiment_1910_wahkon_bench.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1909-wahkon
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Compare Wahkon's calibrated uncertainty vs KANs. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/wahkon_rkhs.py
+      TASK: Run calibration evaluation.
+      CONCRETE STEPS:
+      1. Execute evaluation. Log {date}.
+      2. Save `results/experiment_1910_wahkon_bench.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1911-e2e-integration
+    title: "Exp 1911: E2E Integration of NEXUS + Muon-OGD + Fast-Slow"
+    deliverable: results/experiment_1911_e2e.json
+    max_turns: 100
+    model: opus
+    prompt: |
+      CONTEXT: CRITICAL: integrate all major phase 1-3 improvements. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: python/carnot/pipeline/fast_slow_variant.py, python/carnot/pipeline/nexus_grounding.py, python/carnot/pipeline/muon_ogd.py
+      TASK: Build an end-to-end evaluation script for the milestone.
+      CONCRETE STEPS:
+      1. Create `scripts/experiment_1911_e2e.py`. Log {date}.
+      2. Output `results/experiment_1911_e2e.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1912-full-benchmark
+    title: "Exp 1912: gated on Exp 1911 success: Full E2E Benchmark with SOTA models"
+    deliverable: results/experiment_1912_benchmark.json
+    max_turns: 50
+    gated_on:
+      - upstream: exp1911-e2e-integration
+        artifact_field: success
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: Final benchmark using SOTA GGUF models. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: scripts/experiment_1911_e2e.py
+      TASK: Run the evaluation.
+      CONCRETE STEPS:
+      1. Run the benchmark. MUST include unsloth/Qwen3.6-35B-A3B-GGUF or unsloth/gemma-4-31B-it-GGUF. Log {date}.
+      2. Save `results/experiment_1912_benchmark.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1913-arch-update
+    title: "Exp 1913: Architecture Updates and Position Paper"
+    deliverable: results/experiment_1913_arch_paper.json
+    max_turns: 20
+    prompt: |
+      CONTEXT: Update documentation based on findings. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: _bmad/architecture.md
+      TASK: Draft position paper and update architecture.
+      CONCRETE STEPS:
+      1. Write `docs/position_paper_nexus.md`. Log {date}.
+      2. Output `results/experiment_1913_arch_paper.json`.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1914-milestone-retro
+    title: "Exp 1914: Milestone Retrospective"
+    deliverable: results/experiment_1914_retro.json
+    max_turns: 20
+    agent_type: gemini
+    prompt: |
+      CONTEXT: Perform a retrospective on Milestone 2026.05.193. Workspace is {project_root}.
+      EXISTING CODE TO READ FIRST: ops/changelog.md, ops/status.md
+      TASK: Synthesize the findings and update operational status.
+      CONCRETE STEPS:
+      1. Create `results/experiment_1914_retro.json`. Log {date}.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
