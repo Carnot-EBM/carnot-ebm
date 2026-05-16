@@ -2137,3 +2137,15 @@ The Exp 2097 artifact MUST be written to `results/experiment_2097_eqm_eval.json`
 **Then** convergence time and satisfaction rates are measured
 **And** the artifact is written to `results/experiment_2097_eqm_eval.json` with an `eqm_superior` boolean.
 
+### REQ-KONA-2102: EqM Parameter Memory Cache
+
+Carnot MUST provide a memory cache for Equilibrium Matching (EqM) landscapes to save and retrieve converged parameters. The caching mechanism MUST support JSON or Safetensors serialization of EqM parameters and provide a hot-start capability for subsequent EqM evaluations on similar problems.
+The Exp 2102 artifact MUST be written to `results/experiment_2102_eqm_memory.json` and include the field `memory_promotion_successful` set to `true`.
+
+### SCENARIO-KONA-2102: Exp 2102 Evaluates EqM Memory Promotion
+
+**Given** a converged EqM landscape for a problem
+**When** the memory cache saves the parameters and hot-starts a new EqM evaluation
+**Then** the parameters are successfully serialized and retrieved
+**And** the artifact is written to `results/experiment_2102_eqm_memory.json` with `memory_promotion_successful=true`.
+
