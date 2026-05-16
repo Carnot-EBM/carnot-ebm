@@ -3890,3 +3890,5 @@ Error |
 | 2026-05-16 17:52 UTC | Phase 2: EBM-CoT Latent Calibration Hook | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 17:54 UTC | Phase 2: EBM-CoT Latent Calibration Hook | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 17:56 UTC | Phase 2: Geometric Regulation via Ising | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
+| 2026-05-16 17:58 UTC | Phase 2: NRGPT Gradient-based Block Simulator | OK | 81 passed, 1 warning in 4.87s |
+| 2026-05-16 18:00 UTC | Phase 2: Geometric Regulation via Ising | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
