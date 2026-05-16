@@ -3882,3 +3882,4 @@ Error |
 | 2026-05-16 17:36 UTC | Phase 1: KAN Symbolization Extractor | OK | 81 passed, 1 warning in 4.76s |
 | 2026-05-16 17:38 UTC | Phase 1: KAN4CBC SMT Verification Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2060-kan-symbolization-extractor.symbol |
 | 2026-05-16 17:40 UTC | Phase 1: KAN4CBC SMT Verification Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2060-kan-symbolization-extractor.symbol |
+| 2026-05-16 17:42 UTC | Phase 1: KAN4CBC SMT Verification Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2060-kan-symbolization-extractor.symbol |
