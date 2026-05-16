@@ -172,6 +172,7 @@
 | 2026.05.162 | Operational Efficiency | 23 experiments | GPU efficient on compute tasks; synthesis-only tasks remain primary bottleneck |
 | 2026.05.163 | Operational Efficiency | 22 experiments | Synthesis-only bottlenecks; efficient compute utilization |
 | 2026.05.166 | Operational Efficiency | 10 experiments | GPUs correctly idle; synthesis-only bottleneck |
+| 2026.05.198 | Operational Efficiency | 10 experiments | GPUs efficient on compute tasks; synthesis bottleneck remains |
 
 ## Breakthrough Results
 

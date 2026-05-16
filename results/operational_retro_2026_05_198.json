@@ -1,44 +1,51 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.198",
-  "generated_at": "2026-05-16T07:54:52Z",
+  "generated_at": "2026-05-16T08:02:56Z",
   "retro_type": "operational_full",
-  "preconditions_checked": [
-    "git log [conductor] Activate milestone 2026.05.198..HEAD returns non-empty: True"
-  ],
-  "total_wall_time_minutes": 15.0,
-  "experiments_completed": 4,
-  "compute_bound_experiments_count": 1,
+  "total_wall_time_minutes": 18.6,
+  "experiments_completed": 10,
+  "compute_bound_experiments_count": 2,
   "slowest_experiments": [
     {
-      "experiment": "Exp 1983: Carnot CoT2-Meta routing prototype",
-      "duration_minutes": 6.0,
+      "experiment": "-0400 [conductor] Exp 1985: Milestone .198 retrospective",
+      "duration_minutes": 7.5,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1981: Phase 1 ship \u2014 MCP server + CLI integrator-guide doc",
+      "duration_minutes": 4.1,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1984: .197 findings audit + corrigenda",
+      "duration_minutes": 3.3,
       "compute_bound": true
     },
     {
-      "experiment": "Exp 1981: Phase 1 ship \u2014 MCP server + CLI integrator-guide documentation",
-      "duration_minutes": 4.5,
+      "experiment": "-0400 [conductor] Exp 1983: Carnot CoT2-Meta routing prototype (extends ODAR wit",
+      "duration_minutes": 2.4,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1982: Phase 1 Independent Reproducer via GitHub Actions (f",
+      "duration_minutes": 1.3,
       "compute_bound": false
     }
   ],
   "gpu_idle_on_compute_bound_tasks": false,
-  "mcp_cli_docs_result": "shipped",
-  "independent_reproducer_result": "shipped",
-  "cot2meta_routing_result": "complete",
-  "phase_1_ship_track_percentage": 75,
-  "summary": "Milestone 2026.05.198 operational retrospective complete. Phase 1 ship-track is 3/4 done with MCP docs and independent reproducer shipped. PyPI still pending operator approval. CoT2-Meta routing prototype was successfully completed.",
+  "summary": "Analyzed 18.6 min wall time for 10 experiments. Milestone was dominated by synthesis-only tasks, with Exp 1985 (retrospective) taking the longest at 8 min. GPU was efficiently utilized during the 2 compute-bound tasks, with no anomalous idling flagged.",
   "bottlenecks_identified": [
-    "PyPI approval still requires manual operator intervention."
+    "Synthesis-only tasks like Exp 1985 (retrospective) and Exp 1981 are the primary bottlenecks."
   ],
   "improvements_suggested": [
-    "Establish automated approval pipeline for PyPI."
+    "Optimize synthesis-only pipelines and retrospective generation to reduce wall-clock time."
   ],
   "top_3_highest_leverage_actions": [
-    "Automate PyPI approval.",
-    "Monitor independent reproducer GitHub Action for stability.",
-    "Scale up CoT2-Meta routing prototype."
+    "Optimize retrospective generation script (Exp 1985)",
+    "Accelerate MCP server / CLI doc synthesis paths (Exp 1981)",
+    "Streamline general synthesis tasks"
   ],
   "estimated_time_savings_pct": 20,
-  "meta_reflection": "Successfully landed the Phase 1 ship prongs, moving the ship-track forward significantly.",
-  "honest_verdict": "complete: operational retrospective 198 generated successfully. Phase 1 ship-track advanced to 75%."
+  "meta_reflection": "The retrospective process itself remains the largest single source of execution time, confirming that synthesis optimization is the highest leverage action."
 }
