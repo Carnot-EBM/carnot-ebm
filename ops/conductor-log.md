@@ -3968,3 +3968,5 @@ Error |
 | 2026-05-16 23:28 UTC | Phase 3: CSL IRED Feedback Loop | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 23:33 UTC | Phase 3: CSL EqM Memory Promotion | OK | 81 passed, 1 warning in 4.07s |
 | 2026-05-16 23:35 UTC | Phase 3: CSL Zero-Forgetting Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2101-csl-ired-feedback) |
+| 2026-05-16 23:38 UTC | Phase 4: ASP-KAN-HAQ Hardware Quantization | OK | 81 passed, 1 warning in 4.96s |
+| 2026-05-16 23:40 UTC | Phase 3: CSL Zero-Forgetting Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2101-csl-ired-feedback) |
