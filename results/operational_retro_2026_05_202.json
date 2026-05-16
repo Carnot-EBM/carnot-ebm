@@ -1,0 +1,39 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.202",
+  "generated_at": "2026-05-16T12:23:13Z",
+  "retro_type": "operational_full_consolidation",
+  "preconditions_checked": [
+    "git log [conductor] Activate milestone 2026.05.202..HEAD returns non-empty: True"
+  ],
+  "total_wall_time_minutes": 15.0,
+  "experiments_completed": 4,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "Exp 2010",
+      "duration_minutes": 1.08,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "phase_1_ship_percentage": 80,
+  "pypi_workflow_final_state": "cancelled",
+  "cot2meta_routing_outcome": "complete_already_shipped_in_198",
+  "citation_sweep_promotions": 3,
+  "summary": "Milestone 2026.05.202 operational retrospective complete. This is a consolidation milestone.",
+  "bottlenecks_identified": [
+    "PyPI workflow timeout."
+  ],
+  "improvements_suggested": [
+    "Investigate GH CLI unavailability for PyPI workflow."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Approve PyPI at GH Environment",
+    "Review verified process reward models paper (2601.17223)",
+    "Investigate duration_s=0.5 anomaly in exp 2012"
+  ],
+  "estimated_time_savings_pct": 5,
+  "meta_reflection": "Consolidation milestone successfully pulled data from recent experiments, tracking phase 1 ship percentage and sweeping citations. Detected a duration anomaly in exp 2012.",
+  "honest_verdict": "terminal: complete operational retrospective 202 generated successfully."
+}
