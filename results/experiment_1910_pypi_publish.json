@@ -1,17 +1,17 @@
 {
   "schema": "carnot.pypi_publish.v4_ci_tagged_release",
   "experiment": 1910,
-  "run_date": "2026-05-15T23:55:00Z",
+  "run_date": "2026-05-16T04:02:13Z",
   "duration_s": 65,
   "random_seed": 173110,
-  "reproducibility_checksum": "sha256",
+  "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
   "preconditions_checked": [
-    "workflow_exists",
-    "name_configured",
+    "publish_workflow_exists",
+    "pypi_name_configured",
     "version_readable",
     "github_remote_exists",
-    "tag_empty",
-    "gh_available"
+    "version_already_tagged_needs_bump",
+    "gh_cli_missing"
   ],
   "model_specs": {
     "package_name": "carnot-ebm",
@@ -23,8 +23,8 @@
   "n_samples_justification": "Ship task; one release artifact.",
   "tag_created": "",
   "tag_pushed": false,
-  "workflow_run_url": "",
-  "workflow_run_status": "",
+  "workflow_run_url": null,
+  "workflow_run_status": "failure",
   "pypi_url": null,
   "external_install_verified": false,
   "installed_version_matches": false,
