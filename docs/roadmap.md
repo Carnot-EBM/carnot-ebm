@@ -248,3 +248,4 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 | 2026.05.200 | Operational Efficiency | 10 experiments | Execution stable with 1 compute-bound task; synthesis tasks remain the primary bottleneck |
 | 2026.05.202 | Operational Efficiency | 10 experiments | GPUs correctly idle; 0 compute-bound tasks; synthesis tasks remain primary bottleneck |
 | 2026.05.204 | Operational Efficiency | 221 experiments | GPUs correctly idle; 0 compute-bound tasks; synthesis tasks remain primary bottleneck |
+| 2026.05.205 | Operational Efficiency | 27 experiments | GPUs correctly idle; 0 compute-bound tasks; synthesis tasks remain primary bottleneck |
