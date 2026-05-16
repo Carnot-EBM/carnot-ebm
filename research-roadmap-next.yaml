@@ -1,0 +1,283 @@
+milestone: "2026.05.208"
+milestone_title: "System-2 Compositional Energy Minimization, HardNet Integrations, and Constrained Augmented Generation"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: "exp2082-archive-and-activate"
+    title: "Phase 0: Archive .207 and activate .208"
+    max_turns: 20
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: We are beginning milestone 2026.05.208. We must archive the previous milestone and update the tracking docs.
+      
+      EXISTING CODE TO READ FIRST:
+      - ops/status.md
+      - ops/changelog.md
+      - openspec/change-proposals/research-roadmap-v2026.05.208.md
+      
+      TASK: Rename the previous vNEXT doc if necessary and record the activation of milestone 2026.05.208 in ops/status.md and ops/changelog.md.
+      
+      CONCRETE STEPS:
+      1. Ensure openspec/change-proposals/research-roadmap-v2026.05.208.md exists.
+      2. Update ops/changelog.md to log the start of milestone 2026.05.208.
+      3. Update ops/status.md to reflect the new active milestone and Phase 0 completion.
+      4. Write the terminal deliverable artifact results/experiment_2082_activation.json with honest_verdict="activation_complete".
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2083-pem-composition-module"
+    title: "Phase 1: Compositional Energy Minimization (PEM) Module"
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Generalizable Reasoning through Compositional Energy Minimization (arXiv:2510.20607) proposes composing small, tractable energy sub-problems.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/phase3/lagrangian_optimizer.py
+      
+      TASK: Implement an EBM Composition module that can sum independent local constraint energy functions into a global landscape.
+      
+      CONCRETE STEPS:
+      1. Create python/carnot/phase3/compositional_energy.py.
+      2. Implement a JAX-based composition system that takes multiple callable energy potentials and evaluates them in parallel over the latent state.
+      3. Provide unit test coverage in tests/python/phase3/test_compositional_energy.py.
+      4. Save to results/experiment_2083_pem_composition.json with compositional_energy_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2084-pem-optimizer"
+    title: "Phase 1: Parallel Energy Minimization Optimizer"
+    gated_on:
+      - upstream: "exp2083-pem-composition-module"
+        artifact_field: "compositional_energy_ready"
+        op: "=="
+        value: true
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: The PEM algorithm conducts stochastic optimization over the composed energy landscape to find the global minimum.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/phase3/compositional_energy.py
+      
+      TASK: Implement the PEM optimization loop.
+      
+      CONCRETE STEPS:
+      1. Extend python/carnot/phase3/lagrangian_optimizer.py or create a new PEM optimizer.
+      2. Run gradient-based Langevin dynamics over the composed sub-problem landscapes.
+      3. Write unit tests for convergence on simple composed quadratic wells.
+      4. Save results to results/experiment_2084_pem_optimizer.json with pem_optimizer_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2085-pem-vs-lagrangian-sudoku"
+    title: "Phase 1: PEM vs Lagrangian on Hard Sudoku"
+    gated_on:
+      - upstream: "exp2084-pem-optimizer"
+        artifact_field: "pem_optimizer_ready"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must empirically prove that PEM escapes local minima better than the monolithic Lagrangian from Phase 2071.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2072_kona_sudoku.py
+      - python/carnot/phase3/compositional_energy.py
+      
+      TASK: Compare the new PEM solver against the monolithic Lagrangian on a hard Sudoku dataset.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2085_pem_sudoku_eval.py.
+      2. Run 50 Hard Sudoku instances using both the PEM solver and the prior Lagrangian solver.
+      3. Measure the success rate (escaped local minima).
+      4. Save results to results/experiment_2085_pem_sudoku_eval.json with success_rate_delta > 0.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2086-hardnet-differentiable-layer"
+    title: "Phase 2: HardNet Differentiable Enforcement Layer"
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: HardNet (NeurIPS 2025) uses a closed-form differentiable layer to guarantee hard constraint satisfaction in the forward pass.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/kan_smt_verifier.py
+      
+      TASK: Implement a HardNet-style differentiable enforcement layer for logical inequality constraints.
+      
+      CONCRETE STEPS:
+      1. Create python/carnot/models/hardnet_layer.py.
+      2. Implement the projection algorithm that clamps continuous latent outputs to the feasible logical bounds.
+      3. Ensure the layer is fully JAX-differentiable and compatible with Optax.
+      4. Save to results/experiment_2086_hardnet_layer.json with hardnet_layer_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2087-hardnet-verification-integration"
+    title: "Phase 2: HardNet Verification Pipeline Integration"
+    gated_on:
+      - upstream: "exp2086-hardnet-differentiable-layer"
+        artifact_field: "hardnet_layer_ready"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: The HardNet layer must be integrated into our verification pipeline as a faster alternative to SMT or KAN-based solvers.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py
+      - python/carnot/models/hardnet_layer.py
+      
+      TASK: Integrate the HardNet layer into the `VerifyRepairPipeline`.
+      
+      CONCRETE STEPS:
+      1. Modify or extend `VerifyRepairPipeline` to accept a HardNet-based verification path.
+      2. Convert symbolic constraints (like bounding boxes or numerical limits) into the HardNet layer tensors.
+      3. Write tests validating that the pipeline can use this layer to score and correct states.
+      4. Save to results/experiment_2087_hardnet_pipeline.json with hardnet_integrated=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2088-hardnet-zero-false-accept-benchmark"
+    title: "Phase 2: HardNet Zero-False-Accept Graph Coloring"
+    gated_on:
+      - upstream: "exp2087-hardnet-verification-integration"
+        artifact_field: "hardnet_integrated"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must prove that the new HardNet pipeline component has zero false accepts on combinatorial constraints like Graph Coloring.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2076_nesy_verification.py
+      
+      TASK: Run a Graph Coloring benchmark using the HardNet layer and verify the outputs deterministically.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2088_hardnet_graph_coloring.py.
+      2. Train the HardNet model to generate colored graphs subject to vertex constraint inequalities.
+      3. Verify 100 generated graphs manually to ensure zero constraint violations.
+      4. Save to results/experiment_2088_hardnet_graph_coloring.json with violations=0.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2089-crane-augmented-grammar"
+    title: "Phase 3: CRANE Augmented Grammar Adapter"
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: CRANE (ICML 2025) interleaves constrained and unconstrained decoding to allow reasoning before strict grammar formatting.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/trajectory_decoder.py
+      
+      TASK: Implement an Augmented Grammar Decoder for local models.
+      
+      CONCRETE STEPS:
+      1. Create python/carnot/inference/crane_decoder.py.
+      2. In MODEL_SPECS, include 'unsloth/gemma-4-31B-it-GGUF' and 'unsloth/Qwen3.6-35B-A3B-GGUF'.
+      3. Implement logic that applies standard logits until a specific trigger token is generated, and then strictly applies a BNF grammar constraint for the final output schema.
+      4. Save results to results/experiment_2089_crane_decoder.json with crane_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2090-crane-humaneval-pass"
+    title: "Phase 3: CRANE Decoder HumanEval Benchmark"
+    gated_on:
+      - upstream: "exp2089-crane-augmented-grammar"
+        artifact_field: "crane_ready"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must verify that CRANE's flexible reasoning block improves performance over rigid initial grammar constraints.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2012_e2e.py
+      - python/carnot/inference/crane_decoder.py
+      
+      TASK: Run HumanEval using both rigid schema decoding and CRANE augmented decoding.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2090_crane_humaneval.py using 'unsloth/gemma-4-31B-it-GGUF'.
+      2. Evaluate 50 HumanEval problems requiring structured JSON output.
+      3. Compare Pass@1 of CRANE against rigid start-to-finish grammar enforcement.
+      4. Save to results/experiment_2090_crane_humaneval.json with pass_rate_delta > 0.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2091-csl-grammar-violation-updates"
+    title: "Phase 3: Tier 1 CSL Grammar Updates"
+    gated_on:
+      - upstream: "exp2090-crane-humaneval-pass"
+        artifact_field: "pass_rate_delta"
+        op: ">"
+        value: 0.0
+    max_turns: 50
+    prompt: |
+      CONTEXT: The PRD mandates Continuous Self-Learning (CSL). Here, we update grammar rule weights based on energy evaluations.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/crane_decoder.py
+      - python/carnot/pipeline/constraint_template_library.py
+      
+      TASK: Implement online weight updates to the grammar probabilities based on post-generation constraint checks.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2091_csl_grammar.py.
+      2. Track which rules in the augmented grammar trigger logical violations in a test set.
+      3. Update running counter weights (Tier 1 CSL) to bias future decoding against the failing rule structures.
+      4. Save to results/experiment_2091_csl_grammar.json with tier1_csl_active=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2092-full-integration-benchmark"
+    title: "Phase 4: Full Integration Benchmark (PEM + HardNet + CRANE)"
+    gated_on:
+      - upstream: "exp2091-csl-grammar-violation-updates"
+        artifact_field: "tier1_csl_active"
+        op: "=="
+        value: true
+    max_turns: 80
+    model: "opus"
+    prompt: |
+      CONTEXT: We must validate the complete System-2 loop combining composed energy minimization, hard constraints, and augmented decoding.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2085_pem_sudoku_eval.py
+      - scripts/experiment_2088_hardnet_graph_coloring.py
+      - scripts/experiment_2090_crane_humaneval.py
+      
+      TASK: Build an end-to-end multi-step reasoning integration test.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2092_full_integration.py.
+      2. Use CRANE to generate a multi-step constraint satisfaction problem.
+      3. Route it to PEM for solution search, passing through the HardNet layer to guarantee bounds.
+      4. Measure overall pipeline latency and success rate.
+      5. Save to results/experiment_2092_full_integration.json with integration_successful=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2093-milestone-208-retro"
+    title: "Phase 4: Milestone 2026.05.208 Retrospective"
+    max_turns: 20
+    prompt: |
+      CONTEXT: The milestone is complete and we must summarize results.
+      
+      EXISTING CODE TO READ FIRST:
+      - ops/status.md
+      - ops/changelog.md
+      - ops/metrics.md
+      
+      TASK: Produce the milestone retrospective artifact.
+      
+      CONCRETE STEPS:
+      1. Compile the success/failure state of all Exp 2083-2092 deliverables.
+      2. Analyze if the three gaps (PEM, HardNet, CRANE) were successfully closed.
+      3. Save to results/experiment_2093_retro.json.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

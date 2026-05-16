@@ -13039,3 +13039,26 @@ This sweep was run after milestone `.206` completed. The literature search revea
 - **Papers:** "Generative Thermodynamic Computing" (Whitelam, Jun 2025) and Extropic's TSU platform (Late 2025).
 - **What:** Uses physical stochasticity and "leaky" hardware to perform generative tasks and Gibbs sampling at vastly lower energy costs than GPU simulations.
 - **Relevance to Carnot:** Validates our focus on Thermodynamic Denoising Models (DTM) and physical sampling hardware (like KV260).
+
+
+## 2026-05-16 Post-.207 Planning Sweep (Milestone 2026.05.208)
+
+This sweep was run after milestone `.207` completed. The literature search revealed advances in compositional energy minimization, hard constraints in neural network architectures, and constrained reasoning generation.
+
+### Generalizable Reasoning through Compositional Energy Minimization
+- **Paper:** "Generalizable Reasoning through Compositional Energy Minimization" (arXiv:2510.20607).
+- **What:** Proposes learning energy landscapes over small subproblems and composing them at test time to solve complex tasks (N-Queens, 3-SAT) via Parallel Energy Minimization (PEM).
+- **Relevance to Carnot:** Extends Phase 1/2 EBM reasoning goals by introducing a compositional "System-2" optimization loop.
+- **Concrete experiment hook:** Implement PEM for composed constraint subsets in the verification pipeline.
+
+### HardNet: Hard-Constrained Architectures
+- **Paper:** HardNet (NeurIPS 2025).
+- **What:** A framework using a differentiable closed-form enforcement layer to inherently satisfy multiple hard inequality constraints without sacrificing model capacity.
+- **Relevance to Carnot:** Directly targets the requirement for zero-false-accepts by providing mathematical guarantees in the forward pass.
+- **Concrete experiment hook:** Build a HardNet differentiable layer as an alternative to the NeSy symbolic encoder from Phase 2.
+
+### CRANE: Constrained Reasoning Augmented Generation
+- **Paper:** "CRANE: Constrained Reasoning Augmented Generation" (ICML 2025).
+- **What:** An algorithm that interleaves constrained and unconstrained decoding using an augmented grammar, allowing Chain-of-Thought reasoning before producing syntactically constrained outputs.
+- **Relevance to Carnot:** Improves Energy-Guided decoding by preventing strict constraints from diminishing LLM reasoning abilities.
+- **Concrete experiment hook:** Implement an augmented grammar adapter for local SOTA GGUF models.
