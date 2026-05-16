@@ -41,6 +41,7 @@ use std::collections::HashMap;
 pub mod benchmarks;
 pub mod error;
 pub mod init;
+pub mod math;
 pub mod serialize;
 pub mod verify;
 pub mod verification_learning;

@@ -20,7 +20,7 @@ use carnot_boltzmann::{
     soft_bellman_solve_path as rust_soft_bellman_solve_path, BoltzmannConfig, BoltzmannModel,
     SoftBellmanSolution,
 };
-use carnot_core::{EnergyFunction, Float};
+use carnot_core::{math::gec::project_gradient, EnergyFunction, Float};
 use carnot_gibbs::{Activation, GibbsConfig, GibbsModel};
 use carnot_ising::{IsingConfig, IsingModel};
 use carnot_samplers::{HmcSampler, LangevinSampler, Sampler};
@@ -400,6 +400,25 @@ impl PyHmcSampler {
 }
 
 // ---------------------------------------------------------------------------
+// Math
+// ---------------------------------------------------------------------------
+
+/// Projects a gradient onto the feasible region defined by a reference gradient and epsilon.
+///
+/// Spec: REQ-FR11-1683
+#[pyfunction(name = "project_gradient")]
+#[pyo3(signature = (grad, ref_grad, epsilon=0.0))]
+fn py_project_gradient<'py>(
+    py: Python<'py>,
+    grad: PyReadonlyArray1<Float>,
+    ref_grad: PyReadonlyArray1<Float>,
+    epsilon: Float,
+) -> Bound<'py, PyArray1<Float>> {
+    let result = project_gradient(grad.as_array(), ref_grad.as_array(), epsilon);
+    PyArray1::from_owned_array(py, result)
+}
+
+// ---------------------------------------------------------------------------
 // Module registration
 // ---------------------------------------------------------------------------
 
@@ -407,6 +426,9 @@ impl PyHmcSampler {
 #[pymodule]
 fn _rust(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("__version__", env!("CARGO_PKG_VERSION"))?;
+
+    // Math
+    m.add_function(wrap_pyfunction!(py_project_gradient, m)?)?;
 
     // Models
     m.add_function(wrap_pyfunction!(py_soft_bellman_solve, m)?)?;
