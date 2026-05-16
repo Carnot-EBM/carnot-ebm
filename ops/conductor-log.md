@@ -3631,3 +3631,5 @@ IMPORTANT:
 | 2026-05-16 02:06 UTC | Exp 1901: Implement Muon-OGD for Continual Learnin | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.06s |
 | 2026-05-16 02:08 UTC | Exp 1902: Implement KAN-CL Per-Knot Regularization | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.18s |
 | 2026-05-16 02:11 UTC | Exp 1902: Implement KAN-CL Per-Knot Regularization | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.17s |
+| 2026-05-16 02:13 UTC | Exp 1902: Implement KAN-CL Per-Knot Regularization | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.47s |
+| 2026-05-16 02:15 UTC | Exp 1903: gated on Exp 1901 and 1902: Benchmark Mu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1901-muon-ogd, exp1902-kan-cl) |
