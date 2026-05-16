@@ -3691,3 +3691,5 @@ Error |
 | 2026-05-16 04:59 UTC | Exp 1920: Thermodynamically Constrained Neural Gen | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 05:01 UTC | Exp 1920: Thermodynamically Constrained Neural Gen | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 05:03 UTC | Exp 1921: DAB + SOTA GGUF Live Generation benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1920-thermo-constrained-gen) |
+| 2026-05-16 05:07 UTC | Exp 1922: Compositional Energy Minimization (CEM)  | OK | 81 passed, 1 warning in 5.32s |
+| 2026-05-16 05:09 UTC | Exp 1921: DAB + SOTA GGUF Live Generation benchmar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1920-thermo-constrained-gen) |
