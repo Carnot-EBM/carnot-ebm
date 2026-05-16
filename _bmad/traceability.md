@@ -1662,3 +1662,5 @@
 | SCENARIO-CARM-1772-1 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | Implemented | results/experiment_1772_care_prototype.json |
 | REQ-CARM-1773-1 | Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall | Implemented | results/experiment_1773_care_evaluation.json |
 | SCENARIO-CARM-1773-1 | Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall | Implemented | results/experiment_1773_care_evaluation.json |
+| REQ-1980-E2E-CASCADE | Exp 1980: E2E Cascade Validation of .197 Pipeline | Implemented-Partial | results/experiment_1980_e2e_cascade.json |
+| SCENARIO-1980-E2E-CASCADE | Exp 1980: E2E Cascade Validation of .197 Pipeline | Implemented-Partial | results/experiment_1980_e2e_cascade.json |
