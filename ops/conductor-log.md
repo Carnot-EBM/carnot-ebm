@@ -3759,3 +3759,4 @@ Error |
 | 2026-05-16 09:37 UTC | Exp 2002: Milestone .199 retrospective | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/operational_retro_2026_ |
 | 2026-05-16 09:44 UTC | Exp 2002: Milestone .199 retrospective | OK | 81 passed, 1 warning in 5.89s |
 | 2026-05-16 09:46 UTC | Milestone 2026.05.200 activated | OK | 5 tasks queued |
+| 2026-05-16 09:52 UTC | Exp 1986: Combined .198 + .199 findings audit + co | OK | 81 passed, 1 warning in 5.13s |
