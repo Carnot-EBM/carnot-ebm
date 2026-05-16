@@ -1,0 +1,49 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.204",
+  "generated_at": "2026-05-16T15:41:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 470.5,
+  "experiments_completed": 221,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [
+    {
+      "experiment": "-0400 [conductor] Exp 1970: Phase 1 - THRML Hybrid Thermodynamic Abstraction Hoo",
+      "duration_minutes": 18.0,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1993: Implement Gradient-Guided Epsilon Constraint (GEC) c",
+      "duration_minutes": 15.2,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Pre-gate block: Exp 1912: gated on Exp 1911 success: Full E2E ",
+      "duration_minutes": 14.6,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 2014: Milestone 201 Retrospective",
+      "duration_minutes": 9.3,
+      "compute_bound": false
+    },
+    {
+      "experiment": "-0400 [conductor] Exp 1776: Interwhen Asynchronous Test-Time Monitor",
+      "duration_minutes": 9.1,
+      "compute_bound": false
+    }
+  ],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.204 completed 221 experiments in 470.5 minutes, averaging roughly 2 minutes per task. All 221 tasks were synthesis-only, with zero compute-bound tasks executed.",
+  "bottlenecks_identified": [
+    "Longest synthesis tasks took up to 18 minutes (Exp 1970 and Exp 1993), indicating potential bottlenecks in complex code synthesis or testing phases."
+  ],
+  "improvements_suggested": [
+    "Investigate synthesis tasks exceeding 10 minutes to identify inefficiencies in code generation or context gathering."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Profile the longest synthesis tasks (Exp 1970, Exp 1993, Exp 1912) to reduce their wall time."
+  ],
+  "estimated_time_savings_pct": 10,
+  "meta_reflection": "The milestone was entirely synthesis-driven and completed successfully without utilizing the available GPU resources. Focusing on accelerating the slowest synthesis tasks will yield the most significant operational efficiency gains."
+}

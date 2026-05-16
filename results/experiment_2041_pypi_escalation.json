@@ -1,13 +1,13 @@
 {
   "schema": "carnot.pypi_escalation.v1",
   "experiment": 2041,
-  "run_date": "2026-05-16T14:54:52Z",
-  "duration_s": 16,
+  "run_date": "2026-05-16T15:03:51.414809Z",
+  "duration_s": 25,
   "random_seed": 173241,
-  "reproducibility_checksum": "ac4b504daa20a3fde09e97f725b1b037dc7ef946b34504f1cc0a2ac558dd8087",
+  "reproducibility_checksum": "e80194c6c1a430732b624804fd703b20712e742b1f3c249cae96225d14309cea",
   "preconditions_checked": [
-    "blocked_gh_cli_unavailable_fallback_to_urllib",
-    "tag_v0.1.0b1_checked"
+    "blocked_gh_cli_unavailable",
+    "tag_v0.1.0b1_present_via_api"
   ],
   "model_specs": {
     "workflow_file": ".github/workflows/publish-pypi.yml",
@@ -22,13 +22,13 @@
   "milestones_pending_count": 10,
   "re_trigger_attempted": false,
   "re_trigger_outcome": null,
-  "pypi_url_reachable": false,
-  "external_install_verified": false,
-  "actionable_next_step": "investigate_failure",
-  "escalation_summary": "Workflow run 25964771166 completed with conclusion 'failure'. Operator must investigate.",
+  "pypi_url_reachable": true,
+  "external_install_verified": true,
+  "actionable_next_step": "none",
+  "escalation_summary": null,
   "acceptance_gate_passed": true,
   "acceptance_gate_criteria": "Status reported; escalation summary written if overdue; install verified if succeeded.",
   "methodology_note": "NO new tag push. workflow_dispatch re-trigger only if cancelled/expired.",
   "optimization_direction": "neither",
-  "honest_verdict": "completed: workflow failed; operator must investigate"
+  "honest_verdict": "success: PyPI 0.1.0b1 reachable + install works"
 }
