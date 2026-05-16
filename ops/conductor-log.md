@@ -3947,3 +3947,4 @@ Error |
 | 2026-05-16 21:53 UTC | Phase 3: CRANE Augmented Grammar Adapter | OK | 82 passed, 1 warning in 5.72s |
 | 2026-05-16 22:00 UTC | Phase 3: CRANE Decoder HumanEval Benchmark | OK | 81 passed, 1 warning in 4.74s |
 | 2026-05-16 22:02 UTC | Phase 3: Tier 1 CSL Grammar Updates | OK | Excluded by manifest: exp_id=2091 in manifest |
+| 2026-05-16 22:02 UTC | Phase 4: Full Integration Benchmark (PEM + HardNet | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2091-csl-grammar-violation-updates.tier |
