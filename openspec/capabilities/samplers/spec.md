@@ -574,3 +574,20 @@ Sub-requirements:
 **Given** the ROCm Langevin sampler fidelity script is executed
 **When** it calculates divergence between CPU and mock GPU samplers
 **Then** it writes the result to `results/experiment_2011_fidelity.json`
+
+### REQ-SAMPLE-2067: DTM Simulator
+
+Carnot MUST provide a Denoising Thermodynamic Model (DTM) CPU simulator in `python/carnot/samplers/dtm_sampler.py`.
+The DTM simulator integrates Langevin thermal noise with Carnot's energy function (arXiv:2510.23972).
+
+Sub-requirements:
+- REQ-SAMPLE-2067-1: The module SHALL provide a `DTMSampler` class mapping state updates to thermal noise profiles.
+- REQ-SAMPLE-2067-2: The sampler SHALL use Langevin thermal noise in its updates.
+- REQ-SAMPLE-2067-3: The experiment artifact SHALL be written to `results/experiment_2067_dtm_simulation.json` with `dtm_sim_ready=true`.
+
+### SCENARIO-SAMPLE-2067: DTM Simulator writes terminal artifact
+
+**Given** the DTM Simulator and an energy function
+**When** the DTM sampler runs
+**Then** it successfully outputs a valid sample and updates
+**And** it writes `results/experiment_2067_dtm_simulation.json` with `dtm_sim_ready=true`.
