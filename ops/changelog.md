@@ -5965,3 +5965,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Phase 0: Archive .205 and activate .206 (✅ Complete) — honest_verdict=activation_complete; results/experiment_2059_activation.json
 - 2026-05-16: Phase 1: KAN Symbolization Extractor (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2060_kan_symbolizer.json
 - 2026-05-16: Phase 2: NRGPT Gradient-based Block Simulator (⚠️ Research Finding) — honest_verdict=success; results/experiment_2065_nrgpt_stub.json
+- 2026-05-16: Phase 3: EBRM (Energy-Based Reward Model) Training (✅ Complete) — honest_verdict=complete_ebrm_cd_trained; results/experiment_2066_ebrm_training.json
