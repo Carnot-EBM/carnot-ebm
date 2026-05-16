@@ -15,3 +15,5 @@ Complex multi-constraint optimization degrades. We need Compositional Energy Min
 ## Scenarios
 - SCENARIO-CEM-001: Decompose a multi-constraint CCTU trace into localized landscapes and report the number of generated subsets.
 - SCENARIO-CEM-002: Test CompositionalEnergyMinimizer on a 3-SAT toy problem (n=16).
+- SCENARIO-CEM-003: Solve a 10-variable 20-clause 3-SAT problem using composed ClauseEBMs with target 0 energy.
+oblem (n=16).

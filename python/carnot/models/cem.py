@@ -6,19 +6,37 @@ Refines a continuous latent trace via energy gradients from compositional sub-en
 Spec: REQ-CEM-004
 """
 
-from typing import List
+from typing import List, Sequence, Any
 import jax
 import jax.numpy as jnp
 from carnot.models.ising import IsingModel
 
+class ClauseEBM:
+    """
+    Energy Based Model for a single 3-SAT clause.
+    Energy is minimized (approaches 0) when the clause is satisfied.
+
+    Spec: REQ-CEM-005
+    """
+    def __init__(self, indices: jnp.ndarray, signs: jnp.ndarray):
+        self.indices = jnp.array(indices)
+        self.signs = jnp.array(signs)
+
+    def energy(self, state: jnp.ndarray) -> jnp.ndarray:
+        """Computes energy of the clause for a continuous state in [-1, 1]."""
+        vals = state[self.indices]
+        penalties = 1.0 - self.signs * vals
+        penalties = jnp.maximum(0.0, penalties)
+        return jnp.prod(penalties)
+
 class CompositionalEnergyMinimizer:
     """
     Implements global energy landscape composition over small tractable subproblems.
-    Sums multiple independent IsingEBM instances.
+    Sums multiple independent EBM instances.
 
-    Spec: REQ-CEM-004, SCENARIO-CEM-002
+    Spec: REQ-CEM-004, REQ-CEM-005, SCENARIO-CEM-002, SCENARIO-CEM-003
     """
-    def __init__(self, sub_models: List[IsingModel], learning_rate: float = 0.01):
+    def __init__(self, sub_models: Sequence[Any], learning_rate: float = 0.01):
         self.sub_models = sub_models
         self.learning_rate = learning_rate
 
