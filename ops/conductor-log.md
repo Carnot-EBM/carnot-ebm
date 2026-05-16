@@ -3812,3 +3812,23 @@ Error |
 | 2026-05-16 13:38 UTC | Phase 2: Evaluate KAGNN vs MLP Baseline | OK | 81 passed, 1 warning in 4.36s |
 | 2026-05-16 13:44 UTC | Phase 3: HardNet++ Differentiable Layer Implementa | OK | 101 passed, 1 warning in 9.27s |
 | 2026-05-16 13:50 UTC | Phase 3: Integrate HardNet++ into Carnot-Gibbs Tie | OK | 81 passed, 1 warning in 4.18s |
+| 2026-05-16 13:55 UTC | Phase 3: Interleaved Gibbs Diffusion (IGD) Sampler | FAIL | Gemini CLI error: WGAOW57.js:309732:14)
+    at async file:///usr/lib/node_modu |
+| 2026-05-16 14:09 UTC | Phase 3: Interleaved Gibbs Diffusion (IGD) Sampler | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: d for a better visu |
+| 2026-05-16 14:11 UTC | Phase 3: Interleaved Gibbs Diffusion (IGD) Sampler | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 5.33s |
+| 2026-05-16 14:13 UTC | Phase 3: E2E IGD Sampler on Sudoku with Qwen3.6 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 6.04s |
+| 2026-05-16 14:15 UTC | Phase 3: E2E IGD Sampler on Sudoku with Qwen3.6 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 5.40s |
+| 2026-05-16 14:18 UTC | Phase 3: E2E IGD Sampler on Sudoku with Qwen3.6 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 5.38s |
+| 2026-05-16 14:20 UTC | Phase 4: Synthesize KANELÉ LUT-based Evaluation fo | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 5.36s |
+| 2026-05-16 14:22 UTC | Phase 4: Synthesize KANELÉ LUT-based Evaluation fo | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 5.84s |
+| 2026-05-16 14:24 UTC | Phase 4: Synthesize KANELÉ LUT-based Evaluation fo | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 6.63s |
+| 2026-05-16 14:26 UTC | gated on Exp 2040: Hardware-in-the-loop Inference | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2040-kanele-fpga-synthesis) |
+| 2026-05-16 14:27 UTC | Phase 4: Multi-Scale Ensemble Integration | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 7.34s |
+| 2026-05-16 14:29 UTC | gated on Exp 2040: Hardware-in-the-loop Inference | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2040-kanele-fpga-synthesis) |
+| 2026-05-16 14:29 UTC | Phase 4: Multi-Scale Ensemble Integration | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 6.18s |
+| 2026-05-16 14:31 UTC | gated on Exp 2040: Hardware-in-the-loop Inference | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2040-kanele-fpga-synthesis) |
+| 2026-05-16 14:31 UTC | Phase 4: Multi-Scale Ensemble Integration | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 6.40s |
+| 2026-05-16 14:34 UTC | Milestone 203 Retrospective and Documentation Upda | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 7.23s |
+| 2026-05-16 14:36 UTC | Milestone 203 Retrospective and Documentation Upda | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 6.77s |
+| 2026-05-16 14:39 UTC | Milestone 203 Retrospective and Documentation Upda | SKIP | Pre-tests failing, self-heal failed: 2 failed, 82 passed, 1 warning in 6.62s |
+| 2026-05-16 14:41 UTC | Milestone 2026.05.204 activated | OK | 5 tasks queued |
