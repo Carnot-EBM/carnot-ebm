@@ -1,165 +1,447 @@
-milestone: "2026.05.197"
-milestone_title: "Thermodynamic EBT Verification + Formal Proof Scaling"
+milestone: "2026.05.198"
+milestone_title: "Phase 1 ship completion: MCP docs + reproducer + CoT2-Meta integration + .197 audit"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction_compliance:
+  rationale: ".196 produced THREE major wins: (1) exp1929 Fast-Slow Variant codified into paper-v6 §3 with BOTH runs cited (exp1811 + exp1909 confirmation), (2) exp1930 PyPI workflow status confirmed as 'waiting on operator approval at GH Environment pypi' (actionable_next_step=operator_approve), (3) exp1931 FIRST HuggingFace publication SHIPPED at https://huggingface.co/Carnot-EBM/ThinkPRM-v3 after 4 prior stranded attempts. Phase 1 ship-track now has 2 of 4 prongs DONE (HF + Fast-Slow codification) and 1 awaiting operator action (PyPI). The remaining prongs are MCP/CLI integrator-docs (stuck since .172/.184 SKIP wipeouts) and Independent Reproducer. .198 attempts to land both."
+  carry_forwards_addressed: ["MCP/CLI integrator-guide docs (Phase 1 prong, stuck since .172/.184)", "Independent Reproducer (Phase 1 final criterion, never attempted)", "CoT2-Meta integration with verify-repair state-machine (Score 320 surfaced 2026-05-16T04:35Z)", ".197 audit"]
+authored_by: outer-loop-claude
+
 tasks:
-  - id: exp1970-thrml-hybrid-abstraction
-    title: "Exp 1970: Phase 1 - THRML Hybrid Thermodynamic Abstraction Hookup"
-    deliverable: results/experiment_1970_thrml_hookup.json
-    max_turns: 30
-    prompt: |
-      CONTEXT: Milestone .197 introduces thermodynamic hardware abstractions. We need to integrate THRML for hybrid digital-thermodynamic initialization.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_template.py`, `carnot/samplers/`
-      TASK: Implement a basic THRML hookup for energy initialization and ensure it runs in simulator mode.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1970.py` that utilizes THRML abstractions.
-      2. Log the execution times and initialization offsets.
-      3. Save artifact to `results/experiment_1970_thrml_hookup.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1971-thrml-latency-audit
-    title: "Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Audit"
-    deliverable: results/experiment_1971_thrml_latency.json
-    gated_on:
-      - upstream: exp1970-thrml-hybrid-abstraction
-        artifact_field: success
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: We must verify if the THRML abstraction offers theoretical simulator advantages.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1970.py`
-      TASK: Compare the sampling latency of the new THRML hookup against our native CPU Gibbs sampler.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1971.py` to run n=128 latency tests.
-      2. Record CPU vs THRML latency bounds.
-      3. Save to `results/experiment_1971_thrml_latency.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1972-ebt-system2-decoding
-    title: "Exp 1972: Phase 2 - EBT System-2 Energy Decoding Baseline"
-    deliverable: results/experiment_1972_ebt_baseline.json
-    prompt: |
-      CONTEXT: Energy-Based Transformers (EBT) use energy scores for inference-time computation.
-      EXISTING CODE TO READ FIRST: `carnot/models/`, local GGUF wrappers.
-      TASK: Implement a draft EBT decoding loop using local SOTA models. MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1972.py` integrating the EBT decoding protocol.
-      2. Track multi-step energy minimization on 10 prompt cases.
-      3. Save artifact to `results/experiment_1972_ebt_baseline.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1973-ebt-gsm8k-scaling
-    title: "Exp 1973: Phase 2 - EBT Inference Scaling on GSM8K Subset"
-    deliverable: results/experiment_1973_ebt_gsm8k.json
-    gated_on:
-      - upstream: exp1972-ebt-system2-decoding
-        artifact_field: success
-        op: "=="
-        value: true
-    prompt: |
-      CONTEXT: Evaluate if EBT decoding actually improves reasoning.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1972.py`
-      TASK: Run the EBT baseline on a GSM8K 20-question subset.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1973.py`.
-      2. Measure acceptance rates and energy deltas.
-      3. Save to `results/experiment_1973_ebt_gsm8k.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1974-kona-logic-extraction
-    title: "Exp 1974: Phase 3 - Kona-inspired Continuous Latent Logic Extraction"
-    deliverable: results/experiment_1974_kona_extraction.json
-    prompt: |
-      CONTEXT: Formal verification requires zero-false-accept logic extraction.
-      EXISTING CODE TO READ FIRST: Constraint parsing modules.
-      TASK: Develop a logic extractor that maps unstructured prompts to continuous constraints. MUST use `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1974.py`.
-      2. Extract constraints from 15 unstructured tests.
-      3. Save to `results/experiment_1974_kona_extraction.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1975-formal-proof-bridge
-    title: "Exp 1975: Phase 3 - Formal Proof Validator Bridge Prototype"
-    deliverable: results/experiment_1975_formal_bridge.json
-    agent_type: codex
-    prompt: |
-      CONTEXT: We must bridge the extracted constraints into verifiable proofs.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1974.py`
-      TASK: Implement a Z3-compatible validator backend for the extracted constraints.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1975.py` to route logic rules to Z3.
-      2. Report false-accept rates (must be zero).
-      3. Save to `results/experiment_1975_formal_bridge.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1976-energy-flow-matching
-    title: "Exp 1976: Phase 3 - Energy Matching Latent Generation Probe"
-    deliverable: results/experiment_1976_energy_matching.json
-    max_turns: 30
-    prompt: |
-      CONTEXT: Energy matching unifies flow matching with EBMs.
-      EXISTING CODE TO READ FIRST: Flow/Latent generation modules.
-      TASK: Write a small probe to test energy matching abstractions in latent space.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1976.py` for continuous generation constraints.
-      2. Save artifact to `results/experiment_1976_energy_matching.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1977-kan-hardware-complexity
-    title: "Exp 1977: Phase 1 - KAN Hardware Complexity Metric Check (RM/BOP/NABS)"
-    deliverable: results/experiment_1977_kan_metrics.json
-    max_turns: 20
-    model: opus
-    prompt: |
-      CONTEXT: We need hardware accounting for KANs before synthesis.
-      EXISTING CODE TO READ FIRST: KAN models.
-      TASK: Add a no-synthesis hardware accounting pass for existing KAN energy tiers.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1977.py` to calculate RM/BOP/NABS metrics.
-      2. Save to `results/experiment_1977_kan_metrics.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1978-fr11-continuous-learning
-    title: "Exp 1978: Phase 4 - FR-11 Continuous Self-Learning Loop"
-    deliverable: results/experiment_1978_fr11_learning.json
-    prompt: |
-      CONTEXT: FR-11 requires continuous self-learning with verifier-governed memory promotion.
-      EXISTING CODE TO READ FIRST: Continual learning scripts, verifiers.
-      TASK: Run the continuous self-learning loop ensuring external feedback governance. MUST include at least one SOTA model like `unsloth/gemma-4-31B-it-GGUF`.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1978.py`.
-      2. Log the `soundness_mistakes` and `completeness_mistakes`.
-      3. Save to `results/experiment_1978_fr11_learning.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1979-fr11-retention-audit
-    title: "Exp 1979: Phase 4 - Continuous Self-Learning Retention Audit"
-    deliverable: results/experiment_1979_fr11_audit.json
-    gated_on:
-      - upstream: exp1978-fr11-continuous-learning
-        artifact_field: soundness_mistakes
-        op: "=="
-        value: 0
-    prompt: |
-      CONTEXT: Ensure the FR-11 loop did not cause catastrophic forgetting or mode collapse.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1978.py`
-      TASK: Run a retention audit on the updated FR-11 policy.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_1979.py` analyzing retention vs baseline.
-      2. Save to `results/experiment_1979_fr11_audit.json`.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp1980-e2e-cascade
-    title: "Exp 1980: E2E Cascade Validation of .197 Pipeline"
-    deliverable: results/experiment_1980_e2e_cascade.json
-    model: opus
+  - id: exp1981-phase1-mcp-cli-integrator-docs
+    title: "Exp 1981: Phase 1 ship — MCP server + CLI integrator-guide documentation (3rd attempt)"
+    deliverable: results/experiment_1981_mcp_cli_integrator_docs.json
     max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures:
+      - experiment_id: exp1701-phase1-mcp-cli-integrator-docs
+        verdict: skipped_pretest_failing_in_172_pretest_skip_wipeout
+        addressed_by: "exp1701 (.172) SKIPPED in pretest wipeout. Pretest now stable (last regression fixed 2026-05-16 ~01:30Z). Same task scope; direct preconditions step 0."
+        retire_if_same_verdict: false
+      - experiment_id: exp1748-phase1-huggingface-retry-3rd
+        verdict: hf_shipped_in_196_pattern_works
+        addressed_by: "exp1931 (.196) successfully shipped HF mirror after similar stranded chain. This task applies the same no-gate + direct-preconditions pattern to the MCP/CLI docs prong."
+        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: Final validation of the complete milestone pipeline.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_1972.py`, `scripts/experiment_1975.py`, `scripts/experiment_1978.py`.
-      TASK: Combine the EBT decoding, formal proof validator, and continuous learning into one pipeline check. MUST use `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      CONTEXT: Phase 1 ship-track has 4 prongs: PyPI (tag pushed, awaiting
+      operator approval), HF mirror (SHIPPED .196 to
+      huggingface.co/Carnot-EBM/ThinkPRM-v3), MCP/CLI integrator-guide
+      docs (THIS TASK; stuck since .172/.184 SKIP wipeouts), Independent
+      Reproducer (next task). MCP/CLI docs is the third prong to land.
+
+      FALSIFIABLE HYPOTHESIS: A fresh-clone integrator can follow
+      docs/integrator-guide.md, install Carnot, configure the MCP
+      server in Claude Desktop, run `carnot verify` from the CLI,
+      and reach a working verify_code or verify_with_properties call
+      within 15 minutes (wall-clock, excluding pip-install download).
+      Self-test: run the walkthrough end-to-end from a /tmp scratch
+      directory.
+
+      EXISTING CODE TO READ FIRST:
+        - README.md (current model-card state — DO NOT TRUNCATE; the
+          .184/.186 regressions wiped legacy assertions; tests now check
+          docs/technical-report.md not README, but DON'T add emojis
+          per CLAUDE.md)
+        - mcp/ or python/carnot/mcp/ (MCP server implementation; grep
+          for `MCPServer` or `tool_definitions`)
+        - python/carnot/cli/ (CLI; grep for `carnot verify`)
+        - .mcp.json.example (existing MCP config template)
+        - docs/integrator-guide.md (if exists)
+
+      TASK: Write or update docs/integrator-guide.md as the canonical
+      onboarding doc.
+
       CONCRETE STEPS:
-      1. Write `scripts/experiment_1980.py` tying the phases together.
-      2. Run the pipeline on 5 complex E2E queries.
-      3. Save to `results/experiment_1980_e2e_cascade.json`.
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `test -d python/carnot/mcp` OR `find python/carnot -name
+              "mcp*.py"` returns non-empty — else
+              `blocked_mcp_implementation_missing`.
+           b. `test -d python/carnot/cli` OR equivalent CLI entry point
+              identifiable via `grep -rn "carnot verify" python/` — else
+              `blocked_cli_entry_point_missing`.
+           c. `test -f .mcp.json.example` OR Claude-Desktop-config
+              example locatable — else
+              `blocked_mcp_config_example_missing`.
+           Record preconditions_checked.
+        1. Inventory shippable surface: which CLI commands work today?
+           Which MCP tools are exposed? Read code; do NOT trust older
+           docs.
+        2. Write docs/integrator-guide.md (NO emojis per CLAUDE.md;
+           verbose layman explanations):
+             - §1 5-line quickstart (clone + install + verify call)
+             - §2 MCP install + Claude Desktop config (paste
+               .mcp.json.example contents)
+             - §3 CLI examples: `carnot verify`, `carnot verify-code
+               --pbt`, `carnot verify-with-properties`
+             - §4 One worked end-to-end example (input → verifier
+               output → repair output)
+             - §5 Reproducing paper-v6 results pointer (interim: point
+               at .194 empirical results — Fast-Slow Variant
+               replication-confirmed)
+        3. Update README.md quickstart section to LINK to the
+           integrator guide (do NOT replace README content).
+        4. Self-test: from /tmp scratch dir, execute the steps in §1-3.
+           Record wall-clock time to first working verify call.
+        5. Acceptance: walkthrough_wall_time_minutes < 15 AND
+           walkthrough_succeeded AND NOT docs_has_emojis.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.mcp_cli_integrator_docs.v2"
+        - experiment: 1981
+        - run_date: ISO-8601 UTC
+        - duration_s: > 60s (writing + self-test)
+        - random_seed: 173181
+        - reproducibility_checksum: sha256 of (docs/integrator-guide.md
+          content + README.md content + git_rev)
+        - preconditions_checked: list
+        - model_specs: {{docs_written: ["docs/integrator-guide.md",
+          "README.md (linked, not replaced)"],
+          cli_commands_documented: list, mcp_tools_documented: list}}
+        - n_samples: 1
+        - n_samples_justification: "Ship task; self-test walkthrough."
+        - walkthrough_wall_time_minutes_excluding_install: float
+        - walkthrough_succeeded: bool
+        - walkthrough_first_verify_call_output: str (truncate 500 chars)
+        - docs_has_emojis: false (CLAUDE.md compliance)
+        - docs_has_verbose_explanations: true
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "Self-test succeeds under 15min;
+          emoji-free; verbose-explanation-style."
+        - methodology_note: "If wall_time < 1 minute, self-test
+          short-circuited (warm cache); record honestly."
+        - optimization_direction: "minimize_walkthrough_wall_time"
+        - honest_verdict: MUST start with `complete:` / `complete_` /
+          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
+          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1982-phase1-independent-reproducer-github-actions
+    title: "Exp 1982: Phase 1 Independent Reproducer via GitHub Actions (final ship criterion)"
+    deliverable: results/experiment_1982_independent_reproducer.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: critical
+    prior_failures: []
+    prompt: |
+      CONTEXT: Phase 1 ship-track 4th prong: at least one independent
+      reproducer of the verify-and-repair flow from outside the
+      operator's immediate dev environment. Per CLAUDE.md Project
+      Vision + ops/known-issues.md ".121+ MANDATORY", this is the
+      Phase 1 final ship criterion. Operator confirmed earlier that
+      a CI run on a fresh GitHub Actions runner counts as "independent".
+
+      FALSIFIABLE HYPOTHESIS: A `.github/workflows/phase1-reproducer.yml`
+      workflow runs on a fresh ubuntu-latest runner, clones
+      Carnot-EBM/carnot-ebm, installs the published carnot-ebm package
+      (or `pip install -e .` if PyPI still pending approval), and
+      executes one verify call producing the expected output — all
+      within 15 minutes of workflow start. The artifact is the public
+      workflow-run log + the reproducer-doc entry at
+      ops/phase-1-reproducers.md.
+
+      EXISTING CODE TO READ FIRST:
+        - .github/workflows/ (current CI structure; ci.yml + publish-pypi.yml)
+        - README.md + docs/integrator-guide.md (from exp1981; the docs
+          this reproducer follows)
+        - python/carnot/__init__.py (the verify entry point)
+        - ops/phase-1-reproducers.md (if exists; CLAUDE.md no-pruning:
+          APPEND, do not delete)
+
+      TASK: Ship a .github/workflows/phase1-reproducer.yml workflow + log
+      the reproducer.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `.github/workflows/` directory exists — else
+              `blocked_no_github_workflows_dir`.
+           b. `git remote -v` includes github.com:Carnot-EBM/carnot-ebm
+              — else `blocked_no_github_remote`.
+           c. `command -v gh` succeeds for workflow_dispatch trigger —
+              else continue but mark `gh_unavailable_run_pending: true`.
+           Record preconditions_checked.
+        1. Draft .github/workflows/phase1-reproducer.yml:
+             - on: workflow_dispatch (manual trigger) + schedule (weekly
+               cron 0 6 * * 1, Monday 06:00 UTC)
+             - runs-on: ubuntu-latest
+             - python-version: 3.11
+             - steps:
+               * checkout
+               * setup-python
+               * `pip install carnot-ebm` if PyPI 0.1.0b1 is reachable;
+                 else `pip install -e .` from clone
+               * One verify call: `carnot verify --code 'def add(a, b):
+                 return a - b' --func add --test "(2,3):5"` — should
+                 detect the bug (the function returns a-b instead of a+b)
+               * Upload result as artifact
+        2. If gh available: trigger via `gh workflow run
+           phase1-reproducer.yml --repo Carnot-EBM/carnot-ebm`. Wait
+           up to 10 minutes for first run completion. Capture run_url
+           + conclusion.
+        3. Update ops/phase-1-reproducers.md (CLAUDE.md no-pruning:
+           APPEND a new entry, do NOT delete prior content):
+           - Date / runner / Python version / package source (PyPI or
+             clone) / verify-call result / wall-clock time / workflow URL
+        4. Acceptance: workflow_drafted AND
+           (workflow_run_triggered OR gh_unavailable_run_pending) AND
+           reproducer_doc_updated.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.phase1_reproducer.v1"
+        - experiment: 1982
+        - run_date: ISO-8601 UTC
+        - duration_s: > 60s
+        - random_seed: 173182
+        - reproducibility_checksum: sha256 of (workflow file content +
+          git_rev)
+        - preconditions_checked: list
+        - model_specs: {{workflow_file: ".github/workflows/phase1-reproducer.yml",
+          runner: "ubuntu-latest", target_python: "3.11",
+          package_source: "pypi_pinned" | "clone_editable"}}
+        - n_samples: 1
+        - n_samples_justification: "Ship task; one workflow."
+        - workflow_drafted: bool
+        - workflow_run_triggered: bool
+        - workflow_run_url: str or null
+        - workflow_run_status: "success" | "failure" | "pending" | "not_yet_triggered"
+        - workflow_run_conclusion: str or null
+        - reproducer_doc_updated: bool
+        - reproducer_doc_path: "ops/phase-1-reproducers.md"
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "Workflow drafted + run triggered
+          (or noted-pending) + reproducer doc appended."
+        - methodology_note: "An ubuntu-latest runner is a legitimate
+          'independent reproducer' per operator-stated criteria. PyPI
+          dependency optional — `pip install -e .` from the clone is
+          acceptable if PyPI 0.1.0b1 still awaiting approval."
+        - optimization_direction: "neither — ship task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Operator may push the workflow file after review.
+      Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1983-carnot-cot2meta-routing-prototype
+    title: "Exp 1983: Carnot CoT2-Meta routing prototype (extends ODAR with explicit fallback path)"
+    deliverable: results/experiment_1983_cot2meta_routing.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1822-carnot-odar-routing-prototype
+        verdict: planner_replaced_in_190
+        addressed_by: "exp1822 (.190) was the ODAR-only routing prototype that the planner replaced. This task supersedes it by adopting CoT2-Meta's superset state-machine (expand/prune/repair/stop/fallback) — same authors as ODAR but more complete formalism. exp1811's Fast-Slow Variant + exp1909's adversarial-confirmation provide the pipeline this routing sits on top of."
+        retire_if_same_verdict: false
+      - experiment_id: exp1811-fast-slow-variant-prototype
+        verdict: complete_3.1x_sample_eff_0.25x_kl_drift_no_forgetting
+        addressed_by: "exp1811 (.189) shipped Fast-Slow Variant. CoT2-Meta routing layers on top: same fast-weight context buffer, with explicit state-machine over the iteration decision."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: arXiv:2603.28135 CoT2-Meta (Ma et al., Mar 30 2026,
+      Score 320 surfaced 2026-05-16T04:35Z via routine citation-sweep)
+      is a training-free metacognitive control framework integrating
+      "expansion, pruning, repair, stopping, fallback decisions" for
+      budgeted test-time reasoning. Same Ma/Gao/Liu author line as ODAR
+      (Score 400). CoT2-Meta is the OPERATIONAL framework; ODAR is the
+      routing-mechanism within it.
+
+      Carnot's verify-repair loop currently has IMPLICIT versions of
+      expand/prune/repair/stop but lacks an explicit fallback path.
+      This task adds the explicit state machine.
+
+      FALSIFIABLE HYPOTHESIS: A Carnot CoT2-Meta routing prototype on
+      the same 90-example 3-task corpus from exp1811 (GSM8K + BBH +
+      MATH) achieves AT LEAST a further 1.2x reduction in
+      compute-overhead (iters-per-task) vs the pure Fast-Slow Variant
+      baseline AND demonstrates non-trivial fallback-path usage
+      (>= 5% of examples hit the fallback path) AND maintains
+      exp1811's pass-rate within +/-3pp per task. If fallback usage
+      is 0% across all 90 examples, the routing is structurally
+      equivalent to Fast-Slow alone — disclose honestly.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1811_fast_slow_variant.json (the FS baseline)
+        - results/experiment_1909_fast_slow_confirmation.json (the
+          confirmation pair)
+        - python/carnot/pipeline/fast_slow_variant.py (the FS impl)
+        - python/carnot/pipeline/verify_repair.py (the verify-repair loop)
+        - arXiv:2603.28135 abstract (cite as methodology origin)
+
+      TASK: Implement CoT2-Meta state-machine on top of Fast-Slow.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. `python -c "from carnot.pipeline.fast_slow_variant import
+              fast_slow_variant"` succeeds — else
+              `blocked_fast_slow_implementation_missing`.
+           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
+              non-empty — else `blocked_model_not_cached`.
+           c. `test -f results/experiment_1811_fast_slow_variant.json` —
+              else `blocked_fs_baseline_missing`.
+           Record preconditions_checked.
+        1. Implement cot2meta_state_machine(state) with 5 actions:
+             - expand: generate next iteration's candidate (default FS path)
+             - prune: verifier rejection
+             - repair: FS verifier-failure-summary appended to context
+             - stop: ODAR-style risk-sensitive acceptance
+             - fallback: escalate to k=16 ensemble disagreement check
+               OR mark as "needs human review" (record but proceed)
+        2. Wire the state machine into Fast-Slow Variant. Each iter:
+           pick action via free-energy-principled fusion (ODAR rule):
+           action = argmax over {{expand, prune, repair, stop, fallback}}
+           with risk-sensitive weighting.
+        3. Run on the same 90-example corpus as exp1811. Log per-example:
+           action_sequence, total_iters, final_action, fallback_triggered.
+        4. Compute: overall_iters_reduction vs exp1811 Fast-Slow baseline,
+           fallback_usage_rate, per-task passrate drift.
+        5. Acceptance: iters_reduction >= 1.2x AND fallback_usage_rate
+           >= 0.05 AND max_passrate_drift_pp <= 0.03 across 3 tasks.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.cot2meta_routing.v1"
+        - experiment: 1983
+        - run_date: ISO-8601 UTC
+        - duration_s: > 300s (90 examples × state-machine-routed FS)
+        - random_seed: 173183 (NOT 1983 or 90)
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          baseline: "fast_slow_variant_v1 (exp1811)",
+          state_machine: "cot2meta_v1 (expand/prune/repair/stop/fallback)",
+          tasks: ["gsm8k_30", "bbh_30", "math_30"]}}
+        - n_samples: 90
+        - n_samples_justification: "30 per task × 3 tasks matching
+          exp1811."
+        - cot2meta_passrate_per_task: dict
+        - fast_slow_baseline_passrate_per_task: dict (from exp1811)
+        - cot2meta_iters_per_task_mean: dict
+        - fast_slow_iters_per_task_mean: dict
+        - overall_iters_reduction: float
+        - fallback_usage_rate: float (fraction of 90 examples hitting
+          fallback)
+        - passrate_drift_per_task: dict
+        - max_passrate_drift_pp: float
+        - acceptance_gate_passed: bool (iters_reduction >= 1.2 AND
+          fallback_usage >= 0.05 AND max_drift <= 0.03)
+        - acceptance_gate_criteria: "1.2x iter reduction AND >=5%
+          fallback usage AND <=3pp passrate drift."
+        - methodology_note: "If iters_reduction > 3x without explicit
+          methodology, treat as IMPLAUSIBLE_PERFECT. If fallback_usage
+          == 0, state machine is structurally equivalent to FS alone —
+          disclose honestly. Cite arXiv:2603.28135 as methodology origin."
+        - optimization_direction: "maximize_iters_reduction_minimize_passrate_drift"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1984-findings-audit-pass-197
+    title: "Exp 1984: .197 findings audit + corrigenda"
+    deliverable: results/experiment_1984_findings_audit_197.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures: []
+    prompt: |
+      CONTEXT: .197 has 11 tasks (exp1970-1980) running. Routine
+      audit-cadence.
+
+      FALSIFIABLE HYPOTHESIS: At least 2 .197 artifacts will be flagged
+      by the 9-rule adversarial-verify linter (rule #8 IMPLAUSIBLE_TIGHT_CI
+      + rule #9 if any new since 2026-05-15). Classify each.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py
+        - results/experiment_197[0-9]*.json + experiment_1980*.json
+
+      TASK: Audit + corrigenda.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
+        1. `python3 scripts/adversarial_verify.py --milestone-range
+           1970 1985`.
+        2. Classify each flag REAL_BUG / FALSE_POSITIVE / NEEDS_REVISION;
+           append corrigendum_2026_05_198_audit (CLAUDE.md no-pruning).
+        3. For REAL_BUG, propose .199+ follow-ups.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.findings_audit_corrigenda.v11"
+        - experiment: 1984
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 173184
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{audit_target_milestone: "2026.05.197",
+          adversarial_verify_version: git_rev,
+          artifacts_scanned: int, artifacts_flagged: int}}
+        - n_samples: int
+        - n_samples_justification: "Audit; n is flagged count."
+        - audit_outcomes: dict
+        - corrigenda_added: list
+        - acceptance_gate_passed: bool
+        - acceptance_gate_criteria: "All flagged classified; corrigenda appended."
+        - methodology_note: "Audit; <10s on >5 artifacts = shortcut."
+        - optimization_direction: "neither — audit task"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
+      or scripts/adversarial_verify.py.
+
+  - id: exp1985-milestone-198-retrospective
+    title: "Exp 1985: Milestone .198 retrospective"
+    deliverable: results/operational_retro_2026_05_198.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
+    prompt: |
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8. .198 is the Phase 1 completion
+      milestone: MCP/CLI docs (exp1981) + Independent Reproducer
+      (exp1982) + CoT2-Meta routing prototype (exp1983). If both ship
+      prongs land, Phase 1 ship-track is 3/4 done in repo state
+      (PyPI still pending operator approval).
+
+      TASK: Generate the .198 operational retrospective.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.198..HEAD returns non-empty.
+        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.184/.187/.190/.194/.196
+             templates.
+        7. Phase 1 ship-track status fields:
+             - mcp_cli_docs_result: "shipped" | "blocked"
+             - independent_reproducer_result: "shipped" | "blocked"
+             - cot2meta_routing_result: "complete" | "blocked"
+             - phase_1_ship_track_percentage: int (0-100; e.g., 75 if
+               PyPI + HF + MCP+docs shipped but reproducer blocked)
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.198"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_full"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - gpu_idle_on_compute_bound_tasks: bool or null
+        - mcp_cli_docs_result: str
+        - independent_reproducer_result: str
+        - cot2meta_routing_result: str
+        - phase_1_ship_track_percentage: int
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+        - DO NOT modify README.md or docs/technical-report.md.
+
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
