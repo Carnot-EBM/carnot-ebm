@@ -3614,3 +3614,4 @@ IMPORTANT:
 | 2026-05-16 01:21 UTC | Exp 1838: Codify exp1811 Fast-Slow Variant into pa | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.14s |
 | 2026-05-16 01:23 UTC | Exp 1838: Codify exp1811 Fast-Slow Variant into pa | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.18s |
 | 2026-05-16 01:26 UTC | Exp 1838: Codify exp1811 Fast-Slow Variant into pa | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.09s |
+| 2026-05-16 01:28 UTC | Exp 1839: Phase 4 canonical-metric decision (DEFER | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.73s |
