@@ -3637,3 +3637,4 @@ IMPORTANT:
 | 2026-05-16 02:17 UTC | Exp 1903: gated on Exp 1901 and 1902: Benchmark Mu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1901-muon-ogd, exp1902-kan-cl) |
 | 2026-05-16 02:17 UTC | Exp 1904: Implement Energy-Guided Decoding | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 02:19 UTC | Exp 1903: gated on Exp 1901 and 1902: Benchmark Mu | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1901-muon-ogd, exp1902-kan-cl) |
+| 2026-05-16 02:19 UTC | Exp 1904: Implement Energy-Guided Decoding | DOOMED_RERUN_BLOCK | 9 prior failure(s) match this task's scope but prior_failures field is missing o |
