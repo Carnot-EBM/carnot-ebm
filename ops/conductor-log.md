@@ -3723,3 +3723,5 @@ Error |
 | 2026-05-16 07:11 UTC | Exp 1977: Phase 1 - KAN Hardware Complexity Metric | DOOMED_RERUN_BLOCK | 6 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 07:13 UTC | Exp 1978: Phase 4 - FR-11 Continuous Self-Learning | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-16 07:15 UTC | Exp 1978: Phase 4 - FR-11 Continuous Self-Learning | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-16 07:17 UTC | Exp 1978: Phase 4 - FR-11 Continuous Self-Learning | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-16 07:19 UTC | Exp 1979: Phase 4 - Continuous Self-Learning Reten | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1978-fr11-continuous-learning) |
