@@ -19034,3 +19034,12 @@ completes.
 **Implementation Status:** Implemented (Exp 1776)
 
 **Spec traces:** REQ-VERIFY-175, SCENARIO-VERIFY-175, Exp 1776
+
+### REQ-FAST-SLOW-1909: Adversarial Confirmation of Fast-Slow Variant
+**Requirement:** The system MUST run Experiment 1909 to confirm the Fast-Slow Variant metrics adversarially.
+- The seed MUST be rotated to 192737.
+- The corpus MUST be rotated to examples 31-60.
+- It MUST confirm sample efficiency ratio in [2.6, 3.6].
+
+### SCENARIO-FAST-SLOW-1909: Confirm Metrics
+**When** Experiment 1909 is executed, **Then** it produces results/experiment_1909_fast_slow_confirmation.json with matching adversarial validation criteria.
