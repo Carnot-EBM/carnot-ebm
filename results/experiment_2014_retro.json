@@ -1,0 +1,67 @@
+{
+  "experiment_id": 2014,
+  "schema": "carnot.milestone_retro.v1",
+  "milestone": "2026.05.201",
+  "milestone_title": "Continuous Self-Learning, Hallucination Detection via Spilled Energy, and ROCm Bring-up",
+  "run_date": "2026-05-16",
+  "status": "complete",
+  "completed_task_count": 8,
+  "blocked_task_count": 5,
+  "failed_task_count": 0,
+  "completed_experiments": [
+    2003,
+    2005,
+    2008,
+    2009,
+    2010,
+    2011,
+    2012,
+    2013
+  ],
+  "blocked_experiments": [
+    2001,
+    2002,
+    2004,
+    2006,
+    2007
+  ],
+  "failed_experiments": [],
+  "experiment_honest_verdicts": {
+    "exp2001": "blocked_gate_check_failed",
+    "exp2002": "blocked_gate_check_failed",
+    "exp2003": "success_csr_metric_evaluated_and_correlated",
+    "exp2004": "blocked_gate_check_failed",
+    "exp2005": "success",
+    "exp2006": "blocked_gate_check_failed",
+    "exp2007": "blocked_gate_check_failed",
+    "exp2008": "hardware_probe_success",
+    "exp2009": "hardware missing but mock probe works",
+    "exp2010": "success: vectorized_langevin_benchmark_complete",
+    "exp2011": "UNKNOWN",
+    "exp2012": "success",
+    "exp2013": "reconciliation_delegated_to_haiku"
+  },
+  "adversarial_flags": {
+    "exp2005": [
+      "IMPLAUSIBLE_PERFECT: 100% Z3 verification in <1 s suggests hardcoded responses rather than actual model inference"
+    ],
+    "exp2011": [
+      "TAUTOLOGY: cpu == mock_gpu (bit-identical via mock, not a real measurement)"
+    ]
+  },
+  "bottlenecks_identified": [
+    "Planner-side doomed-rerun discipline failure: exp2001 (4 prior failures), exp2002 (2), exp2004 (13), exp2007 (1) were all blocked at conductor_pre_gate because the roadmap task had no prior_failures field. 4 of 13 tasks (31%) never ran. The self-learning lineage alone has 13 unacknowledged prior failures — it is a retirement candidate.",
+    "Gate-field schema mismatch caused cascading block: exp2006 was gated on exp2005.verified_count but exp2005 emitted n_puzzles_verified. The upstream task succeeded (100 verified) but the gate could not read it, blocking exp2006. Planner must verify artifact field names match gate field names exactly.",
+    "Adversarial-verify flags on synthetic tasks: exp2005 (100/100 Z3 verified in 0.07 s — implausible if Qwen3.6-35B was actually invoked; responses appear hardcoded), exp2011 (divergence=0.0 is a TAUTOLOGY from bit-identical mocks), exp2012 (duration_s=0.0 on a task claiming E2E test execution). Preconditions blocks are absent from exp2005 and exp2012.",
+    "ROCm bring-up (exp2008) confirmed real gfx1150 hardware (AMD Radeon 890M, 16 CU, 2900 MHz, 110 GB unified APU pool + RyzenAI-npu4 NPU). This is a genuine positive signal but follow-on tasks (exp2009, exp2010, exp2011) used mocked VRAM/GPU — no real ROCm inference was attempted."
+  ],
+  "recommendations": [
+    "Retire or fundamentally redesign the continuous self-learning / epsilon-engine lineage before proposing new versions. With 13 unacknowledged prior failures, the next proposal MUST include a prior_failures block naming each, a diagnosed root cause, and a concrete architectural change. Without all three, the conductor will block it again.",
+    "Add preconditions blocks (per CLAUDE.md Pre-Launch Preconditions Discipline) to every task that claims to invoke Qwen3.6-35B-A3B-GGUF or gemma-4-31B-it-GGUF. The exp2005 artifact shows 0.07 s wall time for 100 GGUF responses — this is physically impossible and indicates fabricated inference calls.",
+    "Fix the exp2006 gate: change artifact_field from 'verified_count' to 'n_puzzles_verified' so the gate can read the actual exp2005 artifact. This single fix unblocks the self-distillation chain with no other changes.",
+    "The ROCm gfx1150 APU is confirmed present and alive. The next ROCm milestone should attempt real torch.cuda() / HIP inference (not mocked VRAM allocation). Use `sg render -c '...'` and `TORCH_ROCM_AOTRITON_ENABLE_EXPERIMENTAL=1` per CLAUDE.md ROCm guidance. The APU's 110 GB unified memory pool means full SOTA GGUF models fit without quantization tricks.",
+    "The REFIND CSR metric (exp2003, energy_correlation=0.9425) is the cleanest positive result of the milestone and is paper-v6 eligible pending adversarial confirmation (rotate seed + corpus + baseline). Schedule a confirmation run as the highest-priority clean task for .202."
+  ],
+  "retro_complete": true,
+  "honest_verdict": "complete: milestone_201_retro_filed_8_completed_5_blocked_0_failed"
+}
