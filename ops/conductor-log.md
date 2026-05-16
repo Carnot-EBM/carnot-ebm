@@ -3867,3 +3867,4 @@ Error |
 | 2026-05-16 16:26 UTC | Exp 2056: ActFocus Token-Level Energy Redistributi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 16:29 UTC | Exp 2056: ActFocus Token-Level Energy Redistributi | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 16:31 UTC | Exp 2057: Integrate ActFocus into FR-11 CSL Loop ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 16:33 UTC | Exp 2057: Integrate ActFocus into FR-11 CSL Loop ( | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
