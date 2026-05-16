@@ -708,3 +708,15 @@ The output SHALL be saved to `results/experiment_2009_dual_model.json` with all 
 **Then** theoretical max sequence length is determined
 **And** the result is saved to `results/experiment_2009_dual_model.json`.
 
+
+
+### REQ-INFER-CRANE-2089: Augmented Grammar Decoder
+The inference engine SHALL implement an Augmented Grammar Decoder in `python/carnot/inference/crane_decoder.py`.
+The decoder SHALL apply standard logits until a specific trigger token is generated, and then strictly apply a BNF grammar constraint.
+The output SHALL be saved to `results/experiment_2089_crane_decoder.json` with `crane_ready=true`.
+
+### SCENARIO-INFER-CRANE-2089-001: Augmented Grammar Decoder Execution
+**Given** the models unsloth/gemma-4-31B-it-GGUF and unsloth/Qwen3.6-35B-A3B-GGUF
+**When** the CRANE decoder is executed
+**Then** it interleaves constrained and unconstrained decoding
+**And** the result is saved to `results/experiment_2089_crane_decoder.json`.
