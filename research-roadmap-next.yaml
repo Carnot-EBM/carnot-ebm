@@ -58,13 +58,13 @@ tasks:
         - random_seed: 173186
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestones: ["2026.05.198",
+        - model_specs: {{audit_target_milestones: ["2026.05.198",
           "2026.05.199"], adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
+          artifacts_scanned: int, artifacts_flagged: int}}
         - n_samples: int (flagged count)
         - n_samples_justification: "Combined audit; n is flagged-artifact
           count across 2 milestones."
-        - audit_outcomes: dict experiment_id -> {classification, rationale}
+        - audit_outcomes: dict experiment_id -> {{classification, rationale}}
         - corrigenda_added: list
         - skip_cascade_observed: bool
         - skip_cascade_root_cause: str or null
@@ -143,9 +143,9 @@ tasks:
         - random_seed: 173187
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {workflow_file: ".github/workflows/publish-pypi.yml",
+        - model_specs: {{workflow_file: ".github/workflows/publish-pypi.yml",
           tag_checked: "v0.1.0b1",
-          prior_status_artifact: "exp1930"}
+          prior_status_artifact: "exp1930"}}
         - n_samples: 1
         - n_samples_justification: "Status re-check; single workflow run."
         - workflow_run_id: int or null
@@ -236,13 +236,13 @@ tasks:
         - random_seed: 173188
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {dashboard_path: "ops/phase-1-dashboard.md",
+        - model_specs: {{dashboard_path: "ops/phase-1-dashboard.md",
           prongs_audited: ["pypi", "huggingface", "mcp_docs",
-          "independent_reproducer"]}
+          "independent_reproducer"]}}
         - n_samples: 4
         - n_samples_justification: "Dashboard; n is prong count."
-        - per_prong_status: dict prong -> {status: str, evidence: str,
-          date: str, next_action: str}
+        - per_prong_status: dict prong -> {{status: str, evidence: str,
+          date: str, next_action: str}}
         - phase_1_ship_percentage: int (0-100)
         - operator_action_items: list
         - dashboard_word_count: int
@@ -322,7 +322,7 @@ tasks:
         - random_seed: 173189
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {tasks_audited: ["exp1981", "exp1982"]}
+        - model_specs: {{tasks_audited: ["exp1981", "exp1982"]}}
         - n_samples: 2
         - n_samples_justification: "Recovery; n is task count."
         - exp1981_mcp_docs_status: "shipped" | "missing" | "blocked" | "retried"
