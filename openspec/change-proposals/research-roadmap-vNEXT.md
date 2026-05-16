@@ -1,56 +1,54 @@
-# Carnot Research Roadmap: Milestone 2026.05.191
+# Carnot Research Roadmap: Milestone 2026.05.193
 
-## ActFocus Agentic RL + KAN-CL Continual Learning + Thermodynamic Langevin Sampler
+## NEXUS Continuous Grounding + AdamFLIP + Wahkon RKHS
 
 ### Objective
 This milestone addresses three major gaps identified in the PRD and recent architectural reviews:
-1. **Catastrophic Forgetting in Self-Learning:** Utilizing Per-Knot Importance Regularization for KANs (KAN-CL) and Spectral Orthogonal Gradients (Muon-OGD) to achieve robust, continuous self-learning (FR-11).
-2. **Sampler Latency:** Accelerating stochastic samplers through Mpemba-inspired thermodynamic initializations and Langevin clock rescaling.
-3. **Agentic Reasoning Bottlenecks:** Replacing uniform GRPO with ActFocus, which leverages token-level energy functions to direct reinforcement learning updates toward critical reasoning tokens.
+1. **Continuous Self-Learning Resilience:** Overcoming catastrophic forgetting through spectral-norm projection (Muon-OGD) and localized spline regularization (KAN-CL), culminating in the NEXUS framework for safe continual learning of symbolic constraints.
+2. **Constraint Satisfaction Bottlenecks:** Moving beyond soft penalties to hard constrained optimization using AdamFLIP and Energy-Guided Decoding.
+3. **Architecture Scaling & Uncertainty:** Evaluating Wahkon (Deep RKHS Superposition Networks) as a rigorous statistical alternative to standard KANs for calibrated uncertainty in high dimensions.
 
-### Previous Milestone (.190) Summary
-Milestone 2026.05.190 successfully codified the Fast-Slow reasoning variant, integrated ODAR routing, and solidified the Phase 4 Canonical Decision framework. These structural advances provided the necessary foundation for advanced continual learning and targeted reinforcement strategies.
+### Previous Milestone (.192) Summary
+Milestone 2026.05.192 successfully completed the Fast-Slow Variant ADVERSARIAL CONFIRMATION, proving sample efficiency and KL drift stability. It codified the Phase 4 Canonical Decision framework, providing the bedrock for continuous constraint-grounded learning without hallucination degradation.
 
 ### Architecture Update
 ```mermaid
 graph TD;
-    LLM[unsloth/Qwen3.6-35B-A3B-GGUF] --> TokenEnergy[ActFocus Reweighting];
-    TokenEnergy --> GRPO[Agentic GRPO Update];
-    GRPO --> Continual[KAN-CL / Muon-OGD Memory];
-    Continual --> Sampler[Mpemba/Langevin Accelerated Sampler];
-    Sampler --> Output[Verified Output];
+    LLM[unsloth/Qwen3.6-35B-A3B-GGUF] --> Decode[Energy-Guided Decoding];
+    Decode --> Opt[AdamFLIP Hard Constraints];
+    Opt --> Continual[Muon-OGD / KAN-CL];
+    Continual --> NEXUS[NEXUS Symbolic Grounding];
+    NEXUS --> EBM[Wahkon RKHS / EBM Verification];
+    EBM --> Output[Verified Safe Output];
 ```
 
 ### Phases
 
 #### Phase 1: Continuous Self-Learning Resilience
-Focuses on stopping catastrophic forgetting.
-- **Exp 1826:** Implement KAN-CL (Per-Knot Importance Regularization).
-- **Exp 1827:** Implement Muon-OGD (Spectral Orthogonal Gradient Projection).
-- **Exp 1828:** Evaluate KAN-CL vs Muon-OGD on FR-11 retention tasks.
+Focuses on resolving catastrophic forgetting via recent arXiv advances.
+- **Exp 1901:** Implement Muon-OGD spectral-norm-aware orthogonal projection.
+- **Exp 1902:** Implement KAN-CL per-knot importance regularization.
+- **Exp 1903:** Benchmark KAN-CL and Muon-OGD on FR-11 forgetting metrics.
 
-#### Phase 2: Thermodynamic Sampler Acceleration
-Focuses on inference speed for Phase 3/4 continuous EBMs.
-- **Exp 1829 & 1830:** Implement Mpemba-inspired initialization and Langevin clock rescaling.
-- **Exp 1831:** Benchmark the accelerated samplers.
+#### Phase 2: Hard Constraint Optimization & Decoding
+Moving from soft penalties to deterministic constraint satisfaction.
+- **Exp 1904:** Implement Energy-Guided Decoding to dynamically select minimal energy hidden states.
+- **Exp 1905:** Implement AdamFLIP adaptive momentum feedback linearization.
+- **Exp 1906:** Evaluate AdamFLIP constraint satisfaction vs soft PINN baselines.
+- **Exp 1907:** Integrate Energy-Guided Decoding into the Fast-Slow inference path.
 
-#### Phase 3: Energy-Informed Agentic RL
-Targets the optimization of the LLM via energy functions.
-- **Exp 1832 & 1833:** Implement ActFocus Token-Level Energy Reweighting for GRPO and train models on reasoning trajectories.
-- **Exp 1834:** Evaluate ActFocus vs Baseline GRPO.
+#### Phase 3: Symbolic Continual Learning & Uncertainty
+Focuses on safety constraints and calibrated uncertainty.
+- **Exp 1908:** Implement NEXUS framework decoupling physical feasibility from safety specifications.
+- **Exp 1909:** Implement Wahkon Deep RKHS Superposition Networks for finite-sample guarantees.
+- **Exp 1910:** Benchmark Wahkon vs KANs on calibration.
 
 #### Phase 4: Synthesis, Documentation, and Scaling
-Tying it all together.
-- **Exp 1835:** Author theoretical connections (EBM-RLVR equivalence).
-- **Exp 1836 & 1837:** E2E Integration and Benchmark with flagship MoE models.
-- **Exp 1838:** Retrospective.
+- **Exp 1911:** E2E Integration: NEXUS + Muon-OGD + Fast-Slow variant.
+- **Exp 1912:** Full Benchmark using `unsloth/gemma-4-31B-it-GGUF`.
+- **Exp 1913:** Architecture updates and position paper.
+- **Exp 1914:** Milestone Retrospective.
 
 ### Hardware Requirements
-- **LLM Inference:** RTX 3090/4090 for running `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-- **Continual Learning:** Standard GPU memory constraints apply.
-
-### Models
-Mandated SOTA local GGUF models applied:
-- `unsloth/Qwen3.6-35B-A3B-GGUF`
-- `unsloth/gemma-4-31B-it-GGUF`
-- `unsloth/gemma-4-26B-A4B-it-GGUF`
+- **LLM Inference:** Local discrete GPUs (e.g. 2x RTX 3090) or CPU execution for `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- **Continual Learning:** Standard local constraints apply.
