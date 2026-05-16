@@ -6013,3 +6013,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Phase 1: Equilibrium Matching (EqM) Landscape Module (✅ Complete) — honest_verdict=success_eqm_landscape_implemented; results/experiment_2095_eqm_landscape.json
 - 2026-05-16: Phase 1: EqM Compositional Module (✅ Complete) — honest_verdict=success_eqm_composition_implemented; results/experiment_2096_eqm_composition.json
 - 2026-05-16: Phase 1: EqM vs PEM on Constraint Graphs (✅ Complete) — honest_verdict=SUCCESS: eqm_eval_complete; results/experiment_2097_eqm_eval.json
+- 2026-05-16: Phase 2: IRED Adaptive Optimizer (⚠️ Research Finding) — honest_verdict=IRED adaptive step loop stops when gradient norm falls below epsilon, taking fewer steps for simpler constraints.; results/experiment_2098_ired_optimizer.json
