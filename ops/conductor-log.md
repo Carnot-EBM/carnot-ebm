@@ -3792,3 +3792,4 @@ Error |
 | 2026-05-16 11:54 UTC | Exp 2014: Milestone 201 Retrospective | OK | 81 passed, 1 warning in 5.27s |
 | 2026-05-16 11:56 UTC | Milestone 2026.05.202 activated | OK | 5 tasks queued |
 | 2026-05-16 12:02 UTC | Exp 2010: Consolidated 4-milestone audit (.198 thr | OK | 81 passed, 1 warning in 6.01s |
+| 2026-05-16 12:08 UTC | Exp 2011: PyPI workflow FINAL re-check (v0.1.0b1 a | OK | 81 passed, 1 warning in 5.25s |
