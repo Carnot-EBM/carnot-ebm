@@ -12943,3 +12943,7 @@ This sweep incorporates the latest 2026 findings on Energy-Based Models, formal 
 - **Paper:** "Digitally Optimized Initializations for Fast Thermodynamic Computing" (arXiv:2603.24183) & THRML framework.
 - **What:** Hybrid digital-thermodynamic algorithms to suppress slow relaxation modes, allowing physical systems to settle into Boltzmann distributions rapidly.
 - **Relevance to Carnot:** Provides a concrete integration target for Phase 1 scaling beyond CPU Gibbs sampling.
+
+## 2026-05-16 Post-.198 Planning Sweep
+- **CLaRa-V: Continuous Latent Reasoning for Verification** (arXiv:2605.15222, May 2026). Extends CLaRa with EBM energy functions for verification of reasoning steps in continuous latent space.
+- **Gradient-Guided Epsilon Constraint (GEC) for Continuous Constraints** (NeurIPS 2025). Strict gradient projection method ensuring catastrophic forgetting is avoided in constraint rule-bases.
