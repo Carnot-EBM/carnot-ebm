@@ -1,54 +1,69 @@
-# Carnot Research Roadmap: Milestone 2026.05.193
+# Carnot Research Roadmap: vNEXT (2026.05.195)
 
-## NEXUS Continuous Grounding + AdamFLIP + Wahkon RKHS
+**Milestone:** 2026.05.195
+**Title:** Continuous Self-Learning Repair + Hardware LUT Accounting + DAB Generation
+**Status:** DRAFT
 
-### Objective
-This milestone addresses three major gaps identified in the PRD and recent architectural reviews:
-1. **Continuous Self-Learning Resilience:** Overcoming catastrophic forgetting through spectral-norm projection (Muon-OGD) and localized spline regularization (KAN-CL), culminating in the NEXUS framework for safe continual learning of symbolic constraints.
-2. **Constraint Satisfaction Bottlenecks:** Moving beyond soft penalties to hard constrained optimization using AdamFLIP and Energy-Guided Decoding.
-3. **Architecture Scaling & Uncertainty:** Evaluating Wahkon (Deep RKHS Superposition Networks) as a rigorous statistical alternative to standard KANs for calibrated uncertainty in high dimensions.
+## 1. Context and Previous Milestone (.194)
 
-### Previous Milestone (.192) Summary
-Milestone 2026.05.192 successfully completed the Fast-Slow Variant ADVERSARIAL CONFIRMATION, proving sample efficiency and KL drift stability. It codified the Phase 4 Canonical Decision framework, providing the bedrock for continuous constraint-grounded learning without hallucination degradation.
+Milestone 2026.05.194 successfully closed out several critical lingering loops:
+- **Fast-Slow Adversarial Confirmation (Exp 1909):** We confirmed the paper-matching 3.1x sample efficiency and 0.25x KL drift for the Fast-Slow Variant under adversarial rotation.
+- **Phase 4 Canonical Metric Decision (Exp 1911):** Established the canonical metrics for ongoing benchmarking.
+- **PyPI Release (Exp 1910):** Addressed the long-standing CI tagged release publish loop.
 
-### Architecture Update
+However, three primary gaps remain between our current state and the core PRD vision:
+1. **Continuous Self-Learning (Tier 3 JEPA & FR-11):** While Fast-Slow handles sample efficiency, our FR-11 baseline exhibited catastrophic forgetting. We need dynamic resolution replay to fix this.
+2. **Hardware Accounting (LUT-based without full synthesis):** We deferred KV260 execution earlier due to toolchain issues, but we can do Vivado-free LUT accounting for our KAN models.
+3. **Energy-guided constrained generation:** The goal of breaking autoregressive limitations requires Discrete Auto-Regressive Biasing (DAB) and thermodynamic constraints to guide standard IT-models.
+
+## 2. Recent ArXiv Findings incorporated
+
+Our recent literature scan (2025-2026) validates this direction:
+- **Compositional Energy Minimization (CEM):** Demonstrates that chaining local EBM constraints significantly reduces multi-step hallucinations in LLMs.
+- **Discrete Auto-Regressive Biasing (DAB):** Provides a mechanism to inject EBM constraint boundaries directly into decoding without retraining the base LLM.
+- **Substrate-Aware KANs (Hardware-Efficient):** New architectural primitives that map continuous latent variables to LUT-friendly boolean expressions.
+
+## 3. Phase Descriptions
+
+### Phase 1: Self-Learning & State Resolution
+We must fix the catastrophic forgetting observed in the FR-11 baseline.
+- **Exp 1914:** .194 archive and .195 initialization.
+- **Exp 1915:** Implement Dynamic Resolution Continual EBM Learning Prototype.
+- **Exp 1916:** Evaluate FR-11 continuous learning on live data using the prototype.
+
+### Phase 2: Hardware-Aware KAN Accounting
+Provide empirical hardware claims without the risk of Vivado synthesis failures.
+- **Exp 1917:** Substrate-Aware KAN LUT Accounting (No Synthesis).
+- **Exp 1918:** Verify KAN boolean mapping correctness.
+
+### Phase 3: Constrained Generation (DAB + Thermodynamic)
+Integrate EBMs with our local SOTA GGUF models.
+- **Exp 1919:** Discrete Auto-Regressive Biasing (DAB) Decoder Adapter implementation.
+- **Exp 1920:** Thermodynamically Constrained Neural Generation Smoke Test.
+- **Exp 1921:** DAB + SOTA GGUF Live Generation benchmark with `unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+### Phase 4: Integration and Retrospective
+- **Exp 1922:** Compositional Energy Minimization (CEM) Architecture Design.
+- **Exp 1923:** CEM Proof of Concept on 3-SAT (Local SOTA).
+- **Exp 1924:** .195 Milestone Retrospective.
+
+## 4. Hardware Requirements
+- Local CPU / RAM for basic tests.
+- 1x NVIDIA GPU with at least 24GB VRAM for GGUF execution.
+- GGUF SOTA Model: `unsloth/gemma-4-26B-A4B-it-GGUF` and/or `unsloth/Qwen3.6-35B-A3B-GGUF`.
+
+## 5. Dependency Graph
 ```mermaid
-graph TD;
-    LLM[unsloth/Qwen3.6-35B-A3B-GGUF] --> Decode[Energy-Guided Decoding];
-    Decode --> Opt[AdamFLIP Hard Constraints];
-    Opt --> Continual[Muon-OGD / KAN-CL];
-    Continual --> NEXUS[NEXUS Symbolic Grounding];
-    NEXUS --> EBM[Wahkon RKHS / EBM Verification];
-    EBM --> Output[Verified Safe Output];
+graph TD
+    E1914[Exp 1914: Init] --> E1915[Exp 1915: Dynamic Res]
+    E1915 --> E1916[Exp 1916: Live Eval]
+    E1914 --> E1917[Exp 1917: LUT Accounting]
+    E1917 --> E1918[Exp 1918: KAN Mapping]
+    E1914 --> E1919[Exp 1919: DAB Adapter]
+    E1919 --> E1920[Exp 1920: Thermo Gen]
+    E1920 --> E1921[Exp 1921: DAB + SOTA]
+    E1916 --> E1922[Exp 1922: CEM Design]
+    E1921 --> E1922
+    E1922 --> E1923[Exp 1923: CEM PoC]
+    E1923 --> E1924[Exp 1924: Retro]
 ```
-
-### Phases
-
-#### Phase 1: Continuous Self-Learning Resilience
-Focuses on resolving catastrophic forgetting via recent arXiv advances.
-- **Exp 1901:** Implement Muon-OGD spectral-norm-aware orthogonal projection.
-- **Exp 1902:** Implement KAN-CL per-knot importance regularization.
-- **Exp 1903:** Benchmark KAN-CL and Muon-OGD on FR-11 forgetting metrics.
-
-#### Phase 2: Hard Constraint Optimization & Decoding
-Moving from soft penalties to deterministic constraint satisfaction.
-- **Exp 1904:** Implement Energy-Guided Decoding to dynamically select minimal energy hidden states.
-- **Exp 1905:** Implement AdamFLIP adaptive momentum feedback linearization.
-- **Exp 1906:** Evaluate AdamFLIP constraint satisfaction vs soft PINN baselines.
-- **Exp 1907:** Integrate Energy-Guided Decoding into the Fast-Slow inference path.
-
-#### Phase 3: Symbolic Continual Learning & Uncertainty
-Focuses on safety constraints and calibrated uncertainty.
-- **Exp 1908:** Implement NEXUS framework decoupling physical feasibility from safety specifications.
-- **Exp 1909:** Implement Wahkon Deep RKHS Superposition Networks for finite-sample guarantees.
-- **Exp 1910:** Benchmark Wahkon vs KANs on calibration.
-
-#### Phase 4: Synthesis, Documentation, and Scaling
-- **Exp 1911:** E2E Integration: NEXUS + Muon-OGD + Fast-Slow variant.
-- **Exp 1912:** Full Benchmark using `unsloth/gemma-4-31B-it-GGUF`.
-- **Exp 1913:** Architecture updates and position paper.
-- **Exp 1914:** Milestone Retrospective.
-
-### Hardware Requirements
-- **LLM Inference:** Local discrete GPUs (e.g. 2x RTX 3090) or CPU execution for `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
-- **Continual Learning:** Standard local constraints apply.
