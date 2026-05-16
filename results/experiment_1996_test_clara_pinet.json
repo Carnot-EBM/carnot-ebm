@@ -1,0 +1,24 @@
+{
+  "experiment": 1996,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-16",
+  "started_at": "2026-05-16T08:53:56.707437+00:00",
+  "finished_at": "2026-05-16T08:53:56.707437+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Exp 1996: Test CLaRa-V constraints with PiNet projection",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp1995-pinet-differentiable-projection.honest_verdict (actual='SUCCESS: CLaRa-V continuous latent variables projected successfully using PiNet Douglas-Rachford operator splitting.' contains expected='complete')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1995-pinet-differentiable-projection",
+      "artifact_field": "honest_verdict",
+      "op": "contains",
+      "expected": "complete",
+      "actual": "SUCCESS: CLaRa-V continuous latent variables projected successfully using PiNet Douglas-Rachford operator splitting.",
+      "passed": false,
+      "reason": "actual='SUCCESS: CLaRa-V continuous latent variables projected successfully using PiNet Douglas-Rachford operator splitting.' contains expected='complete'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
