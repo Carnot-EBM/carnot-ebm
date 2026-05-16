@@ -1,461 +1,326 @@
-milestone: "2026.05.194"
-milestone_title: "Fast-Slow adversarial confirmation + PyPI CI tagged release + Phase 4 closure + .193 audit"
+milestone: "2026.05.195"
+milestone_title: "Continuous Self-Learning Repair + Hardware LUT Accounting + DAB Generation"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 scope_reduction_compliance:
-  rationale: "The .192 + .193 plans both went different directions than the outer-loop drafts. The .192 codification (exp1838) + adversarial confirmation (exp1837) + Phase 4 closure (exp1839) + CI tagged release PyPI (exp1840) all got replaced by KAN-MILP / hardware / continual-learning / energy-guided / NEXUS scope. The recurring pretest README-regex SKIP loop (just fixed 2026-05-16 ~01:30Z) wiped at least 5 of the .193 tasks. .194 carries forward the still-pending Score-400+ paper-v6-critical work with NO upstream gates and explicit prior_failures naming the silent-replacement pattern."
-  carry_forwards_addressed: ["Fast-Slow adversarial confirmation (operator-approved discipline, never ran)", "PyPI CI-tagged-release (operator clarification 2026-05-16 ~00:30Z, never ran)", "Phase 4 canonical-metric decision (deferred from .184 / .186 / .187 / .190 / .192 — 5 silent-replacement cycles)", ".193 audit"]
+  rationale: ".194 completed Fast-Slow adversarial confirmation. Now returning to FR-11 continual learning repair, hardware accounting (no-synthesis), and DAB constraints."
+  carry_forwards_addressed: ["Continuous Self-Learning Repair", "LUT Accounting without Vivado synthesis", "Discrete Auto-Regressive Biasing (DAB)"]
 authored_by: outer-loop-claude
 
 tasks:
-  - id: exp1909-fast-slow-adversarial-confirmation
-    title: "Exp 1909: Fast-Slow Variant adversarial confirmation (5th carry-forward attempt; seed + corpus + baseline rotation)"
-    deliverable: results/experiment_1909_fast_slow_confirmation.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: critical
-    prior_failures:
-      - experiment_id: exp1837-fast-slow-variant-adversarial-confirmation
-        verdict: planner_replaced_in_192
-        addressed_by: "exp1837 was in my .192 outer-loop draft; the planner replaced .192 with KAN-MILP scope and exp1837 never ran. Same task spec, NO upstream gate, direct preconditions step 0. retire_if_same_verdict=true to break any silent-replacement cycle."
-        retire_if_same_verdict: true
-      - experiment_id: exp1811-fast-slow-variant-prototype
-        verdict: complete_3.1x_sample_eff_0.25x_kl_drift_no_forgetting
-        addressed_by: "exp1811 (.189) shipped FS Variant with paper-matching numbers on a single seed/corpus/baseline configuration. Per the new adversarial-confirmation discipline (memory entry feedback_adversarial_confirmation_protocol), Score-400 findings require independent replication BEFORE paper-v6 citation. This task is the explicit replication."
-        retire_if_same_verdict: false
+  - id: exp1914-194-archive-195-activation
+    title: "Exp 1914: .194 archive / .195 activation"
+    deliverable: results/experiment_1914_init.json
+    max_turns: 20
     prompt: |
-      CONTEXT: exp1811 (.189) shipped Carnot Fast-Slow Variant on the
-      4th attempt with paper-matching numbers (sample_efficiency_ratio
-      = 3.1x; kl_drift_ratio = 0.25; FR-11 baseline catastrophic forgetting
-      on BBH 0.45 + MATH 0.35 while FS held 0.90 + 0.85; 350s real run).
-
-      Operator approved 2026-05-16 ~00:00Z that paper-v6 citation requires
-      adversarial confirmation — a second independent run with rotated
-      seed + rotated corpus + audited baseline. The new memory entry
-      `feedback_adversarial_confirmation_protocol.md` codifies the
-      discipline. This task is the FIFTH attempt to ship it (prior 4
-      were all silently replaced by planner-drafted scope).
-
-      FALSIFIABLE HYPOTHESIS: An independent re-run of exp1811 with
-      (a) seed bumped from 172911 to 192737, (b) DIFFERENT 30-example
-      slices for GSM8K/BBH/MATH (not the exact examples used in exp1811),
-      and (c) baseline-implementation audit confirming FR-11 path is
-      canonical produces sample_efficiency_ratio in [2.6, 3.6] AND
-      kl_drift_ratio in [0.15, 0.35] AND FR-11 catastrophic forgetting
-      reproduces (passrate < 0.55 on rotated BBH+MATH) AND Fast-Slow
-      holds > 0.80 on rotated BBH+MATH.
-
+      CONTEXT: Milestone .194 has completed. We need to initialize the .195 environment.
+      
       EXISTING CODE TO READ FIRST:
-        - results/experiment_1811_fast_slow_variant.json (original)
-        - python/carnot/pipeline/fast_slow_variant.py (implementation;
-          DO NOT MODIFY)
-        - python/carnot/pipeline/ebft_autoresearch_loop.py (or
-          wherever the FR-11 baseline lives — audit for canonical-ness)
-        - feedback_adversarial_confirmation_protocol memory entry
+        - ops/changelog.md
+        - ops/status.md
+        - research-complete.yaml
 
-      TASK: Re-run exp1811 with the three rotations.
+      TASK: Update the status tracking to reflect the start of milestone 2026.05.195.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md; NO gated_on):
-           a. `python -c "from carnot.pipeline.fast_slow_variant import
-              fast_slow_variant"` succeeds — else
-              `blocked_fast_slow_implementation_missing`.
-           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
-              non-empty — else `blocked_model_not_cached`.
-           c. `test -f results/experiment_1811_fast_slow_variant.json`
-              — else `blocked_baseline_artifact_missing`.
-           Record preconditions_checked.
-        1. Baseline audit: git log + diff
-           python/carnot/pipeline/ebft_autoresearch_loop.py (or
-           equivalent FR-11 path) since exp1811. Record
-           `baseline_audit: {{commits_since_exp1811: int,
-           code_changed: bool, diff_summary: str}}`.
-        2. Build rotated corpus: 30 GSM8K + 30 BBH + 30 MATH from
-           DIFFERENT slices than exp1811 (examples 31-60 if exp1811
-           used 1-30). Document exact slice in artifact.
-        3. Re-run Fast-Slow Variant with random_seed=192737 (NOT
-           172911). Same model, same code, ONLY seed + corpus change.
-        4. Re-run FR-11 baseline on the same rotated corpus.
-        5. Compute the same metrics as exp1811.
-        6. Acceptance: all 4 in-range conditions above.
+        1. Read ops/status.md and move .194 to Completed.
+        2. Set active milestone to 2026.05.195 in ops/status.md.
+        3. Write a small JSON artifact verifying completion.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.fast_slow_confirmation.v1"
-        - experiment: 1909
-        - run_date: ISO-8601 UTC
-        - duration_s: > 300s
-        - random_seed: 192737 (NOT 1909, NOT 172911)
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - baseline_audit: {{commits_since_exp1811: int, code_changed: bool,
-          diff_summary: str}}
-        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
-          rotation_versus_exp1811: {seed: "172911→192737",
-          corpus: "examples_1-30→examples_31-60",
-          baseline: "audited_canonical"}}
-        - n_samples: 90
-        - n_samples_justification: "Same 30 per task × 3 tasks as exp1811
-          for apples-to-apples adversarial replication."
-        - confirmation_passrate_per_task: dict
-        - exp1811_passrate_per_task: dict (verbatim from exp1811)
-        - confirmation_sample_efficiency_ratio: float
-        - confirmation_kl_drift_ratio: float
-        - confirmation_in_range_efficiency: bool (2.6 <= ratio <= 3.6)
-        - confirmation_in_range_kl: bool (0.15 <= ratio <= 0.35)
-        - fr11_catastrophic_forgetting_reproduced: bool (< 0.55)
-        - fast_slow_held_threshold: bool (> 0.80)
-        - acceptance_gate_passed: bool (all four conditions)
-        - acceptance_gate_criteria: "Efficiency in [2.6, 3.6] AND KL
-          drift in [0.15, 0.35] AND FR-11 forgetting reproduced AND
-          FS held > 0.80 on rotated BBH+MATH."
-        - methodology_note: "ADVERSARIAL CONFIRMATION. If confirmation
-          matches exp1811's 3.1x to 5+ significant figures, that's
-          TAUTOLOGY-class — likely a methodology bug carrying over
-          identically, NOT genuine reproducibility. Disclose honestly."
-        - flagged_preliminary: bool (true if any condition failed)
-        - third_replication_recommended: bool
-        - optimization_direction: "neither — falsification/confirmation"
-        - honest_verdict: MUST start with `complete:` / `complete_` /
-          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
-          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+        - schema: "carnot.init.v1"
+        - experiment: 1914
+        - status_updated: bool
+        - honest_verdict: "complete: initialized .195"
 
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
-      OR python/carnot/pipeline/fast_slow_variant.py (preserve original
-      for apples-to-apples).
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1910-phase1-pypi-publish-via-ci-tagged-release
-    title: "Exp 1910: Phase 1 PyPI publish via CI tagged release (NOT credentials — workflow exists)"
-    deliverable: results/experiment_1910_pypi_publish.json
-    max_turns: 100
+  - id: exp1915-dynamic-resolution-continual-learning
+    title: "Exp 1915: Dynamic Resolution Continual EBM Learning Prototype (FR-11 fix)"
+    deliverable: results/experiment_1915_dynamic_res.json
     agent_type: codex
-    model: gpt-5.5
-    priority: critical
-    prior_failures:
-      - experiment_id: exp1840-phase1-pypi-publish-via-ci-tagged-release
-        verdict: planner_replaced_in_192
-        addressed_by: "exp1840 (.192 outer-loop draft) was the operator-corrected CI-tagged-release task; planner replaced .192 with KAN-MILP scope and exp1840 never ran. Same task spec. The 11-attempt chain of blocked_pypi_credentials_unavailable was wrong-mechanism per operator clarification 2026-05-16 ~00:30Z; OIDC trusted publishing via .github/workflows/publish-pypi.yml is the canonical path."
-        retire_if_same_verdict: true
-      - experiment_id: exp1711-pypi-publish
-        verdict: blocked_pypi_credentials_unavailable_wrong_mechanism
-        addressed_by: "exp1711 (.175) and the 10-attempt chain all used local twine credentials. Wrong mechanism. This task uses `git tag v<version> && git push origin v<version>` to trigger the existing publish-pypi.yml workflow. NO long-lived secrets needed (OIDC)."
-        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: Phase 1 ship-track PyPI prong. The prior 11 attempts
-      (exp2103 → 1683 → 1685 → 1704 → 1711 → 1762 → 1782 → 1788 → 1812
-      → 1824 → 1840-deferred) used the wrong mechanism (local twine
-      credentials). The CORRECT path is the existing
-      `.github/workflows/publish-pypi.yml` workflow with PyPI OIDC
-      trusted publishing — NO long-lived secrets needed. Triggered by
-      `git push origin v<version>` (tag matching v*).
-
-      Current version per python/carnot/_version.py: 0.1.0b1.
-      No release tags exist yet.
-
-      FALSIFIABLE HYPOTHESIS: Creating a `v0.1.0b1` git tag and pushing
-      it to origin triggers the publish-pypi.yml workflow, which builds
-      sdist + wheel and publishes to PyPI via OIDC. Within 5 minutes of
-      tag-push, https://pypi.org/project/carnot-ebm/0.1.0b1/ becomes
-      reachable AND `pip install carnot-ebm==0.1.0b1` succeeds in a
-      fresh venv.
-
+      CONTEXT: The FR-11 baseline exhibited catastrophic forgetting. ArXiv research suggests Dynamic Resolution replay to fix this.
+      
       EXISTING CODE TO READ FIRST:
-        - .github/workflows/publish-pypi.yml (OIDC workflow; verify
-          unchanged from 2026-05-08 commit)
-        - pyproject.toml (name="carnot-ebm")
-        - python/carnot/_version.py (__version__ = "0.1.0b1")
-        - feedback_pypi_publish_via_ci_tagged_release memory entry
+        - python/carnot/pipeline/ebft_autoresearch_loop.py
 
-      TASK: Cut a release via tag-push; verify CI; verify PyPI install.
+      TASK: Implement a prototype of Dynamic Resolution continual learning in carnot.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md):
-           a. `test -f .github/workflows/publish-pypi.yml` — else
-              `blocked_publish_workflow_missing`.
-           b. `pyproject.toml` has `name = "carnot-ebm"` — else
-              `blocked_pypi_name_misconfigured`.
-           c. `grep "^__version__" python/carnot/_version.py` returns
-              valid version string — else `blocked_version_unreadable`.
-           d. `git remote -v` includes `github.com:Carnot-EBM/carnot-ebm`
-              (or equivalent) — else `blocked_github_remote_missing`.
-           e. `git tag --list "v$VERSION"` is EMPTY — else
-              `blocked_version_already_tagged_needs_bump`.
-           f. `command -v gh` succeeds for workflow-run watching.
-           Record preconditions_checked.
-        1. Read current version from python/carnot/_version.py.
-        2. Create annotated tag: `git tag v<version> -m "Phase 1 ship:
-           PyPI release via OIDC trusted publishing"`.
-        3. Push tag: `git push origin v<version>`. Capture push output.
-        4. Wait for GitHub Actions workflow. `gh run watch` if available;
-           else poll. Up to 10 minutes. Record run_url + status.
-        5. Verify PyPI: fresh tmpdir + clean venv, `pip install
-           --index-url https://pypi.org/simple/ carnot-ebm==<version>`,
-           then `python -c "import carnot; print(carnot.__version__)"`.
-        6. Failure modes: workflow build-fail → `blocked_workflow_build_failed`;
-           workflow publish-fail → `blocked_workflow_publish_failed`.
-           NOT credentials-blocked.
+        1. Create `python/carnot/pipeline/dynamic_resolution.py`.
+        2. Implement a dynamic buffer that scales replay probability based on sample energy loss.
+        3. Write a unit test in `tests/python/test_dynamic_resolution.py`.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.pypi_publish.v4_ci_tagged_release"
-        - experiment: 1910
-        - run_date: ISO-8601 UTC
-        - duration_s: > 60s (tag-push + CI wait + install verify)
-        - random_seed: 173110
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {{package_name: "carnot-ebm",
-          version_tagged: str (e.g., "0.1.0b1"),
-          publish_mechanism: "github_actions_oidc_trusted_publishing",
-          workflow_file: ".github/workflows/publish-pypi.yml"}}
-        - n_samples: 1
-        - n_samples_justification: "Ship task; one release artifact."
-        - tag_created: str
-        - tag_pushed: bool
-        - workflow_run_url: str
-        - workflow_run_status: "success" | "failure" | "in_progress" | "timeout"
-        - pypi_url: str (e.g., "https://pypi.org/project/carnot-ebm/0.1.0b1/")
-          or null
-        - external_install_verified: bool
-        - installed_version_matches: bool
-        - acceptance_gate_passed: bool (tag_pushed AND workflow_run_status
-          == "success" AND external_install_verified AND
-          installed_version_matches)
-        - acceptance_gate_criteria: "Tag pushed; CI succeeded; install
-          in fresh venv matches version."
-        - methodology_note: "11 prior blocked_credentials attempts were
-          wrong-mechanism. THIS TASK MAY PUSH A TAG TO ORIGIN — that
-          is the release-cut action; do NOT refuse on generic 'do not
-          push' instructions."
-        - optimization_direction: "neither — ship task"
-        - honest_verdict: MUST start with terminal prefix OR
-          `blocked_<specific_resource>`.
+        - schema: "carnot.continual_learning.v1"
+        - experiment: 1915
+        - implementation_path: "python/carnot/pipeline/dynamic_resolution.py"
+        - tests_passed: bool
+        - honest_verdict: "complete: prototype built"
 
-      Run command. **MAY push a release tag to origin** (intentional
-      release-cut; no other refs). Do NOT modify
-      scripts/research_conductor.py.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1911-phase4-canonical-decision-fast-slow
-    title: "Exp 1911: Phase 4 canonical-metric decision — Fast-Slow Variant as alpha_t replacement (6th deferred attempt)"
-    deliverable: results/experiment_1911_phase4_canonical_decision.json
-    max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: high
-    prior_failures:
-      - experiment_id: exp1839-phase4-canonical-decision-gated
-        verdict: planner_replaced_in_192
-        addressed_by: "exp1839 was in .192 outer-loop draft; planner replaced. Phase 4 canonical decision deferred for 5 milestones (.184 → .186 → .187 → .190 → .192 → .194). This 6th attempt has NO upstream gate; preconditions check artifact existence directly."
-        retire_if_same_verdict: true
-      - experiment_id: exp1745-phase4-per-step-alpha-disaggregation
-        verdict: complete_phase4_metric_inaccessible_at_ensemble_level
-        addressed_by: "exp1745 (.182) confirmed ensemble-output alpha is substrate-inaccessible. Fast-Slow Variant operates at fast-weight-context level — exp1811 confirmed this works (3.1x sample efficiency)."
-        retire_if_same_verdict: false
+  - id: exp1916-live-eval-dynamic-resolution
+    title: "Exp 1916: FR-11 Continual Learning Live Data Evaluation"
+    deliverable: results/experiment_1916_live_eval.json
+    gated_on:
+      - upstream: exp1915-dynamic-resolution-continual-learning
+        artifact_field: tests_passed
+        op: '=='
+        value: true
     prompt: |
-      CONTEXT: Phase 4 program has chased alpha_t measurement across
-      5 experiments (exp1715/1721/1741/1745/1811-class). exp1745
-      confirmed ensemble-output metrics are substrate-inaccessible.
-      exp1811 (.189) shipped Fast-Slow Variant — empirical behavior
-      alpha_t was supposed to measure. Decision artifact has been
-      deferred 5 times by planner replacement.
-
-      FALSIFIABLE HYPOTHESIS: Fast-Slow Variant satisfies the Phase 4
-      active-inference hypothesis EMPIRICALLY in a way that alpha_t /
-      alpha_t' / thermodynamic-metric did not. Canonical Phase 4 metric
-      for .195+ planning = "Fast-Slow Variant sample-efficiency-ratio
-      + KL-drift-ratio relative to FR-11 baseline." Phase 4 program
-      closes as scope-complete.
-
+      CONTEXT: We must evaluate if Dynamic Resolution actually prevents catastrophic forgetting on BBH+MATH tasks.
+      
       EXISTING CODE TO READ FIRST:
-        - results/experiment_1811_fast_slow_variant.json (empirical win)
-        - results/experiment_1745_phase4_per_step_alpha.json (alpha_t
-          inaccessibility verdict)
-        - results/experiment_1909_fast_slow_confirmation.json (this
-          milestone's confirmation; if exists, cites it; if blocked,
-          decision honestly notes the dependency)
-        - feedback_active_inference_phase4_committed memory entry
+        - python/carnot/pipeline/dynamic_resolution.py
+        - results/experiment_1909_fast_slow_confirmation.json
 
-      TASK: Decision artifact + paper-v6 §6 limitation reframe +
-      known-issues MANDATORY update.
+      TASK: Run a continual learning loop on rotated BBH and MATH datasets.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS (per CLAUDE.md; NO gated_on):
-           a. `test -f results/experiment_1811_fast_slow_variant.json` —
-              else `blocked_fast_slow_artifact_missing`.
-           b. `test -f results/experiment_1745_phase4_per_step_alpha.json`
-              — else `blocked_phase4_alpha_inaccessibility_baseline_missing`.
-           c. Optional: if `results/experiment_1909_fast_slow_confirmation.json`
-              exists, read its acceptance_gate_passed. If false, decision
-              still proceeds but with explicit "preliminary pending
-              3rd replication" note. If absent entirely, decision
-              proceeds with "single-run evidence" caveat.
-           Record preconditions_checked.
-        1. Tabulate Phase 4 metric history.
-        2. Decision: Fast-Slow Variant is canonical. Retired:
-           alpha_t / alpha_t' / thermodynamic-metric.
-        3. Update paper-v6 §6 (limitations): alpha_t inaccessibility is
-           methodology limitation, NOT Phase 4 hypothesis falsification.
-        4. Update ops/known-issues.md MANDATORY: "Phase 4 canonical
-           metric = Fast-Slow Variant sample-efficiency-ratio
-           (validated via exp1811; confirmation status: <confirmed
-           per exp1909 | preliminary single-run evidence>)."
+        1. Create `scripts/experiment_1916_live_eval.py`.
+        2. Run 2 epochs of sequential training.
+        3. Evaluate passrate on older tasks to measure forgetting.
+        4. Target: passrate > 0.70 on older tasks.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.phase4_canonical_decision.v2"
-        - experiment: 1911
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s
-        - random_seed: 173111
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {{metric_history: ["alpha_t", "alpha_t_prime",
-          "thermodynamic_metric_v1", "fast_slow_variant_v1"],
-          empirical_winner: "fast_slow_variant_v1",
-          confirmation_status: "confirmed" | "preliminary" | "pending"}}
-        - n_samples: 5
-        - n_samples_justification: "Decision; n is count of Phase 4
-          metric attempts."
-        - canonical_metric_named: str
-        - retired_candidates: list
-        - confirmation_artifact_path: str or null
-        - paper_v6_section_6_word_count_added: int
-        - known_issues_mandatory_added: bool
-        - acceptance_gate_passed: bool
-        - acceptance_gate_criteria: "Decision rendered + paper-v6 §6
-          updated + known-issues MANDATORY appended."
-        - methodology_note: "Confirmation status faithfully recorded.
-          If exp1909 didn't run, decision proceeds with explicit
-          preliminary-evidence caveat — does NOT inflate single-run
-          evidence into 'confirmed'."
-        - optimization_direction: "neither — decision artifact"
-        - honest_verdict: MUST start with terminal prefix.
+        - schema: "carnot.eval.v1"
+        - experiment: 1916
+        - passrate_retained: float
+        - forgetting_prevented: bool
+        - honest_verdict: "complete: evaluated dynamic resolution"
 
-      Run command. Do NOT push to git. Do NOT modify scripts/research_conductor.py.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1912-findings-audit-pass-193
-    title: "Exp 1912: .193 findings audit + corrigenda + SKIP-loop diagnosis"
-    deliverable: results/experiment_1912_findings_audit_193.json
+  - id: exp1917-substrate-aware-kan-lut
+    title: "Exp 1917: Substrate-Aware KAN LUT Accounting (No Synthesis)"
+    deliverable: results/experiment_1917_kan_lut.json
+    model: opus
     max_turns: 100
-    agent_type: codex
-    model: gpt-5.5
-    priority: medium
-    prior_failures: []
     prompt: |
-      CONTEXT: .193 (currently active) has 8+ tasks (exp1901-1908)
-      running. Multiple SKIP loops observed in conductor log between
-      02:23Z and 02:36Z UTC 2026-05-16 due to test_docs.py regex
-      regression (fixed 2026-05-16 ~01:30Z by widening regex for
-      markdown bold around experiment counts). exp1905/1907/1908 all
-      SKIP/doomed-rerun-blocked. .193 audit covers what landed +
-      diagnoses the SKIP cascade for known-issues.
-
-      FALSIFIABLE HYPOTHESIS: Adversarial-verify flags at least 2 .193
-      artifacts. The SKIP-cascade root cause was the README's
-      `**N,NNN**` markdown bold around the experiment count breaking
-      the regex `\d+[+,]?\d*\+?\s*[Ee]xperiments?` — verified by the
-      regex relaxation fix shipped 2026-05-16 ~01:30Z.
-
+      CONTEXT: We deferred FPGA execution to avoid Vivado toolchain failures, but we still need LUT (Look-Up Table) accounting for our continuous latent KAN tiers.
+      
       EXISTING CODE TO READ FIRST:
-        - scripts/adversarial_verify.py (9-rule linter)
-        - results/experiment_19[01]*.json (.193 artifacts)
-        - tests/python/test_docs.py (current state; regex regression fix)
-        - ops/conductor-log.md (SKIP entries)
+        - python/carnot/models/boltzmann.py (or equivalent KAN tier)
+        - docs/technical-report.md (for hardware claims)
 
-      TASK: Audit .193 + write SKIP-cascade diagnosis.
+      TASK: Build an analytical script that maps our continuous EBM layers to a 6-LUT boolean graph and estimates LUT count.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: scripts/adversarial_verify.py importable.
-        1. `python3 scripts/adversarial_verify.py --milestone-range
-           1900 1915`.
-        2. Classify each flag REAL_BUG / FALSE_POSITIVE / NEEDS_REVISION;
-           append corrigendum_2026_05_194_audit (CLAUDE.md no-pruning).
-        3. Diagnose .193 SKIP cascade: tabulate which tasks SKIPPED,
-           which tests were failing at the time, when the README regex
-           regression entered. Propose preventive measure (e.g., the
-           pretest README regex shouldn't depend on markdown formatting
-           — only on content).
-        4. Append a known-issues entry summarizing the regex-fragility
-           fix pattern (don't make MANDATORY; just historical).
+        1. Create `scripts/experiment_1917_kan_lut_accounting.py`.
+        2. Parse the parameter shapes of the Carnot-Ising tier.
+        3. Estimate 6-input LUTs required for an INT8 quantized pass.
+        4. Save LUT counts to artifact.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.findings_audit_corrigenda.v9"
-        - experiment: 1912
-        - run_date: ISO-8601 UTC
-        - duration_s: > 30s
-        - random_seed: 173112
-        - reproducibility_checksum: sha256
-        - preconditions_checked: list
-        - model_specs: {{audit_target_milestone: "2026.05.193",
-          adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}}
-        - n_samples: int
-        - n_samples_justification: "Audit; n is flagged count."
-        - audit_outcomes: dict
-        - corrigenda_added: list
-        - skip_cascade_diagnosis: {{tasks_skipped: list, root_cause: str,
-          fix_commit: str, preventive_recommendation: str}}
-        - acceptance_gate_passed: bool
-        - acceptance_gate_criteria: "Flags classified + SKIP cascade
-          diagnosed + preventive recommendation written."
-        - methodology_note: "Audit. If completes in <10s on >5 artifacts,
-          agent shortcut — disclose."
-        - optimization_direction: "neither — audit task"
-        - honest_verdict: MUST start with terminal prefix.
+        - schema: "carnot.lut_accounting.v1"
+        - experiment: 1917
+        - estimated_6_luts: int
+        - meets_kv260_budget: bool
+        - honest_verdict: "complete: LUT accounting done"
 
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
-      or scripts/adversarial_verify.py.
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp1913-milestone-194-retrospective
-    title: "Exp 1913: Milestone .194 retrospective"
-    deliverable: results/operational_retro_2026_05_194.json
-    max_turns: 60
-    agent_type: codex
-    model: gpt-5.5
-    priority: low
-    prior_failures: []
+  - id: exp1918-kan-mapping-verify
+    title: "Exp 1918: Verify KAN boolean mapping correctness"
+    deliverable: results/experiment_1918_kan_verify.json
+    gated_on:
+      - upstream: exp1917-substrate-aware-kan-lut
+        artifact_field: meets_kv260_budget
+        op: '=='
+        value: true
     prompt: |
-      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
-      Development Workflow step 8. .194 is high-significance: first
-      successful application of the adversarial-confirmation discipline
-      (exp1909) AND Phase 1 ship via CI-tagged-release (exp1910) AND
-      Phase 4 closure (exp1911). Retro foregrounds whether these 3
-      finally landed after multiple planner-replacement cycles.
+      CONTEXT: The analytical LUT count must be verified against a symbolic boolean simulation to ensure the approximation holds.
+      
+      EXISTING CODE TO READ FIRST:
+        - scripts/experiment_1917_kan_lut_accounting.py
 
-      TASK: Generate the .194 operational retrospective.
+      TASK: Create a Python test simulating the INT8 boolean mapping on 5 random vectors.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: git log [conductor] Activate milestone
-           2026.05.194..HEAD returns non-empty.
-        1-6. Standard retro per .169/.171/.175/.176/.178/.181/.184/.187/.190
-             templates.
-        7. Record three flag-fields setting precedent for future
-           milestones:
-             - adversarial_confirmation_result: "confirmed" | "preliminary"
-               | "blocked" (from exp1909)
-             - pypi_ship_result: "shipped" | "workflow_failed" |
-               "blocked" (from exp1910)
-             - phase4_closure_result: "decision_rendered" | "blocked"
-               (from exp1911)
+        1. Create `scripts/experiment_1918_verify_mapping.py`.
+        2. Generate 5 random test vectors.
+        3. Forward pass through continuous layer vs boolean approximation.
+        4. Calculate MSE.
 
       REQUIRED ARTIFACT FIELDS:
-        - schema: "carnot.operational_retro.v64"
-        - milestone: "2026.05.194"
-        - generated_at: ISO-8601 UTC
-        - retro_type: "operational_full"
-        - preconditions_checked: list
-        - total_wall_time_minutes: float
-        - experiments_completed: int
-        - compute_bound_experiments_count: int
-        - slowest_experiments: list
-        - gpu_idle_on_compute_bound_tasks: bool or null
-        - adversarial_confirmation_result: str
-        - pypi_ship_result: str
-        - phase4_closure_result: str
-        - summary: str
-        - bottlenecks_identified: list
-        - improvements_suggested: list
-        - top_3_highest_leverage_actions: list
-        - estimated_time_savings_pct: int
-        - meta_reflection: str
-        - honest_verdict: MUST start with terminal prefix.
-        - DO NOT modify README.md or docs/technical-report.md.
+        - schema: "carnot.verify.v1"
+        - experiment: 1918
+        - mse: float
+        - mapping_accurate: bool
+        - honest_verdict: "complete: verified kan mapping"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1919-dab-decoder-adapter
+    title: "Exp 1919: Discrete Auto-Regressive Biasing (DAB) Decoder Adapter"
+    deliverable: results/experiment_1919_dab_adapter.json
+    agent_type: codex
+    prompt: |
+      CONTEXT: To constrain LLMs with EBMs at generation time, we need a DAB adapter that modifies logits before sampling.
+      
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/
+
+      TASK: Implement a DAB adapter for HuggingFace `LogitsProcessor`.
+
+      CONCRETE STEPS:
+        1. Create `python/carnot/pipeline/dab_adapter.py`.
+        2. Subclass `LogitsProcessor` from `transformers`.
+        3. Accept a generic Carnot EBM that evaluates state energy and subtracts it from logits.
+        4. Unit test the adapter with dummy logits.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.dab.v1"
+        - experiment: 1919
+        - tests_passed: bool
+        - honest_verdict: "complete: built DAB adapter"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1920-thermo-constrained-gen
+    title: "Exp 1920: Thermodynamically Constrained Neural Generation Smoke Test"
+    deliverable: results/experiment_1920_thermo_gen.json
+    max_turns: 30
+    gated_on:
+      - upstream: exp1919-dab-decoder-adapter
+        artifact_field: tests_passed
+        op: '=='
+        value: true
+    prompt: |
+      CONTEXT: We must verify the DAB adapter with a thermodynamically constrained generation constraint (e.g., token-length or character-level constraint).
+      
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/dab_adapter.py
+
+      TASK: Run a quick CPU-based smoke test of DAB using a small model.
+
+      CONCRETE STEPS:
+        1. Create `scripts/experiment_1920_thermo_smoke.py`.
+        2. Use `transformers` with a tiny model (e.g., `gpt2` or small cached model).
+        3. Apply a constraint (e.g., never generate the letter "e").
+        4. Verify output length > 10 tokens and no "e" characters.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.smoke.v1"
+        - experiment: 1920
+        - constraint_violated: bool
+        - honest_verdict: "complete: thermodynamics smoke test passed"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1921-dab-sota-live
+    title: "Exp 1921: DAB + SOTA GGUF Live Generation benchmark"
+    deliverable: results/experiment_1921_dab_sota.json
+    gated_on:
+      - upstream: exp1920-thermo-constrained-gen
+        artifact_field: constraint_violated
+        op: '=='
+        value: false
+    prompt: |
+      CONTEXT: The DAB adapter works on small models. Now scale to the mandated SOTA model.
+      
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/dab_adapter.py
+        - CLAUDE.md (for SOTA model requirements)
+
+      TASK: Run the DAB adapter using `unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+      CONCRETE STEPS:
+        1. Create `scripts/experiment_1921_dab_sota.py`.
+        2. Load `unsloth/gemma-4-26B-A4B-it-GGUF` (use llama-cpp-python logit processors if HF is unavailable).
+        3. Constrain generation to output valid JSON only.
+        4. Verify output schema validity.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.benchmark.v1"
+        - experiment: 1921
+        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF"}
+        - output_valid_json: bool
+        - honest_verdict: "complete: DAB scaled to SOTA"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1922-cem-architecture-design
+    title: "Exp 1922: Compositional Energy Minimization (CEM) Architecture Design"
+    deliverable: results/experiment_1922_cem_design.json
+    agent_type: gemini
+    prompt: |
+      CONTEXT: We must chain multiple EBM constraints sequentially to reduce hallucinations in long-horizon reasoning.
+      
+      EXISTING CODE TO READ FIRST:
+        - python/carnot/pipeline/dab_adapter.py
+
+      TASK: Design the CEM architecture that allows composing multiple DAB processors (e.g., SyntaxEBM + SemanticsEBM).
+
+      CONCRETE STEPS:
+        1. Create `openspec/change-proposals/cem-architecture.md`.
+        2. Explain how to combine energies (e.g., sum, max, or learned temperature).
+        3. Save a JSON artifact confirming completion.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.design.v1"
+        - experiment: 1922
+        - design_file: "openspec/change-proposals/cem-architecture.md"
+        - honest_verdict: "complete: CEM designed"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1923-cem-poc-3sat
+    title: "Exp 1923: CEM Proof of Concept on 3-SAT (Local SOTA)"
+    deliverable: results/experiment_1923_cem_poc.json
+    gated_on:
+      - upstream: exp1922-cem-architecture-design
+        artifact_field: design_file
+        op: 'contains'
+        value: "cem-architecture.md"
+    prompt: |
+      CONTEXT: We test CEM by composing clause-level EBMs to solve a 3-SAT formula.
+      
+      EXISTING CODE TO READ FIRST:
+        - openspec/change-proposals/cem-architecture.md
+
+      TASK: Use SOTA GGUF + CEM composed adapters to sample satisfying assignments for a 3-SAT problem.
+
+      CONCRETE STEPS:
+        1. Create `scripts/experiment_1923_cem_3sat.py`.
+        2. Define a small 3-SAT problem (10 variables, 20 clauses).
+        3. Create 20 independent Clause-EBMs and compose them using CEM.
+        4. Target: Find a valid assignment with 0 energy.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.poc.v1"
+        - experiment: 1923
+        - model_specs: {target_model: "unsloth/gemma-4-26B-A4B-it-GGUF"}
+        - 3sat_solved: bool
+        - total_energy: float
+        - honest_verdict: "complete: 3-SAT solved with CEM"
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp1924-195-retrospective
+    title: "Exp 1924: .195 Milestone Retrospective"
+    deliverable: results/experiment_1924_retro.json
+    max_turns: 20
+    prompt: |
+      CONTEXT: The .195 milestone is wrapping up.
+      
+      EXISTING CODE TO READ FIRST:
+        - ops/changelog.md
+        - ops/status.md
+        - research-roadmap-next.yaml
+
+      TASK: Write the milestone retrospective to prepare for .196.
+
+      CONCRETE STEPS:
+        1. Update `ops/changelog.md` with all .195 completions.
+        2. Update `ops/status.md` moving active items to completed.
+        3. Produce JSON artifact with high-level summary.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.retro.v1"
+        - experiment: 1924
+        - retrospective_summary: str
+        - honest_verdict: "complete: .195 finished"
 
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
