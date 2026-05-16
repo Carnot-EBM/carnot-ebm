@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Technical Report - A Technical Report — 3,218 Experiments Across the Public Record, 209 Archived Milestone Records, 25,017 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
-  <meta name="description" content="Carnot technical report: A Technical Report — 3,218 Experiments Across the Public Record, 209 Archived Milestone Records, 25,017 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
+  <title>Technical Report - A Technical Report — 3,234 Experiments Across the Public Record, 209 Archived Milestone Records, 25,061 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</title>
+  <meta name="description" content="Carnot technical report: A Technical Report — 3,234 Experiments Across the Public Record, 209 Archived Milestone Records, 25,061 Python Test Items Collected (Results and Ops Retros Through Exp 2114). Live GPU benchmarks with statistical confidence intervals, honest negative results, and a public experiment history with provenance labels for every headline claim.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -160,7 +160,7 @@
 
 <article>
 <h1 id="carnot-energy-based-verification-for-llm-output">Carnot: Energy-Based Verification for LLM Output</h1>
-<h2 id="a-technical-report-3218-experiments-across-the-public-record-209-archived-milestone-records-25017-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 3,218 Experiments Across the Public Record, 209 Archived Milestone Records, 25,017 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
+<h2 id="a-technical-report-3234-experiments-across-the-public-record-209-archived-milestone-records-25061-python-test-items-collected-results-and-ops-retros-through-exp-2114">A Technical Report — 3,234 Experiments Across the Public Record, 209 Archived Milestone Records, 25,061 Python Test Items Collected (Results and Ops Retros Through Exp 2114)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-12
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -183,8 +183,8 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report summarizes 3,218 experiments across 209 milestones up to .194, featuring continuous self-learning integration and fast-slow KAN variant scale-up.</p>
-<p>This report documents the research arc behind the framework — <strong>3,218 experiment records tracked through Exp 2114, with 2,512 task records in 209 artifact-backed completed milestone records archived through 2026.05.194</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>209</strong> completed milestone records through 2026.05.195. Milestone 2026.05.194 completed <strong>12</strong> experiments in <strong>19.8</strong> minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.</p>
+<p>This report summarizes 3,234 experiments across 211 milestones up to .197, featuring continuous self-learning integration and fast-slow KAN variant scale-up.</p>
+<p>This report documents the research arc behind the framework — <strong>3,234 experiment records tracked through Exp 2114, with 2,528 task records in 211 artifact-backed completed milestone records archived through 2026.05.197</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>209</strong> completed milestone records through 2026.05.195. Milestone 2026.05.194 completed <strong>12</strong> experiments in <strong>19.8</strong> minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.</p>
 <p>The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -6765,6 +6765,13 @@ Milestones 187 through 191 successfully completed automated retrospectives (up t
 <p>Milestone 2026.05.192 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.192. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.</p>
 <h3 id="phase-27-milestone-194-optimizations">Phase 27 — Milestone .194 Optimizations</h3>
 <p>Milestone 2026.05.194 operational retrospective complete. Analyzed 19.8 min wall time / 12 experiments. All 12 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout. Synthesis tasks (Exp 1909, 1910, 1911) remain the primary bottleneck for optimization.</p>
+<h3 id="428-recent-additions-milestones-195-to-197">4.28 Recent Additions (Milestones .195 to .197)</h3>
+<p><strong>Dynamic Resolution Continual EBM Learning Prototype &amp; FR-11</strong><br>
+Experiments 1915-1916 implemented and evaluated the Dynamic Resolution Continual EBM Learning Prototype with Live Data Evaluation for FR-11, and Experiments 1978-1979 later performed a Continuous Self-Learning Retention Audit on the FR-11 loop.</p>
+<p><strong>Compositional Energy Minimization (CEM) Architecture</strong><br>
+Experiments 1922-1923 introduced the Compositional Energy Minimization (CEM) Architecture Design, along with a Proof of Concept on 3-SAT using a Local SOTA.</p>
+<p><strong>THRML Hybrid Thermodynamic Abstraction &amp; EBT System-2 Decoding</strong><br>
+Experiments 1970-1973 linked the Phase 1 THRML Hybrid Thermodynamic Abstraction Hookup and performed a THRML vs CPU Gibbs Latency Audit, as well as a Phase 2 EBT System-2 Energy Decoding Baseline and Inference Scaling on GSM8K Subset.</p>
 </article>
 
 <footer>

@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,218 Experiments Across the Public Record, 209 Archived Milestone Records, 25,017 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 3,234 Experiments Across the Public Record, 209 Archived Milestone Records, 25,061 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 3,218 experiments across 209 milestones up to .194, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 3,234 experiments across 211 milestones up to .197, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **3,218 experiment records tracked through Exp 2114, with 2,512 task records in 209 artifact-backed completed milestone records archived through 2026.05.194** — run between February and May 2026. `research-complete.yaml` currently archives **209** completed milestone records through 2026.05.195. Milestone 2026.05.194 completed **12** experiments in **19.8** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
+This report documents the research arc behind the framework — **3,234 experiment records tracked through Exp 2114, with 2,528 task records in 211 artifact-backed completed milestone records archived through 2026.05.197** — run between February and May 2026. `research-complete.yaml` currently archives **209** completed milestone records through 2026.05.195. Milestone 2026.05.194 completed **12** experiments in **19.8** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5539,3 +5539,15 @@ Milestone 2026.05.192 operational retrospective complete. Analyzed 0 min wall ti
 ### Phase 27 — Milestone .194 Optimizations
 
 Milestone 2026.05.194 operational retrospective complete. Analyzed 19.8 min wall time / 12 experiments. All 12 tasks were synthesis-only, so GPUs correctly idled at 0% utilization throughout. Synthesis tasks (Exp 1909, 1910, 1911) remain the primary bottleneck for optimization.
+
+
+### 4.28 Recent Additions (Milestones .195 to .197)
+
+**Dynamic Resolution Continual EBM Learning Prototype & FR-11**  
+Experiments 1915-1916 implemented and evaluated the Dynamic Resolution Continual EBM Learning Prototype with Live Data Evaluation for FR-11, and Experiments 1978-1979 later performed a Continuous Self-Learning Retention Audit on the FR-11 loop.
+
+**Compositional Energy Minimization (CEM) Architecture**  
+Experiments 1922-1923 introduced the Compositional Energy Minimization (CEM) Architecture Design, along with a Proof of Concept on 3-SAT using a Local SOTA.
+
+**THRML Hybrid Thermodynamic Abstraction & EBT System-2 Decoding**  
+Experiments 1970-1973 linked the Phase 1 THRML Hybrid Thermodynamic Abstraction Hookup and performed a THRML vs CPU Gibbs Latency Audit, as well as a Phase 2 EBT System-2 Energy Decoding Baseline and Inference Scaling on GSM8K Subset.

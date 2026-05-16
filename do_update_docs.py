@@ -1,96 +1,67 @@
-import re
-import os
-import subprocess
+import json
+import sys
 
-def update_index():
-    with open('docs/index.html', 'r', encoding='utf-8') as f:
-        html = f.read()
-    
-    html = html.replace(
-        '<div class="stat"><div class="stat-num">2,959</div><div class="stat-label">Experiment records through Exp 2114</div></div>',
-        '<div class="stat"><div class="stat-num">2,965</div><div class="stat-label">Experiment records through Exp 2114</div></div>'
-    )
-    html = html.replace(
-        '<div class="stat"><div class="stat-num">194</div><div class="stat-label">archived records through .181</div></div>',
-        '<div class="stat"><div class="stat-num">195</div><div class="stat-label">archived records through .182</div></div>'
-    )
-    html = html.replace(
-        '<div class="stat"><div class="stat-num">12</div><div class="stat-label">experiments completed in .181</div></div>',
-        '<div class="stat"><div class="stat-num">6</div><div class="stat-label">experiments completed in .182</div></div>'
-    )
-    
-    old_card = """      <div class="r-card">
-        <span class="r-tag">Latest closeout</span>
-        <h3 class="r-title">Milestone 2026.05.181 Operational Retrospective</h3>
-        <p class="r-desc">Milestone .181 operational retrospective complete. Analyzed 24.8 min wall time / 12 experiments (avg 2 min). Slowest path: Exp 1741 (6.7 min, synthesis-only). GPU utilization on the single compute-bound task was efficient, and no anomalous idling was flagged. Synthesis-only tasks remain the primary bottleneck for optimization.</p>
-        <div class="r-stats"><span class="r-before">Analyzed 19.3 min wall time</span> <span class="r-after">Exp 2114</span></div>
-      </div>"""
-    
-    new_card = """      <div class="r-card">
-        <span class="r-tag">Latest closeout</span>
-        <h3 class="r-title">Milestone 2026.05.182 Operational Retrospective</h3>
-        <p class="r-desc">Milestone 2026.05.182 operational retrospective complete. Analyzed 50.1 min wall time / 6 experiments. Slowest path: Exp 1749 (45.2 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The milestone wall time was heavily dominated by the retrospective generation task itself. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.</p>
-        <div class="r-stats"><span class="r-before">Analyzed 24.8 min wall time</span> <span class="r-after">Exp 2114</span></div>
-      </div>"""
-    
-    html = html.replace(old_card, new_card)
-    
-    with open('docs/index.html', 'w', encoding='utf-8') as f:
-        f.write(html)
+# 1. Update JSON
+try:
+    with open('results/operational_retro_2026_05_198.json', 'r') as f:
+        data = json.load(f)
 
-def update_readme():
-    with open('README.md', 'r', encoding='utf-8') as f:
-        rm = f.read()
-    
-    # Check if README is just the boilerplate, or already has text.
-    if 'Carnot Smallest Test Model' in rm and len(rm) < 500:
-        rm = """---
-license: apache-2.0
----
-# Carnot EBM Framework
+    data['summary'] = "Analyzed 18.6 min wall time for 10 experiments. Milestone was dominated by synthesis-only tasks, with Exp 1985 (retrospective) taking the longest at 8 min. GPU was efficiently utilized during the 2 compute-bound tasks, with no anomalous idling flagged."
+    data['bottlenecks_identified'] = ["Synthesis-only tasks like Exp 1985 (retrospective) and Exp 1981 are the primary bottlenecks."]
+    data['improvements_suggested'] = ["Optimize synthesis-only pipelines and retrospective generation to reduce wall-clock time."]
+    data['top_3_highest_leverage_actions'] = [
+        "Optimize retrospective generation script (Exp 1985)",
+        "Accelerate MCP server / CLI doc synthesis paths (Exp 1981)",
+        "Streamline general synthesis tasks"
+    ]
+    data['estimated_time_savings_pct'] = 20
+    data['meta_reflection'] = "The retrospective process itself remains the largest single source of execution time, confirming that synthesis optimization is the highest leverage action."
 
-This project tracks **2,965** experiment records through Exp 2114 across **195** milestone records (latest 2026.05.182).
+    with open('results/operational_retro_2026_05_198.json', 'w') as f:
+        json.dump(data, f, indent=2)
+except Exception as e:
+    print(f"Error updating JSON: {e}")
 
-## Key Results Table
-| Milestone | Status | Description |
-|---|---|---|
-| .182 | Complete | 6 experiments, 50.1 min wall time. Synthesis bottleneck remains. |
-| .181 | Complete | 12 experiments, 24.8 min wall time. |
-| .178 | Complete | 10 experiments, 35.2 min wall time. |
-| .176 | Complete | 10 experiments, 19.3 min wall time. |
-"""
-    
-    with open('README.md', 'w', encoding='utf-8') as f:
-        f.write(rm)
+# 2. Update changelog
+try:
+    with open('ops/changelog.md', 'a') as f:
+        f.write("\n## 2026-05-16 (Milestone 2026.05.198 Operational Retrospective)\n\n- Milestone 2026.05.198 operational retrospective complete. Analyzed 18.6 min wall time / 10 experiments. Slowest path: Exp 1985 (8 min, synthesis-only). GPU utilization on the 2 compute-bound tasks was efficient, and no anomalous idling was flagged. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.\n")
+except Exception as e:
+    print(f"Error updating changelog: {e}")
 
-def update_technical_report():
-    with open('docs/technical-report.md', 'r', encoding='utf-8') as f:
-        tr = f.read()
-    
-    tr = tr.replace('2,959 Experiments Across', '2,965 Experiments Across')
-    tr = tr.replace('194 Archived Milestone Records', '195 Archived Milestone Records')
-    tr = tr.replace('2,959\\nexperiment records tracked', '2,965\\nexperiment records tracked')
-    tr = tr.replace('2,959 experiment records tracked', '2,965 experiment records tracked')
-    tr = tr.replace('194 artifact-backed', '195 artifact-backed')
-    tr = tr.replace('in 194', 'in 195')
-    tr = tr.replace('in **194**', 'in **195**')
-    tr = tr.replace('through .181', 'through .182')
-    tr = tr.replace('milestone 2026.05.181', 'milestone 2026.05.182')
-    tr = tr.replace('Milestone .181 completed', 'Milestone .182 completed')
-    
-    # Adding new findings section at the end of the sections before "References" or end of file
-    new_finding = """
-### Phase 24 — Milestone .182 Optimizations (May 2026)
+# 3. Update roadmap
+try:
+    with open('docs/roadmap.md', 'r') as f:
+        lines = f.readlines()
 
-Milestone 2026.05.182 operational retrospective complete. Analyzed 50.1 min wall time / 6 experiments. Slowest path: Exp 1749 (45.2 min, synthesis-only). GPUs correctly idled at 0% utilization throughout, as there were 0 compute-bound tasks. The milestone wall time was heavily dominated by the retrospective generation task itself. Synthesis tasks and retrospectives remain the primary bottleneck for optimization.
-"""
-    if 'Phase 24 — Milestone .182 Optimizations' not in tr:
-        tr = tr + "\\n" + new_finding
-    
-    with open('docs/technical-report.md', 'w', encoding='utf-8') as f:
-        f.write(tr)
+    # Find the Completed Milestones table
+    insert_idx = -1
+    in_table = False
+    for i, line in enumerate(lines):
+        if line.strip() == '## Completed Milestones':
+            in_table = True
+        elif in_table and line.strip().startswith('## '):
+            # Found the next section
+            insert_idx = i
+            break
 
-update_index()
-update_readme()
-update_technical_report()
-print("Files updated")
+    if in_table and insert_idx == -1:
+        insert_idx = len(lines)
+
+    new_row = "| 2026.05.198 | Operational Efficiency | 10 experiments | GPUs efficient on compute tasks; synthesis bottleneck remains |\n"
+
+    if insert_idx != -1:
+        # insert before the next section, trace backward to skip empty lines
+        while insert_idx > 0 and lines[insert_idx-1].strip() == '':
+            insert_idx -= 1
+        lines.insert(insert_idx, new_row)
+    else:
+        # Couldn't find table, just append
+        lines.append(new_row)
+
+    with open('docs/roadmap.md', 'w') as f:
+        f.writelines(lines)
+except FileNotFoundError:
+    pass
+except Exception as e:
+    print(f"Error updating roadmap: {e}")
