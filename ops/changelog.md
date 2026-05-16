@@ -5918,3 +5918,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
 - 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
 - 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
+- 2026-05-16: Exp 1986: Combined .198 + .199 findings audit + corrigenda (✅ Complete) — honest_verdict=complete: Audit of .198 and .199 milestones finished. Found 3 REAL_BUG artifacts and diagnosed a GATE_BLOCK skip cascade root cause.; results/experiment_1986_findings_audit_198_199.json
