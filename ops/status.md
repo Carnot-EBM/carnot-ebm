@@ -1653,6 +1653,8 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
 
 ## What's Working
 
+- **[Phase 1 Ship-Track Dashboard](phase-1-dashboard.md)**: Live tracking of PyPI, HF Mirror, MCP Docs, and Independent Reproducer prongs.
+
 ### Exp 362: SAVeR Multi-Turn Verification Wrapper (REQ-AGENT-001/002)
 
 - **Core motivation:** SAVeR (arXiv 2604.08401) auditor-before-commit loop for multi-turn agent reasoning. Goal #4 in research-program.md.
