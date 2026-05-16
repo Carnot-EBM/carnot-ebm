@@ -3855,3 +3855,4 @@ Error |
 | 2026-05-16 15:55 UTC | Exp 2051: Encode KAN PWA as Mixed Integer Linear P | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 15:57 UTC | Exp 2051: Encode KAN PWA as Mixed Integer Linear P | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 15:59 UTC | Exp 2051: Encode KAN PWA as Mixed Integer Linear P | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 16:05 UTC | Exp 2052: Integrate Z3 Solver for KAN MILP Verific | OK | 81 passed, 1 warning in 6.14s |
