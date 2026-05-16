@@ -44,6 +44,8 @@ import sys
 
 # Broadened cluster queries with parens-wrapped OR-chains and added
 # adjacent terms per the 2026-05-15T12:48Z sweep recommendation.
+# Cluster 4 added 2026-05-16 (operator-approved) for the hardware /
+# sampling-acceleration topic area that the original 4 clusters missed.
 BROADENED_CLUSTERS: dict[int, str] = {
     0: (
         '(abs:"verifier+ensemble"+OR+abs:"verifier+ensembles"+OR+'
@@ -70,6 +72,20 @@ BROADENED_CLUSTERS: dict[int, str] = {
         'abs:"world+model")+AND+'
         '(abs:"LLM"+OR+abs:"language+model"+OR+abs:"reasoning")'
     ),
+    # Cluster 4 — hardware acceleration / probabilistic sampling
+    # Covers FPGA, photonic, Ising machines, thermodynamic computing,
+    # analog ML — the topic area that BRAIN, Extropic Z1, KV260, GateMate,
+    # and PolarFire all live in but which the original 4 clusters missed.
+    # Constraint: AND with sampling / verification / inference / LLM to
+    # filter out general-purpose RTL papers.
+    4: (
+        '(abs:"FPGA"+OR+abs:"Ising+machine"+OR+'
+        'abs:"thermodynamic+computing"+OR+abs:"photonic+computing"+OR+'
+        'abs:"analog+ML"+OR+abs:"analog+inference"+OR+'
+        'abs:"in-memory+computing"+OR+abs:"probabilistic+computing")+AND+'
+        '(abs:"sampling"+OR+abs:"verification"+OR+abs:"inference"+OR+'
+        'abs:"LLM"+OR+abs:"reasoning")'
+    ),
 }
 
 API_BASE = "http://export.arxiv.org/api/query"
@@ -77,7 +93,7 @@ API_BASE = "http://export.arxiv.org/api/query"
 
 def cluster_url(cluster: int, start: int, max_results: int) -> str:
     if cluster not in BROADENED_CLUSTERS:
-        raise ValueError(f"cluster must be 0-3, got {cluster}")
+        raise ValueError(f"cluster must be 0-4, got {cluster}")
     return (
         f"{API_BASE}?search_query={BROADENED_CLUSTERS[cluster]}"
         f"&start={start}&max_results={max_results}"
@@ -89,7 +105,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(
         description="Emit broadened cluster URLs for the /study-sweep cron."
     )
-    parser.add_argument("cluster", help="0|1|2|3 or 'all'")
+    parser.add_argument("cluster", help="0|1|2|3|4 or 'all'")
     parser.add_argument("--start", type=int, default=0)
     parser.add_argument(
         "--max-results",
@@ -101,12 +117,12 @@ def main() -> int:
     args = parser.parse_args()
 
     if args.cluster == "all":
-        clusters = [0, 1, 2, 3]
+        clusters = [0, 1, 2, 3, 4]
     else:
         try:
             clusters = [int(args.cluster)]
         except ValueError:
-            print(f"cluster must be 0-3 or 'all', got {args.cluster!r}", file=sys.stderr)
+            print(f"cluster must be 0-4 or 'all', got {args.cluster!r}", file=sys.stderr)
             return 2
 
     for c in clusters:
