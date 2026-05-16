@@ -3617,3 +3617,4 @@ IMPORTANT:
 | 2026-05-16 01:28 UTC | Exp 1839: Phase 4 canonical-metric decision (DEFER | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.73s |
 | 2026-05-16 01:30 UTC | Exp 1839: Phase 4 canonical-metric decision (DEFER | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.25s |
 | 2026-05-16 01:32 UTC | Exp 1839: Phase 4 canonical-metric decision (DEFER | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.24s |
+| 2026-05-16 01:34 UTC | Exp 1840: Phase 1 PyPI publish via CI tagged relea | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.33s |
