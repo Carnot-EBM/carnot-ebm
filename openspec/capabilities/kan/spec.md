@@ -1514,3 +1514,23 @@ The KAN capability MUST evaluate the tangible efficiency or accuracy benefit of 
 Given a synthetic dataset of constraint graphs,
 When the comparative evaluation is run,
 Then it outputs the results comparing KAGNN and MLP, and `results/exp2035_kagnn_eval.json` is written.
+
+
+## REQ-KAN-2104: Alignment-Symmetry Quantization for KAN Tiers
+
+The KAN capability MUST implement ASP-KAN-HAQ (arXiv:2509.07xxx) grid-alignment and symmetry sharing for B-splines.
+
+**Rationale:**
+    Aligning spline knots with quantization grids and using symmetry sharing massively reduces KAN hardware area.
+
+**Acceptance criteria:**
+    - `python/carnot/hardware/asp_kan_quant.py` implements the ASP-KAN-HAQ alignment and symmetry sharing algorithm for B-splines.
+    - Tests verify that the quantized forward pass matches the expected logic compared to the full FP32 pass.
+    - `results/experiment_2104_asp_kan.json` is written with `asp_kan_ready=true`.
+    - Tests pass with 100% coverage.
+
+### SCENARIO-KAN-2104: ASP-KAN-HAQ Grid Alignment
+
+Given a set of B-spline knots and control points,
+When ASP-KAN-HAQ grid alignment and symmetry sharing are applied,
+Then the knots align to the quantization grid, symmetry is enforced, and the quantized forward pass is evaluated, successfully logging to `results/experiment_2104_asp_kan.json`.
