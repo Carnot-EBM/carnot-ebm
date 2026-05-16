@@ -3716,3 +3716,4 @@ Error |
 | 2026-05-16 06:54 UTC | Exp 1974: Phase 3 - Kona-inspired Continuous Laten | OK | 81 passed, 1 warning in 5.08s |
 | 2026-05-16 06:59 UTC | Exp 1975: Phase 3 - Formal Proof Validator Bridge  | OK | 81 passed, 1 warning in 6.06s |
 | 2026-05-16 07:01 UTC | Exp 1976: Phase 3 - Energy Matching Latent Generat | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 07:03 UTC | Exp 1976: Phase 3 - Energy Matching Latent Generat | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
