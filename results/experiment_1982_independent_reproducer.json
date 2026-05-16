@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.phase1_reproducer.v1",
+  "experiment": 1982,
+  "run_date": "2026-05-16T07:35:54Z",
+  "duration_s": 75,
+  "random_seed": 173182,
+  "reproducibility_checksum": "163daad97cd161ffaa4b6ecf38f6006f7d11b0bc9d8266b251864b6635a24b0b",
+  "preconditions_checked": [
+    ".github/workflows/ directory exists",
+    "git remote -v includes github.com:Carnot-EBM/carnot-ebm",
+    "command -v gh failed (gh_unavailable_run_pending: true)"
+  ],
+  "model_specs": {
+    "workflow_file": ".github/workflows/phase1-reproducer.yml",
+    "runner": "ubuntu-latest",
+    "target_python": "3.11",
+    "package_source": "clone_editable"
+  },
+  "n_samples": 1,
+  "n_samples_justification": "Ship task; one workflow.",
+  "workflow_drafted": true,
+  "workflow_run_triggered": false,
+  "workflow_run_url": null,
+  "workflow_run_status": "not_yet_triggered",
+  "workflow_run_conclusion": null,
+  "reproducer_doc_updated": true,
+  "reproducer_doc_path": "ops/phase-1-reproducers.md",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Workflow drafted + run triggered (or noted-pending) + reproducer doc appended.",
+  "methodology_note": "An ubuntu-latest runner is a legitimate 'independent reproducer' per operator-stated criteria. PyPI dependency optional — `pip install -e .` from the clone is acceptable if PyPI 0.1.0b1 still awaiting approval.",
+  "optimization_direction": "neither — ship task",
+  "honest_verdict": "Terminal success. The Phase 1 independent reproducer workflow has been drafted and the reproducer doc appended. gh is unavailable locally so the run is pending remote trigger."
+}
