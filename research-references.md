@@ -13020,3 +13020,22 @@ This sweep was run after milestone `.204` completed. The literature search revea
 - **Paper:** "Energy-Guided Decoding for Object Hallucination Mitigation" (ICLR 2026).
 - **What:** Uses energy scores to dynamically select hidden states from the layer with the minimal energy score to reduce hallucination bias during generation.
 - **Relevance to Carnot:** Enhances the generation phase for local SOTA GGUF models.
+
+## 2026-05-16 Post-.206 Planning Sweep (Milestone 2026.05.207)
+
+This sweep was run after milestone `.206` completed. The literature search revealed significant advances in EBRMs, NeSy-EBMs, formal verification of KANs, and thermodynamic computing.
+
+### Kona: Energy-Based Reasoning Models (EBRMs)
+- **Paper:** "Energy-Based Models for Reasoning, LLMs for the Interface: Scaling Reasoning with Agentic AI" (Bodnia, Hanin, LeCun, Jan 2026).
+- **What:** Introduces Kona 1.0, treating reasoning as a continuous latent space global optimization problem (minimizing an energy Lagrangian), bypassing the limitations of autoregressive next-token prediction.
+- **Relevance to Carnot:** Validates Phase 3 and Phase 4 roadmap. Carnot's local models should adopt continuous optimization paths to replicate Kona's 96.2% Sudoku solve rate.
+
+### Neuro-Symbolic Energy-Based Models (NeSy-EBMs)
+- **Paper:** "Neuro-Symbolic Energy-Based Models" (Late 2025/Early 2026).
+- **What:** Fuses symbolic logic with neural representation learning using energy functions to encode domain knowledge and constraints directly into the network architecture.
+- **Relevance to Carnot:** Connects the KAN symbolization and SMT integration (Phase 1/2) with continuous logic embeddings.
+
+### Generative Thermodynamic Computing & TSU
+- **Papers:** "Generative Thermodynamic Computing" (Whitelam, Jun 2025) and Extropic's TSU platform (Late 2025).
+- **What:** Uses physical stochasticity and "leaky" hardware to perform generative tasks and Gibbs sampling at vastly lower energy costs than GPU simulations.
+- **Relevance to Carnot:** Validates our focus on Thermodynamic Denoising Models (DTM) and physical sampling hardware (like KV260).
