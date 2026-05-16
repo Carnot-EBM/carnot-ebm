@@ -3576,3 +3576,4 @@ IMPORTANT:
 | 2026-05-15 23:58 UTC | Exp 1825: Milestone .190 retrospective | OK | Deliverable already exists in repo |
 | 2026-05-15 23:58 UTC | Milestone 2026.05.191 activated | OK | 13 tasks queued |
 | 2026-05-16 00:04 UTC | Exp 1826: Implement Per-Knot Importance Regulariza | OK | 81 passed, 1 warning in 5.28s |
+| 2026-05-16 00:09 UTC | Exp 1827: Implement Muon-OGD Spectral Orthogonal G | OK | 81 passed, 1 warning in 5.25s |
