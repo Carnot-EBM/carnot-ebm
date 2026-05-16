@@ -3743,3 +3743,4 @@ Error |
 | 2026-05-16 08:39 UTC | Exp 1993: Implement Gradient-Guided Epsilon Constr | OK | cache hit: 81 passed, 1 warning in 5.35s |
 | 2026-05-16 08:46 UTC | Exp 1994: CLaRa-V Continuous Latent Representation | OK | 81 passed, 1 warning in 6.21s |
 | 2026-05-16 08:51 UTC | Exp 1995: PiNet-style differentiable projection la | OK | 81 passed, 1 warning in 5.33s |
+| 2026-05-16 08:53 UTC | Exp 1996: Test CLaRa-V constraints with PiNet proj | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1995-pinet-differentiable-projection.ho |
