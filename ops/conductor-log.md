@@ -3731,3 +3731,4 @@ Error |
 | 2026-05-16 07:32 UTC | Exp 1981: Phase 1 ship — MCP server + CLI integrat | OK | cache hit: 81 passed, 1 warning in 5.26s |
 | 2026-05-16 07:36 UTC | Exp 1982: Phase 1 Independent Reproducer via GitHu | OK | cache hit: 81 passed, 1 warning in 5.26s |
 | 2026-05-16 07:40 UTC | Exp 1983: Carnot CoT2-Meta routing prototype (exte | OK | 81 passed, 1 warning in 5.22s |
+| 2026-05-16 07:46 UTC | Exp 1984: .197 findings audit + corrigenda | OK | 81 passed, 1 warning in 5.27s |
