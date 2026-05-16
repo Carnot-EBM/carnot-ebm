@@ -66,3 +66,9 @@ The system SHALL provide an adapter in `python/carnot/inference/trajectory_decod
 ## SCENARIO-INFER-2073: Trajectory decoding loop
 Given an optimized continuous thought trajectory, the adapter maps it to token probabilities, updating the decoding state, and saves the experiment artifact.
 
+## REQ-INFER-2098: IRED Adaptive Step Loop
+The system SHALL provide an IRED adaptive step optimizer in `python/carnot/inference/ired_optimizer.py`. It MUST implement an adaptive threshold that stops optimization when the energy gradient norm falls below epsilon, varying the number of steps based on constraint difficulty.
+
+## SCENARIO-INFER-2098: Adaptive Energy Gradient Refinement
+Given continuous reasoning states of varying constraint difficulties, the IRED optimizer refines them, exiting early for simpler constraints and using more steps for harder constraints, ultimately saving to `results/experiment_2098_ired_optimizer.json`.
+
