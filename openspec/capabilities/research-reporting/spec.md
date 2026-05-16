@@ -4083,3 +4083,6 @@ The repository shall provide a module `carnot.reporting.experiment_1914_init` to
 
 ### REQ-REPORT-1924: Milestone .195 Terminal Retrospective
 The repository shall provide a module `carnot.reporting.experiment_1924_retro` and a test `tests/python/test_experiment_1924_retro.py` that outputs the milestone retrospective to `results/experiment_1924_retro.json` containing schema `carnot.retro.v1`, experiment `1924`, `retrospective_summary`, and `honest_verdict` formatted as `complete: .195 finished`.
+
+### REQ-REPORT-2001: Findings Audit 2001
+The repository shall provide a module `carnot.pipeline.findings_audit_2001` and a test `tests/python/test_experiment_2001_findings_audit_198.py` to verify the `.198` artifact range (experiments 1980 through 1986). It shall output `results/experiment_2001_findings_audit_198.json` with schema `carnot.findings_audit_corrigenda.v11`, experiment `2001`, and `honest_verdict` starting with a terminal prefix (e.g. `complete:`).
