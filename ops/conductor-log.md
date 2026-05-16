@@ -3748,3 +3748,4 @@ Error |
 | 2026-05-16 08:58 UTC | Exp 1996: Test CLaRa-V constraints with PiNet proj | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1995-pinet-differentiable-projection.ho |
 | 2026-05-16 09:00 UTC | Exp 1997: Integrate GEC into SEAL Continuous Self- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1993-gec-math-core-rust.honest_verdict  |
 | 2026-05-16 09:02 UTC | Exp 1997: Integrate GEC into SEAL Continuous Self- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1993-gec-math-core-rust.honest_verdict  |
+| 2026-05-16 09:04 UTC | Exp 1997: Integrate GEC into SEAL Continuous Self- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1993-gec-math-core-rust.honest_verdict  |
