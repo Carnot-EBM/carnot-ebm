@@ -19054,3 +19054,15 @@ The logic extractor MUST use the `unsloth/gemma-4-26B-A4B-it-GGUF` model to gene
 **Given** an unstructured prompt containing implicit continuous constraints
 **When** the LogicExtractor is invoked
 **Then** it returns a list of ContinuousConstraint objects with type, target, and float values.
+
+### REQ-VERIFY-1975: Formal Bridge to Z3
+
+The system MUST implement a Z3-compatible validator backend for extracted constraints.
+It MUST be capable of routing logic rules to Z3 and evaluating them.
+It MUST report false-accept rates (which must be zero).
+
+### SCENARIO-VERIFY-1975: Formal Bridge Z3 Validation
+
+**Given** extracted constraints
+**When** the Z3-compatible validator backend processes the constraints
+**Then** it routes the logic rules to Z3, evaluates them, and reports a false-accept rate of zero.
