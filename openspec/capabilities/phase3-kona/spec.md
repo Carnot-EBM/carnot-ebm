@@ -2113,3 +2113,15 @@ The Exp 2072 artifact MUST be written to `results/experiment_2072_kona_sudoku.js
 **Then** the continuous grid state is mapped back to valid digits
 **And** the artifact is written to `results/experiment_2072_kona_sudoku.json` with `solved_sudoku=true`.
 
+### REQ-KONA-085: PEM vs Lagrangian Sudoku Comparison
+
+Carnot MUST provide an empirical comparison between the new PEM solver and the prior monolithic Lagrangian solver on a hard Sudoku dataset. The evaluation MUST demonstrate that the PEM solver escapes local minima better, yielding a strictly positive success rate delta.
+The Exp 2085 artifact MUST be written to `results/experiment_2085_pem_sudoku_eval.json` and include the field `success_rate_delta` greater than 0.
+
+### SCENARIO-KONA-085: Exp 2085 Evaluates PEM on Hard Sudoku
+
+**Given** 50 Hard Sudoku instances
+**When** both the PEM solver and the Lagrangian solver are applied
+**Then** the PEM solver achieves a higher success rate
+**And** the artifact is written to `results/experiment_2085_pem_sudoku_eval.json` with a positive `success_rate_delta`.
+
