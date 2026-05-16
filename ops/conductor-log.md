@@ -3880,3 +3880,4 @@ Error |
 | 2026-05-16 17:27 UTC | Milestone 2026.05.206 activated | OK | 14 tasks queued |
 | 2026-05-16 17:31 UTC | Phase 0: Archive .205 and activate .206 | OK | 81 passed, 1 warning in 5.83s |
 | 2026-05-16 17:36 UTC | Phase 1: KAN Symbolization Extractor | OK | 81 passed, 1 warning in 4.76s |
+| 2026-05-16 17:38 UTC | Phase 1: KAN4CBC SMT Verification Integration | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2060-kan-symbolization-extractor.symbol |
