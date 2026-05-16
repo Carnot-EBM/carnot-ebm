@@ -1,283 +1,325 @@
-milestone: "2026.05.208"
-milestone_title: "System-2 Compositional Energy Minimization, HardNet Integrations, and Constrained Augmented Generation"
+milestone: "2026.05.209"
+milestone_title: "Equilibrium Matching, Adaptive Iterative Reasoning, and Hardware-Aware KAN Quantization"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: "exp2082-archive-and-activate"
-    title: "Phase 0: Archive .207 and activate .208"
+  - id: "exp2094-archive-and-activate"
+    title: "Phase 0: Archive .208 and activate .209"
     max_turns: 20
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: We are beginning milestone 2026.05.208. We must archive the previous milestone and update the tracking docs.
+      CONTEXT: We are beginning milestone 2026.05.209. We must archive the previous milestone and update the tracking docs.
       
       EXISTING CODE TO READ FIRST:
       - ops/status.md
       - ops/changelog.md
-      - openspec/change-proposals/research-roadmap-v2026.05.208.md
+      - openspec/change-proposals/research-roadmap-vNEXT.md
       
-      TASK: Rename the previous vNEXT doc if necessary and record the activation of milestone 2026.05.208 in ops/status.md and ops/changelog.md.
+      TASK: Record the activation of milestone 2026.05.209 in ops/status.md and ops/changelog.md.
       
       CONCRETE STEPS:
-      1. Ensure openspec/change-proposals/research-roadmap-v2026.05.208.md exists.
-      2. Update ops/changelog.md to log the start of milestone 2026.05.208.
+      1. Ensure openspec/change-proposals/research-roadmap-vNEXT.md exists.
+      2. Update ops/changelog.md to log the start of milestone 2026.05.209.
       3. Update ops/status.md to reflect the new active milestone and Phase 0 completion.
-      4. Write the terminal deliverable artifact results/experiment_2082_activation.json with honest_verdict="activation_complete".
+      4. Write the terminal deliverable artifact results/experiment_2094_activation.json with honest_verdict="activation_complete".
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2083-pem-composition-module"
-    title: "Phase 1: Compositional Energy Minimization (PEM) Module"
+  - id: "exp2095-eqm-landscape-module"
+    title: "Phase 1: Equilibrium Matching (EqM) Landscape Module"
     max_turns: 50
-    agent_type: "codex"
     prompt: |
-      CONTEXT: Generalizable Reasoning through Compositional Energy Minimization (arXiv:2510.20607) proposes composing small, tractable energy sub-problems.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/phase3/lagrangian_optimizer.py
-      
-      TASK: Implement an EBM Composition module that can sum independent local constraint energy functions into a global landscape.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/phase3/compositional_energy.py.
-      2. Implement a JAX-based composition system that takes multiple callable energy potentials and evaluates them in parallel over the latent state.
-      3. Provide unit test coverage in tests/python/phase3/test_compositional_energy.py.
-      4. Save to results/experiment_2083_pem_composition.json with compositional_energy_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2084-pem-optimizer"
-    title: "Phase 1: Parallel Energy Minimization Optimizer"
-    gated_on:
-      - upstream: "exp2083-pem-composition-module"
-        artifact_field: "compositional_energy_ready"
-        op: "=="
-        value: true
-    max_turns: 50
-    agent_type: "codex"
-    prompt: |
-      CONTEXT: The PEM algorithm conducts stochastic optimization over the composed energy landscape to find the global minimum.
+      CONTEXT: Equilibrium Matching (arXiv:2510.02300) enables generative modeling with implicit EBMs by matching equilibrium gradients.
       
       EXISTING CODE TO READ FIRST:
       - python/carnot/phase3/compositional_energy.py
       
-      TASK: Implement the PEM optimization loop.
+      TASK: Implement the EqM implicit energy landscape and gradient estimator.
       
       CONCRETE STEPS:
-      1. Extend python/carnot/phase3/lagrangian_optimizer.py or create a new PEM optimizer.
-      2. Run gradient-based Langevin dynamics over the composed sub-problem landscapes.
-      3. Write unit tests for convergence on simple composed quadratic wells.
-      4. Save results to results/experiment_2084_pem_optimizer.json with pem_optimizer_ready=true.
+      1. Create python/carnot/phase3/eqm_landscape.py.
+      2. Implement a JAX-based EqM training objective that minimizes the discrepancy between the target data distribution and the model's equilibrium state.
+      3. Provide unit test coverage in tests/python/phase3/test_eqm_landscape.py.
+      4. Save to results/experiment_2095_eqm_landscape.json with eqm_landscape_ready=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2085-pem-vs-lagrangian-sudoku"
-    title: "Phase 1: PEM vs Lagrangian on Hard Sudoku"
+  - id: "exp2096-eqm-composition"
+    title: "Phase 1: EqM Compositional Module"
     gated_on:
-      - upstream: "exp2084-pem-optimizer"
-        artifact_field: "pem_optimizer_ready"
+      - upstream: "exp2095-eqm-landscape-module"
+        artifact_field: "eqm_landscape_ready"
+        op: "=="
+        value: true
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: EqM allows for compositional reasoning by adding energy functions from multiple models.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/phase3/eqm_landscape.py
+      
+      TASK: Combine multiple EqM models for joint constraint satisfaction.
+      
+      CONCRETE STEPS:
+      1. Extend python/carnot/phase3/eqm_landscape.py to support a compositional EqM sum over multiple implicit landscapes.
+      2. Implement sampling from the composed landscape.
+      3. Write unit tests for composed EqM sampling.
+      4. Save results to results/experiment_2096_eqm_composition.json with eqm_composition_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2097-eqm-vs-pem-eval"
+    title: "Phase 1: EqM vs PEM on Constraint Graphs"
+    gated_on:
+      - upstream: "exp2096-eqm-composition"
+        artifact_field: "eqm_composition_ready"
         op: "=="
         value: true
     max_turns: 50
     prompt: |
-      CONTEXT: We must empirically prove that PEM escapes local minima better than the monolithic Lagrangian from Phase 2071.
+      CONTEXT: We must empirically evaluate if EqM provides faster or more stable convergence than the PEM module from .208.
       
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2072_kona_sudoku.py
+      - python/carnot/phase3/eqm_landscape.py
       - python/carnot/phase3/compositional_energy.py
       
-      TASK: Compare the new PEM solver against the monolithic Lagrangian on a hard Sudoku dataset.
+      TASK: Compare EqM with PEM on synthetic combinatorial constraint graphs.
       
       CONCRETE STEPS:
-      1. Create scripts/experiment_2085_pem_sudoku_eval.py.
-      2. Run 50 Hard Sudoku instances using both the PEM solver and the prior Lagrangian solver.
-      3. Measure the success rate (escaped local minima).
-      4. Save results to results/experiment_2085_pem_sudoku_eval.json with success_rate_delta > 0.
+      1. Create scripts/experiment_2097_eqm_eval.py.
+      2. Generate 50 instances of continuous constraint graphs.
+      3. Measure convergence speed and constraint satisfaction rate for both EqM and PEM.
+      4. Save results to results/experiment_2097_eqm_eval.json with eqm_superior=true or false.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2086-hardnet-differentiable-layer"
-    title: "Phase 2: HardNet Differentiable Enforcement Layer"
-    max_turns: 50
-    agent_type: "codex"
-    prompt: |
-      CONTEXT: HardNet (NeurIPS 2025) uses a closed-form differentiable layer to guarantee hard constraint satisfaction in the forward pass.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/kan_smt_verifier.py
-      
-      TASK: Implement a HardNet-style differentiable enforcement layer for logical inequality constraints.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/models/hardnet_layer.py.
-      2. Implement the projection algorithm that clamps continuous latent outputs to the feasible logical bounds.
-      3. Ensure the layer is fully JAX-differentiable and compatible with Optax.
-      4. Save to results/experiment_2086_hardnet_layer.json with hardnet_layer_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2087-hardnet-verification-integration"
-    title: "Phase 2: HardNet Verification Pipeline Integration"
-    gated_on:
-      - upstream: "exp2086-hardnet-differentiable-layer"
-        artifact_field: "hardnet_layer_ready"
-        op: "=="
-        value: true
+  - id: "exp2098-ired-adaptive-optimizer"
+    title: "Phase 2: IRED Adaptive Optimizer"
     max_turns: 50
     prompt: |
-      CONTEXT: The HardNet layer must be integrated into our verification pipeline as a faster alternative to SMT or KAN-based solvers.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py
-      - python/carnot/models/hardnet_layer.py
-      
-      TASK: Integrate the HardNet layer into the `VerifyRepairPipeline`.
-      
-      CONCRETE STEPS:
-      1. Modify or extend `VerifyRepairPipeline` to accept a HardNet-based verification path.
-      2. Convert symbolic constraints (like bounding boxes or numerical limits) into the HardNet layer tensors.
-      3. Write tests validating that the pipeline can use this layer to score and correct states.
-      4. Save to results/experiment_2087_hardnet_pipeline.json with hardnet_integrated=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2088-hardnet-zero-false-accept-benchmark"
-    title: "Phase 2: HardNet Zero-False-Accept Graph Coloring"
-    gated_on:
-      - upstream: "exp2087-hardnet-verification-integration"
-        artifact_field: "hardnet_integrated"
-        op: "=="
-        value: true
-    max_turns: 50
-    prompt: |
-      CONTEXT: We must prove that the new HardNet pipeline component has zero false accepts on combinatorial constraints like Graph Coloring.
-      
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2076_nesy_verification.py
-      
-      TASK: Run a Graph Coloring benchmark using the HardNet layer and verify the outputs deterministically.
-      
-      CONCRETE STEPS:
-      1. Create scripts/experiment_2088_hardnet_graph_coloring.py.
-      2. Train the HardNet model to generate colored graphs subject to vertex constraint inequalities.
-      3. Verify 100 generated graphs manually to ensure zero constraint violations.
-      4. Save to results/experiment_2088_hardnet_graph_coloring.json with violations=0.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2089-crane-augmented-grammar"
-    title: "Phase 3: CRANE Augmented Grammar Adapter"
-    max_turns: 50
-    agent_type: "codex"
-    prompt: |
-      CONTEXT: CRANE (ICML 2025) interleaves constrained and unconstrained decoding to allow reasoning before strict grammar formatting.
+      CONTEXT: IRED (arXiv:2406.11179) uses an adaptive number of optimization steps based on energy gradients to iteratively refine reasoning traces.
       
       EXISTING CODE TO READ FIRST:
       - python/carnot/inference/trajectory_decoder.py
       
-      TASK: Implement an Augmented Grammar Decoder for local models.
+      TASK: Implement the IRED adaptive step loop based on energy gradients.
       
       CONCRETE STEPS:
-      1. Create python/carnot/inference/crane_decoder.py.
-      2. In MODEL_SPECS, include 'unsloth/gemma-4-31B-it-GGUF' and 'unsloth/Qwen3.6-35B-A3B-GGUF'.
-      3. Implement logic that applies standard logits until a specific trigger token is generated, and then strictly applies a BNF grammar constraint for the final output schema.
-      4. Save results to results/experiment_2089_crane_decoder.json with crane_ready=true.
+      1. Create python/carnot/inference/ired_optimizer.py.
+      2. Implement an adaptive threshold that stops optimization when the energy gradient norm falls below epsilon.
+      3. Add tests verifying that simpler constraints exit early while harder constraints use more steps.
+      4. Save to results/experiment_2098_ired_optimizer.json with ired_optimizer_ready=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2090-crane-humaneval-pass"
-    title: "Phase 3: CRANE Decoder HumanEval Benchmark"
+  - id: "exp2099-ired-constraint-learning"
+    title: "Phase 2: IRED Constraint Learning"
     gated_on:
-      - upstream: "exp2089-crane-augmented-grammar"
-        artifact_field: "crane_ready"
+      - upstream: "exp2098-ired-adaptive-optimizer"
+        artifact_field: "ired_optimizer_ready"
         op: "=="
         value: true
     max_turns: 50
     prompt: |
-      CONTEXT: We must verify that CRANE's flexible reasoning block improves performance over rigid initial grammar constraints.
+      CONTEXT: IRED learns energy functions that map input constraints to desired outputs.
       
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2012_e2e.py
-      - python/carnot/inference/crane_decoder.py
+      - python/carnot/inference/ired_optimizer.py
       
-      TASK: Run HumanEval using both rigid schema decoding and CRANE augmented decoding.
+      TASK: Train IRED to map input constraints to continuous latent outputs.
       
       CONCRETE STEPS:
-      1. Create scripts/experiment_2090_crane_humaneval.py using 'unsloth/gemma-4-31B-it-GGUF'.
-      2. Evaluate 50 HumanEval problems requiring structured JSON output.
-      3. Compare Pass@1 of CRANE against rigid start-to-finish grammar enforcement.
-      4. Save to results/experiment_2090_crane_humaneval.json with pass_rate_delta > 0.
+      1. Create scripts/experiment_2099_ired_training.py.
+      2. Use a synthetic dataset of logic constraints and run a small training loop.
+      3. Validate that the learned IRED energy function correctly minimizes at valid states.
+      4. Save to results/experiment_2099_ired_training.json with ired_training_successful=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2091-csl-grammar-violation-updates"
-    title: "Phase 3: Tier 1 CSL Grammar Updates"
+  - id: "exp2100-ired-sota-integration"
+    title: "Phase 2: IRED SOTA GGUF Integration"
     gated_on:
-      - upstream: "exp2090-crane-humaneval-pass"
-        artifact_field: "pass_rate_delta"
-        op: ">"
-        value: 0.0
-    max_turns: 50
-    prompt: |
-      CONTEXT: The PRD mandates Continuous Self-Learning (CSL). Here, we update grammar rule weights based on energy evaluations.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/crane_decoder.py
-      - python/carnot/pipeline/constraint_template_library.py
-      
-      TASK: Implement online weight updates to the grammar probabilities based on post-generation constraint checks.
-      
-      CONCRETE STEPS:
-      1. Create scripts/experiment_2091_csl_grammar.py.
-      2. Track which rules in the augmented grammar trigger logical violations in a test set.
-      3. Update running counter weights (Tier 1 CSL) to bias future decoding against the failing rule structures.
-      4. Save to results/experiment_2091_csl_grammar.json with tier1_csl_active=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2092-full-integration-benchmark"
-    title: "Phase 4: Full Integration Benchmark (PEM + HardNet + CRANE)"
-    gated_on:
-      - upstream: "exp2091-csl-grammar-violation-updates"
-        artifact_field: "tier1_csl_active"
+      - upstream: "exp2099-ired-constraint-learning"
+        artifact_field: "ired_training_successful"
         op: "=="
         value: true
     max_turns: 80
     model: "opus"
     prompt: |
-      CONTEXT: We must validate the complete System-2 loop combining composed energy minimization, hard constraints, and augmented decoding.
+      CONTEXT: IRED must be integrated into the live decoding loop of our mandated local SOTA models to guide generation.
       
       EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2085_pem_sudoku_eval.py
-      - scripts/experiment_2088_hardnet_graph_coloring.py
-      - scripts/experiment_2090_crane_humaneval.py
+      - python/carnot/inference/ired_optimizer.py
       
-      TASK: Build an end-to-end multi-step reasoning integration test.
+      TASK: Hook IRED optimizer into the local GGUF decoding loop.
       
       CONCRETE STEPS:
-      1. Create scripts/experiment_2092_full_integration.py.
-      2. Use CRANE to generate a multi-step constraint satisfaction problem.
-      3. Route it to PEM for solution search, passing through the HardNet layer to guarantee bounds.
-      4. Measure overall pipeline latency and success rate.
-      5. Save to results/experiment_2092_full_integration.json with integration_successful=true.
+      1. Create scripts/experiment_2100_ired_sota.py.
+      2. In MODEL_SPECS, use 'unsloth/gemma-4-31B-it-GGUF' and 'unsloth/gemma-4-26B-A4B-it-GGUF'.
+      3. Wrap the generation pipeline with the IRED adaptive refinement step, using local model logits.
+      4. Run 10 benchmark problems and measure constraint pass rate.
+      5. Save to results/experiment_2100_ired_sota.json with ired_integrated=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2093-milestone-208-retro"
-    title: "Phase 4: Milestone 2026.05.208 Retrospective"
-    max_turns: 20
+  - id: "exp2101-csl-ired-feedback"
+    title: "Phase 3: CSL IRED Feedback Loop"
+    gated_on:
+      - upstream: "exp2100-ired-sota-integration"
+        artifact_field: "ired_integrated"
+        op: "=="
+        value: true
+    max_turns: 50
     prompt: |
-      CONTEXT: The milestone is complete and we must summarize results.
+      CONTEXT: Our PRD requires Continuous Self-Learning. We will update IRED energy functions online from constraint violations.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/constraint_template_library.py
+      - scripts/experiment_2100_ired_sota.py
+      
+      TASK: Implement an online update mechanism for the IRED energy landscape using deterministic verifier feedback.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2101_csl_ired.py.
+      2. Simulate a failure trace, run a deterministic verifier, and use the error signal to adjust the IRED energy function.
+      3. Show that the model avoids the same failure in the next step.
+      4. Save to results/experiment_2101_csl_ired.json with csl_ired_active=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2102-csl-eqm-memory"
+    title: "Phase 3: CSL EqM Memory Promotion"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Successful EqM composed landscapes should be promoted to Tier 2 continuous memory for future reuse.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/phase3/eqm_landscape.py
+      
+      TASK: Build a memory cache that saves and retrieves converged EqM landscapes.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2102_eqm_memory.py.
+      2. Implement a simple JSON/Safetensors serialization for EqM parameters.
+      3. Retrieve and hot-start EqM on a similar problem.
+      4. Save to results/experiment_2102_eqm_memory.json with memory_promotion_successful=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2103-csl-zero-forgetting-eval"
+    title: "Phase 3: CSL Zero-Forgetting Evaluation"
+    gated_on:
+      - upstream: "exp2101-csl-ired-feedback"
+        artifact_field: "csl_ired_active"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must verify that CSL updates do not cause catastrophic forgetting of previously verified constraints.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2101_csl_ired.py
+      
+      TASK: Run a zero-forgetting evaluation gate for the CSL loop.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2103_csl_forgetting.py.
+      2. Apply sequential constraint updates.
+      3. Verify that the performance on the first constraint does not degrade.
+      4. Save to results/experiment_2103_csl_forgetting.json with nonforgetting_rate=1.0.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2104-asp-kan-haq-quantization"
+    title: "Phase 4: ASP-KAN-HAQ Hardware Quantization"
+    max_turns: 50
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: ASP-KAN-HAQ (arXiv:2509.07xxx) aligns spline knots with quantization grids to massively reduce KAN hardware area.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/kan_tier.py
+      
+      TASK: Implement Alignment-Symmetry Quantization for Carnot's KAN tiers.
+      
+      CONCRETE STEPS:
+      1. Create python/carnot/hardware/asp_kan_quant.py.
+      2. Implement the grid-alignment and symmetry sharing algorithm for B-splines.
+      3. Test the quantized forward pass against the full FP32 pass.
+      4. Save to results/experiment_2104_asp_kan.json with asp_kan_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2105-asp-kan-hardware-accounting"
+    title: "Phase 4: ASP-KAN-HAQ Hardware Accounting"
+    gated_on:
+      - upstream: "exp2104-asp-kan-haq-quantization"
+        artifact_field: "asp_kan_ready"
+        op: "=="
+        value: true
+    max_turns: 20
+    model: "opus"
+    prompt: |
+      CONTEXT: We need explicit platform-independent metrics (LUTs, BOPs, area) for our KANs without requiring a full Vivado synthesis run.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/hardware/asp_kan_quant.py
+      
+      TASK: Run no-synthesis hardware accounting for the quantized ASP-KAN.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2105_kan_accounting.py.
+      2. Calculate the theoretical LUT count and NABS (Number of Additions and Bit-Shifts) for a 3-layer ASP-KAN.
+      3. Compare the area estimate to a non-quantized KAN baseline.
+      4. Save to results/experiment_2105_kan_accounting.json with estimated_area_reduction > 1.0 and hardware_execution_claim=false.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2106-full-integration-benchmark"
+    title: "Phase 4: Full E2E Integration Benchmark"
+    gated_on:
+      - upstream: "exp2100-ired-sota-integration"
+        artifact_field: "ired_integrated"
+        op: "=="
+        value: true
+    max_turns: 80
+    agent_type: "gemini"
+    prompt: |
+      CONTEXT: Final verification of the milestone: End-to-end continuous generation with EqM landscapes and IRED adaptation on SOTA GGUFs.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2097_eqm_eval.py
+      - scripts/experiment_2100_ired_sota.py
+      
+      TASK: Run a comprehensive E2E integration test with 'unsloth/Qwen3.6-35B-A3B-GGUF'.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2106_full_e2e.py.
+      2. Compose multiple EqM constraint landscapes.
+      3. Use IRED to adaptively refine the GGUF generation trace to satisfy all EqM constraints.
+      4. Verify final states with deterministic solvers.
+      5. Save to results/experiment_2106_full_e2e.json with integration_successful=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2107-milestone-209-retro"
+    title: "Phase 4: Milestone 2026.05.209 Retrospective"
+    max_turns: 30
+    agent_type: "claude"
+    prompt: |
+      CONTEXT: The milestone is complete. Summarize findings for EqM, IRED, and ASP-KAN-HAQ.
       
       EXISTING CODE TO READ FIRST:
       - ops/status.md
       - ops/changelog.md
-      - ops/metrics.md
       
       TASK: Produce the milestone retrospective artifact.
       
       CONCRETE STEPS:
-      1. Compile the success/failure state of all Exp 2083-2092 deliverables.
-      2. Analyze if the three gaps (PEM, HardNet, CRANE) were successfully closed.
-      3. Save to results/experiment_2093_retro.json.
+      1. Compile the success/failure state of all Exp 2094-2106 deliverables.
+      2. Analyze if EqM improved continuous reasoning and if ASP-KAN reduced theoretical hardware area.
+      3. Save to results/experiment_2107_retro.json with honest_verdict="retrospective_complete".
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
