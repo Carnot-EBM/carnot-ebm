@@ -53,3 +53,10 @@ The system must provide an RLS feedback loop stub that evaluates partial reasoni
 
 ## SCENARIO-EBT-203: RLS Stub Evaluation
 Given a partial reasoning trace, the RLS verifier evaluates it, returning a higher energy value for logical inconsistencies, and outputs the result in results/experiment_203_rls.json.
+
+## REQ-EBT-2031: EBT Gemma Integration
+The system must support scoring partial reasoning traces via an EBT wrapper using `unsloth/gemma-4-31B-it-GGUF`.
+
+## SCENARIO-EBT-2031: Energy-guided decoding loop
+Given an initial trace and a set of candidates, the wrapper computes the EBT energy objective using the RLS verifier to select the candidate with the lowest energy, outputting the result to results/experiment_2031.json.
+
