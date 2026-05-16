@@ -3888,3 +3888,5 @@ Error |
 | 2026-05-16 17:48 UTC | Phase 1: LUT-based KAN deployment simulation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 17:50 UTC | Phase 2: EBM-CoT Latent Calibration Hook | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 17:52 UTC | Phase 2: EBM-CoT Latent Calibration Hook | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 17:54 UTC | Phase 2: EBM-CoT Latent Calibration Hook | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 17:56 UTC | Phase 2: Geometric Regulation via Ising | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
