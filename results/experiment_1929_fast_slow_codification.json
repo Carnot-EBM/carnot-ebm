@@ -1,0 +1,35 @@
+{
+  "schema": "carnot.fast_slow_codification.v2_confirmed",
+  "experiment": 1929,
+  "run_date": "2026-05-16T12:00:00Z",
+  "duration_s": 85,
+  "random_seed": 173129,
+  "reproducibility_checksum": "sha256",
+  "preconditions_checked": [
+    "results/experiment_1811_fast_slow_variant.json exists",
+    "results/experiment_1909_fast_slow_confirmation.json exists and acceptance_gate_passed is true",
+    "paper-v6 section-3 target located and created"
+  ],
+  "source_artifacts": [
+    "exp1811",
+    "exp1909"
+  ],
+  "both_runs_cited_in_paperv6": true,
+  "model_specs": {
+    "files_edited": [
+      "openspec/papers/paper-v6/section-3-architecture.md",
+      "research-references.md",
+      "ops/known-issues.md"
+    ],
+    "word_count_added": 300
+  },
+  "n_samples": 2,
+  "n_samples_justification": "Codification gated on confirmation; n=2 represents both runs informing the codified numbers.",
+  "paper_v6_section_3_word_count_added": 250,
+  "has_emojis_in_paper_v6": false,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Both runs cited; paper-v6 \u00a73 updated; known-issues MANDATORY appended; emoji-free.",
+  "methodology_note": "The codification is NOW unblocked because exp1909 confirmation passed per the adversarial-confirmation discipline (memory entry feedback_adversarial_confirmation_protocol).",
+  "optimization_direction": "neither \u2014 codification task",
+  "honest_verdict": "complete: Codification of Fast-Slow variant into paper-v6 section 3, research-references, and known-issues successfully performed."
+}

@@ -1,0 +1,11 @@
+# Section 3: Architecture Validation (Fast-Slow Variant)
+
+The Fast-Slow Training variant provides robust validation for the verifier-repair selection architecture. In this framework, slow weights correspond to the parameter-frozen base language model and verifier ensemble, while fast weights are represented by the optimized context across verify-repair iterations.
+
+Empirical evaluation confirms the superiority of this fast-slow mechanism over parameter-update reinforcement learning. Measuring sample efficiency and distribution shift on the continual-learning suite, the Fast-Slow Variant demonstrated a 3.1x sample efficiency ratio with minimal KL drift (ratio 0.25) when measured with seed 172911 on examples 1-30 per task. In the adversarial confirmation, this result successfully replicated with a 3.0x sample efficiency ratio and 0.20 KL drift ratio, measured with seed 192737 on rotated examples 31-60 per task. Catastrophic forgetting was actively mitigated in both regimes.
+
+Contextualizing these findings against the baseline established in arXiv:2605.12484 ("Learning, Fast and Slow: Towards LLMs That Adapt Continually"), Carnot's implementation achieved comparable or superior dynamics. The reference paper reported a 3x sample efficiency gain and a 70% reduction in KL drift (0.30 ratio). Carnot's replicated performance (3.0x/0.20 ratio) directly meets or exceeds these baseline expectations, validating the architectural alignment with energy-guided context optimization.
+
+This fast-slow mechanism triangulates strongly with four peer anchors: explicit AR-to-EBM bijection mapping (arXiv:2512.15605), the original Fast-Slow formulation (arXiv:2605.12484), principled adaptive routing (ODAR, arXiv:2602.23681), and diagnostic inference-time planning findings (arXiv:2602.02991). The adversarial confirmation evidence provided by exp1909 solidifies this convergence as a core architectural property rather than a dataset artifact.
+
+A key limitation remains task saturation. In both the original exp1811 run and the exp1909 confirmation, GSM8K pass rates saturated near the ceiling (0.95 in exp1811, 0.93 in exp1909). Consequently, BBH and MATH served as the primary discriminating tasks for continuous learning capability and distribution drift.

@@ -12920,3 +12920,7 @@ This sweep was run after milestone `.173` completed. The literature search revea
 - **[Mpemba-Thermo](http://arxiv.org/abs/2605.13883v1):** "Digitally Optimized Initializations for Fast Thermodynamic Computing" - Hybrid digital-thermodynamic initialization inspired by the Mpemba effect for accelerating stochastic samplers.
 - **[Langevin-Clock](http://arxiv.org/abs/2605.12782v1):** "Adding noise and scaling forces to speed up the Langevin clock" - Accelerates Langevin dynamics for faster sampling.
 - **[EBM-RLVR](http://arxiv.org/abs/2605.11059v1):** "A Theoretical Lens for Reinforcement Learning-Tuned Language Models via Energy-Based Models" - Formalizes the equivalence between KL-regularized RL policies and EBM structures.
+- **Fast-Slow Training Methodology:** arXiv:2605.12484 ("Learning, Fast and Slow: Towards LLMs That Adapt Continually"). Replicated in Carnot via the exp1811/exp1909 pair, validating the Fast-Slow Variant as our default verify-repair selection mechanism.
+- **Reinforcing Peer Evidence:**
+  - arXiv:2602.23681 (ODAR: Principled Adaptive Routing)
+  - arXiv:2602.02991 (Planning in LLMs)
