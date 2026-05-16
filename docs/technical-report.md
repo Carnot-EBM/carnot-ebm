@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,330 Experiments Across the Public Record, 219 Archived Milestone Records, 25,193 Python Test Items Collected (Results and Ops Retros Through Exp 2214)
+## A Technical Report — 3,330 Experiments Across the Public Record, 220 Archived Milestone Records, 25,193 Python Test Items Collected (Results and Ops Retros Through Exp 2214)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -31,7 +31,7 @@ adversarial-audit results are labeled by artifact provenance.
 
 This report summarizes 3,330 experiments across 219 milestones up to .205, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **3,330 experiment records tracked through Exp 2214, with 2,583 task records in 219 artifact-backed completed milestone records archived through 2026.05.205** — run between February and May 2026. `research-complete.yaml` currently archives **217** completed milestone records through 2026.05.202. Milestone 2026.05.205 completed **27** experiments in **80.4** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
+This report documents the research arc behind the framework — **3,330 experiment records tracked through Exp 2214, with 2,583 task records in 220 artifact-backed completed milestone records archived through 2026.05.206** — run between February and May 2026. `research-complete.yaml` currently archives **219** completed milestone records through 2026.05.205. Milestone 2026.05.205 completed **27** experiments in **80.4** minutes, with all tasks being synthesis-only and GPUs correctly idled at 0% utilization. The slowest paths remain synthesis-only orchestration tasks.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5570,3 +5570,9 @@ Across milestones 192 through 205, the pipeline analyzed numerous experiments he
 
 **Live Artifact Provenance Tracking**
 Routine tracking of live GPU execution confirmed expected behavior without anomalous idling flags. Ongoing updates have maintained strict documentation of the provenance and integrity of hardware acceleration traces.
+
+
+### 4.31 Recent Additions (Milestone .206)
+
+**Milestone 2026.05.206 Operational Retrospective**  
+Milestone 2026.05.206 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.206. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.

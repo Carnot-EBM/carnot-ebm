@@ -3,11 +3,12 @@ license: apache-2.0
 ---
 # Carnot EBM Framework
 
-This project tracks **3,330** experiment records through Exp 2214 across **219** milestone records (latest 2026.05.205).
+This project tracks **3,330** experiment records through Exp 2214 across **220** milestone records (latest 2026.05.206).
 
 ## Key Results Table
 | Milestone | Status | Description |
 |---|---|---|
+| .206 | Complete | 0 experiments, 0 min wall time. GPUs idle. |
 | .205 | Complete | 27 experiments, 80.4 min wall time. All tasks synthesis-only, GPUs correctly idle. |
 | .204 | Complete | 221 experiments, 470 min wall time. GPUs idle. |
 | .202 | Complete | 10 experiments, 17.1 min wall time. GPUs idle. |
