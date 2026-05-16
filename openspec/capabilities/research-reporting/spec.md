@@ -4074,3 +4074,6 @@ The repository shall provide an audit script `scripts/audit_1717.py` that verifi
 **Given** the artifact sources in `results/` for .186 and .187,
 **When** Exp 1796 runs,
 **Then** it writes all required REQ-REPORT-1796 fields, identifies flagged artifacts using `adversarial_verify.py`, applies correct classifications, appends corrigenda fields to the flagged artifacts, and produces an honest_verdict prefixed with `complete:`.
+
+### REQ-REPORT-194: Milestone .194 Operational Retrospective
+The repository shall provide a script to generate the .194 operational retrospective JSON, outputting to `results/operational_retro_2026_05_194.json`. It must contain a schema of `carnot.operational_retro.v64`, milestone `2026.05.194`, and specific flag fields `adversarial_confirmation_result`, `pypi_ship_result`, and `phase4_closure_result`.
