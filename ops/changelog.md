@@ -5887,3 +5887,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 1923: CEM Proof of Concept on 3-SAT (Local SOTA) (✅ Complete) — honest_verdict=complete: 3-SAT solved with CEM; results/experiment_1923_cem_poc.json
 - 2026-05-16: Exp 1924: .195 Milestone Retrospective (✅ Complete) — honest_verdict=complete: .195 finished; results/experiment_1924_retro.json
 - 2026-05-16: Exp 1929: Codify exp1811 + exp1909 Fast-Slow Variant CONFIRMED result into paper-v6 §3 (✅ Complete) — honest_verdict=complete: Codification of Fast-Slow variant into paper-v6 section 3, research-references, and known-issues successfully performed.; results/experiment_1929_fast_slow_codification.json
+- 2026-05-16: Exp 1930: PyPI workflow status check (v0.1.0b1 tag pushed; workflow waiting on operator approval) (⚠️ Research Finding) — honest_verdict=success: operator manual approval required at GH Environment 'pypi'; results/experiment_1930_pypi_status.json
