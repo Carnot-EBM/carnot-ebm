@@ -3651,3 +3651,4 @@ IMPORTANT:
 | 2026-05-16 02:36 UTC | Exp 1908: Implement NEXUS Symbolic Continual Learn | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.52s |
 | 2026-05-16 02:38 UTC | Exp 1908: Implement NEXUS Symbolic Continual Learn | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.26s |
 | 2026-05-16 02:43 UTC | Exp 1909: Implement Wahkon Deep RKHS Superposition | OK | 81 passed, 1 warning in 5.10s |
+| 2026-05-16 02:45 UTC | Exp 1910: gated on Exp 1909 success: Benchmark Wah | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1909-wahkon.success (actual=None == exp |
