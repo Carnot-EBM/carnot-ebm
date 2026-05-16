@@ -3902,3 +3902,6 @@ Error |
 | 2026-05-16 18:32 UTC | Phase 3: FR-11 CSL with EBRM feedback (Zero-forget | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 18:34 UTC | Phase 4: SOTA E2E Benchmark on EBM-CoT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
 | 2026-05-16 18:34 UTC | Phase 4: CSL Delta Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2069-fr11-csl-ebrm-feedback) |
+| 2026-05-16 18:35 UTC | Phase 4: Milestone .206 Retrospective | FAIL | Claude Code error: Error: Reached max turns (20) |
+| 2026-05-16 18:37 UTC | Phase 4: SOTA E2E Benchmark on EBM-CoT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
+| 2026-05-16 18:37 UTC | Phase 4: CSL Delta Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2069-fr11-csl-ebrm-feedback) |
