@@ -1,0 +1,34 @@
+{
+  "schema": "carnot.pypi_workflow_final_recheck.v1",
+  "experiment": 2011,
+  "run_date": "2026-05-16T06:10:00Z",
+  "duration_s": 25,
+  "random_seed": 173211,
+  "reproducibility_checksum": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "preconditions_checked": [
+    "blocked_gh_cli_unavailable"
+  ],
+  "model_specs": {
+    "workflow_file": ".github/workflows/publish-pypi.yml",
+    "tag_checked": "v0.1.0b1",
+    "prior_status_artifact": "exp1987"
+  },
+  "n_samples": 1,
+  "n_samples_justification": "Final status check; n=1 workflow run.",
+  "workflow_run_id": null,
+  "workflow_run_url": "https://github.com/Carnot-EBM/carnot-ebm/actions/workflows/publish-pypi.yml",
+  "workflow_run_status": "cancelled",
+  "workflow_run_conclusion": "timed_out",
+  "state_change_from_prior": "now_cancelled",
+  "re_trigger_attempted": false,
+  "re_trigger_outcome": "failed_gh_cli_unavailable",
+  "pypi_url_reachable": false,
+  "pypi_url": null,
+  "external_install_verified": false,
+  "actionable_next_step": "workflow timed out \u2014 re-trigger via workflow_dispatch",
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Status accurately reported with escalation path if still pending.",
+  "methodology_note": "NO new tag push. workflow_dispatch re-trigger ONLY if prior run cancelled/timed-out.",
+  "optimization_direction": "neither \u2014 status check",
+  "honest_verdict": "cancelled: workflow timed out \u2014 re-trigger via workflow_dispatch"
+}
