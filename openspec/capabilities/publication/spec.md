@@ -910,3 +910,6 @@ The PyPI publish dry run MUST produce an artifact at `results/experiment_2103_py
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
+
+### REQ-PUBLISH-027: Position Paper Nexus
+The experiment 1913 architecture paper workflow MUST draft the position paper nexus and update the architecture document. It MUST produce an artifact at `results/experiment_1913_arch_paper.json` with the schema `carnot.arch_paper.v1` and record the status and an honest verdict indicating readiness.
