@@ -5934,3 +5934,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 2010: EBM Hardware-Accelerated Sampling (Langevin Dynamics) (✅ Complete) — honest_verdict=success: vectorized_langevin_benchmark_complete; results/experiment_2010_langevin.json
 - 2026-05-16: Exp 2011: Verify Model Fidelity Post-ROCm Port (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2011_fidelity.json
 - 2026-05-16: Exp 2012: End-to-End Test Plan Execution (Spec-Anchored) (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2012_e2e.json
+- 2026-05-16: Exp 2013: Update Dashboard & PRD Traceability (⚠️ Research Finding) — honest_verdict=reconciliation_delegated_to_haiku; results/experiment_2013_prd.json
