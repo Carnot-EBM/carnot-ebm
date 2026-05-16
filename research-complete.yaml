@@ -11113,3 +11113,61 @@ milestones:
     title: 'Exp 1825: Milestone .190 retrospective'
     deliverable: results/operational_retro_2026_05_190.json
     result: OK (conductor)
+- id: 2026.05.191
+  title: ActFocus Agentic RL + KAN-CL Continual Learning + Thermodynamic Langevin Sampler
+  doc: openspec/change-proposals/research-roadmap-vNEXT.md
+  completed: '2026-05-16'
+  finding: See conductor log for per-experiment results.
+  tasks:
+  - id: exp1826-kan-cl-implementation
+    title: 'Exp 1826: Implement Per-Knot Importance Regularization for KAN continual learning'
+    deliverable: python/carnot/models/kan_cl.py
+    result: OK (conductor)
+  - id: exp1827-muon-ogd-projection
+    title: 'Exp 1827: Implement Muon-OGD Spectral Orthogonal Gradient Projection'
+    deliverable: python/carnot/models/muon_ogd.py
+    result: OK (conductor)
+  - id: exp1828-continual-learning-eval
+    title: 'Exp 1828: Evaluate KAN-CL vs Muon-OGD on FR-11 retention task'
+    deliverable: results/experiment_1828_cl_eval.json
+    result: OK (conductor)
+  - id: exp1829-actfocus-token-energy
+    title: 'Exp 1829: Implement ActFocus Token-Level Energy Reweighting for GRPO'
+    deliverable: python/carnot/pipeline/actfocus_grpo.py
+    result: OK (conductor)
+  - id: exp1830-actfocus-grpo-training
+    title: 'Exp 1830: Train model using ActFocus GRPO on reasoning trajectories'
+    deliverable: results/experiment_1830_actfocus_train.json
+    result: OK (conductor)
+  - id: exp1831-actfocus-eval
+    title: 'Exp 1831: Evaluate ActFocus GRPO against baseline GRPO'
+    deliverable: results/experiment_1831_actfocus_eval.json
+    result: OK (conductor)
+  - id: exp1832-mpemba-thermo-init
+    title: 'Exp 1832: Implement Mpemba-inspired Hybrid Digital-Thermodynamic Initialization'
+    deliverable: python/carnot/samplers/thermo_init.py
+    result: OK (conductor)
+  - id: exp1833-langevin-clock-rescale
+    title: 'Exp 1833: Implement Langevin clock acceleration via force and noise scaling'
+    deliverable: python/carnot/samplers/langevin_clock.py
+    result: OK (conductor)
+  - id: exp1834-accelerated-sampler-benchmark
+    title: 'Exp 1834: Benchmark Mpemba and Clock Rescaled Langevin samplers'
+    deliverable: results/experiment_1834_sampler_benchmark.json
+    result: OK (conductor)
+  - id: exp1835-ebm-rlvr-theory
+    title: 'Exp 1835: Author theory writeup formalizing EBM-RLVR equivalence'
+    deliverable: docs/technical-report/ebm_rlvr_theory.md
+    result: OK (conductor)
+  - id: exp1836-e2e-integration-test
+    title: 'Exp 1836: Integrate ActFocus + KAN-CL + Accelerated Langevin into E2E pipeline'
+    deliverable: scripts/experiment_1836_e2e_integration.py
+    result: OK (conductor)
+  - id: exp1837-e2e-benchmark
+    title: 'Exp 1837: Run E2E pipeline on full GSM8K suite with flagship MoE'
+    deliverable: results/experiment_1837_e2e_benchmark.json
+    result: OK (conductor)
+  - id: exp1838-milestone-191-retro
+    title: 'Exp 1838: Operational retrospective for 2026.05.191'
+    deliverable: results/operational_retro_2026_05_191.json
+    result: OK (conductor)
