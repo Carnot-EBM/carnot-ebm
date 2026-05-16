@@ -3749,3 +3749,4 @@ Error |
 | 2026-05-16 09:00 UTC | Exp 1997: Integrate GEC into SEAL Continuous Self- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1993-gec-math-core-rust.honest_verdict  |
 | 2026-05-16 09:02 UTC | Exp 1997: Integrate GEC into SEAL Continuous Self- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1993-gec-math-core-rust.honest_verdict  |
 | 2026-05-16 09:04 UTC | Exp 1997: Integrate GEC into SEAL Continuous Self- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1993-gec-math-core-rust.honest_verdict  |
+| 2026-05-16 09:10 UTC | Exp 1998: Continuous test-time reasoning via CLaRa | OK | 81 passed, 1 warning in 5.59s |
