@@ -3781,3 +3781,4 @@ Error |
 | 2026-05-16 10:59 UTC | Exp 2006: Self-Distillation over Z3-verified respo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2005-auto-dataset-gen-z3.verified_count |
 | 2026-05-16 11:01 UTC | Exp 2006: Self-Distillation over Z3-verified respo | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2005-auto-dataset-gen-z3.verified_count |
 | 2026-05-16 11:03 UTC | Exp 2007: Continuous Epsilon Decay Evaluation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 11:05 UTC | Exp 2007: Continuous Epsilon Decay Evaluation | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
