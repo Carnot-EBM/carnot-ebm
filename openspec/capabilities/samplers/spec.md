@@ -561,5 +561,16 @@ Sub-requirements:
 **When** `langevin_step_vectorized` is executed
 **Then** it successfully computes the next states for the entire batch simultaneously.
 
+### REQ-SAMPLE-2011: ROCm Langevin Sampler Fidelity
 
+Carnot MUST provide an experiment script `scripts/experiment_2011_fidelity.py` to calculate the KL divergence (or divergence metric) between the CPU and mock GPU Langevin sampler exact counts.
 
+Sub-requirements:
+- REQ-SAMPLE-2011-1: The script SHALL evaluate divergence between CPU and mock GPU Langevin sampler.
+- REQ-SAMPLE-2011-2: The KL divergence and fidelity validation SHALL be saved to `results/experiment_2011_fidelity.json`.
+
+### SCENARIO-SAMPLE-2011: ROCm Langevin Fidelity Validation
+
+**Given** the ROCm Langevin sampler fidelity script is executed
+**When** it calculates divergence between CPU and mock GPU samplers
+**Then** it writes the result to `results/experiment_2011_fidelity.json`
