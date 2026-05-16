@@ -3642,3 +3642,5 @@ IMPORTANT:
 | 2026-05-16 02:23 UTC | Exp 1905: Implement AdamFLIP Hard Constraints | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.03s |
 | 2026-05-16 02:25 UTC | Exp 1905: Implement AdamFLIP Hard Constraints | SKIP | Pre-tests failing, self-heal failed: 2 failed, 79 passed, 1 warning in 5.30s |
 | 2026-05-16 02:27 UTC | Exp 1906: gated on Exp 1905 success: Evaluate Adam | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-adamflip) |
+| 2026-05-16 02:27 UTC | Exp 1907: Integrate Energy-Guided Decoding into Fa | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 02:29 UTC | Exp 1906: gated on Exp 1905 success: Evaluate Adam | GATE_BLOCK | Pre-emptive skip: upstream retired (exp1905-adamflip) |
