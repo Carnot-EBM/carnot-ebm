@@ -3875,3 +3875,4 @@ Error |
 | 2026-05-16 17:08 UTC | Exp 2059: E2E Continuous Reasoning Eval on SOTA Mo | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 17:10 UTC | Exp 2059: E2E Continuous Reasoning Eval on SOTA Mo | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 17:12 UTC | Exp 2059: E2E Continuous Reasoning Eval on SOTA Mo | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 17:18 UTC | Exp 2060: Milestone .205 Retrospective (Phase 4) | OK | 81 passed, 1 warning in 5.68s |
