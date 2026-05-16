@@ -3964,3 +3964,4 @@ Error |
 | 2026-05-16 23:16 UTC | Phase 2: IRED Constraint Learning | OK | 81 passed, 1 warning in 4.47s |
 | 2026-05-16 23:22 UTC | Phase 2: IRED SOTA GGUF Integration | OK | 81 passed, 1 warning in 5.09s |
 | 2026-05-16 23:24 UTC | Phase 3: CSL IRED Feedback Loop | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-16 23:26 UTC | Phase 3: CSL IRED Feedback Loop | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
