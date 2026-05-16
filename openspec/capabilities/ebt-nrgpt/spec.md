@@ -72,3 +72,9 @@ The system SHALL provide an IRED adaptive step optimizer in `python/carnot/infer
 ## SCENARIO-INFER-2098: Adaptive Energy Gradient Refinement
 Given continuous reasoning states of varying constraint difficulties, the IRED optimizer refines them, exiting early for simpler constraints and using more steps for harder constraints, ultimately saving to `results/experiment_2098_ired_optimizer.json`.
 
+## REQ-INFER-2099: IRED Training Loop
+The system SHALL provide a training loop for IRED in `scripts/experiment_2099_ired_training.py`. It MUST train IRED to map input constraints to continuous latent outputs, such that the learned energy function correctly minimizes at valid states.
+
+## SCENARIO-INFER-2099: Training IRED on Synthetic Constraints
+Given a synthetic dataset of logic constraints, the training loop runs and the learned IRED energy function correctly minimizes at valid states. The script MUST save the results to `results/experiment_2099_ired_training.json` with `ired_training_successful=true`.
+
