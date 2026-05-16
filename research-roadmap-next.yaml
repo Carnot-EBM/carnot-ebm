@@ -109,9 +109,9 @@ tasks:
         - preconditions_checked: list
         - source_artifacts: ["exp1811", "exp1909"]
         - both_runs_cited_in_paperv6: bool
-        - model_specs: {files_edited: ["paper-v6 §3",
+        - model_specs: {{files_edited: ["paper-v6 §3",
           "research-references.md", "ops/known-issues.md"],
-          word_count_added: int}
+          word_count_added: int}}
         - n_samples: 2 (the original + confirmation; explicit pair)
         - n_samples_justification: "Codification gated on confirmation;
           n=2 represents both runs informing the codified numbers."
@@ -210,8 +210,8 @@ tasks:
         - reproducibility_checksum: sha256 of (workflow file + tag
           ref + gh CLI version)
         - preconditions_checked: list
-        - model_specs: {workflow_file: ".github/workflows/publish-pypi.yml",
-          tag_checked: "v0.1.0b1", tag_commit_origin: str}
+        - model_specs: {{workflow_file: ".github/workflows/publish-pypi.yml",
+          tag_checked: "v0.1.0b1", tag_commit_origin: str}}
         - n_samples: 1 (status check; single workflow run)
         - n_samples_justification: "Status check task; n=1."
         - workflow_run_id: int or null
@@ -308,9 +308,9 @@ tasks:
         - reproducibility_checksum: sha256
         - preconditions_checked: list
         - publish_mechanism: "ci_tagged_release" | "hf_api_direct" | "blocked"
-        - model_specs: {hf_org: "Carnot-EBM", hf_repo: str,
+        - model_specs: {{hf_org: "Carnot-EBM", hf_repo: str,
           chosen_artifact_path: str, artifact_size_bytes: int,
-          model_card_word_count: int}
+          model_card_word_count: int}}
         - n_samples: 1
         - n_samples_justification: "Ship task; n=1 artifact."
         - hf_upload_succeeded: bool
@@ -372,9 +372,9 @@ tasks:
         - random_seed: 173132
         - reproducibility_checksum: sha256
         - preconditions_checked: list
-        - model_specs: {audit_target_milestone: "2026.05.195",
+        - model_specs: {{audit_target_milestone: "2026.05.195",
           adversarial_verify_version: git_rev,
-          artifacts_scanned: int, artifacts_flagged: int}
+          artifacts_scanned: int, artifacts_flagged: int}}
         - n_samples: int
         - n_samples_justification: "Audit; n is flagged count."
         - audit_outcomes: dict
