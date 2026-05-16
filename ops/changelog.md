@@ -5916,3 +5916,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 2000: E2E pipeline verification of Phase 4 continuous sampling (⚠️ Research Finding) — honest_verdict=SUCCESS: E2E-008 passed. CLaRa-V continuous latent variables successfully map to ContinuousEBM, evaluate energy correctly, and project via PiNet.; results/experiment_2000_e2e_pipeline.json
 - 2026-05-16: Exp 2001: .198 findings audit + corrigenda (✅ Complete) — honest_verdict=complete: audit finished and corrigenda written for .198 range.; results/experiment_2001_findings_audit_198.json
 - 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
+- 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
