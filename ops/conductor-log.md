@@ -3741,3 +3741,4 @@ Error |
 | 2026-05-16 08:22 UTC | Exp 1992: KV260 v4 RTL sparse E-MVL synthesis scri | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-16 08:35 UTC | Exp 1993: Implement Gradient-Guided Epsilon Constr | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-16 08:39 UTC | Exp 1993: Implement Gradient-Guided Epsilon Constr | OK | cache hit: 81 passed, 1 warning in 5.35s |
+| 2026-05-16 08:46 UTC | Exp 1994: CLaRa-V Continuous Latent Representation | OK | 81 passed, 1 warning in 6.21s |
