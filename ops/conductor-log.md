@@ -3707,3 +3707,4 @@ Error |
 | 2026-05-16 06:23 UTC | Exp 1970: Phase 1 - THRML Hybrid Thermodynamic Abs | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
 | 2026-05-16 06:30 UTC | Exp 1970: Phase 1 - THRML Hybrid Thermodynamic Abs | OK | 98 passed, 1 warning in 8.18s |
 | 2026-05-16 06:32 UTC | Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1970-thrml-hybrid-abstraction.success ( |
+| 2026-05-16 06:34 UTC | Exp 1971: Phase 1 - THRML vs CPU Gibbs Latency Aud | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp1970-thrml-hybrid-abstraction.success ( |
