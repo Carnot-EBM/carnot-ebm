@@ -4516,3 +4516,7 @@ Fast-Slow Variant CONFIRMED (exp1811 + exp1909 replication pair) — paper-v6 §
 
 ### 2026-05-16 Regex Fragility Fix Pattern
 Regex-based tests parsing documentation for experiment counts (like the `test_docs.py` failure that caused the .193 SKIP cascade on exp1901-1908) should be robust to markdown formatting. The README's `**N,NNN**` bolding broke `\d+[+,]?\d*\+?\s*[Ee]xperiments?` before the ~01:30Z fix. Always strip markdown or use flexible matchers.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
