@@ -5917,3 +5917,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-16: Exp 2001: .198 findings audit + corrigenda (✅ Complete) — honest_verdict=complete: audit finished and corrigenda written for .198 range.; results/experiment_2001_findings_audit_198.json
 - 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
 - 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
+- 2026-05-16: Exp 2002: Milestone .199 retrospective (⚠️ Blocked) — honest_verdict=blocked_gate_check_failed; results/experiment_2002_cold_decoding_integration.json
