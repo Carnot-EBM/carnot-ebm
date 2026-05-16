@@ -1,203 +1,433 @@
-milestone: "2026.05.201"
-milestone_title: "Continuous Self-Learning, Hallucination Detection via Spilled Energy, and ROCm Bring-up"
+milestone: "2026.05.202"
+milestone_title: "Consolidated post-Bash-failure audit + PyPI final re-check + CoT2-Meta retry + citation-sweep cadence"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+scope_reduction_compliance:
+  rationale: "Outer-loop Bash failed mid-session 2026-05-16 ~06:40Z; .200/.201 pre-stages drafted via Write only (no linter, no git push). .200 went through (status unknown; planner may have replaced); .201 is active now with hallucination/spilled-energy/ROCm scope (different from my drafts). .202 consolidates 4-milestone state into a single audit + dashboard + checks PyPI workflow (operator approval pending since .194) + retries the CoT2-Meta routing (queued .198 exp1983, status unknown) + runs the routine citation-sweep on CoT2-Meta anchor (cadence rule, never executed)."
+  carry_forwards_addressed: ["consolidated .198/.199/.200/.201 audit (4 milestones of degraded-environment uncertainty)", "PyPI workflow status final re-check (operator approval still pending)", "CoT2-Meta routing retry (queued in .198, status unknown)", "Routine citation-sweep cadence on CoT2-Meta anchor"]
+authored_by: outer-loop-claude
+known_constraints:
+  - "Outer-loop Bash environment broken since 2026-05-16 ~06:40Z. Harness-fit linter not run on this draft. Conductor's pre-emit validation handles structural correctness; planner overwrites per Pre-Staged Roadmap Convention fallback if yaml is malformed."
+
 tasks:
-  - id: exp2001-spilled-energy-metrics
-    title: "Exp 2001: Implement Spilled Energy Metrics (arXiv:2602.18671)"
-    deliverable: "results/experiment_2001_spilled_energy.json"
-    prompt: |
-      CONTEXT: The PRD envisions EBMs escaping autoregressive limitations. Recent paper arXiv:2602.18671 introduces "Spilled Energy" across decoding steps for training-free hallucination detection.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`, `python/carnot/reporting/`
-      TASK: Implement the Spilled Energy calculation and evaluate on a tiny dataset of known hallucinations.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2001_spilled_energy.py`.
-      2. Implement `calculate_spilled_energy(logits, target_tokens)` mapping Softmax to EBM.
-      3. Evaluate using the cached_sota_pair() pattern: `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-      4. Save results to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2002-energy-reward-model
-    title: "Exp 2002: Implement Energy-Based Reward Model (EBRM, arXiv:2504.12317) Loss"
-    deliverable: "results/experiment_2002_ebrm_loss.json"
-    prompt: |
-      CONTEXT: We must integrate Energy-Based Reward Models (arXiv:2504.12317) to mitigate reward hacking and noise in human feedback.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/gibbs.py`
-      TASK: Create an EBRM loss function that calibrates the latent energy.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2002_ebrm_loss.py`.
-      2. Implement `ebrm_loss_fn(energy_pos, energy_neg, margin)`.
-      3. Run a synthetic dataset pass through the loss function to verify gradient flows.
-      4. Save loss metrics to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2003-refind-constraint-satisfaction
-    title: "Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911)"
-    deliverable: "results/experiment_2003_refind_csr.json"
-    prompt: |
-      CONTEXT: REFIND proposes Context Sensitivity Ratio (CSR) for constraint satisfaction in generation. We will adopt this as a metric.
-      EXISTING CODE TO READ FIRST: `python/carnot/reporting/metrics.py`
-      TASK: Implement CSR and evaluate its correlation with our existing energy metrics.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2003_refind.py`.
-      2. Implement `compute_csr(context_energy, no_context_energy)`.
-      3. Validate on `unsloth/gemma-4-26B-A4B-it-GGUF`.
-      4. Write {{deliverable}} with the correlation report.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2004-self-learning-epsilon-engine
-    title: "Exp 2004: Self-Learning Strict Epsilon Engine v1"
-    deliverable: "results/experiment_2004_epsilon_engine.json"
-    prompt: |
-      CONTEXT: Per `research-program.md`, Continuous Self-Learning is a primary goal. The Strict Epsilon Engine controls acceptance criteria for self-generated data.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`
-      TASK: Build the Epsilon Engine that decays the constraint tolerance epsilon based on validation rate.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2004_epsilon.py`.
-      2. Implement a rolling window validation tracking and dynamic epsilon scalar.
-      3. Save step-by-step decay trace to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2005-auto-dataset-gen-z3
-    title: "Exp 2005: Auto-Dataset Generation via Z3 constraint checker"
-    deliverable: "results/experiment_2005_z3_generation.json"
-    agent_type: codex
-    prompt: |
-      CONTEXT: The continuous learning loop needs training data. We will use Codex to orchestrate Z3 constraint verification on generated code/logic blocks.
-      EXISTING CODE TO READ FIRST: `python/carnot/verifiers/`
-      TASK: Generate a batch of 100 logic puzzles, solve them with `unsloth/Qwen3.6-35B-A3B-GGUF`, and label via Z3.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2005_z3.py`.
-      2. Generate puzzles and call the local Z3 verifier.
-      3. Filter for 100% correct responses.
-      4. Save structured JSONL as the artifact, linked in {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2006-self-distillation-qwen
-    title: "Exp 2006: Self-Distillation over Z3-verified responses"
-    deliverable: "results/experiment_2006_self_distill.json"
-    gated_on:
-      - upstream: exp2005-auto-dataset-gen-z3
-        artifact_field: "verified_count"
-        op: ">="
-        value: 10
-    prompt: |
-      CONTEXT: Using the dataset from Exp 2005, perform self-distillation on `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/`
-      TASK: Simulate a fine-tuning step using the Z3 verified dataset.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2006_distill.py`.
-      2. Load the dataset from Exp 2005.
-      3. Execute a single-epoch dummy DPO/SFT pass.
-      4. Save final loss to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2007-continuous-epsilon-decay-eval
-    title: "Exp 2007: Continuous Epsilon Decay Evaluation"
-    deliverable: "results/experiment_2007_epsilon_eval.json"
-    prompt: |
-      CONTEXT: Evaluate if the epsilon decay from Exp 2004 improved model precision without mode collapse.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_2004_epsilon.py`
-      TASK: Run generation under decayed epsilon bounds vs static bounds.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2007_eval.py`.
-      2. Compare acceptance rates and generation quality.
-      3. Save statistical delta to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2008-rocm-rx7900-bringup
-    title: "Exp 2008: ROCm Environment Probe & Bring-Up for RX 7900 XTX"
-    deliverable: "results/experiment_2008_rocm_probe.json"
+  - id: exp2010-consolidated-audit-198-199-200-201
+    title: "Exp 2010: Consolidated 4-milestone audit (.198 through .201) + Phase 1 dashboard"
+    deliverable: results/experiment_2010_consolidated_audit.json
     max_turns: 100
-    model: opus
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1988-phase1-ship-track-dashboard
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp1988 (.200) was drafted while outer-loop Bash was broken; status of subsequent activation unknown. This task supersedes by consolidating 4 milestones of activity into a single audit + dashboard."
+        retire_if_same_verdict: false
+      - experiment_id: exp1986-combined-audit-198-199
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp1986 (.200) same drafting status. Combined audit now spans .198-.201."
+        retire_if_same_verdict: false
     prompt: |
-      CONTEXT: The hardware wishlist targets a Thunderbolt RX 7900 XTX eGPU for ROCm testing.
-      EXISTING CODE TO READ FIRST: `research-hardware-wishlist.md`
-      TASK: Create a probe to verify ROCm visibility and memory bandwidth.
+      CONTEXT: Outer-loop Bash failed 2026-05-16 ~06:40Z during the .200
+      pre-stage. .200 yaml was drafted via Write tool only; activation
+      state unknown. .201 is now active with a different scope
+      (hallucination/spilled-energy/ROCm). This task consolidates
+      4 milestones (.198 + .199 + .200 + .201) into a single audit
+      pass + writes the Phase 1 ship-track dashboard at
+      ops/phase-1-dashboard.md.
+
+      FALSIFIABLE HYPOTHESIS: A single audit + dashboard task can
+      accurately report: (a) which .198 ship-track tasks landed
+      (exp1981 MCP docs, exp1982 Reproducer, exp1983 CoT2-Meta routing),
+      (b) which .199 hardware/CLaRa tasks landed, (c) the current
+      Phase 1 ship-percentage, and (d) any adversarial-verify flags
+      across the 4-milestone artifact set.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/adversarial_verify.py (9-rule linter)
+        - results/experiment_198[1-5]*.json + experiment_199*.json
+          + experiment_20[0-1]*.json (4 milestones)
+        - results/experiment_1929_fast_slow_codification.json (already-shipped)
+        - results/experiment_1931_huggingface_mirror.json (already-shipped)
+        - results/experiment_1930_pypi_status.json + exp1987 if exists
+        - ops/conductor-log.md (SKIP/DOOMED_RERUN/GATE_BLOCK pattern check)
+        - ops/known-issues.md (Phase 1 MANDATORY entry)
+
+      TASK: Audit + dashboard in one pass.
+
       CONCRETE STEPS:
-      1. Write `scripts/experiment_2008_rocm.py`.
-      2. Query `rocminfo` and map memory limits.
-      3. If no hardware found, generate a mock success indicating "hardware missing but probe works".
-      4. Save probe details to {{deliverable}}.
+        0. PRECONDITIONS (per CLAUDE.md):
+           a. scripts/adversarial_verify.py importable.
+           b. results/experiment_1929_fast_slow_codification.json exists
+              (already-shipped baseline).
+           c. results/experiment_1931_huggingface_mirror.json exists
+              (already-shipped baseline).
+           Record preconditions_checked.
+        1. Run adversarial-verify over the 4-milestone range:
+           `python3 scripts/adversarial_verify.py --milestone-range
+            1981 2010`. Classify each flag.
+        2. Scan conductor-log.md for SKIP/DOOMED_RERUN/GATE_BLOCK
+           entries since 2026-05-16T05:00Z; record patterns + root
+           causes if observable.
+        3. For each Phase 1 prong, extract current status:
+             - PyPI: read latest pypi_status artifact (exp1930 or
+               exp1987); record workflow_run_status + actionable_step.
+             - HF mirror: exp1931 confirmed shipped to
+               huggingface.co/Carnot-EBM/ThinkPRM-v3.
+             - Fast-Slow codification: exp1929 confirmed shipped.
+             - MCP/CLI docs: check results/experiment_1981*.json.
+             - Independent Reproducer: check results/experiment_1982*.json.
+        4. Write ops/phase-1-dashboard.md (operator-visible single-page;
+           NO emojis; CLAUDE.md no-pruning if file already exists from
+           exp1988 — APPEND a date-stamped update section).
+        5. Update ops/status.md "What's Working" to LINK to the
+           dashboard (do NOT replace prior content).
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.consolidated_audit_dashboard.v1"
+        - experiment: 2010
+        - run_date: ISO-8601 UTC
+        - duration_s: > 60s (audit + dashboard write)
+        - random_seed: 173210
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{audit_target_milestones: ["2026.05.198",
+          "2026.05.199", "2026.05.200", "2026.05.201"],
+          adversarial_verify_version: git_rev,
+          artifacts_scanned: int, artifacts_flagged: int,
+          dashboard_path: "ops/phase-1-dashboard.md"}}
+        - n_samples: 4 (milestones audited)
+        - n_samples_justification: "Consolidated audit; n is milestone
+          count."
+        - audit_outcomes: dict experiment_id -> {{classification, rationale}}
+        - corrigenda_added: list
+        - skip_cascade_observed: bool
+        - skip_cascade_root_cause: str or null
+        - per_prong_status: dict prong -> {{status, evidence, date,
+          next_action}}
+        - phase_1_ship_percentage: int (0-100)
+        - operator_action_items: list
+        - dashboard_word_count: int
+        - dashboard_has_emojis: false
+        - acceptance_gate_passed: bool (4 milestones audited + dashboard
+          written + status.md linked + emoji-free)
+        - acceptance_gate_criteria: "All 4 milestones audited; dashboard
+          written; status accurately reported (no inflation)."
+        - methodology_note: "PyPI is shipped-pending-operator-approval
+          is NOT 'shipped' — it's 'pending'. Status honestly recorded."
+        - optimization_direction: "neither — audit/synthesis task"
+        - honest_verdict: MUST start with `complete:` / `complete_` /
+          `success:` / `success_` / `passed:` / `passed_` / `shipped:` /
+          `shipped_` per CLAUDE.md Verdict Terminal-Prefix Discipline.
+
+      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py
+      or scripts/adversarial_verify.py.
+
+  - id: exp2011-pypi-workflow-final-recheck
+    title: "Exp 2011: PyPI workflow FINAL re-check (v0.1.0b1 awaiting operator approval since .194)"
+    deliverable: results/experiment_2011_pypi_final_recheck.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1987-pypi-workflow-status-recheck
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp1987 (.200) drafted during Bash failure; activation status unknown. This task runs the same check + escalates if still pending after this many hours."
+        retire_if_same_verdict: false
+      - experiment_id: exp1930-pypi-workflow-status-check
+        verdict: success_operator_approval_required
+        addressed_by: "exp1930 (.196) identified workflow waiting state. Many hours have passed; this final re-check determines if operator approved + workflow succeeded, OR if the workflow timed out and needs re-trigger via workflow_dispatch."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: exp1910 pushed v0.1.0b1 tag at .194. exp1930 (.196)
+      identified the workflow waiting on operator approval. .200 exp1987
+      drafted re-check (status unknown). This is the FINAL re-check
+      task; if workflow still waiting after this many hours, the
+      actionable next step shifts from 'operator approve' to
+      'workflow timed out — re-trigger via workflow_dispatch'.
+
+      FALSIFIABLE HYPOTHESIS: The v0.1.0b1 workflow run is in one of:
+      (a) approved-and-succeeded (PyPI 0.1.0b1 reachable), (b) approved-
+      and-failed (workflow ran but step failed), (c) still-waiting
+      (operator hasn't approved yet), (d) timed-out / cancelled
+      (workflow auto-expired). This task identifies which AND
+      reports actionable next step.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1930_pypi_status.json
+        - results/experiment_1987_pypi_status_recheck.json if exists
+        - .github/workflows/publish-pypi.yml
+        - feedback_pypi_publish_via_ci_tagged_release memory entry
+
+      TASK: Final workflow status check; verify PyPI if succeeded.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `command -v gh` succeeds — else `blocked_gh_cli_unavailable`.
+           b. `gh auth status` returns authenticated — else `blocked_gh_auth_needed`.
+           c. `git ls-remote --tags origin | grep "v0.1.0b1"` returns
+              hash — else `blocked_tag_unexpectedly_missing`.
+           Record preconditions_checked.
+        1. `gh run list --workflow=publish-pypi.yml --limit 10
+            --repo Carnot-EBM/carnot-ebm --json
+            databaseId,status,conclusion,createdAt,url`. Find
+           v0.1.0b1 run.
+        2. Classify:
+           - status=waiting → "Operator: approve at <url>"
+           - status=completed AND conclusion=success → verify PyPI
+             install in fresh venv.
+           - status=completed AND conclusion=failure → fetch failed
+             logs.
+           - status=cancelled OR run too old (>72h) → recommend
+             `gh workflow run publish-pypi.yml --ref v0.1.0b1 --repo
+             Carnot-EBM/carnot-ebm` to re-trigger via workflow_dispatch.
+        3. If workflow_dispatch re-trigger needed, attempt it (NO new
+           tag push) and wait up to 10 minutes for completion.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.pypi_workflow_final_recheck.v1"
+        - experiment: 2011
+        - run_date: ISO-8601 UTC
+        - duration_s: > 15s
+        - random_seed: 173211
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{workflow_file: ".github/workflows/publish-pypi.yml",
+          tag_checked: "v0.1.0b1",
+          prior_status_artifact: "exp1930_or_exp1987"}}
+        - n_samples: 1
+        - n_samples_justification: "Final status check; n=1 workflow run."
+        - workflow_run_id: int or null
+        - workflow_run_url: str
+        - workflow_run_status: "waiting" | "in_progress" | "success" | "failure" | "cancelled"
+        - workflow_run_conclusion: str or null
+        - state_change_from_prior: "no_change" | "now_succeeded" | "now_failed" | "now_cancelled"
+        - re_trigger_attempted: bool
+        - re_trigger_outcome: str or null
+        - pypi_url_reachable: bool
+        - pypi_url: str or null
+        - external_install_verified: bool
+        - actionable_next_step: str
+        - acceptance_gate_passed: bool (status identified + actionable
+          step set)
+        - acceptance_gate_criteria: "Status accurately reported with
+          escalation path if still pending."
+        - methodology_note: "NO new tag push. workflow_dispatch
+          re-trigger ONLY if prior run cancelled/timed-out."
+        - optimization_direction: "neither — status check"
+        - honest_verdict: MUST start with terminal prefix.
+
+      Run command. Do NOT push tags. Do NOT modify
+      scripts/research_conductor.py.
+
+  - id: exp2012-cot2meta-routing-retry
+    title: "Exp 2012: CoT2-Meta routing retry (queued .198 exp1983; status unknown after Bash failure)"
+    deliverable: results/experiment_2012_cot2meta_routing.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: high
+    prior_failures:
+      - experiment_id: exp1983-carnot-cot2meta-routing-prototype
+        verdict: status_unknown_drafted_during_bash_failure
+        addressed_by: "exp1983 (.198) was drafted to extend ODAR with CoT2-Meta state-machine; activation/result unknown. This task checks for the artifact + retries if missing."
+        retire_if_same_verdict: false
+      - experiment_id: exp1811-fast-slow-variant-prototype
+        verdict: complete_3.1x_sample_eff_0.25x_kl_drift_confirmed
+        addressed_by: "exp1811 baseline + exp1909 confirmation provide the FS pipeline this routing sits on top of. arXiv:2603.28135 CoT2-Meta (Score 320) provides the expand/prune/repair/stop/fallback formalism."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: exp1983 (.198) was queued to layer CoT2-Meta's expand/
+      prune/repair/stop/fallback state machine on top of Fast-Slow
+      Variant. Status of activation unknown due to Bash failure during
+      .200 pre-stage. This task checks for the artifact and retries
+      with the same spec if missing.
+
+      FALSIFIABLE HYPOTHESIS: A Carnot CoT2-Meta routing prototype
+      achieves AT LEAST 1.2x further iter reduction vs the pure
+      Fast-Slow Variant baseline AND demonstrates non-trivial fallback-
+      path usage (>= 5% of examples) AND maintains exp1811's pass-rate
+      within +/-3pp per task.
+
+      EXISTING CODE TO READ FIRST:
+        - results/experiment_1983*_cot2meta_routing.json (if exists;
+          if yes, this task no-ops with verdict
+          `complete_already_shipped_in_198`)
+        - results/experiment_1811_fast_slow_variant.json (baseline)
+        - results/experiment_1909_fast_slow_confirmation.json
+        - python/carnot/pipeline/fast_slow_variant.py
+        - arXiv:2603.28135 CoT2-Meta abstract
+
+      TASK: Check for exp1983 artifact; retry if missing.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `python -c "from carnot.pipeline.fast_slow_variant import
+              fast_slow_variant"` succeeds.
+           b. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/`
+              non-empty.
+           Record preconditions_checked.
+        1. If results/experiment_1983*.json exists with
+           acceptance_gate_passed=true: emit
+           `complete_already_shipped_in_198` and exit with no-op.
+        2. Else: implement cot2meta_state_machine() per .198 exp1983
+           spec; run on 90-example 3-task corpus; record per-example
+           action_sequence + final_action.
+        3. Compute iters_reduction vs exp1811 baseline +
+           fallback_usage_rate + passrate drift.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.cot2meta_routing.v1"
+        - experiment: 2012
+        - run_date: ISO-8601 UTC
+        - duration_s: > 300s if retry; smaller if no-op
+        - random_seed: 173212
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{target_model: "unsloth/gemma-4-26B-A4B-it-GGUF",
+          baseline: "fast_slow_variant_v1 (exp1811)",
+          state_machine: "cot2meta_v1"}}
+        - n_samples: 90 if retry; 1 if no-op
+        - n_samples_justification: "30 per task × 3 tasks matching exp1811;
+          or no-op confirmation."
+        - already_shipped_in_198: bool
+        - cot2meta_passrate_per_task: dict (or copied from exp1983 if no-op)
+        - overall_iters_reduction: float
+        - fallback_usage_rate: float
+        - max_passrate_drift_pp: float
+        - acceptance_gate_passed: bool (1.2x reduction + 5% fallback +
+          3pp drift) OR no-op success
+        - acceptance_gate_criteria: "1.2x iter reduction AND >=5%
+          fallback usage AND <=3pp passrate drift; OR confirmed
+          no-op against exp1983 result."
+        - methodology_note: "If exp1983 already shipped, this task is
+          a no-op artifact confirming the prior result. If retrying,
+          IMPLAUSIBLE_PERFECT triggers same as exp1983 spec."
+        - optimization_direction: "maximize_iters_reduction"
+        - honest_verdict: MUST start with terminal prefix.
+
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp2009-dual-model-bench-rocm
-    title: "Exp 2009: Dual-Model Execution Bench on ROCm"
-    deliverable: "results/experiment_2009_dual_model.json"
+  - id: exp2013-routine-citation-sweep-cot2meta
+    title: "Exp 2013: Routine citation-sweep on CoT2-Meta anchor (cadence rule, never executed)"
+    deliverable: results/experiment_2013_citation_sweep_cot2meta.json
+    max_turns: 100
+    agent_type: codex
+    model: gpt-5.5
+    priority: medium
+    prior_failures: []
     prompt: |
-      CONTEXT: EBM requires simultaneous evaluation of `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
-      EXISTING CODE TO READ FIRST: `scripts/experiment_2008_rocm.py`
-      TASK: Build a multi-model VRAM allocator test for ROCm.
+      CONTEXT: Per memory entry feedback_sweep_dedupe_protocol, every 4th
+      keyword sweep should run sweep_citations.py on top-3 active queue
+      anchors. CoT2-Meta (arXiv:2603.28135 Score 320, surfaced
+      2026-05-16T04:35Z via routine citation-sweep on ODAR) has never
+      been depth-swept itself. Same Ma/Gao/Liu author line as ODAR
+      suggests further coherent research-program work may surface.
+
+      FALSIFIABLE HYPOTHESIS: Citation-sweep on arXiv:2603.28135 surfaces
+      at least 1 newly-relevant 2026 paper (post-dedupe) that ties to
+      Carnot's verify-repair architecture or active research questions.
+
+      EXISTING CODE TO READ FIRST:
+        - scripts/sweep_citations.py (helper; arXiv:2602.23681 ODAR
+          sweep surfaced 15 IDs incl. CoT2-Meta)
+        - scripts/sweep_dedupe.py --filter
+        - research-studying.md (current 64+ known-ID catalogue)
+
+      TASK: Citation-sweep + dedupe + score new candidates.
+
       CONCRETE STEPS:
-      1. Write `scripts/experiment_2009_dual.py`.
-      2. Mock VRAM allocation for the SOTA models if hardware absent.
-      3. Determine theoretical max sequence length.
-      4. Save to {{deliverable}}.
+        0. PRECONDITIONS:
+           a. `python3 scripts/sweep_citations.py --help` succeeds.
+           b. `python3 scripts/sweep_dedupe.py --help` succeeds.
+           Record preconditions_checked.
+        1. `python3 scripts/sweep_citations.py 2603.28135 |
+            python3 scripts/sweep_dedupe.py --filter
+            --include-version-bumps`. Capture stderr summary.
+        2. For each NEW arxiv ID (post-dedupe), fetch abstract via
+           arXiv API; score per the relevance × novelty × feasibility ×
+           urgency rubric (1-5 each).
+        3. For Score >= 300, promote to research-studying.md Active
+           Research Queue (Edit tool; CLAUDE.md no-pruning).
+        4. For Score >= 400, add to ops/known-issues.md RESEARCH-STUDYING
+           CANDIDATES (Edit tool; APPEND only).
+        5. Append a Sweep YYYY-MM-DDTHH:MMZ subsection to
+           research-studying.md noting the citation-anchor + new IDs +
+           promotions.
+
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.routine_citation_sweep.v1"
+        - experiment: 2013
+        - run_date: ISO-8601 UTC
+        - duration_s: > 30s
+        - random_seed: 173213
+        - reproducibility_checksum: sha256
+        - preconditions_checked: list
+        - model_specs: {{anchor_paper: "arXiv:2603.28135 (CoT2-Meta, Score 320)",
+          anchor_authors: "Ma/Gao/Xiao/Wang/Yu/Qian/Qian/Gong/Liu"}}
+        - n_samples: int (count of NEW candidates after dedupe)
+        - n_samples_justification: "Sweep; n is candidate count."
+        - new_candidates: list of {{arxiv_id, title, score, rationale}}
+        - promoted_to_active_queue: list
+        - promoted_to_known_issues: list
+        - acceptance_gate_passed: bool (citation-sweep + dedupe ran;
+          scoring complete for all new candidates)
+        - acceptance_gate_criteria: "Sweep ran cleanly; all NEW
+          candidates scored honestly."
+        - methodology_note: "Routine cadence per memory entry
+          feedback_sweep_dedupe_protocol. 0 promotions is acceptable
+          if anchor has no in-domain citations yet."
+        - optimization_direction: "neither — sweep task"
+        - honest_verdict: MUST start with terminal prefix.
+
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp2010-hardware-accel-langevin
-    title: "Exp 2010: EBM Hardware-Accelerated Sampling (Langevin Dynamics)"
-    deliverable: "results/experiment_2010_langevin.json"
+  - id: exp2014-milestone-202-retrospective
+    title: "Exp 2014: Milestone .202 retrospective"
+    deliverable: results/operational_retro_2026_05_202.json
+    max_turns: 60
+    agent_type: codex
+    model: gpt-5.5
+    priority: low
+    prior_failures: []
     prompt: |
-      CONTEXT: Implement Langevin dynamics optimized for ROCm matrix operations.
-      EXISTING CODE TO READ FIRST: `python/carnot/models/boltzmann.py`
-      TASK: Vectorize the Langevin step for GPU.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2010_langevin.py`.
-      2. Compare CPU vs GPU mocked performance of the gradient step.
-      3. Save benchmark to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      CONTEXT: Standard end-of-milestone retrospective per CLAUDE.md
+      Development Workflow step 8. .202 is a consolidation milestone
+      following 4 milestones of degraded-environment uncertainty
+      (.198-.201 spans Bash-failure window + .200 outer-loop draft +
+      .201 planner-drafted hallucination/spilled-energy scope).
 
-  - id: exp2011-e2e-fidelity-rocm
-    title: "Exp 2011: Verify Model Fidelity Post-ROCm Port"
-    deliverable: "results/experiment_2011_fidelity.json"
-    prompt: |
-      CONTEXT: We must ensure no precision loss in the Langevin sampler on ROCm.
-      EXISTING CODE TO READ FIRST: `ops/e2e-test-plan.md`
-      TASK: Validate ROCm EBM sampling against CPU exact counts.
-      CONCRETE STEPS:
-      1. Write `scripts/experiment_2011_fidelity.py`.
-      2. Calculate divergence between CPU and mock GPU sampler.
-      3. Save KL divergence to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      TASK: Generate the .202 operational retrospective.
 
-  - id: exp2012-e2e-test-plan-exec
-    title: "Exp 2012: End-to-End Test Plan Execution (Spec-Anchored)"
-    deliverable: "results/experiment_2012_e2e.json"
-    prompt: |
-      CONTEXT: As mandated by GEMINI.md, all changes must be verified E2E.
-      EXISTING CODE TO READ FIRST: `ops/e2e-test-plan.md`, `scripts/check_spec_coverage.py`
-      TASK: Run full spec coverage and E2E EBM test suite.
       CONCRETE STEPS:
-      1. Write `scripts/experiment_2012_e2e.py` wrapping standard tests.
-      2. Record pass/fail for Python-Rust bridge equivalent results.
-      3. Save report to {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+        0. PRECONDITIONS: git log [conductor] Activate milestone
+           2026.05.202..HEAD returns non-empty.
+        1-6. Standard retro per recent templates.
+        7. Record: phase_1_ship_percentage (from exp2010 dashboard),
+           pypi_workflow_final_state (from exp2011), cot2meta_routing_outcome
+           (from exp2012), citation_sweep_promotions (from exp2013).
 
-  - id: exp2013-update-prd-status
-    title: "Exp 2013: Update Dashboard & PRD Traceability"
-    deliverable: "results/experiment_2013_prd.json"
-    max_turns: 20
-    prompt: |
-      CONTEXT: The milestone is closing. We must update ops/status.md and _bmad/traceability.md.
-      EXISTING CODE TO READ FIRST: `ops/status.md`, `_bmad/traceability.md`
-      TASK: Reconcile specs and move completed work to 'What's Working'.
-      CONCRETE STEPS:
-      1. Update `ops/status.md` preserving historical results.
-      2. Update `_bmad/traceability.md` implementation statuses.
-      3. Generate a JSON summary into {{deliverable}}.
-      Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
+      REQUIRED ARTIFACT FIELDS:
+        - schema: "carnot.operational_retro.v64"
+        - milestone: "2026.05.202"
+        - generated_at: ISO-8601 UTC
+        - retro_type: "operational_full_consolidation"
+        - preconditions_checked: list
+        - total_wall_time_minutes: float
+        - experiments_completed: int
+        - compute_bound_experiments_count: int
+        - slowest_experiments: list
+        - gpu_idle_on_compute_bound_tasks: bool or null
+        - phase_1_ship_percentage: int
+        - pypi_workflow_final_state: str
+        - cot2meta_routing_outcome: str
+        - citation_sweep_promotions: int
+        - summary: str
+        - bottlenecks_identified: list
+        - improvements_suggested: list
+        - top_3_highest_leverage_actions: list
+        - estimated_time_savings_pct: int
+        - meta_reflection: str
+        - honest_verdict: MUST start with terminal prefix.
+        - DO NOT modify README.md or docs/technical-report.md.
 
-  - id: exp2014-milestone-201-retro
-    title: "Exp 2014: Milestone 201 Retrospective"
-    deliverable: "results/experiment_2014_retro.json"
-    agent_type: claude
-    max_turns: 50
-    prompt: |
-      CONTEXT: The final step of any milestone is the retrospective.
-      EXISTING CODE TO READ FIRST: `ops/changelog.md`, `ops/metrics.md`
-      TASK: Analyze the performance of Phase 1-3 tasks for Milestone 2026.05.201.
-      CONCRETE STEPS:
-      1. Review conductor logs.
-      2. Synthesize bottlenecks and highest leverage actions.
-      3. Save retro schema to {{deliverable}}.
       Run command. Do NOT push. Do NOT modify scripts/research_conductor.py.
