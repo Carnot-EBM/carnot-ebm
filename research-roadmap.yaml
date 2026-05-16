@@ -1,274 +1,283 @@
-milestone: "2026.05.207"
-milestone_title: "NeSy-EBM Integration, Continuous Latent Reasoning, and Thermodynamic Benchmarks"
+milestone: "2026.05.208"
+milestone_title: "System-2 Compositional Energy Minimization, HardNet Integrations, and Constrained Augmented Generation"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: "exp2070-archive-and-activate"
-    title: "Phase 0: Archive .206 and activate .207"
+  - id: "exp2082-archive-and-activate"
+    title: "Phase 0: Archive .207 and activate .208"
     max_turns: 20
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: We are beginning milestone 2026.05.207. We must archive the previous milestone and update the tracking docs.
+      CONTEXT: We are beginning milestone 2026.05.208. We must archive the previous milestone and update the tracking docs.
       
       EXISTING CODE TO READ FIRST:
       - ops/status.md
       - ops/changelog.md
-      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - openspec/change-proposals/research-roadmap-v2026.05.208.md
       
-      TASK: Rename the vNEXT roadmap doc to match the current milestone and record the activation in ops/status.md and ops/changelog.md.
+      TASK: Rename the previous vNEXT doc if necessary and record the activation of milestone 2026.05.208 in ops/status.md and ops/changelog.md.
       
       CONCRETE STEPS:
-      1. Move openspec/change-proposals/research-roadmap-vNEXT.md to openspec/change-proposals/research-roadmap-v2026.05.207.md
-      2. Update ops/changelog.md to log the start of milestone 2026.05.207.
+      1. Ensure openspec/change-proposals/research-roadmap-v2026.05.208.md exists.
+      2. Update ops/changelog.md to log the start of milestone 2026.05.208.
       3. Update ops/status.md to reflect the new active milestone and Phase 0 completion.
-      4. Write the terminal deliverable artifact results/experiment_2070_activation.json with honest_verdict="activation_complete".
+      4. Write the terminal deliverable artifact results/experiment_2082_activation.json with honest_verdict="activation_complete".
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2071-lagrangian-energy-landscape"
-    title: "Phase 1: Kona-Style Lagrangian Energy Landscape"
+  - id: "exp2083-pem-composition-module"
+    title: "Phase 1: Compositional Energy Minimization (PEM) Module"
     max_turns: 50
     agent_type: "codex"
-    model: "gpt-5.5"
     prompt: |
-      CONTEXT: Kona treats reasoning as a continuous global Lagrangian optimization problem to find state valleys satisfying all constraints.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/phase3/continuous_ebm.py
-      
-      TASK: Implement a global Lagrangian energy function that sums local symbolic constraint potentials for a latent space reasoning optimizer.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/phase3/lagrangian_optimizer.py.
-      2. Implement a JAX-based continuous space optimizer using a Lagrangian formulation that enforces hard bounds as high-energy penalties.
-      3. Ensure test coverage in tests/python/phase3/test_lagrangian_optimizer.py.
-      4. Save to results/experiment_2071_lagrangian_optimizer.json with lagrangian_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2072-kona-sudoku-solver"
-    title: "Phase 1: Kona-Parity Sudoku Latent Solver"
-    gated_on:
-      - upstream: "exp2071-lagrangian-energy-landscape"
-        artifact_field: "lagrangian_ready"
-        op: "=="
-        value: true
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: To replicate Kona's 96.2% success rate, we need to bypass autoregressive guessing on hard Sudoku.
+      CONTEXT: Generalizable Reasoning through Compositional Energy Minimization (arXiv:2510.20607) proposes composing small, tractable energy sub-problems.
       
       EXISTING CODE TO READ FIRST:
       - python/carnot/phase3/lagrangian_optimizer.py
       
-      TASK: Apply the Phase 1 Lagrangian optimizer to solve hard Sudoku constraints entirely in the continuous domain.
+      TASK: Implement an EBM Composition module that can sum independent local constraint energy functions into a global landscape.
       
       CONCRETE STEPS:
-      1. Create scripts/experiment_2072_kona_sudoku.py.
-      2. Model the Sudoku rules as differentiable energy penalties.
-      3. Optimize the continuous grid state until energy is minimized and map back to digits.
-      4. Save results to results/experiment_2072_kona_sudoku.json including solved_sudoku=true.
+      1. Create python/carnot/phase3/compositional_energy.py.
+      2. Implement a JAX-based composition system that takes multiple callable energy potentials and evaluates them in parallel over the latent state.
+      3. Provide unit test coverage in tests/python/phase3/test_compositional_energy.py.
+      4. Save to results/experiment_2083_pem_composition.json with compositional_energy_ready=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2073-continuous-trajectory-decoding"
-    title: "Phase 1: Continuous Trajectory Decoding via LLM"
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: After optimizing the latent thought trajectory via EBMs, we must route it back into SOTA language models for sequence decoding.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/ebm_cot_adapter.py
-      
-      TASK: Implement an adapter that translates the optimized continuous thought trajectory back to token probabilities.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/inference/trajectory_decoder.py.
-      2. In MODEL_SPECS, include 'unsloth/Qwen3.6-35B-A3B-GGUF' and 'unsloth/gemma-4-31B-it-GGUF'.
-      3. Implement a decoding loop that uses the continuous thought state as conditioning.
-      4. Save results to results/experiment_2073_trajectory_decoder.json.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2074-nesy-symbolic-encoder"
-    title: "Phase 2: NeSy Symbolic Encoder"
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: Neuro-Symbolic Energy-Based Models (NeSy-EBMs) encode symbolic logic directly into the neural architecture.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/kan_symbolizer.py
-      
-      TASK: Create a symbolic encoder module that maps deterministic constraints (like SMT rules) into differentiable energy penalty tensors.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/embeddings/nesy_encoder.py.
-      2. Implement a system to parse basic logic predicates and compile them to JAX tensors.
-      3. Provide full unit test coverage.
-      4. Save to results/experiment_2074_nesy_encoder.json with nesy_encoder_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2075-nesy-map-inference"
-    title: "Phase 2: NeSy MAP Inference Alternating Training"
+  - id: "exp2084-pem-optimizer"
+    title: "Phase 1: Parallel Energy Minimization Optimizer"
     gated_on:
-      - upstream: "exp2074-nesy-symbolic-encoder"
-        artifact_field: "nesy_encoder_ready"
-        op: "=="
-        value: true
-    max_turns: 50
-    prompt: |
-      CONTEXT: NeSy-EBMs train via MAP inference alternating training, learning both neural parameters and enforcing symbolic priors.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/embeddings/nesy_encoder.py
-      - python/carnot/training/ebrm_trainer.py
-      
-      TASK: Implement MAP inference alternating training for the NeSy framework.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/training/nesy_trainer.py.
-      2. Implement an alternating optimization loop updating neural weights and projecting onto the symbolic constraints.
-      3. Save to results/experiment_2075_nesy_map_inference.json with map_inference_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2076-nesy-smt-verification-loop"
-    title: "Phase 2: NeSy to SMT Verification Loop"
-    gated_on:
-      - upstream: "exp2075-nesy-map-inference"
-        artifact_field: "map_inference_ready"
+      - upstream: "exp2083-pem-composition-module"
+        artifact_field: "compositional_energy_ready"
         op: "=="
         value: true
     max_turns: 50
     agent_type: "codex"
-    model: "gpt-5.5"
     prompt: |
-      CONTEXT: Prove that the NeSy mapping correctly produces results that have zero-false-accepts when checked via formal SMT.
+      CONTEXT: The PEM algorithm conducts stochastic optimization over the composed energy landscape to find the global minimum.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/phase3/compositional_energy.py
+      
+      TASK: Implement the PEM optimization loop.
+      
+      CONCRETE STEPS:
+      1. Extend python/carnot/phase3/lagrangian_optimizer.py or create a new PEM optimizer.
+      2. Run gradient-based Langevin dynamics over the composed sub-problem landscapes.
+      3. Write unit tests for convergence on simple composed quadratic wells.
+      4. Save results to results/experiment_2084_pem_optimizer.json with pem_optimizer_ready=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2085-pem-vs-lagrangian-sudoku"
+    title: "Phase 1: PEM vs Lagrangian on Hard Sudoku"
+    gated_on:
+      - upstream: "exp2084-pem-optimizer"
+        artifact_field: "pem_optimizer_ready"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must empirically prove that PEM escapes local minima better than the monolithic Lagrangian from Phase 2071.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2072_kona_sudoku.py
+      - python/carnot/phase3/compositional_energy.py
+      
+      TASK: Compare the new PEM solver against the monolithic Lagrangian on a hard Sudoku dataset.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2085_pem_sudoku_eval.py.
+      2. Run 50 Hard Sudoku instances using both the PEM solver and the prior Lagrangian solver.
+      3. Measure the success rate (escaped local minima).
+      4. Save results to results/experiment_2085_pem_sudoku_eval.json with success_rate_delta > 0.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2086-hardnet-differentiable-layer"
+    title: "Phase 2: HardNet Differentiable Enforcement Layer"
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: HardNet (NeurIPS 2025) uses a closed-form differentiable layer to guarantee hard constraint satisfaction in the forward pass.
       
       EXISTING CODE TO READ FIRST:
       - python/carnot/verify/kan_smt_verifier.py
-      - python/carnot/training/nesy_trainer.py
       
-      TASK: Connect MAP inference outputs to the KAN4CBC SMT verifier, proving zero-false-accepts on a neuro-symbolic toy problem.
+      TASK: Implement a HardNet-style differentiable enforcement layer for logical inequality constraints.
       
       CONCRETE STEPS:
-      1. Create scripts/experiment_2076_nesy_verification.py.
-      2. Train a small model to solve a path-continuity problem using NeSy.
-      3. Verify the generated paths via the SMT verifier to confirm zero false accepts.
-      4. Save to results/experiment_2076_nesy_verification.json.
+      1. Create python/carnot/models/hardnet_layer.py.
+      2. Implement the projection algorithm that clamps continuous latent outputs to the feasible logical bounds.
+      3. Ensure the layer is fully JAX-differentiable and compatible with Optax.
+      4. Save to results/experiment_2086_hardnet_layer.json with hardnet_layer_ready=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2077-actfocus-energy-reweighting"
-    title: "Phase 3: ActFocus Token-Level Energy Reweighting"
-    max_turns: 50
-    prompt: |
-      CONTEXT: ActFocus addresses the action bottleneck by assigning credit appropriately in multi-turn logic sequences via token-level energy gradients.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/composite_scorer.py
-      
-      TASK: Implement ActFocus token-level energy reweighting for Continuous Self-Learning updates.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/training/actfocus_reweighting.py.
-      2. Implement the gradient reweighting logic mapping global energy to local token actions.
-      3. Ensure test coverage in tests/python/training/test_actfocus.py.
-      4. Save to results/experiment_2077_actfocus.json with actfocus_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2078-dynamic-resolution-ebm"
-    title: "Phase 3: Dynamic Resolution Scaling for Continual Learning"
-    max_turns: 50
-    prompt: |
-      CONTEXT: Dynamic resolution EBMs prevent catastrophic forgetting during continuous learning by dynamically scaling the energy landscape fidelity.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/boltzmann.py
-      
-      TASK: Implement dynamic resolution scaling for Carnot's Boltzmann tier.
-      
-      CONCRETE STEPS:
-      1. Modify python/carnot/models/boltzmann.py or create a wrapper class to adjust latent fidelity dynamically based on task novelty.
-      2. Write a test proving that previously learned minima are preserved when new minima are introduced at a higher resolution.
-      3. Save to results/experiment_2078_dynamic_resolution.json.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2079-csl-pipeline-integration"
-    title: "Phase 3: E2E Continuous Self-Learning (CSL) Loop"
+  - id: "exp2087-hardnet-verification-integration"
+    title: "Phase 2: HardNet Verification Pipeline Integration"
     gated_on:
-      - upstream: "exp2077-actfocus-energy-reweighting"
-        artifact_field: "actfocus_ready"
+      - upstream: "exp2086-hardnet-differentiable-layer"
+        artifact_field: "hardnet_layer_ready"
         op: "=="
         value: true
     max_turns: 50
     prompt: |
-      CONTEXT: FR-11 demands a continuous self-learning loop. We will integrate ActFocus and dynamic resolution using a SOTA MoE model.
+      CONTEXT: The HardNet layer must be integrated into our verification pipeline as a faster alternative to SMT or KAN-based solvers.
       
       EXISTING CODE TO READ FIRST:
-      - python/carnot/training/actfocus_reweighting.py
+      - python/carnot/pipeline/verify_repair.py
+      - python/carnot/models/hardnet_layer.py
       
-      TASK: Build the end-to-end FR-11 CSL pipeline integrating ActFocus and dynamic resolution.
+      TASK: Integrate the HardNet layer into the `VerifyRepairPipeline`.
       
       CONCRETE STEPS:
-      1. Create scripts/experiment_2079_csl_pipeline.py.
-      2. Load 'unsloth/gemma-4-26B-A4B-it-GGUF' and simulate an online learning stream of new constraints.
-      3. Apply ActFocus to assign credit, demonstrating learning without catastrophic forgetting on older constraints.
-      4. Save to results/experiment_2079_csl_pipeline.json.
+      1. Modify or extend `VerifyRepairPipeline` to accept a HardNet-based verification path.
+      2. Convert symbolic constraints (like bounding boxes or numerical limits) into the HardNet layer tensors.
+      3. Write tests validating that the pipeline can use this layer to score and correct states.
+      4. Save to results/experiment_2087_hardnet_pipeline.json with hardnet_integrated=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2080-dtm-thermodynamic-sampler"
-    title: "Phase 4: Stochastic Gradient Lattice Random Walk (SGLRW) Sampler"
+  - id: "exp2088-hardnet-zero-false-accept-benchmark"
+    title: "Phase 2: HardNet Zero-False-Accept Graph Coloring"
+    gated_on:
+      - upstream: "exp2087-hardnet-verification-integration"
+        artifact_field: "hardnet_integrated"
+        op: "=="
+        value: true
+    max_turns: 50
+    prompt: |
+      CONTEXT: We must prove that the new HardNet pipeline component has zero false accepts on combinatorial constraints like Graph Coloring.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2076_nesy_verification.py
+      
+      TASK: Run a Graph Coloring benchmark using the HardNet layer and verify the outputs deterministically.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2088_hardnet_graph_coloring.py.
+      2. Train the HardNet model to generate colored graphs subject to vertex constraint inequalities.
+      3. Verify 100 generated graphs manually to ensure zero constraint violations.
+      4. Save to results/experiment_2088_hardnet_graph_coloring.json with violations=0.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2089-crane-augmented-grammar"
+    title: "Phase 3: CRANE Augmented Grammar Adapter"
     max_turns: 50
     agent_type: "codex"
-    model: "gpt-5.5"
     prompt: |
-      CONTEXT: The DTM simulation from .206 needs to be upgraded to the Stochastic Gradient Lattice Random Walk (SGLRW) algorithm for hardware emulation.
+      CONTEXT: CRANE (ICML 2025) interleaves constrained and unconstrained decoding to allow reasoning before strict grammar formatting.
       
       EXISTING CODE TO READ FIRST:
-      - python/carnot/samplers/parallel_ising.py
+      - python/carnot/inference/trajectory_decoder.py
       
-      TASK: Upgrade the DTM simulation to a JAX-optimized hardware-ready SGLRW sampler.
+      TASK: Implement an Augmented Grammar Decoder for local models.
       
       CONCRETE STEPS:
-      1. Create python/carnot/samplers/sglrw_sampler.py.
-      2. Implement the low-precision stochastic gradient lattice algorithm mirroring thermodynamic computing noise models.
-      3. Write tests and save to results/experiment_2080_sglrw_sampler.json with sglrw_ready=true.
+      1. Create python/carnot/inference/crane_decoder.py.
+      2. In MODEL_SPECS, include 'unsloth/gemma-4-31B-it-GGUF' and 'unsloth/Qwen3.6-35B-A3B-GGUF'.
+      3. Implement logic that applies standard logits until a specific trigger token is generated, and then strictly applies a BNF grammar constraint for the final output schema.
+      4. Save results to results/experiment_2089_crane_decoder.json with crane_ready=true.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2081-dual-rtx-benchmark"
-    title: "Phase 4: Live GSM8K Thermodynamic Benchmark on Dual RTX 3090"
+  - id: "exp2090-crane-humaneval-pass"
+    title: "Phase 3: CRANE Decoder HumanEval Benchmark"
     gated_on:
-      - upstream: "exp2080-dtm-thermodynamic-sampler"
-        artifact_field: "sglrw_ready"
+      - upstream: "exp2089-crane-augmented-grammar"
+        artifact_field: "crane_ready"
         op: "=="
         value: true
-    max_turns: 100
-    model: "opus"
+    max_turns: 50
     prompt: |
-      CONTEXT: CRITICAL: We need a live dual-GPU hardware test to unblock large-scale benchmarking. We will run the SGLRW sampler against GSM8K.
+      CONTEXT: We must verify that CRANE's flexible reasoning block improves performance over rigid initial grammar constraints.
       
       EXISTING CODE TO READ FIRST:
-      - python/carnot/samplers/sglrw_sampler.py
-      - scripts/run_benchmark.py
+      - scripts/experiment_2012_e2e.py
+      - python/carnot/inference/crane_decoder.py
       
-      TASK: Run the SGLRW sampler natively on the dual RTX 3090 setup against a 100-sample GSM8K partition.
+      TASK: Run HumanEval using both rigid schema decoding and CRANE augmented decoding.
       
       CONCRETE STEPS:
-      1. Create scripts/experiment_2081_dual_rtx_gsm8k.py.
-      2. Use 'unsloth/Qwen3.6-35B-A3B-GGUF'.
-      3. Probe for ROCm/CUDA availability on multiple devices and distribute the EBM sampler.
-      4. Record hardware latency and generative accuracy on 100 GSM8K problems.
-      5. Write artifact FIRST (bootstrap-and-bail risk). Save to results/experiment_2081_dual_rtx_benchmark.json.
+      1. Create scripts/experiment_2090_crane_humaneval.py using 'unsloth/gemma-4-31B-it-GGUF'.
+      2. Evaluate 50 HumanEval problems requiring structured JSON output.
+      3. Compare Pass@1 of CRANE against rigid start-to-finish grammar enforcement.
+      4. Save to results/experiment_2090_crane_humaneval.json with pass_rate_delta > 0.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2091-csl-grammar-violation-updates"
+    title: "Phase 3: Tier 1 CSL Grammar Updates"
+    gated_on:
+      - upstream: "exp2090-crane-humaneval-pass"
+        artifact_field: "pass_rate_delta"
+        op: ">"
+        value: 0.0
+    max_turns: 50
+    prompt: |
+      CONTEXT: The PRD mandates Continuous Self-Learning (CSL). Here, we update grammar rule weights based on energy evaluations.
+      
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/inference/crane_decoder.py
+      - python/carnot/pipeline/constraint_template_library.py
+      
+      TASK: Implement online weight updates to the grammar probabilities based on post-generation constraint checks.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2091_csl_grammar.py.
+      2. Track which rules in the augmented grammar trigger logical violations in a test set.
+      3. Update running counter weights (Tier 1 CSL) to bias future decoding against the failing rule structures.
+      4. Save to results/experiment_2091_csl_grammar.json with tier1_csl_active=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2092-full-integration-benchmark"
+    title: "Phase 4: Full Integration Benchmark (PEM + HardNet + CRANE)"
+    gated_on:
+      - upstream: "exp2091-csl-grammar-violation-updates"
+        artifact_field: "tier1_csl_active"
+        op: "=="
+        value: true
+    max_turns: 80
+    model: "opus"
+    prompt: |
+      CONTEXT: We must validate the complete System-2 loop combining composed energy minimization, hard constraints, and augmented decoding.
+      
+      EXISTING CODE TO READ FIRST:
+      - scripts/experiment_2085_pem_sudoku_eval.py
+      - scripts/experiment_2088_hardnet_graph_coloring.py
+      - scripts/experiment_2090_crane_humaneval.py
+      
+      TASK: Build an end-to-end multi-step reasoning integration test.
+      
+      CONCRETE STEPS:
+      1. Create scripts/experiment_2092_full_integration.py.
+      2. Use CRANE to generate a multi-step constraint satisfaction problem.
+      3. Route it to PEM for solution search, passing through the HardNet layer to guarantee bounds.
+      4. Measure overall pipeline latency and success rate.
+      5. Save to results/experiment_2092_full_integration.json with integration_successful=true.
+      
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: "exp2093-milestone-208-retro"
+    title: "Phase 4: Milestone 2026.05.208 Retrospective"
+    max_turns: 20
+    prompt: |
+      CONTEXT: The milestone is complete and we must summarize results.
+      
+      EXISTING CODE TO READ FIRST:
+      - ops/status.md
+      - ops/changelog.md
+      - ops/metrics.md
+      
+      TASK: Produce the milestone retrospective artifact.
+      
+      CONCRETE STEPS:
+      1. Compile the success/failure state of all Exp 2083-2092 deliverables.
+      2. Analyze if the three gaps (PEM, HardNet, CRANE) were successfully closed.
+      3. Save to results/experiment_2093_retro.json.
       
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
