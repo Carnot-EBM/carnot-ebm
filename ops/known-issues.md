@@ -4506,3 +4506,7 @@ Status: HUMAN_REQUIRED at planner layer — conductor will block again if omitte
 - At beta=1.05 (near critical beta_c=1.0): NO intervention in the 54-cell ablation closes the gap (`smallest_intervention_closing_gap["1.05"] = null`). `bimodal_distribution_observed["1.05"]` is true.
 
 **Relevance to Carnot:** This is a ship-eligible finding for paper-v6 §6 (limitations) and has direct Z1 hardware-mapping implications because Z1 inherits the Carnot sampler primitive. Downstream planning must account for longer burn-in budgets at beta=1.20 and fundamental limits at beta=1.05. Explicit symmetry-breaking fields may be required if hardware supports them.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).

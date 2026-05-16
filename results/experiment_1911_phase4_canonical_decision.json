@@ -1,0 +1,39 @@
+{
+  "schema": "carnot.phase4_canonical_decision.v2",
+  "experiment": 1911,
+  "run_date": "2026-05-16T04:07:59.066598Z",
+  "duration_s": 35,
+  "random_seed": 173111,
+  "reproducibility_checksum": "2b47b16e321c8b9af8ef7279d7f228128092eddee8f5cba6d0bb002f1bd9b204",
+  "preconditions_checked": [
+    "results/experiment_1811_fast_slow_variant.json exists",
+    "results/experiment_1745_phase4_per_step_alpha.json exists",
+    "results/experiment_1909_fast_slow_confirmation.json status: confirmed"
+  ],
+  "model_specs": {
+    "metric_history": [
+      "alpha_t",
+      "alpha_t_prime",
+      "thermodynamic_metric_v1",
+      "fast_slow_variant_v1"
+    ],
+    "empirical_winner": "fast_slow_variant_v1",
+    "confirmation_status": "confirmed"
+  },
+  "n_samples": 5,
+  "n_samples_justification": "Decision; n is count of Phase 4 metric attempts.",
+  "canonical_metric_named": "Fast-Slow Variant sample-efficiency-ratio + KL-drift-ratio relative to FR-11 baseline",
+  "retired_candidates": [
+    "alpha_t",
+    "alpha_t_prime",
+    "thermodynamic_metric_v1"
+  ],
+  "confirmation_artifact_path": "results/experiment_1909_fast_slow_confirmation.json",
+  "paper_v6_section_6_word_count_added": 30,
+  "known_issues_mandatory_added": true,
+  "acceptance_gate_passed": true,
+  "acceptance_gate_criteria": "Decision rendered + paper-v6 \u00a76 updated + known-issues MANDATORY appended.",
+  "methodology_note": "Confirmation status faithfully recorded. If exp1909 didn't run, decision proceeds with explicit preliminary-evidence caveat \u2014 does NOT inflate single-run evidence into 'confirmed'.",
+  "optimization_direction": "neither \u2014 decision artifact",
+  "honest_verdict": "success: phase4_canonical_decision_rendered_and_documented"
+}

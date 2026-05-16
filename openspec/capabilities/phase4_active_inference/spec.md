@@ -33,3 +33,9 @@
 
 ### SCENARIO-PHASE4-4
 **Description:** Running a 4-cell random-verifier ablation audit using the maximum-caliber `alpha_t'` results in monotonic decay of `delta_alpha` (`monotonic_decay_observed=true`) and absence of the bijection-invariance artifact (`artifact_detected=false`).
+
+### REQ-PHASE4-CANONICAL-DECISION
+**Description:** The system SHALL produce a canonical decision artifact documenting the transition from alpha_t metrics to the Fast-Slow Variant empirical metric.
+
+### SCENARIO-DECISION-ARTIFACT-GENERATION
+**Description:** Running the decision script outputs a valid carnot.phase4_canonical_decision.v2 JSON artifact confirming the retirement of thermodynamic metrics.
