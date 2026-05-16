@@ -3940,3 +3940,4 @@ Error |
 | 2026-05-16 21:06 UTC | Phase 1: Compositional Energy Minimization (PEM) M | OK | 81 passed, 1 warning in 4.25s |
 | 2026-05-16 21:10 UTC | Phase 1: Parallel Energy Minimization Optimizer | OK | 81 passed, 1 warning in 4.76s |
 | 2026-05-16 21:16 UTC | Phase 1: PEM vs Lagrangian on Hard Sudoku | OK | 81 passed, 1 warning in 4.69s |
+| 2026-05-16 21:21 UTC | Phase 2: HardNet Differentiable Enforcement Layer | OK | 81 passed, 1 warning in 5.59s |
