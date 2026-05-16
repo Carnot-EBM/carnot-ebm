@@ -591,3 +591,21 @@ Sub-requirements:
 **When** the DTM sampler runs
 **Then** it successfully outputs a valid sample and updates
 **And** it writes `results/experiment_2067_dtm_simulation.json` with `dtm_sim_ready=true`.
+
+### REQ-SAMPLE-2081: SGLRW Dual RTX GSM8K Benchmark
+
+Carnot MUST provide an experiment script `scripts/experiment_2081_dual_rtx_gsm8k.py` to benchmark the SGLRW sampler on a dual-GPU setup using a GSM8K subset.
+
+Sub-requirements:
+- REQ-SAMPLE-2081-1: The script SHALL use model 'unsloth/Qwen3.6-35B-A3B-GGUF'.
+- REQ-SAMPLE-2081-2: The script SHALL probe for ROCm/CUDA availability on multiple devices and distribute the EBM sampler.
+- REQ-SAMPLE-2081-3: The script SHALL record hardware latency and generative accuracy on 100 GSM8K problems.
+- REQ-SAMPLE-2081-4: The script SHALL write an initial bootstrap artifact to `results/experiment_2081_dual_rtx_benchmark.json` before running the benchmark, and update it with the final results.
+
+### SCENARIO-SAMPLE-2081: SGLRW Dual RTX Benchmark Writes Artifact
+
+**Given** the Exp 2081 Dual RTX benchmark script
+**When** it is executed
+**Then** it successfully checks for multi-GPU availability
+**And** it runs the SGLRW sampler natively against a 100-sample GSM8K partition
+**And** it writes `results/experiment_2081_dual_rtx_benchmark.json` containing latency and accuracy metrics.
