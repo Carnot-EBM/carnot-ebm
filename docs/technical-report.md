@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,213 Experiments Across the Public Record, 202 Archived Milestone Records, 24,981 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 3,227 Experiments Across the Public Record, 205 Archived Milestone Records, 25,006 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-12
@@ -29,10 +29,10 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 3,202 experiments across 200 milestones up to .187, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 3,227 experiments across 205 milestones up to .191, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
 This report documents the research arc behind the framework — **2,959
-experiment records tracked through Exp 2114, with 2,424 task records in 200
+experiment records tracked through Exp 2114, with 2,477 task records in 205
 artifact-backed completed milestone records archived through 2026.05.174 and
 checked-in result artifacts extending through milestone .176** — run between
 February and May 2026. `research-complete.yaml` currently archives **191**
@@ -5532,3 +5532,12 @@ Experiment 1766 implemented token-level energy telemetry for agentic reinforceme
 ### Phase 25 — Milestone .189 Recovery and Fast-Slow Variant (May 2026)
 
 Milestone 2026.05.189 completed successfully, recovering from the .187/.188 gate-cascade. Key experiments included the Carnot Fast-Slow Variant prototype without upstream gates (Exp 1811) and the Phase 4 method decision (Exp 1814).
+
+## Milestones 187–191 — Fast-Slow Reasoning Variant and Phase 4 Decisions (Exps 2114+, May 2026)
+
+**Fast-Slow Reasoning Scale-up**
+Experiment 1811 (re-indexed) prototyped the Carnot Fast-Slow Variant without upstream gates, leading into the Phase 4 method decision (Exp 1814) to cement the hybrid reasoning approach as canonical.
+
+**Operational Efficiency and Retrospectives**
+Milestones 187 through 191 successfully completed automated retrospectives (up to 2026.05.191). The ODAR routing mechanism was integrated to manage complex tasks while keeping GPUs efficiently utilized. Continuous self-learning iterations show plateaus, guiding future research into constraint addition heuristics.
+
