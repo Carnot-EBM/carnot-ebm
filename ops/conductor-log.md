@@ -3895,3 +3895,4 @@ Error |
 | 2026-05-16 18:04 UTC | Phase 3: EBRM (Energy-Based Reward Model) Training | OK | 81 passed, 1 warning in 5.19s |
 | 2026-05-16 18:06 UTC | Phase 2: Geometric Regulation via Ising | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2063-ebm-cot-latent-calibration) |
 | 2026-05-16 18:09 UTC | Phase 3: DTM Simulation for Carnot Samplers | OK | 81 passed, 1 warning in 5.50s |
+| 2026-05-16 18:21 UTC | Phase 3: Extropic TSU DTM Algorithm Parity Test | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
