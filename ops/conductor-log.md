@@ -4183,3 +4183,4 @@ Ripgrep i |
 | 2026-05-17 08:21 UTC | Phase 1: ActFocus Token-Level Energy Reweighting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2181-kan-cl-regularization) |
 | 2026-05-17 08:21 UTC | Phase 2: Energy-Guided Decoding Integration | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-17 08:24 UTC | Phase 3: KV260 k_max=5 Verilog RTL Design | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.42s |
+| 2026-05-17 08:26 UTC | Phase 3: KV260 k_max=5 Verilog RTL Design | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.16s |
