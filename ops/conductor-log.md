@@ -4027,3 +4027,5 @@ Error |
 | 2026-05-17 02:37 UTC | Phase 2: Substrate-Aware KAN Hardware Accounting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2125-substrate-aware-kan) |
 | 2026-05-17 02:47 UTC | Phase 2: AdamFLIP Hard Constrained PINN Training | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: 256-color  |
 | 2026-05-17 02:49 UTC | Phase 2: Substrate-Aware KAN Hardware Accounting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2125-substrate-aware-kan) |
+| 2026-05-17 02:53 UTC | Phase 2: AdamFLIP Hard Constrained PINN Training | OK | cache hit: 84 passed, 1 warning in 5.85s |
+| 2026-05-17 02:55 UTC | Phase 2: Substrate-Aware KAN Hardware Accounting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2125-substrate-aware-kan) |
