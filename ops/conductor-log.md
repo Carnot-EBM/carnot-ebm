@@ -4385,3 +4385,4 @@ Ripgrep i |
 | 2026-05-17 16:38 UTC | Milestone 2026.05.223 activated | OK | 13 tasks queued |
 | 2026-05-17 16:41 UTC | Phase 0: Archive .222 and activate .223 | OK | cache hit: 81 passed, 1 warning in 3.76s |
 | 2026-05-17 16:45 UTC | Phase 0: Fix Duplicate test_compositional_energy M | OK | 83 passed, 1 warning in 3.77s |
+| 2026-05-17 16:47 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
