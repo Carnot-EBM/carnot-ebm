@@ -376,12 +376,12 @@ tasks:
              - extract(instruction: str, response: str) -> list[dict]
                Parses response for logical steps: quantitative claims, conditions,
                causal assertions, list-item commitments.
-               Returns: [{"step": str, "constraint_type": str, "variables": list}]
+               Returns: [{{"step": str, "constraint_type": str, "variables": list}}]
              - encode_z3(steps: list[dict]) -> z3.Solver
                Encodes each step as a Z3 assertion (arithmetic, comparison, or
                Boolean implication). Returns a solver with all constraints asserted.
              - verify(instruction: str, response: str) -> dict
-               Returns: {"satisfiable": bool, "violations": list[str], "n_constraints": int}
+               Returns: {{"satisfiable": bool, "violations": list[str], "n_constraints": int}}
         2. Write focused unit tests in tests/python/pipeline/test_extract.py
            (at least 3 tests: one satisfiable response, one violated arithmetic constraint,
            one violated list-completeness constraint).
@@ -710,9 +710,9 @@ tasks:
                Policy: for each spin, estimate the majority ground-state sign from
                the local field h_i + sum_j J_ij * mean_neighbor_sign.
              - initialize(J: np.ndarray, h: np.ndarray, random_seed: int) -> np.ndarray
-               Returns initial spin configuration as {-1, +1}^n_spins.
+               Returns initial spin configuration as {{-1, +1}}^n_spins.
         2. Write 2 unit tests in tests/python/samplers/test_ml_ising_init.py:
-           Test 1: initialize() returns a valid {-1, +1} spin vector of correct shape.
+           Test 1: initialize() returns a valid {{-1, +1}} spin vector of correct shape.
            Test 2: on a ferromagnetic chain (J_ij = +1), ML initializer aligns spins better
                    than chance (majority_aligned_pct > 60%).
         3. Run unit tests; record n_tests_passed.

@@ -1,0 +1,49 @@
+{
+  "id": "exp2308-archive-and-activate",
+  "honest_verdict": "complete: archive_ready",
+  "archive_ready": true,
+  "completed_date": "20260517",
+  "preconditions": {
+    "roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+    "expected_archive_milestone": "2026.05.226",
+    "literal_expected_milestone_present": true,
+    "observed_active_milestone": "2026.05.227",
+    "research_roadmap_next_exists": false,
+    "status": "already_activated"
+  },
+  "archive": {
+    "research_complete_path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+    "research_complete_contains_2026_05_226": true,
+    "archived_task_count": 14,
+    "archived_task_ids": [
+      "exp2294-archive-and-activate",
+      "exp2295-pypi-escalation-fix-claude",
+      "exp2296-fst-live-gen-v6",
+      "exp2297-fr11-fst-multidomain-v3",
+      "exp2298-kancl-n256-v5",
+      "exp2299-eidoku-csp-v2",
+      "exp2300-projected-langevin-v2",
+      "exp2301-nsvif-neuro-symbolic",
+      "exp2302-verge-repair-integration",
+      "exp2303-kv260-rtl-lint-v5",
+      "exp2304-adversarial-probe-v4",
+      "exp2305-sparse-ising-connectivity",
+      "exp2306-capstone-v226",
+      "exp2307-retro-v226"
+    ]
+  },
+  "activation": {
+    "research_roadmap_active_milestone": "2026.05.227",
+    "research_roadmap_active_doc": "openspec/change-proposals/research-roadmap-v227.md",
+    "roadmap_swap_performed_this_run": false,
+    "note": "research-roadmap.yaml was already at milestone 2026.05.227 and research-roadmap-next.yaml was absent; the archive and activation state was verified instead of duplicating archive data."
+  },
+  "changelog": {
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/changelog.md",
+    "stub_added": "## 20260517 (Milestone 2026.05.227 activated)"
+  },
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required (complete:/success:) so conductor classifies this as a closed task, not a partial.",
+    "archive_ready": "Boolean gate confirming .226 was appended to research-complete.yaml before roadmap swap. Downstream tasks depend on this."
+  }
+}
