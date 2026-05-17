@@ -3287,3 +3287,4 @@ Slowest: Exp 359 (EORM retrain, 51 min — two conductor phases).
 | 2026-05-11 | Exp 1858: GloroKAN integration - forward pass Lipschitz approximation | ✅ Complete | complete: glorokan_lipschitz_bounds_implemented | results/experiment_1858_glorokan.json |
 | 2026-05-15 | Exp 1772: Phase 1 - Prototype Constraint-Aware Retrieval using SOTA models | ✅ Complete | complete: CARM prototype evaluated | results/experiment_1772_care_prototype.json |
 | 2026-05-15 | Exp 1773: Phase 1 - Run full CARM extraction suite and evaluate constraint recall | ✅ Complete | complete: CARM dual-model evaluated | results/experiment_1773_care_evaluation.json |
+| 2026-05-17 | Phase 1: Process-Reward Energy Model Architecture | ✅ Complete | success_prem_architecture_implemented | results/experiment_2144_prem_arch.json |

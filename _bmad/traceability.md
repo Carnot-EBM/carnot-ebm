@@ -1668,3 +1668,8 @@
 | SCENARIO-EVAL-006 | Exp 2003: REFIND Constraint Satisfaction (arXiv:2502.01911) | Implemented-Partial | results/experiment_2003_refind_csr.json |
 | REQ-2012-E2E | Exp 2012: End-to-End Test Plan Execution (Spec-Anchored) | Implemented-Partial | results/experiment_2012_e2e.json |
 | SCENARIO-2012-E2E | Exp 2012: End-to-End Test Plan Execution (Spec-Anchored) | Implemented-Partial | results/experiment_2012_e2e.json |
+| REQ-PREM-001 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
+| REQ-PREM-002 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
+| REQ-PREM-003 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
+| SCENARIO-PREM-001 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
+| SCENARIO-PREM-002 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
