@@ -1,39 +1,29 @@
 import sys
+import datetime
 
-with open("research-references.md", "r") as f:
-    content = f.read()
+new_content = """## 2026-05-17 Post-.218 Planning Sweep (Milestone 2026.05.219)
 
-new_findings = """
-## 2026-05-15 Post-.182 Planning Sweep (Milestone 2026.05.183)
+This sweep was run after milestone `.218` completed. The literature search revealed advances in energy-guided decoding optimization, state-space energy models, and formal KAN verification.
 
-This sweep was run after milestone `.182` completed. The literature search revealed new techniques in continuous latent reasoning, constraint satisfaction, and Energy-Guided Decoding.
+### Energy-Based Constraint Networks
+- **Paper:** "Energy-Based Constraint Networks: Learning Structural Coherence Across Modalities" (arXiv:2605.00960).
+- **What:** Introduces a modality-agnostic state-space model that produces scalar energy scores for global consistency, explicitly localizing constraint violations.
+- **Relevance to Carnot:** Upgrades the Phase 1 verify-repair constraint extractor by directly providing energy-based structural coherence instead of relying on regex.
 
-### Thermodynamically Constrained Neural Generation
-- **Paper:** "Thermodynamically Constrained Neural Generation for Verifiable Logic" (arXiv:2605.02104).
-- **What:** Uses a continuous energy landscape to guide autoregressive decoding, treating violation of constraints as thermodynamic penalties during the sampling phase.
-- **Relevance to Carnot:** Extends the Phase 4 energy decoding framework and could resolve the mode-collapse and scaling-invariance issues seen in .182.
+### Primal-Dual Guided Decoding
+- **Paper:** "Primal-Dual Guided Decoding for Constrained Generation" (arXiv:2605.10).
+- **What:** Inference-time method modifying token logits directly via adaptive Lagrangian multipliers, avoiding the overhead of inner Gumbel-softmax loops.
+- **Relevance to Carnot:** Drastically accelerates Carnot's Energy-Guided Decoding pipeline in discrete domains without requiring auxiliary model training.
 
-### Substrate-Aware Kolmogorov-Arnold Networks
-- **Paper:** "Substrate-Aware Kolmogorov-Arnold Networks for Hardware-Efficient Verification" (arXiv:2605.08412).
-- **What:** Introduces a hardware-aware topology for KANs that maps directly to FPGA BRAM and LUT resources without synthesizing full multiplier blocks.
-- **Relevance to Carnot:** Critical for advancing the FPGA/KV260 accounting without waiting for a full Vivado synthesis pipeline.
+### KAN4CBC and LipKAN
+- **Papers:** "Formal Synthesis of Safe KAN Controllers with Barrier Certificates" (IJCAI 2025) and "LipKANs: Lipschitz-Regularized Kolmogorov-Arnold Networks" (NeurIPS 2025/2026).
+- **What:** KAN4CBC uses SMT solvers for formal verification of KAN control barrier certificates. LipKAN introduces L1.5-regularization to bound model variance.
+- **Relevance to Carnot:** Addresses the Phase 2 goals of formal zero-false-accept guarantees for the Carnot KAN tiers and improves robustness for Continuous Self-Learning (FR-11).
 
-### Dynamic Resolution for Continual EBM Learning
-- **Paper:** "Dynamic Resolution for Continual Energy-Based Model Learning" (OpenReview 2026).
-- **What:** Proposes adjusting the energy landscape resolution dynamically during continuous learning to avoid catastrophic forgetting and mode collapse.
-- **Relevance to Carnot:** Directly applicable to Carnot's FR-11 continuous self-learning requirement, addressing the issues with mode collapse during retention.
 """
 
-if "Post-.182 Planning Sweep" not in content:
-    parts = content.split("## 2026-05-14 Post-.169 Planning Sweep")
-    if len(parts) == 2:
-        new_content = parts[0] + new_findings + "\n## 2026-05-14 Post-.169 Planning Sweep" + parts[1]
-        with open("research-references.md", "w") as f:
-            f.write(new_content)
-        print("Updated research-references.md")
-    else:
-        with open("research-references.md", "a") as f:
-            f.write(new_findings)
-        print("Appended to research-references.md")
-else:
-    print("Already updated.")
+with open("research-references.md", "r") as f:
+    old_content = f.read()
+
+with open("research-references.md", "w") as f:
+    f.write(new_content + old_content)

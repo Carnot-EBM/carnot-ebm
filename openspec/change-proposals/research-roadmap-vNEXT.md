@@ -1,35 +1,38 @@
-# Carnot Research Roadmap: vNEXT (Milestone 2026.05.218)
+# Milestone 2026.05.219: Primal-Dual Decoding, Formal KANs, and Robust CSL
 
-## 1. What Previous Milestones Proved
-Milestone 2026.05.217 successfully integrated Muon-OGD spectral orthogonal gradient projection for CSL stability, digitally optimized ALPS initializations for fast sampling, and the Wahkon RKHS KAN verifier. While these resolved catastrophic forgetting in isolated tests and provided theoretical rigor, our hardware scaling for KANs remained constrained by pure CPU evaluation, and constrained decoding still faces a "reasoning gap" where strict formal boundaries degrade general reasoning capability.
+## Goal
+Advance the Carnot EBM framework by integrating discrete-domain energy decoding, formal constraint verification, and resilient continuous self-learning, recovering from the blockages in `.218`.
 
-## 2. The 3 Biggest Gaps to PRD Vision
-1. **Inference-Time Energy Verification:** The PRD demands verifiable reasoning (FR-12). Recent arXiv (2025/2026) highlights Energy-Based Transformers (EBT) and Energy Outcome Reward Models (EORM). Carnot currently checks constraints after-the-fact; we need iterative energy minimization during inference to achieve genuine "System 2" thinking.
-2. **Hardware KAN Deployability:** We lack a direct translation of Kolmogorov-Arnold Networks to FPGA. The recent KANELÉ framework (arxiv:2512.12850) maps learnable 1D splines directly to FPGA LUTs, promising a 2700x speedup. We must implement this to hit the 10x throughput NFR-01.
-3. **Safe Online Constraint Learning:** While Muon-OGD stabilized forgetting, continuous self-learning (FR-11) lacks safety guarantees. New online regression oracles (pessimistic constraints) and Crosscoder feature-readout constraints are needed to guarantee safe online adaptation.
+## What Previous Milestone Proved
+Milestone `.218` attempted to deploy inference-time EORM verification and KAN LUT-mapping for FPGAs. The operations surfaced hard constraints and repeated `DOOMED_RERUN` blocks in schematic integration (SCG-MEM) and LUT configuration. The primary insight is that continuous space operations require hard constraint boundary verification, and discrete decoding needs efficient Lagrangian multipliers to avoid exponential overhead. 
 
-## 3. Phase Descriptions
+## Architectural Design
 
-### Phase 0: Activation
-Archive 2026.05.217 and initialize 2026.05.218.
+### Phase 1: Core Inference (Discrete Guided Decoding & Coherence)
+The first phase integrates Primal-Dual Guided Decoding directly into the generation logits. Instead of Gumbel-softmax outer loops, it uses Lagrangian multipliers for inference-time adaptation. Simultaneously, an Energy-Based Constraint Network (EBCN) state-space model is added to score structural coherence text-wide, moving away from local Regex.
 
-### Phase 1: EORM & EBT Inference-Time Verification
-Implement a 55M parameter Energy Outcome Reward Model (EORM) to provide scalar energy scores for CoT solutions, and integrate Energy-Based Transformer (EBT) iterative energy minimization to allow the model to refine its predictions based on energy gradients. We also integrate CRANE (arxiv:2502.09061) reasoning-augmented grammar to balance formal constraints with natural reasoning.
+### Phase 2: KAN Formal Synthesis & Hardware Parity
+We address the zero-false-accept requirements for Phase 2 hardware mapping. By incorporating Lipschitz-regularization (LipKAN) and SMT-solvers for Control Barrier Certificates (KAN4CBC), we can formally prove constraint bounds before synthesis. The KANELÉ FPGA BRAM/LUT bitstream will be re-attempted utilizing this safer verified topology.
 
-### Phase 2: KANELÉ Hardware Evolution
-Implement the KANELÉ (arxiv:2512.12850) framework, translating KAN splines directly to FPGA Lookup Tables (LUTs). Draft and synthesize the KV260 bitstream to bypass the k_max=5 bottleneck via efficient LUT usage.
-
-### Phase 3: Pessimistic CSL & Feature Memory
-Advance Tier 3 Continuous Self-Learning (FR-11) by introducing an online regression oracle that imposes pessimistic safety constraints, ensuring zero catastrophic violations during online updates. Additionally, incorporate Schema-Constrained Generative Memory (SCG-MEM) to safely manage agentic memory retrieval.
+### Phase 3: Continuous Self-Learning (FR-11)
+To prevent catastrophic forgetting observed in past self-learning tiers, we implement a dynamic Lipschitz-bound update mechanism within the Continuous Self-Learning loop. This ensures that new constraint representations (from JEPA/Crosscoder) do not overwrite fundamental logical invariants.
 
 ### Phase 4: Capstone Evaluation
-Live GPU evaluation using mandated SOTA models (`unsloth/gemma-4-31B-it-GGUF` and `unsloth/Qwen3.6-35B-A3B-GGUF`), running the complete EORM+EBT pipeline with KANELÉ hardware simulation.
+Live GPU evaluation combining the EBCN structural score, Primal-Dual token logit modifiers, and robust self-learning models using SOTA GGUF models.
 
-## 4. Hardware Requirements
-- **2x NVIDIA RTX 3090 (CUDA):** Required for Phase 4 Capstone live inference.
-- **KV260 / OSS-CAD-Suite:** Required for synthesizing the KANELÉ LUT RTL.
+## Phase Structure
+- **Phase 0:** Archival of `.218` and setup of `.219`.
+- **Phase 1:** Primal-Dual Decoding & Energy-Based Constraint Networks.
+- **Phase 2:** Formal verification of KANs (LipKAN & KAN4CBC) and KV260 hardware synthesis retry.
+- **Phase 3:** Lipschitz-regulated Continuous Self-Learning (FR-11).
+- **Phase 4:** E2E GPU Benchmark & Retro.
 
-## 5. Dependency Graph
-- Phase 1 (EORM/EBT) -> Phase 4 (Capstone)
-- Phase 2 (KANELÉ RTL) -> Phase 2 (KV260 Synthesis) -> Phase 4 (Capstone)
-- Phase 3 (Pessimistic CSL) -> Phase 4 (Capstone)
+## Dependency Graph
+- Phase 1 tasks depend on Phase 0 setup.
+- Phase 2 KAN hardware synthesis depends on KAN formal verification.
+- Phase 3 CSL relies on Phase 2's Lipschitz boundary constraints.
+- Phase 4 depends on all core implementations succeeding.
+
+## Hardware Requirements
+- Dual RTX 3090 (48GB total) for the SOTA GGUF inferences (`unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`).
+- Local KV260 FPGA board (target) / OSS-CAD-Suite for Synthesis Verification.
