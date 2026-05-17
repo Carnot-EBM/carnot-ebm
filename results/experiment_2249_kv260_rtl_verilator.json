@@ -1,0 +1,35 @@
+{
+  "experiment": 2249,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-17",
+  "started_at": "2026-05-17T15:33:03.412301+00:00",
+  "finished_at": "2026-05-17T15:33:03.412301+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 5: KV260 RTL Verilator Source-Level Lint and Simulation",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: prior_failures[0] missing/empty fields: ['retire_if_same_verdict']",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1437-discrete-sb-kv260-rtl-lint-sim",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [
+        {
+          "experiment_id": "exp1451-discrete-sb-rtl-lint-sim-rerun",
+          "verdict": "partial",
+          "addressed_by": "exp1451 ran verilator lint but did not produce a clean simulator run. This attempt targets 10-cycle Icarus simulation after lint (new acceptance criterion). Different: explicitly scoped to source-level simulation only, no bitfile claim."
+        },
+        {
+          "experiment_id": "exp1441-discrete-sb-rtl-source-implementation",
+          "verdict": "partial",
+          "addressed_by": "exp1441 generated RTL stub but didn't lint. This task starts from that RTL or regenerates it, then runs both verilator --lint-only AND a 10-cycle iverilog simulation."
+        }
+      ],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_missing_discrete_sb_rtl_source"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
