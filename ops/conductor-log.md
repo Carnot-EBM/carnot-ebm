@@ -4404,3 +4404,5 @@ Ripgrep i |
 | 2026-05-17 17:20 UTC | Phase 3: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2260-kv260-rtl-clean-reattempt) |
 | 2026-05-17 17:20 UTC | Phase 4: Adversarial Null-Space Probe on k=16 Ense | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 17:22 UTC | Phase 3: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2260-kv260-rtl-clean-reattempt) |
+| 2026-05-17 17:22 UTC | Phase 4: Adversarial Null-Space Probe on k=16 Ense | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 17:24 UTC | Phase 3: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2260-kv260-rtl-clean-reattempt) |
