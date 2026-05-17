@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-17 Milestone 2026.05.226 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-17T20:59:36Z | 2026-05-17T21:05:54Z | Continued from context compaction: read research-roadmap.yaml (format reference); wrote research-roadmap-next.yaml (14 tasks exp2294-exp2307, 226 milestone); updated ops/status.md, ops/changelog.md, ops/metrics.md. | TBD |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available. Turn 1 of this session reflects the resumption after context compaction of the earlier planning session (which read all 11 context files and wrote the roadmap design doc).
+
 ## Session: 2026-05-17 Milestone 2026.05.225 Research Planning
 
 ### Turn Log

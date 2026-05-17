@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-05-17 (Milestone 2026.05.226 Research Planning)
+
+- Milestone 2026.05.226 research planning complete. User instruction: plan the next milestone after .225, which completed all 14 tasks but with the pre-test cascade still blocking substantive work for the 5th consecutive milestone.
+- Root cause confirmed for 5th time: `carnot.pypi_escalation` still missing `check_pypi_escalation` and `run_escalation` — codex gpt-5.5 (exp2281) produced NO deliverable. Switching to `requires_claude: true` (Sonnet + C+E Opus escalation, max_turns: 40) for exp2295.
+- ArXiv research sweep (conducted in earlier session) added 4 papers to `research-references.md` under "Post-.225 Planning Sweep": NSVIF (arXiv:2601.17789), Sparse Ising (arXiv:2503.01177), VERGE (arXiv:2601.20055), CoVe (arXiv:2603.01940).
+- Created `openspec/change-proposals/research-roadmap-v226.md` with full milestone design: what .225 proved, architecture snapshot, 3 biggest gaps vs PRD, phase structure (Phase 0–4), dependency graph, FR-11 mandate, hardware requirements, decentralization check (Rules 1–7), exclusion manifest cross-check, failed-experiment rerun compliance table.
+- Created `research-roadmap-next.yaml` with 14 tasks (exp2294–exp2307). Phase 0: archive .225 + Claude-escalated pypi fix. Phase 1: FST live gen v6 (exp2296), FR-11 multidomain v3 (exp2297), KAN-CL n=256 v5 (exp2298). Phase 2: Eidoku CSP v2 (exp2299), Projected-Langevin v2 (exp2300), NSVIF neuro-symbolic extractor (exp2301 — PRD Priority #1 first implementation), VERGE SMT repair (exp2302). Phase 3: KV260 RTL lint v5 (exp2303), adversarial probe v4 (exp2304), Sparse Ising (exp2305 — new). Phase 4: capstone (exp2306, opus), retro (exp2307, ungated).
+- Agent routing: 12 tasks `codex gpt-5.5`; exp2295 `requires_claude: true` (justified: codex demonstrably failed x2, multi-file debug, multi-step reasoning); exp2306 capstone `model: opus, max_turns: 100`.
+- All Phase 1–3 tasks gate on exp2295.pretest_fixed==true. exp2297 additionally gates on exp2296.fst_live_validated. exp2306 capstone gates on exp2296.fst_live_validated AND exp2298.kancl_n256_validated. exp2307 retro is ungated.
+- FR-11 mandate: exp2297 with `continuous_self_learning_task: true`, gate `cross_domain_retention_rate >= 0.75`.
+- Exclusion manifest cross-check: GRPO/VPRM, WOPR puzzles, HardNet++/DSP, THRML scaling sweep, SpecAnn, exp2091 — none proposed.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-17 (Milestone 2026.05.225 Research Planning)
 
 - Milestone 2026.05.225 research planning complete. User instruction: plan the next milestone after .224, which confirmed 2 of 14 tasks completed and diagnosed a new cascade root cause blocking the remaining 12.

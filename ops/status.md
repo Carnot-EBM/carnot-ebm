@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-17 (milestone 2026.05.225 research planning complete)
+**Last Updated:** 2026-05-17 (milestone 2026.05.226 research planning complete)
+
+## Session 2026-05-17 - Milestone 2026.05.226 Research Planning Complete
+
+**Milestone 2026.05.226 PLANNED after .225 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v226.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2294`-`exp2307`)
+- ID allocation: milestone `.225` used through `exp2293`, so `.226` starts at `exp2294`.
+- Research references updated in previous session with post-.225 planning sweep: NSVIF (arXiv:2601.17789), Sparse Ising (arXiv:2503.01177), VERGE (arXiv:2601.20055), CoVe (arXiv:2603.01940).
+- Design focus: Phase 0 archives .225 and attempts pre-test fix for the 5th time — this time using `requires_claude: true` (Claude Sonnet + C+E Opus escalation, max_turns: 40), switching from codex gpt-5.5 which demonstrably failed in .225 (exp2281 produced no deliverable). Phase 1 retries FST live gen (exp2296), FR-11 multidomain retention (exp2297), KAN-CL n=256 (exp2298) — all blocked 5+ consecutive milestones. Phase 2 introduces three new techniques: Eidoku CSP (exp2299, arXiv:2512.20664), Projected-Langevin (exp2300, arXiv:2605.05387), NSVIF neuro-symbolic Z3 extractor (exp2301, arXiv:2601.17789 — PRD Priority #1 first implementation), VERGE SMT repair (exp2302, arXiv:2601.20055). Phase 3 retries KV260 RTL lint (exp2303), adversarial probe (exp2304), and introduces Sparse Ising (exp2305, arXiv:2503.01177). Phase 4 has capstone and retro.
+- LLM-bearing tasks (`exp2296`, `exp2306`) include mandated local SOTA GGUF MODEL_SPECS: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement (FR-11) satisfied by `exp2297-fr11-fst-multidomain-v3` with `continuous_self_learning_task: true` in its artifact contract. Gate: `cross_domain_retention_rate >= 0.75`.
+- Structured gates: `exp2296`, `exp2298`, `exp2299`, `exp2300`, `exp2301`, `exp2302`, `exp2303`, `exp2304`, `exp2305` all gate on `exp2295.pretest_fixed == true`. `exp2297` additionally gates on `exp2296.fst_live_validated == true`. `exp2306` (capstone) gates on `exp2296.fst_live_validated == true` AND `exp2298.kancl_n256_validated == true`. `exp2307` (retro) is ungated — always runs.
+- Agent routing: 12 of 14 tasks use `agent_type: codex, model: gpt-5.5`. `exp2295` (pre-test fix): `requires_claude: true, max_turns: 40` (Claude Sonnet + C+E Opus escalation). `exp2306` (capstone): `model: opus, max_turns: 100`.
+- Key change from .225: exp2295 uses `requires_claude: true` instead of codex; the codex approach was demonstrably insufficient across 2 consecutive milestones (.224 exp2267 missed the root cause; .225 exp2281 aimed directly at it but produced no deliverable).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.226 when ready. Key unblocking task is `exp2295` (pypi_escalation fix using Claude Sonnet + Opus escalation) — once `pretest_fixed: true`, the conductor can sequence all 12 Phase 1–3 tasks automatically.
+
+---
 
 ## Session 2026-05-17 - Milestone 2026.05.225 Research Planning Complete
 
