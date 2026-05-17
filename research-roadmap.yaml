@@ -1,109 +1,127 @@
-milestone: "2026.05.223"
-milestone_title: "Pre-Test Repair, Real-Scale Live Generation, KAN-CL n=256, and KV260 RTL"
-milestone_doc: "openspec/change-proposals/research-roadmap-v223.md"
+milestone: "2026.05.224"
+milestone_title: "DualGPU ImportError Fix, FST Live Generation, KAN-CL n=256 Validation, and Eidoku CSP Gate"
+milestone_doc: "openspec/change-proposals/research-roadmap-v224.md"
 tasks:
 
-  - id: exp2253-archive-and-activate
-    title: "Phase 0: Archive .222 and activate .223"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2253_archive.json"
+  - id: exp2266-archive-and-activate
+    title: "Phase 0: Archive .223 and activate .224"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2266_archive.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 20
     prior_failures:
-      - experiment_id: exp2239-archive-and-activate
+      - experiment_id: exp2253-archive-and-activate
         verdict: complete
         addressed_by: "Standard archive pattern; each milestone archive is genuinely new scope (different source milestone). Not a failed rerun."
     prompt: |
-      CONTEXT: Milestone 2026.05.222 has completed. We must prepare for 2026.05.223.
+      CONTEXT: Milestone 2026.05.223 has completed. We must prepare for 2026.05.224.
       EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
-      TASK: Archive 2026.05.222 to research-complete.yaml and initialize the .223 milestone in ops/changelog.md.
+      TASK: Archive 2026.05.223 to research-complete.yaml and initialize the .224 milestone in ops/changelog.md.
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
-           a. Verify {project_root}/research-roadmap.yaml exists and contains milestone: "2026.05.222".
+           a. Verify {project_root}/research-roadmap.yaml exists and contains milestone: "2026.05.223".
            If the file is missing or has the wrong milestone, write honest_verdict blocked_roadmap_missing and exit.
-        1. Append all tasks from research-roadmap.yaml under a new "2026.05.222" entry in research-complete.yaml,
+        1. Append all tasks from research-roadmap.yaml under a new "2026.05.223" entry in research-complete.yaml,
            setting completed_date to {date}.
         2. Replace research-roadmap.yaml contents with the new milestone structure from research-roadmap-next.yaml.
-        3. Add a "## {date} (Milestone 2026.05.223 Operational Retrospective)" stub in ops/changelog.md.
+        3. Add a "## {date} (Milestone 2026.05.224 Operational Retrospective)" stub in ops/changelog.md.
         4. Set archive_ready: true in the deliverable.
-        5. Write deliverable to results/experiment_2253_archive.json.
+        5. Write deliverable to results/experiment_2266_archive.json.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required (complete:/success:) so conductor classifies this as a closed task, not a partial."
-        archive_ready:
-          principle: "Boolean gate for downstream tasks confirming .222 was appended to research-complete.yaml before roadmap swap."
+        - honest_verdict:
+            principle: "Terminal-prefix required (complete:/success:) so conductor classifies this as a closed task, not a partial."
+        - archive_ready:
+            principle: "Boolean gate for downstream tasks confirming .223 was appended to research-complete.yaml before roadmap swap."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2254-pretest-fix
-    title: "Phase 0: Fix Duplicate test_compositional_energy Module (Pre-Test Failure)"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2254_pretest_fix.json"
+  - id: exp2267-dualgpu-import-fix
+    title: "Phase 0: Fix DualGPU ImportError in carnot.inference.__init__ (Cascade Root Cause)"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2267_dualgpu_fix.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 20
     prior_failures:
-      - experiment_id: exp2249-kv260-rtl-verilator
-        verdict: blocked_gate_check_failed
-        addressed_by: "exp2249 was blocked by gate_check_failed. Root cause diagnosed post-.222: pytest import collision between tests/python/phase3/test_compositional_energy.py and tests/python/models/test_compositional_energy.py (same module name). This task resolves the systemic pre-test failure directly."
+      - experiment_id: exp2254-pretest-fix
+        verdict: incomplete
+        addressed_by: "exp2254 resolved the duplicate test_compositional_energy basename (renamed phase3 test file) but pretest_fixed=false because a DIFFERENT ImportError remained: tests/python/test_dual_gpu.py imports DualGPUExecutionResult from carnot.inference, but python/carnot/inference/__init__.py is EMPTY. The class exists in python/carnot/inference/dual_gpu.py but is never re-exported. Root cause diagnosed from exp2254 evidence. Fix: add the four missing symbols to __init__.py."
     prompt: |
-      CONTEXT: A systemic pre-test failure has been causing SKIP and GATE_BLOCK events across
-      milestones .216-.222. Root cause: pytest discovers two files with the same basename
-      'test_compositional_energy.py' in different directories:
-        - tests/python/models/test_compositional_energy.py
-        - tests/python/phase3/test_compositional_energy.py
-      pytest's import system cannot distinguish them, causing: "import file mismatch" error and
-      stopping all tests. This blocks the conductor's pre-test check, causing downstream tasks to
-      be SKIPped or gate-blocked.
+      CONTEXT: The cascading pre-test failure across milestones .223 has been root-caused to a single
+      issue: python/carnot/inference/__init__.py is EMPTY, but tests/python/test_dual_gpu.py imports
+      DualGPUExecutionResult, DualGPURunner, estimate_model_size_billions, and requires_device_map_auto
+      from 'carnot.inference'. The classes exist in python/carnot/inference/dual_gpu.py but are never
+      re-exported from __init__.py.
+      This ImportError causes the conductor's pre-test check to fail, which labels ALL tasks as
+      SKIP or blocked_gate_check_failed — including tasks with no structured gate of their own.
+      Fixing this one file unblocks 10+ experiments across .223 and .224.
       EXISTING CODE TO READ FIRST:
-        {project_root}/tests/python/phase3/test_compositional_energy.py
-        {project_root}/tests/python/models/test_compositional_energy.py
-      TASK: Rename the phase3 test file to avoid the duplicate module name and verify tests pass.
+        {project_root}/python/carnot/inference/__init__.py
+        {project_root}/python/carnot/inference/dual_gpu.py
+        {project_root}/tests/python/test_dual_gpu.py
+      TASK: Add the four missing exports to carnot/inference/__init__.py and verify pre-tests pass.
       CONCRETE STEPS:
-        1. Rename tests/python/phase3/test_compositional_energy.py to
-           tests/python/phase3/test_phase3_compositional_energy.py
-           (use git mv so version control tracks the rename).
-        2. Update any imports in the renamed file if needed (check for
-           'from test_compositional_energy import ...' patterns).
-        3. Run: cd {project_root} && .venv/bin/python -m pytest tests/python -x -q --no-cov
-           -p no:cacheprovider 2>&1 | tail -5
-           Record: n_failures, n_errors, n_warnings.
-        4. Set pretest_fixed: true if n_errors == 0 AND n_failures == 0.
-        5. Write deliverable to results/experiment_2254_pretest_fix.json.
+        1. Read python/carnot/inference/dual_gpu.py to confirm the exact names of all four symbols:
+           DualGPUExecutionResult, DualGPURunner, estimate_model_size_billions, requires_device_map_auto.
+           Verify they are defined (not just referenced) in dual_gpu.py.
+        2. Edit python/carnot/inference/__init__.py to add:
+           from carnot.inference.dual_gpu import (
+               DualGPUExecutionResult,
+               DualGPURunner,
+               estimate_model_size_billions,
+               requires_device_map_auto,
+           )
+        3. Run: cd {project_root} && .venv/bin/python -m pytest tests/python/test_dual_gpu.py -x -q --no-cov
+           -p no:cacheprovider 2>&1 | tail -10
+           Record: n_test_errors, n_test_failures.
+        4. Run the full pre-test check: cd {project_root} && .venv/bin/python -m pytest tests/python -x -q
+           --no-cov -p no:cacheprovider 2>&1 | tail -5
+           Record: full_pretest_errors, full_pretest_failures.
+        5. Set pretest_fixed: true if full_pretest_errors == 0 AND full_pretest_failures == 0.
+        6. Write deliverable to results/experiment_2267_dualgpu_fix.json.
 
       REQUIRED ARTIFACT FIELDS:
-        - honest_verdict: Terminal-prefix required. complete: if pre-test errors resolved.
-        - pretest_fixed: Boolean gate for all downstream tasks previously gate-blocked by the pre-test failure.
-        - n_errors: Records post-fix pytest error count; must be 0 for gate to open.
-        - n_failures: Records post-fix test failure count; must be 0 to confirm no regressions.
-        - renamed_file: Records the new file path so reviewers can verify the fix.
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if pretest_fixed is true."
+        - pretest_fixed:
+            principle: "Primary gate for ALL Phase 1 and Phase 2 tasks. True only when the full pytest suite has zero errors and zero failures — not just the dual_gpu test file alone."
+        - n_test_errors:
+            principle: "Records dual_gpu.py test errors specifically to confirm the ImportError was resolved."
+        - n_test_failures:
+            principle: "Records dual_gpu.py test failures to confirm no regressions were introduced by the fix."
+        - full_pretest_errors:
+            principle: "Records full-suite error count post-fix; must be 0 for pretest_fixed=true."
+        - full_pretest_failures:
+            principle: "Records full-suite failure count post-fix; must be 0 for pretest_fixed=true."
+        - symbols_added:
+            principle: "Lists the four symbol names added to __init__.py so reviewers can verify completeness of the export fix."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2255-fst-real-scale-live-gen
+  - id: exp2268-fst-real-scale-live-gen
     title: "Phase 1: FST+ODAR+CASAL Real-Scale Live Generation Benchmark"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2255_fst_live_gen.json"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2268_fst_live_gen.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 50
     gated_on:
-      - upstream: exp2254-pretest-fix
+      - upstream: exp2267-dualgpu-import-fix
         artifact_field: pretest_fixed
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2251-capstone-v222
-        verdict: complete
-        addressed_by: "exp2251 was the .222 capstone but only performed a one-token GGUF probe (not full answer generation). This task explicitly requires full multi-sentence answer generation as the primary deliverable — a materially different acceptance gate."
+      - experiment_id: exp2255-fst-real-scale-live-gen
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp2255 had blocked_gate_check_failed because exp2254.pretest_fixed=false. Root cause diagnosed: carnot.inference.__init__ was empty; DualGPUExecutionResult not exported. exp2267 fixes the ImportError by adding the four symbols to __init__.py. This attempt is identical in scope to exp2255 but runs only when exp2267.pretest_fixed=true."
     prompt: |
-      CONTEXT: The .222 capstone (exp2251) demonstrated that FST+ODAR+CASAL interoperate, but
-      the 'live hardware evidence was limited to a successful one-token GGUF probe on GPU 0,
-      not full live answer generation.' This is the key gap to close in .223. We need full
-      answer generation (multi-sentence, not single token) to validate the verify-repair stack
-      at the product level.
+      CONTEXT: The .223 capstone (exp2251) demonstrated FST+ODAR+CASAL interoperate, but live
+      hardware evidence was limited to a successful one-token GGUF probe on GPU 0, not full
+      live answer generation. exp2255 was blocked by the DualGPU ImportError cascade. Now that
+      exp2267 has fixed that ImportError, this task runs the benchmark with FULL ANSWER GENERATION
+      (minimum 50 tokens per answer, not a single-token probe).
       EXISTING CODE TO READ FIRST:
         {project_root}/python/carnot/pipeline/verify_repair.py
         {project_root}/python/carnot/pipeline/odar_router.py
@@ -113,16 +131,16 @@ tasks:
       TASK: Run 20 full generate+verify passes on a cached SOTA GGUF, generating complete answers.
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
-           a. python/carnot/pipeline/odar_router.py imports — else blocked_odar_missing.
-           b. python/carnot/training/fast_slow.py imports — else blocked_fst_missing.
-           c. python/carnot/samplers/casal.py imports — else blocked_casal_missing.
+           a. python/carnot/pipeline/odar_router.py imports without error — else blocked_odar_missing.
+           b. python/carnot/training/fast_slow.py imports without error — else blocked_fst_missing.
+           c. python/carnot/samplers/casal.py imports without error — else blocked_casal_missing.
            d. ls ~/.cache/huggingface/hub/ | grep -i "gemma-4-26B\|Qwen3.6-35B\|gemma-4-31B" returns non-empty —
               else blocked_model_not_cached. Do NOT fabricate GPU inference.
         1. MODEL_SPECS must include at least one of:
            - unsloth/Qwen3.6-35B-A3B-GGUF
            - unsloth/gemma-4-31B-it-GGUF
            - unsloth/gemma-4-26B-A4B-it-GGUF
-        2. Construct 20 math/reasoning prompts (e.g., multi-step arithmetic, simple logic).
+        2. Construct 20 math/reasoning prompts (multi-step arithmetic, simple logic).
         3. For each prompt: generate a FULL ANSWER (minimum 50 tokens, not just next-token).
            Record the full generated text.
         4. For each answer: run ODAR routing (does this answer need deliberative verification?);
@@ -135,52 +153,61 @@ tasks:
            - odar_fast_path_fraction: fraction routed to fast path
         6. Set fst_live_validated: true if n_violations_found >= 1 AND
            mean_answer_length_tokens >= 50.
-        7. Write deliverable to results/experiment_2255_fst_live_gen.json.
+        7. Write deliverable to results/experiment_2268_fst_live_gen.json.
 
       REQUIRED ARTIFACT FIELDS:
-        - honest_verdict: Terminal-prefix required. complete: if fst_live_validated is true.
-        - fst_live_validated: Primary gate for exp2264 capstone. True only when violations were found in FULL answers (not token probes).
-        - mean_answer_length_tokens: Must be >= 50 to claim full answer generation; prevents single-token probe from satisfying the gate.
-        - n_violations_found: At least 1 required to demonstrate the pipeline is actually running verification, not just generating.
-        - n_violations_repaired: Records repair effectiveness; 0 is acceptable (honest finding) but > 0 is the headline claim.
-        - models_used: Records which SOTA GGUF ran so claims are model-specific.
-        - preconditions_checked: Lists which resources were verified before inference; pre-empts fabrication.
-        - duration_s: Real compute takes wall-clock time; implausibly short duration flags fabrication.
-        - random_seed: Reproducibility for the 20-example corpus.
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if fst_live_validated is true."
+        - fst_live_validated:
+            principle: "Primary gate for exp2278 capstone. True only when violations were found in FULL answers (not token probes). This is the load-bearing anti-fabrication gate."
+        - mean_answer_length_tokens:
+            principle: "Must be >= 50 to distinguish from single-token probes. A value < 50 indicates the benchmark did not test full generation."
+        - n_violations_found:
+            principle: "At least 1 required to demonstrate the pipeline actually runs verification, not just pass-through generation."
+        - n_violations_repaired:
+            principle: "Records repair effectiveness; 0 is acceptable as an honest finding, but > 0 is the headline claim."
+        - models_used:
+            principle: "Records which SOTA GGUF ran so claims are model-specific and not hallucinated."
+        - preconditions_checked:
+            principle: "Lists which resources were verified before inference; pre-empts fabrication mode."
+        - duration_s:
+            principle: "Real compute takes wall-clock time; implausibly short duration (< 60s for 20 problems with a 26B model) flags fabrication."
+        - random_seed:
+            principle: "Reproducibility for the 20-example corpus."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2256-fr11-fst-multidomain
+  - id: exp2269-fr11-fst-multidomain
     title: "Phase 1: FR-11 FST Multi-Domain Retention Validation"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2256_fr11_multidomain.json"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2269_fr11_multidomain.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 30
     gated_on:
-      - upstream: exp2255-fst-real-scale-live-gen
+      - upstream: exp2268-fst-real-scale-live-gen
         artifact_field: fst_live_validated
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2241-fr11-fst-eval
-        verdict: complete
-        addressed_by: "exp2241 validated FST on a single-domain synthetic corpus (30 examples, single arithmetic domain). This task extends to multi-domain retention (math, code, logic) using live-generated data — a new evaluation scope testing cross-domain generalization."
+      - experiment_id: exp2256-fr11-fst-multidomain
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp2256 was blocked because its upstream exp2255 (fst_live_validated) was itself blocked by the DualGPU ImportError cascade. exp2267 fixes the root cause. This attempt is identical in scope to exp2256 but runs only when exp2268.fst_live_validated=true."
     prompt: |
-      CONTEXT: FR-11 continuous self-learning mandate. exp2241 proved FST achieves 4x sample
-      efficiency on a single-domain corpus. This task validates that FST fast-weight updates
-      generalize across domains: fast weights learned on math problems should partially help
-      with code and logic problems. Cross-domain retention is the critical FR-11 property that
-      distinguishes Carnot from per-task fine-tuning.
+      CONTEXT: FR-11 continuous self-learning mandate. exp2241 (.222) proved FST achieves 4x
+      sample efficiency on a single-domain synthetic corpus. This task validates that FST
+      fast-weight updates generalize across domains: fast weights learned on math problems
+      should partially help with code and logic problems. Cross-domain retention is the
+      critical FR-11 property distinguishing Carnot from per-task fine-tuning.
       EXISTING CODE TO READ FIRST:
         {project_root}/python/carnot/training/fast_slow.py
         {project_root}/python/carnot/pipeline/verify_repair.py
         {project_root}/scripts/experiment_template.py
-        {project_root}/results/experiment_2255_fst_live_gen.json
+        {project_root}/results/experiment_2268_fst_live_gen.json
       TASK: Validate FST fast-weight retention across 3 reasoning domains.
       CONCRETE STEPS:
         0. PRECONDITIONS:
-           a. python/carnot/training/fast_slow.py imports — else blocked_fst_missing.
+           a. python/carnot/training/fast_slow.py imports without error — else blocked_fst_missing.
         1. Create 3 domain corpora (10 examples each, synthetic, no external LLM calls):
            Domain A: arithmetic (a + b = c style)
            Domain B: code constraints (loop bounds, array indices)
@@ -188,120 +215,62 @@ tasks:
         2. Run FST learning in sequence: Domain A → Domain B → Domain C.
         3. After Domain C training, evaluate fast-weight performance on held-out Domain A examples.
         4. Measure:
-           - cross_domain_retention_rate: accuracy on Domain A after Domain C training / accuracy
-             on Domain A after Domain A training
+           - cross_domain_retention_rate: accuracy on Domain A after Domain C training divided by
+             accuracy on Domain A after Domain A training
            - per_domain_utility_delta: energy reduction per domain
         5. Set fr11_multidomain_passed: true if cross_domain_retention_rate >= 0.75.
         6. Write deliverable with continuous_self_learning_task: true.
-        7. Write deliverable to results/experiment_2256_fr11_multidomain.json.
+        7. Write deliverable to results/experiment_2269_fr11_multidomain.json.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required. complete: if cross_domain_retention_rate >= 0.75."
-        continuous_self_learning_task:
-          principle: "Must be true — FR-11 mandate requires at least one CSL task per milestone."
-        fr11_multidomain_passed:
-          principle: "Boolean gate. True only when cross-domain retention >= 0.75."
-        cross_domain_retention_rate:
-          principle: "Primary FR-11 gate at multi-domain scale; below 0.75 means FST overfits to each domain independently."
-        per_domain_utility_delta:
-          principle: "Per-domain energy reduction records whether FST helps each domain independently."
-        n_corpus_per_domain:
-          principle: "Must be >= 10 per domain for the retention claim to be statistically non-trivial."
-        preconditions_checked:
-          principle: "Lists FST module availability check."
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if fr11_multidomain_passed is true."
+        - continuous_self_learning_task:
+            principle: "Must be true — FR-11 mandate requires at least one CSL task per milestone."
+        - fr11_multidomain_passed:
+            principle: "Boolean gate. True only when cross-domain retention >= 0.75; below means FST overfits per-domain."
+        - cross_domain_retention_rate:
+            principle: "Primary FR-11 multi-domain gate; computed as accuracy-on-A-after-C / accuracy-on-A-after-A."
+        - per_domain_utility_delta:
+            principle: "Per-domain energy reduction records whether FST helps each domain independently."
+        - n_corpus_per_domain:
+            principle: "Must be >= 10 per domain for the retention claim to be statistically non-trivial."
+        - preconditions_checked:
+            principle: "Lists FST module availability check; pre-empts fabrication on missing module."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2257-odar-real-inference-benchmark
-    title: "Phase 1: ODAR Real-Inference Routing Overhead Benchmark"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2257_odar_real_benchmark.json"
-    agent_type: "codex"
-    model: "gpt-5.5"
-    max_turns: 30
-    prior_failures:
-      - experiment_id: exp2244-odar-benchmark
-        verdict: complete
-        addressed_by: "exp2244 benchmarked ODAR on a 30-example SYNTHETIC corpus with artificially classified EFE values. This task benchmarks on a 100-example corpus using REAL EFE computation from Tier 0 probe outputs — the first time ODAR's routing overhead is measured on genuine inference data rather than synthetic oracle labels."
-    prompt: |
-      CONTEXT: exp2244 validated ODAR's compute reduction on a synthetic corpus where EFE values
-      were constructed artificially. To claim ODAR reduces real inference overhead, we need a
-      benchmark on actual Tier 0 probe outputs from the verify-repair pipeline. This also
-      measures routing_overhead_ms, which was not measured in exp2244.
-      EXISTING CODE TO READ FIRST:
-        {project_root}/python/carnot/pipeline/odar_router.py
-        {project_root}/python/carnot/pipeline/verify_repair.py
-        {project_root}/scripts/experiment_template.py
-      TASK: Benchmark ODAR on 100 examples using real Tier 0 probe EFE computation.
-      CONCRETE STEPS:
-        0. PRECONDITIONS:
-           a. python/carnot/pipeline/odar_router.py imports — else blocked_odar_missing.
-        1. Construct 100 reasoning examples (synthetic text, no external LLM calls).
-        2. For each example:
-           - Run Tier 0 probes (existing verify pipeline) to get real probe outputs.
-           - Compute EFE from those outputs via FreeEnergyRouter.
-           - Route: FAST_PATH or DELIBERATIVE.
-           - Record wall-clock time for routing decision (routing_overhead_ms).
-        3. Regime A (uniform): always run full verification cascade.
-           Regime B (ODAR): route by EFE threshold.
-        4. Measure:
-           - compute_reduction_pct vs uniform
-           - routing_overhead_ms (median per decision)
-           - fast_path_fraction
-           - accuracy_delta (must be >= -2pp)
-        5. Set odar_real_validated: true if compute_reduction_pct >= 25 AND routing_overhead_ms <= 5.
-        6. Write deliverable to results/experiment_2257_odar_real_benchmark.json.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required. complete: if odar_real_validated is true."
-        odar_real_validated:
-          principle: "Boolean gate. True only when compute_reduction_pct >= 25 from real probe EFE."
-        compute_reduction_pct:
-          principle: "Primary gate: must be >= 25 on real inference data (not synthetic labels)."
-        routing_overhead_ms:
-          principle: "Records EFE computation cost; must be <= 5ms to be negligible vs cascade cost."
-        accuracy_delta:
-          principle: "Guards against trading accuracy for speed; must be >= -2pp."
-        n_corpus:
-          principle: "Must be 100 for statistical significance claims."
-        preconditions_checked:
-          principle: "Lists ODAR module availability check."
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2258-kancl-n256-clean-reattempt
-    title: "Phase 2: KAN-CL n=256 Per-Knot Regularization Clean Re-attempt"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2258_kancl_n256.json"
+  - id: exp2270-kancl-n256-clean-reattempt
+    title: "Phase 1: KAN-CL n=256 Per-Knot Regularization Clean Re-attempt"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2270_kancl_n256.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 30
     gated_on:
-      - upstream: exp2254-pretest-fix
+      - upstream: exp2267-dualgpu-import-fix
         artifact_field: pretest_fixed
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2247-kancl-n256-scaling
+      - experiment_id: exp2258-kancl-n256-clean-reattempt
         verdict: blocked_gate_check_failed
-        addressed_by: "exp2247 had blocked_gate_check_failed because the .222 YAML included exp2248 (titled 'THRML/Carnot Parity at n=256 with KAN-CL') which matched the retired exclusion pattern 'THRML/Carnot parity n=256', cascade-blocking exp2247 at activation time. Root cause: scope contamination from exp2248 in the same milestone YAML. Fix: this task's title, description, and ALL deliverable fields reference ONLY KAN-CL per-knot importance regularization — no THRML parity measurement, no bounded_kl field, no reference to THRML at all. This task is purely about catastrophic forgetting in KAN's spline parameterization at n=256 spin Ising scale."
+        addressed_by: "exp2258 had blocked_gate_check_failed because exp2254.pretest_fixed=false. Root cause: DualGPU ImportError in carnot.inference.__init__ (empty file). exp2267 fixes the root cause by exporting the four missing symbols. This attempt is identical in scope to exp2258 and runs only when exp2267.pretest_fixed=true. No THRML parity measurement; no bounded_kl field — purely per-knot importance regularization at n=256."
     prompt: |
       CONTEXT: KAN-CL per-knot importance regularization was proven at small n in .221 (exp2231).
-      The .222 re-attempt at n=256 (exp2247) was blocked because the SAME YAML included exp2248
-      (THRML/Carnot Parity at n=256) which matched a retired exclusion pattern. This task is
-      a CLEAN re-attempt: NO THRML parity, NO bounded_kl metric — purely per-knot importance
-      regularization and retention across sequential constraint domains.
-      COOL (Springer 2026) demonstrated 20μs update latency with KANs on n=256-class tasks.
-      We validate that Carnot's KAN-CL achieves >= 0.85 retention on Domain 1 after Domain 3
-      training, at n=256 spin Ising scale.
+      Attempts at n=256 in .222 (exp2247, blocked by THRML contamination) and .223 (exp2258,
+      blocked by DualGPU ImportError) have failed for exogenous reasons. COOL (Springer 2026)
+      demonstrated 20us update latency with KANs on n=256-class tasks. This task is a CLEAN
+      re-attempt: NO THRML parity, NO bounded_kl metric — purely per-knot importance regularization
+      and retention across sequential constraint domains at n=256 spin Ising scale.
       EXISTING CODE TO READ FIRST:
         {project_root}/python/carnot/models/substrate_kan.py
         {project_root}/python/carnot/samplers/parallel_ising.py
         {project_root}/scripts/experiment_template.py
       TASK: Validate KAN-CL per-knot importance at n=256 without THRML parity measurement.
       CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. python/carnot/models/substrate_kan.py imports without error — else blocked_kan_missing.
         1. Construct an Ising model with n=256 spins (random J and h, random_seed=42).
         2. Define 3 sequential constraint domains:
            Domain 1: ferromagnetic coupling pattern (J_ij = +1 for nearest neighbors)
@@ -314,41 +283,50 @@ tasks:
            - per_knot_update_latency_us: mean update time per step in microseconds
            - n_active_knots: count of importance-weighted active knots after Domain 3
         6. Set kancl_n256_validated: true if n256_retention_rate >= 0.85.
-        7. Write deliverable to results/experiment_2258_kancl_n256.json.
+        7. Write deliverable to results/experiment_2270_kancl_n256.json.
 
       REQUIRED ARTIFACT FIELDS:
-        - honest_verdict: Terminal-prefix required. complete: if n256_retention_rate >= 0.85.
-        - kancl_n256_validated: Boolean gate for exp2259 and exp2264. True only if retention >= 0.85 at n=256.
-        - n256_retention_rate: Primary COOL-parity gate. >= 0.85 means per-knot importance prevents catastrophic forgetting at this scale.
-        - per_knot_update_latency_us: Records whether COOL's 20us budget is achievable; informs hardware feasibility story.
-        - n_active_knots: Sparsity metric; fewer active knots = more efficient; records importance mask effectiveness.
-        - random_seed: Reproducibility for sequential domain training; must be 42.
-        - n_spins: Must be 256 to confirm this is the n=256 scale experiment, not a smaller surrogate.
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if n256_retention_rate >= 0.85."
+        - kancl_n256_validated:
+            principle: "Boolean gate for exp2271 and exp2278. True only if retention >= 0.85 at n=256 scale."
+        - n256_retention_rate:
+            principle: "Primary COOL-parity gate; >= 0.85 means per-knot importance prevents catastrophic forgetting at this scale."
+        - per_knot_update_latency_us:
+            principle: "Records whether COOL's 20us budget is achievable; informs hardware feasibility story."
+        - n_active_knots:
+            principle: "Sparsity metric; fewer active knots = more efficient; records importance mask effectiveness."
+        - n_spins:
+            principle: "Must be 256 to confirm this is the n=256 scale experiment, not a smaller surrogate."
+        - random_seed:
+            principle: "Reproducibility for sequential domain training; must be 42."
+        - preconditions_checked:
+            principle: "Lists KAN module availability check."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2259-kancl-casal-joint
-    title: "Phase 2: KAN-CL n=256 + CASAL Joint Constraint Enforcement"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2259_kancl_casal_joint.json"
+  - id: exp2271-kancl-casal-joint
+    title: "Phase 1: KAN-CL n=256 + CASAL Joint Constraint Enforcement"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2271_kancl_casal_joint.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 30
     gated_on:
-      - upstream: exp2258-kancl-n256-clean-reattempt
+      - upstream: exp2270-kancl-n256-clean-reattempt
         artifact_field: kancl_n256_validated
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2248-thrml-parity-n256
+      - experiment_id: exp2259-kancl-casal-joint
         verdict: blocked_gate_check_failed
-        addressed_by: "exp2248 was titled 'THRML/Carnot Parity at n=256 with KAN-CL' — it matched the retired pattern 'THRML/Carnot parity n=256' and was blocked. This task instead measures KAN-CL importance weights + CASAL primal-dual sampling JOINTLY, with no THRML comparison. The scope is integration testing of two .222-.223 modules, not parity measurement."
+        addressed_by: "exp2259 was blocked because its upstream exp2258 (kancl_n256_validated) was itself blocked by the DualGPU ImportError cascade. exp2267 fixes the root cause. exp2270 runs the n=256 validation first. This attempt is identical in scope to exp2259 but runs only when exp2270.kancl_n256_validated=true."
     prompt: |
-      CONTEXT: KAN-CL (exp2258) provides per-knot importance regularization at n=256.
-      CASAL (.222 exp2245) provides primal-dual hard-constraint sampling. Integrating them:
-      when a constraint equality is violated in the energy landscape, CASAL enforces hard
-      satisfaction while KAN-CL importance weights determine which spline knots are updated
-      to remember this constraint pattern.
+      CONTEXT: KAN-CL (exp2270) provides per-knot importance regularization at n=256. CASAL
+      (.222 exp2245) provides primal-dual hard-constraint sampling. Integrating them: when a
+      constraint equality is violated in the energy landscape, CASAL enforces hard satisfaction
+      while KAN-CL importance weights determine which spline knots are updated to remember
+      this constraint pattern. This integration closes the full training+sampling loop.
       EXISTING CODE TO READ FIRST:
         {project_root}/python/carnot/models/substrate_kan.py
         {project_root}/python/carnot/samplers/casal.py
@@ -356,7 +334,8 @@ tasks:
       TASK: Evaluate KAN-CL importance weighting + CASAL hard-constraint sampling jointly.
       CONCRETE STEPS:
         0. PRECONDITIONS:
-           a. python/carnot/samplers/casal.py imports — else blocked_casal_missing.
+           a. python/carnot/samplers/casal.py imports without error — else blocked_casal_missing.
+           b. python/carnot/models/substrate_kan.py imports without error — else blocked_kan_missing.
         1. Define 2D continuous EBM with n=256 binary variables and 3 hard equality constraints.
         2. Run joint training loop (10 iterations):
            - CASAL sampler generates constraint-satisfying samples
@@ -365,48 +344,49 @@ tasks:
            - joint_constraint_satisfaction_rate: fraction of samples satisfying all 3 constraints
            - importance_weight_coverage: fraction of violated-constraint knots with high importance
         4. Set kancl_casal_joint_validated: true if joint_constraint_satisfaction_rate >= 0.90.
-        5. Write deliverable to results/experiment_2259_kancl_casal_joint.json.
+        5. Write deliverable to results/experiment_2271_kancl_casal_joint.json.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required. complete: if joint_constraint_satisfaction_rate >= 0.90."
-        kancl_casal_joint_validated:
-          principle: "Boolean gate. True when >= 90% of samples satisfy all hard constraints."
-        joint_constraint_satisfaction_rate:
-          principle: "Primary integration gate: CASAL must enforce hard constraints even as KAN-CL updates."
-        importance_weight_coverage:
-          principle: "Validates that importance weighting targets the right knots (those activated by violations)."
-        preconditions_checked:
-          principle: "Lists CASAL module availability check."
-        random_seed:
-          principle: "Reproducibility for the joint training loop."
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if joint_constraint_satisfaction_rate >= 0.90."
+        - kancl_casal_joint_validated:
+            principle: "Boolean gate. True when >= 90% of samples satisfy all hard constraints."
+        - joint_constraint_satisfaction_rate:
+            principle: "Primary integration gate: CASAL must enforce hard constraints even as KAN-CL updates importance weights."
+        - importance_weight_coverage:
+            principle: "Validates that importance weighting targets the right knots (those activated by violations), not random knots."
+        - preconditions_checked:
+            principle: "Lists CASAL and KAN module availability checks; pre-empts fabrication on missing modules."
+        - random_seed:
+            principle: "Reproducibility for the joint training loop."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2260-kv260-rtl-clean-reattempt
-    title: "Phase 3: KV260 RTL Verilator Lint + Icarus Simulation Clean Re-attempt"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2260_kv260_rtl.json"
+  - id: exp2272-kv260-rtl-clean-reattempt
+    title: "Phase 2: KV260 RTL Verilator Lint + Icarus Simulation Clean Re-attempt"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2272_kv260_rtl.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 30
     gated_on:
-      - upstream: exp2254-pretest-fix
+      - upstream: exp2267-dualgpu-import-fix
         artifact_field: pretest_fixed
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: exp2260-kv260-rtl-clean-reattempt
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp2260 had blocked_gate_check_failed because exp2254.pretest_fixed=false. Root cause: DualGPU ImportError cascade. exp2267 fixes the root cause. This attempt has the same RTL scope as exp2260 and adds explicit PRECONDITIONS checks per CLAUDE.md Pre-Launch Preconditions Discipline. Claim boundary: source-level only — no bitfile or board claim until Vivado synthesis runs."
       - experiment_id: exp2249-kv260-rtl-verilator
         verdict: blocked_gate_check_failed
-        addressed_by: "exp2249 was blocked_gate_check_failed because verilator/iverilog toolchain availability was not checked as a PRECONDITION before activation — the conductor's activation guard failed. This task adds explicit PRECONDITIONS (check verilator AND iverilog BEFORE any RTL work) per CLAUDE.md Pre-Launch Preconditions Discipline. If tools missing, emit blocked_toolchain_missing immediately."
-      - experiment_id: exp2247-kancl-n256-scaling
-        verdict: blocked_gate_check_failed
-        addressed_by: "exp2247 cascade-blocked exp2248 which cascade-blocked exp2249 via dependency contamination. This task is independent and does not depend on any KAN-CL or THRML results."
+        addressed_by: "exp2249 was blocked_gate_check_failed because toolchain availability was not checked as a PRECONDITION before activation. This task adds explicit PRECONDITIONS for both verilator and iverilog per CLAUDE.md Pre-Launch Preconditions Discipline."
     prompt: |
       CONTEXT: The KV260 RTL track (architecture.md active track) has been blocked for multiple
-      milestones. The .222 attempt (exp2249) had blocked_gate_check_failed because verilator and
-      iverilog availability was not checked as preconditions before activation. Claim boundary:
-      source-level only — no bitfile or board claim until Vivado synthesis runs.
+      milestones. Prior attempts in .222 (exp2249) and .223 (exp2260) both got
+      blocked_gate_check_failed due to the pre-test cascade root cause (DualGPU ImportError).
+      exp2267 fixes that root cause. Claim boundary: source-level only — no bitfile or board claim
+      until Vivado synthesis runs.
       EXISTING CODE TO READ FIRST:
         {project_root}/python/carnot/hardware/transpiler/
         {project_root}/python/carnot/samplers/parallel_ising.py
@@ -416,43 +396,49 @@ tasks:
            a. command -v verilator succeeds — else write honest_verdict blocked_verilator_missing
               and exit. DO NOT fabricate lint output.
            b. command -v iverilog succeeds — else write honest_verdict blocked_iverilog_missing
-              and exit.
+              and exit. DO NOT fabricate simulation output.
         1. Locate existing Verilog RTL under {project_root}/python/carnot/hardware/ OR generate
            a minimal parallel Ising Gibbs structural stub if no .v file exists. Record rtl_source_path.
         2. Run: verilator --lint-only <rtl_file>
            Record lint_warnings_count and lint_errors_count.
         3. If lint_errors_count == 0: run iverilog -o /tmp/ising_sim <rtl_file> && vvp /tmp/ising_sim
            Record simulation_cycles_completed.
-        4. Write deliverable to results/experiment_2260_kv260_rtl.json.
+        4. Write deliverable to results/experiment_2272_kv260_rtl.json.
 
       REQUIRED ARTIFACT FIELDS:
-        - honest_verdict: Terminal-prefix required. complete: if lint executed (even with warnings). blocked_verilator_missing or blocked_iverilog_missing if tools absent.
-        - lint_errors_count: Zero is the gate for exp2261 synthesis. Even one error prevents synthesis claims.
-        - lint_warnings_count: Non-zero is acceptable; records RTL quality baseline.
-        - rtl_source_path: Records which RTL file was linted; prevents re-runs on stale or fabricated sources.
-        - simulation_cycles_completed: Records iverilog run evidence; zero means simulation was skipped (lint errors present).
-        - preconditions_checked: Lists Verilator and Icarus availability checks. MANDATORY per Pre-Launch Preconditions Discipline.
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if lint executed (even with warnings). blocked_verilator_missing or blocked_iverilog_missing if tools absent — blocked verdicts are honest non-failures."
+        - lint_errors_count:
+            principle: "Zero is the gate for exp2273 synthesis. Even one error prevents synthesis claims."
+        - lint_warnings_count:
+            principle: "Non-zero is acceptable; records RTL quality baseline without blocking synthesis."
+        - rtl_source_path:
+            principle: "Records which RTL file was linted; prevents re-runs on stale or fabricated sources."
+        - simulation_cycles_completed:
+            principle: "Records iverilog run evidence; zero means simulation was skipped (lint errors present)."
+        - preconditions_checked:
+            principle: "Lists Verilator and Icarus availability checks. MANDATORY per CLAUDE.md Pre-Launch Preconditions Discipline."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2261-oss-cad-synthesis
-    title: "Phase 3: OSS-CAD-Suite Yosys Synthesis from Lint-Passing RTL"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2261_oss_cad_synthesis.json"
+  - id: exp2273-oss-cad-synthesis
+    title: "Phase 2: OSS-CAD-Suite Yosys Synthesis from Lint-Passing RTL"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2273_oss_cad_synthesis.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 30
     gated_on:
-      - upstream: exp2260-kv260-rtl-clean-reattempt
+      - upstream: exp2272-kv260-rtl-clean-reattempt
         artifact_field: lint_errors_count
         op: "=="
         value: 0
     prior_failures:
-      - experiment_id: exp2260-kv260-rtl-clean-reattempt
+      - experiment_id: exp2261-oss-cad-synthesis
         verdict: blocked_gate_check_failed
-        addressed_by: "exp2261 is sequentially downstream of exp2260. If exp2260 achieves 0 lint errors, this task runs synthesis. Prior attempts never reached synthesis because lint was never clean. This task only runs when lint_errors_count == 0 is confirmed by the structured gate."
+        addressed_by: "exp2261 was blocked because exp2260.lint_errors_count was never populated (exp2260 itself was blocked by DualGPU cascade). exp2267 fixes the cascade root cause; exp2272 now runs first. This attempt runs only when exp2272.lint_errors_count == 0."
     prompt: |
-      CONTEXT: If exp2260 achieves zero Verilator lint errors, the RTL is synthesis-ready.
+      CONTEXT: If exp2272 achieves zero Verilator lint errors, the RTL is synthesis-ready.
       This task attempts synthesis with yosys from OSS-CAD-Suite, producing a LUT utilization
       estimate. Claim boundary: synthesis report only, no bitfile or timing closure claim.
       EXISTING CODE TO READ FIRST:
@@ -462,36 +448,36 @@ tasks:
         0. PRECONDITIONS:
            a. command -v yosys succeeds — else write honest_verdict blocked_yosys_missing
               and exit. DO NOT fabricate synthesis output.
-           b. Read {project_root}/results/experiment_2260_kv260_rtl.json and confirm
+           b. Read {project_root}/results/experiment_2272_kv260_rtl.json and confirm
               lint_errors_count == 0; else write honest_verdict blocked_lint_not_clean and exit.
         1. Run: yosys -p "read_verilog <rtl_file>; synth -top <top_module>; stat" 2>&1
            Record lut_count_estimate, cell_count, synthesis_time_s.
         2. Record any synthesis errors or warnings.
-        3. Write deliverable to results/experiment_2261_oss_cad_synthesis.json.
+        3. Write deliverable to results/experiment_2273_oss_cad_synthesis.json.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required. complete: if synthesis report generated (even with high LUT count)."
-        lut_count_estimate:
-          principle: "Primary hardware feasibility metric; high count (>4000) means current RTL won't fit on KV260."
-        synthesis_time_s:
-          principle: "Records synthesis overhead; needed for hardware iteration planning."
-        preconditions_checked:
-          principle: "Lists yosys availability and lint-clean confirmation; MANDATORY."
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if synthesis report generated (even with high LUT count — a high count is an honest finding, not a failure)."
+        - lut_count_estimate:
+            principle: "Primary hardware feasibility metric; high count (> 4000 LUTs) means current RTL won't fit on KV260 and needs optimization."
+        - synthesis_time_s:
+            principle: "Records synthesis overhead; needed for hardware iteration planning."
+        - preconditions_checked:
+            principle: "Lists yosys availability and lint-clean confirmation; MANDATORY per Pre-Launch Preconditions Discipline."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2262-adversarial-null-space-probe
-    title: "Phase 4: Adversarial Null-Space Probe on k=16 Ensemble + FST Stack"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2262_adversarial_probe.json"
+  - id: exp2274-adversarial-null-space-probe
+    title: "Phase 3: Adversarial Null-Space Probe on k=16 Ensemble + FST Stack"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2274_adversarial_probe.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 30
     prior_failures:
-      - experiment_id: exp1500-orthogonality-matrix-verifier
-        verdict: complete
-        addressed_by: "exp1500 measured the joint null-space of the k=6 ensemble. This task probes the k=16 ensemble + FST stack against adversarial inputs — a different evaluation (attack simulation vs static null-space measurement) on a different stack version."
+      - experiment_id: exp2262-adversarial-null-space-probe
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp2262 had blocked_gate_check_failed despite having no structured gated_on field. Root cause: the conductor's pre-test check failed due to the DualGPU ImportError cascade (same cascade root cause as .223 Phase 1/2 tasks). exp2267 fixes the ImportError. This attempt is identical in scope to exp2262."
     prompt: |
       CONTEXT: Per Phase 3 defence-layer theory (CLAUDE.md) and Q11 TSS analysis, the k=16
       verifier ensemble + FST fast-weight stack must be adversarially probed. The adversarial
@@ -503,45 +489,180 @@ tasks:
         {project_root}/scripts/experiment_template.py
       TASK: Probe the k=16 ensemble against null-space mimicry attacks.
       CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. python/carnot/verify/ directory exists and contains at least one verifier class — else blocked_verify_missing.
+           b. python/carnot/training/fast_slow.py imports without error — else blocked_fst_missing.
         1. Define 200 adversarial inputs: for each, craft a version that minimizes energy
            for Verifier 1 (Boolean E) while maximizing energy for Verifier 2 (Z3-based).
-           Use gradient-based perturbation in the input token space.
-        2. Score each adversarial input on all k=16 verifiers.
+           Use gradient-based perturbation in the input token space (or synthetic vector space if no GPU available).
+        2. Score each adversarial input on all available verifiers (up to k=16).
         3. Measure:
            - single_verifier_fooled_rate: fraction that fool at least 1 verifier individually
-           - ensemble_fooled_rate: fraction that fool ALL k=16 verifiers simultaneously
-           - fst_robustness_improvement: ensemble_fooled_rate with FST fast-weight active
-             vs without (FST context should capture recent verifier disagreements)
+           - ensemble_fooled_rate: fraction that fool ALL available verifiers simultaneously
+           - fst_robustness_improvement: ensemble_fooled_rate without FST context vs with FST context
         4. Set adversarial_probe_passed: true if ensemble_fooled_rate < 0.05.
-        5. Write deliverable to results/experiment_2262_adversarial_probe.json.
+        5. Write deliverable to results/experiment_2274_adversarial_probe.json.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required. complete: if probe ran to completion."
-        adversarial_probe_passed:
-          principle: "Boolean. True only when ensemble_fooled_rate < 5% — validates the AND-composition security property."
-        ensemble_fooled_rate:
-          principle: "Primary defence gate: must be < 0.05 for the k=16 AND-composition claim to hold."
-        single_verifier_fooled_rate:
-          principle: "Baseline: expected to be high (single verifier is fooled easily). Contrast with ensemble rate."
-        fst_robustness_improvement:
-          principle: "Measures FST's contribution to robustness; positive value = FST context reduces attack success."
-        n_adversarial_inputs:
-          principle: "Must be >= 200 for statistical significance on 5% rate claims."
-        random_seed:
-          principle: "Reproducibility for adversarial input generation."
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if probe ran to completion (regardless of whether gate passes — a high fooled rate is an honest finding, not a run failure)."
+        - adversarial_probe_passed:
+            principle: "Boolean. True only when ensemble_fooled_rate < 5% — validates the AND-composition security property from Phase 3 theory."
+        - ensemble_fooled_rate:
+            principle: "Primary defence gate: must be < 0.05 for the k=16 AND-composition claim to hold. A high rate is a research finding, not a failure to report."
+        - single_verifier_fooled_rate:
+            principle: "Baseline expected to be high (single verifier is fooled easily); contrast with ensemble rate to show AND-composition benefit."
+        - fst_robustness_improvement:
+            principle: "Measures FST's contribution to robustness; positive = FST context reduces attack success."
+        - n_adversarial_inputs:
+            principle: "Must be >= 200 for statistical significance on 5% rate claims."
+        - n_verifiers_active:
+            principle: "Records how many of the k=16 verifiers were actually instantiated; partial ensemble is an honest finding."
+        - preconditions_checked:
+            principle: "Lists verifier and FST availability checks."
+        - random_seed:
+            principle: "Reproducibility for adversarial input generation."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2263-arxiv-sweep-post-222
-    title: "Phase 5: ArXiv Post-.222 Research Sweep + References Update"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2263_arxiv_sweep.json"
+  - id: exp2275-eidoku-csp-gate
+    title: "Phase 3: Eidoku CSP Verification Gate Implementation (arXiv:2512.20664)"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2275_eidoku_csp_gate.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    max_turns: 30
+    prior_failures:
+      - experiment_id: none
+        verdict: n/a
+        addressed_by: "New experiment — no prior attempt. Motivated by arXiv:2512.20664 (Eidoku: Neuro-Symbolic Verification Gate for LLM Reasoning via Structural CSP) added to research-references.md during .224 planning sweep."
+    prompt: |
+      CONTEXT: Eidoku (arXiv:2512.20664) reformulates LLM reasoning verification as a
+      Constraint Satisfaction Problem (CSP) operating independently of generation likelihood.
+      The key mechanism: a lightweight System-2 gate that rejects candidates exceeding a
+      context-calibrated cost threshold derived from the intrinsic statistics of the context,
+      not a learned threshold. This successfully rejects "smooth falsehoods" — statements that
+      are highly probable (would not be caught by perplexity or entropy detectors) yet
+      structurally disconnected from the context.
+      This is a natural Tier 2.8 verifier for Carnot's cascade, between Tier 2.7 (CausalReasoningVerifier)
+      and Tier 3 (Ising full verification).
+      EXISTING CODE TO READ FIRST:
+        {project_root}/python/carnot/verify/
+        {project_root}/python/carnot/pipeline/verify_repair.py
+        {project_root}/scripts/experiment_template.py
+      TASK: Implement a minimal EidokuCSPGate verifier and evaluate on 50 synthetic examples.
+      CONCRETE STEPS:
+        1. Create python/carnot/verify/eidoku_csp.py implementing:
+           class EidokuCSPGate:
+             - Takes (context: str, candidate: str) as input
+             - Extracts structural constraints from context (entities, quantitative claims, logical connectives)
+             - Formulates a cost function over how well candidate satisfies those constraints
+             - Uses context-calibrated threshold (mean + k*sigma of cost over context sentences)
+             - Returns: is_violation: bool, cost: float, constraint_violations: list[str]
+        2. Write focused unit tests in tests/python/verify/test_eidoku_csp.py
+           (at least 2 tests: one smooth-falsehood rejection, one correct-answer acceptance).
+        3. Run the unit tests; record n_tests_passed.
+        4. Evaluate on 50 synthetic examples (25 correct answers, 25 smooth falsehoods):
+           - correct answers: rephrasings of context sentences (should NOT be rejected)
+           - smooth falsehoods: plausible-sounding but structurally disconnected claims
+        5. Measure:
+           - csp_false_positive_rate: correct answers rejected / 25
+           - csp_true_positive_rate: smooth falsehoods caught / 25
+        6. Set eidoku_gate_validated: true if csp_true_positive_rate >= 0.60 AND csp_false_positive_rate <= 0.20.
+        7. Write deliverable to results/experiment_2275_eidoku_csp_gate.json.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if implementation produced a runnable module (even if gate thresholds not met — a low TPR is an honest research finding)."
+        - eidoku_gate_validated:
+            principle: "Boolean. True when TPR >= 0.60 AND FPR <= 0.20 — practical operating point for a cascade verifier where false positives are more costly than false negatives."
+        - csp_true_positive_rate:
+            principle: "Measures smooth-falsehood detection rate; the Eidoku paper claims CSP-based checking catches this class that entropy methods miss."
+        - csp_false_positive_rate:
+            principle: "Guards against rejecting correct answers; a high FPR makes the gate useless as a cascade step."
+        - n_tests_passed:
+            principle: "Records unit test pass count; tests must pass for the implementation to be production-quality."
+        - module_path:
+            principle: "Records where the verifier was written; enables integration into verify_repair.py cascade."
+        - n_eval_examples:
+            principle: "Must be 50 (25+25) for the FPR/TPR claims to be statistically meaningful."
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2276-projected-langevin-baseline
+    title: "Phase 3: Projected-Langevin Equality Constraint Baseline (arXiv:2605.05387)"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2276_projected_langevin.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    max_turns: 30
+    prior_failures:
+      - experiment_id: none
+        verdict: n/a
+        addressed_by: "New experiment — no prior attempt. Motivated by arXiv:2605.05387 (Conditional Diffusion Under Linear Constraints: Langevin Mixing and Information-Theoretic Guarantees) added to research-references.md during .223 sweep."
+    prompt: |
+      CONTEXT: arXiv:2605.05387 proves that projected-Langevin dynamics under linear equality
+      constraints Ax=b achieves Langevin mixing while guaranteeing exact constraint satisfaction
+      throughout the trajectory (not just at convergence). The approach: at each step, after
+      the Langevin update, project back onto the constraint manifold using a closed-form
+      projection operator (P = I - A^T(AA^T)^{-1}A). This is an alternative to CASAL's
+      primal-dual split augmented approach.
+      Carnot currently uses CASAL for hard equality constraints. This task implements a minimal
+      projected-Langevin sampler and compares it against CASAL on 3 synthetic constrained
+      sampling tasks. If projected-Langevin achieves lower feasibility residual at equal wall
+      time, it becomes a candidate to replace or complement CASAL for linear constraints.
+      EXISTING CODE TO READ FIRST:
+        {project_root}/python/carnot/samplers/casal.py
+        {project_root}/python/carnot/samplers/parallel_ising.py
+        {project_root}/scripts/experiment_template.py
+      TASK: Implement projected-Langevin sampler and compare against CASAL baseline.
+      CONCRETE STEPS:
+        1. Create python/carnot/samplers/projected_langevin.py implementing:
+           class ProjectedLangevinSampler:
+             - sample(x0, energy_fn, A, b, n_steps, step_size, noise_scale, random_seed)
+             - Each step: x = x - step_size * grad_E(x) + sqrt(2*step_size)*noise, then project
+             - Projection: x = x - A.T @ solve(A @ A.T, A @ x - b)
+        2. Write 2 focused unit tests in tests/python/samplers/test_projected_langevin.py
+           (one: projection maps to constraint manifold; two: samples stay near manifold).
+        3. Run unit tests; record n_tests_passed.
+        4. Define 3 test problems (n=32 variables, random linear constraints Ax=b):
+           Problem 1: single equality constraint (1D manifold slice)
+           Problem 2: 3 equality constraints (co-dimension 3)
+           Problem 3: 5 equality constraints (heavily constrained)
+        5. For each problem: run 500 steps of projected-Langevin AND 500 steps of CASAL.
+           Measure: mean_feasibility_residual (||Ax-b||_2), sample_diversity (std of samples),
+           wall_time_ms.
+        6. Set projected_langevin_competitive: true if projected-Langevin achieves
+           mean_feasibility_residual <= 2x CASAL residual on at least 2 of 3 problems.
+        7. Write deliverable to results/experiment_2276_projected_langevin.json.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if sampler ran to completion (even if not competitive with CASAL — that is an honest research finding)."
+        - projected_langevin_competitive:
+            principle: "Boolean. True when residual <= 2x CASAL on 2/3 problems; 2x ceiling is generous since projected-Langevin's theoretical guarantee is exact constraint satisfaction."
+        - mean_feasibility_residual_by_problem:
+            principle: "Per-problem residual records where projected-Langevin wins or loses against CASAL."
+        - sample_diversity_by_problem:
+            principle: "Diversity records whether the constraint manifold projection collapses samples to a single point (mode collapse)."
+        - n_tests_passed:
+            principle: "Unit tests must pass for implementation quality claims."
+        - module_path:
+            principle: "Records where the sampler was written for integration planning."
+        - random_seed:
+            principle: "Reproducibility for all 3 problems."
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2277-arxiv-sweep-post-223
+    title: "Phase 4: ArXiv Post-.223 Research Sweep + References Update"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2277_arxiv_sweep.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 20
     prior_failures:
-      - experiment_id: exp2240-fst-impl
+      - experiment_id: exp2263-arxiv-sweep-post-222
         verdict: complete
         addressed_by: "Standard research sweep pattern; each milestone sweep covers new papers in the time window since the last sweep. Not a failed rerun."
     prompt: |
@@ -549,65 +670,65 @@ tasks:
       Search for recent papers (2025-2026) on EBMs, constraint verification, Ising models, KANs,
       guided decoding, hardware-accelerated sampling, and LLM hallucination mitigation. Add
       promising findings to research-references.md BEFORE designing experiments.'
-      This is the mandatory post-.222 literature sweep to find papers for .224 planning.
+      This is the mandatory post-.223 literature sweep to find papers for .225 planning.
       EXISTING CODE TO READ FIRST:
         {project_root}/research-references.md (last 150 lines — most recent entries)
         {project_root}/research-studying.md (if exists)
       TASK: Search for new 2026 papers in target areas and update research-references.md.
       CONCRETE STEPS:
         1. Search these query strings against arxiv.org (use curl or requests if available):
-           - "energy-based model verification LLM 2026"
-           - "continual learning KAN constraint 2026"
-           - "Langevin sampling hard constraint equality 2026"
-           - "constrained generation LLM decoding 2026"
-           - "Ising machine FPGA hardware accelerated sampling 2026"
-           - "active inference free energy LLM routing 2026"
+           - "energy-based model constraint verification LLM 2026"
+           - "KAN continual learning constraint catastrophic forgetting 2026"
+           - "Ising machine hardware sampler thermodynamic 2026"
+           - "hard constraint equality LLM repair decoding 2026"
+           - "active inference free energy verifier routing 2026"
+           - "CSP neuro-symbolic LLM verification 2026"
         2. Identify >= 3 new papers NOT already in research-references.md.
            For each: arxiv ID, title, 1-sentence relevance to Carnot.
-        3. Append a "## {date} Post-.222 Planning Sweep (Milestone 2026.05.223)" section
+        3. Append a "## {date} Post-.223 Planning Sweep (Milestone 2026.05.224)" section
            to {project_root}/research-references.md with the new entries.
-        4. Produce candidate_list: top-3 papers with proposed .224 experiment scope for each.
-        5. Write deliverable to results/experiment_2263_arxiv_sweep.json.
+        4. Produce candidate_list: top-3 papers with proposed .225 experiment scope for each.
+        5. Write deliverable to results/experiment_2277_arxiv_sweep.json.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required. complete: if >= 3 new papers found and appended."
-        n_new_papers_found:
-          principle: "Must be >= 3 for the research sweep to satisfy the planning requirement."
-        candidate_list:
-          principle: "Top-3 paper proposals for .224; gives the .224 planner a head-start."
-        references_updated:
-          principle: "Boolean confirming research-references.md was actually modified."
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if >= 3 new papers found and appended."
+        - n_new_papers_found:
+            principle: "Must be >= 3 for the research sweep to satisfy the planning requirement."
+        - candidate_list:
+            principle: "Top-3 paper proposals for .225; gives the .225 planner a head-start on new experiments."
+        - references_updated:
+            principle: "Boolean confirming research-references.md was actually modified, not just searched."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2264-capstone-v223
-    title: "Phase 6: Capstone E2E Real-Scale Live Generation (.223) — FST + ODAR + CASAL + KAN-CL"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2264_capstone.json"
+  - id: exp2278-capstone-v224
+    title: "Phase 4: Capstone E2E Real-Scale Live Generation (.224) — FST + ODAR + CASAL + KAN-CL n=256"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2278_capstone.json"
     model: "opus"
     max_turns: 100
     gated_on:
-      - upstream: exp2255-fst-real-scale-live-gen
+      - upstream: exp2268-fst-real-scale-live-gen
         artifact_field: fst_live_validated
         op: "=="
         value: true
-      - upstream: exp2258-kancl-n256-clean-reattempt
+      - upstream: exp2270-kancl-n256-clean-reattempt
         artifact_field: kancl_n256_validated
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2251-capstone-v222
-        verdict: complete
-        addressed_by: "exp2251 was the .222 capstone with a one-token GGUF probe as live evidence. This .223 capstone requires full answer generation (mean_answer_length_tokens >= 50 per exp2255's gate), KAN-CL n=256 importance weights active (from exp2258), and a verified_repair_rate >= 0.3 — three materially harder acceptance criteria than exp2251."
+      - experiment_id: exp2264-capstone-v223
+        verdict: blocked_gate_check_failed
+        addressed_by: "exp2264 was blocked because both upstream gates (fst_live_validated from exp2255 and kancl_n256_validated from exp2258) were false due to the DualGPU ImportError cascade. exp2267 fixes the root cause; exp2268 and exp2270 must both pass before this task activates. The acceptance criteria are identical to exp2264: mean_answer_length_tokens >= 50 AND verified_repair_rate >= 0.3."
     prompt: |
-      CONTEXT: Milestone 2026.05.223 capstone. Validate that the full .223 stack —
-      FST+ODAR+CASAL (from .222) plus KAN-CL n=256 importance weighting (exp2258) —
+      CONTEXT: Milestone 2026.05.224 capstone. Validate that the full .224 stack —
+      FST+ODAR+CASAL (from .222) plus KAN-CL n=256 importance weighting (exp2270) —
       interoperates correctly in an end-to-end verify-repair pass with REAL FULL ANSWER
       GENERATION on a SOTA GGUF model. This experiment must NOT rely on a single-token
       probe as 'live evidence.'
-      All upstream gate fields (fst_live_validated, kancl_n256_validated) must be true for
-      this gate to open.
+      All upstream gate fields (fst_live_validated from exp2268, kancl_n256_validated from
+      exp2270) must be true for this gate to open.
       EXISTING CODE TO READ FIRST:
         {project_root}/python/carnot/pipeline/verify_repair.py
         {project_root}/python/carnot/pipeline/odar_router.py
@@ -618,16 +739,16 @@ tasks:
       TASK: Run 10 full verify-repair passes on multi-step math reasoning problems with SOTA GGUF.
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
-           a. python/carnot/pipeline/odar_router.py imports — else blocked_odar_missing.
-           b. python/carnot/training/fast_slow.py imports — else blocked_fst_missing.
-           c. python/carnot/samplers/casal.py imports — else blocked_casal_missing.
+           a. python/carnot/pipeline/odar_router.py imports without error — else blocked_odar_missing.
+           b. python/carnot/training/fast_slow.py imports without error — else blocked_fst_missing.
+           c. python/carnot/samplers/casal.py imports without error — else blocked_casal_missing.
            d. ls ~/.cache/huggingface/hub/ | grep -i "gemma-4-26B\|Qwen3.6-35B\|gemma-4-31B" returns non-empty —
               else blocked_model_not_cached. Do NOT fabricate GPU inference.
         1. MODEL_SPECS must include at least one of:
            - unsloth/Qwen3.6-35B-A3B-GGUF
            - unsloth/gemma-4-31B-it-GGUF
            - unsloth/gemma-4-26B-A4B-it-GGUF
-        2. Select 10 multi-step arithmetic reasoning problems (e.g., two-step word problems).
+        2. Select 10 multi-step arithmetic reasoning problems (two-step word problems).
         3. For each problem:
            a. Generate a FULL ANSWER (>= 50 tokens) using the GGUF model.
            b. Run ODAR routing to decide verification tier.
@@ -642,76 +763,76 @@ tasks:
            - mean_constraint_violation_after_repair
         5. Set capstone_passed: true if mean_answer_length_tokens >= 50 AND
            (n_violations_found == 0 OR verified_repair_rate >= 0.3).
-        6. Write deliverable to results/experiment_2264_capstone.json.
+        6. Write deliverable to results/experiment_2278_capstone.json.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required. complete: if capstone_passed is true."
-        capstone_passed:
-          principle: "Boolean. True only when answers are full-length AND repair rate >= 0.3 (or zero violations — honest finding)."
-        mean_answer_length_tokens:
-          principle: "Must be >= 50 to distinguish from single-token probes. CRITICAL gate for anti-fabrication."
-        n_violations_found:
-          principle: "Records how many problems had detectable constraint violations; 0 is an honest finding."
-        verified_repair_rate:
-          principle: "Measures repair pipeline effectiveness; 0.3 threshold allows for honest partial success."
-        total_compute_reduction_pct:
-          principle: "ODAR's contribution in the integrated stack vs uniform cascade."
-        models_used:
-          principle: "Records which SOTA GGUF ran so claims are model-specific."
-        preconditions_checked:
-          principle: "Lists all resource checks performed; MANDATORY per Pre-Launch Preconditions Discipline."
-        duration_s:
-          principle: "Real compute takes wall-clock time; < 30s for 10 problems with a 26B model flags fabrication."
-        random_seed:
-          principle: "Reproducibility for the 10-problem run."
+        - honest_verdict:
+            principle: "Terminal-prefix required. complete: if capstone_passed is true."
+        - capstone_passed:
+            principle: "Boolean. True only when answers are full-length AND (zero violations OR repair rate >= 0.3). Zero violations is an honest finding — it means the model doesn't make detectable errors on these problems, not a pipeline failure."
+        - mean_answer_length_tokens:
+            principle: "Must be >= 50 to distinguish from single-token probes. This is the primary anti-fabrication check for live generation claims."
+        - n_violations_found:
+            principle: "Records how many problems had detectable constraint violations; 0 is an honest finding."
+        - verified_repair_rate:
+            principle: "Measures repair pipeline effectiveness; 0.3 threshold allows for honest partial success on hard repair problems."
+        - total_compute_reduction_pct:
+            principle: "ODAR's contribution in the integrated stack vs uniform cascade; validates the .224 compute-efficiency story."
+        - models_used:
+            principle: "Records which SOTA GGUF ran so claims are model-specific and not hallucinated."
+        - preconditions_checked:
+            principle: "Lists all resource checks performed; MANDATORY per CLAUDE.md Pre-Launch Preconditions Discipline."
+        - duration_s:
+            principle: "Real compute with a 26B model takes minutes; < 30s for 10 problems flags fabrication."
+        - random_seed:
+            principle: "Reproducibility for the 10-problem run."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2265-retro-v223
-    title: "Phase 6: Milestone 2026.05.223 Retrospective"
-    milestone: "2026.05.223"
-    deliverable: "results/experiment_2265_retro.json"
+  - id: exp2279-retro-v224
+    title: "Phase 4: Milestone 2026.05.224 Retrospective"
+    milestone: "2026.05.224"
+    deliverable: "results/experiment_2279_retro.json"
     agent_type: "codex"
     model: "gpt-5.5"
     max_turns: 20
     prior_failures:
-      - experiment_id: exp2252-retro-v222
+      - experiment_id: exp2265-retro-v223
         verdict: complete
         addressed_by: "Standard retrospective pattern; each milestone retro analyzes a new dataset. Not a failed rerun."
     prompt: |
-      CONTEXT: All experiments in milestone 2026.05.223 have completed (or gate-blocked).
+      CONTEXT: All experiments in milestone 2026.05.224 have completed (or gate-blocked).
       Write the operational retrospective.
       EXISTING CODE TO READ FIRST:
         {project_root}/ops/conductor-log.md (last 100 lines)
-        {project_root}/results/experiment_2254_pretest_fix.json
-        {project_root}/results/experiment_2255_fst_live_gen.json
-        {project_root}/results/experiment_2256_fr11_multidomain.json
-        {project_root}/results/experiment_2258_kancl_n256.json
-        {project_root}/results/experiment_2260_kv260_rtl.json
-        {project_root}/results/experiment_2264_capstone.json
-      TASK: Write milestone 2026.05.223 retrospective.
+        {project_root}/results/experiment_2267_dualgpu_fix.json
+        {project_root}/results/experiment_2268_fst_live_gen.json
+        {project_root}/results/experiment_2270_kancl_n256.json
+        {project_root}/results/experiment_2272_kv260_rtl.json
+        {project_root}/results/experiment_2275_eidoku_csp_gate.json
+        {project_root}/results/experiment_2278_capstone.json
+      TASK: Write milestone 2026.05.224 retrospective.
       CONCRETE STEPS:
         1. Compute: total_wall_time_min, n_experiments_completed, n_gate_blocks, n_compute_bound.
-        2. Identify top 3 successes and top 3 gaps for milestone .224.
-        3. Evaluate progress on .222 retro's three top_gaps:
-           a. Pre-test failure fixed? (exp2254)
-           b. KAN-CL n=256 validated? (exp2258)
-           c. Live generation beyond one-token probe? (exp2255)
+        2. Identify top 3 successes and top 3 gaps for milestone .225.
+        3. Evaluate progress on .223 retro's three top_gaps:
+           a. Pre-test failure fixed? (exp2267)
+           b. KAN-CL n=256 validated? (exp2270)
+           c. Live generation beyond one-token probe? (exp2268)
         4. Propose next_milestone_speedup_target_pct.
-        5. Update ops/changelog.md with a "## {date} (Milestone 2026.05.223 Operational
+        5. Update ops/changelog.md with a "## {date} (Milestone 2026.05.224 Operational
            Retrospective)" section summarizing results.
-        6. Write deliverable to results/experiment_2265_retro.json.
-           schema: carnot.operational_retro.v66
+        6. Write deliverable to results/experiment_2279_retro.json.
+           schema: carnot.operational_retro.v67
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal-prefix required."
-        criteria_met:
-          principle: "N/total count validates milestone completion fraction."
-        top_gaps_resolved:
-          principle: "Records which of the three .222 retro gaps were resolved; tracks multi-milestone gap closure."
-        next_milestone_speedup_target_pct:
-          principle: "Quantifies where wall-time can be recovered in .224."
+        - honest_verdict:
+            principle: "Terminal-prefix required."
+        - criteria_met:
+            principle: "N/total count validates milestone completion fraction; tracks systemic improvement or regression."
+        - top_gaps_resolved:
+            principle: "Records which of the three .223 retro gaps were resolved; enables multi-milestone gap-closure tracking."
+        - next_milestone_speedup_target_pct:
+            principle: "Quantifies where wall-time can be recovered in .225; forces concrete identification of slow paths."
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
