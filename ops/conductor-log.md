@@ -4155,3 +4155,5 @@ Ripgrep i |
 | 2026-05-17 07:33 UTC | Phase 2: FPGA Hardware Resource Allocation for k=5 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2173-manifold-substitution-chains.resul |
 | 2026-05-17 07:35 UTC | Phase 3: JEPA Predictive Verification Model Setup | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 07:37 UTC | Phase 3: JEPA Predictive Verification Model Setup | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 07:40 UTC | Phase 3: JEPA Predictive Verification Model Setup | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 07:42 UTC | Phase 3: Adaptive Data Harvesting for Constraint S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2175-jepa-predictive-verification) |
