@@ -1327,5 +1327,13 @@
   "status": "complete",
   "target_model": "unsloth/gemma-4-26B-A4B-it-GGUF",
   "title": "FST + ODAR + CASAL end-to-end verify-repair interop on cached gemma-4-26B-A4B-it GGUF spec",
-  "total_compute_reduction_pct": 50.0
+  "total_compute_reduction_pct": 50.0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=7.526386 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }

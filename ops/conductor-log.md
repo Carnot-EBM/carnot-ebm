@@ -4379,3 +4379,4 @@ Ripgrep i |
 | 2026-05-17 15:37 UTC | Phase 4: THRML/Carnot Parity at n=256 with KAN-CL | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2247-kancl-n256-scaling) |
 | 2026-05-17 15:37 UTC | Phase 5: KV260 RTL Verilator Source-Level Lint and | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 15:48 UTC | Phase 5: THRML/Extropic TSU Compatibility with CAS | OK | 116 passed, 1 warning in 7.82s |
+| 2026-05-17 16:00 UTC | Phase 6: Capstone E2E GPU Validation (.222) — FST  | OK | 81 passed, 1 warning in 3.76s |
