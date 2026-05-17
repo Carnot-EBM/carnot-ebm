@@ -4068,3 +4068,4 @@ Error |
 | 2026-05-17 04:19 UTC | Milestone 2026.05.213 activated | OK | 12 tasks queued |
 | 2026-05-17 04:23 UTC | Phase 0: Archive .212 and activate .213 | OK | 81 passed, 1 warning in 5.38s |
 | 2026-05-17 04:27 UTC | Phase 1: Process-Reward Energy Model Architecture | OK | 81 passed, 1 warning in 5.71s |
+| 2026-05-17 04:29 UTC | Phase 1: PREM Training Pipeline | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2144-prem-architecture.result (actual i |
