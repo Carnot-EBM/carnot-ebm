@@ -1,3 +1,22 @@
+## 2026-05-17 Post-.221 Planning Sweep (Milestone 2026.05.222)
+
+This sweep was run after milestone `.221` completed. The literature search revealed advances in on-device continual KAN learning, LLM formalization of constraint satisfaction problems, and updated ConstraintBench analysis.
+
+### COOL: On-Device Online KAN Continual Learning
+- **Paper:** "COOL: Continual Online Object Learning with Kolmogorov-Arnold Networks" (Springer 2026).
+- **What:** Demonstrates on-device continual learning using KANs with 14.9ms inference and 20μs parameter update latency with minimal energy overhead, validated on embedded hardware.
+- **Relevance to Carnot:** Direct hardware-portability proof for FR-11 Tier 1 online constraint learning. Demonstrates that KAN's per-knot structure supports sub-millisecond update cycles without catastrophic forgetting, aligning with Carnot's hardware mandate for learning at inference speed.
+
+### ODAR: Principled Adaptive Routing via Active Inference (confirmed for .222)
+- **Paper:** "ODAR: Principled Adaptive Routing for LLM Reasoning via Active Inference" (Ma et al., arXiv:2602.23681, Feb 2026).
+- **What:** Free-energy-principled risk-sensitive routing mechanism for fast vs deliberative agents across 23 benchmarks; reduces computation 82% vs uniform sampling with accuracy parity.
+- **Relevance to Carnot:** Merges Carnot's Phase 4 active inference track with verify-repair cascade routing. Replace argmax selector with ODAR's risk-sensitive fusion; fast agent = Tier 0 probes, deliberative = Tier 3 Ising.
+
+### Fast-Slow Training for Continual LLM Adaptation (confirmed for .222)
+- **Paper:** "Learning, Fast and Slow: Towards LLMs That Adapt Continually" (arXiv:2605.12484, May 2026).
+- **What:** Dual-weight decomposition: slow weights = model parameters (updated via RL), fast weights = optimized context (updated via ICL). Achieves 3x sample efficiency and 70% less KL drift vs parameter-only RL.
+- **Relevance to Carnot:** FR-11 rescue mechanism. Carnot's slow weights = k=16 verifier ensemble + base LLM; fast weights = verifier-output-summary prepended to next repair prompt. Explains the .96-.150+ FR-11 stalls (parameter-only RL fails; fast-slow succeeds).
+
 ## 2026-05-17 Post-.220 Planning Sweep (Milestone 2026.05.221)
 
 This sweep was run after milestone `.220` completed. The literature search revealed advances in agentic RL with energy bottleneck resolution, continual learning for KANs, Hard Constraint optimization, and RKHS-based alternatives to KANs.
