@@ -4301,3 +4301,4 @@ Ripgrep i |
 | 2026-05-17 12:12 UTC | Phase 1: Primal-Dual Decoding with JLE Constraints | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2219-sota-extraction-eval.honest_verdic |
 | 2026-05-17 12:14 UTC | Phase 1: Local SOTA Model Extraction Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2218-jle-dynamic-elicitation) |
 | 2026-05-17 12:14 UTC | Phase 1: Primal-Dual Decoding with JLE Constraints | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2219-sota-extraction-eval.honest_verdic |
+| 2026-05-17 12:16 UTC | Phase 2: HILED PCIe/AXI Software Bridge Mock | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.20s |
