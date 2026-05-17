@@ -4460,3 +4460,5 @@ Ripgrep i |
 | 2026-05-17 19:50 UTC | Phase 0: Archive .224 and activate .225 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-17 19:52 UTC | Phase 0: Fix carnot.pypi_escalation Missing Symbol | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-17 19:54 UTC | Phase 0: Fix carnot.pypi_escalation Missing Symbol | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-17 19:56 UTC | Phase 0: Fix carnot.pypi_escalation Missing Symbol | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-17 19:58 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2281-pypi-escalation-fix) |
