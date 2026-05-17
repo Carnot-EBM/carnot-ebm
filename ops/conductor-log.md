@@ -4316,3 +4316,5 @@ Ripgrep i |
 | 2026-05-17 12:35 UTC | Phase 3: FR-11 CSL Pruning Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2224-semantic-memory-pruning) |
 | 2026-05-17 12:35 UTC | Phase 3: Dynamic Lipschitz Bounds Multi-Session Sy | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 12:37 UTC | Phase 3: FR-11 CSL Pruning Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2224-semantic-memory-pruning) |
+| 2026-05-17 12:37 UTC | Phase 3: Dynamic Lipschitz Bounds Multi-Session Sy | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 12:39 UTC | Phase 3: FR-11 CSL Pruning Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2224-semantic-memory-pruning) |
