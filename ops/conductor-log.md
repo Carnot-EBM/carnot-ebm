@@ -4305,3 +4305,5 @@ Ripgrep i |
 | 2026-05-17 12:18 UTC | Phase 2: HILED PCIe/AXI Software Bridge Mock | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.02s |
 | 2026-05-17 12:21 UTC | Phase 2: HILED PCIe/AXI Software Bridge Mock | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.86s |
 | 2026-05-17 12:23 UTC | Phase 2: KV260 Physical/Simulation Deployment Inte | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2221-hiled-software-bridge) |
+| 2026-05-17 12:23 UTC | Phase 2: HILED Decoder Smoke Test | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2222-kv260-hiled-deployment.honest_verd |
+| 2026-05-17 12:25 UTC | Phase 2: KV260 Physical/Simulation Deployment Inte | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2221-hiled-software-bridge) |
