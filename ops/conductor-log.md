@@ -4476,3 +4476,5 @@ Ripgrep i |
 | 2026-05-17 20:10 UTC | Phase 2: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2281-pypi-escalation-fix) |
 | 2026-05-17 20:10 UTC | Phase 2: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2286-kv260-rtl-lint.lint_errors_count ( |
 | 2026-05-17 20:12 UTC | Phase 2: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2281-pypi-escalation-fix) |
+| 2026-05-17 20:12 UTC | Phase 2: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2286-kv260-rtl-lint.lint_errors_count ( |
+| 2026-05-17 20:14 UTC | Phase 2: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2281-pypi-escalation-fix) |
