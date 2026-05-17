@@ -4104,3 +4104,4 @@ Ripgrep i |
 | 2026-05-17 06:04 UTC | Phase 1: Thermodynamically Constrained Neural Gene | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2156-actfocus-reweighting) |
 | 2026-05-17 06:04 UTC | Phase 1: Generation Benchmark with Qwen3.6-35B-A3B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2157-thermodynamic-generation.result (u |
 | 2026-05-17 06:06 UTC | Phase 1: Thermodynamically Constrained Neural Gene | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2156-actfocus-reweighting) |
+| 2026-05-17 06:06 UTC | Phase 1: Generation Benchmark with Qwen3.6-35B-A3B | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2157-thermodynamic-generation.result (u |
