@@ -105,6 +105,32 @@ verification.
 - If `python/carnot/pipeline/odar_router.py` cannot be imported, the benchmark
   writes a blocked artifact with `blocked_router_missing`.
 
+### REQ-ODAR-2257: ODAR Real Tier 0 Probe Benchmark
+
+The pipeline MUST provide a deterministic Exp 2257 benchmark that measures ODAR
+routing on 100 synthetic reasoning examples using Tier 0 probe outputs produced
+through the verify-repair pipeline's existing probe interfaces rather than
+preconstructed EFE labels.  The benchmark MUST compare a uniform full verification
+cascade against ODAR threshold routing and MUST record the median
+`FreeEnergyRouter.evaluate(...)` routing overhead per decision.
+
+**Acceptance criteria:**
+- The benchmark writes `results/experiment_2257_odar_real_benchmark.json`.
+- `python/carnot/pipeline/odar_router.py` is import-checked before the run; import
+  failure writes a blocked artifact with `honest_verdict` prefixed by
+  `blocked_odar_missing`.
+- The artifact includes `honest_verdict`, `odar_real_validated`,
+  `compute_reduction_pct`, `routing_overhead_ms`, `fast_path_fraction`,
+  `accuracy_delta`, `n_corpus`, and `preconditions_checked`.
+- `n_corpus` is exactly 100.
+- `compute_reduction_pct` is computed as
+  `(tier_calls_A - tier_calls_B) / tier_calls_A * 100`.
+- `accuracy_delta` is reported in percentage points as ODAR accuracy minus
+  uniform-cascade accuracy and MUST be at least `-2.0`.
+- `odar_real_validated` is true only when `compute_reduction_pct >= 25.0`,
+  `routing_overhead_ms <= 5.0`, `accuracy_delta >= -2.0`, and the corpus size is 100.
+- The artifact records that external LLM calls were not used.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -155,6 +181,18 @@ fast-path result before Tier 1 extraction.
 accuracy within two percentage points of the uniform cascade.
 
 **Spec traces:** REQ-ODAR-2244
+
+### SCENARIO-ODAR-2257: Real Probe EFE Clears Routing Overhead Gate
+
+**Given** 100 synthetic reasoning examples and the verify-repair Tier 0 semantic
+energy probe
+**When** the benchmark routes each example through `FreeEnergyRouter` using the
+actual Tier 0 probe records
+**Then** the artifact reports at least 25% fewer cascade tier calls, median
+routing overhead no greater than 5 ms, and accuracy within two percentage points
+of the uniform cascade.
+
+**Spec traces:** REQ-ODAR-2257
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
