@@ -4342,3 +4342,5 @@ Ripgrep i |
 | 2026-05-17 13:15 UTC | Phase 2: KAN-CL FR-11 Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2231-kancl-per-knot-regularization) |
 | 2026-05-17 13:15 UTC | Phase 3: Deep RKHS Superposition Network (Wahkon) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.11s |
 | 2026-05-17 13:17 UTC | Phase 2: KAN-CL FR-11 Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2231-kancl-per-knot-regularization) |
+| 2026-05-17 13:17 UTC | Phase 3: Deep RKHS Superposition Network (Wahkon) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.70s |
+| 2026-05-17 13:18 UTC | Phase 2: KAN-CL FR-11 Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2231-kancl-per-knot-regularization) |
