@@ -4054,3 +4054,5 @@ Error |
 | 2026-05-17 03:46 UTC | Phase 2: Mode-Collapse Recovery Module | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2136-substrate-shifting-csl.result (act |
 | 2026-05-17 03:48 UTC | Phase 2: Mode-Collapse Recovery Module | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2136-substrate-shifting-csl.result (act |
 | 2026-05-17 03:50 UTC | Phase 2: CSL Zero-Forgetting Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2137-mode-collapse-recovery) |
+| 2026-05-17 03:54 UTC | Phase 3: Continuous Latent Reasoning Verifier Brid | OK | 81 passed, 1 warning in 4.97s |
+| 2026-05-17 03:56 UTC | Phase 2: CSL Zero-Forgetting Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2137-mode-collapse-recovery) |
