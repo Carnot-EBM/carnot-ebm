@@ -20,7 +20,7 @@ if TYPE_CHECKING:
 @dataclass
 class DTMSampler:
     """DTM Simulator integrating Langevin thermal noise.
-    
+
     Implements a thermal noise profile mapping to state updates (arXiv:2510.23972).
     """
 
@@ -53,18 +53,18 @@ class DTMSampler:
         ) -> tuple[tuple[jax.Array, jax.Array], jax.Array]:
             x, key = carry
             key, subkey = jrandom.split(key)
-            
+
             beta = beta_schedule[i]
-            
+
             grad = energy_fn.grad_energy(x)
             grad = self._clip_gradient(grad)
-            
+
             noise_scale = jnp.sqrt(self.step_size / beta)
             force_scale = self.step_size / 2.0
-            
+
             noise = jrandom.normal(subkey, x.shape)
             x_new = x - force_scale * grad + noise_scale * noise
-            
+
             return (x_new, key), x_new
 
         steps_idx = jnp.arange(n_steps)
@@ -85,6 +85,7 @@ class DTMSampler:
 
 class _IsingEnergyFunction:
     """Internal energy function adapter for Ising variables."""
+
     def __init__(self, biases: jax.Array, couplings: jax.Array):
         self.biases = biases
         self.couplings = couplings
@@ -107,7 +108,7 @@ class _IsingEnergyFunction:
 @dataclass
 class DtmBackend:
     """DTM Simulator backend adapter satisfying SamplerBackend protocol."""
-    
+
     seed: int = 42
     step_size: float = 0.01
     clip_norm: float | None = None
@@ -127,7 +128,7 @@ class DtmBackend:
         energy_fn = _IsingEnergyFunction(jnp.array(biases), jnp.array(couplings))
         sampler = DTMSampler(step_size=self.step_size, clip_norm=self.clip_norm)
         key = jrandom.PRNGKey(self.seed)
-        
+
         # Schedule goes from 0.1 to beta
         beta_schedule = jnp.linspace(0.1, beta, n_steps)
 
@@ -140,6 +141,20 @@ class DtmBackend:
         samples = jax.vmap(sample_single)(keys)
         return np.asarray(samples)
 
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for the DTM simulator backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for the DTM simulator backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
     def sample(
         self,
         biases: np.ndarray,
@@ -151,10 +166,10 @@ class DtmBackend:
         energy_fn = _IsingEnergyFunction(jnp.array(biases), jnp.array(couplings))
         sampler = DTMSampler(step_size=self.step_size, clip_norm=self.clip_norm)
         key = jrandom.PRNGKey(self.seed)
-        
+
         beta = float(config.get("beta", 1.0))
         beta_schedule = jnp.full(n_steps, beta)
-        
+
         def sample_single(k: jax.Array) -> jax.Array:
             init_state = jrandom.uniform(k, shape=(biases.shape[0],))
             final_state = sampler.sample(energy_fn, init_state, n_steps, k, beta_schedule)

@@ -297,11 +297,27 @@ class SyntheticDriftIsingBackend:
         self.last_acceptance_rate = trace.acceptance_rate
         return trace.samples
 
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for the synthetic Ising drift backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for the synthetic Ising drift backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
 
 def energy_bias(sample_energy: np.ndarray, reference_energy: np.ndarray) -> float:
     """Mean-energy bias relative to the no-drift reference."""
 
-    return float(np.asarray(sample_energy, dtype=np.float64).mean() - np.asarray(reference_energy).mean())
+    return float(
+        np.asarray(sample_energy, dtype=np.float64).mean() - np.asarray(reference_energy).mean()
+    )
 
 
 def magnetization_bias(samples: np.ndarray, reference_samples: np.ndarray) -> float:
@@ -370,7 +386,9 @@ def build_exp1583_payload(config: DriftCorrectionConfig | None = None) -> dict[s
     corrected_mag_bias = magnetization_bias(corrected_samples, reference_samples)
     energy_sigma = combined_sigma(corrected_energy, reference_energy)
     mag_sigma = combined_sigma(magnetization(corrected_samples), magnetization(reference_samples))
-    within_1sigma = abs(corrected_energy_bias) <= energy_sigma and abs(corrected_mag_bias) <= mag_sigma
+    within_1sigma = (
+        abs(corrected_energy_bias) <= energy_sigma and abs(corrected_mag_bias) <= mag_sigma
+    )
     no_hardware_claim = True
     return {
         "status": "complete",

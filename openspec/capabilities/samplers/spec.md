@@ -571,6 +571,32 @@ CASAL
 **And** `results/experiment_2246_casal_vs_adamflip.json` contains the required
 field-principle metadata for downstream capstone gating.
 
+### REQ-SAMPLE-2250: CASAL SamplerBackend Protocol Adapter
+
+Carnot MUST expose the CASAL primal-dual sampler through the sampler backend
+boundary without forcing `CASALSampler` to structurally match the Ising-only
+backend call shape directly.
+
+Sub-requirements:
+- REQ-SAMPLE-2250-1: `SamplerBackend` SHALL include optional
+  `set_constraints(constraints)` and `dual_update_step(dual_lr)` hooks with
+  no-op behavior for non-CASAL backends.
+- REQ-SAMPLE-2250-2: `CASALBackend` SHALL wrap `CASALSampler` and satisfy the
+  runtime-checkable `SamplerBackend` protocol.
+- REQ-SAMPLE-2250-3: Exp 2250 SHALL write
+  `results/experiment_2250_thrml_casal.json` with terminal
+  `honest_verdict`, `protocol_methods_added`, `casal_backend_wraps_protocol`,
+  and `preconditions_checked` fields.
+
+### SCENARIO-SAMPLE-2250: CASAL Adapter Satisfies Backend Protocol
+
+**Given** the CASAL module imports successfully
+**When** a `CASALBackend` instance is checked against `SamplerBackend`
+**Then** the runtime protocol conformance check passes
+**And** non-CASAL backends retain no-op primal-dual hooks
+**And** `results/experiment_2250_thrml_casal.json` records the protocol
+evolution audit fields.
+
 ### REQ-SAMPLE-1807: Lyapunov Control Barrier Functions in Langevin Sampler
 
 Carnot MUST provide a way to integrate Lyapunov Control Barrier Functions (CBFs) as

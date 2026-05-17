@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class DtmBackend:
     """Denoising Thermodynamic Model backend for continuous sampling trajectories.
-    
+
     Spec: REQ-SAMPLE-038
     """
 
@@ -54,10 +54,7 @@ class DtmBackend:
     ) -> np.ndarray:
         """Run denoising trajectory to find low-energy states."""
         return self.sample(
-            biases, 
-            couplings, 
-            n_samples, 
-            {"beta": beta, "steps": n_steps, "anneal": True}
+            biases, couplings, n_samples, {"beta": beta, "steps": n_steps, "anneal": True}
         )
 
     def sample(
@@ -71,7 +68,7 @@ class DtmBackend:
         beta = float(config.get("beta", 1.0))
         steps = int(config.get("steps", 100))
         anneal = bool(config.get("anneal", False))
-        
+
         b = jnp.asarray(biases, dtype=jnp.float32)
         J = jnp.asarray(couplings, dtype=jnp.float32)
         n_spins = biases.shape[0]
@@ -80,26 +77,39 @@ class DtmBackend:
         def step_fn(x: jax.Array, key: jax.Array, current_beta: float) -> jax.Array:
             # Gradient of continuous energy landscape
             # E = -0.5 * x^T J x - b^T x
-            grad_E = - jnp.dot(x, J) - b
-            
+            grad_E = -jnp.dot(x, J) - b
+
             # Simple continuous relaxation step (Langevin-like)
             dt = 0.01
             noise = jrandom.normal(key, shape=x.shape)
-            dx = - grad_E * dt + jnp.sqrt(2 * dt / current_beta) * noise
-            
+            dx = -grad_E * dt + jnp.sqrt(2 * dt / current_beta) * noise
+
             x_new = jnp.clip(x + dx, 0.0, 1.0)
             return x_new
 
         # Initial random continuous state
         x = jrandom.uniform(self._next_key(), shape=(n_samples, n_spins), minval=0.0, maxval=1.0)
-        
+
         # Denoising schedule
         betas = jnp.linspace(0.1, beta, steps) if anneal else jnp.full(steps, beta)
-        
+
         for i in range(steps):
             x = step_fn(x, self._next_key(), float(betas[i]))
-            
+
         # Final threshold to produce boolean samples as required by SamplerBackend protocol
         samples = (x > 0.5).astype(bool)
         return np.asarray(samples)
 
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for the DTM backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for the DTM backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None

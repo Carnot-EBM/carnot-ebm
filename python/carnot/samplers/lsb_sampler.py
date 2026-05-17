@@ -369,6 +369,20 @@ class LangevinSBSampler:
 
         return np.asarray(samples)
 
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for the LSB Ising backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for the LSB Ising backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
 
 def lsb_sample(
     key: jax.Array,

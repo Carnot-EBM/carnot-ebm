@@ -29,13 +29,17 @@
        switching logic end-to-end. When the real TSU driver lands, this stub
        gets replaced with actual hardware calls.
 
-    4. ``FPGAIsingSampler`` — optional KV260/PYNQ-oriented backend with a
+    4. ``CASALBackend`` — adapts the CASAL primal-dual equality sampler to the
+       backend boundary without making ``CASALSampler`` pretend to be an Ising
+       backend directly.
+
+    5. ``FPGAIsingSampler`` — optional KV260/PYNQ-oriented backend with a
        software-model control plane and CPU fallback.
 
-    5. ``get_backend(name)`` — factory function that maps a string name to a
+    6. ``get_backend(name)`` — factory function that maps a string name to a
        backend instance. Reads ``CARNOT_BACKEND`` env var as default.
 
-Spec: REQ-SAMPLE-003
+Spec: REQ-SAMPLE-003, REQ-SAMPLE-2250
 """
 
 from __future__ import annotations
@@ -77,7 +81,12 @@ class SamplerBackend(Protocol):
         - ``backend_name`` is a human-readable string like "cpu" or "tsu" used
           for logging and config validation.
 
-    Spec: REQ-SAMPLE-003
+        - ``set_constraints`` and ``dual_update_step`` are optional
+          primal-dual hooks. Non-CASAL backends implement them as no-ops so the
+          shared protocol can carry CASAL without breaking existing Ising
+          backend call sites.
+
+    Spec: REQ-SAMPLE-003, REQ-SAMPLE-2250
     """
 
     @property
@@ -144,6 +153,30 @@ class SamplerBackend(Protocol):
         Spec: REQ-SAMPLE-003
         """
         ...
+
+    def set_constraints(self, constraints: Any) -> None:
+        """Set equality constraints for primal-dual samplers.
+
+        **Detailed explanation for engineers:**
+            CASAL uses equality residuals as first-class sampler state, while
+            Ising backends do not. The protocol carries this hook so CASAL can
+            be configured through the same backend boundary. Non-CASAL
+            implementations deliberately treat it as a no-op.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """Set or apply the primal-dual update learning rate.
+
+        **Detailed explanation for engineers:**
+            CASAL maps this to its Lagrange-multiplier step size. Backends that
+            do not maintain dual variables keep the default no-op behavior.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
 
 
 @dataclass
@@ -241,8 +274,24 @@ class CpuBackend:
         )
         b = jnp.asarray(biases, dtype=jnp.float32)
         couplings_jax = jnp.asarray(couplings, dtype=jnp.float32)
-        samples = sampler.sample(self._next_key(), b, couplings_jax, beta=beta, h_schedule=h_schedule)
+        samples = sampler.sample(
+            self._next_key(), b, couplings_jax, beta=beta, h_schedule=h_schedule
+        )
         return np.asarray(samples)
+
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for the CPU Ising backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for the CPU Ising backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
 
 
 @dataclass
@@ -354,11 +403,185 @@ class TsuBackend:
         n_spins = biases.shape[0]
         return rng.integers(0, 2, size=(n_samples, n_spins)).astype(bool)
 
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for the TSU stub backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for the TSU stub backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+
+@dataclass
+class CASALBackend:
+    """SamplerBackend adapter for CASAL primal-dual equality sampling.
+
+    **Detailed explanation for engineers:**
+        ``CASALSampler`` has a native continuous interface:
+        ``sample(x_init, energy_fn)`` plus equality constraints and dual-step
+        configuration. ``SamplerBackend`` is historically Ising-shaped:
+        ``sample(biases, couplings, n_samples, config)``. This adapter keeps
+        those surfaces separated. Backend users can pass native CASAL inputs in
+        ``config`` (``x_init``, ``energy_fn``, and optional ``constraints``), or
+        call the Ising-shaped methods for a simulator-only quadratic surrogate.
+
+    Spec: REQ-SAMPLE-2250
+    """
+
+    constraints: Any | None = None
+    step_size: float = 1e-2
+    dual_step_size: float = 1.0
+    n_steps: int = 100
+    seed: int = 0
+    noise_scale: float = 1.0
+    projection_steps: int = 4
+    projection_damping: float = 1e-8
+    penalty_weight: float = 1.0
+    dual_convergence_tol: float = 1e-6
+    last_violation_mean: float | None = field(default=None, init=False)
+    last_dual_update_norm: float | None = field(default=None, init=False)
+    _last_sampler: Any | None = field(default=None, init=False, repr=False)
+
+    @property
+    def backend_name(self) -> str:
+        return "casal"
+
+    def set_constraints(self, constraints: Any) -> None:
+        """Install equality residuals for the next CASAL sampler run."""
+        self.constraints = constraints
+        self._last_sampler = None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """Update CASAL's Lagrange-multiplier learning rate."""
+        if dual_lr <= 0:
+            raise ValueError("dual_lr must be positive for CASALBackend")
+        self.dual_step_size = float(dual_lr)
+        if self._last_sampler is not None:
+            self._last_sampler.dual_step_size = self.dual_step_size
+
+    def minimize_energy(
+        self,
+        biases: np.ndarray,
+        couplings: np.ndarray,
+        n_samples: int,
+        n_steps: int,
+        beta: float,
+    ) -> np.ndarray:
+        """Run the simulator-only CASAL quadratic surrogate and threshold output.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        continuous = self.sample(
+            biases,
+            couplings,
+            n_samples,
+            {
+                "energy_fn": self._quadratic_energy_fn(biases, couplings),
+                "n_steps": n_steps,
+                "noise_scale": 1.0 / max(float(beta), 1e-6),
+            },
+        )
+        return np.asarray(continuous >= 0.5, dtype=bool)
+
+    def sample(
+        self,
+        biases: np.ndarray,
+        couplings: np.ndarray,
+        n_samples: int,
+        config: dict[str, Any],
+    ) -> np.ndarray:
+        """Run CASAL through the backend call shape.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        runtime_config = dict(config)
+        if "constraints" in runtime_config:
+            self.set_constraints(runtime_config["constraints"])
+        if "dual_lr" in runtime_config:
+            self.dual_update_step(float(runtime_config["dual_lr"]))
+        if "dual_step_size" in runtime_config:
+            self.dual_update_step(float(runtime_config["dual_step_size"]))
+
+        energy_fn = runtime_config.get("energy_fn")
+        if energy_fn is None:
+            energy_fn = self._quadratic_energy_fn(biases, couplings)
+
+        x_init = jnp.asarray(runtime_config.get("x_init", biases), dtype=jnp.float32)
+        initial_states = self._initial_states(x_init, n_samples)
+        samples = []
+        for index, initial_state in enumerate(initial_states):
+            sampler = self._build_sampler(runtime_config, seed_offset=index)
+            sample = sampler.sample(initial_state, energy_fn)
+            samples.append(sample)
+            self._last_sampler = sampler
+
+        if self._last_sampler is not None:
+            self.last_violation_mean = self._last_sampler.last_violation_mean
+            self.last_dual_update_norm = self._last_sampler.last_dual_update_norm
+
+        return np.asarray(jnp.stack(samples, axis=0))
+
+    def dual_update_converged(self, tolerance: float | None = None) -> bool:
+        """Expose CASAL's latest dual convergence diagnostic."""
+        if self._last_sampler is None:
+            return False
+        return bool(self._last_sampler.dual_update_converged(tolerance))
+
+    def _build_sampler(self, config: dict[str, Any], seed_offset: int) -> Any:
+        from carnot.samplers.casal import CASALSampler
+
+        return CASALSampler(
+            constraints=(
+                self.constraints if self.constraints is not None else self._unconstrained_residual
+            ),
+            step_size=float(config.get("step_size", self.step_size)),
+            dual_step_size=float(config.get("dual_step_size", self.dual_step_size)),
+            n_steps=int(config.get("n_steps", config.get("steps", self.n_steps))),
+            seed=int(config.get("seed", self.seed)) + seed_offset,
+            noise_scale=float(config.get("noise_scale", self.noise_scale)),
+            projection_steps=int(config.get("projection_steps", self.projection_steps)),
+            projection_damping=float(config.get("projection_damping", self.projection_damping)),
+            penalty_weight=float(config.get("penalty_weight", self.penalty_weight)),
+            dual_convergence_tol=float(
+                config.get("dual_convergence_tol", self.dual_convergence_tol)
+            ),
+        )
+
+    @staticmethod
+    def _initial_states(x_init: jax.Array, n_samples: int) -> list[jax.Array]:
+        if x_init.ndim > 1 and x_init.shape[0] == n_samples:
+            return [x_init[index] for index in range(n_samples)]
+        return [x_init for _ in range(n_samples)]
+
+    @staticmethod
+    def _quadratic_energy_fn(
+        biases: np.ndarray, couplings: np.ndarray
+    ) -> Callable[[jax.Array], jax.Array]:
+        b = jnp.asarray(biases, dtype=jnp.float32)
+        coupling_matrix = jnp.asarray(couplings, dtype=jnp.float32)
+
+        def energy_fn(x: jax.Array) -> jax.Array:
+            x_flat = jnp.ravel(jnp.asarray(x, dtype=jnp.float32))
+            return -jnp.dot(b, x_flat) - 0.5 * (x_flat @ coupling_matrix @ x_flat)
+
+        return energy_fn
+
+    @staticmethod
+    def _unconstrained_residual(x: jax.Array) -> jax.Array:
+        return jnp.zeros((), dtype=x.dtype)
+
 
 BackendFactory = Callable[[], SamplerBackend]
 
 
 _BACKENDS: dict[str, BackendFactory] = {
+    "casal": CASALBackend,
     "cpu": CpuBackend,
     "tsu": TsuBackend,
 }
@@ -378,6 +601,7 @@ def _build_backend_registry() -> dict[str, type]:
     from carnot.samplers.tsu_sampler import TSUSampler
 
     return {
+        "casal": CASALBackend,
         "cpu": CpuBackend,
         "dwave": DWaveNealBackend,
         "thrml_tsu": TSUSampler,
@@ -409,6 +633,8 @@ def get_sampler_backend(name: str | None = None) -> object:
 
         Supported backends:
         - ``"cpu"``: ``CpuBackend`` (wraps ``ParallelIsingSampler``, JAX-based)
+        - ``"casal"``: ``CASALBackend`` (wraps ``CASALSampler`` for continuous
+          primal-dual simulation)
         - ``"dwave"``: ``DWaveNealBackend`` (D-Wave Ocean SDK or CPU fallback)
 
         Unlike ``get_backend()``, this function does NOT require the returned
@@ -455,8 +681,8 @@ def get_backend(name: str | None = None) -> SamplerBackend:
             samples = backend.minimize_energy(biases, couplings, 100, 1000, 10.0)
 
     Args:
-        name: Backend name (``"cpu"``, ``"tsu"``, or ``"fpga"``). If None, reads
-            ``CARNOT_BACKEND`` env var, defaulting to ``"cpu"``.
+        name: Backend name (``"cpu"``, ``"tsu"``, ``"casal"``, or ``"fpga"``).
+            If None, reads ``CARNOT_BACKEND`` env var, defaulting to ``"cpu"``.
 
     Returns:
         An instance of the requested backend.
@@ -489,7 +715,9 @@ def get_backend(name: str | None = None) -> SamplerBackend:
 
     if name not in _BACKENDS:
         available = ", ".join(
-            sorted([*_BACKENDS.keys(), "fpga", "dwave_neal", "dwave_tabu", "dwave_qpu", "thrml_tsu"])
+            sorted(
+                [*_BACKENDS.keys(), "fpga", "dwave_neal", "dwave_tabu", "dwave_qpu", "thrml_tsu"]
+            )
         )
         raise ValueError(f"Unknown sampler backend {name!r}. Available backends: {available}")
 

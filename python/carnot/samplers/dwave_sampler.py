@@ -437,6 +437,20 @@ class DWaveSampler:
 
         return _sample_set_to_array(sample_set, n_spins, n_samples)
 
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for D-Wave Ising backends.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for D-Wave Ising backends.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
     def health_check(self) -> dict[str, Any]:
         """Report backend type, connectivity, and problem size limits.
 

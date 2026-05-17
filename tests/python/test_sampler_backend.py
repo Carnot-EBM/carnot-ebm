@@ -1,6 +1,6 @@
 """Tests for sampler backend abstraction layer.
 
-Spec coverage: REQ-SAMPLE-003
+Spec coverage: REQ-SAMPLE-003, REQ-SAMPLE-2250
 """
 
 from __future__ import annotations
@@ -11,6 +11,7 @@ import numpy as np
 import pytest
 
 from carnot.samplers.backend import (
+    CASALBackend,
     CpuBackend,
     SamplerBackend,
     TsuBackend,
@@ -31,6 +32,17 @@ class TestProtocolConformance:
     def test_tsu_is_sampler_backend(self):
         """SCENARIO-SAMPLE-006: TsuBackend conforms to SamplerBackend."""
         assert isinstance(TsuBackend(), SamplerBackend)
+
+    def test_casal_is_sampler_backend(self):
+        """SCENARIO-SAMPLE-2250: CASALBackend conforms to SamplerBackend."""
+        assert isinstance(CASALBackend(), SamplerBackend)
+
+    def test_non_casal_primal_dual_hooks_are_noops(self):
+        """REQ-SAMPLE-2250-1: Non-CASAL backends keep no-op primal-dual hooks."""
+        backend = CpuBackend()
+
+        assert backend.set_constraints(lambda x: x) is None
+        assert backend.dual_update_step(0.1) is None
 
 
 # --- CpuBackend ---

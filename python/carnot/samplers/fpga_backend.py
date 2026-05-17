@@ -437,6 +437,20 @@ class FpgaBackend:
             j_sparse, h = _apply_lagrangian_penalty(j_sparse, h, self.lagrangian_penalty_strength)
         return self.dispatch(j_sparse, h, n_samples, steps)
 
+    def set_constraints(self, constraints: Any) -> None:
+        """No-op primal-dual hook for the FPGA Ising backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
+    def dual_update_step(self, dual_lr: float) -> None:
+        """No-op dual-update hook for the FPGA Ising backend.
+
+        Spec: REQ-SAMPLE-2250
+        """
+        return None
+
     def dispatch(
         self,
         coupling: np.ndarray,

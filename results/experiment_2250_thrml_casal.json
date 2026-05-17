@@ -1,0 +1,69 @@
+{
+  "schema": "carnot.experiment_2250_thrml_casal.v1",
+  "experiment_id": 2250,
+  "run_date": "2026-05-17",
+  "claim_boundary": "simulator-only",
+  "spec_refs": [
+    "REQ-SAMPLE-2250",
+    "REQ-SAMPLE-2250-1",
+    "REQ-SAMPLE-2250-2",
+    "REQ-SAMPLE-2250-3",
+    "SCENARIO-SAMPLE-2250"
+  ],
+  "honest_verdict": "complete: CASALBackend wraps CASALSampler through SamplerBackend; focused unit, lint, and import checks pass; spec coverage still has pre-existing unrelated traceability debt.",
+  "protocol_methods_added": [
+    "set_constraints",
+    "dual_update_step"
+  ],
+  "casal_backend_wraps_protocol": true,
+  "preconditions_checked": [
+    {
+      "name": "casal_import",
+      "module": "carnot.samplers.casal",
+      "status": "passed",
+      "command": ".venv/bin/python - <<'PY'\nimport importlib\nm = importlib.import_module('carnot.samplers.casal')\nprint('casal_import passed', m.CASALSampler.__name__)\nPY"
+    }
+  ],
+  "interface_audit": {
+    "casal_sampler_native_api": [
+      "CASALSampler(constraints, step_size, dual_step_size, n_steps, ...)",
+      "sample(x_init, energy_fn)",
+      "dual_update_converged(tolerance)"
+    ],
+    "original_sampler_backend_api": [
+      "backend_name",
+      "minimize_energy(biases, couplings, n_samples, n_steps, beta)",
+      "sample(biases, couplings, n_samples, config)"
+    ],
+    "missing_protocol_surface_resolved": [
+      "set_constraints(constraints)",
+      "dual_update_step(dual_lr)"
+    ]
+  },
+  "implementation": {
+    "adapter": "carnot.samplers.backend.CASALBackend",
+    "wrapped_sampler": "carnot.samplers.casal.CASALSampler",
+    "factory_registered": true,
+    "non_casal_hook_behavior": "no-op"
+  },
+  "verification": {
+    "compile_command": ".venv/bin/python -m compileall -q python/carnot/samplers/backend.py python/carnot/samplers/dwave_sampler.py python/carnot/samplers/fpga_backend.py python/carnot/samplers/dtm.py python/carnot/samplers/dtm_sampler.py python/carnot/samplers/lsb_sampler.py python/carnot/sampling/z1_drift_correction.py tests/python/test_sampler_backend.py",
+    "compile_result": "passed",
+    "unit_test_command": ".venv/bin/pytest -q tests/python/test_sampler_backend.py --no-cov",
+    "unit_test_result": "19 passed",
+    "lint_commands": [
+      "/usr/bin/ruff check python/carnot/samplers/backend.py python/carnot/samplers/dtm.py python/carnot/samplers/dtm_sampler.py python/carnot/samplers/dwave_sampler.py python/carnot/samplers/fpga_backend.py python/carnot/samplers/lsb_sampler.py python/carnot/sampling/z1_drift_correction.py tests/python/test_sampler_backend.py",
+      "/usr/bin/ruff format --check python/carnot/samplers/backend.py python/carnot/samplers/dtm.py python/carnot/samplers/dtm_sampler.py python/carnot/samplers/dwave_sampler.py python/carnot/samplers/fpga_backend.py python/carnot/samplers/lsb_sampler.py python/carnot/sampling/z1_drift_correction.py tests/python/test_sampler_backend.py"
+    ],
+    "lint_result": "passed",
+    "spec_coverage_command": ".venv/bin/python scripts/check_spec_coverage.py",
+    "spec_coverage_result": "failed_pre_existing: 240 tests missing spec traceability; tests/python/test_sampler_backend.py was not listed.",
+    "e2e_plan_review": "ops/e2e-test-plan.md reviewed; no dedicated CASAL backend E2E target is listed, so the focused runtime protocol test is the applicable check for this adapter."
+  },
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "protocol_methods_added": "Lists new methods added to SamplerBackend; audit trail for interface evolution.",
+    "casal_backend_wraps_protocol": "Boolean confirming CASALBackend passes protocol conformance test.",
+    "preconditions_checked": "Lists CASAL module availability check."
+  }
+}
