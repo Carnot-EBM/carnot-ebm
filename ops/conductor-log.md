@@ -4362,3 +4362,4 @@ Ripgrep i |
 | 2026-05-17 14:00 UTC | Phase 4: Capstone E2E GPU Validation (.221) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2236-adamflip-ebm-training) |
 | 2026-05-17 14:00 UTC | Milestone 2026.05.222 activated | OK | 14 tasks queued |
 | 2026-05-17 14:03 UTC | Phase 0: Archive .221 and activate .222 | OK | cache hit: 81 passed, 1 warning in 3.72s |
+| 2026-05-17 14:13 UTC | Phase 1: Fast-Slow Training Decomposition for Veri | OK | 145 passed, 1 warning in 4.23s |
