@@ -4165,3 +4165,5 @@ Ripgrep i |
 | 2026-05-17 07:48 UTC | Phase 4: Live GPU Capstone Benchmarks (Gemma4/Qwen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2177-jepa-csl-training-loop) |
 | 2026-05-17 07:48 UTC | Phase 4: Milestone 2026.05.215 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.65s |
 | 2026-05-17 07:50 UTC | Phase 4: Live GPU Capstone Benchmarks (Gemma4/Qwen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2177-jepa-csl-training-loop) |
+| 2026-05-17 07:50 UTC | Phase 4: Milestone 2026.05.215 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 3.92s |
+| 2026-05-17 07:52 UTC | Phase 4: Live GPU Capstone Benchmarks (Gemma4/Qwen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2177-jepa-csl-training-loop) |
