@@ -4391,3 +4391,5 @@ Ripgrep i |
 | 2026-05-17 16:53 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2255-fst-real-scale-live-gen) |
 | 2026-05-17 17:06 UTC | Phase 1: ODAR Real-Inference Routing Overhead Benc | OK | 81 passed, 1 warning in 3.67s |
 | 2026-05-17 17:08 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2255-fst-real-scale-live-gen) |
+| 2026-05-17 17:08 UTC | Phase 2: KAN-CL n=256 Per-Knot Regularization Clea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
+| 2026-05-17 17:10 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2255-fst-real-scale-live-gen) |
