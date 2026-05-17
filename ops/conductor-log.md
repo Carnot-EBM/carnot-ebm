@@ -4096,3 +4096,4 @@ Error |
 Ripgrep i |
 | 2026-05-17 05:42 UTC | Phase 0: Archive .213 and activate .214 | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: nabled. All tool ca |
 | 2026-05-17 05:54 UTC | Phase 0: Archive .213 and activate .214 | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: -color support is r |
+| 2026-05-17 05:56 UTC | Phase 1: ActFocus Token Reweighting for PREM | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
