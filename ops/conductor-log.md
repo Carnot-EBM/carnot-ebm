@@ -4419,3 +4419,5 @@ Ripgrep i |
 | 2026-05-17 18:33 UTC | Phase 0: Fix DualGPU ImportError in carnot.inferen | OK | Deliverable already exists in repo |
 | 2026-05-17 18:33 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2267-dualgpu-import-fix.pretest_fixed ( |
 | 2026-05-17 18:35 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2267-dualgpu-import-fix.pretest_fixed ( |
+| 2026-05-17 18:37 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2267-dualgpu-import-fix.pretest_fixed ( |
+| 2026-05-17 18:39 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2268-fst-real-scale-live-gen) |
