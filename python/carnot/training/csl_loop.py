@@ -2,18 +2,24 @@
 from typing import Any, Dict, Optional
 import jax.numpy as jnp
 from carnot.training.muon_ogd import MuonOGD
+from carnot.training.adamflip import AdamFLIP
 
 class CSLLoop:
-    """Continuous Self-Learning Loop with Muon-OGD."""
+    """Continuous Self-Learning Loop with Muon-OGD and AdamFLIP."""
     
     def __init__(self, optimizer: MuonOGD):
         self.optimizer = optimizer
         self.memory: Optional[jnp.ndarray] = None
+        self.adamflip = AdamFLIP(learning_rate=0.01)
 
-    def step(self, params: jnp.ndarray, grads: jnp.ndarray) -> jnp.ndarray:
-        """Perform a single CSL loop step with Muon-OGD."""
+    def step(self, params: jnp.ndarray, grads: jnp.ndarray, residuals: Optional[jnp.ndarray] = None) -> jnp.ndarray:
+        """Perform a single CSL loop step with Muon-OGD and AdamFLIP."""
         updated_params = self.optimizer.update(params, grads, prior_memory=self.memory)
         
+        if residuals is not None:
+            feedback = self.adamflip.update(residuals)
+            updated_params = updated_params - feedback
+            
         if self.memory is None:
             norm_val = jnp.linalg.norm(grads)
             if norm_val > 0:
@@ -23,19 +29,20 @@ class CSLLoop:
                 
         return updated_params
 
-def run_csl_loop(params: jnp.ndarray, grads: jnp.ndarray) -> Dict[str, Any]:
+def run_csl_loop(params: jnp.ndarray, grads: jnp.ndarray, residuals: Optional[jnp.ndarray] = None) -> Dict[str, Any]:
     """Run a CSL loop and return the result."""
     optimizer = MuonOGD(learning_rate=0.01)
     csl = CSLLoop(optimizer)
     
     # First step (populates memory)
-    updated = csl.step(params, grads)
+    updated = csl.step(params, grads, residuals)
     
     # Second step (uses memory for OGD projection)
-    updated_again = csl.step(updated, grads)
+    updated_again = csl.step(updated, grads, residuals)
     
     return {
         "status": "success",
         "muon_ogd_applied": True,
+        "adamflip_applied": residuals is not None,
         "updated_norm": float(jnp.linalg.norm(updated_again))
     }

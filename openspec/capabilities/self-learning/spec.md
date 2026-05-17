@@ -5824,3 +5824,7 @@ historically reliable constraint violation patterns as new queries arrive.
 **When** the `train()` method is called with synthetic logical traces
 **Then** the energy model weights MUST be updated using Contrastive Divergence
 **And** it outputs a complete deliverable to `results/experiment_2066_ebrm_training.json` with `ebrm_trained=true`.
+
+### REQ-LEARN-2127: AdamFLIP Integration into CSL Loop
+
+AdamFLIP SHALL apply adaptive momentum feedback linearization to solve hard constraints robustly. It SHALL be integrated into the CSL loop to update constraint residuals as a feedback input.
