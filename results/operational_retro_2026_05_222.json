@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.222",
+  "generated_at": "2026-05-17T16:14:06Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits were found since milestone 2026.05.222 activation; the pipeline was inactive this milestone. Both RTX 3090 GPUs remained at 0% utilization with only 4 MB residual allocation each, consistent with no compute-bound work executed. There is no performance data to analyze for this milestone.",
+  "bottlenecks_identified": [
+    "Pipeline inactivity: zero experiments were committed during the milestone window, indicating the conductor either lacked a valid roadmap at activation or no tasks were queued.",
+    "Residual GPU memory (4 MB per GPU at 0% utilization) suggests a prior process left handles open without releasing them; this wastes no wall time but is a hygiene gap."
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml before closing the prior milestone so the conductor has a valid roadmap at activation and can begin tasks immediately.",
+    "Add a conductor health-check: if no experiment task activates within 15 minutes of milestone start, emit a 'pipeline_idle_alert' artifact and page the operator.",
+    "Audit GPU memory residuals after each milestone; add a teardown step that releases any lingering allocations so GPU state starts clean at the next milestone.",
+    "Enforce the Pre-Staged Roadmap Convention (CLAUDE.md) more strictly: if research-roadmap-next.yaml is absent or stale at retro time, block milestone archival until it is written."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-stage a valid research-roadmap-next.yaml for 2026.05.223 before archiving this milestone, so the conductor activates immediately without an idle window.",
+    "Wire a milestone-idle health-check into the conductor's activation guard that fires a structured alert artifact if no task activates within 15 minutes.",
+    "Add GPU teardown to the milestone-close sequence to release residual 4 MB allocations on both GPUs and ensure a clean state for the next milestone's compute-bound tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A milestone with zero executed experiments is not a failed experiment — it is a planning gap: the conductor had no work to do because no roadmap was ready. The correct meta-lesson is to treat roadmap availability as a pre-condition that must be satisfied before the prior milestone closes, not after the new one opens. Preventing a single future inactive milestone recovers more wall time than any individual experiment optimization."
+}

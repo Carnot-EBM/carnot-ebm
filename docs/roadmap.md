@@ -269,3 +269,4 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 | 2026.05.219 | Pipeline Inactive | 0 experiments | No data available this milestone |
 | 2026.05.220 | Pipeline Inactive | 0 experiments | No data available this milestone |
 | 2026.05.221 | Pipeline Inactive | 0 experiments | No data available this milestone |
+| 2026.05.222 | Pipeline Inactive | 0 experiments | No experiments committed; roadmap gap; pre-stage roadmap for .223 |
