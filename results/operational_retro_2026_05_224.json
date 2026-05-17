@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.224",
+  "generated_at": "2026-05-17T19:27:06Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiments were committed during milestone 2026.05.224. Both GPUs remained idle at 0% utilization with only 4MB allocated each. The pipeline was inactive for this milestone window, consistent with the blocked_roadmap_missing artifact produced at the end of .223.",
+  "bottlenecks_identified": [
+    "Pipeline inactive: 0 experiments committed during this milestone window. The proximate cause is the recurring blocked_roadmap_missing pattern — the .223 archive step (results/experiment_2266_archive.json) emitted honest_verdict=complete: blocked_roadmap_missing, leaving no roadmap present to activate .224 tasks.",
+    "No synthesis-only or compute-bound work was initiated, so no per-task bottlenecks are measurable this milestone."
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for .225 before archiving .224 — the pre-staged roadmap convention (CLAUDE.md) preserves operator-drafted plans; applying it now prevents another empty milestone.",
+    "Diagnose and break the blocked_roadmap_missing cycle that has persisted across .222, .223, and .224 archive steps: ensure the planner emits a valid YAML with the correct milestone: field before the archive/activate task fires.",
+    "Consider adding an activation guard that refuses to close a milestone without a successor roadmap present, surfacing the gap before wall time is lost.",
+    "Both RTX 3090 GPUs are idle (0% util, 4MB each). If .225 resumes compute-bound tasks, DualGPURunner should be used when 2+ models are loaded in parallel to recover throughput."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Draft and commit research-roadmap-next.yaml for .225 now, with milestone: 2026.05.225 set correctly, before issuing the archive/activate task for .224.",
+    "Add a pre-condition check in the archive task template that verifies research-roadmap-next.yaml exists and has a non-stale milestone: field before emitting a complete verdict.",
+    "Schedule the post-.223 research sweep findings (results/experiment_2263_arxiv_sweep.json top-3 papers) into concrete .225 experiment tasks to ensure the milestone opens with actionable work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.05.224 is the fourth consecutive empty milestone in the .222-.224 window, all sharing the same root cause: no roadmap is present at activation time. The recurring pattern indicates that the pre-staged roadmap convention is understood at the CLAUDE.md level but not being executed at the operator-turn level before archiving. Fixing the handoff discipline — draft the successor roadmap before archiving the current milestone — is the highest-leverage single action available to the project right now."
+}

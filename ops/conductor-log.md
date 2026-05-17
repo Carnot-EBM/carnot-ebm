@@ -4452,3 +4452,4 @@ Ripgrep i |
 | 2026-05-17 19:18 UTC | Phase 4: Capstone E2E Real-Scale Live Generation ( | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2268-fst-real-scale-live-gen, exp2270-kan |
 | 2026-05-17 19:18 UTC | Phase 4: Milestone 2026.05.224 Retrospective | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-17 19:20 UTC | Phase 4: Capstone E2E Real-Scale Live Generation ( | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2268-fst-real-scale-live-gen, exp2270-kan |
+| 2026-05-17 19:20 UTC | Phase 4: Milestone 2026.05.224 Retrospective | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |

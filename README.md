@@ -40,9 +40,9 @@ path = hf_hub_download(repo_id="Carnot-EBM/ThinkPRM-v3", filename="checkpoint.sa
 
 ## Experiments
 Carnot tracks an exhaustive, public experiment record to maintain provenance for all claims.
-- **Total Experiments:** 2907 (through Exp 2205)
-- **Archived Milestones:** 234
-- **Tests:** 25,306
+- **Total Experiments:** 2,810 (through Exp 2265)
+- **Archived Milestones:** 237
+- **Tests:** 25,353
 
 ## Key Results
 | Domain | Model | Result | Note |
