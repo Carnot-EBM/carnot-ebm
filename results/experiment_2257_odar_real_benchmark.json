@@ -2261,5 +2261,33 @@
   "threshold": 0.5,
   "tier_calls_A": 400,
   "tier_calls_B": 250,
-  "title": "ODAR real Tier 0 probe routing overhead benchmark"
+  "title": "ODAR real Tier 0 probe routing overhead benchmark",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "accuracy_odar_pct=100.0 and accuracy_uniform_pct=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "accuracy_odar_pct=100.0 and n_corpus=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "accuracy_uniform_pct=100.0 and n_corpus=100.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "fast_path_fraction=0.5 and threshold=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "accuracy_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
