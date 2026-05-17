@@ -1,0 +1,24 @@
+{
+  "experiment": 2113,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-17",
+  "started_at": "2026-05-17T00:34:21.760936+00:00",
+  "finished_at": "2026-05-17T00:34:21.760936+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 2: Continual Learning Catastrophic Forgetting Evaluation",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp2111-kan-cl-regularization.result (actual is None, cannot contain 'OK')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp2111-kan-cl-regularization",
+      "artifact_field": "result",
+      "op": "contains",
+      "expected": "OK",
+      "actual": null,
+      "passed": false,
+      "reason": "actual is None, cannot contain 'OK'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
