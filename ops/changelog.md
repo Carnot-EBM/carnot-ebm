@@ -6032,3 +6032,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-17: Phase 2: KAN-CL Per-Knot Importance Regularization (✅ Complete) — honest_verdict=complete_kan_cl_regularization_computed; results/experiment_2111_kan_cl.json
 - 2026-05-17: Phase 2: Muon-OGD Spectral Orthogonal Gradient Projection (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2112_muon_ogd.json
 - 2026-05-17: Phase 3: NEXUS Symbolic Grounding for ActFocus (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2115_nexus.json
+- 2026-05-17: Phase 0: Archive .210 and activate .211 (✅ Complete) — honest_verdict=archive_and_activate_complete; results/experiment_2120_archive.json
