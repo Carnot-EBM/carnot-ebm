@@ -6041,3 +6041,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - Completed Operational Retrospective for 2026.05.211. No data available this milestone.
 - 2026-05-17: Phase 0: Archive .211 and activate .212 (✅ Complete) — honest_verdict=complete: milestone_212_state_initialized_211_archived; results/experiment_2132_archive.json
 - 2026-05-17: Phase 1: Hardware-Assisted DAB Module (✅ Complete) — honest_verdict=HW DAB implemented and energy correctly offloaded to simulated LUTs.; results/experiment_2133_hw_dab.json
+- 2026-05-17: Phase 2: Substrate Shifting CSL (⚠️ Research Finding) — honest_verdict=Substrate Shifting grid parameters successfully integrated into CSL loop.; results/experiment_2136_substrate_shifting.json
