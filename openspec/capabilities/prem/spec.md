@@ -13,3 +13,10 @@ The Process-Reward Energy Model (PREM) base architecture provides step-wise ener
 
 - **SCENARIO-PREM-001**: A sequence of intermediate steps is provided. The model computes the energy at each step using `step_energy` and returns the sequence of energies.
 - **SCENARIO-PREM-002**: A complete trajectory is evaluated to compute the total process reward energy.
+- **SCENARIO-PREM-003**: Given a low PREM energy variance, `TTCController` returns a baseline budget.
+- **SCENARIO-PREM-004**: Given a high PREM energy variance, `TTCController` returns an expanded budget to increase test-time compute.
+
+## Dynamic Budget Controller (TTC)
+
+- **REQ-PREM-004**: The system shall provide a `TTCController` that monitors PREM energy variance and dynamically expands search budgets (e.g. beam width, MCMC steps).
+- **REQ-PREM-005**: `TTCController.get_budget(energy_history)` must compute variance of recent energies and scale the base budget based on the variance.
