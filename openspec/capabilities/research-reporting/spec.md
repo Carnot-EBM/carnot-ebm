@@ -4094,3 +4094,16 @@ The pipeline SHALL run a consolidated audit for milestones .198 to .201, generat
 
 ### REQ-REPORT-2010: Consolidated Phase 1 Audit
 The pipeline SHALL run a consolidated audit for milestones .198 to .201, generate a Phase 1 dashboard, and write results/experiment_2010_consolidated_audit.json.
+
+### REQ-REPORT-2265: Milestone 2026.05.223 Operational Retrospective
+
+The repository shall provide `scripts/experiment_2265_retro.py` to generate `results/experiment_2265_retro.json` with schema `carnot.operational_retro.v66`.
+The artifact must record `total_wall_time_min`, `n_experiments_completed`, `n_gate_blocks`, `n_compute_bound`, `criteria_met`, `top_gaps_resolved`, and `next_milestone_speedup_target_pct`.
+The `honest_verdict` field must start with a terminal prefix and the `.222` gap resolution analysis must explicitly cover the pre-test fix, KAN-CL n=256 validation, and live generation beyond the one-token probe.
+
+#### SCENARIO-REPORT-2265: Generate .223 Retrospective Artifact
+
+**Given** a conductor log containing the milestone 2026.05.223 activation and terminal task rows
+**And** result artifacts for the completed or blocked .223 experiments
+**When** the Exp 2265 retrospective generator runs
+**Then** it writes `results/experiment_2265_retro.json` with schema `carnot.operational_retro.v66`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.222` gap closure records, and a quantified speedup target for milestone `.224`.
