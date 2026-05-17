@@ -13153,3 +13153,20 @@ This sweep was run after milestone `.211` completed. The literature search revea
 - **Online Learning with Unknown Safety Constraints & Mechanistic Forgetting**: Converts optimistic actions to pessimistic based on complexity measures for strict constraint satisfaction. "Crosscoders" used to frame continual learning as a geometric constraint problem at the feature readout level.
 - **SCG-MEM (April 2026)**: Schema-Constrained Generative Memory for agentic structure without hallucinations.
 - **CRANE (arxiv:2502.09061)**: Reasoning-augmented constrained generation to balance constraints with reasoning.
+
+## 2026-05-18 Post-.219 Planning Sweep (Milestone 2026.05.220)
+
+### Joint Latent Energy and Dynamic Constraint Elicitation (JLE-DCE)
+- **Paper:** "Dynamic Constraint Elicitation via Joint Latent Energy Models" (arXiv:2605.16102).
+- **What:** Extracts verifiable constraints directly from unstructured inputs by projecting them into a joint latent space scored by an EBM.
+- **Relevance to Carnot:** Upgrades the EBCN structural coherence model to handle real-time open-world constraint elicitation for local GGUF models.
+
+### Hardware-in-the-Loop Energy Decoding (HILED) on Edge FPGAs
+- **Paper:** "HILED: Hardware-in-the-Loop Energy Decoding for Fast Constraint Satisfaction" (arXiv:2604.22105 / FPGA 2026).
+- **What:** Offloads Gibbs sampling and energy evaluation to an FPGA over PCIe/AXI during LLM autoregressive decoding.
+- **Relevance to Carnot:** Direct transition path from the .219 KANELÉ LUT synthesis to physical KV260 evaluation for the Phase 2 hardware track.
+
+### Semantic Pruning for Continual Energy-Based Models
+- **Paper:** "Mitigating Interference via Semantic Pruning in Continual Energy-Based Models" (arXiv:2604.19882).
+- **What:** Introduces a pruning mechanism for replay buffers in continuous learning to discard redundant constraints and prevent context saturation.
+- **Relevance to Carnot:** Crucial for stabilizing Carnot's FR-11 Continuous Self-Learning loop across multi-session retention.
