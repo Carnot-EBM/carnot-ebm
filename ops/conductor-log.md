@@ -4058,3 +4058,4 @@ Error |
 | 2026-05-17 03:56 UTC | Phase 2: CSL Zero-Forgetting Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2137-mode-collapse-recovery) |
 | 2026-05-17 03:56 UTC | Phase 3: CLR Verifier Benchmark on GSM8K | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2139-clr-verifier-bridge.result (actual |
 | 2026-05-17 03:58 UTC | Phase 2: CSL Zero-Forgetting Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2137-mode-collapse-recovery) |
+| 2026-05-17 03:58 UTC | Phase 3: CLR Verifier Benchmark on GSM8K | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2139-clr-verifier-bridge.result (actual |
