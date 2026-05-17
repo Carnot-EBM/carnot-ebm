@@ -4263,3 +4263,4 @@ Ripgrep i |
 | 2026-05-17 11:01 UTC | Phase 1: EBCN Structural Coherence State-Space Mod | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.97s |
 | 2026-05-17 11:03 UTC | Phase 1: EBCN Structural Coherence State-Space Mod | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.66s |
 | 2026-05-17 11:05 UTC | Phase 1: EBCN Structural Coherence State-Space Mod | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.35s |
+| 2026-05-17 11:07 UTC | Phase 2: Formal Synthesis of KAN Control Barrier C | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
