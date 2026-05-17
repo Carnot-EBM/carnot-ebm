@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-17 (Milestone 2026.05.226 Operational Retrospective)
+
+- Retrospective written for milestone 2026.05.226: 0 experiments completed, 0 wall-time minutes, both RTX 3090s idle at 0% — sixth consecutive empty-experiment milestone. Root cause unchanged: carnot.pypi_escalation import cascade blocking all Phase 1-3 tasks. Top leverage action: execute exp2295 (requires_claude: true pypi fix) as first activation task. Pre-activation import smoke-test proposed as conductor improvement. Artifact: results/operational_retro_2026_05_226.json.
+
 ## 2026-05-17 (Milestone 2026.05.226 Research Planning)
 
 - Milestone 2026.05.226 research planning complete. User instruction: plan the next milestone after .225, which completed all 14 tasks but with the pre-test cascade still blocking substantive work for the 5th consecutive milestone.

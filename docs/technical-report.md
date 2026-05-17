@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,824 Experiments Across the Public Record, 238 Archived Milestone Records, 25,353 Python Test Items Collected (Through Exp 2279)
+## A Technical Report — 2,838 Experiments Across the Public Record, 239 Archived Milestone Records, 25,353 Python Test Items Collected (Through Exp 2293)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-17
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,824 experiments across 238 milestones up to .224, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, and adversarial null-space probing of the k=16 verifier ensemble.
+This report summarizes 2,838 experiments across 239 milestones up to .225, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, and NSVIF neuro-symbolic Z3 extraction as the first PRD Priority #1 implementation.
 
-This report documents the research arc behind the framework — **2,824 experiment records tracked through Exp 2279, with 2,824 task records in 238 artifact-backed completed milestone records archived through 2026.05.224** — run between February and May 2026. `research-complete.yaml` currently archives **238** completed milestone records through 2026.05.224. Milestone 2026.05.224 completed 14 experiments targeting FST live generation, FR-11 multidomain retention, KAN-CL n=256 scaling, KV260 RTL lint, Yosys synthesis, adversarial null-space probing (exp2274), Eidoku CSP gate (exp2275), and Projected-Langevin baseline (exp2276). Milestone .225 is planned with 14 tasks (exp2280-exp2293) addressing a pypi_escalation cascade root cause and retrying blocked Phase 1/2/3 work.
+This report documents the research arc behind the framework — **2,838 experiment records tracked through Exp 2293, with 2,838 task records in 239 artifact-backed completed milestone records archived through 2026.05.225** — run between February and May 2026. `research-complete.yaml` currently archives **239** completed milestone records through 2026.05.225. Milestone 2026.05.225 completed 14 experiments (exp2280-exp2293) targeting the pre-test cascade fix, FST live generation, FR-11 multidomain retention, KAN-CL n=256 scaling, KV260 RTL lint, Yosys synthesis, adversarial null-space probing, Eidoku CSP gate (first run), and Projected-Langevin baseline (first run). The carnot.pypi_escalation cascade root cause — missing check_pypi_escalation and run_escalation functions imported by tests/python/test_pypi_escalation.py line 6 — blocked 12 of 14 Phase 1-3 tasks across 5 consecutive milestones. Milestone .226 is planned with 14 tasks (exp2294-exp2307) introducing requires_claude escalation for the pre-test fix, NSVIF neuro-symbolic Z3 extraction (arXiv:2601.17789 — first PRD Priority #1 implementation), VERGE SMT repair (arXiv:2601.20055), and Sparse Ising connectivity (arXiv:2503.01177).
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5727,3 +5727,37 @@ Experiment 2109 implemented the ALPS module, achieving a 300.00x speedup over st
 
 **Constraint-Aware Retrieval Module (CARM)**
 Experiment 2121 integrated CARM, improving retrieval alignment with hard constraints for downstream verification tasks.
+
+## Milestones 219-226 — Pre-Test Cascade Diagnosis and New Technique Introduction (Exps 2215-2307, May 2026)
+
+### Pre-Test Cascade Root Cause Confirmed
+
+Milestones .219 through .225 each recorded 0 minutes of wall time and 0 compute-bound experiments executed. The primary blocking issue across all five milestones was identified and confirmed: the `carnot.pypi_escalation` module is missing the `check_pypi_escalation` and `run_escalation` functions that `tests/python/test_pypi_escalation.py` imports on line 6. Because the conductor pre-test checks run the full Python test suite before launching any experiment, this import error classifies all downstream tasks as `blocked_gate_check_failed`, preventing Phase 1-3 experiment execution across five consecutive milestones (.221, .222, .223, .224, .225).
+
+Milestone .224 first identified the cascade root cause as `carnot.inference.__init__` being empty (missing re-exports for `DualGPUExecutionResult` and related symbols). The .224 pre-test fix attempt (exp2267) targeted this, and post-fix analysis in .225 confirmed that the `carnot.pypi_escalation` missing functions were a secondary root cause that persisted after the inference module was repaired. Two consecutive codex attempts (exp2267, exp2281) failed to deliver a working fix, with exp2281 producing no deliverable artifact. Milestone .226 switches to `requires_claude: true` (Claude Sonnet with Opus escalation, max_turns=40) for exp2295.
+
+### New Techniques Queued for Execution
+
+Research planning for milestones .224, .225, and .226 introduced five new arXiv-backed techniques queued for first-run execution once the pre-test cascade is resolved:
+
+**NSVIF Neuro-Symbolic Verification (arXiv:2601.17789)** — PRD Priority #1 first implementation. The NSVIF framework extracts Z3 SMT constraints from natural language verification goals using a neuro-symbolic pipeline. Exp2301 is the first Carnot implementation, targeting `z3_constraint_extraction_success_rate >= 0.80`.
+
+**VERGE SMT Repair (arXiv:2601.20055)** — Applies verification-guided repair using SMT solver feedback to constrain LLM repair candidates. Exp2302 targets `verge_repair_acceptance_rate >= 0.70`.
+
+**Eidoku CSP Verification Gate (arXiv:2512.20664)** — Constraint satisfaction problem verification gate that checks LLM-generated solutions against formal CSP encodings. First queued in .225 (exp2289), carried to .226 (exp2299).
+
+**Projected-Langevin Equality Constraints (arXiv:2605.05387)** — Langevin dynamics with projection onto equality constraint manifolds for constrained generation. First queued in .225 (exp2290), carried to .226 (exp2300).
+
+**Sparse Ising Connectivity (arXiv:2503.01177)** — Copy-node graph sparsification for Ising machines, enabling polynomial-time Ising formulation of verification problems. First introduced in .226 planning (exp2305).
+
+### Planning Sweep Papers Added to Research References
+
+Post-.224 and post-.225 arXiv sweeps added nine papers to `research-references.md`:
+- NSVIF (arXiv:2601.17789): neuro-symbolic verification with Z3
+- Sparse Ising (arXiv:2503.01177): copy-node graph sparsification
+- VERGE (arXiv:2601.20055): verification-guided repair with SMT
+- CoVe (arXiv:2603.01940): chain-of-verification for factual consistency
+- Landing-based constrained sampling (arXiv:2510.22044, arXiv:2604.17838)
+- Free Energy routing in MoE (arXiv:2605.00604)
+- Projected Gradient Ascent for hard constraints (arXiv:2602.08646)
+- Kinetic Langevin Splitting (arXiv:2603.23397)

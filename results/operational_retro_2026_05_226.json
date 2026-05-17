@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.226",
+  "generated_at": "2026-05-17T22:28:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.226 produced zero experiment completions — the conductor reached the research-planning phase (roadmap + change-proposal authored) but no experiment commits landed before this retrospective was generated. Both RTX 3090s are idle at 0% utilization with no compute-bound tasks in flight, consistent with a planning-only milestone.",
+  "bottlenecks_identified": [
+    "Five consecutive milestones (.208, .210, .223, .224, .225, now .226) with zero completed experiments: the recurring pre-test cascade block (carnot.pypi_escalation missing check_pypi_escalation / run_escalation) is gating all Phase 1-3 tasks and has not been resolved despite two codex attempts (exp2281 produced no deliverable).",
+    "Codex gpt-5.5 demonstrably unable to debug the carnot.pypi_escalation multi-file import failure — two failed attempts confirm this is beyond codex's capability envelope for this specific task; the requires_claude: true escalation (exp2295) has been planned but not yet executed.",
+    "Research planning work (change-proposal, roadmap YAML, arXiv sweep) consumes a full milestone slot without advancing experiment throughput — the cascade root cause must be resolved before planning effort translates into completed experiments."
+  ],
+  "improvements_suggested": [
+    "Execute exp2295 (Claude-escalated pypi fix, requires_claude: true, max_turns: 40) as the immediate first task of .226 activation to unblock all downstream Phase 1-3 gates — every day the cascade persists burns a full milestone slot.",
+    "Add a pre-activation smoke-test in the conductor: before activating any milestone, run `python -c 'from carnot.pypi_escalation import check_pypi_escalation, run_escalation'` and GATE_BLOCK the entire milestone with a clear blocked_import_error verdict if it fails, rather than allowing 14 tasks to individually surface the same root cause.",
+    "DualGPURunner is available but both GPUs remain at 0% — once the cascade is resolved, schedule parallel GGUF inference tasks (e.g., Qwen on GPU 0 + Gemma on GPU 1) to maximise hardware utilisation in Phase 1 tasks.",
+    "Consider a dedicated 'infrastructure repair' milestone with a single high-priority Claude task to resolve the pypi_escalation cascade before re-proposing any research-breadth experiments, consistent with Scope-Reduction discipline."
+  ],
+  "top_3_highest_leverage_actions": [
+    "1. RESOLVE CASCADE ROOT CAUSE: exp2295 (Claude Sonnet, requires_claude: true) must execute and fix carnot.pypi_escalation before any other .226 task activates. Estimated unblocking value: restores experiment throughput for 12 of 14 planned tasks.",
+    "2. ADD CONDUCTOR PRE-ACTIVATION IMPORT SMOKE-TEST: a one-liner health check in _activate_next_roadmap() that validates critical module imports before task launch would have caught this cascade five milestones ago and prevented ~5 empty milestone slots.",
+    "3. ENGAGE DUALGPURUNNER ON FIRST UNBLOCKED COMPUTE TASK: both RTX 3090s are idle and warmed; loading Qwen3.6-35B-A3B on GPU 0 and Gemma-4-26B-A4B on GPU 1 in parallel (exp2296 FST live gen + exp2297 FR-11 multidomain) would cut wall time by ~40-50% relative to sequential single-GPU execution."
+  ],
+  "estimated_time_savings_pct": 45,
+  "meta_reflection": "This is the sixth consecutive milestone where the retro must report zero experiments completed — the system is in a structural loop where planning work is sound but execution is blocked by a single unresolved import error. The pattern confirms that cascade failures below the 'visible' conductor layer (module import failures) require a different detection mechanism than the existing gate-check and exclusion-manifest layers, both of which operate above the import level. The pre-activation import smoke-test (top action 2) is the highest-leverage process improvement available this milestone."
+}
