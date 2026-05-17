@@ -1,0 +1,27 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.221",
+  "generated_at": "2026-05-17T13:37:07Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.221 completed 0 experiments with 0 minutes of recorded wall time — the conductor pipeline was inactive during this milestone window. No compute-bound tasks ran, so GPU idle state is not applicable.",
+  "bottlenecks_identified": [
+    "Pipeline inactivity: no experiment commits were recorded since milestone activation. The conductor may not have been started, or the milestone was skipped without a retro task queued."
+  ],
+  "improvements_suggested": [
+    "Ensure the conductor is started immediately after milestone activation to avoid zero-experiment milestones.",
+    "Add a milestone-activation watchdog (e.g., a cron alert or supervisor check) that fires if no experiment is committed within 30 minutes of activation.",
+    "Queue at least one lightweight synthesis task (schema validation, doc reconciliation) as a fallback so every milestone produces at least one artifact."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Start the conductor promptly after milestone activation — zero-experiment milestones waste the milestone slot entirely.",
+    "Wire a supervisor heartbeat that alerts when no task has launched within 30 minutes of activation, so inactivity is caught early rather than at retro time.",
+    "Pre-stage at least one low-cost infrastructure task (e.g., exclusion-manifest lint, known-issues audit) in research-roadmap-next.yaml so even a stalled milestone produces an artifact."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A zero-experiment milestone is a scheduling failure, not a research failure — the pipeline simply did not run. The correct operational response is to ensure the conductor is activated immediately and that a fallback task is always pre-staged. No GPU efficiency analysis is possible when no compute-bound tasks ran."
+}
