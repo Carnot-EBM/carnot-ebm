@@ -4338,3 +4338,5 @@ Ripgrep i |
 | 2026-05-17 13:10 UTC | Phase 1: Evaluate ActFocus on Local SOTA Models | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2229-actfocus-reweighting-impl) |
 | 2026-05-17 13:11 UTC | Phase 2: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.30s |
 | 2026-05-17 13:13 UTC | Phase 1: Evaluate ActFocus on Local SOTA Models | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2229-actfocus-reweighting-impl) |
+| 2026-05-17 13:13 UTC | Phase 2: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.05s |
+| 2026-05-17 13:15 UTC | Phase 2: KAN-CL FR-11 Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2231-kancl-per-knot-regularization) |
