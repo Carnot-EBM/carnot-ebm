@@ -4542,3 +4542,4 @@ Ripgrep i |
 | 2026-05-17 22:41 UTC | Plan milestone 2026.05.227 | OK | 14 tasks proposed |
 | 2026-05-17 22:43 UTC | Milestone 2026.05.227 activated | OK | 14 tasks queued |
 | 2026-05-17 22:48 UTC | Phase 0: Archive .226 and activate .227 | OK | cache hit: 81 passed, 1 warning in 1.77s |
+| 2026-05-17 23:01 UTC | Phase 0: Fix 2 Remaining Pre-Test Failures (7th At | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2309_pretest |
