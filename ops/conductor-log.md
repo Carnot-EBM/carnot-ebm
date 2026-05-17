@@ -4050,3 +4050,4 @@ Error |
 | 2026-05-17 03:35 UTC | Phase 1: HW-DAB Guided GSM8K Evaluation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2133-hardware-dab-module.result (actual |
 | 2026-05-17 03:37 UTC | Phase 1: HW-DAB Guided GSM8K Evaluation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2133-hardware-dab-module.result (actual |
 | 2026-05-17 03:42 UTC | Phase 2: Substrate Shifting CSL | OK | 81 passed, 1 warning in 4.49s |
+| 2026-05-17 03:44 UTC | Phase 2: Mode-Collapse Recovery Module | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2136-substrate-shifting-csl.result (act |
