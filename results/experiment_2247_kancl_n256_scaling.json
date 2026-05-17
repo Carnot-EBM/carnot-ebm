@@ -1,0 +1,30 @@
+{
+  "experiment": 2247,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-17",
+  "started_at": "2026-05-17T15:26:55.761984+00:00",
+  "finished_at": "2026-05-17T15:26:55.761984+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 4: KAN-CL Scaling to n=256 Spin Ising (COOL-Style)",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: prior_failures[0] missing/empty fields: ['retire_if_same_verdict']",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1775-thrml-parity-scaling-n256",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [
+        {
+          "experiment_id": "exp1543-thrml-parity-n256-schedule",
+          "verdict": "complete",
+          "addressed_by": "exp1543 tested THRML parity at n=256 without KAN-CL. This task tests KAN-CL's per-knot importance regularization at n=256 specifically, targeting COOL's 20us update budget. Different metric (retention_rate vs bounded_kl)."
+        }
+      ],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
