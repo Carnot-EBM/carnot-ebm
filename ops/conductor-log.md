@@ -4354,3 +4354,5 @@ Ripgrep i |
 | 2026-05-17 13:27 UTC | Phase 4: AdamFLIP Constraint Training Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2235-adamflip-optimizer-impl) |
 | 2026-05-17 13:27 UTC | Phase 4: Thermodynamic Optimized Initializations | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 3.63s |
 | 2026-05-17 13:29 UTC | Phase 4: AdamFLIP Constraint Training Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2235-adamflip-optimizer-impl) |
+| 2026-05-17 13:29 UTC | Phase 4: Thermodynamic Optimized Initializations | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 3.75s |
+| 2026-05-17 13:31 UTC | Phase 4: AdamFLIP Constraint Training Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2235-adamflip-optimizer-impl) |
