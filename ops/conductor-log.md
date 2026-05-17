@@ -4066,3 +4066,4 @@ Error |
 | 2026-05-17 04:16 UTC | Plan milestone 2026.05.213 | OK | 12 tasks proposed |
 | 2026-05-17 04:18 UTC | Phase 4: Full E2E Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2140-clr-gsm8k-benchmark) |
 | 2026-05-17 04:19 UTC | Milestone 2026.05.213 activated | OK | 12 tasks queued |
+| 2026-05-17 04:23 UTC | Phase 0: Archive .212 and activate .213 | OK | 81 passed, 1 warning in 5.38s |
