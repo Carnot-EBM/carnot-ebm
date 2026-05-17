@@ -4237,3 +4237,5 @@ Ripgrep i |
 | 2026-05-17 10:14 UTC | Phase 2: KV260 KANELÉ Bitstream Synthesis | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2199-kanele-lut-mapping) |
 | 2026-05-17 10:14 UTC | Phase 3: Online Learning Pessimistic Safety Constr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.46s |
 | 2026-05-17 10:16 UTC | Phase 2: KV260 KANELÉ Bitstream Synthesis | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2199-kanele-lut-mapping) |
+| 2026-05-17 10:16 UTC | Phase 3: Online Learning Pessimistic Safety Constr | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.56s |
+| 2026-05-17 10:18 UTC | Phase 2: KV260 KANELÉ Bitstream Synthesis | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2199-kanele-lut-mapping) |
