@@ -927,6 +927,168 @@ operator having to re-specify it per-milestone.
 
 ---
 
+## Principle-Annotated Artifact Fields + Verifier-Principle Discipline (MANDATORY)
+
+**Origin:** Anthropic, "Teaching Claude Why" (2026-05, anthropic.com/
+research/teaching-claude-why). Anthropic showed empirically that
+training Claude on the *principles underlying* aligned behavior is
+**28x more sample-efficient** than training on demonstrations of
+correct behavior alone, AND **generalizes better out-of-distribution**.
+Blackmail rate fell 65% -> 19% from constitutional / principle-grounded
+training; Haiku 4.5 hit perfect agentic-misalignment scores. The lesson
+generalizes well beyond alignment: agents that know *why* a constraint
+matters are harder to mimic, more robust to OOD inputs, and require
+fewer training examples to comply correctly.
+
+For Carnot this principle bridges two layers:
+
+1. **Planner-emitted task prompts** — every `REQUIRED ARTIFACT FIELD`
+   declared in a task prompt MUST carry a one-line `principle:`
+   annotation explaining WHY the field matters. The agent generating
+   the artifact then has the principle in context, not just the
+   directive, and produces compliance that generalizes to novel task
+   shapes.
+2. **Carnot's own verifier-ensemble training** — energy-based
+   verifiers (Boolean E, SAT, Z3, AST, liveness, etc.) currently
+   train on (correct, violating) pair data. The "teach why" result
+   predicts each verifier becomes more sample-efficient AND more
+   OOD-robust if it co-trains on *explanations of why a violation
+   is a violation* — not just labels. This is directly load-bearing
+   for the Phase-3 verifier-ensemble null-space mimicry problem
+   (project_null_space_mimicry_attack memory): a verifier that
+   knows the principle behind its constraint is harder to game than
+   one that only knows the decision boundary.
+
+**The rule (planner-side).** When generating `research-roadmap-next.yaml`:
+
+- Every `REQUIRED ARTIFACT FIELD` entry MUST carry a one-line
+  `principle:` annotation. Examples:
+
+  ```yaml
+  REQUIRED ARTIFACT FIELDS:
+    duration_s:
+      principle: "Real compute takes wall-clock time; missing or
+                  implausibly-short duration is the load-bearing signal
+                  for fabrication detection (cf. DURATION_TOO_SHORT in
+                  adversarial_verify.py)."
+    random_seed:
+      principle: "Determinism is the precondition for reproducibility;
+                  missing seed means no third party can re-run the
+                  experiment and confirm or refute the claim."
+    reproducibility_checksum:
+      principle: "Content-addressed hash of the run inputs catches
+                  silent corpus or model-version drift between this
+                  artifact and any future replication attempt."
+    honest_verdict:
+      principle: "Self-declared terminal state lets the conductor
+                  reconciler distinguish success / partial / blocked
+                  without re-running the experiment; misclassification
+                  causes spurious retire / retry."
+    preconditions_checked:
+      principle: "Records WHICH resources the agent verified before
+                  launching; pre-empts the fabrication mode where the
+                  agent silently lacked the resource and synthesized
+                  a passing artifact instead of emitting blocked_*."
+  ```
+
+- For gate conditions (acceptance criteria), every gate MUST carry
+  a one-line `principle:` annotation explaining what failure mode
+  the gate guards against. Example:
+
+  ```yaml
+  acceptance_gates:
+    - condition: "TPR > 0.7 AND FPR < 0.05"
+      principle: "TPR floor prevents trivial all-reject classifier;
+                  FPR ceiling prevents trivial all-accept classifier.
+                  Both bounds together rule out the degenerate-bias
+                  failure mode that exp1851 fabricated past."
+  ```
+
+**The rule (agent-side, when writing artifacts).** When emitting a
+results artifact, the `principle:` annotations from the task prompt
+SHOULD be echoed into the artifact's `field_provenance:` block so the
+artifact is self-explanatory at audit time:
+
+```json
+{
+  "duration_s": 62.3,
+  "field_provenance": {
+    "duration_s": {
+      "principle": "Real compute takes wall-clock time; ...",
+      "satisfied_by": "wall_clock measurement of inference loop"
+    }
+  }
+}
+```
+
+This is not yet mechanically enforced; it's a near-term discipline
+upgrade with high expected value.
+
+**The rule (verifier-training-side, for Phase-3 / Phase-4 work).**
+When the Phase-3 verifier ensemble grows (currently k=15, scheduled
+k=16 with the NLA-class probe), each verifier's training corpus MUST
+include `principle_explanation` fields alongside the (correct,
+violating) pair labels. The verifier learns to predict the principle
+(or a featurization of it) as a co-task, not just the binary label.
+
+Open empirical question — is `principle_explanation` co-training
+worth the corpus-construction cost on EACH of the 15 base verifiers?
+Plausibly the answer is yes only for high-stakes verifiers (Z3,
+liveness, NLA) and not for cheap ones (AST). This question is queued
+for a `.211+ experimental task — DO NOT pre-commit corpus changes
+for all 15 verifiers without empirical justification per verifier.
+
+**Cross-applies to Phase-4 free-energy verifier.** The Fast-Slow
+Variant metric (named canonical .194) measures variational free
+energy. Per the "teach why" finding, training the Fast-Slow Variant
+on principle-grounded reasoning (why a low-energy state is
+low-energy) should beat training on energy labels alone, with the
+OOD-robustness benefit that's the most-load-bearing property for
+verifier ensembles.
+
+**What this rule is NOT.** This is not a request to add prose
+explanations to every line of every task prompt. The principle
+annotation is one-line, machine-readable structure (`principle: "..."`),
+and it lives next to the field/gate it justifies. The cost is small;
+the OOD-robustness payoff is large per the Anthropic empirical result.
+
+**How to apply (planner-side, immediately).** When drafting the next
+`research-roadmap-next.yaml` (the .212+ pre-staged roadmap), add a
+`principle:` annotation to every `REQUIRED ARTIFACT FIELD` and every
+gate condition. Existing milestones (.210, .211) are not retroactively
+re-annotated; this is a forward-only discipline.
+
+**Mechanical enforcement (future, lives in
+`scripts/research_conductor.py` activation guard).** The activation
+guard SHOULD scan emitted YAMLs and refuse a milestone whose task
+prompts declare `REQUIRED ARTIFACT FIELDS` without `principle:`
+annotations on each entry. Until that ships, this rule is
+honor-discipline at the planner layer alone.
+
+**Why this is in CLAUDE.md, not just in the planner prompt.**
+Same defense-in-depth pattern as Codex-Default, Verdict
+Terminal-Prefix, Pre-Launch Preconditions, and Exclusion-Manifest
+Cross-Check: the planner reads CLAUDE.md as required input on every
+plan generation. A rule here ensures the principle-annotation
+discipline applies at design time without operator having to
+re-specify per-milestone.
+
+**Cross-references:**
+- Anthropic "Teaching Claude Why" — anthropic.com/research/teaching-claude-why
+- `reference_anthropic_teaching_why.md` (memory) — full Carnot integration notes
+- `project_null_space_mimicry_attack.md` (memory) — Phase-3 attack
+  pattern that principle-grounded verifiers structurally resist
+- `project_orthogonality_stall.md` (memory) — single-verifier
+  compute-immune ceiling; principle co-training is candidate antidote
+- `feedback_nla_class_16th_verifier_committed.md` (memory) — the
+  .124+ NLA chain now has stronger theoretical underwriting via the
+  "teach why" finding
+- `scripts/adversarial_verify.py` — the post-hoc safety net the
+  principle-annotation rule reduces dependence on (principles in
+  the prompt do at design-time what the linter does at audit-time)
+
+---
+
 ## Phase Prototype + Empirical Validation + Adversarial Check Discipline (MANDATORY)
 
 **Origin:** 2026-04-30 Phase-3 architecture blind-spot audit caught

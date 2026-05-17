@@ -4012,3 +4012,10 @@ Error |
 | 2026-05-17 01:53 UTC | Phase 0: Archive .210 and activate .211 | FAIL | No file changes produced |
 | 2026-05-17 01:57 UTC | Phase 0: Archive .210 and activate .211 | OK | cache hit: 81 passed, 1 warning in 5.58s |
 | 2026-05-17 02:01 UTC | Phase 1: Constraint-Aware Retrieval Module (CARM) | OK | 81 passed, 1 warning in 4.92s |
+| 2026-05-17 02:17 UTC | Phase 1: ConstraintLLM Generation Pipeline | FAIL | Post-tests failed: 11 failed, 96 passed, 1 warning in 6.87s |
+| 2026-05-17 02:20 UTC | Phase 1: ConstraintLLM Generation Pipeline | SKIP | Pre-tests failing, self-heal failed: 11 failed, 98 passed, 1 warning in 5.64s |
+| 2026-05-17 02:22 UTC | Phase 1: ConstraintLLM Generation Pipeline | SKIP | Pre-tests failing, self-heal failed: 11 failed, 98 passed, 1 warning in 6.37s |
+| 2026-05-17 02:24 UTC | Phase 1: Discrete Auto-Regressive Biasing (DAB) | SKIP | Pre-tests failing, self-heal failed: 11 failed, 98 passed, 1 warning in 6.59s |
+| 2026-05-17 02:26 UTC | Phase 1: Discrete Auto-Regressive Biasing (DAB) | SKIP | Pre-tests failing, self-heal failed: 11 failed, 98 passed, 1 warning in 6.72s |
+| 2026-05-17 02:29 UTC | Phase 1: Discrete Auto-Regressive Biasing (DAB) | SKIP | Pre-tests failing, self-heal failed: 11 failed, 98 passed, 1 warning in 5.99s |
+| 2026-05-17 02:31 UTC | Phase 1: DAB-Guided GSM8K Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2123-dab-implementation) |

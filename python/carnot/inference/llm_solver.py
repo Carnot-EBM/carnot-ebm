@@ -81,6 +81,7 @@ class LLMSolverConfig:
     model: str = "sonnet"
     api_key: str = "not-needed"
     temperature: float = 0.3
+    use_carm: bool = False
 
 
 def _build_sat_prompt(clauses: list[SATClause], n_vars: int) -> str:
@@ -426,6 +427,22 @@ def iterative_refine_code(
     from carnot.verify.python_types import safe_exec_function
 
     result = RefinementResult()
+    if config.use_carm:
+        try:
+            from carnot.pipeline.carm import CARM
+            carm = CARM()
+            domains = carm.retrieve_domains(task_description)
+            types = carm.retrieve_constraint_types(task_description)
+            if domains or types:
+                carm_ctx = "CARM Context: Consider the following verifiable logic domains and constraint types.\n"
+                if domains:
+                    carm_ctx += f"Domains: {', '.join(domains)}\n"
+                if types:
+                    carm_ctx += f"Types: {', '.join(types)}\n"
+                task_description = f"{carm_ctx}\nTask:\n{task_description}"
+        except ImportError:
+            pass
+
     messages: list[dict[str, str]] = [
         {
             "role": "system",
@@ -582,6 +599,22 @@ def iterative_refine_with_properties(
     from carnot.verify.python_types import safe_exec_function
 
     result = RefinementResult()
+    if config.use_carm:
+        try:
+            from carnot.pipeline.carm import CARM
+            carm = CARM()
+            domains = carm.retrieve_domains(task_description)
+            types = carm.retrieve_constraint_types(task_description)
+            if domains or types:
+                carm_ctx = "CARM Context: Consider the following verifiable logic domains and constraint types.\n"
+                if domains:
+                    carm_ctx += f"Domains: {', '.join(domains)}\n"
+                if types:
+                    carm_ctx += f"Types: {', '.join(types)}\n"
+                task_description = f"{carm_ctx}\nTask:\n{task_description}"
+        except ImportError:
+            pass
+
     messages: list[dict[str, str]] = [
         {
             "role": "system",
