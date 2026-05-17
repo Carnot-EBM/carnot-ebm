@@ -6029,3 +6029,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-17: Phase 1: Annealed Langevin Posterior Sampling (ALPS) Module (✅ Complete) — honest_verdict=complete: alps_energy=-0.842 < langevin_energy=54.664 speedup=300.00x; results/experiment_2109_alps_module.json
 - 2026-05-17: Phase 2: KAN-CL Per-Knot Importance Regularization (✅ Complete) — honest_verdict=complete_kan_cl_regularization_computed; results/experiment_2111_kan_cl.json
 - 2026-05-17: Phase 2: Muon-OGD Spectral Orthogonal Gradient Projection (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2112_muon_ogd.json
+- 2026-05-17: Phase 3: NEXUS Symbolic Grounding for ActFocus (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2115_nexus.json
