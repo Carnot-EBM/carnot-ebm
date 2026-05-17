@@ -1,0 +1,60 @@
+{
+  "experiment": 2274,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-17",
+  "started_at": "2026-05-17T18:51:42.664150+00:00",
+  "finished_at": "2026-05-17T18:51:42.664150+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 3: Adversarial Null-Space Probe on k=16 Ensemble + FST Stack",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: prior_failures[0] missing/empty fields: ['retire_if_same_verdict']",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1093-phase1c-verifier-joint-null-space-measurement",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [
+        {
+          "experiment_id": "exp2262-adversarial-null-space-probe",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "exp2262 had blocked_gate_check_failed despite having no structured gated_on field. Root cause: the conductor's pre-test check failed due to the DualGPU ImportError cascade (same cascade root cause as .223 Phase 1/2 tasks). exp2267 fixes the ImportError. This attempt is identical in scope to exp2262."
+        }
+      ],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: verifiers_correlated_diversity_needed"
+    },
+    {
+      "upstream": "exp1224-phase5c-adversarial-probe",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [
+        {
+          "experiment_id": "exp2262-adversarial-null-space-probe",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "exp2262 had blocked_gate_check_failed despite having no structured gated_on field. Root cause: the conductor's pre-test check failed due to the DualGPU ImportError cascade (same cascade root cause as .223 Phase 1/2 tasks). exp2267 fixes the ImportError. This attempt is identical in scope to exp2262."
+        }
+      ],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: partial_attack_success_revision_needed"
+    },
+    {
+      "upstream": "exp2262-adversarial-null-space-probe",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [
+        {
+          "experiment_id": "exp2262-adversarial-null-space-probe",
+          "verdict": "blocked_gate_check_failed",
+          "addressed_by": "exp2262 had blocked_gate_check_failed despite having no structured gated_on field. Root cause: the conductor's pre-test check failed due to the DualGPU ImportError cascade (same cascade root cause as .223 Phase 1/2 tasks). exp2267 fixes the ImportError. This attempt is identical in scope to exp2262."
+        }
+      ],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Blocked: blocked_gate_check_failed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}

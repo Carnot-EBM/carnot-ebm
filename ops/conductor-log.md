@@ -4431,3 +4431,5 @@ Ripgrep i |
 | 2026-05-17 18:47 UTC | Phase 1: KAN-CL n=256 + CASAL Joint Constraint Enf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2270-kancl-n256-clean-reattempt) |
 | 2026-05-17 18:47 UTC | Phase 2: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2267-dualgpu-import-fix.pretest_fixed ( |
 | 2026-05-17 18:49 UTC | Phase 1: KAN-CL n=256 + CASAL Joint Constraint Enf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2270-kancl-n256-clean-reattempt) |
+| 2026-05-17 18:49 UTC | Phase 2: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2267-dualgpu-import-fix.pretest_fixed ( |
+| 2026-05-17 18:51 UTC | Phase 2: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2272-kv260-rtl-clean-reattempt) |
