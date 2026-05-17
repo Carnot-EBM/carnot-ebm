@@ -1673,3 +1673,7 @@
 | REQ-PREM-003 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
 | SCENARIO-PREM-001 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
 | SCENARIO-PREM-002 | Phase 1: Process-Reward Energy Model Architecture | Implemented | results/experiment_2144_prem_arch.json |
+| REQ-PREM-004 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
+| REQ-PREM-005 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
+| SCENARIO-PREM-003 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
+| SCENARIO-PREM-004 | Phase 3: Dynamic Test-Time Compute (TTC) Controller | Implemented | results/experiment_2150_ttc_controller.json |
