@@ -1,198 +1,217 @@
-milestone: "2026.05.214"
-milestone_title: "Thermodynamic Generation, Hardware KANs, and Dynamic CSL"
+milestone: "2026.05.215"
+milestone_title: "Live GPU Verification Pivot, FPGA Rescope, and Tier 3 Predictive Self-Learning"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp2155-archive-and-activate
-    title: "Phase 0: Archive .213 and activate .214"
+  - id: exp2167-archive-and-activate
+    title: "Phase 0: Archive .214 and activate .215"
     max_turns: 20
     prompt: |
-      CONTEXT: Milestone 2026.05.213 has completed. We must prepare for 2026.05.214.
+      CONTEXT: Milestone 2026.05.214 has completed. We must prepare for 2026.05.215.
       EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
-      TASK: Archive 2026.05.213 to research-complete.yaml and initialize the .214 milestone in ops/changelog.md.
+      TASK: Archive 2026.05.214 to research-complete.yaml and initialize the .215 milestone in ops/changelog.md.
       CONCRETE STEPS:
-      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.213 entry, setting completed date to {date}.
+      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.214 entry, setting completed date to {date}.
       2. Clear `research-roadmap.yaml` and copy the new milestone structure from `research-roadmap-next.yaml`.
-      3. Add a "## {date} (Milestone 2026.05.214 Operational Retrospective)" stub in `ops/changelog.md`.
-      4. Write deliverable to `results/experiment_2155_archive.json`.
+      3. Add a "## {date} (Milestone 2026.05.215 Operational Retrospective)" stub in `ops/changelog.md`.
+      4. Write deliverable to `results/experiment_2167_archive.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2156-actfocus-reweighting
-    title: "Phase 1: ActFocus Token Reweighting for PREM"
+  - id: exp2168-nsvif-extractor-infrastructure
+    title: "Phase 1: Formal Logic (NSVIF) Extractor Infrastructure"
     max_turns: 50
+    agent_type: "codex"
     prompt: |
-      CONTEXT: arxiv:2605.14558 shows that uniform credit assignment in agentic RL wastes signals. We need to implement ActFocus to downweight reasoning tokens and reweight action tokens using our PREM energies.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/prem_trainer.py
-      TASK: Implement ActFocus token reweighting in the PREM training pipeline.
+      CONTEXT: The regex ArithmeticExtractor is broken for instruction-tuned models. We need a formal logic extractor (NSVIF/Z3 approach) from arxiv:2601.17789.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/extractors.py
+      TASK: Build the base formal logic extractor classes to interface with Z3.
       CONCRETE STEPS:
-      1. Add token-level reward redistribution logic to `prem_trainer.py`.
-      2. Run a small training sweep on generated action-reasoning trajectories.
-      3. Save to `results/experiment_2156_actfocus.json`.
+      1. Create `python/carnot/pipeline/z3_extractor.py` and implement a base class for first-order logic conversion.
+      2. Integrate python-z3 bindings.
+      3. Write deliverable to `results/experiment_2168_nsvif_base.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2157-thermodynamic-generation
-    title: "Phase 1: Thermodynamically Constrained Neural Generation"
+  - id: exp2169-z3-constraint-compiler
+    title: "Phase 1: Z3 Constraint Compiler for CoT Steps"
     max_turns: 50
+    agent_type: "codex"
     gated_on:
-      - upstream: exp2156-actfocus-reweighting
+      - upstream: exp2168-nsvif-extractor-infrastructure
         artifact_field: result
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Based on arxiv:2605.02104, we must integrate continuous energy landscapes as thermodynamic penalties during autoregressive generation.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/hw_dab.py, {project_root}/python/carnot/inference/guided_decoding.py
-      TASK: Implement thermodynamic constrained generation logic.
+      CONTEXT: Translate parsed LLM chain-of-thought outputs into verifiable Z3 constraints.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/z3_extractor.py
+      TASK: Implement the logic to map extracted text into Z3 solvers and run verification.
       CONCRETE STEPS:
-      1. Create `python/carnot/inference/thermo_gen.py`.
-      2. Integrate continuous energy penalties directly into the logits generation loop.
-      3. Save to `results/experiment_2157_thermo_gen.json`.
+      1. Expand `z3_extractor.py` to evaluate statements.
+      2. Return binary pass/fail constraint energies based on Z3 SAT/UNSAT outputs.
+      3. Write deliverable to `results/experiment_2169_z3_compiler.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2158-generation-benchmark
-    title: "Phase 1: Generation Benchmark with Qwen3.6-35B-A3B"
+  - id: exp2170-llm-as-extractor-adapter
+    title: "Phase 1: LLM-as-Extractor Adapter for SOTA GGUF"
     max_turns: 50
     gated_on:
-      - upstream: exp2157-thermodynamic-generation
+      - upstream: exp2169-z3-constraint-compiler
         artifact_field: result
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Evaluate the new generation strategy against standard unconstrained autoregressive output.
+      CONTEXT: For complex logic, we need an LLM-as-extractor approach to parse generation into statements for Z3.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/extractors.py
+      TASK: Implement an LLM inference call using `unsloth/gemma-4-26B-A4B-it-GGUF` that takes raw CoT and outputs JSON-structured statements.
+      CONCRETE STEPS:
+      1. Add LLM-as-extractor step in the pipeline using `unsloth/gemma-4-26B-A4B-it-GGUF` as the backend in `MODEL_SPECS`.
+      2. Ensure it connects to the Z3 compiler.
+      3. Write deliverable to `results/experiment_2170_llm_extractor.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2171-e2e-verify-repair-z3
+    title: "Phase 1: E2E Verify-Repair with Z3 Extraction"
+    max_turns: 50
+    gated_on:
+      - upstream: exp2170-llm-as-extractor-adapter
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: Test the new Z3/LLM extraction pipeline end-to-end on GSM8K to ensure false positive rate is 0.
       EXISTING CODE TO READ FIRST: {project_root}/tests/integration/test_gsm8k.py
-      TASK: Benchmark the thermodynamically constrained generation using unsloth/Qwen3.6-35B-A3B-GGUF.
+      TASK: Run verify-repair loop on a subset of questions using the new extractor.
       CONCRETE STEPS:
-      1. Run a 50-problem suite with and without `thermo_gen.py`.
-      2. Compare reasoning accuracy and action success rates using unsloth/Qwen3.6-35B-A3B-GGUF.
-      3. Save to `results/experiment_2158_gen_bench.json`.
+      1. Configure pipeline to use `unsloth/gemma-4-31B-it-GGUF` as the primary generator and Z3 for verification.
+      2. Verify that extraction false positives are resolved.
+      3. Write deliverable to `results/experiment_2171_z3_e2e.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2159-substrate-aware-kan
-    title: "Phase 2: Substrate-Aware KAN Topology"
-    max_turns: 50
+  - id: exp2172-fpga-kmax-5-pivot
+    title: "Phase 2: FPGA KV260 k_max=5 Architecture Pivot"
+    max_turns: 100
     model: "opus"
     prompt: |
-      CONTEXT: We are targeting FPGA deployment. Based on arxiv:2605.08412, we must design KAN topologies that map directly to LUT/BRAM instead of full multipliers.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/kan.py
-      TASK: Implement the substrate-aware KAN architecture.
+      CONTEXT: The Phase-3/7 derivation proved $k=15$ is infeasible. We must pivot to $k_{max}=5$ for the FPGA hardware deployment.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
+      TASK: Refactor the substrate KAN topology to restrict all couplings to $k=5$.
       CONCRETE STEPS:
-      1. Create `python/carnot/models/substrate_kan.py`.
-      2. Define a quantizable, multiply-free KAN layer.
-      3. Save to `results/experiment_2159_substrate_kan.json`.
+      1. Modify `substrate_kan.py` to enforce a hard cap of 5 connections per LUT element.
+      2. Write deliverable to `results/experiment_2172_kmax5.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2160-kan-lut-allocation
-    title: "Phase 2: KAN to LUT/BRAM Allocation Script"
+  - id: exp2173-manifold-substitution-chains
+    title: "Phase 2: Manifold Substitution Chains Implementation"
     max_turns: 50
+    model: "opus"
+    gated_on:
+      - upstream: exp2172-fpga-kmax-5-pivot
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: With $k_{max}=5$, we must implement parallel PT-SB chains and Manifold Substitution to maintain expressive power.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
+      TASK: Implement parallel chains for Manifold Substitution.
+      CONCRETE STEPS:
+      1. Add parallel chain generation logic to `substrate_kan.py`.
+      2. Validate shape boundaries in simulation.
+      3. Write deliverable to `results/experiment_2173_manifold.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2174-fpga-hardware-resource-k5
+    title: "Phase 2: FPGA Hardware Resource Allocation for k=5"
+    max_turns: 100
     model: "opus"
     agent_type: "codex"
     gated_on:
-      - upstream: exp2159-substrate-aware-kan
+      - upstream: exp2173-manifold-substitution-chains
         artifact_field: result
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Prepare for hardware synthesis by creating a script that accounts for LUT and BRAM usage for a given KAN topology.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
-      TASK: Write a resource estimation script for KV260 FPGAs.
+      CONTEXT: Re-run hardware resource accounting for the new $k_{max}=5$ topology to ensure it fits on the KV260 BRAM/LUT limits.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/fpga_resource_estimator.py
+      TASK: Update the resource estimator for the new k=5 bounds.
       CONCRETE STEPS:
-      1. Create `scripts/fpga_resource_estimator.py`.
-      2. Map substrate KAN shapes to expected LUT/BRAM counts.
-      3. Save to `results/experiment_2160_lut_alloc.json`.
+      1. Edit `fpga_resource_estimator.py` to handle Manifold Substitution overhead.
+      2. Simulate allocation on mock FPGA hardware targets.
+      3. Write deliverable to `results/experiment_2174_resource.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2161-kv260-simulation
-    title: "Phase 2: KV260 FPGA Simulation with Mock Bitstream"
-    max_turns: 100
-    model: "opus"
-    gated_on:
-      - upstream: exp2160-kan-lut-allocation
-        artifact_field: result
-        op: "contains"
-        value: "OK"
-    prompt: |
-      CONTEXT: Hardware integration probe for the KV260 board. We need to verify our end-to-end Rust/Python bridge can handle hardware latency profiles.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/sampler.py, {project_root}/crates/carnot-constraints/src/lib.rs
-      TASK: Simulate the KV260 inference path using a mock bitstream delay profile.
-      CONCRETE STEPS:
-      1. Add a mock FPGA execution mode to our sampling backend.
-      2. Emulate the expected LUT/BRAM data transfer latencies.
-      3. Save to `results/experiment_2161_kv260_sim.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2162-kan-latency-benchmark
-    title: "Phase 2: Hardware-KAN vs CPU-KAN Microbenchmark"
-    max_turns: 50
-    gated_on:
-      - upstream: exp2161-kv260-simulation
-        artifact_field: result
-        op: "contains"
-        value: "OK"
-    prompt: |
-      CONTEXT: Measure the simulated speedup of the substrate-aware KAN against standard PyTorch/JAX CPU implementations.
-      EXISTING CODE TO READ FIRST: {project_root}/scripts/benchmark_pipeline.py
-      TASK: Run a microbenchmark for KAN evaluation.
-      CONCRETE STEPS:
-      1. Evaluate 10,000 constraint checks through both `substrate_kan.py` and standard CPU backends.
-      2. Record latency distributions.
-      3. Save to `results/experiment_2162_kan_latency.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2163-dynamic-resolution-ebm
-    title: "Phase 3: Dynamic Resolution for Continual EBMs"
+  - id: exp2175-jepa-predictive-verification
+    title: "Phase 3: JEPA Predictive Verification Model Setup"
     max_turns: 50
     prompt: |
-      CONTEXT: To support Continuous Self-Learning without catastrophic forgetting, we implement Dynamic Resolution EBMs (OpenReview 2026).
+      CONTEXT: Tier 3 continuous self-learning requires predicting constraint violations before the LLM finishes. We are building a JEPA predictive model.
       EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/boltzmann.py, {project_root}/python/carnot/training/csl_loop.py
-      TASK: Modify the core EBM classes to support dynamic energy landscape resolution.
+      TASK: Create the base JEPA predictor to score partial LLM responses.
       CONCRETE STEPS:
-      1. Introduce an adjustable temperature/resolution parameter during CSL updates.
-      2. Implement resolution scaling logic based on recent error rates.
-      3. Save to `results/experiment_2163_dynamic_ebm.json`.
+      1. Create `python/carnot/models/jepa_predictor.py` supporting partial string embeddings.
+      2. Define the loss function for predicted vs. actual energy.
+      3. Write deliverable to `results/experiment_2175_jepa.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2164-csl-retention-benchmark
-    title: "Phase 3: CSL Retention Benchmark"
+  - id: exp2176-adaptive-data-harvesting
+    title: "Phase 3: Adaptive Data Harvesting for Constraint Selection"
     max_turns: 50
     gated_on:
-      - upstream: exp2163-dynamic-resolution-ebm
+      - upstream: exp2175-jepa-predictive-verification
         artifact_field: result
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Test whether dynamic resolution prevents mode collapse during sequential task learning.
+      CONTEXT: From arxiv:2605.09707, we must implement an adaptive policy to select training samples that best improve constraint satisfaction.
       EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
-      TASK: Evaluate retention of early tasks after fine-tuning on later tasks.
+      TASK: Build the adaptive data harvester for Tier 3 learning.
       CONCRETE STEPS:
-      1. Train on task A, then task B, using the `unsloth/gemma-4-26B-A4B-it-GGUF` model in the loop.
-      2. Verify performance on task A has not collapsed.
-      3. Save to `results/experiment_2164_csl_retention.json`.
+      1. Create `python/carnot/training/harvester.py` that weights inputs based on model uncertainty.
+      2. Connect it to the CSL loop.
+      3. Write deliverable to `results/experiment_2176_harvester.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2165-full-e2e-capstone
-    title: "Phase 4: Full E2E Capstone (Thermo Gen + Substrate KAN + Dynamic CSL)"
+  - id: exp2177-jepa-csl-training-loop
+    title: "Phase 3: JEPA CSL Training Loop on Accumulated Logs"
     max_turns: 50
     gated_on:
-      - upstream: exp2164-csl-retention-benchmark
+      - upstream: exp2176-adaptive-data-harvesting
         artifact_field: result
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Final validation of Milestone 214.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/verify_repair.py
-      TASK: Run the full combined execution pipeline.
+      CONTEXT: Complete the FR-11 continuous self-learning task by closing the training loop on the JEPA predictor using live GPU logs.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
+      TASK: Execute the continuous_self_learning_task utilizing the adaptive harvester.
       CONCRETE STEPS:
-      1. Combine Thermodynamic Generation, the Substrate KAN mock simulator, and Dynamic CSL.
-      2. Evaluate overall reasoning accuracy on a complex multi-step reasoning dataset using `unsloth/gemma-4-31B-it-GGUF`.
-      3. Save to `results/experiment_2165_full_e2e.json`.
+      1. Train the JEPA predictor using mock or existing log data.
+      2. Verify training reduces expected prediction error. Ensure `continuous_self_learning_task: true` is tested.
+      3. Write deliverable to `results/experiment_2177_csl_loop.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2166-milestone-214-retro
-    title: "Phase 4: Milestone 2026.05.214 Retrospective"
+  - id: exp2178-live-gpu-capstone
+    title: "Phase 4: Live GPU Capstone Benchmarks (Gemma4/Qwen3.6)"
+    max_turns: 50
+    gated_on:
+      - upstream: exp2177-jepa-csl-training-loop
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: Final end-to-end evaluation using live GPU inference, Z3 extraction, and JEPA pre-filtering.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/benchmark_pipeline.py
+      TASK: Run a comprehensive benchmark using `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF` on live GPU mode.
+      CONCRETE STEPS:
+      1. Configure `CARNOT_FORCE_LIVE=1` and execute benchmark on 50 HumanEval questions.
+      2. Ensure no simulation fallback is triggered.
+      3. Write deliverable to `results/experiment_2178_capstone.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2179-milestone-215-retro
+    title: "Phase 4: Milestone 2026.05.215 Retrospective"
     max_turns: 20
     prompt: |
-      CONTEXT: End of milestone analysis for .214.
+      CONTEXT: End of milestone analysis for .215.
       EXISTING CODE TO READ FIRST: {project_root}/ops/conductor-log.md
-      TASK: Generate the retrospective analysis of the .214 milestone.
+      TASK: Generate the retrospective analysis.
       CONCRETE STEPS:
-      1. Read all experiment results from the 215X and 216X series.
-      2. Synthesize findings into `results/experiment_2166_retro.json` and update `ops/status.md`.
+      1. Read all experiment results from the 216X and 217X series.
+      2. Synthesize findings into `results/experiment_2179_retro.json` and update `ops/status.md`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
