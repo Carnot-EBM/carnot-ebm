@@ -3992,3 +3992,4 @@ Error |
 | 2026-05-17 00:36 UTC | Phase 2: Continual Learning Catastrophic Forgettin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2111-kan-cl-regularization.result (actu |
 | 2026-05-17 00:38 UTC | Phase 2: Continual Learning Catastrophic Forgettin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2111-kan-cl-regularization.result (actu |
 | 2026-05-17 00:40 UTC | Phase 3: ActFocus Token-Level Energy Reweighting | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 00:42 UTC | Phase 3: ActFocus Token-Level Energy Reweighting | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
