@@ -19066,3 +19066,4 @@ It MUST report false-accept rates (which must be zero).
 **Given** extracted constraints
 **When** the Z3-compatible validator backend processes the constraints
 **Then** it routes the logic rules to Z3, evaluates them, and reports a false-accept rate of zero.
+\n### REQ-VERIFY-2139: CLR Verifier Bridge\nThe system shall provide a CLR Verifier Bridge in `python/carnot/pipeline/clr_bridge.py` that maps latent continuous EBM vectors into verifiable discrete logic formats.\n\n### SCENARIO-VERIFY-2139: CLR Bridge Maps Vectors\nGiven latent continuous EBM vectors,\nWhen passed through the CLR Verifier Bridge,\nThen it outputs verifiable discrete logic formats and records the status in `results/experiment_2139_clr_bridge.json`.\n
