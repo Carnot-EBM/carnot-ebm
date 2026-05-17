@@ -4300,3 +4300,4 @@ Ripgrep i |
 | 2026-05-17 12:12 UTC | Phase 1: Local SOTA Model Extraction Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2218-jle-dynamic-elicitation) |
 | 2026-05-17 12:12 UTC | Phase 1: Primal-Dual Decoding with JLE Constraints | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2219-sota-extraction-eval.honest_verdic |
 | 2026-05-17 12:14 UTC | Phase 1: Local SOTA Model Extraction Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2218-jle-dynamic-elicitation) |
+| 2026-05-17 12:14 UTC | Phase 1: Primal-Dual Decoding with JLE Constraints | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2219-sota-extraction-eval.honest_verdic |
