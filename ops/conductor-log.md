@@ -4163,3 +4163,5 @@ Ripgrep i |
 | 2026-05-17 07:46 UTC | Phase 3: Adaptive Data Harvesting for Constraint S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2175-jepa-predictive-verification) |
 | 2026-05-17 07:46 UTC | Phase 3: JEPA CSL Training Loop on Accumulated Log | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2176-adaptive-data-harvesting.result (u |
 | 2026-05-17 07:48 UTC | Phase 4: Live GPU Capstone Benchmarks (Gemma4/Qwen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2177-jepa-csl-training-loop) |
+| 2026-05-17 07:48 UTC | Phase 4: Milestone 2026.05.215 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.65s |
+| 2026-05-17 07:50 UTC | Phase 4: Live GPU Capstone Benchmarks (Gemma4/Qwen | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2177-jepa-csl-training-loop) |
