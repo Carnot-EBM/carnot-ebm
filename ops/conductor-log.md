@@ -4365,3 +4365,4 @@ Ripgrep i |
 | 2026-05-17 14:13 UTC | Phase 1: Fast-Slow Training Decomposition for Veri | OK | 145 passed, 1 warning in 4.23s |
 | 2026-05-17 14:25 UTC | Phase 1: FR-11 Fast-Slow Training Retention Valida | OK | 81 passed, 1 warning in 3.68s |
 | 2026-05-17 14:41 UTC | Phase 1: ActFocus + FST Unified Gradient Evaluatio | OK | 81 passed, 1 warning in 3.68s |
+| 2026-05-17 14:53 UTC | Phase 2: ODAR Free-Energy Risk-Sensitive Routing I | OK | 145 passed, 1 warning in 4.24s |
