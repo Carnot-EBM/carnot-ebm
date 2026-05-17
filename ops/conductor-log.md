@@ -4492,3 +4492,5 @@ Ripgrep i |
 | 2026-05-17 20:31 UTC | Phase 4: ArXiv Post-.224 Research Sweep + Referenc | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-17 20:33 UTC | Phase 4: ArXiv Post-.224 Research Sweep + Referenc | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-17 20:35 UTC | Phase 4: Capstone E2E Real-Scale Live Generation ( | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2282-fst-real-scale-live-gen, exp2284-kan |
+| 2026-05-17 20:35 UTC | Phase 4: Milestone 2026.05.225 Retrospective | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-17 20:37 UTC | Phase 4: Capstone E2E Real-Scale Live Generation ( | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2282-fst-real-scale-live-gen, exp2284-kan |
