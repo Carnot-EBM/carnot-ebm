@@ -1,38 +1,43 @@
-# Milestone 2026.05.219: Primal-Dual Decoding, Formal KANs, and Robust CSL
+# Milestone 2026.05.221: ActFocus RL, KAN-CL Continual Learning, Wahkon RKHS, and AdamFLIP Hard Constraints
 
-## Goal
-Advance the Carnot EBM framework by integrating discrete-domain energy decoding, formal constraint verification, and resilient continuous self-learning, recovering from the blockages in `.218`.
+## 1. Goal
+Address three massive gaps between the Carnot PRD vision and current state:
+1. Overcoming the action bottleneck in token-level RL attribution.
+2. Achieving FR-11 continuous self-learning for KANs without buffer bloat via KAN-CL.
+3. Enforcing strict equality constraints through AdamFLIP instead of soft penalties. 
 
-## What Previous Milestone Proved
-Milestone `.218` attempted to deploy inference-time EORM verification and KAN LUT-mapping for FPGAs. The operations surfaced hard constraints and repeated `DOOMED_RERUN` blocks in schematic integration (SCG-MEM) and LUT configuration. The primary insight is that continuous space operations require hard constraint boundary verification, and discrete decoding needs efficient Lagrangian multipliers to avoid exponential overhead. 
+Additionally, we explore Wahkon RKHS networks for superior finite-sample statistical guarantees over standard Spline-KANs and implement thermodynamic initializations.
 
-## Architectural Design
+## 2. Context & Previous Milestone Proofs
+Milestone `.220` proved that Dynamic EBCN Extraction (JLE-DCE) allows latent constraint extraction and Primal-Dual decoding seamlessly modifies logits. However, we found that buffer-based semantic pruning scales poorly, soft penalties leave edge-case violations, and token-level PPO misallocates gradients.
 
-### Phase 1: Core Inference (Discrete Guided Decoding & Coherence)
-The first phase integrates Primal-Dual Guided Decoding directly into the generation logits. Instead of Gumbel-softmax outer loops, it uses Lagrangian multipliers for inference-time adaptation. Simultaneously, an Energy-Based Constraint Network (EBCN) state-space model is added to score structural coherence text-wide, moving away from local Regex.
+### The 3 Biggest Gaps Identified
+1. **Continuous Self-Learning (FR-11) Limitations:** Buffer pruning retains semantic knowledge but suffers boundary degradation. KAN-CL fixes this by shifting memory retention to the per-knot topological level.
+2. **Hard Constraints Drift:** Existing constraint training is soft and subject to drift. AdamFLIP treats physics/constraint-informed training as a feedback-linearized dynamical system, ensuring hard mathematical bounds with zero false accepts.
+3. **Statistical Scaling Bottlenecks:** While KANs offer high capacity, they lack strict MAP guarantees. Wahkon deep RKHS architectures provide these exact statistical guarantees for high-dimensional inference.
 
-### Phase 2: KAN Formal Synthesis & Hardware Parity
-We address the zero-false-accept requirements for Phase 2 hardware mapping. By incorporating Lipschitz-regularization (LipKAN) and SMT-solvers for Control Barrier Certificates (KAN4CBC), we can formally prove constraint bounds before synthesis. The KANELÉ FPGA BRAM/LUT bitstream will be re-attempted utilizing this safer verified topology.
+## 3. Phase Plan
 
-### Phase 3: Continuous Self-Learning (FR-11)
-To prevent catastrophic forgetting observed in past self-learning tiers, we implement a dynamic Lipschitz-bound update mechanism within the Continuous Self-Learning loop. This ensures that new constraint representations (from JEPA/Crosscoder) do not overwrite fundamental logical invariants.
+### Phase 0: Archive & Activate
+- Gracefully archive milestone `.220` and set up the foundation for `.221`.
 
-### Phase 4: Capstone Evaluation
-Live GPU evaluation combining the EBCN structural score, Primal-Dual token logit modifiers, and robust self-learning models using SOTA GGUF models.
+### Phase 1: ActFocus RL & Token-Level Energy Bottleneck
+- Implement ActFocus to track variance across rollouts, increasing gradients on critical action tokens and suppressing redundant reasoning tokens.
+- Evaluate heavily on SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`).
 
-## Phase Structure
-- **Phase 0:** Archival of `.218` and setup of `.219`.
-- **Phase 1:** Primal-Dual Decoding & Energy-Based Constraint Networks.
-- **Phase 2:** Formal verification of KANs (LipKAN & KAN4CBC) and KV260 hardware synthesis retry.
-- **Phase 3:** Lipschitz-regulated Continuous Self-Learning (FR-11).
-- **Phase 4:** E2E GPU Benchmark & Retro.
+### Phase 2: KAN-CL Continual Learning (FR-11)
+- Map the FR-11 mandate directly to the KAN splines via per-knot importance regularization.
+- Execute an FR-11 self-learning loop measuring non-forgetting rates across multiple disparate domains.
 
-## Dependency Graph
-- Phase 1 tasks depend on Phase 0 setup.
-- Phase 2 KAN hardware synthesis depends on KAN formal verification.
-- Phase 3 CSL relies on Phase 2's Lipschitz boundary constraints.
-- Phase 4 depends on all core implementations succeeding.
+### Phase 3: Wahkon RKHS Integration & Benchmarking
+- Implement Wahkon as an alternative to KAEMEnergy for statistically principled deep RKHS superposition.
+- Compare Wahkon and KAEMEnergy inverse-transform sampling fast paths.
 
-## Hardware Requirements
-- Dual RTX 3090 (48GB total) for the SOTA GGUF inferences (`unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`).
-- Local KV260 FPGA board (target) / OSS-CAD-Suite for Synthesis Verification.
+### Phase 4: AdamFLIP Constraints & Thermodynamic Capstone
+- Shift Verifier training from soft-penalties to AdamFLIP hard constraint enforcement.
+- Introduce Mpemba-effect inspired initializations to accelerate Langevin sampling for thermodynamic computation scaling.
+- Conclude with a rigorous E2E GPU validation via mandated SOTA endpoints.
+
+## 4. Hardware and Dependencies
+- **Hardware Requirement:** Dual GPU ROCm/CUDA for live model baselines.
+- **Model Specs Mandate:** `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`.

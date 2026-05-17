@@ -1,3 +1,32 @@
+## 2026-05-17 Post-.220 Planning Sweep (Milestone 2026.05.221)
+
+This sweep was run after milestone `.220` completed. The literature search revealed advances in agentic RL with energy bottleneck resolution, continual learning for KANs, Hard Constraint optimization, and RKHS-based alternatives to KANs.
+
+### Resolving Action Bottleneck via Token-Level Energy (ActFocus)
+- **Paper:** "Resolving Action Bottleneck: Agentic Reinforcement Learning Informed by Token-Level Energy" (arXiv:2605.14558).
+- **What:** Proposes ActFocus, downweighting gradients on reasoning tokens and using an energy-based redistribution mechanism to increase weights on action tokens with higher uncertainty.
+- **Relevance to Carnot:** Directly applicable to Carnot's Phase 4 continuous learning and verify-repair training, addressing the token-level energy assignment.
+
+### KAN-CL: Per-Knot Importance Regularization for Continual Learning
+- **Paper:** "KAN-CL: Per-Knot Importance Regularization for Continual Learning with Kolmogorov-Arnold Networks" (arXiv:2605.12306).
+- **What:** Exploits the compact-support spline parameterization of KANs to perform importance-weighted anchoring at per-knot granularity, reducing catastrophic forgetting.
+- **Relevance to Carnot:** Satisfies FR-11 continuous self-learning requirements for Carnot's KAN tiers without the overhead of massive semantic replay buffers.
+
+### AdamFLIP: Hard Constrained PINN Training
+- **Paper:** "AdamFLIP: Adaptive Momentum Feedback Linearization Optimization for Hard Constrained PINN Training" (arXiv:2605.08408).
+- **What:** Reformulates physics-informed training as equality-constrained optimization using Adaptive Momentum Feedback Linearization.
+- **Relevance to Carnot:** Can be integrated into Carnot's verifier training loops to enforce hard mathematical constraints with zero-false-accept bounds.
+
+### Wahkon: Deep RKHS Superposition Network
+- **Paper:** "Wahkon: A Statistically Principled Deep RKHS Superposition Network" (arXiv:2605.14041).
+- **What:** Unifies Kolmogorov's superposition principle with RKHS regularization, outperforming KANs and providing MAP estimates.
+- **Relevance to Carnot:** Potential fast-path successor or alternative to the KAEMEnergy and Spline-based KAN models in Carnot.
+
+### Digitally Optimized Initializations for Fast Thermodynamic Computing
+- **Paper:** "Digitally Optimized Initializations for Fast Thermodynamic Computing" (arXiv:2603.24183).
+- **What:** A hybrid digital-thermodynamic algorithm that computes an initialization suppressing slow relaxation modes for overdamped Langevin dynamics.
+- **Relevance to Carnot:** Directly accelerates Carnot's Phase 3 Langevin samplers and sets the stage for Extropic TSU integration.
+
 ## 2026-05-17 Post-.218 Planning Sweep (Milestone 2026.05.219)
 
 This sweep was run after milestone `.218` completed. The literature search revealed advances in energy-guided decoding optimization, state-space energy models, and formal KAN verification.

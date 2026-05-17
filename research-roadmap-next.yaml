@@ -1,0 +1,201 @@
+milestone: "2026.05.221"
+milestone_title: "ActFocus RL, KAN-CL Continual Learning, Wahkon RKHS, and AdamFLIP Hard Constraints"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp2228-archive-and-activate
+    title: "Phase 0: Archive .220 and activate .221"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2228_archive.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Milestone 2026.05.220 has completed. We must prepare for 2026.05.221.
+      EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
+      TASK: Archive 2026.05.220 to research-complete.yaml and initialize the .221 milestone in ops/changelog.md.
+      CONCRETE STEPS:
+      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.220 entry, setting completed date to {date}.
+      2. Clear `research-roadmap.yaml` and copy the new milestone structure from `research-roadmap-next.yaml`.
+      3. Add a "## {date} (Milestone 2026.05.221 Operational Retrospective)" stub in `ops/changelog.md`.
+      4. Write deliverable to `results/experiment_2228_archive.json`.
+      
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2229-actfocus-reweighting-impl
+    title: "Phase 1: ActFocus Token-Level Reweighting Implementation"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2229_actfocus.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: ActFocus (arxiv:2605.14558) addresses the action bottleneck by downweighting reasoning tokens and shifting focus to action tokens informed by token-level energy variance.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/verify_repair.py, {project_root}/python/carnot/training/
+      TASK: Implement ActFocus token reweighting logic for verify-repair pipelines.
+      CONCRETE STEPS:
+      1. Create `python/carnot/training/actfocus.py`.
+      2. Implement the energy-variance calculation across rollouts.
+      3. Create the token-weight gradient modifier.
+      4. Write deliverable to `results/experiment_2229_actfocus.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2230-actfocus-sota-eval
+    title: "Phase 1: Evaluate ActFocus on Local SOTA Models"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2230_actfocus_eval.json"
+    gated_on:
+      - upstream: exp2229-actfocus-reweighting-impl
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: ActFocus must be evaluated on the SOTA MoE and dense flagship GGUF models.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/experiment_template.py
+      TASK: Validate ActFocus gradient redistribution on reasoning trajectories using mandated SOTA models.
+      CONCRETE STEPS:
+      1. Ensure MODEL_SPECS includes `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      2. Run the token-level energy correlation benchmark.
+      3. Write deliverable to `results/experiment_2230_actfocus_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2231-kancl-per-knot-regularization
+    title: "Phase 2: KAN-CL Per-Knot Importance Regularization"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2231_kancl.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: FR-11 continuous self-learning requires avoiding catastrophic forgetting. KAN-CL (arxiv:2605.12306) uses per-knot importance regularization without massive semantic buffers.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
+      TASK: Implement per-knot importance tracking and regularization for the KAN tiers.
+      CONCRETE STEPS:
+      1. Add importance weight accumulators (similar to EWC) to the KAN splines.
+      2. Apply the per-knot penalty during continuous constraint updates.
+      3. Write deliverable to `results/experiment_2231_kancl.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2232-fr11-kancl-retention-test
+    title: "Phase 2: KAN-CL FR-11 Retention Validation"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2232_kancl_retention.json"
+    gated_on:
+      - upstream: exp2231-kancl-per-knot-regularization
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: We must validate that KAN-CL successfully learns new constraints without degrading on previously validated ones.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/check_spec_coverage.py
+      TASK: Execute an FR-11 continuous self-learning episode using KAN-CL.
+      CONCRETE STEPS:
+      1. Train the KAN sequentially on 3 distinct constraint domains.
+      2. Measure retention rate (non-forgetting rate).
+      3. Ensure `continuous_self_learning_task: true` is included in the JSON artifact.
+      4. Write deliverable to `results/experiment_2232_kancl_retention.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2233-wahkon-rkhs-impl
+    title: "Phase 3: Deep RKHS Superposition Network (Wahkon)"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2233_wahkon.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: Wahkon (arxiv:2605.14041) is a statistically principled deep RKHS superposition network that unifies Kolmogorov's principle with RKHS, offering finite-sample guarantees superior to KAN.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/kaem_energy.py
+      TASK: Implement a Wahkon-style deep RKHS penalty layer as an alternative to Spline KAN.
+      CONCRETE STEPS:
+      1. Create `python/carnot/models/wahkon_rkhs.py`.
+      2. Implement the exact MAP estimate logic under the hierarchical GP prior.
+      3. Write deliverable to `results/experiment_2233_wahkon.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2234-wahkon-benchmark
+    title: "Phase 3: Wahkon MAP vs KAEMEnergy Fast-Path"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2234_wahkon_benchmark.json"
+    gated_on:
+      - upstream: exp2233-wahkon-rkhs-impl
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: Benchmark the new Wahkon MAP estimation against our KAEMEnergy exact inverse-transform sampling fast-path.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/wahkon_rkhs.py, {project_root}/python/carnot/models/kaem_energy.py
+      TASK: Compare Wahkon's computational latency and constraint resolution vs KAEMEnergy.
+      CONCRETE STEPS:
+      1. Run benchmark `benchmark_kaem_vs_mcmc` with Wahkon included.
+      2. Verify minimax optimal convergence.
+      3. Write deliverable to `results/experiment_2234_wahkon_benchmark.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2235-adamflip-optimizer-impl
+    title: "Phase 4: AdamFLIP Hard Constraint Optimizer"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2235_adamflip.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: AdamFLIP (arxiv:2605.08408) uses Adaptive Momentum Feedback Linearization to enforce hard equality constraints during PINN training, significantly reducing error vs soft penalties.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/
+      TASK: Implement AdamFLIP as an optimizer strategy for training Carnot verifiers.
+      CONCRETE STEPS:
+      1. Create `python/carnot/training/adamflip.py`.
+      2. Implement the feedback-linearized Lagrangian gradient combined with Adam-style moments.
+      3. Write deliverable to `results/experiment_2235_adamflip.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2236-adamflip-ebm-training
+    title: "Phase 4: AdamFLIP Constraint Training Validation"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2236_adamflip_train.json"
+    gated_on:
+      - upstream: exp2235-adamflip-optimizer-impl
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: Validate that AdamFLIP strictly enforces hard logical constraints during EBM verifier training better than soft penalties.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/adamflip.py
+      TASK: Train the Gibbs tier EBM on a constraint benchmark using AdamFLIP.
+      CONCRETE STEPS:
+      1. Compare constraint violation magnitude between AdamFLIP and standard CD with soft penalties.
+      2. Write deliverable to `results/experiment_2236_adamflip_train.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2237-thermo-langevin-init
+    title: "Phase 4: Thermodynamic Optimized Initializations"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2237_thermo_init.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: Digitally Optimized Initializations for Fast Thermodynamic Computing (arxiv:2603.24183) accelerates Langevin dynamics by suppressing slow relaxation modes.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/phase3/continuous_ebm.py
+      TASK: Implement optimal initial covariance shaping for Carnot's Langevin samplers.
+      CONCRETE STEPS:
+      1. Add Mpemba-effect inspired initialization to `sample_langevin`.
+      2. Record thermalization time reduction (speedup metric).
+      3. Write deliverable to `results/experiment_2237_thermo_init.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2238-capstone-v221
+    title: "Phase 4: Capstone E2E GPU Validation (.221)"
+    milestone: "2026.05.221"
+    deliverable: "results/experiment_2238_capstone.json"
+    model: "opus"
+    max_turns: 100
+    gated_on:
+      - upstream: exp2236-adamflip-ebm-training
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: We must validate the full stack changes of milestone 2026.05.221.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/benchmark_pipeline.py
+      TASK: Run a comprehensive E2E validation ensuring ActFocus, KAN-CL, and AdamFLIP correctly interoperate.
+      CONCRETE STEPS:
+      1. Generate constraints via dynamic extraction, optimized via AdamFLIP, and tracked by KAN-CL.
+      2. Run on live `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      3. Write deliverable to `results/experiment_2238_capstone.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
