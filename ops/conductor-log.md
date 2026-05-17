@@ -4518,3 +4518,4 @@ Ripgrep i |
 | 2026-05-17 21:40 UTC | Phase 2: Projected-Langevin vs CASAL Baseline — Fi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 21:42 UTC | Phase 2: Projected-Langevin vs CASAL Baseline — Fi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 21:45 UTC | Phase 2: Projected-Langevin vs CASAL Baseline — Fi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
+| 2026-05-17 21:47 UTC | Phase 2: NSVIF Neuro-Symbolic Z3 Extractor — First | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
