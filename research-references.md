@@ -13127,3 +13127,10 @@ This sweep was run after milestone `.211` completed. The literature search revea
 - **NLPOpt-Net: A Learning Method for Nonlinear Optimization with Feasibility Guarantees** (arxiv:2605.00260) - Unsupervised learning with k-layered projection for hard constraint satisfaction. Relevant for Phase-1 verifiers.
 - **Muon-OGD: Muon-based Spectral Orthogonal Gradient Projection for LLM Continual Learning** (arxiv:2605.08949) - Replaces Frobenius-norm geometry with spectral-norm-aware updates to prevent catastrophic forgetting. Applicable to Tier 3 Continuous Self-Learning.
 - **AdamFLIP: Adaptive Momentum Feedback Linearization Optimization for Hard Constrained PINN Training** (arxiv:2605.08408) - Reformulates PINN training as an equality-constrained optimization problem. Relevant for Phase 3 constraint satisfaction.
+
+## Recent ArXiv Findings (2025-2026) for Milestone 2026.05.218
+- **Energy-Based Transformers (EBTs) & EORM (arxiv:2505/2603)**: Iterative energy minimization over a learned verifier function for inference-time thinking. Energy Outcome Reward Model (EORM) provides a lightweight (55M parameter) post-hoc verifier for Chain-of-Thought (CoT) evaluation.
+- **KANELÉ (arxiv:2512.12850)**: Kolmogorov-Arnold Networks mapped directly to FPGA Lookup Tables (LUTs) for up to 2700x speedups, making KANs viable for real-time edge hardware control.
+- **Online Learning with Unknown Safety Constraints & Mechanistic Forgetting**: Converts optimistic actions to pessimistic based on complexity measures for strict constraint satisfaction. "Crosscoders" used to frame continual learning as a geometric constraint problem at the feature readout level.
+- **SCG-MEM (April 2026)**: Schema-Constrained Generative Memory for agentic structure without hallucinations.
+- **CRANE (arxiv:2502.09061)**: Reasoning-augmented constrained generation to balance constraints with reasoning.

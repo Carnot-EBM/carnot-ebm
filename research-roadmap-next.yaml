@@ -1,0 +1,194 @@
+milestone: "2026.05.218"
+milestone_title: "Inference-Time Energy Verification, KANELÉ Hardware, and Safe CSL"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp2195-archive-and-activate
+    title: "Phase 0: Archive .217 and activate .218"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2195_archive.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Milestone 2026.05.217 has completed. We must prepare for 2026.05.218.
+      EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
+      TASK: Archive 2026.05.217 to research-complete.yaml and initialize the .218 milestone in ops/changelog.md.
+      CONCRETE STEPS:
+      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.217 entry, setting completed date to {date}.
+      2. Clear `research-roadmap.yaml` and copy the new milestone structure from `research-roadmap-next.yaml`.
+      3. Add a "## {date} (Milestone 2026.05.218 Operational Retrospective)" stub in `ops/changelog.md`.
+      4. Write deliverable to `results/experiment_2195_archive.json`.
+      
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2196-eorm-verifier-implementation
+    title: "Phase 1: EORM Lightweight Verifier Implementation"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2196_eorm.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: We need inference-time energy verification. Following recent EORM papers (arxiv:2505), a lightweight (55M) Energy Outcome Reward Model can rank Chain-of-Thought (CoT) solutions natively.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/boltzmann.py
+      TASK: Implement an EORM verifier module in Carnot.
+      CONCRETE STEPS:
+      1. Create `python/carnot/models/eorm.py` implementing a 55M parameter reward model interface.
+      2. Integrate the EORM energy scalar into the main constraint verification pipeline.
+      3. Write deliverable to `results/experiment_2196_eorm.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2197-ebt-iterative-minimization
+    title: "Phase 1: EBT Iterative Energy Minimization Decoding"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2197_ebt.json"
+    prompt: |
+      CONTEXT: Energy-Based Transformers (EBT) use iterative energy minimization for "inference-time thinking".
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/guided_decoding.py
+      TASK: Implement an iterative decoding step that utilizes the EORM energy gradients to refine token selection.
+      CONCRETE STEPS:
+      1. Modify `guided_decoding.py` to support multi-step refinement per generation block.
+      2. Ensure it leverages MODEL_SPECS: `unsloth/gemma-4-31B-it-GGUF` or `unsloth/Qwen3.6-35B-A3B-GGUF` for generation.
+      3. Write deliverable to `results/experiment_2197_ebt.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2198-reasoning-augmented-crane-grammar
+    title: "Phase 1: CRANE Reasoning-Augmented Constrained Grammar"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2198_crane.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: Strict constraints degrade reasoning. CRANE (arxiv:2502.09061) augments grammar rules to allow intermediate natural reasoning steps before enforcing structural rules.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/grammar.py
+      TASK: Build a reasoning-augmented grammar adapter.
+      CONCRETE STEPS:
+      1. Extend the grammar definition interface to allow a "reasoning block" prefix.
+      2. Implement the parsing logic to extract the strictly constrained section post-reasoning.
+      3. Write deliverable to `results/experiment_2198_crane.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2199-kanele-lut-mapping
+    title: "Phase 2: KANELÉ FPGA LUT Mapping for KANs"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2199_kanele.json"
+    model: "opus"
+    max_turns: 100
+    prompt: |
+      CONTEXT: We must deploy KANs to hardware efficiently. KANELÉ (arxiv:2512.12850) maps learnable 1D splines directly to FPGA LUTs.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
+      TASK: Write a transpiler that converts KAN spline weights into LUT initialization vectors.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: Check `python -c "import torch"`
+      1. Write `python/carnot/hardware/kanele_transpiler.py` to map splines to BRAM/LUT values.
+      2. Generate a mock LUT configuration from a trained KAN verifier.
+      3. Write deliverable to `results/experiment_2199_kanele.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2200-kv260-kanele-synthesis
+    title: "Phase 2: KV260 KANELÉ Bitstream Synthesis"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2200_synthesis.json"
+    model: "opus"
+    max_turns: 100
+    gated_on:
+      - upstream: exp2199-kanele-lut-mapping
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: We must synthesize the KANELÉ LUTs for the KV260 FPGA.
+      EXISTING CODE TO READ FIRST: {project_root}/hardware/kv260/
+      TASK: Draft Verilog RTL incorporating the LUT mappings and verify via OSS-CAD-Suite.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: `command -v yosys`
+      1. Create `hardware/kv260/kanele_lut_array.v`.
+      2. Verify compilation and resource bounds with `yosys`.
+      3. Write deliverable to `results/experiment_2200_synthesis.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2201-pessimistic-safety-oracle
+    title: "Phase 3: Online Learning Pessimistic Safety Constraints (FR-11)"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2201_safety_oracle.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: Continuous self-learning (FR-11) needs strict safety. Recent papers propose online regression oracles to estimate unknown safety constraints and convert optimistic actions to pessimistic ones.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/jepa_predictor.py
+      TASK: Add a pessimistic safety oracle to the online learning loop.
+      CONCRETE STEPS:
+      1. Create an online regression oracle that monitors constraint violation history.
+      2. If uncertainty is high, force the model update step into a pessimistic bound.
+      3. Ensure `continuous_self_learning_task: true` is included in the output artifact to satisfy the CSL mandate.
+      4. Write deliverable to `results/experiment_2201_safety_oracle.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2202-crosscoder-feature-readout
+    title: "Phase 3: Crosscoder Feature Readout Constraints"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2202_crosscoder.json"
+    prompt: |
+      CONTEXT: To prevent mechanistic forgetting, we apply Crosscoder-based feature readout constraints during continual learning updates.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/jepa_predictor.py
+      TASK: Implement geometric capacity constraints for feature readout.
+      CONCRETE STEPS:
+      1. Define a Crosscoder penalty term in the continuous learning objective.
+      2. Validate that it does not disrupt previous task performance natively.
+      3. Write deliverable to `results/experiment_2202_crosscoder.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2203-scg-mem-integration
+    title: "Phase 3: SCG-MEM Schema-Constrained Generative Memory"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2203_scgmem.json"
+    prompt: |
+      CONTEXT: Agentic memory retrieval suffers from structural hallucinations. SCG-MEM guarantees valid memory keys via constrained decoding.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/grammar.py
+      TASK: Build the SCG-MEM retrieval module using the grammar constrained engine.
+      CONCRETE STEPS:
+      1. Create a schema definition for the memory index.
+      2. Bind it to the generative decoder for safe memory access.
+      3. Write deliverable to `results/experiment_2203_scgmem.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2204-e2e-capstone-evaluation
+    title: "Phase 4: Capstone Live GPU Evaluation (EORM + EBT + KANELÉ)"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2204_capstone.json"
+    gated_on:
+      - upstream: exp2197-ebt-iterative-minimization
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: Final integration test of EBT reasoning, EORM verifier, and SCG-MEM, evaluated on GSM8K using mandated SOTA GGUF models.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/benchmark_pipeline.py
+      TASK: Run live evaluation with the new architecture components.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: Check `torch.cuda.is_available()` and `unsloth/gemma-4-31B-it-GGUF` exists.
+      1. Execute the pipeline using `CARNOT_FORCE_LIVE=1` and MODEL_SPECS: `unsloth/gemma-4-31B-it-GGUF`.
+      2. Record performance improvements related to inference-time thinking.
+      3. Write deliverable to `results/experiment_2204_capstone.json`.
+      
+      REQUIRED ARTIFACT FIELDS:
+        duration_s: "Compute time"
+        honest_verdict: "Terminal prefix"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2205-milestone-218-retro
+    title: "Phase 4: Milestone 2026.05.218 Retrospective"
+    milestone: "2026.05.218"
+    deliverable: "results/experiment_2205_retro.json"
+    max_turns: 20
+    prompt: |
+      CONTEXT: Conclude milestone .218.
+      EXISTING CODE TO READ FIRST: {project_root}/ops/conductor-log.md
+      TASK: Write the retrospective and update ops/status.md.
+      CONCRETE STEPS:
+      1. Summarize findings from experiments 2196 through 2204.
+      2. Write deliverable to `results/experiment_2205_retro.json`.
+      
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: "Terminal prefix"
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
