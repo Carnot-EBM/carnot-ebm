@@ -3985,3 +3985,4 @@ Error |
 | 2026-05-17 00:15 UTC | Phase 1: Annealed Langevin Posterior Sampling (ALP | OK | 81 passed, 1 warning in 5.39s |
 | 2026-05-17 00:17 UTC | Phase 1: Energy-Guided Decoding with Hidden State  | DOOMED_RERUN_BLOCK | 12 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-17 00:19 UTC | Phase 1: Energy-Guided Decoding with Hidden State  | DOOMED_RERUN_BLOCK | 12 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-17 00:21 UTC | Phase 1: Energy-Guided Decoding with Hidden State  | DOOMED_RERUN_BLOCK | 12 prior failure(s) match this task's scope but prior_failures field is missing  |
