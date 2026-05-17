@@ -5854,3 +5854,46 @@ AdamFLIP SHALL apply adaptive momentum feedback linearization to solve hard cons
 **When** run_csl_loop is called with prem_intrinsic_reward
 **Then** the returned dict includes 'prem_intrinsic_applied': True
 **And** the parameters are updated accordingly.
+
+## REQ-LEARN-2241: FR-11 Fast-Slow Training Evaluation Artifact
+
+**Given** the FR-11 continuous self-learning milestone rescue task
+**When** the Exp 2241 FST evaluation runs
+**Then** it MUST verify that `python/carnot/training/fast_slow.py` can be
+imported directly before running the experiment
+**And** it MUST use a 30-example FoVer-class synthetic arithmetic CoT corpus
+without external LLM API calls
+**And** it MUST compare a 5-iteration parameter-only verifier-weight RL regime
+against a 5-iteration Fast-Slow Training regime with frozen slow weights and
+verifier-output-summary fast-weight updates
+**And** it MUST write `results/experiment_2241_fr11_fst_eval.json` with
+`continuous_self_learning_task=true`, `sample_efficiency_ratio`,
+`kl_drift_ratio`, `utility_delta`, `n_corpus`, `preconditions_checked`,
+`fr11_fst_eval_passed`, and `honest_verdict`.
+
+### REQ-LEARN-2241 Sub-requirements
+
+- REQ-LEARN-2241-1: If direct import of `fast_slow.py` fails, the artifact
+  SHALL be written with `honest_verdict="blocked_fst_module_missing"`.
+- REQ-LEARN-2241-2: `fr11_fst_eval_passed` SHALL be true only when
+  `sample_efficiency_ratio >= 2.0` and `kl_drift_ratio <= 0.5`.
+- REQ-LEARN-2241-3: Passing artifacts SHALL use an `honest_verdict` that starts
+  with `complete:`.
+- REQ-LEARN-2241-4: The artifact SHALL record enough regime history for the
+  sample-efficiency and KL-drift ratios to be independently audited.
+
+### SCENARIO-LEARN-2241: FST Beats Parameter-Only RL on Synthetic FoVer Arithmetic
+
+**Given** a deterministic 30-example synthetic arithmetic CoT corpus
+**When** Exp 2241 evaluates parameter-only RL and FST for 5 iterations each
+**Then** the FST regime reaches the energy-reduction threshold at least twice
+as quickly as the parameter-only regime
+**And** the FST regime's verifier-parameter KL drift is at most half the
+parameter-only regime's drift
+**And** the artifact reports `continuous_self_learning_task=true`.
+
+## Implementation Status (REQ-LEARN-2241)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2241 | Implemented (`python/carnot/reporting/fr11_fst_eval.py`, `scripts/experiment_2241_fr11_fst_eval.py`) | Implemented (`tests/python/test_experiment_2241_fr11_fst_eval.py`) |
