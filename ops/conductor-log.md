@@ -4079,3 +4079,5 @@ Error |
 | 2026-05-17 04:42 UTC | Phase 2: Ising Hamiltonian Sampling via ALPS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2147-ising-translation-module.result (a |
 | 2026-05-17 04:44 UTC | Phase 2: Ising Hamiltonian Sampling via ALPS | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2147-ising-translation-module.result (a |
 | 2026-05-17 04:46 UTC | Phase 2: Ising Constraint Satisfaction Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2148-ising-alps-sampling) |
+| 2026-05-17 04:48 UTC | Phase 3: Dynamic Test-Time Compute (TTC) Controlle | OK | 81 passed, 1 warning in 5.40s |
+| 2026-05-17 04:50 UTC | Phase 2: Ising Constraint Satisfaction Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2148-ising-alps-sampling) |
