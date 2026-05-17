@@ -4330,3 +4330,4 @@ Ripgrep i |
 | 2026-05-17 12:56 UTC | Phase 0: Archive .220 and activate .221 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.17s |
 | 2026-05-17 12:58 UTC | Phase 0: Archive .220 and activate .221 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.90s |
 | 2026-05-17 13:00 UTC | Phase 0: Archive .220 and activate .221 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.71s |
+| 2026-05-17 13:02 UTC | Phase 1: ActFocus Token-Level Reweighting Implemen | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
