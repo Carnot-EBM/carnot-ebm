@@ -4042,3 +4042,4 @@ Error |
 | 2026-05-17 03:17 UTC | Phase 3: Full E2E Benchmark (CARM + DAB + Dynamic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2128-dynamic-resolution-csl) |
 | 2026-05-17 03:17 UTC | Milestone 2026.05.212 activated | OK | 11 tasks queued |
 | 2026-05-17 03:21 UTC | Phase 0: Archive .211 and activate .212 | OK | cache hit: 81 passed, 1 warning in 4.81s |
+| 2026-05-17 03:25 UTC | Phase 1: Hardware-Assisted DAB Module | OK | 81 passed, 1 warning in 5.30s |
