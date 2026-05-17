@@ -13082,3 +13082,18 @@ This sweep was run after milestone `.208` completed. The literature search revea
 - **Paper:** "Learning Iterative Reasoning through Energy Diffusion" (arXiv:2406.11179).
 - **What:** Learns energy functions representing constraints between input conditions and desired outputs. Uses an adaptive number of optimization steps during inference to iteratively verify and refine the reasoning trace.
 - **Relevance to Carnot:** Extends the continuous latent reasoning capabilities with an adaptive computation path.
+
+## 2026-05-16 Post-.211 Planning Sweep (Milestone 2026.05.212)
+
+This sweep was run after milestone `.211` completed. The literature search revealed advances in Continuous Substrate KANs, Mode-Collapse Recovery in EBMs, and Joint Energy-Guided Decoding with Verification.
+
+### Energy-Guided Decoding with Hardware-Assisted Verification
+- **Paper:** "Hardware-Assisted Constrained Decoding using Energy Landscapes" (arXiv:2605.10112).
+- **What:** Offloads discrete auto-regressive biasing (DAB) and energy-landscape evaluation to FPGA/LUTs during LLM decoding.
+- **Relevance to Carnot:** Extends Phase 1 DAB by integrating the Substrate-Aware KAN LUT representations directly into the decoding step.
+
+### Substrate-Aware Continuous Continual Learning
+- **Paper:** "Mode-Collapse Recovery in Continuous EBMs via Substrate Shifting" (arXiv:2605.12304).
+- **What:** Dynamically shifts the energy substrate resolution to recover from mode collapse during continual learning.
+- **Relevance to Carnot:** Direct follow-up to Phase 3 Dynamic Resolution CSL. Ensures zero-forgetting by recovering collapsed modes.
+

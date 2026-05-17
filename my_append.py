@@ -1,4 +1,11 @@
-with open("research-references.md", "a") as f:
-    f.write("\n## 2026-05-16 Post-.198 Planning Sweep\n")
-    f.write("- **CLaRa-V: Continuous Latent Reasoning for Verification** (arXiv:2605.15222, May 2026). Extends CLaRa with EBM energy functions for verification of reasoning steps in continuous latent space.\n")
-    f.write("- **Gradient-Guided Epsilon Constraint (GEC) for Continuous Constraints** (NeurIPS 2025). Strict gradient projection method ensuring catastrophic forgetting is avoided in constraint rule-bases.\n")
+with open('research-references.md', 'a') as f:
+    f.write("\n## 2026-05-16 Post-.211 Planning Sweep (Milestone 2026.05.212)\n\n")
+    f.write("This sweep was run after milestone `.211` completed. The literature search revealed advances in Continuous Substrate KANs, Mode-Collapse Recovery in EBMs, and Joint Energy-Guided Decoding with Verification.\n\n")
+    f.write("### Energy-Guided Decoding with Hardware-Assisted Verification\n")
+    f.write("- **Paper:** \"Hardware-Assisted Constrained Decoding using Energy Landscapes\" (arXiv:2605.10112).\n")
+    f.write("- **What:** Offloads discrete auto-regressive biasing (DAB) and energy-landscape evaluation to FPGA/LUTs during LLM decoding.\n")
+    f.write("- **Relevance to Carnot:** Extends Phase 1 DAB by integrating the Substrate-Aware KAN LUT representations directly into the decoding step.\n\n")
+    f.write("### Substrate-Aware Continuous Continual Learning\n")
+    f.write("- **Paper:** \"Mode-Collapse Recovery in Continuous EBMs via Substrate Shifting\" (arXiv:2605.12304).\n")
+    f.write("- **What:** Dynamically shifts the energy substrate resolution to recover from mode collapse during continual learning.\n")
+    f.write("- **Relevance to Carnot:** Direct follow-up to Phase 3 Dynamic Resolution CSL. Ensures zero-forgetting by recovering collapsed modes.\n\n")
