@@ -6086,3 +6086,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-17: Milestone 2026.05.219 Operational Retrospective (✅ Complete) — No experiments run; pipeline inactive.
 - 2026-05-17: Milestone 2026.05.220 Operational Retrospective (✅ Complete) — No experiments run; pipeline inactive.
 - 2026-05-17: Milestone 2026.05.221 Operational Retrospective (✅ Complete) — No experiments run; pipeline inactive.
+- 2026-05-17: Phase 0: Archive .221 and activate .222 (⚠️ Blocked) — honest_verdict=complete: blocked_roadmap_missing; results/experiment_2239_archive.json
