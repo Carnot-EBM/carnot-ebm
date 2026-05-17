@@ -4109,3 +4109,5 @@ Ripgrep i |
 | 2026-05-17 06:11 UTC | Phase 2: Substrate-Aware KAN Topology | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 06:13 UTC | Phase 2: Substrate-Aware KAN Topology | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 06:15 UTC | Phase 2: KAN to LUT/BRAM Allocation Script | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2159-substrate-aware-kan) |
+| 2026-05-17 06:15 UTC | Phase 2: KV260 FPGA Simulation with Mock Bitstream | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2160-kan-lut-allocation.result (upstrea |
+| 2026-05-17 06:17 UTC | Phase 2: KAN to LUT/BRAM Allocation Script | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2159-substrate-aware-kan) |
