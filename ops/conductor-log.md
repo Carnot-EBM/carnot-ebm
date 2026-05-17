@@ -4415,3 +4415,5 @@ Ripgrep i |
 | 2026-05-17 18:13 UTC | Phase 6: Capstone E2E Real-Scale Live Generation ( | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2255-fst-real-scale-live-gen, exp2258-kan |
 | 2026-05-17 18:14 UTC | Milestone 2026.05.224 activated | OK | 14 tasks queued |
 | 2026-05-17 18:17 UTC | Phase 0: Archive .223 and activate .224 | OK | cache hit: 81 passed, 1 warning in 3.64s |
+| 2026-05-17 18:31 UTC | Phase 0: Fix DualGPU ImportError in carnot.inferen | FAIL | Post-tests failed:  |
+| 2026-05-17 18:33 UTC | Phase 0: Fix DualGPU ImportError in carnot.inferen | OK | Deliverable already exists in repo |

@@ -50,6 +50,7 @@ SCENARIO-VERIFY-003
 from __future__ import annotations
 
 import gc
+import importlib.util
 import logging
 import os
 import time
@@ -59,27 +60,73 @@ from typing import Any, cast
 logger = logging.getLogger(__name__)
 
 # ---------------------------------------------------------------------------
-# Optional heavy imports — loaded at module level so tests can patch them
-# without needing create=True. The names are set to None when not installed,
-# and load_model checks for None before use.
+# Optional heavy imports — names exist at module level for tests to patch, but
+# real torch/transformers imports are deferred until load/generate needs them.
 # ---------------------------------------------------------------------------
 
-try:
-    import torch
-    import torch as _torch_module
-except ImportError:  # pragma: no cover
-    _torch_module = None  # type: ignore[assignment]
-    torch = None  # type: ignore[assignment]
-
-try:
-    from transformers import AutoModelForCausalLM, AutoTokenizer
-except ImportError:  # pragma: no cover
-    AutoModelForCausalLM = None  # type: ignore[assignment,misc]
-    AutoTokenizer = None  # type: ignore[assignment,misc]
+_UNINITIALIZED_DEPENDENCY = object()
+torch: Any = _UNINITIALIZED_DEPENDENCY
+_torch_module: Any = _UNINITIALIZED_DEPENDENCY
+AutoModelForCausalLM: Any = _UNINITIALIZED_DEPENDENCY
+AutoTokenizer: Any = _UNINITIALIZED_DEPENDENCY
 
 # Derived flags — always assigned (no branch coverage gap).
-_TORCH_AVAILABLE: bool = torch is not None
-_TRANSFORMERS_AVAILABLE: bool = AutoModelForCausalLM is not None
+_TORCH_AVAILABLE: bool = importlib.util.find_spec("torch") is not None
+_TRANSFORMERS_AVAILABLE: bool = importlib.util.find_spec("transformers") is not None
+
+
+def _ensure_torch_loaded() -> Any | None:
+    """Load torch on first use unless tests patched the module-level name."""
+    global _TORCH_AVAILABLE, _torch_module, torch
+    if torch is not _UNINITIALIZED_DEPENDENCY:
+        return torch
+    if not _TORCH_AVAILABLE:
+        torch = None
+        _torch_module = None
+        return None
+    try:
+        import torch as imported_torch
+    except ImportError:  # pragma: no cover
+        _TORCH_AVAILABLE = False
+        torch = None
+        _torch_module = None
+        return None
+    torch = imported_torch
+    _torch_module = imported_torch
+    return torch
+
+
+def _ensure_transformers_loaded() -> tuple[Any | None, Any | None]:
+    """Load transformers on first use unless tests patched the public names."""
+    global _TRANSFORMERS_AVAILABLE, AutoModelForCausalLM, AutoTokenizer
+    if (
+        AutoTokenizer is not _UNINITIALIZED_DEPENDENCY
+        and AutoModelForCausalLM is not _UNINITIALIZED_DEPENDENCY
+    ):
+        return AutoTokenizer, AutoModelForCausalLM
+    if not _TRANSFORMERS_AVAILABLE:
+        if AutoTokenizer is _UNINITIALIZED_DEPENDENCY:
+            AutoTokenizer = None
+        if AutoModelForCausalLM is _UNINITIALIZED_DEPENDENCY:
+            AutoModelForCausalLM = None
+        return AutoTokenizer, AutoModelForCausalLM
+    try:
+        from transformers import (
+            AutoModelForCausalLM as imported_auto_model,
+            AutoTokenizer as imported_auto_tokenizer,
+        )
+    except ImportError:  # pragma: no cover
+        _TRANSFORMERS_AVAILABLE = False
+        if AutoTokenizer is _UNINITIALIZED_DEPENDENCY:
+            AutoTokenizer = None
+        if AutoModelForCausalLM is _UNINITIALIZED_DEPENDENCY:
+            AutoModelForCausalLM = None
+        return AutoTokenizer, AutoModelForCausalLM
+    if AutoTokenizer is _UNINITIALIZED_DEPENDENCY:
+        AutoTokenizer = imported_auto_tokenizer
+    if AutoModelForCausalLM is _UNINITIALIZED_DEPENDENCY:
+        AutoModelForCausalLM = imported_auto_model
+    return AutoTokenizer, AutoModelForCausalLM
 
 # ---------------------------------------------------------------------------
 # Configuration constants
@@ -94,10 +141,10 @@ _RETRY_WAIT_SECONDS: float = 1.0
 
 
 # ---------------------------------------------------------------------------
-# Public exception (re-used from pipeline errors for consistency)
+# Public exception (shared with pipeline errors for consistency)
 # ---------------------------------------------------------------------------
 
-from carnot.pipeline.errors import ModelLoadError  # noqa: E402  (after constants)
+from carnot.errors import ModelLoadError  # noqa: E402  (after constants)
 
 # ---------------------------------------------------------------------------
 # Warm-server integration
@@ -156,8 +203,9 @@ def _model_device(model: Any) -> Any:
     try:
         return next(model.parameters()).device
     except StopIteration:
-        if torch is not None:
-            return torch.device("cpu")
+        torch_module = _ensure_torch_loaded()
+        if torch_module is not None:
+            return torch_module.device("cpu")
         return "cpu"
 
 
@@ -329,12 +377,20 @@ def load_model(
     force_live = os.environ.get("CARNOT_FORCE_LIVE", "") == "1"
 
     # --- Import check ---
-    # Check the actual module-level sentinels rather than the boolean flags so
-    # that tests can patch AutoModelForCausalLM / AutoTokenizer to mocks and
-    # exercise the load path without needing to also patch _TRANSFORMERS_AVAILABLE.
-    # (The bool flags can be False when a transitive import inside transformers
-    # fails at module-load time even though `import transformers` itself works.)
-    if torch is None or AutoTokenizer is None or AutoModelForCausalLM is None:
+    if not _TORCH_AVAILABLE or not _TRANSFORMERS_AVAILABLE:
+        err = ModelLoadError(
+            f"torch/transformers not installed. Cannot load '{model_name}'. "
+            f"Install with: pip install torch transformers",
+            details={"model_name": model_name},
+        )
+        if force_live:
+            raise err
+        logger.warning("torch/transformers not available; cannot load model.")
+        return None, None
+
+    torch_module = _ensure_torch_loaded()
+    auto_tokenizer, auto_model = _ensure_transformers_loaded()
+    if torch_module is None or auto_tokenizer is None or auto_model is None:
         err = ModelLoadError(
             f"torch/transformers not installed. Cannot load '{model_name}'. "
             f"Install with: pip install torch transformers",
@@ -350,13 +406,15 @@ def load_model(
     if force_cpu or device == "cpu":
         effective_device = "cpu"
     elif device == "cuda" or device.startswith("cuda:"):
-        effective_device = device if torch.cuda.is_available() else "cpu"
+        effective_device = device if torch_module.cuda.is_available() else "cpu"
     else:
-        effective_device = "cuda" if torch.cuda.is_available() else "cpu"
+        effective_device = "cuda" if torch_module.cuda.is_available() else "cpu"
 
     # --- dtype resolution ---
     if dtype is None:
-        effective_dtype = torch.float32 if effective_device == "cpu" else torch.float16
+        effective_dtype = (
+            torch_module.float32 if effective_device == "cpu" else torch_module.float16
+        )
     else:
         effective_dtype = dtype
 
@@ -386,7 +444,7 @@ def load_model(
             return None, None
 
         try:
-            tokenizer = AutoTokenizer.from_pretrained(
+            tokenizer = auto_tokenizer.from_pretrained(
                 model_name,
                 trust_remote_code=os.environ.get("CARNOT_TRUST_REMOTE_CODE", "") == "1",
             )
@@ -396,7 +454,7 @@ def load_model(
             }
             if device_map is not None and effective_device != "cpu":
                 model_kwargs["device_map"] = device_map
-            model = AutoModelForCausalLM.from_pretrained(
+            model = auto_model.from_pretrained(
                 model_name,
                 **model_kwargs,
             )
@@ -421,8 +479,7 @@ def load_model(
                 )
                 gc.collect()
                 try:
-                    if torch is not None:
-                        torch.cuda.empty_cache()
+                    torch_module.cuda.empty_cache()
                 except Exception:
                     pass
                 time.sleep(_RETRY_WAIT_SECONDS)
@@ -519,6 +576,10 @@ def generate(
             "Call load_model() first and check it succeeded."
         )
 
+    torch_module = _ensure_torch_loaded()
+    if torch_module is None:
+        raise RuntimeError("generate() requires torch to be installed.")
+
     device = _model_device(model)
     text = _render_generation_prompt(tokenizer, prompt)
 
@@ -527,7 +588,7 @@ def generate(
     inputs = {k: v.to(device) for k, v in inputs.items()}
     input_length = inputs["input_ids"].shape[1]
 
-    with torch.no_grad():
+    with torch_module.no_grad():
         outputs = model.generate(
             **inputs,
             max_new_tokens=max_new_tokens,

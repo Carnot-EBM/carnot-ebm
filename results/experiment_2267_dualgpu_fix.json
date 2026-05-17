@@ -1,0 +1,42 @@
+{
+  "experiment": 2267,
+  "title": "Dual-GPU inference package export fix",
+  "run_date": "2026-05-17",
+  "required_artifact_field_principles": {
+    "honest_verdict": "Terminal-prefix required. complete: if pretest_fixed is true.",
+    "pretest_fixed": "Primary gate for ALL Phase 1 and Phase 2 tasks. True only when the full pytest suite has zero errors and zero failures - not just the dual_gpu test file alone.",
+    "n_test_errors": "Records dual_gpu.py test errors specifically to confirm the ImportError was resolved.",
+    "n_test_failures": "Records dual_gpu.py test failures to confirm no regressions were introduced by the fix.",
+    "full_pretest_errors": "Records full-suite error count post-fix; must be 0 for pretest_fixed=true.",
+    "full_pretest_failures": "Records full-suite failure count post-fix; must be 0 for pretest_fixed=true.",
+    "symbols_added": "Lists the four symbol names added to __init__.py so reviewers can verify completeness of the export fix."
+  },
+  "honest_verdict": {
+    "principle": "Terminal-prefix required. complete: if pretest_fixed is true.",
+    "terminal_prefix": "blocked",
+    "status": "blocked_full_pretest_import_error",
+    "verdict": "Dual-GPU package exports are fixed and tests/python/test_dual_gpu.py passes, but the requested full tests/python pre-test run stopped on tests/python/test_pypi_escalation.py importing missing check_pypi_escalation from carnot.pypi_escalation."
+  },
+  "pretest_fixed": false,
+  "n_test_errors": 0,
+  "n_test_failures": 0,
+  "full_pretest_errors": 1,
+  "full_pretest_failures": 0,
+  "symbols_added": [
+    "DualGPUExecutionResult",
+    "DualGPURunner",
+    "estimate_model_size_billions",
+    "requires_device_map_auto"
+  ],
+  "commands_run": [
+    {
+      "command": ".venv/bin/python -m pytest tests/python/test_dual_gpu.py -x -q --no-cov -p no:cacheprovider 2>&1 | tail -10",
+      "result": "12 passed in 2.12s"
+    },
+    {
+      "command": ".venv/bin/python -m pytest tests/python -x -q --no-cov -p no:cacheprovider 2>&1 | tail -5",
+      "result": "1 skipped, 12 warnings, 1 error in 19.47s",
+      "blocker": "tests/python/test_pypi_escalation.py: ImportError: cannot import name 'check_pypi_escalation' from 'carnot.pypi_escalation'"
+    }
+  ]
+}

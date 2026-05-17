@@ -16,7 +16,6 @@ from typing import TYPE_CHECKING, Any
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-from carnot.inference.model_loader import generate
 from carnot.pipeline.typed_reasoning import TypedReasoningExtractor, TypedReasoningIR
 from carnot.pipeline.typed_reasoning import extract_typed_reasoning as build_typed_reasoning_ir
 
@@ -343,6 +342,9 @@ class StructuredReasoningController:
                 fallback_generate=fallback_generate,
                 max_new_tokens=max_new_tokens,
             )
+
+        # Deferred to keep importing carnot.inference.model_loader cycle-free.
+        from carnot.inference.model_loader import generate
 
         prompt = self.build_prompt(question, model_name, mode=policy_mode or "structured_json")
         attempts: list[StructuredReasoningAttempt] = []

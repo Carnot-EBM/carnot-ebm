@@ -93,7 +93,7 @@ class DualGPURunner:
         if torch_module is None:
             from carnot.inference import model_loader as model_loader_module
 
-            self._torch = model_loader_module.torch
+            self._torch = model_loader_module._ensure_torch_loaded()
         else:
             self._torch = torch_module
         self._clock = clock
