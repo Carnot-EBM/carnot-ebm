@@ -4334,3 +4334,5 @@ Ripgrep i |
 | 2026-05-17 13:04 UTC | Phase 1: ActFocus Token-Level Reweighting Implemen | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 13:06 UTC | Phase 1: ActFocus Token-Level Reweighting Implemen | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 13:08 UTC | Phase 1: Evaluate ActFocus on Local SOTA Models | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2229-actfocus-reweighting-impl) |
+| 2026-05-17 13:08 UTC | Phase 2: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.79s |
+| 2026-05-17 13:10 UTC | Phase 1: Evaluate ActFocus on Local SOTA Models | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2229-actfocus-reweighting-impl) |
