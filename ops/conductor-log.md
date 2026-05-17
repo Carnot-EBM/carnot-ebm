@@ -4387,3 +4387,5 @@ Ripgrep i |
 | 2026-05-17 16:45 UTC | Phase 0: Fix Duplicate test_compositional_energy M | OK | 83 passed, 1 warning in 3.77s |
 | 2026-05-17 16:47 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
 | 2026-05-17 16:49 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
+| 2026-05-17 16:51 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
+| 2026-05-17 16:53 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2255-fst-real-scale-live-gen) |
