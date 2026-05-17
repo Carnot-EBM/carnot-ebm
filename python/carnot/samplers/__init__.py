@@ -25,6 +25,7 @@ try:
     from .fpga_ising import FPGAIsingSampler
     from .equilibrium_matching import EquilibriumMatchingSampler
     from .continuous_gumbel import ContinuousGumbelSampler
+    from .casal import CASALSampler, casal_sample
     from .gpu_oim_simulator import (
         GPUOscillatorIsingSimulator,
         JEPARetrainResult,
@@ -53,6 +54,7 @@ else:
         "LangevinSampler",
         "EquilibriumMatchingSampler",
         "ContinuousGumbelSampler",
+        "CASALSampler",
         "HMCSampler",
         "KnuthYaoSampler",
         "ParallelIsingSampler",

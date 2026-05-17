@@ -498,6 +498,39 @@ the same constraint as the constraint_fn
 **And** the violation rate across 100 independent trials is 0.0
 **And** the artifact is written to `results/experiment_2110_casal_pinet.json`.
 
+### REQ-SAMPLE-2245: CASAL Primal-Dual Equality Sampler
+
+Carnot MUST provide a `CASALSampler` class in `python/carnot/samplers/casal.py`
+that runs primal-dual Split Augmented Langevin sampling for hard equality
+constraints during inference.
+
+Sub-requirements:
+- REQ-SAMPLE-2245-1: `CASALSampler(constraints, step_size, dual_step_size, n_steps)`
+  SHALL accept equality constraints as residual callables, where zero residual
+  means satisfied.
+- REQ-SAMPLE-2245-2: `sample(x_init, energy_fn)` SHALL run Langevin primal
+  updates, project each primal state back onto the equality manifold, and return
+  a finite final sample.
+- REQ-SAMPLE-2245-3: The sampler SHALL update Lagrange multipliers from
+  post-projection residuals and expose diagnostics for mean violation and dual
+  update convergence.
+- REQ-SAMPLE-2245-4: The Exp 2245 unit test SHALL verify mean equality
+  violation below `1e-4` on a deterministic 2D quadratic-energy problem with one
+  equality constraint.
+- REQ-SAMPLE-2245-5: Exp 2245 SHALL write
+  `results/experiment_2245_casal_impl.json` with `casal_impl_ready=true` only
+  when the unit test demonstrates mean violation below `1e-4`.
+
+### SCENARIO-SAMPLE-2245: CASAL Enforces A 2D Equality Constraint
+
+**Given** a 2D quadratic energy and the equality constraint `x0 + x1 = 1`
+**When** `CASALSampler.sample()` runs from an infeasible initial state
+**Then** the returned sample satisfies the equality constraint with mean
+violation below `1e-4`
+**And** the dual update convergence diagnostic is true
+**And** `results/experiment_2245_casal_impl.json` records the implementation
+gate outcome.
+
 ### REQ-SAMPLE-1807: Lyapunov Control Barrier Functions in Langevin Sampler
 
 Carnot MUST provide a way to integrate Lyapunov Control Barrier Functions (CBFs) as
@@ -627,4 +660,3 @@ Sub-requirements:
 **When** both ALPS and standard Langevin samplers are run
 **Then** ALPS reaches the target minimum in significantly fewer steps
 **And** the experiment artifact is written to `results/experiment_2109_alps_module.json`.
-

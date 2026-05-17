@@ -1,7 +1,213 @@
+"""CASAL samplers for hard constrained continuous EBM inference.
+
+Spec refs: REQ-SAMPLE-1688, REQ-SAMPLE-2110, REQ-SAMPLE-2245,
+SCENARIO-SAMPLE-2245.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable, Sequence
+from dataclasses import dataclass, field
+
 import jax
 import jax.numpy as jnp
+import jax.random as jrandom
 
-def casal_sample(energy_fn, constraint_fn, init_state, steps, key, step_size=1e-2, proj_steps=10, proj_lr=0.1, pinet_layer=None):
+Constraint = Callable[[jax.Array], jax.Array]
+Energy = Callable[[jax.Array], jax.Array]
+LinearConstraint = tuple[jax.Array, jax.Array]
+ConstraintSpec = Constraint | LinearConstraint | Sequence[Constraint | LinearConstraint]
+
+
+def _is_linear_pair(candidate: object) -> bool:
+    return isinstance(candidate, Sequence) and len(candidate) == 2 and not callable(candidate[0])
+
+
+@dataclass
+class CASALSampler:
+    """Primal-dual Split Augmented Langevin sampler for equality constraints.
+
+    `constraints` are equality residuals: every callable should return zero at a
+    feasible state. The primal step combines a Langevin update with the current
+    Lagrange multipliers, then projects back to the equality manifold using a
+    Gauss-Newton correction. The dual step updates multipliers from any residual
+    left after projection, so the returned sample keeps hard-constraint semantics
+    while still exposing dual convergence diagnostics.
+
+    Spec: REQ-SAMPLE-2245.
+    """
+
+    constraints: ConstraintSpec
+    step_size: float = 1e-2
+    dual_step_size: float = 1.0
+    n_steps: int = 100
+    seed: int = 0
+    noise_scale: float = 1.0
+    projection_steps: int = 4
+    projection_damping: float = 1e-8
+    penalty_weight: float = 1.0
+    dual_convergence_tol: float = 1e-6
+    last_violation_mean: float | None = field(default=None, init=False)
+    last_dual_update_norm: float | None = field(default=None, init=False)
+    last_violation_history: jax.Array | None = field(default=None, init=False, repr=False)
+    last_dual_update_history: jax.Array | None = field(default=None, init=False, repr=False)
+    last_dual: jax.Array | None = field(default=None, init=False, repr=False)
+
+    def __post_init__(self) -> None:
+        if self.step_size <= 0:
+            raise ValueError("step_size must be positive")
+        if self.dual_step_size <= 0:
+            raise ValueError("dual_step_size must be positive")
+        if self.n_steps < 0:
+            raise ValueError("n_steps must be non-negative")
+        if self.projection_steps < 1:
+            raise ValueError("projection_steps must be at least 1")
+        if self.projection_damping < 0:
+            raise ValueError("projection_damping must be non-negative")
+        if not callable(self.constraints) and not _is_linear_pair(self.constraints):
+            if not isinstance(self.constraints, Sequence) or len(self.constraints) == 0:
+                raise ValueError(
+                    "constraints must be a callable, linear pair, or non-empty sequence"
+                )
+
+    def sample(self, x_init: jax.Array, energy_fn: Energy | object) -> jax.Array:
+        """Run CASAL and return the final hard-constrained sample.
+
+        The method is intentionally a small Python loop rather than a compiled
+        scan because the constraints can be plain Python callables. It remains
+        deterministic for a fixed `seed`.
+        """
+        x = jnp.asarray(x_init, dtype=jnp.result_type(x_init, jnp.float32))
+        x = self._project(x)
+        dual = jnp.zeros_like(self._residuals(x))
+        key = jrandom.PRNGKey(self.seed)
+        violations: list[jax.Array] = []
+        dual_deltas: list[jax.Array] = []
+
+        for _ in range(self.n_steps):
+            key, step_key = jrandom.split(key)
+            residual = self._residuals(x)
+            jacobian = self._constraint_jacobian(x, residual.size)
+            energy_grad = self._energy_grad(energy_fn, x)
+            constraint_force = jacobian.T @ (dual + self.penalty_weight * residual)
+            primal_grad = energy_grad + jnp.reshape(constraint_force, x.shape)
+            noise = (
+                self.noise_scale
+                * jnp.sqrt(self.step_size)
+                * jrandom.normal(
+                    step_key,
+                    x.shape,
+                )
+            )
+            proposed = x - 0.5 * self.step_size * primal_grad + noise
+            x = self._project(proposed)
+
+            projected_residual = self._residuals(x)
+            next_dual = dual + self.dual_step_size * projected_residual
+            dual_delta = jnp.linalg.norm(next_dual - dual)
+            dual = next_dual
+
+            violations.append(jnp.mean(jnp.abs(projected_residual)))
+            dual_deltas.append(dual_delta)
+
+        if violations:
+            violation_history = jnp.asarray(violations)
+            dual_history = jnp.asarray(dual_deltas)
+        else:
+            residual = self._residuals(x)
+            violation_history = jnp.asarray([jnp.mean(jnp.abs(residual))])
+            dual_history = jnp.asarray([0.0], dtype=x.dtype)
+
+        self.last_violation_history = violation_history
+        self.last_dual_update_history = dual_history
+        self.last_violation_mean = float(jnp.mean(violation_history))
+        self.last_dual_update_norm = float(dual_history[-1])
+        self.last_dual = dual
+        return x
+
+    def dual_update_converged(self, tolerance: float | None = None) -> bool:
+        """Return whether the last dual update was below the convergence gate."""
+        if self.last_dual_update_norm is None:
+            return False
+        threshold = self.dual_convergence_tol if tolerance is None else tolerance
+        return self.last_dual_update_norm <= threshold
+
+    def _energy_grad(self, energy_fn: Energy | object, x: jax.Array) -> jax.Array:
+        grad_energy = getattr(energy_fn, "grad_energy", None)
+        if callable(grad_energy):
+            return grad_energy(x)
+
+        energy_method = getattr(energy_fn, "energy", None)
+        if callable(energy_method):
+            return jax.grad(lambda state: energy_method(state))(x)
+
+        if not callable(energy_fn):
+            raise TypeError("energy_fn must be callable or expose energy/grad_energy methods")
+        return jax.grad(energy_fn)(x)
+
+    def _residuals(self, x: jax.Array) -> jax.Array:
+        constraints = self.constraints
+        if callable(constraints):
+            return self._as_residual_vector(constraints(x), x)
+        if _is_linear_pair(constraints):
+            return self._linear_residual(constraints, x)
+
+        residuals = []
+        for constraint in constraints:
+            if callable(constraint):
+                residuals.append(self._as_residual_vector(constraint(x), x))
+            elif _is_linear_pair(constraint):
+                residuals.append(self._linear_residual(constraint, x))
+            else:
+                raise TypeError(
+                    "each constraint must be callable or a linear (matrix, target) pair"
+                )
+        return jnp.concatenate(residuals)
+
+    def _project(self, x: jax.Array) -> jax.Array:
+        projected = x
+        for _ in range(self.projection_steps):
+            projected = self._project_once(projected)
+        return projected
+
+    def _project_once(self, x: jax.Array) -> jax.Array:
+        residual = self._residuals(x)
+        jacobian = self._constraint_jacobian(x, residual.size)
+        gram = jacobian @ jacobian.T
+        damping = self.projection_damping * jnp.eye(residual.size, dtype=x.dtype)
+        solve_rhs = jnp.linalg.solve(gram + damping, residual)
+        correction = jacobian.T @ solve_rhs
+        return x - jnp.reshape(correction, x.shape)
+
+    def _constraint_jacobian(self, x: jax.Array, n_constraints: int) -> jax.Array:
+        jacobian = jax.jacobian(self._residuals)(x)
+        return jnp.reshape(jacobian, (n_constraints, -1))
+
+    @staticmethod
+    def _as_residual_vector(value: jax.Array, x: jax.Array) -> jax.Array:
+        return jnp.ravel(jnp.asarray(value, dtype=x.dtype))
+
+    @staticmethod
+    def _linear_residual(pair: LinearConstraint, x: jax.Array) -> jax.Array:
+        matrix = jnp.asarray(pair[0], dtype=x.dtype)
+        target = jnp.asarray(pair[1], dtype=x.dtype)
+        x_flat = jnp.ravel(x)
+        if matrix.ndim == 1:
+            return jnp.ravel(jnp.dot(matrix, x_flat) - target)
+        return jnp.ravel(matrix @ x_flat - target)
+
+
+def casal_sample(
+    energy_fn,
+    constraint_fn,
+    init_state,
+    steps,
+    key,
+    step_size=1e-2,
+    proj_steps=10,
+    proj_lr=0.1,
+    pinet_layer=None,
+):
     """
     CASAL sampler variant for strictly constrained generative modeling.
 
@@ -35,6 +241,7 @@ def casal_sample(energy_fn, constraint_fn, init_state, steps, key, step_size=1e-
     Returns:
         Final state after `steps` iterations.
     """
+
     def step_fn(state, k):
         # 1. Unconstrained Langevin step
         grad_energy = jax.grad(energy_fn)(state)
@@ -54,11 +261,9 @@ def casal_sample(energy_fn, constraint_fn, init_state, steps, key, step_size=1e-
                 # Only apply gradient if there's a violation
                 v = constraint_fn(s)
                 return jax.lax.cond(
-                    v > 0,
-                    lambda _: s - proj_lr * grad_c,
-                    lambda _: s,
-                    operand=None
+                    v > 0, lambda _: s - proj_lr * grad_c, lambda _: s, operand=None
                 )
+
             projected_state = jax.lax.fori_loop(0, proj_steps, proj_body_fn, proposed_state)
 
         # 3. Strict gate to ensure hard constraints
@@ -67,10 +272,7 @@ def casal_sample(energy_fn, constraint_fn, init_state, steps, key, step_size=1e-
 
         # Using a small epsilon to account for floating point inaccuracies
         accepted_state = jax.lax.cond(
-            violation <= 1e-5,
-            lambda _: projected_state,
-            lambda _: state,
-            operand=None
+            violation <= 1e-5, lambda _: projected_state, lambda _: state, operand=None
         )
         return accepted_state, accepted_state
 

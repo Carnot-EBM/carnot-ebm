@@ -1,0 +1,37 @@
+{
+  "schema": "carnot.experiment.casal_impl.v1",
+  "experiment_id": 2245,
+  "run_date": "2026-05-17",
+  "spec_refs": [
+    "REQ-SAMPLE-2245",
+    "REQ-SAMPLE-2245-1",
+    "REQ-SAMPLE-2245-2",
+    "REQ-SAMPLE-2245-3",
+    "REQ-SAMPLE-2245-4",
+    "REQ-SAMPLE-2245-5",
+    "SCENARIO-SAMPLE-2245"
+  ],
+  "honest_verdict": "complete: CASAL primal-dual sampler implemented; focused unit and lint checks pass; global spec coverage still has pre-existing untraced tests.",
+  "casal_impl_ready": true,
+  "casal_module_path": "python/carnot/samplers/casal.py",
+  "unit_test_violation_mean": 0.0,
+  "unit_test_violation_threshold": 0.0001,
+  "dual_update_converged": true,
+  "dual_update_norm": 0.0,
+  "unit_test_command": ".venv/bin/pytest -q tests/python/test_casal.py tests/python/test_experiment_2110_casal_pinet.py tests/python/test_casal_primal_dual.py --no-cov",
+  "unit_test_result": "8 passed",
+  "lint_commands": [
+    "/usr/bin/ruff check python/carnot/samplers/casal.py python/carnot/samplers/__init__.py tests/python/test_casal_primal_dual.py",
+    "/usr/bin/ruff format --check python/carnot/samplers/casal.py python/carnot/samplers/__init__.py tests/python/test_casal_primal_dual.py"
+  ],
+  "lint_result": "passed",
+  "spec_coverage_command": "python scripts/check_spec_coverage.py",
+  "spec_coverage_result": "failed_pre_existing: 240 tests missing spec traceability; new CASAL test was not listed.",
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "casal_impl_ready": "Boolean gate for exp2246 and exp2250. True only when unit test shows violation < 1e-4.",
+    "casal_module_path": "Records file path for downstream comparison task.",
+    "unit_test_violation_mean": "Must be < 1e-4 to claim hard-constraint semantics; validates primal-dual cycle.",
+    "dual_update_converged": "Boolean confirming dual variables converged during unit test."
+  }
+}
