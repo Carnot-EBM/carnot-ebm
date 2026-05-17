@@ -4044,3 +4044,4 @@ Error |
 | 2026-05-17 03:21 UTC | Phase 0: Archive .211 and activate .212 | OK | cache hit: 81 passed, 1 warning in 4.81s |
 | 2026-05-17 03:25 UTC | Phase 1: Hardware-Assisted DAB Module | OK | 81 passed, 1 warning in 5.30s |
 | 2026-05-17 03:27 UTC | Phase 1: DAB LUT Hardware Accounting | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2133-hardware-dab-module.result (actual |
+| 2026-05-17 03:29 UTC | Phase 1: DAB LUT Hardware Accounting | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2133-hardware-dab-module.result (actual |
