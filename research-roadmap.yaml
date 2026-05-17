@@ -1,197 +1,229 @@
-milestone: "2026.05.219"
-milestone_title: "Primal-Dual Decoding, Formal KANs, and Robust CSL"
-milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+milestone: "2026.05.220"
+milestone_title: "Dynamic EBCN Extraction, HILED, and Continuous Semantic Pruning"
+milestone_doc: "openspec/change-proposals/research-roadmap-v220.md"
 tasks:
-  - id: exp2206-archive-and-activate
-    title: "Phase 0: Archive .218 and activate .219"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2206_archive.json"
+  - id: exp2217-archive-and-activate
+    title: "Phase 0: Archive .219 and activate .220"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2217_archive.json"
     max_turns: 20
     prompt: |
-      CONTEXT: Milestone 2026.05.218 has completed. We must prepare for 2026.05.219.
+      CONTEXT: Milestone 2026.05.219 has completed. We must prepare for 2026.05.220.
       EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
-      TASK: Archive 2026.05.218 to research-complete.yaml and initialize the .219 milestone in ops/changelog.md.
+      TASK: Archive 2026.05.219 to research-complete.yaml and initialize the .220 milestone in ops/changelog.md.
       CONCRETE STEPS:
-      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.218 entry, setting completed date to {date}.
+      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.219 entry, setting completed date to {date}.
       2. Clear `research-roadmap.yaml` and copy the new milestone structure from `research-roadmap-next.yaml`.
-      3. Add a "## {date} (Milestone 2026.05.219 Operational Retrospective)" stub in `ops/changelog.md`.
-      4. Write deliverable to `results/experiment_2206_archive.json`.
+      3. Add a "## {date} (Milestone 2026.05.220 Operational Retrospective)" stub in `ops/changelog.md`.
+      4. Write deliverable to `results/experiment_2217_archive.json`.
       
       REQUIRED ARTIFACT FIELDS:
         honest_verdict:
           principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2207-primal-dual-guided-decoding
-    title: "Phase 1: Primal-Dual Guided Decoding Optimization"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2207_primal_dual.json"
+  - id: exp2218-jle-dynamic-elicitation
+    title: "Phase 1: Joint Latent Energy Dynamic Constraint Elicitation"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2218_jle_dce.json"
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: We must optimize discrete energy-guided decoding. Recent work (arxiv:2605.10) shows modifying token logits directly via adaptive Lagrangian multipliers (Primal-Dual Guided Decoding) is vastly more efficient than Gumbel-softmax outer loops.
+      CONTEXT: Legacy extraction is fragile. Joint Latent Energy and Dynamic Constraint Elicitation (JLE-DCE, arxiv:2605.16102) maps unstructured text to formal constraints dynamically using continuous latent EBM scoring.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/extract.py, {project_root}/python/carnot/models/ebcn.py
+      TASK: Implement JLE-DCE integration to parse prompts directly into EBCN State-Space formats.
+      CONCRETE STEPS:
+      1. Create a `python/carnot/pipeline/dynamic_extract.py` adapter.
+      2. Implement a latent projection head mapping text embeddings to the structural coherence score defined in EBCN.
+      3. Ensure MODEL_SPECS includes `unsloth/Qwen3.6-35B-A3B-GGUF` for the embedding extraction process.
+      4. Write deliverable to `results/experiment_2218_jle_dce.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2219-sota-extraction-eval
+    title: "Phase 1: Local SOTA Model Extraction Evaluation"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2219_sota_extract.json"
+    gated_on:
+      - upstream: exp2218-jle-dynamic-elicitation
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: We must verify the JLE-DCE extraction on flagship local GGUF models to ensure zero-false-accept logic constraints are formulated correctly before passing them to the verify-repair solver.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/dynamic_extract.py, {project_root}/scripts/check_spec_coverage.py
+      TASK: Evaluate extraction fidelity using `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Run the test suite for the dynamic extraction adapter against 10 sample unstructured rule prompts.
+      2. Ensure constraint validation rate and false accept rate are recorded.
+      3. Write deliverable to `results/experiment_2219_sota_extract.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2220-primal-dual-integration
+    title: "Phase 1: Primal-Dual Decoding with JLE Constraints"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2220_pd_integration.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    gated_on:
+      - upstream: exp2219-sota-extraction-eval
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: Combine the new dynamically elicited constraints with the Primal-Dual Guided Decoding pipeline from .219.
       EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/guided_decoding.py
-      TASK: Implement Primal-Dual Guided Decoding for discrete generation.
+      TASK: Wire the dynamic extraction pipeline output to the Primal-Dual logit modification Lagrangian loop.
       CONCRETE STEPS:
-      1. Replace the inner iterative loops with Lagrangian-based logit modifications in `guided_decoding.py`.
-      2. Ensure it leverages MODEL_SPECS: `unsloth/gemma-4-31B-it-GGUF` or `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      3. Write deliverable to `results/experiment_2207_primal_dual.json`.
+      1. Modify `guided_decoding.py` to accept the new JLE structural tensors.
+      2. Write deliverable to `results/experiment_2220_pd_integration.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2208-energy-based-constraint-networks
-    title: "Phase 1: EBCN Structural Coherence State-Space Model"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2208_ebcn.json"
+  - id: exp2221-hiled-software-bridge
+    title: "Phase 2: HILED PCIe/AXI Software Bridge Mock"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2221_hiled_bridge.json"
     agent_type: "codex"
     model: "gpt-5.5"
     prompt: |
-      CONTEXT: The ArithmeticExtractor regex is obsolete. Energy-Based Constraint Networks (arxiv:2605.00960) use a state-space model to produce scalar energy scores for global structural coherence, localizing violations explicitly.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/extract.py
-      TASK: Replace or augment regex extraction with an EBCN state-space coherence scorer.
+      CONTEXT: We must offload the energy computation. Hardware-in-the-Loop Energy Decoding (HILED) requires an interface bridge to push the KAN array evaluation to hardware via AXI/PCIe.
+      EXISTING CODE TO READ FIRST: {project_root}/hardware/kv260/, {project_root}/python/carnot/inference/guided_decoding.py
+      TASK: Create a Python-to-C++-to-Hardware bridge (mocked for now) to simulate HILED latency.
       CONCRETE STEPS:
-      1. Create `python/carnot/models/ebcn.py` implementing a structural coherence check that outputs local constraint violation energy.
-      2. Wire it into the constraint extraction pipeline.
-      3. Write deliverable to `results/experiment_2208_ebcn.json`.
+      1. Implement `python/carnot/hardware/hiled_bridge.py` establishing an asynchronous offload interface.
+      2. Simulate a fixed latency penalty and check asynchronous non-blocking throughput.
+      3. Write deliverable to `results/experiment_2221_hiled_bridge.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2209-formal-kan-cbc-verification
-    title: "Phase 2: Formal Synthesis of KAN Control Barrier Certificates"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2209_kan_cbc.json"
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: We need formal zero-false-accept guarantees. KAN4CBC (IJCAI 2025) leverages SMT logic to formally synthesize safe KAN control barrier certificates.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/verify/
-      TASK: Implement an SMT-based (Z3) formal verification layer for KAN splines.
-      CONCRETE STEPS:
-      0. PRECONDITIONS: Check `python -c "import z3"`
-      1. Write `python/carnot/verify/kan_cbc.py` mapping 1D splines to SMT logic rules.
-      2. Verify constraint satisfaction on a mock constraint graph.
-      3. Write deliverable to `results/experiment_2209_kan_cbc.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2210-lipkan-robustness-constraints
-    title: "Phase 2: LipKAN Lipschitz-Regularized Architecture"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2210_lipkan.json"
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: KANs are prone to variance. LipKAN (NeurIPS 2025) bounds model variance using L1.5 Lipschitz regularization, making them robust.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
-      TASK: Introduce Lipschitz regularization constraints to the KAN training pipeline.
-      CONCRETE STEPS:
-      1. Implement L1.5 penalty terms for KAN spline generation.
-      2. Add the regularization path to the core EBM training loop.
-      3. Write deliverable to `results/experiment_2210_lipkan.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2211-kv260-kanele-synthesis-retry
-    title: "Phase 2: KV260 KANELÉ Synthesis with Verified Boundaries"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2211_kv260.json"
+  - id: exp2222-kv260-hiled-deployment
+    title: "Phase 2: KV260 Physical/Simulation Deployment Integration"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2222_kv260_hiled.json"
     model: "opus"
     max_turns: 100
     gated_on:
-      - upstream: exp2209-formal-kan-cbc-verification
+      - upstream: exp2221-hiled-software-bridge
         artifact_field: honest_verdict
         op: "contains"
         value: "complete"
     prompt: |
-      CONTEXT: The KANELÉ LUT bitstream failed previously. With formal barrier certificates (KAN4CBC), we must synthesize the LUT array mapping for KV260 hardware.
-      EXISTING CODE TO READ FIRST: {project_root}/hardware/kv260/
-      TASK: Write resilient Verilog RTL for the KAN LUTs and verify compilation bounds.
+      CONTEXT: The KANELÉ bitstream must process HILED requests. We need resilient integration code to interact with Vivado/KV260 simulations.
+      EXISTING CODE TO READ FIRST: {project_root}/hardware/kv260/kanele_lut_array_v2.v
+      TASK: Wire the KV260 Verilog simulation bindings to the HILED bridge.
       CONCRETE STEPS:
-      0. PRECONDITIONS: Check `command -v yosys`
-      1. Draft `hardware/kv260/kanele_lut_array_v2.v` incorporating the CBC guardrails.
-      2. Run OSS-CAD-Suite logic synthesis and report resource sizing.
-      3. Write deliverable to `results/experiment_2211_kv260.json`.
+      0. PRECONDITIONS: Check `command -v yosys` and verify RTL logic paths.
+      1. Compile the hardware-side receiver logic for energy scores.
+      2. Record theoretical or simulated latency overhead for the hardware accounting ledger.
+      3. Write deliverable to `results/experiment_2222_kv260_hiled.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2212-fr11-continuous-lipkan-adaptation
-    title: "Phase 3: Continuous Self-Learning with Dynamic Lipschitz Bounds (FR-11)"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2212_csl_lipkan.json"
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: We must fulfill FR-11 (Continuous Self-Learning). To avoid catastrophic forgetting, we dynamically update LipKAN regularization boundaries during real-time online learning.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/verify_repair.py
-      TASK: Build a continuous learning adapter that dynamically adjusts variance constraints.
-      CONCRETE STEPS:
-      1. Implement online weight updates for the KAN constraints subject to L1.5 bounds.
-      2. Guarantee that `continuous_self_learning_task: true` is included in the output artifact to satisfy the CSL mandate.
-      3. Write deliverable to `results/experiment_2212_csl_lipkan.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2213-crosscoder-readout-repair
-    title: "Phase 3: Crosscoder Feature Readout Constraints Repair"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2213_crosscoder_repair.json"
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: The crosscoder feature readout constraints tests from .218 failed. We must repair and stabilize this structural check.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/jepa_predictor.py
-      TASK: Repair the Crosscoder penalty application for geometric capacity.
-      CONCRETE STEPS:
-      1. Analyze and fix the Crosscoder loss calculation in the learning objective.
-      2. Provide a unit test proving it does not catastrophically disrupt existing tasks.
-      3. Write deliverable to `results/experiment_2213_crosscoder_repair.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2214-scg-mem-schema-repair
-    title: "Phase 3: SCG-MEM Constrained Generative Memory Repair"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2214_scgmem_repair.json"
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: SCG-MEM encountered DOOMED_RERUN blocks. We must implement fallback heuristic schemas and ensure generative indices are safely parsed.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/grammar.py
-      TASK: Implement fault-tolerant parsing for Schema-Constrained Generative Memory.
-      CONCRETE STEPS:
-      1. Refactor the memory retrieval schema to permit partial reasoning block extraction.
-      2. Ensure it integrates safely with the new Primal-Dual logic.
-      3. Write deliverable to `results/experiment_2214_scgmem_repair.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2215-capstone-primal-dual-ebm
-    title: "Phase 4: Capstone Live GPU Evaluation (Primal-Dual Decoding + EBCN + LipKAN)"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2215_capstone.json"
+  - id: exp2223-hiled-decoding-smoke
+    title: "Phase 2: HILED Decoder Smoke Test"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2223_hiled_smoke.json"
     gated_on:
-      - upstream: exp2207-primal-dual-guided-decoding
+      - upstream: exp2222-kv260-hiled-deployment
         artifact_field: honest_verdict
         op: "contains"
         value: "complete"
     prompt: |
-      CONTEXT: Final integration test using Primal-Dual token logit modifiers, EBCN structural constraints, and LipKAN robust architectures.
+      CONTEXT: Validate that the LLM generation loop remains stable when verification is offloaded to the HILED bridge.
       EXISTING CODE TO READ FIRST: {project_root}/scripts/benchmark_pipeline.py
-      TASK: Run live end-to-end evaluation using local SOTA models.
+      TASK: Run a constrained decoding smoke test routing scoring through the HILED interface using `unsloth/gemma-4-26B-A4B-it-GGUF`.
       CONCRETE STEPS:
-      0. PRECONDITIONS: Check `torch.cuda.is_available()` and `unsloth/gemma-4-31B-it-GGUF` exists.
-      1. Execute the benchmark pipeline with `CARNOT_FORCE_LIVE=1` utilizing MODEL_SPECS: `unsloth/gemma-4-31B-it-GGUF` or `unsloth/Qwen3.6-35B-A3B-GGUF`.
-      2. Write deliverable to `results/experiment_2215_capstone.json`.
+      1. Configure inference to use the simulated FPGA interface.
+      2. Collect generation latency and token throughput metrics.
+      3. Write deliverable to `results/experiment_2223_hiled_smoke.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2224-semantic-memory-pruning
+    title: "Phase 3: Continuous Learning Semantic Pruning"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2224_semantic_pruning.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: FR-11 continuous self-learning stores too many constraints, causing catastrophic forgetting or mode collapse. We must implement a semantic similarity pruner for the replay buffer.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/verify_repair.py
+      TASK: Implement a replay buffer pruner that removes redundant formal constraints.
+      CONCRETE STEPS:
+      1. Add `prune_redundant_constraints` function to the continuous memory class using embedding distance thresholds.
+      2. Validate that it does not accidentally prune structurally distinct rules.
+      3. Guarantee that `continuous_self_learning_task: true` is set in the JSON artifact.
+      4. Write deliverable to `results/experiment_2224_semantic_pruning.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2225-pruning-retention-test
+    title: "Phase 3: FR-11 CSL Pruning Retention Validation"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2225_pruning_test.json"
+    gated_on:
+      - upstream: exp2224-semantic-memory-pruning
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: Ensure the pruned memory buffer does not cause the model to regress on previously learned constraints.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/check_spec_coverage.py
+      TASK: Run a retention cycle validation.
+      CONCRETE STEPS:
+      1. Simulate multiple self-learning episodes with heavy constraint injection.
+      2. Trigger the pruner and measure post-pruning constraint satisfaction rate.
+      3. Ensure `nonforgetting_rate` and `soundness_mistakes` are logged.
+      4. Write deliverable to `results/experiment_2225_pruning_test.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2226-csl-dynamic-bounds-repair
+    title: "Phase 3: Dynamic Lipschitz Bounds Multi-Session Sync"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2226_csl_bounds.json"
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prompt: |
+      CONTEXT: The dynamic Lipschitz boundaries from .219 need to be synced across the multi-session memory buffer to ensure consistency after pruning.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
+      TASK: Repair and stabilize the L1.5 bound adjustment during buffer compaction.
+      CONCRETE STEPS:
+      1. Ensure boundary recalculations occur immediately after semantic pruning.
+      2. Write a test asserting that LipKAN regularization values remain stable.
+      3. Write deliverable to `results/experiment_2226_csl_bounds.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2227-capstone-v220
+    title: "Phase 4: Capstone E2E GPU Pipeline Test"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2227_capstone.json"
+    max_turns: 50
+    gated_on:
+      - upstream: exp2220-primal-dual-integration
+        artifact_field: honest_verdict
+        op: "contains"
+        value: "complete"
+    prompt: |
+      CONTEXT: Full end-to-end milestone capstone using dynamic extraction, simulated HILED latency, and a pruned CSL constraint buffer.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/benchmark_pipeline.py
+      TASK: Run live validation of the pipeline using local MoE/Dense SOTA models.
+      CONCRETE STEPS:
+      0. PRECONDITIONS: Check `torch.cuda.is_available()` and target GGUFs exist.
+      1. Execute the comprehensive benchmark suite with JLE-DCE dynamic elicitation enabled and `unsloth/Qwen3.6-35B-A3B-GGUF` or `unsloth/gemma-4-31B-it-GGUF`.
+      2. Write deliverable to `results/experiment_2227_capstone.json`.
       
       REQUIRED ARTIFACT FIELDS:
-        duration_s: "Compute time"
         honest_verdict: "Terminal prefix"
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2216-milestone-219-retro
-    title: "Phase 4: Milestone 2026.05.219 Retrospective"
-    milestone: "2026.05.219"
-    deliverable: "results/experiment_2216_retro.json"
+  - id: exp2228-milestone-220-retro
+    title: "Phase 4: Milestone 2026.05.220 Retrospective"
+    milestone: "2026.05.220"
+    deliverable: "results/experiment_2228_retro.json"
     max_turns: 20
     prompt: |
-      CONTEXT: Conclude milestone .219.
+      CONTEXT: Conclude milestone .220.
       EXISTING CODE TO READ FIRST: {project_root}/ops/conductor-log.md
-      TASK: Write the retrospective summarizing the results of Primal-Dual decoding and Formal KAN synthesis, then update ops/status.md.
+      TASK: Write the retrospective summarizing the results of JLE-DCE, HILED, and CSL Semantic Pruning, then update ops/status.md.
       CONCRETE STEPS:
-      1. Extract results from experiments 2207-2215.
-      2. Write deliverable to `results/experiment_2216_retro.json`.
+      1. Extract results from experiments 2218-2227.
+      2. Record final metrics and prepare `.221` handoff.
+      3. Write deliverable to `results/experiment_2228_retro.json`.
       
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: "Terminal prefix"
