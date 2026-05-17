@@ -4346,3 +4346,5 @@ Ripgrep i |
 | 2026-05-17 13:18 UTC | Phase 2: KAN-CL FR-11 Retention Validation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2231-kancl-per-knot-regularization) |
 | 2026-05-17 13:18 UTC | Phase 3: Deep RKHS Superposition Network (Wahkon) | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 3.82s |
 | 2026-05-17 13:20 UTC | Phase 3: Wahkon MAP vs KAEMEnergy Fast-Path | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2233-wahkon-rkhs-impl) |
+| 2026-05-17 13:21 UTC | Phase 4: AdamFLIP Hard Constraint Optimizer | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 3.70s |
+| 2026-05-17 13:23 UTC | Phase 3: Wahkon MAP vs KAEMEnergy Fast-Path | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2233-wahkon-rkhs-impl) |
