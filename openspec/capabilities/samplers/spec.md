@@ -531,6 +531,46 @@ violation below `1e-4`
 **And** `results/experiment_2245_casal_impl.json` records the implementation
 gate outcome.
 
+### REQ-SAMPLE-2246: CASAL vs AdamFLIP Constraint Violation Benchmark
+
+Carnot MUST compare CASAL inference-time hard equality sampling against an
+AdamFLIP-trained soft-penalty MCMC baseline on the same 3D continuous EBM
+energy landscape.
+
+Sub-requirements:
+- REQ-SAMPLE-2246-1: The benchmark SHALL import
+  `python/carnot/samplers/casal.py` and `python/carnot/training/adamflip.py`
+  before sampling, and SHALL write `blocked_casal_missing` or
+  `blocked_adamflip_missing` if either import precondition fails.
+- REQ-SAMPLE-2246-2: The benchmark SHALL define a 3D `ContinuousEBM` with two
+  hard equality constraints and SHALL draw at least 100 samples from each
+  regime using the same random seed and initial states.
+- REQ-SAMPLE-2246-3: Regime A SHALL run MCMC with AdamFLIP-trained EBM
+  parameters and a post-training soft constraint penalty.
+- REQ-SAMPLE-2246-4: Regime B SHALL run `CASALSampler` primal-dual sampling on
+  the same trained energy parameters and equality constraints.
+- REQ-SAMPLE-2246-5: The artifact SHALL report
+  `casal_violation_mean`, `adamflip_violation_mean`, maximum constraint
+  violation for each regime, energy mean for each regime, `n_samples`, and
+  `random_seed`.
+- REQ-SAMPLE-2246-6: `casal_validated` SHALL be true exactly when
+  `casal_violation_mean <= adamflip_violation_mean / 2`.
+- REQ-SAMPLE-2246-7: Exp 2246 SHALL write
+  `results/experiment_2246_casal_vs_adamflip.json` with a terminal
+  `honest_verdict` beginning with `complete:` only when the validation gate
+  passes.
+
+### SCENARIO-SAMPLE-2246: CASAL Beats AdamFLIP Soft-Penalty MCMC On Constraint Violation
+
+**Given** a deterministic 3D continuous EBM with two equality constraints
+**And** AdamFLIP has trained the EBM parameters against those constraints
+**When** 100 shared-seed initial states are sampled by soft-penalty MCMC and
+CASAL
+**Then** the artifact records both mean and maximum constraint violations
+**And** `casal_validated` equals the half-violation acceptance gate
+**And** `results/experiment_2246_casal_vs_adamflip.json` contains the required
+field-principle metadata for downstream capstone gating.
+
 ### REQ-SAMPLE-1807: Lyapunov Control Barrier Functions in Langevin Sampler
 
 Carnot MUST provide a way to integrate Lyapunov Control Barrier Functions (CBFs) as
