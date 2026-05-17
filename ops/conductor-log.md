@@ -4534,3 +4534,5 @@ Ripgrep i |
 | 2026-05-17 22:13 UTC | Phase 3: Sparse Ising Connectivity via Copy-Node G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 22:15 UTC | Phase 3: Sparse Ising Connectivity via Copy-Node G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 22:17 UTC | Phase 4: Capstone E2E Live Generation (.226) — FST | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2296-fst-live-gen-v6, exp2298-kancl-n256- |
+| 2026-05-17 22:17 UTC | Phase 4: Milestone 2026.05.226 Retrospective | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
+| 2026-05-17 22:19 UTC | Phase 4: Capstone E2E Live Generation (.226) — FST | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2296-fst-live-gen-v6, exp2298-kancl-n256- |
