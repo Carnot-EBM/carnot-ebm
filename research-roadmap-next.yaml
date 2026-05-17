@@ -1,0 +1,210 @@
+milestone: "2026.05.217"
+milestone_title: "CSL Stability, Fast Thermodynamic Sampling, and KAN-RKHS Superposition"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+tasks:
+  - id: exp2188-archive-and-activate
+    title: "Phase 0: Archive .216 and activate .217"
+    milestone: "2026.05.217"
+    deliverable: "results/experiment_2188_archive.json"
+    max_turns: 20
+    prior_failures:
+      - experiment_id: exp1825-archive-activate
+        verdict: unspecified
+        addressed_by: "Routine orchestration task; no prior failure requires addressing here."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Milestone 2026.05.216 has completed. We must prepare for 2026.05.217.
+      EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
+      TASK: Archive 2026.05.216 to research-complete.yaml and initialize the .217 milestone in ops/changelog.md.
+      CONCRETE STEPS:
+      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.216 entry, setting completed date to {date}.
+      2. Clear `research-roadmap.yaml` and copy the new milestone structure from `research-roadmap-next.yaml`.
+      3. Add a "## {date} (Milestone 2026.05.217 Operational Retrospective)" stub in `ops/changelog.md`.
+      4. Write deliverable to `results/experiment_2188_archive.json`.
+      
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_ to allow the conductor's reconciler to correctly classify the state."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2189-muon-ogd-implementation
+    title: "Phase 1: Muon-OGD Spectral Orthogonal Gradient Projection for CSL"
+    milestone: "2026.05.217"
+    deliverable: "results/experiment_2189_muon_ogd.json"
+    max_turns: 50
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prior_failures:
+      - experiment_id: exp2112-muon-ogd-projection
+        verdict: unspecified
+        addressed_by: "Previous execution was unspecified/failed due to agentic instability. We now explicitly use the codex agent type and simplify the integration to only update the JEPA predictor weights."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Tier 3 Continuous Self-Learning suffers from catastrophic forgetting. We need to implement Muon-OGD (arxiv:2605.08949), which uses spectral-norm-aware orthogonal projection to update parameters without overwriting past tasks.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/jepa_predictor.py
+      TASK: Implement the Muon-OGD optimizer update rule for the JEPA predictor CSL pipeline.
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import torch; assert torch.cuda.is_available()"` succeeds
+         If ANY precondition is missing, write honest_verdict `blocked_cuda_missing` and exit. DO NOT fabricate.
+      1. Modify `jepa_predictor.py` (or create a new optimizer file) to support Muon-OGD spectral-norm projection.
+      2. Write a unit test ensuring orthogonal updates do not degrade previous task weights.
+      3. Write deliverable to `results/experiment_2189_muon_ogd.json`.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+        duration_s:
+          principle: "Real compute takes wall-clock time; missing or implausibly-short duration is the load-bearing signal for fabrication detection."
+        preconditions_checked:
+          principle: "Records WHICH resources the agent verified before launching; pre-empts the fabrication mode."
+        result:
+          principle: "Captures the explicit outcome of the experiment to be used in downstream gate evaluations."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2190-digitally-optimized-alps
+    title: "Phase 2: Digitally Optimized Initializations for ALPS"
+    milestone: "2026.05.217"
+    deliverable: "results/experiment_2190_alps_init.json"
+    max_turns: 50
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prior_failures:
+      - experiment_id: exp2109-alps-sampler-module
+        verdict: unspecified
+        addressed_by: "Previous execution was unspecified. We now use Mpemba-inspired initializations to drastically reduce thermalization time."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: Langevin sampling (ALPS) thermalization is too slow. Following arxiv:2603.24183, a digital pre-processor can compute an Mpemba-inspired optimized initialization to suppress slow relaxation modes before launching the thermodynamic sampler.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/guided_decoding.py
+      TASK: Integrate digitally optimized covariance initialization into the ALPS sampler.
+      CONCRETE STEPS:
+      1. Implement the digital initialization calculation for the quadratic energy landscapes.
+      2. Update the ALPS module to accept and apply this initialized state.
+      3. Write deliverable to `results/experiment_2190_alps_init.json`.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2191-multi-fpga-neuroring-rtl
+    title: "Phase 2: Multi-FPGA NeuroRing Stream-Dataflow RTL Design"
+    milestone: "2026.05.217"
+    deliverable: "results/experiment_2191_neuroring_rtl.json"
+    max_turns: 100
+    model: "opus"
+    prior_failures:
+      - experiment_id: exp2117-neuroring-topology-sim
+        verdict: unspecified
+        addressed_by: "Previous run did not produce verified RTL. We now mandate strict yosys synthesis checks and use opus model for hardware tasks."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: The KV260 k_max=5 architecture is bottlenecking complex Ising constraint translation. NeuroRing (arxiv:2604.28059) describes a bidirectional ring topology for multi-FPGA stream-dataflow. We must draft the RTL.
+      EXISTING CODE TO READ FIRST: {project_root}/hardware/kv260/ising_sampler_v5.v
+      TASK: Create `hardware/kv260/neuroring_sampler.v` applying a stream-dataflow ring topology.
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `command -v yosys` succeeds
+         If ANY precondition is missing, write honest_verdict `blocked_yosys_missing` and exit. DO NOT fabricate.
+      1. Draft `neuroring_sampler.v` using the bidirectional ring stream dataflow architecture.
+      2. Verify compilation with `yosys`.
+      3. Write deliverable to `results/experiment_2191_neuroring_rtl.json`.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+        preconditions_checked:
+          principle: "Records WHICH resources the agent verified before launching; pre-empts the fabrication mode."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2192-wahkon-rkhs-kan
+    title: "Phase 3: Wahkon RKHS Superposition KAN Verifier"
+    milestone: "2026.05.217"
+    deliverable: "results/experiment_2192_wahkon.json"
+    max_turns: 50
+    agent_type: "codex"
+    model: "gpt-5.5"
+    prior_failures:
+      - experiment_id: exp1909-wahkon
+        verdict: unspecified
+        addressed_by: "Previous run lacked specific bounding to KAN verifiers. We now mandate strict adherence to RKHS edge-function regularization within substrate_kan.py."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT: KANs lack finite-sample guarantees. Wahkon (arxiv:2605.14041) unifies KANs with Reproducing Kernel Hilbert Space (RKHS) regularization.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
+      TASK: Add RKHS regularization and deep superposition logic to the KAN verifier module.
+      CONCRETE STEPS:
+      1. Create or modify `substrate_kan.py` to support RKHS regularization on the spline edge functions.
+      2. Implement a training routine using the penalized MAP estimator.
+      3. Write deliverable to `results/experiment_2192_wahkon.json`.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2193-live-capstone-evaluation
+    title: "Phase 4: Capstone Live GPU Evaluation (Muon-OGD + Wahkon)"
+    milestone: "2026.05.217"
+    deliverable: "results/experiment_2193_capstone.json"
+    max_turns: 50
+    prior_failures:
+      - experiment_id: exp328-live-fullscale-benchmark
+        verdict: unspecified
+        addressed_by: "Previous live evaluation lacked spectral-norm orthogonal constraints. This iteration includes Muon-OGD to prevent catastrophic forgetting during evaluation."
+        retire_if_same_verdict: true
+    gated_on:
+      - upstream: exp2189-muon-ogd-implementation
+        artifact_field: result
+        op: "in"
+        value: "OK"
+    prompt: |
+      CONTEXT: Final live GPU evaluation of the new Muon-OGD CSL pipeline and Wahkon KAN verifier on the GSM8K benchmark.
+      EXISTING CODE TO READ FIRST: {project_root}/scripts/benchmark_pipeline.py
+      TASK: Run the evaluation using mandated SOTA GGUFs and evaluate forgetting metrics.
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/` returns non-empty (or fallback to Qwen3.6-35B-A3B-GGUF)
+         b. `python -c "import torch; assert torch.cuda.is_available()"` succeeds
+         If ANY precondition is missing, write honest_verdict `blocked_model_or_cuda_missing` and exit. DO NOT fabricate.
+      1. Run benchmark script on GSM8K using `unsloth/gemma-4-31B-it-GGUF`.
+      2. Ensure `CARNOT_FORCE_LIVE=1` is set.
+      3. Collect metrics for non-forgetting and error detection.
+      4. Write deliverable to `results/experiment_2193_capstone.json`.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+        random_seed:
+          principle: "Determinism is the precondition for reproducibility."
+        reproducibility_checksum:
+          principle: "Content-addressed hash of the run inputs catches silent drift."
+        duration_s:
+          principle: "Real compute takes wall-clock time."
+        preconditions_checked:
+          principle: "Records WHICH resources the agent verified before launching; pre-empts the fabrication mode."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2194-milestone-217-retro
+    title: "Phase 4: Milestone 2026.05.217 Retrospective"
+    milestone: "2026.05.217"
+    deliverable: "results/experiment_2194_retro.json"
+    max_turns: 20
+    prior_failures:
+      - experiment_id: exp270-operational-retrospective
+        verdict: unspecified
+        addressed_by: "Routine orchestration task; no prior failure requires addressing here."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT: Conclude milestone .217.
+      EXISTING CODE TO READ FIRST: {project_root}/ops/conductor-log.md
+      TASK: Write the retrospective and update ops/status.md.
+      CONCRETE STEPS:
+      1. Summarize findings from experiments 2189 through 2193.
+      2. Write deliverable to `results/experiment_2194_retro.json`.
+      
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "The honest_verdict field MUST start with one of the terminal prefixes: complete: / complete_ / success: / success_ / passed: / passed_ / shipped: / shipped_."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

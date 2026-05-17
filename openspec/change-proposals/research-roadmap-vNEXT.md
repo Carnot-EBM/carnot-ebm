@@ -1,50 +1,36 @@
-# Carnot Research Roadmap: Milestone 2026.05.216
+# Carnot Research Roadmap: vNEXT (Milestone 2026.05.217)
 
-**Theme:** FPGA Synthesis, KAN Continual Learning (KAN-CL), and Energy-Guided Decoding
+## 1. What Previous Milestones Proved
+Milestone 2026.05.216 focused on KAN Continual Learning (KAN-CL), ActFocus token-level reweighting, and Energy-Guided Decoding. While these mechanisms laid the groundwork for Tier 3 continuous self-learning, our telemetry indicates that catastrophic forgetting remains a severe issue during online adaptation. Furthermore, our hardware acceleration paths (ALPS Langevin sampling and KV260 k_max=5 RTL) face challenges: ALPS thermalization is too slow for real-time decoding, and the k_max=5 FPGA limit restricts the complexity of transpilable constraints.
 
-## 1. Status at End of 2026.05.215
+## 2. The 3 Biggest Gaps to PRD Vision
+1. **Tier 3 Continuous Self-Learning (CSL) Instability:** The PRD (FR-11) demands autonomous directed self-learning. Currently, when the system adapts its constraints online, it suffers from catastrophic forgetting. We must implement spectral-norm orthogonal projection (Muon-OGD) to constrain updates safely.
+2. **Slow Thermodynamic Sampling:** Langevin sampling is the backbone of our energy-guided decoding, but its thermalization time is too high. We need digitally optimized initializations (Mpemba effect) to suppress slow relaxation modes.
+3. **Statistical Guarantees for Verifiers:** Our KAN-based verifiers lack finite-sample performance bounds. Integrating RKHS superposition (Wahkon) will provide the necessary theoretical rigor and out-of-distribution robustness.
 
-Milestone .215 effectively pivoted the KV260 hardware path towards $k_{max}=5$ (Manifold Substitution), brought up Z3/NSVIF as our primary semantic constraint extractor on instruction-tuned models, and instantiated a JEPA-based predictor for Tier 3 Continuous Self-Learning (CSL). However:
-1. The FPGA $k_{max}=5$ models remain in simulation. We need Verilog RTL synthesis via OSS-CAD-Suite to prove hardware feasibility.
-2. The JEPA predictor suffers from Catastrophic Forgetting when learning new constraint paradigms. We must adopt KAN-CL (per-knot importance regularization) to fix this.
-3. The Verify-and-Repair loop treats all tokens equally. We must fix the "Action Bottleneck" (arxiv:2605.14558) via energy-weighted gradient redistribution (ActFocus) so our predictor accurately assigns blame.
-4. Energy-Guided Decoding needs to be fully instantiated on the GGUF runtime to mitigate hallucination dynamically.
+## 3. Phase Descriptions
 
-## 2. Goals for 2026.05.216
+### Phase 0: Activation
+Archive 2026.05.216 and initialize 2026.05.217.
 
-1. **KAN Continual Learning (KAN-CL):** Implement per-knot importance regularization in our KAN energy tiers to completely eliminate catastrophic forgetting during continuous self-learning.
-2. **Resolve Action Bottleneck:** Implement ActFocus token reweighting. Ensure that constraint violation feedback strongly penalizes the specific 'action' tokens that violated the constraints, rather than distributing loss evenly over reasoning tokens.
-3. **KV260 RTL Synthesis:** Finalize the $k_{max}=5$ Verilog design and run it through `yosys` via OSS-CAD-Suite to emit a real hardware bitstream, completing the FPGA bring-up.
-4. **Energy-Guided Decoding:** Apply Energy-Guided Decoding strategies directly on live GGUF `unsloth` models.
+### Phase 1: Tier 3 Continuous Self-Learning Stability
+Integrate the Muon-OGD spectral orthogonal gradient projection (arxiv:2605.08949) into the CSL pipeline. This replaces standard Frobenius-norm updates with spectral-norm-aware orthogonal projections, ensuring new constraints do not overwrite previously learned ones.
 
-## 3. Architecture
+### Phase 2: Fast Thermodynamic Sampling & Hardware Evolution
+Implement digitally optimized initializations (arxiv:2603.24183) for the ALPS module, shifting some initialization compute to a digital pre-processor to exponentially speed up Langevin thermalization. Additionally, draft the NeuroRing (arxiv:2604.28059) RTL to bypass the KV260 k_max=5 bottleneck via a stream-dataflow ring architecture.
 
-```mermaid
-graph TD
-    A[SOTA GGUF (Live GPU)] -->|Energy-Guided Decoding| B[LLM Extractor / Z3 Formalizer]
-    B -->|Constraints| C[KAN Energy Function + KAN-CL]
-    C -->|ActFocus Weighting| D[Tier 3 JEPA Predictor]
-    D -->|Continuous Training| E[Adaptive Data Harvester]
-    C -.->|Verilog RTL Synthesis| F[KV260 FPGA (k_max=5)]
-```
+### Phase 3: KAN Verifier Rigor
+Adopt the Wahkon architecture (arxiv:2605.14041), uniting Kolmogorov-Arnold Networks with Reproducing Kernel Hilbert Space (RKHS) regularization. This provides the finite-sample guarantees missing from standard KANs and acts as a robust verifier against null-space mimicry attacks.
 
-## 4. Execution Phases
+### Phase 4: Capstone Evaluation
+Perform live GPU evaluation using the mandated SOTA models (`unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`). The pipeline must run end-to-end with Muon-OGD CSL and optimized ALPS sampling, measuring the reduction in hallucination rates.
 
-### Phase 0: Housekeeping
-Archive .215 and initialize .216. 
+## 4. Hardware Requirements
+- **2x NVIDIA RTX 3090 (CUDA):** Required for the Phase 4 Capstone live inference.
+- **KV260 / OSS-CAD-Suite:** Required for synthesizing the NeuroRing RTL concept.
 
-### Phase 1: KAN-CL and ActFocus
-Integrate the per-knot regularization for KAN energy tiers to prevent forgetting (arxiv:2605.12306). Then, apply the ActFocus loss modulation (arxiv:2605.14558) so that training gradients properly target the action tokens that break constraints.
-
-### Phase 2: Energy-Guided Decoding
-Wire up the Energy-Guided Decoding loop (arxiv:2507.07731) to force the local LLMs to generate text that minimizes the learned KAN energy landscape. 
-
-### Phase 3: Hardware Synthesis
-Take the $k_{max}=5$ Manifold Substitution architecture and build `hardware/kv260/ising_sampler_v5.v`. Synthesize it using OSS-CAD-Suite to confirm LUT limits are not exceeded and to yield the `carnot_ising.bit` bitfile.
-
-### Phase 4: Capstone Benchmark
-Perform the final E2E test using `unsloth/gemma-4-31B-it-GGUF` to validate KAN-CL retention rates, ActFocus efficiency, and Energy-Guided Decoding correctness. Produce the retrospective.
-
-## 5. Hardware Requirements
-- **Development:** Dual-RTX 3090 (48GB VRAM) for live GGUF testing and training the JEPA predictor.
-- **Hardware Integration:** KV260 FPGA with OSS-CAD-Suite (yosys/nextpnr) installed locally for synthesis operations.
+## 5. Dependency Graph
+- Phase 1 (Muon-OGD) -> Phase 4 (Capstone)
+- Phase 2 (Optimized ALPS) -> Phase 4 (Capstone)
+- Phase 2 (NeuroRing RTL) -> Phase 2 (NeuroRing Synthesis)
+- Phase 3 (Wahkon) -> Phase 4 (Capstone)

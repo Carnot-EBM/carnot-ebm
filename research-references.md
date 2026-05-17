@@ -13119,3 +13119,11 @@ This sweep was run after milestone `.211` completed. The literature search revea
 
 - **A Theoretical Lens for RL-Tuned Language Models via Energy-Based Models** (arxiv:2512.18730): Provides a unified variational analysis showing RLVR (verifiable rewards) is equivalent to expected KL minimization toward an optimal reasoning distribution. Important for tuning Carnot's EBM extraction on real models.
 - **Adaptive Data Harvesting for Efficient Neural Network Learning with Universal Constraints** (arxiv:2605.09707): Demonstrates learning an adaptive policy for sample selection to enforce continuous constraints. Highly relevant to Continuous Self-Learning (Tier 3).
+
+## ArXiv May 2026 Additions (Milestone .217 Planning)
+- **Wahkon: A Statistically Principled Deep RKHS Superposition Network** (arxiv:2605.14041) - Unifies KAN with RKHS for finite-sample guarantees. Potential Phase-3 verifier architecture upgrade.
+- **NeuroRing: Scaling Spiking Neural Networks via Multi-FPGA Bidirectional Ring Topologies** (arxiv:2604.28059) - FPGA stream-dataflow architecture, relevant for Phase-3/Phase-2 FPGA Ising machine scaling beyond k_max=5 limits.
+- **Digitally Optimized Initializations for Fast Thermodynamic Computing** (arxiv:2603.24183) - Hybrid digital-thermodynamic algorithm for Langevin dynamics, applies directly to the ALPS sampling module from .210.
+- **NLPOpt-Net: A Learning Method for Nonlinear Optimization with Feasibility Guarantees** (arxiv:2605.00260) - Unsupervised learning with k-layered projection for hard constraint satisfaction. Relevant for Phase-1 verifiers.
+- **Muon-OGD: Muon-based Spectral Orthogonal Gradient Projection for LLM Continual Learning** (arxiv:2605.08949) - Replaces Frobenius-norm geometry with spectral-norm-aware updates to prevent catastrophic forgetting. Applicable to Tier 3 Continuous Self-Learning.
+- **AdamFLIP: Adaptive Momentum Feedback Linearization Optimization for Hard Constrained PINN Training** (arxiv:2605.08408) - Reformulates PINN training as an equality-constrained optimization problem. Relevant for Phase 3 constraint satisfaction.
