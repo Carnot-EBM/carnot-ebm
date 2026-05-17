@@ -4275,3 +4275,4 @@ Ripgrep i |
 | 2026-05-17 11:22 UTC | Phase 3: Continuous Self-Learning with Dynamic Lip | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 11:24 UTC | Phase 2: KV260 KANELÉ Synthesis with Verified Boun | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2209-formal-kan-cbc-verification) |
 | 2026-05-17 11:24 UTC | Phase 3: Continuous Self-Learning with Dynamic Lip | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 11:26 UTC | Phase 3: Crosscoder Feature Readout Constraints Re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.95s |
