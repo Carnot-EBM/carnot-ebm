@@ -4231,3 +4231,4 @@ Ripgrep i |
 | 2026-05-17 10:01 UTC | Phase 1: CRANE Reasoning-Augmented Constrained Gra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.00s |
 | 2026-05-17 10:03 UTC | Phase 1: CRANE Reasoning-Augmented Constrained Gra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.54s |
 | 2026-05-17 10:05 UTC | Phase 1: CRANE Reasoning-Augmented Constrained Gra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.52s |
+| 2026-05-17 10:07 UTC | Phase 2: KANELÉ FPGA LUT Mapping for KANs | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
