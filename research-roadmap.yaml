@@ -1,177 +1,178 @@
-milestone: "2026.05.211"
-milestone_title: "Constraint-Aware Retrieval, DAB-Guided Generation, and Substrate-Aware KANs"
+milestone: "2026.05.212"
+milestone_title: "Hardware-Assisted DAB, Substrate-Aware CSL, and Continuous Latent Verification"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: exp2120-archive-and-activate
-    title: "Phase 0: Archive .210 and activate .211"
+  - id: exp2132-archive-and-activate
+    title: "Phase 0: Archive .211 and activate .212"
     max_turns: 20
     prompt: |
-      CONTEXT: Milestone 2026.05.210 has completed. We must prepare for 2026.05.211.
+      CONTEXT: Milestone 2026.05.211 has completed. We must prepare for 2026.05.212.
       EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
-      TASK: Archive 2026.05.210 to research-complete.yaml and initialize the .211 milestone in ops/changelog.md.
+      TASK: Archive 2026.05.211 to research-complete.yaml and initialize the .212 milestone in ops/changelog.md.
       CONCRETE STEPS:
-      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.210 entry, setting completed date to {date}.
+      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.211 entry, setting completed date to {date}.
       2. Clear `research-roadmap.yaml` and copy the new milestone structure from `research-roadmap-next.yaml`.
-      3. Add a "## {date} (Milestone 2026.05.211 Operational Retrospective)" stub in `ops/changelog.md`.
-      4. Write deliverable to `results/experiment_2120_archive.json`.
+      3. Add a "## {date} (Milestone 2026.05.212 Operational Retrospective)" stub in `ops/changelog.md`.
+      4. Write deliverable to `results/experiment_2132_archive.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2121-carm-implementation
-    title: "Phase 1: Constraint-Aware Retrieval Module (CARM)"
+  - id: exp2133-hardware-dab-module
+    title: "Phase 1: Hardware-Assisted DAB Module"
     max_turns: 50
     agent_type: "codex"
     prompt: |
-      CONTEXT: ConstraintLLM requires a mechanism to fetch relevant formal constraints based on natural language prompts.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/extract.py
-      TASK: Implement the CARM to dynamically retrieve verifiable logic schemas.
+      CONTEXT: To speed up decoding, Discrete Auto-Regressive Biasing (DAB) needs to be mapped onto hardware-friendly LUTs based on Substrate-Aware KANs.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/dab.py
+      TASK: Implement Hardware-Assisted DAB for energy-guided decoding.
       CONCRETE STEPS:
-      1. Create `python/carnot/pipeline/carm.py`.
-      2. Implement semantic matching of prompt tokens against the existing static constraint library.
-      3. Save to `results/experiment_2121_carm.json`.
+      1. Create `python/carnot/inference/hw_dab.py`.
+      2. Offload DAB energy evaluations to a simulated LUT representation.
+      3. Save to `results/experiment_2133_hw_dab.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2122-constraint-llm-pipeline
-    title: "Phase 1: ConstraintLLM Generation Pipeline"
-    max_turns: 50
-    prompt: |
-      CONTEXT: Integrating CARM into the reasoning loop allows models to become ConstraintLLMs.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/llm_solver.py
-      TASK: Wire the CARM module into the LLM solver for constraint-aware drafting.
-      CONCRETE STEPS:
-      1. Modify the solver to prepend CARM-retrieved constraints to the reasoning context.
-      2. Support `unsloth/gemma-4-31B-it-GGUF`.
-      3. Save to `results/experiment_2122_constraint_llm.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2123-dab-implementation
-    title: "Phase 1: Discrete Auto-Regressive Biasing (DAB)"
-    max_turns: 50
-    prompt: |
-      CONTEXT: DAB guides LLM decoding directly in discrete vocabulary space using energy gradients, bypassing continuous-space mapping bottlenecks.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/energy_decoding.py
-      TASK: Implement DAB for the LLM decoding step.
-      CONCRETE STEPS:
-      1. Create `python/carnot/inference/dab.py`.
-      2. Hook the energy landscape gradients into the top-k logit selection.
-      3. Save to `results/experiment_2123_dab.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2124-dab-gsm8k-eval
-    title: "Phase 1: DAB-Guided GSM8K Evaluation"
-    max_turns: 50
-    gated_on:
-      - upstream: exp2123-dab-implementation
-        artifact_field: result
-        op: "contains"
-        value: "OK"
-    prompt: |
-      CONTEXT: We must verify DAB improves constraint satisfaction on math reasoning.
-      EXISTING CODE TO READ FIRST: {project_root}/tests/integration/test_gsm8k.py
-      TASK: Run GSM8K using `unsloth/Qwen3.6-35B-A3B-GGUF` with DAB.
-      CONCRETE STEPS:
-      1. Execute a 50-problem evaluation with DAB enabled vs disabled.
-      2. Record accuracy and energy bounds.
-      3. Save to `results/experiment_2124_dab_eval.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2125-substrate-aware-kan
-    title: "Phase 2: Substrate-Aware KAN Translation"
-    max_turns: 100
-    model: "opus"
-    agent_type: "codex"
-    prompt: |
-      CONTEXT: KANs must be hardware-efficient. Substrate-aware mapping targets LUTs for FPGA simulation.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/ising/kan_tier.py
-      TASK: Translate KAN nodes into LUT-compatible binary thresholds (BiKA/KANELÉ style).
-      CONCRETE STEPS:
-      1. Implement a LUT-friendly reparameterization of the continuous splines in `python/carnot/models/ising/substrate_kan.py`.
-      2. Validate output equivalence within 1%.
-      3. Save to `results/experiment_2125_substrate_kan.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2126-kan-hardware-accounting
-    title: "Phase 2: Substrate-Aware KAN Hardware Accounting"
+  - id: exp2134-dab-lut-accounting
+    title: "Phase 1: DAB LUT Hardware Accounting"
     max_turns: 30
     gated_on:
-      - upstream: exp2125-substrate-aware-kan
+      - upstream: exp2133-hardware-dab-module
         artifact_field: result
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Measure the theoretical FPGA speedup and area reduction (BOP/LUTs) of Substrate-Aware KANs.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/ising/substrate_kan.py
-      TASK: Perform no-synthesis accounting for the new KAN architecture.
+      CONTEXT: We must verify the hardware complexity of the new DAB LUT representation.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/hw_dab.py
+      TASK: Perform no-synthesis resource accounting (BOP/LUTs) for HW-DAB.
       CONCRETE STEPS:
-      1. Compute RM (Real Multiplications), NABS, and LUT counts.
-      2. Ensure no Vivado compilation is required.
-      3. Save to `results/experiment_2126_kan_accounting.json`.
+      1. Compute RM (Real Multiplications), NABS, and LUT limits for HW-DAB.
+      2. Compare against CPU-bound DAB baselines.
+      3. Save to `results/experiment_2134_dab_accounting.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2127-adamflip-optimization
-    title: "Phase 2: AdamFLIP Hard Constrained PINN Training"
-    max_turns: 50
-    prompt: |
-      CONTEXT: AdamFLIP applies adaptive momentum feedback linearization to solve hard constraints robustly.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
-      TASK: Integrate AdamFLIP into the continuous learning optimizer.
-      CONCRETE STEPS:
-      1. Create `python/carnot/training/adamflip.py`.
-      2. Apply it to the constraint residuals as a feedback input.
-      3. Save to `results/experiment_2127_adamflip.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2128-dynamic-resolution-csl
-    title: "Phase 3: Dynamic Resolution Continuous Self-Learning"
-    max_turns: 50
-    prompt: |
-      CONTEXT: To stop catastrophic forgetting and mode collapse during continual learning, the EBM landscape resolution must adapt dynamically.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
-      TASK: Implement Dynamic Resolution for the EBM landscape during FR-11 CSL.
-      CONCRETE STEPS:
-      1. Scale the energy grid resolution iteratively based on moving-average error.
-      2. Update the CSL loop to support dynamic energy boundaries.
-      3. Save to `results/experiment_2128_dynamic_res.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2129-rlvr-ebm-integration
-    title: "Phase 3: RLVR Integration with Verifiable EBM Rewards"
-    max_turns: 50
-    prompt: |
-      CONTEXT: Reinforcement Learning with Verifiable Rewards (RLVR) provides monotonic KL convergence for LLMs.
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/verifier.py
-      TASK: Use Carnot's energy scores as RLVR scalar potentials.
-      CONCRETE STEPS:
-      1. Wrap the solver output with an RLVR-style objective function.
-      2. Test the backward pass gradients.
-      3. Save to `results/experiment_2129_rlvr.json`.
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2130-full-e2e-benchmark
-    title: "Phase 3: Full E2E Benchmark (CARM + DAB + Dynamic CSL)"
+  - id: exp2135-hardware-dab-eval
+    title: "Phase 1: HW-DAB Guided GSM8K Evaluation"
     max_turns: 50
     gated_on:
-      - upstream: exp2128-dynamic-resolution-csl
+      - upstream: exp2133-hardware-dab-module
         artifact_field: result
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Final validation of Milestone 211. 
-      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/verify_repair.py
-      TASK: Run the complete pipeline leveraging `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      CONTEXT: We need to prove HW-DAB maintains semantic accuracy on GSM8K using local SOTA models.
+      EXISTING CODE TO READ FIRST: {project_root}/tests/integration/test_gsm8k.py
+      TASK: Run GSM8K using `unsloth/Qwen3.6-35B-A3B-GGUF` with HW-DAB enabled.
       CONCRETE STEPS:
-      1. Assemble CARM extraction, DAB decoding, and Dynamic CSL.
-      2. Verify catastrophic forgetting remains at 0% across 3 test scenarios.
-      3. Save to `results/experiment_2130_e2e.json`.
+      1. Execute a benchmark over 50 problems.
+      2. Verify strict constraint satisfaction and energy minimization.
+      3. Save to `results/experiment_2135_hw_dab_eval.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2131-milestone-211-retro
-    title: "Phase 3: Milestone 2026.05.211 Retrospective"
+  - id: exp2136-substrate-shifting-csl
+    title: "Phase 2: Substrate Shifting CSL"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Dynamic Resolution CSL can mode-collapse. Substrate Shifting allows the underlying KAN LUT grids to physically translate during continuous self-learning.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
+      TASK: Implement Substrate Shifting for continuous learning loops.
+      CONCRETE STEPS:
+      1. Add energy grid translation parameters to the CSL loop.
+      2. Integrate with the Substrate-Aware KAN tiers.
+      3. Save to `results/experiment_2136_substrate_shifting.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2137-mode-collapse-recovery
+    title: "Phase 2: Mode-Collapse Recovery Module"
+    max_turns: 50
+    gated_on:
+      - upstream: exp2136-substrate-shifting-csl
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: We must explicitly detect and recover from mode collapse during policy retention.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
+      TASK: Implement explicit mode-collapse recovery using substrate shifts.
+      CONCRETE STEPS:
+      1. Detect constraint violation concentration (collapse).
+      2. Apply substrate shifting to explicitly push the EBM out of the local minimum.
+      3. Save to `results/experiment_2137_mode_collapse.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2138-csl-zero-forgetting-eval
+    title: "Phase 2: CSL Zero-Forgetting Evaluation"
+    max_turns: 50
+    gated_on:
+      - upstream: exp2137-mode-collapse-recovery
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: Ensure Substrate Shifting and Mode-Collapse Recovery maintain zero catastrophic forgetting.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
+      TASK: Run a CSL multi-task loop evaluating forgetting.
+      CONCRETE STEPS:
+      1. Train the EBM sequentially on 3 conflicting logical constraints.
+      2. Assert 0% forgetting rate on earlier tasks using Substrate Shifting.
+      3. Save to `results/experiment_2138_csl_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2139-clr-verifier-bridge
+    title: "Phase 3: Continuous Latent Reasoning Verifier Bridge"
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Bridging continuous latent reasoning (CLR) to our discrete logic verifiers requires an explicit latent verifier bridge.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/verifier.py
+      TASK: Implement the CLR Verifier Bridge.
+      CONCRETE STEPS:
+      1. Create `python/carnot/pipeline/clr_bridge.py`.
+      2. Map latent continuous EBM vectors into verifiable discrete logic formats.
+      3. Save to `results/experiment_2139_clr_bridge.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2140-clr-gsm8k-benchmark
+    title: "Phase 3: CLR Verifier Benchmark on GSM8K"
+    max_turns: 50
+    gated_on:
+      - upstream: exp2139-clr-verifier-bridge
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: Validate the CLR Bridge with SOTA GGUF generation.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/clr_bridge.py
+      TASK: Run the CLR verifier bridge over `unsloth/gemma-4-31B-it-GGUF` decoding outputs.
+      CONCRETE STEPS:
+      1. Execute 25 GSM8K problems and verify the continuous logic bridge triggers correctly.
+      2. Record accuracy.
+      3. Save to `results/experiment_2140_clr_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2141-full-e2e-benchmark
+    title: "Phase 4: Full E2E Benchmark"
+    max_turns: 50
+    gated_on:
+      - upstream: exp2140-clr-gsm8k-benchmark
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: Final validation of Milestone 212 incorporating HW-DAB, Substrate Shifting CSL, and CLR.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/verify_repair.py
+      TASK: Run the full execution pipeline using `unsloth/gemma-4-26B-A4B-it-GGUF`.
+      CONCRETE STEPS:
+      1. Combine HW-DAB, CSL shifting, and the CLR Verifier Bridge.
+      2. Evaluate structural integrity and verifiable constraint adherence.
+      3. Save to `results/experiment_2141_e2e.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2142-milestone-212-retro
+    title: "Phase 4: Milestone 2026.05.212 Retrospective"
     max_turns: 20
     prompt: |
-      CONTEXT: End of milestone analysis for .211.
+      CONTEXT: End of milestone analysis for .212.
       EXISTING CODE TO READ FIRST: {project_root}/ops/conductor-log.md
-      TASK: Generate the retrospective analysis of the .211 milestone.
+      TASK: Generate the retrospective analysis of the .212 milestone.
       CONCRETE STEPS:
-      1. Read all experiment results from the 212X and 213X series.
-      2. Synthesize findings into `results/experiment_2131_retro.json` and update `ops/status.md`.
+      1. Read all experiment results from the 213X and 214X series.
+      2. Synthesize findings into `results/experiment_2142_retro.json` and update `ops/status.md`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
