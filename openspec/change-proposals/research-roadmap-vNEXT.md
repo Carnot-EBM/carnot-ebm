@@ -1,46 +1,39 @@
-# Milestone 2026.05.210: ALPS-based Generative Inference, KAN-CL Continuous Self-Learning, and ActFocus Energy Reweighting
+# Milestone 2026.05.211: ConstraintLLM, DAB-Guided Generation, and Substrate-Aware KANs
 
-## High-Level Goals
-This milestone addresses the three most critical gaps identified between the `.209` execution and the core PRD vision:
-1. **Continuous Self-Learning Robustness:** The CSL loops have struggled with catastrophic forgetting and rigid representation scaling. We introduce KAN-CL (per-knot importance regularization) and Muon-OGD (spectral orthogonal gradient projection) to firmly guarantee non-forgetting across parameter updates, directly tackling FR-11.
-2. **Generative Inference Efficiency:** While EqM established continuous sampling, Annealed Langevin Posterior Sampling (ALPS) and Energy-Guided Decoding (hidden state minimal-energy selection) offer a path to faster, more robust sampling without excessive hyperparameter tuning or continuous-space mode collapse.
-3. **Action Bottleneck Mitigation:** By applying ActFocus (token-level energy reweighting), we address the imbalance where reasoning tokens overwhelm critical action tokens during policy updates. This provides dense, localized gradients explicitly for the tokens interacting with Carnot verifiers.
+## Context: What Milestone 2026.05.210 Proved
+Milestone 210 successfully integrated the ALPS sampler module, ActFocus reweighting, and KAN-CL regularization, resolving the action bottleneck and demonstrating that energy-guided decoders can actively select hidden states. However, while the sampler convergence improved, we identified that static constraints remain a bottleneck to full autonomy, and continuous space sampling suffers from boundary projection taxes.
 
-## Previous Milestone (.209) Accomplishments
-Milestone `.209` successfully proved Equilibrium Matching (EqM) composition, deployed IRED Adaptive Optimizers, and introduced ASP-KAN-HAQ for hardware accounting. However, it revealed that CSL mechanisms still suffer from semantic drift during memory promotion and that the generative process suffers from continuous-space inefficiencies without annealed reweighting.
+## The 3 Biggest Gaps to PRD Vision
+1. **Automated Constraint Elicitation (Reasoning-Time Open Constraint Elicitation):** We still rely heavily on hand-coded or statically parsed constraints. The vision requires dynamic Constraint-Aware Retrieval Modules (CARM) to map natural language to formal constraints.
+2. **Continuous vs Discrete Sampling Inefficiencies:** Energy-guided decoding in strictly continuous latent spaces struggles with the discrete token boundary. Discrete Auto-Regressive Biasing (DAB) is needed to directly map energy gradients to vocabulary logits.
+3. **Hardware Synthesis and CSL Mode Collapse:** KAN-CL prevents forgetting but suffers from mode collapse under uniform capacity. Furthermore, KAN verification requires hardware-aware mapping to LUTs (Substrate-Aware KANs) before it can run on KV260 FPGAs.
 
 ## Architecture
 
 ```mermaid
 graph TD
-    A[SOTA GGUF Solver] -->|Generates Candidates| B(ALPS Sampler / Energy-Guided Decoder)
-    B --> C{Carnot Constraint Verifier}
-    C -->|High Energy| B
-    C -->|Low Energy| D[Final Output]
-    D --> E[Continuous Self-Learning Loop]
-    E -->|ActFocus Reweighting| F[Muon-OGD Policy Update]
-    E -->|Per-Knot Penalty| G[KAN-CL Tier Update]
-    F --> A
-    G --> C
+    A[Prompt] --> B[CARM]
+    B --> C[ConstraintLLM Generator]
+    C --> D[DAB-Guided Decoder]
+    D --> E[Substrate-Aware KAN Evaluator / AdamFLIP]
+    E --> F[Dynamic Resolution CSL Loop]
+    F -.-> C
 ```
 
-## Phase Descriptions
+## Phases
 
-### Phase 1: Generative Inference via ALPS and Energy-Guided Decoding
-Integrate Annealed Langevin Posterior Sampling (ALPS) to stabilize and accelerate EBM sampling by annealing static posterior distributions. Augment this with explicit Energy-Guided Decoding that leverages minimal-energy hidden states directly from the LLM representations, minimizing hallucination and avoiding mode-collapse during continuous inference.
+**Phase 0: Activation**
+Archive the previous milestone and set up the working environment for 2026.05.211.
 
-### Phase 2: Advanced Continual Learning with KANs and Spectral Geometry
-Update the continuous self-learning pipeline to use KAN-CL for the core EBM constraints, ensuring that previous constraints are retained via per-knot importance regularization. For the LLM policy side, deploy Muon-OGD to project updates orthogonally under spectral norm bounds, ensuring that updates to new symbolic concepts do not obliterate previously verified task representations.
+**Phase 1: Extraction & Biasing (CARM + DAB)**
+Focuses on bridging the natural language to formal logic gap using a Constraint-Aware Retrieval Module (CARM) and replaces purely continuous energy guidance with Discrete Auto-Regressive Biasing (DAB), acting directly on the token-level logits to avoid projection taxes.
 
-### Phase 3: Action Bottleneck and Energy Reweighting
-Introduce ActFocus to the agentic feedback loop. Instead of uniformly crediting reasoning traces, focus gradient energy on the action tokens that directly interact with the verifier, effectively eliminating the action bottleneck. Integrate NEXUS-style symbolic grounding to strictly bound probabilistic risk into deterministic constraints before ActFocus updates.
+**Phase 2: Verifier Substrates (KAN + AdamFLIP)**
+Maps KAN nodes to binary/LUT substrates (BiKA style) for hardware-efficient FPGA deployment and integrates AdamFLIP to handle hard constraints robustly during evaluation.
 
-### Phase 4: Hardware Simulation & Full Integration
-Simulate a NeuroRing-style bidirectional ring topology for parallel Gibbs/Ising samplers to prep for future FPGA workloads. Conclude with an exhaustive E2E benchmark verifying that the CSL loop retains previously learned constraints while acquiring new ones without performance degradation.
-
-## Dependency Graph
-Phase 1 (Generative Inference) -> Phase 2 (Continual Learning) -> Phase 3 (Feedback and Token Weighting) -> Phase 4 (Integration and Benchmark)
+**Phase 3: Continuous Self-Learning & Retro**
+Evolves the CSL loop to use dynamic resolution energy landscapes and RLVR structures, enabling zero-forgetting continual learning without mode collapse. Culminates in a full end-to-end benchmark and milestone retrospective.
 
 ## Hardware Requirements
-- **Execution:** Dual RTX 3090 instances for SOTA GGUF model execution (e.g., `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`).
-- **Accounting:** CPU-only NeuroRing simulation and accounting, preserving the rule of no unauthenticated Vivado/KV260 claims.
+- **Local SOTA Runtime:** Dual RTX 3090s running `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- **FPGA Simulation:** KV260 Source-Level RTL sim (No Vivado synthesis required for this milestone, purely accounting).
