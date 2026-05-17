@@ -1,0 +1,33 @@
+{
+  "schema": "carnot.experiment.v1",
+  "experiment": 2295,
+  "run_date": "2026-05-17T21:20:19Z",
+  "duration_s": 206,
+  "random_seed": 2295,
+  "reproducibility_checksum": "sha256:manual-claude-sonnet-4-6-fix",
+  "preconditions_checked": [
+    {
+      "resource": "carnot.pypi_escalation module",
+      "available": true,
+      "note": "check_pypi_escalation and run_escalation added to python/carnot/pypi_escalation.py"
+    }
+  ],
+  "symbols_added": [
+    "check_pypi_escalation",
+    "run_escalation"
+  ],
+  "pypi_test_errors": 0,
+  "pypi_test_failures": 0,
+  "full_pretest_errors": 0,
+  "full_pretest_failures": 2,
+  "full_pretest_failure_details": [
+    "tests/python/test_experiment_1347_thrml_compatibility_parity_audit.py::test_req_sample_041_probe_reports_direct_import_success_without_version",
+    "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_14_soskan_aurocs_have_corpus_and_n"
+  ],
+  "full_pretest_failure_note": "Both failures are pre-existing, unrelated to the pypi_escalation ImportError that was blocking the conductor. The ImportError is now resolved; these 2 tests require separate investigation.",
+  "pretest_fixed": false,
+  "import_error_resolved": true,
+  "iterations_required": 1,
+  "methodology_note": "Read test file to extract exact signatures needed, then added check_pypi_escalation and run_escalation to match. gh-CLI detection uses shutil.which + subprocess.run double-check to handle both test mock strategies.",
+  "honest_verdict": "complete: partial_fix — pypi_escalation ImportError resolved (4/4 tests pass), full suite has 2 pre-existing unrelated failures"
+}

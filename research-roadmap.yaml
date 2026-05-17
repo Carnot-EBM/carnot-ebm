@@ -514,12 +514,12 @@ tasks:
              - extract(instruction: str, response: str) -> list[dict]
                Parses response for logical steps: quantitative claims, conditions,
                causal assertions, list-item commitments.
-               Returns: [{"step": str, "constraint_type": str, "variables": list}]
+               Returns: [{{"step": str, "constraint_type": str, "variables": list}}]
              - encode_z3(steps: list[dict]) -> z3.Solver
                Encodes each step as a Z3 assertion (arithmetic, comparison, or
                Boolean implication). Returns a solver with all constraints asserted.
              - verify(instruction: str, response: str) -> dict
-               Returns: {"satisfiable": bool, "violations": list[str], "n_constraints": int}
+               Returns: {{"satisfiable": bool, "violations": list[str], "n_constraints": int}}
         2. Write focused unit tests in tests/python/pipeline/test_extract.py
            (at least 3 tests: one satisfiable response, one violated arithmetic constraint,
            one violated list-completeness constraint).
@@ -793,9 +793,9 @@ tasks:
            class CopyNodeSparsifier:
              - sparsify(J: np.ndarray, max_degree: int) -> dict
                Takes dense coupling matrix J (n×n) and a max_degree budget.
-               Returns: {"J_sparse": csr_matrix, "n_copy_nodes": int,
+               Returns: {{"J_sparse": csr_matrix, "n_copy_nodes": int,
                          "max_degree_original": int, "max_degree_sparse": int,
-                         "copy_coupling_strength": float}
+                         "copy_coupling_strength": float}}
              - estimate_lut_reduction(max_degree_original: int, max_degree_sparse: int) -> float
                Heuristic: LUTs scale quadratically with local degree; estimate reduction
                as (max_degree_sparse / max_degree_original)^2.
