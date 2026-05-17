@@ -92,14 +92,19 @@ def _describe_import_exception(exc: BaseException) -> str:
 
 
 def _module_version(module: ModuleType | Any) -> str:
-    """Read a THRML version string without requiring package installation."""
+    """Read a THRML version string from the module's own __version__ attribute.
+
+    We intentionally do NOT fall back to importlib.metadata here: the caller
+    may have injected a custom importer (e.g. in tests or local-checkout
+    probing), so package metadata for "thrml" could belong to a different
+    installation than the object that was actually returned.  If the module
+    carries no __version__, callers receive "unknown" rather than a
+    potentially misleading installed-package version.
+    """
     version = getattr(module, "__version__", None)
     if version is not None:
         return str(version)
-    try:
-        return str(importlib.metadata.version("thrml"))
-    except Exception:
-        return "unknown"
+    return "unknown"
 
 
 def _import_from_local_path(

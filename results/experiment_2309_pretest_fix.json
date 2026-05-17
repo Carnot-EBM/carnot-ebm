@@ -1,0 +1,41 @@
+{
+  "experiment": 2309,
+  "title": "Pre-test suite fix: resolve 2 named pre-existing test failures",
+  "run_date": "2026-05-17T22:51:09Z",
+  "schema": "experiment_result_v1",
+  "duration_s": 585,
+  "honest_verdict": "complete: named_tests_fixed_suite_has_other_preexisting_failures",
+  "pretest_fixed": false,
+  "full_pretest_errors": 1,
+  "full_pretest_failures": 2,
+  "full_pretest_note": "The 2 named tests are fixed. 3 other pre-existing failures remain that were not visible in exp2295 (likely masked by artifact presence and xdist scheduling): test_experiment_1692_potts_v2_artifact (missing results artifact file), test_experiment_390_gpu_preflight (xdist GPU error, passes in isolation), test_experiment_294_gpu_baseline_apple (xdist ERROR, passes in isolation). None are caused by this exp's changes.",
+  "tests_fixed": [
+    "tests/python/test_experiment_1347_thrml_compatibility_parity_audit.py::test_req_sample_041_probe_reports_direct_import_success_without_version",
+    "tests/python/test_experiment_1182_paper_v5_medium_low_issues_11_18.py::TestIssue11ThroughIssue15::test_issue_14_soskan_aurocs_have_corpus_and_n"
+  ],
+  "fix_rationale_1": "Root cause: _module_version() in python/carnot/hardware/thrml_compatibility_audit.py fell back to importlib.metadata.version('thrml') when the injected module had no __version__ attribute. Since thrml 0.1.3 is installed in the venv, metadata lookup returned '0.1.3' instead of 'unknown'. The test injects a SimpleNamespace() as the module (no __version__) and asserts version == 'unknown'. Fix: removed the importlib.metadata fallback. The module's own __version__ is now the sole source; absent that, 'unknown' is returned. This is correct semantics: a custom importer may return an object that is NOT the installed thrml package, so metadata for 'thrml' would be misleading. Source changed: python/carnot/hardware/thrml_compatibility_audit.py::_module_version.",
+  "fix_rationale_2": "Root cause: check_issue_14_soskan_auroc() in scripts/experiment_1182_paper_v5_medium_low_issues_11_18.py scans ±220-char windows around every occurrence of '0.9545' in main.tex and requires that any window containing 'SOS' also contains a sample size ('n=6{,}548', '6{,}548-pair', or 'n=50'). The paper had an occurrence at line 1047 ('On the FoVer training corpus, SOSKANEnergyV3 achieves $\\mathrm{AUROC}=0.9545$ (exp1072).') where the sample size n=6{,}548 fell outside the 440-char window. Fix: added '(n=6{,}548)' to that sentence in docs/arxiv-paper/main.tex, making the corpus size explicit at the point of citation. This is the correct fix per paper integrity discipline (paper should state sample size when citing AUROC values). Source changed: docs/arxiv-paper/main.tex line 1047.",
+  "iterations_required": 1,
+  "remaining_preexisting_failures": [
+    {
+      "test": "tests/python/test_experiment_1692_potts_v2.py::test_experiment_1692_potts_v2_artifact",
+      "reason": "results/experiment_1692_potts_export.json does not exist; artifact was present when exp2295 ran but is missing now. Needs experiment 1692 to be re-run or artifact restored.",
+      "passes_in_isolation": false
+    },
+    {
+      "test": "tests/python/test_experiment_390_gpu_preflight.py::TestRunGpuPreflight::test_scripts_missing_session_startup",
+      "reason": "Fails under xdist parallel execution due to GPU/resource contention; passes in isolation.",
+      "passes_in_isolation": true
+    },
+    {
+      "test": "tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct",
+      "reason": "ERROR (not FAILURE) under xdist due to memory leak from parallel GPU tests (+1048MB); passes in isolation.",
+      "passes_in_isolation": true
+    }
+  ],
+  "files_changed": [
+    "python/carnot/hardware/thrml_compatibility_audit.py",
+    "docs/arxiv-paper/main.tex"
+  ],
+  "status": "partial"
+}
