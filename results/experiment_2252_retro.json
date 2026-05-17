@@ -1,0 +1,211 @@
+{
+  "schema": "carnot.operational_retro.v65",
+  "experiment": "2252_retro",
+  "milestone": "2026.05.222",
+  "run_date": "20260517",
+  "generated_at_utc": "2026-05-17T16:07:46Z",
+  "retro_type": "operational_milestone",
+  "source_artifacts": [
+    "ops/conductor-log.md",
+    "results/experiment_2241_fr11_fst_eval.json",
+    "results/experiment_2244_odar_benchmark.json",
+    "results/experiment_2246_casal_vs_adamflip.json",
+    "results/experiment_2247_kancl_n256_scaling.json",
+    "results/experiment_2249_kv260_rtl_verilator.json",
+    "results/experiment_2250_thrml_casal.json",
+    "results/experiment_2251_capstone.json"
+  ],
+  "missing_requested_artifacts": [
+    {
+      "path": "results/experiment_2248_thrml_parity_n256.json",
+      "status": "missing_exact_path",
+      "explanation": "The conductor log records the corresponding Phase 4 THRML/Carnot n=256 parity task as GATE_BLOCK three times because upstream exp2247 was retired before execution."
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "criteria_met": "N/total count validates milestone completion fraction.",
+    "next_milestone_speedup_target_pct": "Quantifies where wall-time can be recovered in .223."
+  },
+  "honest_verdict": "complete: milestone_2026_05_222_retro_11_of_14_criteria_met_120min_wall_time_25pct_speedup_target",
+  "criteria_met": {
+    "count": 11,
+    "total": 14,
+    "fraction": 0.785714,
+    "display": "11/14",
+    "basis": "14 queued milestone tasks: 10 OK task rows were already logged before this retrospective, this retrospective adds the 11th completed deliverable, and 3 distinct tasks remained blocked or gate-skipped."
+  },
+  "compute": {
+    "total_wall_time_min": 120.0,
+    "wall_time_basis": "From conductor log milestone activation at 2026-05-17 14:00 UTC through capstone completion at 2026-05-17 16:00 UTC.",
+    "n_experiments_completed": 10,
+    "n_experiments_completed_including_this_retro": 11,
+    "n_gate_blocks": 3,
+    "n_gate_blocked_distinct_tasks": 1,
+    "n_doomed_rerun_blocks": 6,
+    "n_doomed_rerun_distinct_tasks": 2,
+    "n_distinct_blocked_or_gated_tasks": 3,
+    "n_compute_bound": 9,
+    "compute_bound_basis": "Successful research tasks that ran implementation, unit, lint, adapter, benchmark, or capstone work instead of stopping at conductor pre-gate: exp2240, exp2241, exp2242, exp2243, exp2244, exp2245, exp2246, exp2250, exp2251.",
+    "compute_bound_wall_time_min": 104.0
+  },
+  "wall_time_distribution": [
+    {
+      "bucket": "activation_and_cache_hit",
+      "minutes": 3.0,
+      "pct": 2.5,
+      "basis": "14:00 to 14:03 UTC"
+    },
+    {
+      "bucket": "fst_fr11_actfocus_track",
+      "minutes": 38.0,
+      "pct": 31.7,
+      "basis": "14:03 to 14:41 UTC"
+    },
+    {
+      "bucket": "odar_track",
+      "minutes": 21.0,
+      "pct": 17.5,
+      "basis": "14:41 to 15:02 UTC"
+    },
+    {
+      "bucket": "casal_core_track",
+      "minutes": 22.0,
+      "pct": 18.3,
+      "basis": "15:02 to 15:24 UTC"
+    },
+    {
+      "bucket": "gate_block_and_doomed_rerun_churn",
+      "minutes": 13.0,
+      "pct": 10.8,
+      "basis": "15:24 to 15:37 UTC"
+    },
+    {
+      "bucket": "thrml_casal_adapter_track",
+      "minutes": 11.0,
+      "pct": 9.2,
+      "basis": "15:37 to 15:48 UTC"
+    },
+    {
+      "bucket": "capstone_e2e_track",
+      "minutes": 12.0,
+      "pct": 10.0,
+      "basis": "15:48 to 16:00 UTC"
+    }
+  ],
+  "compute_reduction": {
+    "odar_benchmark": {
+      "compute_reduction_pct": 37.5,
+      "tier_calls_uniform": 120,
+      "tier_calls_odar": 75,
+      "accuracy_uniform_pct": 100.0,
+      "accuracy_odar_pct": 100.0,
+      "accuracy_delta": 0.0,
+      "gate_passed": true,
+      "source": "results/experiment_2244_odar_benchmark.json"
+    },
+    "capstone_integrated_stack": {
+      "total_compute_reduction_pct": 50.0,
+      "n_passes": 20,
+      "gate_threshold_pct": 25.0,
+      "source": "results/experiment_2251_capstone.json"
+    }
+  },
+  "fr11_utility_delta": {
+    "sample_efficiency_ratio": 4.0,
+    "sample_efficiency_gate_passed": true,
+    "sample_efficiency_ratio_min": 2.0,
+    "kl_drift_ratio": 0.0,
+    "kl_drift_gate_passed": true,
+    "kl_drift_ratio_max": 0.5,
+    "baseline_final_energy_reduction": 0.542216,
+    "fst_final_energy_reduction": 0.7004,
+    "utility_delta": 0.158184,
+    "relative_utility_gain_pct": 29.2,
+    "actfocus_fst_retention_rate": 0.9,
+    "actfocus_fst_retained_updates": "18/20",
+    "actfocus_fst_energy_reduction": 0.802872,
+    "source": "results/experiment_2241_fr11_fst_eval.json and results/experiment_2242_actfocus_fst.json"
+  },
+  "constraint_violation_statistics": {
+    "casal_vs_adamflip": {
+      "n_samples": 100,
+      "adamflip_violation_mean": 0.008480615910357349,
+      "casal_violation_mean": 1.186550857568136e-17,
+      "mean_violation_reduction_pct": 100.0,
+      "adamflip_max_constraint_violation": 0.03941779484645175,
+      "casal_max_constraint_violation": 1.3877787807814457e-16,
+      "casal_validated": true,
+      "source": "results/experiment_2246_casal_vs_adamflip.json"
+    },
+    "capstone": {
+      "n_passes": 20,
+      "mean_constraint_violation": 0.0,
+      "gate_threshold": 0.01,
+      "source": "results/experiment_2251_capstone.json"
+    }
+  },
+  "hardware_track_progress": {
+    "completed": [
+      {
+        "track": "THRML/CASAL adapter",
+        "result": "CASALBackend wraps CASALSampler through SamplerBackend.",
+        "protocol_methods_added": [
+          "set_constraints",
+          "dual_update_step"
+        ],
+        "focused_unit_result": "19 passed",
+        "source": "results/experiment_2250_thrml_casal.json"
+      },
+      {
+        "track": "GPU live probe",
+        "result": "One-token GGUF probe loaded on GPU 0 and returned successfully.",
+        "live_probe_ok": true,
+        "live_probe_load_s": 3.886731,
+        "live_probe_total_s": 4.134918,
+        "claim_boundary": "No full live generation claim.",
+        "source": "results/experiment_2251_capstone.json"
+      }
+    ],
+    "blocked": [
+      {
+        "track": "KAN-CL n=256 scaling",
+        "status": "blocked_gate_check_failed",
+        "reason": "prior_failures entry missing retire_if_same_verdict for upstream exp1775 lineage.",
+        "source": "results/experiment_2247_kancl_n256_scaling.json"
+      },
+      {
+        "track": "THRML/Carnot n=256 parity with KAN-CL",
+        "status": "gate_blocked",
+        "reason": "Pre-emptive skip because upstream exp2247 was retired.",
+        "source": "ops/conductor-log.md"
+      },
+      {
+        "track": "KV260 RTL Verilator lint and simulation",
+        "status": "blocked_gate_check_failed",
+        "reason": "prior_failures entries missing retire_if_same_verdict for prior RTL lint/sim lineage.",
+        "source": "results/experiment_2249_kv260_rtl_verilator.json"
+      }
+    ],
+    "verdict": "adapter_progress_real_but_hardware_execution_still_blocked"
+  },
+  "top_successes": [
+    "FST and FR-11 gates passed with sample_efficiency_ratio=4.0, kl_drift_ratio=0.0, and utility_delta=0.158184; ActFocus+FST retained 18/20 useful fast updates.",
+    "ODAR demonstrated compute savings without accuracy loss: 37.5% fewer tier calls in benchmark and 50.0% compute reduction in capstone.",
+    "CASAL hard-constraint sampling reduced mean violation from AdamFLIP's 0.008480615910357349 to 1.186550857568136e-17 and carried zero mean residual into capstone."
+  ],
+  "top_gaps_for_2026_05_223": [
+    "Fix rerun discipline before scheduling hardware or n=256 dependent tasks: missing retire_if_same_verdict caused KAN-CL and KV260 blocks and cascaded into THRML parity skip.",
+    "Convert hardware track from adapter/protocol progress to executable evidence: KV260 lint/simulation needs a clean source-level run or a clearly documented simulator fallback.",
+    "Expand live generation evidence beyond a one-token probe, or keep all capstone and SOTA claims explicitly scoped to cached/speculative metrics."
+  ],
+  "next_milestone_speedup_target_pct": 25.0,
+  "next_milestone_speedup_basis": "Recover the 13 minutes of gate-block churn, avoid repeated doomed rerun attempts, and pre-validate hardware prerequisites before dependent parity tasks enter the active roadmap.",
+  "recommendations": [
+    "Add a pre-roadmap audit for prior_failures.retire_if_same_verdict on any task with a known failed lineage.",
+    "Stage KAN-CL n=256, THRML parity, and KV260 as a single prerequisite-checked hardware lane so downstream tasks are not queued until the upstream artifact is terminal.",
+    "Preserve ODAR fast-path routing in .223 capstones and record tier-call counts in every integrated run.",
+    "Record live generation scope in the deliverable top level: none, one-token probe, bounded batch, or full benchmark."
+  ],
+  "acceptance_gate_passed": true
+}
