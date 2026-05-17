@@ -609,3 +609,22 @@ Sub-requirements:
 **Then** it successfully checks for multi-GPU availability
 **And** it runs the SGLRW sampler natively against a 100-sample GSM8K partition
 **And** it writes `results/experiment_2081_dual_rtx_benchmark.json` containing latency and accuracy metrics.
+
+### REQ-SAMPLE-2109: ALPS Sampler Implementation
+
+Carnot MUST provide an Annealed Langevin Posterior Sampling (ALPS) sampler in `python/carnot/samplers/alps.py`.
+ALPS provides faster convergence for EBMs by annealing static posterior distributions.
+
+Sub-requirements:
+- REQ-SAMPLE-2109-1: The module SHALL provide an `AlpsSampler` class that composes directly with `ContinuousEBM`.
+- REQ-SAMPLE-2109-2: The sampler SHALL implement an ALPS schedule for faster convergence than standard Langevin.
+- REQ-SAMPLE-2109-3: Tests SHALL verify ALPS convergence is significantly faster than standard Langevin on a multi-modal toy landscape.
+- REQ-SAMPLE-2109-4: An experiment deliverable SHALL be written to `results/experiment_2109_alps_module.json`.
+
+### SCENARIO-SAMPLE-2109: ALPS Sampler Faster Convergence
+
+**Given** a multi-modal toy landscape represented as a `ContinuousEBM`
+**When** both ALPS and standard Langevin samplers are run
+**Then** ALPS reaches the target minimum in significantly fewer steps
+**And** the experiment artifact is written to `results/experiment_2109_alps_module.json`.
+
