@@ -6088,3 +6088,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-17: Milestone 2026.05.221 Operational Retrospective (✅ Complete) — No experiments run; pipeline inactive.
 - 2026-05-17: Phase 0: Archive .221 and activate .222 (⚠️ Blocked) — honest_verdict=complete: blocked_roadmap_missing; results/experiment_2239_archive.json
 - 2026-05-17: Phase 1: Fast-Slow Training Decomposition for Verify-Repair Loop (⚠️ Research Finding) — honest_verdict=Terminal-prefix required.; results/experiment_2240_fst_impl.json
+- 2026-05-17: Phase 1: FR-11 Fast-Slow Training Retention Validation (✅ Complete) — honest_verdict=complete: fr11_fst_sample_efficiency_and_kl_gates_passed; results/experiment_2241_fr11_fst_eval.json
