@@ -4516,3 +4516,4 @@ Ripgrep i |
 | 2026-05-17 21:36 UTC | Phase 2: Eidoku CSP Tier 2.8 Gate — First Actual R | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 21:38 UTC | Phase 2: Eidoku CSP Tier 2.8 Gate — First Actual R | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 21:40 UTC | Phase 2: Projected-Langevin vs CASAL Baseline — Fi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
+| 2026-05-17 21:42 UTC | Phase 2: Projected-Langevin vs CASAL Baseline — Fi | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
