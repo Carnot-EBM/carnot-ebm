@@ -4061,3 +4061,5 @@ Error |
 | 2026-05-17 03:58 UTC | Phase 3: CLR Verifier Benchmark on GSM8K | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2139-clr-verifier-bridge.result (actual |
 | 2026-05-17 04:00 UTC | Phase 3: CLR Verifier Benchmark on GSM8K | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2139-clr-verifier-bridge.result (actual |
 | 2026-05-17 04:02 UTC | Phase 4: Full E2E Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2140-clr-gsm8k-benchmark) |
+| 2026-05-17 04:06 UTC | Phase 4: Milestone 2026.05.212 Retrospective | OK | 81 passed, 1 warning in 4.84s |
+| 2026-05-17 04:08 UTC | Phase 4: Full E2E Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2140-clr-gsm8k-benchmark) |

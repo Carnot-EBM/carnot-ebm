@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,827 Experiments Across the Public Record, 221 Archived Milestone Records, 25,215 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 2,675 Experiments Across the Public Record, 225 Archived Milestone Records, 25,287 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-16
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,827 experiments across 221 milestones up to .208, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 2,675 experiments across 225 milestones up to .212, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **2,827 experiment records tracked through Exp 2114, with 2,584 task records in 220 artifact-backed completed milestone records archived through 2026.05.208** — run between February and May 2026. `research-complete.yaml` currently archives **221** completed milestone records through 2026.05.208. Milestone 2026.05.208 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
+This report documents the research arc behind the framework — **2,675 experiment records tracked through Exp 2114, with 2,675 task records in 225 artifact-backed completed milestone records archived through 2026.05.212** — run between February and May 2026. `research-complete.yaml` currently archives **225** completed milestone records through 2026.05.212. Milestone 2026.05.212 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
