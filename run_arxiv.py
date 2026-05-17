@@ -1,28 +1,33 @@
 import urllib.request
 import xml.etree.ElementTree as ET
+import urllib.parse
+from datetime import datetime
 
 queries = [
-    "all:\"Energy-Guided Decoding\"+AND+all:hallucination",
-    "all:\"Continual Learning\"+AND+all:\"Energy-Based\"",
-    "all:\"Kolmogorov-Arnold Network\"+AND+all:\"Hardware\"",
-    "all:\"Constraint Satisfaction\"+AND+all:\"Neural Solver\"",
-    "all:\"Energy-Based Models\"+AND+all:reasoning"
+    'all:"energy-based model" AND all:reasoning',
+    'all:"constraint satisfaction" AND all:"neural network"',
+    'all:"Kolmogorov-Arnold Network"',
+    'all:"guided decoding" AND all:energy',
 ]
 
-results = []
+print("Recent arXiv papers (2025-2026):")
 for q in queries:
-    url = f'http://export.arxiv.org/api/query?search_query={q}&start=0&max_results=3&sortBy=submittedDate&sortOrder=desc'
+    print(f"\n--- Query: {q} ---")
+    query_encoded = urllib.parse.quote(q)
+    url = f"http://export.arxiv.org/api/query?search_query={query_encoded}&sortBy=submittedDate&sortOrder=desc&max_results=3"
     try:
         response = urllib.request.urlopen(url)
         xml_data = response.read()
         root = ET.fromstring(xml_data)
-        for entry in root.findall('{http://www.w3.org/2005/Atom}entry'):
-            title = entry.find('{http://www.w3.org/2005/Atom}title').text.replace('\n', ' ')
-            published = entry.find('{http://www.w3.org/2005/Atom}published').text
-            summary = entry.find('{http://www.w3.org/2005/Atom}summary').text.replace('\n', ' ')
-            results.append(f"Title: {title}\nDate: {published}\nSummary: {summary[:200]}...\n")
+        ns = {'atom': 'http://www.w3.org/2005/Atom'}
+        entries = root.findall('atom:entry', ns)
+        if not entries:
+            print("No entries found.")
+        for entry in entries:
+            title = entry.find('atom:title', ns).text.replace('\n', ' ').strip()
+            published = entry.find('atom:published', ns).text
+            if published.startswith('2025') or published.startswith('2026'):
+                summary = entry.find('atom:summary', ns).text.replace('\n', ' ').strip()[:200]
+                print(f"- {published[:10]} | {title}\n  {summary}...")
     except Exception as e:
-        results.append(f"Error for {q}: {e}")
-
-with open("arxiv_results2.txt", "w") as f:
-    f.write("\n".join(results))
+        print(f"Error fetching {q}: {e}")

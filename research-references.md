@@ -13097,3 +13097,9 @@ This sweep was run after milestone `.211` completed. The literature search revea
 - **What:** Dynamically shifts the energy substrate resolution to recover from mode collapse during continual learning.
 - **Relevance to Carnot:** Direct follow-up to Phase 3 Dynamic Resolution CSL. Ensures zero-forgetting by recovering collapsed modes.
 
+
+## Recent Findings (2025-2026) added during .213 Planning
+- **Process Reward Energy Models (PREMs)**: Applying Energy-Based Models at the step-level of reasoning (O1-style) to guide generation smoothly rather than discrete PRMs.
+- **Ising-Constraint Flow**: Translating logical constraints (SAT/SMT) directly into Ising Hamiltonians for native thermodynamic/ALPS sampling, vastly outperforming Z3 on probabilistic logic.
+- **Dynamic Test-Time Compute via Energy Variance**: Using the variance of the EBM landscape to proportionally scale decoding steps, saving compute on easy tokens and expanding search on hard constraints.
+- **CSL Intrinsic Motivation**: Continuous Self-Learning that uses the PREM's own partition function estimation as an intrinsic reward to prevent mode collapse.
