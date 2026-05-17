@@ -4396,3 +4396,5 @@ Ripgrep i |
 | 2026-05-17 17:10 UTC | Phase 2: KAN-CL n=256 Per-Knot Regularization Clea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
 | 2026-05-17 17:12 UTC | Phase 2: KAN-CL n=256 Per-Knot Regularization Clea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
 | 2026-05-17 17:14 UTC | Phase 2: KAN-CL n=256 + CASAL Joint Constraint Enf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2258-kancl-n256-clean-reattempt) |
+| 2026-05-17 17:14 UTC | Phase 3: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2254-pretest-fix.pretest_fixed (actual= |
+| 2026-05-17 17:16 UTC | Phase 2: KAN-CL n=256 + CASAL Joint Constraint Enf | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2258-kancl-n256-clean-reattempt) |
