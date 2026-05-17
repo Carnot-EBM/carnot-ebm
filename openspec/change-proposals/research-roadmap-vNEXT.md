@@ -1,53 +1,49 @@
-# Research Roadmap: Milestone 2026.05.214
+# Carnot Research Roadmap: Milestone 2026.05.215
 
-**Title:** Thermodynamic Generation, Hardware KANs, and Dynamic CSL
-**Status:** Planned
+**Theme:** Live GPU Verification Pivot, FPGA Rescope, and Tier 3 Predictive Self-Learning
 
-## 1. Context & Motivation
+## 1. Status at End of 2026.05.214
 
-Milestone 2026.05.213 successfully established the Process-Reward Energy Model (PREM), Ising ALPS sampling, and the Dynamic Test-Time Compute (TTC) Controller. However, significant gaps remain between the current state and our PRD vision:
-1.  **Hardware Acceleration:** We have not yet moved constraint sampling logic onto physical FPGA (KV260) infrastructure, despite architectural blueprints.
-2.  **Continuous Self-Learning (CSL) Stability:** Prior milestones observed mode collapse during sequential task learning in EBMs.
-3.  **Generative Decoding:** While we have discrete biasing, our generation loop lacks true continuous energy-landscape constraints (Thermodynamic Generation).
+Milestone .214 proved the feasibility of Thermodynamically Constrained Neural Generation, integrated substrate-aware KANs in simulation, and established early dynamic resolution for Continuous Self-Learning (CSL). However, as mandated by the `research-program.md` April 2026 findings:
+1. Regex-based constraint extraction is fundamentally broken for instruction-tuned models. We need NSVIF/Z3 or LLM-as-extractor techniques.
+2. The architectural derivation proved that $k=15$ is infeasible on a single-chain FPGA. We must pivot to $k_{max}=5$ with Manifold Substitution.
+3. CSL must advance to Tier 3 (JEPA Predictive Verification) coupled with recent findings on Adaptive Data Harvesting for universal constraints (arxiv:2605.09707).
 
-Recent literature (arxiv:2605.02104, arxiv:2605.08412, OpenReview 2026, and arxiv:2605.14558) provides concrete paths to address these gaps.
+## 2. Goals for 2026.05.215
 
-## 2. Architecture Updates
+1. **Rebuild Constraint Extraction:** Implement a Z3/NSVIF extractor and LLM-as-extractor for reliable verification on live instruction-tuned output.
+2. **Hardware Realism ($k_{max}=5$):** Refactor the FPGA topology toward parallel PT-SB chains capped at $k=5$, satisfying the KV260 deployment constraints.
+3. **Continuous Self-Learning (Tier 3):** Implement predictive verification using JEPA and adaptive data harvesting to forecast violations before autoregressive generation finishes.
+4. **Live E2E Benchmarks:** Execute full GSM8K/HumanEval validation on live GPU utilizing the newly mandated unsloth SOTA GGUF models.
 
-This milestone introduces three major architectural components:
--   **Thermodynamic Generation & ActFocus:** Replaces standard autoregressive decoding with a generation loop that incorporates thermodynamic continuous penalties and redistributes token-level energy gradients to prioritize action tokens.
--   **Substrate-Aware KANs:** A multiply-free Kolmogorov-Arnold Network topology designed strictly for LUT/BRAM allocation on FPGAs.
--   **Dynamic Resolution EBMs:** Introduces resolution scaling to the core EBMs to prevent catastrophic forgetting in the CSL loop.
+## 3. Architecture
 
-## 3. Phase Descriptions
+```mermaid
+graph TD
+    A[SOTA GGUF (Live GPU)] -->|CoT Response| B[LLM Extractor / Z3 Formalizer]
+    B -->|Verified Constraints| C[Energy Function (k_max=5 KAN)]
+    C -->|Violations| D[Tier 3 JEPA Predictor]
+    D -->|Continuous Training| E[Adaptive Data Harvester]
+    C -->|Feedback| A
+```
 
-### Phase 0: Activation
-Archive the completed `.213` milestone and activate `.214` in the conductor framework.
+## 4. Execution Phases
 
-### Phase 1: Generative Decoding Enhancements
--   Implement ActFocus token reweighting (arxiv:2605.14558) into the PREM trainer to improve credit assignment.
--   Implement Thermodynamically Constrained Neural Generation (arxiv:2605.02104) to strictly guide autoregressive decoding.
--   Benchmark using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+### Phase 0: Housekeeping
+Archive the .214 roadmap and initialize .215 execution tracking.
 
-### Phase 2: Hardware-Aware KAN Verification
--   Design Substrate-Aware KAN architectures tailored for KV260 FPGAs (arxiv:2605.08412).
--   Create LUT/BRAM allocation scripts to estimate hardware resources.
--   Execute an end-to-end KV260 simulation to identify bottleneck latencies in the Rust/Python bridge.
+### Phase 1: Robust Extraction
+Retire the regex-based ArithmeticExtractor. Build an LLM-guided extractor that outputs formal logic (Z3/NSVIF) representations of CoT steps for reliable constraint detection.
 
-### Phase 3: Continuous Self-Learning Resilience
--   Introduce Dynamic Resolution for Continual EBM Learning (OpenReview 2026).
--   Run retention benchmarks using `unsloth/gemma-4-26B-A4B-it-GGUF` to ensure sequential task learning avoids mode collapse.
+### Phase 2: FPGA Rescope
+Pivot the KV260 simulator and architecture to the $k_{max}=5$ parallel PT-SB chain configuration, abandoning the monolithic $k=15$ approach. 
 
-### Phase 4: Capstone & Retrospective
--   Full end-to-end integration and verification of all new modules.
--   Synthesize performance and reliability insights.
+### Phase 3: Tier 3 Self-Learning
+Integrate arxiv:2605.09707 (Adaptive Data Harvesting) to construct a JEPA predictive verification model. It will train on live GPU logs to forecast energy spikes early in the LLM generation window.
 
-## 4. Hardware Requirements
--   **Required:** 1x GPU with 24GB+ VRAM for SOTA GGUF models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`).
--   **Simulated:** KV260 FPGA board (simulated via Python latency mock, physical integration planned for subsequent milestones).
+### Phase 4: Live GPU Capstone
+Run a complete End-to-End evaluation of the pipeline (Z3 extraction + JEPA prediction) on `unsloth/Qwen3.6-35B-A3B-GGUF` and `unsloth/gemma-4-31B-it-GGUF`. Conclude with the milestone retrospective.
 
-## 5. Dependency Graph
--   Phase 1 depends on baseline PREM training from .213.
--   Phase 2 depends on core KAN architecture.
--   Phase 3 is independent but must be integrated into Phase 4.
--   Phase 4 depends on the successful completion of Phases 1, 2, and 3.
+## 5. Hardware Requirements
+- **Development/Training:** Local dual-RTX 3090 system (48GB VRAM) for live GGUF inference.
+- **Hardware Integration:** Target KV260 FPGA boards using mock simulation until physical boards are deployed.

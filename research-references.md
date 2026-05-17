@@ -13109,3 +13109,13 @@ This sweep was run after milestone `.211` completed. The literature search revea
 - **Paper:** 'Resolving Action Bottleneck: Agentic Reinforcement Learning Informed by Token-Level Energy' (arXiv:2605.14558).
 - **What:** Identifies that token-level training signals concentrate sharply on action tokens. Proposes ActFocus, downweighting gradients on reasoning tokens and an energy-based redistribution mechanism.
 - **Relevance to Carnot:** Directly improves our PREM training pipeline from .213, offering a way to avoid uniform credit assignment in long reasoning trajectories.
+
+
+## Recent ArXiv Findings (2026-05)
+
+
+
+## Recent ArXiv Findings (2026-05) Added for Milestone 2026.05.215 Planning
+
+- **A Theoretical Lens for RL-Tuned Language Models via Energy-Based Models** (arxiv:2512.18730): Provides a unified variational analysis showing RLVR (verifiable rewards) is equivalent to expected KL minimization toward an optimal reasoning distribution. Important for tuning Carnot's EBM extraction on real models.
+- **Adaptive Data Harvesting for Efficient Neural Network Learning with Universal Constraints** (arxiv:2605.09707): Demonstrates learning an adaptive policy for sample selection to enforce continuous constraints. Highly relevant to Continuous Self-Learning (Tier 3).
