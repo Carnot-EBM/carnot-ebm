@@ -1,0 +1,45 @@
+{
+  "experiment": 2262,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-17",
+  "started_at": "2026-05-17T17:20:52.062671+00:00",
+  "finished_at": "2026-05-17T17:20:52.062671+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 4: Adversarial Null-Space Probe on k=16 Ensemble + FST Stack",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 prior failure(s) match this task's scope but prior_failures field is missing or incomplete: prior_failures[0] missing/empty fields: ['retire_if_same_verdict']",
+  "gates_evaluated": [
+    {
+      "upstream": "exp1093-phase1c-verifier-joint-null-space-measurement",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [
+        {
+          "experiment_id": "exp1500-orthogonality-matrix-verifier",
+          "verdict": "complete",
+          "addressed_by": "exp1500 measured the joint null-space of the k=6 ensemble. This task probes the k=16 ensemble + FST stack against adversarial inputs \u2014 a different evaluation (attack simulation vs static null-space measurement) on a different stack version."
+        }
+      ],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: verifiers_correlated_diversity_needed"
+    },
+    {
+      "upstream": "exp1224-phase5c-adversarial-probe",
+      "artifact_field": "rerun_discipline",
+      "op": "prior_failures_required",
+      "expected": "non-empty entry naming this prior",
+      "actual": [
+        {
+          "experiment_id": "exp1500-orthogonality-matrix-verifier",
+          "verdict": "complete",
+          "addressed_by": "exp1500 measured the joint null-space of the k=6 ensemble. This task probes the k=16 ensemble + FST stack against adversarial inputs \u2014 a different evaluation (attack simulation vs static null-space measurement) on a different stack version."
+        }
+      ],
+      "passed": false,
+      "reason": "\u26a0\ufe0f Research Finding: partial_attack_success_revision_needed"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
