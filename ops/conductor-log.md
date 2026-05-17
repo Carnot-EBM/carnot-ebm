@@ -4177,3 +4177,5 @@ Ripgrep i |
 | 2026-05-17 08:13 UTC | Phase 1: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.07s |
 | 2026-05-17 08:15 UTC | Phase 1: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.83s |
 | 2026-05-17 08:17 UTC | Phase 1: ActFocus Token-Level Energy Reweighting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2181-kan-cl-regularization) |
+| 2026-05-17 08:17 UTC | Phase 2: Energy-Guided Decoding Integration | DOOMED_RERUN_BLOCK | 13 prior failure(s) match this task's scope but prior_failures field is missing  |
+| 2026-05-17 08:19 UTC | Phase 1: ActFocus Token-Level Energy Reweighting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2181-kan-cl-regularization) |
