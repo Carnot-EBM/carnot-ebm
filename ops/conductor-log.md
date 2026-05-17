@@ -4474,3 +4474,5 @@ Ripgrep i |
 | 2026-05-17 20:08 UTC | Phase 1: KAN-CL n=256 Per-Knot Regularization Clea | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2281-pypi-escalation-fix) |
 | 2026-05-17 20:08 UTC | Phase 1: KAN-CL n=256 + CASAL Joint Constraint Enf | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2284-kancl-n256-clean.kancl_n256_valida |
 | 2026-05-17 20:10 UTC | Phase 2: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2281-pypi-escalation-fix) |
+| 2026-05-17 20:10 UTC | Phase 2: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2286-kv260-rtl-lint.lint_errors_count ( |
+| 2026-05-17 20:12 UTC | Phase 2: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2281-pypi-escalation-fix) |
