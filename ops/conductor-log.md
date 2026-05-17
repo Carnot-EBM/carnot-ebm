@@ -4031,3 +4031,4 @@ Error |
 | 2026-05-17 02:55 UTC | Phase 2: Substrate-Aware KAN Hardware Accounting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2125-substrate-aware-kan) |
 | 2026-05-17 02:55 UTC | Phase 3: Dynamic Resolution Continuous Self-Learni | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 02:57 UTC | Phase 3: Dynamic Resolution Continuous Self-Learni | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 02:59 UTC | Phase 3: Dynamic Resolution Continuous Self-Learni | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
