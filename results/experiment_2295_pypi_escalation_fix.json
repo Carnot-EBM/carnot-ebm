@@ -29,5 +29,23 @@
   "import_error_resolved": true,
   "iterations_required": 1,
   "methodology_note": "Read test file to extract exact signatures needed, then added check_pypi_escalation and run_escalation to match. gh-CLI detection uses shutil.which + subprocess.run double-check to handle both test mock strategies.",
-  "honest_verdict": "complete: partial_fix — pypi_escalation ImportError resolved (4/4 tests pass), full suite has 2 pre-existing unrelated failures"
+  "honest_verdict": "complete: partial_fix \u2014 pypi_escalation ImportError resolved (4/4 tests pass), full suite has 2 pre-existing unrelated failures",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "experiment=2295.0 and random_seed=2295.0 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "pypi_test_errors=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "full_pretest_errors=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
