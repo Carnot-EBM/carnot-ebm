@@ -4423,3 +4423,5 @@ Ripgrep i |
 | 2026-05-17 18:39 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2268-fst-real-scale-live-gen) |
 | 2026-05-17 18:39 UTC | Phase 1: KAN-CL n=256 Per-Knot Regularization Clea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2267-dualgpu-import-fix.pretest_fixed ( |
 | 2026-05-17 18:41 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2268-fst-real-scale-live-gen) |
+| 2026-05-17 18:41 UTC | Phase 1: KAN-CL n=256 Per-Knot Regularization Clea | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2267-dualgpu-import-fix.pretest_fixed ( |
+| 2026-05-17 18:43 UTC | Phase 1: FR-11 FST Multi-Domain Retention Validati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2268-fst-real-scale-live-gen) |
