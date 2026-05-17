@@ -4023,3 +4023,5 @@ Error |
 | 2026-05-17 02:33 UTC | Phase 1: DAB-Guided GSM8K Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2123-dab-implementation) |
 | 2026-05-17 02:33 UTC | Phase 2: Substrate-Aware KAN Translation | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 02:35 UTC | Phase 1: DAB-Guided GSM8K Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2123-dab-implementation) |
+| 2026-05-17 02:35 UTC | Phase 2: Substrate-Aware KAN Translation | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 02:37 UTC | Phase 2: Substrate-Aware KAN Hardware Accounting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2125-substrate-aware-kan) |
