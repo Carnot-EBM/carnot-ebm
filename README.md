@@ -40,9 +40,9 @@ path = hf_hub_download(repo_id="Carnot-EBM/ThinkPRM-v3", filename="checkpoint.sa
 
 ## Experiments
 Carnot tracks an exhaustive, public experiment record to maintain provenance for all claims.
-- **Total Experiments:** 2868 (through Exp 2166)
-- **Archived Milestones:** 230
-- **Tests:** 25,305
+- **Total Experiments:** 2907 (through Exp 2205)
+- **Archived Milestones:** 234
+- **Tests:** 25,306
 
 ## Key Results
 | Domain | Model | Result | Note |
@@ -54,3 +54,5 @@ Carnot tracks an exhaustive, public experiment record to maintain provenance for
 | Continuous Learning | PREM Motivation | Integration Success | Intrinsic reward for CSL |
 | Optimization | ALPS Module | 300x Speedup | Energy -0.842 vs 54.664 |
 | Verification | CARM | Constraint-Aware Retrieval | Integration Success |
+| Verification | Safety Oracle | FR-11 Integration | Pessimistic constraint learning |
+| Hardware | KANELÉ | FPGA KV260 Synthesis | LUT mapped KANs |

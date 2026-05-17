@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,868 Experiments Across the Public Record, 230 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2166)
+## A Technical Report — 2,907 Experiments Across the Public Record, 234 Archived Milestone Records, 25,306 Python Test Items Collected (Results and Ops Retros Through Exp 2205)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-17
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,864 experiments across 227 milestones up to .214, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 2,907 experiments across 234 milestones up to .218, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **2,675 experiment records tracked through Exp 2114, with 2,675 task records in 225 artifact-backed completed milestone records archived through 2026.05.214** — run between February and May 2026. `research-complete.yaml` currently archives **225** completed milestone records through 2026.05.214. Milestone 2026.05.214 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
+This report documents the research arc behind the framework — **2,907 experiment records tracked through Exp 2205, with 2,907 task records in 234 artifact-backed completed milestone records archived through 2026.05.218** — run between February and May 2026. `research-complete.yaml` currently archives **234** completed milestone records through 2026.05.218. Milestone 2026.05.218 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5705,6 +5705,18 @@ Experiment 2152 successfully integrated PREM intrinsic reward signals for contin
 
 **Discrete-to-Ising Translation**  
 Experiment 2147 successfully mapped basic AND/OR/NOT clauses to quadratic energy penalties, enabling translation of discrete constraints to Ising.
+
+### 4.26 Recent Additions (Milestones .215 to .218)
+
+**Continuous Latent Reasoning & Safety Oracle**
+Experiment 2139 successfully mapped continuous latent reasoning vectors. Experiment 2201 built on this by implementing an online learning pessimistic safety oracle to satisfy FR-11 requirements.
+
+**Hardware-Assisted KANELÉ FPGA Synthesis**
+Experiments 2199 and 2200 executed the Phase 2 LUT mapping and bitstream synthesis for KV260, advancing the hardware integration.
+
+**Capstone Live GPU Evaluation**
+Experiment 2204 brought together the EORM verifier, EBT decoding, and KANELÉ hardware layers for an end-to-end Capstone Live GPU evaluation.
+
 
 
 **Annealed Langevin Posterior Sampling (ALPS)**

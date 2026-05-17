@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en
 <h1>Carnot: Energy-Based Verification for LLM Output</h1>
-<h2>A Technical Report — 2,686 Experiments Across the Public Record, 226 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2154)</h2>
+<h2>A Technical Report — 2,907 Experiments Across the Public Record, 234 Archived Milestone Records, 25,306 Python Test Items Collected (Results and Ops Retros Through Exp 2205)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-16
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -6646,7 +6646,7 @@ Both milestones&#39; operational retrospectives completed, analyzing 0 min wall 
 </html>
 <article class="markdown-body">
 <h1>Carnot: Energy-Based Verification for LLM Output</h1>
-<h2>A Technical Report — 2,868 Experiments Across the Public Record, 230 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2166)</h2>
+<h2>A Technical Report — 2,907 Experiments Across the Public Record, 234 Archived Milestone Records, 25,306 Python Test Items Collected (Results and Ops Retros Through Exp 2205)</h2>
 <p><strong>Author:</strong> Ian Blenke
 <strong>Date:</strong> 2026-05-17
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
@@ -6669,8 +6669,8 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report summarizes 2,864 experiments across 227 milestones up to .214, featuring continuous self-learning integration and fast-slow KAN variant scale-up.</p>
-<p>This report documents the research arc behind the framework — <strong>2,675 experiment records tracked through Exp 2114, with 2,675 task records in 225 artifact-backed completed milestone records archived through 2026.05.214</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>225</strong> completed milestone records through 2026.05.214. Milestone 2026.05.214 completed <strong>0</strong> experiments in <strong>0</strong> minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.</p>
+<p>This report summarizes 2,907 experiments across 234 milestones up to .218, featuring continuous self-learning integration and fast-slow KAN variant scale-up.</p>
+<p>This report documents the research arc behind the framework — <strong>2,907 experiment records tracked through Exp 2205, with 2,907 task records in 234 artifact-backed completed milestone records archived through 2026.05.218</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>234</strong> completed milestone records through 2026.05.218. Milestone 2026.05.218 completed <strong>0</strong> experiments in <strong>0</strong> minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.</p>
 <p>The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
@@ -13273,6 +13273,13 @@ Both milestones&#39; operational retrospectives completed, analyzing 0 min wall 
 <p><strong>Process-Reward Energy Model Architecture</strong><br>Experiment 2144 implemented the PREM architecture, and Experiment 2150 added a Dynamic Test-Time Compute (TTC) Controller that successfully scaled TTC based on PREM energy variance.</p>
 <p><strong>Continuous Self-Learning with PREM Intrinsic Motivation</strong><br>Experiment 2152 successfully integrated PREM intrinsic reward signals for continuous self-learning.</p>
 <p><strong>Discrete-to-Ising Translation</strong><br>Experiment 2147 successfully mapped basic AND/OR/NOT clauses to quadratic energy penalties, enabling translation of discrete constraints to Ising.</p>
+<h3>4.26 Recent Additions (Milestones .215 to .218)</h3>
+<p><strong>Continuous Latent Reasoning &amp; Safety Oracle</strong>
+Experiment 2139 successfully mapped continuous latent reasoning vectors. Experiment 2201 built on this by implementing an online learning pessimistic safety oracle to satisfy FR-11 requirements.</p>
+<p><strong>Hardware-Assisted KANELÉ FPGA Synthesis</strong>
+Experiments 2199 and 2200 executed the Phase 2 LUT mapping and bitstream synthesis for KV260, advancing the hardware integration.</p>
+<p><strong>Capstone Live GPU Evaluation</strong>
+Experiment 2204 brought together the EORM verifier, EBT decoding, and KANELÉ hardware layers for an end-to-end Capstone Live GPU evaluation.</p>
 <p><strong>Annealed Langevin Posterior Sampling (ALPS)</strong>
 Experiment 2109 implemented the ALPS module, achieving a 300.00x speedup over standard Langevin dynamics with a terminal energy of -0.842 (compared to 54.664).</p>
 <p><strong>Constraint-Aware Retrieval Module (CARM)</strong>

@@ -4286,3 +4286,4 @@ Ripgrep i |
 | 2026-05-17 11:41 UTC | Phase 4: Capstone Live GPU Evaluation (Primal-Dual | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2207-primal-dual-guided-decoding) |
 | 2026-05-17 11:41 UTC | Phase 4: Milestone 2026.05.219 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.17s |
 | 2026-05-17 11:43 UTC | Phase 4: Capstone Live GPU Evaluation (Primal-Dual | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2207-primal-dual-guided-decoding) |
+| 2026-05-17 11:43 UTC | Phase 4: Milestone 2026.05.219 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.19s |
