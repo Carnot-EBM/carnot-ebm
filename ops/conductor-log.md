@@ -4092,3 +4092,5 @@ Error |
 | 2026-05-17 05:14 UTC | Plan milestone 2026.05.214 | OK | 12 tasks proposed |
 | 2026-05-17 05:16 UTC | Phase 4: Full E2E Benchmark (PREM + Ising + TTC) | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2151-ttc-prem-integration) |
 | 2026-05-17 05:16 UTC | Milestone 2026.05.214 activated | OK | 12 tasks queued |
+| 2026-05-17 05:29 UTC | Phase 0: Archive .213 and activate .214 | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: approved.
+Ripgrep i |
