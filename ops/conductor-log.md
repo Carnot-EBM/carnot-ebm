@@ -4209,3 +4209,4 @@ Ripgrep i |
 | 2026-05-17 09:09 UTC | Phase 2: Multi-FPGA NeuroRing Stream-Dataflow RTL  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.46s |
 | 2026-05-17 09:12 UTC | Phase 2: Multi-FPGA NeuroRing Stream-Dataflow RTL  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.57s |
 | 2026-05-17 09:14 UTC | Phase 3: Wahkon RKHS Superposition KAN Verifier | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.25s |
+| 2026-05-17 09:16 UTC | Phase 3: Wahkon RKHS Superposition KAN Verifier | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.77s |
