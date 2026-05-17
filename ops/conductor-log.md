@@ -4144,3 +4144,5 @@ Ripgrep i |
 | 2026-05-17 07:23 UTC | Phase 1: E2E Verify-Repair with Z3 Extraction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2170-llm-as-extractor-adapter) |
 | 2026-05-17 07:23 UTC | Phase 2: FPGA KV260 k_max=5 Architecture Pivot | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.73s |
 | 2026-05-17 07:25 UTC | Phase 1: E2E Verify-Repair with Z3 Extraction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2170-llm-as-extractor-adapter) |
+| 2026-05-17 07:25 UTC | Phase 2: FPGA KV260 k_max=5 Architecture Pivot | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.21s |
+| 2026-05-17 07:27 UTC | Phase 1: E2E Verify-Repair with Z3 Extraction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2170-llm-as-extractor-adapter) |
