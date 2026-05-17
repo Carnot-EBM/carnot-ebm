@@ -4187,3 +4187,6 @@ Ripgrep i |
 | 2026-05-17 08:28 UTC | Phase 3: KV260 k_max=5 Verilog RTL Design | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.36s |
 | 2026-05-17 08:30 UTC | Phase 3: OSS-CAD-Suite Hardware Synthesis | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2184-kv260-k5-rtl-design) |
 | 2026-05-17 08:30 UTC | Phase 4: Capstone Live GPU Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2183-energy-guided-decoding) |
+| 2026-05-17 08:30 UTC | Phase 4: Milestone 2026.05.216 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.98s |
+| 2026-05-17 08:32 UTC | Phase 3: OSS-CAD-Suite Hardware Synthesis | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2184-kv260-k5-rtl-design) |
+| 2026-05-17 08:32 UTC | Phase 4: Capstone Live GPU Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2183-energy-guided-decoding) |
