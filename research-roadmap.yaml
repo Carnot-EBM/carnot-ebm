@@ -1,325 +1,172 @@
-milestone: "2026.05.209"
-milestone_title: "Equilibrium Matching, Adaptive Iterative Reasoning, and Hardware-Aware KAN Quantization"
+milestone: "2026.05.210"
+milestone_title: "ALPS-based Generative Inference, KAN-CL Continuous Self-Learning, and ActFocus Energy Reweighting"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 tasks:
-  - id: "exp2094-archive-and-activate"
-    title: "Phase 0: Archive .208 and activate .209"
+  - id: exp2108-archive-and-activate
+    title: "Phase 0: Archive .209 and activate .210"
     max_turns: 20
-    agent_type: "codex"
-    model: "gpt-5.5"
     prompt: |
-      CONTEXT: We are beginning milestone 2026.05.209. We must archive the previous milestone and update the tracking docs.
-      
-      EXISTING CODE TO READ FIRST:
-      - ops/status.md
-      - ops/changelog.md
-      - openspec/change-proposals/research-roadmap-vNEXT.md
-      
-      TASK: Record the activation of milestone 2026.05.209 in ops/status.md and ops/changelog.md.
-      
+      CONTEXT: Milestone 2026.05.209 has completed. We must prepare for 2026.05.210.
+      EXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml, {project_root}/research-roadmap.yaml
+      TASK: Archive 2026.05.209 to research-complete.yaml and initialize the .210 milestone in ops/changelog.md.
       CONCRETE STEPS:
-      1. Ensure openspec/change-proposals/research-roadmap-vNEXT.md exists.
-      2. Update ops/changelog.md to log the start of milestone 2026.05.209.
-      3. Update ops/status.md to reflect the new active milestone and Phase 0 completion.
-      4. Write the terminal deliverable artifact results/experiment_2094_activation.json with honest_verdict="activation_complete".
-      
+      1. Move all tasks from `research-roadmap.yaml` into `research-complete.yaml` under a new 2026.05.209 entry, setting completed date to {date}.
+      2. Clear `research-roadmap.yaml` and copy the new milestone structure from `research-roadmap-next.yaml`.
+      3. Add a "## {date} (Milestone 2026.05.210 Operational Retrospective)" stub in `ops/changelog.md`.
+      4. Write deliverable to `results/experiment_2108_archive.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2095-eqm-landscape-module"
-    title: "Phase 1: Equilibrium Matching (EqM) Landscape Module"
+  - id: exp2109-alps-sampler-module
+    title: "Phase 1: Annealed Langevin Posterior Sampling (ALPS) Module"
     max_turns: 50
     prompt: |
-      CONTEXT: Equilibrium Matching (arXiv:2510.02300) enables generative modeling with implicit EBMs by matching equilibrium gradients.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/phase3/compositional_energy.py
-      
-      TASK: Implement the EqM implicit energy landscape and gradient estimator.
-      
+      CONTEXT: ALPS provides faster convergence for EBMs by annealing static posterior distributions, overcoming traditional MCMC delays.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/samplers/langevin.py
+      TASK: Implement an ALPS sampler that composes directly with Carnot's core ContinuousEBM.
       CONCRETE STEPS:
-      1. Create python/carnot/phase3/eqm_landscape.py.
-      2. Implement a JAX-based EqM training objective that minimizes the discrepancy between the target data distribution and the model's equilibrium state.
-      3. Provide unit test coverage in tests/python/phase3/test_eqm_landscape.py.
-      4. Save to results/experiment_2095_eqm_landscape.json with eqm_landscape_ready=true.
-      
+      1. Create `python/carnot/samplers/alps.py` implementing the ALPS schedule.
+      2. Write a unit test in `tests/python/test_alps.py` verifying ALPS convergence is significantly faster than standard Langevin on a multi-modal toy landscape.
+      3. Save to `results/experiment_2109_alps_module.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2096-eqm-composition"
-    title: "Phase 1: EqM Compositional Module"
-    gated_on:
-      - upstream: "exp2095-eqm-landscape-module"
-        artifact_field: "eqm_landscape_ready"
-        op: "=="
-        value: true
+  - id: exp2110-energy-guided-decoding
+    title: "Phase 1: Energy-Guided Decoding with Hidden State Selection"
+    max_turns: 50
+    prompt: |
+      CONTEXT: Energy-guided decoding dynamically selects hidden states from the layer with the minimal energy score to mitigate hallucination.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/llm_solver.py
+      TASK: Extend the LLM solver to intercept internal representations and apply an energy minimization criteria during decoding.
+      CONCRETE STEPS:
+      1. Add `EnergyGuidedDecoder` in `python/carnot/inference/energy_decoding.py`.
+      2. Ensure it supports extracting representations from the mandated SOTA models (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`).
+      3. Save to `results/experiment_2110_energy_decoding.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2111-kan-cl-regularization
+    title: "Phase 2: KAN-CL Per-Knot Importance Regularization"
     max_turns: 50
     agent_type: "codex"
     prompt: |
-      CONTEXT: EqM allows for compositional reasoning by adding energy functions from multiple models.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/phase3/eqm_landscape.py
-      
-      TASK: Combine multiple EqM models for joint constraint satisfaction.
-      
+      CONTEXT: KAN-CL provides per-knot importance regularization for Continuous Learning in Kolmogorov-Arnold Networks to stop catastrophic forgetting without uniform penalties.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/ising/kan_tier.py
+      TASK: Implement the KAN-CL regularization loss term.
       CONCRETE STEPS:
-      1. Extend python/carnot/phase3/eqm_landscape.py to support a compositional EqM sum over multiple implicit landscapes.
-      2. Implement sampling from the composed landscape.
-      3. Write unit tests for composed EqM sampling.
-      4. Save results to results/experiment_2096_eqm_composition.json with eqm_composition_ready=true.
-      
+      1. Update the KAN tier to calculate node-specific sensitivities (diagonal Fisher information matrix proxy).
+      2. Apply the EWC-style per-knot penalty during training.
+      3. Save to `results/experiment_2111_kan_cl.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2097-eqm-vs-pem-eval"
-    title: "Phase 1: EqM vs PEM on Constraint Graphs"
+  - id: exp2112-muon-ogd-projection
+    title: "Phase 2: Muon-OGD Spectral Orthogonal Gradient Projection"
+    max_turns: 50
+    agent_type: "codex"
+    prompt: |
+      CONTEXT: Muon-OGD applies orthogonalized momentum updates using spectral-norm geometry to avoid interference with prior tasks during continuous LLM adaptation.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/training/csl_loop.py
+      TASK: Implement Muon-OGD for the LLM policy update step.
+      CONCRETE STEPS:
+      1. Create `python/carnot/training/muon_ogd.py` implementing Newton-Schulz matrix-sign approximations.
+      2. Hook it into the Continuous Self-Learning (CSL) loop.
+      3. Save to `results/experiment_2112_muon_ogd.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2113-kan-cl-muon-eval
+    title: "Phase 2: Continual Learning Catastrophic Forgetting Evaluation"
+    max_turns: 50
     gated_on:
-      - upstream: "exp2096-eqm-composition"
-        artifact_field: "eqm_composition_ready"
-        op: "=="
-        value: true
+      - upstream: exp2111-kan-cl-regularization
+        artifact_field: result
+        op: "contains"
+        value: "OK"
+    prompt: |
+      CONTEXT: We must verify KAN-CL and Muon-OGD actually prevent forgetting on a sequence of constraints.
+      EXISTING CODE TO READ FIRST: {project_root}/tests/python/test_csl_loop.py
+      TASK: Benchmark the new regularizations on the self-learning loop.
+      CONCRETE STEPS:
+      1. Create a sequential learning test where constraints A then B then C are taught iteratively.
+      2. Verify constraint A is not forgotten (0% catastrophic forgetting) when C is learned.
+      3. Save to `results/experiment_2113_cl_eval.json`.
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2114-actfocus-reweighting
+    title: "Phase 3: ActFocus Token-Level Energy Reweighting"
     max_turns: 50
     prompt: |
-      CONTEXT: We must empirically evaluate if EqM provides faster or more stable convergence than the PEM module from .208.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/phase3/eqm_landscape.py
-      - python/carnot/phase3/compositional_energy.py
-      
-      TASK: Compare EqM with PEM on synthetic combinatorial constraint graphs.
-      
+      CONTEXT: ActFocus downweights reasoning tokens and upweights action tokens in the policy gradient based on an energy-redistribution mechanism, solving the action bottleneck.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/inference/verifier.py
+      TASK: Modify the reinforcement/energy feedback to apply ActFocus.
       CONCRETE STEPS:
-      1. Create scripts/experiment_2097_eqm_eval.py.
-      2. Generate 50 instances of continuous constraint graphs.
-      3. Measure convergence speed and constraint satisfaction rate for both EqM and PEM.
-      4. Save results to results/experiment_2097_eqm_eval.json with eqm_superior=true or false.
-      
+      1. Inject a weighting function into the reward scalar calculation that isolates the 'action' token segment from 'CoT' segments.
+      2. Downweight gradients on reasoning tokens and redistribute energy to action tokens.
+      3. Save to `results/experiment_2114_actfocus.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2098-ired-adaptive-optimizer"
-    title: "Phase 2: IRED Adaptive Optimizer"
+  - id: exp2115-nexus-symbolic-grounding
+    title: "Phase 3: NEXUS Symbolic Grounding for ActFocus"
     max_turns: 50
     prompt: |
-      CONTEXT: IRED (arXiv:2406.11179) uses an adaptive number of optimization steps based on energy gradients to iteratively refine reasoning traces.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/trajectory_decoder.py
-      
-      TASK: Implement the IRED adaptive step loop based on energy gradients.
-      
+      CONTEXT: NEXUS framework grounds probabilistic risk into deterministic constraints pre-action to establish a rigorous pre-action defense.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/extract.py
+      TASK: Bridge Carnot's symbolic verifiers (Z3) into the ActFocus reward trace.
       CONCRETE STEPS:
-      1. Create python/carnot/inference/ired_optimizer.py.
-      2. Implement an adaptive threshold that stops optimization when the energy gradient norm falls below epsilon.
-      3. Add tests verifying that simpler constraints exit early while harder constraints use more steps.
-      4. Save to results/experiment_2098_ired_optimizer.json with ired_optimizer_ready=true.
-      
+      1. Build `python/carnot/pipeline/nexus_grounding.py` to evaluate pre-action safety.
+      2. Decouple physical feasibility from safety specifications during the CSL feedback loop.
+      3. Save to `results/experiment_2115_nexus.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2099-ired-constraint-learning"
-    title: "Phase 2: IRED Constraint Learning"
-    gated_on:
-      - upstream: "exp2098-ired-adaptive-optimizer"
-        artifact_field: "ired_optimizer_ready"
-        op: "=="
-        value: true
+  - id: exp2116-actfocus-gsm8k-benchmark
+    title: "Phase 3: ActFocus + ALPS Benchmark on GSM8K"
     max_turns: 50
     prompt: |
-      CONTEXT: IRED learns energy functions that map input constraints to desired outputs.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/ired_optimizer.py
-      
-      TASK: Train IRED to map input constraints to continuous latent outputs.
-      
+      CONTEXT: Must test the new ALPS sampler and ActFocus reweighting on a live SOTA model.
+      EXISTING CODE TO READ FIRST: {project_root}/tests/integration/test_gsm8k.py
+      TASK: Execute a live run using mandated SOTA GGUFs.
       CONCRETE STEPS:
-      1. Create scripts/experiment_2099_ired_training.py.
-      2. Use a synthetic dataset of logic constraints and run a small training loop.
-      3. Validate that the learned IRED energy function correctly minimizes at valid states.
-      4. Save to results/experiment_2099_ired_training.json with ired_training_successful=true.
-      
+      1. Run a 50-problem GSM8K slice using `unsloth/Qwen3.6-35B-A3B-GGUF`.
+      2. Measure accuracy and token-efficiency against baseline without ActFocus/ALPS.
+      3. Save to `results/experiment_2116_actfocus_benchmark.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2100-ired-sota-integration"
-    title: "Phase 2: IRED SOTA GGUF Integration"
-    gated_on:
-      - upstream: "exp2099-ired-constraint-learning"
-        artifact_field: "ired_training_successful"
-        op: "=="
-        value: true
-    max_turns: 80
+  - id: exp2117-neuroring-topology-sim
+    title: "Phase 4: NeuroRing Bidirectional Ring Topology Simulation"
+    max_turns: 100
     model: "opus"
     prompt: |
-      CONTEXT: IRED must be integrated into the live decoding loop of our mandated local SOTA models to guide generation.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/inference/ired_optimizer.py
-      
-      TASK: Hook IRED optimizer into the local GGUF decoding loop.
-      
+      CONTEXT: NeuroRing scales constraint satisfaction on FPGAs via stream-dataflow. We must simulate this to advance hardware metrics.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/samplers/parallel_ising.py
+      TASK: Simulate NeuroRing synchronization for the parallel Ising sampler.
       CONCRETE STEPS:
-      1. Create scripts/experiment_2100_ired_sota.py.
-      2. In MODEL_SPECS, use 'unsloth/gemma-4-31B-it-GGUF' and 'unsloth/gemma-4-26B-A4B-it-GGUF'.
-      3. Wrap the generation pipeline with the IRED adaptive refinement step, using local model logits.
-      4. Run 10 benchmark problems and measure constraint pass rate.
-      5. Save to results/experiment_2100_ired_sota.json with ired_integrated=true.
-      
+      1. Implement a bidirectional ring-topology communication pattern for distributed Ising nodes.
+      2. Compute no-synthesis hardware accounting (latency, BOP) over Sudoku constraints.
+      3. Save to `results/experiment_2117_neuroring.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2101-csl-ired-feedback"
-    title: "Phase 3: CSL IRED Feedback Loop"
+  - id: exp2118-full-integration-e2e
+    title: "Phase 4: Full E2E Benchmark (ALPS + ActFocus + KAN-CL + Muon-OGD)"
+    max_turns: 50
     gated_on:
-      - upstream: "exp2100-ired-sota-integration"
-        artifact_field: "ired_integrated"
-        op: "=="
-        value: true
-    max_turns: 50
+      - upstream: exp2116-actfocus-gsm8k-benchmark
+        artifact_field: result
+        op: "contains"
+        value: "OK"
     prompt: |
-      CONTEXT: Our PRD requires Continuous Self-Learning. We will update IRED energy functions online from constraint violations.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/constraint_template_library.py
-      - scripts/experiment_2100_ired_sota.py
-      
-      TASK: Implement an online update mechanism for the IRED energy landscape using deterministic verifier feedback.
-      
+      CONTEXT: The pinnacle of Milestone 210. Must prove CSL loops function flawlessly with the new capabilities.
+      EXISTING CODE TO READ FIRST: {project_root}/python/carnot/pipeline/verify_repair.py
+      TASK: Run the entire integrated pipeline on a complex reasoning scenario.
       CONCRETE STEPS:
-      1. Create scripts/experiment_2101_csl_ired.py.
-      2. Simulate a failure trace, run a deterministic verifier, and use the error signal to adjust the IRED energy function.
-      3. Show that the model avoids the same failure in the next step.
-      4. Save to results/experiment_2101_csl_ired.json with csl_ired_active=true.
-      
+      1. Assemble ALPS, ActFocus, KAN-CL, and Muon-OGD into the VerifyRepairPipeline.
+      2. Run the E2E verification test, observing catastrophic forgetting rates and energy bounds.
+      3. Save to `results/experiment_2118_full_e2e.json`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: "exp2102-csl-eqm-memory"
-    title: "Phase 3: CSL EqM Memory Promotion"
-    max_turns: 50
-    prompt: |
-      CONTEXT: Successful EqM composed landscapes should be promoted to Tier 2 continuous memory for future reuse.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/phase3/eqm_landscape.py
-      
-      TASK: Build a memory cache that saves and retrieves converged EqM landscapes.
-      
-      CONCRETE STEPS:
-      1. Create scripts/experiment_2102_eqm_memory.py.
-      2. Implement a simple JSON/Safetensors serialization for EqM parameters.
-      3. Retrieve and hot-start EqM on a similar problem.
-      4. Save to results/experiment_2102_eqm_memory.json with memory_promotion_successful=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2103-csl-zero-forgetting-eval"
-    title: "Phase 3: CSL Zero-Forgetting Evaluation"
-    gated_on:
-      - upstream: "exp2101-csl-ired-feedback"
-        artifact_field: "csl_ired_active"
-        op: "=="
-        value: true
-    max_turns: 50
-    prompt: |
-      CONTEXT: We must verify that CSL updates do not cause catastrophic forgetting of previously verified constraints.
-      
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2101_csl_ired.py
-      
-      TASK: Run a zero-forgetting evaluation gate for the CSL loop.
-      
-      CONCRETE STEPS:
-      1. Create scripts/experiment_2103_csl_forgetting.py.
-      2. Apply sequential constraint updates.
-      3. Verify that the performance on the first constraint does not degrade.
-      4. Save to results/experiment_2103_csl_forgetting.json with nonforgetting_rate=1.0.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2104-asp-kan-haq-quantization"
-    title: "Phase 4: ASP-KAN-HAQ Hardware Quantization"
-    max_turns: 50
-    agent_type: "codex"
-    model: "gpt-5.5"
-    prompt: |
-      CONTEXT: ASP-KAN-HAQ (arXiv:2509.07xxx) aligns spline knots with quantization grids to massively reduce KAN hardware area.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/models/kan_tier.py
-      
-      TASK: Implement Alignment-Symmetry Quantization for Carnot's KAN tiers.
-      
-      CONCRETE STEPS:
-      1. Create python/carnot/hardware/asp_kan_quant.py.
-      2. Implement the grid-alignment and symmetry sharing algorithm for B-splines.
-      3. Test the quantized forward pass against the full FP32 pass.
-      4. Save to results/experiment_2104_asp_kan.json with asp_kan_ready=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2105-asp-kan-hardware-accounting"
-    title: "Phase 4: ASP-KAN-HAQ Hardware Accounting"
-    gated_on:
-      - upstream: "exp2104-asp-kan-haq-quantization"
-        artifact_field: "asp_kan_ready"
-        op: "=="
-        value: true
+  - id: exp2119-milestone-210-retro
+    title: "Phase 4: Milestone 2026.05.210 Retrospective"
     max_turns: 20
-    model: "opus"
     prompt: |
-      CONTEXT: We need explicit platform-independent metrics (LUTs, BOPs, area) for our KANs without requiring a full Vivado synthesis run.
-      
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/hardware/asp_kan_quant.py
-      
-      TASK: Run no-synthesis hardware accounting for the quantized ASP-KAN.
-      
+      CONTEXT: End of milestone analysis for .210.
+      EXISTING CODE TO READ FIRST: {project_root}/ops/conductor-log.md
+      TASK: Generate the retrospective analysis of the .210 milestone.
       CONCRETE STEPS:
-      1. Create scripts/experiment_2105_kan_accounting.py.
-      2. Calculate the theoretical LUT count and NABS (Number of Additions and Bit-Shifts) for a 3-layer ASP-KAN.
-      3. Compare the area estimate to a non-quantized KAN baseline.
-      4. Save to results/experiment_2105_kan_accounting.json with estimated_area_reduction > 1.0 and hardware_execution_claim=false.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2106-full-integration-benchmark"
-    title: "Phase 4: Full E2E Integration Benchmark"
-    gated_on:
-      - upstream: "exp2100-ired-sota-integration"
-        artifact_field: "ired_integrated"
-        op: "=="
-        value: true
-    max_turns: 80
-    agent_type: "gemini"
-    prompt: |
-      CONTEXT: Final verification of the milestone: End-to-end continuous generation with EqM landscapes and IRED adaptation on SOTA GGUFs.
-      
-      EXISTING CODE TO READ FIRST:
-      - scripts/experiment_2097_eqm_eval.py
-      - scripts/experiment_2100_ired_sota.py
-      
-      TASK: Run a comprehensive E2E integration test with 'unsloth/Qwen3.6-35B-A3B-GGUF'.
-      
-      CONCRETE STEPS:
-      1. Create scripts/experiment_2106_full_e2e.py.
-      2. Compose multiple EqM constraint landscapes.
-      3. Use IRED to adaptively refine the GGUF generation trace to satisfy all EqM constraints.
-      4. Verify final states with deterministic solvers.
-      5. Save to results/experiment_2106_full_e2e.json with integration_successful=true.
-      
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: "exp2107-milestone-209-retro"
-    title: "Phase 4: Milestone 2026.05.209 Retrospective"
-    max_turns: 30
-    agent_type: "claude"
-    prompt: |
-      CONTEXT: The milestone is complete. Summarize findings for EqM, IRED, and ASP-KAN-HAQ.
-      
-      EXISTING CODE TO READ FIRST:
-      - ops/status.md
-      - ops/changelog.md
-      
-      TASK: Produce the milestone retrospective artifact.
-      
-      CONCRETE STEPS:
-      1. Compile the success/failure state of all Exp 2094-2106 deliverables.
-      2. Analyze if EqM improved continuous reasoning and if ASP-KAN reduced theoretical hardware area.
-      3. Save to results/experiment_2107_retro.json with honest_verdict="retrospective_complete".
-      
+      1. Read all experiment results from the 210X series.
+      2. Synthesize findings into `results/experiment_2119_retro.json` and update `ops/status.md`.
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
