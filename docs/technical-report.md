@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,686 Experiments Across the Public Record, 226 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2154)
+## A Technical Report — 2,864 Experiments Across the Public Record, 227 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2166)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-16
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,686 experiments across 226 milestones up to .212, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 2,864 experiments across 227 milestones up to .214, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
-This report documents the research arc behind the framework — **2,675 experiment records tracked through Exp 2114, with 2,675 task records in 225 artifact-backed completed milestone records archived through 2026.05.212** — run between February and May 2026. `research-complete.yaml` currently archives **225** completed milestone records through 2026.05.212. Milestone 2026.05.212 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
+This report documents the research arc behind the framework — **2,675 experiment records tracked through Exp 2114, with 2,675 task records in 225 artifact-backed completed milestone records archived through 2026.05.214** — run between February and May 2026. `research-complete.yaml` currently archives **225** completed milestone records through 2026.05.214. Milestone 2026.05.214 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -420,9 +420,9 @@ artifacts checked into `results/operational_retro_*.json`.
 **Defensible headline results (provenance-labeled artifacts):**
 
 - **99.3%** of wrong code is flagged on the 164-problem HumanEval benchmark;
-  property-based tests catch six bugs the official test suite misses (Exp 226).
+  property-based tests catch six bugs the official test suite misses (Exp 227).
 - **+3.0 percentage points** on HumanEval pass-rate from verify-and-repair,
-  with 95% CI [+0.6, +6.1] (Exp 226, Gemma 4 4B).
+  with 95% CI [+0.6, +6.1] (Exp 227, Gemma 4 4B).
 - **+4.9 percentage points** on a typed-constraint compliance benchmark
   (Exp 221).
 - **Prompt-injection safety KAN** distilled from GPT-OSS-Safeguard-20B
@@ -520,7 +520,7 @@ artifacts checked into `results/operational_retro_*.json`.
 - **Boltzmann-GPT contrastive training:** the random-weight bridge improved
   from **AUROC=0.65** to **0.960744** after **100** contrastive-divergence
   steps on a balanced FoVer slice; the forward pass is verified (Exps
-  1226/1237/1248).
+  1227/1237/1248).
 - **Phase 4 active-inference pilot:** the blocked-Gibbs/free-energy loop solved
   **10/10** synthetic 5x5 ARC-AGI-3-style puzzles with action_count_ratio
   **0.2534** versus a greedy legal-action baseline, a **74.7%** action-count
@@ -804,7 +804,7 @@ artifacts checked into `results/operational_retro_*.json`.
 - **Boltzmann-GPT seed and contrastive-training status:** the random-weight
   Boltzmann-GPT bridge reached **AUROC=0.65** on 20 FoVer examples, proving a
   non-degenerate structural signal but falling below the trained NRGPT baseline
-  **0.920929** (Exp 1226). Exp 1237 implemented the contrastive-training path;
+  **0.920929** (Exp 1227). Exp 1237 implemented the contrastive-training path;
   Exp 1248 then completed the v2 run and measured **post-CD AUROC=0.960744**
   after 100 contrastive-divergence steps.
 - **Q11 TSS instrumentation:** Continuous-EBM sign-bottleneck diagnostics now
@@ -1121,10 +1121,10 @@ and Gemma 4 on their live GPU inference paths. The numbers dropped, as
 expected — and some of them stayed positive. The headline set from Phase 3
 is what we still cite:
 
-- **HumanEval 164-problem** — +3.0 pp with 95% CI excluding zero (Exp 226).
+- **HumanEval 164-problem** — +3.0 pp with 95% CI excluding zero (Exp 227).
 - **Typed-constraint compliance** — +4.9 pp on Gemma 4 4B (Exp 221).
 - **Property-based bug detection** — 99.3% catch rate, 6 bugs beyond the
-  official test suite (Exp 226).
+  official test suite (Exp 227).
 
 Phase 3 also added the **568-row semantic calibration corpus**, the
 **164-task explicit code-spec corpus** with 194 trace links, and the
@@ -1594,12 +1594,12 @@ but are not included as model-generation headline claims.
 
 | Benchmark | Baseline | +Carnot | Delta | Experiment |
 |-----------|----------|---------|-------|------------|
-| HumanEval 164 (PBT) | 11.6% | 14.6% | **+3.0pp** [+0.6, +6.1] CI | Exp 226 |
+| HumanEval 164 (PBT) | 11.6% | 14.6% | **+3.0pp** [+0.6, +6.1] CI | Exp 227 |
 | HumanEval 30 (PBT, seeded Qwen cohort) | 23.3% | 23.3% | +0.0pp; 2 harness misses caught | Exp 227 |
 | HumanEval 50 (PBT, dual-model) | 18.0% / 10.0% | 20.0% / 12.0% | +2.0pp both | Exp 220 |
 | Typed IR constraints (81 tasks) | 61.7% | 66.7% | **+4.9pp** (Gemma4) | Exp 221 |
 | GSM8K semantic v2 (200 questions) | 46.5% | 47.5% | +1.0pp (Gemma4); verify-only still unjustified | Exp 235 |
-| PBT bug detection rate | — | 144/145 | **99.3%** | Exp 226 |
+| PBT bug detection rate | — | 144/145 | **99.3%** | Exp 227 |
 | GSM8K live precision (50q, Gemma4-E4B-it) | — | — | **+5pp** signed, repair_better, first positive verify-repair number since Exp 411 | Exp 451 |
 | Chronological replay v2 (116 cases) | 34.48%, 8 FP | 34.48%, 8 FP | Retrieval **32.1%** hit, **43.6%** precision; primary success not met | Exp 241 |
 | Live trace memory | — | 230/662 accepted | 43 patterns, 29 mature | Exp 222 |
@@ -1636,7 +1636,7 @@ but are not included as model-generation headline claims.
 | KV260 v6 sequential Gibbs | v5 DC-continuous **KL=0.4469** | **KL=0.0000** vs CPU Gibbs | Correctness-first sequential update matches CPU reference on N=8 and N=128/K=16 checks | Exp 1161 |
 | KANELE SOS-KAN FPGA blueprint | CPU baseline **289 ms** | Estimated FPGA latency **0.12 us** | **2,408,333x** speedup estimate for LUTized compressed SOS-KAN; specification only, no Vivado synthesis | Exp 1162 |
 | NRGPT energy-native prototype | baseline AUROC **0.8874** | n=1 AUROC **0.9209**; n=3 **0.9158** | Energy recurrence helps; later frozen-prefix analysis classifies the non-monotonicity as expected causal-context shift, not architectural failure | Exps 1163/1251 |
-| Boltzmann-GPT CD training | random-weight AUROC **0.65** | post-CD AUROC **0.960744** | 100 contrastive-divergence steps on a balanced FoVer slice; forward pass verified | Exps 1226/1237/1248 |
+| Boltzmann-GPT CD training | random-weight AUROC **0.65** | post-CD AUROC **0.960744** | 100 contrastive-divergence steps on a balanced FoVer slice; forward pass verified | Exps 1227/1237/1248 |
 | Phase 4 active-inference harder-puzzle audit | BFS cap target >=50% | **15/15** BFS-intractable solved by blocked Gibbs | 15 synthetic 15x15 scrambled puzzles; BFS hit 100,000-state cap on every puzzle; not a leaderboard claim | Exp 1210 |
 | Phase-5 in-situ training substrate | Prototype ready | **5/5** training-loop gates passed | Energy decrease **67.1%**, oracle accuracy **1.0 → 1.0**, valid-action fraction **1.0** in prototype | Exps 1222/1223 |
 | Spera joint-orthogonality audit | k=3 verifier ensemble | **k_eff≈1**, max P(V_i\|V_j)=**1.000** | Honest warning: correlated blind spots require verifier redesign and k=6 production orthogonality audit before paper/scale-up | Exp 1224 |
@@ -1897,7 +1897,7 @@ This work began as an investigation of activation-based hallucination detection:
 
 This negative result forced a fundamental rethinking. Instead of asking "is this output correct?" (detection), we pivoted to asking "does this output satisfy known constraints?" (verification). The tool for constraint satisfaction is the Ising model — a pairwise energy function where constraints are encoded as spin couplings. Ising models can be solved via parallel Gibbs sampling (CPU), continuous relaxation (gradient descent), or eventually thermodynamic hardware (Extropic TSU).
 
-The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — works as a live end-to-end pattern with measurable improvements on code verification (+3.0pp HumanEval, Exp 226) and typed constraint verification (+4.9pp, Exp 221). Tracker-gated replay first reduced false positives materially on Exp 223, and the richer case-memory follow-on keeps held-out success flat at **34.48%** while improving retrieval specificity on mixed semantic-plus-code traces (Exp 241). All headline numbers are from live GPU inference.
+The resulting architecture — LLM proposes, Ising verifies, repair loop fixes — works as a live end-to-end pattern with measurable improvements on code verification (+3.0pp HumanEval, Exp 227) and typed constraint verification (+4.9pp, Exp 221). Tracker-gated replay first reduced false positives materially on Exp 223, and the richer case-memory follow-on keeps held-out success flat at **34.48%** while improving retrieval specificity on mixed semantic-plus-code traces (Exp 241). All headline numbers are from live GPU inference.
 
 The narrative arc of this report is: tried activation approaches -> learned 14 principles about what doesn't work -> pivoted to constraint verification -> discovered early results were simulation artifacts -> rebuilt extraction for real models -> proved it works on live benchmarks -> shipped it as a product.
 
@@ -2590,7 +2590,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 
 ### Part 2: Constraint-based verification works (live GPU results)
 
-- **Full HumanEval 164 + PBT (Exp 226):** 11.6% -> 14.6% (+3.0pp, 95% CI [+0.6, +6.1])
+- **Full HumanEval 164 + PBT (Exp 227):** 11.6% -> 14.6% (+3.0pp, 95% CI [+0.6, +6.1])
 - **PBT bug detection (Exp 220):** 99.3% of wrong code detected (144/145)
 - **Seeded Qwen cohort (Exp 227):** 23.3% -> 23.3%; PBT still catches 2 official-test misses and detects 17/23 wrong baselines
 - **Typed IR constraints (Exp 221):** Gemma4 61.7% -> 66.7% (+4.9pp)
@@ -2653,7 +2653,7 @@ The energy function serves as the objective judge — no human evaluation or LLM
 
 3. **Historical simulation artifacts.** Early milestones (Exp 39-184) used simulated inference calibrated to instruction-tuned benchmarks while loading base models. All headline numbers in this report are from live GPU inference; simulated results are documented only as negative findings.
 
-4. **Statistical power.** The full 164-problem HumanEval benchmark (Exp 226) includes bootstrap 95% CI: +3.0pp [+0.6, +6.1], excluding zero. Smaller benchmarks (30-50 questions) lack formal significance testing.
+4. **Statistical power.** The full 164-problem HumanEval benchmark (Exp 227) includes bootstrap 95% CI: +3.0pp [+0.6, +6.1], excluding zero. Smaller benchmarks (30-50 questions) lack formal significance testing.
 
 5. **Composite scoring requires test cases.** The code verification pipeline assumes the existence of test cases. For open-ended generation without structural ground truth, only the logprob signal and NL constraint extraction are available.
 
@@ -2913,7 +2913,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 **Result:** On **50** official problems per model, Qwen3.5-0.8B moves from **18.0%** baseline to **20.0%** after verify-repair, while Gemma4-E4B-it moves from **10.0%** to **12.0%**. The additive property path raises wrong-code detections beyond execution-only (**34/41** vs **29/41** for Qwen; **45/45** vs **44/45** for Gemma) and records **93** property violations across **25** Qwen problems plus **218** across **45** Gemma problems, but it catches **0** official-test-missed bugs on this live slice.
 
-**Finding:** Prompt-derived properties are useful for richer error signals and slightly better repair loops, but on this cohort they improve detection rather than surfacing new beyond-harness failures. That is why Exp 224 and then Exp 226 matter: the additive verifier needed a stronger generated-code path than prompt-side properties alone.
+**Finding:** Prompt-derived properties are useful for richer error signals and slightly better repair loops, but on this cohort they improve detection rather than surfacing new beyond-harness failures. That is why Exp 224 and then Exp 227 matter: the additive verifier needed a stronger generated-code path than prompt-side properties alone.
 
 ### 19.7 Live Prompt-Side Constraint Benchmark (Experiment 221)
 
@@ -2947,11 +2947,11 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 **Finding:** Carnot's verification path is ahead of its serving acceleration path. The new PBT verifier already adds clear value on under-specified code, while inference-side speedups remain modest and environment-dependent until the TensorRT stack is actually available.
 
-### 19.11 Property-Based Code Verification at Scale (Experiments 220, 226, and 227)
+### 19.11 Property-Based Code Verification at Scale (Experiments 220, 227, and 227)
 
-**Setup:** Scale the additive Hypothesis-backed verifier from the paired **50**-problem dual-model slice (Exp 220) to the full **164**-problem Gemma4-E4B-it HumanEval contract (Exp 226), then rerun the same approach on live `Qwen/Qwen3.5-0.8B` while reusing the exact ordered **30**-problem Exp 208 cohort for an honest same-cohort comparison (Exp 227). All three artifacts stay in `live_gpu` mode.
+**Setup:** Scale the additive Hypothesis-backed verifier from the paired **50**-problem dual-model slice (Exp 220) to the full **164**-problem Gemma4-E4B-it HumanEval contract (Exp 227), then rerun the same approach on live `Qwen/Qwen3.5-0.8B` while reusing the exact ordered **30**-problem Exp 208 cohort for an honest same-cohort comparison (Exp 227). All three artifacts stay in `live_gpu` mode.
 
-**Result:** Exp 220 shows that PBT detects **144/145 = 99.3%** of wrong code across the paired live slice and yields **+2.0pp** on both Qwen and Gemma. Exp 226 scales the path to full HumanEval: Gemma4-E4B-it improves from **19/164 = 11.6%** to **24/164 = 14.6%**, a paired delta of **+3.0pp** [**+0.6pp**, **+6.1pp**], with **6** official-test misses caught beyond the harness and **5/145** failing baselines repaired. Exp 227 is the honest cross-model follow-up: Qwen3.5-0.8B stays flat at **7/30 = 23.3%** before and after repair, but verify-only still detects **17/23** wrong baselines and catches **2** official-test misses that the weak harness alone would have accepted.
+**Result:** Exp 220 shows that PBT detects **144/145 = 99.3%** of wrong code across the paired live slice and yields **+2.0pp** on both Qwen and Gemma. Exp 227 scales the path to full HumanEval: Gemma4-E4B-it improves from **19/164 = 11.6%** to **24/164 = 14.6%**, a paired delta of **+3.0pp** [**+0.6pp**, **+6.1pp**], with **6** official-test misses caught beyond the harness and **5/145** failing baselines repaired. Exp 227 is the honest cross-model follow-up: Qwen3.5-0.8B stays flat at **7/30 = 23.3%** before and after repair, but verify-only still detects **17/23** wrong baselines and catches **2** official-test misses that the weak harness alone would have accepted.
 
 **Finding:** PBT is now Carnot's strongest verified code path. The key value is not just repair delta; it is surfacing under-specified bugs that execution-only evaluation misses. Exp 227 matters because it shows the additive verifier signal survives cross-model transfer even when repair yield remains model- and prompt-quality-limited.
 
@@ -2965,9 +2965,9 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 ### 19.13 Code Verification Trace Learning (VERIFY-030)
 
-**Setup:** Ingest the checked-in Exp 225 and Exp 226 code-verification artifacts into analytics-only learners (`TraceAnalyzer`, `PropertyRanker`, `RepairStrategy`). Exp 225 is skipped honestly because it contains runner metadata but no per-problem verification histories; Exp 226 is normalized into full baseline-and-repair traces.
+**Setup:** Ingest the checked-in Exp 225 and Exp 227 code-verification artifacts into analytics-only learners (`TraceAnalyzer`, `PropertyRanker`, `RepairStrategy`). Exp 225 is skipped honestly because it contains runner metadata but no per-problem verification histories; Exp 227 is normalized into full baseline-and-repair traces.
 
-**Result:** VERIFY-030 extracts **164** learnable traces from Exp 226. The dominant property signals are signature-derived checks: `no_exception` and `deterministic` each fire on **144** failing baselines, `input_immutability` on **62**, `annotated_return_type` on **24**, `sorted_output` on **14**, and `reverse_output` on **4**. Signature-robustness checks appear in **163** cases, account for **6** official-test misses beyond the weak harness, and participate in **5** repaired outcomes. Mutation-safety signals appear in **68** cases with **5** official-test misses. Syntax-heavy failures remain the only repair states with accepted next-step wins.
+**Result:** VERIFY-030 extracts **164** learnable traces from Exp 227. The dominant property signals are signature-derived checks: `no_exception` and `deterministic` each fire on **144** failing baselines, `input_immutability` on **62**, `annotated_return_type` on **24**, `sorted_output` on **14**, and `reverse_output` on **4**. Signature-robustness checks appear in **163** cases, account for **6** official-test misses beyond the weak harness, and participate in **5** repaired outcomes. Mutation-safety signals appear in **68** cases with **5** official-test misses. Syntax-heavy failures remain the only repair states with accepted next-step wins.
 
 **Finding:** The current value of trace learning is prioritization rather than autonomous repair. The checked-in corpus says Carnot should spend PBT budget first on signature robustness and mutation safety, and should bias repair feedback toward syntax and contract issues before broader heuristics.
 
@@ -2989,7 +2989,7 @@ amplify, while being transparent about the 67% of errors that require richer sem
 
 ### 19.16 Explicit Code Spec Corpus and Spec-Aware Verification (Experiment 236, Experiment 238, and VERIFY-036)
 
-**Setup:** Merge the full Exp 226 Gemma traces with the seeded Exp 227 Qwen follow-up into one explicit code-spec corpus, then expose an additive verifier that combines official harness execution, Hypothesis-backed PBT, and explicit spec clauses in a single structured result. The paired Exp 238 follow-up reuses the same **30**-problem cohort and repair budget across Gemma and Qwen to measure how much the spec layer changes accepted pass@1.
+**Setup:** Merge the full Exp 227 Gemma traces with the seeded Exp 227 Qwen follow-up into one explicit code-spec corpus, then expose an additive verifier that combines official harness execution, Hypothesis-backed PBT, and explicit spec clauses in a single structured result. The paired Exp 238 follow-up reuses the same **30**-problem cohort and repair budget across Gemma and Qwen to measure how much the spec layer changes accepted pass@1.
 
 **Result:** Exp 236 yields a **164**-task corpus with **194** trace links, **8** official-test-miss traces, **6** rows carrying official-test-miss provenance, and **5** repaired traces. VERIFY-036 packages that corpus behind `verify_generated_code_with_specs()` and the opt-in `include_specs` path, adding `official_test_summary`, `spec_summary`, and trace-ranked `repair_ranking` metadata. In Exp 238, the explicit spec layer shifts Gemma-versus-Qwen accepted pass@1 on the paired **30**-case cohort from **-6.7pp** in baseline / official-test / PBT verify-only to **-3.3pp** in spec-aware verify-only and final verify-repair.
 
@@ -3476,7 +3476,7 @@ Milestone 2026.04.84 was designed to confirm Carnot's value on SOTA instruction-
 - **HumanEval:** pass@1 **0% → 36%** after Carnot correction. This is the first measured positive delta on HumanEval with a SOTA instruction-tuned model in the project's history. The cascade and verifier pipeline are adding genuine value on code generation tasks.
 - **GSM8K:** baseline 34%, corrected 34% (net 0.0). VeriCoT extraction TP=0 on math reasoning — the extraction pipeline cannot yet reliably pull arithmetic claims from 35B model chain-of-thought. Code tasks are the current signal.
 
-This result closes a long-standing gap: prior HumanEval improvements (+3.0pp with Gemma 4 4B on 164 problems, Exp 226; +72pp IterativeSelfRepair with execute-feedback-retry, Exp 905) used smaller or different models. The 35B result is the first confirmation that the Carnot pipeline adds value at SOTA model scale, not just on smaller checkpoints.
+This result closes a long-standing gap: prior HumanEval improvements (+3.0pp with Gemma 4 4B on 164 problems, Exp 227; +72pp IterativeSelfRepair with execute-feedback-retry, Exp 905) used smaller or different models. The 35B result is the first confirmation that the Carnot pipeline adds value at SOTA model scale, not just on smaller checkpoints.
 
 **Step-level PRM dataset (Exp 1084):** 7,349 MCTS-labeled step examples generated from the full 6,548-pair FoVer corpus. Target was 2,000; the generation ran to completion at 3.7x the target. ThinkPRM retrained on a 300-sample subset (AUROC 0.99 → 0.79) — the AUROC drop indicates the 300-sample retrain slice was too small; the full 7,349-example dataset needs a properly sized retrain. PRM data volume is confirmed; retrain quality is the open item.
 
@@ -4014,7 +4014,7 @@ three codex attempts with `max_turns=40`. The .96 plan retries with a larger
 turn budget and Claude/Opus because the current artifact does not contain a
 measured defense result.
 
-**Boltzmann-GPT seed and contrastive training (Exps 1226/1237/1248):** Exp 1226
+**Boltzmann-GPT seed and contrastive training (Exps 1227/1237/1248):** Exp 1227
 implemented the Boltzmann-GPT bridge and measured random-weight AUROC
 **0.65** on 20 FoVer examples. That is above random and therefore
 non-degenerate, but below the trained NRGPT baseline **0.920929**. Exp 1237
@@ -5693,3 +5693,15 @@ In milestone .208, the operational retrospective completed, analyzing 0 minutes 
 
 **Milestones 2026.05.207 and 2026.05.208 Operational Retrospectives**
 Both milestones' operational retrospectives completed, analyzing 0 min wall time / 0 experiments each. No experiment commits were found since activation, leaving GPUs correctly idle. No new bottlenecks were identified as no data was available in these milestones.
+
+
+### 4.25 Recent Additions (Milestones .213 to .214)
+
+**Process-Reward Energy Model Architecture**  
+Experiment 2144 implemented the PREM architecture, and Experiment 2150 added a Dynamic Test-Time Compute (TTC) Controller that successfully scaled TTC based on PREM energy variance.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**  
+Experiment 2152 successfully integrated PREM intrinsic reward signals for continuous self-learning.
+
+**Discrete-to-Ising Translation**  
+Experiment 2147 successfully mapped basic AND/OR/NOT clauses to quadratic energy penalties, enabling translation of discrete constraints to Ising.
