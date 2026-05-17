@@ -485,6 +485,161 @@ class PBitIsingSampler:
         return sampler.sample(key, biases, coupling_matrix, beta, init_spins)
 
 
+@dataclass
+class NeuroRingIsingSampler:
+    """Simulates NeuroRing bidirectional ring-topology communication.
+
+    **Researcher summary:**
+        Models the stream-dataflow synchronization of NeuroRing hardware.
+        Spins are partitioned across distributed nodes in a ring. Each node
+        updates its spins using delayed states from other nodes, simulating
+        the communication latency of a bidirectional ring network.
+
+    Attributes:
+        n_warmup: Number of annealing sweeps before collecting samples.
+        n_samples: Number of samples to collect after warmup.
+        steps_per_sample: Sweeps between collected samples.
+        schedule: Optional beta schedule used during warmup.
+        ring_size: Number of distributed nodes in the bidirectional ring.
+
+    Spec: REQ-SAMPLE-024
+    """
+
+    n_warmup: int = 1000
+    n_samples: int = 50
+    steps_per_sample: int = 20
+    schedule: AnnealingSchedule | None = None
+    ring_size: int = 4
+
+    def sample(
+        self,
+        key: jax.Array,
+        biases: jax.Array,
+        coupling_matrix: jax.Array,
+        beta: float | jax.Array = 10.0,
+        init_spins: jax.Array | None = None,
+    ) -> jax.Array:
+        """Run NeuroRing simulated sampling on an Ising model."""
+        n_spins = biases.shape[0]
+        beta = jnp.asarray(beta, dtype=jnp.float32)
+
+        key, init_key = jrandom.split(key)
+        if init_spins is None:
+            spins = jrandom.bernoulli(init_key, 0.5, (n_spins,))
+        else:
+            spins = jnp.asarray(init_spins, dtype=jnp.bool_)
+
+        spins_f = spins.astype(jnp.float32)
+        J = jnp.asarray(coupling_matrix, dtype=jnp.float32)
+        b = jnp.asarray(biases, dtype=jnp.float32)
+        schedule = self.schedule or AnnealingSchedule(beta_init=float(beta), beta_final=float(beta))
+
+        max_delay = max(1, self.ring_size // 2)
+        # History buffer: index 0 is most recent, max_delay is oldest.
+        history = jnp.tile(spins_f, (max_delay + 1, 1))
+
+        # Precompute delay matrix
+        chunk_size = (n_spins + self.ring_size - 1) // self.ring_size
+        r = jnp.arange(n_spins) // chunk_size
+        c = jnp.arange(n_spins) // chunk_size
+        diff = jnp.abs(r[:, None] - c[None, :])
+        delay_matrix = jnp.minimum(diff, self.ring_size - diff)
+        # Cap delay to max_delay just in case
+        delay_matrix = jnp.minimum(delay_matrix, max_delay)
+
+        def warmup_sweep_fn(carry, step_key):
+            h_buf, step = carry
+            beta_t = schedule.beta_at_step(step, self.n_warmup)
+            h_buf, _ = _neuroring_update(h_buf, b, J, beta_t, step_key, delay_matrix)
+            return (h_buf, step + 1), None
+
+        key, warmup_key = jrandom.split(key)
+        warmup_keys = jrandom.split(warmup_key, self.n_warmup)
+        (history, _), _ = jax.lax.scan(
+            warmup_sweep_fn,
+            (history, jnp.int32(0)),
+            warmup_keys,
+        )
+
+        beta_final = jnp.asarray(schedule.beta_final, dtype=jnp.float32)
+
+        def collect_fn(carry, sample_key):
+            h_buf = carry
+            sweep_keys = jrandom.split(sample_key, self.steps_per_sample)
+
+            def decorrelate(inner_carry, k):
+                new_h_buf, s_inner = _neuroring_update(
+                    inner_carry, b, J, beta_final, k, delay_matrix
+                )
+                return new_h_buf, None
+
+            h_buf, _ = jax.lax.scan(decorrelate, h_buf, sweep_keys)
+            return h_buf, h_buf[0]
+
+        key, collect_key = jrandom.split(key)
+        collect_keys = jrandom.split(collect_key, self.n_samples)
+        _, samples_f = jax.lax.scan(collect_fn, history, collect_keys)
+        return samples_f > 0.5
+
+    def hardware_accounting(self, n_spins: int, total_sweeps: int) -> dict:
+        """Compute no-synthesis hardware metrics for the configured ring."""
+        # A dense J@s takes N^2 MACs per sweep
+        macs_per_sweep = n_spins * n_spins
+        bops_per_sweep = macs_per_sweep * 2  # 1 mult + 1 add
+        total_bops = bops_per_sweep * total_sweeps
+        
+        # In a bidirectional ring, max communication latency dictates cycle length
+        latency_cycles_per_sweep = max(1, self.ring_size // 2)
+        total_latency_cycles = latency_cycles_per_sweep * total_sweeps
+
+        return {
+            "n_spins": n_spins,
+            "ring_size": self.ring_size,
+            "total_sweeps": total_sweeps,
+            "bops_per_sweep": bops_per_sweep,
+            "total_bops": total_bops,
+            "latency_cycles_per_sweep": latency_cycles_per_sweep,
+            "total_latency_cycles": total_latency_cycles,
+        }
+
+
+def _neuroring_update(
+    history: jax.Array,
+    biases: jax.Array,
+    J: jax.Array,
+    beta: jax.Array,
+    key: jax.Array,
+    delay_matrix: jax.Array,
+) -> tuple[jax.Array, jax.Array]:
+    """Update spins simulating NeuroRing communication delay.
+    
+    Args:
+        history: Spin history buffer of shape (max_delay + 1, n_spins).
+        biases: Bias vector.
+        J: Coupling matrix.
+        beta: Inverse temperature.
+        key: PRNG key.
+        delay_matrix: Matrix of shape (n_spins, n_spins) mapping spin i, j
+            to the delay cycles it takes for spin j to reach spin i.
+            
+    Returns:
+        (new_history, new_spins)
+    """
+    n_spins = biases.shape[0]
+    j_idx = jnp.arange(n_spins)[None, :]
+    
+    # Perceived spins: spin i sees spin j from delay_matrix[i, j] steps ago.
+    perceived_spins = history[delay_matrix, j_idx]  # shape (n_spins, n_spins)
+    
+    h = biases + jnp.sum(J * perceived_spins, axis=1)
+    probs = jax.nn.sigmoid(2.0 * beta * h)
+    new_spins = jrandom.bernoulli(key, probs).astype(jnp.float32)
+    
+    new_history = jnp.roll(history, 1, axis=0)
+    new_history = new_history.at[0].set(new_spins)
+    return new_history, new_spins
+
+
 def _parallel_update(
     spins: jax.Array,
     biases: jax.Array,

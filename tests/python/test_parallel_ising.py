@@ -14,6 +14,7 @@ import jax.random as jrandom
 from carnot.samplers.parallel_ising import (
     AnnealingSchedule,
     InertiaIsingSampler,
+    NeuroRingIsingSampler,
     ParallelIsingSampler,
     PBitIsingSampler,
     _checkerboard_update,
@@ -505,3 +506,39 @@ class TestPBitIsingSampler:
         samples = sampler.sample(key, b, J, beta=1.0)
         assert samples.shape == (5, n)
 
+
+class TestNeuroRingIsingSampler:
+    """REQ-SAMPLE-024: NeuroRing hardware simulation."""
+
+    def test_neuroring_sample_shape_and_dtype(self):
+        """REQ-SAMPLE-024: NeuroRing sampler preserves sampler output contract."""
+        n = 8
+        sampler = NeuroRingIsingSampler(
+            n_warmup=2,
+            n_samples=3,
+            steps_per_sample=1,
+            ring_size=4,
+        )
+        samples = sampler.sample(
+            jrandom.PRNGKey(0),
+            jnp.zeros(n, dtype=jnp.float32),
+            jnp.zeros((n, n), dtype=jnp.float32),
+            beta=1.0,
+        )
+        assert samples.shape == (3, n)
+        assert samples.dtype == jnp.bool_
+
+    def test_neuroring_hardware_accounting(self):
+        """REQ-SAMPLE-024: Hardware accounting math is correct."""
+        sampler = NeuroRingIsingSampler(ring_size=4)
+        metrics = sampler.hardware_accounting(n_spins=10, total_sweeps=100)
+        
+        assert metrics["n_spins"] == 10
+        assert metrics["ring_size"] == 4
+        assert metrics["total_sweeps"] == 100
+        # 10 * 10 = 100 MACs -> 200 BOPs per sweep
+        assert metrics["bops_per_sweep"] == 200
+        assert metrics["total_bops"] == 20000
+        # ring_size 4 -> max_delay 2 cycles
+        assert metrics["latency_cycles_per_sweep"] == 2
+        assert metrics["total_latency_cycles"] == 200

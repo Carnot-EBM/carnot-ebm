@@ -3998,3 +3998,12 @@ Error |
 | 2026-05-17 00:51 UTC | Phase 3: ActFocus + ALPS Benchmark on GSM8K | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 00:53 UTC | Phase 3: ActFocus + ALPS Benchmark on GSM8K | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 00:55 UTC | Phase 3: ActFocus + ALPS Benchmark on GSM8K | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 01:08 UTC | Phase 4: NeuroRing Bidirectional Ring Topology Sim | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
+| 2026-05-17 01:21 UTC | Phase 4: NeuroRing Bidirectional Ring Topology Sim | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: s enabled. All tool |
+| 2026-05-17 01:36 UTC | Phase 4: NeuroRing Bidirectional Ring Topology Sim | FAIL | Post-tests failed: 1 failed, 127 passed, 1 warning in 17.20s |
+| 2026-05-17 01:38 UTC | Phase 4: Full E2E Benchmark (ALPS + ActFocus + KAN | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2116-actfocus-gsm8k-benchmark) |
+| 2026-05-17 01:38 UTC | Phase 4: Milestone 2026.05.210 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 129 passed, 1 warning in 16.79s |
+| 2026-05-17 01:40 UTC | Phase 4: Full E2E Benchmark (ALPS + ActFocus + KAN | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2116-actfocus-gsm8k-benchmark) |
+| 2026-05-17 01:40 UTC | Phase 4: Milestone 2026.05.210 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 129 passed, 1 warning in 17.10s |
+| 2026-05-17 01:42 UTC | Phase 4: Full E2E Benchmark (ALPS + ActFocus + KAN | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2116-actfocus-gsm8k-benchmark) |
+| 2026-05-17 01:43 UTC | Phase 4: Milestone 2026.05.210 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 129 passed, 1 warning in 17.88s |

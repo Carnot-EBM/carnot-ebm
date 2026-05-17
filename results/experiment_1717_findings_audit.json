@@ -1,10 +1,10 @@
 {
   "schema": "carnot.findings_audit_corrigenda.v3",
   "experiment": 1717,
-  "run_date": "2026-05-16T22:50:04.910666Z",
-  "duration_s": 0.01612710952758789,
+  "run_date": "2026-05-17T01:27:53.085585Z",
+  "duration_s": 0.02454400062561035,
   "random_seed": 171617,
-  "reproducibility_checksum": "45bccf4e02fcfaa79154ab11d46f934d6070821f56fe38bf6e954dbdf1ecfe4d",
+  "reproducibility_checksum": "fe0c80096c9dab479059c40fbae99b5a8f12ee6c0add13923ec212c1693329f2",
   "preconditions_checked": [
     "scripts/adversarial_verify.py importable"
   ],
@@ -13,9 +13,9 @@
       "2026.05.174",
       "2026.05.175"
     ],
-    "adversarial_verify_version": "35f9ee1053b16f06bf2ebb9321cfc8ffa4a14782"
+    "adversarial_verify_version": "b974378b7095a854196735d0eed6c37bab4e8c30"
   },
-  "n_samples": 29,
+  "n_samples": 42,
   "n_samples_justification": "Audit task; n is artifact count.",
   "audit_outcomes": {
     "2101": {
@@ -27,11 +27,17 @@
       "classification": "REAL_BUG",
       "rationale": "GATE_PASSED_WITHOUT_DATA indicates missing metrics. TAUTOLOGY is a false positive. IMPLAUSIBLE_PERFECT requires verification.",
       "follow_up_action": "Fix exp2110 metric extraction and re-evaluate."
+    },
+    "2112": {
+      "classification": "NEEDS_REVISION",
+      "rationale": "Unclassified flag found during audit.",
+      "follow_up_action": "Investigate newly discovered flag."
     }
   },
   "corrigenda_added": [
     "results/experiment_2101_interwhen.json",
-    "results/experiment_2110_casal_pinet.json"
+    "results/experiment_2110_casal_pinet.json",
+    "results/experiment_2112_muon_ogd.json"
   ],
   "acceptance_gate_passed": true,
   "acceptance_gate_criteria": "All flagged artifacts classified with defensible rationale; corrigenda appended.",
