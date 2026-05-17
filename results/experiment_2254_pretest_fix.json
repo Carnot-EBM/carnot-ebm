@@ -1,0 +1,17 @@
+{
+  "honest_verdict": "incomplete: duplicate test_compositional_energy module basename was resolved by renaming the phase3 test file, but the requested pre-test command still reports an unrelated ImportError in tests/python/test_dual_gpu.py.",
+  "pretest_fixed": false,
+  "n_errors": 1,
+  "n_failures": 0,
+  "n_warnings": 12,
+  "renamed_file": "tests/python/phase3/test_phase3_compositional_energy.py",
+  "pytest_command": ".venv/bin/python -m pytest tests/python -x -q --no-cov -p no:cacheprovider 2>&1 | tail -5",
+  "pytest_tail": [
+    "=========================== short test summary info ============================",
+    "ERROR tests/python/test_dual_gpu.py - ImportError while importing test module...",
+    "!!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 1 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!",
+    "!!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 1 failures !!!!!!!!!!!!!",
+    "======================== 12 warnings, 1 error in 9.00s ========================="
+  ],
+  "remaining_error": "ImportError: cannot import name 'DualGPUExecutionResult' from 'carnot.inference' (/home/ianblenke/github.com/ianblenke/carnot/python/carnot/inference/__init__.py)"
+}
