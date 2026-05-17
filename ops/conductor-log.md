@@ -4173,3 +4173,4 @@ Ripgrep i |
 | 2026-05-17 08:05 UTC | Phase 0: Archive .215 and activate .216 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.27s |
 | 2026-05-17 08:07 UTC | Phase 0: Archive .215 and activate .216 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.50s |
 | 2026-05-17 08:09 UTC | Phase 0: Archive .215 and activate .216 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.54s |
+| 2026-05-17 08:11 UTC | Phase 1: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.17s |
