@@ -4134,3 +4134,5 @@ Ripgrep i |
 | 2026-05-17 07:08 UTC | Phase 0: Archive .214 and activate .215 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 5.05s |
 | 2026-05-17 07:10 UTC | Phase 1: Formal Logic (NSVIF) Extractor Infrastruc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 4.93s |
 | 2026-05-17 07:12 UTC | Phase 1: Formal Logic (NSVIF) Extractor Infrastruc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 5.36s |
+| 2026-05-17 07:15 UTC | Phase 1: Formal Logic (NSVIF) Extractor Infrastruc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 4.83s |
+| 2026-05-17 07:17 UTC | Phase 1: Z3 Constraint Compiler for CoT Steps | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2168-nsvif-extractor-infrastructure) |
