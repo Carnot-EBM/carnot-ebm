@@ -4377,3 +4377,4 @@ Ripgrep i |
 | 2026-05-17 15:35 UTC | Phase 4: THRML/Carnot Parity at n=256 with KAN-CL | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2247-kancl-n256-scaling) |
 | 2026-05-17 15:35 UTC | Phase 5: KV260 RTL Verilator Source-Level Lint and | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 15:37 UTC | Phase 4: THRML/Carnot Parity at n=256 with KAN-CL | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2247-kancl-n256-scaling) |
+| 2026-05-17 15:37 UTC | Phase 5: KV260 RTL Verilator Source-Level Lint and | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
