@@ -4245,3 +4245,5 @@ Ripgrep i |
 | 2026-05-17 10:24 UTC | Phase 3: Crosscoder Feature Readout Constraints | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.72s |
 | 2026-05-17 10:26 UTC | Phase 3: SCG-MEM Schema-Constrained Generative Mem | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 10:28 UTC | Phase 3: SCG-MEM Schema-Constrained Generative Mem | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 10:31 UTC | Phase 3: SCG-MEM Schema-Constrained Generative Mem | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 10:33 UTC | Phase 4: Capstone Live GPU Evaluation (EORM + EBT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2197-ebt-iterative-minimization) |
