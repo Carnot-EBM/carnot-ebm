@@ -13231,3 +13231,15 @@ This sweep followed the mandatory post-.222 literature check for .224 planning. 
 - **arXiv:2602.13224 — "A Geometric Taxonomy of Hallucinations in LLMs"**: The type-aware hallucination taxonomy gives Carnot a way to separate embedding-detectable unfaithfulness/confabulation from factual errors that require external constraint verification.
 - **arXiv:2601.20026 — "Semantic Uncertainty Quantification of Hallucinations in LLMs: A Quantum Tensor Network Based Method"**: Semantic clustering plus entropy-based uncertainty offers a comparator for Carnot's energy/entropy hallucination detectors under resource-constrained local-model settings.
 - **arXiv:2605.07723 — "LLM hallucinations in the wild: Large-scale evidence from non-existent citations"**: The citation-hallucination audit suggests a high-precision benchmark class for Carnot's verifier pipeline because nonexistent references are externally checkable constraints.
+
+## 20260517 Post-.223 Planning Sweep (Milestone 2026.05.224)
+
+This sweep was run during .224 planning. Targeted searches on: EBM hallucination verification, KAN continual learning hardware, Ising thermodynamic computing, and constrained LLM decoding.
+
+- **arXiv:2512.20664 — "Eidoku: A Neuro-Symbolic Verification Gate for LLM Reasoning via Structural Constraint Satisfaction"**: Reformulates LLM reasoning verification as a CSP operating independently of generation likelihood. A lightweight System-2 gate rejects candidates exceeding a context-calibrated cost threshold derived from intrinsic context statistics. Successfully rejects smooth falsehoods (highly probable yet structurally disconnected statements). Direct candidate for Tier 2.8 in Carnot's verification cascade.
+
+- **arXiv:2506.15121 — "Generative Thermodynamic Computing"**: Introduces a generative modeling framework where structured data is synthesized from noise via the natural time evolution of a physical system governed by Langevin dynamics — no learned score function required. Relevant to Carnot's Phase-3 hardware track: the physical Langevin dynamics of Extropic Z1 / thermodynamic processors directly implements this generative sampling without a separate training phase.
+
+- **arXiv:2602.01090 — "Hard Constraints Meet Soft Generation: Guaranteed Feasibility for LLM-based Combinatorial Optimization"**: Combines grammar-constrained decoding (syntactic feasibility) + a feasibility repair layer (semantic constraint violation correction) + adaptive Best-of-N sampling. Provides a formal feasibility guarantee complementary to CASAL's primal-dual approach. Relevant for closing the hard-constraint gap in Phase 1 repair.
+
+- **arXiv:2503.09790 — "Constrained Language Generation with Discrete Diffusion Models"**: Formulates projection operators for each constraint class to impose hard constraints during discrete diffusion generation; handles character-level, sequence-level, and property-adherence constraints. Alternative sampling path to Langevin-based CASAL for structured generation tasks.

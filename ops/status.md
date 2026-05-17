@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-12 (milestone 2026.05.147 operational retrospective complete)
+**Last Updated:** 2026-05-17 (milestone 2026.05.224 research planning complete)
+
+## Session 2026-05-17 - Milestone 2026.05.224 Research Planning Complete
+
+**Milestone 2026.05.224 PLANNED after .223 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v224.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2266`-`exp2279`)
+- ID allocation: milestone `.223` used through `exp2265`, so `.224` starts at `exp2266`.
+- Research references updated before final roadmap design with post-.223 planning sweep: Eidoku neuro-symbolic CSP verification gate (arXiv:2512.20664), Generative Thermodynamic Computing (arXiv:2506.15121), Hard Constraints Meet Soft Generation (arXiv:2602.01090), and Constrained Language Generation with Discrete Diffusion (arXiv:2503.09790). arXiv:2605.05387 (projected-Langevin equality constraints) from the .223 sweep is the basis for exp2276.
+- Design focus: Phase 0 archives .223 and fixes the cascade root cause — `carnot.inference.__init__` is empty; `DualGPUExecutionResult` and 3 other symbols exist in `dual_gpu.py` but were never re-exported, causing all pre-test checks to fail and labeling 10 of 13 .223 tasks as blocked. Phase 1 retries FST live generation (exp2268), FR-11 multidomain retention (exp2269), and KAN-CL n=256 (exp2270) — all blocked 3+ consecutive milestones by the cascade. Phase 2 retries KV260 RTL Verilator lint and Yosys synthesis with explicit PRECONDITIONS toolchain checks. Phase 3 covers adversarial null-space probe (retry of exp2262), Eidoku CSP gate (new, arXiv:2512.20664), and projected-Langevin baseline (new, arXiv:2605.05387). Phase 4 has arXiv sweep, capstone, and retro.
+- LLM-bearing tasks (`exp2268`, `exp2278`) include mandated local SOTA GGUF MODEL_SPECS: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement is satisfied by `exp2269-fr11-fst-multidomain` with `continuous_self_learning_task: true` in its artifact contract.
+- Structured gates: `exp2268`, `exp2270`, `exp2272` on `exp2267.pretest_fixed == true`; `exp2269` on `exp2268.fst_live_validated == true`; `exp2271` on `exp2270.kancl_n256_validated == true`; `exp2273` on `exp2272.lint_errors_count == 0`; `exp2278` on both `exp2268.fst_live_validated == true` AND `exp2270.kancl_n256_validated == true`.
+- Agent routing: 13 of 14 tasks use `agent_type: codex, model: gpt-5.5`; `exp2278` capstone uses `model: opus, max_turns: 100`.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` (OK, no violations), `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml` (all_checks_pass: 0 gate-field gaps, 0 upstream-missing, 0 model-coherence failures), `python3 scripts/roadmap_schema.py` (clean), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.224 when ready.
+
+---
 
 ## Session 2026-05-12 - Milestone 2026.05.147 Operational Retrospective Complete
 
