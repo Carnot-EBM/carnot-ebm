@@ -4247,3 +4247,5 @@ Ripgrep i |
 | 2026-05-17 10:28 UTC | Phase 3: SCG-MEM Schema-Constrained Generative Mem | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 10:31 UTC | Phase 3: SCG-MEM Schema-Constrained Generative Mem | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 10:33 UTC | Phase 4: Capstone Live GPU Evaluation (EORM + EBT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2197-ebt-iterative-minimization) |
+| 2026-05-17 10:33 UTC | Phase 4: Milestone 2026.05.218 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.96s |
+| 2026-05-17 10:35 UTC | Phase 4: Capstone Live GPU Evaluation (EORM + EBT | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2197-ebt-iterative-minimization) |
