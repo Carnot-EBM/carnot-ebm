@@ -3988,3 +3988,4 @@ Error |
 | 2026-05-17 00:21 UTC | Phase 1: Energy-Guided Decoding with Hidden State  | DOOMED_RERUN_BLOCK | 12 prior failure(s) match this task's scope but prior_failures field is missing  |
 | 2026-05-17 00:26 UTC | Phase 2: KAN-CL Per-Knot Importance Regularization | OK | 81 passed, 1 warning in 5.95s |
 | 2026-05-17 00:32 UTC | Phase 2: Muon-OGD Spectral Orthogonal Gradient Pro | OK | 84 passed, 1 warning in 6.38s |
+| 2026-05-17 00:34 UTC | Phase 2: Continual Learning Catastrophic Forgettin | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2111-kan-cl-regularization.result (actu |
