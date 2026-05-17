@@ -4175,3 +4175,5 @@ Ripgrep i |
 | 2026-05-17 08:09 UTC | Phase 0: Archive .215 and activate .216 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.54s |
 | 2026-05-17 08:11 UTC | Phase 1: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.17s |
 | 2026-05-17 08:13 UTC | Phase 1: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.07s |
+| 2026-05-17 08:15 UTC | Phase 1: KAN-CL Per-Knot Importance Regularization | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.83s |
+| 2026-05-17 08:17 UTC | Phase 1: ActFocus Token-Level Energy Reweighting | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2181-kan-cl-regularization) |
