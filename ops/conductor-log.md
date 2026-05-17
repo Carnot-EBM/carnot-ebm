@@ -4499,3 +4499,4 @@ Ripgrep i |
 | 2026-05-17 20:39 UTC | Phase 4: Milestone 2026.05.225 Retrospective | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-17 21:06 UTC | Plan milestone 2026.05.226 | OK | 14 tasks proposed |
 | 2026-05-17 21:08 UTC | Milestone 2026.05.226 activated | OK | 14 tasks queued |
+| 2026-05-17 21:10 UTC | Phase 0: Archive .225 and activate .226 | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
