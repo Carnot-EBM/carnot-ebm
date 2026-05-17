@@ -1,0 +1,165 @@
+{
+  "experiment": 2263,
+  "title": "Post-.222 arXiv literature sweep for .224 planning",
+  "run_date": "2026-05-17",
+  "milestone": "2026.05.223",
+  "source_policy": "arxiv.org direct search and abstract pages via curl; export API attempted first and returned rate limiting",
+  "required_artifact_field_principles": {
+    "honest_verdict": "Terminal-prefix required. complete: if >= 3 new papers found and appended.",
+    "n_new_papers_found": "Must be >= 3 for the research sweep to satisfy the planning requirement.",
+    "candidate_list": "Top-3 paper proposals for .224; gives the .224 planner a head-start.",
+    "references_updated": "Boolean confirming research-references.md was actually modified."
+  },
+  "honest_verdict": {
+    "principle": "Terminal-prefix required. complete: if >= 3 new papers found and appended.",
+    "terminal_prefix": "complete",
+    "status": "complete",
+    "verdict": "Found 8 arXiv papers not already present in research-references.md, appended them to the requested 20260517 post-.222 sweep section, and selected the top 3 for .224 planning."
+  },
+  "n_new_papers_found": 8,
+  "references_updated": true,
+  "references_section": "## 20260517 Post-.222 Planning Sweep (Milestone 2026.05.223)",
+  "arxiv_query_log": [
+    {
+      "query": "energy-based model verification LLM 2026",
+      "source": "https://arxiv.org/search/",
+      "status": "ok",
+      "result_count": 5,
+      "notable_ids": [
+        "2604.25326",
+        "2602.18145"
+      ],
+      "dedupe_note": "2602.18145 was already present in research-references.md; 2604.25326 was new."
+    },
+    {
+      "query": "continual learning KAN constraint 2026",
+      "source": "https://arxiv.org/search/",
+      "status": "ok",
+      "result_count": 4,
+      "notable_ids": [
+        "2602.20413",
+        "2603.23854"
+      ],
+      "dedupe_note": "2603.23854 was already present in research-references.md; 2602.20413 was new."
+    },
+    {
+      "query": "Langevin sampling hard constraint equality 2026",
+      "source": "https://arxiv.org/search/",
+      "status": "ok",
+      "result_count": 0,
+      "notable_ids": [],
+      "dedupe_note": "Exact query had no arxiv.org search hits; a follow-up constrained-Langevin arXiv search identified 2605.05387."
+    },
+    {
+      "query": "constrained generation LLM decoding 2026",
+      "source": "https://arxiv.org/search/",
+      "status": "ok_after_retry",
+      "result_count": 0,
+      "notable_ids": [],
+      "dedupe_note": "Exact query had no arxiv.org search hits on retry; known constrained-decoding hits such as 2603.03305 and 2602.01090 were already present in research-references.md."
+    },
+    {
+      "query": "Ising machine FPGA hardware accelerated sampling 2026",
+      "source": "https://arxiv.org/search/",
+      "status": "ok_after_retry",
+      "result_count": 0,
+      "notable_ids": [],
+      "dedupe_note": "Exact query had no arxiv.org search hits on retry; a follow-up p-bit FPGA annealer arXiv search identified 2602.16143 and 2601.18943."
+    },
+    {
+      "query": "active inference free energy LLM routing 2026",
+      "source": "https://arxiv.org/search/",
+      "status": "ok",
+      "result_count": 0,
+      "notable_ids": [],
+      "dedupe_note": "Exact query had no arxiv.org search hits; ODAR 2602.23681 was found by broader search but was already present in research-studying.md/research-references.md context."
+    }
+  ],
+  "new_papers": [
+    {
+      "arxiv_id": "2605.05387",
+      "title": "Conditional Diffusion Under Linear Constraints: Langevin Mixing and Information-Theoretic Guarantees",
+      "url": "https://arxiv.org/abs/2605.05387",
+      "topic": "Langevin sampling; hard linear constraints",
+      "relevance_to_carnot": "Projected-Langevin initialization under linear constraints gives Carnot a concrete equality-constraint sampler baseline for the repair and verification pipeline."
+    },
+    {
+      "arxiv_id": "2602.16143",
+      "title": "Energy-Efficient p-Bit-Based Fully-Connected Quantum-Inspired Simulated Annealer with Dual BRAM Architecture",
+      "url": "https://arxiv.org/abs/2602.16143",
+      "topic": "Ising models; FPGA hardware-accelerated sampling",
+      "relevance_to_carnot": "The spin-serial/replica-parallel p-bit FPGA annealer gives Carnot a hardware-credible schedule for scaling Ising/Max-Cut sampler experiments beyond software-only ALPS checks."
+    },
+    {
+      "arxiv_id": "2601.18943",
+      "title": "Configurable p-Neurons Using Modular p-Bits",
+      "url": "https://arxiv.org/abs/2601.18943",
+      "topic": "p-bits; FPGA stochastic neurons",
+      "relevance_to_carnot": "Modular FPGA p-neurons with stochastic unit sharing provide a resource-sharing design pattern for Carnot's KV260 p-bit and thermodynamic-sampling track."
+    },
+    {
+      "arxiv_id": "2602.20413",
+      "title": "KANDy: Kolmogorov-Arnold Networks and Dynamical System Discovery",
+      "url": "https://arxiv.org/abs/2602.20413",
+      "topic": "KANs; symbolic constraint discovery",
+      "relevance_to_carnot": "KANDy's KAN-based governing-equation discovery is a useful testbed for turning learned KAN energy tiers into interpretable symbolic constraints."
+    },
+    {
+      "arxiv_id": "2604.25326",
+      "title": "AHASD: Asynchronous Heterogeneous Architecture for LLM Adaptive Drafting Speculative Decoding on Mobile Devices",
+      "url": "https://arxiv.org/abs/2604.25326",
+      "topic": "guided/speculative decoding; heterogeneous acceleration",
+      "relevance_to_carnot": "Asynchronous draft/verify scheduling for speculative decoding can inform Carnot's local guided-decoding path where a small fast model proposes and a verifier-heavy path accepts or repairs."
+    },
+    {
+      "arxiv_id": "2602.13224",
+      "title": "A Geometric Taxonomy of Hallucinations in LLMs",
+      "url": "https://arxiv.org/abs/2602.13224",
+      "topic": "LLM hallucination mitigation",
+      "relevance_to_carnot": "The type-aware hallucination taxonomy gives Carnot a way to separate embedding-detectable unfaithfulness/confabulation from factual errors that require external constraint verification."
+    },
+    {
+      "arxiv_id": "2601.20026",
+      "title": "Semantic Uncertainty Quantification of Hallucinations in LLMs: A Quantum Tensor Network Based Method",
+      "url": "https://arxiv.org/abs/2601.20026",
+      "topic": "LLM hallucination uncertainty",
+      "relevance_to_carnot": "Semantic clustering plus entropy-based uncertainty offers a comparator for Carnot's energy/entropy hallucination detectors under resource-constrained local-model settings."
+    },
+    {
+      "arxiv_id": "2605.07723",
+      "title": "LLM hallucinations in the wild: Large-scale evidence from non-existent citations",
+      "url": "https://arxiv.org/abs/2605.07723",
+      "topic": "LLM hallucination benchmark design",
+      "relevance_to_carnot": "The citation-hallucination audit suggests a high-precision benchmark class for Carnot's verifier pipeline because nonexistent references are externally checkable constraints."
+    }
+  ],
+  "candidate_list": [
+    {
+      "rank": 1,
+      "arxiv_id": "2605.05387",
+      "title": "Conditional Diffusion Under Linear Constraints: Langevin Mixing and Information-Theoretic Guarantees",
+      "proposed_224_experiment_scope": "Implement a minimal projected-Langevin initializer for linear equality constraints and compare it against Carnot's current projection/repair baseline on synthetic constrained sampling tasks, measuring feasibility residual, diversity, and verifier false accepts."
+    },
+    {
+      "rank": 2,
+      "arxiv_id": "2602.16143",
+      "title": "Energy-Efficient p-Bit-Based Fully-Connected Quantum-Inspired Simulated Annealer with Dual BRAM Architecture",
+      "proposed_224_experiment_scope": "Software-emulate the paper's spin-serial and replica-parallel update schedule for Carnot Ising/Max-Cut instances, then produce KV260/ZC706-style resource and convergence estimates before any bitstream work."
+    },
+    {
+      "rank": 3,
+      "arxiv_id": "2602.13224",
+      "title": "A Geometric Taxonomy of Hallucinations in LLMs",
+      "proposed_224_experiment_scope": "Partition Carnot hallucination cases into unfaithfulness, confabulation, and factual-error buckets, then test whether embedding/energy detectors handle the first two while external verifiers remain required for factual-error constraints."
+    }
+  ],
+  "files_modified": [
+    "research-references.md",
+    "results/experiment_2263_arxiv_sweep.json"
+  ],
+  "explicit_non_actions": [
+    "Did not push.",
+    "Did not modify scripts/research_conductor.py.",
+    "Did not update ops/changelog.md, ops/status.md, or _bmad/traceability.md."
+  ]
+}

@@ -13218,3 +13218,16 @@ This sweep was run after milestone `.211` completed. The literature search revea
 - **Paper:** "Mitigating Interference via Semantic Pruning in Continual Energy-Based Models" (arXiv:2604.19882).
 - **What:** Introduces a pruning mechanism for replay buffers in continuous learning to discard redundant constraints and prevent context saturation.
 - **Relevance to Carnot:** Crucial for stabilizing Carnot's FR-11 Continuous Self-Learning loop across multi-session retention.
+
+## 20260517 Post-.222 Planning Sweep (Milestone 2026.05.223)
+
+This sweep followed the mandatory post-.222 literature check for .224 planning. The arXiv export API returned a rate-limit response, so the sweep used arxiv.org search/result pages and direct arxiv.org abstract pages via `curl`, then deduped by arXiv ID and title against this file.
+
+- **arXiv:2605.05387 — "Conditional Diffusion Under Linear Constraints: Langevin Mixing and Information-Theoretic Guarantees"**: Projected-Langevin initialization under linear constraints gives Carnot a concrete equality-constraint sampler baseline for the repair and verification pipeline.
+- **arXiv:2602.16143 — "Energy-Efficient p-Bit-Based Fully-Connected Quantum-Inspired Simulated Annealer with Dual BRAM Architecture"**: The spin-serial/replica-parallel p-bit FPGA annealer gives Carnot a hardware-credible schedule for scaling Ising/Max-Cut sampler experiments beyond software-only ALPS checks.
+- **arXiv:2601.18943 — "Configurable p-Neurons Using Modular p-Bits"**: Modular FPGA p-neurons with stochastic unit sharing provide a resource-sharing design pattern for Carnot's KV260 p-bit and thermodynamic-sampling track.
+- **arXiv:2602.20413 — "KANDy: Kolmogorov-Arnold Networks and Dynamical System Discovery"**: KANDy's KAN-based governing-equation discovery is a useful testbed for turning learned KAN energy tiers into interpretable symbolic constraints.
+- **arXiv:2604.25326 — "AHASD: Asynchronous Heterogeneous Architecture for LLM Adaptive Drafting Speculative Decoding on Mobile Devices"**: Asynchronous draft/verify scheduling for speculative decoding can inform Carnot's local guided-decoding path where a small fast model proposes and a verifier-heavy path accepts or repairs.
+- **arXiv:2602.13224 — "A Geometric Taxonomy of Hallucinations in LLMs"**: The type-aware hallucination taxonomy gives Carnot a way to separate embedding-detectable unfaithfulness/confabulation from factual errors that require external constraint verification.
+- **arXiv:2601.20026 — "Semantic Uncertainty Quantification of Hallucinations in LLMs: A Quantum Tensor Network Based Method"**: Semantic clustering plus entropy-based uncertainty offers a comparator for Carnot's energy/entropy hallucination detectors under resource-constrained local-model settings.
+- **arXiv:2605.07723 — "LLM hallucinations in the wild: Large-scale evidence from non-existent citations"**: The citation-hallucination audit suggests a high-precision benchmark class for Carnot's verifier pipeline because nonexistent references are externally checkable constraints.
