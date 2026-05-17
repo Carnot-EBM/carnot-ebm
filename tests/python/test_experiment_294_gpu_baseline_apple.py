@@ -38,7 +38,12 @@ _SCRIPT_PATH = (
 
 def _load_module() -> Any:
     """Load experiment_294 without executing main(), in mock mode."""
-    os.environ.setdefault("CARNOT_FORCE_LIVE", "0")
+    # Force CARNOT_FORCE_LIVE=0 unconditionally — this file's docstring states
+    # "All tests run under CARNOT_FORCE_LIVE=0". Using setdefault() would leave
+    # a pre-existing CARNOT_FORCE_LIVE=1 in place, causing AppleBaselineRunner294
+    # to call _run_prewarm_phase() in __init__, which loads real GPU models and
+    # trips the per-test RSS watchdog (+1993MB) even for pure-lambda test cases.
+    os.environ["CARNOT_FORCE_LIVE"] = "0"
     spec = importlib.util.spec_from_file_location("experiment_294_gpu_baseline_apple", _SCRIPT_PATH)
     assert spec is not None and spec.loader is not None
     mod = importlib.util.module_from_spec(spec)

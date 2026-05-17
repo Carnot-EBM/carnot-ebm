@@ -1,0 +1,33 @@
+{
+  "experiment": 2320,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-17",
+  "started_at": "2026-05-17T23:48:43.745614+00:00",
+  "finished_at": "2026-05-17T23:48:43.745614+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 4: Capstone E2E Live Generation (.227) \u2014 FST + ODAR + CASAL + KAN-CL n=256",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "2 of 2 gate(s) failed; first failure: exp2310-fst-live-gen-v7.fst_live_validated (upstream artifact not found for task id 'exp2310-fst-live-gen-v7')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp2310-fst-live-gen-v7",
+      "artifact_field": "fst_live_validated",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp2310-fst-live-gen-v7'"
+    },
+    {
+      "upstream": "exp2312-kancl-n256-v6",
+      "artifact_field": "kancl_n256_validated",
+      "op": "==",
+      "expected": true,
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp2312-kancl-n256-v6'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
