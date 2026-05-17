@@ -63,6 +63,26 @@ next repair prompt.
 - `verify_and_repair(..., use_fst=True)` sends the next repair prompt with that prefix
   before the normal `Question:` repair prompt body.
 
+### REQ-ODAR-2243: ODAR Free-Energy Routing Gate
+
+The VerifyRepairPipeline MUST provide an optional `use_odar=False` routing gate that
+fuses Tier 0 probe outputs into an expected free-energy (EFE) score before Tier 1
+constraint extraction and downstream deliberative verification.  The gate MUST use
+`FreeEnergyRouter(risk_threshold=...)` from `python/carnot/pipeline/odar_router.py`.
+When EFE is below the configured risk threshold, `verify()` MUST return a fast-path
+`VerificationResult` without running Tier 1 extraction.  When EFE is at or above the
+threshold, or when no Tier 0 probe evidence is present, verification MUST continue down
+the normal deliberative path.
+
+**Acceptance criteria:**
+- `FreeEnergyRouter.route(probe_outputs)` returns `RoutingDecision.FAST_PATH` for
+  low-EFE Tier 0 outputs.
+- `FreeEnergyRouter.route(probe_outputs)` returns `RoutingDecision.DELIBERATIVE` for
+  high-EFE Tier 0 outputs.
+- Changing `risk_threshold` changes the route for the same bounded EFE input.
+- `VerifyRepairPipeline.verify(..., use_odar=True)` records the EFE and decision in the
+  certificate and skips Tier 1 extraction only for the ODAR fast path.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -95,6 +115,15 @@ next repair prompt.
 before the normal repair prompt.
 
 **Spec traces:** REQ-FST-2240
+
+### SCENARIO-ODAR-2243: Low EFE Skips Deliberative Verification
+
+**Given** Tier 0 probe outputs with low risk and high confidence
+**When** `FreeEnergyRouter(risk_threshold=0.5).route(...)` evaluates the outputs
+**Then** the decision is `FAST_PATH`, and the verify-repair pipeline can return a
+fast-path result before Tier 1 extraction.
+
+**Spec traces:** REQ-ODAR-2243
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 

@@ -1,0 +1,40 @@
+{
+  "experiment_id": "2243",
+  "artifact": "odar_impl",
+  "created_at": "2026-05-17",
+  "honest_verdict": "Terminal-prefix required. ODAR router module imports and focused ODAR unit tests pass; repo-wide spec coverage still fails on pre-existing untraced tests outside this experiment.",
+  "odar_impl_ready": true,
+  "router_module_path": "python/carnot/pipeline/odar_router.py",
+  "efe_computation_validated": true,
+  "module_import_validated": true,
+  "verify_repair_integration": {
+    "path": "python/carnot/pipeline/verify_repair.py",
+    "gate": "optional use_odar=False default before Tier 1 extraction",
+    "fast_path_mode": "ODAR_FAST_PATH",
+    "deliberative_route": "continues normal VerifyRepairPipeline.verify()"
+  },
+  "tests_run": [
+    {
+      "command": ".venv/bin/python -m pytest -q --no-cov tests/python/test_odar_router.py",
+      "passed": true,
+      "notes": "6 passed; validates fast-path routing, deliberative routing, threshold sensitivity, and VerifyRepairPipeline integration."
+    },
+    {
+      "command": "/usr/bin/ruff check python/carnot/pipeline/odar_router.py python/carnot/pipeline/verify_repair.py tests/python/test_odar_router.py",
+      "passed": true
+    },
+    {
+      "command": "/usr/bin/ruff format --check python/carnot/pipeline/odar_router.py python/carnot/pipeline/verify_repair.py tests/python/test_odar_router.py",
+      "passed": true
+    },
+    {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "passed": false,
+      "notes": "Fails on 240 pre-existing tests lacking REQ-* or SCENARIO-* references; the new ODAR tests include REQ-ODAR-2243/SCENARIO-ODAR-2243."
+    }
+  ],
+  "e2e_check": {
+    "plan_path": "ops/e2e-test-plan.md",
+    "applicable_check": "No ODAR-specific E2E item is defined; focused pipeline integration tests cover the new routing gate."
+  }
+}

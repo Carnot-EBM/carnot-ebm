@@ -447,6 +447,9 @@ class VerifyRepairPipeline:
         casal_tier: Any | None = None,
         interwhen_monitor: Any | None = None,
         use_hardnet: bool = False,
+        use_odar: bool = False,
+        odar_risk_threshold: float = 0.5,
+        odar_router: Any | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -494,11 +497,21 @@ class VerifyRepairPipeline:
                 PerModelFPTracker state.  When provided, saved state is
                 restored on init and persisted on close().  Default None
                 preserves all existing behaviour.
+            use_odar: Optional ODAR routing gate default for ``verify()``.
+                When True, Tier 0 probe outputs are fused into expected free
+                energy before Tier 1 extraction; low-EFE calls return a
+                fast-path result. Default False preserves existing behaviour.
+            odar_risk_threshold: EFE threshold used when constructing the
+                default FreeEnergyRouter. Lower thresholds route fewer calls
+                to the optimistic fast path.
+            odar_router: Optional custom FreeEnergyRouter-compatible object
+                with ``evaluate(probe_outputs)``. When omitted, the pipeline
+                builds one lazily from ``odar_risk_threshold``.
 
         Raises:
             ModelLoadError: If model is specified but cannot be loaded.
 
-        Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2
+        Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243
         """
         self._domains = domains
         self._max_repairs = max_repairs
@@ -531,13 +544,16 @@ class VerifyRepairPipeline:
             self._and_compose_verifier = build_default_verifier_ensemble()
         else:
             self._and_compose_verifier = and_compose_verifier
-            
+
         self._casal_tier = casal_tier
         # InterwhenMonitor for mid-generation sentence-boundary violation detection
         # (REQ-VERIFY-130, arXiv 2602.11202).  Advisory only: violations recorded in
         # certificate but never override result.verified.
         self._interwhen_monitor = interwhen_monitor
         self._use_hardnet = use_hardnet
+        self._use_odar = use_odar
+        self._odar_risk_threshold = odar_risk_threshold
+        self._odar_router = odar_router
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -1260,6 +1276,9 @@ class VerifyRepairPipeline:
         ising_constraint_injector: IsingConstraintInjector | None = None,
         use_fst: bool = False,
         fst_trainer: Any = None,
+        use_odar: bool = False,
+        odar_risk_threshold: float | None = None,
+        odar_router: Any | None = None,
     ) -> VerificationResult:
         """Verify a response by extracting and checking constraints.
 
@@ -1317,6 +1336,13 @@ class VerifyRepairPipeline:
             use_fst: Optional Fast-Slow Training mode. When True, the base LLM
                 and verifier ensemble are asserted frozen as slow weights and
                 the verification certificate records the FST freeze status.
+            use_odar: Optional ODAR free-energy routing gate. When True, or
+                when enabled at pipeline construction, Tier 0 probe outputs
+                are fused before Tier 1 extraction. Low EFE returns an
+                optimistic fast-path result; high EFE falls through.
+            odar_risk_threshold: Optional per-call EFE threshold used when
+                constructing the default FreeEnergyRouter.
+            odar_router: Optional per-call FreeEnergyRouter-compatible object.
 
         Returns:
             VerificationResult with constraint evaluation details.
@@ -1329,7 +1355,7 @@ class VerifyRepairPipeline:
 
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001,
               REQ-JEPA-002, REQ-VERIFY-094, REQ-VERIFY-146, REQ-LEARN-060,
-              REQ-LEARN-061, REQ-FST-2240
+              REQ-LEARN-061, REQ-FST-2240, REQ-ODAR-2243
         """
         _fst_trainer = fst_trainer
         if use_fst and _fst_trainer is None:
@@ -1342,6 +1368,9 @@ class VerifyRepairPipeline:
                 _fst_trainer.slow_weights.assert_frozen()
                 result.certificate["fst"] = _fst_trainer.certificate()
             return result
+
+        _tier0_probe_outputs: dict[str, Any] = {}
+        _pending_odar_certificate: dict[str, Any] | None = None
 
         typed_reasoning = self.extract_typed_reasoning(question, response)
         semantic_grounding = self.verify_semantic_grounding(question, response, typed_reasoning)
@@ -1396,6 +1425,7 @@ class VerifyRepairPipeline:
         _hallufield_result = None
         if hallufield_detector is not None:
             _hallufield_result = hallufield_detector.score(None)
+            _tier0_probe_outputs["hallufield"] = _hallufield_result
 
         # Tier 0f SemanticEnergyProbe advisory (REQ-VERIFY-155).
         # Scores pairwise Boltzmann semantic energy over sentence clusters.
@@ -1404,6 +1434,7 @@ class VerifyRepairPipeline:
         _semantic_energy_result = None
         if semantic_energy_probe is not None:
             _semantic_energy_result = semantic_energy_probe.score(response)
+            _tier0_probe_outputs["semantic_energy"] = _semantic_energy_result
 
         # Tier 0g StreamingCoT advisory (REQ-VERIFY-140).
         # When CARNOT_STREAMING_COT=1, extract CoT steps from the response and run
@@ -1429,6 +1460,7 @@ class VerifyRepairPipeline:
             if _cot_steps:
                 _streaming_detector = StreamingCoTHalluDetector(alpha=0.3, threshold=0.35)
                 _streaming_cot_result = _streaming_detector.detect(_cot_steps)
+                _tier0_probe_outputs["streaming_cot"] = _streaming_cot_result
 
         # Tier 0 ThinkProbe fast-path (optional, REQ-VERIFY-094).
         # If a CarnotThinkProbe instance is provided and it classifies the response
@@ -1438,6 +1470,11 @@ class VerifyRepairPipeline:
         # 'uncertain' and 'correct' fall through to full Ising verification.
         if think_probe is not None:
             probe_result = think_probe.probe(response)
+            _tier0_probe_outputs["think_probe"] = {
+                "verdict": probe_result.verdict.verdict,
+                "confidence": probe_result.verdict.confidence,
+                "latency_ms": probe_result.latency_ms,
+            }
             if not probe_result.should_run_ising:
                 # ThinkProbe is confident the response is incorrect — skip Ising.
                 think_violation = ConstraintResult(
@@ -1477,6 +1514,10 @@ class VerifyRepairPipeline:
         # Tier 0d (HalluField, which is already handled above as an advisory).
         if self._nup_probe is not None:
             nup_score = self._nup_probe.score(response)
+            _tier0_probe_outputs["nup_probe"] = {
+                "risk_score": nup_score,
+                "threshold": self._nup_probe_threshold,
+            }
             if nup_score <= self._nup_probe_threshold:
                 return _with_fst_certificate(
                     VerificationResult(
@@ -1490,6 +1531,48 @@ class VerifyRepairPipeline:
                             "nup_threshold": self._nup_probe_threshold,
                         },
                         mode="NUP_PROBE_FAST_PATH",
+                        skipped=True,
+                        typed_reasoning=typed_reasoning,
+                        semantic_grounding=semantic_grounding,
+                        semantic_verifier_v2=semantic_verifier_v2,
+                    )
+                )
+
+        # ODAR free-energy router (optional, REQ-ODAR-2243).
+        # This gate fuses the cheap Tier 0 evidence gathered above and decides
+        # whether the response is low-risk enough to skip Tier 1 extraction and
+        # downstream deliberative verification.  Missing probe evidence routes
+        # to deliberative verification because FreeEnergyRouter assigns it
+        # infinite EFE.
+        if use_odar or self._use_odar:
+            from carnot.pipeline.odar_router import (  # noqa: PLC0415
+                FreeEnergyRouter,
+                RoutingDecision,
+            )
+
+            effective_odar_router = odar_router or self._odar_router
+            if effective_odar_router is None:
+                threshold = (
+                    self._odar_risk_threshold
+                    if odar_risk_threshold is None
+                    else odar_risk_threshold
+                )
+                effective_odar_router = FreeEnergyRouter(risk_threshold=threshold)
+
+            odar_result = effective_odar_router.evaluate(_tier0_probe_outputs)
+            _pending_odar_certificate = odar_result.to_certificate()
+            if odar_result.decision is RoutingDecision.FAST_PATH:
+                return _with_fst_certificate(
+                    VerificationResult(
+                        verified=True,
+                        constraints=[],
+                        energy=0.0,
+                        violations=[],
+                        certificate={
+                            "mode": "ODAR_FAST_PATH",
+                            **_pending_odar_certificate,
+                        },
+                        mode="ODAR_FAST_PATH",
                         skipped=True,
                         typed_reasoning=typed_reasoning,
                         semantic_grounding=semantic_grounding,
@@ -1517,13 +1600,14 @@ class VerifyRepairPipeline:
                         response,
                         typed_reasoning=typed_reasoning,
                     )
-                    return _with_fst_certificate(
-                        self._merge_semantic_analysis(
-                            result,
-                            semantic_grounding,
-                            semantic_verifier_v2,
-                        )
+                    result = self._merge_semantic_analysis(
+                        result,
+                        semantic_grounding,
+                        semantic_verifier_v2,
                     )
+                    if _pending_odar_certificate is not None:
+                        result.certificate.update(_pending_odar_certificate)
+                    return _with_fst_certificate(result)
                 except Exception as exc:
                     logger.warning("Rust verify failed, falling back to Python: %s", exc)
                     # Fall through to Python path.
@@ -1656,6 +1740,8 @@ class VerifyRepairPipeline:
         result.typed_reasoning = typed_reasoning
         result.semantic_grounding = semantic_grounding
         result.semantic_verifier_v2 = semantic_verifier_v2
+        if _pending_odar_certificate is not None:
+            result.certificate.update(_pending_odar_certificate)
         if semantic_verifier_v2 is not None:
             result.certificate["semantic_verifier_v2"] = semantic_verifier_v2.to_dict()
 
@@ -1700,7 +1786,9 @@ class VerifyRepairPipeline:
                 "n_violations": len(_iw_violations),
                 "early_detection_count": len(_early),
                 "total_sentences": _total_sentences,
-                "early_detection_rate": len(_early) / len(_iw_violations) if _iw_violations else 0.0,
+                "early_detection_rate": len(_early) / len(_iw_violations)
+                if _iw_violations
+                else 0.0,
             }
 
         # Tier 0h SpectralAttentionProbe advisory (REQ-VERIFY-146).
@@ -2800,13 +2888,18 @@ class VerifyRepairPipeline:
 
         # Check all constraints for violations (metadata-based check).
         for cr in constraints:
-            if getattr(self, "_use_hardnet", False) and "value" in cr.metadata and ("lower_bound" in cr.metadata or "upper_bound" in cr.metadata):
+            if (
+                getattr(self, "_use_hardnet", False)
+                and "value" in cr.metadata
+                and ("lower_bound" in cr.metadata or "upper_bound" in cr.metadata)
+            ):
                 from carnot.models.hardnet_layer import HardNetLayer
                 import jax.numpy as jnp
+
                 lower_bound = cr.metadata.get("lower_bound", -float("inf"))
                 upper_bound = cr.metadata.get("upper_bound", float("inf"))
                 layer = HardNetLayer(lower_bound=lower_bound, upper_bound=upper_bound)
-                
+
                 val = jnp.array([cr.metadata["value"]], dtype=jnp.float32)
                 clamped = layer(val)
                 penalty = float(jnp.sum(jnp.abs(val - clamped)))
@@ -2955,6 +3048,7 @@ class VerifyRepairPipeline:
                 caught_error=(ctype in caught_types),
                 any_error_in_batch=any_error,
             )
+
 
 class CASALTier:
     """Tier for Continuous Attributes in Structured Action Logic (CASAL)."""
