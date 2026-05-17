@@ -37,18 +37,3 @@ path = hf_hub_download(repo_id="Carnot-EBM/ThinkPRM-v3", filename="checkpoint.sa
   url = {https://github.com/ianblenke/carnot}
 }
 ```
-
-## Experiments
-Carnot tracks an exhaustive, public experiment record to maintain provenance for all claims.
-- **Total Experiments:** 2864 (through Exp 2166)
-- **Archived Milestones:** 227
-- **Tests:** 25,305
-
-## Key Results
-| Domain | Model | Result | Note |
-|---|---|---|---|
-| GSM8K | Gemma-4-E4B-it | Live GPU execution completed | 200 question sample |
-| HumanEval | Gemma-4-E4B-it | 50 problems verified | Live execution PBT |
-| Adversarial GSM8K | Apple Math | Credibility validation | Verified resistance to superficial changes |
-| Process-Reward | PREM Architecture | Dynamic Test-Time Compute (TTC) | Scaled by energy variance |
-| Continuous Learning | PREM Motivation | Integration Success | Intrinsic reward for CSL |

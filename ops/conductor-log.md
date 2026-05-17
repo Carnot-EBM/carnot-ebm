@@ -4129,3 +4129,8 @@ Ripgrep i |
 | 2026-05-17 06:35 UTC | Phase 4: Milestone 2026.05.214 Retrospective | OK | cache hit: 81 passed, 1 warning in 4.54s |
 | 2026-05-17 06:47 UTC | Plan milestone 2026.05.215 | OK | 13 tasks proposed |
 | 2026-05-17 06:49 UTC | Milestone 2026.05.215 activated | OK | 13 tasks queued |
+| 2026-05-17 07:03 UTC | Phase 0: Archive .214 and activate .215 | FAIL | Post-tests failed: 1 failed, 80 passed, 1 warning in 4.36s |
+| 2026-05-17 07:06 UTC | Phase 0: Archive .214 and activate .215 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 5.73s |
+| 2026-05-17 07:08 UTC | Phase 0: Archive .214 and activate .215 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 5.05s |
+| 2026-05-17 07:10 UTC | Phase 1: Formal Logic (NSVIF) Extractor Infrastruc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 4.93s |
+| 2026-05-17 07:12 UTC | Phase 1: Formal Logic (NSVIF) Extractor Infrastruc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 81 passed, 1 warning in 5.36s |

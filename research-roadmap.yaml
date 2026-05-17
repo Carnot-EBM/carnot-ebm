@@ -90,7 +90,7 @@ tasks:
     max_turns: 100
     model: "opus"
     prompt: |
-      CONTEXT: The Phase-3/7 derivation proved $k=15$ is infeasible. We must pivot to $k_{max}=5$ for the FPGA hardware deployment.
+      CONTEXT: The Phase-3/7 derivation proved $k=15$ is infeasible. We must pivot to $k_{{max}}=5$ for the FPGA hardware deployment.
       EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
       TASK: Refactor the substrate KAN topology to restrict all couplings to $k=5$.
       CONCRETE STEPS:
@@ -108,7 +108,7 @@ tasks:
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: With $k_{max}=5$, we must implement parallel PT-SB chains and Manifold Substitution to maintain expressive power.
+      CONTEXT: With $k_{{max}}=5$, we must implement parallel PT-SB chains and Manifold Substitution to maintain expressive power.
       EXISTING CODE TO READ FIRST: {project_root}/python/carnot/models/substrate_kan.py
       TASK: Implement parallel chains for Manifold Substitution.
       CONCRETE STEPS:
@@ -128,7 +128,7 @@ tasks:
         op: "contains"
         value: "OK"
     prompt: |
-      CONTEXT: Re-run hardware resource accounting for the new $k_{max}=5$ topology to ensure it fits on the KV260 BRAM/LUT limits.
+      CONTEXT: Re-run hardware resource accounting for the new $k_{{max}}=5$ topology to ensure it fits on the KV260 BRAM/LUT limits.
       EXISTING CODE TO READ FIRST: {project_root}/scripts/fpga_resource_estimator.py
       TASK: Update the resource estimator for the new k=5 bounds.
       CONCRETE STEPS:
