@@ -419,10 +419,13 @@ artifacts checked into `results/operational_retro_*.json`.
 
 **Defensible headline results (provenance-labeled artifacts):**
 
-- **99.3%** of wrong code is flagged on the 164-problem HumanEval benchmark;
-  property-based tests catch six bugs the official test suite misses (Exp 227).
+- **99.3%** of wrong code is flagged on the 164-problem HumanEval benchmark
+  (Exp 226, 144/145 wrong baselines detected with 10 false positives);
+  property-based tests catch six bugs the official test suite misses (Exp 226
+  full sweep; Exp 227 30-problem Qwen cohort corroborates).
 - **+3.0 percentage points** on HumanEval pass-rate from verify-and-repair,
-  with 95% CI [+0.6, +6.1] (Exp 227, Gemma 4 4B).
+  with 95% CI [+0.6, +6.1] (Exp 226, full 164-problem Gemma 4 E4B sweep:
+  baseline pass@1 11.6% → verify-repair pass@1 14.6%).
 - **+4.9 percentage points** on a typed-constraint compliance benchmark
   (Exp 221).
 - **Prompt-injection safety KAN** distilled from GPT-OSS-Safeguard-20B
