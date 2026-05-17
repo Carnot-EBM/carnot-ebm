@@ -1258,6 +1258,8 @@ class VerifyRepairPipeline:
         semantic_energy_probe: Any = None,
         embedding_constraint_store: EmbeddingConstraintStore | None = None,
         ising_constraint_injector: IsingConstraintInjector | None = None,
+        use_fst: bool = False,
+        fst_trainer: Any = None,
     ) -> VerificationResult:
         """Verify a response by extracting and checking constraints.
 
@@ -1312,6 +1314,9 @@ class VerifyRepairPipeline:
                 active constraint list before _evaluate_constraints().  Static
                 constraints are never removed — this is purely additive.
                 Default None (no embedding injection, full backward compatibility).
+            use_fst: Optional Fast-Slow Training mode. When True, the base LLM
+                and verifier ensemble are asserted frozen as slow weights and
+                the verification certificate records the FST freeze status.
 
         Returns:
             VerificationResult with constraint evaluation details.
@@ -1323,8 +1328,21 @@ class VerifyRepairPipeline:
             PipelineTimeoutError: If the call exceeds timeout_seconds.
 
         Spec: REQ-VERIFY-001, REQ-VERIFY-002, REQ-VERIFY-003, REQ-LEARN-001,
-              REQ-JEPA-002, REQ-VERIFY-094, REQ-VERIFY-146, REQ-LEARN-060, REQ-LEARN-061
+              REQ-JEPA-002, REQ-VERIFY-094, REQ-VERIFY-146, REQ-LEARN-060,
+              REQ-LEARN-061, REQ-FST-2240
         """
+        _fst_trainer = fst_trainer
+        if use_fst and _fst_trainer is None:
+            from carnot.training.fast_slow import FastSlowTrainer  # noqa: PLC0415
+
+            _fst_trainer = FastSlowTrainer.from_pipeline(self)
+
+        def _with_fst_certificate(result: VerificationResult) -> VerificationResult:
+            if use_fst and _fst_trainer is not None:
+                _fst_trainer.slow_weights.assert_frozen()
+                result.certificate["fst"] = _fst_trainer.certificate()
+            return result
+
         typed_reasoning = self.extract_typed_reasoning(question, response)
         semantic_grounding = self.verify_semantic_grounding(question, response, typed_reasoning)
         semantic_verifier_v2 = self.verify_semantic_verifier_v2(
@@ -1349,22 +1367,24 @@ class VerifyRepairPipeline:
             probs = jepa_predictor.predict(partial_embedding)
             max_prob = max(probs.values()) if probs else 0.0
             if max_prob < jepa_threshold:
-                return VerificationResult(
-                    verified=True,
-                    constraints=[],
-                    energy=0.0,
-                    violations=[],
-                    certificate={
-                        "mode": "FAST_PATH",
-                        "jepa_max_prob": max_prob,
-                        "jepa_threshold": jepa_threshold,
-                        "jepa_probs": probs,
-                    },
-                    mode="FAST_PATH",
-                    skipped=True,
-                    typed_reasoning=typed_reasoning,
-                    semantic_grounding=semantic_grounding,
-                    semantic_verifier_v2=semantic_verifier_v2,
+                return _with_fst_certificate(
+                    VerificationResult(
+                        verified=True,
+                        constraints=[],
+                        energy=0.0,
+                        violations=[],
+                        certificate={
+                            "mode": "FAST_PATH",
+                            "jepa_max_prob": max_prob,
+                            "jepa_threshold": jepa_threshold,
+                            "jepa_probs": probs,
+                        },
+                        mode="FAST_PATH",
+                        skipped=True,
+                        typed_reasoning=typed_reasoning,
+                        semantic_grounding=semantic_grounding,
+                        semantic_verifier_v2=semantic_verifier_v2,
+                    )
                 )
         # Tier 0e HalluField pre-filter (optional, REQ-VERIFY-117).
         # When a HalluFieldDetector instance is supplied, score the response
@@ -1429,22 +1449,24 @@ class VerifyRepairPipeline:
                         "latency_ms": probe_result.latency_ms,
                     },
                 )
-                return VerificationResult(
-                    verified=False,
-                    constraints=[think_violation],
-                    energy=0.0,
-                    violations=[think_violation],
-                    certificate={
-                        "mode": "THINK_PROBE_FAST_PATH",
-                        "think_probe_verdict": probe_result.verdict.verdict,
-                        "think_probe_confidence": probe_result.verdict.confidence,
-                        "think_probe_latency_ms": probe_result.latency_ms,
-                    },
-                    mode="THINK_PROBE_FAST_PATH",
-                    skipped=True,
-                    typed_reasoning=typed_reasoning,
-                    semantic_grounding=semantic_grounding,
-                    semantic_verifier_v2=semantic_verifier_v2,
+                return _with_fst_certificate(
+                    VerificationResult(
+                        verified=False,
+                        constraints=[think_violation],
+                        energy=0.0,
+                        violations=[think_violation],
+                        certificate={
+                            "mode": "THINK_PROBE_FAST_PATH",
+                            "think_probe_verdict": probe_result.verdict.verdict,
+                            "think_probe_confidence": probe_result.verdict.confidence,
+                            "think_probe_latency_ms": probe_result.latency_ms,
+                        },
+                        mode="THINK_PROBE_FAST_PATH",
+                        skipped=True,
+                        typed_reasoning=typed_reasoning,
+                        semantic_grounding=semantic_grounding,
+                        semantic_verifier_v2=semantic_verifier_v2,
+                    )
                 )
 
         # Tier 0c: NUP Probe v6 fast-path (REQ-VERIFY-146, Exp 622).
@@ -1456,21 +1478,23 @@ class VerifyRepairPipeline:
         if self._nup_probe is not None:
             nup_score = self._nup_probe.score(response)
             if nup_score <= self._nup_probe_threshold:
-                return VerificationResult(
-                    verified=True,
-                    constraints=[],
-                    energy=0.0,
-                    violations=[],
-                    certificate={
-                        "mode": "NUP_PROBE_FAST_PATH",
-                        "nup_score": nup_score,
-                        "nup_threshold": self._nup_probe_threshold,
-                    },
-                    mode="NUP_PROBE_FAST_PATH",
-                    skipped=True,
-                    typed_reasoning=typed_reasoning,
-                    semantic_grounding=semantic_grounding,
-                    semantic_verifier_v2=semantic_verifier_v2,
+                return _with_fst_certificate(
+                    VerificationResult(
+                        verified=True,
+                        constraints=[],
+                        energy=0.0,
+                        violations=[],
+                        certificate={
+                            "mode": "NUP_PROBE_FAST_PATH",
+                            "nup_score": nup_score,
+                            "nup_threshold": self._nup_probe_threshold,
+                        },
+                        mode="NUP_PROBE_FAST_PATH",
+                        skipped=True,
+                        typed_reasoning=typed_reasoning,
+                        semantic_grounding=semantic_grounding,
+                        semantic_verifier_v2=semantic_verifier_v2,
+                    )
                 )
 
         # Fast path: delegate to Rust pipeline when available.
@@ -1493,10 +1517,12 @@ class VerifyRepairPipeline:
                         response,
                         typed_reasoning=typed_reasoning,
                     )
-                    return self._merge_semantic_analysis(
-                        result,
-                        semantic_grounding,
-                        semantic_verifier_v2,
+                    return _with_fst_certificate(
+                        self._merge_semantic_analysis(
+                            result,
+                            semantic_grounding,
+                            semantic_verifier_v2,
+                        )
                     )
                 except Exception as exc:
                     logger.warning("Rust verify failed, falling back to Python: %s", exc)
@@ -1614,15 +1640,17 @@ class VerifyRepairPipeline:
             raise
         except CarnotError as exc:
             logger.warning("Verification degraded: %s", exc)
-            return VerificationResult(
-                verified=False,
-                constraints=[],
-                energy=0.0,
-                violations=[],
-                certificate={"error": str(exc), "error_type": type(exc).__name__},
-                typed_reasoning=typed_reasoning,
-                semantic_grounding=semantic_grounding,
-                semantic_verifier_v2=semantic_verifier_v2,
+            return _with_fst_certificate(
+                VerificationResult(
+                    verified=False,
+                    constraints=[],
+                    energy=0.0,
+                    violations=[],
+                    certificate={"error": str(exc), "error_type": type(exc).__name__},
+                    typed_reasoning=typed_reasoning,
+                    semantic_grounding=semantic_grounding,
+                    semantic_verifier_v2=semantic_verifier_v2,
+                )
             )
 
         result.typed_reasoning = typed_reasoning
@@ -1782,7 +1810,7 @@ class VerifyRepairPipeline:
                     )
                 )
 
-        return result
+        return _with_fst_certificate(result)
 
     def verify_with_gate(
         self,
@@ -1967,6 +1995,7 @@ class VerifyRepairPipeline:
         question: str,
         response: str | None = None,
         domain: str | None = None,
+        use_fst: bool = False,
     ) -> RepairResult:
         """Verify a response and iteratively repair violations via the LLM.
 
@@ -1997,6 +2026,9 @@ class VerifyRepairPipeline:
                 the model generates one. If None and no model, raises
                 ValueError.
             domain: Optional domain hint for constraint extraction.
+            use_fst: Optional Fast-Slow Training mode. When True, verifier
+                feedback is treated as fast weights and prepended to the next
+                repair prompt while model/verifier slow weights remain frozen.
 
         Returns:
             RepairResult with full repair trajectory.
@@ -2004,9 +2036,15 @@ class VerifyRepairPipeline:
         Raises:
             ValueError: If response is None and no model is loaded.
 
-        Spec: REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004
+        Spec: REQ-VERIFY-001, REQ-VERIFY-003, SCENARIO-VERIFY-004,
+              REQ-FST-2240, SCENARIO-FST-2240
         """
         deadline = self._make_deadline()
+        fst_trainer = None
+        if use_fst:
+            from carnot.training.fast_slow import FastSlowTrainer  # noqa: PLC0415
+
+            fst_trainer = FastSlowTrainer.from_pipeline(self)
 
         # Step 1: Get initial response.
         if response is None:
@@ -2030,7 +2068,13 @@ class VerifyRepairPipeline:
 
         # Step 2: Verify the initial response.
         self._check_deadline(deadline)
-        vr = self.verify(question, response, domain)
+        vr = self.verify(
+            question,
+            response,
+            domain,
+            use_fst=use_fst,
+            fst_trainer=fst_trainer,
+        )
         history.append(vr)
 
         if vr.verified:
@@ -2065,6 +2109,13 @@ class VerifyRepairPipeline:
                 f"The following issues were found:\n{feedback}\n\n"
                 f"Please provide a corrected answer that fixes these issues."
             )
+            if fst_trainer is not None:
+                repair_prompt = fst_trainer.next_repair_prompt(
+                    verification_result=vr,
+                    base_prompt=repair_prompt,
+                    iteration=i + 1,
+                )
+                vr.certificate["fst"] = fst_trainer.certificate()
 
             # Generate a repaired response.
             try:
@@ -2085,7 +2136,13 @@ class VerifyRepairPipeline:
             logger.info("Repair iteration %d: regenerated response.", i + 1)
 
             # Re-verify.
-            vr = self.verify(question, response, domain)
+            vr = self.verify(
+                question,
+                response,
+                domain,
+                use_fst=use_fst,
+                fst_trainer=fst_trainer,
+            )
             history.append(vr)
 
             if vr.verified:
@@ -2913,4 +2970,3 @@ class CASALTier:
             "latency_ms": 1.5,
             "acceptance_gate_passed": True,
         }
-

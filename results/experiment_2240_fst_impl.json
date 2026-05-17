@@ -1,0 +1,39 @@
+{
+  "experiment_id": 2240,
+  "status": "complete",
+  "honest_verdict": "Terminal-prefix required.",
+  "fst_impl_ready": true,
+  "fst_module_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/training/fast_slow.py",
+  "fst_import_path": "carnot.training.fast_slow",
+  "slow_weights_frozen": true,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "fst_impl_ready": "Boolean gate for exp2241. True only when all unit tests pass and module imports cleanly.",
+    "fst_module_path": "Records exact file path created so downstream tasks can import it.",
+    "slow_weights_frozen": "Verifies the implementation actually freezes slow-weight gradients."
+  },
+  "validation": {
+    "unit_tests": {
+      "command": ".venv/bin/pytest -q -n 0 -o addopts='' tests/python/test_fast_slow_training.py",
+      "passed": true,
+      "summary": "4 passed, 1 warning"
+    },
+    "module_import": {
+      "command": ".venv/bin/python - <<'PY' ... import carnot.training.fast_slow ... PY",
+      "passed": true
+    },
+    "lint": {
+      "command": "uvx ruff check python/carnot/training/fast_slow.py python/carnot/training/__init__.py python/carnot/pipeline/verify_repair.py tests/python/test_fast_slow_training.py",
+      "passed": true
+    },
+    "spec_coverage": {
+      "command": ".venv/bin/python scripts/check_spec_coverage.py",
+      "passed": false,
+      "reason": "Pre-existing repository-wide traceability failures: 240 tests missing spec references; tests/python/test_fast_slow_training.py was not listed."
+    }
+  },
+  "spec_refs": [
+    "REQ-FST-2240",
+    "SCENARIO-FST-2240"
+  ]
+}

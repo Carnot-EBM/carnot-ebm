@@ -2,6 +2,7 @@
 
 from carnot.training.capo_loss import capo_loss, ece_loss
 from carnot.training.ebft_objective import ebft_loss
+from carnot.training.fast_slow import FastSlowTrainer, FastWeights, SlowWeights, VerifierOutputSummary
 from carnot.training.multilevel_kan_trainer import KnotRefinementInterpolator, MultilevelKAEMTrainer
 from carnot.training.multilevel_sparse_kaem import MultilevelSparseKAEMTrainer
 from carnot.training.nce import nce_loss, nce_loss_stochastic
@@ -12,11 +13,15 @@ from carnot.training.score_matching import dsm_loss, dsm_loss_stochastic
 from carnot.training.snl import snl_loss, snl_loss_stochastic
 
 __all__ = [
+    "FastSlowTrainer",
+    "FastWeights",
     "KnotRefinementInterpolator",
     "MultilevelKAEMTrainer",
     "MultilevelSparseKAEMTrainer",
     "PlattScaler",
     "ReplayBuffer",
+    "SlowWeights",
+    "VerifierOutputSummary",
     "capo_loss",
     "dsm_loss",
     "dsm_loss_stochastic",

@@ -47,6 +47,22 @@ The per-question latency overhead added by the JEPA v18 Tier 2 scorer MUST be le
 5 ms (latency_delta_ms < 5).  Exceeding this budget causes honest_verdict
 "cascade_deploy_latency_fail" regardless of AUC.
 
+### REQ-FST-2240: Fast-Slow Verify-Repair Context Update
+
+The VerifyRepairPipeline MUST provide an optional `use_fst=False` mode that keeps the
+base LLM and verifier ensemble as frozen slow weights while treating verifier-output
+summaries as fast weights.  When enabled for verify-repair, the verifier-output summary
+from the current failed verification step MUST be prepended at the terminal start of the
+next repair prompt.
+
+**Acceptance criteria:**
+- `SlowWeights` freezes any `requires_grad` parameters exposed by the base LLM and
+  verifier ensemble.
+- `FastWeights` converts failed `VerificationResult` feedback into a deterministic
+  verifier-output context prefix.
+- `verify_and_repair(..., use_fst=True)` sends the next repair prompt with that prefix
+  before the normal `Question:` repair prompt body.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -70,6 +86,15 @@ The per-question latency overhead added by the JEPA v18 Tier 2 scorer MUST be le
 **Given** the cascade is loaded with JEPA v18 as Tier 2
 **When** `evaluate_auc(eval_groups)` is called on 50 held-out GSM8K groups
 **Then** the returned float is in [0, 1]
+
+### SCENARIO-FST-2240: Failed Verification Feeds Next Repair Prompt
+
+**Given** a verify-repair loop running with `use_fst=True`
+**When** a verification iteration finds one or more violations
+**Then** the next LLM repair call receives a terminal-prefix verifier-output summary
+before the normal repair prompt.
+
+**Spec traces:** REQ-FST-2240
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
