@@ -4530,3 +4530,4 @@ Ripgrep i |
 | 2026-05-17 22:05 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 22:07 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 22:09 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
+| 2026-05-17 22:11 UTC | Phase 3: Sparse Ising Connectivity via Copy-Node G | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
