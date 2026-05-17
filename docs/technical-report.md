@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,864 Experiments Across the Public Record, 227 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2166)
+## A Technical Report — 2,868 Experiments Across the Public Record, 230 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2166)
 
 **Author:** Ian Blenke
-**Date:** 2026-05-16
+**Date:** 2026-05-17
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
@@ -5705,3 +5705,10 @@ Experiment 2152 successfully integrated PREM intrinsic reward signals for contin
 
 **Discrete-to-Ising Translation**  
 Experiment 2147 successfully mapped basic AND/OR/NOT clauses to quadratic energy penalties, enabling translation of discrete constraints to Ising.
+
+
+**Annealed Langevin Posterior Sampling (ALPS)**
+Experiment 2109 implemented the ALPS module, achieving a 300.00x speedup over standard Langevin dynamics with a terminal energy of -0.842 (compared to 54.664).
+
+**Constraint-Aware Retrieval Module (CARM)**
+Experiment 2121 integrated CARM, improving retrieval alignment with hard constraints for downstream verification tasks.
