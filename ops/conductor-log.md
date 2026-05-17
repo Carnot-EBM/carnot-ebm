@@ -4142,3 +4142,5 @@ Ripgrep i |
 | 2026-05-17 07:21 UTC | Phase 1: Z3 Constraint Compiler for CoT Steps | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2168-nsvif-extractor-infrastructure) |
 | 2026-05-17 07:21 UTC | Phase 1: LLM-as-Extractor Adapter for SOTA GGUF | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2169-z3-constraint-compiler.result (ups |
 | 2026-05-17 07:23 UTC | Phase 1: E2E Verify-Repair with Z3 Extraction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2170-llm-as-extractor-adapter) |
+| 2026-05-17 07:23 UTC | Phase 2: FPGA KV260 k_max=5 Architecture Pivot | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.73s |
+| 2026-05-17 07:25 UTC | Phase 1: E2E Verify-Repair with Z3 Extraction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2170-llm-as-extractor-adapter) |
