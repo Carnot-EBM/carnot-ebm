@@ -4034,3 +4034,5 @@ Error |
 | 2026-05-17 02:59 UTC | Phase 3: Dynamic Resolution Continuous Self-Learni | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 03:01 UTC | Phase 3: RLVR Integration with Verifiable EBM Rewa | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 03:03 UTC | Phase 3: RLVR Integration with Verifiable EBM Rewa | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 03:05 UTC | Phase 3: RLVR Integration with Verifiable EBM Rewa | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 03:07 UTC | Phase 3: Full E2E Benchmark (CARM + DAB + Dynamic | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2128-dynamic-resolution-csl) |
