@@ -731,3 +731,14 @@ The output SHALL be saved to `results/experiment_2090_crane_humaneval.json` with
 **When** evaluated with CRANE versus rigid grammar
 **Then** CRANE achieves a positive pass_rate_delta
 **And** the artifact `results/experiment_2090_crane_humaneval.json` is generated.
+
+### REQ-INFER-2133: Hardware-Assisted DAB
+The system SHALL provide a Hardware-Assisted DAB logits processor in `python/carnot/inference/hw_dab.py`.
+It SHALL offload energy evaluations to a simulated LUT representation based on Substrate-Aware KANs.
+The output SHALL be saved to `results/experiment_2133_hw_dab.json` with all required schema fields including `hw_dab_ready`.
+
+### SCENARIO-INFER-2133-001: Hardware-Assisted DAB Evaluation
+**Given** an LLM outputting logits
+**When** the HWDABLogitsProcessor is applied
+**Then** it updates logits by subtracting energy from simulated LUTs
+**And** the experiment artifact `results/experiment_2133_hw_dab.json` is generated.
