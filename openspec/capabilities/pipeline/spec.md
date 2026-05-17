@@ -83,6 +83,28 @@ the normal deliberative path.
 - `VerifyRepairPipeline.verify(..., use_odar=True)` records the EFE and decision in the
   certificate and skips Tier 1 extraction only for the ODAR fast path.
 
+### REQ-ODAR-2244: ODAR Routing Benchmark Gate
+
+The pipeline MUST provide a deterministic Exp 2244 benchmark that compares ODAR
+routing with a uniform Tier 0 through Tier 3 cascade on a 30-example reasoning
+corpus.  The corpus MUST contain 15 high-confidence low-EFE examples that should
+fast-path and 15 ambiguous high-EFE examples that should route to deliberative
+verification.
+
+**Acceptance criteria:**
+- The benchmark writes `results/experiment_2244_odar_benchmark.json`.
+- The artifact includes `honest_verdict`, `odar_benchmark_passed`,
+  `compute_reduction_pct`, `accuracy_delta`, `n_corpus`, and
+  `preconditions_checked`.
+- `compute_reduction_pct` is computed as
+  `(tier_calls_A - tier_calls_B) / tier_calls_A * 100`.
+- `accuracy_delta` is reported in percentage points as ODAR accuracy minus
+  uniform-cascade accuracy.
+- `odar_benchmark_passed` is true only when `compute_reduction_pct >= 30` and
+  `accuracy_delta >= -2.0`.
+- If `python/carnot/pipeline/odar_router.py` cannot be imported, the benchmark
+  writes a blocked artifact with `blocked_router_missing`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -124,6 +146,15 @@ before the normal repair prompt.
 fast-path result before Tier 1 extraction.
 
 **Spec traces:** REQ-ODAR-2243
+
+### SCENARIO-ODAR-2244: ODAR Benchmark Clears Compute Gate
+
+**Given** the balanced 30-example Exp 2244 reasoning corpus
+**When** the benchmark runs the uniform cascade and ODAR-threshold regimes
+**Then** the artifact reports at least 30% fewer tier calls for ODAR while keeping
+accuracy within two percentage points of the uniform cascade.
+
+**Spec traces:** REQ-ODAR-2244
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
