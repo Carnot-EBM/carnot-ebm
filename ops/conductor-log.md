@@ -3982,3 +3982,4 @@ Error |
 | 2026-05-17 00:02 UTC | Milestone 2026.05.210 activated | OK | 12 tasks queued |
 | 2026-05-17 00:05 UTC | Phase 0: Archive .209 and activate .210 | FAIL | No file changes produced |
 | 2026-05-17 00:09 UTC | Phase 0: Archive .209 and activate .210 | OK | cache hit: 81 passed, 1 warning in 4.96s |
+| 2026-05-17 00:15 UTC | Phase 1: Annealed Langevin Posterior Sampling (ALP | OK | 81 passed, 1 warning in 5.39s |
