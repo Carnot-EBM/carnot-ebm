@@ -650,3 +650,21 @@ To accurately account for hardware p-bit and p-dit implementations before runnin
 ### SCENARIO-ISING-045
 
 **p-bit Ising Sampler v3 artifact:** Given the implementation of p-bit states in the Ising sampler, Exp 1929 SHALL measure latency and accuracy changes, write `results/experiment_1929_p_bit_ising_v3.json`, and keep `hardware_execution_performed=false`.
+
+### REQ-ISING-046
+
+**SAT/SMT to Ising model translator.**
+
+**Rationale:**
+To fully utilize thermodynamic sampling, we must map discrete logical constraints into continuous Ising spin Hamiltonians.
+
+**Acceptance criteria:**
+- The experiment SHALL define `python/carnot/inference/ising_translator.py`.
+- Map basic AND/OR/NOT clauses to quadratic energy penalties.
+- `results/experiment_2147_ising_translation.json` SHALL include `status`, `experiment_id`, and `honest_verdict`.
+
+**Implementation:** `python/carnot/inference/ising_translator.py`
+
+### SCENARIO-ISING-046
+
+**SAT/SMT to Ising model translator artifact:** Given basic AND/OR/NOT clauses, Exp 2147 SHALL translate them to Ising models, write `results/experiment_2147_ising_translation.json`.
