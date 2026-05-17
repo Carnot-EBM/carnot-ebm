@@ -4259,3 +4259,4 @@ Ripgrep i |
 | 2026-05-17 10:53 UTC | Phase 0: Archive .218 and activate .219 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.66s |
 | 2026-05-17 10:55 UTC | Phase 1: Primal-Dual Guided Decoding Optimization | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 10:57 UTC | Phase 1: Primal-Dual Guided Decoding Optimization | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 10:59 UTC | Phase 1: Primal-Dual Guided Decoding Optimization | DOOMED_RERUN_BLOCK | 8 prior failure(s) match this task's scope but prior_failures field is missing o |
