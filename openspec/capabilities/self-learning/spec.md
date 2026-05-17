@@ -5839,3 +5839,18 @@ AdamFLIP SHALL apply adaptive momentum feedback linearization to solve hard cons
 **Given** grid_translation parameters
 **When** run_csl_loop is executed with substrate_shift
 **Then** the parameters MUST be translated and the artifact saved.
+
+
+## REQ-LEARN-2152: CSL Loop Incorporates PREM Intrinsic Rewards
+
+**Given** a Continuous Self-Learning (CSL) loop
+**When** PREM intrinsic rewards are provided during the step
+**Then** the optimizer parameters MUST be shifted by the intrinsic rewards
+**And** the run_csl_loop output MUST reflect that PREM intrinsic rewards were applied
+
+### SCENARIO-LEARN-2152: PREM Intrinsic Rewards Shift CSL Parameters
+
+**Given** a CSL loop
+**When** run_csl_loop is called with prem_intrinsic_reward
+**Then** the returned dict includes 'prem_intrinsic_applied': True
+**And** the parameters are updated accordingly.

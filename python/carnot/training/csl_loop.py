@@ -13,7 +13,7 @@ class CSLLoop:
         self.adamflip = AdamFLIP(learning_rate=0.01)
         self.grid_translation = grid_translation
 
-    def step(self, params: jnp.ndarray, grads: jnp.ndarray, residuals: Optional[jnp.ndarray] = None, substrate_shift: Optional[jnp.ndarray] = None) -> jnp.ndarray:
+    def step(self, params: jnp.ndarray, grads: jnp.ndarray, residuals: Optional[jnp.ndarray] = None, substrate_shift: Optional[jnp.ndarray] = None, prem_intrinsic_reward: Optional[jnp.ndarray] = None) -> jnp.ndarray:
         """Perform a single CSL loop step with Muon-OGD and AdamFLIP."""
         updated_params = self.optimizer.update(params, grads, prior_memory=self.memory)
         
@@ -24,6 +24,9 @@ class CSLLoop:
         shift = substrate_shift if substrate_shift is not None else self.grid_translation
         if shift is not None:
             updated_params = updated_params + shift
+
+        if prem_intrinsic_reward is not None:
+            updated_params = updated_params + prem_intrinsic_reward
             
         if self.memory is None:
             norm_val = jnp.linalg.norm(grads)
@@ -34,21 +37,22 @@ class CSLLoop:
                 
         return updated_params
 
-def run_csl_loop(params: jnp.ndarray, grads: jnp.ndarray, residuals: Optional[jnp.ndarray] = None, substrate_shift: Optional[jnp.ndarray] = None) -> Dict[str, Any]:
+def run_csl_loop(params: jnp.ndarray, grads: jnp.ndarray, residuals: Optional[jnp.ndarray] = None, substrate_shift: Optional[jnp.ndarray] = None, prem_intrinsic_reward: Optional[jnp.ndarray] = None) -> Dict[str, Any]:
     """Run a CSL loop and return the result."""
     optimizer = MuonOGD(learning_rate=0.01)
     csl = CSLLoop(optimizer, grid_translation=substrate_shift)
     
     # First step (populates memory)
-    updated = csl.step(params, grads, residuals)
+    updated = csl.step(params, grads, residuals, substrate_shift=substrate_shift, prem_intrinsic_reward=prem_intrinsic_reward)
     
     # Second step (uses memory for OGD projection)
-    updated_again = csl.step(updated, grads, residuals)
+    updated_again = csl.step(updated, grads, residuals, substrate_shift=substrate_shift, prem_intrinsic_reward=prem_intrinsic_reward)
     
     return {
         "status": "success",
         "muon_ogd_applied": True,
         "adamflip_applied": residuals is not None,
         "substrate_shifting_applied": substrate_shift is not None,
+        "prem_intrinsic_applied": prem_intrinsic_reward is not None,
         "updated_norm": float(jnp.linalg.norm(updated_again))
     }
