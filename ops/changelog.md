@@ -6154,3 +6154,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 
 - 2026-05-17: Milestone 2026.05.225 Operational Retrospective (✅ Complete) — No experiments run; pipeline inactive due to blocked_roadmap_missing at .224 archive step (third consecutive empty milestone). Zero wall time logged; both GPUs idle at 0% utilization. Top action: pre-stage research-roadmap-next.yaml for .226 before archiving .225; results/operational_retro_2026_05_225.json
 - 2026-05-17: Phase 0: Fix carnot.pypi_escalation Missing Symbols — Claude Escalation (5th Attempt) (⚠️ Research Finding) — honest_verdict=complete: partial_fix — pypi_escalation ImportError resolved (4/4 tests pass), full suite has 2 pre-existing unrelated failures; results/experiment_2295_pypi_escalation_fix.json
+- 2026-05-17: Phase 0: Archive .226 and activate .227 (✅ Complete) — honest_verdict=complete: archive_ready; results/experiment_2308_archive.json
