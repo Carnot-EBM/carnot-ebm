@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.225",
+  "generated_at": "2026-05-17T20:46:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.225 recorded zero experiment activity; the conductor loop did not advance past activation. This is the third consecutive empty milestone (.223, .224, .225), each blocked by a missing pre-staged roadmap at handoff time. Both RTX 3090 GPUs were idle at 0% utilization throughout.",
+  "bottlenecks_identified": [
+    "No research-roadmap-next.yaml was pre-staged for .225, causing conductor to stall at the archive/activation step (blocked_roadmap_missing pattern, same as .223 and .224).",
+    "Recurring empty-milestone chain: three milestones in a row produced zero experiment output, compounding research velocity loss."
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for .226 BEFORE archiving .225 — this is the direct fix per the Pre-Staged Roadmap Convention in CLAUDE.md.",
+    "Add a conductor-level guard that warns if the current milestone closes without a pre-staged roadmap already committed for the next milestone.",
+    "Review ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES for any entries pending 3+ consecutive milestones; the overdue-priority forcing function requires at least one pickup.",
+    "GPU Monitor's DualGPURunner suggestion is a false signal when both GPUs are idle due to zero experiment activation — filter this suggestion when experiments_completed=0."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Write and commit research-roadmap-next.yaml for milestone .226 immediately to break the empty-milestone chain; this is the single highest-leverage action available.",
+    "Audit the conductor's archive/activation sequence for .225 to confirm the exact failure point and determine if a structural code fix is needed alongside the roadmap pre-stage.",
+    "Scan ops/known-issues.md for overdue MANDATORY-NEXT-MILESTONE entries (pending 3+ milestones per CLAUDE.md overdue-priority forcing function) and fold them into the .226 roadmap draft."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Three consecutive milestones (.223, .224, .225) completed zero experiments due to the same root cause: no pre-staged roadmap at handoff time. The Pre-Staged Roadmap Convention in CLAUDE.md exists precisely to prevent this pattern, but it requires the outer loop to act on it before archiving. Until roadmap pre-staging becomes a mechanical gate (not just a documented discipline), the empty-milestone chain will recur whenever the outer loop exits without committing the next roadmap."
+}

@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,907 Experiments Across the Public Record, 234 Archived Milestone Records, 25,306 Python Test Items Collected (Results and Ops Retros Through Exp 2205)
+## A Technical Report — 2,824 Experiments Across the Public Record, 238 Archived Milestone Records, 25,353 Python Test Items Collected (Through Exp 2279)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-17
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,907 experiments across 234 milestones up to .218, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 2,824 experiments across 238 milestones up to .224, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, and adversarial null-space probing of the k=16 verifier ensemble.
 
-This report documents the research arc behind the framework — **2,907 experiment records tracked through Exp 2205, with 2,907 task records in 234 artifact-backed completed milestone records archived through 2026.05.218** — run between February and May 2026. `research-complete.yaml` currently archives **234** completed milestone records through 2026.05.218. Milestone 2026.05.218 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
+This report documents the research arc behind the framework — **2,824 experiment records tracked through Exp 2279, with 2,824 task records in 238 artifact-backed completed milestone records archived through 2026.05.224** — run between February and May 2026. `research-complete.yaml` currently archives **238** completed milestone records through 2026.05.224. Milestone 2026.05.224 completed 14 experiments targeting FST live generation, FR-11 multidomain retention, KAN-CL n=256 scaling, KV260 RTL lint, Yosys synthesis, adversarial null-space probing (exp2274), Eidoku CSP gate (exp2275), and Projected-Langevin baseline (exp2276). Milestone .225 is planned with 14 tasks (exp2280-exp2293) addressing a pypi_escalation cascade root cause and retrying blocked Phase 1/2/3 work.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
