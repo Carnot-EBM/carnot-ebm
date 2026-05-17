@@ -4148,3 +4148,5 @@ Ripgrep i |
 | 2026-05-17 07:27 UTC | Phase 1: E2E Verify-Repair with Z3 Extraction | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2170-llm-as-extractor-adapter) |
 | 2026-05-17 07:27 UTC | Phase 2: FPGA KV260 k_max=5 Architecture Pivot | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.58s |
 | 2026-05-17 07:29 UTC | Phase 2: Manifold Substitution Chains Implementati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2172-fpga-kmax-5-pivot) |
+| 2026-05-17 07:29 UTC | Phase 2: FPGA Hardware Resource Allocation for k=5 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2173-manifold-substitution-chains.resul |
+| 2026-05-17 07:31 UTC | Phase 2: Manifold Substitution Chains Implementati | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2172-fpga-kmax-5-pivot) |
