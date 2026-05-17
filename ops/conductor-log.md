@@ -4159,3 +4159,5 @@ Ripgrep i |
 | 2026-05-17 07:42 UTC | Phase 3: Adaptive Data Harvesting for Constraint S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2175-jepa-predictive-verification) |
 | 2026-05-17 07:42 UTC | Phase 3: JEPA CSL Training Loop on Accumulated Log | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2176-adaptive-data-harvesting.result (u |
 | 2026-05-17 07:44 UTC | Phase 3: Adaptive Data Harvesting for Constraint S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2175-jepa-predictive-verification) |
+| 2026-05-17 07:44 UTC | Phase 3: JEPA CSL Training Loop on Accumulated Log | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2176-adaptive-data-harvesting.result (u |
+| 2026-05-17 07:46 UTC | Phase 3: Adaptive Data Harvesting for Constraint S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2175-jepa-predictive-verification) |
