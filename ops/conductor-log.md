@@ -4455,3 +4455,4 @@ Ripgrep i |
 | 2026-05-17 19:20 UTC | Phase 4: Milestone 2026.05.224 Retrospective | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-17 19:41 UTC | Plan milestone 2026.05.225 | OK | 14 tasks proposed |
 | 2026-05-17 19:43 UTC | Milestone 2026.05.225 activated | OK | 14 tasks queued |
+| 2026-05-17 19:46 UTC | Phase 0: Archive .224 and activate .225 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
