@@ -6108,3 +6108,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - Proposed .223 wall-time speedup target: 25.0%, primarily by removing repeated pre-gate churn, consolidating hardware prerequisites before scheduling dependent parity tasks, and preserving ODAR-style fast-path routing in capstone runs.
 - 2026-05-17: Phase 6: Milestone 2026.05.222 Retrospective (✅ Complete) — honest_verdict=complete: milestone_2026_05_222_retro_11_of_14_criteria_met_120min_wall_time_25pct_speedup_target; results/experiment_2252_retro.json
 - 2026-05-17: Milestone 2026.05.222 Operational Retrospective (✅ Complete) — No experiments run; pipeline inactive. Zero wall time logged; both GPUs idle at 0% utilization. Top action: pre-stage roadmap for .223 before archiving .222.
+- 2026-05-17: Phase 0: Archive .222 and activate .223 (⚠️ Blocked) — honest_verdict=complete: blocked_roadmap_missing; results/experiment_2253_archive.json
