@@ -1,0 +1,24 @@
+{
+  "experiment": 2223,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-17",
+  "started_at": "2026-05-17T12:23:01.755272+00:00",
+  "finished_at": "2026-05-17T12:23:01.755272+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Phase 2: HILED Decoder Smoke Test",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp2222-kv260-hiled-deployment.honest_verdict (upstream artifact not found for task id 'exp2222-kv260-hiled-deployment')",
+  "gates_evaluated": [
+    {
+      "upstream": "exp2222-kv260-hiled-deployment",
+      "artifact_field": "honest_verdict",
+      "op": "contains",
+      "expected": "complete",
+      "actual": null,
+      "passed": false,
+      "reason": "upstream artifact not found for task id 'exp2222-kv260-hiled-deployment'"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
