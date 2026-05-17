@@ -4511,3 +4511,4 @@ Ripgrep i |
 | 2026-05-17 21:30 UTC | Phase 1: FR-11 FST Multi-Domain Retention v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2296-fst-live-gen-v6) |
 | 2026-05-17 21:30 UTC | Phase 1: KAN-CL n=256 Per-Knot Retention v5 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
 | 2026-05-17 21:32 UTC | Phase 1: FR-11 FST Multi-Domain Retention v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2296-fst-live-gen-v6) |
+| 2026-05-17 21:32 UTC | Phase 1: KAN-CL n=256 Per-Knot Retention v5 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
