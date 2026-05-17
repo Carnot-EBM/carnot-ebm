@@ -4072,3 +4072,5 @@ Error |
 | 2026-05-17 04:31 UTC | Phase 1: PREM Training Pipeline | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2144-prem-architecture.result (actual i |
 | 2026-05-17 04:33 UTC | Phase 1: PREM Training Pipeline | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2144-prem-architecture.result (actual i |
 | 2026-05-17 04:35 UTC | Phase 1: PREM Evaluation on GSM8K | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2145-prem-training-pipeline) |
+| 2026-05-17 04:38 UTC | Phase 2: Discrete-to-Ising Translation Module | OK | 81 passed, 1 warning in 5.89s |
+| 2026-05-17 04:40 UTC | Phase 1: PREM Evaluation on GSM8K | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2145-prem-training-pipeline) |
