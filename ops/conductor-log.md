@@ -4504,3 +4504,4 @@ Ripgrep i |
 | 2026-05-17 21:14 UTC | Phase 0: Archive .225 and activate .226 | FAIL | Codex CLI error: e 10 minutes, that is correct and expected — exit promptly.  |
 | 2026-05-17 21:20 UTC | Phase 0: Fix carnot.pypi_escalation Missing Symbol | OK | 85 passed, 1 warning in 1.95s |
 | 2026-05-17 21:22 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
+| 2026-05-17 21:24 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2295-pypi-escalation-fix-claude.pretest |
