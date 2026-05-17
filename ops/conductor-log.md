@@ -4115,3 +4115,5 @@ Ripgrep i |
 | 2026-05-17 06:19 UTC | Phase 2: KAN to LUT/BRAM Allocation Script | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2159-substrate-aware-kan) |
 | 2026-05-17 06:19 UTC | Phase 2: KV260 FPGA Simulation with Mock Bitstream | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2160-kan-lut-allocation.result (upstrea |
 | 2026-05-17 06:21 UTC | Phase 2: Hardware-KAN vs CPU-KAN Microbenchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2161-kv260-simulation) |
+| 2026-05-17 06:21 UTC | Phase 3: Dynamic Resolution for Continual EBMs | DOOMED_RERUN_BLOCK | 4 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 06:23 UTC | Phase 2: Hardware-KAN vs CPU-KAN Microbenchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2161-kv260-simulation) |
