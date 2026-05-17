@@ -4439,3 +4439,4 @@ Ripgrep i |
 | 2026-05-17 18:55 UTC | Phase 2: OSS-CAD-Suite Yosys Synthesis from Lint-P | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2272-kv260-rtl-clean-reattempt) |
 | 2026-05-17 18:55 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 18:57 UTC | Phase 3: Eidoku CSP Verification Gate Implementati | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-17 19:00 UTC | Phase 3: Eidoku CSP Verification Gate Implementati | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
