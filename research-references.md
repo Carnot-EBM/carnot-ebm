@@ -13103,3 +13103,9 @@ This sweep was run after milestone `.211` completed. The literature search revea
 - **Ising-Constraint Flow**: Translating logical constraints (SAT/SMT) directly into Ising Hamiltonians for native thermodynamic/ALPS sampling, vastly outperforming Z3 on probabilistic logic.
 - **Dynamic Test-Time Compute via Energy Variance**: Using the variance of the EBM landscape to proportionally scale decoding steps, saving compute on easy tokens and expanding search on hard constraints.
 - **CSL Intrinsic Motivation**: Continuous Self-Learning that uses the PREM's own partition function estimation as an intrinsic reward to prevent mode collapse.
+
+
+### Resolving Action Bottleneck via Token-Level Energy
+- **Paper:** 'Resolving Action Bottleneck: Agentic Reinforcement Learning Informed by Token-Level Energy' (arXiv:2605.14558).
+- **What:** Identifies that token-level training signals concentrate sharply on action tokens. Proposes ActFocus, downweighting gradients on reasoning tokens and an energy-based redistribution mechanism.
+- **Relevance to Carnot:** Directly improves our PREM training pipeline from .213, offering a way to avoid uniform credit assignment in long reasoning trajectories.
