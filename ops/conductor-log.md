@@ -4370,3 +4370,4 @@ Ripgrep i |
 | 2026-05-17 15:11 UTC | Phase 3: CASAL Primal-Dual Split Augmented Langevi | OK | 97 passed, 1 warning in 5.60s |
 | 2026-05-17 15:24 UTC | Phase 3: CASAL vs AdamFLIP Hard Constraint Violati | OK | 81 passed, 1 warning in 3.65s |
 | 2026-05-17 15:26 UTC | Phase 4: KAN-CL Scaling to n=256 Spin Ising (COOL- | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 15:29 UTC | Phase 4: KAN-CL Scaling to n=256 Spin Ising (COOL- | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
