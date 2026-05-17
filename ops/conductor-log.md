@@ -3996,3 +3996,4 @@ Error |
 | 2026-05-17 00:44 UTC | Phase 3: ActFocus Token-Level Energy Reweighting | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 00:49 UTC | Phase 3: NEXUS Symbolic Grounding for ActFocus | OK | 81 passed, 1 warning in 5.76s |
 | 2026-05-17 00:51 UTC | Phase 3: ActFocus + ALPS Benchmark on GSM8K | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 00:53 UTC | Phase 3: ActFocus + ALPS Benchmark on GSM8K | DOOMED_RERUN_BLOCK | 1 prior failure(s) match this task's scope but prior_failures field is missing o |
