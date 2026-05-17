@@ -4019,3 +4019,5 @@ Error |
 | 2026-05-17 02:26 UTC | Phase 1: Discrete Auto-Regressive Biasing (DAB) | SKIP | Pre-tests failing, self-heal failed: 11 failed, 98 passed, 1 warning in 6.72s |
 | 2026-05-17 02:29 UTC | Phase 1: Discrete Auto-Regressive Biasing (DAB) | SKIP | Pre-tests failing, self-heal failed: 11 failed, 98 passed, 1 warning in 5.99s |
 | 2026-05-17 02:31 UTC | Phase 1: DAB-Guided GSM8K Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2123-dab-implementation) |
+| 2026-05-17 02:31 UTC | Phase 2: Substrate-Aware KAN Translation | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
+| 2026-05-17 02:33 UTC | Phase 1: DAB-Guided GSM8K Evaluation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2123-dab-implementation) |
