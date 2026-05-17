@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.223 | Empty milestone / No experiments | N/A | None — conductor loop did not reach experiment execution; GPUs idle but available |
 | 2026.05.210 | Empty milestone / No experiments | N/A | None |
 | 2026.05.208 | Empty milestone / No experiments | N/A | None |
 | 2026.05.190 | Synthesis Only | 2 experiments | 0 compute-bound tasks; correctly left GPU idle for synthesis-only |

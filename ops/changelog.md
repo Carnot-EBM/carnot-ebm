@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-17 (Milestone 2026.05.223 Operational Retrospective)
+
+- Milestone 2026.05.223 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.223. No compute-bound tasks executed; GPU idle state is correct and expected. Primary bottleneck: conductor loop did not advance to experiment execution — zero throughput despite both RTX 3090s fully available. Top action: verify research-roadmap-next.yaml is present with valid 2026.05.223 tasks before the milestone idles further.
+
 ## 2026-05-17 (Milestone 2026.05.218 Operational Retrospective)
 
 - Milestone 2026.05.218 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.218. There were no compute-bound experiments to analyze, and GPUs were correctly idle. No new bottlenecks were identified as no data was available this milestone.

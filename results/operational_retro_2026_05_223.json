@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.223",
+  "generated_at": "2026-05-17T17:54:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits found since milestone 2026.05.223 activation. Zero experiments completed and zero wall-time minutes recorded. GPU idle state is correct and expected — both RTX 3090s at 0% utilization with no compute-bound tasks queued.",
+  "bottlenecks_identified": [
+    "No experiments activated in this milestone — conductor loop may not have advanced to experiment execution phase. This is the primary structural bottleneck: zero throughput regardless of GPU availability or tooling quality."
+  ],
+  "improvements_suggested": [
+    "Verify the conductor loop is running and has a valid research-roadmap-next.yaml pointing to milestone 2026.05.223 tasks before declaring this milestone active.",
+    "If the milestone was activated but no tasks were emitted, check whether the planner sub-process exited without writing research-roadmap-next.yaml (known failure mode from prior milestones).",
+    "Both GPUs are idle and available — pre-warm GGUF models on GPU 0 and GPU 1 using DualGPURunner so that the first compute-bound task avoids the lazy-load stall when experiments do activate.",
+    "Ensure research-roadmap-next.yaml exists with milestone: 2026.05.223 entries; if absent, the conductor has no tasks to launch and wall time accrues as dead time rather than experiment time."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Confirm conductor activation: check that research-roadmap-next.yaml has been written with valid tasks for milestone 2026.05.223; if missing, re-run the planner to emit the roadmap before the GPUs sit idle further.",
+    "Pre-warm GPU model cache: both RTX 3090s have 24GB VRAM fully free — load Qwen3.6-35B-A3B-GGUF on GPU 0 and gemma-4-26B-A4B-it-GGUF on GPU 1 now so the first inference tasks start at steady-state throughput rather than incurring the first-load penalty.",
+    "Audit the activation chain in scripts/research_conductor.py to confirm _activate_next_roadmap() found and loaded the correct YAML milestone; a milestone-field mismatch (stale prefix) will silently re-run the planner rather than activating pre-staged tasks, causing zero-experiment milestones to repeat."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A zero-experiment milestone is not a research outcome — it is a process failure. The pattern of consecutive zero-experiment milestones (2026.05.210 through 2026.05.223) suggests the conductor activation chain is not reaching the experiment-launch phase. The highest-leverage fix is not a research technique improvement but a conductor health check: confirm the roadmap YAML is present, the milestone field matches, and _activate_next_roadmap() is completing without silent exit."
+}

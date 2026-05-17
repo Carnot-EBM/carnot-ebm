@@ -4409,3 +4409,5 @@ Ripgrep i |
 | 2026-05-17 17:24 UTC | Phase 4: Adversarial Null-Space Probe on k=16 Ense | DOOMED_RERUN_BLOCK | 2 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 17:37 UTC | Phase 5: ArXiv Post-.222 Research Sweep + Referenc | OK | cache hit: 81 passed, 1 warning in 3.67s |
 | 2026-05-17 17:39 UTC | Phase 6: Capstone E2E Real-Scale Live Generation ( | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2255-fst-real-scale-live-gen, exp2258-kan |
+| 2026-05-17 17:48 UTC | Phase 6: Milestone 2026.05.223 Retrospective | OK | 81 passed, 1 warning in 3.64s |
+| 2026-05-17 17:50 UTC | Phase 6: Capstone E2E Real-Scale Live Generation ( | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2255-fst-real-scale-live-gen, exp2258-kan |
