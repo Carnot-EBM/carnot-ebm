@@ -1,3 +1,32 @@
+## 2026-05-17 Post-.226 Planning Sweep (Milestone 2026.05.227)
+
+This sweep was run after milestone `.226` completed. The key finding for .227 planning: exp2295 resolved the pypi_escalation ImportError (symbols `check_pypi_escalation` and `run_escalation` added) but two pre-existing test failures remain blocking pretest_fixed. The research sweep found new work in ML-assisted Ising initialization, accelerated constrained sampling theory, neurosymbolic SMT formalization, and adaptive LLM routing.
+
+### ML-Assisted Ising Machines for Dynamic Optimization
+- **Paper:** "Machine Learning-Assisted High-speed Combinatorial Optimization with Ising Machines" (arXiv:2503.23966, March 2026).
+- **What:** Integrates ML heuristics with Ising machines to compute better initial states for combinatorial optimization, dramatically reducing convergence time. The ML component runs offline to learn initialization policy; the Ising machine handles the high-speed combinatorial search.
+- **Relevance to Carnot:** Direct complement to the KV260/FPGA hardware track. Carnot's parallel Ising sampler (parallel_ising.py) currently uses random initialization. ML-assisted initialization could reduce the number of Gibbs sweeps needed to convergence, improving throughput at the hardware boundary. Candidate exp2318 for .227.
+
+### Neurosymbolic Formalization and SMT Verification
+- **Paper:** "A Neurosymbolic Approach to Natural Language Formalization and Verification" (arXiv:2511.09008, November 2025).
+- **What:** Extends the NSVIF framework (arXiv:2601.17789) by using Z3 for detailed logical feedback and auto-formalizing policy descriptions into SMT-LIB logic rules. Provides a more complete pipeline than NSVIF alone.
+- **Relevance to Carnot:** Follow-up to exp2301 (NSVIF LogicalStepExtractor). Provides a concrete path from natural language instructions to SMT-LIB encoding that complements NSVIF's step-by-step verification approach. Candidate for .228+ after NSVIF baseline is established.
+
+### Accelerating Constrained Sampling via Large Deviations
+- **Paper:** "Accelerating Constrained Sampling: A Large Deviations Approach" (arXiv:2506.07816, June 2026).
+- **What:** Analyzes skew-reflected non-reversible Langevin dynamics for constrained sampling, providing faster mixing than overdamped Langevin while maintaining constraint feasibility. Builds on the theoretical foundations established by arXiv:2605.05387 (projected Langevin).
+- **Relevance to Carnot:** Complements exp2316 (Projected-Langevin vs CASAL). Provides theoretical justification for non-reversible extensions that may outperform both projected Langevin and CASAL. Candidate for .228+ after projected Langevin baseline (exp2316) is established.
+
+### BEST-Route: Adaptive LLM Routing for Verification
+- **Paper:** "BEST-Route: Adaptive LLM Routing with Test-Time Optimal Compute" (arXiv:2506.22716, June 2025).
+- **What:** Dynamically allocates compute per-request to match quality at lowest cost, achieving 60% token/cost reduction. Extends ODAR-style routing with budget-constrained optimization.
+- **Relevance to Carnot:** Complements ODAR (arXiv:2602.23681, exp2310). If ODAR routes the verification tier, BEST-Route can further optimize within the deliberative tier to allocate verifier ensemble resources. Candidate for Phase 2 routing integration after ODAR baseline is confirmed.
+
+### Neural Proposals, Symbolic Guarantees (Neuro-Symbolic CSP)
+- **Paper:** "Neural Proposals, Symbolic Guarantees: Neuro-Symbolic Graph Generation" (arXiv:2602.16954, February 2026).
+- **What:** Combines neural generative models with SMT solvers for constraint satisfaction during graph generation; demonstrates practical integration where neural proposals are corrected by symbolic guarantees.
+- **Relevance to Carnot:** Directly relevant to the NSVIF + VERGE pipeline (exp2313 + exp2314). The neural proposals → symbolic correction pattern matches Carnot's LLM generation → Z3 verification → VERGE repair flow. Validates the architectural approach.
+
 ## 2026-05-17 Post-.224 Planning Sweep (Milestone 2026.05.225)
 
 This sweep was run after milestone `.224` completed. The literature search revealed new work in landing-based constrained Langevin samplers, free-energy routing for MoE systems, and projected-gradient reward optimization.
