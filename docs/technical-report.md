@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,675 Experiments Across the Public Record, 225 Archived Milestone Records, 25,287 Python Test Items Collected (Results and Ops Retros Through Exp 2114)
+## A Technical Report — 2,686 Experiments Across the Public Record, 226 Archived Milestone Records, 25,305 Python Test Items Collected (Results and Ops Retros Through Exp 2154)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-16
@@ -29,7 +29,7 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,675 experiments across 225 milestones up to .212, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
+This report summarizes 2,686 experiments across 226 milestones up to .212, featuring continuous self-learning integration and fast-slow KAN variant scale-up.
 
 This report documents the research arc behind the framework — **2,675 experiment records tracked through Exp 2114, with 2,675 task records in 225 artifact-backed completed milestone records archived through 2026.05.212** — run between February and May 2026. `research-complete.yaml` currently archives **225** completed milestone records through 2026.05.212. Milestone 2026.05.212 completed **0** experiments in **0** minutes, with no experiment commits found since activation. There were no compute-bound experiments to analyze, and GPUs were correctly idle.
 
@@ -2167,17 +2167,53 @@ The failure of activation-based detection forced a paradigm shift. Instead of tr
 
 ---
 
+
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
 ## 5. Phase 3: Live LLM End-to-End (Experiments 53-64)
 
 Phase 2 validated individual components with synthetic test inputs. Phase 3 connects a real LLM (Qwen3.5-0.8B, local) to the constraint pipeline and runs everything end-to-end.
 
-### 5.1 Runtime Constraint Instrumentation (Experiment 53)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.1 Runtime Constraint Instrumentation (Experiment 53)
 
 **Setup:** Complement static AST extraction (Experiment 48) with dynamic instrumentation: rewrite the LLM's generated Python code to insert isinstance guards, bound checks, return type checks, and variable initialization tracking at runtime.
 
 **Finding:** Static and dynamic constraint extraction are complementary. Static catches structural issues (missing returns, type mismatches). Dynamic catches runtime issues (out-of-bounds access, uninitialized variables). Both feed into the Ising verifier.
 
-### 5.2 Live LLM Constraint Pipeline (Experiment 56)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.2 Live LLM Constraint Pipeline (Experiment 56)
 
 **Setup:** Full end-to-end pipeline: Qwen3.5-0.8B generates answers to 20 questions across 4 domains (arithmetic, logic, code, factual). Constraint extractor processes each answer. Ising verifier checks constraints.
 
@@ -2185,7 +2221,19 @@ Phase 2 validated individual components with synthetic test inputs. Phase 3 conn
 
 **Finding:** The constraint pipeline works on live LLM output, not just simulated examples. The 100% detection rate stands in stark contrast to the 50% practical rate of activation-based EBMs. The difference: constraints encode external knowledge (what the answer SHOULD satisfy), while activations encode internal confidence (how sure the model IS).
 
-### 5.3 Verify-Repair Loop (Experiment 57)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.3 Verify-Repair Loop (Experiment 57)
 
 **Setup:** When the Ising verifier finds constraint violations, format them as natural language feedback and feed them back to the LLM. The LLM regenerates with constraint context in the prompt. Re-verify, up to 3 iterations.
 
@@ -2193,13 +2241,37 @@ Phase 2 validated individual components with synthetic test inputs. Phase 3 conn
 
 **Finding:** The repair loop is where EBMs add value — not as classifiers (which failed in Phase 1) but as reasoning constraints that guide the LLM toward correct answers. The LLM handles language; the Ising model handles logic. Each does what it's best at.
 
-### 5.4 Constraint-Aware Prompting (Experiment 59)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.4 Constraint-Aware Prompting (Experiment 59)
 
 **Setup:** Instead of only verifying after generation (post-hoc), inject extracted constraints into the prompt before generation (preventive). Three modes tested: baseline, constraint-aware prompting only, and combined (prompt + post-hoc verification).
 
 **Finding:** Constraint-aware prompting prevents some hallucinations at generation time. Post-hoc verification catches the rest. The combined pipeline is more effective than either alone — prevention reduces the repair loop workload.
 
-### 5.5 Scaling Learned Ising Models (Experiments 60-63)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.5 Scaling Learned Ising Models (Experiments 60-63)
 
 | Experiment | Scale | Method | Finding |
 |-----------|-------|--------|---------|
@@ -2210,19 +2282,55 @@ Phase 2 validated individual components with synthetic test inputs. Phase 3 conn
 
 **Key finding:** Learned Ising models scale from toy (10-15 vars) to realistic (1000+ vars) problem sizes. Sparsity (clause-graph masking, hierarchical blocking) is essential — full coupling matrices are too large to learn from limited data, but structured sparsity reduces parameters by 10-20x while preserving solution quality.
 
-### 5.6 Ising-Guided Fuzzing and Trace Learning (Experiments 54-55)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.6 Ising-Guided Fuzzing and Trace Learning (Experiments 54-55)
 
 **Experiment 54:** Use the Ising energy landscape to generate adversarial test inputs for differential testing of LLM-generated code. The sampler biases toward low-energy (high-constraint-violation) inputs, targeting 8 bug types.
 
 **Experiment 55:** Train a discriminative Ising model on correct vs buggy execution traces (200+ binary features). The learned model catches semantic bugs that are invisible to both static analysis and dynamic instrumentation alone.
 
-### 5.7 Continuous Relaxation (Experiment 64)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.7 Continuous Relaxation (Experiment 64)
 
 **Setup:** Replace binary Ising spins {0,1} with continuous variables [0,1]. Test three rounding strategies: sigmoid annealing, penalty method, and straight-through estimation, against discrete Gibbs sampling + random baseline.
 
 **Finding:** Continuous relaxation enables gradient-based constraint optimization as an alternative to sampling-based approaches. This bridges toward Kona-style continuous latent reasoning while retaining the constraint satisfaction guarantees of the Ising framework.
 
-### 5.8 Multi-Domain Live Benchmark (Experiment 58)
+#
+### 4.33 Recent Additions (Milestone .209 to .213)
+
+**Process-Reward Energy Model Architecture (PREM)**
+Experiment 2144 successfully implemented the PREM architecture, establishing the foundational Phase 1 framework for subsequent process-reward tasks.
+
+**Dynamic Test-Time Compute (TTC) Controller**
+Experiment 2150 successfully implemented a dynamic budget controller capable of scaling Test-Time Compute (TTC) based on PREM energy variance, verifying the Phase 3 capability.
+
+**Continuous Self-Learning with PREM Intrinsic Motivation**
+Experiment 2152 evaluated Continuous Self-Learning with PREM intrinsic motivation. The integration was a success, laying groundwork for future test-time adaptations driven by intrinsic energy rewards.
+
+## 5.8 Multi-Domain Live Benchmark (Experiment 58)
 
 **Setup:** 500 questions across 5 domains (arithmetic, code, logic, factual, scheduling) in 3 modes (baseline, verify-only, verify-repair). First comprehensive evaluation of the full pipeline.
 

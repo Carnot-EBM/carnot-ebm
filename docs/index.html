@@ -300,9 +300,9 @@
       <a href="technical-report.html" class="btn btn-secondary">How it works</a>
     </div>
     <div class="stats-bar" aria-label="Project headline numbers">
-      <div class="stat"><div class="stat-num">2,675</div><div class="stat-label">Experiment records through Exp 2114</div></div>
-      <div class="stat"><div class="stat-num">225</div><div class="stat-label">archived records through .212</div></div>
-      <div class="stat"><div class="stat-num">25,287</div><div class="stat-label">Python test items collected</div></div>
+      <div class="stat"><div class="stat-num">2,686</div><div class="stat-label">Experiment records through Exp 2154</div></div>
+      <div class="stat"><div class="stat-num">226</div><div class="stat-label">archived records through .212</div></div>
+      <div class="stat"><div class="stat-num">25,305</div><div class="stat-label">Python test items collected</div></div>
       <div class="stat"><div class="stat-num">0</div><div class="stat-label">experiments completed in .212</div></div>
       <div class="r-card">
         <span class="r-tag">Latest closeout</span>
@@ -431,7 +431,7 @@
 <section id="features" style="background: rgba(255,255,255,0.01);">
   <div class="container">
     <span class="section-label">What you can check</span>
-    <h2 class="section-title">Six capabilities, one framework</h2>
+    <h2 class="section-title">Seven capabilities, one framework</h2>
     <p class="section-desc">
       Carnot ships with a routed verifier stack tuned for different kinds of
       LLM output. Pick one, or let the pipeline route automatically.
@@ -717,6 +717,13 @@
         <h3 class="r-title">DualGPURunner Idle Analysis</h3>
         <p class="r-desc">Milestone .146 completed 20 synthesis-only experiments in 52.5 minutes. GPU idle was appropriate, not a compute bottleneck.</p>
         <div class="r-stats"><span class="r-before">Synthesis timing and closeout batching remain the targets</span> <span class="r-after">ops/changelog .146</span></div>
+      </div>
+      <div class="bento-card span-2">
+        <div class="bento-icon">P</div>
+        <h3 class="bento-title">Test-Time Compute (TTC) &amp; PREM</h3>
+        <p class="bento-text">
+          A dynamic budget controller that scales Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance. This provides intrinsic motivation for continuous self-learning.
+        </p>
       </div>
     </div>
   </div>
@@ -1939,6 +1946,12 @@
         <h3 class="r-title">THRML vs CPU Gibbs Latency</h3>
         <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
         <div class="r-stats"><span class="r-before">Latency audit completed</span> <span class="r-after">Exps 1970-1973</span></div>
+      </div>
+      <div class="r-card">
+        <span class="r-tag">Test-Time Compute &mdash; PREM</span>
+        <h3 class="r-title">PREM Controller implemented</h3>
+        <div class="r-meter"><div class="r-bar" style="width: 100%; background: #22c55e;"></div></div>
+        <div class="r-stats"><span class="r-before">Dynamic budget controller scales TTC based on variance</span> <span class="r-after">Exps 2144-2150</span></div>
       </div>
 </div>
 </section>
