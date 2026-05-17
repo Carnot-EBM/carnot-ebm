@@ -4193,3 +4193,4 @@ Ripgrep i |
 | 2026-05-17 08:32 UTC | Phase 4: Milestone 2026.05.216 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.22s |
 | 2026-05-17 08:34 UTC | Phase 3: OSS-CAD-Suite Hardware Synthesis | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2184-kv260-k5-rtl-design) |
 | 2026-05-17 08:34 UTC | Phase 4: Capstone Live GPU Benchmark | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2183-energy-guided-decoding) |
+| 2026-05-17 08:34 UTC | Phase 4: Milestone 2026.05.216 Retrospective | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 5.61s |
