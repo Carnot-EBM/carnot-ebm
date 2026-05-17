@@ -5897,3 +5897,44 @@ parameter-only regime's drift
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2241 | Implemented (`python/carnot/reporting/fr11_fst_eval.py`, `scripts/experiment_2241_fr11_fst_eval.py`) | Implemented (`tests/python/test_experiment_2241_fr11_fst_eval.py`) |
+
+## REQ-LEARN-2242: ActFocus + FST SOTA GGUF Evaluation Artifact
+
+**Given** the ActFocus token-level energy reweighting task and the FR-11
+Fast-Slow Training verifier loop
+**When** the Exp 2242 combined evaluation runs
+**Then** it MUST directly import `python/carnot/training/actfocus.py` and
+`python/carnot/training/fast_slow.py` before evaluation
+**And** it MUST call the cached SOTA GGUF resolver path before any fallback
+model-spec construction
+**And** it MUST run a deterministic 20-example reasoning corpus through an
+FST-enabled verify-repair loop whose fast-update retention is scored from
+ActFocus action-token energy variance
+**And** it MUST write `results/experiment_2242_actfocus_fst.json` with
+`honest_verdict`, `actfocus_fst_validated`, `models_used`,
+`energy_variance_correlation`, `fast_weight_retention_rate`,
+`energy_reduction`, `preconditions_checked`, and `duration_s`.
+
+### REQ-LEARN-2242 Sub-requirements
+
+- REQ-LEARN-2242-1: If direct import of `actfocus.py` fails, the artifact SHALL
+  be written with `honest_verdict="blocked_actfocus_missing"`.
+- REQ-LEARN-2242-2: If direct import of `fast_slow.py` fails, the artifact
+  SHALL be written with `honest_verdict="blocked_fst_missing"`.
+- REQ-LEARN-2242-3: If no Qwen or Gemma local HF cache entry is present, the
+  artifact SHALL be written with `honest_verdict="blocked_model_not_cached"`.
+- REQ-LEARN-2242-4: `MODEL_SPECS` SHALL include at least one of
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- REQ-LEARN-2242-5: `actfocus_fst_validated` SHALL be true only when
+  `fast_weight_retention_rate >= 0.85`.
+
+### SCENARIO-LEARN-2242: ActFocus Action Variance Retains Useful FST Updates
+
+**Given** a deterministic 20-example reasoning corpus with answer-action
+tokens and reasoning tokens
+**When** ActFocus scores token-energy traces and FST consumes failed verifier
+summaries as fast weights
+**Then** action-token energy variance is positively correlated with useful
+fast-weight updates
+**And** the artifact reports whether the retention gate reached 0.85.
