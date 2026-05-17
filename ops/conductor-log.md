@@ -4268,3 +4268,5 @@ Ripgrep i |
 | 2026-05-17 11:11 UTC | Phase 2: Formal Synthesis of KAN Control Barrier C | DOOMED_RERUN_BLOCK | 3 prior failure(s) match this task's scope but prior_failures field is missing o |
 | 2026-05-17 11:14 UTC | Phase 2: LipKAN Lipschitz-Regularized Architecture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.14s |
 | 2026-05-17 11:16 UTC | Phase 2: LipKAN Lipschitz-Regularized Architecture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.62s |
+| 2026-05-17 11:18 UTC | Phase 2: LipKAN Lipschitz-Regularized Architecture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed, 1 warning in 4.27s |
+| 2026-05-17 11:20 UTC | Phase 2: KV260 KANELÉ Synthesis with Verified Boun | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2209-formal-kan-cbc-verification) |
