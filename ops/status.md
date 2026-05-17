@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-17 (milestone 2026.05.224 research planning complete)
+**Last Updated:** 2026-05-17 (milestone 2026.05.225 research planning complete)
+
+## Session 2026-05-17 - Milestone 2026.05.225 Research Planning Complete
+
+**Milestone 2026.05.225 PLANNED after .224 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v225.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2280`-`exp2293`)
+- ID allocation: milestone `.224` used through `exp2279`, so `.225` starts at `exp2280`.
+- Research references updated before final roadmap design with post-.224 planning sweep: Landing-based constrained sampling (arXiv:2510.22044, arXiv:2604.17838), Free Energy routing in MoE (arXiv:2605.00604), Projected Gradient Ascent for hard constraints (arXiv:2602.08646), Kinetic Langevin Splitting (arXiv:2603.23397).
+- Design focus: Phase 0 archives .224 (with CORRECTED precondition checking for `milestone: "2026.05.224"`, not ".223") and fixes the cascade root cause — `carnot.pypi_escalation` is missing `check_pypi_escalation` and `run_escalation` functions that `tests/python/test_pypi_escalation.py` imports on line 6. Phase 1 retries FST live generation (exp2282), FR-11 multidomain retention (exp2283), and KAN-CL n=256 (exp2284) — all blocked 4+ consecutive milestones by the cascade. Phase 2 retries KV260 RTL Verilator lint and Yosys synthesis with explicit PRECONDITIONS toolchain checks. Phase 3 covers adversarial null-space probe (exp2288), Eidoku CSP gate (exp2289, arXiv:2512.20664, first run), and Projected-Langevin baseline (exp2290, arXiv:2605.05387, first run). Phase 4 has arXiv sweep, capstone, and retro.
+- LLM-bearing tasks (`exp2282`, `exp2292`) include mandated local SOTA GGUF MODEL_SPECS: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement (FR-11) satisfied by `exp2283-fr11-fst-multidomain` with `continuous_self_learning_task: true` in its artifact contract. Gate: `cross_domain_retention_rate >= 0.75`.
+- Structured gates: `exp2282`, `exp2284`, `exp2286`, `exp2288` on `exp2281.pretest_fixed == true`; `exp2283` on `exp2282.fst_live_validated == true`; `exp2285` on `exp2284.kancl_n256_validated == true`; `exp2287` on `exp2286.lint_errors_count == 0`; `exp2292` on both `exp2282.fst_live_validated == true` AND `exp2284.kancl_n256_validated == true`. Experiments `exp2289`, `exp2290`, `exp2291`, `exp2293` are ungated.
+- Agent routing: 13 of 14 tasks use `agent_type: codex, model: gpt-5.5`; `exp2292` capstone uses `model: opus, max_turns: 100` (no agent_type override — uses conductor default).
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` (OK, no violations), `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml` (all_checks_pass: 0 gate-field gaps, 9 upstream checks passed, 0 model-coherence failures), `python3 scripts/roadmap_schema.py` (clean), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.225 when ready. Key unblocking task is `exp2281` (pypi_escalation fix) — once `pretest_fixed: true`, the conductor can sequence Phase 1/2/3 tasks automatically.
+
+---
 
 ## Session 2026-05-17 - Milestone 2026.05.224 Research Planning Complete
 

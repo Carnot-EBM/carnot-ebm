@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-05-17 (Milestone 2026.05.225 Research Planning)
+
+- Milestone 2026.05.225 research planning complete. User instruction: plan the next milestone after .224, which confirmed 2 of 14 tasks completed and diagnosed a new cascade root cause blocking the remaining 12.
+- Root cause analysis: `carnot.pypi_escalation` module missing `check_pypi_escalation` and `run_escalation` functions imported by `tests/python/test_pypi_escalation.py` line 6 — all conductor pre-test checks fail, labeling all subsequent tasks `blocked_gate_check_failed`.
+- Archive precondition bug identified: exp2266 checked for `milestone: "2026.05.223"` but `research-roadmap.yaml` already contained `"2026.05.224"`. exp2280 corrects this.
+- ArXiv research sweep: added 5 new papers to `research-references.md` under "Post-.224 Planning Sweep" — Landing-based constrained sampling (arXiv:2510.22044, arXiv:2604.17838), Free Energy routing in MoE (arXiv:2605.00604), Projected Gradient Ascent (arXiv:2602.08646), Kinetic Langevin Splitting (arXiv:2603.23397).
+- Created `openspec/change-proposals/research-roadmap-v225.md` with full milestone design: what .224 proved, architecture snapshot, 3 biggest gaps vs PRD, phase structure (Phase 0–4), dependency graph, FR-11 mandate fulfillment, hardware requirements, decentralization check.
+- Created `research-roadmap-next.yaml` with 14 tasks (exp2280–exp2293). Phase 0: archive .224 + pypi_escalation fix. Phase 1: FST live gen, FR-11 multidomain, KAN-CL n=256, KAN-CL+CASAL joint. Phase 2: KV260 RTL, Yosys synthesis. Phase 3: adversarial probe, Eidoku CSP (first run), Projected-Langevin (first run). Phase 4: arXiv sweep, capstone, retro.
+- All 14 tasks: `agent_type: codex, model: gpt-5.5`. Capstone (exp2292): `model: opus, max_turns: 100`. FR-11 mandate: exp2283 with `continuous_self_learning_task: true`.
+- Validation: `validate_prior_failures.py` (OK), `audit_roadmap_gates.py` (all_checks_pass: 0 gaps, 9 upstream checks, 0 coherence failures), `roadmap_schema.py` (clean), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-17 (Milestone 2026.05.223 Operational Retrospective)
 
 - Milestone 2026.05.223 operational retrospective complete. Analyzed 0 min wall time / 0 experiments. No experiment commits found since activation of 2026.05.223. No compute-bound tasks executed; GPU idle state is correct and expected. Primary bottleneck: conductor loop did not advance to experiment execution — zero throughput despite both RTX 3090s fully available. Top action: verify research-roadmap-next.yaml is present with valid 2026.05.223 tasks before the milestone idles further.

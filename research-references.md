@@ -1,3 +1,27 @@
+## 2026-05-17 Post-.224 Planning Sweep (Milestone 2026.05.225)
+
+This sweep was run after milestone `.224` completed. The literature search revealed new work in landing-based constrained Langevin samplers, free-energy routing for MoE systems, and projected-gradient reward optimization.
+
+### Landing-Based Constrained Sampling (Fast and Diffusion variants)
+- **Papers:** "Fast Non-Log-Concave Sampling under Nonconvex Equality and Inequality Constraints with Landing" (arXiv:2510.22044) and "Efficient Diffusion Models under Nonconvex Equality and Inequality Constraints via Landing" (arXiv:2604.17838).
+- **What:** Landing-based Langevin dynamics enforces equality and inequality constraints without expensive orthogonal projections. The landing operator is a closed-form alternative to projection that scales better in high-dimensional constraint manifolds.
+- **Relevance to Carnot:** Direct complement to exp2290's Projected-Langevin baseline (arXiv:2605.05387). Landing may achieve lower feasibility residual than projection at equal wall-time; candidate for a .226 comparison experiment after exp2290 establishes the projection baseline.
+
+### Free Energy Routing in MoE via Spiking Networks
+- **Paper:** "Affinity Is Not Enough: Recovering the Free Energy Principle in Mixture-of-Experts" (arXiv:2605.00604).
+- **What:** Replaces affinity-based MoE routing with spiking networks that minimize a variational free energy functional, recovering principled uncertainty-aware routing without learned gating.
+- **Relevance to Carnot:** Complements ODAR's (arXiv:2602.23681) risk-sensitive routing: ODAR uses free-energy-principled EFE for fast vs deliberative selection; arXiv:2605.00604 applies the same principle at the expert level. Future milestone: evaluate whether Carnot's ODAR cascade can be extended with MoE-level free-energy routing for the verifier ensemble.
+
+### Projected Gradient Ascent for Hard-Constraint Generation
+- **Paper:** "Projected Gradient Ascent for Efficient Reward-Guided Updates with One-Step Generative Models" (arXiv:2602.08646).
+- **What:** Applies projected gradient ascent (PGA) — a projected-gradient optimization with hard constraint satisfaction — to reward-guided test-time compute in diffusion-like one-step generators.
+- **Relevance to Carnot:** Directly aligned with exp2290's projected-Langevin sampler. PGA may be faster than projected-Langevin for batch generation tasks where a closed-form projection is available; candidate for integration into the sampler tier after exp2290 establishes the baseline.
+
+### Kinetic Langevin Splitting for Constrained Sampling
+- **Paper:** "Kinetic Langevin Splitting Schemes for Constrained Sampling" (arXiv:2603.23397).
+- **What:** Proposes splitting schemes for kinetic (underdamped) Langevin dynamics under constraints, achieving faster mixing than overdamped Langevin while maintaining constraint feasibility throughout the trajectory.
+- **Relevance to Carnot:** Carnot's current constrained sampler (CASAL) uses overdamped Langevin; kinetic Langevin typically mixes 2–4x faster on smooth manifolds. Future milestone: benchmark kinetic Langevin splitting vs CASAL and projected-Langevin on the same 3-problem test suite from exp2290.
+
 ## 2026-05-17 Post-.221 Planning Sweep (Milestone 2026.05.222)
 
 This sweep was run after milestone `.221` completed. The literature search revealed advances in on-device continual KAN learning, LLM formalization of constraint satisfaction problems, and updated ConstraintBench analysis.

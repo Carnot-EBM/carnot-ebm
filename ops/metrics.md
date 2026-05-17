@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-17 Milestone 2026.05.225 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-17T19:28:24Z | 2026-05-17T19:40:05Z | Read 11 context files (research-program.md, prd.md, architecture.md, ops/status.md, changelog.md, research-roadmap.yaml, conductor-log.md, exclusion_manifest.yaml, research-references.md, pypi_escalation.py, test_pypi_escalation.py); ran arxiv research agent sweep (5 new papers); updated research-references.md with post-.224 planning sweep; wrote openspec/change-proposals/research-roadmap-v225.md; wrote research-roadmap-next.yaml with 14 tasks exp2280-exp2293. Ran all 4 validation scripts (all pass). Updated ops/status.md and ops/metrics.md. | TBD |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
+
 ## Session: 2026-05-17 Milestone 2026.05.224 Research Planning
 
 ### Turn Log
