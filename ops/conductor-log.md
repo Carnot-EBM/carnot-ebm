@@ -4577,3 +4577,4 @@ Ripgrep i |
 | 2026-05-17 23:52 UTC | Phase 3: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2309-pretest-fix-completion) |
 | 2026-05-17 23:52 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2309-pretest-fix-completion) |
 | 2026-05-17 23:52 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2309-pretest-fix-completion) |
+| 2026-05-17 23:52 UTC | Phase 4: Capstone E2E Live Generation (.227) — FST | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp2310-fst-live-gen-v7.fst_live_validated |
