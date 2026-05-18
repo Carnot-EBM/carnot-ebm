@@ -224,6 +224,54 @@ Spec: REQ-LEARN-021, SCENARIO-LEARN-021
 
 ---
 
+## REQ-LEARN-2357: FR-11 Multidomain Fast-Slow Retention
+
+**Given** a Fast-Slow trainer with verifier-initialized slow constraints and
+online fast verifier context
+**When** the trainer processes 30 verified arithmetic examples, 30 verified code
+examples, and 30 verified logic examples with fixed seed 42
+**Then** the trainer SHALL keep slow weights unchanged, update fast constraints
+from verifier-approved examples, and report
+`results/experiment_2357_fr11_multidomain.json`.
+
+### REQ-LEARN-2357 Sub-requirements
+
+- REQ-LEARN-2357-1: `carnot.learning.fast_slow.FastSlowTrainer` SHALL expose
+  `slow_weights`, `fast_weights`, `update_fast(query, verification_result)`,
+  and `predict(query)`.
+- REQ-LEARN-2357-2: The experiment SHALL use exactly 3 domains: arithmetic,
+  code, and logic.
+- REQ-LEARN-2357-3: Each domain SHALL use 30 verified training queries and 10
+  holdout queries.
+- REQ-LEARN-2357-4: The artifact SHALL include `honest_verdict`,
+  `fr11_multidomain_passed`, `cross_domain_retention_rate`,
+  `continuous_self_learning_validated`, `n_domains`, and `random_seed`.
+- REQ-LEARN-2357-5: `fr11_multidomain_passed` SHALL be true exactly when
+  `cross_domain_retention_rate >= 0.75`.
+
+### SCENARIO-LEARN-2357: FST Retains Prior Domains After Later Training
+
+**Given** arithmetic fast constraints have been learned and then code fast
+constraints have been learned
+**When** arithmetic holdout accuracy is measured again
+**Then** the retained arithmetic accuracy contributes to
+`cross_domain_retention_rate`.
+
+**Given** logic fast constraints have subsequently been learned
+**When** arithmetic and code holdouts are measured again
+**Then** their mean retained accuracy across prior-domain checks is at least
+0.75 for an FR-11 pass.
+
+Spec: REQ-LEARN-2357, SCENARIO-LEARN-2357
+
+## Implementation Status (REQ-LEARN-2357)
+
+| Requirement | Python | Tests |
+|-------------|--------|-------|
+| REQ-LEARN-2357 | Implemented (`python/carnot/learning/fast_slow.py`, `python/carnot/reporting/fr11_multidomain_fst_retention.py`) | Python (`tests/python/test_experiment_2357_fr11_multidomain.py`) |
+
+---
+
 ## REQ-FR11-001: FR11EventBus Delivers ViolationEvents to All Subscribers Within 200ms
 
 **Given** a ViolationEvent is emitted by Tier 2.1 JEPAReasonerProbe
