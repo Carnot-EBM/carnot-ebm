@@ -12,6 +12,31 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-2358: Synthetic EBM-CoT Consistency Calibration
+
+The repository shall provide a deterministic, CPU-only EBM-CoT consistency
+calibrator that:
+
+- scores a chain-of-thought trace with lower energy for adjacent-step
+  consistency and higher energy for adjacent contradictions;
+- refines traces with discrete Langevin-style proposals that accept only
+  non-increasing-energy updates;
+- calibrates batches of traces by returning one energy score per trace; and
+- writes `results/experiment_2358_ebm_cot.json` with AUROC, mean energy
+  reduction, trace count, random seed, and an honest terminal-prefix verdict.
+
+The experiment MUST use 50 synthetic traces and fixed random seed 42.
+
+### SCENARIO-VERIFY-2358: EBM-CoT Synthetic Corpus Separates Consistency
+
+Given 25 consistent synthetic chain-of-thought traces and 25 traces with one
+adjacent contradiction,
+When the EBM-CoT calibrator scores all traces and refines five inconsistent
+traces for 50 steps,
+Then the artifact reports `n_traces=50`, `random_seed=42`,
+`ebm_cot_validated` exactly when AUROC is at least 0.60, and a non-negative
+mean energy reduction after refinement.
+
 ### REQ-VERIFY-1673: Hybrid Verifier Pipeline
 
 The system shall provide a unified pipeline (`python/carnot/solvers/hybrid_verifier.py`) where a neural generator predicts, PiNet projects the predictions to satisfy continuous constraints, and Z3 formally verifies the boolean logic of the projected continuous constraints. The hybrid verifier MUST expose pass rates and validation latency.
