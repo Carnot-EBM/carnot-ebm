@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.230",
+  "generated_at": "2026-05-18T11:01:14Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiments were committed within the .230 timing window; this is the ninth consecutive milestone in which the timing-data block records zero wall-time experiments. Both RTX 3090 GPUs are idle at 0% utilization with only 5 MB standby allocation.",
+  "bottlenecks_identified": [
+    "blocked_roadmap_missing recurrence: milestone activated without a pre-staged research-roadmap-next.yaml, causing the conductor to stall before experiment dispatch",
+    "Uncommitted conductor-log state at retro generation time: experiments that may have run within .230 are not captured in the timing snapshot, making the retrospective unable to account for any in-flight work",
+    "No compute-bound experiments in timing window: both GPUs sat idle throughout the measured period, representing wasted inference capacity"
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for .231 before archiving .230 — this is the single highest-leverage action to break the blocked_roadmap_missing recurrence chain",
+    "Commit conductor-log.md checkpoints at experiment completion boundaries (not only at session end) so timing-data extractions capture all .230 work even when the retro task runs before the final session commit",
+    "Add a conductor pre-retro hook that flushes uncommitted experiment artifacts to git before the timing-data snapshot is taken, ensuring the retro reflects actual milestone activity"
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-stage research-roadmap-next.yaml for milestone 2026.05.231 immediately after archiving .230, specifying milestone: 2026.05.231 so the conductor bypasses the planner entirely on next activation",
+    "Wire a pre-retro git-commit flush into the conductor's retro task launcher to eliminate the uncommitted-state blindspot that causes timing data to under-count experiments",
+    "Resolve the pre-test cascade gate (the root cause of the blocked_roadmap_missing chain) so that future milestones activate and dispatch experiments without stalling on the first task"
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Nine consecutive milestones with zero timing-window experiments represents a structural pipeline stall, not a research failure — the upstream blocked_roadmap_missing cause is well-understood and the fix (pre-staging the roadmap) is low-cost. The uncommitted conductor-log at retro generation time is a secondary signal that the session may have produced work not yet visible to the timing extractor; future retros should flush before snapshotting."
+}
