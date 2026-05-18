@@ -6283,3 +6283,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-18: Phase 3: Phase 1 Ship Gate Audit v4 — PyPI + HF Mirror + CLI + MCP + Reproducer (✅ Complete) — honest_verdict=Phase 1 ship gate evaluation complete.; results/experiment_2431_phase1_ship_gate_v4.json
 - 2026-05-18: Phase 4: Paper-v6 Results Table + Capstone v235 — AUROC Ceiling Assault Synthesis (✅ Complete) — honest_verdict=complete: best_auroc=0.8896; hive_gap=+0.0340; n_paper_ready=8; best_sampler_kl_delta=7.8709; fr11=satisfied; results/experiment_2432_capstone_v235.json
 - 2026-05-18: Phase 4: Milestone 2026.05.235 Operational Retrospective (✅ Complete) — honest_verdict=complete: 13 tasks completed successfully; results/experiment_2433_retro_v235.json
+- 2026-05-18: Phase 0: Archive .235 and activate .236 (✅ Complete) — honest_verdict=complete: archive_ready_235_already_activated; results/experiment_2434_archive.json
