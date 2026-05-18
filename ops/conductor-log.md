@@ -4773,3 +4773,4 @@ Ripgrep i |
 | 2026-05-18 09:13 UTC | Phase 1: NSVIF Neuro-Symbolic Z3 Extractor v5 — PR | OK | 81 passed, 1 warning in 5.55s |
 | 2026-05-18 09:24 UTC | Phase 1: VERGE SMT Minimal Correction Subset Repai | OK | 81 passed, 1 warning in 5.63s |
 | 2026-05-18 09:33 UTC | Phase 2: Eidoku CSP Tier 2.8 Gate v6 — First Actua | OK | 81 passed, 1 warning in 5.47s |
+| 2026-05-18 09:45 UTC | Phase 2: Projected-Langevin vs CASAL Baseline v6 — | OK | 97 passed, 1 warning in 12.53s |
