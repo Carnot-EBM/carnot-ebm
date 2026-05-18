@@ -4775,3 +4775,4 @@ Ripgrep i |
 | 2026-05-18 09:33 UTC | Phase 2: Eidoku CSP Tier 2.8 Gate v6 — First Actua | OK | 81 passed, 1 warning in 5.47s |
 | 2026-05-18 09:45 UTC | Phase 2: Projected-Langevin vs CASAL Baseline v6 — | OK | 97 passed, 1 warning in 12.53s |
 | 2026-05-18 09:54 UTC | Phase 3: KAN-CL n=256 Per-Knot Importance Retentio | OK | 89 passed, 1 warning in 6.55s |
+| 2026-05-18 10:06 UTC | Phase 3: FR-11 FST Multi-Domain Continual Retentio | OK | 81 passed, 1 warning in 5.32s |
