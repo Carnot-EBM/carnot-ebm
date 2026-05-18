@@ -4777,3 +4777,4 @@ Ripgrep i |
 | 2026-05-18 09:54 UTC | Phase 3: KAN-CL n=256 Per-Knot Importance Retentio | OK | 89 passed, 1 warning in 6.55s |
 | 2026-05-18 10:06 UTC | Phase 3: FR-11 FST Multi-Domain Continual Retentio | OK | 81 passed, 1 warning in 5.32s |
 | 2026-05-18 10:16 UTC | Phase 4: EBM-CoT Calibration Prototype — Langevin- | OK | 81 passed, 1 warning in 5.40s |
+| 2026-05-18 10:30 UTC | Phase 4: Self-Adaptive Ising Machine with Lagrange | OK | 97 passed, 1 warning in 8.76s |
