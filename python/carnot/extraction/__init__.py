@@ -55,6 +55,12 @@ from carnot.extraction.llm_extractor_v1 import (
     StepSegmentEvalChain,
     SymCodeExtractor,
 )
+from carnot.extraction.nsvif_extractor import (
+    NsvifExtractor,
+    build_experiment_2352_corpus,
+    evaluate_nsvif_corpus,
+    run_experiment_2352,
+)
 from carnot.extraction.trust_agents_extractor import (
     Agent1NER,
     Agent2ClaimFormer,
@@ -97,6 +103,10 @@ __all__ = [
     "JsonClaimExtractor",
     "SymCodeExtractor",
     "StepSegmentEvalChain",
+    "NsvifExtractor",
+    "build_experiment_2352_corpus",
+    "evaluate_nsvif_corpus",
+    "run_experiment_2352",
     "TrustAgentsExtractor",
     "Agent1NER",
     "Agent2ClaimFormer",
