@@ -1,3 +1,37 @@
+## 2026-05-18 Post-.233 Planning Sweep (Milestone 2026.05.234)
+
+This sweep was run after milestone `.233` completed (Codex Recovery Sprint — 9 of 14 tasks succeeded; FregeLogic AUROC=0.8831 beat HalluScan 0.88 baseline; HALT AUROC=0.8539; FST PATH A live GGUF inference validated; 5 tasks produced no artifact: FR-11 exp2400, KV260 Yosys exp2401, Kinetic Langevin exp2402, Phase 1 ship gate exp2403, retro exp2405). Sweep focused on: (a) pushing AUROC above HIVE peer 0.9236, (b) NLI ensemble methods, (c) FPGA Ising papers for post-Yosys KV260 track, (d) formal KAN verification, (e) constrained decoding for FST PATH A advancement.
+
+### HALT-RAG: Calibrated NLI Ensembles for Hallucination Detection in RAG Systems
+- **Paper:** "HALT-RAG: Calibrated NLI Ensembles for Hallucination Detection" (arXiv:2509.07475, Sep 2025).
+- **What:** Combines frozen NLI model ensembles with feature-based abstention for RAG hallucination detection. Achieves calibrated detection via selective abstention when ensemble confidence is low, reducing false positives substantially.
+- **Relevance to Carnot:** Direct competition/complement to HIVE ensemble (arXiv:2604.26139). Carnot's HIVE v3 ensemble (exp2408) could incorporate HALT-RAG's calibrated abstention mechanism to improve precision on uncertain examples — this may push AUROC closer to HIVE peer's 0.9236. Candidate for .234 AUROC ceiling assault.
+- **Sources:** https://arxiv.org/abs/2509.07475
+
+### Optimal Abstractions for Verifying Kolmogorov-Arnold Networks
+- **Paper:** "Optimal Abstractions for Verifying Kolmogorov-Arnold Networks" (arXiv:2602.06737, Feb 2026).
+- **What:** Formal verification of KAN networks via piecewise affine approximations and MILP encoding. Enables certified bounds on KAN outputs given bounded inputs, supporting safety-critical deployment of KAN-based constraint evaluators.
+- **Relevance to Carnot:** Directly applies to Carnot's KAN energy tier verifier. Provides a formal verification path for KAN-based constraint satisfaction, strengthening the paper-v6 formal guarantees section. Also enables adversarial robustness certification for the KAN verifier ensemble. Candidate for .234+ KAN formal verification task.
+- **Sources:** https://arxiv.org/abs/2602.06737
+
+### SafePilot: Neuro-Symbolic LLM Verification via Formal Constraints
+- **Paper:** "SafePilot: A Neuro-Symbolic Verification Framework for LLM-Driven Autonomous Systems" (arXiv:2603.21523, March 2026).
+- **What:** Combines formal verification with hierarchical planning for LLM-generated code; iteratively adjusts prompts when constraint violations are detected. Achieves 92% constraint satisfaction on autonomous navigation tasks vs 67% vanilla LLM.
+- **Relevance to Carnot:** Extends the NSVIF/FregeLogic neuro-symbolic verification stack to iterative prompt correction — aligns with Carnot's verify-repair pipeline. The hierarchical constraint model (system-level → user-level → task-level) maps naturally to Carnot's Tier 1-3 verifier stack. Candidate for .235+ integration after FregeLogic baseline is established.
+- **Sources:** https://arxiv.org/abs/2603.21523
+
+### NCO: Negative Constraint Optimization in Autoregressive Decoding
+- **Paper:** "NCO: Negative Constraints in Decoding for Autoregressive LLMs" (arXiv:2605.10065, May 2026).
+- **What:** Online pattern matching for hard/regex constraints during autoregressive generation with O(1) overhead per token. Eliminates constraint-violating tokens via a finite automaton compiled from the negated constraint specification.
+- **Relevance to Carnot:** Practical constrained decoding mechanism for FST live PATH A pipeline. Now that PATH A GGUF inference is validated (exp2399), NCO provides a low-overhead way to enforce hard constraints during generation — complementary to MCMC constrained sampling (arXiv:2506.05754). Candidate for .234 FST constrained generation task (exp2412).
+- **Sources:** https://arxiv.org/abs/2605.10065
+
+### Quantum-Inspired FPGA Ising Machine via Majority Logic
+- **Paper:** "Quantum-Inspired Ising Machine with Sparsified Connectivity via FPGA Majority Logic" (arXiv:2604.04606, April 2026).
+- **What:** FPGA-based majority voting logic for approximate Ising optimization achieving 6x faster solution speed via hardware extraction and sparsified coupling. Validated on Max-Cut and MIMO detection problems.
+- **Relevance to Carnot:** Provides proven FPGA implementation patterns for the KV260 hardware track, specifically for post-Yosys bitstream generation. Majority logic architecture is simpler to implement than full Gibbs sampling in FPGA LUTs. Candidate for .234+ KV260 hardware acceleration after Yosys synthesis succeeds (exp2413).
+- **Sources:** https://arxiv.org/abs/2604.04606
+
 ## 2026-05-18 Post-.232 Planning Sweep (Milestone 2026.05.233)
 
 This sweep was run after milestone `.232` completed (catastrophic infrastructure failure: 11/14 tasks FAILed with identical Codex CLI error "u finish the real work inside 10 minutes, that is correct an"; only exp2389 paper-v6 table succeeded via stub; capstone gate-blocked; AUROC gap 0.1948 unchanged). Sweep focused on: (a) constrained-sampling theory to inform Kinetic Langevin and DE-PSGLD, (b) logical hierarchy for Tier 1+ verification, (c) FPGA Ising decomposition for KV260 hardware track, (d) root-cause diagnostics for the Codex CLI failure pattern.

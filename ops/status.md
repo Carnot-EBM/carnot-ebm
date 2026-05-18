@@ -1,6 +1,35 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-18 (milestone 2026.05.233 research planning complete)
+**Last Updated:** 2026-05-18 (milestone 2026.05.234 research planning complete)
+
+## Session 2026-05-18 - Milestone 2026.05.234 Research Planning Complete
+
+**Milestone 2026.05.234 PLANNED as AUROC Ceiling Assault + Phase 1 Ship Gate after .233 (Codex Recovery Sprint).**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v234.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2406`–`exp2419`)
+- ID allocation: milestone `.233` used through `exp2405`, so `.234` starts at `exp2406`.
+- Research references updated with post-.233 planning sweep (5 papers): HALT-RAG (arXiv:2509.07475), KAN verification (arXiv:2602.06737), SafePilot neuro-symbolic (arXiv:2603.21523), NCO negative constraint decoding (arXiv:2605.10065), Quantum-inspired FPGA Ising via majority logic (arXiv:2604.04606).
+- **Milestone title**: "AUROC Ceiling Assault + Phase 1 Ship Gate: Full-Ensemble v3, Hierarchical LogCons, KV260 Yosys v3, FR-11 v3"
+- **Root cause of .233 gaps**: 5 tasks never ran (session ended before exp2400-exp2403, exp2405); Codex CLI confirmed healthy by exp2393 (transient OpenAI backend failure, not structural bug). Best AUROC achieved: FregeLogic=0.8831 (beat HalluScan 0.88 baseline). HIVE peer ceiling: 0.9236 (gap=0.0405).
+- **Design focus — 3 critical gaps**:
+  1. AUROC gap 0.0405 to HIVE peer 0.9236 → exp2408 HIVE 4-verifier v3, exp2409 Hierarchical LogCons (arXiv:2604.09075), exp2410 HALT-RAG NLI (arXiv:2509.07475)
+  2. FR-11 NSVIF online learning never completed (3 consecutive session/infra failures) → exp2411 placed early with no upstream deps
+  3. Phase 1 ship gate audit never completed (exp2403 session timeout) → exp2417 placed in Phase 4 with no upstream deps
+- Phase 0 (admin): exp2406 archive+activate (codex), exp2407 belated .233 retro (codex)
+- Phase 1 (AUROC assault): exp2408 HIVE 4-verifier v3, exp2409 Hierarchical LogCons, exp2410 HALT-RAG NLI
+- Phase 2 (FR-11 + FST): exp2411 FR-11 NSVIF online v3 (continuous_self_learning_task:true, MANDATORY), exp2412 FST Constrained MCMC (arXiv:2506.05754)
+- Phase 3 (hardware + samplers): exp2413 KV260 Yosys v3, exp2414 Kinetic Langevin v3 (BAOAB), exp2415 Dikin-Langevin (arXiv:2510.04582), exp2416 DE-PSGLD (arXiv:2605.00723)
+- Phase 4 (ship gate): exp2417 Phase 1 ship gate v3 (PyPI + HF + CLI/MCP docs + reproducer)
+- Phase 5 (synthesis): exp2418 paper-v6 capstone (claude opus, requires_claude, gated: exp2408.ensemble_auroc_improved==true), exp2419 retro (codex)
+- **Agent routing**: 13 tasks codex/gpt-5.5; 1 task claude (exp2418: capstone synthesis, requires_claude positive criterion met: codex never successfully completed multi-milestone AUROC capstones + 12+ cross-file artifact reads + open-ended synthesis).
+- **FR-11 satisfied**: exp2411-fr11-nsvif-online-v3 with `continuous_self_learning_task: true`
+- **Exclusion manifest cross-check**: GRPO/VPRM, WOPR, HardNet++/DSP, THRML sweep, SpecAnn, exp2091, iCE40 PIMI, HalluSAE, discriminative JEPA — none proposed. All carry-forward reruns have `prior_failures:` blocks. validate_prior_failures.py: [OK].
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.234. Critical path: exp2408 HIVE 4-verifier gates exp2418 capstone. Key experiments to watch: exp2408 (HIVE 4-verifier — will fusing all 4 Tier 0 verifiers push past 0.9236?), exp2409 (Hierarchical LogCons — new Z3 extension), exp2411 (FR-11 mandatory — must complete), exp2417 (Phase 1 ship gate — 5 criteria audit).
+
+---
 
 ## Session 2026-05-18 - Milestone 2026.05.233 Research Planning Complete
 

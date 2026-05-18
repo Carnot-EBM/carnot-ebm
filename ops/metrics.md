@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-18 Milestone 2026.05.234 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-18T17:36:00Z | 2026-05-18T17:38:10Z | Resumed from context compaction: ran validate_prior_failures.py (4 violations — exp2412/2415/2416/2418 missing prior_failures blocks); added prior_failures to all 4 tasks; re-ran validation (all_checks_pass); audit_roadmap_gates fuzzy warnings for recurring ops tasks + new-scope tasks are FERD-exempt (prior tasks were successes, not failures; or genuinely different scope); updated ops/metrics.md, ops/status.md, ops/changelog.md. | ~15k |
+
+Note: Full planning session (Turn 0) ran before context compaction: read 11 required files, ran arxiv research sweep (5 new papers), updated research-references.md, wrote openspec/change-proposals/research-roadmap-v234.md, wrote research-roadmap-next.yaml (14 tasks exp2406–exp2419). Estimated tokens for full session: ~70k. `scripts/session-metrics.py` not present in this checkout.
+
 ## Session: 2026-05-18 Milestone 2026.05.233 Research Planning
 
 ### Turn Log
