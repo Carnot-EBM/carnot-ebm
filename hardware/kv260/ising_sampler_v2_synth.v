@@ -66,6 +66,8 @@
 // ---------------------------------------------------------------------------
 // Top-level module: ising_sampler_128_sync
 // ---------------------------------------------------------------------------
+`ifndef ISING_SAMPLER_128_SYNC_DEFINED
+`define ISING_SAMPLER_128_SYNC_DEFINED
 module ising_sampler_128_sync #(
     parameter integer N_SPINS     = 128,
     parameter integer MAX_DEGREE  = 32,
@@ -588,11 +590,14 @@ always @(posedge S_AXI_ACLK) begin
 end
 
 endmodule
+`endif
 
 // ---------------------------------------------------------------------------
 // Submodule: rng_lfsr (retained from v1 for multi-tile designs)
 // ---------------------------------------------------------------------------
 
+`ifndef RNG_LFSR_DEFINED
+`define RNG_LFSR_DEFINED
 module rng_lfsr (
     input  wire        clk,
     input  wire        rst_n,
@@ -614,3 +619,4 @@ module rng_lfsr (
         end
     end
 endmodule
+`endif

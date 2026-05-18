@@ -239,6 +239,7 @@ assign S_AXI_RVALID  = axi_rvalid;
 // β ≤ 127 and h_eff ≤ 1.  For larger arguments, the sigmoid saturates to
 // 0 or 1 which is handled by the index saturation logic below.
 
+`ifndef SYNTHESIS
 integer lut_i;
 real    lut_arg, lut_sig;
 
@@ -253,6 +254,7 @@ initial begin : sigmoid_lut_init
         sigmoid_lut[lut_i] = $rtoi(lut_sig);
     end
 end
+`endif
 
 // ---------------------------------------------------------------------------
 // β-schedule: log-linear ramp with Mpemba hot-start
@@ -665,6 +667,8 @@ endmodule
 // (Used for per-lane RNG instantiation in multi-tile designs.)
 // ---------------------------------------------------------------------------
 
+`ifndef RNG_LFSR_DEFINED
+`define RNG_LFSR_DEFINED
 module rng_lfsr (
     input  wire        clk,
     input  wire        rst_n,
@@ -688,3 +692,4 @@ module rng_lfsr (
         end
     end
 endmodule
+`endif

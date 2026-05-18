@@ -33,6 +33,8 @@
 
 `timescale 1ns / 1ps
 
+`ifndef ISING_SAMPLER_128_SYNC_DEFINED
+`define ISING_SAMPLER_128_SYNC_DEFINED
 module ising_sampler_128_sync #(
     // Parameters preserved for BD-wrapper signature compatibility; they have
     // no effect on this trivial responder.
@@ -134,3 +136,4 @@ wire _unused = &{1'b0, S_AXI_AWPROT, S_AXI_ARPROT, S_AXI_WSTRB, S_AXI_WDATA,
                  N_STEPS[0], 1'b0};
 
 endmodule
+`endif
