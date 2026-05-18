@@ -4928,3 +4928,4 @@ Ripgrep i |
 | 2026-05-18 18:33 UTC | Phase 3: Kinetic Langevin BAOAB vs CASAL v3 (arXiv | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-18 18:35 UTC | Phase 3: Kinetic Langevin BAOAB vs CASAL v3 (arXiv | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-18 18:37 UTC | Phase 3: Kinetic Langevin BAOAB vs CASAL v3 (arXiv | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-18 18:39 UTC | Phase 3: Dikin-Langevin Polytope Sampler (arXiv:25 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
