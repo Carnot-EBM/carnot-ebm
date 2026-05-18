@@ -1830,6 +1830,48 @@ where hallucinated responses inject a wrong numerical answer while preserving re
 **Spec traces:** REQ-TIER0-006, SCENARIO-TIER0-006, Exp 923
 
 
+### REQ-TIER0-007: SemanticEnergyDetector Synthetic Logit Prototype (Tier 0g)
+
+**Status:** Prototype (Exp 2338)
+
+`python/carnot/verify/semantic_energy.py` shall implement `SemanticEnergyDetector`,
+a CPU-only Tier 0g prototype for hallucination detection using Boltzmann free energy
+computed directly from pre-softmax logit arrays.  The detector is a prototype gate
+for synthetic logits only; full validation on real LLM penultimate logits is deferred.
+
+**Acceptance criteria:**
+- REQ-TIER0-007-1: `compute_energy(logits, temperature)` returns a scalar float using
+  `E = -temperature * log(sum(exp(logits / temperature)))` with a numerically stable
+  log-sum-exp implementation.
+- REQ-TIER0-007-2: `cluster_semantics(responses)` deterministically groups normalized
+  response strings by a simple string hash and returns cluster keys mapped to response
+  indices.
+- REQ-TIER0-007-3: `detect(logits_per_response, responses)` returns `energy_mean`,
+  `energy_std`, `semantic_entropy_estimate`, `semantic_energy_score`, and
+  `is_hallucination_predicted`, with the prediction controlled by a configurable
+  threshold on `semantic_energy_score`.
+- REQ-TIER0-007-4: `results/experiment_2338_semantic_energy.json` records AUROC,
+  FPR at TPR=0.80, energy ordering, focused test count, module path, 100 synthetic
+  examples, and random seed 42.
+
+**Spec traces:** REQ-TIER0-007, Exp 2338
+
+
+### SCENARIO-TIER0-007: High-Variance Synthetic Logits Trigger Semantic Energy
+
+**Given** multiple synthetic response logit arrays drawn from a high-variance normal
+distribution,
+**When** `SemanticEnergyDetector.detect()` is called,
+**Then** `is_hallucination_predicted` is true.
+
+**Given** multiple synthetic response logit arrays drawn from a low-variance normal
+distribution,
+**When** `SemanticEnergyDetector.detect()` is called,
+**Then** `is_hallucination_predicted` is false.
+
+**Spec traces:** REQ-TIER0-007, SCENARIO-TIER0-007, Exp 2338
+
+
 ### REQ-TIER28-001: DraftConditionedVerifier Tier 2.8 — Structural Constraint Injection
 
 **Status:** Implemented (Exp 912)
