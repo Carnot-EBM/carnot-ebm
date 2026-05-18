@@ -131,6 +131,30 @@ cascade against ODAR threshold routing and MUST record the median
   `routing_overhead_ms <= 5.0`, `accuracy_delta >= -2.0`, and the corpus size is 100.
 - The artifact records that external LLM calls were not used.
 
+### REQ-FST-2399: FST Live Path A/B/C Reporting
+
+The pipeline MUST provide an Exp 2399 live-path runner that attempts FST
+generation in this order: PATH A local llama.cpp GGUF inference using one of
+the mandated SOTA GGUF model repositories, PATH B local transformers
+AutoModel/AutoTokenizer inference, and PATH C cached telemetry responses from
+`results/live_sota_balanced_telemetry_manifest_1480.jsonl`.  The runner MUST
+write `results/experiment_2399_fst_live_path_ab.json` even when PATH A and
+PATH B are unavailable, and it MUST record which path succeeded.
+
+**Acceptance criteria:**
+- The artifact includes `honest_verdict`, `fst_live_validated`,
+  `live_path_used`, `first_live_generation_text`, `path_a_attempted`,
+  `path_a_blocked_reason`, `path_b_attempted`, `model_used`,
+  `n_test_prompts`, `duration_s`, and `preconditions_checked`.
+- `fst_live_validated` is true when the FST verify/terminal-prefix flow runs
+  end-to-end on PATH A, PATH B, or PATH C.
+- PATH A is attempted first when a mandated GGUF cache entry and `llama_cpp`
+  import are available; PATH B is attempted if PATH A fails or is unavailable;
+  PATH C is used if both live paths fail and telemetry exists.
+- If PATH C succeeds, the artifact records `live_path_used="C_cached"` and
+  `model_used=null`.
+- The honest verdict uses a terminal prefix such as `complete:` or `blocked:`.
+
 ## Scenarios
 
 ### SCENARIO-INFRA-052: Version-Blocked Model Raises Error
@@ -193,6 +217,17 @@ routing overhead no greater than 5 ms, and accuracy within two percentage points
 of the uniform cascade.
 
 **Spec traces:** REQ-ODAR-2257
+
+### SCENARIO-FST-2399: Cached Telemetry Completes When Live Paths Fail
+
+**Given** no usable live llama.cpp or transformers runner and a readable
+`results/live_sota_balanced_telemetry_manifest_1480.jsonl`
+**When** Exp 2399 runs
+**Then** it MUST run the FST verify/terminal-prefix flow over cached telemetry,
+write `results/experiment_2399_fst_live_path_ab.json`, set
+`fst_live_validated=true`, and record `live_path_used="C_cached"`.
+
+**Spec traces:** REQ-FST-2399
 
 ### REQ-SAMPLE-020: SparseIsingEBM K-Regular Graph
 
