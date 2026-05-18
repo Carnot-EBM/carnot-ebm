@@ -4960,3 +4960,4 @@ Ripgrep i |
 | 2026-05-18 21:08 UTC | Phase 3: Kinetic Langevin BAOAB vs CASAL v4 (arXiv | OK | 81 passed, 1 warning in 2.32s |
 | 2026-05-18 21:12 UTC | Phase 3: Dikin-Langevin Polytope Sampler v2 (arXiv | OK | 81 passed, 1 warning in 2.30s |
 | 2026-05-18 21:16 UTC | Phase 3: DE-PSGLD Decentralized Proximal SGLD v2 ( | OK | 81 passed, 1 warning in 2.35s |
+| 2026-05-18 21:21 UTC | Phase 3: Phase 1 Ship Gate Audit v4 — PyPI + HF Mi | OK | 81 passed, 1 warning in 2.34s |
