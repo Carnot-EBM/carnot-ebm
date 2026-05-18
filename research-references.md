@@ -1,3 +1,31 @@
+## 2026-05-18 Post-.232 Planning Sweep (Milestone 2026.05.233)
+
+This sweep was run after milestone `.232` completed (catastrophic infrastructure failure: 11/14 tasks FAILed with identical Codex CLI error "u finish the real work inside 10 minutes, that is correct an"; only exp2389 paper-v6 table succeeded via stub; capstone gate-blocked; AUROC gap 0.1948 unchanged). Sweep focused on: (a) constrained-sampling theory to inform Kinetic Langevin and DE-PSGLD, (b) logical hierarchy for Tier 1+ verification, (c) FPGA Ising decomposition for KV260 hardware track, (d) root-cause diagnostics for the Codex CLI failure pattern.
+
+### Constrained Sampling for LLMs Should Be Easy: An MCMC Perspective
+- **Paper:** "Constrained Sampling for LLMs Should Be Easy: An MCMC Perspective" (arXiv:2506.05754, June 2026).
+- **What:** Proposes a unified MCMC framework for constrained LLM sampling that treats any constraint set (grammar, SMT formula, semantic filter) as an energy function and applies Metropolis–Hastings to sample from the constrained distribution. Achieves near-exact constraint satisfaction at the cost of O(k) forward passes per token where k is the expected rejection count.
+- **Relevance to Carnot:** Bridges Carnot's Ising-sampler (CASAL, kinetic Langevin, projected Langevin) to LLM constrained generation. The paper's "constraint as energy" framing is the theoretical underpinning Carnot needs for the FST live PATH A/B pipeline — each constraint-checking verifier contributes to the acceptance/rejection MH step. Candidate for .234+ after FST PATH A/B establishes the baseline in .233 (exp2399).
+- **Sources:** https://arxiv.org/abs/2506.05754
+
+### Constrained Dikin-Langevin Diffusion for Polyhedra
+- **Paper:** "Constrained Dikin Walk and Langevin Diffusion for Polytope Constraints" (arXiv:2510.04582, Oct 2025).
+- **What:** Applies Dikin-walk Langevin dynamics to sampling from distributions constrained to convex polytopes, exploiting the Dikin ellipsoid's local geometry for near-optimal mixing. Provides polynomial sample complexity guarantees for polyhedral constraints, outperforming projected Langevin on ill-conditioned polytopes.
+- **Relevance to Carnot:** Third constrained-sampling method with formal guarantees (after projected-Langevin exp2355, kinetic Langevin exp2385). Dikin-walk is particularly relevant for Carnot's constraint satisfaction problem: SMT/Z3 feasible regions are polyhedral in theory (for linear constraints), and Dikin-walk provides formal coverage guarantees on those regions. Candidate for .234+ after kinetic Langevin v2 establishes its baseline in .233 (exp2402).
+- **Sources:** https://arxiv.org/abs/2510.04582
+
+### Hierarchical Alignment via Logical Consistency
+- **Paper:** "Hierarchical Alignment: Enforcing Hierarchical Instruction-Following via Logical Consistency" (arXiv:2604.09075, April 2026).
+- **What:** Enforces hierarchical instruction compliance (system → user → tool instructions with proper precedence) via a formal logical consistency checker, achieving 91% adherence in nested instruction scenarios vs 67% baseline. The checker models instruction hierarchy as a partial order and uses Z3 to detect conflicts.
+- **Relevance to Carnot:** Extends FregeLogic (arXiv:2604.18328) and NSVIF (arXiv:2601.17789) to hierarchical instruction verification — directly applicable to Carnot's compliance verification use case (Tier B Compliance Checker from the product roadmap). The partial-order instruction model is a natural fit for Carnot's CSL constraint extraction, where system-level constraints take precedence over user-level. Candidate for .233+ after FregeLogic v2 establishes the Z3 tiebreaker baseline (exp2395).
+- **Sources:** https://arxiv.org/abs/2604.09075
+
+### Decomposing Large-Scale Ising on FPGAs: A Hybrid Hardware Approach
+- **Paper:** "Decomposing Large-Scale Ising Problems on FPGAs: A Hybrid Hardware-Software Approach" (arXiv:2602.15985, Feb 2026).
+- **What:** Proposes a hybrid FPGA-CPU decomposition strategy for Ising problems larger than FPGA capacity, using graph partitioning to assign sub-problems to FPGA tiles and coordinating via a CPU-side global update step. Achieves 3-15x speedup on N=256-1024 Ising problems compared to pure CPU Simulated Annealing.
+- **Relevance to Carnot:** Directly relevant to the KV260 hardware track (exp2401 Yosys synthesis). Once Yosys synthesis succeeds, the next step is deploying an Ising sampler on KV260's FPGA fabric. This paper's decomposition strategy handles problems larger than KV260's LUT count (~250k LUT4s), enabling scaling beyond the hardware limit. Candidate for .234+ after KV260 Yosys synthesis completes in .233 (exp2401).
+- **Sources:** https://arxiv.org/abs/2602.15985
+
 ## 2026-05-18 Post-.231 Planning Sweep (Milestone 2026.05.232)
 
 This sweep was run after milestone `.231` completed (14/14 tasks — first complete milestone; all six IMPLAUSIBLE_PERFECT .230 results replaced by realistic real-data counterparts; FST live gen first validated via PATH C; KV260 RTL lint fixed to 0 errors; HALT latent probe, HIVE ensemble, kinetic Langevin, and FregeLogic hybrid identified as highest-leverage next steps). Sweep focused on: (a) closing the AUROC gap to HalluScan 0.88 baseline, (b) FST live PATH A/B actual inference, (c) KV260 Yosys synthesis now that RTL is lint-clean, (d) faster constrained samplers, (e) Phase 1 ship gate check.

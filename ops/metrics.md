@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-18 Milestone 2026.05.233 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-18T14:59:44Z | 2026-05-18T15:08:06Z | Resumed from context compaction: read research-references.md top, exclusion_manifest.yaml, exp2391 retro (11/14 FAILed Codex CLI), research-roadmap.yaml format; wrote research-references.md .233 sweep prepend (4 papers), openspec/change-proposals/research-roadmap-v233.md, research-roadmap-next.yaml (14 tasks exp2392–exp2405); validated YAML (14 tasks, 12 codex / 2 claude, FR-11 satisfied); updated ops/status.md, ops/metrics.md. | ~45k |
+
+Note: `scripts/session-metrics.py` not present in this checkout; authoritative token extraction unavailable.
+
 ## Session: 2026-05-18 Milestone 2026.05.229 Research Planning
 
 ### Turn Log

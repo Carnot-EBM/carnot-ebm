@@ -1,6 +1,34 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-18 (milestone 2026.05.232 research planning complete)
+**Last Updated:** 2026-05-18 (milestone 2026.05.233 research planning complete)
+
+## Session 2026-05-18 - Milestone 2026.05.233 Research Planning Complete
+
+**Milestone 2026.05.233 PLANNED after .232 catastrophic Codex CLI failure (11/14 tasks FAIL; AUROC gap unchanged at 0.1948).**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v233.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2392`–`exp2405`)
+- ID allocation: milestone `.232` used through `exp2391`, so `.233` starts at `exp2392`.
+- Research references updated with post-.232 planning sweep (4 papers): Constrained Sampling MCMC (arXiv:2506.05754), Constrained Dikin-Langevin (arXiv:2510.04582), Hierarchical Alignment Logical Consistency (arXiv:2604.09075), Decomposing Large-Scale Ising on FPGAs (arXiv:2602.15985).
+- **Milestone title**: "Codex Recovery Sprint: HALT/HIVE/FregeLogic v2, Typed CoT Tier 2.8, FST PATH A/B v2, KV260 Yosys v2, FR-11 v2"
+- **Root cause of .232 failure**: ALL 11 implementation tasks failed with "Codex CLI error: u finish the real work inside 10 minutes, that is correct an" — Codex CLI agent responding conversationally instead of executing. Root cause unknown; exp2393 (requires_claude:true) diagnoses it.
+- **Design focus — 3 critical gaps**:
+  1. Codex CLI infrastructure broken (NEW, highest priority) → exp2393 (requires_claude, Codex diagnostic + repair)
+  2. AUROC gap 0.1948 unchanged → exp2394 HALT v2, exp2395 FregeLogic v2, exp2396 Typed CoT new, exp2397 Freq-Aware Attn queued, exp2398 HIVE v2
+  3. FST/FR-11/KV260/ship-gate evidence missing → exp2399-2403 reruns with prior_failures documented
+- Phase 0 (admin): exp2392 archive (codex), exp2393 Codex diagnostic (claude, requires_claude)
+- Phase 1 (AUROC v2): exp2394 HALT Tier 0j v2, exp2395 FregeLogic v2, exp2396 Typed CoT Tier 2.8 NEW, exp2397 Freq-Aware Attn Tier 0f queued-since-.228, exp2398 HIVE ensemble v2
+- Phase 2 (FST + FR-11): exp2399 FST PATH A/B v2, exp2400 FR-11 NSVIF online v2 (continuous_self_learning_task:true)
+- Phase 3 (hardware + samplers): exp2401 KV260 Yosys v2, exp2402 Kinetic Langevin v2, exp2403 Phase 1 ship gate v2
+- Phase 4 (synthesis): exp2404 paper-v6 table + capstone (claude opus, requires_claude, gated: exp2398 OR exp2394), exp2405 retro (codex)
+- **Agent routing**: 12 tasks codex/gpt-5.5; 2 tasks claude (exp2393: Codex diagnostic; exp2404: capstone). requires_claude positive criterion met: exp2393 (33 prior codex failures x 11 categories + multi-file debugging + OED uncertainty); exp2404 (capstone synthesis across 12+ artifacts + open-ended framing).
+- **FR-11 satisfied**: exp2400-fr11-nsvif-online-v2 with `continuous_self_learning_task: true`
+- **Exclusion manifest cross-check**: GRPO/VPRM, WOPR, HardNet++/DSP, THRML sweep, SpecAnn, exp2091, iCE40 PIMI, HalluSAE, discriminative JEPA — none proposed. All reruns have `prior_failures:` blocks.
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.233. Critical path: exp2393 Codex diagnostic (runs first) determines whether all subsequent codex tasks will succeed. Key experiments to watch: exp2393 (infrastructure repair), exp2398 (HIVE ensemble AUROC vs 0.88 HalluScan), exp2399 (first FST live PATH A/B), exp2400 (FR-11 mandatory), exp2403 (Phase 1 ship gate).
+
+---
 
 ## Session 2026-05-18 - Milestone 2026.05.232 Research Planning Complete
 
