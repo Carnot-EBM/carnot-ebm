@@ -294,7 +294,7 @@ module ising_sampler_128_sparse #(
                     end
                 end
 
-                FSM_RUNNING: begin
+                FSM_RUNNING: begin : fsm_running_blk
                     // -------------------------------------------------------
                     // Update spin[spin_idx] using Metropolis criterion.
                     //

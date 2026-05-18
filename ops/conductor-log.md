@@ -4954,3 +4954,4 @@ Ripgrep i |
 | 2026-05-18 20:09 UTC | Phase 2: FR-11 NSVIF Online Self-Learning v4 — MAN | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2425_fr11_ns |
 | 2026-05-18 20:15 UTC | Phase 2: FR-11 NSVIF Online Self-Learning v4 — MAN | OK | 81 passed, 1 warning in 2.34s |
 | 2026-05-18 20:19 UTC | Phase 2: FST Constrained MCMC Generation v2 (arXiv | OK | 81 passed, 1 warning in 2.48s |
+| 2026-05-18 20:32 UTC | Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: GNU screen |
