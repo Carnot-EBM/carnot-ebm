@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.233",
+  "generated_at": "2026-05-18T17:22:39Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.233 produced 0 experiments in the timing window — the twelfth consecutive empty-experiment milestone. The milestone was consumed by planning work: diagnosing the catastrophic Codex CLI failure that caused 11/14 .232 tasks to emit identical boilerplate non-responses, and drafting a 14-task roadmap (exp2392–exp2405) that puts Codex CLI diagnosis (exp2393) as the first activation gate. No compute-bound work executed and both GPUs remained idle at 0% utilization throughout.",
+  "bottlenecks_identified": [
+    "Twelfth consecutive milestone with zero experiment commits in the timing window — the pre-test cascade and Codex CLI infrastructure failure are the structural root cause blocking all downstream tasks.",
+    "Codex CLI catastrophic failure (.232: 11/14 tasks emitted identical 'u finish the real work inside 10 minutes' boilerplate) was not diagnosed within the milestone that produced it; diagnosis was deferred to .233 planning, adding one full milestone of delay before any repair attempt.",
+    "AUROC gap of 0.1948 (current 0.685 vs HalluScan baseline 0.88) remains unchanged since before .230 — no compute progress while infrastructure is broken.",
+    "FR-11, FST PATH A/B, KV260, and Phase 1 ship gate remain unvalidated because all compute tasks have been blocked by infrastructure failures for 12+ milestones."
+  ],
+  "improvements_suggested": [
+    "Activate exp2393 (Codex CLI Diagnostic, requires_claude:true) as the absolute first task of .234; do not activate any Codex experiment until exp2393 confirms the CLI is repaired.",
+    "Add a Codex CLI smoke-test as a mandatory pre-milestone activation gate: a trivial 5-line codex task that must succeed before the conductor activates the remaining 13 tasks.",
+    "If exp2393 confirms the Codex CLI is broken beyond repair in the current environment, immediately flip all 12 remaining codex tasks to agent_type:claude for .234 to break the empty-milestone chain — quota burn is preferable to another empty milestone.",
+    "Cap planning-only milestones at 1 consecutive occurrence; if two planning milestones fire back-to-back with 0 experiments, the conductor should auto-escalate to operator with a 'infrastructure_blocked' sentinel before drafting a third plan.",
+    "Both RTX 3090 GPUs are fully idle — DualGPURunner can load Qwen3.6-35B on GPU 0 and Gemma-4-31B on GPU 1 in parallel once compute tasks resume, recovering approximately 40-50% wall time on multi-model experiments."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Repair Codex CLI (exp2393): 12 consecutive empty milestones trace to infrastructure failure; fixing this single dependency unblocks all 12 deferred codex experiments simultaneously.",
+    "Enforce a pre-activation smoke-test gate in the conductor: a trivial codex task confirming CLI health must pass before any experiment is activated — prevents another 14-task plan from silently failing with boilerplate responses.",
+    "On confirmed Codex CLI repair, execute AUROC closure (exp2394 HALT Tier 0j + exp2395 FregeLogic + exp2398 HIVE ensemble) as the first compute block to close the 0.1948 AUROC gap that has been frozen for 12+ milestones."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The meta-pattern is now unambiguous: 12 consecutive empty milestones means the infrastructure failure is the work, not the research experiments. Every planning cycle that produces another 14-task YAML without first confirming the executor is repaired is a guaranteed empty milestone. The .233 roadmap correctly makes exp2393 (Codex CLI diagnosis) the phase-0 gate — that structural discipline, applied one milestone earlier (.232 or .231), would have saved 2-3 planning cycles of wall time. Going forward, the highest-value process improvement is not better experiment design but ensuring the execution substrate is verified healthy before any research plan is committed."
+}

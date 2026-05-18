@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.233 | Planning-only / Codex CLI failure diagnosis | N/A | None — twelfth consecutive empty-experiment milestone; Codex CLI catastrophic failure (.232: 11/14 boilerplate) diagnosed; 14-task roadmap drafted (exp2392-exp2405) with exp2393 CLI diagnostic as phase-0 gate |
 | 2026.05.232 | Pipeline stall / No timing-window experiments | N/A | None — eleventh consecutive empty-experiment milestone; blocked_roadmap_missing recurrence; pre-stage .233 roadmap before archiving .232; land exp2323 pre-test cascade fix as first .233 task |
 | 2026.05.231 | Pipeline stall / No timing-window experiments | N/A | None — tenth consecutive empty-experiment milestone; blocked_roadmap_missing recurrence; pre-stage .232 roadmap before archiving .231; fix exp2323 pre-test cascade |
 | 2026.05.230 | Pipeline stall / No timing-window experiments | N/A | None — ninth consecutive empty-experiment milestone per timing data; blocked_roadmap_missing recurrence; pre-stage .231 roadmap before archiving .230 |

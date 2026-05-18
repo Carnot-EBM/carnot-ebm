@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-18 (Milestone 2026.05.233 Operational Retrospective)
+
+- Operational retro written for milestone 2026.05.233: 0 experiments completed (twelfth consecutive empty-experiment milestone). Root cause is Codex CLI infrastructure failure from .232 (11/14 tasks emitted boilerplate). Both RTX 3090 GPUs idle at 0%. Top action: activate exp2393 Codex CLI Diagnostic as the absolute first .234 task before any other experiment. Retro artifact: `results/operational_retro_2026_05_233.json`.
+
 ## 2026-05-18 (Milestone 2026.05.233 Research Planning)
 
 - Milestone 2026.05.233 research planning complete. User instruction: plan the next milestone after .232, which suffered catastrophic Codex CLI failure (11/14 tasks FAIL with identical "u finish the real work inside 10 minutes" error; AUROC gap 0.1948 unchanged; FR-11 not satisfied; FST PATH A/B not executed; Phase 1 ship gate unchecked).
