@@ -4130,3 +4130,27 @@ commands for the two named pre-test failures.
 **And** result artifacts or missing-artifact evidence for Exp 2309, Exp 2310, Exp 2312, Exp 2313, and Exp 2320
 **When** the Exp 2321 retrospective generator runs
 **Then** it writes `results/experiment_2321_retro.json` with schema `carnot.operational_retro.v70`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.226` gap closure records, explicit `pretest_cascade_status`, and a quantified speedup target for milestone `.228`.
+
+### REQ-REPORT-2335: Milestone 2026.05.228 Operational Retrospective
+
+The repository shall provide `scripts/experiment_2335_retro.py` to generate
+`results/experiment_2335_retro.json` with schema
+`carnot.operational_retro.v71`.
+
+The artifact must record `total_wall_time_min`, `n_experiments_completed`,
+`n_gate_blocks`, `n_compute_bound`, `criteria_met`, `top_gaps_resolved`,
+`pretest_cascade_status`, and `next_milestone_speedup_target_pct`. The
+`honest_verdict` field must start with a terminal prefix. The gap-resolution
+analysis must explicitly cover the `.228` design gaps: full pre-test cascade
+resolution, NSVIF neuro-symbolic extraction first actual run, and FST live
+generation beyond one-token probing. If Exp 2323 did not set
+`pretest_fixed=true`, the artifact must include direct operator escalation
+commands for the Exp 2309 and Exp 2323 pre-test failures, plus a recommendation
+to consider a no-xdist pre-test fallback.
+
+#### SCENARIO-REPORT-2335: Generate .228 Retrospective Artifact
+
+**Given** a conductor log containing the milestone 2026.05.228 activation and terminal task rows
+**And** result artifacts or missing-artifact evidence for Exp 2323, Exp 2324, Exp 2326, Exp 2327, and Exp 2334
+**When** the Exp 2335 retrospective generator runs
+**Then** it writes `results/experiment_2335_retro.json` with schema `carnot.operational_retro.v71`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.228` gap closure records, explicit `pretest_cascade_status`, and a quantified speedup target for milestone `.229`.
