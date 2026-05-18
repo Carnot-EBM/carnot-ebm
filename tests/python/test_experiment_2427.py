@@ -6,7 +6,7 @@ import sys
 
 def test_experiment_2427_runs():
     # Run the experiment script
-    result = subprocess.run([sys.executable, "/home/ianblenke/github.com/ianblenke/carnot/experiment_2427_kv260_yosys.py"], capture_output=True, text=True)
+    result = subprocess.run([sys.executable, "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_2427_kv260_yosys.py"], capture_output=True, text=True)
     assert result.returncode == 0
     
     # Check the json file
