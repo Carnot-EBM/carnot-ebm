@@ -1,0 +1,38 @@
+{
+  "id": "exp2322-archive-and-activate",
+  "honest_verdict": "complete: blocked_roadmap_missing",
+  "archive_ready": false,
+  "completed_date": "20260518",
+  "precondition": {
+    "roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+    "expected_milestone": "2026.05.227",
+    "observed_active_milestone": "2026.05.228",
+    "literal_expected_milestone_present_in_prompt_text": true,
+    "active_milestone_matches_expected": false,
+    "research_roadmap_next_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+    "research_roadmap_next_exists": false,
+    "status": "failed"
+  },
+  "archive": {
+    "performed": false,
+    "reason": "research-roadmap.yaml is already at milestone 2026.05.228, so the requested 2026.05.227 task list is no longer the active roadmap to append."
+  },
+  "activation": {
+    "performed": false,
+    "reason": "research-roadmap-next.yaml is absent and the active roadmap is already 2026.05.228."
+  },
+  "changelog": {
+    "modified": false,
+    "reason": "The task instructed exit on failed roadmap precondition before archive, roadmap swap, or changelog edits."
+  },
+  "notes": [
+    "The explicit precondition required research-roadmap.yaml to be active at milestone 2026.05.227 before archiving.",
+    "The active milestone field is 2026.05.228. The string 2026.05.227 appears only inside the embedded prompt for exp2322, not as the active milestone.",
+    "research-complete.yaml was not modified because the precondition failed before archive_ready could be true.",
+    "scripts/research_conductor.py was not modified and nothing was pushed."
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required (complete:/success:) so conductor classifies this as a closed task, not a partial.",
+    "archive_ready": "Boolean gate confirming .227 was appended to research-complete.yaml before roadmap swap. Downstream tasks depend on this."
+  }
+}

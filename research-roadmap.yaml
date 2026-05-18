@@ -348,12 +348,12 @@ tasks:
     \     class LogicalStepExtractor:\n       - extract(instruction: str, response:\
     \ str) -> list[dict]\n         Parses response for logical steps: quantitative\
     \ claims, conditions,\n         causal assertions, list-item commitments.\n  \
-    \       Returns: [{\"step\": str, \"constraint_type\": str, \"variables\": list}]\n\
+    \       Returns: [{{\"step\": str, \"constraint_type\": str, \"variables\": list}}]\n\
     \       - encode_z3(steps: list[dict]) -> z3.Solver\n         Encodes each step\
     \ as a Z3 assertion (arithmetic, comparison, or\n         Boolean implication).\
     \ Returns a solver with all constraints asserted.\n       - verify(instruction:\
-    \ str, response: str) -> dict\n         Returns: {\"satisfiable\": bool, \"violations\"\
-    : list[str], \"n_constraints\": int}\n  2. Write focused unit tests in tests/python/pipeline/test_nsvif_extractor.py\n\
+    \ str, response: str) -> dict\n         Returns: {{\"satisfiable\": bool, \"violations\"\
+    : list[str], \"n_constraints\": int}}\n  2. Write focused unit tests in tests/python/pipeline/test_nsvif_extractor.py\n\
     \     (at least 3 tests: one satisfiable response, one violated arithmetic constraint,\n\
     \     one violated list-completeness constraint).\n  3. Run unit tests; record\
     \ n_tests_passed.\n  4. Evaluate on 30 synthetic (instruction, response) pairs:\n\
@@ -621,9 +621,9 @@ tasks:
     \      Policy: for each spin, estimate the majority ground-state sign from\n \
     \        the local field h_i + sum_j J_ij * mean_neighbor_sign.\n       - initialize(J:\
     \ np.ndarray, h: np.ndarray, random_seed: int) -> np.ndarray\n         Returns\
-    \ initial spin configuration as {-1, +1}^n_spins.\n  2. Write 2 unit tests in\
+    \ initial spin configuration as {{-1, +1}}^n_spins.\n  2. Write 2 unit tests in\
     \ tests/python/samplers/test_ml_ising_init.py:\n     Test 1: initialize() returns\
-    \ a valid {-1, +1} spin vector of correct shape.\n     Test 2: on a ferromagnetic\
+    \ a valid {{-1, +1}} spin vector of correct shape.\n     Test 2: on a ferromagnetic\
     \ chain (J_ij = +1), ML initializer aligns spins better\n             than chance\
     \ (majority_aligned_pct > 60%).\n  3. Run unit tests; record n_tests_passed.\n\
     \  4. Benchmark on 3 Ising problem sizes (random_seed=42 for J/h generation):\n\
