@@ -20,10 +20,12 @@ The model was trained using contrastive energy minimization.
 
 | Metric | Value |
 |--------|-------|
-| Experiments completed | 2,908 (through Exp 2363) |
-| Milestones archived | 244 (through 2026.05.230) |
-| Python test items collected | 26,182 |
-| Semantic Energy AUROC (real GGUF, exp2351) | 0.685 |
+| Experiments completed | 2,950 (through Exp 2405) |
+| Milestones archived | 247 (through 2026.05.233) |
+| Python test items collected | 26,352 |
+| FregeLogic AUROC (Z3+Neural Hybrid, exp2395) | 0.8831 |
+| HIVE 3-verifier ensemble AUROC (exp2398) | 0.8539 |
+| FST PATH A live GGUF inference validated (exp2399) | true |
 | NSVIF verification pass rate (exp2352) | 1.000 |
 | VERGE SMT repair success rate (exp2353) | 1.000 |
 

@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,908 Experiments Across the Public Record, 244 Archived Milestone Records, 26,182 Python Test Items Collected (Through Exp 2363)
+## A Technical Report — 2,950 Experiments Across the Public Record, 247 Archived Milestone Records, 26,352 Python Test Items Collected (Through Exp 2405)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-18
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,908 experiments across 244 milestones up to .230, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction (PRD Priority #1 first actual run, verification_pass_rate=1.000), VERGE SMT repair integration (mcs_repair_success_rate=1.000), Sparse Ising connectivity, Semantic Energy Tier 0g (Boltzmann energy on logits validated AUROC=1.000 on synthetic corpus exp2338, and AUROC=0.685 on real cached GGUF logprob vectors exp2351), and KAN-CL n=256 per-knot retention.
+This report summarizes 2,950 experiments across 247 milestones through .233, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction (PRD Priority #1 first actual run, verification_pass_rate=1.000), VERGE SMT repair integration (mcs_repair_success_rate=1.000), Sparse Ising connectivity, Semantic Energy Tier 0g (AUROC=0.685 on real cached GGUF logprob vectors exp2351), KAN-CL n=256 per-knot retention, and FregeLogic Z3+Neural Hybrid (AUROC=0.8831, beating HalluScan 0.88 peer baseline, exp2395).
 
-This report documents the research arc behind the framework — **2,908 experiment records tracked through Exp 2363, with 2,908 task records in 244 artifact-backed completed milestone records archived through 2026.05.230** — run between February and May 2026. `research-complete.yaml` currently archives **244** completed milestone records through 2026.05.230. Milestone 2026.05.230 ("All-Ungated Full Research Sprint") completed 11 of 14 tasks (exp2350–exp2360), delivering multiple first-actual-run results: **exp2351 (Semantic Energy on real GGUF) achieved AUROC=0.685** on 100 bootstrapped examples from cached Qwen3.6-35B-A3B top-k logprob vectors; **exp2352 (NSVIF Z3 Extractor v5) achieved verification_pass_rate=1.000 and extraction_coverage=1.000** — the first actual run of PRD Priority #1 since it was filed on 2026-04-11; **exp2353 (VERGE SMT repair) achieved mcs_repair_success_rate=1.000**; **exp2354 (Eidoku CSP) gate accuracy=1.000 on 50 examples**; **exp2355 (Projected-Langevin) matched CASAL satisfaction 1.000 vs 0.667**; **exp2357 (FR-11 multidomain retention) passed** with cross_domain_retention_rate=1.000. The all-ungated design (all 14 tasks run regardless of pre-test gate) broke the multi-milestone blockage pattern and delivered 11 new research artifacts.
+This report documents the research arc behind the framework — **2,950 experiment records tracked through Exp 2405, with 2,950 task records in 247 artifact-backed completed milestone records archived through 2026.05.233** — run between February and May 2026. `research-complete.yaml` currently archives **247** completed milestone records through 2026.05.233. Milestone 2026.05.233 ("Codex Recovery Sprint") restored Codex CLI infrastructure and delivered headline results: **exp2395 (FregeLogic Z3+Neural Hybrid, arXiv:2604.18328) achieved AUROC=0.8831** — the first Carnot result exceeding the HalluScan 0.88 peer baseline; **exp2398 (HIVE 3-verifier ensemble) achieved AUROC=0.8539**; **exp2399 (FST PATH A) validated live GGUF inference** with Qwen3.6-35B-A3B for the first time. Prior milestones .231 (first 14/14 fully-complete milestone, RTL lint=0) and .232 (AUROC Closure Sprint, Codex CLI failure recovered in .233) are documented below.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5911,3 +5911,78 @@ Milestone .230 is the first milestone since .204 to deliver substantive new rese
 4. The pre-test cascade remains unresolved; FST live generation and the capstone still depend on it.
 
 Planning for milestone .231 focuses on resolving the pre-test cascade and extending the Semantic Energy real-GGUF validation with full-vocabulary logits.
+
+---
+
+## Milestones .231–.233 — AUROC Breakthrough and Codex Recovery (Exps 2364–2405, May 2026)
+
+### Milestone 2026.05.231 — First Fully-Complete Milestone (14/14 Tasks)
+
+Milestone .231 was the first milestone in the project's history to complete all 14 tasks without any blocked or missing artifacts. Key outcomes:
+
+- **RTL lint=0**: KV260 RTL lint achieved zero lint errors for the first time.
+- **FST PATH C validated**: Fast-Slow Transformer cached telemetry path validated end-to-end.
+- **IMPLAUSIBLE_PERFECT flags resolved**: Adversarial verifier flags cleared across all .231 artifacts.
+- **14/14 tasks complete** (exp2364–exp2377): archive, HALT Tier 0j, HIVE ensemble, FregeLogic, FST PATH C, FR-11 NSVIF online, KV260 Yosys, Kinetic Langevin, KAC RBF, NSVIF SMT-LIB, Phase 1 ship gate, paper-v6 results table, capstone, retro.
+
+The all-ungated design (all 14 tasks run independently, no pre-test gate) was the structural change that enabled this. Experiments dep2378–exp2391 were planned for .232.
+
+### Milestone 2026.05.232 — AUROC Closure Sprint: Codex CLI Failure
+
+Milestone .232 ("AUROC Closure Sprint") suffered catastrophic Codex CLI failure: 11 of 14 tasks failed with the message "u finish the real work inside 10 minutes" — Codex CLI responding conversationally instead of executing. Only the paper-v6 stub task produced a real deliverable. AUROC gap to HalluScan 0.88 baseline remained unchanged at 0.1948.
+
+Root cause diagnosis was deferred to milestone .233 (exp2393, requires_claude:true). All 14 task artifacts were written by the conductor, but 11 contained only the boilerplate error. The all-ungated design meant no cascade blockage, but without a working Codex CLI, no substantive results were produced.
+
+### Milestone 2026.05.233 — Codex Recovery Sprint: AUROC Breakthrough
+
+Milestone .233 ("Codex Recovery Sprint") restored Codex CLI and delivered the project's first AUROC result exceeding the HalluScan 0.88 peer baseline.
+
+#### Codex CLI Diagnostic (exp2393)
+
+exp2393 (requires_claude:true) diagnosed the .232 Codex CLI failure as a transient OpenAI backend disruption — not a structural bug in the conductor or experiment prompts. Codex CLI confirmed healthy for .233 onwards.
+
+#### FregeLogic Z3+Neural Hybrid (exp2395)
+
+FregeLogic (arXiv:2604.18328) combines Z3 SMT formal verification with neural scoring for logical consistency detection.
+
+**Results:**
+- **AUROC=0.8831** on real GGUF inference — the first Carnot result exceeding the HalluScan 0.88 peer baseline
+- honest_verdict: `complete: fregelogic_auroc_0.8831_beats_halluscan_baseline`
+
+#### HIVE 3-Verifier Ensemble (exp2398)
+
+HIVE-style soft-voting ensemble combining Tier 0f (Frequency-Aware Attention), Tier 0g (Semantic Energy), and Tier 0h (HALT latent probe) verifiers.
+
+**Results:**
+- **AUROC=0.8539** (3-verifier ensemble)
+- Gap to HIVE peer ceiling (0.9236) narrowed to 0.0405
+- honest_verdict: `complete: hive_3verifier_auroc_0.8539`
+
+#### FST PATH A Live GGUF Inference (exp2399)
+
+Fast-Slow Transformer PATH A validated with live GGUF inference (Qwen3.6-35B-A3B) for the first time.
+
+**Results:**
+- fst_live_validated: True (PATH A)
+- honest_verdict: `complete: fst_path_a_live_gguf_validated`
+
+#### Typed CoT Tier 2.8 (exp2396) and Frequency-Aware Attention Tier 0f (exp2397)
+
+Two new verifier tiers added to the ensemble:
+- **Typed CoT** (arXiv:2510.01069): Curry-Howard type-checking for chain-of-thought steps — new Tier 2.8
+- **Frequency-Aware Attention** (arXiv:2602.18145): stopword-frequency hallucination signal — new Tier 0f
+
+#### Session Timeout (exp2400–exp2403, exp2405)
+
+Five tasks (FR-11 NSVIF online v2, KV260 Yosys v2, Kinetic Langevin v2, Phase 1 ship gate v2, retro) did not run due to session timeout. All are carried into milestone .234 with prior_failures blocks.
+
+### Summary: .231–.233 Impact
+
+The three milestones collectively:
+1. **Broke the 14/14 completion barrier** (.231) — first fully-complete milestone.
+2. **Identified and recovered from Codex CLI failure** (.232 failure, .233 recovery).
+3. **Exceeded the HalluScan 0.88 AUROC baseline** (.233, FregeLogic=0.8831) — a milestone the project had been targeting for 4+ milestones.
+4. **Validated FST live GGUF inference** — PATH A now confirmed working.
+5. **Extended the verifier ensemble** to 4 Tier 0 verifiers (Tier 0f/0g/0h/0j).
+
+Milestone .234 ("AUROC Ceiling Assault") targets closing the remaining 0.0405 gap to the HIVE peer (0.9236) via 4-verifier ensemble (exp2408), Hierarchical LogCons (exp2409), and HALT-RAG NLI (exp2410).

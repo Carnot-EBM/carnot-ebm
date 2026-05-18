@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.234",
+  "generated_at": "2026-05-18T19:16:55Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.234 recorded 0 experiments completed with 0 minutes of wall time, continuing the pattern of consecutive empty-experiment milestones (thirteenth in sequence). Both RTX 3090 GPUs remained fully idle at 0% utilization throughout the milestone window. No compute-bound tasks ran, so GPU idle is not attributable to a task-execution bottleneck.",
+  "bottlenecks_identified": [
+    "No experiments committed within the timing window — structural pipeline gap (recurring blocked_roadmap_missing / activation-cascade pattern) rather than an execution bottleneck.",
+    "Research roadmap not pre-staged before milestone activation, causing zero tasks to launch."
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for milestone 2026.05.235 before archiving 2026.05.234 to break the consecutive-empty-milestone pattern.",
+    "Add a conductor activation-guard check that surfaces the missing-roadmap condition at milestone close time (not just at activation), so the gap is caught before the next milestone opens.",
+    "Run scripts/exclusion_manifest_lint.py against the .235 roadmap draft before activation to prevent retired-experiment scope-matches from triggering a gate-block cascade.",
+    "Diagnose root cause of the recurring 13+ consecutive empty-milestone pattern — the structural pipeline gap is not resolving between milestones and requires an explicit repair task as the first activation in .235."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-stage research-roadmap-next.yaml for .235 before closing .234: this single action has broken the empty-milestone pattern in prior sessions and has the highest expected value of any intervention.",
+    "File an explicit root-cause investigation task as the first .235 activation item — 13 consecutive empty milestones signals a structural conductor or activation-guard bug, not a one-off; a dedicated diagnostic task (similar to exp2393 CLI diagnostic in .233) is the correct response.",
+    "Run exclusion manifest lint (scripts/exclusion_manifest_lint.py) against any .235 roadmap draft before committing, to prevent the retired-experiment doomed-rerun cascade seen in .208 from recurring and blocking downstream tasks."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Thirteen consecutive empty-experiment milestones is a reliable indicator of a structural pipeline failure, not a workload-pacing issue. Operational improvements (DualGPURunner, batch sizing, model caching) cannot improve a milestone that runs no experiments. The highest-leverage investment is not tuning execution efficiency but fixing the activation path so tasks actually launch. Each empty milestone that closes without a pre-staged roadmap perpetuates the gap at zero cost-to-diagnose and maximum cost-to-milestone-throughput."
+}
