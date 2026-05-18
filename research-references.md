@@ -1,3 +1,31 @@
+## 2026-05-18 Post-.230 Planning Sweep (Milestone 2026.05.231)
+
+This sweep was run after milestone `.230` completed (11/14 experiments — first productive milestone in 10+, with the pre-test cascade finally resolved; FST live gen produced no artifact as the conductor ran out of tasks; all .230 prototype results were IMPLAUSIBLE_PERFECT=1.0 on tiny synthetic corpora except Semantic Energy AUROC=0.685 on real data). Sweep focused on: (a) real-data adversarial validation methods, (b) new verifier architectures to close the AUROC gap to NLI baseline (0.88), (c) deterministic constraint satisfaction alternatives.
+
+### HalluScan: Systematic Benchmark for Hallucination Detection
+- **Paper:** "HalluScan: A Systematic Benchmark for Detecting and Mitigating Hallucinations in Instruction-Following LLMs" (arXiv:2605.02443, May 2026).
+- **What:** Evaluates 6 hallucination detection methods across 4 open-weight model families, 3 domains, 72 configurations. Best result: NLI Verification AUROC=0.88. Introduces HalluScore (Pearson r=0.41 with human judgments) and Adaptive Detection Routing (2x cost reduction). Carnot's Semantic Energy (AUROC=0.685) sits between RAV (0.66) and NLI Verification (0.88) in this benchmark landscape.
+- **Relevance to Carnot:** Definitive external baseline for Carnot's verifier ensemble. The 0.88 NLI target is the paper-v6 comparison anchor. Candidate for exp2370 Semantic Energy vs baseline comparison in .231.
+- **Sources:** https://arxiv.org/abs/2605.02443
+
+### HALT: Hallucination Assessment via Latent Testing
+- **Paper:** "HALT: Hallucination Assessment via Latent Testing" (arXiv:2601.14210, Jan 2026).
+- **What:** Lightweight residual probes read hallucination risk directly from intermediate hidden states of question tokens. Computation is orders of magnitude cheaper than token generation, evaluated fully in parallel with inference, enabling near-instantaneous hallucination risk estimation.
+- **Relevance to Carnot:** Tier 0h verifier candidate (latent-probe, sub-millisecond). Complementary to Semantic Energy (logit-space) and SpilledEnergy (decoding-math) — uses INTERNAL hidden states rather than output logits. Requires access to intermediate activations; can be approximated from cached top-k logprob distributions as a fallback.
+- **Sources:** https://arxiv.org/abs/2601.14210
+
+### FregeLogic: Z3 SMT + LLM Ensemble for Syllogistic Validity
+- **Paper:** "FregeLogic at SemEval 2026 Task 11: A Hybrid Neuro-Symbolic Architecture for Content-Robust Syllogistic Validity Prediction" (arXiv:2604.18328, April 2026).
+- **What:** Combines an ensemble of 5 LLM classifiers with a Z3 SMT solver as a formal-logic tiebreaker. Achieves 94.3% accuracy on syllogistic validity with content effect of 2.85. The Z3 component serves as a last-resort symbolic discriminator when neural classifiers disagree.
+- **Relevance to Carnot:** Direct benchmark competitor for NSVIF Z3 extractor (exp2352). FregeLogic demonstrates that Z3 as a tiebreaker rather than primary verifier achieves better accuracy than Z3-primary architectures. Candidate for hybridizing Carnot's NSVIF Z3 verifier with a neural pre-filter. Paper-v6 comparison baseline for the symbolic verification track.
+- **Sources:** https://arxiv.org/abs/2604.18328
+
+### KAC: Kolmogorov-Arnold Classifier for Continual Learning
+- **Paper:** "KAC: Kolmogorov-Arnold Classifier for Continual Learning" (arXiv:2503.21076, March 2025).
+- **What:** Novel KAN-based classifier for continual learning using Radial Basis Functions (RBF) instead of B-splines. RBF provides improved compatibility with continual learning due to better activation locality. Evaluated on standard incremental learning benchmarks.
+- **Relevance to Carnot:** Competitor/complement to KAN-CL (arXiv:2605.12306, exp2356). KAC's RBF approach vs KAN-CL's per-knot importance regularization — both address catastrophic forgetting in KAN-based constraint learning. Candidate for .232+ comparative benchmark after KAN-CL real-data results establish the baseline.
+- **Sources:** https://arxiv.org/abs/2503.21076
+
 ## 2026-05-18 Post-.229 Planning Sweep (Milestone 2026.05.230) — Extended
 
 Supplementary sweep found two additional papers during final .230 planning:
