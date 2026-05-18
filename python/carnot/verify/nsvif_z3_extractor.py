@@ -1,0 +1,1 @@
+from carnot.extraction.nsvif_extractor import NsvifExtractor as NSVIFExtractor
