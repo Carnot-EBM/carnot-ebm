@@ -4823,3 +4823,4 @@ Ripgrep i |
 | 2026-05-18 12:30 UTC | Phase 5: KAN-CL Hard Domain Adversarial Stress Tes | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 12:32 UTC | Phase 5: KAN-CL Hard Domain Adversarial Stress Tes | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 12:34 UTC | Phase 5: KAN-CL Hard Domain Adversarial Stress Tes | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 12:36 UTC | Phase 5: FR-11 FST Real-Data Cross-Domain Retentio | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
