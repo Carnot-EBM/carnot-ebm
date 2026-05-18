@@ -4957,3 +4957,4 @@ Ripgrep i |
 | 2026-05-18 20:32 UTC | Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: GNU screen |
 | 2026-05-18 20:44 UTC | Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2427_kv260_y |
 | 2026-05-18 21:03 UTC | Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2427_kv260_y |
+| 2026-05-18 21:08 UTC | Phase 3: Kinetic Langevin BAOAB vs CASAL v4 (arXiv | OK | 81 passed, 1 warning in 2.32s |
