@@ -4966,3 +4966,4 @@ Ripgrep i |
 | 2026-05-18 22:00 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-05-18 22:02 UTC | Milestone 2026.05.236 activated | OK | 13 tasks queued |
 | 2026-05-18 22:05 UTC | Phase 0: Archive .235 and activate .236 | OK | cache hit: 81 passed, 1 warning in 2.38s |
+| 2026-05-18 22:10 UTC | Phase 1: DiffuTruth Tier 0k Verifier (arXiv:2602.1 | OK | 81 passed, 1 warning in 2.29s |
