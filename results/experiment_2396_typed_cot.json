@@ -1,0 +1,1059 @@
+{
+  "acceptance_gates": {
+    "typed_cot_validated": true
+  },
+  "candidate_stage": "Tier 2.8 after Tier 2 VERGE repair and before Tier 3 Ising",
+  "cot_fields_found": [
+    "response_text"
+  ],
+  "duration_s": 0.607969,
+  "evaluation_design": "Load the first 36 live SOTA balanced telemetry rows, extract chain_of_thought/reasoning/response_text in priority order, type-check the extracted steps, and score incorrect rows as hallucination-like.",
+  "experiment": 2396,
+  "field_principles": {
+    "cot_fields_found": "Which telemetry fields contained CoT content (empty list = no CoT in corpus).",
+    "duration_s": "Guards against fabrication.",
+    "honest_verdict": "Terminal-prefix required.",
+    "n_eval_examples": "Must be 36.",
+    "preconditions_checked": "Records telemetry manifest check.",
+    "random_seed": "Must be 42.",
+    "typed_cot_auroc": "Primary metric. May be low if telemetry lacks CoT fields \u2014 honest result.",
+    "typed_cot_validated": "True if TypedCoTVerifier ran on real data.",
+    "typed_cot_vs_semantic_energy_delta": "Delta vs baseline 0.685. Key improvement signal."
+  },
+  "honest_verdict": "complete: TypedCoTVerifier ran on 36 cached telemetry entries; AUROC=0.508117; fields=response_text.",
+  "module_path": "python/carnot/verify/typed_cot.py",
+  "n_eval_examples": 36,
+  "n_factual_examples": 22,
+  "n_hallucination_examples": 14,
+  "per_entry_results": [
+    {
+      "case_id": "balanced_correct_format_valid_001",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "1",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_002",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "3",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_003",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "1",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_004",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "0",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_005",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "11",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_006",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "0",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_007",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "1",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_008",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "12",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_valid_009",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "1",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_001",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "The user",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_002",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 4,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "2",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 3,
+          "text": "User",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_003",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "The user",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_004",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "2345",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_005",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.75,
+      "typed_cot_score": 0.25,
+      "typed_step_count": 4,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "0",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 3,
+          "text": "The",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_006",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "2345",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_007",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "The user",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_008",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.75,
+      "typed_cot_score": 0.25,
+      "typed_step_count": 4,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "0",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 3,
+          "text": "The",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_valid_009",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "The user",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_001",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "Claim to",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_002",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.0,
+      "typed_cot_score": 1.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 0,
+          "text": "Mia has 3 marbles in total.",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_003",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "inference has no preceding proposition",
+          "index": 0,
+          "text": "The constraint x=2 satisfies x+3=5, so the answer is 1.",
+          "type": "Inference",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_004",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "Claim to",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_005",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "Initial state",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_006",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Constraint",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_007",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "Claim to",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_008",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 1,
+      "typed_cot_risk_score": 0.6666666666666667,
+      "typed_cot_score": 0.3333333333333333,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "proposition introduces a premise",
+          "index": 2,
+          "text": "Noah buys",
+          "type": "Proposition",
+          "type_checks": true
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_correct_format_invalid_009",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 1,
+      "typed_steps": [
+        {
+          "check_reason": "inference has no preceding proposition",
+          "index": 0,
+          "text": "The constraint y=3 satisfies yy=9, so the answer is 1.",
+          "type": "Inference",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_001",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_002",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_003",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_004",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_005",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_006",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_007",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_008",
+      "cot_field": "response_text",
+      "label": 1,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    },
+    {
+      "case_id": "balanced_incorrect_format_invalid_009",
+      "cot_field": "response_text",
+      "label": 0,
+      "typechecked_step_count": 0,
+      "typed_cot_risk_score": 1.0,
+      "typed_cot_score": 0.0,
+      "typed_step_count": 3,
+      "typed_steps": [
+        {
+          "check_reason": "step type is unknown",
+          "index": 0,
+          "text": "Here's a thinking process",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 1,
+          "text": "Analyze User Input",
+          "type": "Unknown",
+          "type_checks": false
+        },
+        {
+          "check_reason": "step type is unknown",
+          "index": 2,
+          "text": "Command",
+          "type": "Unknown",
+          "type_checks": false
+        }
+      ]
+    }
+  ],
+  "preconditions_checked": {
+    "sklearn_importable": true,
+    "sklearn_version": "1.8.0",
+    "telemetry_manifest_path": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+    "telemetry_manifest_present": true,
+    "telemetry_rows_available": 36
+  },
+  "random_seed": 42,
+  "run_date": "2026-05-18",
+  "score_direction": "higher_typed_cot_risk_score_means_more_hallucination_like",
+  "score_field": "typed_cot_risk_score = 1.0 - typed_cot_score",
+  "semantic_energy_baseline_auroc": 0.685,
+  "source_artifact": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+  "spec_refs": [
+    "REQ-TIER28-002",
+    "SCENARIO-TIER28-002"
+  ],
+  "status": "complete",
+  "test_command": "PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/verify/ -k \"typed_cot\" -v --no-cov 2>&1 | tail -15",
+  "title": "Typed CoT verifier telemetry validation",
+  "typed_cot_auroc": 0.5081168831168832,
+  "typed_cot_mean_score": 0.125,
+  "typed_cot_validated": true,
+  "typed_cot_vs_semantic_energy_delta": -0.17688311688311686
+}

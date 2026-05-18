@@ -1941,6 +1941,47 @@ tiebreaker result.
 **Spec traces:** REQ-TIER0-010, SCENARIO-TIER0-010, Exp 2395
 
 
+### REQ-TIER28-002: Typed CoT Verifier Between VERGE And Ising
+
+**Status:** Prototype (Exp 2396)
+
+`python/carnot/verify/typed_cot.py` shall implement `TypedCoTVerifier`, a
+CPU-only Tier 2.8 verifier stage positioned after Tier 2 VERGE repair and before
+Tier 3 Ising.  The verifier assigns lightweight Curry-Howard-inspired types to
+chain-of-thought steps without invoking a solver.
+
+**Acceptance criteria:**
+- REQ-TIER28-002-1: `TypedCoTVerifier.classify_step(text, index, total)` returns
+  Proposition, Inference, Conclusion, or Unknown using deterministic text
+  patterns.
+- REQ-TIER28-002-2: `TypedCoTVerifier.verify_text(text)` splits reasoning text
+  into steps and returns a `typed_cot_score` equal to the fraction of steps whose
+  local type dependency checks pass.
+- REQ-TIER28-002-3: Inference steps type-check only after at least one
+  Proposition, and Conclusion steps type-check only after at least one
+  Inference.
+- REQ-TIER28-002-4: `results/experiment_2396_typed_cot.json` records Typed CoT
+  AUROC on 36 cached telemetry examples, mean score, delta against the Semantic
+  Energy 0.685 AUROC baseline, detected CoT fields, random seed 42, duration,
+  checked preconditions, and an honest terminal-prefix verdict.
+
+**Spec traces:** REQ-TIER28-002, Exp 2396
+
+
+### SCENARIO-TIER28-002: Typed CoT Checks Local Proof Dependencies
+
+**Given** reasoning text with a proposition, an inference, and a conclusion,
+**When** `TypedCoTVerifier.verify_text()` is called,
+**Then** every step type-checks and `typed_cot_score=1.0`.
+
+**Given** reasoning text whose conclusion appears before any inference,
+**When** `TypedCoTVerifier.verify_text()` is called,
+**Then** the conclusion fails its dependency check and lowers the
+`typed_cot_score`.
+
+**Spec traces:** REQ-TIER28-002, SCENARIO-TIER28-002, Exp 2396
+
+
 ### REQ-TIER28-001: DraftConditionedVerifier Tier 2.8 — Structural Constraint Injection
 
 **Status:** Implemented (Exp 912)
