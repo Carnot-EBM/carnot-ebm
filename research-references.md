@@ -1,3 +1,17 @@
+## 2026-05-18 Post-.229 Planning Sweep (Milestone 2026.05.230) — Extended
+
+Supplementary sweep found two additional papers during final .230 planning:
+
+### Logical Consistency Constraint Modeling for Hallucination Detection
+- **Paper:** "Logical Consistency Constraint Modeling for Hallucination Detection" (arXiv:2605.03971, May 2026).
+- **What:** Detects hallucinations via logical consistency constraints between the response and the model's self-judgment, achieving improved detection across multiple QA benchmarks without requiring ground truth.
+- **Relevance to Carnot:** Direct match for Carnot's multi-step consistency verifier (Tier 3 and Phase-4). The self-judgment coherence model aligns with Carnot's global consistency checker (Exp 172, 100% detection). Candidate k=17 verifier class alongside Semantic Energy (k=16) and VeriCoT.
+
+### Set-Consistency Energy Networks for Multi-Statement Verification
+- **Paper:** "Set-Consistency Energy Networks" (arXiv:2503.10695, March 2025).
+- **What:** Energy-based approach for verifying logical coherence among multiple statements via contrastive learning; learns to distinguish internally-consistent sets from incoherent ones.
+- **Relevance to Carnot:** Directly applicable to Carnot's Phase-3 AND-composition verifier (k=16 ensemble). Set-consistency energy can measure joint coherence across verifier outputs, potentially improving the ensemble null-space detection (project_pathological_joint_null_space.md). Candidate .231+ follow-up after ensemble integration matures.
+
 ## 2026-05-18 Post-.229 Planning Sweep (Milestone 2026.05.230)
 
 This sweep was run after milestone `.229` completed (2 research tasks complete: archive partial + Semantic Energy Tier 0g prototype AUROC=1.0; pre-test cascade failed for 10th time but tests actually pass independently; cascade is now resolved). The sweep found new work in EBM-based CoT calibration, diffusion-likelihood hallucination detection, self-adaptive Ising constraint optimization, and neuro-symbolic CoT validation.

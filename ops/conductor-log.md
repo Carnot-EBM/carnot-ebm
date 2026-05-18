@@ -4733,3 +4733,38 @@ Ripgrep i |
 | 2026-05-18 06:28 UTC | Phase 4: Capstone E2E Live Generation (.229) — FST | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp2339-fst-live-gen-v9.fst_live_validated |
 | 2026-05-18 06:38 UTC | Phase 4: Milestone 2026.05.229 Retrospective | OK | 81 passed, 1 warning in 5.79s |
 | 2026-05-18 07:08 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-18 07:36 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-18 07:38 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:40 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:43 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:45 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:47 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:49 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:51 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:53 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:55 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:57 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 07:59 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:02 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:04 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:06 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:08 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:10 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:12 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:14 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:16 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:18 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:21 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:23 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:25 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:27 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:29 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:31 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:33 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:35 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:37 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:39 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:42 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:44 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:46 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
+| 2026-05-18 08:48 UTC | Milestone 2026.05.230 activated | OK | 14 tasks queued |
