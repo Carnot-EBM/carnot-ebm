@@ -4840,3 +4840,4 @@ Ripgrep i |
 | 2026-05-18 13:21 UTC | Phase 1: HALT Latent Probe Tier 0j (arXiv:2601.142 | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 13:23 UTC | Phase 1: HALT Latent Probe Tier 0j (arXiv:2601.142 | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 13:25 UTC | Phase 1: HALT Latent Probe Tier 0j (arXiv:2601.142 | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 13:27 UTC | Phase 1: HIVE-Style 4-Verifier Ensemble (Tier 0g+0 | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
