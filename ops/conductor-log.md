@@ -4710,3 +4710,13 @@ Ripgrep i |
 | 2026-05-18 06:24 UTC | Phase 2: Projected-Langevin vs CASAL Baseline v5 — | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
 | 2026-05-18 06:24 UTC | Phase 3: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
 | 2026-05-18 06:24 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:24 UTC | Phase 4: Capstone E2E Live Generation (.229) — FST | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp2339-fst-live-gen-v9.fst_live_validated |
+| 2026-05-18 06:26 UTC | Phase 2: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 2: FR-11 FST Multi-Domain Retention v6 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 2: KAN-CL n=256 Per-Knot Retention v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 2: NSVIF Neuro-Symbolic Z3 Extractor — First | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 2: VERGE SMT Minimal Correction Subset Repai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 2: Eidoku CSP Tier 2.8 Gate — First Actual R | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 2: Projected-Langevin vs CASAL Baseline v5 — | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 3: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:26 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
