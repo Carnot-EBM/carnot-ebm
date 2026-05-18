@@ -4968,3 +4968,4 @@ Ripgrep i |
 | 2026-05-18 22:05 UTC | Phase 0: Archive .235 and activate .236 | OK | cache hit: 81 passed, 1 warning in 2.38s |
 | 2026-05-18 22:10 UTC | Phase 1: DiffuTruth Tier 0k Verifier (arXiv:2602.1 | OK | 81 passed, 1 warning in 2.29s |
 | 2026-05-18 22:23 UTC | Phase 1: PCIB Tier 0l Verifier (arXiv:2601.15652)  | OK | 81 passed, 1 warning in 2.33s |
+| 2026-05-18 22:29 UTC | Phase 1: Hierarchical LogCons Z3-True v3 -- Force  | OK | 104 passed, 1 warning in 3.90s |
