@@ -6284,3 +6284,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-18: Phase 4: Paper-v6 Results Table + Capstone v235 — AUROC Ceiling Assault Synthesis (✅ Complete) — honest_verdict=complete: best_auroc=0.8896; hive_gap=+0.0340; n_paper_ready=8; best_sampler_kl_delta=7.8709; fr11=satisfied; results/experiment_2432_capstone_v235.json
 - 2026-05-18: Phase 4: Milestone 2026.05.235 Operational Retrospective (✅ Complete) — honest_verdict=complete: 13 tasks completed successfully; results/experiment_2433_retro_v235.json
 - 2026-05-18: Phase 0: Archive .235 and activate .236 (✅ Complete) — honest_verdict=complete: archive_ready_235_already_activated; results/experiment_2434_archive.json
+- 2026-05-18: Phase 1: DiffuTruth Tier 0k Verifier (arXiv:2602.11364) -- Diffusion Reconstruction Energy Proxy (✅ Complete) — honest_verdict=complete: evaluated DiffuTruthVerifier with AUROC 0.5877.; results/experiment_2435_diffutruth_tier0k.json
