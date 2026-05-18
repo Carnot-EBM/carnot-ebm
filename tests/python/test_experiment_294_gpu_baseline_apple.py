@@ -270,6 +270,7 @@ class TestArtifactSchema:
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.xdist_group("gpu_serial")
 class TestBaselineAccuracyBounds:
     """Accuracy values must be floats in [0.0, 1.0] for every variant/model."""
 

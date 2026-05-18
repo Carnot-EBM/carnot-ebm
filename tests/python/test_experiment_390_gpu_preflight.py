@@ -279,6 +279,7 @@ class TestBuildPreflightArtifact:
 _MODULE = "carnot.pipeline.gpu_preflight"
 
 
+@pytest.mark.xdist_group("gpu_serial")
 class TestRunGpuPreflight:
     """Six-layer preflight — all paths."""
 

@@ -178,15 +178,15 @@ def run_gpu_preflight(
         _log.warning("run_gpu_preflight: diagnose_live_gpu raised: %s", exc)
         is_live_capable = False
 
-    # --- Layer 6: smoke test (only when GPU is live-capable AND scripts exist) ---
-    # Short-circuit: if either startup script is absent the verdict is already
-    # "scripts_missing", so running the smoke test is wasteful and can cause
-    # large RSS spikes in test environments where is_live_capable is mocked True
-    # but the scripts-missing path should terminate early.
+    # --- Layer 6: smoke test (only when GPU is live-capable AND scripts exist AND env propagates) ---
+    # Short-circuit: if either startup script is absent OR subprocess env propagation is broken,
+    # the verdict is already determined ("scripts_missing" or "env_not_propagating"), so running
+    # the smoke test is wasteful and can cause large RSS spikes in test environments where
+    # is_live_capable is mocked True but the early-exit path should terminate cleanly.
     smoke_test_passed = False
     model_ids_loadable: list[str] = []
 
-    if is_live_capable and session_startup_exists and conductor_gpu_env_exists:
+    if is_live_capable and session_startup_exists and conductor_gpu_env_exists and subprocess_inherits_env:
         for mid in model_ids:
             try:
                 result = run_smoke_test(mid)
