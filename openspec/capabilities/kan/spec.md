@@ -1157,6 +1157,9 @@ The KAN capability MUST implement the KAN-CL algorithm (arXiv:2605.11181) for co
     - `python/carnot/models/kan_cl.py` implements the KAN-CL importance tracker and regularization penalty.
     - It tracks importance weights for B-spline knots during training.
     - It computes a penalty term for subsequent learning phases based on the deviation from anchored control points, weighted by the tracked importance.
+    - `python/carnot/learning/kan_cl.py` exposes `KanClLearner.fit(X, y, task_id)` and `KanClLearner.predict(X)` for n=256 constraint learning.
+    - The learner records per-knot importance as the activation frequency of each of the 256 spline coefficients for every task.
+    - The split-task benchmark writes `results/experiment_2356_kancl_n256.json` and validates KAN-CL when catastrophic-forgetting reduction is at least 50%.
     - Tests verify that the penalty is computed correctly and achieve 100% test coverage for the new module.
 
 ### SCENARIO-KAN-1826: KAN-CL Penalty Computation
@@ -1164,6 +1167,12 @@ The KAN capability MUST implement the KAN-CL algorithm (arXiv:2605.11181) for co
 Given an initial set of B-spline control points and their corresponding importance weights,
 When a subsequent learning phase proposes updated control points,
 Then the KAN-CL regularization term correctly computes a penalty proportional to the importance-weighted deviation, and tests pass with 100% coverage.
+
+### SCENARIO-KAN-1826-N256: KAN-CL Split-Task Constraint Learning
+
+Given three 50-example constraint-learning tasks over arithmetic, code, and logic domains with `n_params=256`,
+When `KanClLearner` trains sequentially on the tasks,
+Then per-knot importance is computed from task activation frequencies, prior-task coefficients are protected by importance-weighted L2 updates, and the artifact reports `forgetting_reduction_pct >= 50`.
 
 
 ## REQ-KAN-1857: Softly Symbolified KANs (S2KAN) with Differentiable Gating

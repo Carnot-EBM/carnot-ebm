@@ -465,3 +465,60 @@ class KANModel:
     def interpret_edge(self, i: int, j: int) -> BSpline | None:
         """Get spline for visualization."""
         return self.energy_fn.interpret_edge(i, j)
+
+
+class KAN:
+    """Minimal 256-knot additive KAN used by lightweight continual-learning probes.
+
+    The full `KANModel` above is a JAX energy model.  Some experiment harnesses need a
+    tiny importable `KAN` classifier with exactly one coefficient per constraint
+    dimension.  Each coefficient acts like a spline control point over its feature's
+    local activation interval: inactive features contribute zero, so untouched knots
+    stay dormant during task-specific updates.
+    """
+
+    def __init__(
+        self,
+        n_params: int = 256,
+        seed: int = 42,
+        init_scale: float = 0.01,
+        activation_threshold: float = 1e-12,
+    ) -> None:
+        if n_params <= 0:
+            raise ValueError("n_params must be positive")
+        if init_scale < 0:
+            raise ValueError("init_scale must be non-negative")
+        if activation_threshold < 0:
+            raise ValueError("activation_threshold must be non-negative")
+
+        self.n_params = int(n_params)
+        self.activation_threshold = float(activation_threshold)
+        rng = np.random.default_rng(seed)
+        self.coefficients = rng.normal(0.0, init_scale, size=self.n_params).astype(np.float64)
+
+    def basis(self, x: np.ndarray) -> np.ndarray:
+        """Return the clipped piecewise-linear spline basis for constraint vectors."""
+        arr = np.asarray(x, dtype=np.float64)
+        if arr.ndim == 1:
+            arr = arr.reshape(1, -1)
+        if arr.ndim != 2:
+            raise ValueError("x must be a 1D or 2D array")
+        if arr.shape[1] != self.n_params:
+            raise ValueError(f"x must have {self.n_params} columns")
+        return np.clip(arr, -1.0, 1.0)
+
+    def active_knots(self, x: np.ndarray) -> np.ndarray:
+        """Return a boolean mask showing which spline coefficients are active."""
+        return np.abs(self.basis(x)) > self.activation_threshold
+
+    def activation_frequency(self, x: np.ndarray) -> np.ndarray:
+        """Return per-knot activation frequency across a batch."""
+        return self.active_knots(x).mean(axis=0).astype(np.float64)
+
+    def logits(self, x: np.ndarray) -> np.ndarray:
+        """Compute additive KAN logits from the active spline coefficients."""
+        return self.basis(x) @ self.coefficients
+
+    def predict(self, x: np.ndarray) -> np.ndarray:
+        """Return binary predictions using a zero-logit decision boundary."""
+        return (self.logits(x) >= 0.0).astype(np.int64)
