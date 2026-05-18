@@ -1,0 +1,1321 @@
+milestone: 2026.05.235
+milestone_title: 'Codex Recovery Sprint v2 + AUROC Ceiling Assault v4: Diagnostic Gate,
+  HIVE v4, Hierarchical LogCons v2, FR-11 v4, KV260 Yosys v4, Sampler Suite v2'
+milestone_doc: openspec/change-proposals/research-roadmap-v235.md
+tasks:
+- id: exp2420-archive-and-activate
+  title: 'Phase 0: Archive .234 and activate .235'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2420_archive.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  prompt: |-
+    CONTEXT: Milestone 2026.05.234 (AUROC Ceiling Assault + Phase 1 Ship Gate) completed
+    with 0 of 13 tasks producing artifacts — all failed with "Codex CLI error: you finish
+    the real work inside 10 minutes, that is correct". The retro (exp2419) ran and confirmed
+    0/13 tasks completed. best_auroc=0.8831 (FregeLogic, from .233). .234 is now archived.
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/research-complete.yaml (last 30 lines)
+      {project_root}/research-roadmap.yaml (first 5 lines — check milestone field)
+
+    TASK: Archive milestone 2026.05.234 to research-complete.yaml and activate .235.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Read research-roadmap.yaml first 3 lines to find the milestone field.
+         b. If milestone == "2026.05.234": proceed to step 1.
+            If milestone == "2026.05.235": conductor already swapped. Check research-complete.yaml
+              for "id: 2026.05.234". If present: write archive_ready=true and exit.
+            If other: write honest_verdict blocked_roadmap_unexpected and exit.
+      1. Append .234 entry to research-complete.yaml with completed: "2026-05-18".
+         Key results:
+           exp2406: MISSING — Codex CLI error (3 retries)
+           exp2407: MISSING — Codex CLI error (3 retries)
+           exp2408: MISSING — Codex CLI error (3 retries)
+           exp2409: MISSING — Codex CLI error (3 retries)
+           exp2410: MISSING — Codex CLI error (3 retries)
+           exp2411: MISSING — Codex CLI error (3 retries)
+           exp2412: MISSING — Codex CLI error (3 retries)
+           exp2413: MISSING — Codex CLI error (3 retries)
+           exp2414: MISSING — Codex CLI error (3 retries)
+           exp2415: MISSING — Codex CLI error (3 retries)
+           exp2416: MISSING — Codex CLI error (3 retries)
+           exp2417: MISSING — Codex CLI error (3 retries)
+           exp2418: GATE_BLOCK — upstream exp2408 retired (Codex CLI)
+           exp2419: OK — retro_complete=true; n_experiments_completed=0
+      2. cp {project_root}/research-roadmap-next.yaml {project_root}/research-roadmap.yaml
+      3. Add "## 2026-05-18 (Milestone 2026.05.235 activated)" stub to ops/changelog.md.
+      4. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required. Must start complete: for conductor."
+      - archive_ready:
+          principle: "True only after .234 entry appears in research-complete.yaml."
+      - milestone_archived:
+          principle: "Records which milestone was archived (2026.05.234) for audit trail."
+
+    ACCEPTANCE GATES:
+      - condition: "archive_ready == true"
+        principle: "Ensures research-complete.yaml records .234 outcomes before .235 begins."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2421-codex-cli-diagnostic-v2
+  title: 'Phase 0: Codex CLI Infrastructure Diagnostic v2 — Complexity-Graded Health Check'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2421_codex_diagnostic_v2.json
+  requires_claude: true
+  max_turns: 30
+  prior_failures:
+  - experiment_id: exp2393-codex-cli-diagnostic
+    verdict: complete_codex_cli_healthy_232_was_transient_backend_error
+    addressed_by: "exp2393 in .233 diagnosed the .232 failure as a transient OpenAI backend
+      error that resolved naturally. However the SAME pattern recurred in .234 (all 13 tasks
+      failed). This v2 diagnostic runs a complexity-graded health check (simple + medium +
+      complex) to detect whether the backend issue affects all task complexity levels or
+      only complex tasks. Also checks Codex CLI version and quota status."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: Milestone .234 failed with 0/13 tasks producing artifacts — all failed with
+    "Codex CLI error: you finish the real work inside 10 minutes, that is correct".
+    This is the SECOND time this pattern has occurred (.232 was the first, diagnosed in
+    .233 as a transient backend error). This diagnostic v2 uses a COMPLEXITY-GRADED test
+    to determine:
+      a) Is Codex CLI working at all?
+      b) Is it working for simple tasks but failing for complex ones?
+      c) What is the reliability threshold?
+
+    REQUIRES_CLAUDE JUSTIFICATION: (1) Claude must run Codex to test whether Codex works —
+    a Codex task cannot diagnose Codex's own failure. (2) Requires multi-step orchestration:
+    launch 3 Codex subprocess invocations with increasing complexity, interpret output,
+    classify failure mode, write a structured diagnostic artifact. (3) Open-ended judgment:
+    interpreting partial Codex output to distinguish "transient backend" from "capability
+    threshold" is ambiguous and cannot be reduced to deterministic gate checks.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Check Codex version: codex --version 2>/dev/null || echo "codex_not_found"
+            Record codex_version.
+         b. Check conductor config for Codex routing:
+            grep -n "codex" {project_root}/scripts/research_conductor.py | head -20
+
+      1. TEST LEVEL 1 — Simple (2-sentence math answer):
+         timeout 60 codex exec --color never --model gpt-5.5 --ephemeral - <<'EOF'
+         What is 17 + 25? Reply with just the number.
+         EOF
+         Record level1_exit_code, level1_stdout_first_100_chars, level1_success (true if
+         exit code 0 AND output contains "42").
+
+      2. TEST LEVEL 2 — Medium (read a file, write a JSON artifact):
+         Create /tmp/codex_test_input.txt with content "Test input: EBM verification."
+         timeout 120 codex exec --color never --model gpt-5.5 --ephemeral - <<'EOF'
+         Read the file /tmp/codex_test_input.txt. Then write a JSON file at
+         /tmp/codex_test_output.json containing {"read_content": "<content>",
+         "status": "ok", "experiment": "codex_level2_test"}.
+         Write the file then say Done.
+         EOF
+         Record level2_exit_code, level2_success (true if /tmp/codex_test_output.json
+         exists and contains "status": "ok").
+
+      3. TEST LEVEL 3 — Complex (multi-step Python script + JSON result):
+         timeout 180 codex exec --color never --model gpt-5.5 --ephemeral - <<'EOF'
+         Write a Python script at /tmp/codex_test_complex.py that:
+           1. Imports json, time, random
+           2. Computes random.seed(42); values = [random.random() for _ in range(10)]
+           3. Writes {"values": values, "mean": sum(values)/len(values), "status": "ok"}
+              to /tmp/codex_test_complex.json
+           4. Prints "Done."
+         Then run the script: python3 /tmp/codex_test_complex.py
+         Then read and print the output JSON.
+         EOF
+         Record level3_exit_code, level3_success (true if /tmp/codex_test_complex.json
+         exists and "status" == "ok").
+
+      4. Classify failure mode:
+         - If all 3 levels pass: codex_cli_healthy=true, complexity_threshold=3
+         - If level1 passes but level2 fails: codex_cli_healthy=false,
+           complexity_threshold=1, failure_mode="medium_complexity_failure"
+         - If level1+2 pass but level3 fails: codex_cli_healthy=false,
+           complexity_threshold=2, failure_mode="complex_task_failure"
+         - If level1 fails: codex_cli_healthy=false, complexity_threshold=0,
+           failure_mode="complete_backend_failure"
+
+      5. Failure signature check: look for the exact string "you finish the real work
+         inside 10 minutes, that is correct" in any level's stdout. If found:
+           failure_signature_matched=true, root_cause_hypothesis="transient_backend_echo"
+
+      6. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required. complete: with codex_cli_healthy boolean."
+      - codex_cli_healthy:
+          principle: "True only if ALL 3 levels pass — conservative gate for downstream tasks."
+      - codex_version:
+          principle: "Version string for reproducibility / regression detection."
+      - complexity_threshold:
+          principle: "Max complexity level (0-3) Codex handles reliably. 3 = fully healthy."
+      - failure_mode:
+          principle: "Classification of failure type — guides future diagnostic efforts."
+      - failure_signature_matched:
+          principle: "True if the .232/.234 prompt-echo signature is observed — confirms recurring pattern."
+      - level1_success:
+          principle: "Codex can answer trivial questions — baseline health check."
+      - level2_success:
+          principle: "Codex can read files and write JSON — conductor-task-level health."
+      - level3_success:
+          principle: "Codex can execute multi-step Python — full-task-level health."
+      - duration_s:
+          principle: "Guards against fabrication."
+
+    ACCEPTANCE GATES:
+      - condition: "codex_cli_healthy != null"
+        principle: "Must produce a definitive health boolean — even false is a valid result."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2422-hive-full-4verifier-v4
+  title: 'Phase 1: Full HIVE 4-Verifier Ensemble v4 (Tier 0f+0g+0h+0j) — Target AUROC > 0.90'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2422_hive_full_v4.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2408-hive-full-4verifier-v3
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2408 in .234 failed x3 with Codex CLI error (same backend pattern
+      as .232). exp2421 (Codex diagnostic v2) gates this task — only runs if Codex is
+      confirmed healthy at complexity level 3."
+    retire_if_same_verdict: true
+  - experiment_id: exp2398-hive-4verifier-ensemble-v2
+    verdict: complete_only_3_verifiers_fused
+    addressed_by: "exp2398 in .233 fused only 3 verifiers (AUROC=0.8539) because Tier 0f
+      (FreqAwareAttn, exp2397) was available but not read. This v4 explicitly reads
+      exp2397 artifact and fuses all 4 Tier 0 verifiers with calibrated abstention."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: HIVE (arXiv:2604.26139) achieves AUROC=0.9236 via 4-verifier soft-voting.
+    .233's HIVE ensemble (exp2398) achieved 0.8539 using only 3 verifiers — Tier 0f
+    (FreqAwareAttn, AUROC=0.7045) was available but NOT included. .234's attempt
+    (exp2408) failed via Codex CLI error. This v4 attempt is gated on the Codex
+    diagnostic confirming healthy CLI.
+
+    Available .233 verifier artifacts:
+      Tier 0f: results/experiment_2397_freq_aware_attn.json (freq_attn_auroc=0.7045)
+      Tier 0g: results/experiment_2351_semantic_energy_real.json (AUROC=0.6852)
+      Tier 0h: results/experiment_2368_laab_k17.json (LaaB logical consistency)
+      Tier 0j: results/experiment_2394_halt_tier0j.json (halt_k19j_auroc=0.8539)
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/verify/hive_ensemble.py (from exp2398 if present)
+      {project_root}/python/carnot/verify/freq_aware_attention.py (Tier 0f)
+      {project_root}/python/carnot/verify/halt_probe.py (Tier 0j)
+      {project_root}/python/carnot/verify/semantic_energy.py (Tier 0g)
+      {project_root}/python/carnot/verify/laab_verifier.py (Tier 0h)
+      {project_root}/results/experiment_2397_freq_aware_attn.json (Tier 0f scores)
+      {project_root}/results/experiment_2394_halt_tier0j.json (Tier 0j scores)
+      {project_root}/results/experiment_2398_hive_ensemble.json (.233 ensemble baseline)
+
+    TASK: Implement HiveEnsembleV4 fusing all 4 Tier 0 verifiers with calibrated abstention.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. sklearn importable: .venv/bin/python -c "import sklearn; print(sklearn.__version__)"
+            If missing: .venv/bin/pip install scikit-learn -q
+         b. Telemetry manifest present:
+            ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl
+            If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.
+         c. Count available Tier 0 verifier modules:
+            .venv/bin/python -c "
+            count = 0
+            for mod in ['carnot.verify.freq_aware_attention', 'carnot.verify.semantic_energy',
+                        'carnot.verify.laab_verifier', 'carnot.verify.halt_probe']:
+                try: __import__(mod); count += 1; print(f'OK: {mod}')
+                except Exception as e: print(f'MISSING: {mod}: {e}')
+            print(f'{count} verifiers available')
+            "
+            If count < 3: write honest_verdict blocked_insufficient_verifiers and exit.
+
+      1. Load verifier scores for all 36 telemetry entries used in exp2351:
+         a. For each of the 4 Tier 0 verifiers, call verify(entry) to get a score.
+         b. Build feature matrix X (n=36, d=4) and label vector y (ground truth labels).
+
+      2. Implement HiveEnsembleV4 at python/carnot/verify/hive_ensemble_v4.py:
+         a. Learn soft-vote weights via LogisticRegression with 5-fold CV
+            (CalibratedClassifierCV for probability calibration — HALT-RAG abstention pattern).
+         b. Calibrated abstention: when ensemble confidence < 0.6 (neither P(halluc)
+            nor P(clean) exceeds 0.6), set verdict = "uncertain" and score = 0.5.
+         c. AUROC computed on ALL 36 examples including uncertain ones.
+
+      3. Compute:
+         - hive_v4_auroc: AUROC on 36 examples
+         - hive_v4_vs_v2_delta: hive_v4_auroc - 0.8539 (.233 HIVE v2 baseline)
+         - ensemble_auroc_improved: hive_v4_auroc > 0.8539
+         - abstention_rate: fraction flagged "uncertain"
+         - n_verifiers_fused: must be 4
+         - verifier_weights: soft-vote weights per verifier
+
+      4. Run unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/verify/ -k "hive_v4 or hive_ensemble_v4" -v --no-cov 2>&1 | tail -15
+         Create test if none exists.
+
+      5. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required. complete: with ensemble AUROC."
+      - hive_v4_auroc:
+          principle: "Primary metric. Target > 0.9236 (HIVE peer). Honest result."
+      - hive_v4_vs_v2_delta:
+          principle: "hive_v4_auroc - 0.8539. Positive = improvement over .233 ensemble."
+      - ensemble_auroc_improved:
+          principle: "True if hive_v4_auroc > 0.8539 (.233 HIVE v2 baseline). Gate for capstone."
+      - n_verifiers_fused:
+          principle: "Must be 4 — all Tier 0 verifiers included."
+      - verifier_weights:
+          principle: "Soft-vote weights per verifier — reproducibility."
+      - abstention_rate:
+          principle: "Fraction of uncertain examples. HALT-RAG calibration signal."
+      - n_eval_examples:
+          principle: "Must be 36."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records verifier count, sklearn, telemetry checks."
+
+    ACCEPTANCE GATES:
+      - condition: "ensemble_auroc_improved == true"
+        principle: "v4 must beat v2 baseline 0.8539 — 4-verifier fusion improves over 3."
+      - condition: "n_verifiers_fused == 4"
+        principle: "All 4 Tier 0 verifiers must be fused — key change vs .233."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2423-hierarchical-logcons-v2
+  title: 'Phase 1: Hierarchical Alignment LogCons v2 (arXiv:2604.09075) — Z3 Instruction Hierarchy'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2423_hierarchical_logcons_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2409-hierarchical-logcons
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2409 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic — only runs when Codex is confirmed healthy."
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT: Hierarchical Alignment via Logical Consistency (arXiv:2604.09075, April 2026)
+    enforces hierarchical instruction compliance via Z3 partial-order constraint checking.
+    Achieves 91% adherence vs 67% baseline in nested instruction scenarios. This is a new
+    scope — no HierarchicalLogCons exists in the codebase. Baseline: FregeLogic AUROC=0.8831.
+    Note: Also integrate TruncProof grammar grounding (arXiv:2605.13076) as a structural
+    pre-check for syntactic validity before passing claims to Z3.
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/verify/fregelogic_hybrid.py (architecture reference)
+      {project_root}/python/carnot/verify/nsvif_z3_extractor.py (Z3 encoding reference)
+      {project_root}/results/experiment_2395_fregelogic.json (AUROC=0.8831 baseline)
+
+    TASK: Implement HierarchicalLogConsVerifier and evaluate on 36 telemetry entries.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. z3-solver importable: .venv/bin/python -c "import z3; print(z3.get_version_string())"
+            If missing: .venv/bin/pip install z3-solver -q
+         b. Telemetry manifest present:
+            ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl
+            If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.
+         c. Inspect telemetry for instruction fields:
+            .venv/bin/python -c "
+            import json
+            with open('{project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl') as f:
+                row = json.loads(f.readline())
+            instr_fields = [k for k in row.keys() if any(x in k.lower() for x in
+                            ['instruction', 'prompt', 'system', 'task', 'question'])]
+            print('instruction-like fields:', instr_fields)
+            "
+
+      1. Implement HierarchicalLogConsVerifier at python/carnot/verify/hierarchical_logcons.py:
+         Priority model:
+           Level 0 (highest): system-level constraints (safety, format)
+           Level 1: user-level instructions
+           Level 2: task-level requirements
+         TruncProof structural pre-check (arXiv:2605.13076):
+           Parse response for structural validity markers (balanced brackets, complete sentences).
+           If structural_valid=False: add structural_penalty=0.3 to logcons_score.
+         Consistency check via Z3:
+           Z3 assertion: claimed_level >= required_level (higher priority first).
+           If UNSAT: hierarchy_violation=True → hallucination signal.
+         Fallback (when hierarchy not detectable): use FregeLogic's Z3 verification with
+           priority_consistency_bonus based on sentence-level logical flow.
+         Output: logcons_score, hierarchy_violation, priority_level_used.
+
+      2. Evaluate on 36 entries (same split as exp2351):
+         logcons_auroc, logcons_vs_fregelogic_delta (baseline 0.8831),
+         hierarchy_violation_rate.
+
+      3. Unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/verify/ -k "logcons" -v --no-cov 2>&1 | tail -15
+
+      4. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - logcons_auroc:
+          principle: "Primary metric. Compare with FregeLogic 0.8831. Honest result."
+      - logcons_vs_fregelogic_delta:
+          principle: "LogCons - FregeLogic delta. Positive = improvement."
+      - hierarchy_violation_rate:
+          principle: "Fraction of examples with detected hierarchy violations."
+      - z3_encoding_used:
+          principle: "Whether Z3 partial-order was used or fallback."
+      - truncproof_structural_checks:
+          principle: "Number of examples where structural pre-check fired."
+      - n_eval_examples:
+          principle: "Must be 36."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records z3, telemetry, instruction-field checks."
+
+    ACCEPTANCE GATES:
+      - condition: "logcons_auroc != null AND n_eval_examples >= 30"
+        principle: "Must produce valid AUROC on sufficient data."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2424-halt-rag-nli-v2
+  title: 'Phase 1: HALT-RAG Calibrated NLI Ensemble v2 (arXiv:2509.07475) — Precision via Abstention'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2424_halt_rag_nli_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2410-halt-rag-nli-ensemble
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2410 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic — only runs when Codex is confirmed healthy."
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT: HALT-RAG (arXiv:2509.07475) combines frozen NLI model ensembles with
+    feature-based abstention for RAG hallucination detection. When ensemble confidence
+    < threshold, system abstains rather than making a low-confidence prediction.
+    This improves calibration and AUROC by removing lowest-confidence (highest-noise)
+    examples from the scored set.
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/verify/nsvif_z3_extractor.py (logical consistency)
+      {project_root}/python/carnot/verify/semantic_energy.py (logit-based score)
+      {project_root}/results/experiment_2395_fregelogic.json (AUROC=0.8831 baseline)
+
+    TASK: Implement HaltRagNliDetector v2 with calibrated abstention. Evaluate on 36 entries.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Telemetry manifest present:
+            ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl
+            If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.
+         b. sklearn importable: .venv/bin/python -c "import sklearn; print(sklearn.__version__)"
+         c. scipy importable: .venv/bin/python -c "import scipy; print(scipy.__version__)"
+
+      1. Implement HaltRagNliDetector at python/carnot/verify/halt_rag_nli.py:
+         NLI proxy (without pretrained NLI model):
+           Signal 1: SemanticEnergy score (logit variance proxy)
+           Signal 2: FreqAwareAttn score (stopword-frequency proxy)
+           Signal 3: HALT probe score (logprob kurtosis proxy)
+           Ensemble via CalibratedClassifierCV (sklearn) for probability calibration.
+         Abstention threshold: if max(P(halluc), P(clean)) < 0.65, abstain.
+         Output: halt_rag_score, abstained (bool), confidence, nli_signals_used.
+
+      2. Evaluate on 36 entries:
+         halt_rag_auroc_full: AUROC including abstained examples (score=0.5).
+         halt_rag_auroc_confident: AUROC on non-abstained examples only.
+         abstention_rate: fraction abstained.
+         halt_rag_vs_fregelogic_delta: halt_rag_auroc_full - 0.8831.
+
+      3. Unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/verify/ -k "halt_rag" -v --no-cov 2>&1 | tail -15
+
+      4. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - halt_rag_auroc_full:
+          principle: "AUROC on all 36 examples. Primary metric — honest result."
+      - halt_rag_auroc_confident:
+          principle: "AUROC on non-abstained only — calibration benefit."
+      - halt_rag_vs_fregelogic_delta:
+          principle: "halt_rag_auroc_full - 0.8831. Positive = improvement."
+      - abstention_rate:
+          principle: "Core HALT-RAG mechanism signal."
+      - n_verifiers_fused:
+          principle: "Number of NLI proxy signals used (should be 3)."
+      - n_eval_examples:
+          principle: "Must be 36."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records telemetry, sklearn, scipy checks."
+
+    ACCEPTANCE GATES:
+      - condition: "halt_rag_auroc_full != null AND n_eval_examples >= 30"
+        principle: "Must produce valid AUROC — even below baseline is a finding."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2425-fr11-nsvif-online-v4
+  title: 'Phase 2: FR-11 NSVIF Online Self-Learning v4 — MANDATORY Continuous Self-Learning Task'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2425_fr11_nsvif_online_v4.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  continuous_self_learning_task: true
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2411-fr11-nsvif-online-v3
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2411 in .234 failed x3 with Codex CLI error (all tasks failed in
+      .234). Gated on exp2421 Codex diagnostic. Root cause was Codex CLI backend failure,
+      not NSVIF scope issue — NSVIF Z3 extractor is confirmed working (exp2366, exp2395)."
+    retire_if_same_verdict: false
+  - experiment_id: exp2400-fr11-nsvif-online-v2
+    verdict: no_artifact_session_ended
+    addressed_by: "exp2400 produced no artifact in .233 due to session timeout (5 preceding
+      tasks ran over time budget). Infrastructure failure, not scope failure."
+    retire_if_same_verdict: false
+  - experiment_id: exp2383-fr11-nsvif-online-learning
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2383 failed x3 in .232 with Codex CLI error (transient backend,
+      diagnosed by exp2393). Same category as .234 failure; Codex diagnostic gates this."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: FR-11 (Autonomous Self-Learning Loop) is a MANDATORY functional requirement.
+    Every milestone must include at least one continuous_self_learning_task experiment.
+    This is the 4th attempt; all prior attempts failed due to Codex CLI infrastructure.
+
+    NSVIF Online Learning closes the verify→feedback→update loop:
+      1. Run NSVIF Z3 verification on 20 telemetry entries
+      2. For each UNSAT verdict: extract the failing constraint; add to constraint_patterns.json
+      3. Re-verify same 20 entries with updated constraint patterns
+      4. Measure: did updated patterns retain previously-SAT entries (retention rate)?
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/verify/nsvif_z3_extractor.py (NSVIFExtractor class)
+      {project_root}/results/experiment_2366_nsvif_verge_real.json (NSVIF real-data run)
+      {project_root}/results/experiment_2352_nsvif_extractor.json (NSVIF baseline)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. z3-solver: .venv/bin/python -c "import z3; print(z3.get_version_string())"
+            If missing: .venv/bin/pip install z3-solver -q
+         b. Telemetry manifest present:
+            ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl
+            If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.
+         c. NSVIF importable:
+            .venv/bin/python -c "from carnot.verify.nsvif_z3_extractor import NSVIFExtractor; print('OK')"
+            If missing: write honest_verdict blocked_nsvif_not_importable and exit.
+
+      1. Run initial NSVIF verification on first 20 telemetry entries.
+         Record initial_sat_count, initial_unsat_count, initial_sat_rate.
+
+      2. For each UNSAT entry: extract the constraint that failed.
+         Create/update {project_root}/results/constraint_patterns_v4.json:
+         {
+           "patterns": [
+             {"pattern": "<extracted_constraint>",
+              "hedge": "may_not_be_required",
+              "confidence": 0.5,
+              "added_at": "{date}",
+              "source_entry_idx": <idx>}
+           ]
+         }
+
+      3. Re-verify same 20 entries using updated constraint patterns.
+         For constraints tagged "may_not_be_required" with confidence < 0.6:
+           downgrade UNSAT to SAT (treat constraint as optional).
+         Record updated_sat_count, updated_sat_rate.
+
+      4. Compute:
+         cross_domain_retention_rate: initially-SAT entries that remain SAT after update.
+         self_learning_improvement: updated_sat_rate - initial_sat_rate.
+         n_patterns_added: len(constraint_patterns) after update.
+
+      5. Unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/verify/ -k "nsvif" -v --no-cov 2>&1 | tail -15
+
+      6. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - fr11_nsvif_online_passed:
+          principle: "True if self-learning loop ran (verify → update → re-verify)."
+      - cross_domain_retention_rate:
+          principle: "Fraction of SAT verdicts retained after update. FR-11 gate >= 0.50."
+      - self_learning_improvement:
+          principle: "updated_sat_rate - initial_sat_rate. Positive = learning worked."
+      - n_patterns_added:
+          principle: "Number of constraint patterns added to constraint_patterns_v4.json."
+      - initial_sat_rate:
+          principle: "Baseline before self-learning update."
+      - updated_sat_rate:
+          principle: "After self-learning update."
+      - n_eval_examples:
+          principle: "Must be 20."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records z3, telemetry, nsvif checks."
+
+    ACCEPTANCE GATES:
+      - condition: "fr11_nsvif_online_passed == true"
+        principle: "FR-11 mandatory: self-learning loop must complete."
+      - condition: "cross_domain_retention_rate >= 0.50"
+        principle: "Must not catastrophically degrade previously-correct SAT verdicts."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2426-fst-constrained-mcmc-v2
+  title: 'Phase 2: FST Constrained MCMC Generation v2 (arXiv:2506.05754) — MH Acceptance on PATH A'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2426_fst_constrained_mcmc_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2412-fst-constrained-mcmc
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2412 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic. FST pipeline is confirmed working (exp2399 validated PATH A GGUF)."
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT: Constrained Sampling for LLMs via MCMC Perspective (arXiv:2506.05754) proposes
+    treating any constraint set as an energy function and applying Metropolis-Hastings
+    acceptance/rejection. FST live PATH A GGUF inference was validated in .233 (exp2399).
+    This task adds MH-constrained generation: each proposed token is accepted/rejected based
+    on Carnot's energy constraints (Ising energy or NSVIF Z3 verdict).
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/pipeline/fst_pipeline.py (FST pipeline)
+      {project_root}/python/carnot/samplers/casal_sampler.py (MH acceptance pattern)
+      {project_root}/results/experiment_2399_fst_live_path_ab.json (PATH A baseline)
+      {project_root}/python/carnot/verify/nsvif_z3_extractor.py (constraint checker)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. FST pipeline importable:
+            .venv/bin/python -c "from carnot.pipeline.fst_pipeline import FSTpipeline; print('OK')" 2>/dev/null ||
+            .venv/bin/python -c "import carnot.pipeline; print(dir(carnot.pipeline))"
+         b. CASAL sampler importable:
+            .venv/bin/python -c "from carnot.samplers.casal_sampler import CASALSampler; print('OK')"
+         c. Telemetry manifest present:
+            ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl
+            If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.
+
+      1. Implement MCHFSTFilter at python/carnot/pipeline/mch_fst_filter.py:
+         MH acceptance: accept_prob = min(1, exp(-(energy_after - energy_before)))
+
+      2. Validate on 10 cached telemetry entries:
+         For each entry, simulate token-level MH acceptance:
+           energy_before = IsingEnergy(response[:t])
+           energy_after  = IsingEnergy(response[:t+1])
+           acceptance_rate = fraction of tokens accepted under MH rule
+         Compute: mean_acceptance_rate, mean_energy_reduction_ratio.
+
+      3. Compare MH-filtered vs unfiltered constraint violations (NSVIF):
+         mch_violation_reduction: (unfiltered_violations - mch_filtered_violations) / unfiltered_violations
+
+      4. Unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/pipeline/ -k "mch" -v --no-cov 2>&1 | tail -15
+
+      5. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - mch_filter_validated:
+          principle: "True if MCHFSTFilter ran on real cached telemetry."
+      - mean_acceptance_rate:
+          principle: "MH acceptance rate. Core effectiveness metric."
+      - mch_violation_reduction:
+          principle: "Fractional reduction in NSVIF violations."
+      - mean_energy_reduction_ratio:
+          principle: "Final/initial energy. <1 = MH filter reduces energy."
+      - n_eval_examples:
+          principle: "Number of cached entries evaluated."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records FST pipeline, CASAL, telemetry checks."
+
+    ACCEPTANCE GATES:
+      - condition: "mch_filter_validated == true"
+        principle: "MH filter must run on real cached data and produce acceptance rates."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2427-kv260-yosys-v4
+  title: 'Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean Since exp2372'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2427_kv260_yosys_v4.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2413-kv260-yosys-v3
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2413 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic. RTL is lint-clean since exp2372 (.231); infrastructure is the
+      only blocker."
+    retire_if_same_verdict: true
+  - experiment_id: exp2401-kv260-yosys-v2
+    verdict: no_artifact_session_ended
+    addressed_by: "exp2401 in .233 produced no artifact due to session timeout. Root cause:
+      session, not Yosys failure. RTL confirmed lint-clean (exp2372: lint_errors_count=0)."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: KV260 FPGA hardware track has lint-clean RTL since exp2372 (.231).
+    KV260 Yosys synthesis has been attempted 3 times without producing an artifact:
+    exp2384 (.232): Codex CLI error; exp2401 (.233): session timeout; exp2413 (.234): Codex CLI error.
+    This v4 is gated on exp2421 Codex health check.
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/hardware/kv260/ (RTL files)
+      {project_root}/results/experiment_2372_kv260_rtl_fix.json (lint_errors_count=0)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. yosys installed: command -v yosys && yosys --version
+            If missing: write honest_verdict blocked_yosys_not_installed and exit.
+         b. RTL source present:
+            ls {project_root}/hardware/kv260/*.v 2>/dev/null | head -5
+            If no .v files: write honest_verdict blocked_rtl_not_found and exit.
+
+      1. Run Yosys synthesis:
+         cd {project_root}/hardware/kv260 && yosys -p "
+           read_verilog *.v;
+           synth -top carnot_ising_top;
+           write_json {project_root}/results/kv260_synthesis_v4.json
+         " 2>&1 | tee /tmp/yosys_v4_output.txt | tail -40
+         synthesis_succeeded: true if exit code 0
+         lut_count, flip_flop_count, synthesis_warnings, synthesis_errors.
+
+      2. If synthesis succeeded AND xilinx target available:
+         yosys -p "synth_xilinx -top carnot_ising_top" 2>&1 | tail -20
+         Record xilinx_lut_count, xilinx_ff_count.
+
+      3. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - synthesis_succeeded:
+          principle: "True if Yosys completed without fatal errors."
+      - lut_count:
+          principle: "LUT count in synthesized design."
+      - flip_flop_count:
+          principle: "FF count — area estimate."
+      - synthesis_warnings:
+          principle: "Warning count."
+      - synthesis_errors:
+          principle: "Must be 0 for synthesis_succeeded=true."
+      - yosys_version:
+          principle: "Version string for reproducibility."
+      - rtl_files_synthesized:
+          principle: "List of .v files processed."
+      - duration_s:
+          principle: "Guards against fabrication — Yosys takes measurable wall time."
+      - preconditions_checked:
+          principle: "Records yosys binary check + RTL source check."
+
+    ACCEPTANCE GATES:
+      - condition: "synthesis_succeeded == true OR honest_verdict starts with 'blocked_'"
+        principle: "Must produce either a synthesis result or a structured blocked verdict."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2428-kinetic-langevin-v4
+  title: 'Phase 3: Kinetic Langevin BAOAB vs CASAL v4 (arXiv:2603.23397)'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2428_kinetic_langevin_v4.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2414-kinetic-langevin-v3
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2414 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic. Kinetic Langevin BAOAB is well-defined; scipy + numpy are available."
+    retire_if_same_verdict: true
+  - experiment_id: exp2402-kinetic-langevin-v2
+    verdict: no_artifact_session_ended
+    addressed_by: "exp2402 in .233 produced no artifact due to session timeout. Root cause:
+      session, not an implementation failure."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: Kinetic Langevin (arXiv:2603.23397) uses underdamped (second-order) Langevin
+    with BAOAB splitting for 2-4x faster mixing than overdamped on constrained distributions.
+    BAOAB: B(momentum kick) A(position half-step) O(noise) A(position half-step) B(kick).
+    This is the 4th attempt; all prior failed via Codex CLI or session timeout.
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/samplers/casal_sampler.py (CASAL baseline)
+      {project_root}/python/carnot/samplers/projected_langevin.py (PL reference)
+      {project_root}/results/experiment_2355_projected_langevin.json (PL KL delta +0.333)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. scipy: .venv/bin/python -c "import scipy; print(scipy.__version__)"
+         b. numpy: .venv/bin/python -c "import numpy; print(numpy.__version__)"
+
+      1. Implement KineticLangevinSampler at python/carnot/samplers/kinetic_langevin.py:
+         Parameters: gamma=1.0, kT=1.0, dt=0.01, n_steps=1000, random_seed=42.
+
+      2. Benchmark on 4x4 ferromagnetic Ising (N=16), 1000 samples:
+         kinetic_kl, casal_kl, kinetic_vs_casal_kl_delta.
+
+      3. Unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/samplers/ -k "kinetic" -v --no-cov 2>&1 | tail -15
+
+      4. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - kinetic_langevin_validated:
+          principle: "True if sampler ran on real Ising problem."
+      - kinetic_kl:
+          principle: "KL divergence of KineticLangevin samples from exact distribution."
+      - casal_kl:
+          principle: "CASAL baseline KL."
+      - kinetic_vs_casal_kl_delta:
+          principle: "casal_kl - kinetic_kl. Positive = KineticLangevin better."
+      - n_samples:
+          principle: "Must be 1000."
+      - n_spins:
+          principle: "Must be 16."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records scipy + numpy checks."
+
+    ACCEPTANCE GATES:
+      - condition: "kinetic_langevin_validated == true"
+        principle: "Sampler must produce samples and KL estimate on real Ising."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2429-dikin-langevin-v2
+  title: 'Phase 3: Dikin-Langevin Polytope Sampler v2 (arXiv:2510.04582) — Formal Convergence'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2429_dikin_langevin_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2415-dikin-langevin
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2415 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic. Dikin-Langevin is distinct from Projected-Langevin (exp2355)
+      and uses Dikin-ellipsoid local geometry."
+    retire_if_same_verdict: true
+  - experiment_id: exp983-langevin-sb-boltzmann-sampler
+    verdict: complete_langevin_sb_validated
+    addressed_by: "exp983 implemented Langevin-Boltzmann. Dikin-Langevin (arXiv:2510.04582)
+      uses Dikin-ellipsoid metric for near-optimal mixing — distinct algorithm."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: Dikin-Langevin (arXiv:2510.04582, Oct 2025) applies Dikin-walk Langevin
+    dynamics to polytope-constrained sampling. Dikin metric M(q) = diag(1/delta(q_i)^2)
+    where delta(q_i) = distance to boundary. This is the 2nd attempt; 1st failed via Codex CLI error.
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/samplers/projected_langevin.py (reference architecture)
+      {project_root}/results/experiment_2355_projected_langevin.json (PL KL delta +0.333)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. scipy + numpy importable (check both).
+
+      1. Implement DikinLangevinSampler at python/carnot/samplers/dikin_langevin.py:
+         Box constraints [-1, +1]^N: delta(q_i) = min(q_i - (-1), 1 - q_i)
+         Dikin metric: M(q) = diag(1/delta(q_i)^2)
+         Step: q += dt*(-grad_V + sqrt(2/dt)*M(q)^{-1/2}*noise). Project to box.
+
+      2. Benchmark on 4x4 ferromagnetic Ising (N=16), 1000 samples:
+         dikin_kl, casal_kl, projected_kl, dikin_vs_casal_kl_delta.
+
+      3. Unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/samplers/ -k "dikin" -v --no-cov 2>&1 | tail -15
+
+      4. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - dikin_langevin_validated:
+          principle: "True if DikinLangevinSampler ran on real Ising."
+      - dikin_kl:
+          principle: "KL divergence of Dikin samples."
+      - casal_kl:
+          principle: "CASAL baseline KL."
+      - dikin_vs_casal_kl_delta:
+          principle: "casal_kl - dikin_kl. Positive = Dikin better than CASAL."
+      - n_samples:
+          principle: "Must be 1000."
+      - n_spins:
+          principle: "Must be 16."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records scipy + numpy checks."
+
+    ACCEPTANCE GATES:
+      - condition: "dikin_langevin_validated == true"
+        principle: "Sampler must produce samples and KL estimate."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2430-de-psgld-v2
+  title: 'Phase 3: DE-PSGLD Decentralized Proximal SGLD v2 (arXiv:2605.00723) — vs CASAL'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2430_de_psgld_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2416-de-psgld
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2416 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic. DE-PSGLD (May 2026 paper) uses proximal regularization — distinct
+      algorithm from Projected-Langevin."
+    retire_if_same_verdict: true
+  prompt: |-
+    CONTEXT: DE-PSGLD (arXiv:2605.00723, May 2026) proposes Decentralized Proximal
+    Stochastic Gradient Langevin Dynamics for sampling from log-concave distributions
+    constrained to convex domains via proximal regularization. Proximal step avoids
+    expensive orthogonal projections. For box-constrained Ising: prox = clip(u, -1, 1).
+    This is the 2nd attempt; 1st failed via Codex CLI error.
+
+    EXISTING CODE TO READ FIRST:
+      {project_root}/python/carnot/samplers/projected_langevin.py (reference architecture)
+      {project_root}/results/experiment_2355_projected_langevin.json (PL KL delta +0.333)
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. scipy + numpy importable (check both).
+
+      1. Implement DEPSGLDSampler at python/carnot/samplers/de_psgld.py:
+         PSGLD step: q = clip(q - dt*grad_V(q) + sqrt(2*dt)*noise, -1, 1)
+         Parameters: dt=0.01, n_steps=1000, random_seed=42.
+
+      2. Benchmark on 4x4 ferromagnetic Ising (N=16), 1000 samples:
+         de_psgld_kl, casal_kl, de_psgld_vs_casal_kl_delta.
+
+      3. Unit test:
+         PYTEST_ADDOPTS="" .venv/bin/python -m pytest tests/python/samplers/ -k "de_psgld or psgld" -v --no-cov 2>&1 | tail -15
+
+      4. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - de_psgld_validated:
+          principle: "True if DEPSGLDSampler ran on real Ising."
+      - de_psgld_kl:
+          principle: "KL divergence of DE-PSGLD samples."
+      - casal_kl:
+          principle: "CASAL baseline KL."
+      - de_psgld_vs_casal_kl_delta:
+          principle: "casal_kl - de_psgld_kl. Positive = DE-PSGLD better."
+      - n_samples:
+          principle: "Must be 1000."
+      - n_spins:
+          principle: "Must be 16."
+      - random_seed:
+          principle: "Must be 42."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records scipy + numpy checks."
+
+    ACCEPTANCE GATES:
+      - condition: "de_psgld_validated == true"
+        principle: "Sampler must produce samples and KL estimate."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2431-phase1-ship-gate-v4
+  title: 'Phase 3: Phase 1 Ship Gate Audit v4 — PyPI + HF Mirror + CLI + MCP + Reproducer'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2431_phase1_ship_gate_v4.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 25
+  gated_on:
+  - upstream: exp2421-codex-cli-diagnostic-v2
+    artifact_field: codex_cli_healthy
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2417-phase1-ship-gate-v3
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2417 in .234 failed x3 with Codex CLI error. Gated on exp2421
+      Codex diagnostic. All 5 checks are simple curl + ls commands."
+    retire_if_same_verdict: true
+  - experiment_id: exp2403-phase1-ship-gate-v2
+    verdict: no_artifact_session_ended
+    addressed_by: "exp2403 in .233 produced no artifact due to session timeout."
+    retire_if_same_verdict: false
+  - experiment_id: exp2388-phase1-ship-gate-check
+    verdict: codex_cli_error_failed
+    addressed_by: "exp2388 in .232 failed x3 with Codex CLI error (transient backend).
+      Infrastructure failure, not scope failure."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: Phase 1 ship gate criteria (per CLAUDE.md Phase Vision):
+      1. PyPI package carnot-ebm published (pip install carnot-ebm works)
+      2. HuggingFace mirror: at least one model at huggingface.co/Carnot-EBM
+      3. MCP server documentation exists in docs/
+      4. CLI documentation exists in docs/
+      5. External reproducer: CI workflow + at least one test-results entry
+
+    This audit has been attempted 4 times without producing an artifact. This v4 attempt
+    is gated on exp2421 Codex diagnostic, placed in Phase 3 (earlier in queue).
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Network accessible:
+            curl -sf -o /dev/null https://pypi.org/pypi/carnot-ebm/json 2>/dev/null &&
+            echo "pypi_reachable" || echo "pypi_unreachable"
+            curl -sf -o /dev/null https://huggingface.co/Carnot-EBM 2>/dev/null &&
+            echo "hf_reachable" || echo "hf_unreachable"
+
+      1. PyPI check:
+         pypi_response=$(curl -sf https://pypi.org/pypi/carnot-ebm/json 2>/dev/null)
+         pypi_published: true if response contains '"version"'.
+         pypi_version: extract from response.
+
+      2. HuggingFace check:
+         hf_response=$(curl -sf "https://huggingface.co/api/models?search=carnot-ebm&limit=5" 2>/dev/null)
+         hf_mirror_up: true if at least 1 model found.
+
+      3. MCP docs: mcp_docs_present: ls {project_root}/docs/*mcp* 2>/dev/null | wc -l > 0
+
+      4. CLI docs: cli_docs_present: ls {project_root}/docs/*cli* 2>/dev/null | wc -l > 0
+
+      5. External reproducer:
+         ci_workflow_count: ls {project_root}/.github/workflows/*.yml 2>/dev/null | wc -l
+         external_reproducer_exists: true if ci_workflow_count > 0 AND test-results.md exists.
+
+      6. phase1_ship_gate_met: true if ALL 5 criteria pass.
+         missing_criteria: list of failed criteria.
+
+      7. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - phase1_ship_gate_met:
+          principle: "True if ALL 5 criteria pass. Phase 1 completion gate."
+      - pypi_published:
+          principle: "PyPI carnot-ebm package exists."
+      - pypi_version:
+          principle: "Latest PyPI version (null if not published)."
+      - hf_mirror_up:
+          principle: "HF Carnot-EBM has >= 1 model — decentralization Rule 3."
+      - mcp_docs_present:
+          principle: "MCP documentation exists for external integrators."
+      - cli_docs_present:
+          principle: "CLI documentation exists."
+      - external_reproducer_exists:
+          principle: "CI + test-results.md present."
+      - missing_criteria:
+          principle: "List of failed criteria — actionable next steps."
+      - duration_s:
+          principle: "Guards against fabrication."
+      - preconditions_checked:
+          principle: "Records network reachability checks."
+
+    ACCEPTANCE GATES:
+      - condition: "phase1_ship_gate_met != null"
+        principle: "Must evaluate and record gate boolean — even false is valid."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2432-paperv6-capstone-v235
+  title: 'Phase 4: Paper-v6 Results Table + Capstone v235 — AUROC Ceiling Assault Synthesis'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2432_capstone_v235.json
+  model: opus
+  max_turns: 60
+  requires_claude: true
+  gated_on:
+  - upstream: exp2422-hive-full-4verifier-v4
+    artifact_field: ensemble_auroc_improved
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2418-paperv6-capstone-v234
+    verdict: gate_block_upstream_retired
+    addressed_by: "exp2418 in .234 was GATE_BLOCKed because exp2408 (its upstream gate)
+      was retired due to Codex CLI error. This v235 capstone gates on exp2422 (HIVE v4)
+      which is now gated on the Codex diagnostic — a structural fix, not a scope change."
+    retire_if_same_verdict: false
+  - experiment_id: exp2404-paperv6-capstone-v233
+    verdict: complete_233_capstone_synthesis
+    addressed_by: "exp2404 synthesized .233 milestone results. This task synthesizes .235
+      results — different milestone, new verifier AUROC data from exp2422-2424."
+    retire_if_same_verdict: false
+  prompt: |-
+    CONTEXT: Milestone 2026.05.235 (Codex Recovery Sprint v2 + AUROC Ceiling Assault v4)
+    targets pushing AUROC past the HIVE peer ceiling of 0.9236. Key .233 baseline:
+    FregeLogic=0.8831. .234 produced 0 artifacts (Codex CLI failure). .235 adds:
+    Full 4-verifier HIVE ensemble v4 (exp2422), Hierarchical LogCons v2 (exp2423),
+    HALT-RAG NLI v2 (exp2424), FR-11 NSVIF v4 (exp2425), FST Constrained MCMC v2 (exp2426),
+    3 new samplers (exp2428-2430), KV260 Yosys v4 (exp2427), Phase 1 ship gate v4 (exp2431).
+
+    REQUIRES_CLAUDE JUSTIFICATION: (1) Codex has never successfully synthesized multi-
+    milestone AUROC capstones — prior successful capstones all used Claude (exp2376,
+    exp2404). (2) Reads 12+ experiment artifacts across 5+ directories with cross-
+    experiment AUROC reasoning. (3) Open-ended synthesis: which results close the HIVE
+    peer gap? Does Phase 1 ship gate progress change the paper submission timeline?
+    Multi-step reasoning under ambiguity — not mechanical computation.
+
+    EXISTING ARTIFACTS TO READ:
+      {project_root}/results/experiment_2422_hive_full_v4.json (HIVE v4 AUROC)
+      {project_root}/results/experiment_2423_hierarchical_logcons_v2.json (LogCons AUROC)
+      {project_root}/results/experiment_2424_halt_rag_nli_v2.json (HALT-RAG AUROC)
+      {project_root}/results/experiment_2425_fr11_nsvif_online_v4.json (FR-11 result)
+      {project_root}/results/experiment_2426_fst_constrained_mcmc_v2.json (MH acceptance)
+      {project_root}/results/experiment_2427_kv260_yosys_v4.json (synthesis result)
+      {project_root}/results/experiment_2428_kinetic_langevin_v4.json (KL delta)
+      {project_root}/results/experiment_2429_dikin_langevin_v2.json (Dikin KL delta)
+      {project_root}/results/experiment_2430_de_psgld_v2.json (DE-PSGLD KL delta)
+      {project_root}/results/experiment_2431_phase1_ship_gate_v4.json (ship gate)
+      {project_root}/results/experiment_2404_capstone.json (.233 capstone baseline)
+      {project_root}/results/experiment_2395_fregelogic.json (FregeLogic 0.8831 baseline)
+
+    TASK: Compile paper-v6 results table. Synthesize .235 key findings. Update ops/status.md.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. At least exp2422 artifact must exist (gate condition):
+            ls {project_root}/results/experiment_2422_hive_full_v4.json
+            If missing: write honest_verdict blocked_no_auroc_artifacts and exit.
+
+      1. Read all available artifacts. Extract:
+         - best_auroc_achieved: max AUROC across all .235 verifiers
+         - hive_v4_auroc: from exp2422
+         - logcons_auroc: from exp2423
+         - halt_rag_auroc_full: from exp2424
+         - auroc_gap_to_hive_peer: 0.9236 - best_auroc_achieved
+         - fr11_satisfied: from exp2425.fr11_nsvif_online_passed
+         - kv260_yosys_succeeded: from exp2427.synthesis_succeeded
+         - best_sampler_kl_delta: max(kinetic_vs_casal, dikin_vs_casal, de_psgld_vs_casal)
+         - phase1_ship_gate_met: from exp2431
+
+      2. Compile paper-v6 results table in Markdown:
+         | Verifier | AUROC | vs Baseline | Source |
+         |---|---|---|---|
+         (Include all verifiers from .231-.235)
+
+      3. Write synthesis: what .235 proved, what gap remains, hardware track status.
+
+      4. Append paper_v6_results_table and synthesis to ops/status.md (new section).
+
+      5. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required. complete: with best_auroc and gap."
+      - best_auroc_achieved:
+          principle: "Best AUROC from any .235 verifier. Paper-v6 headline metric."
+      - auroc_gap_to_hive_peer:
+          principle: "0.9236 - best_auroc_achieved. Primary progress signal."
+      - hive_v4_auroc:
+          principle: "HIVE 4-verifier ensemble AUROC (null if exp2422 failed)."
+      - fr11_satisfied:
+          principle: "FR-11 mandatory: true if exp2425.fr11_nsvif_online_passed=true."
+      - kv260_yosys_succeeded:
+          principle: "KV260 hardware track milestone."
+      - best_sampler_kl_delta:
+          principle: "Best KL improvement from new samplers."
+      - phase1_ship_gate_met:
+          principle: "Phase 1 completion gate."
+      - paper_v6_results_table:
+          principle: "Markdown table for paper-v6 Section 5."
+      - n_paper_ready_results:
+          principle: "Count of verifiers with AUROC > 0.685 baseline."
+      - duration_s:
+          principle: "Guards against fabrication."
+
+    ACCEPTANCE GATES:
+      - condition: "best_auroc_achieved != null"
+        principle: "Must have at least one AUROC result from .235."
+      - condition: "fr11_satisfied != null"
+        principle: "FR-11 status must be explicitly recorded — mandatory per CLAUDE.md."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+- id: exp2433-retro-v235
+  title: 'Phase 4: Milestone 2026.05.235 Operational Retrospective'
+  milestone: 2026.05.235
+  deliverable: results/experiment_2433_retro_v235.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 25
+  prompt: |-
+    CONTEXT: Milestone 2026.05.235 (Codex Recovery Sprint v2 + AUROC Ceiling Assault v4)
+    has completed. Write structured retrospective for all 14 tasks (exp2420-exp2433).
+
+    EXISTING ARTIFACTS TO READ (check which exist first):
+      {project_root}/results/experiment_2420_archive.json
+      {project_root}/results/experiment_2421_codex_diagnostic_v2.json
+      {project_root}/results/experiment_2422_hive_full_v4.json
+      {project_root}/results/experiment_2423_hierarchical_logcons_v2.json
+      {project_root}/results/experiment_2424_halt_rag_nli_v2.json
+      {project_root}/results/experiment_2425_fr11_nsvif_online_v4.json
+      {project_root}/results/experiment_2426_fst_constrained_mcmc_v2.json
+      {project_root}/results/experiment_2427_kv260_yosys_v4.json
+      {project_root}/results/experiment_2428_kinetic_langevin_v4.json
+      {project_root}/results/experiment_2429_dikin_langevin_v2.json
+      {project_root}/results/experiment_2430_de_psgld_v2.json
+      {project_root}/results/experiment_2431_phase1_ship_gate_v4.json
+      {project_root}/results/experiment_2432_capstone_v235.json
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Check which artifacts exist:
+            for f in 2420 2421 2422 2423 2424 2425 2426 2427 2428 2429 2430 2431 2432; do
+              ls {project_root}/results/experiment_${f}*.json 2>/dev/null && echo "present: $f" || echo "missing: $f"
+            done
+
+      1. Read each artifact. Extract: status, key_result.
+         Compute n_experiments_completed, n_failed, n_gate_blocks.
+
+      2. Compute:
+         - codex_cli_healthy: exp2421.codex_cli_healthy (null if exp2421 missing)
+         - best_235_verifier_auroc: max AUROC from exp2422-2424 (null if all missing)
+         - auroc_gap_to_hive_peer_at_235_close: 0.9236 - best_235_verifier_auroc
+         - fr11_satisfied: exp2425.fr11_nsvif_online_passed (null if missing)
+         - kv260_yosys_succeeded: exp2427.synthesis_succeeded (null if missing)
+         - phase1_ship_gate_met: exp2431.phase1_ship_gate_met (null if missing)
+         - best_sampler_kl_delta: max improvements from exp2428-2430
+
+      3. Write task_outcomes list (one entry per exp2420-exp2432).
+
+      4. Identify top_3_gaps_for_236: based on what .235 achieved and what remains.
+
+      5. Update ops/status.md with .235 summary (ADD — do not replace existing).
+
+      6. Write deliverable.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required. complete: with n_experiments_completed."
+      - retro_complete:
+          principle: "Must be true — this task always runs."
+      - n_experiments_completed:
+          principle: "Count of tasks with OK status."
+      - n_failed:
+          principle: "Count with FAIL status."
+      - n_gate_blocks:
+          principle: "Count gate-blocked tasks (from Codex CLI diagnostic gate)."
+      - codex_cli_healthy:
+          principle: "exp2421 result — key diagnostic for 236 planner."
+      - best_235_verifier_auroc:
+          principle: "Best AUROC from .235. Key progress metric."
+      - auroc_gap_to_hive_peer_at_235_close:
+          principle: "0.9236 - best_235_verifier_auroc. Remaining gap."
+      - fr11_satisfied:
+          principle: "FR-11 mandatory compliance flag."
+      - kv260_yosys_succeeded:
+          principle: "Hardware track milestone flag."
+      - phase1_ship_gate_met:
+          principle: "Phase 1 completion gate."
+      - best_sampler_kl_delta:
+          principle: "Best KL improvement from new samplers."
+      - task_outcomes:
+          principle: "Per-task status list — audit trail for .236 planner."
+      - top_3_gaps_for_236:
+          principle: "Ordered priority list — seed for .236 planning."
+      - milestone:
+          principle: "Must be '2026.05.235'."
+      - generated_at:
+          principle: "UTC timestamp."
+      - duration_s:
+          principle: "Guards against fabrication."
+
+    ACCEPTANCE GATES:
+      - condition: "retro_complete == true"
+        principle: "Retro always runs — it is the milestone close signal."
+
+    Do NOT push. Do NOT modify scripts/research_conductor.py.

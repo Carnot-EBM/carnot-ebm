@@ -13506,3 +13506,19 @@ This sweep was run during .226 planning. Targeted searches on: EBM neuro-symboli
 - **arXiv:2601.20055 — "VERGE: Formal Refinement and Guidance Engine for Verifiable LLM Reasoning"**: Combines LLM generation with SMT solver-based iterative refinement using Minimal Correction Subsets for precise error localization. Complements Carnot's energy-based verification by providing a formal repair path after the EBM flags a violation — the EBM detects, VERGE localizes and corrects. Carnot experiment hook: wire VERGE's MCS repair as an optional downstream step after Tier 3 Ising violation detection and measure repair success on 30 SMT-encodable math problems.
 
 - **arXiv:2603.01940 — "CoVe: Training Interactive Tool-Use Agents via Constraint-Guided Verification"**: Uses explicit task constraints as both trajectory generators and deterministic verifiers for synthetic training data. The dual-role constraint framework — generate AND verify — aligns with Carnot's architecture where the verifier ensemble both flags violations and guides repair. Carnot experiment hook: adapt CoVe's trajectory generation to produce (context, constraint, violation, repair) tuples for FR-11 self-learning training corpus.
+
+## 2026-05-18 Post-.234 Planning Sweep (Milestone 2026.05.235)
+
+This sweep was run after milestone `.234` closed with 0/13 tasks producing artifacts — second consecutive Codex CLI transient backend failure cascade (same "you finish the real work inside 10 minutes" error pattern as .232). FregeLogic AUROC=0.8831 remains the best result; HIVE peer ceiling 0.9236; gap=0.0405. Sweep focused on: (a) constrained generation, (b) hallucination detection, (c) grammar-constrained decoding, (d) any new Ising/KAN/EBM results in May 2026.
+
+### Graph-Constrained Generation for Hallucination Elimination
+- **arXiv:2605.14665 — "Falkor-IRAC: Knowledge Graph-Constrained Generation for Legal Reasoning"**: Uses graph constraints over legal knowledge graphs to eliminate hallucinated citations in legal text. Constraint-guided generation traverses the KG for each factual claim, rejecting proposals not grounded in the graph. Relevance to Carnot: Direct extension of the HIVE constraint approach; provides a structured-grounding signal analogous to Carnot's Ising energy over discrete constraint sets.
+
+### Grammar-Constrained JSON Generation with Token Budgets
+- **arXiv:2605.13076 — "TruncProof: Grammar-Constrained JSON Generation for LLMs"**: LL(1) parser-based constraint enforcement for syntactically valid JSON under token budget constraints. Recovers feasibility in 97% of cases where unconstrained generation produces malformed output. Relevance to Carnot: Complementary to NSVIF/Z3 extraction — can guarantee syntactic wellformedness of extracted constraint sets before passing to Z3 solver.
+
+### Schema-Guided Structured Extraction
+- **arXiv:2605.09927 — "JSON-Schema Guided LLM Pipeline for Structured Extraction"**: Guides generation by JSON schema constraints, improving structured extraction by 5.7% over conventional prompting. Relevance to Carnot: Compatible with the NSVIF constraint extraction pipeline; schema constraints provide a formal extraction target for the Z3 verifier.
+
+### Negative Constraint Decoding
+- **arXiv:2605.10065 — "NCO: Handling Negative Constraints in Constrained Decoding"**: Online pattern matching during generation enforces forbidden patterns (negative constraints). Relevance to Carnot: Negative constraints are the natural dual of Carnot's energy-based constraints — already referenced in .234 planning as NCO negative constraint decoding, now confirmed as relevant for the FST constrained generation track.

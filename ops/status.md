@@ -1,6 +1,39 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-18 (milestone 2026.05.234 research planning complete)
+**Last Updated:** 2026-05-18 (milestone 2026.05.235 research planning complete)
+
+## Session 2026-05-18 - Milestone 2026.05.235 Research Planning Complete
+
+**Milestone 2026.05.234 FAILED: 0/13 tasks completed.** ALL tasks failed with "Codex CLI error: you finish the real work inside 10 minutes, that is correct" — same Codex CLI transient backend failure pattern as .232. Only retro (exp2419) succeeded because it only scans missing artifacts.
+
+**Milestone 2026.05.235 PLANNED as Codex Recovery Sprint v2 + AUROC Ceiling Assault v4.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v235.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2420`–`exp2433`)
+- ID allocation: milestone `.234` used through `exp2419`, so `.235` starts at `exp2420`.
+- Research references updated with post-.234 planning sweep (4 papers): Falkor-IRAC graph-constrained generation (arXiv:2605.14665), TruncProof grammar-constrained JSON (arXiv:2605.13076), NCO negative constraints (arXiv:2605.10065, confirmed), JSON-Schema guided LLM pipeline (arXiv:2605.09927).
+- **Milestone title**: "Codex Recovery Sprint v2 + AUROC Ceiling Assault v4: Diagnostic Gate, HIVE v4, Hierarchical LogCons v2, FR-11 v4, KV260 Yosys v4, Sampler Suite v2"
+- **Root cause of .234 failure**: Recurring Codex CLI backend transient failure — same pattern as .232. .233 exp2393 diagnosed it as "transient OpenAI backend failure" that "resolved naturally," but .234 hit it again indicating a recurring capacity/rate-limit issue.
+- **State entering .235**:
+  - Best AUROC: FregeLogic=0.8831 (from .233, exp2395) — still holds
+  - HIVE peer ceiling: 0.9236 (gap = 0.0405)
+  - FR-11 NSVIF online learning: NEVER completed (4 consecutive failures)
+  - Phase 1 ship gate: NEVER audited (3 consecutive failures)
+  - KV260 Yosys synthesis: NEVER completed (3 consecutive failures — RTL lint-clean since exp2372)
+- **Design focus — structural gate on Codex health**:
+  1. exp2420 (archive .234, codex, ungated) — admin
+  2. exp2421 (Codex CLI Diagnostic v2, requires_claude:true, ungated) — 3-level complexity check; records `codex_cli_healthy` boolean
+  3. exp2422-exp2431 (all gated on `exp2421.codex_cli_healthy==true`) — HIVE v4, LogCons v2, HALT-RAG NLI v2, FR-11 v4, FST MCMC v2, Yosys v4, Kinetic Langevin v4, Dikin-Langevin v2, DE-PSGLD v2, Ship Gate v4
+  4. exp2432 (claude opus, requires_claude, gated on `exp2422.ensemble_auroc_improved==true`) — Paper-v6 Capstone
+  5. exp2433 (codex, ungated) — .235 Retro
+- **Agent routing**: 12 tasks codex/gpt-5.5; 2 tasks claude (exp2421: Codex diagnostic requires Claude to launch Codex tasks; exp2432: capstone synthesis)
+- **FR-11 satisfied**: exp2425 FR-11 NSVIF Online Self-Learning v4 with `continuous_self_learning_task: true`
+- **Exclusion manifest cross-check**: PASSED. None of the .235 tasks match retired scopes (gemini CLI, discriminative JEPA OOD, etc.).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.235. Critical path: exp2421 (Codex diagnostic) gates everything except exp2433 (retro). If `codex_cli_healthy==true`, all 9 Phase 1-3 tasks unblock. Key experiments to watch: exp2421 (will Codex be healthy this run?), exp2422 (HIVE v4 — will fusing all 4 Tier 0 verifiers push past 0.9236?), exp2425 (FR-11 — 4th attempt, must complete).
+
+---
 
 ## Session 2026-05-18 - Milestone 2026.05.234 Research Planning Complete
 

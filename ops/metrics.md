@@ -2717,4 +2717,12 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 |------|-------|-----|-------------|------|
 | 1 | 2026-05-17T08:37:31Z | 2026-05-17T08:38:04Z | Wrote operational retrospective for milestone 2026.05.216. Zero experiments were completed. | TBD |
 
+## Session: 2026-05-18 Milestone 2026.05.235 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-18T19:18:27Z | 2026-05-18T19:31:17Z | Plan milestone 2026.05.235: read 11 project files, arxiv sweep (4 new papers), create research-roadmap-next.yaml (14 tasks, exp2420-exp2433) and openspec/change-proposals/research-roadmap-v235.md, update ops/status.md and research-references.md. All CLAUDE.md mandatory disciplines applied (Codex-Default, prior_failures, PRECONDITIONS, principle-annotated fields, terminal-prefix verdicts). | TBD |
+
 Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
