@@ -1,5 +1,16 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-18 Milestone 2026.05.229 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-18T04:39:00Z | 2026-05-18T04:54:53Z | Read .228 operational retro, research-complete.yaml, research-references.md, exclusion_manifest.yaml; ArXiv research sweep (4 papers); wrote research-references.md prepend, research-roadmap-v229.md, research-roadmap-next.yaml (14 tasks exp2336–exp2349). Context compaction mid-session. | ~50k |
+| 2 | 2026-05-18T04:54:53Z | 2026-05-18T04:57:54Z | Ran validation scripts (validate_prior_failures — 1 violation for exp2338 missing prior_failures); added prior_failures block for exp772 + exp2103; re-ran validation (all_checks_pass); updated ops/status.md, ops/changelog.md, ops/metrics.md. | ~8k |
+
+Note: `scripts/session-metrics.py` not present in this checkout; authoritative token extraction unavailable.
+
 ## Session: 2026-05-18 Milestone 2026.05.228 Research Planning
 
 ### Turn Log

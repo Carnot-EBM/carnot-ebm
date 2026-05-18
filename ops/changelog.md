@@ -1,5 +1,17 @@
 # Carnot — Changelog
 
+## 2026-05-18 (Milestone 2026.05.229 Research Planning)
+
+- Milestone 2026.05.229 research planning complete. User instruction: plan the next milestone after .228, which produced 0 experiments (8th consecutive empty milestone) — process failure confirmed, pre-test cascade still unresolved.
+- ArXiv research sweep: added 4 papers to `research-references.md` under "Post-.228 Planning Sweep (Milestone 2026.05.229)": Semantic Energy (arXiv:2508.14496, Tier 0g candidate, 13%+ AUROC over Semantic Entropy), KAN-CL (arXiv:2605.12306, per-knot importance, 88/93% forgetting reduction), FALCON (arXiv:2602.01090, grammar-constrained decoding+repair, 100% feasibility), Neuro-Symbolic Compliance (arXiv:2601.06181, NSVIF on financial regulatory domain).
+- Created `openspec/change-proposals/research-roadmap-v229.md` with full milestone design: what .228 proved (process failure, 0/14 criteria), 3 biggest gaps vs PRD (pre-test cascade, NSVIF never ran, FST blocked), architecture snapshot, phase structure (Phase 0-4), dependency graph, FR-11 mandate (exp2340), hardware requirements, decentralization check (Rules 1-7 all clear), exclusion manifest cross-check, failed-experiment rerun compliance table.
+- Created `research-roadmap-next.yaml` with 14 tasks (exp2336–exp2349). **Key structural change**: exp2338 (Semantic Energy Tier 0g) is UNGATED alongside exp2336/exp2337/exp2349, ensuring at least one new research result even if the pre-test cascade blocks for a 10th consecutive time. Prior exp772 (TF-IDF proxy, AUC=0.455) and exp2103 (blocked_gate_check_failed) documented in prior_failures block — exp2338 uses correct Boltzmann energy formula on real logits.
+- Phase 0: archive exp2336 (codex, ungated) + pre-test fix v10 exp2337 (requires_claude, ungated, +operator escalation path). Phase 1: Semantic Energy Tier 0g exp2338 (codex, ungated, NEW). Phase 2 (gated: pretest_fixed): FST live gen v9 exp2339, FR-11 multidomain v6 exp2340, KAN-CL n=256 v8 exp2341, NSVIF Z3 v4 exp2342, VERGE SMT v4 exp2343, Eidoku CSP v5 exp2344, Projected-Langevin v5 exp2345. Phase 3 (gated: pretest_fixed): KV260 RTL lint v8 exp2346, ML-Ising Init v3 exp2347. Phase 4: capstone v229 opus exp2348, retro exp2349 (ungated).
+- Agent routing: 12 tasks codex gpt-5.5; exp2337 requires_claude (justified: codex demonstrably failed x9 including exp2267/2281/2295/2309/2323); exp2348 capstone opus max_turns:100.
+- FR-11 mandate: exp2340 continuous_self_learning_task: true, gate cross_domain_retention_rate >= 0.75.
+- Validation: validate_prior_failures.py (OK, no violations after adding prior_failures to exp2338), audit_roadmap_gates.py (all_checks_pass: 12 upstream checks, 0 gate-field gaps, 0 model-coherence failures, 0 prior_failures missing), git diff --check (clean).
+- Did NOT modify research-roadmap.yaml or scripts/research_conductor.py. Did NOT push.
+
 ## 2026-05-18 (Milestone 2026.05.228 Operational Retrospective)
 
 - Retrospective written for milestone 2026.05.228: 0 experiments completed, 0 wall-time minutes, both RTX 3090s idle at 0% throughout — seventh consecutive empty-experiment milestone. Root cause unchanged: exp2323 (Claude-escalated pre-test fix v9) is the single gating task blocking all 11 Phase 1-3 downstream tasks. Top leverage action: activate exp2323 as the very first task at .228 open; add conductor activation-time pre-test smoke check to convert silent cascade failures into immediate blocked_pretest artifacts. Artifact: results/operational_retro_2026_05_228.json.

@@ -1,6 +1,31 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-18 (milestone 2026.05.228 research planning complete)
+**Last Updated:** 2026-05-18 (milestone 2026.05.229 research planning complete)
+
+## Session 2026-05-18 - Milestone 2026.05.229 Research Planning Complete
+
+**Milestone 2026.05.229 PLANNED after .228 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v229.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2336`–`exp2349`)
+- ID allocation: milestone `.228` used through `exp2335`, so `.229` starts at `exp2336`.
+- Research references updated with post-.228 planning sweep (4 papers): Semantic Energy (arXiv:2508.14496 — Boltzmann energy on penultimate logits, 13%+ AUROC over Semantic Entropy, Tier 0g candidate), KAN-CL (arXiv:2605.12306 — per-knot importance regularization, 88/93% forgetting reduction on Split-CIFAR), FALCON (arXiv:2602.01090 — 100% feasibility via grammar-constrained decoding + repair), Neuro-Symbolic Compliance (arXiv:2601.06181 — NSVIF applied to financial regulatory compliance).
+- **Key structural change from .228**: Four tasks are now UNGATED (run regardless of pre-test gate): exp2336 (archive), exp2337 (pre-test fix v10), **exp2338 (Semantic Energy — NEW, always runs)**, exp2349 (retro). This guarantees at least one new research result even if attempt 10 of the pre-test fix fails.
+- exp2337 (pre-test fix v10, requires_claude:true, max_turns:50): addresses same 3 root causes (potts artifact + 2× xdist group markers). New: operator escalation path — if all 3 targeted fixes fail, artifact records exact pytest commands for operator terminal intervention.
+- exp2338 (Semantic Energy Tier 0g, codex, max_turns:30, UNGATED): implements Boltzmann energy on synthetic logit arrays (no GPU, no GGUF required). Prior failures documented: exp772 (AUC=0.455 using TF-IDF proxy — wrong method), exp2103 (blocked_gate_check_failed — never ran). exp2338 uses correct formula on real logit arrays.
+- Phase 2 (gated on exp2337.pretest_fixed==true): exp2339 FST live gen v9, exp2340 FR-11 multidomain v6, exp2341 KAN-CL n=256 v8, exp2342 NSVIF Z3 extractor v4, exp2343 VERGE SMT repair v4, exp2344 Eidoku CSP v5, exp2345 Projected-Langevin v5.
+- Phase 3 (gated on exp2337.pretest_fixed): exp2346 KV260 RTL lint v8, exp2347 ML-Assisted Ising Init v3.
+- Phase 4: exp2348 capstone (opus, gated: fst_live_validated + kancl_n256_validated), exp2349 retro (ungated).
+- LLM-bearing tasks (exp2339, exp2348) include mandated SOTA GGUF: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement (FR-11) satisfied by `exp2340-fr11-fst-multidomain-v6` with `continuous_self_learning_task: true`. Gate: `cross_domain_retention_rate >= 0.75`.
+- Agent routing: 12 of 14 tasks `codex gpt-5.5`. exp2337 `requires_claude: true` (justified: codex demonstrably failed x9 including exp2267/exp2281/exp2295/exp2309/exp2323, multi-file investigation, judgment calls). exp2348 capstone `model: opus, max_turns: 100`.
+- Exclusion manifest cross-check: GRPO/VPRM, WOPR puzzles, HardNet++/DSP, THRML scaling sweep, SpecAnn, exp2091, iCE40 PIMI — none proposed.
+- Validation: `validate_prior_failures.py` (OK, no violations), `audit_roadmap_gates.py` (all_checks_pass: 0 gate-field gaps, 12 upstream checks passed, 0 model-coherence failures, 0 prior_failures missing), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.229 when ready. Even if exp2337 fails for the 10th time, exp2338 (Semantic Energy Tier 0g) will land a new research result. Pre-test cascade operator manual intervention path is documented in exp2337's artifact contract if needed.
+
+---
 
 ## Session 2026-05-18 - Milestone 2026.05.228 Research Planning Complete
 

@@ -1,3 +1,27 @@
+## 2026-05-18 Post-.228 Planning Sweep (Milestone 2026.05.229)
+
+This sweep was run after milestone `.228` completed (0 experiments, 8th consecutive empty milestone; pre-test cascade exp2323 still unresolved). The sweep found new work in Boltzmann-energy hallucination detection, FALCON feasibility guarantees, KAN-CL per-knot importance validation, and neuro-symbolic compliance.
+
+### Semantic Energy: Detecting LLM Hallucination Beyond Entropy
+- **Paper:** "Semantic Energy: Detecting LLM Hallucination Beyond Entropy" (arXiv:2508.14496, Aug 2025).
+- **What:** Uses Boltzmann-inspired energy distributions on penultimate layer logits (not post-softmax probabilities), combined with semantic clustering, to detect hallucinations. Achieves 13%+ AUROC improvement over Semantic Entropy across multiple benchmarks.
+- **Relevance to Carnot:** Direct Tier 0g verifier candidate. Carnot's energy tiers use Boltzmann/Ising formulations; Semantic Energy applies the same principle at the representation layer — orthogonal to SpilledEnergy (Tier 0b) and Frequency-Aware Attention (Tier 0f). Candidate for exp2338 in .229 as first ungated research task that does NOT depend on the pre-test cascade.
+
+### KAN-CL: Per-Knot Importance Regularization
+- **Paper:** "KAN-CL: Per-Knot Importance Regularization for Continual Learning with Kolmogorov-Arnold Networks" (arXiv:2605.12306, May 2026).
+- **What:** Exploits KAN's compact-support spline parameterization to apply importance-weighted anchoring at per-knot granularity, achieving 88%/93% forgetting reduction on Split-CIFAR-10/5T and Split-CIFAR-100/10T. The key insight: KAN coefficients are spatially dormant outside their activation interval, providing natural task-specific separation.
+- **Relevance to Carnot:** This is the foundational paper for Carnot's KAN-CL experiments (exp2326/2342/etc.). Confirms the architectural approach: per-knot importance (not uniform EWC-style penalties) is the correct mechanism for catastrophic forgetting prevention in constraint learning.
+
+### FALCON: Hard Constraints Meet Soft Generation
+- **Paper:** "Hard Constraints Meet Soft Generation: Guaranteed Feasibility for LLM-based Combinatorial Optimization" (arXiv:2602.01090, Feb 2026).
+- **What:** First LLM-based combinatorial optimizer with provable 100% feasibility guarantees via grammar-constrained decoding plus feasibility repair operators that transform constraint-violating outputs into feasible ones. Adaptive Best-of-N sampling.
+- **Relevance to Carnot:** Extends the VERGE (arXiv:2601.20055) repair framework to combinatorial optimization. FALCON's feasibility repair operators are a production-ready complement to VERGE's MCS-based repair — once exp2343/2344 establish the VERGE baseline, FALCON-style operators can be added for hard-constraint satisfaction.
+
+### Neuro-Symbolic Compliance via LLMs + SMT
+- **Paper:** "Neuro-Symbolic Compliance: Integrating LLMs and SMT Solvers for Automated Financial Legal Analysis" (arXiv:2601.06181, Jan 2026).
+- **What:** Applies NSVIF-style neuro-symbolic Z3 verification to financial/regulatory compliance, achieving 100x+ improvement in reasoning efficiency vs baseline LLM. Demonstrates NSVIF's applicability beyond instruction-following verification.
+- **Relevance to Carnot:** Follow-up to exp2342 (NSVIF first run). Once NSVIF establishes a baseline on general instruction verification, this paper shows the extension path to high-value compliance domains (finance, healthcare) — directly addressing Carnot's "Tier B: Compliance Checker" product roadmap item.
+
 ## 2026-05-18 Post-.227 Planning Sweep (Milestone 2026.05.228)
 
 This sweep was run after milestone `.227` completed. Key finding: exp2309 fixed the 2 originally-named pre-test failures but uncovered 3 more (1 missing potts artifact + 2 xdist parallelism failures that pass in isolation). All 12 research tasks remained gate-blocked. The sweep found new work in frequency-aware hallucination detection, neurosymbolic policy formalization, and skew-reflected constrained Langevin dynamics.
