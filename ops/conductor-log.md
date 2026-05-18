@@ -4860,3 +4860,4 @@ Ripgrep i |
 | 2026-05-18 14:03 UTC | Phase 3: Kinetic Langevin Splitting vs CASAL (arXi | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 14:05 UTC | Phase 3: KAC RBF vs KAN-CL Hard Domains (arXiv:250 | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 14:07 UTC | Phase 3: KAC RBF vs KAN-CL Hard Domains (arXiv:250 | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 14:09 UTC | Phase 3: KAC RBF vs KAN-CL Hard Domains (arXiv:250 | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
