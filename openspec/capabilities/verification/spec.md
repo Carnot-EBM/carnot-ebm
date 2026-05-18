@@ -2369,6 +2369,42 @@ And correct supported steps return `satisfied=true`,
 And unsupported or non-entailed prose conclusions abstain instead of becoming
 false positives.
 
+### REQ-VERIFY-2353: VERGE MCS Repair Engine
+
+The repository shall provide a deterministic VERGE-style repair engine for Exp
+2353 that uses Z3 Minimal Correction Subsets to localize which violated
+NSVIF-extracted arithmetic claims must be relaxed before a response can become
+satisfiable.
+
+The repair engine shall:
+
+- define `python/carnot/repair/verge_repair.py` with an importable
+  `VergeRepairEngine`;
+- expose `find_mcs(constraints, violated)` returning the smallest subset of
+  violated constraint indices whose removal makes the remaining Z3 constraints
+  satisfiable;
+- expose `suggest_repair(response, violations)` returning a concrete textual
+  claim edit suggestion for supported arithmetic violations;
+- evaluate exactly ten deterministic arithmetic-error scenarios with
+  `random_seed=42`; and
+- write `results/experiment_2353_verge_repair.json` with `honest_verdict`,
+  `verge_repair_validated`, `mcs_repair_success_rate`,
+  `n_repair_scenarios`, and `random_seed`.
+
+`verge_repair_validated` MUST be true only when
+`mcs_repair_success_rate >= 0.50` on the ten-scenario repair set.
+
+### SCENARIO-VERIFY-2353: MCS Localizes Arithmetic Repair Claims
+
+Given NSVIF-extracted Z3 constraints from responses with one arithmetic error,
+When `VergeRepairEngine` checks the violated claim indices,
+Then its MCS result identifies the claim index whose relaxation restores
+satisfiability,
+And its repair suggestion rewrites the violated arithmetic claim to the exact
+computed value,
+And the Exp 2353 artifact records the ten-case success rate and terminal
+verdict.
+
 ### REQ-VERIFY-1878: ROCE Validator-Tree Compiler
 
 The repository shall provide a deterministic ROCE-to-validator-tree compiler
@@ -2680,6 +2716,7 @@ backend diagnostics for the reusable adapter.
 | REQ-VERIFY-1878 | Implemented (`python/carnot/pipeline/roce_validator_tree.py`) | Implemented (`tests/python/test_roce_validator_tree.py`) |
 | REQ-VERIFY-1879 | Implemented (`python/carnot/verify/roce_beaver_lite_bounds.py`) | Implemented (`tests/python/test_roce_beaver_lite_bounds.py`) |
 | REQ-VERIFY-1880 | Implemented (`python/carnot/verify/sota_roce_validator_eval.py`) | Implemented (`tests/python/test_sota_roce_validator_eval.py`) |
+| REQ-VERIFY-2353 | Implemented (`python/carnot/repair/verge_repair.py`) | Implemented (`tests/python/test_verge_repair.py`) |
 
 ### REQ-VERIFY-1593: CDG Repair Acceptance Rates
 The repository shall provide a CDG repair analysis tool that builds a CDG over runtime-contract cases, compares repair localization, and contrasts repair acceptance rates between flat check and CDG ordering using the mandated MODEL_SPECS.
