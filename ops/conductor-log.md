@@ -4874,3 +4874,4 @@ Ripgrep i |
 | 2026-05-18 15:09 UTC | Plan milestone 2026.05.233 | OK | 14 tasks proposed |
 | 2026-05-18 15:11 UTC | Phase 5: Capstone v232 — AUROC Closure Sprint Synt | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2382-fst-live-path-ab, exp2380-hive-4veri |
 | 2026-05-18 15:11 UTC | Milestone 2026.05.233 activated | OK | 14 tasks queued |
+| 2026-05-18 15:16 UTC | Phase 0: Archive .232 and activate .233 | OK | cache hit: 81 passed, 1 warning in 2.33s |
