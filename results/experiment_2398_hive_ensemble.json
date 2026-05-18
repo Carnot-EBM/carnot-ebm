@@ -1,0 +1,182 @@
+{
+  "acceptance_gates": {
+    "ensemble_auroc_improved": true,
+    "n_verifiers_fused_gte_2": true
+  },
+  "available_verifiers": [
+    "freq_aware_attention",
+    "semantic_energy",
+    "halt_probe"
+  ],
+  "base_verifier_aurocs": {
+    "freq_aware_attention": 0.7045454545454546,
+    "halt_probe": 0.8538961038961039,
+    "semantic_energy": 0.6883116883116883
+  },
+  "completed_at": "2026-05-18T16:24:23.940093Z",
+  "duration_s": 1.167016,
+  "ensemble_auroc_improved": true,
+  "evaluation_design": "Load the first 36 live SOTA balanced telemetry rows, collect available Tier 0 verifier scores, learn soft-vote weights inside each held-out fold, and compute weighted_score=sum(weight_i*score_i)/sum(weights).",
+  "experiment": 2398,
+  "field_principles": {
+    "duration_s": "Guards against fabrication.",
+    "ensemble_auroc_improved": "True if hive_ensemble_auroc > 0.685 (beats single-verifier baseline).",
+    "hive_ensemble_auroc": "Primary metric. Honest result - may be below 0.88, that is a finding.",
+    "hive_gap_closed_vs_hallscan": "0.88 - hive_ensemble_auroc. Negative = exceeded baseline. Key paper-v6 metric.",
+    "honest_verdict": "Terminal-prefix required. complete: with AUROC.",
+    "n_eval_examples": "Must be 36.",
+    "n_verifiers_fused": "How many Tier 0 verifiers contributed to ensemble.",
+    "preconditions_checked": "Records verifier count + telemetry check.",
+    "random_seed": "Must be 42.",
+    "verifier_weights": "Soft-vote weights per verifier - reproducibility."
+  },
+  "fold_details": [
+    {
+      "fold": 1,
+      "test_size": 8,
+      "train_size": 28,
+      "verifier_weights": {
+        "freq_aware_attention": 0.31495737518222755,
+        "halt_probe": 0.35787676289347436,
+        "semantic_energy": 0.32716586192429803
+      }
+    },
+    {
+      "fold": 2,
+      "test_size": 7,
+      "train_size": 29,
+      "verifier_weights": {
+        "freq_aware_attention": 0.3214647038934908,
+        "halt_probe": 0.3487213305944502,
+        "semantic_energy": 0.32981396551205905
+      }
+    },
+    {
+      "fold": 3,
+      "test_size": 7,
+      "train_size": 29,
+      "verifier_weights": {
+        "freq_aware_attention": 0.3258955832348435,
+        "halt_probe": 0.3424482906228524,
+        "semantic_energy": 0.331656126142304
+      }
+    },
+    {
+      "fold": 4,
+      "test_size": 7,
+      "train_size": 29,
+      "verifier_weights": {
+        "freq_aware_attention": 0.3180195598600439,
+        "halt_probe": 0.34362778674177075,
+        "semantic_energy": 0.3383526533981853
+      }
+    },
+    {
+      "fold": 5,
+      "test_size": 7,
+      "train_size": 29,
+      "verifier_weights": {
+        "freq_aware_attention": 0.3051594036113032,
+        "halt_probe": 0.37346403322305144,
+        "semantic_energy": 0.32137656316564533
+      }
+    }
+  ],
+  "hallscan_reference_auroc": 0.88,
+  "heldout_score_summary": {
+    "max": 0.9959238805513669,
+    "mean": 0.6585083548056289,
+    "min": 0.0009651735662655369,
+    "std": 0.36507709247613956
+  },
+  "hive_ensemble_auroc": 0.8538961038961039,
+  "hive_ensemble_validated": true,
+  "hive_external_reference_auroc": 0.9236,
+  "hive_gap_closed_vs_hallscan": 0.026103896103896074,
+  "honest_verdict": "complete: HiveEnsembleDetector fused 3 Tier 0 verifier scores on 36 cached telemetry entries; AUROC=0.853896.",
+  "module_path": "python/carnot/verify/hive_ensemble.py",
+  "n_eval_examples": 36,
+  "n_factual_examples": 22,
+  "n_hallucination_examples": 14,
+  "n_verifiers_fused": 3,
+  "preconditions_checked": {
+    "available_verifier_count": 3,
+    "available_verifiers": [
+      "freq_aware_attention",
+      "semantic_energy",
+      "halt_probe"
+    ],
+    "missing_verifiers": [
+      "laab_verifier"
+    ],
+    "skipped_verifier_errors": {
+      "laab_verifier": "ModuleNotFoundError: No module named 'carnot.verify.laab_verifier'"
+    },
+    "sklearn_importable": true,
+    "sklearn_version": "1.8.0",
+    "telemetry_fields": [
+      "adversarial_wrong_answer",
+      "blocker",
+      "case_id",
+      "completion_tokens",
+      "correct",
+      "correctness_label",
+      "elapsed_seconds",
+      "error",
+      "expected_answer",
+      "family",
+      "format_label",
+      "format_valid",
+      "generation_source",
+      "gpu",
+      "hf_id",
+      "intended_correct",
+      "intended_format_valid",
+      "known_verifier_label",
+      "logits_available",
+      "logits_shape",
+      "logprob_error",
+      "model_family",
+      "model_name",
+      "model_path",
+      "prompt",
+      "response_text",
+      "response_text_available",
+      "superficial_baselines",
+      "token_logprobs",
+      "token_logprobs_available",
+      "token_texts",
+      "top_logprobs",
+      "topk_alternatives_available",
+      "topk_position_count"
+    ],
+    "telemetry_manifest_path": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+    "telemetry_manifest_present": true,
+    "verifier_imports": {
+      "freq_aware_attention": true,
+      "halt_probe": true,
+      "laab_verifier": false,
+      "semantic_energy": true
+    }
+  },
+  "random_seed": 42,
+  "score_direction": "higher_score_means_more_hallucination_like",
+  "score_field": "hive_ensemble_score",
+  "semantic_energy_baseline_auroc": 0.685,
+  "skipped_verifiers": [
+    "laab_verifier"
+  ],
+  "source_artifact": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+  "spec_refs": [
+    "REQ-TIER0-012",
+    "SCENARIO-TIER0-012"
+  ],
+  "status": "complete",
+  "title": "HIVE-style learned soft-vote Tier 0 verifier ensemble",
+  "verifier_weights": {
+    "freq_aware_attention": 0.3170993251563818,
+    "halt_probe": 0.35322764081511987,
+    "semantic_energy": 0.32967303402849835
+  },
+  "weight_learning": "stratified_5_fold_logistic_regression_with_sigmoid_coefficient_weights"
+}

@@ -1986,6 +1986,49 @@ content-bearing tokens,
 **Spec traces:** REQ-TIER0-011, SCENARIO-TIER0-011, Exp 2397
 
 
+### REQ-TIER0-012: HIVE Soft-Vote Tier 0 Ensemble
+
+**Status:** Prototype (Exp 2398)
+
+`python/carnot/verify/hive_ensemble.py` shall implement `HiveEnsembleDetector`,
+a CPU-only HIVE-style soft-vote ensemble over the importable Tier 0f
+Frequency-Aware Attention, Tier 0g Semantic Energy, Tier 0h LaaB logical
+consistency, and Tier 0j HALT cached-logprob verifier modules.
+
+**Acceptance criteria:**
+- REQ-TIER0-012-1: The detector discovers the four Tier 0 verifier module names
+  and skips missing modules without failing module import.
+- REQ-TIER0-012-2: Evaluation requires at least two importable verifier modules,
+  a present `results/live_sota_balanced_telemetry_manifest_1480.jsonl`, and
+  importable scikit-learn.
+- REQ-TIER0-012-3: Soft-vote weights are learned from verifier score columns
+  using deterministic scikit-learn `LogisticRegression` inside a stratified
+  5-fold evaluation loop, and held-out weighted scores are computed as
+  `sum(weight_i * score_i) / sum(weights)`.
+- REQ-TIER0-012-4: `results/experiment_2398_hive_ensemble.json` records
+  `honest_verdict`, `hive_ensemble_auroc`,
+  `hive_gap_closed_vs_hallscan`, `ensemble_auroc_improved`,
+  `n_verifiers_fused`, `verifier_weights`, `n_eval_examples`,
+  `random_seed`, `duration_s`, and checked preconditions.
+- REQ-TIER0-012-5: If fewer than two Tier 0 verifier modules are importable, the
+  artifact reports `honest_verdict="blocked_insufficient_verifiers"` and does
+  not fabricate AUROC values.
+
+**Spec traces:** REQ-TIER0-012, Exp 2398
+
+
+### SCENARIO-TIER0-012: HIVE Ensemble Fuses Available Tier 0 Scores
+
+**Given** at least two importable Tier 0 verifier modules and the 36-row cached
+telemetry manifest,
+**When** the HIVE ensemble evaluates the split,
+**Then** it reports 36 held-out weighted scores, learned soft-vote weights per
+fused verifier, and an AUROC that is compared honestly against the 0.685
+Semantic Energy baseline and the 0.88 HalluScan reference.
+
+**Spec traces:** REQ-TIER0-012, SCENARIO-TIER0-012, Exp 2398
+
+
 ### REQ-TIER28-002: Typed CoT Verifier Between VERGE And Ising
 
 **Status:** Prototype (Exp 2396)
