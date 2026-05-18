@@ -1,6 +1,37 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-18 (milestone 2026.05.229 research planning complete)
+**Last Updated:** 2026-05-18 (milestone 2026.05.232 research planning complete)
+
+## Session 2026-05-18 - Milestone 2026.05.232 Research Planning Complete
+
+**Milestone 2026.05.232 PLANNED after .231 completion (first fully-complete milestone: 14/14 tasks).**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v232.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2378`–`exp2391`)
+- ID allocation: milestone `.231` used through `exp2377`, so `.232` starts at `exp2378`.
+- Research references updated with post-.231 planning sweep (3 papers): HIVE (arXiv:2604.26139, April 2026 — multi-verifier soft-voting ensemble, AUROC=0.9236, template for exp2380), DE-PSGLD (arXiv:2605.00723, May 2026 — Decentralized Proximal SGLD, candidate .233+), Typed CoT (arXiv:2510.01069, Oct 2025 — Curry-Howard framework for LLM reasoning verification, candidate Tier 2.8 for .233+).
+- **Milestone title**: "AUROC Closure Sprint: HALT k=19, HIVE Ensemble, FST Live PATH A/B, KV260 Yosys, Kinetic Langevin"
+- **Design focus — 3 critical gaps closed**:
+  1. AUROC still below HalluScan 0.88 baseline (best .231 real-data = 0.685 from exp2351) → exp2379 HALT Tier 0j + exp2380 HIVE 4-verifier ensemble (target > 0.88) + exp2381 FregeLogic Z3+neural
+  2. FST live PATH A/B never executed (.231 validated PATH C cached telemetry only) → exp2382 with llama_cpp/transformers live inference, PATH C fallback retained
+  3. Phase 1 ship gate unchecked (PyPI + HF mirror + docs + external reproducer) → exp2388 formal audit
+- Phase 0 (archive): exp2378 (codex, ungated)
+- Phase 1 (AUROC closure): exp2379 HALT Tier 0j (codex, ungated), exp2380 HIVE ensemble (codex, ungated), exp2381 FregeLogic (codex, ungated)
+- Phase 2 (FST live + self-learning): exp2382 FST PATH A/B (codex, ungated), exp2383 FR-11 NSVIF online (codex, ungated, continuous_self_learning_task:true)
+- Phase 3 (hardware + samplers): exp2384 KV260 Yosys (codex, ungated), exp2385 Kinetic Langevin (codex, ungated), exp2386 KAC RBF (codex, ungated)
+- Phase 4 (theory + ship gate): exp2387 NSVIF SMT-LIB (codex, ungated), exp2388 Phase 1 ship gate (codex, ungated), exp2389 paper-v6 table (codex, ungated)
+- Phase 5 (synthesis): exp2390 capstone (model:opus, gated: exp2382.fst_live_validated==true AND exp2380.n_verifiers_used>=2), exp2391 retro (codex, ungated)
+- **All tasks ungated except exp2390** — no pre-test cascade; .231 was the first complete milestone; all .232 tasks are independent new research.
+- LLM-bearing task (exp2382 FST PATH A/B) includes mandated SOTA GGUF: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement (FR-11) satisfied by `exp2383-fr11-nsvif-online-learning` with `continuous_self_learning_task: true`. Gate: `online_learning_completed == true AND n_violations_processed >= 10`.
+- **Agent routing**: 13 tasks `codex gpt-5.5`; 0 tasks `requires_claude:true`; exp2390 capstone `model: opus, max_turns: 100`. First milestone in many where NO task requires Claude — quota-efficient.
+- Exclusion manifest cross-check: GRPO/VPRM, WOPR puzzles, HardNet++/DSP, THRML scaling sweep, SpecAnn, exp2091, iCE40 PIMI, HalluSAEGeometricProbe, discriminative JEPA — none proposed. All 14 tasks are genuinely new scope.
+- Validation: `validate_prior_failures.py` (OK, no violations), `audit_roadmap_gates.py` (all_checks_pass: 2 upstream gate checks, 14 prior_failures checks, 0 gate-field gaps, 0 model-coherence failures, 0 prior_failures missing), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.232 when ready. All 13 non-capstone tasks can run in parallel/sequence without gates. Key experiments to watch: exp2380 (HIVE ensemble AUROC vs 0.88 HalluScan baseline) and exp2382 (first successful FST live PATH A or PATH B inference).
+
+---
 
 ## Session 2026-05-18 - Milestone 2026.05.229 Research Planning Complete
 

@@ -1,3 +1,25 @@
+## 2026-05-18 Post-.231 Planning Sweep (Milestone 2026.05.232)
+
+This sweep was run after milestone `.231` completed (14/14 tasks — first complete milestone; all six IMPLAUSIBLE_PERFECT .230 results replaced by realistic real-data counterparts; FST live gen first validated via PATH C; KV260 RTL lint fixed to 0 errors; HALT latent probe, HIVE ensemble, kinetic Langevin, and FregeLogic hybrid identified as highest-leverage next steps). Sweep focused on: (a) closing the AUROC gap to HalluScan 0.88 baseline, (b) FST live PATH A/B actual inference, (c) KV260 Yosys synthesis now that RTL is lint-clean, (d) faster constrained samplers, (e) Phase 1 ship gate check.
+
+### HIVE: Hidden-Evidence Verification Ensemble
+- **Paper:** "HIVE: Hidden-Evidence Verification for Hallucination Detection in Diffusion Large Language Models" (arXiv:2604.26139, April 2026).
+- **What:** Achieves AUROC=0.9236 via a multi-verifier soft-voting ensemble combining hidden-state probes, logit-distribution energy, and semantic consistency. Demonstrates 4%+ AUROC gain from ensemble fusion over best single verifier.
+- **Relevance to Carnot:** Direct template for exp2380 (HIVE-style ensemble of Tier 0g SemanticEnergy + Tier 0h LaaB + Tier 0i SpilledEnergy k=18 + Tier 0j HALT). HIVE's 0.9236 is the new competitive ceiling above HalluScan's 0.88. Carnot's ensemble architecture is structurally identical; gap closure depends on HALT addition.
+- **Sources:** https://arxiv.org/abs/2604.26139
+
+### DE-PSGLD: Decentralized Proximal Stochastic Gradient Langevin Dynamics
+- **Paper:** "Decentralized Proximal Stochastic Gradient Langevin Dynamics" (arXiv:2605.00723, May 2026).
+- **What:** Proposes DE-PSGLD for sampling from log-concave distributions constrained to convex domains via proximal regularization in a decentralized setting. Convergence guarantees without projection onto the constraint manifold.
+- **Relevance to Carnot:** Third constrained-sampling method (after Projected-Langevin exp2355, kinetic Langevin arXiv:2603.23397) that avoids expensive orthogonal projections. Candidate for .233+ after kinetic Langevin baseline established in .232 (exp2385).
+- **Sources:** https://arxiv.org/abs/2605.00723
+
+### Typed Chain-of-Thought via Curry-Howard Correspondence
+- **Paper:** "Typed Chain-of-Thought: A Curry-Howard Framework for Verifying LLM Reasoning" (arXiv:2510.01069, Oct 2025).
+- **What:** Maps informal CoT steps into formally typed proof structures using the Curry-Howard isomorphism; each reasoning step has an inferred type that can be checked for logical consistency. Achieves 85% proof-validity rate on FOLIO benchmark.
+- **Relevance to Carnot:** Complements NSVIF (step-level Z3 verification) by providing a type-theoretic alternative that doesn't require SMT encoding — potentially cheaper than Z3 for simple logical steps. Candidate Tier 2.8 verifier or NSVIF complement for .233+ experiments.
+- **Sources:** https://arxiv.org/abs/2510.01069
+
 ## 2026-05-18 Post-.230 Planning Sweep (Milestone 2026.05.231)
 
 This sweep was run after milestone `.230` completed (11/14 experiments — first productive milestone in 10+, with the pre-test cascade finally resolved; FST live gen produced no artifact as the conductor ran out of tasks; all .230 prototype results were IMPLAUSIBLE_PERFECT=1.0 on tiny synthetic corpora except Semantic Energy AUROC=0.685 on real data). Sweep focused on: (a) real-data adversarial validation methods, (b) new verifier architectures to close the AUROC gap to NLI baseline (0.88), (c) deterministic constraint satisfaction alternatives.
