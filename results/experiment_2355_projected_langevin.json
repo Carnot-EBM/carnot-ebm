@@ -1,0 +1,142 @@
+{
+  "casal_available": true,
+  "casal_error": null,
+  "casal_satisfaction_rate": 0.6666666666666666,
+  "constraint_satisfaction_rate": 1.0,
+  "energy_at_convergence": {
+    "casal": -0.05366015209829428,
+    "projected_langevin": -0.15603656788706774
+  },
+  "experiment": "2355_projected_langevin",
+  "field_principles": {
+    "constraint_satisfaction_rate": "Fraction of final samples satisfying all constraints. Primary quality metric.",
+    "honest_verdict": "Terminal-prefix required.",
+    "langevin_vs_casal_delta": "Projected-Langevin minus CASAL satisfaction rate. Positive = Langevin wins.",
+    "n_problems": "Must be 3.",
+    "projected_langevin_competitive": "True if projected-Langevin satisfaction_rate >= CASAL or CASAL not available.",
+    "random_seed": "Reproducibility. Must be 42."
+  },
+  "honest_verdict": "complete: Projected-Langevin matched or exceeded CASAL satisfaction (1.000 vs 0.667)",
+  "langevin_vs_casal_delta": 0.33333333333333337,
+  "n_problems": 3,
+  "n_steps": 100,
+  "problem_results": {
+    "casal": [
+      {
+        "energy_at_convergence": -0.03544770194156159,
+        "final_state": [
+          0.15752340853214264,
+          -0.15754668414592743,
+          0.1574384570121765,
+          0.15626293420791626
+        ],
+        "n_variables": 4,
+        "problem": "4-variable Ising with 2 linear constraints",
+        "satisfied": false
+      },
+      {
+        "energy_at_convergence": -0.030075632981137586,
+        "final_state": [
+          -0.23619012534618378,
+          0.014637112617492676,
+          -0.045368097722530365,
+          -0.253379225730896,
+          0.4893670082092285,
+          0.28898462653160095,
+          0.16577675938606262,
+          -0.17179706692695618
+        ],
+        "n_variables": 8,
+        "problem": "8-variable system with box constraints",
+        "satisfied": true
+      },
+      {
+        "energy_at_convergence": -0.09545712137218366,
+        "final_state": [
+          0.6848496794700623,
+          -0.21977829933166504,
+          -0.3881690502166748,
+          0.5695074200630188,
+          0.1155087798833847,
+          0.2052231878042221,
+          -0.668002188205719,
+          -0.6763392090797424,
+          0.38264286518096924,
+          0.24206054210662842,
+          -0.2867041826248169,
+          0.6759408712387085,
+          -0.33200281858444214,
+          0.7473124265670776,
+          -0.008876842446625233,
+          -0.04317336902022362
+        ],
+        "n_variables": 16,
+        "problem": "16-variable system with sum constraint",
+        "satisfied": true
+      }
+    ],
+    "projected_langevin": [
+      {
+        "energy_at_convergence": -0.12300351119873129,
+        "final_state": [
+          0.34850680327623185,
+          -0.3485068032737536,
+          0.5837789738190927,
+          0.5837789738160842
+        ],
+        "n_variables": 4,
+        "problem": "4-variable Ising with 2 linear constraints",
+        "satisfied": true
+      },
+      {
+        "energy_at_convergence": -0.11991745735614422,
+        "final_state": [
+          -0.07669476545463683,
+          -0.31456878728883714,
+          0.11820158365758825,
+          0.24569001473784408,
+          0.5,
+          0.4873410237771106,
+          -0.3511756470344177,
+          -0.4486874028755798
+        ],
+        "n_variables": 8,
+        "problem": "8-variable system with box constraints",
+        "satisfied": true
+      },
+      {
+        "energy_at_convergence": -0.22518873510632767,
+        "final_state": [
+          -0.28665253656867123,
+          0.2220829907009816,
+          0.4768635552348592,
+          0.19882376143924757,
+          -0.5076481013162029,
+          0.2758546714698457,
+          0.09129859111677709,
+          -0.015690559915970077,
+          0.4069021980351727,
+          -0.1744832506165803,
+          0.17551640091459192,
+          0.5000414459202456,
+          -0.034306052422219555,
+          0.10612597330912009,
+          -0.040962755359220226,
+          -0.3937663319416845
+        ],
+        "n_variables": 16,
+        "problem": "16-variable system with sum constraint",
+        "satisfied": true
+      }
+    ]
+  },
+  "projected_langevin_competitive": true,
+  "random_seed": 42,
+  "run_date": "20260518",
+  "schema": "carnot.experiment_2355_projected_langevin.v1",
+  "spec_refs": [
+    "REQ-SAMPLE-2355",
+    "SCENARIO-SAMPLE-2355"
+  ],
+  "status": "success"
+}

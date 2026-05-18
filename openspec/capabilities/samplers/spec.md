@@ -571,6 +571,40 @@ CASAL
 **And** `results/experiment_2246_casal_vs_adamflip.json` contains the required
 field-principle metadata for downstream capstone gating.
 
+### REQ-SAMPLE-2355: Projected-Langevin Constraint Sampler
+
+Carnot MUST provide a CPU-only Projected-Langevin sampler in
+`python/carnot/samplers/projected_langevin.py` that takes a Langevin step and
+then projects the state back onto explicit hard constraints.
+
+Sub-requirements:
+- REQ-SAMPLE-2355-1: `ProjectedLangevinSampler.sample()` SHALL accept
+  `sample(energy_fn, constraints, init, n_steps=100, step_size=0.01,
+  temperature=1.0)` and return the final NumPy state.
+- REQ-SAMPLE-2355-2: Box constraints of the form `x[i] in [lo, hi]` SHALL be
+  enforced by clamping after every Langevin update.
+- REQ-SAMPLE-2355-3: Linear equality constraints SHALL be enforced by gradient
+  projection so the 3-problem benchmark can cover linear and sum constraints.
+- REQ-SAMPLE-2355-4: Exp 2355 SHALL benchmark Projected-Langevin against CASAL
+  when CASAL is importable on exactly three CPU-only problems for 100 steps and
+  write `results/experiment_2355_projected_langevin.json`.
+- REQ-SAMPLE-2355-5: The artifact SHALL include `honest_verdict`,
+  `projected_langevin_competitive`, `constraint_satisfaction_rate`,
+  `langevin_vs_casal_delta`, `n_problems`, and `random_seed`.
+
+### SCENARIO-SAMPLE-2355: Projected-Langevin Benchmark Writes Terminal Artifact
+
+**Given** the Projected-Langevin sampler, three deterministic constrained
+energy problems, and random seed 42
+**When** Projected-Langevin and CASAL are each run for 100 steps where CASAL is
+available
+**Then** the artifact records final constraint satisfaction and energy for each
+sampler
+**And** `projected_langevin_competitive` is true when Projected-Langevin
+matches or exceeds CASAL satisfaction
+**And** `results/experiment_2355_projected_langevin.json` contains the required
+field-principle metadata.
+
 ### REQ-SAMPLE-2250: CASAL SamplerBackend Protocol Adapter
 
 Carnot MUST expose the CASAL primal-dual sampler through the sampler backend

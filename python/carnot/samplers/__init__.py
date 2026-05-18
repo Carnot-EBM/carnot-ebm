@@ -34,6 +34,7 @@ try:
     from .hmc import HMCSampler
     from .knuth_yao import KnuthYaoSampler
     from .langevin import LangevinSampler
+    from .projected_langevin import ProjectedLangevinSampler
     from .parallel_dense_ising import (
         ParallelDenseIsingConfig,
         ParallelDenseIsingInertia,
@@ -52,6 +53,7 @@ except ModuleNotFoundError as exc:
 else:
     __all__ = [
         "LangevinSampler",
+        "ProjectedLangevinSampler",
         "EquilibriumMatchingSampler",
         "ContinuousGumbelSampler",
         "CASALSampler",
