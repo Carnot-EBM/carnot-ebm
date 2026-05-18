@@ -4970,3 +4970,4 @@ Ripgrep i |
 | 2026-05-18 22:23 UTC | Phase 1: PCIB Tier 0l Verifier (arXiv:2601.15652)  | OK | 81 passed, 1 warning in 2.33s |
 | 2026-05-18 22:29 UTC | Phase 1: Hierarchical LogCons Z3-True v3 -- Force  | OK | 104 passed, 1 warning in 3.90s |
 | 2026-05-18 22:37 UTC | Phase 1: Conformal P-Value Ensemble v1 (arXiv:2508 | OK | 81 passed, 1 warning in 2.34s |
+| 2026-05-18 22:42 UTC | Phase 2: FR-11 Online Learnability of CoT Verifier | OK | 81 passed, 1 warning in 2.36s |
