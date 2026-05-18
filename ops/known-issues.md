@@ -320,6 +320,150 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 — Precondition-Gated, Not Fabricated (.237+ MANDATORY)
+
+**Origin:** 2026-05-18 23:55Z operator request after verifying both
+PolarFire SoC Discovery Kit and GateMate A1-EVB-2M are physically
+attached to the bench and udev rules are installed. The prior smoke
+attempt (exp1680 PolarFire smoke v2) is the canonical fabrication
+exemplar cited in CLAUDE.md "Pre-Launch Preconditions Discipline" —
+it reported TPR=1.0 with `run_duration_s=0` and never actually SSHed
+to the board. We now have the precondition machinery in place
+(PRECONDITIONS step 0 + adversarial_verify) to do this honestly.
+
+**State as of `.237 plan:**
+
+- PolarFire SoC: BOOTED, SSH-accessible via `ssh polarfire` (or
+  `ssh root@mpfs-disco-kit.local`). 4-core SiFive U54-MC, Linux
+  6.18.17 riscv64, Python 3.12, outbound network ✓ (uptime 4+ days
+  per latest check). Full bring-up state in
+  `ops/hardware-bringup-prep.md`.
+- udev rules `/etc/udev/rules.d/99-fpga-boards.rules` installed
+  2026-05-18; FlashPro5 (`1514:2008`) and DirtyJTAG (`1209:c0ca`)
+  now `660 root:uucp`, raw USB access works.
+- DirtyJTAG can detect the GateMate fabric (idcode `0x20000001`)
+  via openFPGALoader, so the JTAG chain is up for GateMate too.
+- Prior fabrication: exp1680 — `results/experiment_1680_polarfire_smoke_v2.json`
+  — retired per `ops/exclusion_manifest.yaml`. See CLAUDE.md
+  Pre-Launch Preconditions Discipline.
+
+**Mandatory task spec for `.237 planner:**
+
+```yaml
+- id: exp24XX-polarfire-soc-smoke-v3
+  title: "Phase 2: PolarFire SoC Discovery Kit Smoke v3 — Precondition-Gated Live Run"
+  agent_type: codex          # or claude if codex quota still exhausted
+  model: gpt-5.5             # gemini ok if GEMINI_FORCE_EXPERIMENTS=1
+  deliverable: results/experiment_24XX_polarfire_soc_smoke_v3.json
+  prior_failures:
+    - experiment_id: exp1680-polarfire-smoke-v2
+      verdict: blocked_fabrication_no_ssh_precondition
+      addressed_by: "exp1680 reported TPR=1.0 with run_duration_s=0
+        because there was no PRECONDITIONS step gating on SSH
+        reachability. This v3 task makes step 0 a mandatory SSH
+        precondition check that exits with honest_verdict
+        blocked_polarfire_ssh_unreachable on failure. CLAUDE.md
+        Pre-Launch Preconditions Discipline is now mechanically
+        enforced via adversarial_verify."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT: PolarFire SoC Discovery Kit is BOOTED and SSH-accessible
+    (uptime 4+ days, Linux 6.18.17 riscv64, SiFive U54-MC quad-core,
+    545 MiB RAM). Goal: a real, honest smoke test that proves Carnot
+    can dispatch a CPU-only computation to the RISC-V host and
+    receive a verifiable result. NOT yet a sampler or FPGA-fabric
+    test — just RISC-V host reachability with a measurable workload.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (run BEFORE any compute step; emit
+         blocked_<resource> verdict on failure):
+         a. SSH reachability: ssh -o ConnectTimeout=5 polarfire 'true'
+            returns 0. If not: honest_verdict
+            blocked_polarfire_ssh_unreachable, exit.
+         b. Remote python3 present: ssh polarfire 'python3 --version'
+            returns major>=3.10. If not:
+            blocked_polarfire_python_missing.
+         c. Remote disk space: ssh polarfire 'df -BM /' shows free
+            space >= 64 MiB. If not: blocked_polarfire_disk_full.
+         d. Remote uptime: capture for the artifact (proves we hit a
+            real OS, not a mock).
+         Record all precondition results in `preconditions_checked`.
+
+      1. Compute a deterministic, verifiable workload on the RISC-V
+         cores. A small concrete task:
+           a. Generate 1000 random integers locally with seed=42.
+           b. SCP them to the PolarFire as /tmp/carnot_smoke_input.txt.
+           c. Run `ssh polarfire 'python3 -c "
+                import hashlib, time, sys
+                t0 = time.time()
+                with open(\"/tmp/carnot_smoke_input.txt\") as f:
+                    nums = [int(x) for x in f.read().split()]
+                # CPU-bound deterministic compute: SHA-256 of the
+                # sorted concatenation. Verifiable against local
+                # computation.
+                h = hashlib.sha256(\" \".join(str(x) for x in sorted(nums)).encode()).hexdigest()
+                print(json.dumps({\"hash\": h, \"n\": len(nums),
+                  \"duration_s\": time.time() - t0}))"
+              '`
+           d. Locally compute the same hash with the same input.
+           e. Verify polarfire_hash == local_hash.
+
+      2. Capture board thermal state (per
+         ops/hardware-bringup-prep.md THERMAL CONSTRAINTS):
+         soc_temp_max_c = max value from
+         `ssh polarfire 'cat /sys/class/thermal/thermal_zone*/temp'`
+         divided by 1000. Include in artifact.
+
+      3. Adversarial-verify the produced artifact must pass:
+         - duration_s >= 5 (real network round-trip + SSH + python
+           startup floor is ~3-5s; <5s indicates fabrication)
+         - hash_matched is boolean and true
+         - preconditions_checked is populated with all 4 entries
+         - soc_temp_max_c is non-null and < 85
+         - run_uptime_s pulled from `uptime -p` proves we hit a real
+           multi-day-uptime board
+
+    REQUIRED ARTIFACT FIELDS (all MANDATORY):
+      - honest_verdict: principle "Terminal-prefix required (complete:/blocked_)."
+      - polarfire_ssh_reachable: principle "Records step 0a."
+      - polarfire_python_version: principle "Records step 0b."
+      - polarfire_free_disk_mib: principle "Records step 0c."
+      - polarfire_uptime_s: principle "Records step 0d — proves real OS."
+      - workload_hash_matched: principle "True iff PolarFire hash == local hash. Core correctness check."
+      - polarfire_hash: principle "Hash computed on the board."
+      - local_hash: principle "Local-computed reference."
+      - soc_temp_max_c: principle "Thermal monitoring per bring-up doc."
+      - duration_s: principle "Wall-clock, must be >= 5s for honest run."
+      - run_duration_s: principle "Same as duration_s (legacy field name compatibility)."
+      - random_seed: principle "Must be 42 for reproducibility."
+      - reproducibility_checksum: principle "Content-addressed hash of run inputs."
+      - preconditions_checked: principle "Required for Pre-Launch Preconditions Discipline."
+      - thermal_note: principle "Passive cooling disclaimer per bring-up doc."
+
+    ACCEPTANCE GATES:
+      - condition: "polarfire_ssh_reachable == true AND workload_hash_matched == true AND duration_s >= 5"
+        principle: "Real SSH round-trip + deterministic workload match + plausible wall-clock = not fabricated."
+```
+
+**Cross-references:**
+
+- `ops/hardware-bringup-prep.md` — full bring-up state
+- `docs/jtag-wiring-gatemate-dirtyjtag.md` — JTAG wiring reference for
+  GateMate (separate task; not part of this PolarFire smoke)
+- `CLAUDE.md` "Pre-Launch Preconditions Discipline (MANDATORY)" — the
+  rule this task embodies
+- `results/experiment_1680_polarfire_smoke_v2.json` — fabrication
+  exemplar; this v3 must NOT reproduce that failure
+- `ops/exclusion_manifest.yaml` — exp1680 retirement entry
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES.** The PolarFire
+board has been booted and accessible for 4+ days (per uptime check
+2026-05-18) but no honest Carnot experiment has touched it. The
+hardware sovereignty story in paper-v6 needs at least one published
+smoke result proving the board executes Carnot-dispatched compute.
+This is also the first artifact to fully exercise the Pre-Launch
+Preconditions Discipline machinery on a real hardware target.
+
 ### NEW 2026-05-11 (23:30Z): exp1850 THRML/Carnot Parity Refile — Methodology Correction (.148+ MANDATORY)
 
 **Origin:** 2026-05-11 23:30Z outer-loop (Claude) corrigendum after
