@@ -1875,6 +1875,32 @@ distribution,
 **Spec traces:** REQ-TIER0-007, SCENARIO-TIER0-007, Exp 2338
 
 
+### REQ-TIER0-008: HaltProbeDetector Cached-Logprob Probe (Tier 0j)
+
+**Status:** Prototype (Exp 2394)
+
+`python/carnot/verify/halt_probe.py` shall implement `HaltProbeDetector`, a
+CPU-only Tier 0j hallucination-risk probe for cached logprob telemetry when
+direct intermediate hidden states are unavailable.
+
+**Acceptance criteria:**
+- REQ-TIER0-008-1: `compute_halt_score(entry)` returns a finite float risk score
+  using available cached logprob fields.
+- REQ-TIER0-008-2: Training-free proxy A computes top-k logprob variance and
+  proxy B computes softmax(top-k logprob) kurtosis for entries with
+  `top_logprobs`.
+- REQ-TIER0-008-3: Lightweight proxy C fits a deterministic scikit-learn
+  `LogisticRegression` probe on logprob-derived features when labels are
+  supplied.
+- REQ-TIER0-008-4: `verify(entry)` returns `halt_risk_score`, `is_high_risk`,
+  and `proxy_used`.
+- REQ-TIER0-008-5: `results/experiment_2394_halt_tier0j.json` records AUROC,
+  mean risk score, proxy used, sample count, random seed 42, duration, checked
+  preconditions, and the Semantic Energy AUROC delta against the 0.685 baseline.
+
+**Spec traces:** REQ-TIER0-008, Exp 2394
+
+
 ### REQ-TIER28-001: DraftConditionedVerifier Tier 2.8 — Structural Constraint Injection
 
 **Status:** Implemented (Exp 912)

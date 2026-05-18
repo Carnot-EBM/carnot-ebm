@@ -4214,6 +4214,42 @@ external baselines without counting them as local paper-ready Carnot results.
 REQ-REPORT-2389 required fields, source-artifact availability, methodology
 notes, and a terminal-prefixed honest verdict.
 
+### REQ-REPORT-2378: Archive Milestone 2026.05.231 and Activate 2026.05.232
+
+The repository shall provide an Exp 2378 archive generator that writes
+`results/experiment_2378_archive.json` with schema
+`carnot.archive_activation.v1`.
+
+The generator must read the active `research-roadmap.yaml` milestone before
+making archive decisions. If the active milestone is `2026.05.231`, it must
+append the `2026.05.231` entry to `research-complete.yaml` when absent and copy
+`research-roadmap-next.yaml` over `research-roadmap.yaml` to activate
+`2026.05.232`. If the active milestone is already `2026.05.232`, it must avoid
+duplicate archive entries and set `archive_ready=true` only when
+`research-complete.yaml` contains `id: 2026.05.231`. If the active milestone is
+anything else, it must leave roadmap files unchanged and report the unexpected
+roadmap state honestly.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:`
+- `archive_ready`, true only when `research-complete.yaml` records
+  `id: 2026.05.231`
+- `milestone_archived`, equal to `2026.05.231`
+- precondition, archive, activation, acceptance-gate, and field-principle
+  evidence sufficient for conductor reconciliation
+
+#### SCENARIO-REPORT-2378: Idempotent .231 Archive and .232 Activation
+
+**Given** `research-roadmap.yaml` may already have been swapped by the
+conductor
+**And** `research-complete.yaml` may already contain `id: 2026.05.231`
+**When** the Exp 2378 archive generator runs
+**Then** it writes `results/experiment_2378_archive.json` with a
+terminal-prefixed `honest_verdict`, `archive_ready=true`,
+`milestone_archived=2026.05.231`, no duplicate archive entry, and no
+modification to `scripts/research_conductor.py`.
+
 ### REQ-REPORT-2391: Milestone 2026.05.232 Operational Retrospective
 
 The repository shall provide `scripts/experiment_2391_retro.py` to generate
