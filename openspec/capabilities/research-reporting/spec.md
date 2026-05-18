@@ -4178,3 +4178,38 @@ manual inspection commands and recommend manual inspection before milestone
 **And** result artifacts or missing-artifact evidence for Exp 2337, Exp 2338, Exp 2339, Exp 2341, Exp 2342, and Exp 2348
 **When** the Exp 2349 retrospective generator runs
 **Then** it writes `results/experiment_2349_retro.json` with schema `carnot.operational_retro.v72`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.229` gap closure records, explicit `pretest_cascade_status`, `ungated_tasks_completed`, and a quantified speedup target for milestone `.230`.
+
+### REQ-REPORT-2389: Paper-v6 Real-Data Results Table
+
+The repository shall provide a paper-v6 results-table compiler that reads the
+available milestone `.231` and `.232` result artifacts, records missing source
+artifacts honestly, writes `docs/paper_v6_results_table.md`, and emits
+`results/experiment_2389_paperv6_table.json`.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:` and including
+  `n_paper_ready_results`
+- `n_paper_ready_results`, counting only local results with `n_examples >= 30`
+  and no `IMPLAUSIBLE_PERFECT` provenance
+- `best_auroc_achieved`, the highest AUROC across available Carnot Tier 0
+  verifier rows
+- `hallscan_gap`, computed as `0.88 - best_auroc_achieved`
+- `results_table_written`
+- `n_missing_results`
+- `duration_s`
+
+The compiler must include HalluScan AUROC `0.88` and HIVE AUROC `0.9236` as
+external baselines without counting them as local paper-ready Carnot results.
+
+#### SCENARIO-REPORT-2389: Compile Paper-v6 Table From Available Artifacts
+
+**Given** some expected `.231` and `.232` result artifacts may be absent from
+`results/`
+**When** the Exp 2389 compiler runs
+**Then** it writes `docs/paper_v6_results_table.md` with columns
+`metric_name`, `value`, `n_examples`, `paper_ready`, `external_baseline`, and
+`gap_to_baseline`
+**And** it writes `results/experiment_2389_paperv6_table.json` with all
+REQ-REPORT-2389 required fields, source-artifact availability, methodology
+notes, and a terminal-prefixed honest verdict.

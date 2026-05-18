@@ -139,7 +139,7 @@ tasks:
              Proxy C: linear probe score from sklearn LogisticRegression on logprob features
            Select proxy based on available telemetry fields.
          - verify(entry: dict) -> dict:
-             returns {halt_risk_score: float, is_high_risk: bool, proxy_used: str}
+             returns {{halt_risk_score: float, is_high_risk: bool, proxy_used: str}}
          - This is Tier 0j (cheap, training-free for Proxy A/B; lightweight train for Proxy C).
 
       2. Evaluate on telemetry corpus:
@@ -249,8 +249,8 @@ tasks:
          - score(entry: dict) -> float:
              Run all available verifiers. Weighted average: sum(w_i * score_i) / sum(w_i)
          - verify(entry: dict) -> dict:
-             returns {ensemble_score: float, is_hallucinated: bool, per_verifier_scores: dict,
-                      weights_used: dict, n_verifiers_used: int}
+             returns {{ensemble_score: float, is_hallucinated: bool, per_verifier_scores: dict,
+                      weights_used: dict, n_verifiers_used: int}}
 
       2. Evaluate on ALL available telemetry rows (use all rows, not just 36):
          For each entry: run HiveEnsemble.score(entry).
@@ -357,8 +357,8 @@ tasks:
                    verdict = mean_neural_score (neural classifiers agree — use them)
              d. Else: run NSVIF Z3 extraction + verification as tiebreaker
                    verdict = z3_result
-             returns {frege_verdict: bool, frege_score: float, tiebreaker_used: bool,
-                      neural_vote_variance: float}
+             returns {{frege_verdict: bool, frege_score: float, tiebreaker_used: bool,
+                      neural_vote_variance: float}}
 
       2. Evaluate on 36 telemetry entries (same as exp2366):
          For each entry: run FregeLogicVerifier.verify(entry).
@@ -571,11 +571,11 @@ tasks:
          - __init__(self, extractor: NsvifExtractor, learning_rate: float = 0.01):
          - update_from_violation(response: str, violated_steps: list[str]) -> dict:
              For each violated step: extract token n-grams, upweight in pattern_weights dict.
-             Returns {patterns_updated: int, mean_weight_delta: float}
+             Returns {{patterns_updated: int, mean_weight_delta: float}}
          - update_from_coverage_miss(response: str) -> dict:
              For responses where no constraints extracted: add fallback pattern matching
              common grammatical templates missed by current patterns.
-             Returns {fallback_patterns_added: int}
+             Returns {{fallback_patterns_added: int}}
          - evaluate_coverage_improvement(test_corpus: list) -> float:
              Re-run NsvifExtractor on test corpus, return new extraction_coverage.
 
@@ -755,8 +755,8 @@ tasks:
     that typically achieves 2-4x faster mixing on smooth constraint manifolds.
 
     Kinetic Langevin update:
-      q_{t+1} = q_t + gamma * p_t  (position update via momentum)
-      p_{t+1} = p_t - gamma * grad_E(q) + sqrt(2*gamma) * xi  (momentum update with noise)
+      q_{{t+1}} = q_t + gamma * p_t  (position update via momentum)
+      p_{{t+1}} = p_t - gamma * grad_E(q) + sqrt(2*gamma) * xi  (momentum update with noise)
     Constraint enforcement: project q onto constraint manifold after each position step.
 
     Benchmark: compare kinetic Langevin vs CASAL vs projected-Langevin (exp2355 baseline)
@@ -978,7 +978,7 @@ tasks:
          - verify_response_against_policy(response: str, smt_assertions: list[str]) -> dict:
              Extract numerical claims from response (using regex for numbers).
              Build Z3 model with smt_assertions + extracted values.
-             Return {policy_satisfied: bool, violations: list[str], smt_assertions_count: int}
+             Return {{policy_satisfied: bool, violations: list[str], smt_assertions_count: int}}
 
       2. Define 3 policy domains (distinct from exp2373 financial compliance):
          Policy A: "All users must be >= 18 years old to access premium features"

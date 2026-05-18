@@ -1,0 +1,352 @@
+{
+  "acceptance_gates": {
+    "results_table_written": true
+  },
+  "best_auroc_achieved": 0.6852,
+  "duration_s": 0.000426,
+  "experiment": "2389_paperv6_results_table",
+  "external_baselines": {
+    "halluscan_auroc": 0.88,
+    "halluscan_source": "arXiv:2605.02443",
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139"
+  },
+  "field_principles": {
+    "best_auroc_achieved": "Highest AUROC across all Carnot Tier 0 verifiers. Tracks gap closure.",
+    "duration_s": "Guards against fabrication.",
+    "hallscan_gap": "0.88 - best_auroc_achieved. Tracks competitive baseline gap.",
+    "honest_verdict": "Terminal-prefix required. complete: with n_paper_ready_results.",
+    "n_missing_results": "Count of expected source results not yet available. Honest accounting.",
+    "n_paper_ready_results": "Count of results suitable for paper-v6 citation (n>=30, adversarial-cleared).",
+    "results_table_written": "True if docs/paper_v6_results_table.md was created/updated."
+  },
+  "hallscan_gap": 0.1948,
+  "honest_verdict": "complete: n_paper_ready_results=1; best_auroc_achieved=0.6852; hallscan_gap=0.1948; n_missing_results=11",
+  "n_missing_232_results": 4,
+  "n_missing_results": 11,
+  "n_paper_ready_results": 1,
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "results_table": [
+    {
+      "adversarial_cleared": true,
+      "external_baseline": "HalluScan AUROC 0.88",
+      "gap_to_baseline": 0.1948,
+      "is_external_baseline": false,
+      "methodology_note": "36 usable cached live Qwen3.6-35B-A3B telemetry rows; AUROC computed from cached-gguf-top-logprobs.",
+      "metric_name": "Tier 0g SemanticEnergy AUROC",
+      "metric_value": 0.6852,
+      "n_examples": 36,
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2351_semantic_energy_real.json",
+      "source_id": "exp2351",
+      "source_status": "available",
+      "value_kind": "auroc"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "HalluScan AUROC 0.88",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: LaaB assertion-alignment NLI on real model outputs",
+      "metric_name": "Tier 0h LaaB AUROC",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2368_laab_k17.json",
+      "source_id": "exp2368",
+      "source_status": "missing",
+      "value_kind": "auroc"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "HalluScan AUROC 0.88",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: SpilledEnergy k=18 logprob-compatible verifier on real outputs",
+      "metric_name": "Tier 0i SpilledEnergy k=18 AUROC",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2369_spilled_energy_k18.json",
+      "source_id": "exp2369",
+      "source_status": "missing",
+      "value_kind": "auroc"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "HalluScan AUROC 0.88",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: HALT latent-probe verifier on real telemetry outputs",
+      "metric_name": "Tier 0j HALT AUROC",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2379_halt_tier0j.json",
+      "source_id": "exp2379",
+      "source_status": "missing",
+      "value_kind": "auroc"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "HIVE external AUROC 0.9236",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: 4-verifier ensemble over Tier 0g, 0h, 0i, and 0j",
+      "metric_name": "HIVE 4-verifier ensemble AUROC",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2380_hive_ensemble.json",
+      "source_id": "exp2380",
+      "source_status": "missing",
+      "value_kind": "auroc"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: NSVIF Z3 verification over real Qwen3.6-35B outputs",
+      "metric_name": "NSVIF verification pass rate",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2366_nsvif_verge_real.json",
+      "source_id": "exp2366",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: VERGE repair over NSVIF-detected real-output violations",
+      "metric_name": "VERGE repair success rate",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2366_nsvif_verge_real.json",
+      "source_id": "exp2366",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: Verilator lint on KV260 Ising RTL after reserved-keyword fix",
+      "metric_name": "KV260 RTL lint errors",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2372_kv260_rtl_fix.json",
+      "source_id": "exp2372",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: Yosys generic or Xilinx synthesis of lint-clean KV260 RTL",
+      "metric_name": "KV260 Yosys synthesis succeeded",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2384_kv260_yosys.json",
+      "source_id": "exp2384",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: KAN-CL B-spline continual-learning stress test on hard domains",
+      "metric_name": "KAN-CL hard-domain forgetting reduction pct",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2374_kancl_hard_domains.json",
+      "source_id": "exp2374",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: FST PATH C cached telemetry validation on real model outputs",
+      "metric_name": "FST cached-telemetry validation",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2365_fst_live_gen.json",
+      "source_id": "exp2365",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: FST PATH A/B live llama.cpp or transformers inference attempt",
+      "metric_name": "FST live inference completed",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2382_fst_live_path_ab.json",
+      "source_id": "exp2382",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": false,
+      "external_baseline": "none",
+      "gap_to_baseline": null,
+      "is_external_baseline": false,
+      "methodology_note": "missing source artifact; planned method: FR-11 fast/slow cross-domain retention on real GGUF outputs",
+      "metric_name": "FR-11 cross-domain retention rate",
+      "metric_value": null,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2375_fr11_real_csl.json",
+      "source_id": "exp2375",
+      "source_status": "missing",
+      "value_kind": "scalar"
+    },
+    {
+      "adversarial_cleared": true,
+      "external_baseline": "external baseline",
+      "gap_to_baseline": null,
+      "is_external_baseline": true,
+      "methodology_note": "Published external HalluScan baseline from arXiv:2605.02443; not re-evaluated locally.",
+      "metric_name": "HalluScan external baseline AUROC",
+      "metric_value": 0.88,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "arXiv:2605.02443",
+      "source_id": "halluscan_external",
+      "source_status": "external",
+      "value_kind": "auroc"
+    },
+    {
+      "adversarial_cleared": true,
+      "external_baseline": "external baseline",
+      "gap_to_baseline": null,
+      "is_external_baseline": true,
+      "methodology_note": "Published external HIVE baseline from arXiv:2604.26139; not re-evaluated locally.",
+      "metric_name": "HIVE external baseline AUROC",
+      "metric_value": 0.9236,
+      "n_examples": null,
+      "paper_ready": false,
+      "source_artifact": "arXiv:2604.26139",
+      "source_id": "hive_external",
+      "source_status": "external",
+      "value_kind": "auroc"
+    }
+  ],
+  "results_table_path": "docs/paper_v6_results_table.md",
+  "results_table_written": true,
+  "run_date": "20260518",
+  "schema": "carnot.paper_v6_results_table.v1",
+  "source_artifact_status": {
+    "exp2351": {
+      "available": true,
+      "honest_verdict": "complete: SemanticEnergyDetector validated on cached live GGUF top-k logprob vectors; AUROC=0.685200 on 100 bootstrapped examples.",
+      "milestone": "2026.05.230 carry-forward",
+      "path": "results/experiment_2351_semantic_energy_real.json",
+      "source_id": "exp2351",
+      "status": "available"
+    },
+    "exp2365": {
+      "available": false,
+      "milestone": "2026.05.231",
+      "path": "results/experiment_2365_fst_live_gen.json",
+      "source_id": "exp2365",
+      "status": "missing"
+    },
+    "exp2366": {
+      "available": false,
+      "milestone": "2026.05.231",
+      "path": "results/experiment_2366_nsvif_verge_real.json",
+      "source_id": "exp2366",
+      "status": "missing"
+    },
+    "exp2368": {
+      "available": false,
+      "milestone": "2026.05.231",
+      "path": "results/experiment_2368_laab_k17.json",
+      "source_id": "exp2368",
+      "status": "missing"
+    },
+    "exp2369": {
+      "available": false,
+      "milestone": "2026.05.231",
+      "path": "results/experiment_2369_spilled_energy_k18.json",
+      "source_id": "exp2369",
+      "status": "missing"
+    },
+    "exp2372": {
+      "available": false,
+      "milestone": "2026.05.231",
+      "path": "results/experiment_2372_kv260_rtl_fix.json",
+      "source_id": "exp2372",
+      "status": "missing"
+    },
+    "exp2374": {
+      "available": false,
+      "milestone": "2026.05.231",
+      "path": "results/experiment_2374_kancl_hard_domains.json",
+      "source_id": "exp2374",
+      "status": "missing"
+    },
+    "exp2375": {
+      "available": false,
+      "milestone": "2026.05.231",
+      "path": "results/experiment_2375_fr11_real_csl.json",
+      "source_id": "exp2375",
+      "status": "missing"
+    },
+    "exp2379": {
+      "available": false,
+      "milestone": "2026.05.232",
+      "path": "results/experiment_2379_halt_tier0j.json",
+      "source_id": "exp2379",
+      "status": "missing"
+    },
+    "exp2380": {
+      "available": false,
+      "milestone": "2026.05.232",
+      "path": "results/experiment_2380_hive_ensemble.json",
+      "source_id": "exp2380",
+      "status": "missing"
+    },
+    "exp2382": {
+      "available": false,
+      "milestone": "2026.05.232",
+      "path": "results/experiment_2382_fst_live_path_ab.json",
+      "source_id": "exp2382",
+      "status": "missing"
+    },
+    "exp2384": {
+      "available": false,
+      "milestone": "2026.05.232",
+      "path": "results/experiment_2384_kv260_yosys.json",
+      "source_id": "exp2384",
+      "status": "missing"
+    }
+  },
+  "spec": [
+    "REQ-REPORT-2389",
+    "SCENARIO-REPORT-2389"
+  ],
+  "status": "complete"
+}
