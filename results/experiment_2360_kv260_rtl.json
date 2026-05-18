@@ -1,0 +1,368 @@
+{
+  "experiment": 2360,
+  "finished_at": "2026-05-18T10:42:04.029462+00:00",
+  "full_tree_lint_note": "A literal all-.v sweep was attempted first; it reached hardware/kv260/potts_sampler_v1.v and was stopped after that non-Ising file exceeded the bounded interactive run. The terminal counts above are for the KV260 Ising RTL scope requested by Exp 2360.",
+  "hardware_claim_allowed": false,
+  "hardware_execution_performed": false,
+  "honest_verdict": "complete: rtl_lint_failed_25_error_lines_simulation_passed",
+  "lint_errors_count": 25,
+  "lint_results": [
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_inertia_n8_sparse_v2.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_inertia_n8_sparse_v2.v",
+      "error": "",
+      "lint_errors_count": 4,
+      "lint_warnings_count": 0,
+      "path": "hardware/kv260/ising_inertia_n8_sparse_v2.v",
+      "returncode": 1,
+      "stderr_summary": "%Error: hardware/kv260/ising_inertia_n8_sparse_v2.v:172:24: syntax error, unexpected strong\n  172 |             wire       strong;    \n      |                        ^~~~~~\n        ... See the manual at https://verilator.org/verilator_doc.html?v=5.047 for more assistance.\n%Error: hardware/kv260/ising_inertia_n8_sparse_v2.v:183:20: syntax error, unexpected strong\n  183 |             assign strong  = emag[2];   \n      |                    ^~~~~~\n%Error: hardware/kv260/ising_inertia_n8_sparse_v2.v:191:33: syntax error, unexpected strong, expecting IDENTIFIER-for-type\n  191 |                               (~strong) ? (rnd == 2'b00) :  \n      |                                 ^~~~~~\n%Error: Exiting due to 3 error(s)",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_pimi_n8_sparse_v4.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_pimi_n8_sparse_v4.v",
+      "error": "",
+      "lint_errors_count": 0,
+      "lint_warnings_count": 0,
+      "path": "hardware/kv260/ising_pimi_n8_sparse_v4.v",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "- V e r i l a t i o n   R e p o r t: Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)\n- Verilator: Built from 0.034 MB sources in 2 modules, into 0.089 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.016 s (elab=0.002, cvt=0.009, bld=0.000); cpu 0.016 s on 1 threads; allocated 21.102 MB",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_pimi_n8_synchronous_v3.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_pimi_n8_synchronous_v3.v",
+      "error": "",
+      "lint_errors_count": 0,
+      "lint_warnings_count": 0,
+      "path": "hardware/kv260/ising_pimi_n8_synchronous_v3.v",
+      "returncode": 0,
+      "stderr_summary": "",
+      "stdout_summary": "- V e r i l a t i o n   R e p o r t: Verilator 5.047 devel rev v5.046-331-g2cd9b8df6 (mod)\n- Verilator: Built from 0.035 MB sources in 2 modules, into 0.092 MB in 3 C++ files needing 0.000 MB\n- Verilator: Walltime 0.017 s (elab=0.002, cvt=0.009, bld=0.000); cpu 0.017 s on 1 threads; allocated 21.105 MB",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_128_sparse.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_128_sparse.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 16,
+      "path": "hardware/kv260/ising_sampler_128_sparse.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-WIDTHEXPAND: hardware/kv260/ising_sampler_128_sparse.v:213:34: Bit extraction of array[16383:0] requires 14 bit index, not 12 bits.\n                                                                      : ... note: In instance 'ising_sampler_128_sparse'\n  213 |                         coupl_ram[(S_AXI_AWADDR[13:2])] <= S_AXI_WDATA;\n      |                                  ^\n                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.047\n                      ... Use \"/* verilator lint_off WIDTHEXPAND */\" and lint_on around source to disable this message.\n%Warning-WIDTHEXPAND: hardware/kv260/ising_sampler_128_sparse.v:232:40: Bit extraction of array[16383:0] requires 14 bit index, not 12 bits.\n                                                                      : ... note: In instance 'ising_sampler_128_sparse'\n  232 |                     rd_data = coupl_ram[(S_AXI_ARADDR[13:2])];\n      |                                        ^\n%Warning-WID\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_n16.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_n16.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 6,
+      "path": "hardware/kv260/ising_sampler_n16.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-DECLFILENAME: hardware/kv260/ising_sampler_n16.v:39:8: Filename 'ising_sampler_n16' does not match MODULE name: 'ising_sampler'\n   39 | module ising_sampler #(\n      |        ^~~~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.047\n                       ... Use \"/* verilator lint_off DECLFILENAME */\" and lint_on around source to disable this message.\n%Warning-WIDTHEXPAND: hardware/kv260/ising_sampler_n16.v:171:45: Operator LT expects 32 or 5 bits on the LHS, but LHS's SEL generates 4 bits.\n                                                               : ... note: In instance 'ising_sampler'\n  171 |                         if (j_addr_reg[7:4] < N && j_addr_reg[3:0] < N)\n      |                                             ^\n                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.047\n                      ... Use \"/* verilator lint_off WIDTHEXPAND */\" and lint_on around source to\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v1.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v1.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 30,
+      "path": "hardware/kv260/ising_sampler_v1.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-DECLFILENAME: hardware/kv260/ising_sampler_v1.v:55:8: Filename 'ising_sampler_v1' does not match MODULE name: 'ising_sampler_128'\n   55 | module ising_sampler_128 #(\n      |        ^~~~~~~~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.047\n                       ... Use \"/* verilator lint_off DECLFILENAME */\" and lint_on around source to disable this message.\n%Warning-MULTITOP: hardware/kv260/ising_sampler_v1.v:668:8: Multiple top level modules\n                                                          : ... Suggest see manual; fix the duplicates, or use --top-module to select top.\n                   ... For warning description see https://verilator.org/warn/MULTITOP?v=5.047\n                   ... Use \"/* verilator lint_off MULTITOP */\" and lint_on around source to disable this message.\n                                                          : ... Top module 'ising_sampler_128'\n   55 | module ising_sampler_128 #(\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v2.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v2.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 22,
+      "path": "hardware/kv260/ising_sampler_v2.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-DECLFILENAME: hardware/kv260/ising_sampler_v2.v:69:8: Filename 'ising_sampler_v2' does not match MODULE name: 'ising_sampler_128_sync'\n   69 | module ising_sampler_128_sync #(\n      |        ^~~~~~~~~~~~~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.047\n                       ... Use \"/* verilator lint_off DECLFILENAME */\" and lint_on around source to disable this message.\n%Warning-MULTITOP: hardware/kv260/ising_sampler_v2.v:603:8: Multiple top level modules\n                                                          : ... Suggest see manual; fix the duplicates, or use --top-module to select top.\n                   ... For warning description see https://verilator.org/warn/MULTITOP?v=5.047\n                   ... Use \"/* verilator lint_off MULTITOP */\" and lint_on around source to disable this message.\n                                                          : ... Top module 'ising_sampler_128_sync'\n   69 | module is\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v2_axi_tb.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v2_axi_tb.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 0,
+      "path": "hardware/kv260/ising_sampler_v2_axi_tb.v",
+      "returncode": 1,
+      "stderr_summary": "%Error-MODMISSING: hardware/kv260/ising_sampler_v2_axi_tb.v:100:1: Cannot find file containing module: 'ising_sampler_128_sync'\n  100 | ising_sampler_128_sync dut (\n      | ^~~~~~~~~~~~~~~~~~~~~~\n                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.047\n                   ... This may be because there's no search path specified with -I<dir>.\n                   ... Looked in:\n                        ising_sampler_128_sync\n                        ising_sampler_128_sync.v\n                        ising_sampler_128_sync.sv\n                        obj_dir/ising_sampler_128_sync\n                        obj_dir/ising_sampler_128_sync.v\n                        obj_dir/ising_sampler_128_sync.sv\n                   ... With current working directory '/home/ianblenke/github.com/ianblenke/carnot'\n%Error: Exiting due to 1 error(s)",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v2_axi_tb_split.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v2_axi_tb_split.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 0,
+      "path": "hardware/kv260/ising_sampler_v2_axi_tb_split.v",
+      "returncode": 1,
+      "stderr_summary": "%Error-MODMISSING: hardware/kv260/ising_sampler_v2_axi_tb_split.v:77:1: Cannot find file containing module: 'ising_sampler_128_sync'\n   77 | ising_sampler_128_sync dut (\n      | ^~~~~~~~~~~~~~~~~~~~~~\n                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.047\n                   ... This may be because there's no search path specified with -I<dir>.\n                   ... Looked in:\n                        ising_sampler_128_sync\n                        ising_sampler_128_sync.v\n                        ising_sampler_128_sync.sv\n                        obj_dir/ising_sampler_128_sync\n                        obj_dir/ising_sampler_128_sync.v\n                        obj_dir/ising_sampler_128_sync.sv\n                   ... With current working directory '/home/ianblenke/github.com/ianblenke/carnot'\n%Error: Exiting due to 1 error(s)",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v2_synth.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v2_synth.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 22,
+      "path": "hardware/kv260/ising_sampler_v2_synth.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-DECLFILENAME: hardware/kv260/ising_sampler_v2_synth.v:69:8: Filename 'ising_sampler_v2_synth' does not match MODULE name: 'ising_sampler_128_sync'\n   69 | module ising_sampler_128_sync #(\n      |        ^~~~~~~~~~~~~~~~~~~~~~\n                       ... For warning description see https://verilator.org/warn/DECLFILENAME?v=5.047\n                       ... Use \"/* verilator lint_off DECLFILENAME */\" and lint_on around source to disable this message.\n%Warning-MULTITOP: hardware/kv260/ising_sampler_v2_synth.v:596:8: Multiple top level modules\n                                                                : ... Suggest see manual; fix the duplicates, or use --top-module to select top.\n                   ... For warning description see https://verilator.org/warn/MULTITOP?v=5.047\n                   ... Use \"/* verilator lint_off MULTITOP */\" and lint_on around source to disable this message.\n                                                                : ... Top module 'ising_sampl\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v3.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v3.v",
+      "error": "",
+      "lint_errors_count": 8,
+      "lint_warnings_count": 0,
+      "path": "hardware/kv260/ising_sampler_v3.v",
+      "returncode": 1,
+      "stderr_summary": "%Error: hardware/kv260/ising_sampler_v3.v:211:42: syntax error, unexpected IDENTIFIER, expecting \"'{\"\n  211 |             reg signed [FIELD_WIDTH+3:0] ema_wide;\n      |                                          ^~~~~~~~\n        ... See the manual at https://verilator.org/verilator_doc.html?v=5.047 for more assistance.\n%Error: hardware/kv260/ising_sampler_v3.v:232:42: syntax error, unexpected IDENTIFIER, expecting \"'{\"\n  232 |             reg signed [FIELD_WIDTH-1:0] left_spin_val;\n      |                                          ^~~~~~~~~~~~~\n%Error: hardware/kv260/ising_sampler_v3.v:233:42: syntax error, unexpected IDENTIFIER, expecting \"'{\"\n  233 |             reg signed [FIELD_WIDTH-1:0] right_spin_val;\n      |                                          ^~~~~~~~~~~~~~\n%Error: hardware/kv260/ising_sampler_v3.v:234:42: syntax error, unexpected IDENTIFIER, expecting \"'{\"\n  234 |             reg signed [FIELD_WIDTH-1:0] h_nbr;\n      |                                          ^~~~~\n%Error:\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v3_sequential.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v3_sequential.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 14,
+      "path": "hardware/kv260/ising_sampler_v3_sequential.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-WIDTHTRUNC: hardware/kv260/ising_sampler_v3_sequential.v:225:47: Bit extraction of var[127:0] requires 7 bit index, not 16 bits.\n                                                                        : ... note: In instance 'ising_sampler_v3_sequential'\n  225 |                             neigh_spin_bit = s[j_adj];\n      |                                               ^\n                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.047\n                     ... Use \"/* verilator lint_off WIDTHTRUNC */\" and lint_on around source to disable this message.\n%Warning-WIDTHEXPAND: hardware/kv260/ising_sampler_v3_sequential.v:224:49: Operator LTS expects 32 bits on the LHS, but LHS's VARREF 'j_adj' generates 16 bits.\n                                                                         : ... note: In instance 'ising_sampler_v3_sequential'\n  224 |                         if (j_adj >= 0 && j_adj < N_SPINS) begin\n      |\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v3_tb.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v3_tb.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 2,
+      "path": "hardware/kv260/ising_sampler_v3_tb.v",
+      "returncode": 1,
+      "stderr_summary": "%Error-MODMISSING: hardware/kv260/ising_sampler_v3_tb.v:48:1: Cannot find file containing module: 'ising_sampler_v3'\n   48 | ising_sampler_v3 #(\n      | ^~~~~~~~~~~~~~~~\n                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.047\n                   ... This may be because there's no search path specified with -I<dir>.\n                   ... Looked in:\n                        ising_sampler_v3\n                        ising_sampler_v3.v\n                        ising_sampler_v3.sv\n                        obj_dir/ising_sampler_v3\n                        obj_dir/ising_sampler_v3.v\n                        obj_dir/ising_sampler_v3.sv\n                   ... With current working directory '/home/ianblenke/github.com/ianblenke/carnot'\n%Warning-WIDTHEXPAND: hardware/kv260/ising_sampler_v3_tb.v:159:30: Operator SUB expects 32 bits on the LHS, but LHS's VARREF 'h_ema_spin0' generates 18 bits.\n                                                                 : ... no\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v4.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v4.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 4,
+      "path": "hardware/kv260/ising_sampler_v4.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-WIDTHTRUNC: hardware/kv260/ising_sampler_v4.v:209:35: Operator ASSIGNDLY expects 7 bits on the Assign RHS, but Assign RHS's AND generates 32 bits.\n                                                             : ... note: In instance 'ising_sampler_v4'\n  209 |                 nbr_idx[is*K+ks]  <= (is + off_init + N) & (N - 1);\n      |                                   ^~\n                     ... For warning description see https://verilator.org/warn/WIDTHTRUNC?v=5.047\n                     ... Use \"/* verilator lint_off WIDTHTRUNC */\" and lint_on around source to disable this message.\n%Warning-BLKSEQ: hardware/kv260/ising_sampler_v4.v:205:30: Blocking assignment '=' in sequential logic process\n                                                         : ... note: In instance 'ising_sampler_v4'\n                                                         : ... Suggest using delayed assignment '<='\n  205 |                     off_init = ks + 1;          \n      |\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "hardware/kv260/ising_sampler_v4_tb.v"
+      ],
+      "command_string": "verilator --lint-only -Wall hardware/kv260/ising_sampler_v4_tb.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 0,
+      "path": "hardware/kv260/ising_sampler_v4_tb.v",
+      "returncode": 1,
+      "stderr_summary": "%Error-MODMISSING: hardware/kv260/ising_sampler_v4_tb.v:41:1: Cannot find file containing module: 'ising_sampler_v4'\n   41 | ising_sampler_v4 #(\n      | ^~~~~~~~~~~~~~~~\n                   ... For error description see https://verilator.org/warn/MODMISSING?v=5.047\n                   ... This may be because there's no search path specified with -I<dir>.\n                   ... Looked in:\n                        ising_sampler_v4\n                        ising_sampler_v4.v\n                        ising_sampler_v4.sv\n                        obj_dir/ising_sampler_v4\n                        obj_dir/ising_sampler_v4.v\n                        obj_dir/ising_sampler_v4.sv\n                   ... With current working directory '/home/ianblenke/github.com/ianblenke/carnot'\n%Error: Exiting due to 1 error(s)",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "rtl/gatemate_ising_n16.v"
+      ],
+      "command_string": "verilator --lint-only -Wall rtl/gatemate_ising_n16.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 1,
+      "path": "rtl/gatemate_ising_n16.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-EOFNEWLINE: rtl/gatemate_ising_n16.v:24:10: Missing newline at end of file (POSIX 3.206).\n                                                   : ... Suggest add newline.\n   24 | endmodule\n      |          ^\n                     ... For warning description see https://verilator.org/warn/EOFNEWLINE?v=5.047\n                     ... Use \"/* verilator lint_off EOFNEWLINE */\" and lint_on around source to disable this message.\n%Error: Exiting due to 1 warning(s)",
+      "stdout_summary": "",
+      "timed_out": false
+    },
+    {
+      "command": [
+        "verilator",
+        "--lint-only",
+        "-Wall",
+        "rtl/ising_sampler_v3.v"
+      ],
+      "command_string": "verilator --lint-only -Wall rtl/ising_sampler_v3.v",
+      "error": "",
+      "lint_errors_count": 1,
+      "lint_warnings_count": 8,
+      "path": "rtl/ising_sampler_v3.v",
+      "returncode": 1,
+      "stderr_summary": "%Warning-WIDTHEXPAND: rtl/ising_sampler_v3.v:110:22: Operator ASSIGN expects 32 bits on the Assign RHS, but Assign RHS's SEL generates 6 bits.\n                                                   : ... note: In instance 'ising_sampler_v3'\n  110 |             spin_idx = lfsr[5:0];  \n      |                      ^\n                      ... For warning description see https://verilator.org/warn/WIDTHEXPAND?v=5.047\n                      ... Use \"/* verilator lint_off WIDTHEXPAND */\" and lint_on around source to disable this message.\n%Warning-BLKSEQ: rtl/ising_sampler_v3.v:113:21: Blocking assignment '=' in sequential logic process\n                                              : ... note: In instance 'ising_sampler_v3'\n                                              : ... Suggest using delayed assignment '<='\n  113 |             h_local = 16'sd0;\n      |                     ^\n                 ... For warning description see https://verilator.org/warn/BLKSEQ?v=5.047\n                 ... Use \"/*\n...[truncated]",
+      "stdout_summary": "",
+      "timed_out": false
+    }
+  ],
+  "lint_warnings_count": 125,
+  "rtl_files_linted": [
+    "hardware/kv260/ising_inertia_n8_sparse_v2.v",
+    "hardware/kv260/ising_pimi_n8_sparse_v4.v",
+    "hardware/kv260/ising_pimi_n8_synchronous_v3.v",
+    "hardware/kv260/ising_sampler_128_sparse.v",
+    "hardware/kv260/ising_sampler_n16.v",
+    "hardware/kv260/ising_sampler_v1.v",
+    "hardware/kv260/ising_sampler_v2.v",
+    "hardware/kv260/ising_sampler_v2_axi_tb.v",
+    "hardware/kv260/ising_sampler_v2_axi_tb_split.v",
+    "hardware/kv260/ising_sampler_v2_synth.v",
+    "hardware/kv260/ising_sampler_v3.v",
+    "hardware/kv260/ising_sampler_v3_sequential.v",
+    "hardware/kv260/ising_sampler_v3_tb.v",
+    "hardware/kv260/ising_sampler_v4.v",
+    "hardware/kv260/ising_sampler_v4_tb.v",
+    "rtl/gatemate_ising_n16.v",
+    "rtl/ising_sampler_v3.v"
+  ],
+  "rtl_lint_passed": false,
+  "rtl_scope": "Ising-named .v files under rtl/ and hardware/kv260/",
+  "run_date": "2026-05-18",
+  "schema": "carnot.kv260_ising_rtl_lint_sim.v1",
+  "simulation_command": "vvp /tmp/ising_sim",
+  "simulation_passed": true,
+  "simulation_result": {
+    "command": [
+      "vvp",
+      "/tmp/ising_sim"
+    ],
+    "command_string": "vvp /tmp/ising_sim",
+    "compile_command": [
+      "iverilog",
+      "-o",
+      "/tmp/ising_sim",
+      "hardware/kv260/ising_sampler_v4.v",
+      "hardware/kv260/ising_sampler_v4_tb.v"
+    ],
+    "compile_returncode": 0,
+    "error": "",
+    "returncode": 0,
+    "stage": "run",
+    "stderr": "",
+    "stderr_summary": "",
+    "stdout": "CHECK 1 PASS: valid asserted after reset\nCHECK 2 PASS: s_out is not all-zero after 200 sweeps\nINFO: spin_count (+1) = 128 / 128 (100.0%)\nCHECK 3 PASS: ferromagnetic convergence detected (spin_count=128)\nCHECK 4 PASS: valid still asserted after 200 sweeps\nSIMULATION SUMMARY: 4/4 checks passed\nSIMULATION RESULT: PASS\nhardware/kv260/ising_sampler_v4_tb.v:133: $finish called at 2075000 (1ps)\n",
+    "stdout_head_20": [
+      "CHECK 1 PASS: valid asserted after reset",
+      "CHECK 2 PASS: s_out is not all-zero after 200 sweeps",
+      "INFO: spin_count (+1) = 128 / 128 (100.0%)",
+      "CHECK 3 PASS: ferromagnetic convergence detected (spin_count=128)",
+      "CHECK 4 PASS: valid still asserted after 200 sweeps",
+      "SIMULATION SUMMARY: 4/4 checks passed",
+      "SIMULATION RESULT: PASS",
+      "hardware/kv260/ising_sampler_v4_tb.v:133: $finish called at 2075000 (1ps)"
+    ],
+    "stdout_summary": "CHECK 1 PASS: valid asserted after reset\nCHECK 2 PASS: s_out is not all-zero after 200 sweeps\nINFO: spin_count (+1) = 128 / 128 (100.0%)\nCHECK 3 PASS: ferromagnetic convergence detected (spin_count=128)\nCHECK 4 PASS: valid still asserted after 200 sweeps\nSIMULATION SUMMARY: 4/4 checks passed\nSIMULATION RESULT: PASS\nhardware/kv260/ising_sampler_v4_tb.v:133: $finish called at 2075000 (1ps)",
+    "testbench": "hardware/kv260/ising_sampler_v4_tb.v",
+    "timed_out": false,
+    "top": "hardware/kv260/ising_sampler_v4.v"
+  },
+  "simulation_testbench": "hardware/kv260/ising_sampler_v4_tb.v",
+  "simulation_top": "hardware/kv260/ising_sampler_v4.v",
+  "status": "complete",
+  "tools_available": {
+    "iverilog": true,
+    "verilator": true
+  }
+}
