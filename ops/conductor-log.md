@@ -4730,3 +4730,4 @@ Ripgrep i |
 | 2026-05-18 06:28 UTC | Phase 2: Projected-Langevin vs CASAL Baseline v5 — | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
 | 2026-05-18 06:28 UTC | Phase 3: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
 | 2026-05-18 06:28 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
+| 2026-05-18 06:28 UTC | Phase 4: Capstone E2E Live Generation (.229) — FST | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp2339-fst-live-gen-v9.fst_live_validated |
