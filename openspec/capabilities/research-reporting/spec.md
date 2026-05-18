@@ -4154,3 +4154,27 @@ to consider a no-xdist pre-test fallback.
 **And** result artifacts or missing-artifact evidence for Exp 2323, Exp 2324, Exp 2326, Exp 2327, and Exp 2334
 **When** the Exp 2335 retrospective generator runs
 **Then** it writes `results/experiment_2335_retro.json` with schema `carnot.operational_retro.v71`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.228` gap closure records, explicit `pretest_cascade_status`, and a quantified speedup target for milestone `.229`.
+
+### REQ-REPORT-2349: Milestone 2026.05.229 Operational Retrospective
+
+The repository shall provide `scripts/experiment_2349_retro.py` to generate
+`results/experiment_2349_retro.json` with schema
+`carnot.operational_retro.v72`.
+
+The artifact must record `total_wall_time_min`, `n_experiments_completed`,
+`n_gate_blocks`, `n_compute_bound`, `criteria_met`, `top_gaps_resolved`,
+`pretest_cascade_status`, `ungated_tasks_completed`, and
+`next_milestone_speedup_target_pct`. The `honest_verdict` field must start
+with a terminal prefix. The gap-resolution analysis must explicitly cover the
+`.229` design gaps: full pre-test cascade resolution, Semantic Energy Tier 0g
+prototype landing, and NSVIF neuro-symbolic extraction first actual run. If Exp
+2337 did not set `pretest_fixed=true`, the artifact must include operator
+manual inspection commands and recommend manual inspection before milestone
+`.230` activation.
+
+#### SCENARIO-REPORT-2349: Generate .229 Retrospective Artifact
+
+**Given** a conductor log containing the milestone 2026.05.229 activation and terminal task rows
+**And** result artifacts or missing-artifact evidence for Exp 2337, Exp 2338, Exp 2339, Exp 2341, Exp 2342, and Exp 2348
+**When** the Exp 2349 retrospective generator runs
+**Then** it writes `results/experiment_2349_retro.json` with schema `carnot.operational_retro.v72`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.229` gap closure records, explicit `pretest_cascade_status`, `ungated_tasks_completed`, and a quantified speedup target for milestone `.230`.
