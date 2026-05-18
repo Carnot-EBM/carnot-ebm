@@ -4877,3 +4877,4 @@ Ripgrep i |
 | 2026-05-18 15:16 UTC | Phase 0: Archive .232 and activate .233 | OK | cache hit: 81 passed, 1 warning in 2.33s |
 | 2026-05-18 15:37 UTC | Phase 0: Codex CLI Infrastructure Diagnostic and R | FAIL | Claude Code error: Error: Reached max turns (40) |
 | 2026-05-18 15:39 UTC | Phase 0: Codex CLI Infrastructure Diagnostic and R | OK | Deliverable already exists in repo |
+| 2026-05-18 15:46 UTC | Phase 1: HALT Latent Probe Tier 0j v2 (arXiv:2601. | OK | 99 passed, 1 warning in 2.73s |
