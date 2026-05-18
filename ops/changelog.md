@@ -6276,3 +6276,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-18: Phase 3: Kinetic Langevin BAOAB vs CASAL v4 (arXiv:2603.23397) (⚠️ Research Finding) — honest_verdict=success: KineticLangevin is faster/better mixing; results/experiment_2428_kinetic_langevin_v4.json
 - 2026-05-18: Phase 3: Dikin-Langevin Polytope Sampler v2 (arXiv:2510.04582) — Formal Convergence (✅ Complete) — honest_verdict=success: DikinLangevin improved mixing; results/experiment_2429_dikin_langevin_v2.json
 - 2026-05-18: Phase 3: DE-PSGLD Decentralized Proximal SGLD v2 (arXiv:2605.00723) — vs CASAL (⚠️ Research Finding) — honest_verdict=success: DE-PSGLD competitive; results/experiment_2430_de_psgld_v2.json
+- 2026-05-18: Phase 3: Phase 1 Ship Gate Audit v4 — PyPI + HF Mirror + CLI + MCP + Reproducer (✅ Complete) — honest_verdict=Phase 1 ship gate evaluation complete.; results/experiment_2431_phase1_ship_gate_v4.json
