@@ -4855,3 +4855,4 @@ Ripgrep i |
 | 2026-05-18 13:52 UTC | Phase 3: KV260 Yosys Synthesis — RTL-Clean File to | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 13:54 UTC | Phase 3: KV260 Yosys Synthesis — RTL-Clean File to | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 13:56 UTC | Phase 3: KV260 Yosys Synthesis — RTL-Clean File to | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 13:59 UTC | Phase 3: Kinetic Langevin Splitting vs CASAL (arXi | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
