@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-18 (Milestone 2026.05.228 Operational Retrospective)
+
+- Retrospective written for milestone 2026.05.228: 0 experiments completed, 0 wall-time minutes, both RTX 3090s idle at 0% throughout — seventh consecutive empty-experiment milestone. Root cause unchanged: exp2323 (Claude-escalated pre-test fix v9) is the single gating task blocking all 11 Phase 1-3 downstream tasks. Top leverage action: activate exp2323 as the very first task at .228 open; add conductor activation-time pre-test smoke check to convert silent cascade failures into immediate blocked_pretest artifacts. Artifact: results/operational_retro_2026_05_228.json.
+
 ## 2026-05-18 (Milestone 2026.05.228 Research Planning)
 
 - Milestone 2026.05.228 research planning complete. User instruction: plan the next milestone after .227, which completed 2 of 14 criteria and left the pre-test cascade still unresolved after 8 consecutive milestones.
