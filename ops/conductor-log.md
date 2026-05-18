@@ -4880,3 +4880,4 @@ Ripgrep i |
 | 2026-05-18 15:46 UTC | Phase 1: HALT Latent Probe Tier 0j v2 (arXiv:2601. | OK | 99 passed, 1 warning in 2.73s |
 | 2026-05-18 15:56 UTC | Phase 1: FregeLogic Z3+Neural Hybrid v2 (arXiv:260 | OK | 81 passed, 1 warning in 2.28s |
 | 2026-05-18 16:05 UTC | Phase 1: Typed CoT Curry-Howard Tier 2.8 (arXiv:25 | OK | 81 passed, 1 warning in 2.29s |
+| 2026-05-18 16:14 UTC | Phase 1: Frequency-Aware Attention Tier 0f (arXiv: | OK | 81 passed, 1 warning in 2.27s |
