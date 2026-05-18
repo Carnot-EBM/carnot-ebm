@@ -4949,3 +4949,4 @@ Ripgrep i |
 | 2026-05-18 19:42 UTC | Phase 0: Codex CLI Infrastructure Diagnostic v2 —  | OK | cache hit: 81 passed, 1 warning in 2.31s |
 | 2026-05-18 19:53 UTC | Phase 1: Full HIVE 4-Verifier Ensemble v4 (Tier 0f | OK | 81 passed, 1 warning in 2.28s |
 | 2026-05-18 19:58 UTC | Phase 1: Hierarchical Alignment LogCons v2 (arXiv: | OK | 81 passed, 1 warning in 2.30s |
+| 2026-05-18 20:03 UTC | Phase 1: HALT-RAG Calibrated NLI Ensemble v2 (arXi | OK | 81 passed, 1 warning in 2.27s |
