@@ -1941,6 +1941,51 @@ tiebreaker result.
 **Spec traces:** REQ-TIER0-010, SCENARIO-TIER0-010, Exp 2395
 
 
+### REQ-TIER0-011: Frequency-Aware Attention Top-K Proxy (Tier 0f)
+
+**Status:** Prototype (Exp 2397)
+
+`python/carnot/verify/freq_aware_attention.py` shall implement
+`FreqAwareAttentionDetector`, a CPU-only Tier 0f proxy for Frequency-Aware
+Attention when raw attention matrices are unavailable in cached telemetry. The
+proxy shall score high-frequency stopword and punctuation-fragment mass in the
+recorded top-k token distribution.
+
+**Acceptance criteria:**
+- REQ-TIER0-011-1: `verify(entry)` returns `freq_attn_score`,
+  `is_high_freq_pattern`, and `tier="0f"` for a telemetry entry with
+  `top_logprobs`.
+- REQ-TIER0-011-2: The default proxy strategy uses the fraction of recorded top-k
+  token probability mass assigned to high-frequency stopwords or fragmented
+  punctuation tokens.
+- REQ-TIER0-011-3: `results/experiment_2397_freq_aware_attn.json` records
+  `freq_attn_validated`, `freq_attn_auroc`, `freq_attn_mean_score`,
+  `freq_attn_vs_semantic_energy_delta`, `proxy_strategy`, `n_eval_examples`,
+  `random_seed`, `duration_s`, checked preconditions, and an honest
+  terminal-prefix verdict.
+- REQ-TIER0-011-4: If
+  `results/live_sota_balanced_telemetry_manifest_1480.jsonl` is missing, the
+  artifact uses `honest_verdict="blocked_telemetry_manifest_missing"` and does
+  not fabricate metric values.
+
+**Spec traces:** REQ-TIER0-011, Exp 2397
+
+
+### SCENARIO-TIER0-011: Top-K Stopword Mass Flags High-Frequency Pattern
+
+**Given** a cached telemetry entry whose top-k alternatives contain mostly
+high-frequency stopwords,
+**When** `FreqAwareAttentionDetector.verify()` is called,
+**Then** `freq_attn_score` is high and `is_high_freq_pattern` is true.
+
+**Given** a cached telemetry entry whose top-k alternatives contain mostly
+content-bearing tokens,
+**When** `FreqAwareAttentionDetector.verify()` is called,
+**Then** `freq_attn_score` stays low and `is_high_freq_pattern` is false.
+
+**Spec traces:** REQ-TIER0-011, SCENARIO-TIER0-011, Exp 2397
+
+
 ### REQ-TIER28-002: Typed CoT Verifier Between VERGE And Ising
 
 **Status:** Prototype (Exp 2396)
