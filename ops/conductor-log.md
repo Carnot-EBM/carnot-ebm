@@ -4958,3 +4958,4 @@ Ripgrep i |
 | 2026-05-18 20:44 UTC | Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2427_kv260_y |
 | 2026-05-18 21:03 UTC | Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2427_kv260_y |
 | 2026-05-18 21:08 UTC | Phase 3: Kinetic Langevin BAOAB vs CASAL v4 (arXiv | OK | 81 passed, 1 warning in 2.32s |
+| 2026-05-18 21:12 UTC | Phase 3: Dikin-Langevin Polytope Sampler v2 (arXiv | OK | 81 passed, 1 warning in 2.30s |
