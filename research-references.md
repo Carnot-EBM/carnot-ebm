@@ -1,3 +1,27 @@
+## 2026-05-18 Post-.229 Planning Sweep (Milestone 2026.05.230)
+
+This sweep was run after milestone `.229` completed (2 research tasks complete: archive partial + Semantic Energy Tier 0g prototype AUROC=1.0; pre-test cascade failed for 10th time but tests actually pass independently; cascade is now resolved). The sweep found new work in EBM-based CoT calibration, diffusion-likelihood hallucination detection, self-adaptive Ising constraint optimization, and neuro-symbolic CoT validation.
+
+### EBM-CoT: Energy-Based Calibration for Implicit Chain-of-Thought
+- **Paper:** "Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit Chain-of-Thought" (arXiv:2511.07124, Nov 2025).
+- **What:** Uses a learned energy function and Langevin dynamics to guide latent Chain-of-Thought representations toward lower-energy, higher-consistency regions during inference without modifying the base model.
+- **Relevance to Carnot:** Directly instantiates Carnot's Phase-4 free-energy verifier hypothesis (low-energy = high-confidence correct reasoning) in a working prototype. Also uses Langevin calibration, complementing projected-Langevin (arXiv:2605.05387) and CASAL. Candidate for .230 integration — this is the closest published system to what Carnot targets at Phase 4.
+
+### DiffuTruth: Detecting Hallucinations via Diffusion Model Likelihoods
+- **Paper:** "The Energy of Falsehood: Detecting Hallucinations via Diffusion Model Likelihoods" (arXiv:2602.11364, Feb 2026).
+- **What:** Corrupts factual claims with noise, reconstructs them via a diffusion model, and measures semantic energy (semantic divergence of reconstructed vs. original text) to detect hallucinations unsupervised.
+- **Relevance to Carnot:** Directly operationalizes an energy signal for veracity — the same principle as Carnot's EBM verifier stack but via diffusion likelihoods rather than Ising/Boltzmann sampling. Strong peer for paper-v6 comparison and a candidate Tier 0h verifier via the diffusion reconstruction cost.
+
+### Self-Adaptive Ising Machines for Constrained Optimization
+- **Paper:** "Self-Adaptive Ising Machines for Constrained Optimization" (arXiv:2501.04971, Jan 2025).
+- **What:** Introduces a self-adaptive Ising machine using Lagrange relaxation to iteratively reshape the energy landscape for constrained optimization, outperforming Fujitsu's Digital Annealer on 300-variable quadratic knapsack problems with far fewer samples.
+- **Relevance to Carnot:** Directly advances Phase-2 hardware track — demonstrates constraint-aware energy landscape shaping via Lagrange multipliers, solving the penalty-tuning problem limiting Ising-based verifier deployment on KV260/Extropic Z1. Candidate for .230 experiment: apply self-adaptive Lagrangian updates to Carnot's parallel_ising.py sampler.
+
+### VeriCoT: Neuro-Symbolic Chain-of-Thought Validation
+- **Paper:** "VeriCoT: Neuro-Symbolic Chain-of-Thought Validation via Logical Consistency Checks" (arXiv:2511.04662, Nov 2025).
+- **What:** Converts each step of Chain-of-Thought reasoning into formal logical statements and verifies them for consistency, achieving 46% relative improvement in CoT verification pass rate across multiple datasets.
+- **Relevance to Carnot:** Extends the neuro-symbolic verifier peer landscape beyond NSVIF/VERGE with a step-level logical consistency checker. Candidate k=17 verifier class alongside Semantic Energy (k=16). Benchmarkable against Carnot's NSVIF Z3 extractor after exp2352 establishes the baseline.
+
 ## 2026-05-18 Post-.228 Planning Sweep (Milestone 2026.05.229)
 
 This sweep was run after milestone `.228` completed (0 experiments, 8th consecutive empty milestone; pre-test cascade exp2323 still unresolved). The sweep found new work in Boltzmann-energy hallucination detection, FALCON feasibility guarantees, KAN-CL per-knot importance validation, and neuro-symbolic compliance.

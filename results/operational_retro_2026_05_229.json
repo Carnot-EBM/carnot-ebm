@@ -1,32 +1,31 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.229",
-  "generated_at": "2026-05-18T06:47:37Z",
+  "generated_at": "2026-05-18T07:15:50Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.229 produced zero experiment commits per the TIMING DATA block; this is the eighth consecutive milestone in which the pipeline did not reach experiment execution. Both RTX 3090s remained idle at 0% utilization and 5 MB allocated, consistent with a planning-only / blocked-activation state. The single experiment noted in the changelog (exp2338 Semantic Energy prototype) was committed during milestone .229 activation but was not captured in the scoped timing data.",
+  "summary": "Milestone 2026.05.229 had no experiment commits within the timing window, making this the eighth consecutive empty-experiment milestone. Both RTX 3090 GPUs sat idle at 0% utilization with only 5 MB VRAM allocated each, consistent with a planning-only session. The pre-test cascade (duplicate module / ImportError) and the blocked_roadmap_missing recurrence remain the structural blockers preventing experiment activation.",
   "bottlenecks_identified": [
-    "Recurring blocked_roadmap_missing at archive step: .223 through .229 represent a persistent conductor loop failure — each milestone closes without a pre-staged research-roadmap-next.yaml, causing the next activation to stall immediately before any experiment can run.",
-    "Pre-test cascade unresolved (exp2323 gate): 11 of 14 planned tasks in recent milestones are gated on a Claude-escalated pre-test fix that has not yet reached terminal 'complete' status, blocking the entire experiment queue.",
-    "No compute-bound experiments executed this milestone: both GPUs sat at 0% utilization for the full milestone window, representing 48+ GPU-hours of wasted capacity across the dual RTX 3090 rig.",
-    "Retro tasks completing without upstream experiment data: retrospectives and archive tasks execute (exp2335, exp2336, exp2349) but provide no research value when the experiment queue is empty — they consume turn budget while the underlying blockage persists."
+    "blocked_roadmap_missing recurrence: eighth consecutive milestone where no research-roadmap-next.yaml was staged before archive, causing the conductor to skip experiment activation entirely.",
+    "Pre-test cascade unresolved: duplicate test_compositional_energy module / ImportError in test_dual_gpu.py continues to block the full test suite, which gates 11+ tasks that refuse to activate until the pre-test gate clears.",
+    "No compute-bound experiments ran, so GPU utilisation could not be evaluated; null gpu_idle_on_compute_bound_tasks is correct by the GPU-IDLE INTERPRETATION RULE."
   ],
   "improvements_suggested": [
-    "Pre-stage research-roadmap-next.yaml for milestone .230 BEFORE archiving .229 — the operator-trust pre-staged roadmap convention (CLAUDE.md) is the direct fix for the blocked_roadmap_missing recurrence.",
-    "Resolve the exp2323 pre-test fix as the very first task in .230 activation; gate all other experiment tasks on its terminal verdict so downstream unblocking is automatic.",
-    "Add a conductor pre-archive guard that REFUSES to archive the current milestone unless research-roadmap-next.yaml already exists and has a valid milestone: field matching current+1 — this enforces the pre-staged roadmap convention mechanically.",
-    "Consider batching the retro + archive tasks into a single conductor step when the experiment set is empty; executing separate retro, archive, and operational-retro tasks for an empty milestone wastes ~3 turn slots.",
-    "Once pre-test cascade is resolved, engage DualGPURunner for any milestone containing 2+ parallel GGUF model experiments (Qwen on GPU 0, Gemma on GPU 1) to recapture idle GPU capacity."
+    "Pre-stage research-roadmap-next.yaml for .230 BEFORE archiving .229 — breaking the blocked_roadmap_missing cycle is the single highest-leverage action available.",
+    "Resolve pre-test ImportError in tests/python/test_dual_gpu.py and deduplicate test_compositional_energy module as a standalone fix task that runs ahead of all other .230 tasks.",
+    "Add a conductor guard that REFUSES to archive a milestone if research-roadmap-next.yaml for the next milestone does not already exist, turning the absent-roadmap failure mode into an explicit hard block with a clear error message.",
+    "Consider marking exp2338 (Semantic Energy Hallucination Detector, committed outside the timing window) as a .229 carry-in so the next retro captures it accurately in experiments_completed.",
+    "Both GPUs remain consistently idle across eight milestones; DualGPURunner is appropriate only once 2+ models run in parallel, but the immediate priority is unblocking any experiment activation at all."
   ],
   "top_3_highest_leverage_actions": [
-    "Pre-stage research-roadmap-next.yaml for .230 immediately (before session end) — this single action breaks the blocked_roadmap_missing chain that has stalled eight consecutive milestones.",
-    "Resolve exp2323 pre-test fix (carnot.pypi_escalation + suite failures) as the mandatory first task of .230 — unblocks 11 of 14 queued experiment tasks and restores GPU utilization to non-zero.",
-    "Add a mandatory pre-archive guard to scripts/research_conductor.py that checks for a valid research-roadmap-next.yaml before allowing milestone close — prevents recurrence without operator intervention per milestone."
+    "Pre-stage research-roadmap-next.yaml for milestone 2026.05.230 immediately, before any other work, to break the eight-milestone blocked_roadmap_missing streak.",
+    "Fix the pre-test suite (test_dual_gpu.py ImportError + duplicate test_compositional_energy module) as the very first task in .230 activation, clearing the gate that blocks 11 of 14 queued experiment tasks.",
+    "Add a conductor-level pre-archive guard that requires research-roadmap-next.yaml to exist before the archive step succeeds, making future blocked_roadmap_missing structurally impossible without explicit operator override."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "Eight consecutive empty-experiment milestones represent a systemic process failure: the conductor loop is executing administrative tasks (retros, archives) but not advancing research. The root cause is structural — a missing roadmap file — not a research-quality or experiment-selection issue. Addressing the pre-staged roadmap convention mechanically (conductor guard + operator discipline) would restore the pipeline to research-productive state within one milestone. Until then, GPU resources remain fully wasted each cycle."
+  "meta_reflection": "Eight consecutive empty-experiment milestones reveal a systemic process gap: the roadmap hand-off between archive and activation is fragile and has no mechanical safety net. The pre-test cascade and the absent-roadmap problem are co-blockers — fixing either one alone is insufficient because a passing test suite still needs a roadmap to activate, and a staged roadmap still cannot run if the pre-test gate fails. Both must be resolved together at the start of .230 before any research experiments are proposed."
 }

@@ -4732,3 +4732,4 @@ Ripgrep i |
 | 2026-05-18 06:28 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2337-pretest-fix-v10) |
 | 2026-05-18 06:28 UTC | Phase 4: Capstone E2E Live Generation (.229) — FST | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp2339-fst-live-gen-v9.fst_live_validated |
 | 2026-05-18 06:38 UTC | Phase 4: Milestone 2026.05.229 Retrospective | OK | 81 passed, 1 warning in 5.79s |
+| 2026-05-18 07:08 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
