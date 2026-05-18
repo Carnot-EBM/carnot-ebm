@@ -4883,3 +4883,4 @@ Ripgrep i |
 | 2026-05-18 16:14 UTC | Phase 1: Frequency-Aware Attention Tier 0f (arXiv: | OK | 81 passed, 1 warning in 2.27s |
 | 2026-05-18 16:25 UTC | Phase 1: HIVE-Style 4-Verifier Ensemble v2 (Tier 0 | OK | 81 passed, 1 warning in 2.37s |
 | 2026-05-18 16:39 UTC | Phase 2: FST Live PATH A/B v2 — GGUF Live Inferenc | OK | 81 passed, 1 warning in 2.35s |
+| 2026-05-18 16:41 UTC | Phase 2: FR-11 NSVIF Online Self-Learning v2 — Man | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
