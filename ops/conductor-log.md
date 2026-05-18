@@ -4801,3 +4801,4 @@ Ripgrep i |
 | 2026-05-18 11:43 UTC | Phase 2: NSVIF+VERGE Real-Data Adversarial Stress  | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 11:45 UTC | Phase 2: Eidoku CSP + EBM-CoT Real-Data Adversaria | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 11:48 UTC | Phase 2: Eidoku CSP + EBM-CoT Real-Data Adversaria | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 11:50 UTC | Phase 2: Eidoku CSP + EBM-CoT Real-Data Adversaria | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
