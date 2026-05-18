@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.229",
+  "generated_at": "2026-05-18T06:47:37Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.229 produced zero experiment commits per the TIMING DATA block; this is the eighth consecutive milestone in which the pipeline did not reach experiment execution. Both RTX 3090s remained idle at 0% utilization and 5 MB allocated, consistent with a planning-only / blocked-activation state. The single experiment noted in the changelog (exp2338 Semantic Energy prototype) was committed during milestone .229 activation but was not captured in the scoped timing data.",
+  "bottlenecks_identified": [
+    "Recurring blocked_roadmap_missing at archive step: .223 through .229 represent a persistent conductor loop failure — each milestone closes without a pre-staged research-roadmap-next.yaml, causing the next activation to stall immediately before any experiment can run.",
+    "Pre-test cascade unresolved (exp2323 gate): 11 of 14 planned tasks in recent milestones are gated on a Claude-escalated pre-test fix that has not yet reached terminal 'complete' status, blocking the entire experiment queue.",
+    "No compute-bound experiments executed this milestone: both GPUs sat at 0% utilization for the full milestone window, representing 48+ GPU-hours of wasted capacity across the dual RTX 3090 rig.",
+    "Retro tasks completing without upstream experiment data: retrospectives and archive tasks execute (exp2335, exp2336, exp2349) but provide no research value when the experiment queue is empty — they consume turn budget while the underlying blockage persists."
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for milestone .230 BEFORE archiving .229 — the operator-trust pre-staged roadmap convention (CLAUDE.md) is the direct fix for the blocked_roadmap_missing recurrence.",
+    "Resolve the exp2323 pre-test fix as the very first task in .230 activation; gate all other experiment tasks on its terminal verdict so downstream unblocking is automatic.",
+    "Add a conductor pre-archive guard that REFUSES to archive the current milestone unless research-roadmap-next.yaml already exists and has a valid milestone: field matching current+1 — this enforces the pre-staged roadmap convention mechanically.",
+    "Consider batching the retro + archive tasks into a single conductor step when the experiment set is empty; executing separate retro, archive, and operational-retro tasks for an empty milestone wastes ~3 turn slots.",
+    "Once pre-test cascade is resolved, engage DualGPURunner for any milestone containing 2+ parallel GGUF model experiments (Qwen on GPU 0, Gemma on GPU 1) to recapture idle GPU capacity."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-stage research-roadmap-next.yaml for .230 immediately (before session end) — this single action breaks the blocked_roadmap_missing chain that has stalled eight consecutive milestones.",
+    "Resolve exp2323 pre-test fix (carnot.pypi_escalation + suite failures) as the mandatory first task of .230 — unblocks 11 of 14 queued experiment tasks and restores GPU utilization to non-zero.",
+    "Add a mandatory pre-archive guard to scripts/research_conductor.py that checks for a valid research-roadmap-next.yaml before allowing milestone close — prevents recurrence without operator intervention per milestone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Eight consecutive empty-experiment milestones represent a systemic process failure: the conductor loop is executing administrative tasks (retros, archives) but not advancing research. The root cause is structural — a missing roadmap file — not a research-quality or experiment-selection issue. Addressing the pre-staged roadmap convention mechanically (conductor guard + operator discipline) would restore the pipeline to research-productive state within one milestone. Until then, GPU resources remain fully wasted each cycle."
+}

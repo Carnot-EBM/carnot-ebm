@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.229 | Planning-only / No experiments | N/A | None — eighth consecutive empty-experiment milestone; exp2338 Semantic Energy prototype committed outside timing window; pre-test cascade and blocked_roadmap_missing recurrence unresolved |
 | 2026.05.228 | Planning-only / No experiments | N/A | None — seventh consecutive empty-experiment milestone; pre-test cascade still unresolved; exp2323 (Claude-escalated fix v9) gates 11 of 14 tasks and must activate first |
 | 2026.05.226 | Planning-only / No experiments | N/A | None — sixth consecutive empty-experiment milestone; carnot.pypi_escalation cascade unresolved; exp2295 (Claude-escalated fix) queued as first .226 activation task |
 | 2026.05.225 | Empty milestone / No experiments | N/A | None — third consecutive empty milestone; blocked_roadmap_missing at .224 archive step; GPUs idle at 0% |

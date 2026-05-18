@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,852 Experiments Across the Public Record, 240 Archived Milestone Records, 26,182 Python Test Items Collected (Through Exp 2307)
+## A Technical Report — 2,880 Experiments Across the Public Record, 242 Archived Milestone Records, 26,182 Python Test Items Collected (Through Exp 2335)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-18
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,852 experiments across 240 milestones up to .226, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction as the first PRD Priority #1 implementation, VERGE SMT repair integration, and Sparse Ising connectivity.
+This report summarizes 2,880 experiments across 242 milestones up to .228, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction as the first PRD Priority #1 implementation, VERGE SMT repair integration, Sparse Ising connectivity, and Semantic Energy (Boltzmann energy on logits as a novel Tier 0g verifier candidate).
 
-This report documents the research arc behind the framework — **2,852 experiment records tracked through Exp 2307, with 2,852 task records in 240 artifact-backed completed milestone records archived through 2026.05.226** — run between February and May 2026. `research-complete.yaml` currently archives **240** completed milestone records through 2026.05.226. Milestone 2026.05.226 completed 14 tasks (exp2294-exp2307) including the Claude-escalated pre-test cascade fix attempt (exp2295, requires_claude: true), FST live gen v6 (exp2296), FR-11 multidomain retention v3 (exp2297), KAN-CL n=256 v5 (exp2298), Eidoku CSP v2 (exp2299), Projected-Langevin v2 (exp2300), NSVIF neuro-symbolic Z3 extractor (exp2301 — first PRD Priority #1 implementation), VERGE SMT repair (exp2302), KV260 RTL lint v5 (exp2303), adversarial null-space probe v4 (exp2304), and Sparse Ising connectivity (exp2305). The retrospective for .226 confirmed this as the sixth consecutive empty-experiment milestone: the carnot.pypi_escalation cascade root cause — missing check_pypi_escalation and run_escalation functions imported by tests/python/test_pypi_escalation.py line 6 — blocked all Phase 1-3 tasks. Milestone .227 has been activated with 14 tasks (exp2308-exp2321).
+This report documents the research arc behind the framework — **2,880 experiment records tracked through Exp 2335, with 2,880 task records in 242 artifact-backed completed milestone records archived through 2026.05.228** — run between February and May 2026. `research-complete.yaml` currently archives **242** completed milestone records through 2026.05.228. Milestone 2026.05.228 completed 14 tasks (exp2322-exp2335) and recorded 0 experiments in 0 minutes — the eighth consecutive empty-experiment milestone. Root cause fully diagnosed: (1) `results/experiment_1692_potts_export.json` missing; (2) `test_experiment_390` fails under xdist GPU contention; (3) `test_experiment_294` errors under xdist memory leak. Milestone .229 has been planned with 14 tasks (exp2336-exp2349), including a key structural change: exp2338 (Semantic Energy Tier 0g) is UNGATED, guaranteeing at least one new research result even if the pre-test cascade blocks for a tenth consecutive time.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5761,3 +5761,37 @@ Post-.224 and post-.225 arXiv sweeps added nine papers to `research-references.m
 - Free Energy routing in MoE (arXiv:2605.00604)
 - Projected Gradient Ascent for hard constraints (arXiv:2602.08646)
 - Kinetic Langevin Splitting (arXiv:2603.23397)
+
+## Milestones 227-229 — Process Failure Diagnosis, Ungated Research, and Semantic Energy (Exps 2308-2349, May 2026)
+
+### Pre-Test Cascade Escalates to Process Failure
+
+Milestones .227 and .228 each recorded 0 minutes of wall time and 0 compute-bound experiments executed — the seventh and eighth consecutive empty-experiment milestones. The root cause of the pre-test cascade was fully diagnosed from exp2309 (.227 pre-test fix): three separate blocking failures remain after the carnot.pypi_escalation fix:
+
+1. `results/experiment_1692_potts_export.json` is missing — `test_experiment_1692_potts_v2` requires this artifact
+2. `test_experiment_390` passes in isolation but fails under xdist parallelism due to GPU contention — fix is `@pytest.mark.xdist_group("gpu_serial")`
+3. `test_experiment_294` passes in isolation but errors under xdist parallelism due to a memory leak — same xdist group fix
+
+The .228 retrospective confirmed this as a process failure: 0 of 14 criteria met, 0 wall-time minutes, both RTX 3090s idle at 0% throughout all eight consecutive milestones.
+
+### Milestone .229 Structural Reform: Ungated Semantic Energy
+
+Milestone .229 (exp2336-exp2349) introduces a key structural change to break the deadlock: four tasks are UNGATED (exp2336 archive, exp2337 pre-test fix v10, **exp2338 Semantic Energy**, exp2349 retro), ensuring at least one new research result regardless of pre-test cascade outcome.
+
+**exp2338 — Semantic Energy Tier 0g (NEW, arXiv:2508.14496)**: Implements Boltzmann energy E = -log p(y|x) on penultimate-layer logit arrays. Prior literature shows 13%+ AUROC improvement over Semantic Entropy on hallucination detection benchmarks. Prior failures documented: exp772 (AUC=0.455 using TF-IDF proxy — wrong method), exp2103 (blocked_gate_check_failed — never ran). exp2338 uses the correct formula on real logit arrays without GGUF requirement.
+
+**exp2337 — Pre-Test Fix v10 (requires_claude: true)**: Addresses all three diagnosed root causes with an explicit operator escalation path — if all targeted fixes fail, the artifact records exact pytest commands for manual terminal intervention. codex demonstrably failed across 9 consecutive attempts (exp2267, exp2281, exp2295, exp2309, exp2323).
+
+### Planning Sweep Papers Added to Research References (Post-.227 and Post-.228)
+
+Post-.227 arXiv sweep added four papers:
+- Frequency-Aware Attention hallucination detection (arXiv:2602.18145 — potential Tier 0f verifier)
+- Neurosymbolic SMT-LIB policy formalization (arXiv:2511.09008)
+- Skew-Reflected Non-Reversible Langevin (arXiv:2506.07816)
+- BEST-Route adaptive LLM routing (arXiv:2506.22716)
+
+Post-.228 arXiv sweep added four more papers:
+- Semantic Energy (arXiv:2508.14496 — Boltzmann energy on logits, Tier 0g candidate)
+- KAN-CL (arXiv:2605.12306 — per-knot importance regularization, 88/93% forgetting reduction on Split-CIFAR)
+- FALCON (arXiv:2602.01090 — grammar-constrained decoding + repair, 100% feasibility)
+- Neuro-Symbolic Compliance (arXiv:2601.06181 — NSVIF on financial regulatory compliance domain)

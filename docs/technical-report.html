@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en
 <h1>Carnot: Energy-Based Verification for LLM Output</h1>
-<h2>A Technical Report — 2,838 Experiments Across the Public Record, 239 Archived Milestone Records, 25,353 Python Test Items Collected (Through Exp 2293)</h2>
+<h2>A Technical Report — 2,880 Experiments Across the Public Record, 242 Archived Milestone Records, 26,182 Python Test Items Collected (Through Exp 2335)</h2>
 <p><strong>Author:</strong> Ian Blenke
-<strong>Date:</strong> 2026-05-17
+<strong>Date:</strong> 2026-05-18
 <strong>Repository:</strong> github.com/Carnot-EBM/carnot-ebm
 <strong>License:</strong> Apache 2.0</p>
 <hr>
@@ -24,8 +24,8 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 <strong>live GPU inference on real public models</strong> (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.</p>
-<p>This report summarizes 2,838 experiments across 239 milestones up to .225, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, and NSVIF neuro-symbolic Z3 extraction as the first PRD Priority #1 implementation.</p>
-<p>This report documents the research arc behind the framework — <strong>2,838 experiment records tracked through Exp 2293, with 2,838 task records in 239 artifact-backed completed milestone records archived through 2026.05.225</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>239</strong> completed milestone records through 2026.05.225. Milestone 2026.05.225 completed 14 experiments (exp2280-exp2293) targeting pre-test cascade fix, FST live generation, FR-11 multidomain retention, KAN-CL n=256 scaling, KV260 RTL lint, Yosys synthesis, adversarial null-space probing, Eidoku CSP gate (first run), and Projected-Langevin baseline (first run). The carnot.pypi_escalation cascade root cause — missing check_pypi_escalation and run_escalation functions — blocked 12 of 14 Phase 1-3 tasks across 5 consecutive milestones. Milestone .226 is planned with 14 tasks (exp2294-exp2307) introducing requires_claude escalation for the pre-test fix, NSVIF neuro-symbolic Z3 extraction (arXiv:2601.17789), VERGE SMT repair (arXiv:2601.20055), and Sparse Ising connectivity (arXiv:2503.01177).</p>
+<p>This report summarizes 2,880 experiments across 242 milestones up to .228, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction as the first PRD Priority #1 implementation, VERGE SMT repair integration, Sparse Ising connectivity, and Semantic Energy (Boltzmann energy on logits as a novel Tier 0g verifier candidate).</p>
+<p>This report documents the research arc behind the framework — <strong>2,880 experiment records tracked through Exp 2335, with 2,880 task records in 242 artifact-backed completed milestone records archived through 2026.05.228</strong> — run between February and May 2026. <code>research-complete.yaml</code> currently archives <strong>242</strong> completed milestone records through 2026.05.228. Milestone 2026.05.228 completed 14 tasks (exp2322-exp2335) and recorded 0 experiments in 0 minutes &mdash; the eighth consecutive empty-experiment milestone. Root cause fully diagnosed: (1) <code>results/experiment_1692_potts_export.json</code> missing; (2) <code>test_experiment_390</code> fails under xdist GPU contention; (3) <code>test_experiment_294</code> errors under xdist memory leak. Milestone .229 has been planned with 14 tasks (exp2336-exp2349), including ungated exp2338 (Semantic Energy Tier 0g, arXiv:2508.14496) to guarantee at least one new research result.</p>
 <p>The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
 hardware sampler audits, continuous self-learning, Phase-5 in-situ training
