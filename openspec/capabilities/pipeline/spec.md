@@ -1901,6 +1901,46 @@ direct intermediate hidden states are unavailable.
 **Spec traces:** REQ-TIER0-008, Exp 2394
 
 
+### REQ-TIER0-010: FregeLogic Hybrid Neural Prefilter With Z3 Tiebreaker
+
+**Status:** Prototype (Exp 2395)
+
+`python/carnot/verify/fregelogic_hybrid.py` shall implement `FregeLogicHybrid`, a
+CPU-only hybrid hallucination-risk verifier that uses Semantic Energy and LaaB-style
+logical alignment scores as neural pre-filters, invoking Z3 only when those two
+pre-filter verdicts disagree.
+
+**Acceptance criteria:**
+- REQ-TIER0-010-1: `verify(entry)` returns `fregelogic_verdict`,
+  `tiebreaker_invoked`, and `z3_verdict` when Z3 is invoked.
+- REQ-TIER0-010-2: When Semantic Energy and LaaB agree on high-risk or low-risk,
+  `verify(entry)` returns the consensus without invoking Z3.
+- REQ-TIER0-010-3: When Semantic Energy and LaaB disagree, `verify(entry)` encodes
+  the prompt/response answer constraint as SMT-LIB and uses Z3 as the tiebreaker.
+- REQ-TIER0-010-4: `results/experiment_2395_fregelogic.json` records FregeLogic
+  AUROC on 36 cached telemetry examples, Z3 tiebreaker invocation rate, delta
+  against the Semantic Energy 0.685 AUROC baseline, random seed 42, duration,
+  checked preconditions, and an honest terminal-prefix verdict.
+
+**Spec traces:** REQ-TIER0-010, Exp 2395
+
+
+### SCENARIO-TIER0-010: FregeLogic Invokes Z3 Only On Neural Disagreement
+
+**Given** a telemetry entry whose Semantic Energy and LaaB pre-filter verdicts agree,
+**When** `FregeLogicHybrid.verify()` is called,
+**Then** `tiebreaker_invoked` is false and the returned verdict is the neural
+consensus.
+
+**Given** a telemetry entry whose Semantic Energy and LaaB pre-filter verdicts
+disagree,
+**When** `FregeLogicHybrid.verify()` is called,
+**Then** `tiebreaker_invoked` is true and `z3_verdict` records the symbolic
+tiebreaker result.
+
+**Spec traces:** REQ-TIER0-010, SCENARIO-TIER0-010, Exp 2395
+
+
 ### REQ-TIER28-001: DraftConditionedVerifier Tier 2.8 — Structural Constraint Injection
 
 **Status:** Implemented (Exp 912)
