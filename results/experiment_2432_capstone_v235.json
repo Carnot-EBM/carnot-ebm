@@ -1,0 +1,191 @@
+{
+  "acceptance_gates": {
+    "best_auroc_achieved_present": true,
+    "fr11_satisfied_recorded": true
+  },
+  "auroc_gap_to_hallscan": -0.00961,
+  "auroc_gap_to_hive_peer": 0.03399,
+  "best_auroc_achieved": 0.88961,
+  "best_sampler_kl_delta": 7.87091211155659,
+  "duration_s": 0.000565,
+  "experiment": "2432_capstone_v235",
+  "external_baselines": {
+    "halluscan_auroc": 0.88,
+    "halluscan_source": "arXiv:2605.02443",
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139",
+    "semantic_energy_baseline_auroc": 0.685
+  },
+  "field_principles": {
+    "auroc_gap_to_hive_peer": "0.9236 - best_auroc_achieved. Primary progress signal.",
+    "best_auroc_achieved": "Best AUROC from any .235 verifier. Paper-v6 headline metric.",
+    "best_sampler_kl_delta": "Best KL improvement from new samplers.",
+    "duration_s": "Guards against fabrication.",
+    "fr11_satisfied": "FR-11 mandatory: true if exp2425.fr11_nsvif_online_passed=true.",
+    "hive_v4_auroc": "HIVE 4-verifier ensemble AUROC (null if exp2422 failed).",
+    "honest_verdict": "Terminal-prefix required. complete: with best_auroc and gap.",
+    "kv260_yosys_succeeded": "KV260 hardware track milestone.",
+    "n_paper_ready_results": "Count of verifiers with AUROC > 0.685 baseline.",
+    "paper_v6_results_table": "Markdown table for paper-v6 Section 5.",
+    "phase1_ship_gate_met": "Phase 1 completion gate."
+  },
+  "fr11_satisfied": true,
+  "halt_rag_auroc_full": 0.704545,
+  "hive_v4_auroc": 0.886364,
+  "honest_verdict": "complete: best_auroc=0.8896; hive_gap=+0.0340; n_paper_ready=8; best_sampler_kl_delta=7.8709; fr11=satisfied",
+  "kv260_yosys_succeeded": false,
+  "logcons_auroc": 0.88961,
+  "milestone": "2026.05.235",
+  "missing_source_artifacts": [],
+  "n_paper_ready_results": 8,
+  "paper_v6_results_table": "| Verifier | AUROC | vs Baseline | Source |\n|---|---|---|---|\n| SemanticEnergy (baseline) | 0.6852 | \u2014 | exp2351 |\n| HALT Tier 0j | 0.8539 | +0.1689 | exp2394 |\n| FregeLogic | 0.8831 | +0.1981 | exp2395 |\n| Typed CoT | 0.5081 | -0.1769 | exp2396 |\n| Freq-Aware Attn | 0.7045 | +0.0195 | exp2397 |\n| HIVE Ensemble v3 | 0.8539 | +0.1689 | exp2398 |\n| HIVE Ensemble v4 | 0.8864 | +0.2014 | exp2422 |\n| Hierarchical LogCons v2 | 0.8896 | +0.2046 | exp2423 |\n| HALT-RAG NLI v2 | 0.7045 | +0.0195 | exp2424 |\n| HalluScan NLI (peer) | 0.8800 | \u2014 | arXiv:2605.02443 |\n| HIVE peer | 0.9236 | \u2014 | arXiv:2604.26139 |",
+  "phase1_ship_gate_met": false,
+  "random_seed": 42,
+  "results_table_rows": [
+    {
+      "auroc": 0.6852,
+      "delta_vs_baseline": null,
+      "is_external_baseline": false,
+      "label": "SemanticEnergy (baseline)",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2351_semantic_energy_real.json",
+      "source_id": "exp2351",
+      "status": "available",
+      "tier": "0g"
+    },
+    {
+      "auroc": 0.853896,
+      "delta_vs_baseline": 0.168896,
+      "is_external_baseline": false,
+      "label": "HALT Tier 0j",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2394_halt_tier0j.json",
+      "source_id": "exp2394",
+      "status": "available",
+      "tier": "0j"
+    },
+    {
+      "auroc": 0.883117,
+      "delta_vs_baseline": 0.198117,
+      "is_external_baseline": false,
+      "label": "FregeLogic",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2395_fregelogic.json",
+      "source_id": "exp2395",
+      "status": "available",
+      "tier": "0k"
+    },
+    {
+      "auroc": 0.508117,
+      "delta_vs_baseline": -0.176883,
+      "is_external_baseline": false,
+      "label": "Typed CoT",
+      "paper_ready": false,
+      "source_artifact": "results/experiment_2396_typed_cot.json",
+      "source_id": "exp2396",
+      "status": "available",
+      "tier": "0l"
+    },
+    {
+      "auroc": 0.704545,
+      "delta_vs_baseline": 0.019545,
+      "is_external_baseline": false,
+      "label": "Freq-Aware Attn",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2397_freq_aware_attn.json",
+      "source_id": "exp2397",
+      "status": "available",
+      "tier": "0f"
+    },
+    {
+      "auroc": 0.853896,
+      "delta_vs_baseline": 0.168896,
+      "is_external_baseline": false,
+      "label": "HIVE Ensemble v3",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2398_hive_ensemble.json",
+      "source_id": "exp2398",
+      "status": "available",
+      "tier": "ensemble"
+    },
+    {
+      "auroc": 0.886364,
+      "delta_vs_baseline": 0.201364,
+      "is_external_baseline": false,
+      "label": "HIVE Ensemble v4",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2422_hive_full_v4.json",
+      "source_id": "exp2422",
+      "status": "available",
+      "tier": "ensemble"
+    },
+    {
+      "auroc": 0.88961,
+      "delta_vs_baseline": 0.20461,
+      "is_external_baseline": false,
+      "label": "Hierarchical LogCons v2",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2423_hierarchical_logcons_v2.json",
+      "source_id": "exp2423",
+      "status": "available",
+      "tier": "0m"
+    },
+    {
+      "auroc": 0.704545,
+      "delta_vs_baseline": 0.019545,
+      "is_external_baseline": false,
+      "label": "HALT-RAG NLI v2",
+      "paper_ready": true,
+      "source_artifact": "results/experiment_2424_halt_rag_nli_v2.json",
+      "source_id": "exp2424",
+      "status": "available",
+      "tier": "0n"
+    },
+    {
+      "auroc": 0.88,
+      "delta_vs_baseline": null,
+      "is_external_baseline": true,
+      "label": "HalluScan NLI (peer)",
+      "paper_ready": false,
+      "source_artifact": "arXiv:2605.02443",
+      "source_id": "arXiv:2605.02443",
+      "status": "external",
+      "tier": "external"
+    },
+    {
+      "auroc": 0.9236,
+      "delta_vs_baseline": null,
+      "is_external_baseline": true,
+      "label": "HIVE peer",
+      "paper_ready": false,
+      "source_artifact": "arXiv:2604.26139",
+      "source_id": "arXiv:2604.26139",
+      "status": "external",
+      "tier": "external"
+    }
+  ],
+  "run_date": "20260518",
+  "schema": "carnot.paper_v6_capstone_2432.v1",
+  "spec_refs": [
+    "REQ-REPORT-2432",
+    "SCENARIO-REPORT-2432"
+  ],
+  "status": "complete",
+  "synthesis": {
+    "change_since_233": "3 additional verifier(s) crossed the 0.685 baseline since .233",
+    "n_missing_artifacts": 0,
+    "n_paper_ready_results": 8,
+    "proved_in_235": [
+      "Best Carnot Tier 0 AUROC = 0.8896 on cached live SOTA telemetry; remaining gap to HIVE peer 0.9236 is 0.0340.",
+      "HIVE 4-verifier ensemble v4 fused live on cached telemetry at AUROC=0.8864.",
+      "Hierarchical LogCons v2 (Z3-backed) reached AUROC=0.8896.",
+      "HALT-RAG NLI v2 reached AUROC=0.7045 on the full corpus.",
+      "FR-11 NSVIF online retention rate satisfied per exp2425.",
+      "Best new sampler beat CASAL baseline by KL delta = 7.8709 (Kinetic / Dikin / DE-PSGLD)."
+    ],
+    "still_needs_work": [
+      "KV260 Yosys synthesis not confirmed (exp2427 blocked or failed).",
+      "Phase 1 ship gate not met (exp2431). Missing: MCP docs missing in docs/; CLI docs missing in docs/"
+    ]
+  }
+}
