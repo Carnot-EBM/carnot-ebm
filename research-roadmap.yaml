@@ -552,7 +552,7 @@ tasks:
                         'carnot.verify.halt_probe', 'carnot.verify.freq_aware_attention']:
                 try: __import__(mod); count += 1
                 except: pass
-            print(f'{count} verifiers available')
+            print(f'{{count}} verifiers available')
             "
             If count < 2: write honest_verdict blocked_insufficient_verifiers and exit.
          b. Telemetry manifest present:
@@ -997,8 +997,8 @@ tasks:
          curl -sf https://pypi.org/pypi/carnot-ebm/json 2>/dev/null | python3 -c "
          import json, sys
          d = json.load(sys.stdin)
-         print(f\"latest_version: {d['info']['version']}\")
-         print(f\"upload_time: {list(d['releases'].values())[-1][0]['upload_time'] if d['releases'] else 'none'}\")
+         print(f\"latest_version: {{d['info']['version']}}\")
+         print(f\"upload_time: {{list(d['releases'].values())[-1][0]['upload_time'] if d['releases'] else 'none'}}\")
          " 2>/dev/null || echo "pypi_not_found"
          pypi_published: true if package exists on PyPI, false otherwise.
 
@@ -1193,7 +1193,7 @@ tasks:
       0. PRECONDITIONS:
          a. Check which artifacts exist:
             for f in 2392 2393 2394 2395 2396 2397 2398 2399 2400 2401 2402 2403 2404; do
-              ls {project_root}/results/experiment_${f}*.json 2>/dev/null && echo "present: $f" || echo "missing: $f"
+              ls {project_root}/results/experiment_${{f}}*.json 2>/dev/null && echo "present: $f" || echo "missing: $f"
             done
 
       1. Read each existing artifact. Extract: status (OK/FAIL/GATE_BLOCK), key_result.

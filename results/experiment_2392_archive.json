@@ -1,0 +1,124 @@
+{
+  "id": "exp2392-archive-and-activate",
+  "schema": "carnot.archive_activation.v1",
+  "honest_verdict": "complete: archive_ready=true; milestone_archived=2026.05.232; active_milestone=2026.05.233",
+  "archive_ready": true,
+  "milestone_archived": "2026.05.232",
+  "completed": "2026-05-18",
+  "preconditions": {
+    "roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+    "observed_milestone": "2026.05.233",
+    "expected_archive_milestone": "2026.05.232",
+    "expected_active_milestone": "2026.05.233",
+    "status": "already_activated",
+    "decision": "research-roadmap.yaml already reports 2026.05.233, so this run checked research-complete.yaml for id: 2026.05.232 before exiting the activation branch."
+  },
+  "archive": {
+    "research_complete_path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+    "research_complete_contains_2026_05_232": true,
+    "existing_entry_line": 19891,
+    "appended_this_run": false,
+    "decision": "No duplicate archive entry was appended because research-complete.yaml already contains id: 2026.05.232."
+  },
+  "activation": {
+    "research_roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+    "research_roadmap_next_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+    "observed_active_milestone": "2026.05.233",
+    "copied_this_run": false,
+    "research_roadmap_next_present": false,
+    "decision": "No copy was needed because the active roadmap was already 2026.05.233 before this task ran."
+  },
+  "changelog": {
+    "modified": false,
+    "reason": "The requested 2026.05.233 precondition branch exits after verifying archive_ready=true."
+  },
+  "milestone_232_result_summary": [
+    {
+      "id": "exp2378",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2379",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2380",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2381",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2382",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2383",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2384",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2385",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2386",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2387",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2388",
+      "status": "FAIL",
+      "result": "codex_cli_error"
+    },
+    {
+      "id": "exp2389",
+      "status": "OK",
+      "result": "best_auroc_achieved=0.6852; paper-v6 table stub"
+    },
+    {
+      "id": "exp2390",
+      "status": "GATE_BLOCK",
+      "result": "capstone gated on failed prerequisites"
+    },
+    {
+      "id": "exp2391",
+      "status": "OK",
+      "result": "retro_complete=true; n_failed=11; auroc_gap=0.1948"
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "archive_ready == true",
+      "passed": true,
+      "principle": "Ensures research-complete.yaml records .232 outcomes before .233 begins."
+    }
+  ],
+  "notes": [
+    "scripts/research_conductor.py was not modified.",
+    "No push was performed.",
+    "The active roadmap is already 2026.05.233 and research-complete.yaml already contains id: 2026.05.232."
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required. Must start complete: to pass conductor reconciler.",
+    "archive_ready": "True only when .232 appears in research-complete.yaml -- gate for activation.",
+    "milestone_archived": "Records which milestone was archived (2026.05.232) for audit traceability."
+  }
+}
