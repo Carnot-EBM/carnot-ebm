@@ -4213,3 +4213,33 @@ external baselines without counting them as local paper-ready Carnot results.
 **And** it writes `results/experiment_2389_paperv6_table.json` with all
 REQ-REPORT-2389 required fields, source-artifact availability, methodology
 notes, and a terminal-prefixed honest verdict.
+
+### REQ-REPORT-2391: Milestone 2026.05.232 Operational Retrospective
+
+The repository shall provide `scripts/experiment_2391_retro.py` to generate
+`results/experiment_2391_retro.json` with schema
+`carnot.operational_retro.v75`.
+
+The artifact must read the conductor log and milestone roadmap, record one
+terminal status for each planned Exp 2378 through Exp 2391 task, and include
+`honest_verdict`, `n_experiments_completed`, `n_gate_blocks`, `n_failed`,
+`total_wall_time_min`, `fr11_satisfied`, `fst_live_path_ab_completed`,
+`auroc_gap_to_hallscan_at_232_close`, `kv260_yosys_synthesis_succeeded`,
+`phase1_ship_criteria_met`, `top_3_successes`, `top_3_gaps_for_233`, and
+`retro_complete`.
+
+Missing source artifacts must be treated as unavailable evidence rather than
+as successful gates. The `honest_verdict` field must start with a terminal
+prefix.
+
+#### SCENARIO-REPORT-2391: Generate .232 Retrospective Artifact
+
+**Given** the .232 conductor log contains repeated failed task attempts, one
+paper-v6 table success, and a capstone gate block
+**And** the key Exp 2382, Exp 2383, Exp 2384, Exp 2388, and Exp 2390 source
+artifacts may be absent from `results/`
+**When** the Exp 2391 retrospective generator runs
+**Then** it writes `results/experiment_2391_retro.json` with schema
+`carnot.operational_retro.v75`, terminal-prefixed `honest_verdict`, accurate
+task counts, close-of-milestone AUROC gap accounting, false FR-11/FST/KV260
+ship-gate booleans when evidence is absent, and `retro_complete=true`.
