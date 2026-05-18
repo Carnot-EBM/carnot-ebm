@@ -1,800 +1,527 @@
-milestone: 2026.05.229
-milestone_title: Ungated Semantic Energy + Pre-Test Fix v10 + Phase 1-3 Research Retries
-milestone_doc: openspec/change-proposals/research-roadmap-v229.md
+milestone: 2026.05.230
+milestone_title: 'All-Ungated Full Research Sprint: Semantic Energy + NSVIF + VERGE + FST + KAN-CL'
+milestone_doc: openspec/change-proposals/research-roadmap-v230.md
 tasks:
-- id: exp2336-archive-and-activate
-  title: 'Phase 0: Archive .228 and activate .229'
-  milestone: 2026.05.229
-  deliverable: results/experiment_2336_archive.json
+- id: exp2350-archive-and-activate
+  title: 'Phase 0: Archive .229 and activate .230'
+  milestone: 2026.05.230
+  deliverable: results/experiment_2350_archive.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
   prior_failures:
-  - experiment_id: exp2322-archive-and-activate
-    verdict: 'complete: archive_ready'
-    addressed_by: "exp2322 succeeded in .228. This is a fresh archive task for .228→\
-      .229 transition. Precondition corrected: check for milestone '2026.05.228',\
-      \ which is what research-roadmap.yaml now contains."
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: Milestone 2026.05.228 has completed. We must archive it and activate\
-    \ 2026.05.229.\nKey .228 finding: 0 experiments ran (8th consecutive empty milestone).\
-    \ The pre-test cascade\n(3 specific remaining failures) prevented all Phase 1-3\
-    \ tasks from executing.\nEXISTING CODE TO READ FIRST: {project_root}/research-complete.yaml,\
-    \ {project_root}/research-roadmap.yaml\nTASK: Archive 2026.05.228 to research-complete.yaml\
-    \ and initialize the .229 milestone.\nCONCRETE STEPS:\n  0. PRECONDITIONS (check\
-    \ BEFORE any subsequent step):\n     a. Verify {project_root}/research-roadmap.yaml\
-    \ exists and contains milestone: \"2026.05.228\".\n        If the file is missing\
-    \ or does NOT contain \"2026.05.228\", write honest_verdict\n        blocked_roadmap_missing\
-    \ and exit.\n  1. Append all tasks from research-roadmap.yaml under a new \"2026.05.228\"\
-    \ entry in\n     research-complete.yaml, setting completed_date to {date}.\n  2.\
-    \ Replace research-roadmap.yaml contents with the contents of research-roadmap-next.yaml.\n\
-    \  3. Add a \"## {date} (Milestone 2026.05.229 activated)\" stub in ops/changelog.md.\n\
-    \  4. Set archive_ready: true in the deliverable.\n  5. Write deliverable to results/experiment_2336_archive.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required (complete:/success:) so conductor classifies this as a closed task,\
-    \ not a partial.\"\n  - archive_ready:\n      principle: \"Boolean gate confirming\
-    \ .228 was appended to research-complete.yaml before roadmap swap. Downstream\
-    \ tasks depend on this.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2337-pretest-fix-v10
-  title: "Phase 0: Fix 3 Remaining Pre-Test Failures (10th Attempt — Ungated\
-    \ + Operator Escalation Path)"
-  milestone: 2026.05.229
-  deliverable: results/experiment_2337_pretest_fix.json
-  requires_claude: true
-  max_turns: 50
-  prior_failures:
-  - experiment_id: exp2323-pretest-fix-final
-    verdict: 'complete: pretest_fixed == false or no deliverable (conductor never
-      activated exp2323 within .228 window)'
-    addressed_by: "exp2323 never executed in .228 (8th consecutive empty milestone\
-      \ — conductor activation\n    latency prevented any experiment from running).\
-      \ This task is UNGATED (no gated_on field),\n    so it executes immediately\
-      \ after the archive step without waiting for any gate. The 3\n    specific root\
-      \ causes remain unchanged from exp2309 + exp2323 diagnosis:\n    (1) results/experiment_1692_potts_export.json\
-      \ missing;\n    (2) test_experiment_390 needs xdist_group('gpu_serial');\n \
-      \   (3) test_experiment_294 needs xdist_group('gpu_serial').\n    NEW in v10:\
-      \ If all 3 fixes are applied and the suite still fails, exp2337 documents the\n\
-      \    exact pytest commands for operator manual inspection (5-minute terminal\
-      \ fix path)."
-    retire_if_same_verdict: true
-  - experiment_id: exp2309-pretest-fix-completion
-    verdict: 'complete: named_tests_fixed_suite_has_other_preexisting_failures'
-    addressed_by: exp2309 fixed 2 tests but timed out before clearing 3 more. The
-      3 remaining targets are documented in exp2309 + exp2323 artifacts. exp2337
-      addresses all 3 explicitly.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: After 9 consecutive pre-test fix attempts across 8 empty milestones,\
-    \ the root\ncauses are FULLY DIAGNOSED from exp2309 + exp2323. This task is UNGATED\
-    \ and runs\nimmediately after the archive step. The 3 specific fixes are:\n\n\
-    REMAINING 3 FAILING TESTS (from results/experiment_2309_pretest_fix.json\n+\
-    \ results/experiment_2323_pretest_fix.json if it exists):\n\n  Test A: tests/python/test_experiment_1692_potts_v2.py::test_experiment_1692_potts_v2_artifact\n\
-    \    Reason: results/experiment_1692_potts_export.json does not exist.\n    Fix:\
-    \ Create that JSON file. Strategy:\n      grep -r \"experiment_1692_potts_export\"\
-    \ {project_root}/tests/ {project_root}/scripts/ --include=\"*.py\" -l\n     \
-    \ Read the test to identify EXACTLY what fields it asserts.\n      If a generation\
-    \ script exists, run it. If not, write a minimal valid JSON at\n      results/experiment_1692_potts_export.json\
-    \ with the fields the test asserts.\n\n  Test B: tests/python/test_experiment_390_gpu_preflight.py::TestRunGpuPreflight::test_scripts_missing_session_startup\n\
-    \    Reason: Passes in isolation. Fails under xdist parallel execution (GPU contention).\n\
-    \    Fix: Add @pytest.mark.xdist_group(\"gpu_serial\") ABOVE TestRunGpuPreflight\
-    \ class.\n    Add 'import pytest' if not present. DO NOT skip the test.\n\n  Test\
-    \ C: tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct\n\
-    \    Reason: ERROR (not FAILURE) under xdist due to memory leak from parallel\
-    \ GPU tests.\n    Passes in isolation.\n    Fix: Add @pytest.mark.xdist_group(\"\
-    gpu_serial\") ABOVE TestBaselineAccuracyBounds class.\n    Add 'import pytest'\
-    \ if not present. DO NOT skip the test.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/results/experiment_2309_pretest_fix.json\n\
-    \  {project_root}/tests/python/test_experiment_1692_potts_v2.py\n  {project_root}/tests/python/test_experiment_390_gpu_preflight.py\n\
-    \  {project_root}/tests/python/test_experiment_294_gpu_baseline_apple.py\n  Also\
-    \ read results/experiment_2323_pretest_fix.json if it exists (may have further\
-    \ diagnosis)\nTASK: Fix all 3 remaining failures so the full pre-test suite passes.\n\
-    CONCRETE STEPS:\n  1. Read results/experiment_2309_pretest_fix.json (and exp2323\
-    \ if present) to confirm\n     exact test names and any additional diagnosis from\
-    \ prior attempts.\n  2. Fix Test A (potts artifact):\n     a. Run: grep -r \"\
-    experiment_1692_potts_export\" {project_root}/tests/ {project_root}/scripts/\
-    \ --include=\"*.py\" -l\n     b. Read test_experiment_1692_potts_v2.py to identify\
-    \ EXACTLY what fields are asserted.\n     c. If a generation script exists: run\
-    \ it to recreate the artifact.\n        If no generation script: write a minimal\
-    \ valid JSON at results/experiment_1692_potts_export.json\n        containing\
-    \ the fields asserted by the test (with plausible values from the test logic).\n\
-    \     d. Verify: .venv/bin/python -m pytest \"tests/python/test_experiment_1692_potts_v2.py\"\
-    \ -x -v --no-cov -p no:cacheprovider -p no:xdist 2>&1 | tail -20\n  3. Fix Tests\
-    \ B and C (xdist group markers):\n     a. Open tests/python/test_experiment_390_gpu_preflight.py.\n\
-    \        Add 'import pytest' if not present at top of file.\n        Add @pytest.mark.xdist_group(\"\
-    gpu_serial\") ABOVE TestRunGpuPreflight class.\n     b. Open tests/python/test_experiment_294_gpu_baseline_apple.py.\n\
-    \        Add 'import pytest' if not present at top of file.\n        Add @pytest.mark.xdist_group(\"\
-    gpu_serial\") ABOVE TestBaselineAccuracyBounds class.\n     c. Verify both in\
-    \ isolation (no xdist):\n        .venv/bin/python -m pytest \\\n          \"tests/python/test_experiment_390_gpu_preflight.py::TestRunGpuPreflight::test_scripts_missing_session_startup\"\
-    \ \\\n          \"tests/python/test_experiment_294_gpu_baseline_apple.py::TestBaselineAccuracyBounds::test_accuracy_in_unit_interval_when_all_correct\"\
-    \ \\\n          -x -v --no-cov -p no:cacheprovider -p no:xdist 2>&1 | tail -20\n\
-    \  4. Run the FULL pre-test suite:\n     cd {project_root} && .venv/bin/python\
-    \ -m pytest tests/python \\\n       -x -q --no-cov -p no:cacheprovider 2>&1 |\
-    \ tail -30\n     Record: full_pretest_errors (count of ERROR lines), full_pretest_failures\
-    \ (count of FAILED lines).\n  5. Set pretest_fixed: true ONLY if full_pretest_errors\
-    \ == 0 AND full_pretest_failures == 0.\n  6. OPERATOR ESCALATION PATH (if pretest_fixed\
-    \ still false after steps 1-4):\n     If the suite still fails, record in the\
-    \ artifact:\n       operator_manual_commands: [\n         \"cd {project_root}\"\
-    ,\n         \".venv/bin/python -m pytest tests/python -x -q --no-cov -p no:cacheprovider\
-    \ 2>&1 | tail -40\",\n         \"# Copy the FAILED/ERROR lines above and inspect\
-    \ the specific test file\"\n       ]\n     This gives the operator a 5-minute\
-    \ terminal fix path without re-running the conductor.\n  7. Write deliverable\
-    \ to results/experiment_2337_pretest_fix.json.\n     CRITICAL: Write the file\
-    \ even if the suite still fails. Honest partial > no deliverable.\n     Include\
-    \ tests_still_failing list if pretest_fixed=false.\n\nREQUIRED ARTIFACT FIELDS:\n\
-    \  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: if\
-    \ pretest_fixed=true. complete: partial_fix_N_of_3\n                 if only some\
-    \ tests fixed. Never omit the file (honest partial > no deliverable).\"\n  - pretest_fixed:\n\
-    \      principle: \"Primary gate for ALL Phase 2-4 tasks. True only when full\
-    \ pytest suite has\n                 zero errors AND zero failures. All 3 named\
-    \ tests must pass.\"\n  - full_pretest_errors:\n      principle: \"Must be 0 for\
-    \ pretest_fixed=true. Records import/environment errors.\"\n  - full_pretest_failures:\n\
-    \      principle: \"Must be 0 for pretest_fixed=true. Records test assertion failures.\"\
-    \n  - testa_potts_fixed:\n      principle: \"Boolean: did the potts artifact test\
-    \ now pass in isolation? Tracks per-test progress.\"\n  - testb_gpu390_fixed:\n\
-    \      principle: \"Boolean: did the GPU preflight xdist test pass? Tracks xdist\
-    \ group marker effectiveness.\"\n  - testc_gpu294_fixed:\n      principle: \"\
-    Boolean: did the GPU baseline xdist test pass? Tracks xdist group marker effectiveness.\"\
-    \n  - fix_approach_potts:\n      principle: \"Documents what approach fixed the\
-    \ potts artifact (regenerated vs minimal fixture).\"\n  - tests_still_failing:\n\
-    \      principle: \"If pretest_fixed=false, lists remaining failing tests. Enables\
-    \ root-cause tracking for .230.\"\n  - operator_manual_commands:\n      principle:\
-    \ \"If pretest_fixed=false, provides exact terminal commands for operator manual\
-    \ inspection.\n                 Converts a cascade blocker into a 5-minute operator\
-    \ action item.\"\n  - iterations_required:\n      principle: \"Records fix-test\
-    \ cycles needed; calibrates future pre-test fix budgets.\"\n\nRun command, 'Do\
-    \ NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2338-semantic-energy-tier0g
-  title: "Phase 1: Semantic Energy Hallucination Detector — Tier 0g Verifier\
-    \ Prototype (arXiv:2508.14496)"
-  milestone: 2026.05.229
-  deliverable: results/experiment_2338_semantic_energy.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  prompt: "CONTEXT: This task is UNGATED. It runs regardless of whether exp2337 (pre-test\
-    \ fix) succeeds.\nThis structural change prevents another 0-experiment milestone.\n\
-    \narXiv:2508.14496 introduces Semantic Energy: a Boltzmann-inspired energy function\n\
-    computed from LLM penultimate layer logits (not post-softmax probabilities) combined\n\
-    with semantic clustering. Achieves 13%+ AUROC improvement over Semantic Entropy\n\
-    for hallucination detection across multiple benchmarks.\n\nThis is a natural Tier\
-    \ 0g verifier for Carnot's cascade architecture:\n- Tier 0b: SpilledEnergy (token-logit\
-    \ variance)\n- Tier 0f: Frequency-Aware Attention (arXiv:2602.18145, attention\
-    \ pattern entropy)\n- Tier 0g: Semantic Energy (Boltzmann energy on penultimate\
-    \ logits) [THIS TASK]\n\nThe task does NOT require: the pre-test suite to pass,\
-    \ a GPU, or a cached GGUF model.\nIt uses a small synthetic logit simulation to\
-    \ prototype the detector.\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/\n\
-    \  {project_root}/python/carnot/models/substrate_kan.py\n  {project_root}/scripts/experiment_template.py\n\
-    TASK: Implement a prototype Semantic Energy hallucination detector and evaluate\
-    \ on synthetic data.\nCONCRETE STEPS:\n  1. Create python/carnot/verify/semantic_energy.py\
-    \ implementing:\n     class SemanticEnergyDetector:\n       - compute_energy(logits:\
-    \ np.ndarray, temperature: float = 1.0) -> float\n         Computes Boltzmann\
-    \ energy: E = -temperature * log(sum(exp(logits / temperature)))\n         Equivalent\
-    \ to the negative log-partition function (free energy).\n       - cluster_semantics(responses:\
-    \ list[str]) -> dict[str, list[int]]\n         Groups responses by semantic equivalence\
-    \ (simple string-hash clustering for prototype).\n       - detect(logits_per_response:\
-    \ list[np.ndarray], responses: list[str]) -> dict\n         Returns: {{\n       \
-    \    \"energy_mean\": float,\n           \"energy_std\": float,\n           \"\
-    semantic_entropy_estimate\": float,\n           \"semantic_energy_score\": float,\n\
-    \           \"is_hallucination_predicted\": bool\n         }}\n         where semantic_energy_score\
-    \ = energy_std / (energy_mean + 1e-8)\n         and is_hallucination_predicted\
-    \ = semantic_energy_score > threshold.\n  2. Write 3 focused unit tests in tests/python/verify/test_semantic_energy.py:\n\
-    \     Test 1: compute_energy() returns scalar float for valid logit array.\n  \
-    \   Test 2: detect() on high-variance logits (simulated hallucination) returns\n\
-    \             is_hallucination_predicted=True.\n     Test 3: detect() on low-variance\
-    \ logits (simulated confident correct) returns\n             is_hallucination_predicted=False.\n\
-    \  3. Run unit tests. Record n_tests_passed.\n     NOTE: If the pre-test suite\
-    \ is still broken (exp2337 failed), run these unit tests\n     with: .venv/bin/python\
-    \ -m pytest tests/python/verify/test_semantic_energy.py -v --no-cov -p no:xdist\n\
-    \  4. Synthesize an evaluation corpus:\n     - 50 correct-answer examples: logits\
-    \ drawn from Normal(0, 0.5) [low variance = confident]\n     - 50 hallucination\
-    \ examples: logits drawn from Normal(0, 2.0) [high variance = uncertain]\n   \
-    \  Use random_seed=42.\n  5. Evaluate:\n     - semantic_energy_auroc: AUROC for\
-    \ detecting hallucinations (correct label: is_hallucination)\n     - fpr_at_tpr80:\
-    \ false positive rate at TPR=0.80\n     - mean_energy_correct vs mean_energy_hallucination\n\
-    \  6. Set semantic_energy_validated: true if semantic_energy_auroc >= 0.60.\n\
-    \  7. Write deliverable to results/experiment_2338_semantic_energy.json.\n\nREQUIRED\
-    \ ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\
-    \ complete: if implementation ran to completion (AUROC\n                 below\
-    \ 0.60 is an honest finding for a prototype).\"\n  - semantic_energy_validated:\n\
-    \      principle: \"Boolean. True when AUROC >= 0.60 on synthetic corpus. This\
-    \ is a prototype\n                 gate; full validation requires real LLM logits\
-    \ in a later milestone.\"\n  - semantic_energy_auroc:\n      principle: \"Primary\
-    \ hallucination-detection quality metric. Baseline: 0.50 = random, 0.60\n    \
-    \             = informative prototype, 0.75+ = paper-v6 claim territory.\"\n \
-    \ - fpr_at_tpr80:\n      principle: \"False positive rate at TPR=0.80 guards against\
-    \ over-rejection at inference\n                 time; FPR > 0.30 makes the verifier\
-    \ unusable in production.\"\n  - mean_energy_correct:\n      principle: \"Must\
-    \ be lower than mean_energy_hallucination; validates the Boltzmann energy\n  \
-    \               direction (correct = lower energy = more certain).\"\n  - mean_energy_hallucination:\n\
-    \      principle: \"Must be higher than mean_energy_correct; validates the energy\
-    \ ordering.\"\n  - n_tests_passed:\n      principle: \"Unit tests must pass; confirms\
-    \ the module is importable and functionally correct.\"\n  - module_path:\n    \
-    \  principle: \"Records where SemanticEnergyDetector was written for integration\
-    \ with the\n                 verifier cascade in future milestones.\"\n  - n_eval_examples:\n\
-    \      principle: \"Must be 100 (50+50) to make AUROC estimates statistically\
-    \ meaningful.\"\n  - random_seed:\n      principle: \"Must be 42 for reproducibility\
-    \ of the synthetic logit corpus.\"\n\nRun command, 'Do NOT push. Do NOT modify\
-    \ scripts/research_conductor.py.'\n"
-  prior_failures:
-  - experiment_id: exp772-semantic-energy-probe
-    verdict: semantic_energy_below_baseline
-    addressed_by: "exp772 (arXiv 2508.14496, Tier 0g candidate) used a TF-IDF proxy
-      as a stand-in for real logits (AUC=0.455556, energy_threshold=5.0, probe_type=unsupervised_tfidf_proxy).
-      The core method was never tested on actual Boltzmann energy from penultimate
-      layer logits. exp2338 implements the correct formula: E=-T*log(sum(exp(logits/T)))
-      on synthetic logit arrays with controlled variance (Normal(0,0.5) vs Normal(0,2.0)),
-      making the method testable without a cached GGUF model. Gate lowered to AUROC>=0.60
-      to be prototype-appropriate."
+  - experiment_id: exp2336-archive-and-activate
+    verdict: 'complete: blocked_roadmap_missing (archive_ready=false)'
+    addressed_by: "exp2336 checked for milestone \"2026.05.228\" but research-roadmap.yaml already contained \"2026.05.229\"\
+      \ (conductor swaps roadmap before any task runs). exp2350 checks for \"2026.05.229\" \u2014 the current milestone. If\
+      \ the file already shows \"2026.05.230\" (conductor swapped again), the task reads research-complete.yaml to confirm\
+      \ .229 is listed there and writes archive_ready=true without re-appending."
     retire_if_same_verdict: false
-  - experiment_id: exp2103-semantic-energy-detection
-    verdict: blocked_gate_check_failed
-    addressed_by: "exp2103 was gated on an upstream artifact that was never set; the
-      experiment never ran any Semantic Energy logic. exp2338 is UNGATED — it runs
-      regardless of the pre-test cascade or any other gate. No model cache required."
-    retire_if_same_verdict: false
-- id: exp2339-fst-live-gen-v9
-  title: 'Phase 2: FST+ODAR+CASAL Real-Scale Live Generation v9 (>50 tokens)'
-  milestone: 2026.05.229
-  deliverable: results/experiment_2339_fst_live_gen.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 50
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
-  prior_failures:
-  - experiment_id: exp2324-fst-live-gen-v8
-    verdict: blocked_gate_check_failed
-    addressed_by: exp2324 was blocked because exp2323.pretest_fixed was never set
-      (exp2323 never ran in .228). exp2337 is UNGATED and addresses all 3 root causes.
-      Scope is identical to exp2324.
-    retire_if_same_verdict: true
-  - experiment_id: exp2310-fst-live-gen-v7
-    verdict: blocked_gate_check_failed
-    addressed_by: Same pre-test cascade. FST live generation has never run in any
-      milestone due to continuous cascade blocking.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: After 9 consecutive milestones of cascade blocking, exp2337 has\
-    \ finally achieved\npretest_fixed: true. This task runs the FST+ODAR+CASAL live\
-    \ generation benchmark with\nFULL ANSWER GENERATION (minimum 50 tokens per answer,\
-    \ not a single-token probe).\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/pipeline/verify_repair.py\n\
-    \  {project_root}/python/carnot/pipeline/odar_router.py\n  {project_root}/python/carnot/training/fast_slow.py\n\
-    \  {project_root}/python/carnot/samplers/casal.py\n  {project_root}/scripts/experiment_template.py\n\
-    TASK: Run 20 full generate+verify passes on a cached SOTA GGUF, generating complete\
-    \ answers.\nCONCRETE STEPS:\n  0. PRECONDITIONS (check BEFORE any subsequent step):\n\
-    \     a. python/carnot/pipeline/odar_router.py imports without error — else\
-    \ blocked_odar_missing.\n     b. python/carnot/training/fast_slow.py imports without\
-    \ error — else blocked_fst_missing.\n     c. python/carnot/samplers/casal.py\
-    \ imports without error — else blocked_casal_missing.\n     d. ls ~/.cache/huggingface/hub/\
-    \ | grep -i \"gemma-4-26B\\|Qwen3.6-35B\\|gemma-4-31B\" returns\n        non-empty\
-    \ — else blocked_model_not_cached. Do NOT fabricate GPU inference.\n  1.\
-    \ MODEL_SPECS must include at least one of:\n     - unsloth/Qwen3.6-35B-A3B-GGUF\n\
-    \     - unsloth/gemma-4-31B-it-GGUF\n     - unsloth/gemma-4-26B-A4B-it-GGUF\n\
-    \  2. Construct 20 math/reasoning prompts (multi-step arithmetic, simple logic).\n\
-    \  3. For each prompt: generate a FULL ANSWER (minimum 50 tokens, not just next-token).\n\
-    \  4. For each answer: run ODAR routing; if deliberative, run FST context prep\
-    \ + CASAL constraint enforcement.\n  5. Measure:\n     - n_violations_found: count\
-    \ of answers with a constraint violation detected\n     - n_violations_repaired:\
-    \ count where repair reduced energy\n     - mean_answer_length_tokens: must be\
-    \ >= 50 (not a one-token probe)\n     - odar_fast_path_fraction: fraction routed\
-    \ to fast path\n  6. Set fst_live_validated: true if n_violations_found >= 1 AND\
-    \ mean_answer_length_tokens >= 50.\n  7. Write deliverable to results/experiment_2339_fst_live_gen.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if fst_live_validated is true.\"\n  - fst_live_validated:\n\
-    \      principle: \"Primary gate for exp2340 and exp2348. True only when violations\
-    \ found in FULL\n                 answers (>= 50 tokens, not single-token probes).\"\
-    \n  - mean_answer_length_tokens:\n      principle: \"Must be >= 50. Value < 50\
-    \ indicates the benchmark did not test full generation.\"\n  - n_violations_found:\n\
-    \      principle: \"At least 1 required to confirm the pipeline runs verification,\
-    \ not pass-through.\"\n  - n_violations_repaired:\n      principle: \"Records\
-    \ repair effectiveness; 0 is acceptable as an honest finding.\"\n  - models_used:\n\
-    \      principle: \"Records which SOTA GGUF ran so claims are model-specific and\
-    \ not hallucinated.\"\n  - preconditions_checked:\n      principle: \"Lists which\
-    \ resources were verified; pre-empts fabrication mode.\"\n  - duration_s:\n  \
-    \    principle: \"Real compute with a 26B model takes minutes; < 60s for 20 problems\
-    \ flags fabrication.\"\n  - random_seed:\n      principle: \"Reproducibility for\
-    \ the 20-example corpus.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2340-fr11-fst-multidomain-v6
-  title: 'Phase 2: FR-11 FST Multi-Domain Retention v6'
-  milestone: 2026.05.229
-  deliverable: results/experiment_2340_fr11_multidomain.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  continuous_self_learning_task: true
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
-  - upstream: exp2339-fst-live-gen-v9
-    artifact_field: fst_live_validated
-    op: ==
-    value: true
-  prior_failures:
-  - experiment_id: exp2325-fr11-fst-multidomain-v5
-    verdict: blocked_gate_check_failed
-    addressed_by: exp2325 was blocked because exp2324 (FST live gen) never set fst_live_validated
-      (exp2324 was blocked because exp2323 never ran). exp2337 is ungated; exp2339
-      runs first. Scope is identical to exp2325.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: FR-11 continuous self-learning mandate (PRD requirement). exp2241\
-    \ (.222) proved\nFST achieves 4x sample efficiency on a single-domain synthetic\
-    \ corpus. This task validates\nFST fast-weight updates generalize across domains.\
-    \ Mandatory CSL experiment for .229.\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/training/fast_slow.py\n\
-    \  {project_root}/python/carnot/pipeline/verify_repair.py\n  {project_root}/scripts/experiment_template.py\n\
-    \  {project_root}/results/experiment_2339_fst_live_gen.json\nTASK: Validate FST\
-    \ fast-weight retention across 3 reasoning domains.\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n\
-    \     a. python/carnot/training/fast_slow.py imports without error — else\
-    \ blocked_fst_missing.\n  1. Create 3 domain corpora (10 examples each, synthetic,\
-    \ no external LLM calls):\n     Domain A: arithmetic (a + b = c style)\n     Domain\
-    \ B: code constraints (loop bounds, array indices)\n     Domain C: logic propositions\
-    \ (if P then Q style)\n  2. Run FST learning in sequence: Domain A -> Domain B\
-    \ -> Domain C.\n  3. After Domain C training, evaluate on held-out Domain A examples.\n\
-    \  4. Measure:\n     - cross_domain_retention_rate: accuracy on Domain A after\
-    \ Domain C / accuracy after Domain A\n     - per_domain_utility_delta: energy\
-    \ reduction per domain\n  5. Set fr11_multidomain_passed: true if cross_domain_retention_rate\
-    \ >= 0.75.\n  6. Write deliverable with continuous_self_learning_task: true.\n\
-    \  7. Write deliverable to results/experiment_2340_fr11_multidomain.json.\n\n\
-    REQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if fr11_multidomain_passed is true.\"\n  - continuous_self_learning_task:\n\
-    \      principle: \"Must be true — FR-11 mandate requires at least one CSL\
-    \ task per milestone.\"\n  - fr11_multidomain_passed:\n      principle: \"Boolean\
-    \ gate. True only when cross-domain retention >= 0.75.\"\n  - cross_domain_retention_rate:\n\
-    \      principle: \"Primary FR-11 multi-domain gate; measures FST cross-domain\
-    \ generalization.\"\n  - per_domain_utility_delta:\n      principle: \"Per-domain\
-    \ energy reduction records domain-specific benefit.\"\n  - n_corpus_per_domain:\n\
-    \      principle: \"Must be >= 10 per domain for statistically non-trivial retention\
-    \ claims.\"\n  - random_seed:\n      principle: \"Reproducibility for the sequential\
-    \ domain training.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2341-kancl-n256-v8
-  title: 'Phase 2: KAN-CL n=256 Per-Knot Retention v8'
-  milestone: 2026.05.229
-  deliverable: results/experiment_2341_kancl_n256.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
-  prior_failures:
-  - experiment_id: exp2326-kancl-n256-v7
-    verdict: blocked_gate_check_failed
-    addressed_by: exp2326 was blocked because exp2323 never ran in .228. exp2337
-      is ungated. Scope identical to exp2326. KAN-CL validated by arXiv:2605.12306
-      (88%/93% forgetting reduction) confirming the per-knot approach.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: KAN-CL (arXiv:2605.12306) proves per-knot importance regularization\
-    \ achieves\n88-93% forgetting reduction on Split-CIFAR benchmarks. Carnot's implementation\n\
-    targets Ising constraint learning at n=256. All prior attempts blocked by cascades.\n\
-    EXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/models/substrate_kan.py\n\
-    \  {project_root}/python/carnot/samplers/parallel_ising.py\n  {project_root}/scripts/experiment_template.py\n\
-    TASK: Validate KAN-CL per-knot importance at n=256 without THRML parity measurement.\n\
-    CONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. python/carnot/models/substrate_kan.py\
-    \ imports without error — else blocked_kan_missing.\n  1. Construct an Ising\
-    \ model with n=256 spins (random J and h, random_seed=42).\n  2. Define 3 sequential\
-    \ constraint domains:\n     Domain 1: ferromagnetic coupling (J_ij = +1 for nearest\
-    \ neighbors)\n     Domain 2: antiferromagnetic coupling (J_ij = -1 for nearest\
-    \ neighbors)\n     Domain 3: random sparse coupling (random J, 20% non-zero)\n\
-    \  3. Train KAN-CL with per-knot importance for each domain in sequence.\n  4.\
-    \ After Domain 3 training, evaluate on held-out Domain 1 test instances.\n  5.\
-    \ Measure:\n     - n256_retention_rate: accuracy on Domain 1 after Domain 3 /\
-    \ accuracy after Domain 1\n     - per_knot_update_latency_us: mean update time\
-    \ per step in microseconds\n     - n_active_knots: count of importance-weighted\
-    \ active knots after Domain 3\n  6. Set kancl_n256_validated: true if n256_retention_rate\
-    \ >= 0.85.\n  7. Write deliverable to results/experiment_2341_kancl_n256.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if n256_retention_rate >= 0.85.\"\n  - kancl_n256_validated:\n\
-    \      principle: \"Boolean gate for exp2348 (capstone). True only if retention\
-    \ >= 0.85 at n=256.\"\n  - n256_retention_rate:\n      principle: \"Primary COOL-parity\
-    \ gate; >= 0.85 means per-knot importance prevents catastrophic forgetting.\"\n\
-    \  - per_knot_update_latency_us:\n      principle: \"Records whether COOL's 20us\
-    \ budget is achievable; informs hardware feasibility.\"\n  - n_active_knots:\n\
-    \      principle: \"Sparsity metric; fewer active knots = more efficient importance\
-    \ mask.\"\n  - n_spins:\n      principle: \"Must be 256 to confirm this is the\
-    \ n=256 scale experiment, not a smaller surrogate.\"\n  - random_seed:\n      principle:\
-    \ \"Must be 42 for reproducibility of the sequential domain training.\"\n\nRun\
+  prompt: "CONTEXT: Milestone 2026.05.229 has completed (3/14 criteria met: archive partial, Semantic\nEnergy Tier 0g AUROC=1.0,\
+    \ retro). We must archive it and activate 2026.05.230.\n\nKEY FIX vs prior attempts: check for \"2026.05.229\" (NOT \"\
+    2026.05.228\"). The conductor\nswaps research-roadmap.yaml when activating a milestone, so by the time this task runs,\n\
+    the file already contains the NEW milestone ID.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/research-complete.yaml\
+    \ (last 80 lines)\n  {project_root}/research-roadmap.yaml (first 5 lines \u2014 check milestone field)\n\nTASK: Archive\
+    \ milestone 2026.05.229 to research-complete.yaml and activate .230.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a.\
+    \ Read research-roadmap.yaml first 3 lines to find the milestone field.\n     b. If milestone == \"2026.05.229\": proceed\
+    \ to step 1.\n        If milestone == \"2026.05.230\": the conductor already swapped the file.\n          Check if research-complete.yaml\
+    \ contains \"id: 2026.05.229\". If yes:\n          write archive_ready=true and exit (no double-append needed). If no:\n\
+    \          try appending .229 to research-complete.yaml from the prior roadmap backup.\n        If milestone is anything\
+    \ else: write honest_verdict blocked_roadmap_unexpected\n          and exit.\n  1. Append all .229 tasks as a new \"-\
+    \ id: 2026.05.229\" entry in research-complete.yaml\n     (mirroring the format of the .228 entry directly above). Set\
+    \ completed: \"{date}\".\n  2. Replace research-roadmap.yaml with research-roadmap-next.yaml (the .230 roadmap).\n   \
+    \  Command: cp {project_root}/research-roadmap-next.yaml {project_root}/research-roadmap.yaml\n  3. Add \"## {date} (Milestone\
+    \ 2026.05.230 activated)\" stub in ops/changelog.md.\n  4. Write deliverable to results/experiment_2350_archive.json.\n\
+    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: archive_ready=true.\"\
+    \n  - archive_ready:\n      principle: \"Boolean gate: true only when .229 appears in research-complete.yaml.\"\n\nRun\
     \ command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2342-nsvif-z3-extractor-v4
-  title: "Phase 2: NSVIF Neuro-Symbolic Z3 Extractor — First Actual Run v4\
-    \ (arXiv:2601.17789)"
-  milestone: 2026.05.229
-  deliverable: results/experiment_2342_nsvif_extractor.json
+- id: exp2351-semantic-energy-real-llm
+  title: "Phase 1: Semantic Energy Real-LLM Validation (arXiv:2508.14496) \u2014 Extend exp2338 Prototype"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2351_semantic_energy_real.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  prior_failures:
+  - experiment_id: exp2338-semantic-energy-tier0g
+    verdict: 'complete: Semantic Energy synthetic-logit prototype ran to completion; AUROC=1.0 on the 100-example synthetic
+      corpus.'
+    addressed_by: "exp2338 validated on synthetic Normal(0,0.5) vs Normal(0,2.0) logits. exp2351 tests on real penultimate-layer\
+      \ logits from a GGUF model OR from cached logit snapshots in results/. The AUROC=1.0 on synthetic is expected (well-separated\
+      \ distributions); real-model performance is the meaningful signal. Ungated \u2014 own GGUF precondition."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: exp2338 implemented SemanticEnergyDetector (python/carnot/verify/semantic_energy.py)\nand achieved AUROC=1.0\
+    \ on SYNTHETIC logit arrays. This is a sanity check. We now need\nto test on REAL LLM logits to measure actual hallucination\
+    \ detection performance.\n\nSemanticEnergyDetector computes energy E(x) = -log Z + mean(|log_softmax(logits)|) using\n\
+    penultimate layer logit vectors (one per generated response).\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/semantic_energy.py\n\
+    \  {project_root}/tests/python/verify/test_semantic_energy.py\n  {project_root}/results/experiment_2338_semantic_energy.json\n\
+    \nTASK: Validate SemanticEnergyDetector on real or representative logit distributions.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n\
+    \     a. Check if a cached logit snapshot exists:\n        ls {project_root}/results/ | grep -i \"logit\\|logprob\\|beaver\\\
+    |live\" | head -10\n     b. Check for GGUF model:\n        ls ~/.cache/huggingface/hub/ 2>/dev/null | grep -i \"gemma-4-26B\\\
+    |Qwen3.6-35B\"\n     c. If NEITHER logit cache NOR GGUF is available:\n        Use a representative real-distribution\
+    \ substitute: load a small transformers model\n        (distilbert or similar from huggingface) and extract its logit\
+    \ outputs on 50 prompts.\n        This is NOT the full SOTA model but uses REAL neural network logits, not Normal samples.\n\
+    \     If all preconditions checked: proceed regardless (task is ungated and self-adaptive).\n\n  1. Choose the best available\
+    \ logit source (in priority order):\n     a. Cached real GGUF logits from prior experiments (grep results/ for logit arrays)\n\
+    \     b. Live GGUF model inference (if cached model available)\n     c. Small transformers model (distilbert/similar)\
+    \ for representative real logits\n     d. Fallback: paired synthetic logit sets with realistic covariance structure\n\n\
+    \  2. Construct a 100-example test set: 50 \"factual\" examples (low-variance logits from\n     high-confidence model\
+    \ outputs) and 50 \"hallucination\" examples (high-variance logits\n     from low-confidence or adversarial prompts).\n\
+    \n  3. Run SemanticEnergyDetector on both sets. Compute AUROC.\n\n  4. Run unit tests: PYTEST_ADDOPTS=\"\" .venv/bin/python\
+    \ -m pytest\n     tests/python/verify/test_semantic_energy.py -v --no-cov 2>&1 | tail -15\n\n  5. Write deliverable.\n\
+    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: with AUROC value.\"\
+    \n  - semantic_energy_real_auroc:\n      principle: \"AUROC on real or representative LLM logits. Expected lower than\
+    \ 1.0 (realistic).\"\n  - semantic_energy_real_validated:\n      principle: \"True if AUROC >= 0.60 on real-distribution\
+    \ logits.\"\n  - logit_source:\n      principle: \"Records which logit source was used (gguf/cached/small-model/synthetic-realistic).\"\
+    \n  - n_eval_examples:\n      principle: \"Must be 100 (50 factual + 50 hallucination).\"\n  - random_seed:\n      principle:\
+    \ \"Reproducibility. Must be 42.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2352-nsvif-z3-extractor-v5
+  title: "Phase 1: NSVIF Neuro-Symbolic Z3 Extractor v5 \u2014 PRD Priority #1 First Actual Run (arXiv:2601.17789)"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2352_nsvif_extractor.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  prior_failures:
+  - experiment_id: exp2342-nsvif-z3-extractor-v4
+    verdict: blocked_gate_check_failed (upstream exp2337-pretest-fix-v10 retired)
+    addressed_by: "exp2342 was gate-blocked \u2014 it NEVER ACTUALLY RAN. The structural fix: exp2352 is UNGATED. It checks\
+      \ for z3 import availability as its own precondition and runs regardless of any upstream pretest state. The pre-test\
+      \ cascade has been confirmed resolved independently."
+    retire_if_same_verdict: false
+  - experiment_id: exp2327-nsvif-z3-extractor-v3
+    verdict: blocked_gate_check_failed (upstream never set pretest_fixed=true)
+    addressed_by: Same cascade block. Ungated in .230.
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: NSVIF (arXiv:2601.17789) is the neuro-symbolic Z3-based constraint extractor\nthat replaces Carnot's failed\
+    \ ArithmeticExtractor (regex-based, finds 0 violations on\ninstruction-tuned models). NSVIF is PRD Priority #1 since 2026-04-11\
+    \ but has been blocked\nfor 5 consecutive milestones (.225\u2013.229) by the pre-test cascade. exp2352 is UNGATED \u2014\
+    \nit has its own z3 precondition and runs regardless of the conductor's pre-test state.\n\nNSVIF approach: parse LLM chain-of-thought\
+    \ into logical assertion steps, encode as Z3\nSMT constraints, verify satisfiability. Failed assertions = detected constraint\
+    \ violations.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/extraction/ (look for nsvif or z3 extractor)\n\
+    \  {project_root}/python/carnot/verify/ (look for nsvif or z3 verifier)\n  {project_root}/scripts/experiment_template.py\
+    \ (ExperimentTemplate usage)\n\nTASK: Implement and validate NSVIF neuro-symbolic Z3 constraint extractor.\n\nCONCRETE\
+    \ STEPS:\n  0. PRECONDITIONS:\n     a. Verify z3 is importable: .venv/bin/python -c \"import z3; print(z3.get_version_string())\"\
+    \n        If z3 is not installed: .venv/bin/pip install z3-solver -q\n        Re-verify: .venv/bin/python -c \"import\
+    \ z3; print(z3.get_version_string())\"\n        If still fails: write honest_verdict blocked_z3_unavailable and exit.\n\
+    \     b. Check for existing NSVIF code:\n        ls {project_root}/python/carnot/extraction/ | grep -i \"nsvif\\|z3\"\n\
+    \        If LogicalStepExtractor or NsvifExtractor already exists, read it and build on it.\n\n  1. Implement NsvifExtractor\
+    \ class at python/carnot/extraction/nsvif_extractor.py:\n     - extract_steps(response: str) -> list[str]: parse CoT into\
+    \ logical assertion steps\n       using sentence splitting + heuristic (\"therefore\", \"thus\", \"so\", \"equals\", \"\
+    =\")\n     - encode_z3(steps: list[str]) -> list[z3.BoolRef]: encode steps as Z3 assertions\n       (arithmetic expressions\
+    \ using z3.Int, z3.Real; simple equalities/inequalities)\n     - verify(response: str) -> dict: run z3.Solver, return\
+    \ {'satisfiable': bool,\n       'violations': list[str], 'verification_pass': bool}\n\n  2. Create test corpus: 20 arithmetic\
+    \ reasoning examples\n     - 10 \"correct\" examples with valid chain-of-thought (satisfiable constraints)\n     - 10\
+    \ \"incorrect\" examples with a logical error in the chain-of-thought\n     - Write test corpus to results/experiment_2352_nsvif_corpus.json\n\
+    \n  3. Run NsvifExtractor on the test corpus. Compute:\n     - verification_pass_rate: fraction of examples where extractor\
+    \ correctly\n       classifies correct (satisfiable) vs incorrect (unsatisfiable)\n     - extraction_coverage: fraction\
+    \ of examples where extractor found at least 1 Z3 constraint\n\n  4. Write test for the extractor:\n     PYTEST_ADDOPTS=\"\
+    \" .venv/bin/python -m pytest tests/python/ -k \"nsvif\" -v --no-cov 2>&1 | tail -15\n     (Create test file if none exists)\n\
+    \n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\
+    \ complete: with pass rate.\"\n  - nsvif_extractor_validated:\n      principle: \"True if verification_pass_rate >= 0.60\
+    \ on 20-example corpus.\"\n  - verification_pass_rate:\n      principle: \"Primary metric. Expected >= 0.60 for basic\
+    \ feasibility.\"\n  - extraction_coverage:\n      principle: \"Fraction of examples with >= 1 Z3 constraint found. Guards\
+    \ against empty-extractor.\"\n  - n_correct_examples:\n      principle: \"Must be 10. Validates correct path of NSVIF.\"\
+    \n  - n_incorrect_examples:\n      principle: \"Must be 10. Validates violation detection.\"\n  - random_seed:\n     \
+    \ principle: \"Reproducibility. Must be 42.\"\n  - z3_version:\n      principle: \"Records which z3 version was used.\"\
+    \n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2353-verge-smt-repair-v5
+  title: "Phase 1: VERGE SMT Minimal Correction Subset Repair v5 \u2014 First Actual Run (arXiv:2601.20055)"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2353_verge_repair.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
   prior_failures:
-  - experiment_id: exp2327-nsvif-z3-extractor-v3
+  - experiment_id: exp2343-verge-repair-v4
     verdict: blocked_gate_check_failed
-    addressed_by: exp2327 was blocked by pretest_fixed=false (exp2323 never ran).
-      exp2337 is ungated. Scope identical to exp2327. NSVIF has never run in any
-      milestone despite being PRD Priority #1 since 2026-04-11.
-    retire_if_same_verdict: true
-  - experiment_id: exp2313-nsvif-neuro-symbolic-v2
-    verdict: blocked_gate_check_failed
-    addressed_by: Same cascade blocking. No change to root cause other than pre-test
-      gate now pointing to ungated exp2337.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: research-program.md lists \"Rebuild constraint extraction for\
-    \ real models\" as\nthe HIGHEST PRIORITY since 2026-04-11. NSVIF (arXiv:2601.17789)\
-    \ has NEVER actually run\nin any prior milestone due to pre-test cascades. This\
-    \ is the first actual execution.\n\nNSVIF formalizes instruction verification\
-    \ as a CSP: given instruction I and response R,\nextract logical steps from R,\
-    \ encode them as Z3 constraints, and check satisfiability.\nUNSAT means the response\
-    \ violates the instruction's constraints.\n\nNOTE: Requires z3-solver Python package.\n\
-    EXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/pipeline/\n  {project_root}/python/carnot/verify/\n\
-    \  {project_root}/scripts/experiment_template.py\nTASK: Implement the NSVIF LogicalStepExtractor\
-    \ and Z3 encoding pipeline.\nCONCRETE STEPS:\n  0. PRECONDITIONS (check BEFORE\
-    \ any subsequent step):\n     a. python -c \"import z3; print(z3.get_version_string())\"\
-    \ succeeds — else\n        run: {project_root}/.venv/bin/pip install z3-solver\
-    \ -q\n        If install fails: write honest_verdict blocked_z3_unavailable and\
-    \ exit.\n  1. Create python/carnot/pipeline/nsvif_extractor.py implementing:\n\
-    \     class LogicalStepExtractor:\n       - extract(instruction: str, response:\
-    \ str) -> list[dict]\n         Returns: [{{\"step\": str, \"constraint_type\"\
-    : str, \"variables\": list}}]\n       - encode_z3(steps: list[dict]) -> z3.Solver\n\
-    \         Returns a solver with all constraints asserted.\n       - verify(instruction:\
-    \ str, response: str) -> dict\n         Returns: {{\"satisfiable\": bool, \"violations\"\
-    : list[str], \"n_constraints\": int}}\n  2. Write 3 unit tests in tests/python/pipeline/test_nsvif_extractor.py:\n\
-    \     One satisfiable response, one violated arithmetic constraint, one violated\
-    \ list-completeness.\n  3. Run unit tests; record n_tests_passed.\n  4. Evaluate\
-    \ on 30 synthetic (instruction, response) pairs:\n     - 15 correct responses\
-    \ (should return satisfiable=true)\n     - 15 responses with detectable violations\n\
-    \  5. Measure:\n     - nsvif_tpr: violations_correctly_detected / 15\n     - nsvif_fpr:\
-    \ correct_responses_rejected / 15\n     - mean_z3_solve_time_ms: mean Z3 query\
-    \ latency\n  6. Set nsvif_extractor_validated: true if nsvif_tpr >= 0.50 AND\
-    \ nsvif_fpr <= 0.30.\n  7. Write deliverable to results/experiment_2342_nsvif_extractor.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if extractor ran to completion.\"\n  - nsvif_extractor_validated:\n\
-    \      principle: \"Boolean. True when TPR >= 0.50 AND FPR <= 0.30. Relaxed threshold\
-    \ for first prototype.\"\n  - nsvif_tpr:\n      principle: \"Measures constraint-violation\
-    \ detection rate vs ArithmeticExtractor 0% baseline on IT models.\"\n  - nsvif_fpr:\n\
-    \      principle: \"Guards against over-rejection; high FPR makes verifier unusable.\"\
-    \n  - mean_z3_solve_time_ms:\n      principle: \"Z3 latency determines cascade-tier\
-    \ cost; must be < 1000ms for feasibility.\"\n  - n_tests_passed:\n      principle:\
-    \ \"Unit tests must pass; pipeline quality gate.\"\n  - z3_version:\n      principle:\
-    \ \"Records Z3 version for reproducibility.\"\n  - preconditions_checked:\n  \
-    \    principle: \"Lists Z3 availability check; mandatory per CLAUDE.md Pre-Launch\
-    \ Preconditions Discipline.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2343-verge-repair-v4
-  title: 'Phase 2: VERGE SMT Minimal Correction Subset Repair v4 (arXiv:2601.20055)'
-  milestone: 2026.05.229
-  deliverable: results/experiment_2343_verge_repair.json
+    addressed_by: Ungated in .230. Own z3 precondition.
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: VERGE (arXiv:2601.20055) repairs LLM outputs via Minimal Correction Subsets (MCS):\ngiven a set of violated\
+    \ SMT constraints, VERGE finds the minimal subset of the LLM's claims\nthat must be changed to restore satisfiability.\
+    \ This is the repair half of the NSVIF pipeline.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/extraction/nsvif_extractor.py\
+    \ (if exp2352 created it)\n  {project_root}/python/carnot/repair/ (look for verge or mcs repair)\n  {project_root}/results/experiment_2352_nsvif_extractor.json\
+    \ (if available)\n\nTASK: Implement and validate VERGE MCS repair engine.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n  \
+    \   a. .venv/bin/python -c \"import z3; print(z3.get_version_string())\"\n        If fails: .venv/bin/pip install z3-solver\
+    \ -q; re-check.\n        If still fails: blocked_z3_unavailable and exit.\n     b. Check if NsvifExtractor exists: .venv/bin/python\
+    \ -c \"from carnot.extraction.nsvif_extractor import NsvifExtractor; print('OK')\"\n        If fails: implement a minimal\
+    \ stub locally for testing.\n\n  1. Implement VergeRepairEngine at python/carnot/repair/verge_repair.py:\n     - find_mcs(constraints:\
+    \ list[z3.BoolRef], violated: list[int]) -> list[int]:\n       Returns minimal subset indices to relax. Algorithm: iteratively\
+    \ remove one\n       constraint at a time; check if remaining constraints become satisfiable.\n     - suggest_repair(response:\
+    \ str, violations: list[str]) -> str:\n       Uses NsvifExtractor violations to identify which claim to modify; returns\n\
+    \       a suggestion string (\"Change 'X=Y' to 'X=Z'\")\n\n  2. Create 10 violated constraint scenarios (arithmetic errors)\
+    \ and run VergeRepairEngine.\n     Compute mcs_repair_success_rate: fraction where the MCS suggestion points to the\n\
+    \     actual error.\n\n  3. Run unit tests if they exist:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/\
+    \ -k \"verge\" -v --no-cov 2>&1 | tail -15\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
+    \      principle: \"Terminal-prefix required.\"\n  - verge_repair_validated:\n      principle: \"True if mcs_repair_success_rate\
+    \ >= 0.50.\"\n  - mcs_repair_success_rate:\n      principle: \"Fraction of violated scenarios where MCS correctly identifies\
+    \ the error location.\"\n  - n_repair_scenarios:\n      principle: \"Must be 10.\"\n  - random_seed:\n      principle:\
+    \ \"Reproducibility. Must be 42.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2354-eidoku-csp-v6
+  title: "Phase 2: Eidoku CSP Tier 2.8 Gate v6 \u2014 First Actual Run (arXiv:2512.20664)"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2354_eidoku_csp.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
   prior_failures:
-  - experiment_id: exp2328-verge-repair-v3
+  - experiment_id: exp2344-eidoku-csp-v5
     verdict: blocked_gate_check_failed
-    addressed_by: exp2328 was blocked by pretest_fixed=false. exp2337 is ungated.
-      Scope identical to exp2328. VERGE has never run in any milestone.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: VERGE (arXiv:2601.20055) uses SMT Minimal Correction Subsets\
-    \ (MCS) to localize\nand repair Z3-encodable constraint violations. Repair-side\
-    \ complement to NSVIF (exp2342).\nThis is the FIRST ACTUAL RUN — all prior\
-    \ attempts were gate-blocked.\nNOTE: Requires z3-solver Python package (shared\
-    \ with exp2342).\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/pipeline/verify_repair.py\n\
-    \  {project_root}/python/carnot/verify/\n  {project_root}/scripts/experiment_template.py\n\
-    TASK: Implement VERGE-style MCS repair and evaluate on 20 synthetic violations.\n\
-    CONCRETE STEPS:\n  0. PRECONDITIONS (check BEFORE any subsequent step):\n    \
-    \ a. python -c \"import z3; print(z3.get_version_string())\" succeeds — else\n\
-    \        run: {project_root}/.venv/bin/pip install z3-solver -q\n        If install\
-    \ fails: write honest_verdict blocked_z3_unavailable and exit.\n  1. Create python/carnot/verify/verge_repair.py\
-    \ implementing:\n     class VERGERepair:\n       - find_mcs(solver: z3.Solver,\
-    \ constraints: list) -> list[int]\n         Returns indices of the Minimal Correction\
-    \ Subset.\n       - repair(original_text: str, mcs_indices: list, violations:\
-    \ list[str]) -> str\n         Returns patched text with minimal corrections applied.\n\
-    \  2. Write 2 unit tests in tests/python/verify/test_verge_repair.py.\n  3. Run\
-    \ unit tests; record n_tests_passed.\n  4. Evaluate on 20 synthetic violated (instruction,\
-    \ response) pairs:\n     - Find MCS for each violation; apply repair; verify repair\
-    \ reduces violation count.\n  5. Measure:\n     - mcs_avg_size, repair_violation_reduction_rate,\
-    \ mean_mcs_solve_time_ms\n  6. Set verge_repair_validated: true if repair_violation_reduction_rate\
-    \ >= 0.60.\n  7. Write deliverable to results/experiment_2343_verge_repair.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if VERGE ran to completion.\"\n  - verge_repair_validated:\n\
-    \      principle: \"Boolean. True when >= 60% of repairs reduce violations.\"\n\
-    \  - repair_violation_reduction_rate:\n      principle: \"Primary effectiveness\
-    \ gate; records whether targeted MCS repair fixes what it identified.\"\n  - mcs_avg_size:\n\
-    \      principle: \"Measures repair precision; MCS of size 1 is maximally targeted.\"\
-    \n  - mean_mcs_solve_time_ms:\n      principle: \"MCS latency determines cascade-tier\
-    \ cost feasibility.\"\n  - n_tests_passed:\n      principle: \"Unit tests must\
-    \ pass.\"\n  - preconditions_checked:\n      principle: \"Lists Z3 availability\
-    \ check; mandatory per CLAUDE.md Pre-Launch Preconditions Discipline.\"\n\nRun\
-    \ command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2344-eidoku-csp-v5
-  title: "Phase 2: Eidoku CSP Tier 2.8 Gate — First Actual Run v5 (arXiv:2512.20664)"
-  milestone: 2026.05.229
-  deliverable: results/experiment_2344_eidoku_csp.json
+    addressed_by: "Ungated in .230. Never actually ran \u2014 only gate-blocked."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Eidoku (arXiv:2512.20664) adds a CSP (Constraint Satisfaction Problem) gating\nlayer that rejects LLM\
+    \ outputs violating hard structural constraints. It detects \"smooth\nfalsehoods\" \u2014 plausible-sounding but structurally\
+    \ invalid outputs that pass entropy-based\ndetectors. This is Carnot's Tier 2.8 verifier.\n\nEXISTING CODE TO READ FIRST:\n\
+    \  {project_root}/python/carnot/verify/ (look for eidoku or csp)\n  {project_root}/scripts/experiment_template.py\n\n\
+    TASK: Implement Eidoku CSP gate and validate on arithmetic constraint corpus.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\
+    \ none (pure Python, no special dependencies).\n\n  1. Implement EidokuCspGate at python/carnot/verify/eidoku_csp.py:\n\
+    \     - validate(response: str, constraints: list[str]) -> dict:\n       Each constraint is a Python expression string\
+    \ (e.g., \"x + y == 42\").\n       Evaluate via safe_eval using ast.literal_eval on parsed numeric expressions.\n    \
+    \   Return {'gate_passed': bool, 'violations': list[str]}\n\n  2. Create test corpus: 50 examples\n     - 25 \"correct\"\
+    \ with valid arithmetic constraints\n     - 25 \"incorrect\" with at least one violated constraint\n     Compute csp_gate_accuracy:\
+    \ fraction correctly classified.\n\n  3. Run unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/\
+    \ -k \"eidoku\" -v --no-cov 2>&1 | tail -15\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
+    \      principle: \"Terminal-prefix required.\"\n  - eidoku_gate_validated:\n      principle: \"True if csp_gate_accuracy\
+    \ >= 0.75.\"\n  - csp_gate_accuracy:\n      principle: \"Fraction of 50 examples correctly classified by the CSP gate.\"\
+    \n  - n_eval_examples:\n      principle: \"Must be 50.\"\n  - random_seed:\n      principle: \"Reproducibility. Must be\
+    \ 42.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2355-projected-langevin-v6
+  title: "Phase 2: Projected-Langevin vs CASAL Baseline v6 \u2014 Comparative Benchmark (arXiv:2605.05387)"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2355_projected_langevin.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  prior_failures:
+  - experiment_id: exp2345-projected-langevin-v5
+    verdict: blocked_gate_check_failed
+    addressed_by: Ungated in .230. Never ran.
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Projected-Langevin dynamics (arXiv:2605.05387) enforces hard equality and inequality\nconstraints during\
+    \ sampling by projecting each Langevin update onto the constraint manifold.\nThis is an alternative to CASAL (Carnot's\
+    \ current constrained Ising sampler) that may achieve\nbetter constraint satisfaction on non-linear constraint sets.\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/samplers/ (look for casal or langevin)\n  {project_root}/scripts/experiment_template.py\n\
+    \nTASK: Implement projected-Langevin sampler and benchmark against CASAL.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: none\
+    \ (pure numpy/JAX, CPU-only).\n\n  1. Implement ProjectedLangevinSampler at python/carnot/samplers/projected_langevin.py:\n\
+    \     - sample(energy_fn, constraints: list[callable], init: np.ndarray,\n              n_steps: int=100, step_size: float=0.01,\
+    \ temperature: float=1.0) -> np.ndarray\n     - Each Langevin step: x = x - step_size * grad_energy(x) + noise\n     -\
+    \ After each step: project x onto constraint manifold using gradient projection.\n       Simple constraint: x[i] in [lo,\
+    \ hi] \u2192 clamp. SMT/Z3 constraints: not required for\n       this baseline (use box constraints only).\n\n  2. Benchmark\
+    \ on 3-problem suite:\n     - Problem 1: 4-variable Ising with 2 linear constraints\n     - Problem 2: 8-variable system\
+    \ with box constraints\n     - Problem 3: 16-variable system with sum constraint\n     For each: run both ProjectedLangevin\
+    \ and CASAL (if implemented) for 100 steps.\n     Measure: constraint_satisfaction_rate, energy_at_convergence.\n\n  3.\
+    \ Run unit tests:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/ -k \"langevin\" -v --no-cov 2>&1\
+    \ | tail -15\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
+    \ required.\"\n  - projected_langevin_competitive:\n      principle: \"True if projected-Langevin satisfaction_rate >=\
+    \ CASAL or CASAL not available.\"\n  - constraint_satisfaction_rate:\n      principle: \"Fraction of final samples satisfying\
+    \ all constraints. Primary quality metric.\"\n  - langevin_vs_casal_delta:\n      principle: \"Projected-Langevin minus\
+    \ CASAL satisfaction rate. Positive = Langevin wins.\"\n  - n_problems:\n      principle: \"Must be 3.\"\n  - random_seed:\n\
+    \      principle: \"Reproducibility. Must be 42.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2356-kancl-n256-v9
+  title: "Phase 3: KAN-CL n=256 Per-Knot Importance Retention v9 \u2014 First Actual Run (arXiv:2605.12306)"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2356_kancl_n256.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  prior_failures:
+  - experiment_id: exp2341-kancl-n256-v8
+    verdict: blocked_gate_check_failed
+    addressed_by: Ungated in .230. Own KAN import precondition.
+    retire_if_same_verdict: false
+  - experiment_id: exp2326-kancl-n256-v7
+    verdict: blocked_gate_check_failed
+    addressed_by: Cascade block. Ungated in .230.
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: KAN-CL (arXiv:2605.12306) applies per-knot importance regularization to Kolmogorov-\nArnold Networks for\
+    \ continual learning. KAN coefficients are spatially dormant outside their\nactivation interval, providing natural task-specific\
+    \ separation. This avoids catastrophic\nforgetting better than uniform EWC-style penalties.\n\nn=256 means the constraint\
+    \ parameter space has 256 dimensions (n_spins=256 in Carnot's Ising\nsampler). Per-knot importance weights each spline\
+    \ coefficient by its activation frequency.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/models/ (look\
+    \ for KAN implementation)\n  {project_root}/python/carnot/learning/ (look for continual learning)\n  {project_root}/scripts/experiment_template.py\n\
+    \nTASK: Implement and validate KAN-CL per-knot importance for n=256 constraint learning.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n\
+    \     a. .venv/bin/python -c \"from carnot.models.kan import KAN; print('OK')\"\n        OR .venv/bin/python -c \"import\
+    \ carnot; print('OK')\"\n        If KAN is not importable: try to find the KAN class in python/carnot/models/\n      \
+    \  and import it directly.\n        If KAN does not exist: implement a minimal spline-based KAN with n_params=256\n  \
+    \      sufficient for the continual learning experiment.\n\n  1. Implement KanClLearner at python/carnot/learning/kan_cl.py:\n\
+    \     - Class with fit(X, y, task_id) and predict(X) methods\n     - Per-knot importance: importance[i] = frequency of\
+    \ activation of knot i across\n       all training examples for task_id\n     - Regularization: L2 penalty proportional\
+    \ to importance[i] on each weight update\n       (prevents overwriting high-importance knots from previous tasks)\n\n\
+    \  2. Run Split-Task continual learning benchmark (3 tasks):\n     - Task 1: constraint satisfaction on arithmetic domain\
+    \ (50 examples)\n     - Task 2: constraint satisfaction on code domain (50 examples)\n     - Task 3: constraint satisfaction\
+    \ on logic domain (50 examples)\n     Sequential training: train Task 1, test 1; train Task 2, test 1+2; train Task 3,\
+    \ test 1+2+3.\n     Metrics: forgetting_reduction_pct = 100 * (1 - forgetting_with_kancl / forgetting_without)\n\n  3.\
+    \ Run unit tests:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/ -k \"kan_cl or kancl\" -v --no-cov\
+    \ 2>&1 | tail -15\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
+    \ required.\"\n  - kancl_n256_validated:\n      principle: \"True if forgetting_reduction_pct >= 50%.\"\n  - forgetting_reduction_pct:\n\
+    \      principle: \"Primary metric. Percentage reduction in catastrophic forgetting vs baseline.\"\n  - n_tasks:\n   \
+    \   principle: \"Must be 3.\"\n  - n_params:\n      principle: \"Must be 256 (n=256 constraint space).\"\n  - random_seed:\n\
+    \      principle: \"Reproducibility. Must be 42.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2357-fr11-fst-multidomain-v7
+  title: 'Phase 3: FR-11 FST Multi-Domain Continual Retention v7 (MANDATORY CSL)'
+  milestone: 2026.05.230
+  deliverable: results/experiment_2357_fr11_multidomain.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  continuous_self_learning_task: true
+  prior_failures:
+  - experiment_id: exp2340-fr11-fst-multidomain-v6
+    verdict: blocked_gate_check_failed
+    addressed_by: Ungated in .230. Own FST import precondition.
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: FR-11 is the mandatory functional requirement for continuous self-learning. The\nFast-Slow Training approach\
+    \ (arXiv:2605.12484) separates slow weights (base LLM parameters)\nfrom fast weights (verifier context, updated per-query).\
+    \ This experiment validates that fast\nweights from one domain generalize to another \u2014 the core of cross-domain retention.\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/learning/ (look for fast_slow, fst, or continual learning)\n\
+    \  {project_root}/python/carnot/pipeline/ (look for VerifyRepairPipeline)\n\nTASK: Validate FR-11 cross-domain retention\
+    \ with FST fast/slow weight decomposition.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. .venv/bin/python -c \"from\
+    \ carnot.learning.fast_slow import FastSlowTrainer; print('OK')\"\n        OR .venv/bin/python -c \"from carnot.pipeline.verify_repair\
+    \ import VerifyRepairPipeline; print('OK')\"\n        If FastSlowTrainer does not exist: implement a minimal stub with\
+    \ fast_weights and\n        slow_weights attributes that satisfy the experiment interface.\n\n  1. Implement or reuse\
+    \ FastSlowTrainer:\n     - slow_weights: constraint weights shared across domains (initialized from verifier)\n     -\
+    \ fast_weights: per-query context cache (updated during inference, cleared between queries)\n     - update_fast(query,\
+    \ verification_result): add verified constraint to fast cache\n     - predict(query) -> uses slow + fast weights\n\n \
+    \ 2. Run 3-domain retention test:\n     - Domain 1 (arithmetic): 30 queries, verify all, update fast weights\n     - Measure\
+    \ accuracy on domain 1 holdout (10 queries)\n     - Domain 2 (code): 30 queries, verify all, update fast weights\n   \
+    \  - Measure accuracy on domain 1 holdout again (retention test)\n     - Domain 3 (logic): 30 queries, verify all, update\
+    \ fast weights\n     - Measure accuracy on domain 1 + domain 2 holdouts\n     cross_domain_retention_rate = mean accuracy\
+    \ on prior domains after new domain training\n\n  3. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
+    \      principle: \"Terminal-prefix required.\"\n  - fr11_multidomain_passed:\n      principle: \"True if cross_domain_retention_rate\
+    \ >= 0.75.\"\n  - cross_domain_retention_rate:\n      principle: \"Primary metric. Mean accuracy retention across domains.\
+    \ Gate: >= 0.75.\"\n  - continuous_self_learning_validated:\n      principle: \"Must be true to satisfy FR-11. Records\
+    \ that online learning mechanism works.\"\n  - n_domains:\n      principle: \"Must be 3.\"\n  - random_seed:\n      principle:\
+    \ \"Reproducibility. Must be 42.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2358-ebm-cot-calibration
+  title: "Phase 4: EBM-CoT Calibration Prototype \u2014 Langevin-Guided Implicit CoT (arXiv:2511.07124)"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2358_ebm_cot.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
-  prior_failures:
-  - experiment_id: exp2329-eidoku-csp-v4
-    verdict: blocked_gate_check_failed
-    addressed_by: exp2329 was blocked by pretest_fixed=false. exp2337 is ungated.
-      Scope identical to exp2329. Eidoku has never run in any milestone.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: Eidoku (arXiv:2512.20664) reformulates LLM reasoning verification\
-    \ as a CSP\nthat catches \"smooth falsehoods\" — highly probable but structurally\
-    \ disconnected statements.\nThis is a natural Tier 2.8 verifier. This is the FIRST\
-    \ ACTUAL RUN after 4 blocked attempts.\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/\n\
-    \  {project_root}/python/carnot/pipeline/verify_repair.py\n  {project_root}/scripts/experiment_template.py\n\
-    TASK: Implement EidokuCSPGate and evaluate on 50 synthetic examples.\nCONCRETE\
-    \ STEPS:\n  1. Create python/carnot/verify/eidoku_csp.py implementing EidokuCSPGate:\n\
-    \     - Takes (context: str, candidate: str)\n     - Extracts structural constraints\
-    \ from context\n     - Formulates cost function over candidate satisfaction\n \
-    \    - Returns: is_violation: bool, cost: float, constraint_violations: list[str]\n\
-    \  2. Write 2 unit tests in tests/python/verify/test_eidoku_csp.py.\n  3. Run\
-    \ unit tests; record n_tests_passed.\n  4. Evaluate on 50 synthetic examples\
-    \ (25 correct, 25 smooth falsehoods).\n  5. Measure: csp_false_positive_rate,\
-    \ csp_true_positive_rate.\n  6. Set eidoku_gate_validated: true if csp_true_positive_rate\
-    \ >= 0.60 AND csp_false_positive_rate <= 0.20.\n  7. Write deliverable to results/experiment_2344_eidoku_csp.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if implementation produced a runnable module.\"\n  - eidoku_gate_validated:\n\
-    \      principle: \"Boolean. True when TPR >= 0.60 AND FPR <= 0.20.\"\n  - csp_true_positive_rate:\n\
-    \      principle: \"Measures smooth-falsehood detection; Eidoku's CSP claims to\
-    \ catch this class.\"\n  - csp_false_positive_rate:\n      principle: \"Guards\
-    \ against rejecting correct answers.\"\n  - n_tests_passed:\n      principle:\
-    \ \"Records unit test pass count.\"\n  - n_eval_examples:\n      principle: \"\
-    Must be 50 (25+25) for the FPR/TPR claims to be statistically meaningful.\"\n\
+  prompt: "CONTEXT: \"Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit\nChain-of-Thought\" (arXiv:2511.07124)\
+    \ uses a learned energy function and Langevin dynamics\nto guide latent CoT representations toward lower-energy, higher-consistency\
+    \ regions.\nLow energy = high confidence + consistent reasoning. This directly implements Carnot's\nPhase-4 free-energy\
+    \ verifier hypothesis.\n\nThe key idea: instead of sampling the output space, EBM-CoT samples the REASONING SPACE.\nGiven\
+    \ a CoT trace (sequence of reasoning steps), the energy function E(trace) measures\ninternal consistency. Langevin dynamics\
+    \ drives the trace toward E=0.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/samplers/ (look for langevin\
+    \ or casal)\n  {project_root}/python/carnot/verify/ (look for energy functions)\n\nTASK: Implement EBM-CoT consistency\
+    \ calibration on synthetic CoT traces.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS: none (CPU-only, pure numpy).\n\n  1. Implement\
+    \ EbmCotCalibrator at python/carnot/verify/ebm_cot.py:\n     - energy(trace: list[str]) -> float: compute inconsistency\
+    \ score between\n       adjacent reasoning steps. Simple heuristic: contradiction score between\n       step N and step\
+    \ N+1 (e.g., number of negated facts from step N that appear\n       in step N+1).\n     - langevin_refine(trace: list[str],\
+    \ n_steps: int=50) -> list[str]:\n       Apply discrete \"Langevin\" updates: at each step, randomly perturb one trace\n\
+    \       element (paraphrase the claim); accept if energy decreases.\n     - calibrate(traces: list[list[str]]) -> list[float]:\
+    \ return energy scores.\n\n  2. Create 50 synthetic CoT traces:\n     - 25 \"consistent\" traces (each step logically\
+    \ follows from prior, energy should be low)\n     - 25 \"inconsistent\" traces (one step contradicts a prior step, energy\
+    \ should be high)\n     Run calibrate() on all 50. Compute AUROC (consistent=positive label).\n\n  3. Run langevin_refine()\
+    \ on 5 inconsistent traces. Measure energy reduction.\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
+    \      principle: \"Terminal-prefix required.\"\n  - ebm_cot_validated:\n      principle: \"True if AUROC >= 0.60 on synthetic\
+    \ CoT corpus.\"\n  - ebm_cot_auroc:\n      principle: \"AUROC on consistent vs inconsistent CoT discrimination.\"\n  -\
+    \ energy_reduction_mean:\n      principle: \"Mean energy reduction after 50 Langevin steps on inconsistent traces.\"\n\
+    \  - n_traces:\n      principle: \"Must be 50.\"\n  - random_seed:\n      principle: \"Reproducibility. Must be 42.\"\n\
     \nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2345-projected-langevin-v5
-  title: "Phase 2: Projected-Langevin vs CASAL Baseline v5 — First Actual Run\
-    \ (arXiv:2605.05387)"
-  milestone: 2026.05.229
-  deliverable: results/experiment_2345_projected_langevin.json
+  prior_failures:
+  - experiment_id: exp1293-ebt-arm-ebm-cot-energy-bridge-audit
+    verdict: blocked_gate_check_failed
+    addressed_by: "exp1293 was a diagnostic audit of the energy-bridge concept that never produced a runnable artifact. exp2358\
+      \ implements the concrete Langevin-guided trace refinement from arXiv:2511.07124 \u2014 a different scope (prototype\
+      \ implementation, not audit) and CPU-only / pure-numpy (no GGUF dependency that blocked exp1293)."
+    retire_if_same_verdict: true
+  - experiment_id: exp1416-ebm-cot-v3-temperature-calibration
+    verdict: temperature_scaling_reduced_variance_and_preserved_auroc
+    addressed_by: exp1416 was a SUCCESSFUL temperature-calibration finding on the hinge-only scoring path, scope-orthogonal
+      to exp2358 (which calibrates via Langevin dynamics on the trace space, not via temperature scaling on output scores).
+      Both can co-exist; this is a complementary technique.
+    retire_if_same_verdict: true
+  - experiment_id: exp1803-ebm-cot-latent-prototyping
+    verdict: blocked_gate_check_failed
+    addressed_by: "exp1803 prototyped Langevin updates on LATENT embeddings (continuous space, model-dependent). exp2358 operates\
+      \ on DISCRETE trace tokens (CPU-only, no model dependency) \u2014 the simpler operational substrate that arXiv:2511.07124\
+      \ demonstrates is sufficient for the consistency-calibration headline."
+    retire_if_same_verdict: true
+  - experiment_id: exp1810-ebm-cot-full-benchmark
+    verdict: blocked_gate_check_failed
+    addressed_by: "exp1810 was a full Qwen3.6-35B-A3B-GGUF GSM8K benchmark (heavy compute, GGUF cache dependency). exp2358\
+      \ is the prototype prerequisite \u2014 implements + smoke-tests the calibrator on synthetic traces before any benchmark\
+      \ run. Benchmark is downstream (.231+)."
+    retire_if_same_verdict: true
+  - experiment_id: exp2009-ebm-cot-latent-calibration
+    verdict: blocked_gate_check_failed
+    addressed_by: exp2009 was blocked on the pypi_escalation pre-test cascade now resolved by exp2309/2323/2342 chain through
+      .227-.229. exp2358 also moves the substrate from latent (model-dependent) to discrete trace (CPU-only), bypassing the
+      original blocker entirely.
+    retire_if_same_verdict: true
+  - experiment_id: exp2063-ebm-cot-latent-calibration
+    verdict: blocked_gate_check_failed
+    addressed_by: 'exp2063 same scope-class as exp2009 (latent calibration hook). Same root cause + same scope-shift mitigation:
+      exp2358 uses discrete trace substrate, no model dependency, no pretest cascade exposure.'
+    retire_if_same_verdict: true
+  - experiment_id: exp458-ebm-cot-calibration
+    verdict: improvement
+    addressed_by: exp458 was the ORIGINAL latent EBM-CoT calibration that found an `improvement` research finding. exp2358
+      is a different technique (Langevin trace refinement from arXiv:2511.07124 published 2025, post-dating exp458) and a
+      different substrate (discrete trace vs latent embedding). Successor work, not a re-run.
+    retire_if_same_verdict: true
+- id: exp2359-self-adaptive-ising
+  title: 'Phase 4: Self-Adaptive Ising Machine with Lagrange Relaxation (arXiv:2501.04971)'
+  milestone: 2026.05.230
+  deliverable: results/experiment_2359_self_adaptive_ising.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  prompt: "CONTEXT: \"Self-Adaptive Ising Machines for Constrained Optimization\" (arXiv:2501.04971)\nintroduces Lagrange\
+    \ multiplier updates to iteratively reshape the Ising energy landscape for\nconstrained problems. Instead of requiring\
+    \ constraint penalties to be manually tuned, the\nmachine automatically adjusts them until constraints are satisfied.\
+    \ This outperforms Fujitsu's\nDigital Annealer on 300-variable quadratic knapsack problems with far fewer samples.\n\n\
+    For Carnot: this addresses the penalty-tuning problem in the parallel Ising sampler\n(python/carnot/samplers/parallel_ising.py).\
+    \ Constraint violations are currently handled by\nfixed penalty terms. Lagrangian updates would make the sampler self-correcting.\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/samplers/ (look for parallel_ising.py or gibbs_sampler.py)\n\
+    \  {project_root}/scripts/experiment_template.py\n\nTASK: Implement self-adaptive Lagrangian Ising sampler and benchmark.\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS: none (pure numpy/CPU).\n\n  1. Implement SelfAdaptiveIsingSampler at python/carnot/samplers/adaptive_ising.py:\n\
+    \     - Initialize: J (coupling matrix), h (bias), lambdas (Lagrange multipliers, zeros)\n     - constraint_fn: function\
+    \ mapping state -> constraint violations (list of scalars)\n     - sample_step(): Gibbs sweep over all spins\n     - lagrange_update():\
+    \ lambdas += lr * constraint_violations (gradient ascent on dual)\n     - solve(n_outer=50, n_inner=10): outer loop =\
+    \ lagrange updates, inner = Gibbs sweeps\n\n  2. Benchmark on 2 constrained Ising problems:\n     - Problem A: 16-spin\
+    \ ferromagnet with sum constraint (sum(s) == 4)\n     - Problem B: 32-spin random coupling with linear equality constraint\n\
+    \     Metrics: final_constraint_violation (||g(s)||), convergence_rate (iter to feasibility)\n\n  3. Compare to fixed-penalty\
+    \ baseline (same problems, fixed penalty=1.0).\n     adaptive_speedup = fixed_iters / adaptive_iters to reach violation\
+    \ < 0.1.\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
+    \ required.\"\n  - adaptive_ising_validated:\n      principle: \"True if adaptive_speedup >= 1.5x on at least 1 of 2 problems.\"\
+    \n  - adaptive_speedup:\n      principle: \"Iterations ratio: fixed-penalty / adaptive Lagrangian to feasibility.\"\n\
+    \  - final_constraint_violation:\n      principle: \"Constraint residual after convergence. Adversarial check: should\
+    \ be near 0.\"\n  - n_problems:\n      principle: \"Must be 2.\"\n  - random_seed:\n      principle: \"Reproducibility.\
+    \ Must be 42.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2360-kv260-rtl-lint-v9
+  title: 'Phase 5: KV260 RTL Verilator Lint + Icarus Simulation v9'
+  milestone: 2026.05.230
+  deliverable: results/experiment_2360_kv260_rtl.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 30
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
   prior_failures:
-  - experiment_id: exp2330-projected-langevin-v4
+  - experiment_id: exp2346-kv260-rtl-lint-v8
     verdict: blocked_gate_check_failed
-    addressed_by: exp2330 was blocked by pretest_fixed=false. exp2337 is ungated.
-      Scope identical to exp2330. Projected-Langevin has never run in any milestone.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: arXiv:2605.05387 proves projected-Langevin dynamics under linear\
-    \ equality\nconstraints achieves correct Langevin mixing while guaranteeing exact\
-    \ constraint satisfaction.\nAlternative to CASAL's primal-dual augmented approach.\
-    \ First actual run after 4 blocked attempts.\nEXISTING CODE TO READ FIRST:\n \
-    \ {project_root}/python/carnot/samplers/casal.py\n  {project_root}/python/carnot/samplers/parallel_ising.py\n\
-    \  {project_root}/scripts/experiment_template.py\nTASK: Implement projected-Langevin\
-    \ sampler and compare against CASAL.\nCONCRETE STEPS:\n  1. Create python/carnot/samplers/projected_langevin.py\
-    \ implementing ProjectedLangevinSampler:\n     - sample(x0, energy_fn, A, b,\
-    \ n_steps, step_size, noise_scale, random_seed)\n     - Each step: x = x - step_size\
-    \ * grad_E(x) + sqrt(2*step_size)*noise, then project\n     - Projection: x =\
-    \ x - A.T @ solve(A @ A.T, A @ x - b)\n  2. Write 2 unit tests in tests/python/samplers/test_projected_langevin.py.\n\
-    \  3. Run unit tests; record n_tests_passed.\n  4. Evaluate on 3 test problems\
-    \ (n=32 variables, random linear constraints Ax=b).\n  5. For each: run 500 steps\
-    \ of projected-Langevin AND 500 steps of CASAL.\n     Measure: mean_feasibility_residual\
-    \ (||Ax-b||_2), sample_diversity, wall_time_ms.\n  6. Set projected_langevin_competitive:\
-    \ true if residual <= 2x CASAL on at least 2/3 problems.\n  7. Write deliverable\
-    \ to results/experiment_2345_projected_langevin.json.\n\nREQUIRED ARTIFACT FIELDS:\n\
-    \  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: if\
-    \ sampler ran to completion.\"\n  - projected_langevin_competitive:\n      principle:\
-    \ \"Boolean. True when residual <= 2x CASAL on 2/3 problems.\"\n  - mean_feasibility_residual_by_problem:\n\
-    \      principle: \"Per-problem residual records where projected-Langevin wins\
-    \ or loses.\"\n  - n_tests_passed:\n      principle: \"Unit tests must pass.\"\
-    \n  - random_seed:\n      principle: \"Reproducibility for all 3 problems.\"\n\
-    \nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2346-kv260-rtl-lint-v8
-  title: 'Phase 3: KV260 RTL Verilator Lint + Icarus Simulation v8'
-  milestone: 2026.05.229
-  deliverable: results/experiment_2346_kv260_rtl.json
+    addressed_by: Ungated in .230. Own toolchain precondition.
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: KV260 RTL track implements the parallel Ising machine as synthesizable Verilog.\nThe RTL source is at\
+    \ hardware/kv260/ and rtl/. Lint and simulation validate the RTL before\nany physical synthesis.\n\nEXISTING CODE TO READ\
+    \ FIRST:\n  {project_root}/rtl/ (look for .v or .sv files)\n  {project_root}/hardware/kv260/ (look for existing RTL)\n\
+    \nTASK: Run Verilator lint and Icarus Verilog simulation on KV260 Ising RTL.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n\
+    \     a. command -v verilator || echo \"verilator not found\"\n        command -v iverilog || echo \"iverilog not found\"\
+    \n        If BOTH are missing: write honest_verdict blocked_toolchain_missing and exit.\n        If only one is missing:\
+    \ proceed with the available tool.\n     b. ls {project_root}/rtl/*.v 2>/dev/null || ls {project_root}/hardware/kv260/*.v\
+    \ 2>/dev/null\n        If no Verilog files found: write honest_verdict blocked_no_rtl_source and exit.\n\n  1. Run Verilator\
+    \ lint on all .v files found:\n     verilator --lint-only -Wall <file.v> 2>&1\n     Count lint_errors (lines containing\
+    \ \"Error:\") and lint_warnings.\n\n  2. Run Icarus Verilog simulation on the top-level module (if testbench exists):\n\
+    \     iverilog -o /tmp/ising_sim <top.v> <tb.v> && vvp /tmp/ising_sim 2>&1 | head -20\n\n  3. Write deliverable.\n\nREQUIRED\
+    \ ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\n  - rtl_lint_passed:\n      principle:\
+    \ \"True if lint_errors_count == 0.\"\n  - lint_errors_count:\n      principle: \"Number of Verilator Error lines. Must\
+    \ be 0 for rtl_lint_passed=true.\"\n  - lint_warnings_count:\n      principle: \"Warnings are acceptable (not fatal).\"\
+    \n  - simulation_passed:\n      principle: \"True if Icarus simulation exits 0.\"\n\nRun command, 'Do NOT push. Do NOT\
+    \ modify scripts/research_conductor.py.'\n"
+- id: exp2361-fst-live-gen-v10
+  title: "Phase 6: FST+ODAR+CASAL Real-Scale Live Generation v10 \u2014 First Actual Run After 10 Blockages"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2361_fst_live_gen.json
   agent_type: codex
   model: gpt-5.5
-  max_turns: 30
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
+  max_turns: 50
   prior_failures:
-  - experiment_id: exp2331-kv260-rtl-lint-v7
+  - experiment_id: exp2339-fst-live-gen-v9
+    verdict: blocked_gate_check_failed (upstream exp2337 retired)
+    addressed_by: exp2339 was gate-blocked and never ran. exp2361 is UNGATED with own GGUF precondition. The pre-test cascade
+      that blocked exp2339 is confirmed resolved on direct test inspection.
+    retire_if_same_verdict: false
+  - experiment_id: exp2324-fst-live-gen-v8
     verdict: blocked_gate_check_failed
-    addressed_by: exp2331 was blocked by pretest_fixed=false. exp2337 is ungated.
-      Scope identical to exp2331. KV260 RTL lint has been blocked for 8+ milestones.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: KV260 RTL track (active in architecture.md) has been blocked\
-    \ for 8+ milestones.\nexp2337 now fixes the pre-test cascade. Source-level only\
-    \ claim — no bitfile until Vivado runs.\nEXISTING CODE TO READ FIRST:\n \
-    \ {project_root}/python/carnot/hardware/transpiler/\n  {project_root}/python/carnot/samplers/parallel_ising.py\n\
-    TASK: Run Verilator lint and Icarus 10-cycle simulation on parallel Ising RTL.\n\
-    CONCRETE STEPS:\n  0. PRECONDITIONS (check BEFORE any subsequent step):\n    \
-    \ a. command -v verilator succeeds — else write honest_verdict blocked_verilator_missing\
-    \ and exit.\n     b. command -v iverilog succeeds — else write honest_verdict\
-    \ blocked_iverilog_missing and exit.\n  1. Locate existing Verilog RTL under {project_root}/python/carnot/hardware/\
-    \ OR generate\n     a minimal parallel Ising Gibbs structural stub if no .v file\
-    \ exists. Record rtl_source_path.\n  2. Run: verilator --lint-only <rtl_file>\n\
-    \     Record lint_warnings_count and lint_errors_count.\n  3. If lint_errors_count\
-    \ == 0: run iverilog -o /tmp/ising_sim <rtl_file> && vvp /tmp/ising_sim\n    \
-    \ Record simulation_cycles_completed.\n  4. Write deliverable to results/experiment_2346_kv260_rtl.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if lint executed. blocked_verilator_missing or blocked_iverilog_missing\
-    \ if tools absent.\"\n  - lint_errors_count:\n      principle: \"Zero is the\
-    \ gate for downstream synthesis experiments.\"\n  - lint_warnings_count:\n    \
-    \  principle: \"Non-zero acceptable; records RTL quality baseline.\"\n  - rtl_source_path:\n\
-    \      principle: \"Records which RTL file was linted; prevents re-runs on stale\
-    \ sources.\"\n  - simulation_cycles_completed:\n      principle: \"Records iverilog\
-    \ run evidence; zero means simulation was skipped (lint errors).\"\n  - preconditions_checked:\n\
-    \      principle: \"Lists Verilator and Icarus availability checks. MANDATORY per\
-    \ CLAUDE.md.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2347-ml-ising-init-v3
-  title: "Phase 3: ML-Assisted Ising Machine Initialization v3 (arXiv:2503.23966)\
-    \ — First Actual Run"
-  milestone: 2026.05.229
-  deliverable: results/experiment_2347_ml_ising_init.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 30
-  gated_on:
-  - upstream: exp2337-pretest-fix-v10
-    artifact_field: pretest_fixed
-    op: ==
-    value: true
-  prior_failures:
-  - experiment_id: exp2332-ml-ising-init-v2
-    verdict: blocked_gate_check_failed
-    addressed_by: exp2332 was blocked by pretest_fixed=false. exp2337 is ungated.
-      Scope identical to exp2332. ML-Assisted Ising Init has never run in any milestone.
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: arXiv:2503.23966 demonstrates ML heuristics reduce Ising machine\
-    \ convergence\ntime by providing better initial spin configurations. Carnot's parallel_ising.py\n\
-    currently uses random initialization. This is the FIRST ACTUAL RUN after 2 blocked\
-    \ attempts.\nCPU-only (gradient-free) — no GPU required.\nEXISTING CODE TO READ\
-    \ FIRST:\n  {project_root}/python/carnot/samplers/parallel_ising.py\n  {project_root}/scripts/experiment_template.py\n\
-    TASK: Implement and benchmark ML-assisted Ising initialization vs random initialization.\n\
-    CONCRETE STEPS:\n  1. Create python/carnot/samplers/ml_ising_init.py implementing\
-    \ MLIsingInitializer:\n     - fit(J, h, n_training_samples=200): learns initialization\
-    \ policy\n       Policy: for each spin, estimate majority ground-state sign from\n\
-    \       local field h_i + sum_j J_ij * mean_neighbor_sign.\n     - initialize(J,\
-    \ h, random_seed) -> np.ndarray: returns {{-1, +1}}^n_spins.\n  2. Write 2 unit\
-    \ tests in tests/python/samplers/test_ml_ising_init.py.\n  3. Run unit tests;\
-    \ record n_tests_passed.\n  4. Benchmark on 3 sizes (random_seed=42 for J/h generation):\n\
-    \     n=64, n=128, n=256 (dense J).\n     For each: 50 trials with ML init (T_ml\
-    \ sweeps to reach E_target)\n              50 trials with random init (T_random\
-    \ sweeps)\n              convergence_speedup = T_random / T_ml\n  5. Set ml_init_speedup_validated:\
-    \ true if convergence_speedup >= 1.5 on n=256.\n  6. Write deliverable to results/experiment_2347_ml_ising_init.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if benchmark ran to completion.\"\n  - ml_init_speedup_validated:\n\
-    \      principle: \"Boolean. True if convergence_speedup >= 1.5 at n=256.\"\n\
-    \  - convergence_speedup_by_size:\n      principle: \"Per-size speedup ratio;\
-    \ records whether ML init scales with problem size.\"\n  - final_energy_delta_by_size:\n\
-    \      principle: \"Measures solution quality improvement (negative = ML init\
-    \ finds better solutions).\"\n  - n_tests_passed:\n      principle: \"Unit tests\
-    \ must pass.\"\n  - random_seed:\n      principle: \"Must be 42 for J/h generation;\
-    \ reproducibility for convergence trials.\"\n  - n_training_samples:\n      principle:\
-    \ \"Must be 200 to match task specification.\"\n\nRun command, 'Do NOT push. Do\
-    \ NOT modify scripts/research_conductor.py.'\n"
-- id: exp2348-capstone-v229
-  title: "Phase 4: Capstone E2E Live Generation (.229) — FST + ODAR + CASAL\
-    \ + KAN-CL n=256"
-  milestone: 2026.05.229
-  deliverable: results/experiment_2348_capstone.json
+    addressed_by: Same cascade block. Ungated in .230.
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: FST (Fast-Slow Training, arXiv:2605.12484) decomposes inference into slow weights\n(base model) + fast\
+    \ weights (query-specific context). ODAR (arXiv:2602.23681) routes between\nfast/deliberative paths. CASAL applies constraint\
+    \ enforcement during sampling.\n\nThis is the full end-to-end live generation pipeline. It has been blocked for 10 consecutive\n\
+    milestones (.220\u2013.229) by the pre-test cascade. exp2361 is UNGATED with its own GGUF\nprecondition \u2014 if the\
+    \ GGUF is not cached, it emits blocked_model_not_cached; if it IS\ncached, it generates >50 tokens live and validates\
+    \ the FST fast/slow delta.\n\nMODEL_SPECS:\n  - model: \"unsloth/gemma-4-26B-A4B-it-GGUF\"  # primary (MoE, fastest)\n\
+    \  - model: \"unsloth/Qwen3.6-35B-A3B-GGUF\"     # secondary\n  - model: \"unsloth/gemma-4-31B-it-GGUF\"       # tertiary\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/pipeline/ (look for FST, ODAR, CASAL integration)\n  {project_root}/python/carnot/learning/fast_slow.py\
+    \ (if from exp2357)\n  {project_root}/scripts/experiment_template.py\n\nTASK: Run FST+ODAR+CASAL end-to-end live generation\
+    \ with >50 tokens.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. Check GGUF cache: ls ~/.cache/huggingface/hub/ 2>/dev/null\
+    \ | grep -i \"gemma-4-26B\"\n        If no GGUF cached: try the other two models.\n        If NONE cached: write honest_verdict\
+    \ blocked_model_not_cached and exit.\n     b. Check llama.cpp: which llama-server || which llama.cpp || .venv/bin/python\
+    \ -c \"import llama_cpp\"\n        If llama.cpp not available: blocked_llama_cpp_missing and exit.\n\n  1. Load ODAR router\
+    \ (or stub if not implemented): route query to fast (Tier 0 probes)\n     vs deliberative (Tier 1+ Ising) path.\n\n  2.\
+    \ Run live inference with the cached GGUF model:\n     Generate >50 tokens on 5 arithmetic reasoning prompts.\n     Record:\
+    \ tokens_generated (must be >50), wall_time_s per query.\n\n  3. Apply FST fast-weight update: for each generated response,\
+    \ extract verified facts\n     and update fast_weights context.\n\n  4. Run CASAL constraint enforcement on the output\
+    \ (or apply energy scoring).\n\n  5. Compute fst_live_delta: accuracy improvement from fast-weight-augmented vs base inference\n\
+    \     (on a 10-question holdout if possible; otherwise just measure token count and wall time).\n\n  6. Write deliverable.\n\
+    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: with token count.\"\
+    \n  - fst_live_validated:\n      principle: \"True if tokens_generated > 50 AND no blocking conditions hit.\"\n  - tokens_generated:\n\
+    \      principle: \"Must be > 50. Adversarial check: impossibly short = fabrication flag.\"\n  - wall_time_s:\n      principle:\
+    \ \"Must be > 10s for real GGUF inference at > 50 tokens.\"\n  - model_name:\n      principle: \"Records which GGUF model\
+    \ was used.\"\n  - random_seed:\n      principle: \"Reproducibility. Must be 42.\"\n  - preconditions_checked:\n     \
+    \ principle: \"List of {resource, available} pairs for adversarial verification.\"\n\nRun command, 'Do NOT push. Do NOT\
+    \ modify scripts/research_conductor.py.'\n"
+- id: exp2362-capstone-v230
+  title: "Phase 6: Capstone v230 \u2014 FST+ODAR+CASAL+KAN-CL+Semantic Energy End-to-End"
+  milestone: 2026.05.230
+  deliverable: results/experiment_2362_capstone.json
   model: opus
   max_turns: 100
   gated_on:
-  - upstream: exp2339-fst-live-gen-v9
+  - upstream: exp2361-fst-live-gen-v10
     artifact_field: fst_live_validated
     op: ==
     value: true
-  - upstream: exp2341-kancl-n256-v8
+  - upstream: exp2356-kancl-n256-v9
     artifact_field: kancl_n256_validated
     op: ==
     value: true
-  prior_failures:
-  - experiment_id: exp2334-capstone-v228
-    verdict: blocked_gate_check_failed
-    addressed_by: "exp2334 was blocked because both upstream gates (fst_live_validated\
-      \ from exp2324,\n    kancl_n256_validated from exp2326) were never set —\
-      \ both experiments were blocked\n    by pretest_fixed=false (exp2323 never ran\
-      \ in .228). exp2337 fixes pre-test;\n    exp2339 and exp2341 now run first.\
-      \ Scope identical to exp2334."
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: Milestone 2026.05.229 capstone. Validate the full .222-.229 stack\
-    \ —\nFST+ODAR+CASAL (from .222) plus KAN-CL n=256 importance weighting (exp2341)\
-    \ —\ninteroperates correctly in an E2E verify-repair pass with REAL FULL\
-    \ ANSWER GENERATION\non a SOTA GGUF model. This experiment must NOT rely on a\
-    \ single-token probe.\nAll upstream gate fields (fst_live_validated from exp2339,\
-    \ kancl_n256_validated from\nexp2341) must be true for this gate to open.\nEXISTING\
-    \ CODE TO READ FIRST:\n  {project_root}/python/carnot/pipeline/verify_repair.py\n\
-    \  {project_root}/python/carnot/pipeline/odar_router.py\n  {project_root}/python/carnot/training/fast_slow.py\n\
-    \  {project_root}/python/carnot/samplers/casal.py\n  {project_root}/python/carnot/models/substrate_kan.py\n\
-    \  {project_root}/scripts/experiment_template.py\nTASK: Run 10 full verify-repair\
-    \ passes with SOTA GGUF on multi-step math reasoning.\nCONCRETE STEPS:\n  0.\
-    \ PRECONDITIONS (check BEFORE any subsequent step):\n     a. python/carnot/pipeline/odar_router.py\
-    \ imports without error — else blocked_odar_missing.\n     b. python/carnot/training/fast_slow.py\
-    \ imports without error — else blocked_fst_missing.\n     c. python/carnot/samplers/casal.py\
-    \ imports without error — else blocked_casal_missing.\n     d. ls ~/.cache/huggingface/hub/\
-    \ | grep -i \"gemma-4-26B\\|Qwen3.6-35B\\|gemma-4-31B\" returns\n        non-empty\
-    \ — else blocked_model_not_cached. Do NOT fabricate GPU inference.\n  1.\
-    \ MODEL_SPECS must include at least one of:\n     - unsloth/Qwen3.6-35B-A3B-GGUF\n\
-    \     - unsloth/gemma-4-31B-it-GGUF\n     - unsloth/gemma-4-26B-A4B-it-GGUF\n\
-    \  2. Select 10 multi-step arithmetic reasoning problems.\n  3. For each: generate\
-    \ FULL ANSWER (>= 50 tokens), run ODAR routing, FST context prep,\n     CASAL\
-    \ constraint enforcement, attempt repair if violation found.\n  4. Measure:\n\
-    \     - mean_answer_length_tokens (MUST be >= 50)\n     - n_violations_found,\
-    \ verified_repair_rate, total_compute_reduction_pct\n  5. Set capstone_passed:\
-    \ true if mean_answer_length_tokens >= 50 AND\n     (n_violations_found == 0 OR\
-    \ verified_repair_rate >= 0.3).\n  6. Write deliverable to results/experiment_2348_capstone.json.\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required. complete: if capstone_passed is true.\"\n  - capstone_passed:\n  \
-    \    principle: \"Boolean. True only when answers are full-length AND (zero violations\
-    \ OR repair rate >= 0.3).\"\n  - mean_answer_length_tokens:\n      principle:\
-    \ \"Must be >= 50 to distinguish from single-token probes. Primary anti-fabrication\
-    \ check.\"\n  - n_violations_found:\n      principle: \"Records how many problems\
-    \ had constraint violations; 0 is an honest finding.\"\n  - verified_repair_rate:\n\
-    \      principle: \"Measures repair pipeline effectiveness; 0.3 threshold allows\
-    \ honest partial success.\"\n  - models_used:\n      principle: \"Records which\
-    \ SOTA GGUF ran so claims are model-specific and not hallucinated.\"\n  - preconditions_checked:\n\
-    \      principle: \"Lists all resource checks; MANDATORY per CLAUDE.md Pre-Launch\
-    \ Preconditions Discipline.\"\n  - duration_s:\n      principle: \"Real compute\
-    \ with a 26B model takes minutes; < 30s for 10 problems flags fabrication.\"\n\
-    \  - random_seed:\n      principle: \"Reproducibility for the 10-problem run.\"\
-    \n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
-- id: exp2349-retro-v229
-  title: 'Phase 4: Milestone 2026.05.229 Retrospective'
-  milestone: 2026.05.229
-  deliverable: results/experiment_2349_retro.json
+  prompt: "CONTEXT: This is the capstone synthesis for milestone 2026.05.230. It runs only if\nexp2361 (FST live gen v10)\
+    \ set fst_live_validated=true AND exp2356 (KAN-CL n=256 v9)\nset kancl_n256_validated=true. These gates represent the\
+    \ two load-bearing results:\nlive generation works AND continual constraint learning works.\n\nThe capstone validates\
+    \ the COMPLETE Carnot pipeline:\nGGUF \u2192 ODAR routing \u2192 FST fast/slow weights \u2192 CASAL sampling \u2192\n\
+    Verifier ensemble (k=16 + Semantic Energy) \u2192 KAN-CL constraint learning \u2192\nRepair output.\n\nMODEL_SPECS:\n\
+    \  - model: \"unsloth/gemma-4-26B-A4B-it-GGUF\"\n  - model: \"unsloth/Qwen3.6-35B-A3B-GGUF\"\n  - model: \"unsloth/gemma-4-31B-it-GGUF\"\
+    \n\nEXISTING CODE TO READ FIRST:\n  {project_root}/results/experiment_2361_fst_live_gen.json\n  {project_root}/results/experiment_2356_kancl_n256.json\n\
+    \  {project_root}/results/experiment_2351_semantic_energy_real.json\n  {project_root}/python/carnot/pipeline/\n\nTASK:\
+    \ Synthesize .230 research findings into a coherent E2E validation report.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n \
+    \    a. Read exp2361 artifact \u2014 confirm fst_live_validated=true, record model_name.\n     b. Read exp2356 artifact\
+    \ \u2014 confirm kancl_n256_validated=true, record forgetting_reduction_pct.\n     c. Read exp2351 artifact if available\
+    \ \u2014 record semantic_energy_real_auroc.\n     d. Read exp2352 artifact if available \u2014 record nsvif verification_pass_rate.\n\
+    \     e. Read exp2353 artifact if available \u2014 record verge mcs_repair_success_rate.\n\n  1. Synthesize pipeline performance\
+    \ report:\n     - Full pipeline TPR/FPR estimate based on individual verifier AUROCs\n     - Constraint coverage: what\
+    \ fraction of arithmetic errors does the ensemble catch?\n     - Latency profile: wall_time_s breakdown by pipeline stage\n\
+    \n  2. Identify top 3 findings for paper-v6:\n     - Each finding must have a measurable artifact field to cite\n    \
+    \ - Each finding must NOT be from synthetic-only experiments (real logits required)\n\n  3. Write deliverable: comprehensive\
+    \ capstone with all synthesis results.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
+    \ required. complete: with pipeline summary.\"\n  - capstone_passed:\n      principle: \"True if fst_live_validated and\
+    \ kancl_n256_validated both confirm.\"\n  - pipeline_tpr:\n      principle: \"Estimated true positive rate from ensemble\
+    \ composition.\"\n  - pipeline_fpr:\n      principle: \"Estimated false positive rate from ensemble composition.\"\n \
+    \ - top_findings:\n      principle: \"List of 3 paper-v6-eligible findings with artifact citations.\"\n  - random_seed:\n\
+    \      principle: \"Must be 42.\"\n  - preconditions_checked:\n      principle: \"List of upstream artifact reads confirming\
+    \ gate conditions.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+- id: exp2363-retro-v230
+  title: 'Phase 7: Milestone 2026.05.230 Operational Retrospective'
+  milestone: 2026.05.230
+  deliverable: results/experiment_2363_retro.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
-  prior_failures:
-  - experiment_id: exp2335-retro-v228
-    verdict: 'complete: retro_written'
-    addressed_by: "Retros are a mandatory recurring pattern — one per milestone,\
-      \ not a carry-forward of a failed experiment. exp2335 (.228 retro) succeeded;\
-      \ this is the fresh .229 retro. No failure to address."
-    retire_if_same_verdict: true
-  prompt: "CONTEXT: All experiments in milestone 2026.05.229 have completed (or gate-blocked).\n\
-    Write the operational retrospective. This task is UNGATED — it always runs\
-    \ last,\neven if exp2337 (pre-test fix) failed for a 10th time.\nEXISTING CODE\
-    \ TO READ FIRST:\n  {project_root}/ops/conductor-log.md (last 100 lines)\n  {project_root}/results/experiment_2337_pretest_fix.json\n\
-    \  {project_root}/results/experiment_2338_semantic_energy.json\n  {project_root}/results/experiment_2339_fst_live_gen.json\n\
-    \  {project_root}/results/experiment_2341_kancl_n256.json\n  {project_root}/results/experiment_2342_nsvif_extractor.json\n\
-    \  {project_root}/results/experiment_2348_capstone.json\nTASK: Write milestone\
-    \ 2026.05.229 retrospective.\nCONCRETE STEPS:\n  1. Compute: total_wall_time_min,\
-    \ n_experiments_completed, n_gate_blocks, n_compute_bound.\n  2. Identify top\
-    \ 3 successes and top 3 gaps for milestone .230.\n  3. Evaluate progress on the\
-    \ 3 biggest gaps from .229 design doc:\n     a. Pre-test cascade FULLY resolved?\
-    \ (exp2337 — 10th attempt)\n     b. Semantic Energy Tier 0g prototype landed?\
-    \ (exp2338 — ungated, new verifier)\n     c. NSVIF neuro-symbolic extraction\
-    \ first actual run? (exp2342 — PRD Priority #1)\n  4. Evaluate structural\
-    \ change effectiveness: did ungated exp2338 prevent a 9th consecutive\n     empty-experiment\
-    \ milestone? Record ungated_tasks_completed count.\n  5. If exp2337 failed AGAIN\
-    \ (pretest_fixed=false):\n     Record the operator_manual_commands from exp2337's\
-    \ artifact in the retro.\n     Propose for .230: operator manual inspection before\
-    \ milestone activation.\n  6. Propose next_milestone_speedup_target_pct.\n  7.\
-    \ Update ops/changelog.md with a \"## {date} (Milestone 2026.05.229 Operational\
-    \ Retrospective)\"\n     section summarizing results.\n  8. Write deliverable\
-    \ to results/experiment_2349_retro.json.\n     schema: carnot.operational_retro.v72\n\
-    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required.\"\n  - criteria_met:\n      principle: \"N/total count validates milestone\
-    \ completion fraction.\"\n  - top_gaps_resolved:\n      principle: \"Records which\
-    \ of the 3 .229 design gaps were resolved.\"\n  - pretest_cascade_status:\n  \
-    \    principle: \"Explicit field for whether the 10-milestone pre-test cascade\
-    \ was resolved; load-bearing for .230 planning.\"\n  - ungated_tasks_completed:\n\
-    \      principle: \"Records how many ungated tasks ran regardless of pre-test state;\
-    \ validates the structural fix.\"\n  - next_milestone_speedup_target_pct:\n  \
-    \    principle: \"Quantifies recoverable wall-time in .230; forces concrete identification\
-    \ of slow paths.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
+  prompt: "CONTEXT: Milestone 2026.05.230 retrospective. 14 tasks were planned (exp2350\u2013exp2363).\nThis was the FIRST\
+    \ all-ungated milestone in 10+ milestones. Key structural change:\nall research experiments (exp2351\u2013exp2361) removed\
+    \ gated_on dependencies and use own\npreconditions instead.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/ops/conductor-log.md\
+    \ (last 80 lines)\n  {project_root}/research-roadmap.yaml (current milestone tasks)\n  {project_root}/results/experiment_2350_archive.json\n\
+    \  {project_root}/results/experiment_2351_semantic_energy_real.json\n  {project_root}/results/experiment_2352_nsvif_extractor.json\n\
+    \  {project_root}/results/experiment_2361_fst_live_gen.json\n  {project_root}/results/experiment_2362_capstone.json\n\n\
+    TASK: Write milestone 2026.05.230 operational retrospective.\n\nCONCRETE STEPS:\n  1. Read conductor-log.md to extract\
+    \ wall time, outcomes, and gate blocks for each task.\n  2. Compute: n_experiments_completed, n_gate_blocks, n_failed,\
+    \ total_wall_time_min.\n  3. For each task in the milestone: record status (OK/GATE_BLOCK/FAIL/SKIP) and key result.\n\
+    \  4. Identify top_3_successes and top_3_gaps_for_231.\n  5. Confirm whether FR-11 was satisfied (exp2357.fr11_multidomain_passed).\n\
+    \  6. Write schema: carnot.operational_retro.v73.\n  7. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
+    \      principle: \"Terminal-prefix required.\"\n  - n_experiments_completed:\n      principle: \"Count of terminal OK\
+    \ status tasks.\"\n  - n_gate_blocks:\n      principle: \"Count of GATE_BLOCK tasks.\"\n  - total_wall_time_min:\n   \
+    \   principle: \"Sum of wall time from conductor log.\"\n  - fr11_satisfied:\n      principle: \"True if exp2357 set fr11_multidomain_passed=true.\"\
+    \n  - ungated_experiments_succeeded:\n      principle: \"Count of ungated research experiments that produced OK artifacts.\"\
+    \n  - retro_complete:\n      principle: \"Must be true.\"\n\nRun command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'\n"
