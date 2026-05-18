@@ -4768,3 +4768,4 @@ Ripgrep i |
 | 2026-05-18 08:44 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-18 08:46 UTC | Activation REFUSED: milestone 2026.05.230 | BLOCK | exclusion-manifest: 1 HARD violation(s); first: SCOPE_MATCHED_PRIOR_FAILURE on e |
 | 2026-05-18 08:48 UTC | Milestone 2026.05.230 activated | OK | 14 tasks queued |
+| 2026-05-18 08:52 UTC | Phase 0: Archive .229 and activate .230 | OK | cache hit: 81 passed, 1 warning in 5.79s |
