@@ -4825,3 +4825,5 @@ Ripgrep i |
 | 2026-05-18 12:34 UTC | Phase 5: KAN-CL Hard Domain Adversarial Stress Tes | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 12:36 UTC | Phase 5: FR-11 FST Real-Data Cross-Domain Retentio | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 12:38 UTC | Phase 5: FR-11 FST Real-Data Cross-Domain Retentio | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 12:40 UTC | Phase 5: FR-11 FST Real-Data Cross-Domain Retentio | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 12:42 UTC | Phase 6: Capstone v231 — Real-Data Pipeline Synthe | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2365-fst-live-gen-v11, exp2366-nsvif-verg |
