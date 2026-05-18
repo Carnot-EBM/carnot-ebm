@@ -1,3 +1,27 @@
+## 2026-05-18 Post-.227 Planning Sweep (Milestone 2026.05.228)
+
+This sweep was run after milestone `.227` completed. Key finding: exp2309 fixed the 2 originally-named pre-test failures but uncovered 3 more (1 missing potts artifact + 2 xdist parallelism failures that pass in isolation). All 12 research tasks remained gate-blocked. The sweep found new work in frequency-aware hallucination detection, neurosymbolic policy formalization, and skew-reflected constrained Langevin dynamics.
+
+### Frequency-Aware Attention Hallucination Detection
+- **Paper:** "Detecting Contextual Hallucinations in LLMs with Frequency-Aware Attention" (arXiv:2602.18145, Feb 2026).
+- **What:** Detects hallucinations by measuring "high-frequency attention energy" in fragmented tokens — LLMs attending to high-frequency, semantically incoherent tokens is a strong hallucination signal.
+- **Relevance to Carnot:** Potential Tier 0f verifier for the cascade architecture (orthogonal to SpilledEnergy Tier 0b and HalluField Tier 0e — attention frequency vs logit variance vs token-path ensemble variance). Candidate for .229+ after pre-test cascade is resolved.
+
+### Neurosymbolic Policy Formalization via SMT-LIB
+- **Paper:** "A Neurosymbolic Approach to Natural Language Formalization and Verification" (arXiv:2511.09008, Nov 2025).
+- **What:** Extends NSVIF (arXiv:2601.17789) by auto-formalizing policy descriptions into SMT-LIB logic rules with Z3 feedback loops, providing more complete coverage than step-by-step extraction alone.
+- **Relevance to Carnot:** Follow-up to exp2327 (NSVIF first run in .228). Provides a concrete path from natural language instructions to SMT-LIB encoding with policy-level semantic checking. Candidate for .229+ after NSVIF baseline is established in .228.
+
+### Skew-Reflected Non-Reversible Langevin (Large Deviations Acceleration)
+- **Paper:** "Accelerating Constrained Sampling: A Large Deviations Approach" (arXiv:2506.07816, Jun 2026).
+- **What:** Analyzes skew-reflected non-reversible Langevin dynamics for constrained sampling, proving faster mixing than overdamped Langevin under constraints via large deviations theory. Builds on projected-Langevin foundations (arXiv:2605.05387).
+- **Relevance to Carnot:** Theoretical follow-up to exp2330 (Projected-Langevin vs CASAL in .228). Once the projected-Langevin baseline is established, skew-reflected non-reversible extensions may outperform both CASAL and projected Langevin. Candidate for .229+ after exp2330 establishes the baseline.
+
+### BEST-Route: Budget-Constrained Adaptive LLM Routing
+- **Paper:** "BEST-Route: Adaptive LLM Routing with Test-Time Optimal Compute" (arXiv:2506.22716, Jun 2025).
+- **What:** Dynamically allocates test-time compute per-request via budget-constrained optimization, achieving 60% token/cost reduction. Extends ODAR-style routing with explicit budget awareness.
+- **Relevance to Carnot:** Complements ODAR's (arXiv:2602.23681) fast-vs-deliberative routing: once ODAR gates the verification tier, BEST-Route can optimize within the deliberative tier for multi-verifier ensemble resource allocation. Candidate for integration after exp2324 (FST+ODAR live gen) confirms ODAR's contribution.
+
 ## 2026-05-17 Post-.226 Planning Sweep (Milestone 2026.05.227)
 
 This sweep was run after milestone `.226` completed. The key finding for .227 planning: exp2295 resolved the pypi_escalation ImportError (symbols `check_pypi_escalation` and `run_escalation` added) but two pre-existing test failures remain blocking pretest_fixed. The research sweep found new work in ML-assisted Ising initialization, accelerated constrained sampling theory, neurosymbolic SMT formalization, and adaptive LLM routing.

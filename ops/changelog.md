@@ -1,5 +1,19 @@
 # Carnot — Changelog
 
+## 2026-05-18 (Milestone 2026.05.228 Research Planning)
+
+- Milestone 2026.05.228 research planning complete. User instruction: plan the next milestone after .227, which completed 2 of 14 criteria and left the pre-test cascade still unresolved after 8 consecutive milestones.
+- Root cause for .228 planning: exp2309 (.227 pre-test fix) fixed 2 originally-named test failures but timed out (1201s silence) before clearing the full suite — 3 more pre-existing failures revealed: (1) `results/experiment_1692_potts_export.json` missing; (2) `test_experiment_390` fails under xdist GPU contention (passes in isolation); (3) `test_experiment_294` errors under xdist memory leak (passes in isolation). Root cause now FULLY diagnosed.
+- ArXiv research sweep: added 4 papers to `research-references.md` under "Post-.227 Planning Sweep" — Frequency-Aware Attention hallucination detection (arXiv:2602.18145 — potential Tier 0f), Neurosymbolic SMT-LIB formalization (arXiv:2511.09008), Skew-Reflected Non-Reversible Langevin (arXiv:2506.07816), BEST-Route adaptive routing (arXiv:2506.22716).
+- Created `openspec/change-proposals/research-roadmap-v228.md` with full milestone design: what .227 proved, 3 biggest gaps vs PRD, architecture snapshot, phase structure (Phase 0–4), dependency graph, FR-11 mandate, hardware requirements, decentralization check (Rules 1–7), exclusion manifest cross-check, failed-experiment rerun compliance table.
+- Created `research-roadmap-next.yaml` with 14 tasks (exp2322–exp2335). Phase 0: archive .227 (exp2322) + Claude-escalated pre-test fix v9 (exp2323, requires_claude:true, max_turns:50). Phase 1: FST live gen v8 (exp2324), FR-11 multidomain v5 (exp2325), KAN-CL n=256 v7 (exp2326). Phase 2: NSVIF neuro-symbolic Z3 extractor v3 (exp2327, PRD Priority #1 since 2026-04-11), VERGE SMT repair v3 (exp2328), Eidoku CSP v4 (exp2329), Projected-Langevin v4 (exp2330). Phase 3: KV260 RTL lint/sim v7 (exp2331), ML-Assisted Ising Init v2 (exp2332, first actual run), Adversarial Null-Space Probe v6 (exp2333). Phase 4: capstone v228 (exp2334, opus), retro v228 (exp2335, ungated).
+- Agent routing: 12 tasks `codex gpt-5.5`; exp2323 `requires_claude: true` (justified: codex demonstrably failed x8 across exp2267/exp2281/exp2295/exp2309, multi-file investigation required, judgment calls on potts artifact strategy + xdist group marking); exp2334 capstone `model: opus, max_turns: 100`.
+- All Phase 1–3 tasks gate on exp2323.pretest_fixed==true. exp2325 additionally gates on exp2324.fst_live_validated. exp2334 capstone gates on exp2324.fst_live_validated AND exp2326.kancl_n256_validated. exp2335 retro is ungated.
+- FR-11 mandate: exp2325 with `continuous_self_learning_task: true`, gate `cross_domain_retention_rate >= 0.75`.
+- Exclusion manifest cross-check: GRPO/VPRM, WOPR puzzles, HardNet++/DSP, THRML scaling sweep, SpecAnn, exp2091, iCE40 PIMI — none proposed. exp2332 ML Ising Init is NEW (no prior exclusion match).
+- Validation: `validate_prior_failures.py` (OK, no violations), `audit_roadmap_gates.py` (all_checks_pass: 0 gate-field gaps, 13 upstream checks passed, 0 model-coherence failures, 0 prior_failures missing), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 20260517 (Milestone 2026.05.227 activated)
 
 ## 2026-05-17 (Milestone 2026.05.226 Operational Retrospective)

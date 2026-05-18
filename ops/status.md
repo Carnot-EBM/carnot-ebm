@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-17 (milestone 2026.05.226 research planning complete)
+**Last Updated:** 2026-05-18 (milestone 2026.05.228 research planning complete)
+
+## Session 2026-05-18 - Milestone 2026.05.228 Research Planning Complete
+
+**Milestone 2026.05.228 PLANNED after .227 completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v228.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2322`–`exp2335`)
+- ID allocation: milestone `.227` used through `exp2321`, so `.228` starts at `exp2322`.
+- Research references updated with post-.227 planning sweep: Frequency-Aware Attention hallucination detection (arXiv:2602.18145 — potential Tier 0f verifier), Neurosymbolic SMT-LIB policy formalization (arXiv:2511.09008 — .229+ follow-up to NSVIF), Skew-Reflected Non-Reversible Langevin (arXiv:2506.07816 — .229+ follow-up to projected-Langevin), BEST-Route adaptive LLM routing (arXiv:2506.22716 — .229+ ODAR complement).
+- Design focus: Phase 0 archives .227 and makes the 9th attempt at resolving the pre-test cascade. Root cause now fully diagnosed from exp2309: (1) `results/experiment_1692_potts_export.json` missing — test_experiment_1692_potts_v2 requires this artifact; (2) `test_experiment_390` + `test_experiment_294` pass in isolation but fail under xdist parallelism due to GPU contention/memory leak — fix is `@pytest.mark.xdist_group("gpu_serial")` on the two test classes. Phase 1 retries FST live gen (exp2324), FR-11 multidomain retention (exp2325), KAN-CL n=256 (exp2326) — all blocked 6-7 consecutive milestones. Phase 2 retries NSVIF Z3 extractor (exp2327, PRD Priority #1 since 2026-04-11), VERGE SMT repair (exp2328), Eidoku CSP gate (exp2329), Projected-Langevin (exp2330). Phase 3 covers KV260 RTL lint/sim (exp2331), ML-Assisted Ising Init (exp2332, first actual run), Adversarial Null-Space Probe (exp2333). Phase 4 has capstone (exp2334) and retro (exp2335).
+- LLM-bearing tasks (`exp2324`, `exp2334`) include mandated local SOTA GGUF MODEL_SPECS: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- Continuous self-learning requirement (FR-11) satisfied by `exp2325-fr11-fst-multidomain-v5` with `continuous_self_learning_task: true`. Gate: `cross_domain_retention_rate >= 0.75`.
+- Structured gates: `exp2324`, `exp2325`, `exp2326`, `exp2327`, `exp2328`, `exp2329`, `exp2330`, `exp2331`, `exp2332`, `exp2333` all gate on `exp2323.pretest_fixed == true`. `exp2325` additionally gates on `exp2324.fst_live_validated == true`. `exp2334` (capstone) gates on `exp2324.fst_live_validated == true` AND `exp2326.kancl_n256_validated == true`. `exp2335` (retro) is ungated.
+- Agent routing: 12 of 14 tasks use `agent_type: codex, model: gpt-5.5`. `exp2323` (pre-test fix v9): `requires_claude: true, max_turns: 50` — justified by codex demonstrably failing x8 (exp2267, exp2281, exp2295, exp2309), multi-file tool choreography required, and judgment calls on potts artifact vs xdist strategy. `exp2334` (capstone): `model: opus, max_turns: 100`.
+- Validation passed: `python3 scripts/validate_prior_failures.py research-roadmap-next.yaml` (OK, no violations), `python3 scripts/audit_roadmap_gates.py research-roadmap-next.yaml` (all_checks_pass: 0 gate-field gaps, 13 upstream checks passed, 0 model-coherence failures, 0 prior_failures missing), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.228 when ready. Key unblocking task is `exp2323` (pre-test cascade final fix using Claude Sonnet, max_turns:50) — once `pretest_fixed: true`, the conductor can sequence all 11 Phase 1–3 tasks automatically for the first time in 8+ consecutive milestones.
+
+---
 
 ## Session 2026-05-17 - Milestone 2026.05.226 Research Planning Complete
 

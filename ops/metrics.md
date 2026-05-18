@@ -1,5 +1,16 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-18 Milestone 2026.05.228 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-18T00:10:20Z | 2026-05-18T00:21:55Z | Read .227 state, diagnosed pre-test cascade root cause, ArXiv research sweep, wrote research-roadmap-v228.md + research-roadmap-next.yaml (14 tasks exp2322–exp2335). Context compaction during planning. | ~45k |
+| 2 | 2026-05-18T00:21:55Z | 2026-05-18T00:25:00Z | Validated YAML (audit_roadmap_gates all_checks_pass), fixed retro prior_failures block, updated ops/status.md + ops/changelog.md + ops/metrics.md. | ~8k |
+
+Note: `scripts/session-metrics.py` not present in this checkout; authoritative token extraction unavailable.
+
 ## Session: 2026-05-17 Milestone 2026.05.226 Research Planning
 
 ### Turn Log
