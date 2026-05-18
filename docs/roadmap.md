@@ -275,3 +275,6 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 | 2026.05.222 | Pipeline Inactive | 0 experiments | No experiments committed; roadmap gap; pre-stage roadmap for .223 |
 | 2026.05.223 | Pipeline Inactive | 0 experiments | No experiments committed; blocked_roadmap_missing at archive step; pre-stage roadmap for .224 |
 | 2026.05.224 | Pipeline Inactive | 0 experiments | No experiments committed; blocked_roadmap_missing recurrence; pre-stage roadmap for .225 before archiving .224 |
+| 2026.05.225 | Pipeline Inactive | 0 experiments | No experiments committed; blocked_roadmap_missing recurrence; pre-stage roadmap for .226 before archiving .225 |
+| 2026.05.226 | Pipeline Inactive | 0 experiments | No experiments committed; blocked_roadmap_missing recurrence; pre-stage roadmap for .227 before archiving .226 |
+| 2026.05.227 | Pipeline Inactive | 0 experiments | No experiments committed; fourth consecutive blocked_roadmap_missing; pre-stage roadmap for .228 immediately |

@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.227",
+  "generated_at": "2026-05-18T00:09:13Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.227 produced no committed experiment artifacts; the TIMING DATA block contained no experiment commits since activation. Both GPUs were idle at 0% utilization with only 4 MB allocated, consistent with a pipeline that ran no compute-bound work. This is the fourth consecutive empty milestone, pointing to a structural gap in roadmap pre-staging.",
+  "bottlenecks_identified": [
+    "No research-roadmap-next.yaml was pre-staged before activating .227, causing the conductor to have no work to dispatch — the same root cause as .224/.225/.226.",
+    "The blocked_roadmap_missing pattern at each archive step has now recurred across at least four consecutive milestones without a permanent fix being merged.",
+    "Operator-authored roadmap pre-staging (per Pre-Staged Roadmap Convention in CLAUDE.md) is the required remedy, but has not been consistently applied before each milestone activation."
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for .228 BEFORE archiving .227; the milestone field must read '2026.05.228' and be committed with an [operator] or [outer-loop] prefix.",
+    "Add a conductor pre-activation guard that refuses to activate a new milestone if research-roadmap-next.yaml does not exist with the correct milestone field — this converts a silent skip into a loud, early failure.",
+    "Document the recurring blocked_roadmap_missing pattern in ops/known-issues.md as a MANDATORY-NEXT-MILESTONE PRIORITY so the overdue-priority forcing function in CLAUDE.md triggers automatic pickup.",
+    "Consider making the archive step itself write a stub research-roadmap-next.yaml skeleton (milestone field + empty tasks list) so the conductor always has a valid file to validate against, even if the planner must still fill tasks."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-stage a valid research-roadmap-next.yaml for milestone 2026.05.228 immediately after closing this retro — this single action unblocks the entire next milestone.",
+    "Add blocked_roadmap_missing as a MANDATORY-NEXT-MILESTONE PRIORITY in ops/known-issues.md to engage the overdue-priority forcing function and prevent another silent skip.",
+    "Implement a conductor pre-activation check that hard-errors when research-roadmap-next.yaml is absent or has a stale milestone field, preventing future empty activations from going undetected."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Four consecutive milestones (.224 through .227) have been structurally empty due to the same missing-roadmap root cause; this is an operational process failure, not a research failure. The Pre-Staged Roadmap Convention in CLAUDE.md is the correct remedy, but it relies on honor-discipline at the operator/outer-loop layer — the recurring pattern suggests the mechanical enforcement gap (conductor pre-activation guard) must be closed. No compute-bound data exists this milestone, so GPU efficiency analysis is not applicable."
+}

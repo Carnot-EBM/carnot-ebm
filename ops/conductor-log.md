@@ -4578,3 +4578,4 @@ Ripgrep i |
 | 2026-05-17 23:52 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2309-pretest-fix-completion) |
 | 2026-05-17 23:52 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2309-pretest-fix-completion) |
 | 2026-05-17 23:52 UTC | Phase 4: Capstone E2E Live Generation (.227) — FST | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp2310-fst-live-gen-v7.fst_live_validated |
+| 2026-05-18 00:03 UTC | Phase 4: Milestone 2026.05.227 Retrospective | OK | 81 passed, 1 warning in 3.49s |
