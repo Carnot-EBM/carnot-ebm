@@ -4107,3 +4107,26 @@ The `honest_verdict` field must start with a terminal prefix and the `.222` gap 
 **And** result artifacts for the completed or blocked .223 experiments
 **When** the Exp 2265 retrospective generator runs
 **Then** it writes `results/experiment_2265_retro.json` with schema `carnot.operational_retro.v66`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.222` gap closure records, and a quantified speedup target for milestone `.224`.
+
+### REQ-REPORT-2321: Milestone 2026.05.227 Operational Retrospective
+
+The repository shall provide `scripts/experiment_2321_retro.py` to generate
+`results/experiment_2321_retro.json` with schema
+`carnot.operational_retro.v70`.
+
+The artifact must record `total_wall_time_min`, `n_experiments_completed`,
+`n_gate_blocks`, `n_compute_bound`, `criteria_met`, `top_gaps_resolved`,
+`pretest_cascade_status`, and `next_milestone_speedup_target_pct`. The
+`honest_verdict` field must start with a terminal prefix. The gap-resolution
+analysis must explicitly cover the `.226` carry-forward gaps: full pre-test
+cascade resolution, FST live generation beyond one-token probing, and NSVIF
+neuro-symbolic extraction execution. If Exp 2309 did not set
+`pretest_fixed=true`, the artifact must include direct operator escalation
+commands for the two named pre-test failures.
+
+#### SCENARIO-REPORT-2321: Generate .227 Retrospective Artifact
+
+**Given** a conductor log containing the milestone 2026.05.227 activation and terminal task rows
+**And** result artifacts or missing-artifact evidence for Exp 2309, Exp 2310, Exp 2312, Exp 2313, and Exp 2320
+**When** the Exp 2321 retrospective generator runs
+**Then** it writes `results/experiment_2321_retro.json` with schema `carnot.operational_retro.v70`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.226` gap closure records, explicit `pretest_cascade_status`, and a quantified speedup target for milestone `.228`.
