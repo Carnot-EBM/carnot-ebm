@@ -2931,3 +2931,24 @@ The artifact MUST be written to `results/experiment_1771_tskm_projection.json` w
 ### SCENARIO-VERIFY-1771: SKM Iterative Projection Achieves Zero Violations
 
 Given 50 CCTU linear constraints, when the SKM randomized projection algorithm executes, then post-projection outputs achieve strictly zero constraint violations and the required JSON artifact is produced.
+
+### REQ-VERIFY-2354: Eidoku CSP Arithmetic Gate
+
+The repository shall provide a CPU-only Eidoku CSP gate in
+`python/carnot/verify/eidoku_csp.py` that:
+- extracts numeric variable assignments from a response string;
+- evaluates hard arithmetic constraint expressions without `eval`;
+- rejects missing variables, unsafe syntax, and violated constraints as gate
+  violations;
+- exposes `EidokuCspGate.validate(response: str, constraints: list[str]) ->
+  dict` with `gate_passed` and `violations` fields; and
+- reports `results/experiment_2354_eidoku_csp.json` with
+  `csp_gate_accuracy` on exactly 50 deterministic arithmetic examples.
+
+### SCENARIO-VERIFY-2354: Eidoku CSP Gate Validates Arithmetic Corpus
+
+Given a deterministic 50-example arithmetic constraint corpus with seed 42,
+When `EidokuCspGate` evaluates each response against its hard constraints,
+Then the reported `csp_gate_accuracy` is the fraction of examples correctly
+classified, `n_eval_examples` is 50, and `eidoku_gate_validated` is true only
+when the accuracy is at least 0.75.
