@@ -4681,3 +4681,14 @@ Ripgrep i |
 | 2026-05-18 04:18 UTC | Phase 3: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
 | 2026-05-18 04:18 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
 | 2026-05-18 04:18 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:18 UTC | Phase 4: Capstone E2E Live Generation (.228) — FST | GATE_BLOCK | 2 of 2 gate(s) failed; first failure: exp2324-fst-live-gen-v8.fst_live_validated |
+| 2026-05-18 04:20 UTC | Phase 1: FST+ODAR+CASAL Real-Scale Live Generation | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 1: FR-11 FST Multi-Domain Retention v5 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 1: KAN-CL n=256 Per-Knot Retention v7 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 2: NSVIF Neuro-Symbolic Z3 Extractor — First | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 2: VERGE SMT Minimal Correction Subset Repai | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 2: Eidoku CSP Tier 2.8 Gate — First Actual R | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 2: Projected-Langevin vs CASAL Baseline v4 — | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 3: KV260 RTL Verilator Lint + Icarus Simulat | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 3: ML-Assisted Ising Machine Initialization | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
+| 2026-05-18 04:20 UTC | Phase 3: Adversarial Null-Space Probe on k=16 Ense | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2323-pretest-fix-final) |
