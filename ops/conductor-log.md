@@ -4963,3 +4963,5 @@ Ripgrep i |
 | 2026-05-18 21:21 UTC | Phase 3: Phase 1 Ship Gate Audit v4 — PyPI + HF Mi | OK | 81 passed, 1 warning in 2.34s |
 | 2026-05-18 21:27 UTC | Phase 4: Paper-v6 Results Table + Capstone v235 —  | OK | 81 passed, 1 warning in 2.29s |
 | 2026-05-18 21:33 UTC | Phase 4: Milestone 2026.05.235 Operational Retrosp | OK | 81 passed, 1 warning in 2.38s |
+| 2026-05-18 22:00 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-05-18 22:02 UTC | Milestone 2026.05.236 activated | OK | 13 tasks queued |

@@ -1,6 +1,33 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-18 (milestone 2026.05.235 research planning complete)
+**Last Updated:** 2026-05-18 (milestone 2026.05.236 research planning complete)
+
+## Session 2026-05-18 - Milestone 2026.05.236 Research Planning Complete
+
+**Milestone 2026.05.235 COMPLETED: 13/13 tasks completed.** codex_cli_healthy=true (complexity_threshold=3), best_auroc=0.8896 (Hierarchical LogCons v2, exp2423 — but z3_encoding_used=false, fallback used), HIVE v4 AUROC=0.8864, kinetic_langevin best sampler (KL=1.987 vs CASAL 9.858, delta=+7.87). KV260 Yosys: synthesis_errors=1 (RTL content bug, infrastructure working). Phase 1 ship gate: NOT MET (only mcp_docs + cli_docs missing).
+
+**Milestone 2026.05.236 PLANNED as AUROC Ceiling Breach + RTL Fix + Phase 1 Ship Gate Completion.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v236.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2434`–`exp2446`)
+- ID allocation: milestone `.235` used through `exp2433`, so `.236` starts at `exp2434`.
+- Research references updated with post-.235 planning sweep (6 papers): DiffuTruth (arXiv:2602.11364), HalluField (arXiv:2509.10753), Multiple Testing/Conformal P-values (arXiv:2508.18473), PCIB (arXiv:2601.15652), Online Learnability of CoT Verifiers (arXiv:2603.03538), LaaB ACL 2026 (arXiv:2605.03971).
+- **Milestone title**: "AUROC Ceiling Breach: DiffuTruth + PCIB + Conformal Ensemble, RTL Synthesis Fix, Phase 1 Ship Gate Completion"
+- **Four critical gaps targeted**:
+  1. AUROC gap 0.034 to HIVE peer 0.9236: DiffuTruth Tier 0k (exp2435), PCIB Tier 0l (exp2436), LogCons Z3-True v3 (exp2437, force z3_encoding=true), Conformal P-Value Ensemble v1 (exp2438)
+  2. FST MCMC degenerate (exp2426 acceptance_rate=1.0): fixed in exp2442 via different spin states per token
+  3. KV260 RTL synthesis error=1: diagnosed and fixed in exp2440
+  4. Phase 1 ship gate only needs MCP+CLI docs: written in exp2441
+- **Agent routing**: 12 tasks codex/gpt-5.5; 1 task claude opus (exp2445: capstone synthesis, requires_claude)
+- **FR-11 satisfied**: exp2439 FR-11 Online Learnability of CoT Verifiers with `continuous_self_learning_task: true`
+- **No diagnostic gate needed**: .235 confirmed codex_cli_healthy=true; no exp2421-style gate required
+- **Key structural changes from .235**: exp2438 (Conformal Ensemble) gated on exp2437 (LogCons Z3-True); exp2445 (Capstone) gated on exp2438; NO milestone-wide codex health gate (Codex confirmed healthy)
+- Validation: both `scripts/validate_prior_failures.py` and `scripts/audit_roadmap_gates.py` pass (roadmap_gate_audit_passed: true, no prior_failures violations)
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.236. Critical path: exp2437 → exp2438 → exp2445 (capstone). Key experiments to watch: exp2437 (will z3_encoding_used=true push AUROC above the fallback 0.8896?), exp2438 (will conformal p-values close the 0.034 gap to HIVE peer?), exp2441 (will MCP+CLI docs close Phase 1 ship gate?).
+
+---
 
 ## Session 2026-05-18 - Milestone 2026.05.235 Research Planning Complete
 

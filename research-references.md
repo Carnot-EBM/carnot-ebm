@@ -1,3 +1,43 @@
+## 2026-05-18 Post-.235 Planning Sweep (Milestone 2026.05.236)
+
+This sweep was run after milestone `.235` completed (13/13 tasks completed — Codex CLI confirmed healthy, best AUROC=0.8896 via Hierarchical LogCons v2, AUROC gap=0.034 to HIVE peer, FR-11 NSVIF online learning passed, KV260 Yosys synthesis_errors=1 in RTL, Phase 1 ship gate 3/5 criteria met — MCP+CLI docs missing, Kinetic Langevin +7.87 KL delta). Sweep focused on: (a) new verifiers to close AUROC gap, (b) RTL synthesis fix diagnosis, (c) Phase 1 ship gate completion, (d) online learning theory.
+
+### DiffuTruth: Energy of Falsehood via Diffusion Model Likelihoods
+- **Paper:** "The Energy of Falsehood: Detecting Hallucinations via Diffusion Model Likelihoods" (arXiv:2602.11364, Feb 2026).
+- **What:** Uses non-equilibrium thermodynamics for fact verification — claims undergo noise corruption/reconstruction through a discrete text diffusion model. Semantic Energy measures NLI-divergence between original claims and reconstructions, isolating factual contradictions. AUROC=0.725 on FEVER, 4%+ zero-shot improvement on HOVER. True statements are stable attractors; hallucinations reside on high-energy slopes.
+- **Relevance to Carnot:** New Tier 0k verifier candidate. Diffusion reconstruction as energy proxy is complementary to Carnot's Ising energy — provides a different signal axis than logit-space (SemanticEnergy) or hidden-state probes (HALT). Candidate for .236 AUROC ceiling assault; if validated, adds to HIVE conformal ensemble.
+- **Sources:** https://arxiv.org/abs/2602.11364
+
+### HalluField: Field-Theoretic Hallucination Detection
+- **Paper:** "HalluField: Detecting LLM Hallucinations via Field-Theoretic Modeling" (arXiv:2509.10753, Sep 2025).
+- **What:** Models LLM responses as a collection of discrete likelihood token paths with associated energy and entropy under varying temperature. Distinguishes hallucinations by analyzing how energy and entropy distributions shift across token paths — claimed SOTA across multiple models and datasets. Does NOT require auxiliary LLMs for energy/entropy computation.
+- **Relevance to Carnot:** Complements SemanticEnergy (Tier 0g) with a temperature-sensitivity axis. The token-path energy distribution is orthogonal to logit-variance, potentially adding a new dimension to the HIVE ensemble. Candidate for .236+ evaluation if DiffuTruth is insufficient to close the gap.
+- **Sources:** https://arxiv.org/abs/2509.10753
+
+### Principled Hallucination Detection via Multiple Testing (Conformal P-values)
+- **Paper:** "Principled Detection of Hallucinations in Large Language Models via Multiple Testing" (arXiv:2508.18473, Aug 2025).
+- **What:** Formulates hallucination detection as hypothesis testing, aggregating multiple verifier scores via conformal p-values with controlled false alarm rate. Achieves highest macro-average AUROC across all models and datasets when properly calibrated, outperforming both individual baselines and simple score aggregation.
+- **Relevance to Carnot:** Direct upgrade for the HIVE ensemble fusion. Instead of LogisticRegression weights, conformal p-values provide theoretically sound aggregation with controlled FPR. If FregeLogic (0.8831) + LogCons (0.8896) + HALT-probe (0.8539) are aggregated via conformal p-values, the gap to 0.9236 may close. Candidate for .236 Conformal Ensemble task.
+- **Sources:** https://arxiv.org/abs/2508.18473
+
+### PCIB: Predictive Coding + Information Bottleneck for Hallucination Detection
+- **Paper:** "Predictive Coding and Information Bottleneck for Hallucination Detection in Large Language Models" (arXiv:2601.15652, Jan 2026).
+- **What:** Extracts interpretable signals from Predictive Coding (surprise against internal priors) and Information Bottleneck (retention under perturbation). AUROC=0.8669 with improvements: entity-focused uptake, context adherence, falsifiability score. Uses 75x less training data than LLM judge baselines; 1000x faster inference (5ms vs 5s); fully interpretable.
+- **Relevance to Carnot:** New Tier 0l verifier candidate with strong AUROC (0.8669) achieved with minimal training data. The falsifiability score signal (detects confident but contradictory claims) is orthogonal to Carnot's current verifiers. Entity-focused uptake could integrate with NSVIF's entity extraction. Candidate for .236 new Tier 0l verifier.
+- **Sources:** https://arxiv.org/abs/2601.15652
+
+### Online Learnability of CoT Verifiers: Soundness/Completeness Trade-offs
+- **Paper:** "Online Learnability of Chain-of-Thought Verifiers: Soundness and Completeness Trade-offs" (arXiv:2603.03538, March 2026).
+- **What:** Introduces an online learning framework for CoT verifiers with novel extensions of the Littlestone dimension for soundness-vs-completeness mistake bounds. Key result: learned verifiers can boost weak generators and enable proof generation beyond initial training. Pareto-optimal algorithms for soundness budgets.
+- **Relevance to Carnot:** Directly underpins the FR-11 NSVIF online self-learning loop. The soundness/completeness asymmetric error tracking maps naturally to Carnot's constraint-learning paradigm: soundness errors = missing real violations (false negatives), completeness errors = flagging correct responses (false positives). .236 FR-11 extension should track these separately per arXiv:2603.03538.
+- **Sources:** https://arxiv.org/abs/2603.03538
+
+### LaaB: Logical Consistency as a Bridge (ACL 2026)
+- **Paper:** "Logical Consistency as a Bridge: Improving LLM Hallucination Detection via Label Constraint Modeling between Responses and Self-Judgments" (arXiv:2605.03971, May 2026). ACL 2026 Main.
+- **What:** Bridges micro-level neural uncertainty signals and macro-level self-judgment labels through "meta-judgment" processing. Exploits the logical constraint that response labels and meta-judgment labels are either the same or opposite based on self-judgment semantics. Evaluated on 4 datasets, 4 LLMs, 8 baselines.
+- **Relevance to Carnot:** Confirms and strengthens the LaaB verifier (Tier 0h, arXiv:2604.XX) already partially implemented in Carnot. The meta-judgment bridge is a key contribution — Carnot's LaaB verifier should adopt the full label constraint modeling, not just the logical consistency score.
+- **Sources:** https://arxiv.org/abs/2605.03971
+
 ## 2026-05-18 Post-.233 Planning Sweep (Milestone 2026.05.234)
 
 This sweep was run after milestone `.233` completed (Codex Recovery Sprint — 9 of 14 tasks succeeded; FregeLogic AUROC=0.8831 beat HalluScan 0.88 baseline; HALT AUROC=0.8539; FST PATH A live GGUF inference validated; 5 tasks produced no artifact: FR-11 exp2400, KV260 Yosys exp2401, Kinetic Langevin exp2402, Phase 1 ship gate exp2403, retro exp2405). Sweep focused on: (a) pushing AUROC above HIVE peer 0.9236, (b) NLI ensemble methods, (c) FPGA Ising papers for post-Yosys KV260 track, (d) formal KAN verification, (e) constrained decoding for FST PATH A advancement.
