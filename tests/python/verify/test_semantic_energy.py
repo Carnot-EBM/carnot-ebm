@@ -7,7 +7,11 @@ from __future__ import annotations
 
 import numpy as np
 
-from carnot.verify.semantic_energy import SemanticEnergyDetector
+from carnot.verify.semantic_energy import (
+    SemanticEnergyDetector,
+    binary_auroc,
+    top_logprobs_to_logit_vector,
+)
 
 
 def _synthetic_logits(seed: int, sigma: float, n_responses: int = 12) -> list[np.ndarray]:
@@ -47,3 +51,24 @@ def test_detect_keeps_low_variance_logits_as_confident_correct() -> None:
 
     assert result["semantic_energy_score"] < detector.threshold
     assert result["is_hallucination_predicted"] is False
+
+
+def test_top_logprobs_to_logit_vector_flattens_cached_gguf_distribution() -> None:
+    """REQ-TIER0-007-5: cached top-k logprob telemetry becomes a finite vector."""
+    top_logprobs = [
+        {"1": -0.01, "0": -5.0, "<think>": -7.0},
+        {"</think>": -0.0, " need": -18.0},
+    ]
+
+    vector = top_logprobs_to_logit_vector(top_logprobs)
+
+    np.testing.assert_allclose(vector, np.array([-0.01, -5.0, -7.0, -0.0, -18.0]))
+    assert vector.dtype == np.float64
+
+
+def test_binary_auroc_uses_pairwise_tie_credit() -> None:
+    """REQ-TIER0-007-5: real-logit validation computes AUROC without sklearn."""
+    labels = [0, 0, 1, 1]
+    scores = [0.1, 0.4, 0.4, 0.9]
+
+    assert binary_auroc(labels, scores) == 0.875

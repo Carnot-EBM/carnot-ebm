@@ -1,0 +1,84 @@
+{
+  "caveats": [
+    "This uses cached top-k logprob distributions from real GGUF inference, not persisted full-vocabulary penultimate logits.",
+    "The 100-example set is deterministic bootstrap resampling because the cached balanced manifest has 36 usable rows.",
+    "The score uses SemanticEnergyDetector.compute_energy() directly; repeated-response semantic clustering is not available in this cache."
+  ],
+  "completed_at": "2026-05-18T09:00:07Z",
+  "detector_threshold": 0.05,
+  "evaluation_design": "Sample with replacement from 22 correct and 14 incorrect live SOTA telemetry rows using numpy default_rng(42), yielding 50 factual and 50 hallucination examples.",
+  "example_digest": {
+    "first_factual": {
+      "binary_label": 0,
+      "bootstrap_index": 0,
+      "case_id": "balanced_correct_format_valid_002",
+      "energy_magnitude": 1.790788967637221,
+      "eval_label": "factual",
+      "source_correctness_label": "correct",
+      "source_format_label": "format_valid",
+      "vector_length": 30
+    },
+    "first_hallucination": {
+      "binary_label": 1,
+      "bootstrap_index": 0,
+      "case_id": "balanced_incorrect_format_invalid_004",
+      "energy_magnitude": 3.1661773165087648,
+      "eval_label": "hallucination",
+      "source_correctness_label": "incorrect",
+      "source_format_label": "format_invalid",
+      "vector_length": 120
+    }
+  },
+  "experiment": 2351,
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required. complete: with AUROC value.",
+    "logit_source": "Records which logit source was used (gguf/cached/small-model/synthetic-realistic).",
+    "n_eval_examples": "Must be 100 (50 factual + 50 hallucination).",
+    "random_seed": "Reproducibility. Must be 42.",
+    "semantic_energy_real_auroc": "AUROC on real or representative LLM logits. Expected lower than 1.0 (realistic).",
+    "semantic_energy_real_validated": "True if AUROC >= 0.60 on real-distribution logits."
+  },
+  "hf_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "honest_verdict": "complete: SemanticEnergyDetector validated on cached live GGUF top-k logprob vectors; AUROC=0.685200 on 100 bootstrapped examples.",
+  "logit_source": "cached-gguf-top-logprobs",
+  "logit_vector_construction": "Flatten each generated token's cached top-k logprob dictionary in descending logprob order. Full vocabulary logits were available during live llama.cpp generation but only compact top-k logprob distributions were persisted.",
+  "mean_energy_factual": 2.7370705700892506,
+  "mean_energy_hallucination": 3.1661845904260737,
+  "model_names": [
+    "Qwen3.6-35B-A3B"
+  ],
+  "module_path": "python/carnot/verify/semantic_energy.py",
+  "n_eval_examples": 100,
+  "n_factual_examples": 50,
+  "n_hallucination_examples": 50,
+  "precondition_cache_check": "results/ contains live/logprob artifacts including live_sota_balanced_telemetry_manifest_1480.jsonl and arm_ebm_logprob_telemetry_manifest_1556.jsonl.",
+  "precondition_gguf_check": "Local HuggingFace hub contains unsloth/Qwen3.6-35B-A3B-GGUF and unsloth/gemma-4-26B-A4B-it-GGUF cache directories.",
+  "random_seed": 42,
+  "score_direction": "higher_score_means_more_hallucination_like",
+  "score_field": "energy_magnitude_from_compute_energy",
+  "semantic_energy_real_auroc": 0.6852,
+  "semantic_energy_real_validated": true,
+  "source_artifact": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+  "source_format_counts": {
+    "format_invalid": 22,
+    "format_valid": 14
+  },
+  "source_label_counts": {
+    "correct": 22,
+    "incorrect": 14
+  },
+  "source_rows_total": 36,
+  "source_rows_usable": 36,
+  "status": "complete",
+  "std_energy_factual": 0.6040674627129384,
+  "std_energy_hallucination": 0.010837395310843564,
+  "temperature": 1.0,
+  "test_command": "PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/verify/test_semantic_energy.py -v --no-cov 2>&1 | tail -15",
+  "title": "Semantic Energy real-distribution GGUF top-k logprob validation",
+  "unit_tests_passed": 5,
+  "vector_length_max": 120,
+  "vector_length_mean": 105.15,
+  "vector_length_min": 30
+}

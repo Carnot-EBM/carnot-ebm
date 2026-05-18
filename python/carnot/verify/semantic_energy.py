@@ -4,9 +4,11 @@ This module is the Exp 2338 Tier 0g prototype.  It computes the Boltzmann
 negative log-partition energy from raw logits and combines repeated response
 energies with a simple semantic-cluster entropy estimate.  The prototype is
 CPU-only and intentionally uses synthetic logits; real penultimate-layer LLM
-logits are a later validation target.
+logits are a later validation target.  Exp 2351 adds small helper functions for
+auditing cached llama.cpp top-k logprob telemetry when full logits were observed
+at generation time but only compact top-k distributions were persisted.
 
-Spec: REQ-TIER0-007, SCENARIO-TIER0-007
+Spec: REQ-TIER0-007, REQ-TIER0-007-5, SCENARIO-TIER0-007
 """
 
 from __future__ import annotations
@@ -17,6 +19,67 @@ import re
 from collections import OrderedDict
 
 import numpy as np
+
+
+def top_logprobs_to_logit_vector(top_logprobs: list[dict[str, float]]) -> np.ndarray:
+    """Flatten recorded top-k logprob dictionaries into one numeric vector.
+
+    The live GGUF telemetry stores a compact distribution per generated token:
+    each dictionary maps token text to that token's logprob among the top-k
+    alternatives.  Full vocabulary logits can be too large to persist, so this
+    helper gives the detector a deterministic real-distribution substitute while
+    preserving the ordering and spread of the model's actual alternatives.
+
+    Spec: REQ-TIER0-007-5
+    """
+    if not top_logprobs:
+        raise ValueError("top_logprobs must contain at least one position")
+
+    values: list[float] = []
+    for position in top_logprobs:
+        if not position:
+            continue
+        values.extend(sorted((float(value) for value in position.values()), reverse=True))
+
+    if not values:
+        raise ValueError("top_logprobs must contain at least one numeric logprob")
+
+    vector = np.asarray(values, dtype=np.float64)
+    if not np.all(np.isfinite(vector)):
+        raise ValueError("top_logprobs must be finite")
+    return vector
+
+
+def binary_auroc(labels: list[int] | np.ndarray, scores: list[float] | np.ndarray) -> float:
+    """Compute binary AUROC with average tie credit and no optional dependency.
+
+    The experiment artifacts should be reproducible in a minimal Carnot
+    environment where scikit-learn may not be installed.  This pairwise
+    Mann-Whitney calculation is small but explicit: every positive example wins
+    against every negative example when its score is larger, loses when smaller,
+    and receives half credit for ties.
+
+    Spec: REQ-TIER0-007-5
+    """
+    label_array = np.asarray(labels)
+    score_array = np.asarray(scores, dtype=np.float64)
+    if label_array.shape[0] != score_array.shape[0]:
+        raise ValueError("labels and scores must have the same length")
+    if label_array.size == 0:
+        raise ValueError("at least one label/score pair is required")
+    if not np.all(np.isfinite(score_array)):
+        raise ValueError("scores must be finite")
+
+    positive_scores = score_array[label_array == 1]
+    negative_scores = score_array[label_array == 0]
+    if positive_scores.size == 0 or negative_scores.size == 0:
+        raise ValueError("labels must include at least one positive and one negative example")
+
+    wins = 0.0
+    for positive_score in positive_scores:
+        wins += float(np.sum(positive_score > negative_scores))
+        wins += 0.5 * float(np.sum(positive_score == negative_scores))
+    return float(wins / (positive_scores.size * negative_scores.size))
 
 
 class SemanticEnergyDetector:

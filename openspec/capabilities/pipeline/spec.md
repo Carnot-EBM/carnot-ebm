@@ -1853,6 +1853,9 @@ for synthetic logits only; full validation on real LLM penultimate logits is def
 - REQ-TIER0-007-4: `results/experiment_2338_semantic_energy.json` records AUROC,
   FPR at TPR=0.80, energy ordering, focused test count, module path, 100 synthetic
   examples, and random seed 42.
+- REQ-TIER0-007-5: `results/experiment_2351_semantic_energy_real.json` records
+  a 100-example real-distribution validation using cached or live LLM logit/logprob
+  vectors, including AUROC, logit source, validation boolean, and random seed 42.
 
 **Spec traces:** REQ-TIER0-007, Exp 2338
 
