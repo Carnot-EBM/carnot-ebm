@@ -4936,3 +4936,5 @@ Ripgrep i |
 | 2026-05-18 18:50 UTC | Phase 3: DE-PSGLD Decentralized Proximal SGLD (arX | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-18 18:52 UTC | Phase 4: Phase 1 Ship Gate Audit v3 — PyPI + HF Mi | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-18 18:54 UTC | Phase 4: Phase 1 Ship Gate Audit v3 — PyPI + HF Mi | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-18 18:56 UTC | Phase 4: Phase 1 Ship Gate Audit v3 — PyPI + HF Mi | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-18 18:58 UTC | Phase 5: Paper-v6 Results Table + Capstone v234 — | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2408-hive-full-4verifier-v3) |
