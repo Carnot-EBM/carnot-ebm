@@ -4931,3 +4931,4 @@ Ripgrep i |
 | 2026-05-18 18:39 UTC | Phase 3: Dikin-Langevin Polytope Sampler (arXiv:25 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-18 18:42 UTC | Phase 3: Dikin-Langevin Polytope Sampler (arXiv:25 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
 | 2026-05-18 18:44 UTC | Phase 3: Dikin-Langevin Polytope Sampler (arXiv:25 | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
+| 2026-05-18 18:46 UTC | Phase 3: DE-PSGLD Decentralized Proximal SGLD (arX | FAIL | Codex CLI error: you finish the real work inside 10 minutes, that is correct  |
