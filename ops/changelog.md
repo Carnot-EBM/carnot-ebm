@@ -6275,3 +6275,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-18: Phase 3: KV260 Yosys Synthesis v4 — RTL Lint-Clean Since exp2372 (⚠️ Blocked) — honest_verdict=blocked_synthesis_failed; lut_count=0; results/experiment_2427_kv260_yosys_v4.json
 - 2026-05-18: Phase 3: Kinetic Langevin BAOAB vs CASAL v4 (arXiv:2603.23397) (⚠️ Research Finding) — honest_verdict=success: KineticLangevin is faster/better mixing; results/experiment_2428_kinetic_langevin_v4.json
 - 2026-05-18: Phase 3: Dikin-Langevin Polytope Sampler v2 (arXiv:2510.04582) — Formal Convergence (✅ Complete) — honest_verdict=success: DikinLangevin improved mixing; results/experiment_2429_dikin_langevin_v2.json
+- 2026-05-18: Phase 3: DE-PSGLD Decentralized Proximal SGLD v2 (arXiv:2605.00723) — vs CASAL (⚠️ Research Finding) — honest_verdict=success: DE-PSGLD competitive; results/experiment_2430_de_psgld_v2.json
