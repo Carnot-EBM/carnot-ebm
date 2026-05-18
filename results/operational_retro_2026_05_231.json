@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.231",
+  "generated_at": "2026-05-18T12:53:35Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits were found since activation of milestone 2026.05.231, making this the tenth consecutive empty-experiment milestone. Both RTX 3090 GPUs remain idle at 0% utilization with only 5 MB each allocated. The blocked_roadmap_missing cascade that began at milestone .222 continues to prevent task activation.",
+  "bottlenecks_identified": [
+    "blocked_roadmap_missing recurrence: research-roadmap-next.yaml was not pre-staged before .231 was activated, continuing the pattern spanning .222 through .230",
+    "pre-test cascade: exp2323 (Claude-escalated fix v9) gates 11 of 14 milestone tasks and remains unresolved, structurally blocking the bulk of the roadmap even when a roadmap YAML is present"
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for .232 before archiving .231 — this is the single highest-leverage action to break the blocked_roadmap_missing chain",
+    "Resolve the pre-test cascade (exp2323 gate) before planning tasks that depend on it; either fix the underlying test failures or restructure the roadmap to route around them",
+    "Add an activation-guard check that verifies research-roadmap-next.yaml exists and has the correct next milestone field BEFORE the archive step runs — prevents silent activation of an empty milestone",
+    "Both GPUs are idle; when real experiments resume, use DualGPURunner only for tasks that explicitly load 2+ models in parallel, not for single-model tasks"
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-stage research-roadmap-next.yaml for milestone .232 immediately, before archiving .231, to break the ten-milestone blocked_roadmap_missing chain",
+    "Fix or route around the pre-test cascade (exp2323 gate) so the 11 gated tasks can activate — this unblocks the majority of the research roadmap",
+    "Add a conductor activation-guard check that refuses to activate a milestone if research-roadmap-next.yaml for milestone+1 is absent or stale, surfacing the gap at close time rather than at next-milestone open time"
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Ten consecutive empty-experiment milestones is a systemic process failure, not a one-off gap. The root cause is structural: the archive step fires before the roadmap for the next milestone is written, and the pre-test cascade blocks the bulk of the task set even when a roadmap exists. Both issues have been identified repeatedly in prior retros (.222 through .230); the fact that they persist indicates the improvements are being documented but not actioned. The next retro should report whether the pre-staged roadmap convention was followed for .232 — if not, escalate to an operator-directed intervention rather than repeating the suggestion."
+}

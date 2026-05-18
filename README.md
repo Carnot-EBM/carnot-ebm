@@ -16,6 +16,17 @@ The model was trained on the FoVer dataset, a curated corpus of verified formal 
 ## Training Procedure
 The model was trained using contrastive energy minimization.
 
+## Project Status (2026-05-18)
+
+| Metric | Value |
+|--------|-------|
+| Experiments completed | 2,908 (through Exp 2363) |
+| Milestones archived | 244 (through 2026.05.230) |
+| Python test items collected | 26,182 |
+| Semantic Energy AUROC (real GGUF, exp2351) | 0.685 |
+| NSVIF verification pass rate (exp2352) | 1.000 |
+| VERGE SMT repair success rate (exp2353) | 1.000 |
+
 ## Evaluation Metrics
 The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set.
 

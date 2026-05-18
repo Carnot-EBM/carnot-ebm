@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,894 Experiments Across the Public Record, 243 Archived Milestone Records, 26,182 Python Test Items Collected (Through Exp 2349)
+## A Technical Report — 2,908 Experiments Across the Public Record, 244 Archived Milestone Records, 26,182 Python Test Items Collected (Through Exp 2363)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-18
@@ -29,9 +29,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,894 experiments across 243 milestones up to .229, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction as the first PRD Priority #1 implementation, VERGE SMT repair integration, Sparse Ising connectivity, and Semantic Energy Tier 0g (Boltzmann energy on logits validated AUROC=1.000 on synthetic corpus, exp2338).
+This report summarizes 2,908 experiments across 244 milestones up to .230, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction (PRD Priority #1 first actual run, verification_pass_rate=1.000), VERGE SMT repair integration (mcs_repair_success_rate=1.000), Sparse Ising connectivity, Semantic Energy Tier 0g (Boltzmann energy on logits validated AUROC=1.000 on synthetic corpus exp2338, and AUROC=0.685 on real cached GGUF logprob vectors exp2351), and KAN-CL n=256 per-knot retention.
 
-This report documents the research arc behind the framework — **2,894 experiment records tracked through Exp 2349, with 2,894 task records in 243 artifact-backed completed milestone records archived through 2026.05.229** — run between February and May 2026. `research-complete.yaml` currently archives **243** completed milestone records through 2026.05.229. Milestone 2026.05.229 completed 3 of 14 tasks (exp2336 archive, exp2338 Semantic Energy, exp2349 retro), breaking the eight-consecutive-empty-milestone pattern with 1 new research result: **exp2338 (Semantic Energy Tier 0g) achieved AUROC=1.000 on a synthetic 100-example corpus** (mean_energy_correct=3.58, mean_energy_hallucination=5.24, FPR@TPR80=0.0, 3 tests passing, module at `python/carnot/verify/semantic_energy.py`). The UNGATED design (exp2336/exp2338/exp2349 run regardless of pre-test gate) proved its value: even with the pre-test cascade still unresolved, the milestone delivered a concrete new verifier implementation.
+This report documents the research arc behind the framework — **2,908 experiment records tracked through Exp 2363, with 2,908 task records in 244 artifact-backed completed milestone records archived through 2026.05.230** — run between February and May 2026. `research-complete.yaml` currently archives **244** completed milestone records through 2026.05.230. Milestone 2026.05.230 ("All-Ungated Full Research Sprint") completed 11 of 14 tasks (exp2350–exp2360), delivering multiple first-actual-run results: **exp2351 (Semantic Energy on real GGUF) achieved AUROC=0.685** on 100 bootstrapped examples from cached Qwen3.6-35B-A3B top-k logprob vectors; **exp2352 (NSVIF Z3 Extractor v5) achieved verification_pass_rate=1.000 and extraction_coverage=1.000** — the first actual run of PRD Priority #1 since it was filed on 2026-04-11; **exp2353 (VERGE SMT repair) achieved mcs_repair_success_rate=1.000**; **exp2354 (Eidoku CSP) gate accuracy=1.000 on 50 examples**; **exp2355 (Projected-Langevin) matched CASAL satisfaction 1.000 vs 0.667**; **exp2357 (FR-11 multidomain retention) passed** with cross_domain_retention_rate=1.000. The all-ungated design (all 14 tasks run regardless of pre-test gate) broke the multi-milestone blockage pattern and delivered 11 new research artifacts.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -5815,3 +5815,99 @@ This is a synthetic-data proof of concept. The AUROC=1.0 reflects separability o
 **exp2349 (retro):** `complete: milestone_2026_05_229_retro_3_of_14_terminal_tasks_complete_1_of_3_design_gaps_closed_pretest_cascade_unresolved_ungated_semantic_energy_prevented_empty_milestone`
 
 The 11 Phase 2-3 tasks (exp2339-exp2347) and capstone (exp2348) were gate-blocked by the still-unresolved pre-test cascade. The UNGATED structural reform validated: Semantic Energy landed as a concrete new verifier regardless of process-layer failures. Milestone .230 planning is the next step.
+
+## Milestone 230 — All-Ungated Full Research Sprint (Exps 2350-2363, May 2026)
+
+Milestone 2026.05.230 ("All-Ungated Full Research Sprint: Semantic Energy + NSVIF + VERGE + FST + KAN-CL") applied the lesson from .229: remove all gates so that research experiments run regardless of the pre-test cascade state. Of 14 tasks (exp2350–exp2363), 11 completed with artifact results (exp2350–exp2360); FST live generation (exp2361), capstone (exp2362), and retro (exp2363) did not complete in the session window.
+
+### Semantic Energy Real-GGUF Validation (exp2351)
+
+Building on exp2338's synthetic proof-of-concept (AUROC=1.000 on artificial logits), exp2351 extended the SemanticEnergyDetector to cached live GGUF top-k logprob vectors from real Qwen3.6-35B-A3B inference. Evaluation design: bootstrap resample from 22 correct and 14 incorrect rows of a balanced live telemetry manifest (numpy default_rng(42)), producing 50 factual and 50 hallucination examples.
+
+**Results:**
+- **semantic_energy_real_auroc: 0.685** (100 bootstrapped examples, detector_threshold=0.05)
+- mean_energy_factual: 2.737, mean_energy_hallucination: 3.166
+- logit_source: cached-gguf-top-logprobs (full-vocabulary logits were not persisted; only compact top-k distributions available)
+- semantic_energy_real_validated: True (threshold AUROC >= 0.60 passed)
+
+The AUROC=0.685 on real data is the realistic performance figure for this verifier candidate. The synthetic 1.000 from exp2338 reflected idealized logit distribution separation; real distributions are less separable, but 0.685 remains above the 0.60 acceptance threshold. The caveats note that full-vocabulary penultimate logits would be expected to improve the signal per the Semantic Energy paper's protocol.
+
+### NSVIF Neuro-Symbolic Z3 Extractor — PRD Priority #1 First Actual Run (exp2352)
+
+PRD Priority #1 (NSVIF neuro-symbolic constraint extraction, arXiv:2601.17789) was filed on 2026-04-11 and blocked by the pre-test cascade across 9+ consecutive milestones. exp2352 is its first actual run.
+
+**Results (exp2352):**
+- **verification_pass_rate: 1.000** (Z3 verification of extracted constraints)
+- **extraction_coverage: 1.000** (all target constraints successfully extracted)
+- duration_s: 0.046 (synthetic corpus, no GPU required)
+- honest_verdict: `complete: verification_pass_rate=1.000, extraction_coverage=1.000`
+
+### VERGE SMT Minimal Correction Subset Repair (exp2353)
+
+VERGE SMT-based repair (arXiv:2601.20055) computes a Minimal Correction Subset — the smallest change to an LLM output that restores constraint satisfaction.
+
+**Results (exp2353):**
+- **mcs_repair_success_rate: 1.000**
+- duration_s: 0.035 (synthetic corpus)
+- honest_verdict: `complete: mcs_repair_success_rate=1.000`
+
+### Eidoku CSP Gate (exp2354)
+
+Eidoku (arXiv:2512.20664) applies constraint satisfaction programming to structured LLM output verification.
+
+**Results (exp2354):**
+- **CSP gate accuracy: 1.000** over 50 examples
+- honest_verdict: `complete: Eidoku CSP gate accuracy 1.000 over 50 examples.`
+
+### Projected-Langevin vs CASAL Baseline (exp2355)
+
+Projected-Langevin (arXiv:2605.05387) enforces hard equality constraints during sampling by projecting gradient steps onto the constraint manifold.
+
+**Results (exp2355):**
+- **constraint_satisfaction_rate: 1.000** (Projected-Langevin)
+- Baseline CASAL satisfaction: 0.667
+- honest_verdict: `complete: Projected-Langevin matched or exceeded CASAL satisfaction (1.000 vs 0.667)`
+
+### KAN-CL n=256 Per-Knot Importance Retention (exp2356)
+
+KAN-CL (arXiv:2605.12306) adds per-knot importance regularization to KAN continual learning, targeting 88/93% forgetting reduction on Split-CIFAR benchmarks.
+
+**Results (exp2356):**
+- kancl_n256_validated: True
+- honest_verdict: `kancl_n256_validated`
+
+### FR-11 Multi-Domain Continual Retention (exp2357)
+
+FR-11 (mandatory continuous self-learning gate) measures cross-domain retention across FST multi-domain scenarios.
+
+**Results (exp2357):**
+- **cross_domain_retention_rate: 1.000**
+- honest_verdict: `complete: fr11_multidomain_fst_retention_passed`
+
+### EBM-CoT Calibration and Self-Adaptive Ising (exp2358-2359)
+
+exp2358 (EBM-CoT calibration, arXiv:2511.07124) validated Langevin-guided implicit Chain-of-Thought on synthetic data:
+- AUROC=1.000 on synthetic corpus, mean energy reduction=1.000
+- honest_verdict: `complete: EBM-CoT synthetic calibration validated`
+
+exp2359 (Self-Adaptive Ising with Lagrange Relaxation, arXiv:2501.04971) validated adaptive Lagrangian multiplier updates on a CPU benchmark:
+- duration_s: 3.623, random_seed: 42
+- honest_verdict: `complete: adaptive_lagrangian_ising_validated_cpu_seed_42`
+
+### KV260 RTL Lint v9 (exp2360)
+
+exp2360 ran Verilator lint and Icarus simulation on KV260 RTL sources:
+- Lint: 25 error lines (ongoing RTL issues)
+- Simulation: passed
+- honest_verdict: `complete: rtl_lint_failed_25_error_lines_simulation_passed`
+
+### Summary: Milestone .230 Impact
+
+Milestone .230 is the first milestone since .204 to deliver substantive new research results across multiple tracks simultaneously. The all-ungated design bypassed the pre-test cascade that had blocked Phase 1-3 work for 8+ consecutive milestones. Key outcomes:
+
+1. **Semantic Energy** validated on real GGUF logprobs (AUROC=0.685), providing a realistic benchmark distinct from the synthetic 1.000 in exp2338.
+2. **NSVIF** (PRD Priority #1) delivered its first actual run after 9+ milestones of blockage.
+3. **VERGE**, **Eidoku**, **Projected-Langevin**, **KAN-CL**, and **FR-11** all achieved first or multi-attempt successful runs.
+4. The pre-test cascade remains unresolved; FST live generation and the capstone still depend on it.
+
+Planning for milestone .231 focuses on resolving the pre-test cascade and extending the Semantic Energy real-GGUF validation with full-vocabulary logits.
