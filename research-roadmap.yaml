@@ -883,7 +883,7 @@ tasks:
          For box-constrained Ising [-1, +1]^N (the natural Carnot constraint):
            boundary distance delta(q_i) = min(q_i - (-1), 1 - q_i)
            Dikin metric M(q) = diag(1/delta(q_i)^2)
-           Step: q += dt * (-grad_V + sqrt(2/dt) * M(q)^{-1/2} * noise)
+           Step: q += dt * (-grad_V + sqrt(2/dt) * M(q)^{{-1/2}} * noise)
            Project back to box if violated.
          Parameters: dt=0.01, n_steps=1000, random_seed=42.
 
@@ -945,8 +945,8 @@ tasks:
     Stochastic Gradient Langevin Dynamics for sampling from log-concave distributions
     constrained to convex domains via proximal regularization — avoids expensive orthogonal
     projections by adding a proximal penalty term to the energy. The proximal step:
-      q_new = prox_{dt*f}(q - dt*grad_V(q) + sqrt(2*dt)*noise)
-    where prox_{dt*f}(u) = argmin_x {f(x) + (1/2dt)|x-u|^2} and f is the indicator of
+      q_new = prox_{{dt*f}}(q - dt*grad_V(q) + sqrt(2*dt)*noise)
+    where prox_{{dt*f}}(u) = argmin_x {{f(x) + (1/2dt)|x-u|^2}} and f is the indicator of
     the feasible set (box constraints for Ising).
 
     EXISTING CODE TO READ FIRST:
