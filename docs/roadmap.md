@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.232 | Pipeline stall / No timing-window experiments | N/A | None — eleventh consecutive empty-experiment milestone; blocked_roadmap_missing recurrence; pre-stage .233 roadmap before archiving .232; land exp2323 pre-test cascade fix as first .233 task |
 | 2026.05.231 | Pipeline stall / No timing-window experiments | N/A | None — tenth consecutive empty-experiment milestone; blocked_roadmap_missing recurrence; pre-stage .232 roadmap before archiving .231; fix exp2323 pre-test cascade |
 | 2026.05.230 | Pipeline stall / No timing-window experiments | N/A | None — ninth consecutive empty-experiment milestone per timing data; blocked_roadmap_missing recurrence; pre-stage .231 roadmap before archiving .230 |
 | 2026.05.229 | Planning-only / No experiments | N/A | None — eighth consecutive empty-experiment milestone; exp2338 Semantic Energy prototype committed outside timing window; pre-test cascade and blocked_roadmap_missing recurrence unresolved |

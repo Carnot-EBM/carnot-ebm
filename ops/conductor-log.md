@@ -4869,3 +4869,5 @@ Ripgrep i |
 | 2026-05-18 14:22 UTC | Phase 4: Phase 1 Ship Gate Audit — PyPI + HF Mirro | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 14:34 UTC | Phase 4: Paper-v6 Real-Data Results Table — Compil | OK | 81 passed, 1 warning in 2.27s |
 | 2026-05-18 14:36 UTC | Phase 5: Capstone v232 — AUROC Closure Sprint Synt | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2382-fst-live-path-ab, exp2380-hive-4veri |
+| 2026-05-18 14:44 UTC | Phase 6: Milestone 2026.05.232 Operational Retrosp | OK | 81 passed, 1 warning in 2.33s |
+| 2026-05-18 14:46 UTC | Phase 5: Capstone v232 — AUROC Closure Sprint Synt | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2382-fst-live-path-ab, exp2380-hive-4veri |

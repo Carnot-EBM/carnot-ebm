@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.232",
+  "generated_at": "2026-05-18T14:54:02Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.232 is the eleventh consecutive empty-experiment milestone: the timing data shows 0 experiments completed and 0 wall-clock minutes logged within the milestone activation window. Both RTX 3090 GPUs remained idle at 0% utilization throughout. The blocked_roadmap_missing recurrence continues to prevent the conductor from activating research tasks.",
+  "bottlenecks_identified": [
+    "blocked_roadmap_missing recurrence: no research-roadmap-next.yaml was staged before milestone activation, causing the conductor to loop without launching any experiments — identical root cause as .225/.226/.227/.228/.229/.230/.231",
+    "pre-test cascade (exp2323 gate) remains unresolved: 11 of 14 roadmap tasks depend on a prerequisite fix that has not landed, meaning even if the roadmap is pre-staged, task activation will cascade-block",
+    "No synthesis-only ungated tasks were included in the .232 roadmap to serve as fallback work when the pre-test cascade blocks compute-bound tasks — a pattern that would have saved at least one non-zero experiment (as exp2338 Semantic Energy demonstrated in .229)"
+  ],
+  "improvements_suggested": [
+    "Pre-stage research-roadmap-next.yaml for .233 before archiving .232 — this is the single highest-leverage action and has been the top recommendation since .225",
+    "Land the pre-test cascade fix (exp2323 prerequisite) as the first task in .233 activation — without this, 11 of 14 tasks remain structurally blocked regardless of roadmap availability",
+    "Always include at least 2 ungated synthesis-only tasks in every roadmap as fallback work; these have no pre-test dependency and prevent an entirely empty milestone even when the main task chain is blocked",
+    "Add conductor activation-guard logic to surface missing-roadmap gap at milestone CLOSE time (not activation time) so the operator is warned before the window elapses",
+    "Consider pre-wiring DualGPURunner for the next milestone's GGUF-inference tasks: both RTX 3090s have been idle for 11 milestones and the throughput gain from parallel Qwen+Gemma loading is material"
+  ],
+  "top_3_highest_leverage_actions": [
+    "Pre-stage research-roadmap-next.yaml for .233 immediately (before archiving .232) — this single action ends the 11-milestone empty-experiment streak",
+    "Fix the exp2323 pre-test cascade as the first activated task in .233 — this unblocks 11 of 14 queued tasks and converts the milestone from structurally-blocked to executable",
+    "Add 2+ ungated synthesis-only tasks to every roadmap as a no-dependency fallback layer so no future milestone can be entirely empty due to upstream gate failures"
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Eleven consecutive milestones with zero experiments is a structural failure mode, not a research one. The process issue is architectural: the roadmap pre-staging step happens at the wrong point in the milestone lifecycle (after archive rather than before), creating a guaranteed single-cycle lag. Moving pre-staging to the close step of the current milestone — as a mandatory gating action before archive — would permanently eliminate the blocked_roadmap_missing class of empty milestones. The pre-test cascade is a separate compounding factor that needs its own landing commitment."
+}
