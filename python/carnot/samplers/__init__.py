@@ -9,6 +9,7 @@ try:
         get_backend,
         get_sampler_backend,
     )
+    from .adaptive_ising import SelfAdaptiveIsingSampler
     from .dwave_backend import DWaveNealBackend
     from .dwave_sampler import DWaveSampler
     from .discrete_simulated_bifurcation import (
@@ -59,6 +60,7 @@ else:
         "CASALSampler",
         "HMCSampler",
         "KnuthYaoSampler",
+        "SelfAdaptiveIsingSampler",
         "ParallelIsingSampler",
         "Phase4Sampler",
         "AnnealingSchedule",

@@ -221,6 +221,41 @@ Ising sweep are each run for 200 steps from the same random initial state
 **And** the surrogate skip rate (fraction of steps where full energy was bypassed)
 is recorded and is strictly positive (> 0) when `skip_threshold` < 1.0.
 
+### REQ-SAMPLE-2359: Self-Adaptive Lagrangian Ising Sampler
+
+Carnot MUST provide a pure NumPy `SelfAdaptiveIsingSampler` that updates
+constraint Lagrange multipliers from observed violations so constrained Ising
+sampling does not depend only on manually tuned fixed penalties.
+
+Sub-requirements:
+- REQ-SAMPLE-2359-1: The sampler SHALL accept a coupling matrix `J`, bias vector
+  `h`, and `constraint_fn(state)` callable, initialize binary state locally, and
+  initialize one Lagrange multiplier per reported constraint violation to zero.
+- REQ-SAMPLE-2359-2: `sample_step()` SHALL run a Gibbs sweep over all spins using
+  the current Ising energy plus the current Lagrange-weighted constraint
+  violation energy.
+- REQ-SAMPLE-2359-3: `lagrange_update()` SHALL apply
+  `lambdas += lr * constraint_violations` and return the updated multipliers.
+- REQ-SAMPLE-2359-4: `solve(n_outer=50, n_inner=10)` SHALL alternate inner Gibbs
+  sweeps with outer Lagrange updates, record violation history, and report the
+  first outer iteration that reaches the configured feasibility threshold.
+- REQ-SAMPLE-2359-5: Experiment 2359 SHALL benchmark the adaptive sampler against
+  a fixed-penalty baseline with `fixed_penalty=1.0` on exactly two CPU-only
+  constrained Ising problems using `random_seed=42`.
+- REQ-SAMPLE-2359-6: The benchmark artifact SHALL be written to
+  `results/experiment_2359_self_adaptive_ising.json` and include
+  `honest_verdict`, `adaptive_ising_validated`, `adaptive_speedup`,
+  `final_constraint_violation`, `n_problems`, and `random_seed`.
+
+### SCENARIO-SAMPLE-2359: Adaptive Lagrangian Benchmark Validates On One Problem
+
+**Given** the Exp 2359 CPU benchmark problems
+**When** the adaptive sampler and fixed-penalty baseline run with seed 42
+**Then** both problems report final constraint violation and iterations to
+feasibility
+**And** `adaptive_ising_validated` is true only when at least one adaptive speedup
+is at least 1.5x.
+
 ### REQ-SAMPLE-2044: AIA Continuous Gumbel Sampler Simulator
 
 Carnot MUST provide a `ContinuousGumbelSampler` in
