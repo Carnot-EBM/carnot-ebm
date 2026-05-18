@@ -4783,3 +4783,5 @@ Ripgrep i |
 | 2026-05-18 10:46 UTC | Phase 6: FST+ODAR+CASAL Real-Scale Live Generation | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 10:49 UTC | Phase 6: FST+ODAR+CASAL Real-Scale Live Generation | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-18 10:51 UTC | Phase 6: Capstone v230 — FST+ODAR+CASAL+KAN-CL+Sem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2361-fst-live-gen-v10) |
+| 2026-05-18 10:51 UTC | Phase 7: Milestone 2026.05.230 Operational Retrosp | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-18 10:53 UTC | Phase 6: Capstone v230 — FST+ODAR+CASAL+KAN-CL+Sem | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2361-fst-live-gen-v10) |
