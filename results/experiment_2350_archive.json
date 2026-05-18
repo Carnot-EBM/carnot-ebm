@@ -1,0 +1,37 @@
+{
+  "id": "exp2350-archive-and-activate",
+  "honest_verdict": "complete: archive_ready=true",
+  "archive_ready": true,
+  "completed_date": "20260518",
+  "preconditions": {
+    "roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+    "expected_archive_milestone": "2026.05.229",
+    "observed_active_milestone": "2026.05.230",
+    "status": "already_activated",
+    "decision": "The conductor already swapped research-roadmap.yaml to 2026.05.230, so archive readiness was verified without appending another 2026.05.229 entry."
+  },
+  "archive": {
+    "research_complete_path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+    "research_complete_contains_2026_05_229": true,
+    "performed_this_run": false,
+    "reason": "research-complete.yaml already contains id: 2026.05.229."
+  },
+  "activation": {
+    "performed_this_run": false,
+    "research_roadmap_active_milestone": "2026.05.230",
+    "reason": "research-roadmap.yaml was already activated for 2026.05.230 before this task ran."
+  },
+  "changelog": {
+    "modified": false,
+    "reason": "The 2026.05.230 already-activated precondition branch exits after verifying archive_ready=true."
+  },
+  "notes": [
+    "No duplicate archive entry was appended.",
+    "scripts/research_conductor.py was not modified.",
+    "No push was performed."
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required. complete: archive_ready=true.",
+    "archive_ready": "Boolean gate: true only when .229 appears in research-complete.yaml."
+  }
+}

@@ -110,7 +110,7 @@ tasks:
     \ logical assertion steps\n       using sentence splitting + heuristic (\"therefore\", \"thus\", \"so\", \"equals\", \"\
     =\")\n     - encode_z3(steps: list[str]) -> list[z3.BoolRef]: encode steps as Z3 assertions\n       (arithmetic expressions\
     \ using z3.Int, z3.Real; simple equalities/inequalities)\n     - verify(response: str) -> dict: run z3.Solver, return\
-    \ {'satisfiable': bool,\n       'violations': list[str], 'verification_pass': bool}\n\n  2. Create test corpus: 20 arithmetic\
+    \ {{'satisfiable': bool,\n       'violations': list[str], 'verification_pass': bool}}\n\n  2. Create test corpus: 20 arithmetic\
     \ reasoning examples\n     - 10 \"correct\" examples with valid chain-of-thought (satisfiable constraints)\n     - 10\
     \ \"incorrect\" examples with a logical error in the chain-of-thought\n     - Write test corpus to results/experiment_2352_nsvif_corpus.json\n\
     \n  3. Run NsvifExtractor on the test corpus. Compute:\n     - verification_pass_rate: fraction of examples where extractor\
@@ -177,7 +177,7 @@ tasks:
     \ none (pure Python, no special dependencies).\n\n  1. Implement EidokuCspGate at python/carnot/verify/eidoku_csp.py:\n\
     \     - validate(response: str, constraints: list[str]) -> dict:\n       Each constraint is a Python expression string\
     \ (e.g., \"x + y == 42\").\n       Evaluate via safe_eval using ast.literal_eval on parsed numeric expressions.\n    \
-    \   Return {'gate_passed': bool, 'violations': list[str]}\n\n  2. Create test corpus: 50 examples\n     - 25 \"correct\"\
+    \   Return {{'gate_passed': bool, 'violations': list[str]}}\n\n  2. Create test corpus: 50 examples\n     - 25 \"correct\"\
     \ with valid arithmetic constraints\n     - 25 \"incorrect\" with at least one violated constraint\n     Compute csp_gate_accuracy:\
     \ fraction correctly classified.\n\n  3. Run unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/\
     \ -k \"eidoku\" -v --no-cov 2>&1 | tail -15\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
@@ -461,7 +461,7 @@ tasks:
     \      principle: \"Must be > 50. Adversarial check: impossibly short = fabrication flag.\"\n  - wall_time_s:\n      principle:\
     \ \"Must be > 10s for real GGUF inference at > 50 tokens.\"\n  - model_name:\n      principle: \"Records which GGUF model\
     \ was used.\"\n  - random_seed:\n      principle: \"Reproducibility. Must be 42.\"\n  - preconditions_checked:\n     \
-    \ principle: \"List of {resource, available} pairs for adversarial verification.\"\n\nRun command, 'Do NOT push. Do NOT\
+    \ principle: \"List of {{resource, available}} pairs for adversarial verification.\"\n\nRun command, 'Do NOT push. Do NOT\
     \ modify scripts/research_conductor.py.'\n"
 - id: exp2362-capstone-v230
   title: "Phase 6: Capstone v230 \u2014 FST+ODAR+CASAL+KAN-CL+Semantic Energy End-to-End"
