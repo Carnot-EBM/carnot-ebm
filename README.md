@@ -20,8 +20,8 @@ The model was trained using contrastive energy minimization.
 
 | Metric | Value |
 |--------|-------|
-| Experiments completed | 2,950 (through Exp 2405) |
-| Milestones archived | 247 (through 2026.05.233) |
+| Experiments completed | 2,964 (through Exp 2419) |
+| Milestones archived | 248 (through 2026.05.234) |
 | Python test items collected | 26,352 |
 | FregeLogic AUROC (Z3+Neural Hybrid, exp2395) | 0.8831 |
 | HIVE 3-verifier ensemble AUROC (exp2398) | 0.8539 |

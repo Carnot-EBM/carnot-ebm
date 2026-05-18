@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-18 (Milestone 2026.05.235 Operational Retrospective)
+
+- Operational retro written for milestone 2026.05.235: 0 experiments completed (fourteenth consecutive empty-experiment milestone). No experiment commits found since activation. Both RTX 3090 GPUs idle at 0% utilization. Top actions: (1) activate first experiment task in same session as planning to guarantee at least one artifact lands, (2) deploy persistent background conductor from openspec/change-proposals/conductor-process-isolation.md, (3) reduce milestone scope to 6-8 tasks. Retro artifact: `results/operational_retro_2026_05_235.json`.
+
 ## 2026-05-18 (Milestone 2026.05.234 Research Planning)
 
 - Milestone 2026.05.234 research planning complete. User instruction: plan the next milestone after .233 (Codex Recovery Sprint), which achieved FregeLogic AUROC=0.8831 (beating HalluScan 0.88 baseline), HIVE 3-verifier=0.8539, FST PATH A GGUF validated, Codex CLI confirmed healthy — but 5 tasks (exp2400-2403, exp2405) never ran due to session timeout.

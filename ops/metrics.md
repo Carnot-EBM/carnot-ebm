@@ -1,5 +1,13 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-18 Milestone 2026.05.235 Docs Update
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-18T21:35:13Z | 2026-05-18T21:40:29Z | Doc update: read ops/status.md, ops/changelog.md, research-complete.yaml, README.md, docs/index.html, docs/technical-report.md, docs/technical-report.html. Updated all four files: experiment count 2950→2964 (through Exp 2419), milestones 247→248 (through .234), added .234 failure note and .235 planning context. | ~35k |
+
 ## Session: 2026-05-18 Milestone 2026.05.234 Research Planning
 
 ### Turn Log

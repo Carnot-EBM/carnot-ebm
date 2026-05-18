@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.235",
+  "generated_at": "2026-05-18T21:40:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.235 completed 0 experiments — the fourteenth consecutive empty-experiment milestone. No experiment commits were recorded since milestone activation. Both RTX 3090 GPUs remain idle at 0% utilization with only 5 MB allocated each, consistent with a planning-only milestone.",
+  "bottlenecks_identified": [
+    "Fourteenth consecutive empty-experiment milestone: the executor pipeline is not activating tasks within the timing window of each milestone. No experiment commits reached the repo during 2026.05.235, identical to .230-.234.",
+    "Roadmap activation gap: experiments appear planned (roadmap-next.yaml drafted each milestone) but the conductor is not launching tasks before the retro window closes. Root cause is structural — the activation-to-execution path is not completing within the session lifecycle.",
+    "Session budget exhaustion pattern: retros and planning tasks consistently consume the session turn budget before any experiment tasks can activate and commit results."
+  ],
+  "improvements_suggested": [
+    "Pre-activate the first experiment task (e.g., the archive task or a quick codex smoke test) in the same session that drafts the roadmap, so at least one commit lands before the session closes.",
+    "Reduce milestone scope: if 14-task milestones are too large to activate within a session, drop to 6-8 tasks so the conductor can reach experiment execution before turn-budget exhaustion.",
+    "Use a persistent background conductor process (already designed in openspec/change-proposals/conductor-process-isolation.md) so experiments run asynchronously between operator sessions rather than requiring a live session to drive each task.",
+    "Set a hard rule: no retro is written until at least one experiment artifact lands in results/. This forces the pipeline to activate at least one task before the milestone closes.",
+    "Audit whether research-roadmap-next.yaml is being correctly read by the conductor at activation time — consecutive blocked_roadmap_missing verdicts in prior milestones suggest the YAML is drafted but not picked up."
+  ],
+  "top_3_highest_leverage_actions": [
+    "1. ACTIVATE FIRST TASK IN SAME SESSION AS PLANNING: immediately after drafting research-roadmap-next.yaml, activate and run the archive task (e.g., exp2419 or equivalent) before closing the session. This guarantees at least one artifact lands and breaks the all-retro-no-experiments streak.",
+    "2. DEPLOY PERSISTENT CONDUCTOR: implement the background conductor from openspec/change-proposals/conductor-process-isolation.md so experiments run between sessions. The current pattern of all-or-nothing session-driven execution is the structural root cause of 14 consecutive empty milestones.",
+    "3. REDUCE MILESTONE SCOPE TO 6-8 TASKS: 14-task milestones require more activation capacity than the current session lifecycle provides. Smaller milestones with fewer dependencies are more likely to complete within a single session turn budget."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Fourteen consecutive empty-experiment milestones represent a systemic pipeline failure, not an experiment-level failure. The retro and planning work is being completed correctly, but the bridge between roadmap-drafted and experiment-activated is broken. The highest-leverage fix is architectural: either activate at least one task in the same session as planning, or deploy a persistent conductor that operates outside the session lifecycle. Until one of these is in place, per-milestone operational retros can only document the absence of data rather than analyze execution efficiency."
+}
