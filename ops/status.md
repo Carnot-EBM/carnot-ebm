@@ -1,6 +1,40 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.240 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.241 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.241 Research Planning Complete
+
+**Milestone 2026.05.240 COMPLETED: key results from capstone exp2493:**
+- **AUROC 0.975 group-conditional conformal ensemble** (exp2485) — adversarially verified via exp2484 5-seed replication (confirmed TAUTOLOGY was code artifact; true value 0.7964 for simple-fusion); group-conditional uses independent calibration per verifier class (logprob/semantic/logic).
+- **Phase 4 empirical: BOTH PATHS FAILED** — ARM-EBM bijection pearson_r=0.108 (noise floor), Qwen PRC used mock_model (methodology gap); phase4_validated_any=False; arXiv hold remains.
+- **PolarFire near-terminal**: carnot_runs_on_polarfire=True, energy_sanity_check_passed=False (one sanity computation needed).
+- **KV260 flash**: dirtyjtag_compatible=False, openocd_feasible=False; PYNQ SD-card boot = next path to investigate.
+- **KAN certified deployment ready**: kan_certified_deployment_ready=True (coverage=0.833, local_lip=2.396).
+- **arXiv: 2/4 gates met** (phase4_validated_any=False, auroc_adversarially_verified=False); hold continues.
+
+**Milestone 2026.05.241 PLANNED as Phase 4 Real-GGUF Empirical Validation + arXiv Gate + Spilled-Energy Tier 0q + PolarFire Terminal + AUROC Headline Verification.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v241.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2495`–`exp2506`)
+- ID allocation: milestone `.240` used through `exp2494`, so `.241` starts at `exp2495`.
+- Research references updated with Post-.240 Planning Sweep: Spilled Energy (arXiv:2602.18671), Curry-Howard Verification (arXiv:2510.01069), Memory-Augmented Continual Learning (arXiv:2604.27003), Differentiable Conformal Training (arXiv:2604.20098).
+- **Milestone title**: "Phase 4 Real-GGUF Empirical Validation + arXiv Gate + Spilled-Energy Tier 0q + PolarFire Terminal + AUROC Headline Verification"
+- **Three critical gaps targeted**:
+  1. Phase 4 empirical (arXiv hold): exp2496 (Qwen PRC v3 REAL GGUF with PRECONDITIONS block), exp2497 (Spilled Energy CPU test — CPU-only, no GGUF needed, alternative Phase 4 path)
+  2. AUROC adversarial verification of group-conditional 0.975: exp2498 (independent replication of exp2485 group-conditional method with explicit cross-group TAUTOLOGY checks)
+  3. Hardware terminal states: exp2501 (PolarFire energy sanity — SSH to run IsingVerifier(n_spins=4).energy([1,-1,1,-1])), exp2502 (KV260 PYNQ SD-card boot research)
+- **New verifiers**: exp2499 (Spilled Energy Tier 0q + Ensemble v6, gated on exp2497.tier0q_viable==true), exp2504 (Curry-Howard Tier 0r arXiv:2510.01069)
+- **Continuous self-learning**: exp2500 (FR-11 Tier 1-4 Integration Demo, continuous_self_learning_task:true)
+- **Paper+Synthesis**: exp2503 (paper-v6 arXiv final readiness check), exp2505 (capstone claude+opus, NO HARD GATE), exp2506 (retro codex)
+- **Agent routing**: 11 codex/gpt-5.5 (91.7%); 1 claude+opus (exp2505 capstone synthesis — cross-artifact judgment, open-ended arXiv readiness).
+- **Capstone exp2505 has NO HARD GATE** — always runs regardless of AUROC or Phase 4 outcome; lesson carried forward from exp2469/exp2481 gate-blocks.
+- Validation: `validate_prior_failures.py` (OK — no schema errors, no violations), `audit_roadmap_gates.py` (roadmap_gate_audit_passed=true, 0 failures, 12 tasks audited). Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.241. Critical path: exp2496 (Phase 4 Qwen PRC v3 REAL GGUF — will real inference correlate?) + exp2497 (Spilled Energy CPU alternative — no GGUF dependency) → exp2498 (AUROC group-conditional adversarial replication). Key experiments to watch: exp2496 (will Qwen3.6-35B-A3B-GGUF PRC divergence show pearson_r > 0.3? This is the final make-or-break Phase 4 path), exp2497 (Spilled Energy CPU-only test — if viable, provides arXiv gate without GGUF dependency), exp2501 (PolarFire energy sanity — one SSH command away from terminal state).
+
+---
+
+## Session 2026-05-19 - Milestone 2026.05.240 Research Planning Complete
 
 ## Session 2026-05-19 - Milestone 2026.05.240 Research Planning Complete
 

@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-19 Milestone 2026.05.241 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (resumed) | 2026-05-19T13:00:22Z | 2026-05-19T13:00:38Z | Resumed from context compaction: ran validate_prior_failures.py (OK — no violations), ran audit_roadmap_gates.py (roadmap_gate_audit_passed=true, 12 tasks, 0 failures); updated ops/metrics.md, ops/status.md, ops/changelog.md. | ~20k |
+
+Note: Full planning session (Turn 0) ran before context compaction: read 11 required files; read results for exp2490 (PolarFire), exp2491 (KV260), exp2493 (capstone v240), operational_retro_2026_05_240.json; ran arxiv research sweep (4 new papers: Spilled Energy 2602.18671, Curry-Howard 2510.01069, Memory-Augmented CL 2604.27003, Differentiable Conformal 2604.20098); updated research-references.md; wrote openspec/change-proposals/research-roadmap-v241.md; wrote research-roadmap-next.yaml (12 tasks exp2495–exp2506). Estimated tokens for full session: ~145k.
+
 ## Session: 2026-05-19 Milestone 2026.05.240 Research Planning
 
 ### Turn Log
