@@ -87,7 +87,7 @@ tasks:
     \ list with all results.\n\n  1. Load 3 few-shot examples from telemetry manifest (1 known hallucination, 1 correct, 1\
     \ borderline):\n     Use entries where known_verifier_label is available (correctness_label field).\n     Format as few-shot\
     \ prompt prefix.\n\n  2. For each of 36 telemetry entries:\n     Construct prompt:\n       \"[FEW-SHOT EXAMPLES]\n   \
-    \     New entry:\n        Response: {entry.response_text[:500]}  # truncate to 500 chars\n        Does this response contain\
+    \     New entry:\n        Response: {{entry.response_text[:500]}}  # truncate to 500 chars\n        Does this response contain\
     \ factual errors or hallucinations?\n        Answer with YES or NO, then a confidence score 0.0-1.0.\"\n     Call Llama(model_path,\
     \ n_ctx=1024, verbose=False) with max_tokens=20.\n     Parse response:\n       if 'YES' in output.upper(): score = extract_float(output,\
     \ default=0.8)\n       if 'NO' in output.upper(): score = 1.0 - extract_float(output, default=0.2)\n       else: score\
@@ -96,7 +96,7 @@ tasks:
     \ mean per-entry inference time\n     orthogonality_vs_fregelogic: Pearson r(tier0p_scores, fregelogic_scores)\n     \
     \  (load fregelogic scores from existing verifier score files if available)\n\n  4. Write verifier score file for ensemble:\n\
     \     {project_root}/results/experiment_2472_tier0p_scores.json:\n     {\"verifier\": \"llm_judge\", \"model_used\": model_path,\
-    \ \"scores\": [{\"idx\": i, \"score\": s, \"label\": l} for all 36]}\n\n  5. Write deliverable. Validate JSON before writing.\n\
+    \ \"scores\": [{{\"idx\": i, \"score\": s, \"label\": l}} for all 36]}\n\n  5. Write deliverable. Validate JSON before writing.\n\
     \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: with tier0p_auroc.\
     \ Blocked if GGUF not cached.\"\n  - tier0p_auroc:\n      principle: \"Primary AUROC on 36 examples. Honest result regardless\
     \ of sign vs baseline.\"\n  - tier0p_vs_semantic_energy_delta:\n      principle: \"tier0p_auroc - 0.810. Positive = exceeds\
@@ -393,11 +393,11 @@ tasks:
     \ && openFPGALoader --version 2>&1 | head -1\n        Record: openFPGALoader_available=True/False.\n\n  1. ATTEMPT BITSTREAM\
     \ GENERATION (in priority order):\n\n     PATH A \u2014 Vivado (if vivado_available=True):\n       # Write Vivado TCL\
     \ script\n       cat > /tmp/kv260_synth.tcl << 'EOF'\n       set project_name carnot_kv260\n       create_project $project_name\
-    \ /tmp/$project_name -part xczu5ev-sfvc784-2-e\n       add_files -scan_for_includes [glob {RTL_DIR}/*.v]\n       set_property\
+    \ /tmp/$project_name -part xczu5ev-sfvc784-2-e\n       add_files -scan_for_includes [glob {{RTL_DIR}}/*.v]\n       set_property\
     \ top carnot_ising_top [current_fileset]\n       # Read XDC constraints if present\n       if {[file exists {project_root}/kv260/constraints.xdc]}\
     \ {\n         add_files -fileset constrs_1 {project_root}/kv260/constraints.xdc\n       }\n       synth_design -top carnot_ising_top\
     \ -part xczu5ev-sfvc784-2-e\n       opt_design\n       place_design\n       route_design\n       write_bitstream -force\
-    \ /tmp/$project_name.bit\n       EOF\n       # Fill in RTL_DIR\n       sed -i \"s|{RTL_DIR}|$rtl_directory|g\" /tmp/kv260_synth.tcl\n\
+    \ /tmp/$project_name.bit\n       EOF\n       # Fill in RTL_DIR\n       sed -i \"s|{{RTL_DIR}}|$rtl_directory|g\" /tmp/kv260_synth.tcl\n\
     \       vivado -mode tcl -source /tmp/kv260_synth.tcl -log /tmp/vivado_run.log 2>&1 | tail -20\n       ls /tmp/carnot_kv260.bit\
     \ 2>/dev/null && bitstream_path=/tmp/carnot_kv260.bit\n\n     PATH B \u2014 Yosys + nextpnr-xilinx (if nextpnr_xilinx_available=True):\n\
     \       # Yosys synthesis to JSON netlist\n       /opt/oss-cad-suite/bin/yosys -p \"\n         read_verilog $rtl_directory/*.v;\n\
@@ -412,7 +412,7 @@ tasks:
     \ -b kv260 $bitstream_path 2>&1 | tail -10\n     Record: kv260_bitstream_flashed=True/False, flash_method_used, flash_output.\n\
     \n  3. If board flash succeeded:\n     # Run minimal timing benchmark (Ising energy computation latency)\n     python3\
     \ -c \"\n from pynq import Overlay\n import time\n ol = Overlay('$bitstream_path')\n t0 = time.time_ns()\n ol.ising_top.write(0,\
-    \ 0xA5)  # write test coupling\n r = ol.ising_top.read(0)  # read energy result\n t1 = time.time_ns()\n print(f'latency_ns={(t1-t0)}')\n\
+    \ 0xA5)  # write test coupling\n r = ol.ising_top.read(0)  # read energy result\n t1 = time.time_ns()\n print(f'latency_ns={{(t1-t0)}}')\n\
     \ \"  # Note: PYNQ API specifics depend on IP block registers\n     Record: latency_ns, latency_us (if measured).\n\n\
     \  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\
     \ complete: if kv260_bitstream_flashed=True; complete: (tool unavailable) if no bitstream tool found.\"\n  - kv260_bitstream_flashed:\n\
@@ -468,7 +468,7 @@ tasks:
     \ package on PolarFire:\n     ssh polarfire 'pip3 install /tmp/carnot-ebm-*.tar.gz --no-deps --break-system-packages -q\
     \ 2>&1 | tail -10'\n     Record: modified_install_succeeded=True/False.\n\n  4. Test carnot import on PolarFire:\n   \
     \  ssh polarfire 'python3 -c \"\nimport carnot\nfrom carnot.models.ising import IsingModel\nm = IsingModel(n_spins=4,\
-    \ seed=42)\ne = m.energy()\nprint(f\\\"energy={e:.4f}, jax_available={carnot.JAX_AVAILABLE}\\\")\n\"' 2>&1\n     Record:\
+    \ seed=42)\ne = m.energy()\nprint(f\\\"energy={{e:.4f}}, jax_available={{carnot.JAX_AVAILABLE}}\\\")\n\"' 2>&1\n     Record:\
     \ carnot_runs_on_polarfire=True/False, energy_value, jax_available_on_polarfire.\n\n  5. If carnot runs: run minimal pipeline\
     \ test:\n     ssh polarfire 'python3 -c \"\nfrom carnot.pipeline.verify_repair import VerifyRepairPipeline\npipeline =\
     \ VerifyRepairPipeline(n_spins=8)\nresult = pipeline.verify(\\\"The capital of France is Paris.\\\")\nprint(f\\\"verify_passed:\
@@ -555,14 +555,14 @@ tasks:
     \ 2>/dev/null || ls {project_root}/docs/paper-v6/ 2>/dev/null | head -3\n        ls {project_root}/docs/arxiv-paper/main.tex\
     \ 2>/dev/null || ls {project_root}/docs/*.tex 2>/dev/null | head -1\n        Record: paper_path (path to main.tex)\n \
     \       If no tex file found: write honest_verdict blocked_paper_source_missing and exit.\n\n  1. Fix MAJOR discrepancy:\
-    \ exp1100 timing claim.\n     grep -n 'exp1100\\|7.05s\\|100 live\\|35B.*calls' {paper_path} | head -10\n     Update the\
+    \ exp1100 timing claim.\n     grep -n 'exp1100\\|7.05s\\|100 live\\|35B.*calls' {{paper_path}} | head -10\n     Update the\
     \ claim to note: 'exp1100 artifact has a DURATION_TOO_SHORT fabrication flag;\n     the 7.05s duration for 100 live 35B\
     \ model calls is not credible; this result is excluded\n     from headline claims pending replication.'\n     Or remove\
     \ the specific timing number and replace with 'per exp1100 artifact (see notes)'.\n\n  2. Fix MINOR: exp1068 spin count.\n\
-    \     grep -n 'exp1068\\|64 spin\\|64-spin\\|KV260.*64' {paper_path} | head -5\n     Replace '64 spins' with '32 spins\
+    \     grep -n 'exp1068\\|64 spin\\|64-spin\\|KV260.*64' {{paper_path}} | head -5\n     Replace '64 spins' with '32 spins\
     \ (max_popcount in exp1068 artifact)' where relevant.\n\n  3. Fix MINOR: GRPO sample count.\n     grep -n 'exp1118\\|exp1129\\\
-    |n=25\\|GRPO.*25' {paper_path} | head -5\n     Replace 'n=25' with 'n=47' for the GRPO PRM improvement claim.\n\n  4.\
-    \ Run a verification pass:\n     grep -c 'exp1100' {paper_path}  # should have fewer instances of the raw number 7.05\n\
+    |n=25\\|GRPO.*25' {{paper_path}} | head -5\n     Replace 'n=25' with 'n=47' for the GRPO PRM improvement claim.\n\n  4.\
+    \ Run a verification pass:\n     grep -c 'exp1100' {{paper_path}}  # should have fewer instances of the raw number 7.05\n\
     \     Record: n_fixes_applied.\n\n  5. Run audit verification (re-check the 3 specific claims):\n     Confirm each discrepancy\
     \ is addressed:\n     major_fix_applied: can no longer grep '7.05s' with the old claim pattern\n     minor_fix_1_applied:\
     \ '64 spins' replaced with '32 spins'\n     minor_fix_2_applied: 'n=25' GRPO claim updated to n=47\n\n  6. Write deliverable.\n\
