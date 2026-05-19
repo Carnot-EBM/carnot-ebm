@@ -5121,3 +5121,5 @@ Ripgrep i |
     at async file:///usr/lib/node_modules/@google |
 | 2026-05-19 19:44 UTC | Phase 0: Archive .243 and activate .244 | FAIL | Gemini CLI error: .js:309732:14)
     at async file:///usr/lib/node_modules/@go |
+| 2026-05-19 19:47 UTC | Phase 0: Archive .243 and activate .244 | FAIL | Gemini CLI error: 309732:14)
+    at async file:///usr/lib/node_modules/@google |
