@@ -6372,3 +6372,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 5: Milestone 2026.05.238 Operational Retrospective (✅ Complete) — honest_verdict=complete: retro generated.; results/experiment_2470_retro_v238.json
 - 2026-05-19: Phase 0: Archive .238 and activate .239 (✅ Complete) — honest_verdict=complete: Milestone 2026.05.238 already archived and roadmap swapped by conductor.; results/experiment_2471_archive.json
 - 2026-05-19: Phase 1: LLM-as-Judge Tier 0p -- SOTA GGUF Direct Hallucination Scoring (MANDATORY SOTA GGUF per CLAUDE.md) (✅ Complete) — honest_verdict=complete: tier0p_auroc=0.6412. Model: gemma-4-26B-A4B-it-GGUF; results/experiment_2472_tier0p_scores.json
+- 2026-05-19: Phase 1: Calibrated Conformal Ensemble v4 -- Platt Scaling + Isotonic Regression on All 9 Verifiers (✅ Complete) — honest_verdict=complete; results/experiment_2473_calibrated_ensemble_v4.json
