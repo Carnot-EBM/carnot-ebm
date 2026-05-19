@@ -55,7 +55,7 @@ bitstream on-board KL not yet measured), while deferring same-basis
 CPU-vs-FPGA speedup claims until matching measurements exist;
 (iii) document the pre-retrain energy-ordering inversion on SOTA outputs
 ($\overline{E}_{\mathrm{correct}} = 0.689 > \overline{E}_{\mathrm{incorrect}} = 0.621$,
-exp1100) as an out-of-distribution Goodhart-class anomaly that
+per exp1100 artifact (see notes)) as an out-of-distribution Goodhart-class anomaly that
 constrains the class of energy functions any decentralized verifier
 may use; (iv) show that retraining the SOS-KAN verifier on a
 7{,}329-pair SOTA-inclusive corpus fixes the observed inversion with
@@ -66,7 +66,7 @@ to drive the filter, not be re-derived from accept/reject labels.
 Carnot's positive baseline results --- SOS-KAN $\mathrm{AUROC} = 0.9545$
 on the FoVer corpus (n=6{,}548; exp1072), GRPO with ThinkPRM v2 as an explicit energy
 reward improving held-out GSM8K by $+4$ pp (n=25, 95\% CI:
-[0.1\%, 20.4\%]) to $+8.51$ pp (n=25, 95\% CI:
+[0.1\%, 20.4\%]) to $+8.51$ pp (n=47, 95\% CI:
 [1.0\%, 26.0\%])
 (exp1118/1129), post-retrain $\alpha_t = 0.52$ on Qwen3.6-35B-A3B
 (up from $0.38$, exp1130), and the HumanEval extraction-fix anomaly
@@ -195,7 +195,7 @@ distribution the simulator produced was not the target distribution.
 \paragraph{Wall 3 --- Out-of-distribution energy-ordering inversion.}
 On 100 SOTA-model outputs, the cascade reports
 $\overline{E}_{\mathrm{correct}} = 0.689$ vs.\
-$\overline{E}_{\mathrm{incorrect}} = 0.621$ (exp1100). The energy
+$\overline{E}_{\mathrm{incorrect}} = 0.621$ (exp1100 artifact has a DURATION\_TOO\_SHORT fabrication flag; the 7.05s duration for 100 live 35B model calls is not credible; this result is excluded from headline claims pending replication). The energy
 gap inverts: heavily-optimized SOTA outputs produce \emph{lower}
 energy for incorrect completions than for correct ones. The same
 energy function on the FoVer corpus (n=6{,}548; exp1072) reaches
@@ -821,7 +821,7 @@ The paper therefore reports it as an architectural bound and defers
 same-$N$, same-basis CPU-vs-FPGA timing to follow-up measurement.
 
 \paragraph{FPGA latency, single-point measurement.}
-The KV260 achieves $24.83\,\mu s$ per sweep at $N{=}64$ spins
+The KV260 achieves $24.83\,\mu s$ per sweep at 32 spins (max\_popcount in exp1068 artifact)
 (exp1068 hardware-measured smoke test); a rigorous
 CPU-vs-FPGA comparison requires matching $N$ and per-sample
 basis on both sides, and will be reported in follow-up work.
@@ -1023,7 +1023,7 @@ more-likely correct outputs.
 The first application of GRPO with ThinkPRM v2
 ($\mathrm{AUROC}=0.9946$) as an explicit process reward signal
 achieved +4 pp (n=25, 95\% CI: [0.1\%, 20.4\%]) to +8.51 pp
-(n=25, 95\% CI: [1.0\%, 26.0\%]) improvement on held-out GSM8K
+(n=47, 95\% CI: [1.0\%, 26.0\%]) improvement on held-out GSM8K
 questions (exp1118/1129),%
 \footnote{GRPO delta estimates are computed on small evaluation sets
 (n=25--47); binomial CIs are wide and these results should be treated
@@ -1217,7 +1217,7 @@ framework's operating range is honestly scoped:
         Appendix~\ref{app:harness-anomalies} because the unrepaired
         baseline pass@1\,=\,0.0\% was a harness extraction failure.
   \item \textbf{KV260 latency $24.83\,\mu s$} (exp1068): per-sample
-        latency at 64 spins.
+        latency at 32 spins (max\_popcount in exp1068 artifact).
 \end{itemize}
 
 These numbers are the \emph{in-distribution} operating regime of
