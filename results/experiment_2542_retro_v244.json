@@ -1,0 +1,132 @@
+{
+  "experiment": "2542_retro_v244",
+  "milestone": "2026.05.244",
+  "run_date": "20260519",
+  "schema": "carnot.operational_retro.v67",
+  "spec_refs": [
+    "REQ-RETRO-2542",
+    "SCENARIO-RETRO-2542"
+  ],
+  "status": "complete",
+  "honest_verdict": "complete: retro for milestone 2026.05.244 written; n_experiments_completed=5; best_244_auroc=0.9750 (carried forward); phase4_final_status=blocked_precondition; arxiv_ready=False; operator_recommendation=request_operator_decision",
+
+  "n_experiments_completed": 5,
+  "n_experiments_completed_source": "Counted from capstone exp2541: experiments reaching a terminal complete: state were exp2535 (Tier 0u prototype), exp2536 (LaTeX compile fix), exp2537 (GateMate LUT mapping + bitstream), exp2539 (FR-11 JEPA pipeline integration), exp2540 (paper update). Five of eleven capstone-input experiments (exp2530, exp2531, exp2532, exp2533, exp2534) produced no artifacts. One was honestly blocked (exp2538 — blocked_pynq_image_url_unreachable).",
+
+  "best_244_auroc": 0.9750,
+  "best_244_auroc_source": "Carried forward from exp2498 (.241) through .242, .243, and .244 unchanged because exp2533 (ensemble v7b) and exp2534 (adaptive conformal v2) did not run this milestone. HIVE peer baseline remains 0.9236 (arXiv:2604.26139); gap +0.0514 in Carnot's favour, unchanged three consecutive milestones.",
+  "best_244_auroc_carried_forward": true,
+  "best_244_auroc_adversarially_verified": true,
+
+  "phase4_final_status": "blocked_precondition",
+  "phase4_final_status_detail": "exp2531 (IsingVerifier implementation) and exp2532 (Phase 4 ARM-EBM v4, retire_if_same_verdict=true) both produced no artifacts in .244. IsingVerifier remains a stub ('class IsingVerifier: pass') in python/carnot/verify/semantic_energy.py. Phase 4 has now spent four consecutive milestones (.241/.242/.243/.244) in an unvalidated state: exp2486 failed proxy, exp2508 methodology fallback (METHODOLOGY_FALLBACK corrigendum), exp2519 blocked_ising_verifier_not_available, exp2532 not run. The retire_if_same_verdict trip-wire is dormant — it cannot fire until exp2532 executes.",
+  "phase4_permanently_retired": false,
+
+  "arxiv_ready": false,
+  "arxiv_gates": {
+    "gate_1_phase1_ship": true,
+    "gate_2_audit": true,
+    "gate_3_phase4_validated_any": false,
+    "gate_4_auroc_adversarially_verified": true
+  },
+  "arxiv_readiness_detail": "Two of the three .243 arXiv blockers resolved in .244: latex_compile_success=True (exp2536, tectonic compiles main.tex cleanly, 393.9 KB PDF); abstract trimmed 522 -> 205 words (exp2536). Third blocker — Phase 4 gate-3 — remains open because exp2531/exp2532 did not run. exp2536 self-reported gate_3_phase4_validated_any=True in its own arxiv_gates block, but that is internally inconsistent with phase4_final_status='blocked_precondition'; capstone exp2541 (and this retro) make the honest call: gate_3=False. Submission package is mechanically ready (compiles, abstract within limit, four new citations integrated) but not operator-submittable.",
+
+  "operator_recommendation": "request_operator_decision",
+  "operator_decision_options": [
+    "(a) Implement IsingVerifier.energy(step_text: str) -> float in python/carnot/verify/semantic_energy.py. Run exp2532 in .245 with retire_if_same_verdict=true vs exp2519. If step_granularity_achieved=True, Phase 4 reaches validated_clean and arxiv_ready flips True. If blocked/negative, retire_if_same_verdict fires and Phase 4 becomes retired_negative — paper can still submit with documented negative §4.",
+    "(b) Accept Phase 4 as empirically unsupported now. Direct .245 planner to expand exp2540's blocked_precondition paragraph in §4.4 into a full honest negative-result subsection citing exp2486, exp2508, exp2519, and the four-milestone history. arxiv_ready flips True on Phase 1 (verify-repair) + ensemble results alone.",
+    "(c) Retire Phase 4 from the arXiv submission entirely. Cut §4, move active-inference work to a follow-up paper. Cleanest cut but loses the free-energy theoretical framing."
+  ],
+  "operator_decision_recommended_default": "Option (b). Phase 4 has occupied four consecutive milestones without a validated result. Honest negative-result documentation is preferable to indefinite carry-forward.",
+
+  "top_3_successes": [
+    "arXiv LaTeX compile + abstract trim shipped (exp2536): tectonic compiled docs/arxiv-paper/main.tex cleanly producing main.pdf (393.9 KB). Abstract trimmed from 522 words to 205 words while preserving all five numbered contributions and headline numerics. submission_package_ready=True at the mechanical layer — the three-milestone LaTeX/abstract blocker is resolved.",
+    "GateMate A1-EVB-2M LUT mapping resolved + bitstream generated (exp2537): false-premise blocker eliminated — yosys 0.64 emits CC_LUT2 and nextpnr-himbaechel 0.10 accepts it under --vopt allow-unconstrained with no workaround. rtl/gatemate_ising_n16.cfg (16392 bytes, max F=514.67 MHz, 33/40960 CPE_LT utilization) is ready for physical flash. GateMate advances from 'LUT-mismatch-blocking-bitstream' to 'bitstream-generated-flash-pending'.",
+    "FR-11 Tier 3 JEPA fast-path integrated into VerifyRepairPipeline (exp2539): jepa_pipeline_integrated=True; JEPAFastPathPredictor + extract_response_features shipped in python/carnot/pipeline/jepa_fast_path.py with 14 passing tests. Continuous self-learning loop (FR-11) is now load-bearing in the verify surface. Caveat: fast_path_rate=1.0 on synthetic corpus — trained JEPA model (AUC=0.8889 from exp2525) needed for meaningful discrimination on real text."
+  ],
+
+  "top_3_gaps_for_245": [
+    "Phase 4 critical-path tasks (exp2531 IsingVerifier impl, exp2532 Phase 4 ARM-EBM v4) did not run in .244. Phase 4 remains blocked_precondition across four consecutive milestones; the retire_if_same_verdict trip-wire never fired; gate-3 for arXiv is unmoved despite LaTeX/abstract/paper fixes landing. .245 must EITHER front-load exp2531+exp2532 at positions 1-2 of the roadmap, OR the operator commits to option (b)/(c) from operator_decision_needed and the planner stops proposing Phase 4 validation tasks.",
+    "Ensemble v7b (exp2533) not run and adaptive conformal v2 (exp2534) still blocked — headline AUROC carries forward 0.9750 for the third consecutive milestone. The Group D reassignment for Tier 0r (independent proof-path calibration) was planned but not executed in .242/.243/.244. .245 must run exp2533 first to either restore >=0.975 or definitively rule out Tier 0r as a 10th ensemble member; exp2534 is gated on that outcome.",
+    "Execution-layer gap: five of eleven .244 capstone-input experiments (exp2530, exp2531, exp2532, exp2533, exp2534 — the first five-task contiguous block) produced no artifacts. The planner emitted a coherent 13-task roadmap; execution stopped or stalled before reaching the critical path. Root cause unknown from artifacts alone. .245 must diagnose (test hypothesis: Phase 4 dependency at positions 1-3 cascade-blocked the block via gate propagation) and restructure the roadmap so critical-path tasks ship at the top of the queue."
+  ],
+
+  "milestone_health": {
+    "n_planned": 13,
+    "n_produced_artifacts": 7,
+    "n_terminal_complete": 5,
+    "n_honestly_blocked": 1,
+    "n_missing_no_artifact": 5,
+    "completion_rate_pct": 38.5,
+    "completion_rate_note": "5 of 13 planned tasks at terminal complete: state — below the project's typical 70-85% completion-rate band. The 5-task execution-layer gap at the front of the milestone is the primary driver.",
+    "process_flags": [
+      "EXECUTION_LAYER_GAP: five contiguous tasks at front of milestone produced no artifacts — root cause undiagnosed",
+      "PHASE4_STALL: fourth consecutive milestone with phase4_final_status not in {validated_clean, retired_negative}",
+      "HEADLINE_CARRY_FORWARD: best_244_auroc=0.9750 unchanged for three consecutive milestones (.242/.243/.244)"
+    ]
+  },
+
+  "hardware_status": {
+    "kv260": {
+      "state": "hwh_generated_flash_pending_operator",
+      "blocker": "PYNQ v3.0 image download URL HTTP-unreachable from dev host (exp2538). SD card devices detected (/dev/sda, /dev/sdb). Bitstream path verified. Operator flash procedure documented in 7 steps.",
+      "terminal_state_reached": false,
+      "mandatory_245_task": true
+    },
+    "gatemate": {
+      "state": "bitstream_generated_flash_pending",
+      "detail": "rtl/gatemate_ising_n16.cfg (16392 bytes, 514.67 MHz max F). Physical flash via DirtyJTAG onboard MCU (USB 1209:c0ca) is the only remaining step.",
+      "terminal_state_reached": false,
+      "mandatory_245_task": true
+    },
+    "polarfire": {
+      "state": "terminal",
+      "detail": "Energy sanity check passed (exp2501). Terminal-state graduation criteria met. .245 hardware slot freed per CLAUDE.md Hardware-Task Continuity terminal-state clause.",
+      "terminal_state_reached": true,
+      "mandatory_245_task": false
+    }
+  },
+
+  "corrigendum_carry_forward": [
+    {
+      "kind": "METHODOLOGY_FALLBACK",
+      "severity": "critical",
+      "age_milestones": 4,
+      "detail": "exp2508 (.242) self-declared phase4_validated_step_level=True with pearson_r=-0.4266 but step_granularity_achieved=False (semantic_energy_fallback proxy). Four milestones old without structural resolution. Retired via operator option (a)/(b)/(c) in .245."
+    },
+    {
+      "kind": "SYNTHETIC_EVAL_DEPENDENCE",
+      "severity": "warn",
+      "detail": "Four verifier AUROC claims on synthetic/fit corpora not yet paper-citable: Tier 0r (exp2520, 0.8256), Tier 0s (exp2522, 1.0), multilevel (exp2523, 1.0), Tier 0u (exp2535, 0.96 fit-to-corpus). .245 must include real-corpus validation before any of these can be cited."
+    },
+    {
+      "kind": "EXECUTION_LAYER_GAP",
+      "severity": "high",
+      "detail": "New in .244: five contiguous tasks at front of milestone produced no artifacts. Root cause unknown. .245 retro must diagnose before critical-path planning."
+    }
+  ],
+
+  "245_planner_inputs": {
+    "operator_decision_first": "The .245 roadmap cannot be responsibly structured until the operator chooses option (a), (b), or (c) for Phase 4. If option (a): front-load exp2531 (IsingVerifier impl, positions 1-2), then exp2532 (Phase 4 ARM-EBM v4) before any other experiment. If option (b)/(c): do NOT propose any further Phase 4 validation tasks; prioritise ensemble v7b (exp2533), adaptive conformal v2 (exp2534), real-corpus verifier validation, and hardware flash tasks.",
+    "mandatory_hardware_slots": 2,
+    "hardware_slots_for": ["GateMate physical flash + smoke test", "KV260 SD card flash via manual download path"],
+    "mandatory_infrastructure_tasks": ["diagnose .244 execution-layer gap (root-cause analysis of exp2530-exp2534 missing artifacts)", "real-corpus validation for Tier 0r/0s/0u synthetic AUROC claims"],
+    "exclusion_manifest_cross_check": "No retired experiment IDs are proposed. All .244 missing tasks (exp2530-exp2534) should re-appear in .245 ONLY after the operator decision resolves Phase 4 direction — do not blindly re-queue exp2531/exp2532 without confirming option (a) is the operator's choice."
+  },
+
+  "duration_s": 4.2,
+  "random_seed": 42,
+  "reproducibility_checksum": "retro-2542-244-20260519",
+
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required. Retro reads already-completed artifacts — it is always terminal regardless of milestone outcome. Starts with 'complete:' by discipline.",
+    "schema": "carnot.operational_retro.v67 — the versioned schema that downstream tooling (conductor reconciler, doc Haiku pass) reads to validate retro artifacts.",
+    "n_experiments_completed": "Completion rate denominator for milestone health tracking. Distinguishes terminal complete: from honestly blocked and missing-no-artifact cases.",
+    "best_244_auroc": "Carry-forward of headline AUROC for trend tracking across milestones. Adversarially verified; changes only when a new ensemble run produces a verified headline.",
+    "phase4_final_status": "Terminal Phase 4 determination — the arXiv gating signal. 'blocked_precondition' means the retire_if_same_verdict trip-wire is dormant (exp2532 never ran), not triggered.",
+    "arxiv_ready": "Conjunction of all four arxiv_gates. False because gate_3 (phase4_validated_any) is False despite all mechanical submission-package blockers being resolved.",
+    "operator_recommendation": "Concrete operator action. 'request_operator_decision' surfaces the choice between option (a) implement+run, (b) accept negative and document, or (c) retire Phase 4 from this paper.",
+    "top_3_successes": "Most impactful wins for .245 carry-forward bias in the planner's roadmap.",
+    "top_3_gaps_for_245": "Most critical unresolved issues — primary input to .245 planner priority ordering."
+  }
+}
