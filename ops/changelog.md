@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.237 Research Planning)
+
+- Milestone 2026.05.237 research planning complete. User instruction: plan the next milestone after .236 (all tasks completed).
+- Milestone .236 outcomes: phase1_ship_gate_met=true (exp2441, all 5 criteria satisfied), best_236_auroc=0.9167 (exp2438, conformal ensemble 7 verifiers, gap to HIVE peer=0.0069), exp2438 JSON malformed (blocked capstone exp2445), exp2440 KV260 RTL MISSING (never ran), exp2444 NCO AUROC=0.500 tautology.
+- ArXiv research sweep: confirmed ODAR (arXiv:2602.23681) as the key addition — free-energy-principled risk-sensitive routing for verify-repair iteration selection. Added to `research-references.md` Post-.236 Planning Sweep.
+- Created `openspec/change-proposals/research-roadmap-v237.md` with full milestone design: what .236 proved (phase1_ship_gate_met, AUROC=0.9167, 3 critical gaps), three biggest gaps (AUROC ceiling, KV260 RTL synthesis_errors=1, capstone blocked), architecture diagram (4 phases), hardware track status table (KV260/GateMate/PolarFire terminal states), phase structure, dependency graph, FR-11 mandate, decentralization check (Rules 1-7 all clear), exclusion manifest cross-check (0 retired patterns matched in .237 tasks), agent routing table, hardware requirements, failed-experiment rerun compliance table (8 entries).
+- Created `research-roadmap-next.yaml` with 12 tasks (exp2447–exp2458):
+  - Phase 0: exp2447 archive .236 + activate .237 (codex, ungated)
+  - Phase 1 AUROC breach: exp2448 Conformal Ensemble v2 (JSON fix + PCIB, codex), exp2449 HalluField Tier 0m (arXiv:2509.10753, codex), exp2450 LaaB ACL 2026 Meta-Judgment v2 (arXiv:2605.03971, codex)
+  - Phase 2: exp2451 FR-11 Soundness/Completeness v5 (codex, continuous_self_learning_task:true), exp2455 ODAR Free-Energy Routing (arXiv:2602.23681, codex)
+  - Phase 3 hardware: exp2452 KV260 RTL Fix v5 (claude+opus, requires_claude — 18-file RTL debug, codex failed twice), exp2453 GateMate n=16 Ising + Flash v2 (codex), exp2454 PolarFire Smoke v3 (codex, precondition-gated SSH, retire_if_same_verdict)
+  - Phase 4: exp2456 NCO Corrigendum v2 (codex), exp2457 Paper-v6 Capstone v237 (claude+opus, requires_claude, gated: exp2448.ensemble_auroc_improved==true), exp2458 Retro (codex)
+- Agent routing: 10 codex/gpt-5.5; 2 claude+opus (exp2452 KV260 hardware multi-file, exp2457 capstone synthesis). Both meet all three CLAUDE.md positive criteria.
+- Validation: `validate_prior_failures.py` — 1 violation caught (exp2455 lacked prior_failures block for exp1983/exp2001 scope matches); fixed by adding explicit prior_failures distinguishing CoT2-Meta routing (exp1983, succeeded) from ODAR free-energy routing (genuinely new paper scope). `audit_roadmap_gates.py` (all_checks_pass, roadmap_gate_audit_passed=true). `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-18 (Milestone 2026.05.235 Operational Retrospective)
 
 - Operational retro written for milestone 2026.05.235: 0 experiments completed (fourteenth consecutive empty-experiment milestone). No experiment commits found since activation. Both RTX 3090 GPUs idle at 0% utilization. Top actions: (1) activate first experiment task in same session as planning to guarantee at least one artifact lands, (2) deploy persistent background conductor from openspec/change-proposals/conductor-process-isolation.md, (3) reduce milestone scope to 6-8 tasks. Retro artifact: `results/operational_retro_2026_05_235.json`.

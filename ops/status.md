@@ -1,6 +1,39 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-18 (milestone 2026.05.236 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.237 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.237 Research Planning Complete
+
+**Milestone 2026.05.236 COMPLETED: 10/13 tasks completed (1 failed, 1 blocked, 1 missing).** 
+- **Phase 1 ship gate: FINALLY MET** (exp2441) — PyPI, HF mirror, MCP docs, CLI docs, external reproducer all satisfied.
+- **Conformal Ensemble AUROC: 0.9167** (exp2438, 7 verifiers fused) — gap to HIVE peer now only **0.0069** (down from 0.034).
+- **Critical gaps**: exp2438 JSON malformed (blocking capstone exp2445), exp2440 KV260 RTL MISSING (never ran), exp2444 NCO AUROC=0.500 tautology.
+- **Other completed**: DiffuTruth Tier 0k (AUROC=0.588), PCIB Tier 0l (AUROC=0.802), LogCons Z3-True v3 (AUROC=0.607, worse than fallback), FR-11 v4 satisfied, FST MCMC fixed, Kinetic Langevin integrated, FR-11+Archive+GateMate all done.
+
+**Milestone 2026.05.237 PLANNED as AUROC Final Breach + Paper Capstone + Hardware Continuity.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v237.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2447`–`exp2458`)
+- ID allocation: milestone `.236` used through `exp2446`, so `.237` starts at `exp2447`.
+- Research references updated with Post-.236 Planning Sweep: ODAR (arXiv:2602.23681) free-energy routing.
+- **Milestone title**: "AUROC Final Breach + Paper Capstone + Hardware Continuity: KV260 RTL Fix, GateMate Flash, PolarFire Smoke"
+- **Three critical gaps targeted**:
+  1. AUROC gap 0.0069 to HIVE peer 0.9236: exp2448 (Conformal Ensemble v2, fix JSON + add PCIB), exp2449 (HalluField Tier 0m, arXiv:2509.10753), exp2450 (LaaB ACL 2026 Meta-Judgment v2, arXiv:2605.03971)
+  2. KV260 synthesis_errors=1: exp2452 (claude+opus, requires_claude — codex failed twice, 18-file RTL debug)
+  3. Paper-v6 capstone blocked: exp2457 (claude+opus, gated on exp2448.ensemble_auroc_improved==true)
+- **Phase 2**: exp2451 (FR-11 Soundness/Completeness v5), exp2455 (ODAR free-energy routing)
+- **Phase 3 hardware**: exp2452 (KV260 RTL v5), exp2453 (GateMate n=16 Ising + Flash v2), exp2454 (PolarFire Smoke v3)
+- **Phase 4**: exp2456 (NCO Corrigendum v2, fix AUROC=0.500 tautology), exp2457 (capstone), exp2458 (retro)
+- **Agent routing**: 10 tasks codex/gpt-5.5; 2 tasks claude+opus (exp2452: KV260 hardware+multi-file, requires_claude; exp2457: capstone synthesis, requires_claude)
+- **2/12 tasks claude (16.7%)** — both meet all three positive criteria in CLAUDE.md Codex-Default rule
+- **FR-11 satisfied**: exp2451 FR-11 Soundness/Completeness Tracking v5 with `continuous_self_learning_task: true`
+- **Critical path**: exp2448 → exp2457 (2 hops, ~2 hours wall time if codex succeeds)
+- Validation: `validate_prior_failures.py` (OK, 1 violation fixed — exp2455 prior_failures block added), `audit_roadmap_gates.py` (all_checks_pass: roadmap_gate_audit_passed=true), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.237. Critical path: exp2448 (Conformal Ensemble v2 JSON fix) → exp2457 (Capstone). Key experiments to watch: exp2448 (will 8 verifiers + valid JSON finally breach AUROC 0.9236?), exp2452 (will claude+opus crack the KV260 18-file RTL synthesis bug?), exp2454 (will PolarFire precondition-gated smoke avoid fabrication?).
+
+---
 
 ## Session 2026-05-18 - Milestone 2026.05.236 Research Planning Complete
 

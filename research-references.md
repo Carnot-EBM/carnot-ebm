@@ -1,3 +1,13 @@
+## 2026-05-19 Post-.236 Planning Sweep (Milestone 2026.05.237)
+
+This sweep was run after milestone `.236` completed (10/13 tasks — Phase 1 ship gate FINALLY MET, exp2441; best AUROC=0.9167 via Conformal Ensemble v1 exp2438 but JSON malformed blocking capstone; DiffuTruth=0.588; PCIB=0.802; LogCons Z3-True=0.607 (WORSE than fallback!); KV260 synthesis_errors=1 still; NCO AUROC=0.500 adversarially flagged; FST MCMC fixed). Sweep focused on: (a) conformal ensemble JSON fix + final AUROC breach (gap=0.0069), (b) KV260 RTL debug, (c) hardware continuity (GateMate + PolarFire), (d) ODAR free-energy routing for Phase 4 integration.
+
+### ODAR: Principled Adaptive Routing for LLM Reasoning via Active Inference
+- **Paper:** "ODAR: Principled Adaptive Routing for LLM Reasoning via Active Inference" (arXiv:2602.23681, Feb 2026).
+- **What:** Proposes free-energy-principled risk-sensitive fusion to adaptively route LLM reasoning between fast (heuristic) and deliberative (deep) modes. Uses variational free energy as a routing criterion across 23 benchmarks, achieving reduced computational overhead vs uniform sampling. The fast-slow decision is made per-query based on epistemic uncertainty (free energy as information gain).
+- **Relevance to Carnot:** ODAR directly merges Phase 4 (active inference / verifier-as-free-energy) and the Fast-Slow Variant tracks that have been parallel. Carnot's verify-repair currently uses argmax over verify-repair iterations; replacing with ODAR-style risk-sensitive fusion would: (a) select iterations with highest expected information gain, (b) connect Carnot's energy signal to the Phase 4 free-energy hypothesis empirically. Candidate for .237 ODAR-Routing-for-Carnot experiment. Cross-references arXiv:2605.12484 (FST: fast/slow weight partitioning) and arXiv:2605.12536 (IIT↔FEP max-caliber bridge).
+- **Sources:** https://arxiv.org/abs/2602.23681
+
 ## 2026-05-18 Post-.235 Planning Sweep (Milestone 2026.05.236)
 
 This sweep was run after milestone `.235` completed (13/13 tasks completed — Codex CLI confirmed healthy, best AUROC=0.8896 via Hierarchical LogCons v2, AUROC gap=0.034 to HIVE peer, FR-11 NSVIF online learning passed, KV260 Yosys synthesis_errors=1 in RTL, Phase 1 ship gate 3/5 criteria met — MCP+CLI docs missing, Kinetic Langevin +7.87 KL delta). Sweep focused on: (a) new verifiers to close AUROC gap, (b) RTL synthesis fix diagnosis, (c) Phase 1 ship gate completion, (d) online learning theory.
