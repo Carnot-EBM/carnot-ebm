@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.236",
+  "generated_at": "2026-05-19T00:45:54Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiments were committed during the timing window for milestone 2026.05.236; total wall time is 0 minutes with 0 experiments completed. Both RTX 3090 GPUs were idle at 0% utilization with only 5 MB allocated each, consistent with no compute-bound tasks having executed. This is no data available this milestone.",
+  "bottlenecks_identified": [
+    "Zero experiments committed during timing window — conductor loop did not reach experiment execution within the measurement window for this milestone.",
+    "Recurring pattern: multiple consecutive milestones with 0 timing-window experiments indicates the activation-to-execution handoff is the primary bottleneck, not per-experiment GPU or compute latency.",
+    "Both GPUs idle (0% util, 5 MB allocated each) — compute capacity fully unused, consistent with no GGUF/CUDA tasks having launched."
+  ],
+  "improvements_suggested": [
+    "Activate the first experiment task in the same session as milestone planning — do not close the planning session before at least one task is running.",
+    "Deploy a persistent conductor daemon so the experiment loop does not require a fresh session start to pick up after milestone archival.",
+    "Reduce per-milestone task count to 6-8 to lower the activation-gate risk surface; fewer tasks means fewer dependent-chain block cascades.",
+    "Pre-stage research-roadmap-next.yaml for milestone .237 before archiving .236, so the conductor has an immediately runnable roadmap on next activation.",
+    "Add a post-archive smoke-check: after archiving a milestone, the conductor should verify at least one task has activated before exiting the session."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Same-session activation: close every milestone planning phase only after at least one experiment task has successfully launched — eliminates the gap between archive and next execution.",
+    "Pre-staged .237 roadmap: author research-roadmap-next.yaml with milestone: 2026.05.237 before this session closes, so the conductor can activate immediately on next run.",
+    "Persistent conductor: deploy research_conductor.py as a long-running daemon (systemd unit or screen session) to remove the human-session dependency from the experiment loop."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Milestone 2026.05.236 continues the pattern of zero timing-window experiments seen across many prior milestones; the bottleneck is not research quality or GPU throughput but the fragile session-boundary handoff between milestone archival and experiment activation. The fact that both GPUs remain at 0% utilization with 24 GB VRAM each unused is the operational signal — the hardware is ready, the pipeline is not. Every improvement action targets the activation gap, not the compute path."
+}

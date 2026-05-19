@@ -1,9 +1,9 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 2,964 Experiments Across the Public Record, 248 Archived Milestone Records, 26,352 Python Test Items Collected (Through Exp 2419)
+## A Technical Report — 2,991 Experiments Across the Public Record, 250 Archived Milestone Records, 26,352 Python Test Items Collected (Through Exp 2446)
 
 **Author:** Ian Blenke
-**Date:** 2026-05-18
+**Date:** 2026-05-19
 **Repository:** github.com/Carnot-EBM/carnot-ebm
 **License:** Apache 2.0
 
