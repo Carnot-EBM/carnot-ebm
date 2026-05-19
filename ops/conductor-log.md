@@ -5153,3 +5153,4 @@ Ripgrep i |
 | 2026-05-19 20:42 UTC | Phase 4a (Hardware): GateMate A1 yosys/nextpnr LUT | OK | Deliverable already exists in repo |
 | 2026-05-19 20:44 UTC | Phase 4b (Hardware): KV260 SD Card Flash Attempt | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2538_kv260_s |
 | 2026-05-19 20:49 UTC | Phase 4b (Hardware): KV260 SD Card Flash Attempt | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2538_kv260_s |
+| 2026-05-19 20:54 UTC | Phase 4b (Hardware): KV260 SD Card Flash Attempt | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2538_kv260_s |
