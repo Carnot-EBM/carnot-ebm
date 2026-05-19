@@ -5026,3 +5026,4 @@ Ripgrep i |
 | 2026-05-19 07:36 UTC | Phase 1: Phase 4 ODAR Free-Energy Empirical Valida | OK | 81 passed, 1 warning in 2.23s |
 | 2026-05-19 07:41 UTC | Phase 2: FR-11 Tier 3 JEPA Predictive Verification | OK | 81 passed, 1 warning in 2.43s |
 | 2026-05-19 07:44 UTC | Phase 2: KAN Lipschitz Regularization + Recertific | FAIL | No file changes produced |
+| 2026-05-19 07:47 UTC | Phase 2: KAN Lipschitz Regularization + Recertific | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2476_kan_lip |
