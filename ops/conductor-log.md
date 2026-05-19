@@ -5142,3 +5142,6 @@ Ripgrep i |
 | 2026-05-19 20:03 UTC | Phase 3a: Tier 0u Logical Consistency Verifier (ar | FAIL | Gemini CLI error: .js:309732:14)
     at async file:///usr/lib/node_modules/@go |
 | 2026-05-19 20:05 UTC | Phase 2b: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2533-ensemble-v7b-tier0r-group-d) |
+| 2026-05-19 20:05 UTC | Phase 3a: Tier 0u Logical Consistency Verifier (ar | FAIL | Gemini CLI error: .js:309732:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-05-19 20:08 UTC | Phase 2b: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2533-ensemble-v7b-tier0r-group-d) |
