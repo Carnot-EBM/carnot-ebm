@@ -1,0 +1,37 @@
+{
+  "experiment": 2545,
+  "title": "IsingVerifier text energy implementation",
+  "run_date": "2026-05-19",
+  "honest_verdict": "blocked_carnot_import_failed",
+  "ising_verifier_text_energy_implemented": false,
+  "energy_test_correct": false,
+  "implementation_method": "not_attempted_precondition_failed",
+  "preconditions_checked": {
+    "codex_md_read": true,
+    "semantic_energy_detector_import": {
+      "command": "python3 -c \"from carnot.verify.semantic_energy import SemanticEnergyDetector; print('import ok')\"",
+      "passed": false,
+      "stderr": "ModuleNotFoundError: No module named 'carnot'"
+    },
+    "ising_verifier_existing_methods": {
+      "command": "python3 -c \"from carnot.verify.semantic_energy import IsingVerifier; iv=IsingVerifier(); print('methods:', [m for m in dir(iv) if not m.startswith('_')])\"",
+      "passed": false,
+      "skipped_reason": "semantic_energy_detector_import_failed"
+    },
+    "openspec_capabilities_scanned_for_req": true
+  },
+  "duration_s": 37.0,
+  "random_seed": 42,
+  "acceptance_gates": {
+    "ising_verifier_text_energy_implemented_and_energy_test_correct": false
+  },
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "ising_verifier_text_energy_implemented": "True only if IsingVerifier().energy(str) returns float in [0,1] and discrimination test passes. Gate condition for downstream callers.",
+    "energy_test_correct": "True if energy('2+3=5')=0.0 AND energy('2+3=6')=1.0. Confirms non-trivial discrimination.",
+    "implementation_method": "'regex_arith_re' or 'manual_search' — documents what approach was used for audit trail.",
+    "preconditions_checked": "Records which resources were verified before launching.",
+    "duration_s": "Wall-clock measurement.",
+    "random_seed": "Set to 42."
+  }
+}
