@@ -87,7 +87,7 @@ tasks:
     to TEST set Fisher p-values (predict) → test_isotonic_pvals\n     d. Compute test_auroc = roc_auc_score(test_labels,
     test_isotonic_pvals)\n     e. ALSO compute platt_auroc separately: fit LogisticRegression(C=1) on train Fisher p-values
     → predict_proba on test\n     f. Verify: assert platt_auroc != test_auroc (different algorithms must differ)\n     g.
-    Record: {seed, test_auroc_isotonic, test_auroc_platt, n_train, n_test}\n\n  3. Compute summary statistics:\n     true_replicated_auroc_isotonic:
+    Record: {{seed, test_auroc_isotonic, test_auroc_platt, n_train, n_test}}\n\n  3. Compute summary statistics:\n     true_replicated_auroc_isotonic:
     mean(test_auroc_isotonic across 5 seeds)\n     replicated_auroc_std: std(test_auroc_isotonic across 5 seeds)\n     replicated_auroc_ci_95_low:
     mean - 1.96 * std\n     replicated_auroc_ci_95_high: mean + 1.96 * std\n     tautology_resolved: True (we used distinct
     variables; platt_auroc != isotonic_auroc verified for each seed)\n     hive_peer_breached: true if replicated_auroc_ci_95_low
@@ -144,7 +144,7 @@ tasks:
     5 random seeds (42, 123, 456, 789, 1337):\n     a. Split 36 examples 70/30.\n     b. For each group: fit isotonic regression
     on TRAIN group-scores → Fisher p-values → apply to TEST.\n     c. Aggregate group-level calibrated p-values via Fisher's
     method across groups (not across individual verifiers).\n     d. Compute test_auroc for the group-aggregated scores.\n
-    \    Record: {seed, group_a_auroc, group_b_auroc, group_c_auroc, group_conditional_ensemble_auroc}\n\n  3. Compute summary:\n
+    \    Record: {{seed, group_a_auroc, group_b_auroc, group_c_auroc, group_conditional_ensemble_auroc}}\n\n  3. Compute summary:\n
     \    group_conditional_auroc_mean: mean(group_conditional_ensemble_auroc across 5 seeds)\n     group_conditional_auroc_std:
     std across seeds\n     group_conditional_vs_isotonic_delta: group_conditional_auroc_mean - true_replicated_auroc_isotonic
     (from exp2484)\n     group_conditional_vs_fisher_delta: group_conditional_auroc_mean - 0.9167\n     hive_peer_breached_group_cond:
@@ -182,7 +182,7 @@ tasks:
     retire_if_same_verdict: false
   prompt: "CONTEXT: Phase 4 ODAR empirical test failed (exp2474: odar_energy_auroc=0.5584, pearson_r=0.19,\nphase4_validated=False).
     The arXiv operator hold requires phase4_validated=True before submission.\n\narXiv:2512.15605 establishes an ARM-EBM
-    bijection: every autoregressive LLM defines an implicit\nenergy function E(x) = -sum_i log p_LLM(x_i | x_{<i}). When
+    bijection: every autoregressive LLM defines an implicit\nenergy function E(x) = -sum_i log p_LLM(x_i | x_{{<i}}). When
     the model hallucin­ates,\nits implicit energy landscape diverges from ground truth — which should cause high Carnot Ising\nenergy
     on the same examples. If pearson_r(carnot_ising_energy, llm_implicit_energy) > 0.3 on\nhallucination-labeled examples,
     this IS Phase 4 empirical validation: verifier energy correlates\nwith generative model's implicit energy on violation
@@ -202,7 +202,7 @@ tasks:
     = llm_implicit_energy / n_tokens)\n     b. Compute Carnot Ising energy proxy:\n        Use SemanticEnergy score if
     available from existing verifier score files (experiment_24XX_*_scores.json)\n        OR compute from manifest's constraint_violations
     field if present\n        OR use negative of correctness_label as energy proxy (high=hallucination=high energy)\n     c.
-    Record: {idx, label (0=correct, 1=hallucination), llm_implicit_energy_per_token, carnot_ising_energy, response_length}\n\n
+    Record: {{idx, label (0=correct, 1=hallucination), llm_implicit_energy_per_token, carnot_ising_energy, response_length}}\n\n
     \  2. Compute ARM-EBM bijection metrics:\n     pearson_r, p_value = scipy.stats.pearsonr(llm_implicit_energy_per_token_array,
     carnot_ising_energy_array)\n     arm_ebm_auroc = roc_auc_score(labels, llm_implicit_energy_per_token_array)  # LLM energy
     alone predicts hallucination?\n     energy_delta_auroc = roc_auc_score(labels, llm_implicit_energy_per_token_array +
@@ -253,9 +253,9 @@ tasks:
     have clear correct answers but trigger Qwen censorship circuit.\n     Example: \"What happened in Tiananmen Square in
     June 1989?\"\n\n  2. Define 20 neutral-topic prompts (European history, science, geography, math):\n     Match complexity/length
     to PRC prompts.\n     Example: \"What happened in Berlin in November 1989?\"\n\n  3. Load GGUF model (n_ctx=512, verbose=False).
-    For each of 40 prompts:\n     Generate response (max_tokens=200). Record: {prompt_type, prompt, response, inference_time_s}\n
+    For each of 40 prompts:\n     Generate response (max_tokens=200). Record: {{prompt_type, prompt, response, inference_time_s}}\n
     \    timer: record per-response inference_time_s.\n\n  4. Compute Carnot verifier energy for each response:\n     Use
-    SemanticEnergy.score(response) or equivalent energy measure.\n     Record: {idx, prompt_type, energy}\n\n  5. Statistical
+    SemanticEnergy.score(response) or equivalent energy measure.\n     Record: {{idx, prompt_type, energy}}\n\n  5. Statistical
     test:\n     energy_prc_mean = mean(energy for prc-topic responses)\n     energy_neutral_mean = mean(energy for neutral
     responses)\n     from scipy.stats import ttest_ind\n     t_stat, p_value = ttest_ind(prc_energies, neutral_energies,
     alternative='greater')\n     prc_energy_elevated = (p_value < 0.05 and energy_prc_mean > energy_neutral_mean)\n     phase4_validated_via_prc
@@ -305,8 +305,8 @@ tasks:
     triggered_region) function:\n        Add 1 knot in the triggered region's energy dimension.\n        Record: before_energy,
     after_energy on triggering examples.\n\n  2. Run prototype on the 36 telemetry corpus examples (use as accumulated history):\n
     \    Load constraint violations from Tier 2 memory or telemetry manifest.\n     For each example, call detect_new_pattern.\n
-    \    If adaptation triggers: call adapt_structure and record the knot delta.\n     Record: {n_examples_processed, adaptations_triggered,
-    adapted_knot_count, energy_reduction_mean}\n\n  3. Validate: the adaptation reduces energy on triggering examples:\n
+    \    If adaptation triggers: call adapt_structure and record the knot delta.\n     Record: {{n_examples_processed, adaptations_triggered,
+    adapted_knot_count, energy_reduction_mean}}\n\n  3. Validate: the adaptation reduces energy on triggering examples:\n
     \    energy_reduced_on_triggers = (after_energy < before_energy) for ≥50% of trigger examples\n     tier4_prototype_functional
     = (adapted_knot_count >= 1 AND energy_reduced_on_triggers)\n\n  4. Write prototype code to python/carnot/models/tier4_adaptive_prototype.py.\n
     \    Write deliverable. Validate JSON before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - tier4_prototype_functional:\n
@@ -347,7 +347,7 @@ tasks:
     \    b. Telemetry manifest present: ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n     Record:
     preconditions_checked list.\n\n  1. Search for KAN model at candidate paths (in order):\n     a. Read exp2467 artifact
     to find which path it found kan_model=True\n     b. Try: results/kan_verifier_model.* (any extension)\n     c. Try:
-    python/carnot/models/kan/*.{npz,pkl,json,pt}\n     d. Try: results/experiment_*_kan*.{npz,json} (sorted newest-first)\n
+    python/carnot/models/kan/*.{{npz,pkl,json,pt}}\n     d. Try: results/experiment_*_kan*.{{npz,json}} (sorted newest-first)\n
     \    e. If found: record kan_model_found_at path.\n     f. If NOT found: retrain_needed=True.\n\n  2. Load or initialize
     KAN model:\n     If found: load model weights.\n     If not found: initialize 2-layer KAN with 8 knots per spline, input_dim=len(verifier_scores),
     output_dim=1.\n\n  3. Load telemetry corpus (36 examples). Prepare (verifier_scores, label) pairs.\n\n  4. Apply LipNeXt
@@ -451,7 +451,7 @@ tasks:
     if openocd can flash a Zynq UltraScale+ (ZU5EV) bitstream.\n     Record: openocd_kv260_path (str or None), openocd_flash_feasible
     (bool)\n\n  3. Document Vivado hardware_manager path:\n     The Vivado Hardware Manager (GUI or Tcl) can flash via\n
     \    any connected Xilinx programmer (e.g., Digilent JTAG HS2, USB Cable II).\n     Write the exact Tcl commands needed:\n
-    \    `open_hw_manager; connect_hw_server; open_hw_target; set_property PROGRAM.FILE {bitstream.bit} [get_hw_devices
+    \    `open_hw_manager; connect_hw_server; open_hw_target; set_property PROGRAM.FILE {{bitstream.bit}} [get_hw_devices
     xck26*]; program_hw_devices`\n     Record: vivado_tcl_commands str\n\n  4. Write kv260_flash_requirements.md with:\n
     \    - Bitstream location: {project_root}/results/kv260_ising_top.bit (or wherever exp2477 wrote it)\n     - Programmer
     options: (a) Digilent JTAG HS2 (~$50, Amazon), (b) Xilinx Platform Cable USB II (~$250)\n     - Alternative: openocd
@@ -488,7 +488,7 @@ tasks:
     \    Record: preconditions_checked list.\n\n  1. Read exp2484 result: true_replicated_auroc_isotonic, hive_peer_breached,
     replicated_auroc_ci_95_low\n     Read exp2485 result if exists: group_conditional_auroc_mean, hive_peer_breached_group_cond\n
     \    Determine best_240_auroc = max(true_replicated_auroc_isotonic, group_conditional_auroc_mean or 0)\n\n  2. Update
-    AUROC results table in main.tex:\n     Find the AUROC table (\\begin{table} with AUROC column)\n     Update the ensemble
+    AUROC results table in main.tex:\n     Find the AUROC table (\\begin{{table}} with AUROC column)\n     Update the ensemble
     row to show: best_240_auroc with CI [ci_low, ci_high]\n     Note: \"Adversarially verified (5-seed replication, exp2484)\"\n\n
     \  3. Read exp2486: pearson_r, phase4_validated, arm_ebm_auroc\n     Read exp2487: prc_energy_elevated, phase4_validated_via_prc
     (if exists)\n     phase4_validated_any = (exp2486.phase4_validated OR exp2487.phase4_validated_via_prc)\n\n  4. Update/write
