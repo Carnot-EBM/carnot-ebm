@@ -14,5 +14,18 @@
     "nsvif_importable": true
   },
   "nco_vs_nsvif_tpr_delta": 0.0,
-  "nsvif_auroc_baseline": 0.5
+  "nsvif_auroc_baseline": 0.5,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "nco_auroc=0.5 and nsvif_auroc_baseline=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "nco_vs_nsvif_tpr_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
