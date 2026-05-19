@@ -5009,3 +5009,4 @@ Ripgrep i |
 | 2026-05-19 05:00 UTC | Phase 3: KV260 RTL Synthesis Fix v6 -- MANDATORY H | FAIL | Claude Code error: Wall-clock+idle timeout after 1200s (1200s silence). Last ou |
 | 2026-05-19 05:23 UTC | Phase 3: KV260 RTL Synthesis Fix v6 -- MANDATORY H | FAIL | Claude Code error: Wall-clock+idle timeout after 1200s (1200s silence). Last ou |
 | 2026-05-19 05:43 UTC | Phase 3: KV260 RTL Synthesis Fix v6 -- MANDATORY H | OK | 81 passed, 1 warning in 2.34s |
+| 2026-05-19 05:48 UTC | Phase 3: PolarFire Carnot Pure-Python Deploy -- In | OK | cache hit: 81 passed, 1 warning in 2.34s |
