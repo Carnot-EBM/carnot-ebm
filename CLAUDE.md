@@ -1347,6 +1347,102 @@ the time, would have forced the planner to allocate 8+ tasks to
 scope reduction instead. The `.112 planner reads this rule; future
 SCOPE REDUCTION directives will be honored by design.
 
+## Hardware-Task Continuity Discipline (MANDATORY)
+
+**Origin:** 2026-05-18 operator directive: "I just don't want you to
+forget about the FPGAs again." Filed after the `.220-`.226 cascade
+window where every FPGA-related task got gate-blocked, doomed-rerun-
+blocked, or 3-fail-skipped across 6+ consecutive milestones — partly
+due to the codex quota cascade, but also because the planner deferred
+hardware tasks in favor of verifier / AUROC ceiling work each time
+a milestone got crowded.
+
+**The rule.** As long as Carnot has FPGA boards physically attached
+to the development machine, **every milestone's `research-roadmap-next.yaml`
+MUST include at least one task targeting EACH attached board**, until
+that board reaches its defined terminal state.
+
+**Currently attached boards (as of 2026-05-18):**
+
+| Board | USB enumeration | Reachable via | Terminal state |
+|---|---|---|---|
+| AMD/Xilinx KV260 | (board has internal programmer) | Vivado bitstream + PYNQ board execution | board-level latency transcript landed in a non-fabricated artifact + `kv260_synthesis_succeeded: true` |
+| Cologne Chip GateMate A1-EVB-2M | onboard DirtyJTAG MCU at `1209:c0ca` | `openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bit>` over board's USB-C | n=16 Ising tile flashed + smoke-tested on hardware; `gatemate_bitstream_flashed: true` |
+| Microchip PolarFire SoC Discovery Kit | FlashPro5 at `1514:2008` + booted Linux | `ssh polarfire` (uptime 4+ days as of 2026-05-18) | end-to-end Carnot dispatch run with hash-match verification; `polarfire_workload_validated: true` |
+
+**How to apply (planner-side discipline).** When generating
+`research-roadmap-next.yaml`:
+
+1. **Audit the attached-boards table** (above, kept current by the
+   outer-loop/operator). For each board NOT yet at its terminal state,
+   reserve one task slot.
+2. **Pick the next concrete forward step** for that board, based on
+   the most recent artifact in `results/` and the next gate in the
+   board's own track. Examples:
+   - KV260: if synthesis_errors still > 0 → another debug/fix task;
+     if synthesis clean → bitstream-pack + board-flash task;
+     if board-flashed → board-latency transcript task.
+   - GateMate: if yosys/nextpnr LUT mapping mismatch unresolved →
+     mapping-workaround task; if resolved → n=16 P&R + flash + smoke;
+     if flashed → on-board Ising sampler timing benchmark.
+   - PolarFire: if no smoke yet → precondition-gated SSH smoke (per
+     2026-05-18 known-issues entry); if smoked → CPU-only Ising
+     sampler; if CPU sampler validated → adaptive-K PCD prototype.
+3. **Mark each FPGA task with `track: hardware`** in the YAML so
+   future audits can confirm one-per-board-per-milestone compliance.
+4. **If a board's next step requires operator action** (Vivado
+   bitstream, physical re-cabling, etc.) and that action hasn't
+   happened, the planner SHOULD still queue a documentation-only or
+   audit task for that board, NOT skip it. A queued audit task keeps
+   the board visible in milestone retros and prevents the
+   forget-pattern.
+
+**Operator-override for skipping.** A board can be omitted from a
+specific milestone only if the operator explicitly authorizes it
+(e.g., "skip PolarFire this milestone, the board is being firmware-
+upgraded"). The override must appear in `ops/known-issues.md` as
+a dated entry, NOT in the planner's own judgment.
+
+**Terminal-state graduation.** Once a board hits its terminal state
+(per the table above), the board CAN be dropped from per-milestone
+mandatory inclusion. At that point, follow-on work on that board
+shifts to optional / opportunistic. The terminal artifact must be
+adversarial-verified non-fabricated (per Pre-Launch Preconditions
+Discipline + adversarial_verify.py).
+
+**Mechanical enforcement (planner-side honor-discipline + future
+activation-guard check).** Until a roadmap-FPGA-coverage check is
+mechanically wired into `scripts/research_conductor.py`, this rule is
+planner honor-discipline. The outer-loop/operator audits roadmap
+drafts and re-emits if FPGA coverage is missing.
+
+**Forward queue (queued in `ops/known-issues.md` as of 2026-05-18):**
+
+- `.237+ PolarFire SoC Smoke v3 — Precondition-Gated, Not Fabricated
+- `.237+ GateMate A1 yosys/nextpnr LUT mapping workaround (or
+  bitstream end-to-end if mapping resolved)
+- `.237+ KV260 synthesis fix follow-on or bitstream pack (depending
+  on exp2440 outcome in `.236)
+
+**Why this is in CLAUDE.md, not just `ops/known-issues.md`.** The
+planner reads CLAUDE.md as required input on every plan generation.
+A rule that only lives in `ops/known-issues.md` is advisory and
+sometimes deprioritized when the milestone gets crowded. Hardware
+tasks have repeatedly been the deprioritized class. Putting the
+continuity rule here forces the cross-check at design time:
+"does this milestone have at least one task per attached board?"
+becomes a checkbox the planner must answer before emitting.
+
+**Cross-references:**
+- `ops/hardware-bringup-prep.md` — current bring-up state for each board
+- `ops/known-issues.md` MANDATORY-NEXT-MILESTONE PRIORITIES — the
+  freshest per-board queued task
+- `research-hardware-wishlist.md` — exp 1460 scope reduction and
+  active/deferred portfolio definitions
+- `docs/jtag-wiring-gatemate-dirtyjtag.md` — reference for the rare
+  case of external DirtyJTAG (not the current bench)
+- 2026-05-18 operator directive — origin
+
 ## Overdue-Priority Forcing Function (MANDATORY)
 
 If a `ops/known-issues.md` "MANDATORY-NEXT-MILESTONE PRIORITIES" entry has been
