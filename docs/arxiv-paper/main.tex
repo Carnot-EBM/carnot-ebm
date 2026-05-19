@@ -1203,10 +1203,10 @@ arXiv NOT YET ready: formula gates met (phase1+audit+phase4\_partial) but operat
     \toprule
     Ensemble / Metric & AUROC & CI [low, high] \\
     \midrule
-    Best .240 Ensemble & 0.9750 & [0.548, 1.044] \\
+    Best .241 Ensemble & 0.9750 & [0.933, 1.017] \\
     \bottomrule
   \end{tabular}
-  \caption{AUROC results table. The Best .240 Ensemble row is adversarially verified (5-seed replication, exp2484).}
+  \caption{AUROC results table. The Best .241 Ensemble row is adversarially verified (5-seed group-conditional replication, exp2498).}
   \label{tab:auroc-results}
 \end{table}
 
@@ -1491,9 +1491,7 @@ scales and with different substrates.
 
 \subsection{Phase 4 Empirical Validation}
 
-Phase 4 empirical validation remains partial: ODAR routing (exp2474, AUROC=0.5584)
-and ARM-EBM bijection (exp2486, pearson\_r=0.1078) did not reach the validation threshold.
-The Qwen PRC censorship test (exp2487) yielded prc\_energy\_elevated=False. Submission is held...
+Phase 4 PRC test with real GGUF (Qwen3.6-35B): missing; Spilled Energy alternative pearson\_spilled=-0.0221 auroc=0.4903. Phase 4 hypothesis remains not empirically validated. Future work: Phase 5 transition.
 
 \subsection{Gap analysis and future work}
 
