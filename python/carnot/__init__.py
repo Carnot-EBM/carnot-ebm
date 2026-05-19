@@ -26,6 +26,14 @@ and can be trained with the same set of loss functions (NCE, DSM, SNL).
 import sys
 from pathlib import Path
 
+try:
+    import jax
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    JAX_AVAILABLE = False
+    # numpy fallback for riscv64 and other platforms without JAX
+
 # Direct repo-root imports such as ``from python.carnot...`` execute this file
 # before the top-level ``carnot`` package is importable.  Add ./python so the
 # absolute imports below work both in editable installs and raw checkouts.
@@ -74,13 +82,15 @@ except ModuleNotFoundError as exc:
     from carnot._version import __version__
 
     RUST_AVAILABLE = False
-    __all__ = ["__version__", "RUST_AVAILABLE"]
+    __all__ = ["__version__", "RUST_AVAILABLE", "JAX_AVAILABLE"]
 else:
     __all__ = [
         # Version
         "__version__",
         # Rust bindings
         "RUST_AVAILABLE",
+        # JAX
+        "JAX_AVAILABLE",
         # Core
         "AutoGradMixin",
         "EnergyFunction",

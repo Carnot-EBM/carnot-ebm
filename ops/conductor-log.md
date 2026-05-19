@@ -5029,3 +5029,6 @@ Ripgrep i |
 | 2026-05-19 07:47 UTC | Phase 2: KAN Lipschitz Regularization + Recertific | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2476_kan_lip |
 | 2026-05-19 07:50 UTC | Phase 2: KAN Lipschitz Regularization + Recertific | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2476_kan_lip |
 | 2026-05-19 08:03 UTC | Phase 3: KV260 Bitstream Pack + Board Flash -- syn | OK | 81 passed, 1 warning in 2.24s |
+| 2026-05-19 08:27 UTC | Phase 3: PolarFire Carnot Full Deploy v2 -- Fix JA | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1273s (300s silence). Last out |
+| 2026-05-19 08:44 UTC | Phase 3: PolarFire Carnot Full Deploy v2 -- Fix JA | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-VWGAOW5 |
+| 2026-05-19 08:58 UTC | Phase 3: PolarFire Carnot Full Deploy v2 -- Fix JA | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-VWGAOW5 |

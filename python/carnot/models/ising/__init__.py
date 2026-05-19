@@ -40,9 +40,25 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import jax
-import jax.numpy as jnp
-import jax.random as jrandom
+try:
+    import jax
+    import jax.numpy as jnp
+    import jax.random as jrandom
+    JAX_AVAILABLE = True
+except ImportError:
+    JAX_AVAILABLE = False
+    import numpy as jnp
+    class _MockJRandom:
+        @staticmethod
+        def PRNGKey(seed): return seed
+        @staticmethod
+        def split(key): return key, key
+        @staticmethod
+        def uniform(key, shape, minval=0.0, maxval=1.0):
+            import numpy as np
+            np.random.seed(key)
+            return jnp.asarray(np.random.uniform(minval, maxval, size=shape))
+    jrandom = _MockJRandom()
 
 from carnot.core.energy import AutoGradMixin
 
@@ -133,7 +149,7 @@ class IsingModel(AutoGradMixin):
     Spec: REQ-TIER-001
     """
 
-    def __init__(self, config: IsingConfig, key: jax.Array | None = None) -> None:
+    def __init__(self, config: IsingConfig | None = None, key: jax.Array | None = None, n_spins: int | None = None, seed: int | None = None) -> None:
         """Create a new Ising model with initialized parameters.
 
         **Detailed explanation for engineers:**
@@ -154,6 +170,13 @@ class IsingModel(AutoGradMixin):
 
         Spec: REQ-TIER-001, SCENARIO-TIER-006
         """
+        if config is None:
+            config = IsingConfig(input_dim=n_spins if n_spins is not None else 784)
+            if seed is not None and key is None:
+                if JAX_AVAILABLE:
+                    key = jrandom.PRNGKey(seed)
+                else:
+                    key = seed
         config.validate()
         self.config = config
 
