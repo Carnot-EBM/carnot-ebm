@@ -620,6 +620,127 @@ emitting plans that get coerced. Putting the rule in CLAUDE.md (which
 the planner reads as required input) means the planner respects it at
 design time AND the conductor coerces if it slips. Defense in depth.
 
+## Operator-Only External Publication (MANDATORY)
+
+**Origin:** 2026-05-19 operator directive: "I need to review any paper
+before it is submitted." Filed after `.243 exp2527 (arXiv Submission
+Package Prep) was queued and paper-v6 reached `arxiv_ready=True` per
+the conductor's own gate logic. The current exp2527 task is correctly
+prep-only (produces a checklist for the operator), but no MANDATORY
+rule yet prevents a future planner from queuing an autonomous arXiv
+push, OpenReview upload, GitHub PR creation against a public-fork,
+HuggingFace model release announcement, or any equivalent
+external-publication action without operator review.
+
+**The rule.** **Submission of papers, model releases, or other
+externally-visible artifacts to public venues is OPERATOR-ONLY.**
+Carnot tasks may:
+
+- Prepare arXiv submission packages (LaTeX compile, abstract
+  word-count check, author list extraction, CCS concept tagging,
+  category recommendation)
+- Generate operator-action checklists
+- Run pre-submission integrity audits and gate checks
+- Write LaTeX files, update bibliographies, regenerate figures
+- Push to private remotes (the project's own GitHub mirror,
+  HuggingFace organization, etc.) — these are NOT external
+  publication, they are internal mirroring
+- Generate model card text, release notes, or announcement drafts
+
+Carnot tasks **MUST NOT** perform any of:
+
+- `arxiv upload` / `arxiv submit` / equivalent CLI to arxiv.org
+- OpenReview submission API calls
+- HuggingFace model card publish-button-equivalent that flips a
+  model from private/draft to public
+- GitHub release creation (`gh release create`, equivalent web API)
+- Social-media or blog posts announcing the project
+- Email or other outbound communication to reviewers, editors,
+  conference chairs, or external researchers
+- Any action that creates a publicly-citable artifact bearing the
+  Carnot name without prior operator review
+
+**Why this is operator-only.** External publication is irreversible
+in practice. arXiv submissions can be withdrawn but not deleted; the
+record persists. Reviewer or editor outreach commits the project to
+a tone, framing, and set of claims that may need to be re-litigated
+if wrong. The Carnot project's credibility — already validated by
+the discipline machinery (adversarial-verify, 5-seed replication,
+exp2468 audit) — would be undermined by a single autonomous
+submission of unreviewed material. The operator is the trust-anchor
+for what the project says publicly.
+
+**How to apply (planner-side discipline).** When generating
+`research-roadmap-next.yaml`:
+
+- Submission-prep tasks (LaTeX compile, package assembly, checklist
+  generation) are allowed and encouraged. Frame them as "prepare
+  package for operator review."
+- The task's `REQUIRED ARTIFACT FIELDS` MUST include
+  `submission_package_ready: bool` with the principle "True if the
+  package is ready for OPERATOR to submit; the task itself never
+  submits."
+- The task's prompt MUST NOT include any step like "run `arxiv
+  submit`" or equivalent. Concrete steps stop at "produce the
+  package + checklist."
+- If a task's intent is genuinely operator-side action assistance,
+  it goes in the checklist artifact, not as a step the agent
+  executes.
+
+**How to apply (agent-side discipline, for any agent running a Carnot
+task).** When executing a task that touches paper / model / release
+artifacts:
+
+- Read the task prompt. If any step says or implies "submit to
+  arxiv" / "upload to OpenReview" / "publish the model card" /
+  "create the GitHub release," **DO NOT execute that step**.
+  Instead, write `honest_verdict: blocked_operator_only_submission`
+  and produce the prepared-but-not-submitted artifact alongside a
+  prominent note in the deliverable that the submission step is
+  reserved for the operator.
+- This applies even if the agent's environment has the credentials
+  to execute the action (arxiv API token, HuggingFace write token,
+  `gh auth status` logged in, etc.). Capability does not imply
+  authorization.
+
+**Mechanical enforcement (future, lives in
+`scripts/research_conductor.py` activation guard).** The activation
+guard SHOULD scan task prompts for terms like `arxiv submit`,
+`arxiv upload`, `arxiv-submit`, `OpenReview submission`, `gh release
+create`, and refuse activation of any milestone containing such a
+task without an explicit `operator_override:` field citing where the
+operator authorized the submission. Until that ships, this rule is
+honor-discipline at the planner+agent layer alone.
+
+**Exceptions.** A task may *include* the operator submitting if and
+only if:
+
+1. The task's prompt explicitly says "the operator will perform step
+   N; this task ends at step N-1," and
+2. The task's `submission_package_ready` field is the terminal
+   acceptance gate (true → operator-ready, false → still-in-prep),
+   and
+3. The task does NOT have the credentials to perform step N
+   regardless (no arxiv token in env, etc. — defense in depth).
+
+**Cross-references:**
+
+- 2026-05-19 operator directive (origin)
+- `feedback_publication_holds_until_phase4_pivot.md` (memory) —
+  the prior pre-publication hold framework; this rule extends it
+  to cover the post-hold submission action itself
+- `feedback_paper_integrity_audit.md` (memory) — the pre-submission
+  audit discipline; submission still requires operator after audit
+  passes
+- CLAUDE.md "Decentralization-Respecting Design Constraints" Rule 3
+  (mandatory mirroring) — private mirrors are fine; the
+  external-publication is what this rule guards
+- CLAUDE.md "Doing tasks" section (top of file): "For actions that
+  are hard to reverse, affect shared systems beyond your local
+  environment, or could otherwise be risky or destructive, check
+  with the user before proceeding." — this rule operationalizes
+  that principle for the specific case of external publication.
+
 ## Never Stash — Always Commit-First (MANDATORY)
 
 **Origin:** 2026-05-04 14:30Z incident. The user issued `pull`. The
