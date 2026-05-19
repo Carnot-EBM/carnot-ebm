@@ -6471,3 +6471,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 2b: Adaptive Conformal Prediction v2 (arXiv:2604.13991) -- Prompt-Adaptive Calibration (⚠️ Blocked) — honest_verdict=blocked_ensemble_v7_not_available; results/experiment_2511_adaptive_conformal.json
 - 2026-05-19: Phase 2b: Adaptive Conformal Prediction v2 (arXiv:2604.13991) -- Prompt-Adaptive Calibration (⚠️ Blocked) — honest_verdict=blocked_ensemble_v7_not_available; results/experiment_2511_adaptive_conformal.json
 - 2026-05-19: Phase 2b: Adaptive Conformal Prediction v2 (arXiv:2604.13991) -- Prompt-Adaptive Calibration (⚠️ Blocked) — honest_verdict=blocked_ensemble_v7_not_available; results/experiment_2511_adaptive_conformal.json
+- 2026-05-19: Phase 2b: FR-11 Tier 2 Memory-Augmented 32-Example Threshold Adaptation (⚠️ Blocked) — honest_verdict=blocked_fr11_tier2_not_implemented; results/experiment_2512_fr11_tier2_memory.json
