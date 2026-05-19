@@ -5097,3 +5097,4 @@ Ripgrep i |
 | 2026-05-19 17:44 UTC | Plan milestone 2026.05.243 | OK | 12 tasks proposed |
 | 2026-05-19 17:46 UTC | Milestone 2026.05.243 activated | OK | 12 tasks queued |
 | 2026-05-19 17:49 UTC | Phase 0: Archive .242 and activate .243 | OK | cache hit: 81 passed, 1 warning in 2.35s |
+| 2026-05-19 17:54 UTC | Phase 1: Phase 4 ARM-EBM Step-Level v3 -- IsingVer | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2519_phase4_ |
