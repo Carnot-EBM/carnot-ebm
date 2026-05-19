@@ -5119,3 +5119,5 @@ Ripgrep i |
 | 2026-05-19 19:40 UTC | Milestone 2026.05.244 activated | OK | 13 tasks queued |
 | 2026-05-19 19:42 UTC | Phase 0: Archive .243 and activate .244 | FAIL | Gemini CLI error: 309732:14)
     at async file:///usr/lib/node_modules/@google |
+| 2026-05-19 19:44 UTC | Phase 0: Archive .243 and activate .244 | FAIL | Gemini CLI error: .js:309732:14)
+    at async file:///usr/lib/node_modules/@go |
