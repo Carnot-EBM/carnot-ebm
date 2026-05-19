@@ -123,7 +123,7 @@ tasks:
     carnot.verify.semantic_energy import SemanticEnergy; print('ok')\"\n        If import
     fails: write honest_verdict blocked_carnot_import_failed and exit.\n     c. Verify
     sample size: count available step pairs in telemetry.\n        If n_step_pairs <
-    100: write honest_verdict blocked_insufficient_step_pairs_n={n} and exit.\n  1.
+    100: write honest_verdict blocked_insufficient_step_pairs_n={{n}} and exit.\n  1.
     Load telemetry manifest. Extract per-CoT-step token logprob sequences.\n  2. For
     each CoT step with token_logprobs available:\n     E_step = -sum(log_p(token_i))
     for token_i in step (ARM-EBM formula)\n  3. For each CoT step, compute IsingVerifier.energy()
@@ -483,7 +483,7 @@ tasks:
     kv260_bitstream_path (can be null if not found).\n  1. If Vivado and .bd both present:\n
     \    a. Write TCL script to export .hwh: write_hw_platform -fixed -include_bit\n
     \    b. Run: vivado -mode batch -source generate_hwh.tcl\n     c. Find generated
-    .hwh: find . -name '*.hwh' -newer {bd_file}\n     d. Set kv260_hwh_generated = (.hwh
+    .hwh: find . -name '*.hwh' -newer {{bd_file}}\n     d. Set kv260_hwh_generated = (.hwh
     found)\n  2. If .hwh generated:\n     a. Locate PYNQ SD card image or document
     SD card preparation steps:\n        Check if pynq package available: python3 -c
     \"import pynq; print(pynq.__version__)\" 2>/dev/null\n     b. Document exact commands
