@@ -5065,3 +5065,4 @@ Ripgrep i |
 | 2026-05-19 14:34 UTC | Phase 2: AUROC Adversarial Replication v2 -- Indep | OK | 81 passed, 1 warning in 2.25s |
 | 2026-05-19 14:36 UTC | Phase 2: Spilled Energy Tier 0q Verifier + Conform | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2497-phase4-spilled-energy-cpu-test.tie |
 | 2026-05-19 14:38 UTC | Phase 2: Spilled Energy Tier 0q Verifier + Conform | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2497-phase4-spilled-energy-cpu-test.tie |
+| 2026-05-19 14:40 UTC | Phase 2: Spilled Energy Tier 0q Verifier + Conform | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2497-phase4-spilled-energy-cpu-test.tie |
