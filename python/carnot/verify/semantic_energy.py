@@ -190,3 +190,5 @@ class SemanticEnergyDetector:
             if probability > 0.0:
                 entropy -= probability * math.log(probability)
         return float(entropy)
+
+SemanticEnergy = SemanticEnergyDetector
