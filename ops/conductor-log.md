@@ -5063,3 +5063,4 @@ Ripgrep i |
 | 2026-05-19 14:17 UTC | Phase 1: Phase 4 Qwen PRC Censorship Divergence v3 | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1294s (300s silence). Last out |
 | 2026-05-19 14:23 UTC | Phase 1: Phase 4 Spilled Energy Alternative CPU Te | OK | 83 passed, 1 warning in 2.51s |
 | 2026-05-19 14:34 UTC | Phase 2: AUROC Adversarial Replication v2 -- Indep | OK | 81 passed, 1 warning in 2.25s |
+| 2026-05-19 14:36 UTC | Phase 2: Spilled Energy Tier 0q Verifier + Conform | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2497-phase4-spilled-energy-cpu-test.tie |
