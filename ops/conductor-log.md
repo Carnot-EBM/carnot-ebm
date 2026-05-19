@@ -5011,3 +5011,4 @@ Ripgrep i |
 | 2026-05-19 05:43 UTC | Phase 3: KV260 RTL Synthesis Fix v6 -- MANDATORY H | OK | 81 passed, 1 warning in 2.34s |
 | 2026-05-19 05:48 UTC | Phase 3: PolarFire Carnot Pure-Python Deploy -- In | OK | cache hit: 81 passed, 1 warning in 2.34s |
 | 2026-05-19 05:51 UTC | Phase 4: KAN Formal Verification Bounds (arXiv:260 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2467_kan_for |
+| 2026-05-19 05:54 UTC | Phase 4: KAN Formal Verification Bounds (arXiv:260 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2467_kan_for |
