@@ -192,3 +192,7 @@ class SemanticEnergyDetector:
         return float(entropy)
 
 SemanticEnergy = SemanticEnergyDetector
+
+class IsingVerifier:
+    pass
+
