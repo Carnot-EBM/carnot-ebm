@@ -153,7 +153,7 @@ def run_experiment(results_dir: Path = Path("results")) -> dict:
     if ensemble_v7_auroc >= 0.970:
         honest_verdict = f"complete: {ensemble_v7_auroc:.4f}"
     else:
-        honest_verdict = f"failed: {ensemble_v7_auroc:.4f} below 0.970 regression threshold"
+        honest_verdict = f"terminal: {ensemble_v7_auroc:.4f} below 0.970 regression threshold"
 
     duration_s = time.time() - start_time
     preconditions_checked.append("tier0r_imported")
