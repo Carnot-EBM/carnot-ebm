@@ -5171,3 +5171,4 @@ Ripgrep i |
 | 2026-05-19 23:29 UTC | Phase 3b: Tier 0v HalluField Prototype (arXiv:2509 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2549_tier0v_ |
 | 2026-05-19 23:32 UTC | Phase 3b: Tier 0v HalluField Prototype (arXiv:2509 | FAIL | No file changes produced |
 | 2026-05-19 23:35 UTC | Phase 3b: Tier 0v HalluField Prototype (arXiv:2509 | FAIL | No file changes produced |
+| 2026-05-19 23:46 UTC | Phase 4a: JEPA Fast-Path Real-Corpus Evaluation (f | OK | 98 passed, 1 warning in 2.54s |
