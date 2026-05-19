@@ -20,5 +20,13 @@
   "duration_s": 15.5,
   "actual_agent_backend": "gemini",
   "acceptance_gate_passed": true,
-  "honest_verdict": "complete: SSH connection succeeded but carnot-ebm install failed due to missing jaxlib on riscv64"
+  "honest_verdict": "complete: SSH connection succeeded but carnot-ebm install failed due to missing jaxlib on riscv64",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "run_duration_s=15.5 and duration_s=15.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
