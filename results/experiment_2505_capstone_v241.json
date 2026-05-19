@@ -1,0 +1,94 @@
+{
+  "acceptance_gates": {
+    "best_241_auroc_positive": true,
+    "data_was_read": true,
+    "phase4_validated_any_not_null": true
+  },
+  "arxiv_gates": {
+    "gate_1_phase1_ship": true,
+    "gate_2_audit": true,
+    "gate_3_phase4": false,
+    "gate_4_auroc": true
+  },
+  "arxiv_readiness_assessment": "arXiv NOT YET ready: 3 of 4 gates met; unmet = ['gate_3_phase4'].",
+  "arxiv_ready": false,
+  "audit_passed_after_fix": true,
+  "auroc_adversarially_verified": true,
+  "auroc_gap_to_hive": 0.0514,
+  "best_241_auroc": 0.975,
+  "best_241_auroc_source": "exp2498.group_conditional_auroc_replicated",
+  "duration_s": 0.000182,
+  "ensemble_v6_auroc": null,
+  "experiment": "2505_capstone_v241",
+  "external_baselines": {
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139",
+    "prior_240_group_conditional_auroc": 0.975,
+    "prior_240_group_conditional_source": "exp2485.group_conditional_auroc_mean (.240)"
+  },
+  "field_principles": {
+    "arxiv_ready": "True if all 4 gates met. Operator can submit paper to arXiv if True.",
+    "auroc_adversarially_verified": "True if exp2498 independently confirmed group-conditional 0.975 adversarially clean. Gate 4 of 4 for arXiv.",
+    "best_241_auroc": "Best adversarially-verified AUROC across .241. This is the cite-safe paper value if auroc_adversarially_verified=True.",
+    "honest_verdict": "Terminal-prefix required. complete: with best_241_auroc, phase4 status, arxiv_ready.",
+    "phase4_validated_any": "True if either Qwen PRC v3 (exp2496) or Spilled Energy (exp2497) confirmed Phase 4. Gate 3 of 4 for arXiv."
+  },
+  "fr11_integration_working": true,
+  "group_conditional_replicated": 0.975,
+  "honest_verdict": "complete: best_241_auroc=0.9750 (hive_gap=+0.0514); phase4_validated_any=False; arxiv=blocked; note=(arXiv NOT YET ready: 3 of 4 gates met; unmet = ['gate_3_phase4'].)",
+  "kv260_status": "pynq_path_viable",
+  "milestone": "2026.05.241",
+  "missing_source_artifacts": [
+    {
+      "key": "phase4_prc_v3",
+      "path": "results/experiment_2496_phase4_qwen_prc_v3.json",
+      "source_id": "exp2496"
+    }
+  ],
+  "phase1_ship_gate_met": true,
+  "phase4_explanation": "exp2496 (Qwen PRC v3) artifact MISSING \u2014 likely blocked at precondition (model cache, GPU, or quota); methodology gap rather than refutation. exp2497 (Spilled Energy) did NOT validate Phase 4: pearson_spilled=-0.0221, auroc_spilled=0.4903 (both indistinguishable from chance).",
+  "phase4_prc_v3": false,
+  "phase4_spilled": false,
+  "phase4_validated_any": false,
+  "polarfire_status": "terminal_state_reached",
+  "preconditions_checked": {
+    "archive": true,
+    "auroc_adversarial": true,
+    "ensemble_v6": true,
+    "fr11_demo": true,
+    "kv260_pynq": true,
+    "paper_readiness": true,
+    "phase4_prc_v3": false,
+    "phase4_spilled": true,
+    "polarfire": true,
+    "tier0r": true
+  },
+  "random_seed": 42,
+  "run_date": "20260519",
+  "schema": "carnot.paper_v6_capstone_2505.v1",
+  "spec_refs": [
+    "REQ-REPORT-2505",
+    "SCENARIO-REPORT-2505"
+  ],
+  "status": "complete",
+  "synthesis": {
+    "arxiv_readiness": "arXiv NOT YET ready: 3 of 4 gates met; unmet = ['gate_3_phase4'].",
+    "milestone_summary": "Milestone 2026.05.241 closed with 9/10 capstone-input artifacts present. Phase 4 status: exp2496 (Qwen PRC v3) artifact MISSING \u2014 likely blocked at precondition (model cache, GPU, or quota); methodology gap rather than refutation. exp2497 (Spilled Energy) did NOT validate Phase 4: pearson_spilled=-0.0221, auroc_spilled=0.4903 (both indistinguishable from chance). Net Gate 3 = phase4_validated_any=False. AUROC status: best .241 AUROC = 0.9750 (source exp2498.group_conditional_auroc_replicated); gap to HIVE peer 0.9236 = +0.0514 (BREACHED). auroc_adversarially_verified=True (Gate 4). arXiv readiness: arXiv NOT YET ready: 3 of 4 gates met; unmet = ['gate_3_phase4']. Hardware: PolarFire status = terminal_state_reached (.240 left the energy-sanity leg open; .241 closes it via exp2501). KV260 status = pynq_path_viable \u2014 exp2502 establishes the PYNQ SD-card path as a programmer-purchase-bypass alternative to the Digilent JTAG HS2 blocker surfaced in .240 exp2491. FR-11 + new verifiers: fr11_integration_working=True (exp2500 Tier-4-to-Tier-1 feedback demonstrated end-to-end on a 10/10 example corpus). Tier 0q (Spilled Energy) viability = False \u2014 exp2497 noise-floor correlation killed the Tier 0q ensemble extension, which is why exp2499 pre-gate-blocked. Tier 0r (Curry-Howard soft-typed proof-path) viability = True (exp2504 AUROC = 0.9123 on the .241 corpus); the verifier ensemble candidate-set grows via Tier 0r even as Tier 0q is retired. Capstone-honest verdict: arxiv_ready=False, with the operator-directed hold remaining in place until Phase 4 validates on a real-GGUF path.",
+    "n_missing_artifacts": 1,
+    "proved_in_241": [
+      "AUROC adversarially verified: exp2498 independently replicated the .240 group-conditional 0.975 with the cross-group tautology resolved across 5 seeds (mean 0.9750, gap to HIVE 0.9236 = +0.0514). Gate 4 met.",
+      "PolarFire SoC reached terminal state (exp2501): energy sanity check passed, closing the leg .240 left open. Per Hardware-Task Continuity Discipline this board now graduates to optional/opportunistic follow-on.",
+      "KV260 PYNQ SD-card path established as viable bypass (exp2502) \u2014 sidesteps the Digilent JTAG HS2 programmer purchase blocker .240 exp2491 surfaced. Requires .hwh file extraction from the Vivado block design.",
+      "FR-11 all four tiers integrated end-to-end (exp2500): Tier 4 adaptive-energy feedback fires into Tier 1 on a 10/10 continuous-self-learning example corpus.",
+      "Tier 0r (Curry-Howard soft-typed proof-path, arXiv:2510.01069 ICLR 2026) viable as 16th verifier candidate (exp2504, AUROC = 0.9123)."
+    ],
+    "still_needs_work": [
+      "Phase 4 still not validated by either real-GGUF Qwen PRC (exp2496) or Spilled Energy (exp2497); Gate 3 unmet; operator-directed arXiv hold remains in place.",
+      "Tier 0q (Spilled Energy) ruled out by exp2497 noise-floor correlation; exp2499 ensemble extension consequently pre-gate-blocked. Retire Tier 0q from the candidate set.",
+      "arXiv NOT YET ready: 3 of 4 gates met; unmet = ['gate_3_phase4']."
+    ]
+  },
+  "tier0q_viable": false,
+  "tier0r_auroc": 0.9123376623376623,
+  "tier0r_viable": true
+}
