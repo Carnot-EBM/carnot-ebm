@@ -1,23 +1,28 @@
 {
-  "n_experiments_completed": 11,
-  "n_missing": 0,
-  "n_blocked": 0,
-  "best_240_auroc": 0.975,
-  "auroc_adversarially_verified": false,
-  "phase4_validated_any": false,
-  "arxiv_ready": false,
-  "top_3_successes": [
-    "Group-conditional calibration (exp2485) breaches HIVE 0.9236: mean AUROC 0.975 (std 0.021).",
-    "PolarFire SoC reaches terminal state (exp2490): carnot_runs_on_polarfire=True on riscv64.",
-    "KAN retrain achieves certified deployment readiness (exp2489): new_certified_coverage=0.833, new_kan_auroc=0.974."
-  ],
-  "top_3_gaps_for_241": [
-    "Phase 4 not validated; requires retry with real Qwen3.6-35B-A3B-GGUF.",
-    "KV260 flash blocked on Digilent JTAG HS2 programmer purchase.",
-    "PolarFire terminal state needs verification pass on Carnot energy computation."
-  ],
-  "honest_verdict": "complete: best_240_auroc=0.975, phase4_validated_any=False, arxiv_ready=False",
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.240",
-  "generated_at": "2026-05-19T12:34:59.590672+00:00"
+  "generated_at": "2026-05-19T12:44:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.240 recorded 0 experiments in the timing window per authoritative TIMING DATA; no compute-bound tasks were tracked. Both GPUs were idle (0% utilization, 5 MB allocated each) throughout the milestone window, consistent with the absence of any GGUF/CUDA workloads.",
+  "bottlenecks_identified": [
+    "No experiment commits were captured in the TIMING DATA window for this milestone; the conductor's git-commit-based timing probe found no milestone-scoped experiment artifacts to measure.",
+    "GPU memory residuals (5 MB on each RTX 3090) with 0% utilization suggest idle processes that were not cleaned up between milestones, which can interfere with memory-headroom checks in subsequent compute-bound tasks."
+  ],
+  "improvements_suggested": [
+    "Ensure the conductor's milestone-activation commit includes a sentinel marker so the git-log timing probe can anchor the milestone window correctly, preventing 0-experiment reports on milestones that did run experiments.",
+    "Add a post-milestone GPU memory flush step (torch.cuda.empty_cache() / explicit process teardown) so residual 5 MB allocations do not accumulate across milestones.",
+    "Pre-stage the next milestone roadmap (research-roadmap-next.yaml) before archiving the current one to avoid the blocked_roadmap_missing cascade pattern observed in .222-.227."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the conductor's timing-probe anchor so all milestone experiments are captured in TIMING DATA, eliminating spurious 0-experiment retros that obscure real throughput.",
+    "Add automated GPU-memory-flush to the milestone teardown hook so neither RTX 3090 carries idle allocations into the next milestone's precondition checks.",
+    "Enforce pre-staged roadmap discipline (research-roadmap-next.yaml present before archive step) to prevent the blocked_roadmap_missing recurrence pattern that has idled multiple consecutive milestones."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This milestone produced a 0-experiment retro because the timing probe found no commits in its window — not because no work was done. The primary operational lesson is that the measurement infrastructure itself is a bottleneck: a retro that cannot see its own milestone's experiments cannot surface real slowdowns. Fixing the probe anchor is higher-leverage than any experiment-level optimization."
 }

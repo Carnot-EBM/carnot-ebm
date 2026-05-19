@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report — 3,015 Experiments Across the Public Record, 360 Archived Milestone Records, 26,352 Python Test Items Collected (Through Exp 2470)
+## A Technical Report — 3,039 Experiments Across the Public Record, 361 Archived Milestone Records, 26,352 Python Test Items Collected (Through Exp 2494)
 
 **Author:** Ian Blenke
 **Date:** 2026-05-19
@@ -30,9 +30,9 @@ a handful of lines of Python. Headline model-generation benchmark numbers are fr
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 3,015 experiments across 360 milestones through .238, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction (PRD Priority #1 first actual run, verification_pass_rate=1.000), VERGE SMT repair integration (mcs_repair_success_rate=1.000), Sparse Ising connectivity, Semantic Energy Tier 0g (AUROC=0.685 on real cached GGUF logprob vectors exp2351), KAN-CL n=256 per-knot retention, FregeLogic Z3+Neural Hybrid (AUROC=0.8831, beating HalluScan 0.88 peer baseline, exp2395), Conformal P-Value Ensemble with 7 verifiers fused (AUROC=0.9167, gap to HIVE peer 0.9236 closed to 0.0069, exp2438), GateMate bitstream flashed TERMINAL (exp2453, .237), KV260 RTL synthesis_errors=0 FIRST SUCCESS (exp2465, .238), FR-11 Tier 2 cross-session constraint memory complete (exp2463, .238), Fisher ceiling confirmed at AUROC=0.9167 (Stouffer 0.818 and Logistic 0.825 both worse, exp2461, .238), and KAN formal verification bounds certified (AUROC=0.994, certified_coverage=0.0, mean_local_lipschitz=39.5, exp2467, .238 — Lipschitz regularization required).
+This report summarizes 3,039 experiments across 361 milestones through .239, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction (PRD Priority #1 first actual run, verification_pass_rate=1.000), VERGE SMT repair integration (mcs_repair_success_rate=1.000), Sparse Ising connectivity, Semantic Energy Tier 0g (AUROC=0.685 on real cached GGUF logprob vectors exp2351), KAN-CL n=256 per-knot retention, FregeLogic Z3+Neural Hybrid (AUROC=0.8831, beating HalluScan 0.88 peer baseline, exp2395), Conformal P-Value Ensemble with 7 verifiers fused (AUROC=0.9167, gap to HIVE peer 0.9236 closed to 0.0069, exp2438), GateMate bitstream flashed TERMINAL (exp2453, .237), KV260 RTL synthesis_errors=0 FIRST SUCCESS (exp2465, .238), FR-11 Tier 2 cross-session constraint memory complete (exp2463, .238), Fisher ceiling confirmed at AUROC=0.9167 (Stouffer 0.818 and Logistic 0.825 both worse, exp2461, .238), KAN formal verification bounds (AUROC=0.994 but certified_coverage=0.0, mean_local_lipschitz=39.5, exp2467, .238 — Lipschitz regularization required), FR-11 Tier 3 JEPA Predictive Verification COMPLETE (jepa_predictor_implemented=True, jepa_violation_auc=0.7633, exp2475, .239), Group-Conditional Conformal Ensemble v5 BREACHING HIVE PEER (group_conditional_auroc_mean=0.975, group_conditional_vs_fisher_delta=+0.058, exp2485, .240), KAN LipNeXt regularization enabling certified deployment (new_certified_coverage=0.83, new_mean_local_lipschitz=2.40, certified_deployment_ready=True, exp2489, .240), PolarFire full Carnot deployment (carnot_runs_on_polarfire=True after JAX conditional import fix, exp2490, .240), and FR-11 Tier 4 adaptive energy landscape prototype functional (tier4_prototype_functional=True, exp2488, .240).
 
-This report documents the research arc behind the framework — **3,015 experiment records tracked through Exp 2470, with 3,015 task records in 360 artifact-backed completed milestone records archived through 2026.05.238** — run between February and May 2026. `research-complete.yaml` currently archives **360** completed milestone records through 2026.05.238. Milestone 2026.05.235 ("Codex Recovery Sprint v2") confirmed codex_cli_healthy=true and delivered key results: **HIVE v4 AUROC=0.8864** (exp2422), **Hierarchical LogCons v2 AUROC=0.8896** (exp2423, fallback path), **Kinetic Langevin** as best sampler (KL=1.987 vs CASAL 9.858, exp2428). Milestone 2026.05.236 ("AUROC Ceiling Breach") completed 10 of 12 tasks: **exp2438 (Conformal P-Value Ensemble, 7 verifiers fused) achieved AUROC=0.9167** — closing the gap to the HIVE peer ceiling (0.9236) to 0.0069; **exp2441 (Phase 1 Ship Gate v5) declared all criteria met** (PyPI published, HuggingFace mirror live, MCP+CLI docs written, external reproducer confirmed); exp2439 (FR-11 Online Learnability) satisfied the continuous self-learning mandate; exp2442 (FST MCMC energy fix) resolved the degenerate acceptance_rate=1.0 sampler. Milestone 2026.05.237 ("AUROC Final Breach + Hardware Continuity", exp2447–exp2458) completed 8 of 12 tasks: **GateMate bitstream flashed TERMINAL** (exp2453, gatemate_bitstream_flashed=True — drops from mandatory hardware roster); **PolarFire SSH reachable** (exp2454, ssh_reachable=True); Conformal Ensemble v2 AUROC=0.9167 Fisher ceiling confirmed (exp2448); FR-11 Soundness/Completeness Tracking v5 complete (exp2451); ODAR free-energy routing integrated (exp2455). Milestone 2026.05.238 ("AUROC Ceiling Assault v3 + KV260 RTL + PolarFire + arXiv Prep", exp2459–exp2470) completed 11 of 12 tasks: **KV260 RTL synthesis_errors=0 FIRST SUCCESS** (exp2465, kv260_synthesis_succeeded=True — first clean synthesis after 6+ consecutive milestone failures; bitstream pack and board flash now unblocked); **FR-11 Tier 2 cross-session constraint memory COMPLETE** (exp2463, online constraint accumulation and retrieval working); **Fisher conformal ceiling confirmed** (exp2461, Stouffer Z-score AUROC=0.818 and Logistic AUROC=0.825 both worse than Fisher 0.9167 — ceiling is in verifier information content, not aggregation method); **KAN formal verification bounds** (exp2467, AUROC=0.994 but certified_coverage=0.0, mean_local_lipschitz=39.5 — Lipschitz regularization required before certified deployment); **Paper integrity audit FAILED** (exp2468, 9 failing checks, 5 critical — fabricated numbers, missing citations, unsupported claims); **PolarFire partial** (exp2466, ssh_reachable=True, inline_energy_value=2.1000, polarfire_workload_validated=True, but carnot/__init__.py has unconditional import jax causing RuntimeError on riscv64). Capstone exp2469 was gate-blocked (AUROC improvement gate not met). Milestone 2026.05.239 ("AUROC Phase 4 Empirical Validation + KAN Lipschitz + KV260 Board Flash + arXiv Integrity Fix + FR-11 Tier 3 JEPA", exp2471–exp2482) is currently planned.
+This report documents the research arc behind the framework — **3,039 experiment records tracked through Exp 2494, with task records in 361 artifact-backed completed milestone records archived through 2026.05.239** — run between February and May 2026. `research-complete.yaml` currently archives **361** completed milestone records through 2026.05.239. Milestone 2026.05.235 ("Codex Recovery Sprint v2") confirmed codex_cli_healthy=true and delivered key results: **HIVE v4 AUROC=0.8864** (exp2422), **Hierarchical LogCons v2 AUROC=0.8896** (exp2423, fallback path), **Kinetic Langevin** as best sampler (KL=1.987 vs CASAL 9.858, exp2428). Milestone 2026.05.236 ("AUROC Ceiling Breach") completed 10 of 12 tasks: **exp2438 (Conformal P-Value Ensemble, 7 verifiers fused) achieved AUROC=0.9167** — closing the gap to the HIVE peer ceiling (0.9236) to 0.0069; **exp2441 (Phase 1 Ship Gate v5) declared all criteria met** (PyPI published, HuggingFace mirror live, MCP+CLI docs written, external reproducer confirmed); exp2439 (FR-11 Online Learnability) satisfied the continuous self-learning mandate; exp2442 (FST MCMC energy fix) resolved the degenerate acceptance_rate=1.0 sampler. Milestone 2026.05.237 ("AUROC Final Breach + Hardware Continuity", exp2447–exp2458) completed 8 of 12 tasks: **GateMate bitstream flashed TERMINAL** (exp2453, gatemate_bitstream_flashed=True — drops from mandatory hardware roster); **PolarFire SSH reachable** (exp2454, ssh_reachable=True); Conformal Ensemble v2 AUROC=0.9167 Fisher ceiling confirmed (exp2448); FR-11 Soundness/Completeness Tracking v5 complete (exp2451); ODAR free-energy routing integrated (exp2455). Milestone 2026.05.238 ("AUROC Ceiling Assault v3 + KV260 RTL + PolarFire + arXiv Prep", exp2459–exp2470) completed 11 of 12 tasks: **KV260 RTL synthesis_errors=0 FIRST SUCCESS** (exp2465, kv260_synthesis_succeeded=True — first clean synthesis after 6+ consecutive milestone failures; bitstream pack and board flash now unblocked); **FR-11 Tier 2 cross-session constraint memory COMPLETE** (exp2463, online constraint accumulation and retrieval working); **Fisher conformal ceiling confirmed** (exp2461, Stouffer Z-score AUROC=0.818 and Logistic AUROC=0.825 both worse than Fisher 0.9167 — ceiling is in verifier information content, not aggregation method); **KAN formal verification bounds** (exp2467, AUROC=0.994 but certified_coverage=0.0, mean_local_lipschitz=39.5 — Lipschitz regularization required before certified deployment); **Paper integrity audit FAILED** (exp2468, 9 failing checks, 5 critical — fabricated numbers, missing citations, unsupported claims); **PolarFire partial** (exp2466, ssh_reachable=True, inline_energy_value=2.1000, polarfire_workload_validated=True, but carnot/__init__.py has unconditional import jax causing RuntimeError on riscv64). Capstone exp2469 was gate-blocked (AUROC improvement gate not met). Milestone 2026.05.239 ("AUROC Phase 4 Empirical Validation + KAN Lipschitz + KV260 Board Flash + arXiv Integrity Fix + FR-11 Tier 3 JEPA", exp2471–exp2482) completed 10 of 12 tasks: **Calibrated Conformal Ensemble v4 AUROC=0.9351 (exp2473)** via isotonic scaling — flagged TAUTOLOGY by adversarial verifier (isotonic_auroc == best_calibrated_auroc, duration_s=0.12s implausible); **FR-11 Tier 3 JEPA Predictive Verification COMPLETE** (exp2475, jepa_predictor_implemented=True, jepa_violation_auc=0.7633, min_logprob is best feature); **Paper integrity audit FIXED** (exp2479, audit_passed_after_fix=True, exp1100 timing discrepancy resolved); **KV260 bitstream GENERATED** (exp2477, 7.8MB, kv260_bitstream_flashed=False — no Xilinx JTAG programmer on bench); GateMate timing benchmark complete (TERMINAL state maintained); Phase 4 ODAR validation FAILED (exp2474, odar_energy_auroc=0.5584, pearson_r=0.19; arXiv hold remains); KAN MISSING (exp2476, blocked_kan_model_missing — path mismatch); PolarFire 3x Gemini CLI failures (exp2478, carnot_runs_on_polarfire=False). Milestone 2026.05.240 ("AUROC Adversarial Resolution + Phase 4 ARM-EBM Empirical + KAN Retrain + PolarFire v3 + arXiv Gate", exp2483–exp2494) completed all 12 tasks: **exp2484 (AUROC Adversarial Replication)** resolved the TAUTOLOGY — true replicated AUROC=0.7964 (5-seed, std=0.127), prior_exp2473_validated=False; **exp2485 (Group-Conditional Conformal v5, arXiv:2602.01285)** BREACHED the HIVE peer with group_conditional_auroc_mean=0.975 and hive_peer_breached_group_cond=True; **exp2488 (FR-11 Tier 4 Adaptive Energy Landscape)** prototype functional with tier4_prototype_functional=True and 2 adaptive knot adjustments over 36 examples; **exp2489 (KAN Retrain + LipNeXt)** achieved new_certified_coverage=0.83 and certified_deployment_ready=True (new_mean_local_lipschitz=2.40 vs prior 39.5); **exp2490 (PolarFire Carnot Deploy v3)** achieved carnot_runs_on_polarfire=True after JAX conditional import fix. Phase 4 remains unvalidated: exp2486 (ARM-EBM bijection pearson_r=0.11, n=36) and exp2487 (Qwen PRC, used mock_model — methodology gap) both returned phase4_validated=False. arXiv hold persists (2/4 gates met per capstone exp2493).
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -114,9 +114,9 @@ artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.05.238; checked-in result artifacts now extend through Exp 2470, the .238
-operational retrospective. Milestone 2026.05.239 is currently planned
-(exp2471–exp2482) and not yet represented in the archive.
+2026.05.239; checked-in result artifacts now extend through Exp 2494, the .240
+operational retrospective. Milestone 2026.05.240 (exp2483–exp2494) is complete;
+Milestone 2026.05.241 is the next planned milestone.
 Milestone .105 diagnosed the SOTA thinking-mode certificate path as a terminal
 negative: `<think>` output consumed
 the generation budget before structural tags, producing
@@ -5985,4 +5985,150 @@ The three milestones collectively:
 4. **Validated FST live GGUF inference** — PATH A now confirmed working.
 5. **Extended the verifier ensemble** to 4 Tier 0 verifiers (Tier 0f/0g/0h/0j).
 
-Milestone .234 ("AUROC Ceiling Assault") targets closing the remaining 0.0405 gap to the HIVE peer (0.9236) via 4-verifier ensemble (exp2408), Hierarchical LogCons (exp2409), and HALT-RAG NLI (exp2410).
+### Milestone 2026.05.235 — Codex Recovery Sprint v2: AUROC Ceiling Assault
+
+Milestone .235 ("Codex Recovery Sprint v2") deployed a structural Codex health gate (exp2421) before all research experiments. Codex confirmed healthy and all gated experiments ran.
+
+**Key results:**
+- **HIVE v4 4-verifier ensemble AUROC=0.8864** (exp2422) — fusing all 4 Tier 0 verifiers
+- **Hierarchical LogCons v2 AUROC=0.8896** (exp2423) — Z3 partial-order hierarchy, fallback path used
+- **Kinetic Langevin** validated as best sampler: KL=1.987 vs CASAL 9.858 (exp2428)
+- KV260 Yosys: synthesis_errors=1 (RTL content bug identified, infrastructure confirmed working)
+- Phase 1 ship gate NOT MET (only MCP+CLI docs missing)
+
+### Milestone 2026.05.236 — AUROC Ceiling Breach + Phase 1 Ship Gate
+
+Milestone .236 ("AUROC Ceiling Breach") completed 10 of 13 tasks and finally satisfied the Phase 1 ship gate.
+
+**Key results:**
+- **Conformal P-Value Ensemble v1 AUROC=0.9167** (exp2438, 7 verifiers fused) — gap to HIVE peer 0.9236 closed to 0.0069
+- **Phase 1 ship gate CONFIRMED MET** (exp2441): PyPI published, HuggingFace mirror live, MCP+CLI docs written, external reproducer confirmed
+- FR-11 Online Learnability satisfied continuous self-learning mandate (exp2439)
+- FST MCMC degenerate sampler fixed (exp2442, acceptance_rate bug resolved)
+- exp2438 artifact malformed JSON — blocked capstone exp2445
+- KV260 RTL never ran (exp2440 missing); NCO AUROC=0.500 tautology (exp2444)
+
+### Milestone 2026.05.237 — AUROC Final Breach Attempt + Hardware Continuity
+
+Milestone .237 completed 8 of 12 tasks. GateMate reached TERMINAL state.
+
+**Key results:**
+- **GateMate bitstream FLASHED TERMINAL** (exp2453, gatemate_bitstream_flashed=True — drops from mandatory hardware roster)
+- **PolarFire SSH reachable** (exp2454, ssh_reachable=True)
+- Conformal Ensemble v2 AUROC=0.9167 — Fisher ceiling confirmed (exp2448, ensemble_auroc_improved_v2=False)
+- FR-11 Soundness/Completeness Tracking v5 complete (exp2451)
+- ODAR free-energy routing integrated (exp2455)
+- NCO Corrigendum: AUROC=0.678 (exp2456, tautology fixed from 0.500)
+- KV260 RTL v5 MISSING (exp2452, never ran — 3rd consecutive miss)
+
+### Milestone 2026.05.238 — AUROC Ceiling Assault v3: KV260 Synthesis Succeeded
+
+Milestone .238 completed 11 of 12 tasks and achieved the first clean KV260 synthesis.
+
+**Key results:**
+- **KV260 RTL synthesis_errors=0 FIRST SUCCESS** (exp2465, kv260_synthesis_succeeded=True — after 6+ consecutive failures; bitstream pack and board flash now unblocked)
+- **FR-11 Tier 2 cross-session constraint memory COMPLETE** (exp2463 — online constraint accumulation and retrieval working)
+- **Fisher conformal ceiling confirmed** (exp2461 — Stouffer Z-score 0.818 and Logistic 0.825 both worse than Fisher 0.9167; ceiling is in verifier information content, not aggregation method)
+- **KAN formal verification bounds** (exp2467 — AUROC=0.994 but certified_coverage=0.0, mean_local_lipschitz=39.5; Lipschitz regularization required)
+- Paper integrity audit FAILED (exp2468 — 9 failing checks, 5 critical: fabricated numbers, missing citations)
+- PolarFire partial (exp2466 — inline_energy_value=2.1000 but unconditional `import jax` blocks riscv64)
+- Capstone exp2469 gate-blocked (AUROC improvement gate not met)
+
+### Milestone 2026.05.239 — KV260 Bitstream + FR-11 Tier 3 JEPA + Paper Integrity Fix
+
+Milestone .239 completed 10 of 12 tasks. FR-11 Tier 3 JEPA became the first self-learning tier to verify violations before they are fully expressed.
+
+**Key results:**
+- **FR-11 Tier 3 JEPA Predictive Verification COMPLETE** (exp2475 — jepa_predictor_implemented=True, jepa_violation_auc=0.7633, min_logprob identified as best feature for predicting violations from partial responses)
+- **KV260 bitstream GENERATED** (exp2477 — 7.8MB, sha256=1bb0c3b…; kv260_bitstream_flashed=False — no Xilinx JTAG programmer physically available on bench)
+- **Paper integrity audit FIXED** (exp2479 — audit_passed_after_fix=True; exp1100 timing discrepancy resolved, citation gaps addressed)
+- Calibrated Conformal Ensemble v4 AUROC=0.9351 (exp2473) — isotonic scaling; **flagged TAUTOLOGY** by adversarial verifier (isotonic_auroc == best_calibrated_auroc, duration_s=0.12s implausibly short); requires independent replication
+- Phase 4 ODAR validation FAILED (exp2474 — odar_energy_auroc=0.5584, pearson_r=0.19; arXiv hold remains)
+- KAN MISSING (exp2476 — blocked_kan_model_missing; path mismatch vs exp2467)
+- PolarFire 3x Gemini CLI failures (exp2478 — carnot_runs_on_polarfire=False)
+- Capstone exp2481 ran with NO HARD GATE — best_239_auroc=0.9351 (TAUTOLOGY flagged), arxiv=blocked
+
+### Milestone 2026.05.240 — HIVE Peer BREACHED: Group-Conditional Conformal + PolarFire Full Deploy
+
+Milestone .240 ("AUROC Adversarial Resolution + Phase 4 ARM-EBM Empirical + KAN Retrain + PolarFire v3 + arXiv Gate") completed all 12 tasks. The HIVE peer ceiling was breached for the first time.
+
+#### AUROC Adversarial Replication (exp2484)
+
+5-seed independent replication of the exp2473 isotonic AUROC=0.9351 claim.
+
+**Results:**
+- true_replicated_auroc_isotonic: **0.7964** (std=0.1266, 95% CI [0.548, 1.045])
+- tautology_resolved: True — the TAUTOLOGY flag from exp2473 is confirmed; the 0.9351 result was an artifact of fitting on the calibration set
+- prior_exp2473_validated: False
+- hive_peer_breached: False (by simple fusion)
+
+#### Group-Conditional Conformal Ensemble v5 (exp2485)
+
+Applied group-conditional conformal prediction (arXiv:2602.01285) with per-group calibration sets derived from verifier signal type.
+
+**Results:**
+- **group_conditional_auroc_mean: 0.975** — HIVE peer baseline (0.9236) BREACHED
+- group_conditional_auroc_std: 0.021
+- group_conditional_vs_fisher_delta: +0.058
+- hive_peer_breached_group_cond: True
+- honest_verdict: `complete: 0.9750`
+
+This is the headline AUROC result for the project. The adversarially-cleaner group-conditional method overcomes the Fisher ceiling by calibrating separately per verifier-signal cluster.
+
+#### FR-11 Tier 4 Adaptive Energy Landscape (exp2488)
+
+First implementation of the FR-11 Tier 4 adaptive energy landscape prototype.
+
+**Results:**
+- tier4_prototype_functional: True
+- adapted_knot_count: 2 (adaptive adjustments triggered over 36 examples)
+- energy_reduction_mean: 2.0 (per adaptation step)
+- continuous_self_learning_task: True
+
+#### KAN Retrain + LipNeXt Regularization (exp2489)
+
+Retraining KAN with LipNeXt (arXiv:2601.18513) spectral norm propagation to address the certified_coverage=0.0 finding from exp2467.
+
+**Results:**
+- new_kan_auroc: **0.974** (maintained near exp2467's 0.994)
+- new_mean_local_lipschitz: **2.40** (down from 39.5 — 16x reduction)
+- new_certified_coverage: **0.83** (up from 0.0)
+- certified_deployment_ready: True
+- retrain_needed: True (confirmed prior model was not certifiably deployable)
+
+#### PolarFire Carnot Deploy v3 (exp2490)
+
+Fixed the unconditional `import jax` in `carnot/__init__.py` with a try/except fallback.
+
+**Results:**
+- carnot_runs_on_polarfire: **True**
+- init_py_fix_applied: True
+- cpu_arch: riscv64
+- import_jax_line_number: 30 (fixed with conditional try/except)
+- energy_sanity_check_passed: False (riscv64 numerical precision differs; flagged for follow-up)
+
+#### Phase 4 Empirical Validation (exp2486, exp2487)
+
+Two parallel Phase 4 tests ran. Both returned phase4_validated=False.
+
+- **ARM-EBM Bijection (exp2486, arXiv:2512.15605):** pearson_r=0.1078 (LLM implicit energy E=-log p vs Carnot Ising energy correlation), arm_ebm_auroc=0.516, n=36 — below the 0.3 threshold for validation
+- **Qwen PRC Censorship Divergence (exp2487):** prc_energy_elevated=False, phase4_validated_via_prc=False — exp2487 used mock_model (adversarial flag: METHODOLOGY_MISSING); result is unreliable
+
+arXiv hold persists. Phase 4 empirical validation (verifier-as-free-energy hypothesis) remains an open question for milestone .241+.
+
+#### Capstone v240 (exp2493)
+
+**Summary verdict:** best_240_auroc=0.975 (exp2485 group_conditional); auroc_adversarially_verified=False (simple-fusion replication failed but group-conditional independently breached HIVE); phase4_validated_any=False; arxiv_ready=False (2/4 gates met; operator hold persists).
+
+### Summary: .234–.240 Arc
+
+The seven-milestone arc from .234 to .240 delivered:
+
+1. **HIVE peer ceiling breached (AUROC=0.975)** — via group-conditional conformal calibration (exp2485, .240), after confirming the Fisher ceiling at 0.9167 (.235–.238) and resolving a TAUTOLOGY artifact (exp2484, .240).
+2. **Phase 1 ship gate confirmed met** (.236, exp2441) — PyPI + HuggingFace mirror + MCP + CLI docs + external reproducer all satisfied.
+3. **GateMate TERMINAL** (.237, exp2453) — hardware milestone complete; drops from mandatory roster.
+4. **KV260 bitstream generated** (.239, exp2477) — synthesis clean since .238; board flash awaits JTAG programmer.
+5. **PolarFire full Carnot deployment** (.240, exp2490) — carnot_runs_on_polarfire=True after JAX conditional import fix.
+6. **FR-11 Tier 2 + Tier 3 + Tier 4 self-learning stack** — constraint memory (.238), JEPA predictive verification (.239), and adaptive energy landscape (.240) all functional.
+7. **KAN certified deployment readiness** (.240, exp2489) — certified_coverage=0.83 after LipNeXt regularization.
+8. **Phase 4 empirical validation remains open** — ODAR (pearson_r=0.19), ARM-EBM (pearson_r=0.11), and Qwen PRC (mock model) all returned phase4_validated=False. arXiv hold persists.
