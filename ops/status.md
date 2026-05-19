@@ -1,6 +1,44 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.244 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.245 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.245 Research Planning Complete
+
+**Milestone 2026.05.244 COMPLETED: key results from retro exp2542 + capstone exp2541:**
+- **5/13 execution-layer gap** — exp2530-exp2534 produced no artifacts; root-cause: complex codex tasks at front of queue without robust precondition handling.
+- **LaTeX compile fixed (exp2536)** — abstract trimmed 522→205 words; latex_compile_success=True.
+- **GateMate bitstream generated (exp2537)** — rtl/gatemate_ising_n16.cfg 16392 bytes; max F 514.67 MHz; flash pending.
+- **JEPA fast-path integrated (exp2539)** — JEPAFastPathPredictor wired into VerifyRepairPipeline; fast_path_rate=1.0 (synthetic corpus too coarse to discriminate).
+- **Tier 0u logical-consistency verifier (exp2535)** — synthetic AUROC=0.96; not yet integrated into ensemble.
+- **Phase 4 blocked_precondition again** — IsingVerifier stub (`class IsingVerifier: pass`) never fixed in .244; exp2531-exp2534 produced no artifacts.
+- **arXiv: arxiv_ready=False** — LaTeX now compiles but Gate 3 (phase4_resolved) still open.
+- **Operator capstone recommendation**: Option (b) — accept Phase 4 as empirically unsupported; expand §4 with honest negative subsection; proceed to arXiv.
+- **Gate-3 redefined**: `phase4_resolved = (phase4_validated_any OR phase4_honest_negative_documented)` — Option B satisfies gate.
+
+**Milestone 2026.05.245 PLANNED as Phase 4 Option B + arXiv Submission + Ensemble v7b + Hardware Flash + JEPA Real Evaluation.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v245.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2543`–`exp2555`)
+- ID allocation: milestone `.244` used through `exp2542`, so `.245` starts at `exp2543`.
+- Research references updated with Post-.244 Planning Sweep (2026-05-19): 5 new papers:
+  - arXiv:2509.10753 (HalluField — field-theoretic hallucination detection)
+  - arXiv:2512.18730 (RL-tuned LMs as EBMs)
+  - arXiv:2604.16217 (Conformal prediction via internal representations)
+  - arXiv:2604.17109 (Fully parallel Ising machine on FPGA)
+  - arXiv:2605.09515 (Game-theoretic FEP in LLM attention heads)
+- **Milestone title**: "Phase 4 Option B + arXiv Submission + Ensemble v7b + Hardware Flash + JEPA Real Evaluation"
+- **Three critical gaps targeted**:
+  1. Phase 4 resolution via Option B: exp2544 writes honest §4 negative subsection (3 experiments, 4 milestones, no validated bijection); exp2545 implements IsingVerifier as foundation for future work.
+  2. Ensemble v7b Group D: exp2546 moves Tier 0r to Group D calibration; exp2547 adaptive conformal v2 ACSE (gated on exp2546.ensemble_v7b_auroc>=0.970).
+  3. arXiv submission package: exp2553 builds final submission package after paper-v6 written through (exp2552); operator submits.
+- **Other experiments**: exp2548 real-corpus verifier validation (HalluGuard, HellaSwag, HaluEval); exp2549 Tier 0v HalluField prototype (field-theoretic); exp2550 JEPA real-corpus evaluation (continuous_self_learning_task:true); exp2551 GateMate flash + KV260 flash (requires_claude: hardware); exp2554 capstone claude+opus (NO HARD GATE); exp2555 retro codex.
+- **Critical path**: exp2544 (Phase 4 Option B §4) + exp2546 (ensemble v7b Group D) → exp2552 (paper-v6 final writethrough) → exp2553 (arXiv package) → exp2554 (capstone).
+- **Agent routing**: 11 codex/gpt-5.5 (84.6%); 2 claude+opus (exp2551 hardware flash, exp2554 capstone).
+- Validation: `validate_prior_failures.py` — [OK] 0 violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.245. Critical path: exp2544 (Phase 4 Option B §4 honest negative — resolves the 4-milestone Gate 3 blocker) and exp2546 (ensemble v7b Group D — fixes the Tier 0r regression). If both succeed, exp2552+exp2553 can produce an arXiv-ready submission package for operator review.
+
+---
 
 ## Session 2026-05-19 - Milestone 2026.05.244 Research Planning Complete
 

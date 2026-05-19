@@ -13753,3 +13753,17 @@ This sweep was run after milestone `.234` closed with 0/13 tasks producing artif
 
 ### Negative Constraint Decoding
 - **arXiv:2605.10065 — "NCO: Handling Negative Constraints in Constrained Decoding"**: Online pattern matching during generation enforces forbidden patterns (negative constraints). Relevance to Carnot: Negative constraints are the natural dual of Carnot's energy-based constraints — already referenced in .234 planning as NCO negative constraint decoding, now confirmed as relevant for the FST constrained generation track.
+
+## 20260519 Post-.244 Planning Sweep (Milestone 2026.05.245)
+
+This sweep was run during .245 planning. Targeted searches on EBMs for verification, conformal prediction, Ising hardware acceleration, hallucination detection via energy/field methods.
+
+- **arXiv:2509.10753 — "HalluField: Detecting LLM Hallucinations via Field-Theoretic Modeling"**: Uses parametrized variational principles and thermodynamics to detect hallucinations via energy/entropy landscape analysis, achieving competitive hallucination detection without relying on external knowledge bases. Relevance to Carnot: Direct Tier 0v candidate — field-theoretic energy score as a new orthogonal verifier signal. The free-energy landscape formulation is complementary to Carnot's Ising constraint-based energy.
+
+- **arXiv:2512.18730 — "A Theoretical Lens for RL-Tuned Language Models via Energy-Based Models"**: Analyzes RLVR-tuned language models through an EBM lens, showing suboptimality gaps reduce to Bernoulli KL divergence between the LLM policy and the EBM Gibbs distribution. Relevance to Carnot: Provides theoretical scaffolding for paper-v6 §3 — the ARM-EBM bijection (arXiv:2512.15605) plus this RLVR-EBM connection establishes Carnot's energy-based verification as grounded in the same distribution-theoretic framework as RLVR fine-tuning.
+
+- **arXiv:2604.16217 — "Beyond Surface Statistics: Robust Conformal Prediction for LLMs via Internal Representations"**: Applies conformal prediction using internal LLM representations (hidden states, attention patterns) as nonconformity scores, achieving stronger coverage guarantees than surface-level conformal methods. Relevance to Carnot: Complements the adaptive conformal calibration track (arXiv:2604.13991) — internal-representation nonconformity scores could replace or augment Carnot's calibrated logprob-based scores in the group-conditional ensemble.
+
+- **arXiv:2604.17109 — "A fully parallel densely connected probabilistic Ising machine with inertia for real-time applications"**: FPGA-accelerated fully parallel Ising machine with sub-nanosecond spin updates and inertia-based dynamics for avoiding local minima. Relevance to Carnot: Hardware precedent for the KV260 Ising machine track — demonstrates that fully-connected probabilistic Ising sampling on FPGA is feasible for n=16 and beyond. The inertia mechanism is analogous to Carnot's Gibbs-momentum sampling.
+
+- **arXiv:2605.09515 — "A Game-Theoretic Free Energy Analysis of Higher-Order Synergy in Attention Heads of LLMs"**: Game-theoretic foundation for the Free Energy Principle (FEP) applied to LLM attention mechanisms; quantifies synergy, redundancy, and unique information across attention heads. Relevance to Carnot: Phase 4 theoretical grounding — the attention-head FEP synergy metric is a potential mechanistic basis for the ARM-EBM bijection's free-energy interpretation. May rescue the Phase 4 theoretical framing even as an honest negative result is documented.
