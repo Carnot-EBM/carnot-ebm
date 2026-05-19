@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.243 Research Planning)
+
+- Milestone 2026.05.243 research planning complete. User instruction: plan the next milestone after .242 (all tasks completed).
+- Milestone .242 outcomes (key results from capstone exp2516): AUROC=0.9750 carry-forward (group-conditional ensemble v6 stable); Phase 4 exp2508 pearson_r=-0.42662 but step_granularity_achieved=False (semantic_energy_fallback used, not IsingVerifier step-level — methodology still a proxy); flagged adversarial (METHODOLOGY_FALLBACK + DURATION_TOO_SHORT); operator_decision_needed=True; Tier 0r code NOT written (exp2504 tested viability only); KV260 .hwh generated (exp2514); arXiv literal 4/4 gates met but Gate 3 has methodology caveat; top 3 gaps: Phase 4 clean re-run, Tier 0r implementation, KAN rebuild.
+- ArXiv research sweep: ran post-.242 sweep; no new papers found beyond previously indexed. 4/δ Bound (arXiv:2512.02080) highlighted for paper-v6 §3 direct citation. Added "Post-.242 Planning Sweep (Milestone 2026.05.243)" header to `research-references.md`.
+- Created `openspec/change-proposals/research-roadmap-v243.md` with full milestone design: what .242 proved (5 wins, 3 gaps with methodology flag), three biggest gaps (Phase 4 fallback-free re-run, Tier 0r code missing, KAN disk-missing), architecture snapshot (ensemble v6 AUROC=0.9750 carry-forward, Tier 0r PENDING IMPLEMENTATION, KAN MISSING FROM DISK, FR-11 all 4 tiers, KV260 hwh_generated flash pending), 5-phase structure, dependency graph, hardware requirements table (KV260 only non-terminal board), decentralization compliance (Rules 1-7 all clear), exclusion manifest cross-check (0 retired patterns matched), failed-experiment rerun compliance table (3 entries), agent routing (11 codex 91.7%, 1 claude+opus 8.3%).
+- Created `research-roadmap-next.yaml` with 12 tasks (exp2518–exp2529):
+  - Phase 0: exp2518 archive .242 + activate .243 (codex)
+  - Phase 4 (no fallback): exp2519 ARM-EBM v3 NO fallback — IsingVerifier step-level logprobs only; blocked_ising_verifier_not_available if unavailable; retire_if_same_verdict=true on exp2508; gate: |pearsonr|>0.30 AND step_granularity_achieved=True
+  - Phase 2a (Tier 0r): exp2520 write Tier0rVerifier to `python/carnot/verify/tier0r_curry_howard.py` (codex); exp2521 ensemble v7 10-verifier group-conditional (codex, gated on exp2520.tier0r_implemented==true, AUROC>=0.970 no-regression)
+  - Phase 2b (New verifiers): exp2522 HalluGuard corpus construction — scan results files for labels first, then synthetic if <50 pairs (codex); exp2523 KAN locate/retrain + multilevel training arXiv:2603.04827 (codex, retire_if_same_verdict=true if kan_model_rebuilt=False)
+  - Phase 2c (Calibration): exp2524 adaptive conformal + ACSE (codex, gated on exp2521.ensemble_v7_auroc>=0.970)
+  - Phase 3 (Self-learning): exp2525 FR-11 Tier 3 JEPA + Phase 4 signal integration (codex, continuous_self_learning_task:true)
+  - Hardware: exp2526 KV260 SD card automated prep from .hwh (codex, track:hardware)
+  - Paper: exp2527 arXiv submission package — either submit-now or revise-as-negative-result path (codex, gated on exp2519 outcome)
+  - Synthesis: exp2528 capstone v243 (claude+opus, requires_claude:true, NO HARD GATE); exp2529 retro v243 (codex)
+- Agent routing: 11 codex/gpt-5.5 (91.7%); 1 claude+opus (exp2528 capstone — open-ended arXiv recommendation across 11 experiment artifacts + cross-phase reasoning under ambiguity; meets all 3 positive-criterion conditions).
+- Validation: `validate_prior_failures.py` — [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 12 tasks audited. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-19 (Milestone 2026.05.242 Operational Retrospective)
 
 - Operational retrospective for milestone 2026.05.242 written to `results/operational_retro_2026_05_242.json`. No experiment commits found in the timing window — milestone is in activation/planning phase only. Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with planning-only turn. Top-3 leverage actions: (1) launch exp2507 activation immediately; (2) pre-warm dual GPUs for parallel exp2509+exp2510 Phase 2a ensemble expansion; (3) flag exp2508 ARM-EBM (retire_if_same_verdict:true, 5 prior failures) for immediate operator review upon completion. Roadmap gate audit previously confirmed passing (0 schema errors, 11 tasks). Docs updated: changelog + roadmap.md Completed Milestones table.

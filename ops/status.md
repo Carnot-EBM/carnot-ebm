@@ -1,6 +1,36 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.242 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.243 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.243 Research Planning Complete
+
+**Milestone 2026.05.242 COMPLETED: key results from capstone exp2516:**
+- **AUROC 0.9750 confirmed carry-forward** — group-conditional ensemble v6 stable.
+- **Phase 4 step-level ARM-EBM (exp2508)**: pearson_r=-0.42662, step_granularity_achieved=False (semantic_energy_fallback used — methodology still a proxy, not raw IsingVerifier). Flagged adversarial (METHODOLOGY_FALLBACK + DURATION_TOO_SHORT). operator_decision_needed=True on arXiv Gate 3.
+- **Tier 0r Curry-Howard code NOT written** — exp2504 (.241) tested viability (AUROC=0.9123) but never persisted implementation. Ensemble v7 chain blocked.
+- **KV260 .hwh generated** (exp2514) — kv260_hwh_generated=True, SD card flash pending operator action.
+- **arXiv: literal 4/4 gates met** — but Gate 3 has methodology caveat; operator decision needed.
+- **Top 3 gaps for .243**: (1) Phase 4 clean re-run without fallback; (2) Tier 0r code implementation; (3) KAN rebuild.
+
+**Milestone 2026.05.243 PLANNED as Phase 4 ARM-EBM v3 (No Fallback) + Tier 0r Implementation + Ensemble v7 + KAN Restore + arXiv Submission Prep.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v243.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2518`–`exp2529`)
+- ID allocation: milestone `.242` used through `exp2517`, so `.243` starts at `exp2518`.
+- Research references updated with Post-.242 Planning Sweep: no new papers found beyond previously indexed; 4/δ Bound (arXiv:2512.02080) highlighted for paper-v6 §3.
+- **Milestone title**: "Phase 4 ARM-EBM v3 (No Fallback) + Tier 0r Implementation + Ensemble v7 + KAN Restore + arXiv Submission Prep"
+- **Three critical gaps targeted**:
+  1. Phase 4 empirical (Gate 3, arXiv decision): exp2519 — ARM-EBM v3 with IsingVerifier step-level logprobs, NO semantic_energy_fallback. If IsingVerifier not importable → emit `blocked_ising_verifier_not_available`, not fallback. retire_if_same_verdict=true on exp2508 means if fallback repeats, Phase 4 is permanently retired.
+  2. Ensemble v7 chain recovery: exp2520 writes `python/carnot/verify/tier0r_curry_howard.py` implementing Tier0rVerifier (AUROC=0.9123 from exp2504); exp2521 10-verifier group-conditional calibration (gated on exp2520.tier0r_implemented==true).
+  3. KAN model restore: exp2523 locates or retrains KAN from scratch with multilevel training (arXiv:2603.04827); persists checkpoint to prevent future blocked_kan_not_found.
+- **Other experiments**: exp2522 HalluGuard corpus construction (scan results files first, then synthetic if < 50 pairs); exp2524 adaptive conformal + ACSE (gated on exp2521.ensemble_v7_auroc>=0.970); exp2525 FR-11 Tier 3 JEPA + Phase 4 signal integration (continuous_self_learning_task:true); exp2526 KV260 SD card automated prep from .hwh; exp2527 arXiv submission package; exp2528 capstone claude+opus (requires_claude, NO HARD GATE); exp2529 retro codex.
+- **Critical path**: exp2519 (Phase 4 clean result) → exp2527 (arXiv prep, either submit-now or revise-as-negative-result) → exp2528 (capstone operator recommendation).
+- **Agent routing**: 11 codex/gpt-5.5 (91.7%); 1 claude+opus (exp2528 capstone).
+- Validation: `validate_prior_failures.py` — [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 12 tasks audited. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.243. Critical path: exp2519 (Phase 4 ARM-EBM v3 — NO fallback allowed; retire_if_same_verdict=true on exp2508 means if methodology fallback repeats, Phase 4 is permanently retired and paper §4 documents this as a honest negative result → arXiv proceeds). Key experiments to watch: exp2519 (will step-level IsingVerifier logprobs produce |pearsonr|>0.30 without fallback?), exp2520 (will Tier0rVerifier implementation pass test suite?), exp2521 (will 10-verifier ensemble maintain AUROC>=0.970?), exp2526 (can automated SD card prep script be written from .hwh without physical hardware?).
+
+---
 
 ## Session 2026-05-19 - Milestone 2026.05.242 Research Planning Complete
 
