@@ -1,0 +1,161 @@
+{
+  "experiment_id": "2465",
+  "experiment": "exp2465-kv260-rtl-synthesis-fix-v6",
+  "milestone": "2026.05.238",
+  "run_date": "2026-05-19T05:25:56Z",
+  "schema": "results/v1",
+
+  "honest_verdict": "complete: kv260 yosys synthesis succeeds with 0 errors, 18 warnings (all benign memory->register replacements). The fix already shipped in commit 3723c8912 added carnot_ising_top.v wrapper + xilinx_unisim_stubs.v LUT6 stub; this run verifies the fix.",
+
+  "synthesis_errors": 0,
+  "kv260_synthesis_succeeded": true,
+  "synthesis_warnings": 18,
+
+  "file_with_error": "(historical, now resolved) Missing top-level wrapper module and missing UNISIM LUT6 primitive stubs. The kanele_lut.v / kan_lut_block.v / kanele_top.v chain instantiated the Xilinx UNISIM cell `LUT6` by name, which is built-in inside Vivado but undefined under open-source yosys. Without a top-level wrapper, yosys also lacked a single hierarchy root to prune the conflicting duplicate definitions of `ising_sampler_128_sync` (defined in ising_sampler_v2.v:71, ising_sampler_v2_synth.v:71, and minimal_axi_responder.v:38).",
+
+  "error_description": "exp2427 (.235) saw synthesis_errors=1 because yosys could not resolve `LUT6` (a Xilinx UNISIM primitive not present in the open-source library) and had no top module to drive the hierarchy pass. The fix landed in commit 3723c8912fdb10d90ce2bf4700f180391e8bb94a (2026-05-18 22:02 EDT) as part of an interrupted-run checkpoint: hardware/kv260/carnot_ising_top.v (a wrapper that wires axi_resp + ising_sampler_n16 + symbolic_kan + discrete_sb_256 + kanele_top behind a single 7-port boundary) and hardware/kv260/xilinx_unisim_stubs.v (a behavioral LUT6 stub: a 64-entry 1-bit ROM addressed by the six inputs with INIT-supplied contents; bit-identical to UNISIM LUT6 for legal inputs). With the wrapper as top, yosys's hierarchy pass prunes the redundant duplicate module bodies and synthesis completes cleanly. This run is a verification pass, not a fresh diagnose/fix cycle.",
+
+  "rtl_file_count": 20,
+  "rtl_directory": "/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260",
+  "rtl_files_synthesized": [
+    "carnot_ising_top.v",
+    "discrete_sb_256.v",
+    "ising_inertia_n8_sparse_v2.v",
+    "ising_pimi_n8_sparse_v4.v",
+    "ising_pimi_n8_synchronous_v3.v",
+    "ising_sampler_128_sparse.v",
+    "ising_sampler_n16.v",
+    "ising_sampler_v1.v",
+    "ising_sampler_v2.v",
+    "ising_sampler_v2_synth.v",
+    "ising_sampler_v3.v",
+    "ising_sampler_v3_sequential.v",
+    "ising_sampler_v4.v",
+    "kan_lut_block.v",
+    "kanele_lut.v",
+    "kanele_top.v",
+    "minimal_axi_responder.v",
+    "potts_sampler_v1.v",
+    "symbolic_kan.v",
+    "xilinx_unisim_stubs.v"
+  ],
+
+  "top_module": "carnot_ising_top",
+  "yosys_command": "/opt/oss-cad-suite/bin/yosys -p 'read_verilog hardware/kv260/*.v; synth -top carnot_ising_top -noabc;'",
+  "yosys_version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+  "yosys_exit_code": 0,
+
+  "synth_statistics": {
+    "module": "carnot_ising_top",
+    "wires": 139,
+    "wire_bits": 868,
+    "public_wires": 20,
+    "public_wire_bits": 107,
+    "ports": 7,
+    "port_bits": 41,
+    "cells_total": 523,
+    "cells_by_type": {
+      "_AND_": 214,
+      "_DFF_P_": 1,
+      "_NOT_": 40,
+      "_OR_": 78,
+      "_SDFF_PN0_": 10,
+      "_XOR_": 180
+    },
+    "check_pass_problems": 0
+  },
+
+  "warning_categories": {
+    "memory_replaced_with_registers": 18,
+    "syntax_errors": 0,
+    "missing_modules": 0,
+    "non_synthesizable_constructs": 0
+  },
+  "warning_note": "All 18 yosys warnings are 'Replacing memory \\<name> with list of registers'. This is the expected yosys behaviour when an array is written in a parallel/non-RAM access pattern; the memory is correctly mapped to discrete registers by the synth pass. No warning indicates a real RTL bug.",
+
+  "n_fix_iterations": 0,
+  "fix_iterations_note": "0 because the underlying fix already landed in commit 3723c8912 (2026-05-18). This experiment is the verification pass: yosys was run once on the current tree and reported 0 errors. The prior exp2427 (.235) failure cause is now diagnosed and documented.",
+
+  "diagnostic_path": [
+    "Step 0: PRECONDITIONS verified — yosys 0.64+149 reachable; 20 .v files present in hardware/kv260/.",
+    "Step 1: Ran yosys read_verilog hardware/kv260/*.v + synth -top carnot_ising_top -noabc. Wall time 656s, EXIT=0.",
+    "Step 2: grep -ciE 'error' /tmp/yosys_output.txt -> 0 errors. grep -ciE 'warning' -> 19 lines (18 benign memory->register + 1 'Warnings:' summary).",
+    "Step 3: No fix required. Compared 20 current .v files to the 18 listed in exp2427 — the additions are carnot_ising_top.v (wrapper) and xilinx_unisim_stubs.v (LUT6 stub). git log identified commit 3723c8912 as the source.",
+    "Step 4: Confirmed CHECK pass 'Found and reported 0 problems' and synth_statistics show a clean 523-cell mapping.",
+    "Step 5: Wrote this artifact and a verification test."
+  ],
+
+  "preconditions_checked": [
+    {"resource": "yosys_binary", "available": true, "evidence": "Yosys 0.64+149 (git sha1 2dc69a757) at /opt/oss-cad-suite/bin/yosys"},
+    {"resource": "rtl_directory", "available": true, "evidence": "hardware/kv260/ contains 20 .v files"},
+    {"resource": "top_module_wrapper", "available": true, "evidence": "carnot_ising_top.v present"},
+    {"resource": "unisim_stubs", "available": true, "evidence": "xilinx_unisim_stubs.v provides LUT6 behavioral stub"}
+  ],
+
+  "duration_s": 845.0,
+  "wall_time_breakdown": {
+    "yosys_run_s": 656.43,
+    "diagnostic_steps_s": 188.6
+  },
+
+  "random_seed": 0,
+  "random_seed_note": "Yosys synthesis is deterministic on the same input set; no random sampling occurs. Recorded as 0 for schema compliance.",
+  "reproducibility_checksum": "57aff634967b4d05",
+  "reproducibility_note": "sha256sum of (sha256sum of each of the 20 .v files in hardware/kv260/) truncated to 64 bits. Pins the exact RTL set used. Yosys version + command line + this hash together uniquely determine the synthesis output.",
+
+  "methodology_note": "This is a verification artifact, not a fresh diagnose+fix cycle. The underlying RTL fix (top-level wrapper + UNISIM stub) was committed to the tree on 2026-05-18 22:02 EDT in commit 3723c8912 (an interrupted-run checkpoint) ahead of this task being scheduled. This experiment runs yosys on the post-fix tree and confirms 0 errors. The deliverable is honest about that: n_fix_iterations=0 because no edits were needed at task launch time.",
+
+  "links_to_prior_work": {
+    "exp2413_milestone": "2026.05.234",
+    "exp2427_milestone": "2026.05.235",
+    "exp2427_artifact": "results/experiment_2427_kv260_yosys_v4.json",
+    "exp2452_milestone": "2026.05.237",
+    "exp2452_artifact_status": "missing — task never ran",
+    "fix_commit": "3723c8912fdb10d90ce2bf4700f180391e8bb94a",
+    "fix_commit_message": "[conductor] Checkpoint: preserve uncommitted work from interrupted run",
+    "fix_commit_date": "2026-05-18T22:02:26-04:00"
+  },
+
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "Terminal-prefix required. complete: is appropriate because synthesis ran to completion with 0 errors.",
+      "satisfied_by": "yosys EXIT=0, grep error count = 0, synth pass produced complete cell mapping"
+    },
+    "synthesis_errors": {
+      "principle": "Count of yosys synthesis errors AFTER fix attempt. 0 = success.",
+      "satisfied_by": "grep -ciE 'error' /tmp/yosys_output.txt returned 0"
+    },
+    "kv260_synthesis_succeeded": {
+      "principle": "True only if synthesis_errors=0 in re-run. The terminal-state metric for the KV260 hardware track.",
+      "satisfied_by": "synthesis_errors == 0 AND CHECK pass reported 0 problems AND statistics show 523 cells mapped"
+    },
+    "duration_s": {
+      "principle": "Guards against fabrication. Synthesis runs ~241s; total with debug should be > 300s.",
+      "satisfied_by": "Wall time 845s (yosys 656s + diagnostic steps 189s) — well above the 300s fabrication floor"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed hash of the run inputs catches silent corpus or model-version drift between this artifact and any future replication attempt.",
+      "satisfied_by": "57aff634967b4d05 hashes the exact 20-file .v set"
+    },
+    "random_seed": {
+      "principle": "Determinism is the precondition for reproducibility; missing seed means no third party can re-run the experiment and confirm or refute the claim.",
+      "satisfied_by": "Synthesis is deterministic by construction; recorded as 0"
+    },
+    "preconditions_checked": {
+      "principle": "Records WHICH resources the agent verified before launching; pre-empts the fabrication mode where the agent silently lacked the resource and synthesized a passing artifact instead of emitting blocked_*.",
+      "satisfied_by": "All four preconditions checked with concrete evidence strings"
+    },
+    "n_fix_iterations": {
+      "principle": "Documents debugging depth — how many fix-and-rerun cycles were needed.",
+      "satisfied_by": "0 — fix was pre-committed in 3723c8912; this is a verification pass"
+    }
+  },
+
+  "acceptance_gate": {
+    "condition": "synthesis_errors == 0",
+    "principle": "Zero errors is the terminal state for KV260 synthesis.",
+    "passed": true
+  },
+
+  "next_step_open": "The kv260 'board-level latency transcript landed in a non-fabricated artifact + kv260_synthesis_succeeded: true' terminal state (per CLAUDE.md Hardware-Task Continuity Discipline) is half-satisfied: synthesis succeeds open-source. The remaining half is a Vivado bitstream + PYNQ board execution producing a board-latency transcript, which requires the Vivado toolchain (precondition not checked in this task)."
+}
