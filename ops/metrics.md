@@ -7,6 +7,7 @@
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 (resumed) | 2026-05-19T17:43:05Z | 2026-05-19T17:43:22Z | Resumed from context compaction: ran validate_prior_failures.py (OK — no schema errors, no violations); ran audit_roadmap_gates.py (roadmap_gate_audit_passed=True, 0 failures, 12 tasks audited); updated ops/status.md, ops/changelog.md, ops/metrics.md. | ~30k |
+| 2 | 2026-05-19T19:16:48Z | 2026-05-19T19:20:26Z | Documentation update: read ops/status.md, ops/changelog.md, research-complete.yaml, docs/index.html, README.md, docs/technical-report.md, docs/technical-report.html; updated stale "latest archived milestone" paragraph in technical-report.md and technical-report.html from .240/.241 to .242/.243 (both occurrences in HTML). index.html and README.md already current for .242 results. | ~25k |
 
 Note: Full planning session (Turn 0) ran before context compaction: read 11 required files; read exp2516 (capstone v242) + exp2508 (phase4 step-level ARM-EBM); ran arxiv research sweep (no new papers — all already indexed; 4/δ Bound arXiv:2512.02080 highlighted for paper-v6 §3); updated research-references.md; wrote openspec/change-proposals/research-roadmap-v243.md; wrote research-roadmap-next.yaml (12 tasks exp2518–exp2529). Estimated tokens for full session: ~165k.
 

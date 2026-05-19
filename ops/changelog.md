@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.243 Operational Retrospective)
+
+- Operational retrospective for milestone 2026.05.243 written to `results/operational_retro_2026_05_243.json`. No experiment commits found in the timing window — milestone is planning-only (nineteenth consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with a planning-only turn. Top-3 leverage actions: (1) activate exp2518 in the same conductor session as planning; (2) deploy persistent conductor daemon to eliminate the planning-execution gap; (3) gate the retro task on minimum experiment count >= 1 to prevent empty-window retros. Roadmap pre-staged with 12 tasks (exp2518–exp2529), all validated.
+
 ## 2026-05-19 (Milestone 2026.05.243 Research Planning)
 
 - Milestone 2026.05.243 research planning complete. User instruction: plan the next milestone after .242 (all tasks completed).

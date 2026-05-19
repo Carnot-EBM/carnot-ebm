@@ -114,10 +114,10 @@ artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.05.240; checked-in result artifacts extend through Exp 2494, the .240
-retro (exp2494). Milestone 2026.05.241 ("Phase 4 Real-GGUF Empirical Validation
-+ arXiv Gate + Spilled-Energy Tier 0q + PolarFire Terminal + AUROC Headline
-Verification", exp2495–exp2506) is the next planned milestone.
+2026.05.242; checked-in result artifacts extend through Exp 2517, the .242
+retro (exp2517). Milestone 2026.05.243 ("Phase 4 ARM-EBM v3 (No Fallback) +
+Tier 0r Implementation + Ensemble v7 + KAN Restore + arXiv Submission Prep",
+exp2518–exp2529) is the next planned milestone.
 Milestone .105 diagnosed the SOTA thinking-mode certificate path as a terminal
 negative: `<think>` output consumed
 the generation budget before structural tags, producing
