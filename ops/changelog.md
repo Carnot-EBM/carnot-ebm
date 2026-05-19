@@ -6463,3 +6463,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 0: Archive .241 and activate .242 (✅ Complete) — honest_verdict=complete: Milestone 2026.05.241 already archived and conductor swapped to 2026.05.242; results/experiment_2507_archive.json
 - 2026-05-19: Phase 4: Step-Level ARM-EBM Bijection v2 (FREIA FEP Grounding) -- CPU-Only from Telemetry Manifest (✅ Complete) — honest_verdict=complete: success; results/experiment_2508_phase4_step_level_arm_ebm.json
 - 2026-05-19: Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Prototype (arXiv:2601.18753 ICLR 2026) (⚠️ Blocked) — honest_verdict=blocked_no_eval_corpus; results/experiment_2509_halluguard_tier0s.json
+- 2026-05-19: Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Prototype (arXiv:2601.18753 ICLR 2026) (⚠️ Blocked) — honest_verdict=blocked_no_eval_corpus; results/experiment_2509_halluguard_tier0s.json
