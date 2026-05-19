@@ -5037,3 +5037,4 @@ Ripgrep i |
 | 2026-05-19 09:45 UTC | Phase 4: Paper-v6 Integrity Fix -- Fix exp1100 Maj | OK | cache hit: 81 passed, 1 warning in 2.30s |
 | 2026-05-19 09:54 UTC | Phase 4: Paper-v6 §6 Limitations — Qwen Censorship | OK | 81 passed, 1 warning in 2.26s |
 | 2026-05-19 09:59 UTC | Phase 4: Phase 4 Empirical Validation Summary Repo | OK | 81 passed, 1 warning in 2.45s |
+| 2026-05-19 10:10 UTC | Phase 5: Paper-v6 Capstone v239 -- AUROC + Phase 4 | OK | 81 passed, 1 warning in 2.26s |
