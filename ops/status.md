@@ -1,6 +1,40 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.237 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.239 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.239 Research Planning Complete
+
+**Milestone 2026.05.238 COMPLETED: 11/12 tasks completed (1 gate-blocked capstone).**
+- **KV260 synthesis_errors=0 ACHIEVED** (exp2465) — first clean synthesis; bitstream pack + board flash now unblocked.
+- **FR-11 Tier 2 constraint memory COMPLETE** (exp2463) — online constraint accumulation + retrieval working.
+- **Fisher conformal ceiling confirmed at AUROC=0.9167** — Stouffer (0.818) and Logistic (0.825) both WORSE; ceiling is in verifier information content, not aggregation method.
+- **KAN tier: AUROC=0.994 but certified_coverage=0.0** (exp2467) — mean_local_lipschitz=39.5; Lipschitz regularization required before certified deployment.
+- **Paper integrity audit FAILED** (exp2468) — 9 failing checks, 5 critical (fabricated numbers, missing citations, unsupported claims).
+- **PolarFire partial progress** (exp2466) — --no-deps install succeeded but `carnot/__init__.py` has unconditional `import jax` causing RuntimeError on riscv64; fix is try/except ImportError with numpy fallback.
+- **Capstone exp2469 GATE_BLOCKED** — AUROC improvement gate not met; capstone never ran.
+
+**Milestone 2026.05.239 PLANNED as AUROC Phase 4 Empirical Validation + KAN Lipschitz + KV260 Board Flash + arXiv Integrity Fix + FR-11 Tier 3 JEPA.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v239.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2471`–`exp2482`)
+- ID allocation: milestone `.238` used through `exp2470`, so `.239` starts at `exp2471`.
+- Research references updated with Post-.238 Planning Sweep: LLM-as-Judge/Platt calibration (arXiv:2604.06216), LLM-JEPA predictive (arXiv:2509.14252), LipNeXt Lipschitz regularization (arXiv:2601.18513).
+- **Milestone title**: "AUROC Phase 4 Empirical Validation + KAN Lipschitz + KV260 Board Flash + arXiv Integrity Fix + FR-11 Tier 3 JEPA"
+- **Three critical gaps targeted**:
+  1. AUROC ceiling 0.9167 → 0.9236+: exp2472 (LLM-as-Judge Tier 0p, calibrated logprob judge), exp2473 (Calibrated Conformal Ensemble v4 with Platt/isotonic scaling), exp2474 (Phase 4 ODAR free-energy empirical validation)
+  2. KAN certified_coverage=0.0: exp2476 (LipNeXt λ·local_lip² penalty, target local_lip < 5.0)
+  3. arXiv hold (paper audit FAILED): exp2479 (fix 9 failing checks, 5 critical), exp2480 (Phase 4 empirical summary for paper §7)
+- **Hardware**: exp2477 (KV260 bitstream pack + board flash, requires_claude; synthesis_errors=0 unblocks this), exp2478 (PolarFire Carnot deploy v2 — fix try/except jax import)
+- **FR-11 Tier 3**: exp2475 (LLM-JEPA predictive verification, continuous_self_learning_task=true)
+- **Agent routing**: 10 tasks codex/gpt-5.5; 2 tasks claude+opus (exp2477: KV260 hardware+board flash, requires_claude; exp2481: capstone synthesis, requires_claude)
+- **2/12 tasks claude (16.7%)** — both meet all three positive criteria in CLAUDE.md Codex-Default rule
+- **Capstone exp2481 has NO HARD AUROC GATE** — capstone always runs regardless of AUROC outcome; learned from exp2469 (capstone gate-blocked twice)
+- Validation: `validate_prior_failures.py` (OK — no schema errors, no violations), `audit_roadmap_gates.py` (roadmap_gate_audit_passed=true, 0 failures across 12 tasks), `git diff --check` (clean).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.239. Critical path: exp2472 (LLM-as-Judge Tier 0p) + exp2474 (Phase 4 ODAR validation) → exp2480 (Phase 4 summary) → exp2481 (Capstone). Key experiments to watch: exp2472 (will calibrated logprob judge as 10th verifier finally breach AUROC 0.9236?), exp2477 (will KV260 board flash succeed now that synthesis_errors=0?), exp2479 (can the paper integrity audit be fixed in one task?).
+
+---
 
 ## Session 2026-05-19 - Milestone 2026.05.237 Research Planning Complete
 

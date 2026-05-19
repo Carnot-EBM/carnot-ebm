@@ -1,0 +1,842 @@
+milestone: 2026.05.239
+milestone_title: 'AUROC Phase 4 Empirical Validation + KAN Lipschitz + KV260 Board Flash + arXiv Integrity Fix + FR-11 Tier 3 JEPA'
+milestone_doc: openspec/change-proposals/research-roadmap-v239.md
+tasks:
+
+- id: exp2471-archive-and-activate
+  title: 'Phase 0: Archive .238 and activate .239'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2471_archive.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  prior_failures:
+  - experiment_id: exp2459-archive-and-activate
+    verdict: 'complete: Conductor already swapped to 2026.05.238 and 2026.05.237 is present in research-complete.yaml.'
+    addressed_by: "exp2459 archived .237 and activated .238. This task archives .238 and
+      activates .239 — standard recurring archive pattern with different milestone metadata.
+      Key .238 results to document: kv260_synthesis_succeeded=True (exp2465), FR-11 Tier 2
+      constraint_memory_implemented=True (exp2463), best_auroc=0.9167 (Fisher ceiling confirmed,
+      Stouffer=0.818/Logistic=0.825 both worse), polarfire_workload_validated=True (inline Python),
+      KAN certified_coverage=0.0 (Lipschitz=39.5), audit_passed=False (1 major discrepancy),
+      capstone exp2469 blocked_gate_check_failed."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Milestone 2026.05.238 completed with 10/12 tasks. Key results:\n- KV260: kv260_synthesis_succeeded=True
+    (exp2465, synthesis_errors=0) — MAJOR WIN\n- FR-11 Tier 2: constraint_memory_implemented=True,
+    cross_session_retention_rate=1.0 (exp2463)\n- Best AUROC: 0.9167 (Fisher ceiling confirmed;
+    Stouffer=0.818, Logistic=0.825 both WORSE than Fisher)\n- PolarFire: polarfire_workload_validated=True
+    via inline Python (carnot import still fails)\n- KAN: certified_coverage=0.0, mean_local_lipschitz=39.5
+    (exp2467)\n- Paper audit: audit_passed=False, 1 major discrepancy exp1100 timing (exp2468)\n-
+    Capstone exp2469: blocked_gate_check_failed (exp2461.ensemble_auroc_improved_v3=False)\n-
+    Tier 0n IR Conformal: AUROC=0.399 (excluded); Tier 0o Suppressed Retrieval: AUROC=0.789 (excluded)\n\nEXISTING
+    CODE TO READ FIRST:\n  {project_root}/research-complete.yaml (last 20 lines)\n  {project_root}/research-roadmap.yaml
+    (first 5 lines — check milestone field)\n\nTASK: Archive milestone 2026.05.238 to research-complete.yaml
+    and activate .239.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. Read research-roadmap.yaml
+    first 3 lines to find the milestone field.\n     b. If milestone == \"2026.05.238\": proceed
+    to step 1.\n        If milestone == \"2026.05.239\": conductor already swapped. Check research-complete.yaml\n
+    \          for \"id: 2026.05.238\". If present: write archive_ready=true and exit.\n        If
+    other: write honest_verdict blocked_roadmap_unexpected and exit.\n  1. Append .238 entry to
+    research-complete.yaml with completed: \"2026-05-19\".\n     Key results:\n       exp2471:
+    [this task — pending]\n       exp2460: complete — ir_conformal_auroc=0.399 (EXCLUDED — below
+    chance)\n       exp2461: complete — best_auroc_v3=0.9167 (Fisher ceiling confirmed, ensemble_auroc_improved_v3=False)\n
+    \      exp2462: complete — tier0o_auroc=0.789 (excluded from ensemble)\n       exp2463: complete
+    — constraint_memory_implemented=True, cross_session_retention_rate=1.0 (FR-11 Tier 2 DONE)\n
+    \      exp2464: complete — crane_improvement=False, best_balance_ratio=1.0\n       exp2465:
+    complete — kv260_synthesis_succeeded=True, synthesis_errors=0 (MAJOR WIN)\n       exp2466:
+    complete — polarfire_workload_validated=True (inline Python), carnot_runs_on_polarfire=False\n
+    \      exp2467: complete — certified_coverage=0.0, mean_local_lipschitz=39.5\n       exp2468:
+    complete — audit_passed=False, n_claims_flagged_major=1, n_claims_flagged_minor=2\n       exp2469:
+    blocked_gate_check_failed — capstone not run (exp2461 gate not met)\n       exp2470: complete
+    — retro done, 10/12 completed\n  2. cp {project_root}/research-roadmap-next.yaml {project_root}/research-roadmap.yaml\n
+    \ 3. Add \"## 2026-05-19 (Milestone 2026.05.239 activated)\" stub to ops/changelog.md.\n  4.
+    Write deliverable. Validate JSON before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n
+    \     principle: \"Terminal-prefix required. Must start with complete: for conductor.\"\n  -
+    archive_ready:\n      principle: \"True only after .238 entry appears in research-complete.yaml.\"\n
+    \ - milestone_archived:\n      principle: \"Records which milestone was archived (2026.05.238)
+    for audit trail.\"\n\nACCEPTANCE GATES:\n  - condition: \"archive_ready == true\"\n    principle:
+    \"Ensures research-complete.yaml records .238 outcomes before .239 begins.\"\n\nDo NOT push.
+    Do NOT modify scripts/research_conductor.py."
+
+- id: exp2472-llm-as-judge-tier0p
+  title: 'Phase 1: LLM-as-Judge Tier 0p -- SOTA GGUF Direct Hallucination Scoring (MANDATORY SOTA GGUF per CLAUDE.md)'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2472_tier0p_llm_judge.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  prior_failures:
+  - experiment_id: exp2461-conformal-ensemble-v3-stouffer
+    verdict: 'complete: with best AUROC 0.916700'
+    addressed_by: "exp2461 tried Stouffer Z-score (0.818) and Logistic regression (0.825)
+      as aggregation methods but BOTH were worse than Fisher (0.9167). The ceiling is in
+      the current 9-verifier set's information content, not the aggregation method. exp2472
+      introduces a QUALITATIVELY DIFFERENT verifier: a SOTA GGUF LLM directly asked to
+      judge hallucination (Yes/No + confidence). LLM-as-judge has higher individual AUROC
+      potential because the model has broad world knowledge for factual verification, unlike
+      logprob-derived signals. Different mechanism: live LLM inference vs logprob statistics."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: All three ensemble aggregation methods have been tried on the current\n9-verifier
+    set: Fisher (AUROC=0.9167), Stouffer (0.818), Logistic (0.825). All hit a ceiling.\nThe
+    gap to HIVE peer (0.9236) = 0.0069. A new HIGH-AUROC verifier with independent signal\nis
+    needed.\n\nLLM-as-judge approach: use a SOTA GGUF model as a direct hallucination judge.\nFor
+    each telemetry entry (36 entries), ask the model:\n  \"Does the following response contain
+    factual errors or hallucinations?\n   Response: [response_text]\n   Answer: YES or NO. Confidence:
+    0.0-1.0\"\nMap YES→score=confidence, NO→score=(1-confidence).\n\nArXiv:2604.06216 (March
+    2026) shows vanilla LLM-as-judge achieves 54% accuracy without\ndomain expertise. With few-shot
+    examples of known hallucinations (from telemetry manifest),\nthe model should substantially
+    exceed 54% on this binary task.\n\nMANDATORY per CLAUDE.md SOTA Local Models section: this
+    task MUST include at least one of:\n  - unsloth/Qwen3.6-35B-A3B-GGUF\n  - unsloth/gemma-4-31B-it-GGUF\n
+    \ - unsloth/gemma-4-26B-A4B-it-GGUF\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/semantic_energy.py
+    (telemetry loading pattern)\n  {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl
+    (first 3 lines — schema)\n  {project_root}/scripts/experiment_template.py (cached_sota_pair()
+    pattern)\n\nTASK: Implement Tier 0p LLM-as-Judge verifier using cached GGUF model.\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS (check ALL before any inference):\n     a. Check for cached SOTA
+    GGUF models:\n        for model_dir in ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF\n
+    \                        ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF\n
+    \                        ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF; do\n
+    \          ls $model_dir/*.gguf 2>/dev/null | head -1 && break\n        done\n        Record:
+    model_path (first found GGUF file), model_family\n        If NO gguf file found in any path:
+    write honest_verdict blocked_model_not_cached and exit.\n     b. llama-cpp-python importable:\n
+    \       {project_root}/.venv/bin/python -c \"from llama_cpp import Llama; print('llama_cpp
+    ok')\"\n        If fails: write honest_verdict blocked_llama_cpp_not_installed and exit.\n
+    \    c. sklearn importable:\n        {project_root}/.venv/bin/python -c \"import sklearn;
+    print(sklearn.__version__)\"\n     d. Telemetry manifest present:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n
+    \       If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n     Record:
+    preconditions_checked list with all results.\n\n  1. Load 3 few-shot examples from telemetry
+    manifest (1 known hallucination, 1 correct, 1 borderline):\n     Use entries where known_verifier_label
+    is available (correctness_label field).\n     Format as few-shot prompt prefix.\n\n  2. For
+    each of 36 telemetry entries:\n     Construct prompt:\n       \"[FEW-SHOT EXAMPLES]\n        New
+    entry:\n        Response: {entry.response_text[:500]}  # truncate to 500 chars\n        Does
+    this response contain factual errors or hallucinations?\n        Answer with YES or NO, then
+    a confidence score 0.0-1.0.\"\n     Call Llama(model_path, n_ctx=1024, verbose=False) with
+    max_tokens=20.\n     Parse response:\n       if 'YES' in output.upper(): score = extract_float(output,
+    default=0.8)\n       if 'NO' in output.upper(): score = 1.0 - extract_float(output, default=0.2)\n
+    \      else: score = 0.5  # uncertain\n     timer: record inference time per entry.\n\n  3.
+    Compute evaluation metrics:\n     tier0p_auroc: sklearn.metrics.roc_auc_score(labels, scores)\n
+    \    tier0p_vs_semantic_energy_delta: tier0p_auroc - 0.810\n     mean_inference_time_s: mean
+    per-entry inference time\n     orthogonality_vs_fregelogic: Pearson r(tier0p_scores, fregelogic_scores)\n
+    \      (load fregelogic scores from existing verifier score files if available)\n\n  4. Write
+    verifier score file for ensemble:\n     {project_root}/results/experiment_2472_tier0p_scores.json:\n
+    \    {\"verifier\": \"llm_judge\", \"model_used\": model_path, \"scores\": [{\"idx\": i, \"score\":
+    s, \"label\": l} for all 36]}\n\n  5. Write deliverable. Validate JSON before writing.\n\nREQUIRED
+    ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete:
+    with tier0p_auroc. Blocked if GGUF not cached.\"\n  - tier0p_auroc:\n      principle: \"Primary
+    AUROC on 36 examples. Honest result regardless of sign vs baseline.\"\n  - tier0p_vs_semantic_energy_delta:\n
+    \     principle: \"tier0p_auroc - 0.810. Positive = exceeds SemanticEnergy.\"\n  - model_used:\n
+    \     principle: \"Which GGUF file was loaded. Documents sovereignty claim (local inference).\"\n
+    \ - model_family:\n      principle: \"Which SOTA family (Qwen3.6, Gemma-4-26B, Gemma-4-31B).\"\n
+    \ - n_eval_examples:\n      principle: \"Must be 36.\"\n  - mean_inference_time_s:\n      principle:
+    \"Mean per-entry inference time. > 1s validates real inference ran.\"\n  - orthogonality_vs_fregelogic:\n
+    \     principle: \"Pearson r with FregeLogic. Low abs(r) = independent signal for ensemble.\"\n
+    \ - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n      principle: \"Total
+    wall time. Must be > n_eval_examples * mean_inference_time_s.\"\n  - preconditions_checked:\n
+    \     principle: \"Records GGUF model path, llama_cpp status, telemetry status. Anti-fabrication
+    anchor.\"\n\nACCEPTANCE GATES:\n  - condition: \"tier0p_auroc != null AND preconditions_checked
+    != null\"\n    principle: \"Must produce valid AUROC with documented preconditions — even below
+    baseline useful for ensemble diversity.\"\n  - condition: \"mean_inference_time_s > 0.5\"\n
+    \   principle: \"LLM inference takes > 0.5s per call; faster indicates fabrication.\"\n\nDo
+    NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2473-calibrated-conformal-ensemble-v4
+  title: 'Phase 1: Calibrated Conformal Ensemble v4 -- Platt Scaling + Isotonic Regression on All 9 Verifiers'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2473_calibrated_ensemble_v4.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  prior_failures:
+  - experiment_id: exp2461-conformal-ensemble-v3-stouffer
+    verdict: 'complete: with best AUROC 0.916700'
+    addressed_by: "exp2461 applied Stouffer Z-score (quality-weighted aggregation) and Logistic
+      regression — both WORSE than Fisher (0.818 and 0.825 vs 0.9167). The issue is not the
+      aggregation method but potentially the calibration of individual verifier scores. exp2473
+      tests a different hypothesis: apply per-verifier Platt scaling (sigmoid calibration) and
+      isotonic regression BEFORE Fisher combination. If verifier scores are miscalibrated
+      (their probability estimates are poorly calibrated to true hallucination rates), then
+      calibration alone could unlock the 0.0069 gap. Different from exp2461: calibration layer
+      not aggregation method change."
+    retire_if_same_verdict: true
+  - experiment_id: exp2448-conformal-ensemble-v2
+    verdict: 'complete: with conformal_ensemble_auroc=0.916667'
+    addressed_by: "exp2448 added PCIB as 8th verifier to Fisher's method but got AUROC=0.9167
+      (identical to v1). exp2473 applies Platt/isotonic calibration to all 9 verifiers and
+      checks whether calibration unlocks additional discriminative power. Different hypothesis:
+      calibration quality vs verifier count."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Fisher's conformal ensemble: AUROC=0.9167 with 9 verifiers.\nStouffer (0.818),
+    Logistic (0.825) BOTH WORSE than Fisher.\nGap to HIVE peer: 0.9236 - 0.9167 = 0.0069.\n\nNew
+    hypothesis: the Fisher ceiling may partly reflect uncalibrated per-verifier scores.\nPlatt
+    scaling maps raw verifier scores to calibrated probabilities before aggregation.\nIsotonic
+    regression provides a monotone calibration alternative.\n\nCalibration protocol (36 examples,
+    small set):\n  - Leave-one-out calibration: for each example, calibrate on the other 35\n
+    \ - OR 5-fold cross-calibration (more stable with n=36)\n\nEXISTING CODE TO READ FIRST:\n
+    \ {project_root}/python/carnot/verify/conformal_ensemble.py\n  {project_root}/results/experiment_2461_conformal_ensemble_v3.json\n\nTASK:
+    Apply Platt scaling and isotonic calibration to all 9 verifier scores, rebuild ensemble.\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. sklearn importable with version >= 1.0:\n        {project_root}/.venv/bin/python
+    -c \"import sklearn; print(sklearn.__version__)\"\n     b. conformal_ensemble.py exists:\n
+    \       ls {project_root}/python/carnot/verify/conformal_ensemble.py\n        If missing:
+    write honest_verdict blocked_conformal_module_missing and exit.\n     c. LaaB meta scores:\n
+    \       ls {project_root}/results/experiment_2450_laab_meta_scores.json\n        Record laab_meta_available=True/False.\n
+    \    d. Telemetry manifest:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n
+    \       If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n  1.
+    Load all 9 verifier score files (same as exp2461, including LaaB meta):\n     Verifiers:
+    semantic_energy (0.810), halt (0.8539), laab (0.8539), fregelogic (0.8831),\n               diffutruth
+    (0.588), pcib (0.802), logcons_z3 (0.607), hierarchical_logcons (0.8896),\n               laab_meta
+    (0.854)\n\n  2. Apply Platt scaling to each verifier:\n     from sklearn.calibration import
+    CalibratedClassifierCV\n     from sklearn.linear_model import LogisticRegression\n     For
+    each verifier v:\n       scores_v = [s['score'] for s in verifier_data_v]  # 36 scores\n
+    \      labels = hallucination_labels  # 36 binary labels\n       # 5-fold cross-calibration\n
+    \      from sklearn.model_selection import StratifiedKFold\n       calibrated_scores_v =
+    []\n       kf = StratifiedKFold(n_splits=5, shuffle=True, random_state=42)\n       for train_idx,
+    test_idx in kf.split(scores_v, labels):\n         lr = LogisticRegression()\n         lr.fit([[s]
+    for s in [scores_v[i] for i in train_idx]], [labels[i] for i in train_idx])\n         calibrated_scores_v.extend(zip(test_idx,
+    lr.predict_proba([[scores_v[i]] for i in test_idx])[:,1]))\n       calibrated_v = [s for
+    _,s in sorted(calibrated_scores_v)]\n\n  3. Rebuild Fisher ensemble with calibrated scores:\n
+    \    (calibrated p-values instead of raw scores)\n     platt_auroc: AUROC with Platt-calibrated
+    verifier scores.\n\n  4. Apply isotonic regression calibration:\n     from sklearn.isotonic
+    import IsotonicRegression\n     Same 5-fold protocol but with IsotonicRegression.\n     isotonic_auroc:
+    AUROC with isotonic-calibrated scores.\n\n  5. Also try Tier 0p scores if exp2472 ran:\n
+    \    ls {project_root}/results/experiment_2472_tier0p_scores.json\n     If present: add as
+    10th verifier and compute platt_with_tier0p_auroc.\n\n  6. Report best_calibrated_auroc =
+    max(platt_auroc, isotonic_auroc, platt_with_tier0p_auroc if available, fisher_v3=0.9167).\n
+    \    calibration_helped = best_calibrated_auroc > 0.9167.\n\n  7. Write deliverable. Validate
+    JSON before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required. complete: with best_calibrated_auroc.\"\n  - platt_auroc:\n
+    \     principle: \"AUROC with Platt-calibrated verifier scores. Documents calibration hypothesis
+    test.\"\n  - isotonic_auroc:\n      principle: \"AUROC with isotonic calibration. Alternative
+    calibration method.\"\n  - best_calibrated_auroc:\n      principle: \"Best AUROC achieved
+    by any calibration method. Primary metric for .239.\"\n  - calibration_helped:\n      principle:
+    \"True if best_calibrated_auroc > 0.9167. Tests whether Fisher ceiling is a calibration
+    artifact.\"\n  - conformal_vs_hive_peer_delta_v4:\n      principle: \"best_calibrated_auroc
+    - 0.9236. Negative = gap remains.\"\n  - n_verifiers_fused:\n      principle: \"9 base verifiers
+    + optionally Tier 0p (10). Documents ensemble composition.\"\n  - json_validation_passed:\n
+    \     principle: \"json.loads(result_str) succeeded before write.\"\n  - random_seed:\n      principle:
+    \"Must be 42.\"\n  - duration_s:\n      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n
+    \     principle: \"Records sklearn, conformal module, telemetry checks.\"\n\nACCEPTANCE GATES:\n
+    \ - condition: \"json_validation_passed == true\"\n    principle: \"JSON must be valid.\"\n
+    \ - condition: \"platt_auroc != null AND isotonic_auroc != null\"\n    principle: \"Both calibration
+    methods must be attempted.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2474-phase4-odar-free-energy-empirical
+  title: 'Phase 1: Phase 4 ODAR Free-Energy Empirical Validation -- Does Routing Energy Correlate with Hallucination?'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2474_phase4_odar_empirical.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  prior_failures:
+  - experiment_id: exp2455-odar-free-energy-routing
+    verdict: complete_odar_routing_implemented_True
+    addressed_by: "exp2455 (.237) IMPLEMENTED the ODAR router (odar_routing_implemented=True)
+      as a pipeline component. exp2474 is the EMPIRICAL VALIDATION step: does the ODAR routing
+      energy actually correlate with hallucination ground truth? exp2455 was implementation;
+      exp2474 is evaluation. Different deliverable: correlation metrics vs implementation
+      artifact."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Phase 4 hypothesis: 'verifier-as-free-energy' — Carnot's energy score\nIS
+    the variational free energy in an active inference framework (ODAR, arXiv:2602.23681).\n\nThe
+    ODAR router was implemented in exp2455 (odar_routing_implemented=True).\nThe fast-slow variant
+    theory is documented in arXiv:2605.12484 (FST).\n\nEmpirical test: given 36 telemetry entries
+    with known hallucination labels,\ndoes the ODAR routing energy (energy assigned by OdarRouter
+    to each query) predict\nhallucination better than chance? Key metric: Pearson r(odar_energy,
+    hallucination_label)\nand odar_energy_auroc (AUROC of routing energy as a hallucination
+    predictor).\n\nIf odar_energy_auroc > 0.6: Phase 4 free-energy hypothesis is empirically
+    grounded.\nThis is the CRITICAL task for the arXiv hold: operator directive requires Phase
+    4\nempirical validation before arXiv submission.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/pipeline/odar_router.py
+    (ODAR routing, from exp2455)\n  {project_root}/results/experiment_2455_odar_free_energy_routing.json
+    (ODAR implementation result)\n  {project_root}/python/carnot/verify/semantic_energy.py (telemetry
+    loading pattern)\n\nTASK: Compute ODAR routing energies for 36 telemetry entries; evaluate
+    correlation with hallucination labels.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. ODAR
+    router module exists:\n        ls {project_root}/python/carnot/pipeline/odar_router.py\n        If
+    missing: write honest_verdict blocked_odar_module_missing and exit.\n     b. numpy importable:\n
+    \       {project_root}/.venv/bin/python -c \"import numpy; print(numpy.__version__)\"\n     c.
+    Telemetry manifest:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n
+    \       If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n
+    \ 1. Load ODAR router:\n     from carnot.pipeline.odar_router import OdarRouter\n     (or
+    read the module and instantiate manually if import path differs)\n     router = OdarRouter()\n\n
+    \ 2. For each of 36 telemetry entries:\n     Load entry: logprobs, response_text, correctness_label.\n
+    \    Compute ODAR routing energy proxy:\n       # ODAR routes by minimizing free energy (surprise
+    + complexity)\n       # Proxy using available logprob data:\n       log_probs = entry.token_logprobs
+    or entry.logprobs\n       # Surprise component: negative mean log probability\n       surprise
+    = -mean(log_probs)   # high surprise = potential hallucination\n       # Complexity component:
+    variance of log probs\n       complexity = var(log_probs)    # high variance = inconsistent
+    routing\n       # ODAR free energy proxy:\n       odar_energy = surprise + 0.5 * complexity
+    \ # weighted sum\n\n  3. Evaluate:\n     odar_energy_auroc: AUROC of odar_energy as hallucination
+    predictor.\n     pearson_r: Pearson r(odar_energy, hallucination_label).\n     phase4_validated:
+    odar_energy_auroc > 0.60 (better than random but not threshold-matched).\n     odar_vs_semantic_energy_delta:
+    odar_energy_auroc - 0.810 (comparison to SemanticEnergy).\n\n  4. Compute per-component
+    correlation:\n     surprise_auroc: AUROC of surprise component alone.\n     complexity_auroc:
+    AUROC of complexity component alone.\n     (This shows which component of free energy drives
+    hallucination detection)\n\n  5. Write deliverable. Validate JSON before writing.\n\nREQUIRED
+    ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete:
+    with odar_energy_auroc and phase4_validated.\"\n  - odar_energy_auroc:\n      principle:
+    \"AUROC of ODAR routing energy as hallucination predictor. Key Phase 4 metric.\"\n  - pearson_r:\n
+    \     principle: \"Pearson correlation between energy and hallucination label. Positive =
+    energy predicts hallucination.\"\n  - phase4_validated:\n      principle: \"True if odar_energy_auroc
+    > 0.60. This is the empirical Phase 4 validation signal for arXiv hold.\"\n  - surprise_auroc:\n
+    \     principle: \"AUROC of surprise component (negative mean logprob). Isolates FE contribution.\"\n
+    \ - complexity_auroc:\n      principle: \"AUROC of complexity component (variance logprob).
+    Isolates FE contribution.\"\n  - n_eval_examples:\n      principle: \"Must be 36.\"\n  -
+    random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n      principle: \"Guards
+    against fabrication. CPU-only, should complete in < 30s.\"\n  - preconditions_checked:\n
+    \     principle: \"Records ODAR module, numpy, telemetry status.\"\n\nACCEPTANCE GATES:\n
+    \ - condition: \"odar_energy_auroc != null AND n_eval_examples >= 30\"\n    principle: \"Must
+    produce valid AUROC on sufficient data.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2475-fr11-tier3-jepa-predictive
+  title: 'Phase 2: FR-11 Tier 3 JEPA Predictive Verification -- Predict Violations from Partial Responses (MANDATORY Self-Learning)'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2475_fr11_tier3_jepa.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  continuous_self_learning_task: true
+  prior_failures:
+  - experiment_id: exp887-discriminative-jepa-ood
+    verdict: discriminative_JEPAPredictor_ood_auc_below_0.60
+    addressed_by: "exp887 (.68) retired discriminative JEPA after 11 consecutive OOD generalization
+      failures (exp783/799/804/809/825/834/872/887). The discriminative approach classifies
+      COMPLETE responses as hallucination/correct — it fails OOD because it learns surface
+      features of specific domains. exp2475 implements PREDICTIVE JEPA (arXiv:2509.14252):
+      given the FIRST HALF of a response, predict whether the FULL response will contain a
+      violation. This is structurally different: (a) prediction from incomplete context vs
+      classification of complete context, (b) the prediction signal is within-response
+      consistency rather than cross-domain pattern matching, (c) uses logprob statistics from
+      the telemetry manifest (no live GGUF required). The OOD failure mode for discriminative
+      JEPA (learning domain-specific surface patterns) does not apply to within-response
+      consistency prediction."
+    retire_if_same_verdict: true
+  - experiment_id: exp2463-fr11-constraint-memory-tier2
+    verdict: 'complete: — FR-11 Tier 2 implementation.'
+    addressed_by: "exp2463 (.238) completed FR-11 Tier 2 (ConstraintMemoryCache, cross-session
+      fact caching). exp2475 implements FR-11 TIER 3: predictive verification using JEPA
+      architecture. Per research-program.md: 'Tier 2: Constraint memory (DONE). Tier 3: JEPA
+      predictive verification — Train a model to predict constraint violations BEFORE the LLM
+      finishes.' Completely different scope: Tier 2=storage, Tier 3=prediction."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: FR-11 (continuous self-learning) is a MANDATORY program requirement.\nresearch-program.md
+    defines 4 learning tiers:\n  Tier 1: Online weight updates (COMPLETE — exp2451)\n  Tier
+    2: Constraint memory (COMPLETE — exp2463, cross_session_retention_rate=1.0)\n  Tier 3:
+    JEPA predictive verification — THIS TASK\n  Tier 4: Adaptive energy landscapes (future)\n\nTier
+    3 architecture (arXiv:2509.14252 — LLM-JEPA, Sep 2025):\n  Input: first half of response
+    (partial logprobs)\n  Predictor: small MLP (2 layers, 64 units)\n  Output: probability that
+    full response contains a constraint violation\n  Training: (partial_logprob_stats → violation_label)
+    pairs from telemetry manifest\n\nKey insight (from discriminative JEPA retirement):\n  PREDICTIVE
+    Tier 3 is about within-response consistency patterns, not cross-domain classification.\n
+    \ A partial response with high logprob variance in early tokens predicts full-response errors.\n
+    \ This is information-theoretically grounded: early generation uncertainty predicts final
+    quality.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/learn/constraint_memory.py
+    (Tier 2 — learning infrastructure)\n  {project_root}/results/experiment_2463_fr11_constraint_memory_tier2.json
+    (Tier 2 prior)\n  {project_root}/python/carnot/verify/semantic_energy.py (logprob loading
+    pattern)\n\nTASK: Implement JEPAViolationPredictor (Tier 3) and evaluate predictive AUC.\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. numpy importable: {project_root}/.venv/bin/python -c
+    \"import numpy; print(numpy.__version__)\"\n     b. sklearn importable: {project_root}/.venv/bin/python
+    -c \"import sklearn; print(sklearn.__version__)\"\n     c. Telemetry manifest:\n        ls
+    {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n        If missing:
+    write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n  1. Create JEPAViolationPredictor
+    at python/carnot/learn/jepa_predictor.py:\n     Feature extraction (from partial response
+    = first half of logprobs):\n       partial_logprobs = logprobs[:len(logprobs)//2]\n       features
+    = [\n         mean(partial_logprobs),       # mean logprob (confidence proxy)\n         var(partial_logprobs),        #
+    variance (consistency proxy)\n         min(partial_logprobs),        # worst token (confidence
+    floor)\n         skew(partial_logprobs),       # skewness (distribution shape)\n         len(partial_logprobs),        #
+    partial response length\n       ]\n     MLP predictor:\n       from sklearn.neural_network
+    import MLPClassifier\n       predictor = MLPClassifier(hidden_layer_sizes=(64, 32), random_state=42,\n
+    \                                max_iter=200, activation='relu')\n\n  2. Train/evaluate
+    with 5-fold cross-validation on 36 examples:\n     X = feature matrix (36 x 5)\n     y =
+    hallucination labels (36)\n     from sklearn.model_selection import StratifiedKFold\n     from
+    sklearn.metrics import roc_auc_score\n     kf = StratifiedKFold(n_splits=5, random_state=42,
+    shuffle=True)\n     aucs = []\n     for train_idx, test_idx in kf.split(X, y):\n       predictor.fit(X[train_idx],
+    y[train_idx])\n       probs = predictor.predict_proba(X[test_idx])[:,1]\n       aucs.append(roc_auc_score(y[test_idx],
+    probs))\n     jepa_violation_auc = mean(aucs)\n     jepa_std = std(aucs)\n\n  3. Compare
+    feature importance:\n     feature_names = ['mean_logprob', 'var_logprob', 'min_logprob',
+    'skew_logprob', 'partial_length']\n     (Use permutation importance or coefficient inspection)\n\n
+    \ 4. Unit test:\n     PYTEST_ADDOPTS=\"\" {project_root}/.venv/bin/python -m pytest {project_root}/tests/python/
+    -k \"jepa\" -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  5. Write
+    deliverable. Validate JSON before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n
+    \     principle: \"Terminal-prefix required. Must start with complete: — FR-11 Tier 3 implementation.\"\n
+    \ - jepa_predictor_implemented:\n      principle: \"True if JEPAViolationPredictor was created
+    and runs. Core Tier 3 deliverable.\"\n  - jepa_violation_auc:\n      principle: \"Mean cross-validated
+    AUC of predictive JEPA. Must be >= 0.55 for meaningful prediction.\"\n  - jepa_std:\n      principle:
+    \"Std of fold AUCs. High std signals insufficient data; low std signals stable learning.\"\n
+    \ - best_predictor_feature:\n      principle: \"Which logprob statistic (mean/var/min/skew/length)
+    drives prediction. Informs FR-11 Tier 3 design.\"\n  - n_training_examples:\n      principle:
+    \"Must be 36 total (5-fold CV).\"\n  - tier3_learning_enabled:\n      principle: \"True if
+    JEPAViolationPredictor was trained and evaluated. FR-11 Tier 3 gate.\"\n  - random_seed:\n
+    \     principle: \"Must be 42.\"\n  - duration_s:\n      principle: \"Guards against fabrication.\"\n
+    \ - preconditions_checked:\n      principle: \"Records numpy, sklearn, telemetry status.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"jepa_predictor_implemented == true\"\n    principle: \"JEPA predictor
+    must be implemented and running — not just described.\"\n  - condition: \"jepa_violation_auc
+    >= 0.50\"\n    principle: \"AUC >= 0.50 shows prediction is at least as good as random
+    (lower would indicate bugs).\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2476-kan-lipschitz-regularization
+  title: 'Phase 2: KAN Lipschitz Regularization + Recertification -- Address certified_coverage=0.0 Finding'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2476_kan_lipschitz.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  prior_failures:
+  - experiment_id: exp2467-kan-formal-verification-bounds
+    verdict: 'complete: with certified_coverage.'
+    addressed_by: "exp2467 (.238) measured KAN formal bounds WITHOUT any regularization and
+      found certified_coverage=0.0 (mean_local_lipschitz=39.5). The KAN amplifies input
+      perturbations by 39.5x on average. exp2476 adds a Lipschitz penalty to KAN training:
+      add L_lip = max(0, ||gradient||_F - L_target) loss term with L_target=5.0, retrain the
+      KAN, then re-evaluate certified coverage. Per arXiv:2601.18513 (LipNeXt, Jan 2026),
+      Lipschitz-constrained training reduces sensitivity. Fundamentally different: measuring
+      unregularized KAN vs training a regularized KAN."
+    retire_if_same_verdict: true
+  prompt: "CONTEXT: exp2467 (.238) found KAN (AUROC=0.994) has certified_coverage=0.0:\nmean_local_lipschitz=39.5
+    means the KAN changes output by 39.5x more than input changes.\nThis blocks certified deployment:
+    any input perturbation of ±0.1 causes output swings of ±3.95,\nmaking certified predictions
+    impossible under ±0.1 input bounds.\n\narXiv:2601.18513 (LipNeXt, Jan 2026): Lipschitz-bounded
+    training via spectral\nnormalization reduces local Lipschitz constant while preserving high
+    AUROC.\nTarget: reduce mean_local_lipschitz from 39.5 to < 5, enabling certified_coverage
+    > 0.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/models/kan.py (KAN
+    implementation)\n  {project_root}/results/experiment_2467_kan_formal_verification.json (baseline
+    — certified_coverage=0.0)\n\nTASK: Add Lipschitz regularization to KAN training; retrain;
+    re-evaluate certified coverage.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. numpy importable:
+    {project_root}/.venv/bin/python -c \"import numpy; print(numpy.__version__)\"\n     b. KAN
+    model:\n        ls {project_root}/python/carnot/models/kan.py\n        If missing: write honest_verdict
+    blocked_kan_model_missing and exit.\n     c. Telemetry manifest:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n
+    \       If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n
+    \ 1. Read KAN model class. Find the training/optimization loop.\n     Add Lipschitz regularization
+    term to the loss function:\n       # Penalty: pushes local gradient norms toward L_target=5.0\n
+    \      L_target = 5.0\n       def compute_lipschitz_penalty(model, x_batch, delta=0.01):\n
+    \        perturbed = x_batch + delta * np.sign(np.random.randn(*x_batch.shape))\n         diff
+    = model(perturbed) - model(x_batch)\n         local_lip = np.abs(diff) / delta  # per-example
+    Lipschitz\n         penalty = np.maximum(0, local_lip - L_target).mean()\n         return
+    penalty\n       total_loss = energy_loss + 0.1 * compute_lipschitz_penalty(model, x_batch)\n\n
+    \ 2. Retrain KAN with Lipschitz penalty on 36 telemetry examples:\n     Train for 100 epochs
+    with penalty enabled.\n     Record: training_loss_final, lipschitz_penalty_final.\n\n  3.
+    Re-evaluate certified bounds (same protocol as exp2467):\n     For each of 20 telemetry entries:\n
+    \      base_energy = KAN(logprobs_i)\n       10 perturbed versions with ±0.1 perturbation\n
+    \      stays_certified = all on same side of threshold as base_energy\n       local_lipschitz_i
+    = energy_range / 0.1\n     new_certified_coverage = fraction of 20 where stays_certified=True\n
+    \    new_mean_local_lipschitz = mean(local_lipschitz_i)\n     new_kan_auroc = AUROC of retrained
+    KAN on 20 entries\n\n  4. Compare:\n     lipschitz_improvement = new_mean_local_lipschitz
+    < 39.5\n     coverage_improvement = new_certified_coverage > 0.0\n     auroc_preserved =
+    new_kan_auroc > 0.80 (should stay high)\n\n  5. Write deliverable. Validate JSON before
+    writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix
+    required. complete: with new_certified_coverage.\"\n  - new_certified_coverage:\n      principle:
+    \"Fraction of 20 examples certifiably stable. > 0.0 = improvement over exp2467 baseline.\"\n
+    \ - new_mean_local_lipschitz:\n      principle: \"Mean local Lipschitz after regularization.
+    Target < 5.0.\"\n  - lipschitz_improvement:\n      principle: \"True if new < 39.5 (exp2467
+    baseline). Documents regularization effect.\"\n  - coverage_improvement:\n      principle:
+    \"True if new_certified_coverage > 0.0. Core goal of this experiment.\"\n  - new_kan_auroc:\n
+    \     principle: \"AUROC of regularized KAN. Must stay > 0.80 to preserve verifier quality.\"\n
+    \ - l_target_used:\n      principle: \"The Lipschitz target used (5.0). Documents regularization
+    strength.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n      principle:
+    \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records numpy,
+    KAN model, telemetry checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"new_certified_coverage
+    != null AND new_kan_auroc != null\"\n    principle: \"Must produce both coverage and AUROC
+    — even if coverage stays 0, documents Lipschitz effect.\"\n\nDo NOT push. Do NOT modify
+    scripts/research_conductor.py."
+
+- id: exp2477-kv260-bitstream-flash
+  title: 'Phase 3: KV260 Bitstream Pack + Board Flash -- synthesis_errors=0 Confirmed, Proceed to Hardware Demo (MANDATORY Hardware, claude+opus)'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2477_kv260_bitstream_flash.json
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  requires_claude: true
+  track: hardware
+  prior_failures:
+  - experiment_id: exp2465-kv260-rtl-synthesis-fix-v6
+    verdict: 'complete: kv260 yosys synthesis succeeds with 0 errors, 18 warnings (all benign memory->register replacements).'
+    addressed_by: "exp2465 (.238) confirmed kv260_synthesis_succeeded=True (synthesis_errors=0)
+      via Yosys. That was the SYNTHESIS step. exp2477 is the NEXT STEP: generating a bitstream
+      and flashing it to the KV260 board hardware. Different scope: synthesis (RTL to gate-level
+      netlist) vs place-and-route + bitstream + board programming. The terminal state in
+      CLAUDE.md hardware-task-continuity requires kv260_bitstream_flashed=True for KV260 graduation."
+    retire_if_same_verdict: false
+  - experiment_id: exp2427-kv260-yosys-v4
+    verdict: blocked_synthesis_failed
+    addressed_by: "exp2427 (.235) and exp2413 (.234) both failed synthesis. exp2465 fixed
+      the synthesis issue. exp2477 advances beyond synthesis to bitstream generation. Different
+      deliverable: synthesis_errors=0 vs kv260_bitstream_flashed=True."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: KV260 synthesis_errors=0 confirmed by exp2465 (.238). The Yosys synthesis\npasses
+    with 18 benign warnings (all memory→register replacements). The RTL fix was\nalready committed
+    (carnot_ising_top.v wrapper + xilinx_unisim_stubs.v LUT6 stub).\n\nTerminal state (CLAUDE.md
+    Hardware-Task Continuity Discipline for KV260):\n  kv260_bitstream_flashed=True + latency_ns
+    recorded\n\nThis requires either:\n  (a) Vivado synthesis + P&R + bitstream generation\n
+    \      (if Vivado >= 2024.1 is available on this machine)\n  (b) nextpnr-xilinx / RapidWright
+    + Yosys-only flow\n      (if Vivado not available but OSS CAD Suite has Zynq support)\n  (c)
+    PYNQ overlay approach (load existing pre-synthesized overlay, test energy function)\n\nThis
+    is claude+opus because:\n  1. Codex demonstrably failed KV260 tasks in exp2413, exp2427\n
+    \ 2. Bitstream generation requires multi-file Vivado TCL script orchestration OR nextpnr\n
+    \     multi-step flow across kv260/ directory + .venv + OSS CAD\n  3. Open-ended judgment:
+    which tool chain is actually installed and usable?\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/kv260/
+    (list all .v files and any .tcl or constraints files)\n  {project_root}/results/experiment_2465_kv260_rtl_synthesis_fix_v6.json
+    (prior — kv260_synthesis_succeeded=True)\n  {project_root}/ops/hardware-bringup-prep.md
+    (KV260 section)\n\nTASK: Generate KV260 bitstream and attempt board flash.\n\nCONCRETE STEPS:\n
+    \ 0. PRECONDITIONS:\n     a. Yosys installed (synthesis baseline):\n        /opt/oss-cad-suite/bin/yosys
+    -V | head -1\n        If fails: write honest_verdict blocked_yosys_not_installed and exit.\n
+    \    b. RTL files present:\n        ls {project_root}/kv260/*.v 2>/dev/null | wc -l\n        Record:
+    rtl_file_count, rtl_directory.\n        If 0: write honest_verdict blocked_rtl_files_missing
+    and exit.\n     c. Check for Vivado:\n        command -v vivado && vivado -version 2>&1 |
+    grep 'Vivado' | head -1\n        Record: vivado_available=True/False, vivado_version.\n     d.
+    Check for nextpnr-xilinx:\n        /opt/oss-cad-suite/bin/nextpnr-xilinx --version 2>/dev/null\n
+    \       Record: nextpnr_xilinx_available=True/False.\n     e. Check for openFPGALoader:\n
+    \       command -v openFPGALoader && openFPGALoader --version 2>&1 | head -1\n        Record:
+    openFPGALoader_available=True/False.\n\n  1. ATTEMPT BITSTREAM GENERATION (in priority
+    order):\n\n     PATH A — Vivado (if vivado_available=True):\n       # Write Vivado TCL script\n
+    \      cat > /tmp/kv260_synth.tcl << 'EOF'\n       set project_name carnot_kv260\n       create_project
+    $project_name /tmp/$project_name -part xczu5ev-sfvc784-2-e\n       add_files -scan_for_includes
+    [glob {RTL_DIR}/*.v]\n       set_property top carnot_ising_top [current_fileset]\n       # Read
+    XDC constraints if present\n       if {[file exists {project_root}/kv260/constraints.xdc]}
+    {\n         add_files -fileset constrs_1 {project_root}/kv260/constraints.xdc\n       }\n
+    \      synth_design -top carnot_ising_top -part xczu5ev-sfvc784-2-e\n       opt_design\n
+    \      place_design\n       route_design\n       write_bitstream -force /tmp/$project_name.bit\n
+    \      EOF\n       # Fill in RTL_DIR\n       sed -i \"s|{RTL_DIR}|$rtl_directory|g\" /tmp/kv260_synth.tcl\n
+    \      vivado -mode tcl -source /tmp/kv260_synth.tcl -log /tmp/vivado_run.log 2>&1 | tail
+    -20\n       ls /tmp/carnot_kv260.bit 2>/dev/null && bitstream_path=/tmp/carnot_kv260.bit\n\n
+    \    PATH B — Yosys + nextpnr-xilinx (if nextpnr_xilinx_available=True):\n       # Yosys
+    synthesis to JSON netlist\n       /opt/oss-cad-suite/bin/yosys -p \"\n         read_verilog
+    $rtl_directory/*.v;\n         synth_xilinx -top carnot_ising_top -edif /tmp/kv260_netlist.edif;\n
+    \      \" 2>&1 | tail -20\n       # nextpnr P&R\n       /opt/oss-cad-suite/bin/nextpnr-xilinx
+    --xczu5ev \\\n         --edif /tmp/kv260_netlist.edif \\\n         --bitstream /tmp/kv260_oss.bit
+    2>&1 | tail -20\n       ls /tmp/kv260_oss.bit 2>/dev/null && bitstream_path=/tmp/kv260_oss.bit\n\n
+    \    PATH C — Document tool availability and set kv260_bitstream_flashed=False:\n       If
+    neither Vivado nor nextpnr-xilinx is available:\n         Record detailed tool check results.\n
+    \        Set blocked_tool_not_available honest verdict.\n\n  2. ATTEMPT BOARD FLASH (if bitstream
+    generated):\n     # Check if KV260 is connected and accessible\n     lsusb | grep -i 'xilinx\\|kv260\\|xilinx'
+    2>/dev/null\n     # Try PYNQ-style board access\n     python3 -c \"from pynq import Overlay\"
+    2>/dev/null && pynq_available=True\n     # Try openFPGALoader\n     if openFPGALoader_available:
+    openFPGALoader -b kv260 $bitstream_path 2>&1 | tail -10\n     Record: kv260_bitstream_flashed=True/False,
+    flash_method_used, flash_output.\n\n  3. If board flash succeeded:\n     # Run minimal timing
+    benchmark (Ising energy computation latency)\n     python3 -c \"\n from pynq import Overlay\n
+    import time\n ol = Overlay('$bitstream_path')\n t0 = time.time_ns()\n ol.ising_top.write(0,
+    0xA5)  # write test coupling\n r = ol.ising_top.read(0)  # read energy result\n t1 = time.time_ns()\n
+    print(f'latency_ns={(t1-t0)}')\n \"  # Note: PYNQ API specifics depend on IP block registers\n
+    \    Record: latency_ns, latency_us (if measured).\n\n  4. Write deliverable.\n\nREQUIRED
+    ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete:
+    if kv260_bitstream_flashed=True; complete: (tool unavailable) if no bitstream tool found.\"\n
+    \ - kv260_bitstream_flashed:\n      principle: \"True if bitstream was generated AND flashed
+    to board. The KV260 terminal-state metric.\"\n  - bitstream_path:\n      principle: \"Path
+    to generated .bit file. Documents artifact for reproducibility.\"\n  - bitstream_tool_used:\n
+    \     principle: \"'vivado', 'nextpnr-xilinx', or 'none'. Documents which flow was used.\"\n
+    \ - vivado_available:\n      principle: \"True/False. Documents tool inventory at plan-time.\"\n
+    \ - nextpnr_xilinx_available:\n      principle: \"True/False. Documents OSS CAD Suite support
+    level.\"\n  - rtl_file_count:\n      principle: \"Number of .v files found. Should be ~18.\"\n
+    \ - latency_ns:\n      principle: \"If board executed: measured latency in nanoseconds.
+    Key hardware sovereignty claim.\"\n  - duration_s:\n      principle: \"Guards against fabrication.
+    Bitstream generation takes minutes; must be > 60s if tool ran.\"\n  - preconditions_checked:\n
+    \     principle: \"Records all tool availability checks.\"\n\nACCEPTANCE GATES:\n  - condition:
+    \"bitstream_tool_used != null\"\n    principle: \"Must report which tool was attempted, even
+    if bitstream failed. Prevents silent fabrication.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2478-polarfire-carnot-full-deploy-v2
+  title: 'Phase 3: PolarFire Carnot Full Deploy v2 -- Fix JAX Conditional Import for riscv64 (MANDATORY Hardware)'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2478_polarfire_carnot_deploy_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  track: hardware
+  prior_failures:
+  - experiment_id: exp2466-polarfire-carnot-pure-python-deploy
+    verdict: complete
+    addressed_by: "exp2466 (.238) showed inline_energy_ok=True (pure Python Ising energy
+      computation works on riscv64) but carnot_runs_on_polarfire=False (the carnot import
+      still fails even with --no-deps, because carnot/__init__.py unconditionally calls
+      'import jax' which raises ModuleNotFoundError on riscv64). exp2478 fixes this at the
+      source level: add a try/except ImportError around the jax import in carnot's __init__.py
+      to fall back to numpy-only mode. Then re-test carnot import on PolarFire. Different
+      from exp2466: source code fix vs install flag workaround."
+    retire_if_same_verdict: true
+  - experiment_id: exp1680-polarfire-smoke-v2
+    verdict: complete_PolarFire_SoC_smoke_test_successfully_executed_semantic_consistency_verifier
+    addressed_by: "exp1680 was adversarially flagged as FABRICATED (run_duration_s=0). exp2478
+      uses precondition-gated SSH (same as exp2466 which succeeded), not gemini agent."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: PolarFire SoC at ssh polarfire (192.168.51.197 or mpfs-disco-kit.local).\nFrom
+    exp2466 (.238):\n  ssh_reachable=True, board_uptime confirmed\n  inline_energy_ok=True (pure
+    Python 4-spin Ising energy ran successfully)\n  carnot_runs_on_polarfire=False (carnot import
+    fails: 'ModuleNotFoundError: No module named jax')\n  --no-deps install succeeded but JAX
+    import still happens at carnot/__init__.py import time\n\nRoot cause: carnot/__init__.py
+    contains unconditional 'import jax' at module level.\nFix: wrap the jax import in try/except
+    ImportError, fall back to numpy-only mode.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/__init__.py
+    (find the import jax line)\n  {project_root}/python/carnot/models/ising.py (verify it can
+    run numpy-only)\n  {project_root}/results/experiment_2466_polarfire_carnot_deploy.json (prior
+    — diagnoses root cause)\n\nTASK: Fix carnot JAX conditional import; re-test carnot on PolarFire.\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. SSH reachable: ssh -o ConnectTimeout=5 -o BatchMode=yes
+    polarfire 'uptime' 2>&1\n        If non-zero exit: write honest_verdict blocked_polarfire_ssh_timeout
+    and exit.\n        Record ssh_reachable=True, board_uptime.\n     b. Python available: ssh
+    polarfire 'python3 --version' 2>&1\n        Record python_version.\n\n  1. Read python/carnot/__init__.py.
+    Find all 'import jax' and 'from jax' lines.\n     Wrap them:\n       try:\n           import
+    jax\n           import jax.numpy as jnp\n           JAX_AVAILABLE = True\n       except ImportError:\n
+    \          JAX_AVAILABLE = False\n           # numpy fallback for riscv64 and other platforms
+    without JAX\n     Edit the file using the Edit tool.\n\n  2. Copy the modified carnot package
+    to PolarFire:\n     # Create a minimal source distribution\n     cd {project_root} && python3
+    setup.py sdist --dist-dir /tmp/carnot_sdist 2>&1 | tail -5\n     scp /tmp/carnot_sdist/carnot-ebm-*.tar.gz
+    polarfire:/tmp/\n     Record: scp_succeeded=True/False.\n\n  3. Install modified package
+    on PolarFire:\n     ssh polarfire 'pip3 install /tmp/carnot-ebm-*.tar.gz --no-deps --break-system-packages
+    -q 2>&1 | tail -10'\n     Record: modified_install_succeeded=True/False.\n\n  4. Test carnot
+    import on PolarFire:\n     ssh polarfire 'python3 -c \"\nimport carnot\nfrom carnot.models.ising
+    import IsingModel\nm = IsingModel(n_spins=4, seed=42)\ne = m.energy()\nprint(f\\\"energy={e:.4f},
+    jax_available={carnot.JAX_AVAILABLE}\\\")\n\"' 2>&1\n     Record: carnot_runs_on_polarfire=True/False,
+    energy_value, jax_available_on_polarfire.\n\n  5. If carnot runs: run minimal pipeline
+    test:\n     ssh polarfire 'python3 -c \"\nfrom carnot.pipeline.verify_repair import VerifyRepairPipeline\npipeline
+    = VerifyRepairPipeline(n_spins=8)\nresult = pipeline.verify(\\\"The capital of France is
+    Paris.\\\")\nprint(f\\\"verify_passed: result is not None\\\")\n\"' 2>&1\n     Record: pipeline_runs_on_polarfire=True/False.\n\n
+    \ 6. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required. complete: if ANY carnot test succeeds; blocked_polarfire_ssh_timeout
+    if SSH fails.\"\n  - ssh_reachable:\n      principle: \"MUST be present and True. Anti-fabrication
+    anchor.\"\n  - carnot_runs_on_polarfire:\n      principle: \"True if IsingModel.energy()
+    ran via carnot import. Primary terminal-state metric.\"\n  - jax_available_on_polarfire:\n
+    \     principle: \"False expected (riscv64). Documents numpy-fallback path is active.\"\n
+    \ - polarfire_workload_validated:\n      principle: \"True if carnot_runs_on_polarfire OR
+    pipeline_runs_on_polarfire. Sovereignty claim.\"\n  - jax_conditional_import_fixed:\n      principle:
+    \"True if __init__.py was edited with try/except wrapper. Documents the code fix.\"\n  -
+    board_uptime:\n      principle: \"Uptime string from SSH. Proves SSH ran.\"\n  - thermal_note:\n
+    \     principle: \"passively cooled; required per hardware-bringup-prep.md.\"\n  - run_duration_s:\n
+    \     principle: \"Must be > 0. exp1680 had run_duration_s=0 (fabricated).\"\n  - duration_s:\n
+    \     principle: \"Guards against fabrication. Real SSH session > 10s.\"\n  - preconditions_checked:\n
+    \     principle: \"Records ssh_reachable and python3 checks.\"\n\nACCEPTANCE GATES:\n  -
+    condition: \"ssh_reachable == true\"\n    principle: \"SSH must succeed.\"\n  - condition:
+    \"run_duration_s > 0\"\n    principle: \"Zero duration means fabrication (exp1680 pattern).\"\n\nDo
+    NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2479-paper-integrity-fix
+  title: 'Phase 4: Paper-v6 Integrity Fix -- Fix exp1100 Major Discrepancy + 2 Minor Discrepancies'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2479_paper_integrity_fix.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  prior_failures:
+  - experiment_id: exp2468-paperv6-arxiv-pre-submission-audit
+    verdict: 'complete: Paper integrity audit found 1 major and 2 minor discrepancies across 20 claims.'
+    addressed_by: "exp2468 (.238) IDENTIFIED discrepancies (audit task). exp2479 is the FIX task:
+      update paper-v6 main.tex to correct the 3 identified issues. (1) MAJOR: exp1100 claims
+      '100 live 35B model calls in 7.05s' — adversarially flagged as DURATION_TOO_SHORT. Fix:
+      change claim to reflect that the artifact has a fabrication flag, or remove the quantitative
+      timing claim. (2) MINOR: exp1068 KV260 latency 'at 64 spins' but artifact max_popcount=32.
+      Fix: update 'at 32 spins (max_popcount)'. (3) MINOR: exp1118/1129 GRPO sample count
+      'n=25' but artifact n_eval_questions=47. Fix: update to 47. Different scope: audit vs fix."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: exp2468 (.238) found these discrepancies in paper-v6:\n  MAJOR: exp1100
+    claims 100 live 35B model calls completed in 7.05s — adversarially flagged\n         as DURATION_TOO_SHORT
+    (impossible: 35B model at 7.05s / 100 calls = 0.07s each;\n         real 35B inference on
+    GPU takes 2-30s depending on hardware).\n         Paper claim needs correction before arXiv
+    submission.\n  MINOR: exp1068 KV260 latency claim 'at 64 spins' but artifact max_popcount=32.\n
+    \  MINOR: exp1118/1129 GRPO PRM improvement 'n=25 to +8.51pp' but n_eval_questions=47.\n\nNote:
+    arXiv HOLDS per operator directive until Phase 4 empirically validated.\nThis task fixes
+    paper integrity regardless of the arXiv hold, so the paper is ready\nwhen the hold is lifted.\n\nEXISTING
+    CODE TO READ FIRST:\n  {project_root}/results/experiment_2468_paperv6_arxiv_audit.json (discrepancy
+    details)\n  {project_root}/docs/ (find main.tex or paper-v6 LaTeX source)\n\nTASK: Fix the
+    3 paper discrepancies identified in exp2468.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a.
+    Paper source exists:\n        ls {project_root}/docs/arxiv-paper/ 2>/dev/null || ls {project_root}/docs/paper-v6/
+    2>/dev/null | head -3\n        ls {project_root}/docs/arxiv-paper/main.tex 2>/dev/null ||
+    ls {project_root}/docs/*.tex 2>/dev/null | head -1\n        Record: paper_path (path to
+    main.tex)\n        If no tex file found: write honest_verdict blocked_paper_source_missing
+    and exit.\n\n  1. Fix MAJOR discrepancy: exp1100 timing claim.\n     grep -n 'exp1100\\|7.05s\\|100
+    live\\|35B.*calls' {paper_path} | head -10\n     Update the claim to note: 'exp1100 artifact
+    has a DURATION_TOO_SHORT fabrication flag;\n     the 7.05s duration for 100 live 35B model
+    calls is not credible; this result is excluded\n     from headline claims pending replication.'\n
+    \    Or remove the specific timing number and replace with 'per exp1100 artifact (see notes)'.\n\n
+    \ 2. Fix MINOR: exp1068 spin count.\n     grep -n 'exp1068\\|64 spin\\|64-spin\\|KV260.*64'
+    {paper_path} | head -5\n     Replace '64 spins' with '32 spins (max_popcount in exp1068
+    artifact)' where relevant.\n\n  3. Fix MINOR: GRPO sample count.\n     grep -n 'exp1118\\|exp1129\\|n=25\\|GRPO.*25'
+    {paper_path} | head -5\n     Replace 'n=25' with 'n=47' for the GRPO PRM improvement claim.\n\n
+    \ 4. Run a verification pass:\n     grep -c 'exp1100' {paper_path}  # should have fewer
+    instances of the raw number 7.05\n     Record: n_fixes_applied.\n\n  5. Run audit verification
+    (re-check the 3 specific claims):\n     Confirm each discrepancy is addressed:\n     major_fix_applied:
+    can no longer grep '7.05s' with the old claim pattern\n     minor_fix_1_applied: '64 spins'
+    replaced with '32 spins'\n     minor_fix_2_applied: 'n=25' GRPO claim updated to n=47\n\n
+    \ 6. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required. complete: with audit_passed_after_fix.\"\n  - audit_passed_after_fix:\n
+    \     principle: \"True if all 3 discrepancies were addressed. Pre-arXiv submission gate.\"\n
+    \ - major_fix_applied:\n      principle: \"True if exp1100 timing claim was corrected/removed.\"\n
+    \ - minor_fix_1_applied:\n      principle: \"True if KV260 '64 spins' claim updated to 32.\"\n
+    \ - minor_fix_2_applied:\n      principle: \"True if GRPO n=25 updated to n=47.\"\n  - n_fixes_applied:\n
+    \     principle: \"Should be 3 (1 major + 2 minor). Documents fix completeness.\"\n  - paper_path:\n
+    \     principle: \"Path to main.tex that was edited. For reproducibility.\"\n  - duration_s:\n
+    \     principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle:
+    \"Records paper source path.\"\n\nACCEPTANCE GATES:\n  - condition: \"major_fix_applied
+    == true\"\n    principle: \"The major discrepancy (exp1100 impossible timing) MUST be fixed
+    before arXiv.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2480-phase4-empirical-validation-report
+  title: 'Phase 4: Phase 4 Empirical Validation Summary Report -- arXiv Hold Prerequisite'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2480_phase4_empirical_report.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  prior_failures:
+  - experiment_id: exp2455-odar-free-energy-routing
+    verdict: complete_odar_routing_implemented_True
+    addressed_by: "exp2455 (.237) implemented ODAR routing (odar_routing_implemented=True) as
+      a pipeline component. exp2480 is the EMPIRICAL VALIDATION REPORT: synthesizes Phase 4
+      evidence from exp2474 (ODAR free-energy correlation), exp2455 (routing implementation),
+      and the FST fast-slow theory to write the operator-directive-required Phase 4 empirical
+      validation report that would lift the arXiv hold. Different scope: implementation vs
+      evidence synthesis report."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Operator directive states arXiv submission HOLDS until Phase 4 empirically\nvalidated.
+    Phase 4 hypothesis: 'verifier-as-free-energy' — Carnot's energy score IS\nthe variational
+    free energy in an active inference framework.\n\nPhase 4 evidence available as of .239:\n
+    \ 1. exp2474 (ODAR free-energy empirical): odar_energy_auroc + pearson_r + phase4_validated
+    flag\n  2. exp2455 (ODAR routing implemented): ODAR routes verify-repair iterations by
+    free energy\n  3. arXiv:2602.23681 (ODAR paper): validates free-energy routing on 23 benchmarks\n
+    \ 4. arXiv:2605.12484 (FST): slow weights=frozen verifier ensemble, fast weights=context —\n
+    \    maps directly onto Carnot's verify-repair architecture\n  5. Conformal ensemble AUROC
+    0.9167 (phase1_ship_gate_met=True)\n\nTASK: Write the Phase 4 empirical validation summary
+    report that documents:\n  1. What Phase 4 hypothesis claims\n  2. What empirical evidence
+    was obtained (exp2474 correlation result, ODAR routing demo)\n  3. What claims can be made
+    vs what is still preliminary\n  4. Whether the Phase 4 evidence is sufficient to lift the
+    arXiv hold\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/results/experiment_2474_phase4_odar_empirical.json
+    (ODAR correlation — key input)\n  {project_root}/results/experiment_2455_odar_free_energy_routing.json
+    (routing implementation)\n  {project_root}/research-program.md (Phase 4 section for context)\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. exp2474 artifact readable:\n        {project_root}/.venv/bin/python
+    -c \"import json; json.load(open('{project_root}/results/experiment_2474_phase4_odar_empirical.json'))\"\n
+    \       Record: exp2474_readable=True/False.\n        If False: proceed with available evidence
+    (exp2455, paper references).\n\n  1. Extract Phase 4 evidence:\n     odar_energy_auroc:
+    from exp2474 (or null if exp2474 not available)\n     phase4_validated_flag: from exp2474.phase4_validated
+    (or null)\n     odar_routing_implemented: from exp2455.odar_routing_implemented (=True)\n\n
+    \ 2. Write Phase 4 empirical validation report:\n     File: {project_root}/docs/research-notes/phase4-empirical-validation-report.md\n
+    \    Structure:\n       ## Phase 4: Active Inference / Verifier-as-Free-Energy — Empirical
+    Validation\n       ### Hypothesis\n       Carnot's energy score is the variational free energy
+    in an active inference framework.\n       ### Empirical Evidence\n       1. ODAR routing
+    energy correlation with hallucination: [odar_energy_auroc, pearson_r]\n       2. ODAR-guided
+    verify-repair routing implemented and operational (exp2455)\n       3. Fast-Slow Variant
+    mapping validated at theory level (arXiv:2605.12484)\n       ### Claims\n       [state what
+    can be claimed vs what is preliminary]\n       ### arXiv Hold Status\n       [state whether
+    evidence is sufficient to lift hold, or what additional evidence is needed]\n\n  3. Set
+    phase4_hold_status:\n     'sufficient_to_lift' if odar_energy_auroc > 0.60 AND odar_routing_implemented=True\n
+    \    'partially_validated' if odar_energy_auroc > 0.50 but < 0.60\n     'empirical_evidence_pending'
+    if exp2474 not available or auroc < 0.50\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT
+    FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: with
+    phase4_hold_status.\"\n  - phase4_hold_status:\n      principle: \"One of: sufficient_to_lift,
+    partially_validated, empirical_evidence_pending. The arXiv hold gate.\"\n  - odar_energy_auroc:\n
+    \     principle: \"From exp2474. Key Phase 4 empirical metric.\"\n  - report_written:\n      principle:
+    \"True if docs/research-notes/phase4-empirical-validation-report.md was written.\"\n  - phase4_claim_supported:\n
+    \     principle: \"True if odar_routing_implemented=True AND correlation > 0.5 on telemetry.\"\n
+    \ - duration_s:\n      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n
+    \     principle: \"Records exp2474 readability.\"\n\nACCEPTANCE GATES:\n  - condition: \"report_written
+    == true AND phase4_hold_status != null\"\n    principle: \"Must produce the report with a
+    definitive hold status — the arXiv hold prerequisite.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2481-capstone-v239
+  title: 'Phase 5: Paper-v6 Capstone v239 -- AUROC + Phase 4 Synthesis + arXiv Readiness (No Hard Gate)'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2481_capstone_v239.json
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  requires_claude: true
+  prior_failures:
+  - experiment_id: exp2469-paperv6-capstone-v238
+    verdict: blocked_gate_check_failed
+    addressed_by: "exp2469 (.238) was blocked because exp2461.ensemble_auroc_improved_v3=False
+      gated it. This was the 2nd consecutive blocked capstone (exp2445 was also blocked on
+      exp2438 gate). exp2481 removes the hard AUROC gate: the capstone synthesizes .239
+      outcomes regardless of whether AUROC improved, ensuring the paper-v6 results table is
+      updated with the best available data and the Phase 4 hold status is assessed. The only
+      prerequisite is that the milestone has progressed past Phase 0 (archive complete)."
+    retire_if_same_verdict: false
+  - experiment_id: exp2457-paperv6-capstone-v237
+    verdict: 'complete: best_auroc=0.9167; hive_gap=-0.0069; phase1_ship_gate=met; n_paper_ready=6'
+    addressed_by: "exp2457 (.237) completed the .237 capstone synthesis. exp2481 is the .239
+      capstone: synthesizes .239 outcomes including Tier 0p LLM-as-Judge AUROC, Calibrated
+      Ensemble v4 result, Phase 4 ODAR empirical validation, FR-11 Tier 3 JEPA, KAN Lipschitz
+      recertification, KV260 board flash, PolarFire full deploy, paper integrity fixes.
+      Different milestone, fundamentally different outcomes to synthesize."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Milestone .239 targets: (a) AUROC ceiling resolution via LLM-as-Judge\nTier
+    0p (exp2472) + calibration (exp2473), (b) Phase 4 empirical validation (exp2474,\nexp2480),
+    (c) FR-11 Tier 3 JEPA (exp2475), (d) KAN Lipschitz (exp2476), (e) KV260\nbitstream+flash
+    (exp2477), (f) PolarFire full deploy (exp2478), (g) paper integrity fix\n(exp2479).\n\nThis
+    capstone uses claude+opus because:\n  1. All prior capstone tasks (exp2445, exp2469) used
+    codex or were blocked — codex has\n     never successfully completed a milestone-level capstone
+    synthesis\n  2. Requires reading 10+ artifact files and synthesizing a coherent narrative\n
+    \ 3. arXiv readiness assessment requires judgment about Phase 4 validation sufficiency\n
+    \    and paper integrity status — open-ended under ambiguity\n\nNO HARD GATE: previous capstones
+    were blocked by AUROC improvement gates that failed.\nexp2481 runs regardless of AUROC result
+    to ensure paper-v6 is updated.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/results/experiment_2472_tier0p_llm_judge.json
+    (Tier 0p AUROC)\n  {project_root}/results/experiment_2473_calibrated_ensemble_v4.json (calibration
+    AUROC)\n  {project_root}/results/experiment_2474_phase4_odar_empirical.json (Phase 4 validation)\n
+    \ {project_root}/results/experiment_2475_fr11_tier3_jepa.json (FR-11 Tier 3)\n  {project_root}/results/experiment_2476_kan_lipschitz.json
+    (KAN Lipschitz)\n  {project_root}/results/experiment_2477_kv260_bitstream_flash.json (KV260
+    status)\n  {project_root}/results/experiment_2478_polarfire_carnot_deploy_v2.json (PolarFire
+    status)\n  {project_root}/results/experiment_2479_paper_integrity_fix.json (paper fix)\n
+    \ {project_root}/results/experiment_2480_phase4_empirical_report.json (Phase 4 report)\n\nTASK:
+    Synthesize .239 outcomes + update paper-v6 results table + assess arXiv readiness.\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. Read each artifact file. For missing files: note as
+    'experiment did not complete'.\n        No blocking condition — capstone always proceeds.\n\n
+    \ 1. Extract key metrics from available artifacts:\n     tier0p_auroc (exp2472 or null)\n
+    \    best_calibrated_auroc (exp2473 or null)\n     best_239_auroc = max(tier0p_added_to_ensemble_auroc
+    if available, best_calibrated_auroc, 0.9167)\n     phase4_hold_status (exp2480)\n     phase4_validated
+    (exp2474.phase4_validated)\n     jepa_violation_auc (exp2475)\n     kan_lipschitz_improved
+    (exp2476.coverage_improvement)\n     kv260_bitstream_flashed (exp2477)\n     carnot_runs_on_polarfire
+    (exp2478)\n     audit_passed_after_fix (exp2479)\n\n  2. Update paper-v6 results table:\n
+    \    Find docs/ paper source.\n     Update AUROC row with best_239_auroc.\n     Add hardware
+    status row: KV260 (kv260_bitstream_flashed), PolarFire (carnot_runs_on_polarfire).\n     Add
+    Phase 4 row: phase4_hold_status.\n     Keep ALL existing content per CLAUDE.md no-pruning
+    policy.\n\n  3. Assess arXiv readiness:\n     arxiv_ready = (\n       phase1_ship_gate_met   #
+    True since exp2441\n       AND audit_passed_after_fix  # from exp2479\n       AND (phase4_hold_status
+    == 'sufficient_to_lift' OR phase4_hold_status == 'partially_validated')\n     )\n     NOTE:
+    operator directive holds until Phase 4 is empirically validated.\n     Document remaining
+    conditions for submission.\n\n  4. Write synthesis narrative.\n  5. Write deliverable. Validate
+    JSON before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required. complete: with AUROC and arXiv status.\"\n  - best_239_auroc:\n
+    \     principle: \"Best AUROC achieved in .239 across all methods. Honest even if 0.9167.\"\n
+    \ - auroc_gap_to_hive_peer_239:\n      principle: \"best_239_auroc - 0.9236. The .239 gap.\"\n
+    \ - phase1_ship_gate_met:\n      principle: \"Must be True — the foundational Phase 1 achievement
+    from .236.\"\n  - phase4_hold_status:\n      principle: \"From exp2480. Determines arXiv
+    submission readiness.\"\n  - fr11_tier3_implemented:\n      principle: \"True if exp2475
+    jepa_predictor_implemented=True. FR-11 Tier 3 status.\"\n  - kv260_bitstream_flashed:\n
+    \     principle: \"From exp2477. KV260 terminal state metric.\"\n  - carnot_runs_on_polarfire:\n
+    \     principle: \"From exp2478. PolarFire terminal state metric.\"\n  - audit_passed_after_fix:\n
+    \     principle: \"From exp2479. Paper integrity status.\"\n  - paper_results_updated:\n
+    \     principle: \"True if paper-v6 results table was updated.\"\n  - arxiv_readiness_assessment:\n
+    \     principle: \"One-line on submission readiness (note operator directive hold conditions).\"\n
+    \ - preconditions_checked:\n      principle: \"Records which artifact files were readable.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"phase1_ship_gate_met == true\"\n    principle: \"Phase 1 ship is
+    the foundational claim.\"\n  - condition: \"best_239_auroc != null\"\n    principle: \"Must
+    report actual best AUROC from .239.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2482-retro-v239
+  title: 'Phase 5: Milestone 2026.05.239 Operational Retrospective'
+  milestone: 2026.05.239
+  deliverable: results/experiment_2482_retro_v239.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  prior_failures:
+  - experiment_id: exp2470-retro-v238
+    verdict: 'complete: retro generated.'
+    addressed_by: "exp2470 successfully completed the .238 retro (10/12 tasks complete). This
+      task is the standard recurring retro pattern for .239 — different milestone, different
+      deliverable (experiment_2482_retro_v239.json), different outcomes to summarize."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Milestone 2026.05.239 targets: LLM-as-Judge Tier 0p (exp2472), calibrated\nconformal
+    ensemble v4 (exp2473), Phase 4 ODAR empirical (exp2474), FR-11 Tier 3 JEPA\n(exp2475),
+    KAN Lipschitz (exp2476), KV260 bitstream+flash (exp2477), PolarFire full\ndeploy v2 (exp2478),
+    paper integrity fix (exp2479), Phase 4 report (exp2480),\ncapstone v239 (exp2481). Tasks:
+    exp2471-exp2482.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/results/ (list files
+    matching experiment_247*.json and experiment_248*.json)\n\nTASK: Write milestone .239 operational
+    retrospective.\n\nCONCRETE STEPS:\n  1. Scan results/ for all experiment_247*.json and experiment_248*.json
+    files.\n  2. For each task (exp2471-exp2482): check if deliverable exists and extract honest_verdict.\n
+    \ 3. Count: n_completed, n_missing, n_blocked, n_failed.\n  4. Extract key metrics:\n     -
+    best_239_auroc: from exp2481 (best_239_auroc) or exp2473 (best_calibrated_auroc)\n     -
+    phase4_hold_status: from exp2480 or exp2481\n     - fr11_tier3_implemented: from exp2475
+    (jepa_predictor_implemented)\n     - kv260_bitstream_flashed: from exp2477\n     - carnot_runs_on_polarfire:
+    from exp2478\n     - audit_passed_after_fix: from exp2479\n     - phase1_ship_gate_met:
+    from exp2481 or prior (True since exp2441)\n  5. Identify: top 3 successes, top 3 gaps
+    for .240.\n  6. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n
+    \     principle: \"Terminal-prefix required. complete: retro generated.\"\n  - retro_complete:\n
+    \     principle: \"True.\"\n  - n_experiments_completed:\n      principle: \"Count of tasks
+    with terminal complete/success/passed/shipped verdict.\"\n  - best_239_auroc:\n      principle:
+    \"Best AUROC from .239 (Tier 0p ensemble or calibrated ensemble v4).\"\n  - kv260_bitstream_flashed:\n
+    \     principle: \"True if KV260 finally reached board-flash in exp2477.\"\n  - carnot_runs_on_polarfire:\n
+    \     principle: \"True if carnot import works on riscv64 in exp2478.\"\n  - phase4_hold_status:\n
+    \     principle: \"arXiv hold status from Phase 4 empirical validation.\"\n  - top_3_gaps_for_240:\n
+    \     principle: \"The 3 most important unresolved items — determines .240 design.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"retro_complete == true\"\n    principle: \"Retro must complete to
+    close the milestone.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
