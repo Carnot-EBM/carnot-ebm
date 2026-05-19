@@ -5146,3 +5146,4 @@ Ripgrep i |
     at async file:///usr/lib/node_modules/@go |
 | 2026-05-19 20:08 UTC | Phase 2b: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2533-ensemble-v7b-tier0r-group-d) |
 | 2026-05-19 20:11 UTC | Phase 3a: Tier 0u Logical Consistency Verifier (ar | OK | 81 passed, 1 warning in 2.38s |
+| 2026-05-19 20:18 UTC | Phase 3b: LaTeX Compile Fix + arXiv Submission Pac | OK | cache hit: 81 passed, 1 warning in 2.38s |
