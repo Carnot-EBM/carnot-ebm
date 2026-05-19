@@ -320,6 +320,77 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone — DURABLE (.237+ MANDATORY, until each board's terminal state)
+
+**Origin:** 2026-05-18 operator directive: "I just don't want you to
+forget about the FPGAs again." Codified as CLAUDE.md MANDATORY rule
+"Hardware-Task Continuity Discipline" (commit b9e3ad392).
+
+**The rule (summary):** every milestone roadmap MUST include at least
+one task targeting EACH attached FPGA board until that board reaches
+its defined terminal state. The three attached boards as of 2026-05-18:
+
+| Board | Next forward step | Terminal state |
+|---|---|---|
+| AMD/Xilinx KV260 | Resume `exp2440` (synthesis_errors=1 fix) → bitstream pack → board flash → PYNQ latency transcript | `kv260_synthesis_succeeded: true` AND `kv260_board_latency_ms` recorded |
+| Cologne Chip GateMate A1-EVB-2M | yosys 0.64 → nextpnr-himbaechel CC_LUT mapping workaround (`synth_gatemate -abc9`) → P&R → flash n=16 Ising tile | `gatemate_bitstream_flashed: true` AND on-board sampler timing benchmark |
+| Microchip PolarFire SoC Discovery Kit | Precondition-gated SSH smoke (already queued separately below) → CPU-only Ising sampler → adaptive-K PCD prototype | `polarfire_workload_validated: true` (non-fabricated artifact with hash-match) |
+
+**Per-board task spec for `.237 planner (companion to the PolarFire
+entry below):**
+
+**KV260 follow-on:**
+```yaml
+- id: exp24XX-kv260-synth-fix-continue
+  title: "Phase 2: KV260 Synthesis Fix Follow-On (gated on exp2440 outcome from .236)"
+  track: hardware
+  prior_failures:
+    - experiment_id: exp2440-kv260-rtl-fix-v5
+      verdict: <whatever exp2440 produced in .236; .237 planner reads results/>
+      addressed_by: "Carry-forward of synthesis_errors fix; refer to exp2440 diagnosis."
+      retire_if_same_verdict: false  # genuine iteration of an in-progress fix
+```
+
+**GateMate workaround:**
+```yaml
+- id: exp24XX-gatemate-lut-mapping-workaround
+  title: "Phase 2: GateMate yosys/nextpnr CC_LUT Mapping Workaround"
+  track: hardware
+  prompt: |
+    CONTEXT: rtl/gatemate_ising_n16.json synthesized to 136 cells but
+    P&R blocked because yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1 while
+    nextpnr-himbaechel 0.10 only accepts CC_LUT4. udev rules are now
+    installed; the GateMate's onboard DirtyJTAG MCU at 1209:c0ca is
+    reachable; the only remaining blocker is this LUT mapping.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. openFPGALoader -c dirtyJtag --detect succeeds (idcode 0x20000001)
+         b. yosys, nextpnr-himbaechel, openFPGALoader on PATH from
+            /opt/oss-cad-suite/bin
+      1. Try yosys `synth_gatemate -abc9` (forces use of LUT4 mapping)
+      2. If still fails, try upgrading nextpnr-himbaechel to a build
+         that accepts CC_LUT1/2/3 (check upstream commits)
+      3. If P&R succeeds, produce textcfg, pack to .bit via gmpack,
+         flash via openFPGALoader -b olimex_gatemateevb
+    PRINCIPLE: every step must be adversarial-verify-safe (preconditions
+    checked, duration_s >= 5s for real synthesis work, non-fabricated).
+```
+
+**PolarFire smoke v3:** Already queued as the separate entry below.
+
+**Why this entry exists.** The CLAUDE.md rule (commit b9e3ad392) is
+the structural enforcement. This known-issues entry is the planner-
+visible MANDATORY queue item that surfaces "do this in .237" without
+the planner having to derive the per-board next step on its own.
+Defense in depth: rule + queue + outer-loop audit.
+
+This entry stays in MANDATORY-NEXT-MILESTONE PRIORITIES until ALL
+THREE BOARDS reach their terminal state. Once a board's terminal
+artifact lands and adversarial-verify passes, the operator OR the
+outer-loop deletes that row from the table above and the planner
+graduates that board from mandatory per-milestone inclusion.
+
 ### NEW 2026-05-18 (23:55Z): PolarFire SoC Smoke v3 — Precondition-Gated, Not Fabricated (.237+ MANDATORY)
 
 **Origin:** 2026-05-18 23:55Z operator request after verifying both
