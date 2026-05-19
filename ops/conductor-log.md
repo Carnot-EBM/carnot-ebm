@@ -5123,3 +5123,22 @@ Ripgrep i |
     at async file:///usr/lib/node_modules/@go |
 | 2026-05-19 19:47 UTC | Phase 0: Archive .243 and activate .244 | FAIL | Gemini CLI error: 309732:14)
     at async file:///usr/lib/node_modules/@google |
+| 2026-05-19 19:49 UTC | Phase 1a: Implement IsingVerifier.energy(step_text | FAIL | Gemini CLI error: js:309732:14)
+    at async file:///usr/lib/node_modules/@goo |
+| 2026-05-19 19:51 UTC | Phase 1a: Implement IsingVerifier.energy(step_text | FAIL | Gemini CLI error: .js:309732:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-05-19 19:54 UTC | Phase 1a: Implement IsingVerifier.energy(step_text | FAIL | Gemini CLI error: js:309732:14)
+    at async file:///usr/lib/node_modules/@goo |
+| 2026-05-19 19:56 UTC | Phase 1b: Phase 4 ARM-EBM v4 -- IsingVerifier.ener | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2531-ising-verifier-implementation) |
+| 2026-05-19 19:56 UTC | Phase 2a: Ensemble v7b -- Tier 0r Dedicated Group  | FAIL | Gemini CLI error: js:309732:14)
+    at async file:///usr/lib/node_modules/@goo |
+| 2026-05-19 19:58 UTC | Phase 1b: Phase 4 ARM-EBM v4 -- IsingVerifier.ener | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2531-ising-verifier-implementation) |
+| 2026-05-19 19:58 UTC | Phase 2a: Ensemble v7b -- Tier 0r Dedicated Group  | FAIL | Gemini CLI error: .js:309732:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-05-19 20:00 UTC | Phase 1b: Phase 4 ARM-EBM v4 -- IsingVerifier.ener | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2531-ising-verifier-implementation) |
+| 2026-05-19 20:00 UTC | Phase 2a: Ensemble v7b -- Tier 0r Dedicated Group  | FAIL | Gemini CLI error: .js:309732:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-05-19 20:02 UTC | Phase 2b: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2533-ensemble-v7b-tier0r-group-d) |
+| 2026-05-19 20:03 UTC | Phase 3a: Tier 0u Logical Consistency Verifier (ar | FAIL | Gemini CLI error: .js:309732:14)
+    at async file:///usr/lib/node_modules/@go |
+| 2026-05-19 20:05 UTC | Phase 2b: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2533-ensemble-v7b-tier0r-group-d) |
