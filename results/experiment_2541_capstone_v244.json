@@ -1,0 +1,215 @@
+{
+  "experiment": "2541_capstone_v244",
+  "milestone": "2026.05.244",
+  "run_date": "20260519",
+  "schema": "carnot.paper_v6_capstone_2541.v1",
+  "spec_refs": [
+    "REQ-REPORT-2541",
+    "SCENARIO-REPORT-2541"
+  ],
+  "status": "complete",
+  "honest_verdict": "complete: best_244_auroc=0.9750; phase4_final_status=blocked_precondition; arxiv_ready=False",
+
+  "n_experiments_completed": 5,
+  "n_experiments_completed_methodology": "Counted as 'reached a terminal complete: result state' across exp2530-exp2540: included exp2535 (Tier 0u prototype), exp2536 (LaTeX compile fix), exp2537 (GateMate LUT mapping + bitstream), exp2539 (FR-11 JEPA pipeline integration), exp2540 (paper update). Excluded: exp2538 (honestly blocked: blocked_pynq_image_url_unreachable; documentation complete but verdict lacks complete: prefix). Missing entirely: exp2530 (archive), exp2531 (IsingVerifier impl), exp2532 (Phase 4 ARM-EBM v4), exp2533 (ensemble v7b), exp2534 (adaptive conformal v2) — five tasks at the front of the critical path that did not produce artifacts in this milestone.",
+
+  "best_244_auroc": 0.9750,
+  "best_244_auroc_source": "Carried forward from exp2498 (.241), unchanged through .242, .243, and .244 because exp2533 (ensemble v7b) and exp2534 (adaptive conformal v2) did not run in this milestone. The Group D regression fix that would have advanced or replicated the headline never executed.",
+  "best_244_auroc_carried_forward": true,
+
+  "auroc_adversarially_verified": true,
+  "auroc_adversarially_verified_source": "0.9750 carried forward from exp2498 (.241), replicated across 5 seeds with no adversarial flags. No new headline AUROC produced in .244 to verify; the verification status carries forward unchanged.",
+
+  "ensemble_v7b": {
+    "ran": false,
+    "reason": "exp2533 artifact does not exist. The planned Group D reassignment for Tier 0r (proof-path class with independent calibration) was not executed in this milestone."
+  },
+
+  "adaptive_conformal_v2": {
+    "ran": false,
+    "reason": "exp2534 artifact does not exist. Gated on exp2533.ensemble_v7b_auroc >= 0.975, which was not produced. Blocked since .242 by ensemble regression; remains blocked entering .245."
+  },
+
+  "phase4_final_status": "blocked_precondition",
+  "phase4_permanently_retired": false,
+  "phase4_validated_any": false,
+  "phase4_explanation": "exp2531 (IsingVerifier implementation) and exp2532 (Phase 4 ARM-EBM v4 with retire_if_same_verdict=true) both did not produce artifacts in .244. IsingVerifier remains a stub ('class IsingVerifier: pass' in python/carnot/verify/semantic_energy.py per the .244 roadmap diagnosis). The retire_if_same_verdict trip-wire could not fire because the structural test was never attempted. exp2536 (LaTeX fix) and exp2540 (paper update) both correctly detected exp2532's absence via preconditions_checked and selected the blocked_precondition path — exp2536 preserved existing §4 content; exp2540 added a blocked_precondition paragraph to §4.4 with structured bullets distinguishing what is established (exp2508 pearson_r=-0.426 with semantic_energy_fallback) from what is open (step-level ARM-EBM with the designed methodology). Phase 4 has now spent four consecutive milestones (.241/.242/.243/.244) in some flavour of unvalidated state: exp2486 failed proxy, exp2508 methodology fallback, exp2519 blocked precondition, exp2532 not run. Operator decision still required: (a) implement IsingVerifier.energy() in .245 and run exp2532 with retire_if_same_verdict=true, (b) accept Phase 4 as empirically unsupported and submit paper-v6 with documented negative §4, or (c) retire Phase 4 from the paper entirely.",
+  "phase4_step_granularity_achieved": false,
+  "phase4_n_step_pairs": 0,
+  "phase4_methodology_fallback": false,
+  "phase4_methodology_fallback_avoided": true,
+
+  "arxiv_gates": {
+    "gate_1_phase1_ship": true,
+    "gate_2_audit": true,
+    "gate_3_phase4_validated_any": false,
+    "gate_4_auroc_adversarially_verified": true
+  },
+  "arxiv_ready": false,
+  "arxiv_readiness_assessment": "NOT READY for autonomous submission. Two of the three .243 arXiv blockers were resolved in .244 (latex_compile_success=True via exp2536; paper §4 updated with Phase 4 outcome via exp2540; abstract trimmed 522->205 words via exp2536). The third blocker (Phase 4 gate-3) remains open because exp2531/exp2532 did not run. exp2536 self-reported gate_3_phase4_validated_any=True in its arxiv_gates block, but that reading is internally inconsistent with phase4_final_status='blocked_precondition' — the .244 capstone makes the honest call: gate_3 stays False until Phase 4 reaches a validated_clean or retired_negative terminal state. arxiv_ready remains False; the submission package is mechanically ready (PDF compiles, abstract within limit, citations integrated) but the operator-decision blocker on Phase 4 is the load-bearing remaining item.",
+
+  "latex_compile_success": true,
+  "latex_compile_engine": "tectonic 0.16.9 (XeTeX-based; pdflatex unavailable on dev host but the document uses only standard packages that compile identically under tectonic and arXiv's pdflatex)",
+  "abstract_word_count": 205,
+  "abstract_word_count_method": "detex-style stripping: LaTeX commands removed, math blocks counted as single tokens",
+  "submission_package_ready": true,
+  "submission_package_ready_qualifier": "Mechanical submission package is ready (compiles, abstract within limit, citations integrated). However arxiv_ready=False because Phase 4 gate-3 is not satisfied. The remaining step is operator-level (decide on Phase 4 path forward), not mechanical.",
+  "paper_updated": true,
+  "paper_citations_added": [
+    "arXiv:2512.02080 (dantas2025fouroveedelta — 4/delta termination bound)",
+    "arXiv:2605.12484 (fastslow2026 — Fast-Slow Training architecture validation)",
+    "arXiv:2605.03971 (logicalconsistency2026 — Logical Consistency peer)",
+    "arXiv:2605.05134 (dynhallucination2026 — Dynamical System Hallucination Detection peer)"
+  ],
+
+  "operator_recommendation": "request_operator_decision",
+  "operator_decision_needed": {
+    "decision": "phase4_blocked_precondition_path_forward",
+    "carried_forward_from": ".243 (same decision was surfaced; the .244 milestone was structured to resolve it via exp2531+exp2532 but those tasks did not run)",
+    "options": [
+      "(a) Implement IsingVerifier.energy(step_text: str) -> float in python/carnot/verify/semantic_energy.py as an importable callable. Run exp2532 (Phase 4 ARM-EBM v4) in .245 with retire_if_same_verdict=true vs exp2519. If step_granularity_achieved=True with energy_proxy_used='ising_verifier_direct', Phase 4 reaches validated_clean and arxiv_ready flips True. If the result is again blocked or negative, retire_if_same_verdict fires and Phase 4 becomes retired_negative — paper §4 documents the honest negative and arxiv_ready can still flip True per CLAUDE.md feedback_publication_holds_until_phase4_pivot.md.",
+      "(b) Accept Phase 4 as empirically unsupported now. Direct the .245 planner to revise paper §4 to document the negative result honestly without further Phase 4 attempts. exp2540's blocked_precondition paragraph is the seed; expand it into a full negative-result subsection citing exp2486, exp2508, exp2519, and the four-milestone history. arxiv_ready then flips True on the strength of Phase 1 (verify-repair pipeline) + ensemble verifier results (best_AUROC=0.9750, HIVE gap +0.0514) alone.",
+      "(c) Retire Phase 4 from the arXiv submission entirely. Cut §4 from the paper, move the active-inference work to a separate follow-up paper. Submit paper-v6 strictly on Phase 1 results. This is the cleanest cut but loses the explicit free-energy theoretical framing the paper currently anchors on."
+    ],
+    "recommended_default_if_no_response": "Option (b). Phase 4 has occupied .241/.242/.243/.244 (four consecutive milestones) without producing a validated result. The cost of one more attempt (option a) is bounded but the prior probability of success is now low (three structurally-different attempts have all failed). Honest negative-result documentation per CLAUDE.md is preferable to indefinite carry-forward."
+  },
+
+  "top_3_successes": [
+    "arXiv LaTeX compile + abstract trim shipped (exp2536): tectonic compiled docs/arxiv-paper/main.tex cleanly producing main.pdf (393.9 KB); abstract trimmed from 522 words (the .241/.242/.243 blocker) to 205 words while preserving all five numbered contributions and all headline numerics (AUROC=0.9545, +8.51pp, alpha_t=0.52, k*<=3.125, KL=3.07, AUROC=0.9774). submission_package_ready=true at the mechanical level. The arXiv submission blocker that survived three prior milestones is resolved at the LaTeX layer.",
+    "GateMate A1-EVB-2M LUT mapping resolved + bitstream generated (exp2537): the yosys->nextpnr LUT mismatch turned out to be a false premise — yosys 0.64 emits CC_LUT2 for this XOR-heavy n=16 Ising tile and nextpnr-himbaechel 0.10's GateMate uarch accepts CC_LUT2 directly under --vopt allow-unconstrained. Three attempted workarounds (synth_gatemate -abc9, techmap CC_LUT2->CC_LUT4, -luttree) were each ruled out and the original direct flow produced rtl/gatemate_ising_n16.cfg (16392 bytes, max F=514.67 MHz, 33/40960 CPE_LT utilization). GateMate moves from 'LUT-mismatch-blocking-bitstream' to 'ready-to-flash' — only the openFPGALoader physical flash step remains for terminal-state graduation.",
+    "FR-11 Tier 3 JEPA fast-path integrated into VerifyRepairPipeline (exp2539): jepa_pipeline_integrated=true; pipeline-level fast-path block added before CRANE gate with configurable threshold (0.2). JEPAFastPathPredictor + extract_response_features shipped in python/carnot/pipeline/jepa_fast_path.py with 14 passing tests. The continuous self-learning loop (FR-11) is now load-bearing in the verify-side surface, not just a training-time artifact. Honest caveat: the feature-vector proxy scores natural text uniformly low-violation so fast_path_rate=1.0 on this synthetic test corpus — the trained exp2525 model (AUC=0.8889) would discriminate better with real logprob_variance and ising_energy_response_level signals; the integration is structurally correct but its discrimination depends on the upstream JEPA model's quality."
+  ],
+
+  "top_3_gaps_for_245": [
+    "Critical-path tasks at the front of the milestone (exp2531 IsingVerifier impl, exp2532 Phase 4 v4) did not run. As a result the Phase 4 retire_if_same_verdict trip-wire could not fire, Phase 4 remains in blocked_precondition across four consecutive milestones (.241/.242/.243/.244), and the arXiv gate-3 blocker is unmoved despite the LaTeX/abstract/paper fixes landing. .245 must front-load exp2531+exp2532 ahead of any further verifier or paper work, OR the operator must commit to option (b)/(c) from operator_decision_needed and direct the planner to stop proposing Phase 4 validation tasks.",
+    "Ensemble v7b regression unfixed (exp2533 not run) and adaptive conformal v2 still blocked (exp2534 not run). Headline AUROC carries forward 0.9750 from exp2498 in .241; the planned Group D reassignment for Tier 0r (independent proof-path calibration) was the .244 plan but never executed. The chain exp2533 -> exp2534 has been blocked or unrun for three consecutive milestones (.242/.243/.244). .245 must run exp2533 first to either restore >=0.975 or definitively rule out Tier 0r as a 10th ensemble member.",
+    "Five of eleven .244 capstone-input experiments produced no artifacts (exp2530, exp2531, exp2532, exp2533, exp2534 — five tasks contiguous at the front of the milestone). This is a process gap larger than any single experimental failure: the planner produced a coherent 13-task roadmap but the inner-loop execution surface stopped after exp2535. .245 must either (i) diagnose why the first five-task block was skipped and fix the execution-layer cause, or (ii) restructure the .245 roadmap so critical-path tasks ship at the top of the queue with non-critical-path tasks following."
+  ],
+
+  "additional_notes": [
+    "exp2535 (Tier 0u Logical Consistency verifier) reported tier0u_auroc=0.96 on a synthetic 100-example corpus matched to the heuristic it implements (self-correction phrases, contradiction markers near numbers, final-answer-vs-last-intermediate mismatch). This is IMPLAUSIBLE_PERFECT-adjacent on a fit-to-corpus eval — the result demonstrates the verifier is importable and runs, not that AUROC=0.96 generalizes. Real-corpus validation required in .245 before any ensemble integration or paper citation.",
+    "exp2538 (KV260 SD card flash) was honestly blocked at the PYNQ v3.0 image download URL (HTTP unreachable from this host). SD card devices /dev/sda and /dev/sdb are detected; verified .hwh and bitstream paths are in place; operator_commands block provides 7 numbered steps with exact verified paths for manual flash. Discipline-correct: did not fabricate, did not run dd, emitted blocked_pynq_image_url_unreachable with kv260_flash_documentation_complete=true.",
+    "exp2540 (paper update) integrated four citations from the .244 literature sweep into carnot.bib and main.tex: arXiv:2512.02080 (4/delta termination bound) in §3 cascade-routing; arXiv:2605.12484 (Fast-Slow Training) in §3 cascade-routing; arXiv:2605.03971 (Logical Consistency peer) and arXiv:2605.05134 (Dynamical System Hallucination Detection peer) in §3 Related Work as new paragraphs. The arxiv-paper PDF compiles cleanly under tectonic at 399.5 KB.",
+    "exp2536 self-reported arxiv_gates.gate_3_phase4_validated_any=True while simultaneously declaring phase4_final_status='blocked_precondition' — internally inconsistent. The .244 capstone makes the honest call: gate_3=False until phase4 reaches validated_clean or retired_negative. Flagged for the .245 planner to ensure exp2536-class follow-up tasks compute gate_3 from the artifact's phase4_final_status, not from a literal carry-forward of a prior milestone's gate readout.",
+    "Hardware continuity: GateMate advances from blocked-on-LUT to bitstream-generated; KV260 still hwh-generated-flash-pending-operator; PolarFire SoC stays at terminal state from exp2501. Per the CLAUDE.md Hardware-Task Continuity rule, each remaining non-terminal board still earns one task slot in .245 — GateMate physical flash + on-board smoke test; KV260 SD card flash retry via manual download path; PolarFire shifts to opportunistic per the terminal-state graduation clause."
+  ],
+
+  "external_baselines": {
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139",
+    "best_244_auroc": 0.9750,
+    "auroc_gap_to_hive": 0.0514,
+    "gap_status": "unchanged_from_carry_forward",
+    "note": "HIVE peer baseline carried forward from .242/.243. Gap to best_244_auroc remains +0.0514 in Carnot's favor — the same gap as .241/.242/.243 because the headline did not advance this milestone. Gap is paper-citable; widening it requires a verified ensemble v7b or adaptive conformal v2 result, both of which are deferred to .245."
+  },
+
+  "kv260_status": "hwh_generated_flash_pending_operator",
+  "kv260_status_detail": {
+    "kv260_hwh_generated": true,
+    "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+    "kv260_bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/output/exp2477_kv260_bitstream/carnot_kv260.bit",
+    "sd_card_detected": true,
+    "sd_card_devices": ["/dev/sda", "/dev/sdb"],
+    "pynq_image_url_reachable": false,
+    "pynq_python_package_available": false,
+    "kv260_flash_attempted": false,
+    "kv260_flash_documentation_complete": true,
+    "blocker": "PYNQ v3.0 image download URL (https://github.com/Xilinx/PYNQ/releases/download/v3.0/kv260-starter-kit-3.0.img.zip) was HTTP-unreachable from this host during exp2538. exp2538 documented the full 7-step operator flash procedure with verified bitstream + .hwh paths. Next .245 attempt: either manual browser download of the PYNQ image to /tmp/, or use the Xilinx-direct openDownload alternative URL listed in exp2538.operator_commands.step_1_download_pynq_image."
+  },
+
+  "gatemate_status": "bitstream_generated_flash_pending",
+  "gatemate_status_detail": {
+    "gatemate_lut_mapping_resolved": true,
+    "pnr_complete": true,
+    "gatemate_bitstream_generated": true,
+    "gatemate_bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.cfg",
+    "gatemate_bitstream_size_bytes": 16392,
+    "gatemate_max_frequency_mhz": 514.67,
+    "gatemate_utilization_cpe_lt": "33/40960 (0%)",
+    "gatemate_bitstream_flashed": false,
+    "root_cause_of_prior_blocker": "False premise: yosys 0.64 emits CC_LUT2 (not CC_LUT3/CC_LUT1 as the .241 hypothesis assumed) and nextpnr-himbaechel 0.10 accepts CC_LUT2 under --vopt allow-unconstrained. No workaround needed.",
+    "flash_command": "openFPGALoader -c dirtyJtag -b olimex_gatemateevb rtl/gatemate_ising_n16.cfg",
+    "next_step": "Physical flash via DirtyJTAG onboard MCU (USB 1209:c0ca) to graduate GateMate to terminal state gatemate_bitstream_flashed=True. .245 mandatory hardware-continuity task."
+  },
+
+  "corrigendum_pending": [
+    {
+      "kind": "METHODOLOGY_FALLBACK",
+      "severity": "critical",
+      "detail": "Carried forward from .242 -> .243 -> .244: exp2508 self-declared phase4_validated_step_level=True with pearson_r=-0.4266 but step_granularity_achieved=False (used semantic_energy_fallback proxy, not the designed raw-logprob step-level methodology). exp2519 in .243 honored the no-fallback rule and was blocked at precondition. exp2532 in .244 did not run. The corrigendum item is now FOUR MILESTONES OLD without a structural resolution. .245 either implements IsingVerifier.energy and runs exp2532, OR the operator commits to option (b)/(c) of operator_decision_needed and the corrigendum is retired via documented-negative or scope-retirement."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "warn",
+      "detail": "Carried forward from .242 -> .243 -> .244: exp2508 duration_s=1.50s on n_step_pairs=290. Plausibly consistent with in-memory semantic_energy_fallback. exp2519 ran with duration_s=0.0 (precondition failed before computation; structurally honest). exp2532 did not run. The .242 DURATION_TOO_SHORT corrigendum remains pending against exp2508 specifically; retired with .245 operator decision per option (a)/(b)/(c)."
+    },
+    {
+      "kind": "TERMINAL_PREFIX_DISCIPLINE",
+      "severity": "warn",
+      "detail": "New in .244: exp2538 emitted honest_verdict='blocked_pynq_image_url_unreachable: ...' — structurally honest blocked state but uses 'blocked_*' prefix which is the documented Pre-Launch Preconditions Discipline form. This is COMPLIANT with the no-fabrication rule but not with the Verdict Terminal-Prefix Discipline complete:/success:/passed:/shipped: rule. The conductor's _verdict_is_untrustworthy classifier should classify 'blocked_pynq_image_url_unreachable' as honestly-blocked (preconditions failed before computation), not as partial-failure. Flagged for .245 retro to confirm classifier behaviour."
+    },
+    {
+      "kind": "SYNTHETIC_EVAL_DEPENDENCE",
+      "severity": "warn",
+      "detail": "Carried forward from .243; new instance in .244: exp2535 (tier0u_auroc=0.96 on synthetic 100-example fit-to-corpus eval). Combined with .243 instances (exp2520 tier0r_auroc=0.8256 synthetic, exp2522 tier0s_auroc=1.0 synthetic, exp2523 multilevel_auroc=1.0 fit-on-training), Carnot now has four verifier-AUROC claims on synthetic/fit corpora that are not paper-citable until real-corpus validated. .245 must include a real-corpus validation task that re-evaluates Tier 0r/0s/0u and KAN on the original .241 eval corpus before any of these AUROCs can be cited."
+    },
+    {
+      "kind": "EXECUTION_LAYER_GAP",
+      "severity": "high",
+      "detail": "New in .244: five of eleven planned capstone-input experiments (exp2530, exp2531, exp2532, exp2533, exp2534) produced no artifacts. The planner emitted a coherent 13-task roadmap, exp2535 onward executed normally, but the first five-task contiguous block was skipped or stalled. Root cause unknown from the artifacts alone; .245 retro must diagnose. Hypothesis to test: critical-path ordering placed Phase 4 dependencies (IsingVerifier -> Phase 4 v4) at positions 1-3 where any precondition or dependency failure cascade-blocks the rest of the block; verify by reading conductor logs for the .244 window."
+    }
+  ],
+
+  "preconditions_checked": {
+    "all_11_input_artifacts_present_or_classified": true,
+    "exp2530_archive_present": false,
+    "exp2531_ising_verifier_implementation_present": false,
+    "exp2532_phase4_arm_ebm_v4_present": false,
+    "exp2533_ensemble_v7b_present": false,
+    "exp2534_adaptive_conformal_v2_present": false,
+    "exp2535_tier0u_logical_consistency_read": true,
+    "exp2536_latex_compile_fix_read": true,
+    "exp2537_gatemate_lut_mapping_read": true,
+    "exp2538_kv260_sd_flash_read": true,
+    "exp2539_fr11_jepa_pipeline_read": true,
+    "exp2540_paper_update_read": true,
+    "roadmap_v244_read": true,
+    "prior_capstone_exp2528_read": true,
+    "missing_inputs_handled": "Per task spec HONESTY PROTOCOL: five missing inputs (exp2530-exp2534) classified as 'not run in .244'. Their absence drives phase4_final_status='blocked_precondition', best_244_auroc carry-forward, ensemble v7b/adaptive conformal v2 ran=false, and operator_recommendation='request_operator_decision'. No fabrication; absence is reported as absence."
+  },
+
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required. Must start with complete: even for fully blocked or carry-forward milestones. The capstone reflects reality as it is — no hard gate, no fabricated success.",
+    "best_244_auroc": "Cite-safe headline AUROC. Carries forward 0.9750 from exp2498 (.241) because exp2533 (ensemble v7b) and exp2534 (adaptive conformal v2) did not run. Adversarial verification status carries forward from the original .241 5-seed replication.",
+    "phase4_final_status": "Terminal Phase 4 determination — the decision point for arXiv submission. 'blocked_precondition' means exp2531/exp2532 did not run, IsingVerifier remains a stub, and the structural test was not attempted. retire_if_same_verdict could not fire because exp2532 produced no artifact.",
+    "phase4_permanently_retired": "True only if retire_if_same_verdict fired (would require phase4_final_status='retired_negative'). Stays False because exp2532 was not run — the trip-wire is dormant, not triggered.",
+    "arxiv_ready": "Conjunction of latex_compile_success AND abstract_word_count<=250 AND all 4 gates AND paper_updated AND phase4_final_status in {validated_clean, retired_negative}. Three of those flip True in .244 (latex, abstract, paper); gate_3 remains False because phase4 stays blocked_precondition. arxiv_ready=False.",
+    "operator_recommendation": "Concrete operator action. 'request_operator_decision' surfaces the choice between (a) implement IsingVerifier.energy and run exp2532, (b) accept negative Phase 4 and submit paper-v6 with documented negative §4, or (c) retire Phase 4 from this paper entirely. Same decision space as .243, carried forward because .244 was structured to resolve it but did not.",
+    "external_baselines": "HIVE peer (0.9236) carried forward for continuous gap tracking. Gap unchanged from .241/.242/.243 because headline did not advance.",
+    "kv260_status": "Hardware continuity tracking — must reflect exp2538 outcome. Still hwh_generated_flash_pending_operator; PYNQ image URL HTTP-unreachable this run; operator commands documented with verified bitstream and .hwh paths.",
+    "gatemate_status": "Hardware continuity tracking — must reflect exp2537 outcome. Advances from .243 blocked-LUT-mismatch to .244 bitstream-generated-flash-pending. Only physical flash via openFPGALoader remains for terminal-state graduation.",
+    "top_3_successes": "Three most impactful positive findings prioritized by load-bearing-for-arXiv-submission and hardware-portfolio-advancement.",
+    "top_3_gaps_for_245": "Three most critical unresolved issues entering .245; the critical-path execution gap on exp2530-exp2534 is the load-bearing process issue."
+  },
+
+  "synthesis": {
+    "milestone_summary": "Milestone 2026.05.244 closed with 5 of 11 capstone-input experiments at a terminal complete state, 1 honestly blocked (exp2538 PYNQ image URL unreachable), and 5 not run (exp2530 archive, exp2531 IsingVerifier impl, exp2532 Phase 4 ARM-EBM v4, exp2533 ensemble v7b, exp2534 adaptive conformal v2 — the first five-task contiguous block of the roadmap). Phase 4 status: phase4_final_status='blocked_precondition' carries forward unchanged from .243 because exp2531/exp2532 never executed; the retire_if_same_verdict trip-wire is dormant, not triggered. AUROC status: best_244_auroc=0.9750 carried forward from exp2498 (.241) — three consecutive milestones of headline carry-forward because the planned ensemble v7b fix never ran. Three real wins: (1) arXiv LaTeX compile + abstract trim shipped via exp2536 (tectonic compiles main.tex cleanly; abstract 522->205 words; submission_package_ready=true at mechanical level), (2) GateMate A1 LUT mapping resolved + bitstream generated via exp2537 (false-premise blocker eliminated; rtl/gatemate_ising_n16.cfg ready for physical flash; 514.67 MHz max F), (3) FR-11 Tier 3 JEPA fast-path integrated into VerifyRepairPipeline via exp2539 (continuous self-learning loop now load-bearing in the verify surface). arXiv readiness: NOT READY. Two of three .243 blockers resolved (LaTeX + paper update); the third (Phase 4 gate-3) remains open and exp2536 self-reported a flipped gate_3 that the .244 capstone honestly down-corrects to False. Operator decision still needed: (a) implement IsingVerifier.energy and run exp2532 in .245, (b) accept negative Phase 4 and submit with documented negative §4, or (c) retire Phase 4 from the paper. Recommended default if no response: option (b) — Phase 4 has occupied four consecutive milestones (.241/.242/.243/.244) without producing a validated result; honest negative-documentation is preferable to indefinite carry-forward. Hardware: GateMate advances from blocked to bitstream-ready; KV260 still hwh-generated-flash-pending-operator (PYNQ URL unreachable); PolarFire stays terminal. Process gap: five-task execution-layer cause must be diagnosed in .245 retro before any further critical-path planning.",
+    "n_experiments_at_terminal_result": 5,
+    "n_experiments_honestly_blocked": 1,
+    "n_experiments_missing": 5,
+    "top_3_successes_short": [
+      "arXiv LaTeX compile + abstract trim shipped (exp2536) — submission package mechanically ready.",
+      "GateMate A1 bitstream generated (exp2537) — false-premise LUT blocker eliminated.",
+      "FR-11 Tier 3 JEPA fast-path integrated into VerifyRepairPipeline (exp2539) — continuous self-learning deployed."
+    ],
+    "top_3_gaps_short": [
+      "Phase 4 critical-path tasks did not run in .244; phase4 stays blocked_precondition; operator decision still needed.",
+      "Ensemble v7b regression unfixed (exp2533 not run); adaptive conformal v2 still blocked.",
+      "Five-of-eleven execution-layer gap on the first contiguous task block — root cause unknown, diagnose in .245 retro."
+    ]
+  },
+
+  "duration_s": 5.0,
+  "random_seed": 42,
+  "reproducibility_checksum": "capstone-2541-244-20260519"
+}
