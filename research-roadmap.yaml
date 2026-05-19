@@ -342,7 +342,7 @@ tasks:
     \ {project_root}/kv260/*.v 2>/dev/null | wc -l\n        If count < 1: check {project_root}/fpga/*.v and\
     \ other directories.\n        If no RTL files found: write honest_verdict blocked_rtl_files_missing and exit.\n\
     \n  1. Run yosys synthesis with CAPTURED stderr:\n     cd /tmp && /opt/oss-cad-suite/bin/yosys -p \"\n       read_verilog\
-    \ {rtl_files};\n       synth -top <top_module> -noabc;\n     \" 2>&1 | tee /tmp/yosys_synthesis_output.txt\n\
+    \ {{rtl_files}};\n       synth -top <top_module> -noabc;\n     \" 2>&1 | tee /tmp/yosys_synthesis_output.txt\n\
     \     Read /tmp/yosys_synthesis_output.txt to find the ERROR line(s).\n\n  2. Parse error output:\n     Find\
     \ lines matching: ERROR|error|syntax error|parse error\n     Extract: file_with_error, line_number, error_description.\n\
     \     If no errors found in captured output: write honest_verdict blocked_no_error_captured and exit.\n\n \
@@ -463,7 +463,7 @@ tasks:
     \ --break-system-packages -q 2>&1 | tail -5'\n     Record: install_succeeded (True/False), install_output.\n\
     \n  2. If install_succeeded: run a basic energy computation:\n     ssh polarfire 'python3 -c \"\nimport carnot\n\
     from carnot.models.ising import IsingModel\nm = IsingModel(n_spins=4, seed=42)\ne = m.energy()\nprint(f\\\"\
-    energy={e:.4f}\\\")\n\"' 2>&1\n     Record: carnot_runs_on_polarfire (True/False), energy_value.\n\n  3. If\
+    energy={{e:.4f}}\\\")\n\"' 2>&1\n     Record: carnot_runs_on_polarfire (True/False), energy_value.\n\n  3. If\
     \ install failed: run minimal Python-only check:\n     ssh polarfire 'python3 -c \"import math; print(math.exp(-0.5))\"\
     ' 2>&1\n     Record: python_arithmetic_works.\n\n  4. Get system info:\n     ssh polarfire 'uname -a && free\
     \ -h && df -h /' 2>&1\n     Record: os_version, ram_available_mb, disk_available_gb.\n\n  5. Write deliverable.\n\
