@@ -5108,3 +5108,5 @@ Ripgrep i |
 | 2026-05-19 18:37 UTC | Phase 2a: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2521-ensemble-v7-tier0r-integration) |
 | 2026-05-19 18:44 UTC | Phase 2c: FR-11 Tier 3 JEPA -- Phase 4 Step-Level  | OK | 81 passed, 1 warning in 2.37s |
 | 2026-05-19 18:46 UTC | Phase 2a: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2521-ensemble-v7-tier0r-integration) |
+| 2026-05-19 18:49 UTC | Phase 3 (Hardware): KV260 SD Card Preparation + Fl | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2526_kv260_s |
+| 2026-05-19 18:51 UTC | Phase 2a: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2521-ensemble-v7-tier0r-integration) |
