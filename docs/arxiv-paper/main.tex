@@ -1491,30 +1491,30 @@ scales and with different substrates.
 
 \subsection{Phase 4 Empirical Validation}
 
-Phase 4 empirical validation is documented as pending due to blocked preconditions. The direct IsingVerifier validation (exp2519) was blocked by a missing \texttt{ising\_verifier\_import} dependency. We carry forward the exp2508 literal gate: Experiment 2508 achieved Phase 4 step-level validation using a semantic energy proxy (\texttt{pearson\_r=-0.426}, $p=0.01$). While this fulfills the step-granularity validation criteria, the use of a fallback proxy rather than direct IsingVerifier step-level energy indicates structural limitations in energy granularity remain.
-
-\textbf{Phase 4 ARM-EBM final validation attempt (exp2532): blocked precondition.}
-The planned definitive Phase 4 validation using the Autoregressive Masked
-Energy-Based Model (ARM-EBM)~\cite{wu2025arm-ebm} substrate (exp2532) did not
-produce a result artifact. The precondition check (required GGUF model cache
-or ARM-EBM weights available locally) was not satisfied at the time the
-experiment was queued. Accordingly, no new Phase~4 numerical claims are made
-in this section beyond those already documented: the exp2508 semantic proxy
-(\texttt{pearson\_r=-0.426}, $p=0.01$) remains the last verified Phase~4 step-level
-measurement. The Phase~4 conclusion is therefore:
+\paragraph{Honest negative result.}
+We attempted to empirically validate the Phase~4 free-energy bijection
+hypothesis across four consecutive milestones. The hypothesis predicts that
+Carnot constraint-violation energy (\texttt{IsingVerifier}) correlates with
+ARM-EBM~\cite{wu2025arm-ebm} token-level free energy (sum of negative
+log-probabilities) at per-CoT-step granularity. Four structured attempts were
+made:
 \begin{itemize}
-  \item The theoretical free-energy equivalence (Section~\ref{sec:phase4-active-inference})
-        is established.
-  \item The synthetic pilot (exp1165) demonstrates that Carnot's energy surface
-        can guide an active-inference sampler on toy ARC-AGI-3-like puzzles.
-  \item Step-level energy correlation ($\mathrm{pearson\_r} = -0.426$, $p = 0.01$,
-        exp2508 semantic proxy) provides preliminary empirical support for
-        the free-energy interpretation.
-  \item Direct IsingVerifier ARM-EBM validation remains open work; the absence
-        of exp2532 is an honest blocked-precondition state, not a negative result.
+  \item exp2486 (milestone .240): \texttt{pearsonr=0.108}, $p=0.28$---below the
+        $\lvert r\rvert > 0.30$ threshold.
+  \item exp2508 (milestone .242): \texttt{step\_granularity\_achieved=False}
+        (\texttt{semantic\_energy\_fallback} proxy used instead of direct
+        \texttt{IsingVerifier}; methodology gap).
+  \item exp2519 (milestone .243): \texttt{blocked\_ising\_verifier\_not\_available}
+        (\texttt{IsingVerifier} class was a stub with no methods).
+  \item exp2532 (milestone .244): not executed (\texttt{IsingVerifier} stub not
+        implemented before the experiment ran).
 \end{itemize}
-This section will be revised when a direct-substrate Phase~4 validation
-artifact is available and adversarially verified.
+Phase~4 remains a theoretical hypothesis. The active-inference free-energy
+framing (arXiv:2605.04065, arXiv:2512.15605, arXiv:2605.09515) provides strong
+theoretical motivation, but empirical validation of the bijection at
+step-level granularity was not achieved. Future work should investigate
+token-level logprob integration with constraint-based energy computation using
+a fully implemented \texttt{IsingVerifier}.
 
 \subsection{Gap analysis and future work}
 

@@ -1,0 +1,92 @@
+{
+  "experiment": "exp2544",
+  "title": "Phase 4 Option B honest negative documentation",
+  "run_date": "2026-05-19T22:36:39Z",
+  "duration_s": 151,
+  "honest_verdict": "complete: phase4_section_expanded=true; phase4_honest_negative_documented=true; acceptance_gate=passed",
+  "phase4_section_expanded": true,
+  "phase4_honest_negative_documented": true,
+  "experiments_cited": [
+    "exp2486",
+    "exp2508",
+    "exp2519",
+    "exp2532"
+  ],
+  "preconditions_checked": [
+    {
+      "resource": "docs/arxiv-paper/main.tex",
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex",
+      "available": true
+    },
+    {
+      "resource": "CODEX.md",
+      "check": "read before non-trivial repository change",
+      "available": true
+    },
+    {
+      "resource": "results/experiment_2540_paper_update.json",
+      "check": "read prior Phase 4 paper-update artifact",
+      "available": true
+    },
+    {
+      "resource": "docs/arxiv-paper/main.tex §4.4 Phase 4 Empirical Validation",
+      "check": "located exp2540 blocked_precondition paragraph and replaced it with the Option B honest negative subsection",
+      "available": true
+    }
+  ],
+  "paper_section": "docs/arxiv-paper/main.tex §4.4 Phase 4 Empirical Validation",
+  "phase4_resolution": "Option B adopted: Phase 4 remains a theoretical hypothesis; empirical validation of the free-energy bijection at step-level granularity was not achieved.",
+  "gate3_redefined_result": "passed: phase4_resolved = phase4_validated_any OR phase4_honest_negative_documented",
+  "verification": {
+    "requested_grep_check": {
+      "command": "grep -A5 'phase 4\\|freia\\|bijection\\|arm-ebm' /home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex -i | head -30",
+      "passed": true
+    },
+    "experiment_reference_check": {
+      "command": "rg -n \"Honest negative result|exp2486|exp2508|exp2519|exp2532|Phase~4 remains a theoretical hypothesis|step-level granularity was not achieved\" docs/arxiv-paper/main.tex",
+      "passed": true
+    },
+    "latex_compile": {
+      "command": "tectonic main.tex",
+      "workdir": "docs/arxiv-paper",
+      "passed": true,
+      "notes": "Compiled successfully; tectonic reported layout warnings only."
+    }
+  },
+  "files_modified": [
+    "docs/arxiv-paper/main.tex",
+    "docs/arxiv-paper/main.pdf",
+    "results/experiment_2544_phase4_option_b.json"
+  ],
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "Terminal-prefix required.",
+      "satisfied_by": "Value starts with 'complete:' and records the passed gate."
+    },
+    "phase4_section_expanded": {
+      "principle": "True if main.tex §4 now contains the full honest negative subsection with all four experiment references. This is the gating signal for arXiv submission package (exp2553).",
+      "satisfied_by": "§4.4 contains the Honest negative result paragraph and cites exp2486, exp2508, exp2519, and exp2532."
+    },
+    "phase4_honest_negative_documented": {
+      "principle": "True if the honest negative documentation (4 attempts, all failed/blocked) is in main.tex. This satisfies the redefined gate-3: phase4_resolved = phase4_validated_any OR phase4_honest_negative_documented.",
+      "satisfied_by": "The subsection states that Phase 4 remains a theoretical hypothesis and that step-level bijection validation was not achieved."
+    },
+    "experiments_cited": {
+      "principle": "List of experiment IDs cited in §4 negative subsection — exp2486, exp2508, exp2519, exp2532 expected.",
+      "satisfied_by": "All four expected IDs are present in docs/arxiv-paper/main.tex."
+    },
+    "preconditions_checked": {
+      "principle": "Records which resources were verified.",
+      "satisfied_by": "main.tex, CODEX.md, exp2540 artifact, and the §4.4 target paragraph were verified before writing this deliverable."
+    },
+    "duration_s": {
+      "principle": "Wall-clock measurement.",
+      "satisfied_by": "Measured from 2026-05-19T22:34:08Z start to 2026-05-19T22:36:39Z deliverable timestamp."
+    }
+  },
+  "acceptance_gate": {
+    "condition": "phase4_honest_negative_documented == true",
+    "principle": "Phase 4 Option B is complete when the honest negative is in main.tex. This satisfies the redefined gate-3 and unblocks arXiv submission.",
+    "result": "PASSED"
+  }
+}
