@@ -6291,3 +6291,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 3: FST MCMC Energy Integration Fix v3 -- Fix Degenerate acceptance_rate=1.0 from exp2426 (✅ Complete) — honest_verdict=complete: MCHFSTFilter energy fixed; results/experiment_2442_fst_mcmc_energy_fix_v3.json
 - 2026-05-19: Phase 3: Kinetic Langevin as FST Sampler -- Connect KL=1.987 Best Sampler to FST Pipeline (✅ Complete) — honest_verdict=complete: KineticLangevinFSTSampler evaluated; results/experiment_2443_kinetic_langevin_fst.json
 - 2026-05-19: Phase 3: NCO Negative Constraint Decoding (arXiv:2605.10065) -- WFSA-Based Constraint Rejection (✅ Complete) — honest_verdict=complete: AUROC=0.500; results/experiment_2444_nco_negative_constraint.json
+- 2026-05-19: Phase 4: Milestone 2026.05.236 Operational Retrospective (⚠️ Blocked) — honest_verdict=complete: retro generated with 10 completed, 1 failed, 1 blocked.; results/experiment_2446_retro_v236.json
