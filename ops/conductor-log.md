@@ -4980,3 +4980,4 @@ Ripgrep i |
 | 2026-05-19 00:25 UTC | Phase 3: NCO Negative Constraint Decoding (arXiv:2 | OK | 81 passed, 1 warning in 2.27s |
 | 2026-05-19 00:27 UTC | Phase 4: Paper-v6 Results Table + Capstone v236 -- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2438-conformal-ensemble-v1.ensemble_aur |
 | 2026-05-19 00:29 UTC | Phase 4: Paper-v6 Results Table + Capstone v236 -- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2438-conformal-ensemble-v1.ensemble_aur |
+| 2026-05-19 00:31 UTC | Phase 4: Paper-v6 Results Table + Capstone v236 -- | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2438-conformal-ensemble-v1.ensemble_aur |
