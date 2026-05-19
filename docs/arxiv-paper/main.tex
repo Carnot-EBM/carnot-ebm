@@ -1195,7 +1195,7 @@ is NOT yet lifted even though the report classifies the work as
 partially validated. arXiv-readiness assessment for this milestone:
 arXiv NOT YET ready: formula gates met (phase1+audit+phase4\_partial) but operator hold remains until phase4\_validated=True (currently False)..
 
-\subsection{Milestone .240 update}
+\subsection{Milestones .240 to .242 update}
 
 \begin{table}[ht]
   \centering
@@ -1204,9 +1204,10 @@ arXiv NOT YET ready: formula gates met (phase1+audit+phase4\_partial) but operat
     Ensemble / Metric & AUROC & CI [low, high] \\
     \midrule
     Best .241 Ensemble & 0.9750 & [0.933, 1.017] \\
+    Tier 0r & 0.9123 & \\
     \bottomrule
   \end{tabular}
-  \caption{AUROC results table. The Best .241 Ensemble row is adversarially verified (5-seed group-conditional replication, exp2498).}
+  \caption{AUROC results table. The Best .241 Ensemble row is adversarially verified (5-seed group-conditional replication, exp2498). Note: the reported \texttt{best\_241\_auroc=0.975} and \texttt{group\_conditional\_replicated=0.975} refer to the exact same method and metric from the same experiment, rather than two distinct measurements. The newly introduced Tier 0r verifier achieved an AUROC of 0.9123 (exp2504).}
   \label{tab:auroc-results}
 \end{table}
 
@@ -1628,6 +1629,14 @@ platforms remains planned future work.
 \label{sec:limitations}
 
 Carnot uses Qwen3.6 as one of three mandatory SOTA local models. However, \cite{vas_blog_qwen_censorship} documents a writer-layer censorship circuit (comprising $d_{\mathrm{prc}}$, $d_{\mathrm{refuse}}$, and $d_{\mathrm{style}}$ axes) in Qwen3.5-9B that suppresses retrieval on PRC-sensitive topics without removing the underlying factual knowledge. Because Qwen3.6 is downstream of Qwen3.5, it almost certainly inherits this circuit. This presents a structural limitation: Carnot's black-box output verifiers operate downstream of the routing decision, meaning they cannot distinguish ``model refused'' from ``model doesn't know'' on suppressed-retrieval topics. Furthermore, the cross-axis overgeneralization observed (e.g., a $d_{\mathrm{prc}}$ misfire on sovereignty language leading to the false claim that ``Kosovo is an integral part of China'') is detectable by factual-recall verifiers if tested; a full audit of this behavior is pending in the .239+ chain. Carnot's portfolio mitigation---using Gemma 4 and Llama alternatives in the same SOTA list---reduces single-vendor dependence and addresses this vendor-specific risk.
+
+\subsection{Recent Experimental Findings (Milestones .241-.242)}
+
+\begin{itemize}
+    \item \textbf{Tier 0q (Spilled Energy) Verifier Retirement:} Documentation from exp2497 indicates the Spilled Energy Tier 0q verifier operates at a noise floor (AUROC=0.4903). Consequently, this mechanism has been retired from the primary ensemble.
+    \item \textbf{Phase 4 Step-Level Verification:} Experiment 2508 achieved Phase 4 step-level validation using a semantic energy proxy (\texttt{pearson\_r=-0.426}, $p=0.01$). While this fulfills the step-granularity validation criteria, the use of a fallback proxy (\texttt{semantic\_energy\_fallback}) rather than direct IsingVerifier step-level energy indicates structural limitations in energy granularity remain.
+    \item \textbf{HalluGuard Tier 0s Viability:} The evaluation of the HalluGuard Tier 0s verifier (exp2509) was blocked due to an absence of an evaluation corpus (\texttt{n\_eval=0}), rendering it currently unviable.
+\end{itemize}
 
 \section{Conclusion \& Roadmap}
 \label{sec:roadmap}
