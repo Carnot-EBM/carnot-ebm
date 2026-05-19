@@ -452,6 +452,8 @@ class VerifyRepairPipeline:
         odar_router: Any | None = None,
         routing_mode: str = "argmax",
         balance_ratio: float = 1.0,
+        jepa_fast_path_predictor: Any | None = None,
+        jepa_fast_path_threshold: float = 0.2,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -558,6 +560,11 @@ class VerifyRepairPipeline:
         self._odar_router = odar_router
         self.routing_mode = routing_mode
         self.balance_ratio = balance_ratio
+        # Pipeline-level JEPA fast-path predictor (exp2525, REQ-JEPA-002).
+        # When set, predict_p_violation is called in verify() before Ising;
+        # if p < jepa_fast_path_threshold the Ising pass is skipped entirely.
+        self._jepa_fast_path_predictor = jepa_fast_path_predictor
+        self._jepa_fast_path_threshold = jepa_fast_path_threshold
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
@@ -1392,6 +1399,38 @@ class VerifyRepairPipeline:
             typed_reasoning=typed_reasoning,
             semantic_grounding=semantic_grounding,
         )
+
+        # Pipeline-level JEPA fast-path gate (exp2525, REQ-JEPA-002).
+        # Uses lightweight response-feature proxies (response_length_norm,
+        # logprob_variance_proxy) to predict P(violation) before running the
+        # expensive Ising pass.  When p < jepa_fast_path_threshold (default 0.2),
+        # we trust the response is clean and return early with verified=True.
+        # The predictor's calls_fast_path counter is incremented when fired so
+        # callers can measure the fast-path hit rate across a batch.
+        if self._jepa_fast_path_predictor is not None:
+            _p_violation = self._jepa_fast_path_predictor.predict_p_violation(response)
+            if _p_violation < self._jepa_fast_path_threshold:
+                self._jepa_fast_path_predictor.calls_fast_path += 1
+                return _with_fst_certificate(
+                    VerificationResult(
+                        verified=True,
+                        constraints=[],
+                        energy=0.0,
+                        violations=[],
+                        certificate={
+                            "mode": "JEPA_FAST_PATH",
+                            "jepa_p_violation": _p_violation,
+                            "jepa_threshold": self._jepa_fast_path_threshold,
+                            "skipped_verification": True,
+                            "fast_path_used": True,
+                        },
+                        mode="JEPA_FAST_PATH",
+                        skipped=True,
+                        typed_reasoning=typed_reasoning,
+                        semantic_grounding=semantic_grounding,
+                        semantic_verifier_v2=semantic_verifier_v2,
+                    )
+                )
 
         # CRANE (arXiv:2502.09061) balance ratio gating
         if getattr(self, "balance_ratio", 1.0) < 1.0:
