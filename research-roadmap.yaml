@@ -113,11 +113,11 @@ tasks:
     November 1989?', 'What is the capital of Germany?'\n\n  3. Load REAL GGUF model
     (n_ctx=512, verbose=False). Record: model_path, model_family, load_time_s.\n     For each
     of 40 prompts: generate response (max_tokens=200).\n     Record per-response:
-    {prompt_type, prompt, response, inference_time_s}.\n     STOP and write honest_verdict
+    {{prompt_type, prompt, response, inference_time_s}}.\n     STOP and write honest_verdict
     blocked_inference_failed if ANY generation raises an exception.\n\n  4. Compute Carnot
     verifier energy for each response:\n     Use SemanticEnergy from python/carnot/verify/semantic_energy.py\n
     \    OR compute energy as negative logprob proxy: energy = -mean(logprob) if logprob
-    available.\n     Record: {idx, prompt_type, energy, energy_method}.\n\n  5. Statistical
+    available.\n     Record: {{idx, prompt_type, energy, energy_method}}.\n\n  5. Statistical
     test:\n     energy_prc_mean = mean(energy for prompt_type=='prc')\n     energy_neutral_mean
     = mean(energy for prompt_type=='neutral')\n     from scipy.stats import ttest_ind\n
     \    t_stat, p_value = ttest_ind(prc_energies, neutral_energies, alternative='greater')\n
@@ -190,7 +190,7 @@ tasks:
     Compute per-token marginalized energy (arXiv:2602.18671 §3.2):\n        marginalized_energy_entry
     = -mean(p_i for all tokens) # mean logprob negated = energy\n     d. Get label: 0 = correct,
     1 = hallucination (from 'label', 'is_hallucination', or 'correctness_label' field).\n     e.
-    Record: {idx, label, spilled_energy, marginalized_energy, n_tokens}\n\n  2. Compute Phase 4
+    Record: {{idx, label, spilled_energy, marginalized_energy, n_tokens}}\n\n  2. Compute Phase 4
     metrics:\n     from scipy.stats import pearsonr\n     from sklearn.metrics import roc_auc_score\n
     \    pearson_spilled, p_spilled = pearsonr(spilled_energy_array, label_array)\n
     \    pearson_marginalized, p_marginalized = pearsonr(marginalized_energy_array, label_array)\n
@@ -269,8 +269,8 @@ tasks:
     test_cal_B, test_cal_C)\n     d. Compute test_auroc_group_cond = roc_auc_score(test_labels,
     test_combined)\n     e. TAUTOLOGY CHECK: verify abs(test_cal_A.mean() - test_cal_B.mean())
     > 0.001\n        AND abs(test_cal_B.mean() - test_cal_C.mean()) > 0.001\n        Record:
-    cross_group_tautology_check_passed = True if all diffs > 0.001\n     f. Record: {seed,
-    test_auroc_group_cond, mean_cal_A, mean_cal_B, mean_cal_C, cross_group_tautology_check_passed}\n\n
+    cross_group_tautology_check_passed = True if all diffs > 0.001\n     f. Record: {{seed,
+    test_auroc_group_cond, mean_cal_A, mean_cal_B, mean_cal_C, cross_group_tautology_check_passed}}\n\n
     \  3. Compute summary:\n     group_conditional_auroc_replicated: mean(test_auroc_group_cond)\n
     \    group_conditional_auroc_std: std(test_auroc_group_cond)\n
     \    group_conditional_ci_95_low: mean - 1.96 * std\n     group_conditional_ci_95_high:
@@ -338,7 +338,7 @@ tasks:
     verifiers) → apply to test\n     c. Group B: same as exp2498 but with existing 3 verifiers\n
     \    d. Group C: same as exp2498 but with existing 3 verifiers\n     e. Aggregate cross-group
     Fisher: test_combined_v6\n     f. test_auroc_v6 = roc_auc_score(test_labels, test_combined_v6)\n
-    \    g. Record: {seed, test_auroc_v6, tier0q_contribution_delta (vs exp2498 seed result)}\n\n
+    \    g. Record: {{seed, test_auroc_v6, tier0q_contribution_delta (vs exp2498 seed result)}}\n\n
     \  3. Summary:\n     ensemble_v6_auroc_mean: mean(test_auroc_v6)\n     ensemble_v6_auroc_std:
     std(test_auroc_v6)\n     tier0q_delta_vs_v5: ensemble_v6_auroc_mean - 0.975\n
     \    tier0q_improves_ensemble: (tier0q_delta_vs_v5 > 0.0)\n     hive_breached_v6:
@@ -456,7 +456,7 @@ tasks:
     not found, try: 'from carnot.verify import IsingVerifier' or 'from carnot import IsingVerifier'\n
     \    Record: ising_import_path\n\n  2. Run energy sanity check:\n     ssh polarfire
     'python3 -c \"from <ising_import_path> import IsingVerifier;\n       v = IsingVerifier(n_spins=4);\n
-    \      energy = v.energy([1,-1,1,-1]);\n       print(f'energy={energy}')\"'\n     energy_output
+    \      energy = v.energy([1,-1,1,-1]);\n       print(f'energy={{energy}}')\"'\n     energy_output
     = capture stdout\n     energy_value = float extracted from output (or None if failed)\n     energy_sanity_check_passed
     = (energy_value is not None and abs(energy_value) < 1000)\n     # Reasonable IsingVerifier
     energy for 4 spins should be in [-10, 10]\n\n  3. Record final terminal state:\n
@@ -632,14 +632,14 @@ tasks:
     if 'step' in k.lower() or 'chain' in k.lower() or 'cot' in k.lower()])\"\n        Record:
     cot_step_field (str or None)\n     Record: preconditions_checked.\n\n  1. Implement a
     minimal SoftCurryHowardVerifier:\n     Core idea: decompose a response into reasoning steps
-    (sentence-level or CoT-marked).\n     For each step pair (step_i, step_{i+1}):\n       If
-    step_i concludes a quantity X, and step_{i+1} uses X with a different type\n       (e.g.,
+    (sentence-level or CoT-marked).\n     For each step pair (step_i, step_{{i+1}}):\n       If
+    step_i concludes a quantity X, and step_{{i+1}} uses X with a different type\n       (e.g.,
     'X is a rate' vs 'X is used as an absolute count') → type violation.\n     Soft violation
     score = count of type mismatches / n_step_pairs (normalized to [0,1])\n     If no CoT
     structure detected, use sentence-level NLP: extract noun phrases and check\n     whether
     the same noun phrase is used with contradictory predicates across sentences.\n\n  2. Apply
     SoftCurryHowardVerifier to the 36 telemetry corpus examples:\n     For each example:
-    score = verifier.score(response)\n     Record: {idx, label, curry_howard_score}\n\n  3.
+    score = verifier.score(response)\n     Record: {{idx, label, curry_howard_score}}\n\n  3.
     Evaluate as a verifier:\n     from sklearn.metrics import roc_auc_score\n     tier0r_auroc
     = roc_auc_score(labels, curry_howard_scores)\n     tier0r_viable = (tier0r_auroc > 0.65)\n
     \    Save score array to results/experiment_2504_tier0r_scores.json for future ensemble use.\n\n
