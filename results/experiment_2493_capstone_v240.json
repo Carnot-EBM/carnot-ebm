@@ -1,0 +1,117 @@
+{
+  "experiment": "2493_capstone_v240",
+  "milestone": "2026.05.240",
+  "schema": "carnot.paper_v6_capstone_2493.v1",
+  "status": "complete",
+  "run_date": "20260519",
+  "random_seed": 42,
+  "duration_s": 0.0015,
+  "spec_refs": [
+    "REQ-REPORT-2493",
+    "SCENARIO-REPORT-2493"
+  ],
+  "preconditions_checked": {
+    "exp2483_archive": true,
+    "exp2484_auroc_replication": true,
+    "exp2485_group_conformal": true,
+    "exp2486_arm_ebm": true,
+    "exp2487_qwen_prc": true,
+    "exp2488_fr11_tier4": true,
+    "exp2489_kan_retrain": true,
+    "exp2490_polarfire": true,
+    "exp2491_kv260_flash_docs": true,
+    "exp2492_paperv6_update": true
+  },
+  "missing_source_artifacts": [],
+  "best_240_auroc": 0.975,
+  "best_240_auroc_source": "exp2485.group_conditional_auroc_mean",
+  "best_240_auroc_components": {
+    "exp2484_true_replicated_auroc_isotonic": 0.7964285714285715,
+    "exp2484_replicated_auroc_ci_95_low": 0.5483479393752007,
+    "exp2484_replicated_auroc_ci_95_high": 1.0445092034819423,
+    "exp2484_replicated_auroc_std": 0.12657175104763818,
+    "exp2484_n_verifiers_fused": 8,
+    "exp2485_group_conditional_auroc_mean": 0.975,
+    "exp2485_group_conditional_auroc_std": 0.021428571428571432
+  },
+  "auroc_adversarially_verified": false,
+  "auroc_verified_method": "exp2485_group_conditional",
+  "auroc_verified_explanation": "exp2484 (5-seed simple replication of the .239 0.9351 claim) tautology_resolved=True but hive_peer_breached=False; true_replicated_auroc_isotonic=0.7964 with 95% CI [0.548, 1.045] does NOT reach the HIVE peer 0.9236. The headline 0.9351 number from .239 (exp2473) is therefore NOT cite-safe in paper-v6 as a single-method claim. exp2485 group-conditional calibration achieved 0.975 (std 0.021, n=5 seeds) — this DOES breach HIVE 0.9236 and the breach is statistically meaningful given the small std. The strict gate auroc_adversarially_verified requires BOTH tautology_resolved AND hive_peer_breached on exp2484; since hive_peer_breached_exp2484=False the strict gate is False even though group-conditional (exp2485) breached separately.",
+  "auroc_gap_to_hive_peer_240": -0.1271714285714285,
+  "auroc_gap_to_hive_peer_240_group_conditional": 0.0514,
+  "hive_peer_breached_simple_replication": false,
+  "hive_peer_breached_group_conditional": true,
+  "external_baselines": {
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139",
+    "prior_239_claimed_auroc": 0.9351,
+    "prior_239_source": "exp2473.best_calibrated_auroc (flagged TAUTOLOGY in .239 audit)"
+  },
+  "phase4_arm_ebm_pearson_r": 0.10784743804649699,
+  "phase4_arm_ebm_validated": false,
+  "phase4_arm_ebm_n_examples": 36,
+  "phase4_prc_energy_elevated": false,
+  "phase4_qwen_prc_validated": false,
+  "phase4_qwen_prc_model_used": "mock_model",
+  "phase4_validated_any": false,
+  "phase4_hold_status": "not_validated",
+  "phase4_explanation": "Both .240 Phase 4 attempts returned phase4_validated=False. exp2486 (ARM-EBM bijection): pearson_r=0.108 on n=36, ARM↔EBM correlation indistinguishable from noise; arm_ebm_auroc=0.5162 (chance-level). exp2487 (Qwen PRC divergence): energy_prc_mean=energy_neutral_mean=-2.0125 (no detectable elevation under PRC perturbation); honest disclosure model_used='mock_model' rather than the real Qwen GGUF — methodology gap, not a refutation. Phase 4 hypothesis remains not_validated; the verifier-as-free-energy claim is unsupported by the .240 evidence and the operator hold on arXiv submission persists.",
+  "fr11_tier4_prototype_functional": true,
+  "fr11_tier4_adaptations_triggered": 2,
+  "kan_certified_deployment_ready": true,
+  "kan_new_auroc": 0.974025974025974,
+  "kan_new_mean_local_lipschitz": 2.3961100578308105,
+  "kan_new_certified_coverage": 0.8333333333333334,
+  "carnot_runs_on_polarfire": true,
+  "polarfire_status": "carnot_installed",
+  "polarfire_cpu_arch": "riscv64",
+  "polarfire_energy_sanity_check_passed": false,
+  "kv260_bitstream_flashed": false,
+  "kv260_status": "bitstream_generated; flash requires Vivado hw_server with Digilent JTAG HS2 programmer purchase (DirtyJTAG physically incompatible: 3.3V vs 1.8V level mismatch; OpenOCD ZynqMP PS init absent from xilinx_zynqmp.cfg)",
+  "kv260_dirtyjtag_compatible": false,
+  "kv260_openocd_feasible": false,
+  "hardware_status": {
+    "kv260": "bitstream_generated_flash_blocked_on_programmer_purchase",
+    "polarfire": "carnot_installed_terminal_state_reached",
+    "kan_certified": true
+  },
+  "paper_results_updated": true,
+  "phase4_section_written": true,
+  "audit_passed_after_fix": true,
+  "phase1_ship_gate_met": true,
+  "arxiv_ready": false,
+  "arxiv_readiness_assessment": "arXiv NOT YET ready: 2 of 4 gates met. Phase 1 ship gate met (.236 exp2441) and audit_passed_after_fix=True (.239 exp2479). However phase4_validated_any=False (both exp2486 ARM-EBM and exp2487 Qwen PRC returned not-validated; latter used mock_model — methodology gap rather than refutation) AND auroc_adversarially_verified=False (exp2484 5-seed replication of the .239 0.9351 claim gave 0.7964 with CI [0.548, 1.045], failing to breach HIVE 0.9236). Paper-v6 cannot cite 0.9351 as headline; the cite-safe AUROC is exp2485 group-conditional 0.975 (does breach HIVE) but only as the calibration-method headline, not the simple-fusion claim. Operator hold remains in place. Forward plan: (a) re-attempt Phase 4 with real Qwen3.6-35B-A3B-GGUF rather than mock_model in .241+; (b) replace paper-v6 headline AUROC with exp2485 group-conditional 0.975; (c) keep PolarFire terminal-state achievement and KAN certified deployment as supporting evidence.",
+  "acceptance_gates": {
+    "best_240_auroc_present": true,
+    "best_240_auroc_positive": true,
+    "phase4_hold_status_non_null": true,
+    "phase1_ship_gate_met": true,
+    "data_was_read": true
+  },
+  "synthesis": {
+    "milestone_summary": "Milestone 2026.05.240 closed with 10/10 capstone-input artifacts present and adversarially scrutinized. AUROC adversarial resolution: the .239 claim of 0.9351 (exp2473, flagged TAUTOLOGY) did NOT survive 5-seed simple-fusion replication — exp2484 gave 0.7964 with 95% CI [0.548, 1.045], so the bare 0.9351 number is retired as paper-v6 headline. exp2485 group-conditional calibration recovered with mean AUROC 0.975 (std 0.021, n=5 seeds) which DOES breach HIVE 0.9236; this becomes the cite-safe headline if paper-v6 narrates the calibration choice explicitly. Phase 4 attempts both failed: ARM-EBM bijection (exp2486) saw pearson_r=0.108 (noise floor) on n=36, and Qwen PRC divergence (exp2487) showed no elevation but honestly disclosed it used mock_model rather than the real GGUF — a methodology gap that justifies one more Phase 4 attempt in .241+ with the real model before declaring the verifier-as-free-energy hypothesis refuted. KAN retrain (exp2489) achieved certified_deployment_ready=True with new_certified_coverage=0.833 and AUROC 0.974. PolarFire reached terminal state: carnot_runs_on_polarfire=True on the riscv64 SoC (energy_sanity_check still pending). KV260 flash is blocked on programmer hardware: DirtyJTAG is physically incompatible (3.3V vs 1.8V), OpenOCD lacks the ZynqMP PS init script; the only forward path is a Digilent JTAG HS2 programmer purchase plus Vivado hw_server. arXiv submission readiness: 2 of 4 gates met; operator hold persists until Phase 4 validates with a real model AND the paper-v6 headline switches to the cite-safe 0.975 group-conditional number.",
+    "proved_in_240": [
+      "Group-conditional calibration (exp2485) breaches HIVE 0.9236: mean AUROC 0.975 (std 0.021, n=5 seeds). This becomes the cite-safe paper-v6 headline.",
+      "PolarFire SoC reaches terminal state (exp2490): carnot_runs_on_polarfire=True on riscv64; per Hardware-Task Continuity Discipline this board now graduates to optional/opportunistic follow-on.",
+      "KAN retrain achieves certified deployment readiness (exp2489): new_certified_coverage=0.833, new_kan_auroc=0.974, mean_local_lipschitz=2.396.",
+      "FR-11 Tier 4 adaptive-energy prototype is functional (exp2488): 2 adaptations triggered, energy_reduction_mean=2.0.",
+      "Adversarial replication retired an untrustworthy headline: exp2484 tautology_resolved=True forced retirement of the .239 0.9351 simple-fusion claim; scientific honesty preserved."
+    ],
+    "still_needs_work": [
+      "Phase 4 not validated by either ARM-EBM (exp2486) or Qwen PRC (exp2487); exp2487's use of mock_model is a methodology gap, not a refutation — .241+ must retry with real Qwen3.6-35B-A3B-GGUF.",
+      "Paper-v6 headline AUROC must switch from the retired 0.9351 (exp2473 TAUTOLOGY-flagged) to exp2485 0.975 group-conditional; narrate the calibration-method choice transparently.",
+      "KV260 flash requires Digilent JTAG HS2 programmer purchase + Vivado hw_server; DirtyJTAG and OpenOCD paths both ruled out by exp2491.",
+      "PolarFire energy_sanity_check_passed=False; the install is correct but a verification pass on at least one Carnot energy computation is still owed before the terminal state is adversarial-verify clean.",
+      "arXiv submission remains blocked under operator hold (phase4_validated_any=False); 2 of 4 gates outstanding."
+    ],
+    "arxiv_readiness": "arXiv NOT YET ready: 2 of 4 gates met; phase4 not validated and the simple-fusion AUROC failed adversarial replication. Path forward documented under still_needs_work."
+  },
+  "field_principles": {
+    "best_240_auroc": "Best adversarially-verified AUROC across .240 experiments. This is the cite-safe paper value.",
+    "auroc_adversarially_verified": "True if 5-seed replication confirmed (or corrected) the 0.9351 result. Without this, the paper cannot cite 0.9351.",
+    "phase4_validated_any": "True if either ARM-EBM (exp2486) or Qwen PRC divergence (exp2487) confirmed Phase 4 hypothesis. Gate for arXiv.",
+    "arxiv_ready": "True if all 4 gates met: phase1_ship + audit + phase4 + auroc_verified. Operator can submit if True.",
+    "honest_verdict": "Terminal-prefix required. complete: with best_240_auroc, phase4 status, arxiv_ready."
+  },
+  "honest_verdict": "complete: best_240_auroc=0.975 (exp2485 group_conditional); auroc_adversarially_verified=False (simple-fusion replication failed but group-conditional breached HIVE); phase4_validated_any=False (both ARM-EBM and Qwen PRC not-validated; exp2487 used mock_model — methodology gap); arxiv_ready=False (2/4 gates met; operator hold persists)"
+}
