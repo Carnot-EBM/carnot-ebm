@@ -1,0 +1,113 @@
+{
+  "honest_verdict": "complete: 0.9857 regression resolved",
+  "ensemble_v7b_auroc": 0.9857142857142858,
+  "ensemble_v7b_auroc_std": 0.01749635530559415,
+  "ensemble_v6_baseline": 0.975,
+  "ensemble_v7_regression": 0.9607,
+  "regression_resolved": true,
+  "tier0r_group_assignment": "Group D (proof-path)",
+  "n_seeds": 5,
+  "preconditions_checked": [
+    "sklearn_importable",
+    "exp2485_deliverable_present",
+    "exp2498_deliverable_present",
+    "exp2521_regression_deliverable_present",
+    "score_files_present",
+    "tier0r_imported",
+    "group_d_configured"
+  ],
+  "duration_s": 0.015596151351928711,
+  "random_seed": 42,
+  "n_groups": 4,
+  "n_verifiers": 10,
+  "group_order": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "group_labels": {
+    "A": "Group A (logprob)",
+    "B": "Group B (semantic)",
+    "C": "Group C (logic)",
+    "D": "Group D (proof-path)"
+  },
+  "group_score_sources": {
+    "A": [
+      "experiment_2395_fregelogic.json:semantic_energy_score",
+      "experiment_2450_laab_meta_scores.json:score",
+      "experiment_2395_fregelogic.json:fregelogic_risk_score"
+    ],
+    "B": [
+      "experiment_2435_tier0k_scores.json:score",
+      "experiment_2436_tier0l_scores.json:score",
+      "experiment_2449_tier0m_scores.json:score"
+    ],
+    "C": [
+      "experiment_2437_logcons_z3_scores.json:score",
+      "nco_rejection_rate(token_logprobs)",
+      "experiment_2460_tier0n_scores.json:score"
+    ],
+    "D": [
+      "Tier0rVerifier.score"
+    ]
+  },
+  "acceptance_gates": {
+    "ensemble_v7b_auroc >= 0.970": true
+  },
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "ensemble_v7b_auroc": "Primary metric - must be >= 0.970 to unblock adaptive conformal (exp2547). >= 0.975 to restore cite-safe headline.",
+    "ensemble_v7b_auroc_std": "Multi-seed std - required for paper-v6 cite-safe reporting.",
+    "ensemble_v6_baseline": "Explicitly records 0.9750 baseline for regression detection.",
+    "ensemble_v7_regression": "Explicitly records 0.9607 regression from exp2521 so delta is unambiguous.",
+    "regression_resolved": "True if ensemble_v7b_auroc >= 0.975. Key success flag.",
+    "tier0r_group_assignment": "Must be 'Group D (proof-path)'. Documents that Group C was not modified.",
+    "n_seeds": "Must be >= 3 for meaningful std.",
+    "preconditions_checked": "Records which resources were verified.",
+    "duration_s": "Wall-clock measurement.",
+    "random_seed": "Base random seed - set to 42."
+  },
+  "results_by_seed": [
+    {
+      "seed": 42,
+      "test_auroc_group_cond": 1.0,
+      "mean_cal_A": 0.4462809917355372,
+      "mean_cal_B": 0.5389814089593412,
+      "mean_cal_C": 0.3383838383838384,
+      "mean_cal_D": 0.4848484848484848
+    },
+    {
+      "seed": 123,
+      "test_auroc_group_cond": 0.9642857142857143,
+      "mean_cal_A": 0.45454545454545453,
+      "mean_cal_B": 0.5707070707070707,
+      "mean_cal_C": 0.39304812834224595,
+      "mean_cal_D": 0.4454545454545455
+    },
+    {
+      "seed": 456,
+      "test_auroc_group_cond": 1.0,
+      "mean_cal_A": 0.45454545454545453,
+      "mean_cal_B": 0.47273910289900023,
+      "mean_cal_C": 0.2784090909090909,
+      "mean_cal_D": 0.45454545454545453
+    },
+    {
+      "seed": 789,
+      "test_auroc_group_cond": 0.9642857142857142,
+      "mean_cal_A": 0.4318181818181818,
+      "mean_cal_B": 0.5081585081585082,
+      "mean_cal_C": 0.44019138755980863,
+      "mean_cal_D": 0.4848484848484848
+    },
+    {
+      "seed": 1337,
+      "test_auroc_group_cond": 1.0,
+      "mean_cal_A": 0.4848484848484848,
+      "mean_cal_B": 0.4074661142219057,
+      "mean_cal_C": 0.303030303030303,
+      "mean_cal_D": 0.5714285714285714
+    }
+  ]
+}

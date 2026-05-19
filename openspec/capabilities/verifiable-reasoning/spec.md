@@ -19067,3 +19067,46 @@ It MUST report false-accept rates (which must be zero).
 **When** the Z3-compatible validator backend processes the constraints
 **Then** it routes the logic rules to Z3, evaluates them, and reports a false-accept rate of zero.
 \n### REQ-VERIFY-2139: CLR Verifier Bridge\nThe system shall provide a CLR Verifier Bridge in `python/carnot/pipeline/clr_bridge.py` that maps latent continuous EBM vectors into verifiable discrete logic formats.\n\n### SCENARIO-VERIFY-2139: CLR Bridge Maps Vectors\nGiven latent continuous EBM vectors,\nWhen passed through the CLR Verifier Bridge,\nThen it outputs verifiable discrete logic formats and records the status in `results/experiment_2139_clr_bridge.json`.\n
+
+## REQ-VERIFY-2546: Ensemble v7b Proof-Path Independent Calibration
+
+**Capability:** verifiable-reasoning / group-conditional ensemble calibration
+
+The system SHALL provide an exp2546 ensemble v7b calibration run that resolves
+the exp2521 regression by assigning Tier 0r to an independent proof-path group
+instead of mixing its lower-range nonconformity scores into the logic group.
+
+**Requirements:**
+
+- REQ-VERIFY-2546-1: The experiment SHALL keep the exp2485/exp2498 Group A,
+  Group B, and Group C score columns unchanged.
+- REQ-VERIFY-2546-2: The experiment SHALL assign `Tier0rVerifier` to
+  `Group D (proof-path)` as the only member of that group.
+- REQ-VERIFY-2546-3: The experiment SHALL run the group-conditional calibration
+  across five deterministic seeds `[42, 123, 456, 789, 1337]` and SHALL report
+  `ensemble_v7b_auroc` and `ensemble_v7b_auroc_std`.
+- REQ-VERIFY-2546-4: The artifact `results/experiment_2546_ensemble_v7b.json`
+  SHALL include `ensemble_v6_baseline=0.9750`,
+  `ensemble_v7_regression=0.9607`, `regression_resolved`,
+  `tier0r_group_assignment`, `n_seeds`, `preconditions_checked`,
+  `duration_s`, and `random_seed`.
+- REQ-VERIFY-2546-5: `regression_resolved` SHALL be true iff
+  `ensemble_v7b_auroc >= 0.975`; the acceptance gate for adaptive conformal
+  SHALL pass iff `ensemble_v7b_auroc >= 0.970`.
+- REQ-VERIFY-2546-6: If `Tier0rVerifier` is not importable, the experiment
+  SHALL write an artifact with `honest_verdict` equal to
+  `blocked_tier0r_not_importable` and SHALL not fabricate passing metrics.
+
+### SCENARIO-VERIFY-2546: Tier 0r Uses Proof-Path Group D
+
+**Given** the exp2485/exp2498 group-conditional score files and the Tier 0r
+verifier are available
+**When** `scripts/experiment_2546_ensemble_v7b.py` runs
+**Then** Group A, Group B, and Group C use the same score columns as exp2485
+**And** Tier 0r is calibrated as `Group D (proof-path)`
+**And** the output artifact reports five-seed AUROC mean/std plus
+`regression_resolved` from the 0.9750 baseline comparison.
+
+**Implementation Status:** Implemented (Exp 2546)
+
+**Spec traces:** REQ-VERIFY-2546, SCENARIO-VERIFY-2546, Exp 2546
