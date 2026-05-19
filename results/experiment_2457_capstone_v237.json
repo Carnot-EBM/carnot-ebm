@@ -1,0 +1,84 @@
+{
+  "acceptance_gates": {
+    "best_auroc_present": true,
+    "phase1_ship_gate_met": true
+  },
+  "auroc_gap_to_hive_peer": -0.006933,
+  "best_auroc_achieved": 0.916667,
+  "duration_s": 0.000387,
+  "experiment": "2457_capstone_v237",
+  "external_baselines": {
+    "halluscan_auroc": 0.88,
+    "halluscan_source": "arXiv:2605.02443",
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139",
+    "semantic_energy_baseline_auroc": 0.685
+  },
+  "field_principles": {
+    "auroc_gap_to_hive_peer": "conformal - 0.9236. Negative = gap remains; positive = BREACHED.",
+    "best_auroc_achieved": "Primary metric: conformal ensemble AUROC from exp2448.",
+    "fr11_satisfied": "True iff exp2451 completed soundness+completeness tracking.",
+    "hardware_status_summary": "One-line per board (KV260/GateMate/PolarFire) current state.",
+    "honest_verdict": "Terminal-prefix required. complete: with key outcomes.",
+    "n_paper_ready_experiments": "Count of .236/.237 experiments contributing headline-quality results.",
+    "paper_results_updated": "True if paper-v6 results table was updated on disk.",
+    "phase1_ship_gate_met": "Foundational Phase 1 achievement.",
+    "preconditions_checked": "Records that exp2448 was readable AND ship gate was met before claims."
+  },
+  "fr11_satisfied": true,
+  "hardware_status": {
+    "gatemate": "bitstream_flashed",
+    "kv260": "missing",
+    "polarfire": "ssh_reachable_install_failed"
+  },
+  "hardware_status_summary": "KV260: missing; GateMate: bitstream_flashed; PolarFire: ssh_reachable_install_failed",
+  "honest_verdict": "complete: best_auroc=0.9167; hive_gap=-0.0069; phase1_ship_gate=met; n_paper_ready=6; hardware=[KV260: missing; GateMate: bitstream_flashed; PolarFire: ssh_reachable_install_failed]",
+  "milestone": "2026.05.237",
+  "missing_source_artifacts": [
+    {
+      "key": "kv260_fix",
+      "path": "results/experiment_2452_kv260_rtl_synthesis_fix_v5.json",
+      "source_id": "exp2452"
+    }
+  ],
+  "n_paper_ready_experiments": 6,
+  "n_verifiers_fused": 8,
+  "odar_routing_implemented": true,
+  "paper_ready_breakdown": {
+    "conformal_v2": true,
+    "fr11_v5": true,
+    "gatemate": true,
+    "odar": true,
+    "polarfire": true,
+    "ship_gate": true
+  },
+  "paper_results_updated": true,
+  "phase1_ship_gate_met": true,
+  "preconditions_checked": true,
+  "random_seed": 42,
+  "run_date": "20260518",
+  "schema": "carnot.paper_v6_capstone_2457.v1",
+  "spec_refs": [
+    "REQ-REPORT-2457",
+    "SCENARIO-REPORT-2457"
+  ],
+  "status": "complete",
+  "synthesis": {
+    "n_missing_artifacts": 1,
+    "n_verifiers_fused": 8,
+    "phase1_ship_status": "met",
+    "proved_in_237": [
+      "Conformal ensemble 8-verifier fusion stable at AUROC = 0.9167; matches the .236 7-verifier baseline within the small (n_eval=26) sample noise floor.",
+      "Phase 1 ship gate MET (exp2441): PyPI published, HuggingFace mirror up, MCP and CLI docs landed. Carnot is operationally ship-ready independent of paper-v6 / Phase-4 status.",
+      "FR-11 v5 (exp2451) enabled soundness AND completeness tracking; soundness error rate 0.0 / completeness error rate 1.43 on 14 violations.",
+      "ODAR free-energy routing implemented (exp2455); Phase-4 active-inference integration shows iteration savings vs argmax baseline.",
+      "GateMate n=16 Ising bitstream flashed on hardware \u2014 board terminal state."
+    ],
+    "still_needs_work": [
+      "Conformal ensemble AUROC = 0.9167 still 0.0069 below the HIVE peer 0.9236 \u2014 ceiling not breached; the 8th verifier (PCIB) did not move the headline number on the current eval set.",
+      "KV260 fix artifact missing (exp2452) \u2014 board status unknown.",
+      "PolarFire SoC SSH reachable but carnot-ebm install failed (riscv64 jaxlib wheel unavailable) \u2014 board accessible but workload not yet validated.",
+      "AUROC ceiling breach blocked at conformal-ensemble layer. Next-milestone candidates: (a) larger n_eval to escape the 26-example noise floor; (b) verifier-weight retuning (Mondrian conformal alpha schedule); (c) add a structurally-independent 9th verifier outside the 8 already-fused."
+    ]
+  }
+}

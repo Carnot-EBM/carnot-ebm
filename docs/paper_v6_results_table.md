@@ -66,3 +66,15 @@ Run date: `20260518`
 | exp2380 | results/experiment_2380_hive_ensemble.json | 2026.05.232 | missing |
 | exp2382 | results/experiment_2382_fst_live_path_ab.json | 2026.05.232 | missing |
 | exp2384 | results/experiment_2384_kv260_yosys.json | 2026.05.232 | missing |
+
+## Milestone 2026.05.237 Headline Results
+
+| metric_name | value | source | external_baseline | gap_to_baseline |
+|---|---:|---|---|---:|
+| Conformal ensemble AUROC (8 verifiers) | 0.9167 | exp2448 | HIVE 0.9236 | -0.0069 (gap remains) |
+| Phase 1 ship gate met | true | exp2441 | n/a | n/a |
+| FR-11 soundness/completeness tracking | true | exp2451 | n/a | n/a |
+| KV260 synthesis state | missing | exp2452 | n/a | n/a |
+| GateMate Ising synthesis | bitstream_flashed | exp2453 | n/a | n/a |
+| PolarFire SoC smoke | ssh_reachable_install_failed | exp2454 | n/a | n/a |
+| ODAR free-energy routing enabled | true | exp2455 | n/a | n/a |
