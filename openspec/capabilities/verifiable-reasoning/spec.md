@@ -521,6 +521,24 @@ The `VerifyRepairPipeline.verify()` method shall support an optional JEPA predic
 - **Skip rate**: The benchmark (Exp 308) must report `skip_rate = n_skipped / n_total` per threshold.
 - **TP rate target**: At least one threshold in `[0.3, 0.5, 0.7]` must achieve `skip_rate ≥ 0.30` AND `TP_rate ≥ 0.85` on the 50-question benchmark corpus.
 
+### REQ-JEPA-006: Feature-Vector Fast-Path Discriminates Unsafe Text
+
+The text-feature `JEPAFastPathPredictor` shall not fast-path every short natural-language
+response. It shall include lightweight text cues for hedging, uncertainty,
+contradiction, and simple arithmetic inconsistency before applying the low-risk
+fast-path rule.
+
+The deterministic Exp 2550 evaluation shall:
+- build a balanced 100-response corpus with 50 safe short responses and 50 unsafe
+  hedged, contradictory, or internally inconsistent responses;
+- score each response with `JEPAFastPathPredictor.predict(response)` or the equivalent
+  probability method;
+- report `fast_path_rate`, `fast_path_precision`, `threshold_used`, `n_corpus`,
+  `random_seed`, `duration_s`, `preconditions_checked`, and an honest terminal-prefix
+  verdict in `results/experiment_2550_jepa_real_eval.json`;
+- set `jepa_discrimination_achieved=true` only when `fast_path_rate` is in `[0.30, 0.80]`
+  and `fast_path_precision >= 0.80`.
+
 ## Scenarios
 
 ### SCENARIO-VERIFY-001: Sudoku Constraint Satisfaction
@@ -3475,6 +3493,16 @@ Spec: REQ-LEARN-037, SCENARIO-LEARN-068
 **And** `gate_decision == "verify"`
 **And** the full Ising pipeline ran
 
+### SCENARIO-JEPA-012: Text Fast-Path Separates Safe And Unsafe Responses
+
+**Given** a balanced 100-response corpus with safe short responses and unsafe
+hedged or contradictory responses
+**When** `JEPAFastPathPredictor` scores the corpus at threshold 0.2
+**Then** the fast-path rate is below 0.95
+**And** the fast-path precision is at least 0.80
+**And** `jepa_discrimination_achieved` is true only when the rate is in `[0.30, 0.80]`
+and precision is at least 0.80
+
 ### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
 
 **Given** a corpus row whose `process_label` is `"clean"` and whose
@@ -6210,6 +6238,7 @@ increasingly large errors (energy_A <= energy_B <= energy_C).
 | REQ-JEPA-003 | Not Started | Implemented | Exp 291 Apple adversarial retrain + conformal calibration |
 | REQ-JEPA-004 | Not Started | Implemented | Exp 307 JEPA MLP real-logit retrain; blocked until logits_294/295 files present |
 | REQ-JEPA-005 | Not Started | Implemented | JepaGate fast-path + verify_with_gate() + Exp 308 benchmark |
+| REQ-JEPA-006 | Not Started | Implemented | Exp 2550 balanced text fast-path discrimination eval |
 | REQ-PRED-001 | Not Started | Implemented | Feature extraction + serialization tests |
 | REQ-PRED-002 | Not Started | Implemented | Calibrated gate + serialization tests |
 | REQ-PRED-003 | Not Started | Implemented | ONNX export helper + safetensors round-trip tests |

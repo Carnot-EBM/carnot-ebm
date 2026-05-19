@@ -77,6 +77,23 @@ class TestJEPAFastPathPredictor:
         p = self.predictor.predict_p_violation("75")
         assert p < 0.2
 
+    def test_hedged_short_answer_above_threshold(self) -> None:
+        """REQ-JEPA-006: short unsafe hedging must not receive the low-risk shortcut."""
+        p = self.predictor.predict_p_violation("I think it might be 7, but it could be 9.")
+        assert p >= 0.2
+
+    def test_inconsistent_arithmetic_above_threshold(self) -> None:
+        """REQ-JEPA-006: simple arithmetic contradictions must route to full verification."""
+        p = self.predictor.predict_p_violation("The answer is definitely 5 + 7 = 13.")
+        assert p >= 0.2
+
+    def test_predict_alias_matches_probability(self) -> None:
+        """REQ-JEPA-006: predict(response) supports the Exp 2550 scoring contract."""
+        response = "A triangle has three sides."
+        assert self.predictor.predict(response) == pytest.approx(
+            self.predictor.predict_p_violation(response)
+        )
+
     def test_calls_total_incremented(self) -> None:
         """calls_total is incremented on each predict_p_violation call."""
         assert self.predictor.calls_total == 0
@@ -94,12 +111,13 @@ class TestJEPAFastPathPredictor:
     def test_fast_path_rate_nan_when_no_calls(self) -> None:
         """fast_path_rate is NaN before any calls (no ZeroDivisionError)."""
         import math
+
         assert math.isnan(self.predictor.fast_path_rate)
 
     def test_fast_path_rate_computed(self) -> None:
         """fast_path_rate equals calls_fast_path / calls_total."""
         self.predictor.predict_p_violation("75")  # total=1
-        self.predictor.calls_fast_path = 1         # simulate pipeline incrementing
+        self.predictor.calls_fast_path = 1  # simulate pipeline incrementing
         assert self.predictor.fast_path_rate == pytest.approx(1.0)
 
 

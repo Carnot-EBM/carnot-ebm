@@ -41,6 +41,7 @@ Spec: REQ-JEPA-005, SCENARIO-JEPA-010, SCENARIO-JEPA-011
 from __future__ import annotations
 
 import math
+import re
 from collections import Counter
 from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Any
@@ -54,14 +55,93 @@ if TYPE_CHECKING:
 # ---------------------------------------------------------------------------
 
 
+_HEDGE_TERMS = frozenset(
+    {
+        "about",
+        "apparently",
+        "approximately",
+        "around",
+        "could",
+        "guess",
+        "likely",
+        "maybe",
+        "might",
+        "perhaps",
+        "possibly",
+        "probable",
+        "probably",
+        "seem",
+        "seems",
+        "uncertain",
+        "unclear",
+        "unsure",
+    }
+)
+
+_HEDGE_PHRASES = (
+    "i think",
+    "i guess",
+    "not sure",
+    "could be",
+    "might be",
+    "may be",
+    "it depends",
+)
+
+_CONTRADICTION_PHRASES = (
+    "although",
+    "but",
+    "cannot both",
+    "correct and incorrect",
+    "even though",
+    "however",
+    "nevertheless",
+    "on the other hand",
+    "true and false",
+    "yet",
+)
+
+_ARITHMETIC_EQUATION_RE = re.compile(
+    r"(?P<a>-?\d+)\s*(?P<op>[+\-*/xX])\s*(?P<b>-?\d+)\s*=\s*(?P<result>-?\d+)"
+)
+
+
+def _count_phrases(text_lower: str, phrases: tuple[str, ...]) -> int:
+    """Count lightweight cue phrases without relying on an NLP dependency."""
+    return sum(1 for phrase in phrases if phrase in text_lower)
+
+
+def _arithmetic_inconsistency(response: str) -> float:
+    """Return 1.0 when a simple integer equation in the response is wrong."""
+    for match in _ARITHMETIC_EQUATION_RE.finditer(response):
+        a = int(match.group("a"))
+        b = int(match.group("b"))
+        stated = int(match.group("result"))
+        op = match.group("op")
+        if op == "+":
+            expected = a + b
+        elif op == "-":
+            expected = a - b
+        elif op in {"*", "x", "X"}:
+            expected = a * b
+        elif b != 0 and a % b == 0:
+            expected = a // b
+        else:
+            continue
+        if expected != stated:
+            return 1.0
+    return 0.0
+
+
 def extract_response_features(response: str) -> dict[str, float]:
     """Extract lightweight violation-predictive features from response text.
 
     **Detailed explanation for engineers:**
-        Produces two proxy signals without requiring LLM logprobs — important
+        Produces proxy signals without requiring LLM logprobs — important
         because logprobs are only available when an LLM is loaded in the
-        pipeline. Both signals correlate with the exp2525 feature set
-        (ising_energy_response_level and logprob_variance):
+        pipeline. The first two signals correlate with the exp2525 feature set
+        (ising_energy_response_level and logprob_variance), while the text-cue
+        signals keep obviously risky short responses out of the fast path:
 
         1. ``response_length_norm``: normalised token count.
            Computed as ``len(response.split()) / 200``, capped at 1.0.
@@ -74,15 +154,22 @@ def extract_response_features(response: str) -> dict[str, float]:
            fabrication risk). Low entropy = repetitive bigrams = monotone /
            possibly collapsed output.  Ranges 0.0 (maximum diversity) to 1.0
            (single repeated bigram).
+        3. ``hedge_cue_norm``: bounded count of uncertainty terms such as
+           "maybe", "might", or "not sure".
+        4. ``contradiction_cue_norm``: bounded count of contrast or direct
+           contradiction phrases such as "but" or "correct and incorrect".
+        5. ``arithmetic_inconsistency``: exact check for simple integer
+           equations like ``5 + 7 = 13``.
 
     Args:
         response: The response text to featurise.
 
     Returns:
-        Dict with keys ``response_length_norm`` and ``logprob_variance_proxy``,
-        both guaranteed to be in [0.0, 1.0].
+        Dict with bounded feature values in [0.0, 1.0].
     """
     tokens = response.split()
+    response_lower = response.lower()
+    word_tokens = re.findall(r"[a-z]+(?:'[a-z]+)?", response_lower)
 
     # Feature 1: length normalised to [0, 1] using 200-token reference scale
     length_norm = min(len(tokens) / 200.0, 1.0)
@@ -101,9 +188,19 @@ def extract_response_features(response: str) -> dict[str, float]:
     else:
         variance_proxy = 0.0
 
+    hedge_count = sum(1 for token in word_tokens if token in _HEDGE_TERMS)
+    hedge_count += _count_phrases(response_lower, _HEDGE_PHRASES)
+    hedge_cue_norm = min(hedge_count / 3.0, 1.0)
+
+    contradiction_count = _count_phrases(response_lower, _CONTRADICTION_PHRASES)
+    contradiction_cue_norm = min(contradiction_count / 2.0, 1.0)
+
     return {
         "response_length_norm": length_norm,
         "logprob_variance_proxy": variance_proxy,
+        "hedge_cue_norm": hedge_cue_norm,
+        "contradiction_cue_norm": contradiction_cue_norm,
+        "arithmetic_inconsistency": _arithmetic_inconsistency(response),
     }
 
 
@@ -156,9 +253,13 @@ class JEPAFastPathPredictor:
             Calls ``extract_response_features`` to get length_norm and
             variance_proxy, then applies the two-stage decision rule:
 
-            1. If BOTH features < 0.1 (very short, compositionally uniform
-               text like "42" or "yes"): return 0.05 — fast-path eligible.
-            2. Otherwise: return 0.4 * length_norm + 0.6 * variance_proxy.
+            1. If hedging, contradiction, or arithmetic inconsistency cues are
+               present, return at least 0.25 so the response cannot slip below
+               the default 0.2 fast-path threshold merely because it is short.
+            2. If BOTH legacy features < 0.1 (very short, compositionally
+               uniform text like "42" or "yes"): return 0.05 — fast-path
+               eligible.
+            3. Otherwise: return 0.4 * length_norm + 0.6 * variance_proxy.
 
             The threshold check against the pipeline's
             ``jepa_fast_path_threshold`` (default 0.2) happens in
@@ -178,6 +279,20 @@ class JEPAFastPathPredictor:
         features = extract_response_features(response)
         length_norm = features["response_length_norm"]
         variance_proxy = features["logprob_variance_proxy"]
+        hedge_cue_norm = features["hedge_cue_norm"]
+        contradiction_cue_norm = features["contradiction_cue_norm"]
+        arithmetic_inconsistency = features["arithmetic_inconsistency"]
+
+        if max(hedge_cue_norm, contradiction_cue_norm, arithmetic_inconsistency) > 0.0:
+            p = (
+                0.25
+                + 0.35 * hedge_cue_norm
+                + 0.30 * contradiction_cue_norm
+                + 0.35 * arithmetic_inconsistency
+                + 0.05 * length_norm
+                + 0.05 * variance_proxy
+            )
+            return min(max(p, 0.0), 1.0)
 
         # Both signals negligible → response is very short and uniform
         # (e.g. a single numeric answer). Near-zero violation risk.
@@ -186,6 +301,18 @@ class JEPAFastPathPredictor:
 
         p = 0.4 * length_norm + 0.6 * variance_proxy
         return min(max(p, 0.0), 1.0)
+
+    def predict(self, response: str) -> float:
+        """Compatibility alias for Exp 2550 text-corpus scoring.
+
+        The ONNX-backed ``JepaGate`` already exposes ``predict(logit_mean)``.
+        This feature-vector predictor now mirrors that naming for callers that
+        only have response text, while preserving ``predict_p_violation`` as
+        the explicit probability API used by ``VerifyRepairPipeline``.
+
+        Spec: REQ-JEPA-006
+        """
+        return self.predict_p_violation(response)
 
     @property
     def fast_path_rate(self) -> float:

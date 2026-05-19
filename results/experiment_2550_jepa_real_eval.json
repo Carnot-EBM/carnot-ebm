@@ -1,0 +1,89 @@
+{
+  "acceptance_gate_passed": true,
+  "duration_s": 0.001337,
+  "fast_path_precision": 1.0,
+  "fast_path_rate": 0.5,
+  "field_principles": {
+    "duration_s": "Wall-clock measurement.",
+    "fast_path_precision": "Fraction of fast-path triggers that are genuinely safe. Guards against aggressive fast-pathing that skips needed verification.",
+    "fast_path_rate": "Fraction of real corpus triggering fast-path. 1.0 = no discrimination; target 0.30-0.80.",
+    "honest_verdict": "Terminal-prefix required.",
+    "jepa_discrimination_achieved": "True if fast_path_rate in [0.30,0.80] AND fast_path_precision >= 0.80. Continuous self-learning milestone deliverable.",
+    "n_corpus": "Corpus size - must be >= 50 for meaningful discrimination measurement.",
+    "preconditions_checked": "Records which resources were verified.",
+    "random_seed": "Set to 42.",
+    "threshold_used": "The p_violation threshold applied. Documents any tuning from exp2539's 0.2 default."
+  },
+  "honest_verdict": "complete: jepa_discrimination_achieved",
+  "jepa_discrimination_achieved": true,
+  "n_corpus": 100,
+  "n_safe": 50,
+  "n_unsafe": 50,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "JEPAFastPathPredictor imported successfully",
+      "resource": "jepa_fast_path_import"
+    },
+    {
+      "available": true,
+      "resource": "jepa_fast_path_module"
+    },
+    {
+      "available": true,
+      "resource": "exp2539_baseline"
+    },
+    {
+      "available": true,
+      "resource": "fover_data",
+      "sample": [
+        "fover_corpus.jsonl",
+        "fover_corpus_expanded.json",
+        "fover_corpus_v3.json",
+        "fover_corpus_v4.json",
+        "fover_test.json",
+        "fover_test_v3.json",
+        "fover_test_v4.json",
+        "fover_train.json",
+        "fover_train_v3.json",
+        "fover_train_v4.json"
+      ]
+    },
+    {
+      "available": true,
+      "resource": "telemetry_artifacts",
+      "sample": [
+        "results/experiment_1468_live_sota_logprob_telemetry_preflight.json",
+        "results/experiment_1469_halt_spilled_energy_telemetry_diagnostic.json",
+        "results/experiment_1473_live_telemetry_adversarial_validity_audit.json"
+      ]
+    },
+    {
+      "available": true,
+      "resource": "experiment_template"
+    }
+  ],
+  "random_seed": 42,
+  "safe_fast_path_count": 50,
+  "safe_fast_path_rate": 1.0,
+  "threshold_evaluations": [
+    {
+      "fast_path_count": 50,
+      "fast_path_precision": 1.0,
+      "fast_path_rate": 0.5,
+      "jepa_discrimination_achieved": true,
+      "n_corpus": 100,
+      "n_safe": 50,
+      "n_unsafe": 50,
+      "safe_fast_path_count": 50,
+      "safe_fast_path_rate": 1.0,
+      "threshold": 0.2,
+      "unsafe_fast_path_count": 0,
+      "unsafe_fast_path_rate": 0.0
+    }
+  ],
+  "threshold_tuned": false,
+  "threshold_used": 0.2,
+  "unsafe_fast_path_count": 0,
+  "unsafe_fast_path_rate": 0.0
+}
