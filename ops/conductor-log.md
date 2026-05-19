@@ -5104,3 +5104,5 @@ Ripgrep i |
 | 2026-05-19 18:18 UTC | Phase 2a: Ensemble v7 -- Tier 0r Integration into  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2521_ensembl |
 | 2026-05-19 18:23 UTC | Phase 2a: Ensemble v7 -- Tier 0r Integration into  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2521_ensembl |
 | 2026-05-19 18:28 UTC | Phase 2b: HalluGuard Tier 0s -- Eval Corpus Constr | OK | 100 passed, 1 warning in 3.71s |
+| 2026-05-19 18:35 UTC | Phase 2b: KAN Tier 1 Model Restore + Multilevel Tr | OK | 81 passed, 1 warning in 2.27s |
+| 2026-05-19 18:37 UTC | Phase 2a: Adaptive Conformal v2 + ACSE (arXiv:2604 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2521-ensemble-v7-tier0r-integration) |
