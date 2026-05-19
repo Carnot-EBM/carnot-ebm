@@ -320,6 +320,25 @@ hacking via formally-distinct verifier ensembles, runs on
 local-first hardware without closed-API dependencies, and exposes
 calibrated rejection signals rather than generation decisions.
 
+\textbf{Logical Consistency Verification.}
+Concurrent work by~\cite{logicalconsistency2026} (arXiv:2605.03971)
+derives logical-consistency constraints as energy signals for LLM
+output verification, providing a new Tier-0u candidate verifier
+approach. \emph{Carnot does not claim novelty over ``logical
+consistency as an energy signal'' in isolation} --- the combination
+with AND-composed formally-distinct verifiers spanning Z3 SMT,
+Ising MCMC, and semantic consistency is Carnot's contribution.
+
+\textbf{Dynamical Systems Hallucination Detection.}
+Concurrent work by~\cite{dynhallucination2026} (arXiv:2605.05134)
+detects hallucinations by framing LLM output dynamics as trajectories
+in a learned state space, using energy-like trajectory divergence as
+a rejection signal. \emph{Carnot does not claim novelty over
+``trajectory-based hallucination detection'' --- } Carnot's Tier-0b
+SpilledEnergy detector (arXiv:2602.18671) uses the pre-softmax
+logit-vs-output energy gap rather than trajectory divergence, but
+both methods operate on the energy-as-verifier principle.
+
 \section{Carnot Architectural Framework}
 \label{sec:framework}
 
@@ -472,6 +491,21 @@ $c_j > (\lambda/2) \cdot |f_1^{(j)} - f_0^{(j)}|$ identifies tiers
 whose marginal cost exceeds their marginal information gain. The
 lineage is Saberian-Vasconcelos cascade design + Schneidman MaxEnt-Ising
 joint modeling + Wald sequential probability ratio testing.
+
+When a candidate is rejected by the verifier ensemble, Carnot passes
+it to a repair LLM and re-enters the cascade. This verify-repair loop
+is an absorbing Markov chain with absorption probability $\delta$ at
+each step. Dantas et al.~\cite{dantas2025fouroveedelta} prove that
+such chains terminate in expected iterations
+$\mathbb{E}[n] \leq 4/\delta$,
+giving a closed-form termination guarantee: for a verifier pass rate
+of $\delta = 0.1$ (10\% of candidates accepted), the pipeline
+terminates in at most $40$ expected iterations.
+The fast-then-slow cascade structure independently validated by
+\cite{fastslow2026} --- cheap Tier-0 probes providing high-frequency
+fast feedback, expensive Tier-3 Ising MCMC providing slow definitive
+constraints --- directly minimises $\delta$-per-dollar by sorting
+candidates before invoking costly verifiers.
 
 \begin{figure}[ht]
   \centering
@@ -1458,6 +1492,29 @@ scales and with different substrates.
 \subsection{Phase 4 Empirical Validation}
 
 Phase 4 empirical validation is documented as pending due to blocked preconditions. The direct IsingVerifier validation (exp2519) was blocked by a missing \texttt{ising\_verifier\_import} dependency. We carry forward the exp2508 literal gate: Experiment 2508 achieved Phase 4 step-level validation using a semantic energy proxy (\texttt{pearson\_r=-0.426}, $p=0.01$). While this fulfills the step-granularity validation criteria, the use of a fallback proxy rather than direct IsingVerifier step-level energy indicates structural limitations in energy granularity remain.
+
+\textbf{Phase 4 ARM-EBM final validation attempt (exp2532): blocked precondition.}
+The planned definitive Phase 4 validation using the Autoregressive Masked
+Energy-Based Model (ARM-EBM)~\cite{wu2025arm-ebm} substrate (exp2532) did not
+produce a result artifact. The precondition check (required GGUF model cache
+or ARM-EBM weights available locally) was not satisfied at the time the
+experiment was queued. Accordingly, no new Phase~4 numerical claims are made
+in this section beyond those already documented: the exp2508 semantic proxy
+(\texttt{pearson\_r=-0.426}, $p=0.01$) remains the last verified Phase~4 step-level
+measurement. The Phase~4 conclusion is therefore:
+\begin{itemize}
+  \item The theoretical free-energy equivalence (Section~\ref{sec:phase4-active-inference})
+        is established.
+  \item The synthetic pilot (exp1165) demonstrates that Carnot's energy surface
+        can guide an active-inference sampler on toy ARC-AGI-3-like puzzles.
+  \item Step-level energy correlation ($\mathrm{pearson\_r} = -0.426$, $p = 0.01$,
+        exp2508 semantic proxy) provides preliminary empirical support for
+        the free-energy interpretation.
+  \item Direct IsingVerifier ARM-EBM validation remains open work; the absence
+        of exp2532 is an honest blocked-precondition state, not a negative result.
+\end{itemize}
+This section will be revised when a direct-substrate Phase~4 validation
+artifact is available and adversarially verified.
 
 \subsection{Gap analysis and future work}
 
