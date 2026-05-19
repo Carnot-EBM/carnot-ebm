@@ -5068,3 +5068,4 @@ Ripgrep i |
 | 2026-05-19 14:40 UTC | Phase 2: Spilled Energy Tier 0q Verifier + Conform | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2497-phase4-spilled-energy-cpu-test.tie |
 | 2026-05-19 14:45 UTC | Phase 3: FR-11 Tier 1-4 Integration Demo -- Unifie | OK | 81 passed, 1 warning in 2.42s |
 | 2026-05-19 14:51 UTC | Phase 4: PolarFire Terminal State Closure -- Energ | OK | 81 passed, 1 warning in 2.29s |
+| 2026-05-19 14:55 UTC | Phase 4: KV260 PYNQ SD-Card Alternative Flash Path | OK | cache hit: 81 passed, 1 warning in 2.29s |
