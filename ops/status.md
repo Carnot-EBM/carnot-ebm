@@ -1,6 +1,42 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.239 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.240 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.240 Research Planning Complete
+
+**Milestone 2026.05.239 COMPLETED: 10/12 tasks completed (2 gaps).**
+- **AUROC 0.9351 achieved via isotonic calibration** (exp2473) — FLAGGED TAUTOLOGY adversarial (isotonic_auroc == best_calibrated_auroc, duration_s=0.12s implausible). Needs independent 5-seed replication before paper citation.
+- **FR-11 Tier 3 JEPA COMPLETE** (exp2475) — jepa_predictor_implemented=True, jepa_violation_auc=0.7633, min_logprob is best feature.
+- **Paper integrity audit FIXED** (exp2479) — audit_passed_after_fix=True, exp1100 timing discrepancy resolved, citation gaps addressed.
+- **KV260 bitstream GENERATED** (exp2477) — 7.8MB, sha256=1bb0c3b…, kv260_bitstream_flashed=False (no Xilinx JTAG programmer on bench).
+- **GateMate timing benchmark DONE** — sampler timing captured; GateMate reaches TERMINAL state.
+- **Qwen censorship disclosure added** to paper §6 Limitations.
+- **Phase 4 ODAR validation FAILED** (exp2474) — odar_energy_auroc=0.5584, pearson_r=0.19; arXiv hold remains (phase4_validated=False).
+- **KAN model MISSING** (exp2476) — blocked_kan_model_missing; path mismatch vs exp2467.
+- **PolarFire MISSING** (exp2478) — 3x consecutive Gemini CLI failures; carnot_runs_on_polarfire=False.
+- **Capstone exp2481 ran** — complete, best_239_auroc=0.9351, arxiv=blocked, operator hold remains until phase4_validated=True.
+
+**Milestone 2026.05.240 PLANNED as AUROC Adversarial Resolution + Phase 4 ARM-EBM Empirical + KAN Retrain + PolarFire v3 + arXiv Gate.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v240.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2483`–`exp2494`)
+- ID allocation: milestone `.239` used through `exp2482`, so `.240` starts at `exp2483`.
+- Research references updated with Post-.239 Planning Sweep: Multi-LLM Adaptive Conformal (arXiv:2602.01285), ARM-EBM Bijection Phase 4 path (arXiv:2512.15605).
+- **Milestone title**: "AUROC Adversarial Resolution + Phase 4 ARM-EBM Empirical + KAN Retrain + PolarFire v3 + arXiv Gate"
+- **Three critical gaps targeted**:
+  1. AUROC TAUTOLOGY resolution + extension: exp2484 (5-seed replication, explicit tautology check), exp2485 (group-conditional conformal arXiv:2602.01285, gated on exp2484)
+  2. Phase 4 empirical validation (arXiv hold): exp2486 (ARM-EBM bijection logprob correlation — CPU-only), exp2487 (Qwen PRC censorship divergence — MANDATORY GGUF Qwen3.6-35B-A3B-GGUF)
+  3. Hardware + KAN: exp2489 (KAN locate+retrain+LipNeXt), exp2490 (PolarFire v3, NOT Gemini — switched to codex), exp2491 (KV260 JTAG doc + openocd alt path)
+- **FR-11 Tier 4**: exp2488 (adaptive energy landscape prototype, continuous_self_learning_task=true)
+- **Paper+Synthesis**: exp2492 (paper-v6 main.tex update), exp2493 (capstone claude+opus, NO HARD GATE), exp2494 (retro codex)
+- **Agent routing**: 11 tasks codex/gpt-5.5 (91.7%); 1 claude+opus (exp2493 capstone synthesis — cross-artifact judgment across 10+ deliverables)
+- **Capstone exp2493 has NO HARD GATE** — always runs regardless of AUROC or Phase 4 outcome; lesson from exp2469/exp2481 gate-blocks.
+- Validation: `validate_prior_failures.py` (initially 2 violations on exp2488/exp2492; fixed and re-ran: OK no violations), `audit_roadmap_gates.py` (roadmap_gate_audit_passed=true, 0 failures, 12 tasks audited).
+- Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.240. Critical path: exp2484 (AUROC replication — is 0.9351 real?) → exp2485 (group-conditional extension). Parallel: exp2486+exp2487 (Phase 4 — can ARM-EBM bijection validate what ODAR failed?). Key experiments to watch: exp2484 (will the TAUTOLOGY flag be refuted or confirmed?), exp2486 (will Carnot Ising energy correlate with LLM implicit energy pearson_r > 0.3?), exp2490 (will codex succeed on PolarFire where Gemini failed 3x?).
+
+---
 
 ## Session 2026-05-19 - Milestone 2026.05.239 Research Planning Complete
 
