@@ -5165,3 +5165,4 @@ Ripgrep i |
 | 2026-05-19 22:37 UTC | Phase 1a: Phase 4 Option B — Expand §4 with Full H | OK | cache hit: 81 passed, 1 warning in 2.27s |
 | 2026-05-19 22:41 UTC | Phase 1b: IsingVerifier.energy(step_text) Implemen | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2545_ising_v |
 | 2026-05-19 22:49 UTC | Phase 1b: IsingVerifier.energy(step_text) Implemen | OK | 100 passed, 1 warning in 3.73s |
+| 2026-05-19 22:59 UTC | Phase 2a: Ensemble v7b — Tier 0r Group D (fix 0.96 | OK | 81 passed, 1 warning in 2.23s |
