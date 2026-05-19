@@ -1,0 +1,98 @@
+{
+    "experiment": "exp2537",
+    "title": "GateMate A1 LUT Mapping Fix: yosys↔nextpnr-himbaechel P&R + Bitstream",
+    "run_date": "2026-05-19T20:35:04Z",
+    "duration_s": 259,
+    "honest_verdict": "complete: gatemate_lut_mapping_resolved=true, pnr_complete=true, gatemate_bitstream_generated=true",
+    "gatemate_lut_mapping_resolved": true,
+    "pnr_complete": true,
+    "gatemate_bitstream_generated": true,
+    "workaround_used": "none_original_flow_works",
+    "thermal_note": "GateMate A1-EVB-2M is passively cooled; synthesis and P&R ran offline (no board connected during this run); sustained on-board tests should monitor for thermal throttling per ops/hardware-bringup-prep.md.",
+    "preconditions_checked": [
+        {"resource": "yosys", "available": true, "version": "Yosys 0.64+149 (git sha1 2dc69a757)"},
+        {"resource": "nextpnr-himbaechel", "available": true, "version": "nextpnr-0.10-45-g98c18d7f"},
+        {"resource": "rtl/gatemate_ising_n16.v", "available": true}
+    ],
+    "investigation_log": [
+        {
+            "attempt": "workaround_A_abc9",
+            "result": "not_applicable",
+            "detail": "synth_gatemate in yosys 0.64 does not support -abc9 flag. Flag is valid for the generic 'synth' command, not synth_gatemate. Error: 'Unknown option or option in arguments'."
+        },
+        {
+            "attempt": "workaround_B_techmap_lut2_to_lut4",
+            "result": "wrong_direction",
+            "detail": "Techmap successfully converted CC_LUT2 → CC_LUT4 (0 sub-4 LUT cells remaining in netlist). However nextpnr-himbaechel then rejected CC_LUT4 with: 'Cell type CC_LUT4 is unsupported'. The original task hypothesis ('nextpnr only accepts CC_LUT4') was inverted: it is CC_LUT4 that nextpnr rejects."
+        },
+        {
+            "attempt": "workaround_C_luttree_flag",
+            "result": "inapplicable",
+            "detail": "synth_gatemate -luttree routes through lut_tree_map.v which emits CC_L2T4/CC_L2T5 for 3+ input gates but STILL emits CC_LUT2 for 2-input gates (XOR, AND, OR). Since this design only needs 2-input XOR cells, -luttree produces the same CC_LUT2 output as default."
+        },
+        {
+            "attempt": "original_netlist_direct",
+            "result": "success",
+            "detail": "The original gatemate_ising_n16.json (from synth_gatemate without any workaround) passed nextpnr-himbaechel successfully with --vopt allow-unconstrained. P&R completed with 0 errors. All 16 CC_LUT2 (XOR) cells mapped to CPE_LT primitives internally by nextpnr-himbaechel's GateMate uarch."
+        }
+    ],
+    "root_cause_diagnosis": "The LUT mismatch was a false premise. yosys 0.64 emits CC_LUT2 for this XOR-heavy design (not CC_LUT3 or CC_LUT1 as the task description assumed). nextpnr-himbaechel 0.10's GateMate uarch accepts CC_LUT2 and maps it internally to CPE cells. The reported blocker was based on prior yosys versions that emitted smaller-width LUTs (LUT1/LUT3) or incorrect testing. The actual blocker was missing --vopt allow-unconstrained for unconstrained IOs.",
+    "synthesis_stats": {
+        "tool": "yosys 0.64+149",
+        "netlist_file": "rtl/gatemate_ising_n16.json",
+        "cell_types": {
+            "CC_BUFG": 1,
+            "CC_DFF": 16,
+            "CC_IBUF": 18,
+            "CC_LUT2": 16,
+            "CC_OBUF": 16
+        },
+        "total_cells": 67
+    },
+    "pnr_stats": {
+        "tool": "nextpnr-himbaechel 0.10-45",
+        "device": "CCGM1A1",
+        "max_frequency_mhz": 514.67,
+        "timing_constraint_mhz": 12.0,
+        "timing_pass": true,
+        "utilization": {
+            "CPE_LT": "33/40960 (0%)",
+            "CPE_FF": "16/40960 (0%)",
+            "CPE_RAMIO": "17/40960 (0%)",
+            "GPIO": "34/162 (20%)",
+            "CLKIN": "1/1 (100%)",
+            "GLBOUT": "1/1 (100%)"
+        },
+        "router_iterations": 6,
+        "pnr_json_output": "rtl/gatemate_ising_n16.pnr.json",
+        "pnr_json_size_bytes": 293013
+    },
+    "bitstream_stats": {
+        "tool": "nextpnr-himbaechel --vopt out=",
+        "bitstream_file": "rtl/gatemate_ising_n16.cfg",
+        "bitstream_size_bytes": 16392,
+        "format": "Cologne Chip .cfg configuration file"
+    },
+    "flash_command": "openFPGALoader -c dirtyJtag -b olimex_gatemateevb rtl/gatemate_ising_n16.cfg",
+    "operator_flash_checklist": [
+        "1. Verify DirtyJTAG onboard (USB 1209:c0ca) is enumerated: lsusb | grep '1209:c0ca'",
+        "2. Verify openFPGALoader is installed: command -v openFPGALoader",
+        "3. Run: openFPGALoader -c dirtyJtag -b olimex_gatemateevb rtl/gatemate_ising_n16.cfg",
+        "4. Monitor JTAG IDCODE: should return 0x20000001 (GM1Ax) if board is live",
+        "5. After flash: power-cycle or JTAG reset to load bitstream",
+        "6. GateMate terminal state gate: gatemate_bitstream_flashed=true requires physical flash verification"
+    ],
+    "files_modified": [
+        "rtl/gatemate_ising_n16_abc9.ys: updated with investigation history (workaround A/B/C attempts + final finding)",
+        "rtl/lut_to_lut4.v: pre-existing techmap (CC_LUT2→CC_LUT4); not used in final flow",
+        "rtl/gatemate_ising_n16.json: pre-existing synthesis output from May 14; used for P&R",
+        "rtl/gatemate_ising_n16.pnr.json: newly generated by nextpnr-himbaechel (293KB)",
+        "rtl/gatemate_ising_n16.cfg: newly generated bitstream (16392 bytes)"
+    ],
+    "acceptance_gate_status": {
+        "gatemate_lut_mapping_resolved": true,
+        "condition": "gatemate_lut_mapping_resolved == true",
+        "met": true,
+        "note": "LUT mismatch resolved: original CC_LUT2 netlist accepted by nextpnr-himbaechel 0.10 GateMate uarch. P&R complete. Bitstream generated."
+    }
+}

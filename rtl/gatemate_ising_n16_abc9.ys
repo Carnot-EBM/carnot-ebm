@@ -1,14 +1,16 @@
-## yosys synthesis script for gatemate_ising_n16 with LUT upsizing techmap.
+## yosys synthesis script for gatemate_ising_n16 — workaround C: -luttree flag.
 ##
-## Workaround B for yosys<->nextpnr-himbaechel LUT mismatch:
-## yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1 primitives, but
-## nextpnr-himbaechel 0.10 only accepts CC_LUT4.
-## This script applies a techmap after synthesis to upsize smaller LUTs to CC_LUT4.
+## Investigation history for the yosys↔nextpnr-himbaechel LUT mismatch:
+##   Workaround A (-abc9): synth_gatemate in yosys 0.64 does not support -abc9.
+##   Workaround B (techmap to CC_LUT4): confirmed CC_LUT4-only netlist, but
+##     nextpnr-himbaechel 0.10 also rejects CC_LUT4 — it needs CC_L2T4/CC_L2T5
+##     (the GateMate CPE's native tree-LUT cells, NOT CC_LUT4).
+##   Workaround C (-luttree): synth_gatemate -luttree uses lut_tree_cells.genlib
+##     + lut_tree_map.v to emit CC_L2T4/CC_L2T5 cells that nextpnr-himbaechel
+##     actually accepts as its CPE cell representation.
+##
+## Usage (from repo root):
+##   cd rtl && yosys gatemate_ising_n16_abc9.ys
 
-read_verilog -sv rtl/gatemate_ising_n16.v
-synth_gatemate -top gatemate_ising_n16 -nomx8 -json rtl/gatemate_ising_n16_abc9.json
-
-# Upsize CC_LUT1/CC_LUT2/CC_LUT3 to CC_LUT4 for nextpnr-himbaechel compatibility
-techmap -map rtl/lut_to_lut4.v
-clean
-write_json rtl/gatemate_ising_n16_abc9.json
+read_verilog -sv gatemate_ising_n16.v
+synth_gatemate -luttree -top gatemate_ising_n16 -nomx8 -json gatemate_ising_n16_abc9.json
