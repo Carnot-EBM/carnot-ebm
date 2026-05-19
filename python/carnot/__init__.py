@@ -31,6 +31,7 @@ try:
     import jax.numpy as jnp
     JAX_AVAILABLE = True
 except ImportError:
+    jax = None
     JAX_AVAILABLE = False
     # numpy fallback for riscv64 and other platforms without JAX
 
