@@ -20,12 +20,16 @@ The model was trained using contrastive energy minimization.
 
 | Metric | Value |
 |--------|-------|
-| Experiments completed | 3,061 (through Exp 2517) |
-| Milestones archived | 364 (through 2026.05.242) |
+| Experiments completed | 3,073 (through Exp 2529) |
+| Milestones archived | 365 (through 2026.05.243) |
 | Python test items collected | 26,352 |
 | Group-Conditional Conformal AUROC, adversarially verified (exp2485/exp2498) | 0.975 |
-| Phase 4 empirical validation, step-level ARM-EBM bijection (exp2508) | true (pearson_r=-0.4266, p<0.01, n=290) |
-| arXiv submission ready, all 4 gates met (exp2516 capstone) | true |
+| Phase 4 empirical validation, step-level ARM-EBM bijection (exp2508) | true (pearson_r=-0.4266, p<0.01, n=290, semantic_energy_fallback) |
+| arXiv gates met (exp2516 capstone); LaTeX package not ready (exp2527) | gates: true; package: false (latex_compile_success=False, abstract 522 words) |
+| Ensemble v7 regression after Tier 0r added to Group C (exp2521) | AUROC 0.9750→0.9607; Tier 0r needs Group D (tracked in .244) |
+| IsingVerifier stub identified as root cause of Phase 4 failures (exp2519) | class IsingVerifier: pass — empty stub; IsingVerifier fix queued exp2531 |
+| Tier 0r Curry-Howard verifier implemented (exp2520) | tier0r_implemented=True |
+| FR-11 Tier 3 JEPA AUC improved (exp2525) | 0.7633→0.8889 |
 | Isotonic calibration AUROC, TAUTOLOGY flagged (exp2473) | 0.9351 |
 | Conformal Ensemble AUROC, Fisher ceiling confirmed (exp2448) | 0.9167 |
 | FregeLogic AUROC (Z3+Neural Hybrid, exp2395) | 0.8831 |
@@ -37,13 +41,12 @@ The model was trained using contrastive energy minimization.
 | KAN certified_coverage after LipNeXt regularization (exp2489) | 0.83 |
 | KAN certified_deployment_ready (exp2489) | true |
 | FR-11 all 4 tiers integrated end-to-end (exp2500) | true |
-| FR-11 Tier 3 JEPA COMPLETE, jepa_violation_auc (exp2475) | 0.7633 |
 | FST PATH A live GGUF inference validated (exp2399) | true |
 | NSVIF verification pass rate (exp2352) | 1.000 |
 | VERGE SMT repair success rate (exp2353) | 1.000 |
 
 ## Evaluation Metrics
-The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.975 on the Group-Conditional Conformal Ensemble (exp2485, group_conditional_vs_fisher_delta=+0.058), breaching the HIVE peer baseline (0.9236), independently adversarially replicated via exp2498 (5-seed cross-group tautology check passed). Phase 4 empirical validation confirmed via step-level ARM-EBM bijection (exp2508): pearson_r=-0.4266 (p<0.01, n=290 step pairs) using semantic_energy_fallback, establishing that high Carnot energy predicts low LLM log-probability at the step level. All 4 arXiv submission gates are now met (exp2516 capstone). The simple-fusion isotonic AUROC of 0.9351 (exp2473) was flagged as a TAUTOLOGY by adversarial verification and later replicated at 0.7964 (exp2484); the group-conditional result provides the adversarially-cleaner headline.
+The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.975 on the Group-Conditional Conformal Ensemble (exp2485, group_conditional_vs_fisher_delta=+0.058), breaching the HIVE peer baseline (0.9236), independently adversarially replicated via exp2498 (5-seed cross-group tautology check passed). Phase 4 empirical validation confirmed via step-level ARM-EBM bijection (exp2508): pearson_r=-0.4266 (p<0.01, n=290 step pairs) using semantic_energy_fallback, establishing that high Carnot energy predicts low LLM log-probability at the step level. All 4 arXiv submission gates are met (exp2516 capstone), though the submission package itself requires LaTeX fixes (exp2527: latex_compile_success=False, abstract 522 words vs 250-word limit) — targeted in milestone .244. FR-11 Tier 3 JEPA AUC improved 0.7633→0.8889 (exp2525, .243). Tier 0r Curry-Howard verifier implemented (exp2520). The simple-fusion isotonic AUROC of 0.9351 (exp2473) was flagged as a TAUTOLOGY by adversarial verification and later replicated at 0.7964 (exp2484); the group-conditional result provides the adversarially-cleaner headline. Ensemble v7 AUROC regression (0.9750→0.9607, exp2521, .243) was traced to Tier 0r score range mismatch in Group C; Group D reassignment targeted in .244 (exp2533).
 
 ## Usage
 ```python

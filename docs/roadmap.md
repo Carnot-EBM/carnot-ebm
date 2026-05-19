@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.244 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments completed; twentieth consecutive empty-timing-window retro; 13-task roadmap (exp2530–exp2542) validated and pre-staged; IsingVerifier stub fix + ensemble regression + LaTeX compile repair are top priorities; top leverage action: activate exp2530 same-session as planning |
 | 2026.05.243 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments completed; nineteenth consecutive empty-timing-window retro; 12-task roadmap (exp2518–exp2529) validated and pre-staged; top leverage action: activate exp2518 same-session as planning |
 | 2026.05.242 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments completed; 11-task roadmap (exp2507–exp2517) validated and pre-staged; ARM-EBM Phase 4 path (exp2508) marked retire_if_same_verdict:true; dual GPUs idle and ready for ensemble expansion tasks |
 | 2026.05.241 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments completed; eighteenth consecutive empty-timing-window retro; pre-stage .242 roadmap before archiving .241; wire conductor pre-activation guard to halt on zero-experiment open |
