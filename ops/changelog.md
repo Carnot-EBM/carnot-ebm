@@ -6502,3 +6502,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 4b: Paper-v6 Final Write-Through + arXiv Gate Check (✅ Complete) — honest_verdict=complete: success; results/experiment_2515_paper_writethrough.json
 - 2026-05-19: Phase 5: Capstone v242 -- Milestone 2026.05.242 Final Synthesis (NO HARD GATE) (✅ Complete) — honest_verdict=complete: best_242_auroc=0.9750; phase4_validated_any=True; arxiv_ready=True; results/experiment_2516_capstone_v242.json
 - 2026-05-19: Phase 5: Operational Retrospective v242 (✅ Complete) — honest_verdict=complete: best_242_auroc=0.975; phase4_validated_any=True; arxiv_ready=True; results/experiment_2517_retro_v242.json
+- 2026-05-19: Phase 0: Archive .242 and activate .243 (✅ Complete) — honest_verdict=complete: Milestone 2026.05.242 already archived and 243 is already active.; results/experiment_2518_archive.json
