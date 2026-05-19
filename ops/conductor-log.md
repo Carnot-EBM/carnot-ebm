@@ -5006,3 +5006,4 @@ Ripgrep i |
 | 2026-05-19 04:23 UTC | Phase 1: Qwen Suppressed-Retrieval NLA Probe Tier  | OK | 81 passed, 1 warning in 2.32s |
 | 2026-05-19 04:29 UTC | Phase 2: FR-11 Constraint Memory Tier 2 -- Cross-S | OK | 81 passed, 1 warning in 2.32s |
 | 2026-05-19 04:37 UTC | Phase 2: CRANE Balanced Constraint Integration (ar | OK | 145 passed, 1 warning in 3.68s |
+| 2026-05-19 05:00 UTC | Phase 3: KV260 RTL Synthesis Fix v6 -- MANDATORY H | FAIL | Claude Code error: Wall-clock+idle timeout after 1200s (1200s silence). Last ou |
