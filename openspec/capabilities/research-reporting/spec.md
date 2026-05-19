@@ -4279,3 +4279,42 @@ artifacts may be absent from `results/`
 `carnot.operational_retro.v75`, terminal-prefixed `honest_verdict`, accurate
 task counts, close-of-milestone AUROC gap accounting, false FR-11/FST/KV260
 ship-gate booleans when evidence is absent, and `retro_complete=true`.
+
+### REQ-REPORT-2543: Archive Milestone 2026.05.244 and Confirm 2026.05.245 Activation
+
+The repository shall provide an Exp 2543 archive generator that writes
+`results/experiment_2543_archive.json` with schema
+`carnot.archive_activation.v1`.
+
+The generator must read the active `research-roadmap.yaml` milestone before
+making archive decisions. If the active milestone is `2026.05.244`, it must
+append the `2026.05.244` entry to `research-complete.yaml` when absent and copy
+`research-roadmap-next.yaml` over `research-roadmap.yaml` to activate
+`2026.05.245`. If the active milestone is already `2026.05.245`, it must avoid
+duplicate archive entries, confirm that `research-complete.yaml` contains
+`id: 2026.05.244`, and report `archive_ready=true` only after that confirmation.
+If the active milestone is anything else, it must leave roadmap files unchanged
+and report the unexpected roadmap state honestly.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:`
+- `archive_ready`, true only when `research-complete.yaml` records
+  `id: 2026.05.244`
+- `milestone_archived`, equal to `2026.05.244`
+- `execution_gap_diagnosis`, preserving the exp2530-exp2534 root-cause
+  hypothesis for .245 process improvement
+- `preconditions_checked`, recording the milestone and archive checks that
+  guarded activation
+- `duration_s`, a wall-clock duration for the archive generator run
+
+#### SCENARIO-REPORT-2543: Idempotent .244 Archive and .245 Activation
+
+**Given** `research-roadmap.yaml` may already have been swapped by the
+conductor
+**And** `research-complete.yaml` may already contain `id: 2026.05.244`
+**When** the Exp 2543 archive generator runs
+**Then** it writes `results/experiment_2543_archive.json` with a
+terminal-prefixed `honest_verdict`, `archive_ready=true`,
+`milestone_archived=2026.05.244`, the execution-gap diagnosis, no duplicate
+archive entry, and no modification to `scripts/research_conductor.py`.

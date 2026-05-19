@@ -1,0 +1,87 @@
+{
+  "id": "exp2543-archive-and-activate",
+  "schema": "carnot.archive_activation.v1",
+  "honest_verdict": "complete: archive_ready=true; archive_ready=true; milestone_archived=2026.05.244; active_milestone=2026.05.245",
+  "archive_ready": true,
+  "milestone_archived": "2026.05.244",
+  "completed": "2026-05-19",
+  "duration_s": 0.048124,
+  "preconditions_checked": {
+    "roadmap_milestone": {
+      "command": "yaml.safe_load_all(research-roadmap.yaml)[0].milestone",
+      "observed": "2026.05.245",
+      "expected_archive_milestone": "2026.05.244",
+      "expected_active_milestone": "2026.05.245",
+      "status": "already_activated"
+    },
+    "archive_entry": {
+      "command": "search research-complete.yaml for 2026.05.244",
+      "observed_before": "found",
+      "observed_after": "found",
+      "archive_ready": true
+    },
+    "acceptance_gate": {
+      "condition": "archive_ready == true",
+      "passed": true
+    }
+  },
+  "archive": {
+    "research_complete_path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml",
+    "research_complete_contains_2026_05_244": true,
+    "existing_entry_line": 20586,
+    "existing_entry_line_before_run": 20586,
+    "appended_this_run": false,
+    "decision": "No duplicate archive entry was appended."
+  },
+  "activation": {
+    "research_roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml",
+    "research_roadmap_next_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap-next.yaml",
+    "observed_active_milestone": "2026.05.245",
+    "copied_this_run": false,
+    "research_roadmap_next_present": false,
+    "decision": "No roadmap copy was performed for this precondition branch."
+  },
+  "milestone_244_results": {
+    "best_244_auroc": 0.975,
+    "phase4_final_status": "blocked_precondition",
+    "arxiv_ready": false,
+    "gatemate_status": "bitstream_generated_flash_pending",
+    "kv260_status": "hwh_generated_sd_devices_detected_pynq_url_unreachable",
+    "jepa_pipeline_integrated": true,
+    "tier0u_implemented": true,
+    "tier0r_implemented": true,
+    "n_experiments_completed": 5
+  },
+  "execution_gap_diagnosis": {
+    "principle": "Documents the root-cause hypothesis for why exp2530-exp2534 had no artifacts. Required for .245 process improvement.",
+    "summary": "exp2530-exp2534 produced no artifacts in .244.",
+    "hypothesis": "exp2530-exp2534 were complex codex tasks placed at the front of queue.",
+    "task_hypotheses": [
+      "exp2530 (archive) may have failed on precondition check.",
+      "exp2531 (IsingVerifier) required multi-method Python code beyond 45-turn budget.",
+      "exp2532 was gated on exp2531 -- gate-blocked.",
+      "exp2533 (ensemble v7b) required locating calibration code -- hard to find in 45 turns.",
+      "exp2534 was gated on exp2533 -- gate-blocked."
+    ]
+  },
+  "acceptance_gates": [
+    {
+      "condition": "archive_ready == true",
+      "passed": true,
+      "principle": "Ensures research-complete.yaml records .244 outcomes before .245 begins."
+    }
+  ],
+  "notes": [
+    "scripts/research_conductor.py was not modified.",
+    "No push was performed.",
+    "Ops status/changelog/traceability docs were left for the conductor reconciler."
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required (complete:/success:/passed:/shipped:). Conductor reconciler classifies terminal verdicts by this prefix.",
+    "archive_ready": "True only after .244 entry confirmed in research-complete.yaml. Guards against partial archive.",
+    "milestone_archived": "Records which milestone was archived (2026.05.244) for audit trail.",
+    "execution_gap_diagnosis": "Documents the root-cause hypothesis for why exp2530-exp2534 had no artifacts. Required for .245 process improvement.",
+    "preconditions_checked": "Records which preconditions were verified before launching.",
+    "duration_s": "Wall-clock measurement."
+  }
+}
