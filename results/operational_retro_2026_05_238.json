@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.238",
+  "generated_at": "2026-05-19T06:40:21Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.238 produced 0 completed experiments as of retro generation time. No experiment commits were found since milestone activation; the milestone was in the planning/activation phase. Both RTX 3090 GPUs were idle (0% utilization, 5 MB allocated each) with no compute-bound tasks having run.",
+  "bottlenecks_identified": [
+    "No experiments completed before retro was generated — milestone appears to be in activation/planning phase with 0 experiment commits landed.",
+    "Both GPUs idle at 0% utilization; however, since no compute-bound experiments ran, this is expected behaviour, not a GPU-scheduling bug."
+  ],
+  "improvements_suggested": [
+    "Ensure the activation experiment (exp2459) commits and closes before the retro fires so at least milestone-archive data is present in the timing block.",
+    "Monitor conductor activation lag: if the retro executes before any experiment commits, the timing data window is empty and no bottleneck analysis is possible.",
+    "Consider delaying the retro task trigger until at least one experiment commit has landed (e.g., gate retro on exp2459 archive artifact existing)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate the retro trigger on a minimum experiment count (e.g., require at least the activation/archive task to have committed) so future retros have non-empty timing data.",
+    "Use DualGPURunner (carnot.pipeline.dual_gpu_harness) for milestone phases that run Qwen on GPU 0 and Gemma on GPU 1 simultaneously once multi-model experiments are active — GPUs are currently idle and ready.",
+    "Validate that the conductor's activation experiment (exp2459) ran to completion before any downstream Phase 1-5 tasks are launched; the empty timing block suggests the activation step may have been skipped or not yet committed."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This milestone's retro reflects a clean slate: the planning phase completed fully (roadmap, change proposal, validation all landed in changelog), but no experiment commits existed at retro-generation time. The operational gap is the retro firing before the milestone's experiments have run — a sequencing issue, not a research quality issue. Future milestones should verify retro timing relative to experiment commit count before concluding the analysis."
+}

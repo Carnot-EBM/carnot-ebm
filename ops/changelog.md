@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.238 Operational Retrospective)
+
+- Operational retro for milestone 2026.05.238 written to `results/operational_retro_2026_05_238.json` (schema v64). 0 experiments completed before retro generation; milestone was in activation/planning phase. Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated, no compute-bound tasks ran). Top-3 leverage actions: (1) gate retro trigger on minimum experiment count; (2) deploy DualGPURunner for multi-model phases once experiments activate; (3) verify exp2459 activation artifact exists before downstream phases launch. Roadmap table row appended to `docs/roadmap.md`.
+
 ## 2026-05-19 (Milestone 2026.05.238 Research Planning)
 
 - Milestone 2026.05.238 research planning complete. User instruction: plan the next milestone after .237 (all tasks completed).

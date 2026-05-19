@@ -5017,3 +5017,4 @@ Ripgrep i |
 | 2026-05-19 06:24 UTC | Phase 5: Paper-v6 Capstone v238 -- AUROC v3 Synthe | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2461-conformal-ensemble-v3-stouffer.ens |
 | 2026-05-19 06:26 UTC | Phase 5: Paper-v6 Capstone v238 -- AUROC v3 Synthe | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2461-conformal-ensemble-v3-stouffer.ens |
 | 2026-05-19 06:28 UTC | Phase 5: Paper-v6 Capstone v238 -- AUROC v3 Synthe | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp2461-conformal-ensemble-v3-stouffer.ens |
+| 2026-05-19 06:33 UTC | Phase 5: Milestone 2026.05.238 Operational Retrosp | OK | 81 passed, 1 warning in 2.23s |

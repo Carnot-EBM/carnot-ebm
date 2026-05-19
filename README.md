@@ -20,13 +20,16 @@ The model was trained using contrastive energy minimization.
 
 | Metric | Value |
 |--------|-------|
-| Experiments completed | 2,991 (through Exp 2446) |
-| Milestones archived | 250 (through 2026.05.236) |
+| Experiments completed | 3,015 (through Exp 2470) |
+| Milestones archived | 359 (through 2026.05.237) |
 | Python test items collected | 26,352 |
-| Conformal Ensemble AUROC (7 verifiers fused, exp2438) | 0.9167 |
+| Conformal Ensemble AUROC, Fisher ceiling confirmed (exp2448) | 0.9167 |
 | FregeLogic AUROC (Z3+Neural Hybrid, exp2395) | 0.8831 |
 | HIVE v4 ensemble AUROC (exp2422) | 0.8864 |
 | Phase 1 ship gate met (PyPI + HF + MCP + CLI, exp2441) | true |
+| KV260 RTL synthesis succeeded, synthesis_errors=0 (exp2465) | true |
+| GateMate bitstream flashed TERMINAL (exp2453) | true |
+| PolarFire inline energy validated, polarfire_workload_validated (exp2466) | true |
 | FST PATH A live GGUF inference validated (exp2399) | true |
 | NSVIF verification pass rate (exp2352) | 1.000 |
 | VERGE SMT repair success rate (exp2353) | 1.000 |
