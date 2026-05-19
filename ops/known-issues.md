@@ -320,6 +320,201 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-19 (03:10Z): Qwen Censorship-Circuit Audit + Paper-v6 Disclosure — Verifier Coverage Gap (.238+ MANDATORY)
+
+**Origin:** 2026-05-19 ~03:10Z operator-shared blog post analysis from
+`https://vas-blog.pages.dev/qwen-censorship/` — author identified that
+Qwen3.5-9B has a localized, mechanistically-analyzable censorship
+circuit at writer layers 11-20: three directions (d_prc, d_refuse,
+d_style) that gate PRC-specific deflection without removing the
+factual knowledge from pretraining. The base model knows the truth;
+post-training added a routing layer that suppresses retrieval.
+
+**Why this matters for Carnot:**
+
+1. **Verifier coverage gap.** Carnot uses `unsloth/Qwen3.6-35B-A3B-GGUF`
+   as one of three MANDATORY SOTA local models (CLAUDE.md "SOTA Local
+   Models"). Qwen3.6 is downstream of Qwen3.5 and almost certainly
+   inherits the circuit. **Carnot's black-box output verifiers
+   (FreqAwareAttn, SemanticEnergy, HALT, LaaB, HalluField, DiffuTruth,
+   Conformal Ensemble) operate downstream of the routing decision** —
+   they see only the deflection output, which is fluent and confident,
+   not the suppression mechanism. Standard hallucination detection
+   misses this class because it's not a hallucination — it's
+   *suppressed retrieval*.
+
+2. **The Kosovo cross-axis overgeneralization is a measurable
+   hallucination class.** Per the blog: d_prc misfires on sovereignty
+   language and Qwen emits "Kosovo is an integral part of China..."
+   This is verifiably false — restoring d_prc subtraction produces the
+   factual 2008-independence answer. **This is detectable by Carnot's
+   factual-recall verifiers if tested.** If Conformal Ensemble v2
+   (exp2448) flags this output as low-confidence on a held-out test,
+   that's coverage; if not, that's a measurable gap.
+
+3. **The NLA-class 16th verifier (.124+ chain) is the right defense.**
+   The white-box SAE-based probe Carnot has committed to is exactly
+   the layer-internal probe needed to detect d_prc/d_refuse
+   activations. **Carnot's NLA verifier should benchmark against this
+   circuit as a known-ground-truth test case** — measurable activation
+   deltas, replicated paper claims.
+
+4. **Paper-v6 must disclose the Qwen censorship circuit** in the
+   limitations section. Carnot's "verify open-weight LLM outputs"
+   claim is partially compromised on PRC topics with Qwen as the
+   primary SOTA model. Mitigation: portfolio diversity (Gemma 4 + Llama
+   alternatives) already in CLAUDE.md. But the disclosure must exist.
+
+5. **Phase 4 active-inference has a direct empirical test.** The
+   Fast-Slow Variant (canonical metric .194) bets that "deliberative
+   reasoning surfaces internal information the fast path suppresses."
+   Per the blog: 89% of Qwen Tiananmen reasoning traces are in Chinese
+   and follow an explicit deflection script (cites "Cybersecurity
+   Law"). **PRC topics are a structured testbed for the Fast-Slow
+   hypothesis** — does Carnot's slow-path verifier produce different
+   results from the fast-path verifier on these inputs?
+
+**Mandatory `.238+ task chain (4 tasks):**
+
+```yaml
+- id: exp24XX-qwen-censorship-circuit-audit
+  title: "Phase 1: Qwen Censorship-Circuit White-Box Probe Audit (vas-blog.pages.dev/qwen-censorship)"
+  track: verifier
+  agent_type: claude        # white-box layer-internal probe = requires Claude
+  requires_claude: true
+  model: sonnet
+  max_turns: 60
+  deliverable: results/experiment_24XX_qwen_censorship_audit.json
+  prior_failures: []        # net-new line; no scope-similar prior
+  prompt: |
+    CONTEXT: vas-blog.pages.dev/qwen-censorship documents a 3-axis
+    censorship circuit at Qwen3.5-9B writer layers 11-20 (d_prc,
+    d_refuse, d_style). Carnot uses Qwen3.6 as SOTA local model;
+    likely inherits circuit.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Qwen3.6-35B-A3B-GGUF cached:
+            ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/
+         b. SAE / activation extraction tooling available:
+            python -c "import transformers, torch; print('ok')"
+         c. PRC prompt corpus available (Tiananmen, Taiwan, Tibet,
+            Xinjiang, Hong Kong, Falun Gong, Xi Jinping — at least
+            6 sensitive topics + 6 non-PRC controls)
+      1. Extract layer-11-20 residual activations for each prompt.
+      2. Fit PCA / SAE to identify candidate d_prc-analogue direction.
+      3. Test causal validation: apply α·d perturbation at writer
+         layers; measure verdict flip rate.
+      4. Cross-reference with Kosovo-style cross-axis test (is the
+         Qwen3.6 sovereignty-question vulnerability still present?).
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict (terminal prefix)
+      - d_prc_identified: bool (did the probe find a candidate?)
+      - prc_topic_count, control_topic_count
+      - flip_rate_at_alpha_neg_12: numeric
+      - cross_axis_kosovo_misfire_present: bool
+      - replication_of_blog_claim: bool
+    ACCEPTANCE GATES:
+      - condition: "d_prc_identified != null"
+        principle: "Must produce a definitive identification, even if negative."
+
+- id: exp24XX-paperv6-qwen-disclosure
+  title: "Phase 4: Paper-v6 Limitations Section — Qwen Censorship-Circuit Disclosure"
+  track: paper
+  agent_type: codex         # mechanical doc integration
+  model: gpt-5.5
+  max_turns: 30
+  deliverable: results/experiment_24XX_paperv6_qwen_disclosure.json
+  prompt: |
+    Add to docs/arxiv-paper/main.tex §6 Limitations a paragraph
+    disclosing that Qwen3.6 (one of three MANDATORY SOTA local
+    models per CLAUDE.md SOTA Local Models) exhibits the writer-
+    layer censorship circuit documented at
+    vas-blog.pages.dev/qwen-censorship (Qwen3.5-9B analysis). Cite
+    the d_prc / d_refuse / d_style circuit, the factual-knowledge-
+    intact base model observation, and the Kosovo cross-axis
+    overgeneralization. Note Carnot's portfolio mitigation:
+    Gemma 4 / Llama alternatives exist in the SOTA list.
+
+- id: exp24XX-writer-layer-steering-verifier-prototype
+  title: "Phase 1: Writer-Layer Steering as Verifier Prototype (Tier 0n)"
+  track: verifier
+  agent_type: claude        # cross-file Phase-3-tier design
+  requires_claude: true
+  model: sonnet
+  max_turns: 80
+  deliverable: results/experiment_24XX_writer_layer_steering_tier0n.json
+  depends_on: [exp24XX-qwen-censorship-circuit-audit]  # need the circuit first
+  prompt: |
+    CONTEXT: If exp24XX (audit) confirms d_prc exists in Qwen3.6,
+    a verifier that probes d_prc activation at layer 19-24 IS a
+    new Tier 0n verifier — detects "the model is suppressing
+    retrieval despite knowing the answer". Implement it.
+
+    CONCRETE STEPS:
+      1. Wire d_prc activation extraction into
+         python/carnot/verify/writer_layer_steering.py
+      2. score(prompt, response) returns 1 - sigmoid(d_prc · res)
+         (high = model is in deflection mode; low = factual)
+      3. Evaluate on PRC test corpus from exp24XX audit; compare
+         AUROC against existing Tier 0 verifiers.
+      4. Adversarial-verify: run on non-PRC controls; AUROC should
+         be ~0.5 (chance) — verifier should ONLY fire on circuit-
+         active outputs.
+
+- id: exp24XX-phase4-fast-slow-prc-test
+  title: "Phase 4: Fast-Slow Variant on PRC Topics — Active Inference Empirical Test"
+  track: phase4
+  agent_type: claude        # Phase 4 white-box probe coordination
+  requires_claude: true
+  model: sonnet
+  max_turns: 60
+  deliverable: results/experiment_24XX_fast_slow_prc.json
+  depends_on: [exp24XX-qwen-censorship-circuit-audit]
+  prompt: |
+    CONTEXT: Fast-Slow Variant (canonical Phase 4 metric .194) bets
+    that deliberation surfaces information fast path suppresses. PRC
+    topics are a structured testbed.
+
+    CONCRETE STEPS:
+      1. Run PRC prompt corpus through Carnot's Fast-Slow Variant
+         (existing implementation from .194).
+      2. Compare fast-path vs slow-path output on same prompt.
+      3. Per blog: 89% of Qwen Tiananmen reasoning traces in Chinese,
+         following deflection script — does Carnot's slow path
+         escape that script, or follow it?
+      4. Compare with non-PRC controls (Kent State, Arab Spring) —
+         no expected fast/slow divergence on those.
+    REQUIRED ARTIFACT FIELDS:
+      - fast_path_deflects: bool per prompt
+      - slow_path_deflects: bool per prompt
+      - fast_slow_divergence_rate: numeric (% of prompts where they differ)
+      - phase4_empirical_signal: bool (does PRC corpus support FSV hypothesis?)
+```
+
+**Cross-references:**
+
+- `https://vas-blog.pages.dev/qwen-censorship/` — source article (added
+  to `research-references.md` under "verifier-relevant LLM internals"
+  in companion commit)
+- `feedback_nla_class_16th_verifier_committed.md` (memory) — the
+  white-box probe track this audit benchmarks
+- `reference_anthropic_natural_language_autoencoders.md` (memory) —
+  NLA reconstruction-error framing for the verifier
+- `feedback_phase_1_ship_decoupled_from_paper_and_hardware.md`
+  (memory) — paper-v6 still gates on Phase 4 validation; this test
+  is direct Phase 4 evidence
+- CLAUDE.md "SOTA Local Models" — Qwen3.6 is mandatory; needs disclosure
+
+**Why this is in MANDATORY-NEXT-MILESTONE PRIORITIES.** Carnot's
+"verify open-weight LLM outputs" claim has a structural gap on the
+PRC class of suppressed-retrieval errors. Paper-v6 cannot ship to
+arXiv without either (a) the disclosure, or (b) the writer-layer
+probe demonstrating Carnot detects the circuit. Either path requires
+this audit task to land first. The Fast-Slow PRC test is also direct
+Phase 4 empirical evidence — a faster path to .94+ Phase 4 validation
+than the FoVer-based work currently in flight.
+
 ### NEW 2026-05-18 (24:30Z): Per-FPGA-board task slot every milestone — DURABLE (.237+ MANDATORY, until each board's terminal state)
 
 **Origin:** 2026-05-18 operator directive: "I just don't want you to
