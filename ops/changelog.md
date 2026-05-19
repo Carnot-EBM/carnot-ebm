@@ -6404,3 +6404,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 5: Milestone 2026.05.239 Operational Retrospective (✅ Complete) — honest_verdict=complete: retro generated.; results/experiment_2482_retro_v239.json
 - 2026-05-19: Phase 0: Archive .239 and activate .240 (✅ Complete) — honest_verdict=complete: conductor already swapped, 2026.05.239 present in research-complete.yaml; results/experiment_2483_archive.json
 - 2026-05-19: Phase 1: AUROC Adversarial Resolution -- 5-Seed Replication of Isotonic 0.9351 (exp2473 TAUTOLOGY fix) (✅ Complete) — honest_verdict=complete: true_replicated_auroc_isotonic=0.7964; results/experiment_2484_auroc_adversarial_replication.json
+- 2026-05-19: Phase 1: Group-Conditional Conformal Ensemble v5 (arXiv:2602.01285) -- Verifier-Type Group Calibration (✅ Complete) — honest_verdict=complete: 0.9750; results/experiment_2485_group_conformal_v5.json
