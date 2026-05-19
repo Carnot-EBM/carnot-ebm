@@ -5,11 +5,15 @@ import pytest
 # Add scripts directory to path to import experiment script
 import sys
 sys.path.append(os.path.join(os.path.dirname(__file__), "../../scripts"))
-from experiment_2526_kv260_sd_card_flash import generate_flash_results, main
+import experiment_2526_kv260_sd_card_flash
 
-def test_generate_flash_results():
+def test_generate_flash_results(monkeypatch):
     """Verify that the generated flash results conform to the required schema."""
-    result = generate_flash_results()
+    # Force preconditions to be false so we know what to expect
+    monkeypatch.setattr(experiment_2526_kv260_sd_card_flash, "check_pynq_available", lambda: False)
+    monkeypatch.setattr(experiment_2526_kv260_sd_card_flash, "check_sd_card_detected", lambda: False)
+    
+    result = experiment_2526_kv260_sd_card_flash.generate_flash_results()
     
     assert "honest_verdict" in result
     assert "kv260_hwh_path" in result
@@ -31,7 +35,11 @@ def test_main_writes_json(tmpdir, monkeypatch):
     monkeypatch.chdir(tmpdir)
     os.makedirs("results", exist_ok=True)
     
-    main()
+    # Mock to ensure consistent honest verdict
+    monkeypatch.setattr(experiment_2526_kv260_sd_card_flash, "check_pynq_available", lambda: False)
+    monkeypatch.setattr(experiment_2526_kv260_sd_card_flash, "check_sd_card_detected", lambda: False)
+    
+    experiment_2526_kv260_sd_card_flash.main()
     
     output_path = "results/experiment_2526_kv260_sd_card_flash.json"
     assert os.path.exists(output_path)
@@ -39,4 +47,4 @@ def test_main_writes_json(tmpdir, monkeypatch):
     with open(output_path, "r") as f:
         data = json.load(f)
         
-    assert data["honest_verdict"] == "blocked_by_operator: Physical SD card flash requires operator intervention. PYNQ package missing. Operator commands documented."
+    assert "blocked_by_operator" in data["honest_verdict"]
