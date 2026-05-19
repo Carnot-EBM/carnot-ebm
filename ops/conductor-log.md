@@ -5004,3 +5004,4 @@ Ripgrep i |
 | 2026-05-19 04:09 UTC | Phase 1: Tier 0n Internal Representation Conformal | OK | 81 passed, 1 warning in 2.35s |
 | 2026-05-19 04:19 UTC | Phase 1: Conformal Ensemble v3 -- Stouffer Z-Score | OK | 100 passed, 1 warning in 3.75s |
 | 2026-05-19 04:23 UTC | Phase 1: Qwen Suppressed-Retrieval NLA Probe Tier  | OK | 81 passed, 1 warning in 2.32s |
+| 2026-05-19 04:29 UTC | Phase 2: FR-11 Constraint Memory Tier 2 -- Cross-S | OK | 81 passed, 1 warning in 2.32s |
