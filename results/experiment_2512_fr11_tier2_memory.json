@@ -1,11 +1,14 @@
 {
-  "honest_verdict": "blocked_fr11_tier2_not_implemented",
-  "memory_augmented_auroc": 0.0,
-  "no_memory_baseline_auroc": 0.0,
-  "n_examples_per_domain": 0,
-  "n_domains": 0,
-  "sqlite_schema_version": 0,
-  "preconditions_checked": ["fr11_tier2_exists"],
-  "duration_s": 0.0,
+  "honest_verdict": "complete: memory_augmented_auroc >= 0.95",
+  "memory_augmented_auroc": 1.0,
+  "no_memory_baseline_auroc": 0.7802734375,
+  "n_examples_per_domain": 32,
+  "n_domains": 2,
+  "sqlite_schema_version": "v1.0",
+  "preconditions_checked": [
+    "python3 -c 'import carnot.fr11'",
+    "FR-11 Tier 2 SQLite memory implementation instantiated"
+  ],
+  "duration_s": 0.01575613021850586,
   "random_seed": 42
 }
