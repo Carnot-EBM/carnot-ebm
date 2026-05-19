@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.239",
+  "generated_at": "2026-05-19T10:27:17Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.239 produced 0 experiment commits before retro generation — the milestone was in the planning/activation phase at retro time. Both RTX 3090 GPUs sat idle at 0% utilization with no compute-bound tasks scheduled. No timing data exists to analyse; all interpretive fields reflect that absence.",
+  "bottlenecks_identified": [
+    "Retro triggered before any experiment activated: no commits land in the timing window, making every numeric field 0 and rendering GPU-utilisation analysis vacuous.",
+    "Persistent gap between roadmap planning and first-experiment activation: the conductor archives the prior milestone and writes the new roadmap in the same outer-loop turn, but experiment exp2471 (archive + activate) has not yet committed, so the timing anchor is never set."
+  ],
+  "improvements_suggested": [
+    "Gate operational retro trigger on a minimum experiment count (>=1 commit in the timing window); if the gate is not met, emit a lightweight 'planning-only' stub and defer the full retro until at least one experiment completes.",
+    "Pre-activate exp2471 (archive + activate) in the same session as roadmap planning so the timing anchor is set before the retro fires.",
+    "Deploy a persistent conductor daemon that picks up the roadmap and begins activation without waiting for the next outer-loop turn."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate retro on minimum experiment count: avoids generating a structurally empty retro (17th consecutive occurrence) and saves outer-loop turn budget.",
+    "Same-session activation of exp2471: collapse roadmap-write and first-task-activation into one outer-loop turn so the timing window always contains at least one commit.",
+    "Persistent conductor daemon: eliminates the inter-session gap between roadmap commit and first experiment launch, the root cause of all empty-timing-window milestones."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This is the seventeenth consecutive milestone where the retro fires on an empty timing window. The structural root cause — retro triggered before exp2471 activates — has been identified in every prior retro but not yet resolved mechanically. The highest-value action remains unchanged: make the retro gate on experiment count, not on milestone boundary."
+}

@@ -21,7 +21,7 @@ The model was trained using contrastive energy minimization.
 | Metric | Value |
 |--------|-------|
 | Experiments completed | 3,015 (through Exp 2470) |
-| Milestones archived | 359 (through 2026.05.237) |
+| Milestones archived | 360 (through 2026.05.238) |
 | Python test items collected | 26,352 |
 | Conformal Ensemble AUROC, Fisher ceiling confirmed (exp2448) | 0.9167 |
 | FregeLogic AUROC (Z3+Neural Hybrid, exp2395) | 0.8831 |
