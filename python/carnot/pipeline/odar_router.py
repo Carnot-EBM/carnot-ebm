@@ -377,3 +377,23 @@ def _json_safe_value(value: Any) -> Any:
     if isinstance(value, Sequence) and not isinstance(value, str | bytes):
         return [_json_safe_value(item) for item in value]
     return repr(value)
+
+class OdarRouter:
+    """ODAR router that uses free-energy objective for iteration selection."""
+
+    def __init__(self, max_iterations: int = 5):
+        self.max_iterations = max_iterations
+
+    def route(self, current_energy: float, prior_energy: float, iteration: int) -> tuple[bool, float, float]:
+        """
+        Evaluate if we should route to another repair iteration.
+        Returns: (route_to_repair, variational_free_energy, expected_reduction)
+        """
+        delta_E = prior_energy - current_energy
+        expected_reduction = delta_E * math.exp(-0.5 * iteration)
+        complexity = abs(delta_E) / (iteration + 1)
+        variational_free_energy = -expected_reduction + 0.3 * complexity
+
+        # We route to repair if the expected gain is positive (VFE < 0)
+        route_to_repair = variational_free_energy < 0 and iteration < self.max_iterations
+        return route_to_repair, variational_free_energy, expected_reduction

@@ -450,6 +450,7 @@ class VerifyRepairPipeline:
         use_odar: bool = False,
         odar_risk_threshold: float = 0.5,
         odar_router: Any | None = None,
+        routing_mode: str = "argmax",
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -554,6 +555,11 @@ class VerifyRepairPipeline:
         self._use_odar = use_odar
         self._odar_risk_threshold = odar_risk_threshold
         self._odar_router = odar_router
+        self.routing_mode = routing_mode
+        self._repair_router = None
+        if self.routing_mode == "odar":
+            from carnot.pipeline.odar_router import OdarRouter
+            self._repair_router = OdarRouter(max_iterations=max_repairs)
 
         # Restore persisted learning state if session_memory was provided
         # and a prior session exists on disk.  Restoring here (before
@@ -2186,8 +2192,26 @@ class VerifyRepairPipeline:
                 history=history,
             )
 
+        iterations_used = self._max_repairs
         for i in range(self._max_repairs):
             self._check_deadline(deadline)
+
+            if self.routing_mode == "odar" and self._repair_router is not None:
+                current_energy = vr.energy
+                if i > 0:
+                    prior_energy = history[-2].energy
+                else:
+                    prior_energy = current_energy + 1.0
+
+                route_to_repair, vfe, _ = self._repair_router.route(
+                    current_energy=current_energy,
+                    prior_energy=prior_energy,
+                    iteration=i
+                )
+                if not route_to_repair:
+                    logger.info("ODAR routing VFE=%.3f >= 0. Stopping repair.", vfe)
+                    iterations_used = i
+                    break
 
             # Format violations as feedback for the LLM.
             feedback = self._format_violations(vr.violations)
@@ -2243,13 +2267,13 @@ class VerifyRepairPipeline:
                     history=history,
                 )
 
-        # Exhausted repair iterations.
+        # Exhausted or aborted repair iterations.
         return RepairResult(
             initial_response=initial_response,
             final_response=response,
             verified=False,
             repaired=False,
-            iterations=self._max_repairs,
+            iterations=iterations_used,
             history=history,
         )
 
