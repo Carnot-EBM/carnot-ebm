@@ -5044,3 +5044,4 @@ Ripgrep i |
 | 2026-05-19 10:51 UTC | Phase 0: Archive .239 and activate .240 | OK | cache hit: 81 passed, 1 warning in 2.39s |
 | 2026-05-19 11:00 UTC | Phase 1: AUROC Adversarial Resolution -- 5-Seed Re | OK | 81 passed, 1 warning in 2.30s |
 | 2026-05-19 11:15 UTC | Phase 1: Group-Conditional Conformal Ensemble v5 ( | OK | 81 passed, 1 warning in 2.32s |
+| 2026-05-19 11:21 UTC | Phase 2: Phase 4 ARM-EBM Bijection Empirical Test  | OK | 81 passed, 1 warning in 2.26s |
