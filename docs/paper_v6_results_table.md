@@ -78,3 +78,15 @@ Run date: `20260518`
 | GateMate Ising synthesis | bitstream_flashed | exp2453 | n/a | n/a |
 | PolarFire SoC smoke | ssh_reachable_install_failed | exp2454 | n/a | n/a |
 | ODAR free-energy routing enabled | true | exp2455 | n/a | n/a |
+## Milestone 2026.05.239 Headline Results
+
+| metric_name | value | source | external_baseline | gap_to_baseline |
+|---|---:|---|---|---:|
+| Best .239 AUROC | 0.9351 | exp2473.best_calibrated_auroc | HIVE 0.9236 | +0.0115 (BREACHED) |
+| Phase 1 ship gate met | true | exp2441 (.236) | n/a | n/a |
+| FR-11 Tier 3 JEPA implemented | true | exp2475 | n/a | n/a |
+| KV260 board status | bitstream_generated_not_flashed | exp2477 | n/a | n/a |
+| PolarFire SoC status | missing | exp2478 | n/a | n/a |
+| Paper-v6 integrity audit | passed | exp2479 | n/a | n/a |
+| Phase 4 hold status | partially_validated | exp2480 | operator directive | n/a |
+| arXiv submission ready | false | derived | n/a | n/a |

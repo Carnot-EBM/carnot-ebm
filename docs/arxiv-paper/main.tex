@@ -1143,6 +1143,57 @@ local-model readout.
 
 
 In milestone .89, HardNet++-style arithmetic projection repair corrected 20/20 synthetic violations at 100\% accuracy and handled each violation in 117\,$\mu s$ per case versus 8.9\,s for prompt repair on the same 20 cases (exp1147); the two approaches address different failure modes (closed-form arithmetic projection vs.\ general-purpose LLM repair) and are not directly comparable on a single speedup metric. MetaCluster-style centroid compression made SOSKANEnergyV3 5.03$\times$ smaller with AUROC drop 0.018 (0.9902 to 0.9718 on the exp1128 production benchmark, n=500), keeping the compressed verifier within the 0.02 degradation target (exp1148).
+\subsection{Milestone .239 update}
+\label{sec:milestone-239-update}
+
+Milestone .239 chases two parallel goals: (a) push the calibrated
+ensemble AUROC past the HIVE peer ceiling of $0.9236$ by adding an
+LLM-as-Judge Tier 0p verifier (exp2472) and re-running calibration
+(exp2473) on top of the .236 conformal baseline (AUROC $0.9167$,
+exp2438); and (b) make empirical progress on Phase 4 active-inference
+validation (exp2474 ODAR + exp2480 hold-status report) so the
+operator-directed arXiv-submission hold can eventually lift.
+
+The best .239 AUROC is $\mathrm{AUROC} = 0.9351$ (source:
+\texttt{exp2473.best\_calibrated\_auroc}), BREACHED the HIVE peer ceiling by
+$+0.0115$. The Tier 0p single-verifier AUROC was $0.6412$
+(exp2472) on $n=36$ examples; on inspection adding Tier 0p to the
+calibrated ensemble dropped Platt AUROC from $0.8344$ to $0.8279$,
+so the LLM-as-Judge addition is not net-positive at this corpus
+size and should not be treated as a headline contributor. The
+isotonic calibration on the existing nine-verifier base reached
+AUROC $= 0.9351$, but exp2473 was flagged adversarial
+(TAUTOLOGY between isotonic\_auroc and best\_calibrated\_auroc — a
+false positive of the $\max(\text{platt}, \text{isotonic})$
+pattern); the headline is preserved with that caveat noted in the
+limitations track and $n_{\text{eval}} = 36$ remains small enough
+that the number should be read as suggestive rather than definitive.
+
+FR-11 Tier 3 (exp2475) is implemented (JEPA predictor learns from min\_logprob): a small JEPA predictor on
+$n=36$ training examples reached violation\_auc $= 0.7633$
+($\sigma = 0.198$). KAN Lipschitz tightening (exp2476) was blocked
+on a missing KAN model checkpoint and remains queued for the next
+milestone. The paper-v6 integrity audit (exp2479) is
+\textbf{PASSED after fix}; three fixes (one major, two minor) were
+applied to \texttt{docs/arxiv-paper/main.tex} prior to this
+subsection's insertion.
+
+Hardware-Task Continuity (CLAUDE.md): KV260: bitstream generated not flashed; PolarFire: missing. KV260
+exp2477 generated a $7{,}797{,}830$-byte bitstream via Vivado
+2025.2.1 for \texttt{xck26-sfvc784-2LV-c} (sha256 reproducibility
+checksum recorded) but the board was not USB-attached this run, so
+the flash leg of KV260 graduation is honest-deferred rather than
+fabricated. PolarFire exp2478 did not land an artifact in this
+milestone and re-queues to .240+.
+
+Phase 4 hold status (exp2480): \texttt{partially\_validated}, with ODAR
+energy AUROC $= 0.5584$ on the same $n=36$ corpus (exp2474). The
+phase4\_validated boolean from exp2474 remains False, so the
+operator-directed arXiv-submission hold (memory note
+\texttt{feedback\_publication\_holds\_until\_phase4\_pivot})
+is NOT yet lifted even though the report classifies the work as
+partially validated. arXiv-readiness assessment for this milestone:
+arXiv NOT YET ready: formula gates met (phase1+audit+phase4\_partial) but operator hold remains until phase4\_validated=True (currently False)..
 
 \subsection{$D_{\mathrm{int}} = 1.6$ motivates the Welch bound (exp1093)}
 
