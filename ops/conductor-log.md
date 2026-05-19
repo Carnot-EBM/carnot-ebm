@@ -4989,3 +4989,4 @@ Ripgrep i |
 | 2026-05-19 01:24 UTC | Phase 1: HalluField Tier 0m Verifier (arXiv:2509.1 | OK | 81 passed, 1 warning in 2.42s |
 | 2026-05-19 01:33 UTC | Phase 1: LaaB ACL 2026 Full Meta-Judgment Bridge v | OK | 100 passed, 1 warning in 3.72s |
 | 2026-05-19 01:37 UTC | Phase 2: FR-11 Soundness/Completeness Tracking v5  | OK | 100 passed, 1 warning in 3.76s |
+| 2026-05-19 02:00 UTC | Phase 3: KV260 RTL Synthesis Debug Fix v5 -- Diagn | FAIL | Claude Code error: Wall-clock+idle timeout after 1200s (1200s silence). Last ou |
