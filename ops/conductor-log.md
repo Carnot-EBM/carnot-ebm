@@ -4997,3 +4997,4 @@ Ripgrep i |
 | 2026-05-19 03:10 UTC | Phase 2: ODAR Free-Energy Routing for Carnot Verif | OK | 145 passed, 1 warning in 3.72s |
 | 2026-05-19 03:14 UTC | Phase 4: NCO Corrigendum v2 -- Fix AUROC=0.500 Tau | OK | 81 passed, 1 warning in 2.25s |
 | 2026-05-19 03:28 UTC | Phase 4: Paper-v6 Results Table + Capstone v237 -- | OK | 81 passed, 1 warning in 2.23s |
+| 2026-05-19 03:31 UTC | Phase 4: Milestone 2026.05.237 Operational Retrosp | OK | 81 passed, 1 warning in 2.30s |

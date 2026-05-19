@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.237 | Pipeline stall / No timing-window experiments | N/A | None — sixteenth consecutive empty-experiment milestone; fix timing-capture anchor + pre-stage .238 roadmap + persistent conductor daemon are top-3 leverage actions |
 | 2026.05.236 | Pipeline stall / No timing-window experiments | N/A | None — fifteenth consecutive empty-experiment milestone; both GPUs idle at 0%; same-session activation + pre-staged .237 roadmap + persistent conductor daemon are top-3 leverage actions |
 | 2026.05.235 | Pipeline stall / No timing-window experiments | N/A | None — fourteenth consecutive empty-experiment milestone; activate first task in same session as planning; deploy persistent conductor; reduce milestone scope to 6-8 tasks |
 | 2026.05.234 | Pipeline stall / No timing-window experiments | N/A | None — thirteenth consecutive empty-experiment milestone; pre-stage .235 roadmap before archiving .234; file root-cause diagnostic task as first .235 activation; run exclusion_manifest_lint.py against .235 draft |

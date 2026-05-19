@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.237",
+  "generated_at": "2026-05-19T03:38:05Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.237 recorded 0 experiments in the timing window and 0 minutes of tracked wall time, continuing the recurring activation-gap pattern seen across the prior consecutive empty-experiment milestones. Both RTX 3090 GPUs were idle at 0% utilization with only 5 MB allocated on each, consistent with no compute-bound work having landed within the timing capture window. No compute-bound experiments ran, so GPU idle is not a bottleneck this milestone.",
+  "bottlenecks_identified": [
+    "Activation-gap: experiments executed and committed in the same session as milestone activation fall outside the timing capture window, producing 0-experiment retros that do not reflect actual throughput.",
+    "Timing capture granularity: the git-commit-based timing data collection anchors to milestone activation rather than milestone close, making fast same-session milestones invisible to the retro.",
+    "No persistent conductor daemon: each conductor session must restart from scratch, introducing per-session startup latency before the first experiment can launch."
+  ],
+  "improvements_suggested": [
+    "Shift timing capture to anchor on milestone CLOSE rather than milestone ACTIVATION so that same-session experiments are counted in the retro.",
+    "Pre-stage research-roadmap-next.yaml for .238 before archiving .237, so the next conductor session can activate experiments immediately without a planning round.",
+    "Deploy a persistent conductor daemon (systemd unit or tmux session) that survives between operator turns and eliminates per-session restart overhead.",
+    "Add a retro-sanity check: if experiments_completed == 0 but changelog shows entries for the milestone date, emit a WARNING field noting the timing-capture gap rather than silently reporting an empty milestone.",
+    "Reduce milestone scope to 6-8 tasks to increase the probability that all tasks complete within the same conductor session, making them visible to the timing window."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing capture anchor: move git-commit window from activation time to close time — eliminates false empty-milestone retros with a one-line change to the timing query in scripts/research_conductor.py (read-only change to retro data collection, not experiment logic).",
+    "Pre-stage .238 roadmap in this session before archiving .237 — costs <5 minutes, eliminates the next planning-round startup gap, and is already the established convention per Pre-Staged Roadmap Convention in CLAUDE.md.",
+    "Deploy persistent conductor daemon (tmux/systemd) — eliminates per-session Python import + exclusion manifest load + roadmap parse overhead that currently precedes every first experiment, saving 2-5 minutes of dead time per session."
+  ],
+  "estimated_time_savings_pct": 20,
+  "meta_reflection": "The persistent 0-experiment timing-window pattern across consecutive milestones is itself a meta-signal: the retro infrastructure is measuring the wrong thing (activation-to-commit gap) rather than the right thing (activation-to-close throughput). Fixing the measurement is higher leverage than fixing the process, because an accurate retro would immediately reveal whether the underlying throughput problem persists or was already solved by same-session activation. The recurring recommendation to fix the timing anchor has not been acted on; this iteration should treat it as the single highest-priority infrastructure task for .238."
+}

@@ -20,18 +20,19 @@ the right kind of ground-truth (code execution, formal solver, type and bound
 checks, cross-step consistency), and can feed the violations back to the LLM
 for a repair pass.
 
-The framework is built in Rust plus Python/JAX and installs from source today
-with `pip install -e ".[dev]"`; public PyPI packaging remains blocked by the
-Exp 1582 Phase-1 ship-readiness ledger. Four energy-model tiers (KAN, Ising,
+The framework is built in Rust plus Python/JAX and installs via `pip install carnot-ebm`
+(PyPI package published; Phase 1 ship gate confirmed met in exp2441, 2026-05-19 — all
+five criteria satisfied: PyPI published, HuggingFace mirror live, MCP docs written, CLI
+docs written, external reproducer confirmed). Four energy-model tiers (KAN, Ising,
 Gibbs, Boltzmann) can be selected by task; the production verify-repair API is
 a handful of lines of Python. Headline model-generation benchmark numbers are from
 **live GPU inference on real public models** (Qwen 3.5, Gemma 4,
 Qwen3.6-35B-A3B), never from simulated runs; hardware, ensemble, and
 adversarial-audit results are labeled by artifact provenance.
 
-This report summarizes 2,964 experiments across 248 milestones through .234, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction (PRD Priority #1 first actual run, verification_pass_rate=1.000), VERGE SMT repair integration (mcs_repair_success_rate=1.000), Sparse Ising connectivity, Semantic Energy Tier 0g (AUROC=0.685 on real cached GGUF logprob vectors exp2351), KAN-CL n=256 per-knot retention, and FregeLogic Z3+Neural Hybrid (AUROC=0.8831, beating HalluScan 0.88 peer baseline, exp2395).
+This report summarizes 2,991 experiments across 250 milestones through .236, featuring continuous self-learning integration, fast-slow KAN variant scale-up, Eidoku CSP verification gates, Projected-Langevin equality constraint baselines, adversarial null-space probing of the k=16 verifier ensemble, NSVIF neuro-symbolic Z3 extraction (PRD Priority #1 first actual run, verification_pass_rate=1.000), VERGE SMT repair integration (mcs_repair_success_rate=1.000), Sparse Ising connectivity, Semantic Energy Tier 0g (AUROC=0.685 on real cached GGUF logprob vectors exp2351), KAN-CL n=256 per-knot retention, FregeLogic Z3+Neural Hybrid (AUROC=0.8831, beating HalluScan 0.88 peer baseline, exp2395), and Conformal P-Value Ensemble with 7 verifiers fused (AUROC=0.9167, gap to HIVE peer 0.9236 closed to 0.0069, exp2438).
 
-This report documents the research arc behind the framework — **2,964 experiment records tracked through Exp 2419, with 2,964 task records in 248 artifact-backed completed milestone records archived through 2026.05.234** — run between February and May 2026. `research-complete.yaml` currently archives **248** completed milestone records through 2026.05.234. Milestone 2026.05.233 ("Codex Recovery Sprint") restored Codex CLI infrastructure and delivered headline results: **exp2395 (FregeLogic Z3+Neural Hybrid, arXiv:2604.18328) achieved AUROC=0.8831** — the first Carnot result exceeding the HalluScan 0.88 peer baseline; **exp2398 (HIVE 3-verifier ensemble) achieved AUROC=0.8539**; **exp2399 (FST PATH A) validated live GGUF inference** with Qwen3.6-35B-A3B for the first time. Milestone 2026.05.234 ("AUROC Ceiling Assault") was archived with 0 of 13 implementation tasks completed — all failed with the recurring Codex CLI backend transient error; only the retro (exp2419) succeeded. Milestone 2026.05.235 ("Codex Recovery Sprint v2 + AUROC Ceiling Assault v4", exp2420–exp2433) is planned next. Prior milestones .231 (first 14/14 fully-complete milestone, RTL lint=0) and .232 (AUROC Closure Sprint, Codex CLI failure recovered in .233) are documented below.
+This report documents the research arc behind the framework — **2,991 experiment records tracked through Exp 2446, with 2,991 task records in 250 artifact-backed completed milestone records archived through 2026.05.236** — run between February and May 2026. `research-complete.yaml` currently archives **250** completed milestone records through 2026.05.236. Milestone 2026.05.235 ("Codex Recovery Sprint v2") confirmed codex_cli_healthy=true and delivered key results: **HIVE v4 AUROC=0.8864** (exp2422), **Hierarchical LogCons v2 AUROC=0.8896** (exp2423, fallback path), **Kinetic Langevin** as best sampler (KL=1.987 vs CASAL 9.858, exp2428). Milestone 2026.05.236 ("AUROC Ceiling Breach") completed 10 of 12 tasks: **exp2438 (Conformal P-Value Ensemble, 7 verifiers fused) achieved AUROC=0.9167** — closing the gap to the HIVE peer ceiling (0.9236) to 0.0069; **exp2441 (Phase 1 Ship Gate v5) declared all criteria met** (PyPI published, HuggingFace mirror live, MCP+CLI docs written, external reproducer confirmed); exp2439 (FR-11 Online Learnability) satisfied the continuous self-learning mandate; exp2442 (FST MCMC energy fix) resolved the degenerate acceptance_rate=1.0 sampler. exp2440 (KV260 RTL) did not run; exp2445 (capstone) was gate-blocked by a JSON parse error in exp2438. Milestone 2026.05.237 ("AUROC Final Breach + Paper Capstone + Hardware Continuity", exp2447–exp2458) is planned next.
 
 The story now spans activation-based negative results, constraint-based
 verification, live SOTA-model benchmarks, production verifier ensembles,
@@ -113,10 +114,9 @@ artifacts, and an explicit finding that SOTA cache/runtime readiness and the
 .147 operational speedup target remain unresolved.
 
 The latest archived milestone entry in `research-complete.yaml` is
-2026.05.163; checked-in result artifacts now extend through Exp 2089, the .161
-research retrospective. The latest current-result layer is therefore ahead of
-the archive by one milestone: .158 is archived, while .159 is represented in
-`ops/changelog.md` and result artifacts.
+2026.05.236; checked-in result artifacts now extend through Exp 2446, the .236
+operational retrospective. Milestone 2026.05.237 is currently planned
+(exp2447–exp2458) and not yet represented in the archive.
 Milestone .105 diagnosed the SOTA thinking-mode certificate path as a terminal
 negative: `<think>` output consumed
 the generation budget before structural tags, producing
