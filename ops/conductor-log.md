@@ -5091,3 +5091,4 @@ Ripgrep i |
 | 2026-05-19 16:48 UTC | Phase 2b: FR-11 Tier 2 Memory-Augmented 32-Example | OK | 81 passed, 1 warning in 2.30s |
 | 2026-05-19 16:52 UTC | Phase 2c: KAN Multilevel Training (arXiv:2603.0482 | OK | 81 passed, 1 warning in 2.37s |
 | 2026-05-19 16:58 UTC | Phase 3 (Hardware): KV260 PYNQ .hwh Generation + F | OK | 81 passed, 1 warning in 2.33s |
+| 2026-05-19 17:03 UTC | Phase 4b: Paper-v6 Final Write-Through + arXiv Gat | OK | 81 passed, 1 warning in 2.38s |
