@@ -19110,3 +19110,49 @@ verifier are available
 **Implementation Status:** Implemented (Exp 2546)
 
 **Spec traces:** REQ-VERIFY-2546, SCENARIO-VERIFY-2546, Exp 2546
+
+## REQ-VERIFY-2547: Prompt-Adaptive Conformal Calibration With ACSE Proxy
+
+**Capability:** verifiable-reasoning / adaptive conformal ensemble calibration
+
+The system SHALL provide an exp2547 adaptive conformal calibration run layered
+on top of the exp2546 ensemble v7b result. The run MUST keep exp2546 as the
+comparison baseline, classify prompts into stable prompt-type groups, and use a
+semantic-entropy proxy from top-k logprobs plus verifier-score dispersion before
+reporting whether the adaptive layer preserves or improves AUROC.
+
+**Requirements:**
+
+- REQ-VERIFY-2547-1: The module SHALL expose
+  `prompt_type_classifier(prompt: str) -> str` and return only one of
+  `factual`, `reasoning`, `creative`, or `code`.
+- REQ-VERIFY-2547-2: The adaptive calibration run SHALL verify that
+  `results/experiment_2546_ensemble_v7b.json` exists and that
+  `ensemble_v7b_auroc >= 0.970`; otherwise it SHALL write
+  `honest_verdict="blocked_ensemble_v7b_below_threshold"`.
+- REQ-VERIFY-2547-3: The run SHALL execute five deterministic seeds
+  `[42, 123, 456, 789, 1337]`, apply prompt-type-conditional calibration with
+  shrinkage toward the exp2546 group-conditional calibration, and incorporate an
+  ACSE-style entropy weight computed from top-k logprobs and verifier scores.
+- REQ-VERIFY-2547-4: The artifact
+  `results/experiment_2547_adaptive_conformal_v2.json` SHALL include
+  `honest_verdict`, `adaptive_conformal_auroc`, `ensemble_v7b_baseline`,
+  `prompt_type_distribution`, `acse_component_used`, `n_seeds`,
+  `preconditions_checked`, `duration_s`, and `random_seed`.
+- REQ-VERIFY-2547-5: The non-regression gate SHALL pass iff
+  `adaptive_conformal_auroc >= ensemble_v7b_baseline`.
+
+### SCENARIO-VERIFY-2547: Adaptive Layer Preserves Ensemble v7b AUROC
+
+**Given** the exp2546 ensemble v7b artifact passes the AUROC precondition
+**And** the live SOTA telemetry rows include prompts, top-k logprobs, labels,
+and the exp2546 score sources
+**When** `scripts/experiment_2547_adaptive_conformal_v2.py` runs
+**Then** the output artifact reports the exp2546 baseline, five-seed adaptive
+conformal AUROC, prompt-type distribution, and ACSE usage
+**And** the acceptance gate records whether adaptive conformal preserved the
+exp2546 AUROC floor.
+
+**Implementation Status:** Implemented (Exp 2547)
+
+**Spec traces:** REQ-VERIFY-2547, SCENARIO-VERIFY-2547, Exp 2547

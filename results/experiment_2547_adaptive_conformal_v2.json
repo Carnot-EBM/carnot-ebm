@@ -1,0 +1,138 @@
+{
+  "honest_verdict": "complete: 0.9929 no regression vs v7b",
+  "adaptive_conformal_auroc": 0.9928571428571429,
+  "adaptive_conformal_auroc_std": 0.014285714285714323,
+  "ensemble_v7b_baseline": 0.9857142857142858,
+  "adaptive_vs_ensemble_v7b_delta": 0.0071428571428571175,
+  "prompt_type_distribution": {
+    "factual": 24,
+    "reasoning": 12,
+    "creative": 0,
+    "code": 0
+  },
+  "acse_component_used": true,
+  "n_seeds": 5,
+  "preconditions_checked": [
+    "exp2546_baseline_loaded",
+    "ensemble_v7b_auroc>=0.970",
+    "score_files_present",
+    "exp2546_score_groups_loaded",
+    "prompt_type_classifier_applied",
+    "acse_entropy_proxy_applied"
+  ],
+  "duration_s": 0.06588411331176758,
+  "random_seed": 42,
+  "prompt_type_shrinkage": 0.2,
+  "acse_entropy_weight": 1e-09,
+  "acse_entropy_mean": 25.518311777809558,
+  "acse_entropy_std": 3.2582127138135153,
+  "group_conditional_baseline_auroc": 0.9857142857142858,
+  "group_conditional_baseline_auroc_std": 0.01749635530559415,
+  "acceptance_gates": {
+    "adaptive_conformal_auroc >= ensemble_v7b_baseline": true
+  },
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required.",
+    "adaptive_conformal_auroc": "Primary metric - documents whether prompt-adaptation improves beyond fixed calibration.",
+    "ensemble_v7b_baseline": "Comparison baseline from exp2546 for regression detection.",
+    "prompt_type_distribution": "Shows how prompts were classified - validates classifier is not degenerate (not all in one class).",
+    "acse_component_used": "True if semantic entropy component was incorporated.",
+    "n_seeds": "Must be >= 3.",
+    "preconditions_checked": "Records which resources were verified.",
+    "duration_s": "Wall-clock measurement.",
+    "random_seed": "Set to 42."
+  },
+  "source_experiment": "experiment_2546_ensemble_v7b.json",
+  "results_by_seed": [
+    {
+      "seed": 42,
+      "test_auroc_group_cond_baseline": 1.0,
+      "test_auroc_adaptive_conformal": 1.0,
+      "mean_acse_entropy_test": 25.48906512591726,
+      "prompt_type_local_fit_count": 8,
+      "prompt_type_fallback_count": 0,
+      "prompt_type_counts_test": {
+        "factual": 9,
+        "reasoning": 2,
+        "creative": 0,
+        "code": 0
+      },
+      "mean_adaptive_cal_A": 0.43884297520661164,
+      "mean_adaptive_cal_B": 0.5324838284661744,
+      "mean_adaptive_cal_C": 0.3406060606060606,
+      "mean_adaptive_cal_D": 0.47878787878787876
+    },
+    {
+      "seed": 123,
+      "test_auroc_group_cond_baseline": 0.9642857142857143,
+      "test_auroc_adaptive_conformal": 0.9642857142857142,
+      "mean_acse_entropy_test": 25.19873414177589,
+      "prompt_type_local_fit_count": 8,
+      "prompt_type_fallback_count": 0,
+      "prompt_type_counts_test": {
+        "factual": 9,
+        "reasoning": 2,
+        "creative": 0,
+        "code": 0
+      },
+      "mean_adaptive_cal_A": 0.46801078327592066,
+      "mean_adaptive_cal_B": 0.5766955266955268,
+      "mean_adaptive_cal_C": 0.4013071895424837,
+      "mean_adaptive_cal_D": 0.44077922077922077
+    },
+    {
+      "seed": 456,
+      "test_auroc_group_cond_baseline": 1.0,
+      "test_auroc_adaptive_conformal": 1.0,
+      "mean_acse_entropy_test": 24.18847332908858,
+      "prompt_type_local_fit_count": 8,
+      "prompt_type_fallback_count": 0,
+      "prompt_type_counts_test": {
+        "factual": 7,
+        "reasoning": 4,
+        "creative": 0,
+        "code": 0
+      },
+      "mean_adaptive_cal_A": 0.4454545454545455,
+      "mean_adaptive_cal_B": 0.47913231748780416,
+      "mean_adaptive_cal_C": 0.2646005509641874,
+      "mean_adaptive_cal_D": 0.45454545454545453
+    },
+    {
+      "seed": 789,
+      "test_auroc_group_cond_baseline": 0.9642857142857142,
+      "test_auroc_adaptive_conformal": 1.0,
+      "mean_acse_entropy_test": 25.256806819808798,
+      "prompt_type_local_fit_count": 8,
+      "prompt_type_fallback_count": 0,
+      "prompt_type_counts_test": {
+        "factual": 7,
+        "reasoning": 4,
+        "creative": 0,
+        "code": 0
+      },
+      "mean_adaptive_cal_A": 0.43838383838383843,
+      "mean_adaptive_cal_B": 0.4948928797266035,
+      "mean_adaptive_cal_C": 0.42488038277511964,
+      "mean_adaptive_cal_D": 0.48658008658008656
+    },
+    {
+      "seed": 1337,
+      "test_auroc_group_cond_baseline": 1.0,
+      "test_auroc_adaptive_conformal": 1.0,
+      "mean_acse_entropy_test": 26.151388067807773,
+      "prompt_type_local_fit_count": 8,
+      "prompt_type_fallback_count": 0,
+      "prompt_type_counts_test": {
+        "factual": 8,
+        "reasoning": 3,
+        "creative": 0,
+        "code": 0
+      },
+      "mean_adaptive_cal_A": 0.48398268398268396,
+      "mean_adaptive_cal_B": 0.3885991540037873,
+      "mean_adaptive_cal_C": 0.303030303030303,
+      "mean_adaptive_cal_D": 0.56987012987013
+    }
+  ]
+}
