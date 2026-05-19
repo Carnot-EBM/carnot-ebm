@@ -1,14 +1,14 @@
-## yosys synthesis script for gatemate_ising_n16 — workaround B: techmap pass.
+## yosys synthesis script for gatemate_ising_n16 with LUT upsizing techmap.
 ##
-## WHY: yosys 0.64 synth_gatemate emits CC_LUT1/CC_LUT2/CC_LUT3 for small logic
-## functions. nextpnr-himbaechel 0.10 only accepts CC_LUT4.
-## FIX: synthesize without writing JSON (keeps design in RTLIL), then apply a
-## techmap that upgrades all CC_LUT1/2/3 → CC_LUT4 with don't-care padding.
-##
-## Usage (from repo root):
-##   yosys rtl/gatemate_ising_n16_abc9.ys
+## Workaround B for yosys<->nextpnr-himbaechel LUT mismatch:
+## yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1 primitives, but
+## nextpnr-himbaechel 0.10 only accepts CC_LUT4.
+## This script applies a techmap after synthesis to upsize smaller LUTs to CC_LUT4.
 
 read_verilog -sv rtl/gatemate_ising_n16.v
-synth_gatemate -top gatemate_ising_n16 -nomx8
-techmap -map rtl/lut_upgrade_to_lut4.v
+synth_gatemate -top gatemate_ising_n16 -nomx8 -json rtl/gatemate_ising_n16_abc9.json
+
+# Upsize CC_LUT1/CC_LUT2/CC_LUT3 to CC_LUT4 for nextpnr-himbaechel compatibility
+techmap -map rtl/lut_to_lut4.v
+clean
 write_json rtl/gatemate_ising_n16_abc9.json
