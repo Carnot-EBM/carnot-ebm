@@ -5172,3 +5172,4 @@ Ripgrep i |
 | 2026-05-19 23:32 UTC | Phase 3b: Tier 0v HalluField Prototype (arXiv:2509 | FAIL | No file changes produced |
 | 2026-05-19 23:35 UTC | Phase 3b: Tier 0v HalluField Prototype (arXiv:2509 | FAIL | No file changes produced |
 | 2026-05-19 23:46 UTC | Phase 4a: JEPA Fast-Path Real-Corpus Evaluation (f | OK | 98 passed, 1 warning in 2.54s |
+| 2026-05-19 23:50 UTC | Phase 5a (Hardware): GateMate Physical Flash + KV2 | OK | cache hit: 98 passed, 1 warning in 2.54s |
