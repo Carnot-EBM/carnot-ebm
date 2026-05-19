@@ -93,7 +93,7 @@ tasks:
     energy_proxy_used='semantic_energy_fallback' — the experiment fell back to response-level
     SemanticEnergy proxy (the same class as the failed exp2486, pearsonr=0.108). The structural
     ARM-EBM test was NOT performed.\n\nTHEORETICAL GROUNDING:\nARM-EBM bijection (arXiv:2512.15605):
-    E_LLM(x) = -log p_LLM(x) = -sum_i log p(x_i | x_{<i})\nFREIA (arXiv:2605.04065):
+    E_LLM(x) = -log p_LLM(x) = -sum_i log p(x_i | x_{{<i}})\nFREIA (arXiv:2605.04065):
     step-level free energy E_t = -log p(action_t | state_t)\nCarnot IsingVerifier.energy(text)
     computes constraint-violation energy from text structure.\nIf Phase 4 hypothesis holds:
     high Carnot energy steps should have high ARM-EBM energy (more uncertain, more likely
@@ -626,7 +626,7 @@ tasks:
     \    - 'blocked_precondition': Document as pending; carry forward exp2508 literal gate\n
     \ 3. If latex_available=True: run pdflatex main.tex and capture exit code.\n     Set
     latex_compile_success=(exit_code == 0).\n  4. Prepare submission checklist:\n     a.
-    abstract_word_count: count words in \\begin{abstract}...\\end{abstract}\n     b. author_list:
+    abstract_word_count: count words in \\begin{{abstract}}...\\end{{abstract}}\n     b. author_list:
     extract from \\author{} block\n     c. arxiv_categories: suggested [cs.LG, cs.AI,
     stat.ML]\n     d. checklist items: all 4 gates, latex compile, figure count, reference
     count\n  5. Set submission_package_ready = (latex_compile_success AND all 4 gates
