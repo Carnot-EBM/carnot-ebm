@@ -1,0 +1,69 @@
+{
+  "experiment": 2549,
+  "title": "Tier 0v HalluField Field-Theoretic Hedge-Energy Verifier",
+  "run_date": "20260519",
+  "schema_version": "1.0",
+  "honest_verdict": "blocked_carnot_import_failed: required precondition command failed before implementation or evaluation",
+  "tier0v_auroc": null,
+  "tier0v_viable": false,
+  "tier0v_implementation_complete": false,
+  "corpus_type": "diverse_synthetic",
+  "n_eval": 0,
+  "methodology_note": "No Tier0v corpus was evaluated because the required precondition command failed: python3 -c \"from carnot.verify.tier0r_curry_howard import Tier0rVerifier; print('ok')\" raised ModuleNotFoundError: No module named 'carnot'. Intended methodology, if unblocked, was the requested hedge-energy proxy using HEDGE_WORDS ['perhaps', 'might', 'could be', 'i think', 'approximately', 'roughly', 'not sure', 'may be', 'unclear', 'according to', 'i believe', 'as far as i know', 'possibly', 'probably', 'seemingly', 'apparently', 'allegedly'] with score=min(1.0, hedge_count * 3.0 / max(len(response.split()), 1)).",
+  "preconditions_checked": [
+    {
+      "resource": "carnot_import",
+      "available": false,
+      "check": "python3 -c \"from carnot.verify.tier0r_curry_howard import Tier0rVerifier; print('ok')\"",
+      "failure": "ModuleNotFoundError: No module named 'carnot'"
+    }
+  ],
+  "duration_s": 0.001,
+  "random_seed": 42,
+  "acceptance_gate_result": {
+    "condition": "tier0v_viable == true OR tier0v_implementation_complete == true",
+    "passed": false,
+    "reason": "Blocked before implementation because the explicit import precondition failed."
+  },
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "Terminal-prefix required.",
+      "satisfied_by": "Starts with blocked_carnot_import_failed:"
+    },
+    "tier0v_auroc": {
+      "principle": "Primary viability metric. > 0.60 threshold for ensemble candidacy.",
+      "satisfied_by": "Not computed because the required import precondition failed."
+    },
+    "tier0v_viable": {
+      "principle": "Explicit viability flag for future ensemble integration.",
+      "satisfied_by": "false because AUROC was not computed."
+    },
+    "corpus_type": {
+      "principle": "'real' or 'diverse_synthetic' \u2014 distinguishes paper-citable from non-citable.",
+      "satisfied_by": "Set to diverse_synthetic as the intended non-citable fallback corpus type; n_eval=0 records that no evaluation ran."
+    },
+    "n_eval": {
+      "principle": "Sample size for AUROC claim \u2014 must be >= 50.",
+      "satisfied_by": "0; no AUROC claim is made due to the failed precondition."
+    },
+    "methodology_note": {
+      "principle": "Documents hedge-word list used and weighting \u2014 required for paper-v6 methodology disclosure.",
+      "satisfied_by": "Includes the requested hedge-word list and weighting formula, marked as intended because implementation did not proceed."
+    },
+    "preconditions_checked": {
+      "principle": "Records which resources were verified.",
+      "satisfied_by": "Records the exact import command and failure."
+    },
+    "duration_s": {
+      "principle": "Wall-clock measurement.",
+      "satisfied_by": "0.001 seconds for the failed precondition check."
+    },
+    "random_seed": {
+      "principle": "Set to 42.",
+      "satisfied_by": "42"
+    }
+  },
+  "module": null,
+  "tests": null,
+  "blocked_by": "Bare carnot import failed under the required command; task instruction required immediate blocked artifact and exit."
+}
