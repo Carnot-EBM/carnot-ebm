@@ -5042,3 +5042,4 @@ Ripgrep i |
 | 2026-05-19 10:46 UTC | Plan milestone 2026.05.240 | OK | 12 tasks proposed |
 | 2026-05-19 10:48 UTC | Milestone 2026.05.240 activated | OK | 12 tasks queued |
 | 2026-05-19 10:51 UTC | Phase 0: Archive .239 and activate .240 | OK | cache hit: 81 passed, 1 warning in 2.39s |
+| 2026-05-19 11:00 UTC | Phase 1: AUROC Adversarial Resolution -- 5-Seed Re | OK | 81 passed, 1 warning in 2.30s |
