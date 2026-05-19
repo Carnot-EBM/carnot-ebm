@@ -1,6 +1,38 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.241 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.242 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.242 Research Planning Complete
+
+**Milestone 2026.05.241 COMPLETED: key results from capstone exp2505:**
+- **AUROC 0.9750 adversarially verified** (exp2498) — group-conditional ensemble independently replicated across 5 seeds, cross-group tautology check passed. Gate 4 met. cite-safe.
+- **Phase 4 STILL NOT VALIDATED** — exp2496 (Qwen PRC v3) MISSING (resource blocked); exp2497 (Spilled Energy) AUROC=0.4903 noise floor, Tier 0q definitively retired. phase4_validated_any=False; Gate 3 unmet; arXiv hold remains.
+- **FR-11 all 4 tiers integrated end-to-end** (exp2500) — Tier 4 adaptive-energy feedback into Tier 1 on 10/10 continuous-self-learning corpus.
+- **PolarFire TERMINAL** (exp2501) — energy_sanity_check_passed=True. Graduated to optional/opportunistic.
+- **KV260 PYNQ path established** (exp2502) — kv260_pynq_path_viable=True. .hwh not yet generated; flash pending.
+- **Tier 0r Curry-Howard viable** (exp2504) — AUROC=0.9123. Not yet integrated into ensemble.
+- **arXiv: 3/4 gates met** — blocked on Gate 3 only.
+
+**Milestone 2026.05.242 PLANNED as Phase 4 FREIA FEP Sprint + Step-Level ARM-EBM + HalluGuard Tier 0s + Ensemble v7 + KV260 PYNQ Flash.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v242.md`
+- Execution queue: `research-roadmap-next.yaml` (11 tasks, `exp2507`–`exp2517`)
+- ID allocation: milestone `.241` used through `exp2506`, so `.242` starts at `exp2507`.
+- Research references updated with Post-.241 Planning Sweep: FREIA (arXiv:2605.04065), HalluGuard (arXiv:2601.18753 ICLR 2026), Adaptive Conformal (arXiv:2604.13991), ACSE (arXiv:2605.04295), Multilevel KAN (arXiv:2603.04827).
+- **Milestone title**: "Phase 4 FREIA FEP Sprint + Step-Level ARM-EBM + HalluGuard Tier 0s + Ensemble v7 + KV260 PYNQ Flash"
+- **Three critical gaps targeted**:
+  1. Phase 4 empirical (Gate 3, arXiv hold): exp2508 step-level ARM-EBM bijection v2 — uses raw token logprobs at per-CoT-step granularity from existing .241 telemetry manifest (CPU-only, no GGUF). Grounded by FREIA (arXiv:2605.04065) step-level FEP formalism. Structurally distinct from all 5 prior Phase 4 failures.
+  2. Ensemble expansion: exp2509 HalluGuard Tier 0s NTK-based prototype + exp2510 Tier 0r integration into ensemble v7 (10 verifiers). Goal: confirm no regression from 0.975 baseline.
+  3. KV260 flash: exp2514 .hwh generation from Vivado block design + SD card flash attempt.
+- **Calibration enhancements**: exp2511 Adaptive Conformal (prompt-adaptive calibration arXiv:2604.13991), exp2512 FR-11 Tier 2 32-example memory adaptation.
+- **KAN improvement**: exp2513 Multilevel Training (arXiv:2603.04827) — no-regression gate vs AUROC=0.994 certified baseline.
+- **Paper+Synthesis**: exp2515 (paper-v6 write-through + arXiv gate check), exp2516 (capstone claude+opus, NO HARD GATE), exp2517 (retro codex).
+- **Agent routing**: 10 codex/gpt-5.5 (90.9%); 1 claude+opus (exp2516 capstone synthesis).
+- Validation: `validate_prior_failures.py` — [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 11 tasks audited.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.242. Critical path: exp2508 (Phase 4 step-level ARM-EBM — the only remaining structurally-distinct untried path; retire_if_same_verdict=true on exp2486 prior failure means if this fails, operator decides on arXiv without Phase 4 validation). Key experiments to watch: exp2508 (will raw-logprob step-level correlation |pearsonr| > 0.30?), exp2510 (will Tier 0r integration maintain AUROC >= 0.970?), exp2514 (will .hwh generation work with available Vivado + block design?).
+
+---
 
 ## Session 2026-05-19 - Milestone 2026.05.241 Research Planning Complete
 

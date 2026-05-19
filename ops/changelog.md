@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.242 Research Planning)
+
+- Milestone 2026.05.242 research planning complete. User instruction: plan the next milestone after .241 (all tasks completed, 8/10 with 1 MISSING and 1 GATE_BLOCKED).
+- Milestone .241 outcomes (key results from capstone exp2505): best_241_auroc=0.9750 adversarially verified (exp2498, Gate 4 met); phase4_validated_any=False (exp2496 MISSING, exp2497 Spilled Energy AUROC=0.4903 noise floor — Tier 0q retired); tier0r_viable=True (exp2504, AUROC=0.9123); FR-11 all tiers end-to-end (exp2500); PolarFire TERMINAL (exp2501, energy_sanity_check_passed=True); KV260 pynq_path_viable (exp2502, .hwh not generated); arxiv_ready=False (3/4 gates, blocked on Gate 3).
+- ArXiv research sweep: added 5 papers to `research-references.md` under "Post-.241 Planning Sweep (Milestone 2026.05.242)": (1) arXiv:2605.04065 — FREIA: FEP-based step-level RL — step-level energy E_t=-log p(action_t|state_t), Phase 4 grounding; (2) arXiv:2601.18753 — HalluGuard (ICLR 2026): NTK-based hallucination detector distinguishing data-driven vs reasoning-driven — Tier 0s candidate; (3) arXiv:2604.13991 — Adaptive Conformal Prediction for LLM Factuality — prompt-adaptive calibration beyond group-conditional; (4) arXiv:2605.04295 — ACSE: LLM Uncertainty via Adaptive Conformal Semantic Entropy — archived for .243+; (5) arXiv:2603.04827 — Multilevel Training for KAN — coarse-to-fine KAN training schedule.
+- Created `openspec/change-proposals/research-roadmap-v242.md` with full milestone design: what .241 proved (5 wins, 4 gaps), three biggest gaps (Phase 4 step-level ARM-EBM with 5 prior failures documented, ensemble expansion with Tier 0r+HalluGuard, KV260 .hwh+flash), architecture snapshot (ensemble v6 AUROC=0.975, Tier 0r viable not integrated, PolarFire TERMINAL, KV260 pynq_path_viable, GateMate TERMINAL), 5-phase structure, dependency graph, hardware requirements table (KV260 only non-terminal board), decentralization compliance (Rules 1-7 all clear), exclusion manifest cross-check (0 retired patterns matched), failed-experiment rerun compliance table (3 entries), agent routing (10 codex 90.9%, 1 claude+opus 9.1%).
+- Created `research-roadmap-next.yaml` with 11 tasks (exp2507–exp2517):
+  - Phase 0: exp2507 archive .241 + activate .242 (codex)
+  - Phase 4 Step-Level ARM-EBM: exp2508 Phase 4 step-level ARM-EBM bijection v2 (codex, CPU-only, telemetry manifest, 5 prior_failures documented, retire_if_same_verdict:true on exp2486, gate: |pearsonr|>0.30 AND p<0.05 AND n>=100)
+  - Phase 2a Ensemble Expansion: exp2509 HalluGuard Tier 0s NTK prototype (codex, AUROC>0.70 gate), exp2510 Tier 0r integration + ensemble v7 (codex, AUROC>=0.970 gate)
+  - Phase 2b Calibration: exp2511 Adaptive Conformal v2 arXiv:2604.13991 (codex, AUROC>=0.975 no-regression gate), exp2512 FR-11 Tier 2 32-example memory (codex, memory_augmented_auroc>=0.95)
+  - Phase 2c KAN: exp2513 KAN Multilevel Training arXiv:2603.04827 (codex, AUROC>=0.994 AND coverage>=0.833 no-regression gate)
+  - Phase 3 Hardware: exp2514 KV260 .hwh + flash (codex, kv260_hwh_generated OR kv260_blocker_documented gate)
+  - Phase 4b Paper: exp2515 paper-v6 write-through + arXiv gate check (codex, paper_updated gate)
+  - Phase 5 Synthesis: exp2516 capstone v242 (claude+opus, requires_claude, NO HARD GATE), exp2517 retro v242 (codex)
+- Agent routing: 10 codex/gpt-5.5 (90.9%); 1 claude+opus (exp2516 capstone — multi-artifact synthesis across 9 files + cross-phase reasoning under ambiguity; meets all 3 positive-criterion conditions).
+- Validation: `validate_prior_failures.py` — initially 6 schema/violation errors (model:claude-opus-4-7 invalid for agent_type:claude; 6 tasks missing prior_failures). Fixed: model changed to 'opus'; 8 prior_failures blocks added. Re-ran: [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 11 tasks audited. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-19 (Milestone 2026.05.241 Research Planning)
 
 - Milestone 2026.05.241 research planning complete. User instruction: plan the next milestone after .240 (all tasks completed).
