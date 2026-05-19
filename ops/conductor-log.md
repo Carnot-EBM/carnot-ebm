@@ -5045,3 +5045,6 @@ Ripgrep i |
 | 2026-05-19 11:00 UTC | Phase 1: AUROC Adversarial Resolution -- 5-Seed Re | OK | 81 passed, 1 warning in 2.30s |
 | 2026-05-19 11:15 UTC | Phase 1: Group-Conditional Conformal Ensemble v5 ( | OK | 81 passed, 1 warning in 2.32s |
 | 2026-05-19 11:21 UTC | Phase 2: Phase 4 ARM-EBM Bijection Empirical Test  | OK | 81 passed, 1 warning in 2.26s |
+| 2026-05-19 11:33 UTC | Phase 2: Phase 4 Qwen PRC Censorship Divergence Te | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: Warning: GNU screen |
+| 2026-05-19 11:46 UTC | Phase 2: Phase 4 Qwen PRC Censorship Divergence Te | FAIL | Post-tests failed: 1 failed, 81 passed, 1 warning in 2.62s |
+| 2026-05-19 11:48 UTC | Phase 2: Phase 4 Qwen PRC Censorship Divergence Te | OK | Deliverable already exists in repo |
