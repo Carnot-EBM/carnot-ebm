@@ -6509,3 +6509,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 2a: Ensemble v7 -- Tier 0r Integration into Group-Conditional Calibration (10 Verifiers) (❌ Failed) — honest_verdict=failed: 0.9607 below 0.970 regression threshold; results/experiment_2521_ensemble_v7.json
 - 2026-05-19: Phase 2a: Ensemble v7 -- Tier 0r Integration into Group-Conditional Calibration (10 Verifiers) (⚠️ Research Finding) — honest_verdict=terminal: 0.9607 below 0.970 regression threshold; results/experiment_2521_ensemble_v7.json
 - 2026-05-19: Phase 2a: Ensemble v7 -- Tier 0r Integration into Group-Conditional Calibration (10 Verifiers) (⚠️ Research Finding) — honest_verdict=terminal: 0.9607 below 0.970 regression threshold; results/experiment_2521_ensemble_v7.json
+- 2026-05-19: Phase 2b: HalluGuard Tier 0s -- Eval Corpus Construction + NTK Prototype (✅ Complete) — honest_verdict=completed; results/experiment_2522_halluguard_tier0s.json
