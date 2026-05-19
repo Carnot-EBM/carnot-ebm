@@ -1,5 +1,21 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.238 Research Planning)
+
+- Milestone 2026.05.238 research planning complete. User instruction: plan the next milestone after .237 (all tasks completed).
+- Milestone .237 outcomes (8/12 tasks complete): AUROC=0.9167 via Conformal Ensemble v2 (exp2448, 8 verifiers, Fisher's method — identical to v1, Fisher ceiling confirmed); GateMate TERMINAL (exp2453 gatemate_bitstream_flashed=True — drops from mandatory hardware roster); PolarFire ssh_reachable=True (exp2454) but jaxlib missing for riscv64 blocks carnot install; ODAR routing implemented (exp2455); NCO AUROC improved 0.5→0.678 (exp2456, tautology fixed); Phase 1 ship gate confirmed met (exp2457); HalluField Tier 0m AUROC=0.539 (below baseline, excluded); LaaB meta AUROC=0.854 (useful, not fused in exp2448); exp2452 KV260 claude+opus MISSING (never ran, 3rd consecutive miss).
+- ArXiv research sweep: added 2 papers to `research-references.md` under "Post-.237 Planning Sweep (Milestone 2026.05.238)": (1) arXiv:2604.16217 — "Beyond Surface Statistics: Robust Conformal Prediction for LLMs via Internal Representations" (April 2026) — layer-wise logit info scores as Tier 0n verifier; (2) arXiv:2502.09061 — "CRANE: Reasoning with Constrained LLM Generation" (ICML 2025) — balance_ratio for constrained/unconstrained generation mixing.
+- Created `openspec/change-proposals/research-roadmap-v238.md` with full milestone design: what .237 proved (GateMate terminal, PolarFire SSH reachable, ODAR implemented, NCO fixed, phase1_ship_gate_met, Fisher ceiling confirmed, HalluField below baseline, LaaB meta useful), 3 biggest gaps (AUROC ceiling 0.9167 vs HIVE 0.9236, KV260 synthesis_errors=1 3-consecutive-misses, PolarFire jaxlib block), architecture snapshot (Tier 0-2 verifiers, hardware status, paper-v6 phase), dependency graph (5 phases), hardware requirements table, decentralization check (Rules 1-7 all clear), exclusion manifest cross-check (0 retired patterns matched), failed-experiment rerun compliance table (9 entries), agent routing table.
+- Created `research-roadmap-next.yaml` with 12 tasks (exp2459–exp2470):
+  - Phase 0: exp2459 archive .237 + activate .238 (codex, ungated)
+  - Phase 1 AUROC Ceiling Assault v3: exp2460 Tier 0n Internal Representation Conformal (arXiv:2604.16217, codex), exp2461 Conformal Ensemble v3 Stouffer Z-score + LaaB meta 9th verifier (codex, retire_if_same_verdict), exp2462 Qwen Suppressed-Retrieval NLA Probe Tier 0o (MANDATORY per research-references.md 2026-05-19, codex)
+  - Phase 2 Self-Learning + Research: exp2463 FR-11 Constraint Memory Tier 2 cross-session fact caching (codex, continuous_self_learning_task:true), exp2464 CRANE Balanced Constraint Integration (arXiv:2502.09061, codex)
+  - Phase 3 Hardware Continuity: exp2465 KV260 RTL Synthesis Fix v6 (claude+opus, requires_claude — 3rd real attempt + explicit yosys stderr capture), exp2466 PolarFire Pure-Python Carnot Deploy --no-deps + numpy fallback (codex, retire_if_same_verdict)
+  - Phase 4 Paper Prep: exp2467 KAN Formal Verification Bounds (arXiv:2602.06737, codex), exp2468 Paper-v6 arXiv Pre-Submission Integrity Audit (codex)
+  - Phase 5 Synthesis: exp2469 Capstone v238 (claude+opus, requires_claude, gated: exp2461.ensemble_auroc_improved_v3==true), exp2470 Retro v238 (codex)
+- Agent routing: 10 codex/gpt-5.5; 2 claude+opus (exp2465 KV260 hardware 18-file RTL debug — all 3 positive criteria; exp2469 capstone 12+ artifact reads). Both meet all three CLAUDE.md positive criteria for requires_claude.
+- Validation: `validate_prior_failures.py` — 3 YAML parse errors caught (unquoted `verdict: complete: ...` fields containing colons); fixed by quoting all verdict strings. Final: [OK] no schema errors, no prior_failures violations. `audit_roadmap_gates.py` — all_checks_pass, roadmap_gate_audit_passed=true, 12 tasks audited, 1 gate upstream check passed. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-19 (Milestone 2026.05.237 Research Planning)
 
 - Milestone 2026.05.237 research planning complete. User instruction: plan the next milestone after .236 (all tasks completed).
