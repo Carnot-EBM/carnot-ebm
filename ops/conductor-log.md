@@ -5013,3 +5013,4 @@ Ripgrep i |
 | 2026-05-19 05:51 UTC | Phase 4: KAN Formal Verification Bounds (arXiv:260 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2467_kan_for |
 | 2026-05-19 05:54 UTC | Phase 4: KAN Formal Verification Bounds (arXiv:260 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2467_kan_for |
 | 2026-05-19 06:14 UTC | Phase 4: KAN Formal Verification Bounds (arXiv:260 | OK | 81 passed, 1 warning in 2.36s |
+| 2026-05-19 06:22 UTC | Phase 4: Paper-v6 arXiv Pre-Submission Integrity A | OK | 81 passed, 1 warning in 2.30s |
