@@ -5079,3 +5079,4 @@ Ripgrep i |
 | 2026-05-19 15:59 UTC | Phase 4: Step-Level ARM-EBM Bijection v2 (FREIA FE | OK | 100 passed, 1 warning in 3.69s |
 | 2026-05-19 16:04 UTC | Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Pr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2509_hallugu |
 | 2026-05-19 16:08 UTC | Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Pr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2509_hallugu |
+| 2026-05-19 16:14 UTC | Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Pr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2509_hallugu |
