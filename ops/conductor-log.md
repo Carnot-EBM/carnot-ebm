@@ -5061,3 +5061,4 @@ Ripgrep i |
 | 2026-05-19 13:30 UTC | Phase 1: Phase 4 Qwen PRC Censorship Divergence v3 | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1200s (545s silence). Last out |
 | 2026-05-19 13:53 UTC | Phase 1: Phase 4 Qwen PRC Censorship Divergence v3 | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1202s (505s silence). Last out |
 | 2026-05-19 14:17 UTC | Phase 1: Phase 4 Qwen PRC Censorship Divergence v3 | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1294s (300s silence). Last out |
+| 2026-05-19 14:23 UTC | Phase 1: Phase 4 Spilled Energy Alternative CPU Te | OK | 83 passed, 1 warning in 2.51s |
