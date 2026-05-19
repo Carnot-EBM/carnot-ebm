@@ -5025,3 +5025,4 @@ Ripgrep i |
 | 2026-05-19 07:30 UTC | Phase 1: Calibrated Conformal Ensemble v4 -- Platt | OK | cache hit: 81 passed, 1 warning in 2.63s |
 | 2026-05-19 07:36 UTC | Phase 1: Phase 4 ODAR Free-Energy Empirical Valida | OK | 81 passed, 1 warning in 2.23s |
 | 2026-05-19 07:41 UTC | Phase 2: FR-11 Tier 3 JEPA Predictive Verification | OK | 81 passed, 1 warning in 2.43s |
+| 2026-05-19 07:44 UTC | Phase 2: KAN Lipschitz Regularization + Recertific | FAIL | No file changes produced |
