@@ -451,6 +451,7 @@ class VerifyRepairPipeline:
         odar_risk_threshold: float = 0.5,
         odar_router: Any | None = None,
         routing_mode: str = "argmax",
+        balance_ratio: float = 1.0,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -556,6 +557,7 @@ class VerifyRepairPipeline:
         self._odar_risk_threshold = odar_risk_threshold
         self._odar_router = odar_router
         self.routing_mode = routing_mode
+        self.balance_ratio = balance_ratio
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
@@ -607,6 +609,10 @@ class VerifyRepairPipeline:
         Spec: REQ-GPU-010
         """
         return self._model_name is not None and self._second_model_spec is not None
+
+    def get_balance_ratio(self) -> float:
+        """Return the current balance ratio (fraction of tokens constrained vs free)."""
+        return getattr(self, "balance_ratio", 1.0)
 
     @property
     def has_model(self) -> bool:
@@ -1386,6 +1392,26 @@ class VerifyRepairPipeline:
             typed_reasoning=typed_reasoning,
             semantic_grounding=semantic_grounding,
         )
+
+        # CRANE (arXiv:2502.09061) balance ratio gating
+        if getattr(self, "balance_ratio", 1.0) < 1.0:
+            import random
+            if random.random() > self.balance_ratio:
+                baseline_score = _with_fst_certificate(
+                    VerificationResult(
+                        verified=True,
+                        constraints=[],
+                        energy=0.0,
+                        violations=[],
+                        certificate={"mode": "CRANE_FREE", "skipped": True},
+                        mode="CRANE_FREE",
+                        skipped=True,
+                        typed_reasoning=typed_reasoning,
+                        semantic_grounding=semantic_grounding,
+                        semantic_verifier_v2=semantic_verifier_v2,
+                    )
+                )
+                return baseline_score
 
         # Tier 3 JEPA fast-path gate (optional).
         # If a JEPA predictor is supplied, embed the first 50 whitespace-split
