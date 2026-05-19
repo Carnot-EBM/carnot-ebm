@@ -3,8 +3,8 @@
 # SW Build 6403652 on Thu Mar 19 13:47:00 MDT 2026
 # IP Build 6403511 on Thu Mar 19 12:41:45 MDT 2026
 # SharedData Build 6403650 on Thu Mar 19 14:02:13 MDT 2026
-# Start of session at: Tue May 19 12:55:48 2026
-# Process ID         : 2093093
+# Start of session at: Tue May 19 12:55:29 2026
+# Process ID         : 2092863
 # Current directory  : /home/ianblenke/github.com/ianblenke/carnot
 # Command line       : vivado -mode batch -source /home/ianblenke/github.com/ianblenke/carnot/generate_hwh.tcl
 # Log file           : /home/ianblenke/github.com/ianblenke/carnot/vivado.log
@@ -13,16 +13,17 @@
 # Platform           : cachyos
 # Operating System   : CachyOS
 # Processor Detail   : AMD Ryzen AI 9 HX 370 w/ Radeon 890M
-# CPU Frequency      : 4879.346 MHz
+# CPU Frequency      : 605.264 MHz
 # CPU Physical cores : 12
 # CPU Logical cores  : 24
 # Host memory        : 134305 MB
 # Swap memory        : 154618 MB
 # Total Virtual      : 288924 MB
-# Available Virtual  : 137580 MB
+# Available Virtual  : 137515 MB
 #-----------------------------------------------------------
 source /home/ianblenke/github.com/ianblenke/carnot/generate_hwh.tcl
 # open_project /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.xpr
+INFO: [filemgmt 56-3] Default IP Output Path : Could not find the directory '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1'.
 WARNING: [filemgmt 56-3] IPUserFilesDir: Could not find the directory '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.ip_user_files'.
 Scanning sources...
 Finished scanning sources
@@ -110,48 +111,42 @@ INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.2.1/data/ip'.
 INFO: [Ipptcl 7-1463] No Compatible Board Interface found. Board Tab not created in customize GUI
 INFO: [PSU-0] Address Range of DDR (0x7ff00000 to 0x7fffffff) is reserved by PMU for internal purpose.
+open_project: Time (s): cpu = 00:00:11 ; elapsed = 00:00:05 . Memory (MB): peak = 1810.145 ; gain = 364.770 ; free physical = 74975 ; free virtual = 130552
 # open_bd_design [get_files *.bd]
 Reading block design file </home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.srcs/sources_1/bd/carnot_ising_bd/carnot_ising_bd.bd>...
 Adding component instance block -- xilinx.com:ip:zynq_ultra_ps_e:3.5 - zynq_ultra_ps_e_0
+INFO: [PSU-0] Address Range of DDR (0x7ff00000 to 0x7fffffff) is reserved by PMU for internal purpose.
 Adding component instance block -- xilinx.com:ip:smartconnect:1.0 - axi_smartconnect_0
 Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - proc_sys_reset_0
 Adding component instance block -- xilinx.com:module_ref:ising_sampler_128_sync:1.0 - ising_sampler_0
+WARNING: [IP_Flow 19-587] [HDL Parser] HDL port or parameter 'state_ram' has a dependency on the module local parameter or undefined parameter 'N_OUT_WORDS'.
+INFO: [IP_Flow 19-1976] HDL Parser: Replacing 'SIG_LUT_SIZE' by 256 for port or parameter 'sigmoid_lut'
+INFO: [IP_Flow 19-5107] Inferred bus interface 'S_AXI' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'S_AXI_ARESETN' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'S_AXI_ACLK' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'S_AXI_ARESETN': Added interface parameter 'POLARITY' with value 'ACTIVE_LOW'.
+INFO: [IP_Flow 19-4728] Bus Interface 'S_AXI_ACLK': Added interface parameter 'ASSOCIATED_BUSIF' with value 'S_AXI'.
+INFO: [IP_Flow 19-4728] Bus Interface 'S_AXI_ACLK': Added interface parameter 'ASSOCIATED_RESET' with value 'S_AXI_ARESETN'.
+WARNING: [IP_Flow 19-11770] Clock interface 'S_AXI_ACLK' has no FREQ_HZ parameter.
+WARNING: [IP_Flow 19-587] [HDL Parser] HDL port or parameter 'state_ram' has a dependency on the module local parameter or undefined parameter 'N_OUT_WORDS'.
+INFO: [IP_Flow 19-1976] HDL Parser: Replacing 'SIG_LUT_SIZE' by 256 for port or parameter 'sigmoid_lut'
+INFO: [IP_Flow 19-5107] Inferred bus interface 'S_AXI' of definition 'xilinx.com:interface:aximm:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'S_AXI_ARESETN' of definition 'xilinx.com:signal:reset:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-5107] Inferred bus interface 'S_AXI_ACLK' of definition 'xilinx.com:signal:clock:1.0' (from Xilinx Repository).
+INFO: [IP_Flow 19-4728] Bus Interface 'S_AXI_ARESETN': Added interface parameter 'POLARITY' with value 'ACTIVE_LOW'.
+INFO: [IP_Flow 19-4728] Bus Interface 'S_AXI_ACLK': Added interface parameter 'ASSOCIATED_BUSIF' with value 'S_AXI'.
+INFO: [IP_Flow 19-4728] Bus Interface 'S_AXI_ACLK': Added interface parameter 'ASSOCIATED_RESET' with value 'S_AXI_ARESETN'.
+WARNING: [IP_Flow 19-11770] Clock interface 'S_AXI_ACLK' has no FREQ_HZ parameter.
+INFO: [IP_Flow 19-3420] Updated carnot_ising_bd_ising_sampler_0_0 to use current project options
 Successfully read diagram <carnot_ising_bd> from block design file </home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.srcs/sources_1/bd/carnot_ising_bd/carnot_ising_bd.bd>
-# generate_target all [get_files *.bd]
-INFO: [BD 41-1662] The design 'carnot_ising_bd.bd' is already validated. Therefore parameter propagation will not be re-run.
-Verilog Output written to : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v
-Verilog Output written to : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/sim/carnot_ising_bd.v
-Verilog Output written to : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/hdl/carnot_ising_bd_wrapper.v
-INFO: [PSU-0] Address Range of DDR (0x7ff00000 to 0x7fffffff) is reserved by PMU for internal purpose.
-INFO: [xilinx.com:ip:zynq_ultra_ps_e:3.5-0] carnot_ising_bd_zynq_ultra_ps_e_0_0: 
-Changes in your design (including the PCW configuration settings) are not automatically exported from Vivado to Amd's SDK, Petalinux or Yocto.
-This is by design to avoid disrupting existing embedded development efforts. To have any changes of your design taking effect in the embedded software flow please export your
-design by going through Vivado's main menu, click on File, then Export finally select Export Hardware, please ensure you click on the Include BitStream option.
-The auto-generated HDF file is all you need to import in Amd's SDK, Petalinux or Yocto for your changes to be reflected in the Embedded Software Flow.
-For more information, please consult PG201, section: Exporting PCW Settings to Embedded Software Flows
-INFO: [PSU-0] Address Range of DDR (0x7ff00000 to 0x7fffffff) is reserved by PMU for internal purpose.
-INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI_HPM0_FPD'. A default connection has been created.
-INFO: [BD 41-1029] Generation completed for the IP Integrator block zynq_ultra_ps_e_0 .
-Exporting to file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/bd_0/hw_handoff/carnot_ising_bd_axi_smartconnect_0_0.hwh
-Generated Hardware Definition File /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/bd_0/synth/carnot_ising_bd_axi_smartconnect_0_0.hwdef
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_smartconnect_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block proc_sys_reset_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block ising_sampler_0 .
-Exporting to file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/hw_handoff/carnot_ising_bd.hwh
-Generated Hardware Definition File /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.hwdef
-INFO: [BD 41-3262] Generated VHDL Instantiation Template file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/carnot_ising_bd.vho
-INFO: [BD 41-3262] Generated Verilog Instantiation Template file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/carnot_ising_bd.veo
-INFO: [BD 41-3262] Generated System Verilog Instantiation Template file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/carnot_ising_bd_sv.sveo
-generate_target: Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1877.984 ; gain = 27.887 ; free physical = 74904 ; free virtual = 130543
 # write_hw_platform -fixed -include_bit -force /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa
 INFO: [Projectvivado 1-1918] Creating Hardware Platform: /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa ...
-ERROR: [Hsi 55-2023] No IPI block design hardware handoff files present in the hardware definition file /home/ianblenke/github.com/ianblenke/carnot/.Xil/Vivado-2093093-icbfl1/HWH/temp.hdf
-ERROR: [Pfi 67-8] Hardware Design is not available
+INFO: [Vivado_Tcl 4-424] Cannot write hardware definition file as there are no IPI block design hardware handoff files present
+INFO: [Vivado_Tcl 4-424] Cannot write hardware definition file as there are no IPI block design hardware handoff files present
+INFO: [Vivado_Tcl 4-424] Cannot write hardware definition file as there are no IPI block design hardware handoff files present
+INFO: [Vivado_Tcl 4-424] Cannot write hardware definition file as there are no IPI block design hardware handoff files present
+INFO: [Vivado_Tcl 4-424] Cannot write hardware definition file as there are no IPI block design hardware handoff files present
+CRITICAL WARNING: [Projectvivado 1-1924] Failed to write hardware handoff data into Hardware Platform.
 INFO: [Projectvivado 1-1943] The Hardware Platform can be used for Hardware
 INFO: [Projectvivado 1-1941] Successfully created Hardware Platform: /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa
-ERROR: [Common 17-39] 'write_hw_platform' failed due to earlier errors.
-
-    while executing
-"write_hw_platform -fixed -include_bit -force /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa"
-    (file "/home/ianblenke/github.com/ianblenke/carnot/generate_hwh.tcl" line 4)
-INFO: [Common 17-206] Exiting Vivado at Tue May 19 12:56:08 2026...
+INFO: [Common 17-206] Exiting Vivado at Tue May 19 12:55:38 2026...
