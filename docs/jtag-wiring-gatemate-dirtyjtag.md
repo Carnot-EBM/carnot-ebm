@@ -1,25 +1,62 @@
-# GateMate A1-EVB-2M JTAG wiring via DirtyJTAG
+# GateMate JTAG wiring via DirtyJTAG (reference for non-Olimex variants)
 
-This document is the bench-side reference for wiring the **Cologne Chip
-GateMate A1-EVB-2M** evaluation board to a **DirtyJTAG** USB adapter so
-that `openFPGALoader` can program the FPGA.
+**Status note (2026-05-18):** The Carnot bench uses the **Olimex
+GateMate A1-EVB-2M**, which has an onboard DirtyJTAG-compatible
+programmer MCU built into the PCB. **No external wiring is required**
+for that board — programming goes over the board's own USB-C cable.
+This document is retained as a reference for two situations:
 
-Filed by outer-loop 2026-05-18 as part of the FPGA bring-up.
+1. You move to a different GateMate evaluation board (non-Olimex
+   variant, raw-chip dev board, custom carrier PCB) that exposes
+   only a JTAG header without onboard programming.
+2. You want to debug or replace the wiring between an external
+   DirtyJTAG adapter and a GateMate board.
 
-## Why this is needed
+If you only have the Olimex GateMate A1-EVB-2M plugged in and the
+USB-C cable connected, **skip to "Step 3: Verify the chain"** — the
+onboard programmer handles everything internally.
 
-The GateMate A1-EVB-2M evaluation board does **not** include an onboard
-FTDI USB-to-JTAG bridge. The board exposes a raw JTAG header (TCK/TMS/
-TDI/TDO/GND, plus optional TRST and VTREF) that must be driven by an
-external programmer.
+## What the Olimex GateMate A1-EVB-2M actually does (current bench)
 
-The DirtyJTAG project (https://github.com/jeanthom/DirtyJTAG) provides a
-$5–15 microcontroller-based JTAG adapter that exposes the right pins
-over USB. The Carnot bench has one attached (USB ID `1209:c0ca`,
-enumerated as `/dev/ttyACM0` + `/dev/ttyACM1`). The udev rule at
-`/etc/udev/rules.d/99-fpga-boards.rules` (installed 2026-05-18) grants
-the `uucp` group raw USB access so `openFPGALoader -c dirtyJtag`
-works without sudo.
+Verified 2026-05-18 via `/sys/bus/usb/devices/3-2.3/`:
+
+```
+manufacturer = Jean THOMAS
+product      = DirtyJTAG
+bNumInterfaces = 5
+  3-2.3:1.0  class=ff      ← vendor-specific (raw JTAG endpoint)
+  3-2.3:1.1  class=02 "DirtyJTAG CDC 0"  → /dev/ttyACM0
+  3-2.3:1.2  class=0a      ← CDC data
+  3-2.3:1.3  class=02 "DirtyJTAG CDC 1"  → /dev/ttyACM1
+  3-2.3:1.4  class=0a      ← CDC data
+```
+
+The Olimex board ships with an integrated MCU (likely RP2040) flashed
+with Jean Thomas's open-source DirtyJTAG firmware. That MCU drives the
+GateMate fabric's JTAG pins via PCB traces. The host sees the result
+as USB device `1209:c0ca` with the 5-interface composite layout above.
+
+The udev rule at `/etc/udev/rules.d/99-fpga-boards.rules` (installed
+2026-05-18) grants the `uucp` group raw USB access so
+`openFPGALoader -c dirtyJtag` works without sudo.
+
+---
+
+The rest of this document covers the EXTERNAL-DirtyJTAG case, which
+applies only to non-Olimex variants. Skip past it if you only have
+the Olimex board.
+
+## Why external wiring would be needed (non-Olimex case)
+
+Other GateMate evaluation boards (raw-chip dev boards, custom carrier
+PCBs, some open-hardware variants) do **not** include an onboard
+USB-to-JTAG bridge. They expose a raw JTAG header (TCK/TMS/TDI/TDO/GND,
+plus optional TRST and VTREF) that must be driven by an external
+programmer.
+
+The DirtyJTAG project (https://github.com/jeanthom/DirtyJTAG) provides
+a $5–15 microcontroller-based JTAG adapter that exposes the right
+pins over USB.
 
 ## Step 0: Identify your DirtyJTAG host hardware
 

@@ -8,8 +8,8 @@
 
 | Component | Status | Evidence |
 |---|---|---|
-| GateMate A1-EVB-2M physical | attached, not auto-enumerating | `lsusb` shows no FT2232H/FT4232H; board needs external JTAG via DirtyJTAG |
-| DirtyJTAG adapter | enumerated as `1209:c0ca` on /dev/ttyACM0+1 | `lsusb` + `udevadm info -n /dev/ttyACM0` |
+| GateMate A1-EVB-2M physical | attached, **programmer is ONBOARD** | The Olimex variant ships with an integrated DirtyJTAG-firmware MCU on the PCB; programming goes over the board's own USB-C cable. Verified 2026-05-18 via `/sys/bus/usb/devices/3-2.3/` (5-interface composite: vendor JTAG + 2x CDC ACM + 2x CDC data). The earlier note about needing an external DirtyJTAG was misleading — `lsusb` was checked for FTDI VIDs, but the onboard programmer is a DirtyJTAG-firmware MCU at `1209:c0ca`, not FTDI. |
+| DirtyJTAG programmer (onboard the GateMate) | enumerated as `1209:c0ca` on /dev/ttyACM0+1 | `udevadm info -n /dev/ttyACM0` → manufacturer=Jean THOMAS, product=DirtyJTAG, serial=1861832311111616 |
 | PolarFire SoC Discovery Kit | enumerated as `1514:2008` Microsemi FlashPro5 | `lsusb` + dmesg shows FT4232H internal bridge → /dev/ttyUSB0 (UART) |
 | Ethernet (PolarFire) | connected to switch | operator confirmation |
 | microSD in PolarFire | inserted, NOT formatted with boot image | operator note |
@@ -137,11 +137,11 @@ sync
 | Component | Issue | Fix path |
 |---|---|---|
 | DirtyJTAG USB raw access | `openFPGALoader -c dirtyJtag --detect` fails with "fails to open device" because /dev/bus/usb/003/006 is 664 root:root | Install /tmp/99-fpga-boards.rules (sudo) — see below |
-| FlashPro5 USB raw access (for JTAG/flash ops, not UART) | Same — Microsemi 1514:2008 needs udev rule for raw USB | Same udev rule file covers both |
-| GateMate JTAG wiring | DirtyJTAG → GateMate JTAG header pins (TCK/TMS/TDI/TDO/GND) not physically connected | Operator at bench: identify GateMate A1-EVB-2M JTAG header, wire 5 jumpers to DirtyJTAG GPIOs (pins depend on DirtyJTAG host firmware — typically PB6/PB7/PB8/PB9/GND on STM32 BluePill DirtyJTAG, or specific GPIOs on RP2040) |
-| PolarFire microSD boot image | SD inserted but not formatted with HSS + Linux | Operator at bench: format SD with Microchip's HSS payload + a reference Linux rootfs (Yocto build or Microchip's reference image) |
-| PolarFire DIP-switch boot mode | typically defaults to eMMC | Operator at bench: flip DIP switches to SD-boot mode per Microchip documentation |
-| yosys ↔ nextpnr-himbaechel LUT mapping mismatch | yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1, nextpnr-himbaechel 0.10 only accepts CC_LUT4 | Workaround pending: try `synth_gatemate -abc9` or upgrade either tool. exp2105 will document; not blocking the rest of the prep |
+| FlashPro5 USB raw access (for JTAG/flash ops, not UART) | ~~needs udev rule~~ — INSTALLED 2026-05-18 | `/etc/udev/rules.d/99-fpga-boards.rules` grants `uucp` group raw access to 1209:c0ca + 1514:2008 |
+| ~~GateMate JTAG wiring~~ | **CORRECTED 2026-05-18: not needed — programmer is onboard the Olimex GateMate A1-EVB-2M** | The Olimex variant integrates a DirtyJTAG-firmware MCU on the PCB; programming goes over the board's own USB-C, no external jumpers required. Verified by reading 0x20000001 (GM1Ax IDCODE) over `openFPGALoader -c dirtyJtag --detect`. |
+| PolarFire microSD boot image | RESOLVED 2026-05-14 | SD imaged + extended; board boots cleanly. |
+| PolarFire DIP-switch boot mode | RESOLVED 2026-05-14 | Booting from SD as confirmed by 4+ days uptime under ssh polarfire. |
+| yosys ↔ nextpnr-himbaechel LUT mapping mismatch | yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1, nextpnr-himbaechel 0.10 only accepts CC_LUT4 | Workaround pending: try `synth_gatemate -abc9` or upgrade either tool. exp2105 will document; this is now the **last remaining** GateMate blocker for end-to-end bitstream flow. |
 
 ## Pre-prepared artifacts
 
@@ -150,23 +150,33 @@ sync
 | Minimal n=16 GateMate Ising tile (RTL) | `rtl/gatemate_ising_n16.v` | exp2105 smoke target |
 | yosys synthesis script | `rtl/gatemate_ising_n16.ys` | yosys -p flow documented |
 | Synthesized JSON netlist | `rtl/gatemate_ising_n16.json` | verified produces 136 cells (~0.7% of A1 budget); P&R blocked on LUT mapping |
-| udev rule file | `/tmp/99-fpga-boards.rules` | NOT YET INSTALLED — needs operator sudo |
+| udev rule file | `/etc/udev/rules.d/99-fpga-boards.rules` | **INSTALLED 2026-05-18 19:54Z** by outer-loop; verified working (devices now 660 root:uucp) |
 
 ## Operator-side action checklist (sudo / bench access needed)
 
+**All items in this checklist are now COMPLETE (2026-05-18):**
+
 ```bash
-# 1. Install udev rule for FlashPro5 + DirtyJTAG raw USB access
-sudo cp /tmp/99-fpga-boards.rules /etc/udev/rules.d/99-fpga-boards.rules
-sudo udevadm control --reload && sudo udevadm trigger
-# Then re-plug both USB devices.
+# 1. udev rule install — COMPLETED 2026-05-18 19:54Z
+#    sudo cp /tmp/99-fpga-boards.rules /etc/udev/rules.d/99-fpga-boards.rules
+#    sudo udevadm control --reload && sudo udevadm trigger
+#    Verified: stat /dev/bus/usb/003/006 = 660 root:uucp ✓
+#              stat /dev/bus/usb/003/005 = 660 root:uucp ✓
 
-# 2. Verify DirtyJTAG access (should report scan results, not "fails to open"):
-openFPGALoader -c dirtyJtag --detect
+# 2. DirtyJTAG access — VERIFIED 2026-05-18:
+#    openFPGALoader -c dirtyJtag --detect
+#    → idcode 0x20000001 (GM1Ax) read successfully
 
-# 3. Verify PolarFire UART (115200 8N1, board power-cycled):
-screen /dev/ttyUSB0 115200    # exit with Ctrl-A k y
-# Should show U-Boot/HSS banner if the board has a working boot image.
+# 3. PolarFire SSH — VERIFIED 2026-05-18:
+#    ssh polarfire 'uname -a && uptime'
+#    → Linux mpfs-disco-kit 6.18.17-linux4microchip-2026.04.1 riscv64
+#       uptime: 4 days 5:41
 ```
+
+**No further bench-side action required for either board** as of 2026-05-18.
+The only remaining technical blocker is the yosys↔nextpnr LUT mapping
+mismatch (`synth_gatemate -abc9` workaround pending), which is software
+not hardware.
 
 ### Bench-side (physical actions)
 
