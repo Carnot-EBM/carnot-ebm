@@ -5081,3 +5081,4 @@ Ripgrep i |
 | 2026-05-19 16:08 UTC | Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Pr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2509_hallugu |
 | 2026-05-19 16:14 UTC | Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Pr | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2509_hallugu |
 | 2026-05-19 16:19 UTC | Phase 2a: Tier 0r Integration + Conformal Ensemble | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2510_ensembl |
+| 2026-05-19 16:23 UTC | Phase 2a: Tier 0r Integration + Conformal Ensemble | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2510_ensembl |
