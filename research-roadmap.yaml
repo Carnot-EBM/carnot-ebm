@@ -103,7 +103,7 @@ tasks:
     \ ir_conformal_auroc - 0.810.\n     orthogonality_vs_pcib: Pearson r between ir_conformal_score\
     \ and pcib_score.\n     orthogonality_vs_halt: Pearson r between ir_conformal_score and halt_score\
     \ (if available).\n\n  3. Compute verifier_scores for conformal ensemble:\n     Write results/experiment_2460_tier0n_scores.json:\n\
-    \     {\"verifier\": \"ir_conformal\", \"scores\": [{\"idx\": i, \"score\": s, \"label\": l} for\
+    \     {\"verifier\": \"ir_conformal\", \"scores\": [{{\"idx\": i, \"score\": s, \"label\": l}} for\
     \ all 36]}\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/verify/\
     \ -k \"ir_conformal\" -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  5. Write\
     \ deliverable. Validate JSON: json.loads(json.dumps(result)) before writing.\n\nREQUIRED ARTIFACT\
@@ -264,7 +264,7 @@ tasks:
     \ tier0o_auroc - 0.810.\n     orthogonality_vs_halt: Pearson r between suppression_score and halt\
     \ score.\n     paraphrase_divergence_mean: mean divergence across 36 entries.\n\n  3. Compute verifier_scores\
     \ for ensemble:\n     Write results/experiment_2462_tier0o_scores.json:\n     {\"verifier\": \"suppressed_retrieval\"\
-    , \"scores\": [{\"idx\": i, \"score\": s, \"label\": l} for all 36]}\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\
+    , \"scores\": [{{\"idx\": i, \"score\": s, \"label\": l}} for all 36]}\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\
     \" .venv/bin/python -m pytest tests/python/verify/ -k \"suppressed_retrieval\" -v --no-cov 2>&1\
     \ | tail -15\n     Create test if none exists.\n\n  5. Write deliverable. Validate JSON before\
     \ writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
@@ -460,9 +460,9 @@ tasks:
     \ ls {project_root}/fpga/*.v 2>/dev/null | wc -l\n        If still 0: write honest_verdict blocked_rtl_files_missing\
     \ and exit.\n        Record: rtl_file_count, rtl_directory.\n\n  1. CAPTURE STDERR — run yosys\
     \ and redirect ALL output:\n     RTL_DIR=$(dirname $(ls {project_root}/kv260/*.v | head -1))\n  \
-    \   TOP_MODULE=$(grep -l \"module \" ${RTL_DIR}/*.v | head -1 | xargs grep \"^module \" | head -1\
-    \ | awk '{print $2}' | tr -d '(')\n     /opt/oss-cad-suite/bin/yosys -p \"\n       read_verilog\
-    \ ${RTL_DIR}/*.v;\n       synth -top ${TOP_MODULE} -noabc;\n     \" > /tmp/yosys_output.txt 2>&1\
+    \   TOP_MODULE=$(grep -l \"module \" ${{RTL_DIR}}/*.v | head -1 | xargs grep \"^module \" | head -1\
+    \ | awk '{{print $2}}' | tr -d '(')\n     /opt/oss-cad-suite/bin/yosys -p \"\n       read_verilog\
+    \ ${{RTL_DIR}}/*.v;\n       synth -top ${{TOP_MODULE}} -noabc;\n     \" > /tmp/yosys_output.txt 2>&1\
     \ || true\n     echo 'yosys_exit_captured'\n     grep -n 'ERROR\\|error:\\|syntax' /tmp/yosys_output.txt\
     \ | head -20\n\n  2. Parse error output:\n     Read /tmp/yosys_output.txt. Find lines with ERROR\
     \ or \"syntax error\".\n     Extract: file_with_error (the .v filename), line_number, error_description.\n\
@@ -532,13 +532,13 @@ tasks:
     \ -q 2>&1 | tail -10'\n     Record: nodeps_install_succeeded (True/False), nodeps_install_output.\n\
     \n  2. If nodeps_install_succeeded: test carnot import:\n     ssh polarfire 'python3 -c \"\nimport\
     \ carnot\nfrom carnot.models.ising import IsingModel\nm = IsingModel(n_spins=4, seed=42)\ne = m.energy()\n\
-    print(f\\\"energy={e:.4f}\\\")\n\"' 2>&1\n     Record: carnot_import_succeeded, energy_value.\n\n\
+    print(f\\\"energy={{e:.4f}}\\\")\n\"' 2>&1\n     Record: carnot_import_succeeded, energy_value.\n\n\
     \  3. If carnot import failed (JAX still required despite --no-deps):\n     Run minimal inline Ising\
     \ energy computation (pure Python, no packages needed):\n     ssh polarfire 'python3 -c \"\nimport\
     \ math\nimport random\nrandom.seed(42)\n# n=4 Ising model: spins, couplings\nspins = [1, -1, 1,\
     \ -1]\ncouplings = [[0, 0.5, -0.3, 0.1],\n             [0.5, 0, 0.2, -0.4],\n             [-0.3,\
     \ 0.2, 0, 0.6],\n             [0.1, -0.4, 0.6, 0]]\nenergy = -sum(couplings[i][j]*spins[i]*spins[j]\n\
-    \              for i in range(4) for j in range(i+1,4))\nprint(f\\\"inline_energy={energy:.4f}\\\
+    \              for i in range(4) for j in range(i+1,4))\nprint(f\\\"inline_energy={{energy:.4f}}\\\
     \")\n\"' 2>&1\n     Record: inline_energy_ok (True/False), inline_energy_value.\n\n  4. Get system\
     \ info:\n     ssh polarfire 'python3 --version && python3 -c \"import platform; print(platform.machine())\"\
     ' 2>&1\n     Record: python_version, cpu_arch.\n\n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n\
@@ -654,8 +654,8 @@ tasks:
     \ and verify the number matches\n     - Speedup claims: find timing data and verify the multiplier\
     \ is computed correctly\n     - Hardware claims: verify kv260/gatemate/polarfire claims match artifact\
     \ fields\n     - Statistical: verify sample sizes are >= the minimum for the claimed precision\n\n\
-    \  3. Flag discrepancies:\n     For each discrepancy: {claim: str, paper_value: str, artifact_value:\
-    \ str, severity: 'minor'|'major'}\n     Severity 'major': claim overstates by > 10% or is unsupported\
+    \  3. Flag discrepancies:\n     For each discrepancy: {{claim: str, paper_value: str, artifact_value:\
+    \ str, severity: 'minor'|'major'}}\n     Severity 'major': claim overstates by > 10% or is unsupported\
     \ by any artifact\n     Severity 'minor': claim is approximately correct but citation/number formatting\
     \ should be updated\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
     \      principle: \"Terminal-prefix required. complete: with audit summary.\"\n  - n_claims_audited:\n\
