@@ -1,0 +1,171 @@
+{
+  "acceptance_gates": {
+    "corpus_type IS NOT NULL AND n_real >= 30": true,
+    "paper_citable_requires_real_n>=50": true
+  },
+  "corpus_label_counts": {
+    "0": 6434,
+    "1": 114
+  },
+  "corpus_path": "data/fover_corpus_v4.json",
+  "corpus_type": "real",
+  "duration_s": 0.1942799260141328,
+  "field_principles": {
+    "corpus_type": "'real' or 'diverse_synthetic' -- distinguishes paper-citable from non-citable.",
+    "duration_s": "Wall-clock measurement.",
+    "honest_verdict": "Terminal-prefix required.",
+    "n_real": "Sample size for AUROC claims -- must be >= 50 for paper-citable result.",
+    "paper_citable": "Dict of {tier0r, tier0s, tier0u} -> bool. True only if n_real>=50 AND corpus_type='real'.",
+    "preconditions_checked": "Records which resources were verified.",
+    "random_seed": "Set to 42.",
+    "tier0r_real_auroc": "AUROC on real corpus -- paper-citable only if corpus_type='real' AND n_real>=50.",
+    "tier0s_real_auroc": "AUROC on real corpus -- prev synthetic 1.0 was suspicious; honest real-corpus value expected lower.",
+    "tier0u_real_auroc": "AUROC on real corpus -- prev synthetic 0.96 was fit-to-corpus; honest real value expected lower."
+  },
+  "honest_verdict": "complete: real corpus validation n=6548 real=6548; importable=3/3",
+  "n_eval_examples": 6548,
+  "n_real": 6548,
+  "n_supplemental_synthetic": 0,
+  "paper_citable": {
+    "tier0r": true,
+    "tier0s": true,
+    "tier0u": true
+  },
+  "preconditions_checked": {
+    "both_label_classes_present": true,
+    "candidate_corpora": [
+      {
+        "label_counts": {
+          "0": 6434,
+          "1": 114
+        },
+        "n_examples": 6548,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v4.json"
+      },
+      {
+        "label_counts": {
+          "0": 5148,
+          "1": 92
+        },
+        "n_examples": 5240,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_train_v4.json"
+      },
+      {
+        "label_counts": {
+          "0": 1286,
+          "1": 22
+        },
+        "n_examples": 1308,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test_v4.json"
+      },
+      {
+        "label_counts": {
+          "0": 102,
+          "1": 114
+        },
+        "n_examples": 216,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_v3.json"
+      },
+      {
+        "label_counts": {
+          "0": 81,
+          "1": 91
+        },
+        "n_examples": 172,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_train_v3.json"
+      },
+      {
+        "label_counts": {
+          "0": 47,
+          "1": 38
+        },
+        "n_examples": 85,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus_expanded.json"
+      },
+      {
+        "label_counts": {
+          "0": 37,
+          "1": 30
+        },
+        "n_examples": 67,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_train.json"
+      },
+      {
+        "label_counts": {
+          "0": 21,
+          "1": 23
+        },
+        "n_examples": 44,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test_v3.json"
+      },
+      {
+        "label_counts": {
+          "0": 10,
+          "1": 8
+        },
+        "n_examples": 18,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_test.json"
+      }
+    ],
+    "corpus_search_patterns": [
+      "data/fover*.json",
+      "results/experiment_*fover*.json",
+      "results/fover*.json"
+    ],
+    "n_real_examples_found": 6548,
+    "pythonpath_required_for_bare_carnot_import": true,
+    "selected_corpus": "data/fover_corpus_v4.json",
+    "semantic_energy_importable": true,
+    "tier0r_importable": true,
+    "tier0s_importable": true,
+    "tier0u_importable": true
+  },
+  "random_seed": 42,
+  "synthetic_baseline_auroc": {
+    "tier0r": 0.8256,
+    "tier0s": 1.0,
+    "tier0u": 0.96
+  },
+  "tier0r_real_auroc": 0.9413750415828194,
+  "tier0s_real_auroc": 0.3758077973921437,
+  "tier0u_real_auroc": 0.535990952669208,
+  "verifier_importable": {
+    "tier0r": true,
+    "tier0s": true,
+    "tier0u": true
+  },
+  "verifier_score_details": {
+    "tier0r": {
+      "auroc": 0.9413750415828194,
+      "score_failures": 0,
+      "score_max": 1.0,
+      "score_mean": 0.11629734270006109,
+      "score_min": 0.01,
+      "score_source": "carnot.verify.tier0r_curry_howard.Tier0rVerifier.score",
+      "scored_examples": 6548
+    },
+    "tier0s": {
+      "auroc": 0.3758077973921437,
+      "score_failures": 0,
+      "score_max": 617283947.0,
+      "score_mean": 95785.04016493585,
+      "score_min": 0.0,
+      "score_source": "carnot.verify.tier0s_halluguard.Tier0sVerifier.halluguard_ntk_score",
+      "scored_examples": 6548
+    },
+    "tier0u": {
+      "auroc": 0.535990952669208,
+      "score_failures": 0,
+      "score_max": 0.6000000000000001,
+      "score_mean": 0.0010749408909152343,
+      "score_min": 0.0,
+      "score_source": "carnot.verify.tier0u_logical_consistency.Tier0uVerifier.score",
+      "scored_examples": 6548
+    }
+  },
+  "vs_synthetic_claim": {
+    "tier0r": "higher",
+    "tier0s": "lower",
+    "tier0u": "lower"
+  }
+}

@@ -2977,3 +2977,36 @@ When `EidokuCspGate` evaluates each response against its hard constraints,
 Then the reported `csp_gate_accuracy` is the fraction of examples correctly
 classified, `n_eval_examples` is 50, and `eidoku_gate_validated` is true only
 when the accuracy is at least 0.75.
+
+### REQ-VERIFY-2548: Tier 0 Real-Corpus Hallucination Validation
+
+The repository shall provide a deterministic, CPU-only real-corpus validation
+runner for Tier 0r, Tier 0s, and Tier 0u verifier prototypes that:
+
+- records which verifier imports and corpus preconditions were checked;
+- loads a labeled FoVer corpus from local `data/` or `results/` artifacts before
+  using any synthetic fallback;
+- scores every selected labeled example with each importable verifier;
+- computes AUROC against hallucination labels where hallucination is `1` and
+  grounded/correct is `0`;
+- compares each real-corpus AUROC with the verifier's prior synthetic claim;
+- marks a verifier paper-citable only when AUROC was measured on a real corpus
+  with at least 50 real labeled examples; and
+- writes `results/experiment_2548_real_corpus_validation.json` with
+  `honest_verdict`, `tier0r_real_auroc`, `tier0s_real_auroc`,
+  `tier0u_real_auroc`, `corpus_type`, `n_real`, `paper_citable`,
+  `preconditions_checked`, `duration_s`, and `random_seed`.
+
+If fewer than 50 real labeled examples are available, the runner may supplement
+with at least 30 diverse synthetic examples, but those AUROC values MUST be
+reported as non-citable.
+
+### SCENARIO-VERIFY-2548: FoVer Corpus Produces Citable Tier 0 AUROC
+
+Given a local FoVer corpus with at least 50 labeled examples and both
+hallucination classes,
+When the Exp 2548 runner evaluates every importable Tier 0 verifier,
+Then the artifact reports `corpus_type="real"`, records `n_real` from the
+selected corpus, computes one AUROC field per importable verifier, and sets
+each verifier's `paper_citable` flag exactly when the real-corpus sample-size
+gate is satisfied.
