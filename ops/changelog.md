@@ -6312,3 +6312,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 0: Archive .236 and activate .237 (✅ Complete) — honest_verdict=complete: Conductor already swapped roadmap to 2026.05.237 and archived 2026.05.236.; results/experiment_2447_archive.json
 - 2026-05-19: Phase 1: Conformal P-Value Ensemble v2 -- Fix JSON Malformation + Add PCIB (Tier 0l) + Breach 0.9236 (✅ Complete) — honest_verdict=complete: with conformal_ensemble_auroc=0.916667; results/experiment_2448_conformal_ensemble_v2.json
 - 2026-05-19: Phase 1: HalluField Tier 0m Verifier (arXiv:2509.10753) -- Field-Theoretic Token-Path Energy (⚠️ Research Finding) — honest_verdict=unspecified; results/experiment_2449_tier0m_scores.json
+- 2026-05-19: Phase 1: LaaB ACL 2026 Full Meta-Judgment Bridge v2 (arXiv:2605.03971) -- Label Constraint Modeling (⚠️ Research Finding) — honest_verdict=Terminal-prefix required.; results/experiment_2450_laab_meta_judgment_v2.json
