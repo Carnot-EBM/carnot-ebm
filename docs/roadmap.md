@@ -292,3 +292,4 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 | 2026.05.227 | Pipeline Inactive | 0 experiments | No experiments committed; fourth consecutive blocked_roadmap_missing; pre-stage roadmap for .228 immediately |
 
 | 2026.05.240 | complete: best_240_auroc=0.975, phase4_validated_any=False, arxiv_ready=False | 11 experiments | Phase 4 not validated; Operator hold persists |
+| 2026.05.241 | complete: best_241_auroc=0.975, phase4_validated_any=False, arxiv_ready=False | 8 experiments | 1 missing, 1 blocked; Phase 4 unvalidated; Operator hold persists |
