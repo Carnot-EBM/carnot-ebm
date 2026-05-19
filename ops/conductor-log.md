@@ -5084,3 +5084,4 @@ Ripgrep i |
 | 2026-05-19 16:23 UTC | Phase 2a: Tier 0r Integration + Conformal Ensemble | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2510_ensembl |
 | 2026-05-19 16:27 UTC | Phase 2a: Tier 0r Integration + Conformal Ensemble | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2510_ensembl |
 | 2026-05-19 16:30 UTC | Phase 2b: Adaptive Conformal Prediction v2 (arXiv: | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2511_adaptiv |
+| 2026-05-19 16:33 UTC | Phase 2b: Adaptive Conformal Prediction v2 (arXiv: | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2511_adaptiv |
