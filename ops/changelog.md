@@ -6470,3 +6470,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 2a: Tier 0r Integration + Conformal Ensemble v7 (10 Verifiers) (⚠️ Blocked) — honest_verdict=blocked_tier0r_not_implemented; results/experiment_2510_ensemble_v7.json
 - 2026-05-19: Phase 2b: Adaptive Conformal Prediction v2 (arXiv:2604.13991) -- Prompt-Adaptive Calibration (⚠️ Blocked) — honest_verdict=blocked_ensemble_v7_not_available; results/experiment_2511_adaptive_conformal.json
 - 2026-05-19: Phase 2b: Adaptive Conformal Prediction v2 (arXiv:2604.13991) -- Prompt-Adaptive Calibration (⚠️ Blocked) — honest_verdict=blocked_ensemble_v7_not_available; results/experiment_2511_adaptive_conformal.json
+- 2026-05-19: Phase 2b: Adaptive Conformal Prediction v2 (arXiv:2604.13991) -- Prompt-Adaptive Calibration (⚠️ Blocked) — honest_verdict=blocked_ensemble_v7_not_available; results/experiment_2511_adaptive_conformal.json
