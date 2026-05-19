@@ -1,30 +1,29 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.244",
-  "generated_at": "2026-05-19T21:32:10Z",
+  "generated_at": "2026-05-19T22:02:15Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.244 is a planning-only milestone with 0 experiments completed — the twentieth consecutive empty-timing-window retrospective. The 13-task roadmap (exp2530–exp2542) was validated and pre-staged, with IsingVerifier implementation (exp2531), ensemble v7b regression fix (exp2533), and LaTeX compile repair (exp2536) as top priorities. Both RTX 3090 GPUs remain idle at 0% utilization with 5 MB allocated each, indicating the persistent planning-execution gap has not yet been closed.",
+  "summary": "Milestone 2026.05.244 recorded zero experiment commits — the milestone activated but no experiments reached completion before the retrospective was triggered. With 0 experiments completed and 0 total wall-time minutes, there is no execution data to analyze this cycle.",
   "bottlenecks_identified": [
-    "Planning-execution gap: experiments are planned but not activated within the same conductor session, producing an empty timing window every milestone.",
-    "No compute-bound experiments ran this milestone, so GPU utilization cannot be assessed; both RTX 3090s are idle at 0% with 5 MB allocated each.",
-    "Retro task fires before any experiments complete, yielding 0-experiment retrospectives that consume turn budget without actionable data."
+    "No experiments landed this milestone — the activation phase did not produce any completed artifacts. This may indicate a planning gap, a blocked activation, or a mid-cycle interruption before any task ran to completion.",
+    "Both RTX 3090 GPUs are idle at 0% utilization with only 5 MB allocated each, consistent with no active compute workloads. This is expected given zero experiments completed, not a GPU-side failure."
   ],
   "improvements_suggested": [
-    "Activate exp2530 (archive .244 + activate .244) in the same conductor session as planning, not a separate turn.",
-    "Deploy persistent conductor daemon to eliminate the session-boundary gap between planning and execution.",
-    "Gate the retro task (exp2542) on minimum experiment count >= 1 so that a zero-experiment retrospective cannot be written until at least one task has landed.",
-    "Wire the conductor pre-activation guard to halt and emit a diagnostic when the timing window contains zero experiment commits at retro time."
+    "Verify that the research-roadmap-next.yaml for this milestone contains valid, activation-ready tasks before the next milestone starts — a zero-experiment retro may indicate the YAML was absent or structurally invalid.",
+    "Add a conductor-side post-activation health check: if no experiment transitions to 'running' within 10 minutes of milestone activation, emit an alert artifact so the outer loop can intervene before the full milestone budget is consumed.",
+    "Review ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES to confirm the next milestone has concrete queued tasks that address hardware-continuity requirements (KV260, GateMate, PolarFire) per Hardware-Task Continuity Discipline.",
+    "Confirm the codex/gemini agent quota state before the next milestone activates — a quota-exhausted backend will cause all tasks to silently stall without producing artifacts."
   ],
   "top_3_highest_leverage_actions": [
-    "Same-session activation: immediately activate exp2530 after planning completes — this alone closes the planning-execution gap that has caused 20 consecutive empty retros.",
-    "Persistent conductor daemon: deploy a long-running conductor process that survives between turns so experiment activation does not depend on a new session being opened.",
-    "Retro gate on experiment count: add a conductor check that blocks exp2542 (retro) from activating until experiments_completed >= 1, converting empty retros into forward-only diagnostic blocks."
+    "Diagnose why 2026.05.244 produced zero experiment commits: read the conductor log (ops/conductor-log.md) and conductor state (ops/conductor-state.json) to determine whether tasks were queued, blocked at activation, or never scheduled.",
+    "Pre-stage a valid research-roadmap-next.yaml for 2026.05.245 before this milestone closes, following the Pre-Staged Roadmap Convention, so the conductor skips the planner and activates immediately on the pre-drafted plan.",
+    "Ensure the three attached FPGA boards (KV260, GateMate A1-EVB-2M, PolarFire SoC) each have at least one concrete forward-step task in the next milestone roadmap per Hardware-Task Continuity Discipline — these tracks have a documented history of being dropped when milestones get crowded."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The twentieth consecutive empty-timing-window retrospective confirms a structural gap: the conductor's planning and execution phases run in separate sessions with no bridging mechanism, so every milestone's timing window captures zero experiment commits. The improvements suggested here are identical to those from the preceding nineteen retros — suggesting the retro output itself is not feeding back into the conductor's operational config. The highest-leverage change is not another retro suggestion but a mechanical guard (retro gate on experiment count) that makes the empty-retro failure mode impossible rather than merely noted."
+  "meta_reflection": "A zero-experiment milestone is a process signal, not a research signal — it means the outer loop (conductor + planner) failed to produce runnable work within the milestone window. The retrospective for such a milestone should focus entirely on diagnosing the activation gap rather than analyzing experiment-level performance. Future milestones should treat a zero-experiment retro as a P0 process incident: root-cause the stall, apply the fix within the same session, and confirm the next milestone activates at least one experiment before the outer loop moves on."
 }

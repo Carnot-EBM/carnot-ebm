@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.244 Operational Retrospective — Final)
+
+- Operational retrospective for milestone 2026.05.244 written to `results/operational_retro_2026_05_244.json`. Zero experiment commits found — milestone is planning-only (no experiments reached completion before retro trigger). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. Top-3 leverage actions: (1) diagnose why 2026.05.244 produced zero commits by reading conductor-log.md and conductor-state.json; (2) pre-stage a valid research-roadmap-next.yaml for 2026.05.245 before this milestone closes; (3) ensure KV260, GateMate, and PolarFire each have a concrete forward-step task in the next milestone per Hardware-Task Continuity Discipline. Estimated time savings: 0% (no execution data). Meta-reflection: a zero-experiment milestone is a P0 process signal — root-cause the stall and confirm at least one experiment activates before the outer loop advances.
+
 ## 2026-05-19 (Milestone 2026.05.244 Operational Retrospective)
 
 - Operational retrospective for milestone 2026.05.244 written to `results/operational_retro_2026_05_244.json`. No experiment commits found in the timing window — milestone is planning-only (twentieth consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with a planning-only turn. Top-3 leverage actions: (1) activate exp2530 in the same conductor session as planning; (2) deploy persistent conductor daemon to eliminate the planning-execution gap; (3) gate the retro task on minimum experiment count >= 1 to prevent empty-window retros. Roadmap pre-staged with 13 tasks (exp2530–exp2542), all validated.
