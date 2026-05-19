@@ -4974,3 +4974,4 @@ Ripgrep i |
 | 2026-05-18 23:09 UTC | Phase 2: KV260 RTL Synthesis Fix v5 -- Debug and F | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1460s (300s silence). Last out |
 | 2026-05-18 23:38 UTC | Phase 2: KV260 RTL Synthesis Fix v5 -- Debug and F | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1530s (300s silence). Last out |
 | 2026-05-19 00:05 UTC | Phase 2: KV260 RTL Synthesis Fix v5 -- Debug and F | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1469s (300s silence). Last out |
+| 2026-05-19 00:09 UTC | Phase 2: Phase 1 Ship Gate Completion v5 -- Write  | OK | cache hit: 81 passed, 1 warning in 2.36s |
