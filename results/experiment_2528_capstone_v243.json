@@ -1,0 +1,178 @@
+{
+  "experiment": "2528_capstone_v243",
+  "milestone": "2026.05.243",
+  "run_date": "20260519",
+  "schema": "carnot.paper_v6_capstone_2528.v1",
+  "spec_refs": [
+    "REQ-REPORT-2528",
+    "SCENARIO-REPORT-2528"
+  ],
+  "status": "complete",
+  "honest_verdict": "complete: best_243_auroc=0.9750; phase4_final_status=blocked_precondition; arxiv_ready=False",
+
+  "n_experiments_completed": 7,
+  "n_experiments_completed_methodology": "Counted as 'reached a terminal result state' across exp2518-2527: included exp2518 (archive), exp2520 (Tier 0r impl), exp2521 (ensemble v7 regression), exp2522 (HalluGuard prototype), exp2523 (KAN rebuilt), exp2525 (FR-11 JEPA), exp2527 (arXiv prep). Excluded: exp2519 (blocked_ising_verifier_not_available) and exp2526 (blocked_by_operator) as honestly-blocked-not-counted per .242 convention; exp2524 (adaptive_conformal_v2) missing entirely (no artifact written, dependency exp2521 regressed below the gating threshold).",
+
+  "best_243_auroc": 0.975,
+  "best_243_auroc_source": "exp2498.group_conditional_auroc_replicated (.241), carried forward through .242 and .243 because exp2521 ensemble_v7=0.9607 regressed below the v6 baseline and exp2524 adaptive conformal was not run.",
+  "best_243_auroc_carried_forward": true,
+
+  "auroc_adversarially_verified": true,
+  "auroc_adversarially_verified_source": "0.9750 carried forward from exp2498 (.241), which was replicated across 5 seeds with no adversarial flags. The .243 ensemble v7 attempt (exp2521) ran 5 seeds but produced 0.9607 +/- 0.0364 — a regression, not an advance; the cite-safe headline remains the .241 figure.",
+
+  "ensemble_v7": {
+    "ensemble_v7_auroc": 0.9607142857142857,
+    "ensemble_v7_auroc_std": 0.03642156795423423,
+    "n_seeds": 5,
+    "regression_vs_v6_baseline": true,
+    "v6_baseline": 0.975,
+    "tier0r_group_assignment": "Group C",
+    "interpretation": "Adding Tier 0r as the 10th verifier in Group C (logic-class) dragged the group-conditional mean down because Tier 0r's solo AUROC on a 50-example synthetic eval (0.8256, exp2520) is well below the v6 Group C members (Tier 0d=0.588, Tier 0h=0.678). The Fisher-combined group conditional mean is sensitive to its weakest member; adding 0.8256 alongside ~0.6 verifiers does not lift the group. Real corpus + better-calibrated Tier 0r weighting needed before Tier 0r expands the ensemble."
+  },
+
+  "adaptive_conformal_v2": {
+    "ran": false,
+    "reason": "exp2524 artifact does not exist; the dependency chain exp2520 -> exp2521 -> exp2524 was gated on exp2521.ensemble_v7_auroc >= 0.970, which was not met (0.9607). No adaptive_conformal_v2 AUROC was produced this milestone."
+  },
+
+  "phase4_final_status": "blocked_precondition",
+  "phase4_validated_any": false,
+  "phase4_explanation": "exp2519 honored the no-fallback discipline: when IsingVerifier.energy() could not be imported, it emitted honest_verdict='complete: blocked_ising_verifier_not_available' with n_step_pairs=0, step_granularity_achieved=False, and energy_proxy_used='ising_verifier_direct' (the intended-but-unreachable proxy, NOT the prior semantic_energy_fallback). This is a structurally honest blocked result, not a methodology_fallback_retirement — the precondition gate fired correctly. Phase 4 remains empirically unvalidated at step-level. Operator decision required: (a) implement/expose IsingVerifier.energy() on step text and re-run exp2519, (b) accept Phase 4 as empirically unsupported and revise paper §4 to document the negative result transparently per feedback_publication_holds_until_phase4_pivot.md, or (c) retire Phase 4 from the arXiv submission entirely.",
+  "phase4_energy_proxy_used": "ising_verifier_direct",
+  "phase4_step_granularity_achieved": false,
+  "phase4_n_step_pairs": 0,
+  "phase4_methodology_fallback": false,
+  "phase4_methodology_fallback_avoided": true,
+
+  "arxiv_gates": {
+    "gate_1_phase1_ship": true,
+    "gate_2_audit": true,
+    "gate_3_phase4_validated_any": false,
+    "gate_4_auroc_adversarially_verified": true
+  },
+  "arxiv_ready": false,
+  "arxiv_readiness_assessment": "NOT READY. Gate 3 (phase4_validated_any) is False because exp2519 was structurally blocked at precondition (IsingVerifier.energy() not importable). exp2527 self-reported all 4 gates met but that reading is based on a stale carry-forward of the .242 literal-gate flip; the .243 capstone makes the honest call: with Phase 4 blocked-precondition this milestone, phase4_validated_any=False and arxiv_ready=False. Additionally, exp2527.submission_package_ready=False (latex_compile_success=False). Operator decision needed on Phase 4 before arXiv submission.",
+
+  "operator_recommendation": "request_phase4_operator_decision",
+  "operator_decision_needed": {
+    "decision": "phase4_blocked_precondition_path_forward",
+    "options": [
+      "(a) Implement or expose IsingVerifier.energy() as an importable callable that operates on a single CoT step's text. Re-run exp2519 in .244 with a working precondition. retire_if_same_verdict=true still applies if a third attempt also fails to achieve step_granularity_achieved=True with the IsingVerifier path.",
+      "(b) Accept Phase 4 as empirically unsupported. Revise paper §4 to document the negative result honestly (the ARM-EBM step-level energy correlation hypothesis was tested twice — exp2486 with embedding-distance proxy failed; exp2508 with semantic_energy_fallback gave pearson_r=-0.4266 but did not run the designed methodology; exp2519 honored no-fallback and was blocked at precondition). Per feedback_publication_holds_until_phase4_pivot.md, paper submission can proceed with a documented negative Phase 4 result.",
+      "(c) Retire Phase 4 from the arXiv submission entirely. Move Phase 4 (active inference / verifier-as-free-energy) to a follow-up paper. Submit paper-v6 on the strength of Phase 1 (verify-repair pipeline) + ensemble verifier results (best_AUROC=0.9750, HIVE gap +0.0514)."
+    ],
+    "recommended_default_if_no_response": "Option (b). The .242 corrigendum_pending METHODOLOGY_FALLBACK item is two milestones old and the structural test still has not been performed. Honest negative-result documentation is preferable to indefinite carry-forward of an unsubstantiated gate flip."
+  },
+
+  "top_3_successes": [
+    "Tier 0r Curry-Howard verifier IMPLEMENTED (exp2520): python/carnot/verify/tier0r_curry_howard.py written following the BaseVerifier interface; solo AUROC=0.8256 on synthetic 50-example eval. Unblocks the three-task dependency chain that has been stalled since .241 — exp2521 was able to actually invoke Tier 0r as the 10th verifier even though the ensemble result regressed. The viability claim from exp2504 (AUROC=0.9123) is now backed by an importable Python class.",
+    "FR-11 Tier 3 JEPA strengthened with IsingVerifier response-level energy (exp2525): jepa_violation_auc advanced from 0.7633 baseline to 0.8889 (+0.126) by adding ising_energy_response_level + logprob_variance features. The continuous self-learning loop continues to compound — Tier 3 JEPA can now exploit an energy signal even while Phase 4 step-level remains blocked.",
+    "KAN Tier 1 verifier rebuilt from scratch (exp2523): kan_model_rebuilt=True, checkpoint saved to models/kan_tier1_restored.safetensors, multilevel_auroc=1.0 on the available training corpus. The .242 'kan_model_missing_from_disk' gap is resolved at the artifact level; the AUROC=0.994 certified-deployment claim from exp2489 now has a reproducible model checkpoint backing it (subject to fresh adversarial verification of the restored model on the original eval corpus, which is a .244 follow-up)."
+  ],
+
+  "top_3_gaps_for_244": [
+    "Phase 4 step-level ARM-EBM still empirically unvalidated after three attempts (exp2486 failed proxy, exp2508 methodology fallback, exp2519 blocked precondition). IsingVerifier.energy() is not importable as a per-step callable on text. Two paths to .244: (i) implement IsingVerifier.energy(step_text:str) -> float and re-run exp2519 with retire_if_same_verdict=true, OR (ii) operator accepts a negative Phase 4 result and the paper §4 is revised to document the honest negative outcome.",
+    "Ensemble v7 regression to 0.9607 (-0.0143 vs v6=0.9750). Tier 0r as the 10th verifier dragged the Group C mean down because its solo AUROC (0.8256) is well below the strong verifiers but the group-conditional Fisher combination weighs all members. .244 needs either group-conditional Tier 0r reweighting, dedicated-group Tier 0r placement, or rejection of Tier 0r as an ensemble member if its real-corpus AUROC does not improve. Adaptive conformal v2 (exp2524) was not run because of the regression — it remains a candidate for .244 only after Tier 0r is correctly integrated or replaced.",
+    "arXiv submission package not ready: latex_compile_success=False in exp2527 (pdflatex toolchain or main.tex error not diagnosed). Even if the operator chose option (a) or (b) for Phase 4, the LaTeX build pipeline must compile cleanly before the package is ready. .244 must include a LaTeX-compile fix task with explicit error capture from pdflatex stdout."
+  ],
+
+  "additional_notes": [
+    "exp2521 emitted honest_verdict='terminal: 0.9607 below 0.970 regression threshold' — this is a Verdict Terminal-Prefix Discipline violation (should be 'complete: ...'). Flagged for retro in .244. The result itself is honest and the regression is a real finding.",
+    "exp2522 emitted honest_verdict='completed' (no colon, not 'complete:'). HalluGuard Tier 0s prototype reported tier0s_auroc=1.0 on synthetic 100-example corpus with arithmetic-deviation heuristic — IMPLAUSIBLE_PERFECT on a synthetic eval is expected behavior for a heuristic that matches the synthetic generator; this is a sanity-check result, not a capability claim. Real corpus needed before headline citation.",
+    "exp2523 emitted honest_verdict='Terminal-prefix required. Model retrained from scratch.' — Verdict Terminal-Prefix Discipline violation. Flagged. The KAN multilevel_auroc=1.0 on training corpus is a fit-on-self statistic, not an out-of-distribution AUROC; adversarial verification on the original exp2489 eval corpus is required before re-citing 0.994.",
+    "exp2526 emitted honest_verdict='blocked_by_operator: PYNQ Python package is not available.' — this is structurally blocked, but uses a non-discipline-compliant prefix. KV260 SD card flash remains a manual operator step; the .hwh file from exp2514 is in place. exp2526 documented the exact operator commands.",
+    "exp2519 correctly honored the no-fallback rule. This is the first time the Phase 4 retire_if_same_verdict trip-wire was tested against a precondition-fail-rather-than-fabricate path; the discipline worked as designed."
+  ],
+
+  "external_baselines": {
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139",
+    "best_243_auroc": 0.975,
+    "auroc_gap_to_hive": 0.0514,
+    "gap_status": "breached_carried_forward",
+    "note": "HIVE peer baseline carried forward from .242. Gap to best_243_auroc remains +0.0514 in Carnot's favor — the same gap as .242 because the headline did not advance this milestone."
+  },
+
+  "kv260_status": "hwh_generated_flash_pending_operator",
+  "kv260_status_detail": {
+    "kv260_hwh_generated": true,
+    "kv260_hwh_path": "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh",
+    "pynq_python_package_available": false,
+    "sd_card_detected": true,
+    "kv260_flash_attempted": false,
+    "kv260_flash_documentation_complete": true,
+    "blocker": "PYNQ Python package is not pip-installable in the current environment; physical SD card flash is a manual operator step. exp2526 documented the operator commands (wget kv260-starter-kit-3.0.img, dd to /dev/sdX, copy BOOT.BIT + .hwh, ssh xilinx@192.168.2.99). Hardware-continuity-discipline: KV260 stays in the .244 mandatory roadmap as either a documentation-audit task or an operator-flash transcript landing task once flash is performed."
+  },
+
+  "corrigendum_pending": [
+    {
+      "kind": "METHODOLOGY_FALLBACK",
+      "severity": "critical",
+      "detail": "Carried forward from .242: exp2508 self-declared phase4_validated_step_level=True with pearson_r=-0.4266 but step_granularity_achieved=False (used semantic_energy_fallback proxy, not the designed raw-logprob step-level methodology). exp2519 in .243 honored the no-fallback rule and was blocked at precondition (IsingVerifier.energy not importable) rather than falling back again. The corrigendum item is now STRUCTURALLY DECIDABLE: either IsingVerifier.energy() ships as a callable in .244 and exp2519's retry produces a real result, or paper §4 is revised to document the negative result honestly. The METHODOLOGY_FALLBACK flag persists but is no longer accumulating — the .242 ambiguity is replaced with an explicit blocked-precondition state."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "warn",
+      "detail": "Carried forward from .242: exp2508 duration_s=1.50s on n_step_pairs=290. The .242 capstone flagged this as plausibly consistent with the in-memory semantic_energy_fallback computation. exp2519 in .243 ran with duration_s=0.0 (precondition failed before any computation) which is structurally honest. The .242 DURATION_TOO_SHORT corrigendum remains pending against exp2508 specifically; if the operator chooses Phase 4 option (b) (accept negative result) the corrigendum item is retired with the documented-negative outcome."
+    },
+    {
+      "kind": "TERMINAL_PREFIX_DISCIPLINE",
+      "severity": "warn",
+      "detail": "New in .243: exp2521 ('terminal: ...'), exp2522 ('completed'), exp2523 (prose), exp2526 ('blocked_by_operator: ...') all emit non-compliant honest_verdict prefixes. The conductor's _verdict_is_untrustworthy classifier is the safety net but the planner-side discipline should have produced 'complete: ...' prefixes. Flagged for .244 retro. The underlying experimental results are honest; only the verdict-string format is non-compliant."
+    },
+    {
+      "kind": "SYNTHETIC_EVAL_DEPENDENCE",
+      "severity": "warn",
+      "detail": "New in .243: exp2520 (tier0r_auroc=0.8256), exp2522 (tier0s_auroc=1.0), exp2523 (multilevel_auroc=1.0) all reported AUROC values on synthetic / fit-on-self corpora. These are sanity-check results, not capability claims. Real-corpus validation needed in .244 before any of these AUROC values can be cited in paper-v6."
+    }
+  ],
+
+  "preconditions_checked": {
+    "all_10_input_artifacts_present_or_classified": true,
+    "exp2518_archive_read": true,
+    "exp2519_phase4_arm_ebm_v3_read": true,
+    "exp2520_tier0r_implementation_read": true,
+    "exp2521_ensemble_v7_read": true,
+    "exp2522_halluguard_tier0s_read": true,
+    "exp2523_kan_restore_read": true,
+    "exp2524_adaptive_conformal_v2_classified_missing": true,
+    "exp2525_fr11_tier3_jepa_read": true,
+    "exp2526_kv260_sd_card_read": true,
+    "exp2527_arxiv_submission_prep_read": true,
+    "roadmap_v243_read": true,
+    "prior_capstone_exp2516_read": true
+  },
+
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required. Must start with complete: even for fully negative milestones. The capstone reflects reality as it is — no hard gate, no fabricated success.",
+    "best_243_auroc": "Cite-safe headline AUROC. Carries forward from .241/.242 (0.9750) because exp2521 ensemble_v7 (0.9607) regressed and exp2524 adaptive conformal was not run. Adversarial verification status carries forward from the original .241 5-seed replication.",
+    "phase4_final_status": "Terminal Phase 4 determination — the decision point for arXiv submission. 'blocked_precondition' means exp2519 correctly emitted blocked rather than falling back; the structural test was not performed because IsingVerifier.energy is not importable.",
+    "phase4_validated_any": "Gate 3 status. False this milestone because phase4_final_status != 'validated_clean'. Operator decision needed before this can flip True.",
+    "arxiv_ready": "Conjunction of all 4 gates AND phase4_validated_any=True AND submission_package_ready. False this milestone (Gate 3 false; latex compile failed).",
+    "operator_recommendation": "Concrete operator action. 'request_phase4_operator_decision' surfaces the choice between (a) implement IsingVerifier.energy and retry, (b) accept negative Phase 4 and revise paper §4, or (c) retire Phase 4 from this paper entirely.",
+    "external_baselines": "HIVE peer (0.9236) carried forward for continuous gap tracking. Gap unchanged from .242 because headline did not advance.",
+    "kv260_status": "Hardware continuity tracking — must reflect exp2526 outcome. Still hwh_generated_flash_pending_operator; PYNQ Python package not available in env; manual operator flash documented.",
+    "top_3_successes": "Three most impactful positive findings prioritized by ensemble-chain unblock and continuous-self-learning compounding.",
+    "top_3_gaps_for_244": "Three most critical unresolved issues entering .244; Phase 4 operator decision is the load-bearing blocker."
+  },
+
+  "synthesis": {
+    "milestone_summary": "Milestone 2026.05.243 closed with 7 of 10 capstone-input experiments at a determinate-result state, 2 honestly blocked (exp2519 Phase 4 precondition, exp2526 KV260 PYNQ unavailable), and 1 missing (exp2524 adaptive conformal not run after exp2521 regression). Phase 4 status: exp2519 honored the no-fallback discipline and emitted blocked_ising_verifier_not_available rather than falling back to SemanticEnergy a third time — structurally honest, but Phase 4 remains empirically unvalidated at step level. AUROC status: best_243_auroc = 0.9750, carried forward from exp2498 (.241); ensemble v7 (exp2521) regressed to 0.9607 because Tier 0r as the 10th verifier dragged the Group C mean down. Three real wins: Tier 0r verifier IMPLEMENTED (exp2520) so the dependency chain is structurally unblocked even though the regression means it didn't yet advance the headline; FR-11 Tier 3 JEPA advanced from 0.7633 to 0.8889 with IsingVerifier response-level energy + logprob variance (exp2525); KAN Tier 1 model rebuilt from scratch (exp2523, multilevel_auroc=1.0 on training corpus, OOD validation pending). arXiv readiness: NOT READY. Gate 3 (phase4_validated_any) is False; exp2527 latex_compile_success=False so submission_package_ready=False. Operator decision needed: (a) implement IsingVerifier.energy() and retry exp2519 in .244, (b) accept negative Phase 4 and revise paper §4, or (c) retire Phase 4 from this paper entirely. Hardware: KV260 still hwh_generated_flash_pending_operator (exp2526 PYNQ unavailable); manual operator SD card flash commands documented. PolarFire and GateMate remain terminal from prior milestones.",
+    "n_experiments_at_terminal_result": 7,
+    "n_experiments_honestly_blocked": 2,
+    "n_experiments_missing": 1,
+    "top_3_successes_short": [
+      "Tier 0r verifier IMPLEMENTED (exp2520) — three-task dependency chain unblocked structurally even though ensemble regressed.",
+      "FR-11 Tier 3 JEPA gain: 0.7633 -> 0.8889 with IsingVerifier response-level energy (exp2525).",
+      "KAN Tier 1 model rebuilt from scratch (exp2523) — .242 missing-from-disk gap resolved at the artifact level."
+    ],
+    "top_3_gaps_short": [
+      "Phase 4 step-level ARM-EBM unvalidated after three attempts; operator decision needed.",
+      "Ensemble v7 regression to 0.9607; Tier 0r integration weakened the headline.",
+      "arXiv submission package not ready (latex_compile failed in exp2527)."
+    ]
+  },
+
+  "duration_s": 5.0,
+  "random_seed": 42
+}
