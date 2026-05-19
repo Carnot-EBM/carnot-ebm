@@ -21,7 +21,7 @@ The model was trained using contrastive energy minimization.
 | Metric | Value |
 |--------|-------|
 | Experiments completed | 3,039 (through Exp 2494) |
-| Milestones archived | 361 (through 2026.05.239) |
+| Milestones archived | 362 (through 2026.05.240) |
 | Python test items collected | 26,352 |
 | Group-Conditional Conformal AUROC, HIVE peer BREACHED (exp2485) | 0.975 |
 | Isotonic calibration AUROC, TAUTOLOGY flagged (exp2473) | 0.9351 |

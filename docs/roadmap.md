@@ -25,6 +25,7 @@
 
 | Milestone | Theme | Experiments | Key Breakthrough |
 |-----------|-------|------------|-----------------|
+| 2026.05.241 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments completed; eighteenth consecutive empty-timing-window retro; pre-stage .242 roadmap before archiving .241; wire conductor pre-activation guard to halt on zero-experiment open |
 | 2026.05.239 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments completed; seventeenth consecutive empty-timing-window retro; gate retro on minimum experiment count + same-session exp2471 activation + persistent conductor daemon |
 | 2026.05.238 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments completed; milestone in activation phase at retro time; gate retro on minimum experiment count to avoid empty timing windows |
 | 2026.05.237 | Pipeline stall / No timing-window experiments | N/A | None — sixteenth consecutive empty-experiment milestone; fix timing-capture anchor + pre-stage .238 roadmap + persistent conductor daemon are top-3 leverage actions |

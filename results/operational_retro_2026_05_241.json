@@ -1,22 +1,29 @@
 {
-  "schema": "carnot.operational_retro.v65",
+  "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.241",
-  "n_experiments_completed": 8,
-  "n_missing": 1,
-  "n_blocked": 1,
-  "best_241_auroc": 0.975,
-  "auroc_adversarially_verified": true,
-  "phase4_validated_any": false,
-  "arxiv_ready": false,
-  "top_3_successes": [
-    "AUROC adversarially verified: exp2498 replicated the 0.975 group-conditional AUROC across 5 seeds, resolving the cross-group tautology and meeting Gate 4.",
-    "Tier 0r (Curry-Howard soft-typed proof-path) achieved an AUROC of 0.9123 and is viable as a 16th verifier candidate.",
-    "FR-11 integration working end-to-end: Tier 4 adaptive-energy feedback successfully fires into Tier 1."
+  "generated_at": "2026-05-19T15:27:12Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.241 had no experiment commits recorded in the timing data window; 0 experiments completed and 0 wall-time minutes logged. Both RTX 3090 GPUs were idle at 0% utilization with only 5 MB allocated each, consistent with a milestone that ran no compute-bound tasks.",
+  "bottlenecks_identified": [
+    "No experiments were activated or completed this milestone — the primary bottleneck is milestone activation itself, not experiment execution speed.",
+    "Both GPUs (GPU 0: RTX 3090, GPU 1: RTX 3090) are idle at 0% utilization with residual 5 MB allocations, suggesting a prior session left stale CUDA contexts that were never freed. This is a minor housekeeping issue, not a wall-time bottleneck."
   ],
-  "top_3_gaps_for_242": [
-    "Phase 4 validation blocked: exp2496 (Qwen PRC v3) artifact is missing (likely resource/quota blocked) and exp2497 (Spilled Energy) failed to validate Phase 4. Gate 3 remains unmet.",
-    "Tier 0q (Spilled Energy) is non-viable due to noise-floor correlation, precluding its inclusion in the ensemble. It must be formally retired from candidate set.",
-    "arXiv submission remains blocked on Gate 3 (phase4_validated_any is False), requiring a valid Phase 4 verification path (e.g., resolving the real-GGUF Qwen PRC blocker)."
+  "improvements_suggested": [
+    "Ensure the research-roadmap-next.yaml is present and valid before milestone activation so the conductor can begin launching tasks immediately rather than falling through to a zero-experiment milestone.",
+    "Free stale CUDA memory allocations (5 MB on each GPU) between milestones to avoid confusing future GPU-state snapshots — run `nvidia-smi --gpu-reset` or restart the holding process.",
+    "Add a pre-activation check in the conductor that warns if the roadmap YAML is missing or stale; log a WARN rather than silently producing a zero-experiment milestone.",
+    "DualGPURunner engagement is not applicable this milestone (no parallel-model tasks ran), but both GPUs are free for the next milestone — plan at least one dual-model inference task to recoup the idle capacity."
   ],
-  "honest_verdict": "complete: best_241_auroc=0.975, phase4_validated_any=False, arxiv_ready=False"
+  "top_3_highest_leverage_actions": [
+    "Confirm research-roadmap-next.yaml exists for milestone 2026.05.242 with a valid milestone: field and at least one activated task before closing this retrospective — a pre-staged roadmap is the single highest-leverage action to avoid another zero-experiment milestone.",
+    "Free the 5 MB stale CUDA allocations on both GPUs so the next milestone starts with a clean GPU state and the GPU Monitor does not flag spurious idle-with-allocation warnings.",
+    "Wire a conductor pre-activation guard that halts and notifies the operator when experiments_activated == 0 at milestone open, preventing silent zero-progress milestones from consuming calendar time without any research output."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A zero-experiment milestone is a process failure, not a research failure — the conductor ran but nothing was activated, so there is nothing to optimize at the experiment level. The actionable finding is upstream: roadmap presence and activation-guard coverage must be confirmed before a milestone opens, not discovered in the retrospective after it closes. GPU and compute efficiency analysis cannot be performed when no tasks ran; all three questions in this retrospective reduce to 'no data available this milestone.'"
 }
