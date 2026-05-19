@@ -1,677 +1,705 @@
-milestone: 2026.05.236
-milestone_title: 'AUROC Ceiling Breach: DiffuTruth + PCIB + Conformal Ensemble, RTL Synthesis Fix, Phase 1 Ship Gate Completion'
-milestone_doc: openspec/change-proposals/research-roadmap-v236.md
+milestone: 2026.05.237
+milestone_title: 'AUROC Final Breach + Paper Capstone + Hardware Continuity: KV260 RTL Fix,
+  GateMate Flash, PolarFire Smoke'
+milestone_doc: openspec/change-proposals/research-roadmap-v237.md
 tasks:
-- id: exp2434-archive-and-activate
-  title: 'Phase 0: Archive .235 and activate .236'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2434_archive.json
+- id: exp2447-archive-and-activate
+  title: 'Phase 0: Archive .236 and activate .237'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2447_archive.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 20
   prior_failures:
-  - experiment_id: exp2420-archive-and-activate
-    verdict: complete_archive_ready_235_activated
-    addressed_by: "exp2420 archived .234 and activated .235. This task archives .235 and activates .236 — standard recurring\
-      \ archive pattern, not a failure. Different deliverable (experiment_2434_archive.json), different milestone metadata\
-      \ (key results from .235: best_auroc=0.8896, codex_cli_healthy=true, kinetic_langevin KL=1.987)."
+  - experiment_id: exp2434-archive-and-activate
+    verdict: complete_archive_ready_236_activated
+    addressed_by: "exp2434 archived .235 and activated .236. This task archives .236 and activates .237 — standard
+      recurring archive pattern, not a failure. Different deliverable (experiment_2447_archive.json),
+      different milestone metadata (key .236 results: phase1_ship_gate_met=true, best_auroc=0.9167,
+      conformal_ensemble_auroc_improved=true, kv260_synthesis_errors=1, nco_tautology flagged)."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: Milestone 2026.05.235 (Codex Recovery Sprint v2 + AUROC Ceiling Assault v4)\ncompleted with 13/13 tasks\
-    \ producing artifacts. Key results: best_auroc=0.8896 (Hierarchical\nLogCons v2, exp2423), codex_cli_healthy=true, kinetic_langevin\
-    \ best sampler KL=1.987\n(delta=+7.87 vs CASAL KL=9.858). kv260_yosys_succeeded=false (synthesis_errors=1),\nphase1_ship_gate_met=false\
-    \ (only mcp_docs and cli_docs missing).\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/research-complete.yaml (last 30\
-    \ lines)\n  {project_root}/research-roadmap.yaml (first 5 lines — check milestone field)\n\nTASK: Archive milestone\
-    \ 2026.05.235 to research-complete.yaml and activate .236.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. Read research-roadmap.yaml\
-    \ first 3 lines to find the milestone field.\n     b. If milestone == \"2026.05.235\": proceed to step 1.\n        If milestone\
-    \ == \"2026.05.236\": conductor already swapped. Check research-complete.yaml\n          for \"id: 2026.05.235\". If present:\
-    \ write archive_ready=true and exit.\n        If other: write honest_verdict blocked_roadmap_unexpected and exit.\n  1. Append\
-    \ .235 entry to research-complete.yaml with completed: \"2026-05-18\".\n     Key results:\n       exp2420: OK — archive_ready=true\n\
-    \       exp2421: OK — codex_cli_healthy=true, complexity_threshold=3\n       exp2422: complete — hive_v4_auroc=0.8864\n\
-    \       exp2423: complete — logcons_auroc=0.8896 (best; z3_encoding_used=false)\n       exp2424: complete — halt_rag_auroc_full\
-    \ result\n       exp2425: OK — fr11_nsvif_online_passed=true\n       exp2426: OK — mch_filter_validated=true (BUT\
-    \ mean_acceptance_rate=1.0 degenerate)\n       exp2427: OK — blocked_synthesis_failed (synthesis_errors=1)\n       exp2428:\
-    \ OK — kinetic_kl=1.987, delta=+7.87\n       exp2429: OK — dikin_kl=2.41, delta=+7.45\n       exp2430: OK —\
-    \ de_psgld_kl=3.85, delta=+6.01\n       exp2431: OK — phase1_ship_gate_met=false (mcp_docs+cli_docs missing)\n     \
-    \  exp2432: complete — best_auroc_achieved=0.88961\n       exp2433: complete — retro_complete=true; n_experiments_completed=13\n\
-    \  2. cp {project_root}/research-roadmap-next.yaml {project_root}/research-roadmap.yaml\n  3. Add \"## 2026-05-18 (Milestone\
-    \ 2026.05.236 activated)\" stub to ops/changelog.md.\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
-    \      principle: \"Terminal-prefix required. Must start complete: for conductor.\"\n  - archive_ready:\n      principle:\
-    \ \"True only after .235 entry appears in research-complete.yaml.\"\n  - milestone_archived:\n      principle: \"Records\
-    \ which milestone was archived (2026.05.235) for audit trail.\"\n\nACCEPTANCE GATES:\n  - condition: \"archive_ready ==\
-    \ true\"\n    principle: \"Ensures research-complete.yaml records .235 outcomes before .236 begins.\"\n\nDo NOT push. Do\
-    \ NOT modify scripts/research_conductor.py."
+  prompt: "CONTEXT: Milestone 2026.05.236 (AUROC Ceiling Breach Attempt) completed with 10/13 tasks.\nKey results:\
+    \ phase1_ship_gate_met=true (exp2441 — MAJOR WIN), best_auroc=0.9167 (exp2438\nconformal ensemble,\
+    \ 7 verifiers, but JSON malformed blocking capstone), kv260_synthesis_errors=1\n(exp2440 artifact MISSING),\
+    \ nco_auroc=0.500 adversarially flagged (exp2444 tautology).\nGap to HIVE peer: 0.9236 - 0.9167 = 0.0069.\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/research-complete.yaml (last 20 lines)\n  {project_root}/research-roadmap.yaml\
+    \ (first 5 lines — check milestone field)\n\nTASK: Archive milestone 2026.05.236 to research-complete.yaml\
+    \ and activate .237.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. Read research-roadmap.yaml first 3\
+    \ lines to find the milestone field.\n     b. If milestone == \"2026.05.236\": proceed to step 1.\n        If\
+    \ milestone == \"2026.05.237\": conductor already swapped. Check research-complete.yaml\n          for \"id: 2026.05.236\".\
+    \ If present: write archive_ready=true and exit.\n        If other: write honest_verdict blocked_roadmap_unexpected\
+    \ and exit.\n  1. Append .236 entry to research-complete.yaml with completed: \"2026-05-19\".\n     Key results:\n\
+    \       exp2434: complete — archive_ready=true\n       exp2435: complete — diffutruth_auroc=0.5877 (orthogonality_check=0.398)\n\
+    \       exp2436: complete — pcib_auroc=0.8019 (Tier 0l)\n       exp2437: complete — logcons_z3_true_auroc=0.607\
+    \ (z3_encoding_used=true but WORSE)\n       exp2438: complete — conformal_ensemble_auroc=0.9167 (7 verifiers,\
+    \ JSON malformed)\n       exp2439: complete — learnability audit completed (non-standard verdict)\n       exp2440:\
+    \ MISSING — artifact not produced\n       exp2441: complete — phase1_ship_gate_met=true, mcp_docs=true, cli_docs=true\n\
+    \       exp2442: complete — fst_mcmc_energy_fixed=true\n       exp2443: complete — kinetic_langevin_fst_evaluated=true\n\
+    \       exp2444: complete — nco_auroc=0.500 (adversarially flagged tautology)\n       exp2445: blocked — gate_check_failed\
+    \ (exp2438 JSON unreadable)\n       exp2446: complete — retro done, 10/13 completed\n  2. cp {project_root}/research-roadmap-next.yaml\
+    \ {project_root}/research-roadmap.yaml\n  3. Add \"## 2026-05-19 (Milestone 2026.05.237 activated)\" stub to ops/changelog.md.\n\
+    \  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
+    \ required. Must start with complete: for conductor.\"\n  - archive_ready:\n      principle: \"True only after\
+    \ .236 entry appears in research-complete.yaml.\"\n  - milestone_archived:\n      principle: \"Records which\
+    \ milestone was archived (2026.05.236) for audit trail.\"\n\nACCEPTANCE GATES:\n  - condition: \"archive_ready\
+    \ == true\"\n    principle: \"Ensures research-complete.yaml records .236 outcomes before .237 begins.\"\n\nDo\
+    \ NOT push. Do NOT modify scripts/research_conductor.py."
 
-- id: exp2435-diffutruth-tier0k
-  title: 'Phase 1: DiffuTruth Tier 0k Verifier (arXiv:2602.11364) -- Diffusion Reconstruction Energy Proxy'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2435_diffutruth_tier0k.json
+- id: exp2448-conformal-ensemble-v2
+  title: 'Phase 1: Conformal P-Value Ensemble v2 -- Fix JSON Malformation + Add PCIB (Tier 0l) + Breach 0.9236'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2448_conformal_ensemble_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  prior_failures:
+  - experiment_id: exp2438-conformal-ensemble-v1
+    verdict: complete_with_conformal_ensemble_auroc_0.916667
+    addressed_by: "exp2438 achieved AUROC=0.9167 (ensemble_auroc_improved=true) but JSON had Extra data at char
+      1999 (line 75 column 2) — a duplicate trailing JSON object or malformed final field prevented
+      json.load(). Root cause: agent wrote two JSON objects or left a trailing dict literal. Fix: explicit
+      json.dumps() + single write; validate with json.loads() before writing. Also adds PCIB scores from
+      experiment_2436_tier0l_scores.json (not included in v1's 7 verifiers) to attempt AUROC >= 0.9236."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: exp2438 (Conformal P-Value Ensemble v1, .236) achieved conformal_ensemble_auroc=0.9167\n\
+    (7 verifiers fused, ensemble_auroc_improved=true) BUT the JSON artifact had Extra data at char 1999\n(line\
+    \ 75 column 2), preventing json.load() and blocking the downstream capstone gate. The AUROC\nvalue was confirmed\
+    \ via regex: conformal_ensemble_auroc=0.9166666666666666.\n\nThe gap to HIVE peer target is only 0.0069 (0.9236\
+    \ - 0.9167). This v2 fixes the JSON\nmalformation AND adds PCIB scores (Tier 0l, AUROC=0.802 from exp2436)\
+    \ which were computed\nbut never fused into the ensemble. Adding one more orthogonal verifier (PCIB Pearson\n\
+    r with existing verifiers likely < 0.5) may push the ensemble past 0.9236.\n\nEXISTING CODE TO READ FIRST:\n\
+    \  {project_root}/python/carnot/verify/conformal_ensemble.py (from exp2438)\n  {project_root}/results/experiment_2438_conformal_ensemble_v1.json\
+    \ (first 60 lines — key fields)\n  {project_root}/results/experiment_2436_tier0l_scores.json (PCIB scores\
+    \ to fuse)\n  {project_root}/results/experiment_2435_tier0k_scores.json (DiffuTruth scores)\n  {project_root}/results/experiment_2437_logcons_z3_scores.json\
+    \ (LogCons Z3 scores)\n\nTASK: Rebuild conformal ensemble with JSON-safe output, fuse PCIB (8th verifier).\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. sklearn importable: .venv/bin/python -c \"import sklearn;\
+    \ print(sklearn.__version__)\"\n     b. conformal_ensemble.py exists:\n        ls {project_root}/python/carnot/verify/conformal_ensemble.py\n\
+    \        If missing: write honest_verdict blocked_conformal_module_missing and exit.\n     c. PCIB scores file\
+    \ present:\n        ls {project_root}/results/experiment_2436_tier0l_scores.json\n        If missing: run without\
+    \ PCIB (7-verifier mode) and note pcib_fused=false.\n     d. Telemetry manifest present:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n\
+    \        If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n  1. Read conformal_ensemble.py.\
+    \ Identify the code path that generates the final artifact.\n     Find where json.dump() or file write occurs.\
+    \ Confirm it uses a single json.dumps(result_dict)\n     and writes once. If multiple write calls exist:\
+    \ consolidate to one.\n\n  2. Load existing score files for all verifiers:\n     From experiment_2438, load\
+    \ verifier scores for the 7 already-computed verifiers.\n     Load experiment_2436_tier0l_scores.json (PCIB,\
+    \ 36 entries).\n     Load experiment_2435_tier0k_scores.json (DiffuTruth, 36 entries).\n     Ensure all score\
+    \ lists have 36 entries with matching idx order.\n\n  3. Rebuild conformal ensemble with 8 verifiers (7 from\
+    \ v1 + PCIB):\n     - Use 10 calibration examples (same as v1: first 10 entries).\n     - Compute p-values\
+    \ for remaining 26 test examples.\n     - Aggregate via Fisher's method (same as v1).\n     - Compute conformal_ensemble_auroc\
+    \ on the 26 test examples.\n     - Compute ensemble_auroc_improved: conformal_ensemble_auroc > 0.8864 (HIVE\
+    \ v4 baseline).\n     - Compute conformal_vs_hive_peer_delta: conformal_ensemble_auroc - 0.9236.\n\n  4. Validate\
+    \ JSON output before writing:\n     result_str = json.dumps(result_dict, indent=2)\n     json.loads(result_str)\
+    \ # Raises if malformed\n     Write result_str to deliverable with a single open(path, 'w').write(result_str)\
+    \ call.\n     DO NOT write multiple JSON objects to the same file.\n\n  5. Unit test:\n     PYTEST_ADDOPTS=\"\"\
+    \ .venv/bin/python -m pytest tests/python/verify/ -k \"conformal\" -v --no-cov 2>&1 | tail -15\n\nREQUIRED\
+    \ ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: with AUROC\
+    \ value.\"\n  - conformal_ensemble_auroc:\n      principle: \"Primary metric. Must be from conformal ensemble,\
+    \ not individual verifier.\"\n  - ensemble_auroc_improved:\n      principle: \"conformal_ensemble_auroc > 0.8864\
+    \ (HIVE v4). Required for downstream capstone gate.\"\n  - conformal_vs_hive_peer_delta:\n      principle:\
+    \ \"conformal_ensemble_auroc - 0.9236. Negative means gap remains; positive means breach.\"\n  - n_verifiers_fused:\n\
+    \      principle: \"Must be 8 (7 from v1 + PCIB). Documents ensemble composition.\"\n  - pcib_fused:\n    \
+    \  principle: \"Boolean. True if PCIB scores were successfully loaded and fused.\"\n  - n_calibration_examples:\n\
+    \      principle: \"Must be 10 (same as v1 for comparability).\"\n  - n_eval_examples:\n      principle: \"Must\
+    \ be 26 (36 total - 10 calibration).\"\n  - json_validation_passed:\n      principle: \"json.loads(result_str)\
+    \ succeeded before write. Guards against repeat of exp2438 malformation.\"\n  - random_seed:\n      principle:\
+    \ \"Must be 42.\"\n  - duration_s:\n      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n\
+    \      principle: \"Records sklearn, conformal module, PCIB scores, telemetry checks.\"\n\nACCEPTANCE GATES:\n\
+    \  - condition: \"ensemble_auroc_improved == true\"\n    principle: \"Ensemble must beat HIVE v4 (0.8864) to\
+    \ be useful. This gates the capstone.\"\n  - condition: \"json_validation_passed == true\"\n    principle:\
+    \ \"JSON must be valid — no repeat of exp2438 Extra data bug.\"\n  - condition: \"n_eval_examples >= 20\"\n\
+    \    principle: \"Sufficient holdout set for AUROC reliability.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2449-hallufield-tier0m
+  title: 'Phase 1: HalluField Tier 0m Verifier (arXiv:2509.10753) -- Field-Theoretic Token-Path Energy'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2449_hallufield_tier0m.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
   prior_failures:
   - experiment_id: exp571-hallufield-tier0e
     verdict: tier_0e_viable
-    addressed_by: "exp571 implemented HalluField (arXiv:2509.10753) — thermodynamic energy-path detection — and passed as\
-      \ Tier 0e viable. DiffuTruth (arXiv:2602.11364) is a DISTINCT technique: diffusion model reconstruction error as\
-      \ hallucination proxy, not energy-path thermodynamics. Different paper, different mechanism, different signal axis.\
-      \ Prior technique succeeded but this is novel scope on a different arXiv paper."
+    addressed_by: "exp571 implemented HalluField (arXiv:2509.10753) as a contextual Tier 0e check and SUCCEEDED
+      (tier_0e_viable). exp2449 is different scope: implementing HalluField as a standalone Tier 0m
+      verifier with proper 36-entry evaluation against the live_sota_balanced_telemetry_manifest_1480.jsonl,
+      computing verifier scores for conformal ensemble integration (experiment_2449_tier0m_scores.json),
+      and measuring orthogonality vs existing verifiers. exp571 was a viability check; exp2449 is
+      production implementation for ensemble integration."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: DiffuTruth (arXiv:2602.11364, Feb 2026) proposes that diffusion model\nreconstruction error is a proxy\
-    \ for hallucination risk: hallucinated text has higher\nenergy (more reconstruction steps required) than factually grounded\
-    \ text. AUROC=0.725 on\nFEVER in the paper. This is a generative energy proxy — orthogonal to discriminative\nlogit-based\
-    \ verifiers (Tier 0f/0g/0h/0j). Adding an orthogonal signal axis should\nimprove the conformal p-value ensemble (exp2438).\n\
-    \nThis is a NEW scope: no DiffuTruth implementation exists in the codebase. Best current\nAUROC: Hierarchical LogCons 0.8896\
-    \ (exp2423). HIVE peer target: 0.9236.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/fregelogic_hybrid.py\
-    \ (verifier architecture pattern)\n  {project_root}/python/carnot/verify/semantic_energy.py (energy score pattern)\n  {project_root}/results/experiment_2395_fregelogic.json\
-    \ (0.8831 baseline)\n\nTASK: Implement DiffuTruthVerifier (Tier 0k) and evaluate on 36 telemetry entries.\n\nCONCRETE STEPS:\n\
-    \  0. PRECONDITIONS:\n     a. sklearn importable: .venv/bin/python -c \"import sklearn; print(sklearn.__version__)\"\n  \
-    \      If missing: .venv/bin/pip install scikit-learn -q\n     b. Telemetry manifest present:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n\
-    \        If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n     c. numpy importable: .venv/bin/python\
-    \ -c \"import numpy; print(numpy.__version__)\"\n\n  1. Implement DiffuTruthVerifier at python/carnot/verify/diffutruth_verifier.py:\n\
-    \     DiffuTruth energy proxy WITHOUT a real diffusion model (which would require GPU):\n       Use token-level log-perplexity\
-    \ variance as a reconstruction proxy:\n         energy_score = std(token_logprobs) * mean(abs(token_logprobs))\n       Intuition:\
-    \ hallucinated claims have high perplexity variance (confident on common tokens,\n       confused on specific factual claims).\
-    \ This is the CPU-feasible approximation.\n     Output: diffutruth_score (higher = more likely hallucination), energy_proxy_method.\n\
-    \n  2. Evaluate on 36 telemetry entries (same split as exp2351/exp2422):\n     diffutruth_auroc: AUROC on 36 examples.\n\
-    \     diffutruth_vs_fregelogic_delta: diffutruth_auroc - 0.8831.\n     diffutruth_vs_logcons_delta: diffutruth_auroc - 0.8896.\n\
-    \     orthogonality_check: correlation with Tier 0j (HALT probe) scores. If abs(pearson_r)\
-    \ < 0.5, signal is orthogonal.\n\n  3. Compute verifier_scores list (36 entries) for use by conformal ensemble (exp2438):\n\
-    \     Write results/experiment_2435_tier0k_scores.json with format:\n     {{\"verifier\": \"diffutruth\", \"scores\": [{{\"idx\"\
-    : i, \"score\": s, \"label\": l}} for all 36]}}\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/verify/\
-    \ -k \"diffutruth\" -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  5. Write deliverable.\n\nREQUIRED\
-    \ ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: with AUROC.\"\n  - diffutruth_auroc:\n\
-    \      principle: \"Primary metric. Honest result regardless of sign vs baseline.\"\n  - diffutruth_vs_fregelogic_delta:\n\
-    \      principle: \"diffutruth_auroc - 0.8831. Diagnostic for conformal ensemble.\"\n  - orthogonality_check:\n      principle:\
-    \ \"Pearson correlation with Tier 0j. Low correlation = independent signal axis.\"\n  - energy_proxy_method:\n      principle:\
-    \ \"Documents which CPU approximation was used for reproducibility.\"\n  - n_eval_examples:\n      principle: \"Must be\
-    \ 36.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n      principle: \"Guards against fabrication.\"\
-    \n  - preconditions_checked:\n      principle: \"Records sklearn, telemetry, numpy checks.\"\n\nACCEPTANCE GATES:\n  - condition:\
-    \ \"diffutruth_auroc != null AND n_eval_examples >= 30\"\n    principle: \"Must produce valid AUROC on sufficient data —\
-    \ even below baseline is a finding.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+  prompt: "CONTEXT: HalluField (arXiv:2509.10753, Sep 2025) models LLM responses as discrete\nlikelihood\
+    \ token paths with associated energy and entropy under varying temperature.\nHallucinations show shifted\
+    \ energy/entropy distributions across token paths — CLAIMED SOTA\nacross multiple models and datasets. Does\
+    \ NOT require auxiliary LLMs.\n\nPrior exp571 validated HalluField as viable (Tier 0e). This task implements\
+    \ it as\na standalone Tier 0m verifier for ensemble integration. Token-path energy under temperature\n\
+    variation provides a signal orthogonal to PCIB (Tier 0l), DiffuTruth (Tier 0k), and HALT\n(logit-space\
+    \ probe). If orthogonal, it improves the conformal ensemble.\n\nBest current AUROC: 0.9167 (exp2438 conformal,\
+    \ 7 verifiers). Target: 0.9236.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/semantic_energy.py\
+    \ (Tier 0g — energy score pattern to follow)\n  {project_root}/python/carnot/verify/pcib_verifier.py (Tier\
+    \ 0l — similar feature extraction)\n  {project_root}/results/experiment_2436_pcib_tier0l.json (Tier 0l:\
+    \ AUROC=0.802)\n\nTASK: Implement HalluFieldVerifier (Tier 0m) and evaluate on 36 telemetry entries.\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. numpy importable: .venv/bin/python -c \"import numpy; print(numpy.__version__)\"\
+    \n     b. scipy importable: .venv/bin/python -c \"import scipy; print(scipy.__version__)\"\n        If missing:\
+    \ .venv/bin/pip install scipy -q\n     c. sklearn importable: .venv/bin/python -c \"import sklearn; print(sklearn.__version__)\"\
+    \n     d. Telemetry manifest present:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n\
+    \        If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n  1. Implement HalluFieldVerifier\
+    \ at python/carnot/verify/hallufield_verifier.py:\n     CPU approximation of field-theoretic token-path energy:\n\
+    \       For each telemetry entry (logprobs list available):\n         temp_grid = [0.5, 0.8, 1.0, 1.2, 2.0]\
+    \ (5 temperature values)\n         For each temperature T:\n           scaled_logprobs = logprobs / T\n       \
+    \    path_energy = -mean(scaled_logprobs)  # energy at temp T\n           path_entropy = -sum(p * log(p))\
+    \ where p = softmax(scaled_logprobs)\n         energy_variation = std([path_energy at each T])  # how much\
+    \ energy shifts\n         entropy_variation = std([path_entropy at each T])  # how much entropy shifts\n  \
+    \       hallufield_score = energy_variation * entropy_variation  # higher = more hallucination-like\n     Output:\
+    \ hallufield_score (higher = more likely hallucination), temperature_grid_used.\n\n  2. Evaluate on 36 telemetry\
+    \ entries:\n     hallufield_auroc: AUROC on 36 examples.\n     hallufield_vs_semantic_energy_delta: hallufield_auroc\
+    \ - 0.810 (SemanticEnergy Tier 0g baseline).\n     orthogonality_vs_pcib: Pearson r between hallufield_score\
+    \ and pcib_score across 36.\n     orthogonality_vs_halt: Pearson r between hallufield_score and halt_probe_score.\n\
+    \n  3. Compute verifier_scores for conformal ensemble:\n     Write results/experiment_2449_tier0m_scores.json\
+    \ format:\n     {{\"verifier\": \"hallufield\", \"scores\": [{{\"idx\": i, \"score\": s, \"label\": l}} for all 36]}}\n\
+    \n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/verify/ -k \"hallufield\"\
+    \ -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  5. Write deliverable. Validate JSON:\
+    \ json.loads(json.dumps(result)) before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n     \
+    \ principle: \"Terminal-prefix required. complete: with AUROC.\"\n  - hallufield_auroc:\n      principle:\
+    \ \"Primary metric. Honest result regardless of sign vs baseline.\"\n  - hallufield_vs_semantic_energy_delta:\n\
+    \      principle: \"hallufield_auroc - 0.810. Positive = improvement over SemanticEnergy.\"\n  - orthogonality_vs_pcib:\n\
+    \      principle: \"Pearson r with PCIB. If abs(r) < 0.5, HalluField adds independent signal.\"\n  - temperature_grid_used:\n\
+    \      principle: \"Documents which temperatures were used — reproducibility.\"\n  - n_eval_examples:\n   \
+    \   principle: \"Must be 36.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n     \
+    \ principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records numpy,\
+    \ scipy, sklearn, telemetry checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"hallufield_auroc != null AND\
+    \ n_eval_examples >= 30\"\n    principle: \"Must produce valid AUROC on sufficient data — even below baseline\
+    \ is a useful finding.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
 
-- id: exp2436-pcib-tier0l
-  title: 'Phase 1: PCIB Tier 0l Verifier (arXiv:2601.15652) -- Predictive Coding + Information Bottleneck'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2436_pcib_tier0l.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
-  prior_failures:
-  - experiment_id: exp995-pcib-hallucination-tier0f
-    verdict: tier0f_below_threshold
-    addressed_by: "exp995 implemented PCIB Tier 0f and achieved pcib_auroc=0.5321 (below threshold). Root cause: exp995 used\
-      \ a simplified PCIB proxy without the semi-supervised 5-example seeding and the proper IB compression (LinearSVC C=0.1).\
-      \ This v236 implementation uses the correct semi-supervised approach from the arXiv:2601.15652 paper: 5 labeled seed\
-      \ examples + label propagation via nearest-neighbor in feature space + 5-fold CV evaluation. The 75x data efficiency\
-      \ is the key mechanism that exp995 did not use. Different: proper IB compression, semi-supervised seeding."
-    retire_if_same_verdict: false
-  prompt: "CONTEXT: PCIB (arXiv:2601.15652, Jan 2026) combines Predictive Coding (PC) with\nInformation Bottleneck (IB) to\
-    \ extract a compressed representation Z of the model's\ninternal state that predicts hallucination. Key advantage: AUROC=0.8669\
-    \ with 75x LESS\ntraining data than comparable probes. The 75x data efficiency directly addresses\nCarnot's limited 36-sample\
-    \ telemetry problem. Semi-supervised setting: only 5 labeled\nexamples needed to initialize; the rest learned from structure.\n\
-    \nThis is a NEW scope: no PCIB implementation exists in the codebase.\nBest current AUROC: 0.8896 (exp2423). HIVE peer target:\
-    \ 0.9236.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/halt_probe.py (probe architecture pattern)\n\
-    \  {project_root}/python/carnot/verify/fregelogic_hybrid.py (verifier architecture)\n  {project_root}/results/experiment_2394_halt_tier0j.json\
-    \ (Tier 0j baseline probe: 0.8539)\n\nTASK: Implement PCIBVerifier (Tier 0l) and evaluate on 36 telemetry entries.\n\nCONCRETE\
-    \ STEPS:\n  0. PRECONDITIONS:\n     a. sklearn importable: .venv/bin/python -c \"import sklearn; print(sklearn.__version__)\"\
-    \n     b. numpy importable: .venv/bin/python -c \"import numpy; print(numpy.__version__)\"\n     c. Telemetry manifest present:\n\
-    \        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n        If missing: write honest_verdict\
-    \ blocked_telemetry_manifest_missing and exit.\n\n  1. Implement PCIBVerifier at python/carnot/verify/pcib_verifier.py:\n\
-    \     Predictive Coding component (CPU approximation without live activations):\n       Encode text as token-level feature\
-    \ vector: [mean_logprob, std_logprob, max_logprob,\n         min_logprob, kurtosis_logprob, skewness_logprob] (6 features).\n\
-    \       These capture the statistical structure of the model's predictive distribution.\n     Information Bottleneck compression\
-    \ (LinearSVC with C=0.1 for compression):\n       Compress 6 features to a 2D IB representation via LinearSVC decision function.\n\
-    \     Output: pcib_score, ib_compression_ratio, pc_features_used.\n\n  2. Train with 5 labeled examples (semi-supervised):\n\
-    \     a. Use first 5 examples from telemetry as labeled seed.\n     b. Fit LinearSVC on 5 labeled examples.\n     c. Propagate\
-    \ labels to remaining 31 examples via nearest-neighbor in feature space.\n     d. Re-fit on all 36 with propagated labels.\n\
-    \     Measure pcib_auroc on all 36 held-out examples (via 5-fold CV on 36).\n\n  3. Compute verifier_scores for conformal\
-    \ ensemble (exp2438):\n     Write results/experiment_2436_tier0l_scores.json with format:\n     {{\"verifier\": \"pcib\"\
-    , \"scores\": [{{\"idx\": i, \"score\": s, \"label\": l}} for all 36]}}\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python\
-    \ -m pytest tests/python/verify/ -k \"pcib\" -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  5. Write\
-    \ deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\n  - pcib_auroc:\n\
-    \      principle: \"Primary metric. AUROC via 5-fold CV. Honest result.\"\n  - pcib_vs_halt_delta:\n      principle: \"\
-    pcib_auroc - 0.8539 (Tier 0j baseline). Positive = improvement.\"\n  - ib_compression_ratio:\n      principle: \"Information\
-    \ bottleneck compression — core PCIB mechanism signal.\"\n  - n_labeled_seed_examples:\n      principle: \"Must be\
-    \ 5 (75x data efficiency claim requires few-shot seed).\"\n  - pc_features_used:\n      principle: \"Lists which predictive\
-    \ coding features were extracted.\"\n  - n_eval_examples:\n      principle: \"Must be 36.\"\n  - random_seed:\n      principle:\
-    \ \"Must be 42.\"\n  - duration_s:\n      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle:\
-    \ \"Records sklearn, numpy, telemetry checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"pcib_auroc != null AND n_eval_examples\
-    \ >= 30\"\n    principle: \"Must produce valid AUROC on sufficient data.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
-
-- id: exp2437-logcons-z3-true-v3
-  title: 'Phase 1: Hierarchical LogCons Z3-True v3 -- Force Real Z3 Encoding (Fix exp2423 Fallback)'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2437_logcons_z3_true_v3.json
+- id: exp2450-laab-meta-judgment-v2
+  title: 'Phase 1: LaaB ACL 2026 Full Meta-Judgment Bridge v2 (arXiv:2605.03971) -- Label Constraint Modeling'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2450_laab_meta_judgment_v2.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 35
   prior_failures:
-  - experiment_id: exp2423-hierarchical-logcons-v2
-    verdict: complete_logcons_auroc_0.8896_z3_encoding_used_false
-    addressed_by: "exp2423 in .235 achieved AUROC=0.8896 BUT z3_encoding_used=false (fallback FregeLogic path was used because\
-      \ instruction hierarchy detection found no hierarchy-detectable fields). The task produced the best .235 AUROC without\
-      \ actually using Z3. This v3 explicitly constructs a synthetic instruction hierarchy from the telemetry prompt field (system\
-      \ > user > task levels), encodes it as Z3 partial-order constraints BEFORE anything else, and treats z3_encoding_used=false\
-      \ as a hard FAIL gate. Different from v2: the Z3 encoding is NOT optional."
+  - experiment_id: exp2380-hive-4verifier-ensemble-v1
+    verdict: complete_hive_auroc_0.8539
+    addressed_by: "exp2380 implemented the HIVE 4-verifier ensemble including an initial LaaB verifier (Tier 0h).
+      The LaaB verifier was a basic logical consistency score. The LaaB ACL 2026 paper (arXiv:2605.03971)
+      introduces a full meta-judgment bridge: the logical constraint that response labels and meta-judgment
+      labels are either same or opposite based on self-judgment semantics. This v2 updates
+      python/carnot/verify/laab_verifier.py to use the full meta-judgment bridge, re-evaluates on 36
+      telemetry entries, and produces ensemble-compatible scores. Different scope: full ACL 2026
+      mechanism vs initial basic implementation."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: exp2423 (Hierarchical LogCons v2, .235) achieved AUROC=0.8896 — the best\nresult in the project —\
-    \ BUT z3_encoding_used=false. The fallback FregeLogic path was\ntriggered because the instruction field detection found no\
-    \ detectable hierarchy in the\ntelemetry entries. The Z3 partial-order constraint encoding, which is the key innovation\n\
-    in arXiv:2604.09075, was NEVER used.\n\nThis v3 MUST use real Z3. The hypothesis: real Z3 hierarchical encoding\nshould\
-    \ achieve >= 0.8896 AUROC (already demonstrated by the fallback), and may push\nhigher since the fallback was a weaker proxy.\n\
-    \nRoot cause of exp2423 fallback: hierarchy_levels was an empty list because the code\nlooked for an 'instruction' field\
-    \ in telemetry that doesn't exist. Fix: construct a\nsynthetic 3-level hierarchy from telemetry fields (system_prompt >\
-    \ user_prompt > response)\nand encode it as Z3 partial-order constraints regardless.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/hierarchical_logcons.py\
-    \ (from exp2423)\n  {project_root}/python/carnot/verify/nsvif_z3_extractor.py (Z3 encoding reference)\n  {project_root}/results/experiment_2423_hierarchical_logcons_v2.json\
-    \ (AUROC=0.8896, z3=false)\n\nTASK: Fix HierarchicalLogConsVerifier to always use Z3 encoding. Force z3_encoding_used=true.\n\
-    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. z3-solver importable: .venv/bin/python -c \"import z3; print(z3.get_version_string())\"\
-    \n        If missing: .venv/bin/pip install z3-solver -q\n     b. hierarchical_logcons.py exists:\n        ls {project_root}/python/carnot/verify/hierarchical_logcons.py\n\
-    \        If missing: write honest_verdict blocked_logcons_module_missing and exit.\n     c. Telemetry manifest present:\n\
-    \        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n        If missing: write honest_verdict\
-    \ blocked_telemetry_manifest_missing and exit.\n\n  1. Read hierarchical_logcons.py. Find the code path that sets z3_encoding_used=False.\n\
-    \     Modify to ALWAYS build a 3-level hierarchy from available telemetry fields:\n       Level 0 (highest priority): system-level\
-    \ content (use 'system' or 'instruction' or first 100 chars of prompt)\n       Level 1: user-level content (use 'question'\
-    \ or 'prompt' field or next 100 chars)\n       Level 2: task-level content (use 'response' first 100 chars)\n     Z3 encoding:\n\
-    \       s0, s1, s2 = z3.Ints('s0 s1 s2')  # priority levels\n       solver = z3.Solver()\n       solver.add(s0 > s1, s1\
-    \ > s2)       # hierarchy constraint\n       # Check if response violates level ordering\n       response_level = estimate_response_priority_level(response)\n\
-    \       solver.add(z3.Not(response_level >= s0))  # if response claims system-level\n       verdict = solver.check()  #\
-    \ SAT = consistent, UNSAT = hierarchy violation\n     If z3 check completes (SAT or UNSAT): z3_encoding_used=True.\n   \
-    \  FAIL GATE: if z3_encoding_used=False after this, write honest_verdict\n     blocked_z3_encoding_failed and exit.\n\n\
-    \  2. Evaluate on 36 entries:\n     logcons_z3_true_auroc, logcons_z3_true_vs_v2_delta (v2 was 0.8896),\n     hierarchy_violation_rate,\
-    \ z3_encoding_used (must be True for all 36).\n\n  3. Compute verifier_scores for conformal ensemble (exp2438):\n     Write\
-    \ results/experiment_2437_logcons_z3_scores.json with format:\n     {{\"verifier\": \"logcons_z3_true\", \"scores\": [{{\"\
-    idx\": i, \"score\": s, \"label\": l}} for all 36]}}\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest\
-    \ tests/python/verify/ -k \"logcons\" -v --no-cov 2>&1 | tail -15\n\n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n\
-    \  - honest_verdict:\n      principle: \"Terminal-prefix required. complete: with AUROC. blocked_z3_encoding_failed if Z3\
-    \ encoding fails.\"\n  - logcons_z3_true_auroc:\n      principle: \"Primary metric. Must be from Z3 path, not fallback.\"\
-    \n  - logcons_z3_true_vs_v2_delta:\n      principle: \"Difference from exp2423 (0.8896). Positive = Z3 beats FregeLogic\
-    \ fallback.\"\n  - z3_encoding_used:\n      principle: \"MUST be true. If false, task has failed its mandate.\"\n  - hierarchy_violation_rate:\n\
-    \      principle: \"Fraction of examples with detected Z3 hierarchy violations.\"\n  - n_eval_examples:\n      principle:\
-    \ \"Must be 36.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n      principle: \"Guards against\
-    \ fabrication.\"\n  - preconditions_checked:\n      principle: \"Records z3, logcons module, telemetry checks.\"\n\nACCEPTANCE\
-    \ GATES:\n  - condition: \"z3_encoding_used == true\"\n    principle: \"The entire purpose of this task is to force Z3 encoding.\
-    \ If false, it failed.\"\n  - condition: \"logcons_z3_true_auroc != null AND n_eval_examples >= 30\"\n    principle: \"\
-    Must produce valid AUROC on sufficient data.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+  prompt: "CONTEXT: LaaB ACL 2026 (arXiv:2605.03971, May 2026) bridges micro-level neural uncertainty\nand\
+    \ macro-level self-judgment via a meta-judgment processing mechanism. Key insight:\nthe response label and\
+    \ meta-judgment label are LOGICALLY CONSTRAINED to be either the same\nor opposite based on self-judgment\
+    \ semantics (\"I think this is correct\" → same polarity;\n\"I'm not sure\" → potentially different polarity).\
+    \ This constraint-based consistency check is\northogonal to NLI and energy probes.\n\nThe existing laab_verifier.py\
+    \ (in the codebase from exp2380) implements a basic LaaB check.\nThis v2 updates it with the full ACL 2026\
+    \ meta-judgment bridge. The laab_verifier was included\nin exp2438's 7-verifier conformal ensemble (laab_verifier:\
+    \ true in verifier_imports). Updating\nit should improve its standalone AUROC and potentially improve the\
+    \ conformal ensemble further.\n\nBest current AUROC: 0.9167 (conformal ensemble, 7 verifiers). Target: 0.9236.\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/laab_verifier.py (current implementation)\n\
+    \  {project_root}/python/carnot/verify/fregelogic_hybrid.py (Z3 verifier pattern for comparison)\n  {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\
+    \ (first 3 lines — schema)\n\nTASK: Update LaaB verifier with full meta-judgment bridge; evaluate on 36 entries.\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. sklearn importable: .venv/bin/python -c \"import sklearn;\
+    \ print(sklearn.__version__)\"\n     b. laab_verifier.py exists:\n        ls {project_root}/python/carnot/verify/laab_verifier.py\n\
+    \        If missing: create from scratch following fregelogic_hybrid.py structure.\n     c. Telemetry manifest\
+    \ present:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n        If\
+    \ missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n  1. Read current laab_verifier.py.\
+    \ Identify where the consistency score is computed.\n     Add meta-judgment bridge logic:\n       A. Extract\
+    \ self-judgment polarity from response (if response contains \"I think\"/\"I believe\"\n          → positive\
+    \ polarity; \"I'm not sure\"/\"uncertain\" → negative polarity; else neutral)\n       B. Extract response\
+    \ label polarity (positive if factual claim, negative if uncertainty marker)\n       C. Apply label constraint:\
+    \ if self-judgment polarity is definite (positive/negative):\n            expected_response_polarity = self_judgment_polarity\n\
+    \            meta_judgment_consistency = int(response_polarity == expected_response_polarity)\n          else:\n\
+    \            meta_judgment_consistency = 0.5  # neutral\n       D. laab_meta_score = alpha * original_laab_score\
+    \ + (1-alpha) * meta_judgment_consistency\n          (alpha=0.7 gives 70% weight to original logical consistency\
+    \ + 30% meta-judgment)\n     Output: laab_meta_score, meta_judgment_applied (bool), self_judgment_polarity.\n\
+    \n  2. Evaluate updated verifier on 36 telemetry entries:\n     laab_meta_auroc: AUROC on 36 examples.\n \
+    \    laab_meta_vs_v1_delta: laab_meta_auroc - original_laab_auroc (compute both).\n     meta_judgment_applied_rate:\
+    \ fraction of 36 examples where meta_judgment was applied.\n\n  3. Compute verifier_scores for conformal ensemble:\n\
+    \     Write results/experiment_2450_laab_meta_scores.json:\n     {{\"verifier\": \"laab_meta\", \"scores\": [{{\"idx\"\
+    : i, \"score\": s, \"label\": l}} for all 36]}}\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python\
+    \ -m pytest tests/python/verify/ -k \"laab\" -v --no-cov 2>&1 | tail -15\n\n  5. Write deliverable. Validate\
+    \ JSON: json.loads(json.dumps(result)) before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
+    \      principle: \"Terminal-prefix required.\"\n  - laab_meta_auroc:\n      principle: \"Primary metric.\
+    \ AUROC with meta-judgment bridge active.\"\n  - laab_meta_vs_v1_delta:\n      principle: \"laab_meta_auroc\
+    \ - original_laab_auroc. Positive = meta-judgment improved the verifier.\"\n  - meta_judgment_applied_rate:\n\
+    \      principle: \"Fraction of examples where meta-judgment polarity was definite. Documents coverage.\"\n\
+    \  - n_eval_examples:\n      principle: \"Must be 36.\"\n  - random_seed:\n      principle: \"Must be 42.\"\
+    \n  - duration_s:\n      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle:\
+    \ \"Records sklearn, laab module, telemetry checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"laab_meta_auroc\
+    \ != null AND n_eval_examples >= 30\"\n    principle: \"Must produce valid AUROC on sufficient data.\"\n\n\
+    Do NOT push. Do NOT modify scripts/research_conductor.py."
 
-- id: exp2438-conformal-ensemble-v1
-  title: 'Phase 1: Conformal P-Value Ensemble v1 (arXiv:2508.18473) -- Principled Multi-Verifier Aggregation'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2438_conformal_ensemble_v1.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 45
-  prior_failures:
-  - experiment_id: exp923-drift-probe-ensemble
-    verdict: complete_drift_probe_ensemble_ok
-    addressed_by: "exp923 implemented DRIFTProbe Ensemble (arXiv:2604.13386) — multi-layer weighted ensemble — which PASSED.\
-      \ Conformal P-Value Ensemble (arXiv:2508.18473) is a DISTINCT aggregation method: uses calibration-set nonconformity\
-      \ scores and Fisher's combined p-value test instead of weighted voting. Different paper, different aggregation theory\
-      \ (conformal prediction vs weighted averaging). The prior ensemble used LogisticRegression weights (exp2422 HIVE v4);\
-      \ this uses theoretically-principled p-value aggregation with coverage guarantees."
-    retire_if_same_verdict: false
-  gated_on:
-  - upstream: exp2437-logcons-z3-true-v3
-    artifact_field: logcons_z3_true_auroc
-    op: "!="
-    value: null
-  prompt: "CONTEXT: Conformal P-Value Ensemble (arXiv:2508.18473, Aug 2025) achieves highest\nmacro AUROC across verifier aggregation\
-    \ methods by converting each verifier's score\ninto a p-value via calibration-set nonconformity scores, then aggregating\
-    \ via Fisher's\ncombined test (chi-squared statistic: -2 * sum(ln(p_i))).\n\nThis task fuses all available Tier 0 verifiers:\n\
-    \  - Tier 0f FreqAwareAttn (AUROC=0.7045, exp2397)\n  - Tier 0g SemanticEnergy (AUROC=0.6852, exp2351)\n  - Tier 0h LaaB\
-    \ (exp2368)\n  - Tier 0j HALT probe (AUROC=0.8539, exp2394)\n  - Tier 0k DiffuTruth (exp2435, from results/experiment_2435_tier0k_scores.json)\n\
-    \  - Tier 0l PCIB (exp2436, from results/experiment_2436_tier0l_scores.json)\n  - Tier 1 LogCons Z3-True (exp2437, from\
-    \ results/experiment_2437_logcons_z3_scores.json)\n\nReplace LogisticRegression soft-vote weights (exp2422 approach) with\n\
-    conformal p-value aggregation. Theory guarantees: marginal coverage at level alpha\nregardless of per-verifier score distribution.\n\
-    \nGated on exp2437 completing (requires logcons_z3_true_auroc != null — need at\nleast the Z3-True scores for the ensemble).\n\
-    \nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/hive_ensemble_v4.py (from exp2422)\n  {project_root}/results/experiment_2422_hive_full_v4.json\
-    \ (HIVE v4 baseline: 0.8864)\n  {project_root}/results/experiment_2435_tier0k_scores.json (if exists)\n  {project_root}/results/experiment_2436_tier0l_scores.json\
-    \ (if exists)\n  {project_root}/results/experiment_2437_logcons_z3_scores.json (if exists)\n\nTASK: Implement ConformalEnsemble\
-    \ and evaluate on 36 telemetry entries.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. sklearn importable: .venv/bin/python\
-    \ -c \"import sklearn; print(sklearn.__version__)\"\n     b. scipy importable: .venv/bin/python -c \"import scipy; print(scipy.__version__)\"\
-    \n     c. Telemetry manifest:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n     d.\
-    \ Score files from exp2435+2436+2437 (read each, log which are present):\n        for f in tier0k_scores tier0l_scores logcons_z3_scores;\
-    \ do\n          ls {project_root}/results/experiment_*_$f.json 2>/dev/null && echo \"present\" || echo \"missing: $f\"\n\
-    \        done\n\n  1. Load all available verifier scores into a matrix X (n=36, d=n_verifiers).\n     Available verifiers\
-    \ from existing artifacts:\n       Tier 0f: load from exp2397 or re-compute via freq_aware_attention.py\n       Tier 0g:\
-    \ load from exp2351 or re-compute via semantic_energy.py\n       Tier 0h: load from exp2368 or re-compute via laab_verifier.py\n\
-    \       Tier 0j: load from exp2394 or re-compute via halt_probe.py\n       Tier 0k: from results/experiment_2435_tier0k_scores.json\
-    \ (if present)\n       Tier 0l: from results/experiment_2436_tier0l_scores.json (if present)\n       LogCons Z3: from results/experiment_2437_logcons_z3_scores.json\
-    \ (if present)\n     n_verifiers_fused: count of verifiers successfully loaded.\n\n  2. Implement ConformalEnsemble at python/carnot/verify/conformal_ensemble.py:\n\
-    \     Calibration split: 10 examples for calibration, 26 for evaluation.\n     For each verifier i:\n       Calibration\
-    \ nonconformity scores: alpha_i = sort(scores_cal) — ascending for clean\n       p-value for test example x: p_i(x)\
-    \ = |{cal j : alpha_i_j >= score_i(x)}| / (n_cal + 1)\n     Fisher aggregation: chi2_stat = -2 * sum(ln(p_i))\n     Convert\
-    \ chi2_stat to p-value via scipy.stats.chi2.sf(chi2_stat, df=2*n_verifiers)\n     Final score = 1 - p_combined (higher\
-    \ = more likely hallucination)\n\n  3. Evaluate on 26 test examples:\n     conformal_ensemble_auroc: AUROC on 26 test examples.\n\
-    \     conformal_vs_hive_v4_delta: conformal_ensemble_auroc - 0.8864 (.235 HIVE v4 baseline).\n     conformal_vs_logcons_delta:\
-    \ conformal_ensemble_auroc - 0.8896 (.235 best result).\n     ensemble_auroc_improved: conformal_ensemble_auroc > 0.8896.\n\
-    \n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/verify/ -k \"conformal\" -v --no-cov\
-    \ 2>&1 | tail -15\n     Create test if none exists.\n\n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
-    \      principle: \"Terminal-prefix required. complete: with conformal_ensemble_auroc.\"\n  - conformal_ensemble_auroc:\n\
-    \      principle: \"Primary metric. Target > 0.9236 (HIVE peer). Honest result.\"\n  - conformal_vs_hive_v4_delta:\n    \
-    \  principle: \"conformal_auroc - 0.8864. Positive = conformal beats HIVE v4.\"\n  - conformal_vs_logcons_delta:\n      principle:\
-    \ \"conformal_auroc - 0.8896. Positive = conformal beats project best.\"\n  - ensemble_auroc_improved:\n      principle:\
-    \ \"True if conformal_ensemble_auroc > 0.8896. Gate for capstone.\"\n  - n_verifiers_fused:\n      principle: \"Number of\
-    \ verifiers successfully loaded and fused.\"\n  - n_calibration_examples:\n      principle: \"Must be 10.\"\n  - n_eval_examples:\n\
-    \      principle: \"Must be 26 (36 - 10 calibration).\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n\
-    \      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records sklearn, scipy,\
-    \ score file availability checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"conformal_ensemble_auroc != null AND n_eval_examples\
-    \ >= 20\"\n    principle: \"Must produce valid AUROC on sufficient test data.\"\n  - condition: \"n_verifiers_fused >= 4\"\
-    \n    principle: \"At least 4 verifiers required for meaningful conformal aggregation.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
-
-- id: exp2439-fr11-online-learnability
-  title: 'Phase 2: FR-11 Online Learnability of CoT Verifiers (arXiv:2603.03538) -- MANDATORY Continuous Self-Learning Task'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2439_fr11_online_learnability.json
+- id: exp2451-fr11-soundness-completeness-v5
+  title: 'Phase 2: FR-11 Soundness/Completeness Tracking v5 (arXiv:2603.03538) -- MANDATORY Continuous Self-Learning
+    Task'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2451_fr11_soundness_completeness_v5.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
   continuous_self_learning_task: true
   prior_failures:
+  - experiment_id: exp2439-fr11-online-learnability
+    verdict: "Terminal-prefix required. Learnability audit completed."
+    addressed_by: "exp2439 (.236) ran the learnability audit but emitted a non-standard verdict (missing terminal
+      prefix — the verdict itself says 'Terminal-prefix required' which is NOT a proper terminal verdict).
+      This v5 corrects: (a) uses proper terminal prefix 'complete:', (b) extends with asymmetric
+      soundness/completeness tracking per arXiv:2603.03538 Littlestone-dimension bounds, (c) uses the
+      NSVIF extractor to process real violations from live_sota_balanced_telemetry_manifest_1480.jsonl,
+      tracking soundness mistakes (missed violations) and completeness mistakes (false alarms) separately."
+    retire_if_same_verdict: false
   - experiment_id: exp2425-fr11-nsvif-online-v4
     verdict: complete_fr11_nsvif_online_passed
-    addressed_by: "exp2425 ran the NSVIF online self-learning loop and PASSED (fr11_nsvif_online_passed=true,\
-      \ cross_domain_retention_rate=1.0). This task is a DISTINCT scope: instead of just running the loop,\
-      \ it MEASURES the theoretical learnability properties (soundness, completeness, Littlestone dimension)\
-      \ per arXiv:2603.03538. These properties were never measured; the prior task only demonstrated the loop\
-      \ runs. Different: theoretical learnability audit, not a loop execution."
+    addressed_by: "exp2425 (.235) PASSED (fr11_nsvif_online_passed=true, cross_domain_retention_rate=1.0). This
+      v5 EXTENDS exp2425 with explicit soundness/completeness asymmetric tracking per arXiv:2603.03538.
+      The mechanism: soundness_mistakes (false negatives on real violations) and completeness_mistakes
+      (false positives on correct responses) tracked separately with Littlestone-dimension bounds.
+      Different scope: exp2425 measured retention rate; exp2451 measures mistake types per learning theory."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: FR-11 (Autonomous Self-Learning Loop) is a MANDATORY functional requirement.\nEvery milestone must include\
-    \ at least one continuous_self_learning_task experiment.\n\nexp2425 (.235) ran the NSVIF online learning loop and passed\
-    \ (cross_domain_retention_rate=1.0,\nself_learning_improvement=0.667). This task goes deeper: instead of just running\n\
-    the loop, it MEASURES the theoretical learnability properties of the CoT verifier class.\n\nOnline Learnability of CoT Verifiers\
-    \ (arXiv:2603.03538) establishes:\n  - Soundness: fraction of verifier verdicts that correctly classify SAT examples as\
-    \ SAT\n  - Completeness: fraction of verifier verdicts that correctly classify UNSAT examples as UNSAT\n  - Littlestone\
-    \ dimension: bounds the number of online updates needed before convergence\n    (finite Littlestone dim = online learnable;\
-    \ infinite = not learnable)\n\nFor NSVIF Z3 verifier: bounded Littlestone dimension follows from the fact that\nZ3 constraint\
-    \ patterns are drawn from a finite vocabulary (UNSAT cores are finite and\nenumerable). Empirically, estimate dim via the\
-    \ doubling trick.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/nsvif_z3_extractor.py (NSVIFExtractor\
-    \ class)\n  {project_root}/results/experiment_2425_fr11_nsvif_online_v4.json (loop result: retention=1.0)\n  {project_root}/results/constraint_patterns_v4.json\
-    \ (if exists, from exp2425)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. z3-solver: .venv/bin/python -c \"import z3;\
-    \ print(z3.get_version_string())\"\n        If missing: .venv/bin/pip install z3-solver -q\n     b. Telemetry manifest:\n\
-    \        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n        If missing: write honest_verdict\
-    \ blocked_telemetry_manifest_missing and exit.\n     c. NSVIF importable:\n        .venv/bin/python -c \"from carnot.verify.nsvif_z3_extractor\
-    \ import NSVIFExtractor; print('OK')\"\n        If missing: write honest_verdict blocked_nsvif_not_importable and exit.\n\
-    \n  1. Measure soundness on first 30 telemetry entries:\n     For each entry with ground_truth_label=SAT (clean):\n     \
-    \  Run NSVIF Z3 verification. Record: is_correct = (z3_verdict == 'SAT').\n     soundness_rate = sum(is_correct) / n_sat_examples.\n\
-    \n  2. Measure completeness on first 30 telemetry entries:\n     For each entry with ground_truth_label=UNSAT (hallucination):\n\
-    \       Run NSVIF Z3 verification. Record: is_correct = (z3_verdict == 'UNSAT').\n     completeness_rate = sum(is_correct)\
-    \ / n_unsat_examples.\n\n  3. Estimate Littlestone dimension via doubling trick:\n     Initialize: verifier_correct_so_far\
-    \ = []\n     For k in 1..5 (doubling rounds):\n       Query 2^k examples in sequence. Record the number of verifier mistakes\
-    \ (wrong label).\n       If mistakes in this round == 0: estimated_littlestone_dim = k-1. Stop.\n     If all 5 rounds have\
-    \ mistakes: estimated_littlestone_dim = 5+ (bounded from above).\n\n  4. Online update step (FR-11 loop):\n     For any\
-    \ entry where z3_verdict was WRONG (soundness or completeness failure):\n       Extract the constraint that was incorrectly\
-    \ applied.\n       Append to constraint_patterns with confidence -= 0.1 (online weight decay for wrong patterns).\n     updated_soundness_rate,\
-    \ updated_completeness_rate after the update.\n     cross_domain_retention_rate: fraction of originally-correct verdicts\
-    \ still correct.\n\n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required.\"\n  - fr11_online_learnability_passed:\n      principle: \"True if soundness + completeness were measured AND\
-    \ online update ran.\"\n  - soundness_rate:\n      principle: \"Fraction of SAT examples correctly classified as SAT. FR-11\
-    \ correctness.\"\n  - completeness_rate:\n      principle: \"Fraction of UNSAT examples correctly classified as UNSAT.\"\
-    \n  - estimated_littlestone_dim:\n      principle: \"Finite dim = verifier is online-learnable per Littlestone theory.\"\
-    \n  - cross_domain_retention_rate:\n      principle: \"FR-11 gate: fraction of correct verdicts retained after update.\"\
-    \n  - n_eval_examples:\n      principle: \"Must be 30.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n\
-    \      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records z3, telemetry,\
-    \ nsvif checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"fr11_online_learnability_passed == true\"\n    principle: \"FR-11\
-    \ mandatory: self-learning loop must complete.\"\n  - condition: \"cross_domain_retention_rate >= 0.50\"\n    principle:\
-    \ \"Must not catastrophically degrade previously-correct verdicts.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+  prompt: "CONTEXT: FR-11 (continuous self-learning) is a MANDATORY program requirement.\narXiv:2603.03538 (Online\
+    \ Learnability of CoT Verifiers, March 2026) introduces Littlestone-dimension\nbounds for soundness vs completeness\
+    \ mistake budgets in online CoT verifier learning.\nKey result: asymmetric error tracking — soundness errors\
+    \ (missed real violations = false\nnegatives) and completeness errors (false alarms on correct responses\
+    \ = false positives) have\ndifferent Littlestone dimensions and should be tracked separately.\n\nexp2425 (.235)\
+    \ passed FR-11 with cross_domain_retention_rate=1.0. exp2439 (.236) tried to audit\nonline learnability\
+    \ but emitted a non-standard verdict (\"Terminal-prefix required...\"). This\nv5 implements proper soundness/completeness\
+    \ tracking.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/nsvif_z3_extractor.py\
+    \ (NSVIF extractor — online learning\n    target)\n  {project_root}/python/carnot/pipeline/verify_repair.py\
+    \ (learning pipeline context)\n  {project_root}/results/experiment_2425_fr11_nsvif_online_v4.json (prior\
+    \ passing FR-11)\n\nTASK: Implement soundness/completeness asymmetric tracking in NSVIF online learner.\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. nsvif_z3_extractor.py exists:\n        ls {project_root}/python/carnot/verify/nsvif_z3_extractor.py\n\
+    \        If missing: write honest_verdict blocked_nsvif_module_missing and exit.\n     b. Telemetry manifest\
+    \ present:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n        If\
+    \ missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n     c. z3-solver importable:\
+    \ .venv/bin/python -c \"import z3; print(z3.get_version_string())\"\n        If missing: .venv/bin/pip install\
+    \ z3-solver -q\n\n  1. Add SoundnessCompletenessTracker class to python/carnot/verify/nsvif_z3_extractor.py\
+    \ (or a new\n     file python/carnot/learn/soundness_tracker.py):\n       - soundness_mistakes: count of missed\
+    \ violations (prediction=safe, label=violation)\n       - completeness_mistakes: count of false alarms (prediction=violation,\
+    \ label=safe)\n       - update(prediction, label): updates the appropriate counter\n       - soundness_rate():\
+    \ soundness_mistakes / n_total (fraction missed)\n       - completeness_rate(): completeness_mistakes / n_total\
+    \ (fraction of false alarms)\n       - littlestone_soundness_bound(): sqrt(2 * soundness_mistakes * log(n_features))\n\
+    \         (Littlestone-dimension upper bound per arXiv:2603.03538 Theorem 1)\n\n  2. Run online learning loop\
+    \ over first 50 entries from telemetry manifest:\n     - For each entry: extract NSVIF features, predict\
+    \ violation/safe, compare to label.\n     - Update SoundnessCompletenessTracker.\n     - Record: n_violations_processed,\
+    \ soundness_mistakes, completeness_mistakes.\n     Gate check: n_violations_processed >= 10.\n\n  3. Compute\
+    \ summary metrics:\n     soundness_tracking_enabled: True (if SoundnessCompletenessTracker was used)\n     completeness_tracking_enabled:\
+    \ True\n     soundness_error_rate: soundness_mistakes / n_violations_processed\n     completeness_error_rate:\
+    \ completeness_mistakes / n_violations_processed\n     littlestone_soundness_bound: the bound value\n\n  4.\
+    \ Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/ -k \"soundness or fr11 or\
+    \ nsvif\" \\\n       -v --no-cov 2>&1 | tail -15\n\n  5. Write deliverable. Validate JSON before writing.\n\
+    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. Must start\
+    \ with complete: — DO NOT use the verdict text as the prefix field label.\"\n  - soundness_tracking_enabled:\n\
+    \      principle: \"Must be true. Core FR-11 v5 deliverable.\"\n  - completeness_tracking_enabled:\n      principle:\
+    \ \"Must be true. Asymmetric tracking is the key contribution from arXiv:2603.03538.\"\n  - soundness_error_rate:\n\
+    \      principle: \"Fraction of real violations missed (false negative rate). Should decrease over iterations.\"\
+    \n  - completeness_error_rate:\n      principle: \"Fraction of safe responses flagged (false positive rate).\"\
+    \n  - n_violations_processed:\n      principle: \"Must be >= 10 for acceptance gate. Documents learning loop\
+    \ ran.\"\n  - littlestone_soundness_bound:\n      principle: \"Upper bound on cumulative soundness mistakes\
+    \ from arXiv:2603.03538. Validates theoretical grounding.\"\n  - random_seed:\n      principle: \"Must be\
+    \ 42.\"\n  - duration_s:\n      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n  \
+    \    principle: \"Records nsvif module, telemetry, z3 checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"soundness_tracking_enabled\
+    \ == true AND completeness_tracking_enabled == true\"\n    principle: \"Both trackers must be active for\
+    \ the asymmetric learning discipline to hold.\"\n  - condition: \"n_violations_processed >= 10\"\n    principle:\
+    \ \"Minimum online loop coverage to demonstrate learning is happening.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
 
-- id: exp2440-kv260-rtl-fix-v5
-  title: 'Phase 2: KV260 RTL Synthesis Fix v5 -- Debug and Fix synthesis_errors=1 from exp2427'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2440_kv260_rtl_fix_v5.json
-  agent_type: codex
-  model: gpt-5.5
-  max_turns: 40
+- id: exp2452-kv260-rtl-synthesis-fix-v5
+  title: 'Phase 3: KV260 RTL Synthesis Debug Fix v5 -- Diagnose and Repair synthesis_errors=1 (18 RTL Files)'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2452_kv260_rtl_synthesis_fix_v5.json
+  agent_type: claude
+  model: opus
+  max_turns: 100
+  requires_claude: true
+  track: hardware
   prior_failures:
+  - experiment_id: exp2413-kv260-yosys-v3
+    verdict: blocked_synthesis_failed
+    addressed_by: "exp2413 in .234 ran yosys synthesis for 241s across 18 RTL files and got synthesis_errors=1.
+      The task was to run synthesis; it ran but failed. Root cause: RTL content error in one of the 18 .v
+      files. exp2413 did not attempt to diagnose WHICH file. This v5 explicitly reads the yosys error log
+      output from a fresh synthesis run to identify the specific file and line with the syntax/content error,
+      then fixes it. Different: debugging focus, not just running synthesis."
+    retire_if_same_verdict: false
   - experiment_id: exp2427-kv260-yosys-v4
-    verdict: blocked_synthesis_failed_synthesis_errors_1
-    addressed_by: "exp2427 in .235 ran Yosys successfully (duration=241.56s, yosys_version confirmed, 18 .v files found) but\
-      \ synthesis_errors=1. The problem is a Verilog content error in one of the 18 .v files, NOT missing infrastructure. This\
-      \ v5 task reads the Yosys error output to identify the exact file:line with the synthesis error, applies a targeted fix,\
-      \ and re-runs Yosys to confirm synthesis_errors=0."
-    retire_if_same_verdict: false
-  prompt: "CONTEXT: KV260 RTL synthesis failed in exp2427 (.235) with synthesis_errors=1.\nYosys binary IS installed (yosys_version=0.64+149),\
-    \ 18 .v files ARE present.\nDuration=241.56s confirms Yosys actually ran the synthesis. The error is a Verilog\ncontent\
-    \ bug in one of the 18 .v files, not a missing tool.\n\nDIAGNOSIS FIRST: Read the Yosys error output to identify the exact\
-    \ error before fixing.\nYosys errors look like:\n  ERROR: ... at hardware/kv260/some_file.v:123\nOR:\n  Error in ... module\
-    \ 'carnot_ising_top' ...\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/hardware/kv260/ (all .v files: ls them first)\n\
-    \  {project_root}/results/experiment_2427_kv260_yosys_v4.json (synthesis_errors=1, details)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n\
-    \     a. yosys installed: command -v yosys && yosys --version 2>&1 | head -3\n        If missing: write honest_verdict blocked_yosys_not_installed\
-    \ and exit.\n     b. RTL source present:\n        ls {project_root}/hardware/kv260/*.v 2>/dev/null | head -20\n        If\
-    \ no .v files: write honest_verdict blocked_rtl_not_found and exit.\n\n  1. Diagnose the synthesis error:\n     a. Re-run\
-    \ Yosys with verbose error output:\n        cd {project_root}/hardware/kv260 && yosys -p \"\n          read_verilog *.v;\n\
-    \          synth -top carnot_ising_top;\n        \" 2>&1 | tee /tmp/yosys_v5_diag.txt\n     b. Extract the error line:\n\
-    \        grep -n \"ERROR\\|Error\\|error\" /tmp/yosys_v5_diag.txt | head -20\n     c. Identify the specific .v file and\
-    \ line number with the error.\n        Record: error_file, error_line, error_message.\n\n  2. Fix the synthesis error:\n\
-    \     a. Read the specific .v file at the error line.\n     b. Apply a targeted fix. Common synthesis errors:\n        -\
-    \ Undefined module: add `/* synthesis ignore */` or remove the reference\n        - Port width mismatch: correct the port\
-    \ declaration\n        - Undriven net: add a default assignment\n        - Unknown keyword: replace with synthesizable equivalent\n\
-    \     c. Record: fix_applied, fix_description.\n\n  3. Re-run Yosys after the fix:\n     cd {project_root}/hardware/kv260\
-    \ && yosys -p \"\n       read_verilog *.v;\n       synth -top carnot_ising_top;\n       write_json {project_root}/results/kv260_synthesis_v5.json\n\
-    \     \" 2>&1 | tee /tmp/yosys_v5_output.txt | tail -40\n     synthesis_errors_after_fix, synthesis_warnings_after_fix.\n\
-    \     synthesis_succeeded: true if synthesis_errors_after_fix == 0.\n\n  4. If synthesis_succeeded: also try Xilinx target:\n\
-    \     yosys -p \"synth_xilinx -top carnot_ising_top\" 2>&1 | tail -20\n     Record xilinx_lut_count, xilinx_ff_count.\n\n\
-    \  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\
-    \n  - synthesis_succeeded:\n      principle: \"True if synthesis_errors_after_fix == 0.\"\n  - error_file:\n      principle:\
-    \ \"Which .v file contained the synthesis error.\"\n  - error_message:\n      principle: \"The exact Yosys error message\
-    \ — for reproducibility and paper.\"\n  - fix_applied:\n      principle: \"True if a fix was applied. False if error\
-    \ not diagnosed.\"\n  - fix_description:\n      principle: \"What specifically was changed in the .v file.\"\n  - synthesis_errors_after_fix:\n\
-    \      principle: \"Must be 0 for synthesis_succeeded=true.\"\n  - synthesis_warnings_after_fix:\n      principle: \"Warning\
-    \ count after fix.\"\n  - yosys_version:\n      principle: \"Reproducibility: confirm same Yosys version as exp2427.\"\n\
-    \  - duration_s:\n      principle: \"Guards against fabrication — Yosys takes measurable wall time.\"\n  - preconditions_checked:\n\
-    \      principle: \"Records yosys binary + RTL source checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"synthesis_succeeded\
-    \ == true OR honest_verdict starts with 'blocked_'\"\n    principle: \"Must produce synthesis result or structured blocked\
-    \ verdict.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+    verdict: blocked_synthesis_failed
+    addressed_by: "exp2427 in .235 repeated exp2413 with same result: synthesis_errors=1, 241s runtime.
+      Neither exp2413 nor exp2427 attempted to parse the yosys error output to find the root cause.
+      This v5 captures yosys stderr/stdout to identify exactly which RTL file has the content error,
+      then fixes it before re-running synthesis. The prior_failures pattern is broken by: (a) reading
+      yosys output line by line, (b) fixing the identified error, (c) re-running synthesis to confirm fix."
+    retire_if_same_verdict: true
+  prompt: "CONTEXT: KV260 Yosys synthesis has failed with synthesis_errors=1 in exp2413 (.234) and\nexp2427\
+    \ (.235). Both ran for ~241 seconds across 18 RTL .v files. The yosys binary works\n(Yosys 0.64+149 at\
+    \ /opt/oss-cad-suite/bin/yosys). The error is in the RTL CONTENT of one\nof the 18 files — NOT missing\
+    \ infrastructure. Neither prior task attempted to read the yosys\nerror message to identify which file/line.\n\
+    \nThis task MUST: (1) run yosys synthesis with stderr captured, (2) parse the error message\nto identify\
+    \ the specific file and line, (3) fix the RTL content bug, (4) re-run synthesis\nto confirm synthesis_errors=0.\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/kv260/ (list all .v files)\n  {project_root}/results/experiment_2427_kv260_yosys_v4.json\
+    \ (exp2427 result: which 18 files)\n\nTASK: Diagnose and fix the RTL content error causing synthesis_errors=1.\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. Yosys installed: /opt/oss-cad-suite/bin/yosys -V\n        If\
+    \ missing: write honest_verdict blocked_yosys_not_installed and exit.\n     b. RTL files present:\n        ls\
+    \ {project_root}/kv260/*.v 2>/dev/null | wc -l\n        If count < 1: check {project_root}/fpga/*.v and\
+    \ other directories.\n        If no RTL files found: write honest_verdict blocked_rtl_files_missing and exit.\n\
+    \n  1. Run yosys synthesis with CAPTURED stderr:\n     cd /tmp && /opt/oss-cad-suite/bin/yosys -p \"\n       read_verilog\
+    \ {rtl_files};\n       synth -top <top_module> -noabc;\n     \" 2>&1 | tee /tmp/yosys_synthesis_output.txt\n\
+    \     Read /tmp/yosys_synthesis_output.txt to find the ERROR line(s).\n\n  2. Parse error output:\n     Find\
+    \ lines matching: ERROR|error|syntax error|parse error\n     Extract: file_with_error, line_number, error_description.\n\
+    \     If no errors found in captured output: write honest_verdict blocked_no_error_captured and exit.\n\n \
+    \ 3. Read the identified file(s) at the identified line(s).\n     Diagnose the RTL content bug (common issues:\n\
+    \       - Missing semicolons in module declarations\n       - Undefined wire/reg widths\n       - Incompatible\
+    \ port declarations\n       - Non-synthesizable constructs (initial blocks, $display)\n       - Mismatched\
+    \ bit widths in assignments)\n     Fix the bug in the .v file (use Edit tool).\n\n  4. Re-run yosys synthesis\
+    \ after fix:\n     Same command as step 1. Check synthesis_errors count.\n     If synthesis_errors=0: set\
+    \ kv260_synthesis_succeeded=true.\n     If synthesis_errors still > 0: repeat steps 2-4 for remaining errors\
+    \ (up to 3 iterations).\n\n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n  \
+    \    principle: \"Terminal-prefix required. complete: if synthesis_errors=0 achieved.\"\n  - synthesis_errors:\n\
+    \      principle: \"Count of yosys synthesis errors after fix. Must be 0 for success.\"\n  - kv260_synthesis_succeeded:\n\
+    \      principle: \"True only if synthesis_errors=0 in re-run after fix.\"\n  - rtl_file_fixed:\n      principle:\
+    \ \"Name of the RTL file that contained the error. Documents which file was debugged.\"\n  - error_description:\n\
+    \      principle: \"What the RTL bug was. Key for paper-v6 hardware section and future maintenance.\"\n  -\
+    \ yosys_version:\n      principle: \"Yosys version string for reproducibility.\"\n  - duration_s:\n      principle:\
+    \ \"Guards against fabrication. Synthesis runs ~241s; total with debug should be > 300s.\"\n  - preconditions_checked:\n\
+    \      principle: \"Records yosys installed and RTL files present checks.\"\n\nACCEPTANCE GATES:\n  - condition:\
+    \ \"synthesis_errors == 0\"\n    principle: \"Zero errors is the terminal state for KV260 synthesis. Partial\
+    \ improvement (fewer errors) is a research finding but does not satisfy the gate.\"\n\nDo NOT push. Do NOT\
+    \ modify scripts/research_conductor.py."
 
-- id: exp2441-phase1-ship-gate-completion-v5
-  title: 'Phase 2: Phase 1 Ship Gate Completion v5 -- Write MCP + CLI Docs to Close Gate'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2441_phase1_ship_gate_completion_v5.json
+- id: exp2453-gatemate-ising-synthesis-v2
+  title: 'Phase 3: GateMate n=16 Ising Synthesis + Flash v2 (OSS CAD Suite Confirmed)'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2453_gatemate_ising_synthesis_v2.json
   agent_type: codex
   model: gpt-5.5
-  max_turns: 35
+  max_turns: 50
+  track: hardware
   prior_failures:
-  - experiment_id: exp2431-phase1-ship-gate-v4
-    verdict: complete_phase1_ship_gate_not_met_mcp_cli_docs_missing
-    addressed_by: "exp2431 in .235 confirmed phase1_ship_gate_met=false with ONLY two criteria missing: mcp_docs_present=false,\
-      \ cli_docs_present=false. PyPI (published), HF mirror (up), and external reproducer (CI exists) are all passing. This\
-      \ v5 task writes both missing docs, then re-runs the gate audit. Different from v4: this is a WRITE task, not just an\
-      \ audit task."
+  - experiment_id: exp2105-gatemate-smoke
+    verdict: complete_gatemate_smoke_blocked_toolchain_missing
+    addressed_by: "exp2105 (.166) used gemini agent and found synthesis_completed=false with verdict
+      'blocked_toolchain_missing' (verdict was actually prefixed 'complete:' indicating terminal state,
+      but content described toolchain as missing). Root cause: OSS CAD Suite was not installed at the time.
+      As of 2026-05-14, ops/hardware-bringup-prep.md confirms: yosys 0.64+197 at /opt/oss-cad-suite/bin/yosys,
+      nextpnr-himbaechel available, openFPGALoader v1.1.1 with dirtyJtag support and olimex_gatemateevb
+      board profile. The toolchain blocker is definitively resolved. This v2 uses codex (not gemini — gemini
+      is rate-limited per CLAUDE.md operator constraint) with explicit preconditions on OSS CAD Suite."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: Phase 1 ship gate requires 5 criteria (per CLAUDE.md Phase Vision):\n  1. PyPI carnot-ebm published: PASSING\
-    \ (confirmed exp2431)\n  2. HuggingFace mirror: PASSING (confirmed exp2431)\n  3. External reproducer (CI + test-results.md):\
-    \ PASSING (confirmed exp2431)\n  4. MCP server documentation: FAILING (mcp_docs_present=false)\n  5. CLI documentation:\
-    \ FAILING (cli_docs_present=false)\n\nOnly 2 criteria remain. This task WRITES the missing docs and closes the gate.\n\n\
-    EXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/mcp/ (MCP server implementation if present)\n  {project_root}/python/carnot/cli/ (CLI\
-    \ implementation if present)\n  ls {project_root}/docs/ (existing docs directory)\n  {project_root}/results/experiment_2431_phase1_ship_gate_v4.json\
-    \ (audit baseline)\n\nTASK: Write docs/mcp-server.md and docs/cli-guide.md, then re-run gate audit.\n\nCONCRETE STEPS:\n\
-    \  0. PRECONDITIONS:\n     a. docs/ directory exists or can be created:\n        ls {project_root}/docs/ 2>/dev/null ||\
-    \ mkdir -p {project_root}/docs/\n     b. Network accessible for PyPI/HF verification:\n        curl -sf -o /dev/null https://pypi.org/pypi/carnot-ebm/json\
-    \ 2>/dev/null &&\n        echo \"pypi_reachable\" || echo \"pypi_unreachable\"\n\n  1. Read existing MCP implementation:\n\
-    \     ls {project_root}/python/carnot/ | grep -i mcp\n     ls {project_root}/python/carnot/mcp/ 2>/dev/null || echo \"no\
-    \ mcp dir\"\n     Find MCP-related files: grep -rl \"mcp\\|model_context_protocol\" {project_root}/python/carnot/ 2>/dev/null\
-    \ | head -10\n\n  2. Write {project_root}/docs/mcp-server.md:\n     Include at minimum:\n     # Carnot MCP Server\n    \
-    \ ## Overview (brief: what MCP is, why Carnot exposes it)\n     ## Installation\n     ## Configuration\n     ## Available\
-    \ Tools/Resources (list MCP endpoints)\n     ## Usage Examples (2-3 concrete examples)\n     ## Integration with Claude\
-    \ Desktop (standard MCP integration pattern)\n     Base content on what actually exists in the code. If MCP is not yet\
-    \ implemented,\n     document the planned interface from the codebase stubs.\n\n  3. Read existing CLI implementation:\n\
-    \     ls {project_root}/python/carnot/ | grep -i cli\n     Find CLI entry points: grep -rl \"argparse\\|click\\|typer\\\
-    |__main__\" {project_root}/python/carnot/ | head -10\n     cat {project_root}/python/carnot/__main__.py 2>/dev/null | head\
-    \ -50\n\n  4. Write {project_root}/docs/cli-guide.md:\n     Include at minimum:\n     # Carnot CLI Guide\n     ## Installation\n\
-    \     ## Commands\n     ### carnot verify\n     ### carnot sample\n     ### carnot repair (if implemented)\n     ## Examples\
-    \ (4-5 end-to-end examples)\n     ## Configuration (env vars, config file)\n     Base content on what actually exists.\n\
-    \n  5. Re-run gate audit:\n     mcp_docs_present: ls {project_root}/docs/*mcp* 2>/dev/null | wc -l > 0\n     cli_docs_present:\
-    \ ls {project_root}/docs/*cli* 2>/dev/null | wc -l > 0\n     pypi_published: curl -sf https://pypi.org/pypi/carnot-ebm/json\
-    \ | python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get('info',{}).get('version','null'))\"\n     hf_mirror_up:\
-    \ curl -sf \"https://huggingface.co/api/models?search=carnot-ebm&limit=3\" | python3 -c \"import json,sys; print(len(json.load(sys.stdin))\
-    \ > 0)\"\n     external_reproducer_exists: ls {project_root}/.github/workflows/*.yml 2>/dev/null | wc -l\n     phase1_ship_gate_met:\
-    \ true if all 5 pass.\n\n  6. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"\
-    Terminal-prefix required. complete: with phase1_ship_gate_met.\"\n  - phase1_ship_gate_met:\n      principle: \"True if\
-    \ ALL 5 criteria pass. Phase 1 completion gate.\"\n  - mcp_docs_written:\n      principle: \"True if docs/mcp-server.md\
-    \ was written successfully.\"\n  - cli_docs_written:\n      principle: \"True if docs/cli-guide.md was written successfully.\"\
-    \n  - mcp_docs_present:\n      principle: \"Re-verified after writing.\"\n  - cli_docs_present:\n      principle: \"Re-verified\
-    \ after writing.\"\n  - pypi_published:\n      principle: \"PyPI carnot-ebm package exists (unchanged from exp2431).\"\n\
-    \  - hf_mirror_up:\n      principle: \"HF Carnot-EBM has >= 1 model (unchanged from exp2431).\"\n  - missing_criteria:\n\
-    \      principle: \"Empty list if gate met. Actionable next steps if not.\"\n  - duration_s:\n      principle: \"Guards against\
-    \ fabrication.\"\n  - preconditions_checked:\n      principle: \"Records docs dir + network reachability checks.\"\n\nACCEPTANCE\
-    \ GATES:\n  - condition: \"phase1_ship_gate_met != null\"\n    principle: \"Must evaluate and record gate boolean.\"\n  -\
-    \ condition: \"mcp_docs_written == true AND cli_docs_written == true\"\n    principle: \"Both docs must be written for gate\
-    \ to be closeable.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+  prompt: "CONTEXT: GateMate A1-EVB-2M is physically attached with an onboard DirtyJTAG programmer\nat USB\
+    \ 1209:c0ca. From ops/hardware-bringup-prep.md (2026-05-14):\n- OSS CAD Suite confirmed at /opt/oss-cad-suite/\
+    \ (yosys 0.64+197, nextpnr-himbaechel 0.10-45,\n  openFPGALoader v1.1.1, ghdl)\n- DirtyJTAG programmer:\
+    \ 1209:c0ca on /dev/ttyACM0+1 (onboard, NOT external)\n- openFPGALoader supports: -c dirtyJtag -b olimex_gatemateevb\n\
+    - User ianblenke is in uucp group (serial port access)\n\nPrior exp2105 was blocked by toolchain_missing\
+    \ (now confirmed resolved). Terminal state for GateMate:\nn=16 Ising tile synthesized with nextpnr + flashed\
+    \ via openFPGALoader.\n\nNote: GateMate requires Cologne Chip's cc_toolchain for synthesis (not standard\
+    \ yosys\nsynth -top). The yosys synth_gatemate plugin or cc_toolchain must be used.\n\nEXISTING CODE TO\
+    \ READ FIRST:\n  {project_root}/ops/hardware-bringup-prep.md (toolchain details)\n  {project_root}/results/experiment_2105_gatemate_smoke.json\
+    \ (prior blocked verdict)\n\nTASK: Synthesize n=16 Ising tile for GateMate A1-EVB-2M and attempt flash.\n\
+    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. yosys installed: /opt/oss-cad-suite/bin/yosys -V | head -1\n\
+    \        If fails: write honest_verdict blocked_yosys_not_installed and exit.\n     b. openFPGALoader installed\
+    \ + DirtyJTAG support:\n        /opt/oss-cad-suite/bin/openFPGALoader --list-cables 2>&1 | grep -i dirty\n\
+    \        If no match: write honest_verdict blocked_openFPGALoader_no_dirtyJtag and exit.\n     c. DirtyJTAG\
+    \ USB enumerated:\n        lsusb | grep '1209:c0ca'\n        If no match: write honest_verdict blocked_gatemate_not_enumerated\
+    \ and exit.\n     d. GateMate board profile available:\n        /opt/oss-cad-suite/bin/openFPGALoader --list-boards\
+    \ 2>&1 | grep -i gatemate\n        If no match: write honest_verdict blocked_gatemate_board_profile_missing\
+    \ and exit.\n\n  1. Write a minimal n=16 Ising tile RTL for GateMate (GateMate uses synth_gatemate, not synth):\n\
+    \     File: /tmp/ising_n16_gatemate.v\n     Content: minimal 16-spin Ising sampler using only GateMate-compatible\
+    \ primitives:\n       - Use only standard flip-flops and LUT4 (no non-synthesizable constructs)\n       - Single\
+    \ clock domain at 10 MHz\n       - Spins stored in 16-bit register; energy computed combinatorially\n\n  2.\
+    \ Run GateMate synthesis:\n     /opt/oss-cad-suite/bin/yosys -p \"\n       read_verilog /tmp/ising_n16_gatemate.v;\n\
+    \       synth_gatemate -top ising_n16 -json /tmp/ising_n16_synth.json;\n     \" 2>&1 | tee /tmp/gatemate_yosys.log\n\
+    \     Check exit code. Record synthesis_completed (True/False).\n     If synthesis fails: record the error;\
+    \ write honest_verdict with synthesis_completed=false.\n\n  3. If synthesis succeeded: run nextpnr for GateMate:\n\
+    \     /opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A25 \\\n       --json /tmp/ising_n16_synth.json\
+    \ --write /tmp/ising_n16_pnr.json 2>&1 | tee /tmp/gatemate_pnr.log\n     Check LUT utilization, max clock\
+    \ frequency estimate.\n\n  4. If PnR succeeded: attempt bitstream generation + flash:\n     (GateMate uses\
+    \ cc_bitgen or openFPGALoader with PROM format)\n     /opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag\
+    \ -b olimex_gatemateevb /tmp/ising_n16.bit 2>&1\n     Record jtag_flashed=True/False, gatemate_bitstream_flashed=True/False.\n\
+    \n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
+    \ required.\"\n  - synthesis_completed:\n      principle: \"True if yosys synth_gatemate ran without errors.\"\
+    \n  - pnr_completed:\n      principle: \"True if nextpnr-himbaechel ran without errors.\"\n  - gatemate_bitstream_flashed:\n\
+    \      principle: \"True only if openFPGALoader flash succeeded. The terminal-state metric.\"\n  - lut_utilization:\n\
+    \      principle: \"LUT% from PnR. Documents FPGA fabric usage for the n=16 Ising tile.\"\n  - thermal_note:\n\
+    \      principle: \"Passively cooled — required per hardware-bringup-prep.md thermal constraint.\"\n  - yosys_version:\n\
+    \      principle: \"For reproducibility.\"\n  - duration_s:\n      principle: \"Guards against fabrication.\
+    \ Real synthesis + PnR + flash takes > 30s.\"\n  - preconditions_checked:\n      principle: \"Lists all\
+    \ 4 precondition check results.\"\n\nACCEPTANCE GATES:\n  - condition: \"synthesis_completed == true\"\n\
+    \    principle: \"Synthesis success is the minimum viable outcome. Flash is bonus.\"\n\nDo NOT push. Do NOT\
+    \ modify scripts/research_conductor.py."
 
-- id: exp2442-fst-mcmc-energy-fix-v3
-  title: 'Phase 3: FST MCMC Energy Integration Fix v3 -- Fix Degenerate acceptance_rate=1.0 from exp2426'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2442_fst_mcmc_energy_fix_v3.json
+- id: exp2454-polarfire-smoke-v3
+  title: 'Phase 3: PolarFire SoC Smoke v3 -- Precondition-Gated SSH Smoke (NOT Fabricated)'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2454_polarfire_smoke_v3.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 40
+  track: hardware
   prior_failures:
-  - experiment_id: exp2426-fst-constrained-mcmc-v2
-    verdict: complete_mch_filter_validated_degenerate_acceptance_1.0
-    addressed_by: "exp2426 in .235 reported mch_filter_validated=true but mean_acceptance_rate=1.0, mch_violation_reduction=0.0,\
-      \ mean_energy_reduction_ratio=1.0. Root cause: the MCHFSTFilter computed IsingEnergy of the response PREFIX at consecutive\
-      \ token positions, but the spin configuration was NOT updated between tokens (same spin state = same energy = acceptance_rate=1.0).\
-      \ This v3 fixes the energy computation to use DIFFERENT spin configurations before and after token insertion: energy_before\
-      \ uses a randomly-sampled spin state, energy_after adds a spin flip corresponding to the new token. This creates real\
-      \ energy differences and a non-trivial acceptance rate. Acceptance gate: mean_acceptance_rate < 0.95."
+  - experiment_id: exp1680-polarfire-smoke-v2
+    verdict: complete_PolarFire_SoC_smoke_test_successfully_executed_semantic_consistency_verifier
+    addressed_by: "exp1680 (.166, gemini agent) was adversarially flagged: run_duration_s=0, tpr_observed=1.0,
+      reproducibility_checksum='none', flagged_adversarial=true (GATE_PASSED_WITHOUT_DATA + IMPLAUSIBLE_PERFECT).
+      The gemini agent fabricated a passing result without actually SSHing to the PolarFire. Root cause:
+      (a) gemini agent used (rate-limited per known-issues.md, prone to fabrication), (b) no precondition
+      check before inference. This v3 uses codex (not gemini), with MANDATORY SSH precondition check
+      BEFORE any inference. If `ssh polarfire uptime` fails, write honest_verdict blocked_polarfire_ssh_timeout
+      and exit — NO fabrication."
     retire_if_same_verdict: true
-  prompt: "CONTEXT: FST MCMC Energy Integration Fix (exp2426 post-mortem).\nexp2426 (.235) implemented MCHFSTFilter but produced\
-    \ a DEGENERATE result:\n  mean_acceptance_rate=1.0 (every single token was accepted)\n  mch_violation_reduction=0.0 (no\
-    \ improvement vs unfiltered)\n  mean_energy_reduction_ratio=1.0 (energy before = energy after)\n\nRoot cause: IsingEnergy(response[:t])\
-    \ and IsingEnergy(response[:t+1]) evaluated the\nSAME spin configuration because spin initialization depended only on the\
-    \ prefix,\nand adding one token did not change the spin assignment. energy_before == energy_after\nfor every token, so MH\
-    \ acceptance probability = min(1, exp(0)) = 1.0 for all tokens.\n\nFIX: Use two DIFFERENT spin configurations:\n  energy_before:\
-    \ IsingEnergy of spin state sampled from N(0,1) with seed based on (entry_idx, t)\n  energy_after: IsingEnergy of spin\
-    \ state with one additional flip at spin index (t % n_spins)\nThis creates real energy differences. Expected: mean_acceptance_rate\
-    \ in [0.3, 0.85].\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/pipeline/mch_fst_filter.py (from exp2426)\n\
-    \  {project_root}/results/experiment_2426_fst_constrained_mcmc_v2.json (degenerate result)\n  {project_root}/python/carnot/samplers/casal_sampler.py\
-    \ (IsingEnergy reference)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. mch_fst_filter.py exists:\n        ls {project_root}/python/carnot/pipeline/mch_fst_filter.py\n\
-    \        If missing: write honest_verdict blocked_mch_filter_missing and exit.\n     b. Telemetry manifest:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n\
-    \        If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n     c. numpy importable: .venv/bin/python\
-    \ -c \"import numpy; print(numpy.__version__)\"\n\n  1. Fix MCHFSTFilter in python/carnot/pipeline/mch_fst_filter.py:\n\
-    \     For each telemetry entry and token position t:\n       rng = np.random.RandomState(seed=42 + entry_idx * 100 + t)\n\
-    \       spin_before = rng.randn(n_spins)    # N(0,1) random spin state\n       spin_after  = spin_before.copy()\n       spin_after[t % n_spins] *= -1         # flip one spin corresponding to token t\n\
-    \       energy_before = ising_energy(spin_before)\n       energy_after  = ising_energy(spin_after)\n       delta_E = energy_after\
-    \ - energy_before\n       accept_prob = min(1.0, np.exp(-delta_E))  # Metropolis-Hastings\n     Record per-token accept_prob\
-    \ and accepted (Bernoulli sample with accept_prob).\n\n  2. Validate on 10 cached telemetry entries:\n     mean_acceptance_rate:\
-    \ MUST be < 0.95 (non-degenerate gate).\n     mean_energy_delta: mean(energy_after - energy_before). Positive = MH filter\
-    \ is doing real work.\n     mch_violation_reduction: compare NSVIF violations before/after MH filtering.\n\n  3. Adversarial\
-    \ check:\n     Verify that spin_before != spin_after for every token:\n       all_spins_different: True if max(|spin_before\
-    \ - spin_after|) > 0 for all tokens.\n     If all_spins_different=False: write honest_verdict blocked_spin_update_degenerate.\n\
-    \n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/pipeline/ -k \"mch\" -v --no-cov 2>&1\
-    \ | tail -15\n\n  5. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
-    \ required.\"\n  - mch_energy_fix_validated:\n      principle: \"True if MCHFSTFilter ran with non-degenerate energy computation.\"\
-    \n  - mean_acceptance_rate:\n      principle: \"MUST be < 0.95. acceptance_rate=1.0 means degenerate energy function.\"\n\
-    \  - mean_energy_delta:\n      principle: \"Mean of (energy_after - energy_before). Non-zero = real energy differences.\"\
-    \n  - mch_violation_reduction:\n      principle: \"Fractional reduction in NSVIF violations vs unfiltered.\"\n  - all_spins_different:\n\
-    \      principle: \"Adversarial check: spin_before != spin_after for all tokens.\"\n  - n_eval_examples:\n      principle:\
-    \ \"Number of entries evaluated.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n      principle:\
-    \ \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records mch_filter, telemetry, numpy checks.\"\
-    \n\nACCEPTANCE GATES:\n  - condition: \"mean_acceptance_rate < 0.95\"\n    principle: \"Non-degenerate energy required.\
-    \ acceptance_rate=1.0 is the failure mode.\"\n  - condition: \"mch_energy_fix_validated == true\"\n    principle: \"Fix\
-    \ must confirm actual energy differences between spin states.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+  prompt: "CONTEXT: PolarFire SoC Discovery Kit is on the bench at 192.168.51.197 / mpfs-disco-kit.local.\nFrom\
+    \ ops/hardware-bringup-prep.md (2026-05-14 22:15Z update):\n- HSS → U-Boot → Linux (Microchip Distro 1.0,\
+    \ Yocto, Linux 6.18.17)\n- CPU: SiFive U54-MC riscv64, 4 cores\n- RAM: 478 MiB available\n- SSH: ssh polarfire\
+    \ configured in ~/.ssh/config\n- Python 3.12.12 + pip3 available on the board\n- Passively cooled — no sustained\
+    \ high-load\n\nPrior exp1680 was FABRICATED (run_duration_s=0). This v3 MUST SSH first.\nIf SSH fails: blocked_polarfire_ssh_timeout.\
+    \ NO fabrication of passing results.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/ops/hardware-bringup-prep.md\
+    \ (PolarFire section, lines 71+)\n  {project_root}/results/experiment_1680_polarfire_smoke_v2.json (prior\
+    \ fabricated result)\n\nTASK: Smoke-test PolarFire SoC via SSH — run Python + install carnot-ebm + verify one\
+    \ constraint.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS (check ALL before ANY inference step):\n     a. SSH\
+    \ reachable: ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'uptime' 2>&1\n        If non-zero exit\
+    \ or timeout: write honest_verdict blocked_polarfire_ssh_timeout and exit.\n        Record ssh_reachable=True,\
+    \ board_uptime (the uptime string).\n     b. Python available: ssh polarfire 'python3 --version' 2>&1\n  \
+    \      Record python_version.\n     c. Network reachable from board: ssh polarfire 'curl -sf -o /dev/null\
+    \ https://pypi.org/simple/ && echo OK' 2>&1\n        If fails: note network_blocked=True; skip pip install\
+    \ step.\n\n  1. Attempt pip install of carnot-ebm on PolarFire:\n     ssh polarfire 'pip3 install carnot-ebm\
+    \ --break-system-packages -q 2>&1 | tail -5'\n     Record: install_succeeded (True/False), install_output.\n\
+    \n  2. If install_succeeded: run a basic energy computation:\n     ssh polarfire 'python3 -c \"\nimport carnot\n\
+    from carnot.models.ising import IsingModel\nm = IsingModel(n_spins=4, seed=42)\ne = m.energy()\nprint(f\\\"\
+    energy={e:.4f}\\\")\n\"' 2>&1\n     Record: carnot_runs_on_polarfire (True/False), energy_value.\n\n  3. If\
+    \ install failed: run minimal Python-only check:\n     ssh polarfire 'python3 -c \"import math; print(math.exp(-0.5))\"\
+    ' 2>&1\n     Record: python_arithmetic_works.\n\n  4. Get system info:\n     ssh polarfire 'uname -a && free\
+    \ -h && df -h /' 2>&1\n     Record: os_version, ram_available_mb, disk_available_gb.\n\n  5. Write deliverable.\n\
+    \nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete:\
+    \ if SSH succeeded; blocked_polarfire_ssh_timeout if SSH failed.\"\n  - ssh_reachable:\n      principle:\
+    \ \"MUST be present. True if ssh polarfire succeeded. This is the anti-fabrication check.\"\n  - board_uptime:\n\
+    \      principle: \"The actual uptime string from `uptime` on the board. Proves SSH ran.\"\n  - carnot_runs_on_polarfire:\n\
+    \      principle: \"True if carnot.models.ising.IsingModel ran successfully on the riscv64 board.\"\n  - run_duration_s:\n\
+    \      principle: \"Wall clock time of the SSH session. Must be > 0. exp1680 had run_duration_s=0 (fabricated).\"\
+    \n  - thermal_note:\n      principle: \"passively cooled; required per hardware-bringup-prep.md thermal note.\"\
+    \n  - preconditions_checked:\n      principle: \"Records ssh, python3, network checks.\"\n  - random_seed:\n\
+    \      principle: \"42.\"\n  - duration_s:\n      principle: \"Guards against fabrication. Must be > 5s\
+    \ for real SSH session.\"\n\nACCEPTANCE GATES:\n  - condition: \"ssh_reachable == true\"\n    principle:\
+    \ \"SSH must succeed. This is the non-negotiable anti-fabrication gate.\"\n  - condition: \"run_duration_s\
+    \ > 0\"\n    principle: \"Zero duration means no real work was done (exp1680 failure mode).\"\n\nDo NOT\
+    \ push. Do NOT modify scripts/research_conductor.py."
 
-- id: exp2443-kinetic-langevin-fst-sampler
-  title: 'Phase 3: Kinetic Langevin as FST Sampler -- Connect KL=1.987 Best Sampler to FST Pipeline'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2443_kinetic_langevin_fst.json
+- id: exp2455-odar-free-energy-routing
+  title: 'Phase 2: ODAR Free-Energy Routing for Carnot Verify-Repair (arXiv:2602.23681)'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2455_odar_free_energy_routing.json
   agent_type: codex
   model: gpt-5.5
   max_turns: 35
   prior_failures:
-  - experiment_id: exp983-langevin-sb-boltzmann-sampler
-    verdict: complete_langevin_sb_validated
-    addressed_by: "exp983 implemented Langevin-SB Boltzmann sampler (arXiv:2512.02323) as a standalone sampler.\
-      \ This task is DISTINCT: it connects the already-implemented KineticLangevinSampler (exp2428, KL=1.987) to\
-      \ the FST pipeline (MCHFSTFilter from exp2442). The pipeline integration — using sampled spin states as\
-      \ energy_before/energy_after for MH acceptance — is a new scope never attempted. Prior task was sampler\
-      \ benchmarking; this is pipeline integration."
+  - experiment_id: exp1983-cot2meta-routing
+    verdict: complete
+    addressed_by: "exp1983 (.201) succeeded at CoT2-Meta routing (meta-controller routing
+      between fast/slow reasoning paths during LLM generation). However, that was a DIFFERENT
+      technique and scope: routing between internal reasoning modes. exp2455 implements ODAR
+      (arXiv:2602.23681) specifically for verify-repair ITERATION SELECTION — using variational
+      free energy to decide whether another repair iteration is worth running. No prior ODAR
+      implementation exists in the codebase; this is genuinely new scope."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: Kinetic Langevin BAOAB (exp2428, .235) is the best sampler from .235:\nkinetic_kl=1.987 vs CASAL KL=9.858\
-    \ (delta=+7.87). It samples from a distribution much\ncloser to the true Ising Boltzmann. This task connects KineticLangevinSampler\
-    \ to the\nFST pipeline as the token-acceptance energy source, replacing the static CASAL-based\nenergy in MCHFSTFilter (now\
-    \ fixed in exp2442).\n\nHypothesis: using KineticLangevin-sampled spin states for energy_before/energy_after\nshould produce\
-    \ MORE MEANINGFUL acceptance decisions than random-init spin states\n(exp2442 approach) because Kinetic Langevin samples\
-    \ from the CORRECT distribution.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/samplers/kinetic_langevin.py\
-    \ (from exp2428)\n  {project_root}/python/carnot/pipeline/mch_fst_filter.py (from exp2426/exp2442)\n  {project_root}/results/experiment_2428_kinetic_langevin_v4.json\
-    \ (KL=1.987, delta=+7.87)\n  {project_root}/results/experiment_2442_fst_mcmc_energy_fix_v3.json (fixed MH filter)\n\nCONCRETE\
-    \ STEPS:\n  0. PRECONDITIONS:\n     a. kinetic_langevin.py exists:\n        ls {project_root}/python/carnot/samplers/kinetic_langevin.py\n\
-    \        If missing: write honest_verdict blocked_kinetic_langevin_missing and exit.\n     b. mch_fst_filter.py exists:\n\
-    \        ls {project_root}/python/carnot/pipeline/mch_fst_filter.py\n        If missing: write honest_verdict blocked_mch_filter_missing\
-    \ and exit.\n     c. Telemetry manifest:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n\
-    \        If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n\n  1. Implement KineticLangevinFSTSampler\
-    \ at python/carnot/pipeline/kinetic_fst_sampler.py:\n     Uses KineticLangevinSampler to generate spin states:\n       sampler\
-    \ = KineticLangevinSampler(n_spins=16, gamma=1.0, kT=1.0, dt=0.01, seed=42)\n       For each token position t:\n       \
-    \  spin_before = sampler.sample(n_steps=10)   # 10 Langevin steps\n         spin_after  = sampler.sample(n_steps=11)  \
-    \  # 1 additional step\n         energy_before = ising_energy(spin_before)\n         energy_after  = ising_energy(spin_after)\n\
-    \         accept_prob = min(1.0, exp(-(energy_after - energy_before)))\n\n  2. Compare vs random-init (exp2442 approach)\
-    \ on 10 telemetry entries:\n     kinetic_fst_mean_acceptance_rate (must be in [0.1, 0.95])\n     random_init_mean_acceptance_rate:\
-    \ from exp2442 result (loaded from artifact)\n     kinetic_vs_random_acceptance_delta: difference\n     kinetic_fst_mch_violation_reduction:\
-    \ NSVIF violations reduced vs unfiltered\n\n  3. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/pipeline/\
-    \ -k \"kinetic_fst\" -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  4. Write deliverable.\n\nREQUIRED\
-    \ ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\n  - kinetic_fst_validated:\n  \
-    \    principle: \"True if KineticLangevinFSTSampler ran on real telemetry.\"\n  - kinetic_fst_mean_acceptance_rate:\n  \
-    \    principle: \"MH acceptance rate. Must be < 0.95 (non-degenerate).\"\n  - kinetic_vs_random_acceptance_delta:\n     \
-    \ principle: \"Kinetic acceptance rate minus random-init (exp2442). Shows effect of better sampler.\"\n  - kinetic_fst_mch_violation_reduction:\n\
-    \      principle: \"Reduction in NSVIF violations vs unfiltered. Core pipeline effectiveness.\"\n  - n_eval_examples:\n\
-    \      principle: \"Number of entries evaluated.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n\
-    \      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records kinetic_langevin,\
-    \ mch_filter, telemetry checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"kinetic_fst_validated == true\"\n    principle:\
-    \ \"Kinetic Langevin FST must run on real cached data and produce acceptance rates.\"\n  - condition: \"kinetic_fst_mean_acceptance_rate\
-    \ < 0.95\"\n    principle: \"Non-degenerate acceptance required — same gate as exp2442.\"\n\nDo NOT push. Do NOT modify\
+  - experiment_id: exp2001-spilled-energy-metrics
+    verdict: blocked_gate_check_failed
+    addressed_by: "exp2001 (.199) was spilled-energy metrics (measuring energy leakage across
+      pipeline stages) — unrelated to routing. Scope match is name-based only (both involve
+      'energy'); the deliverables are structurally distinct."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: ODAR (arXiv:2602.23681, Feb 2026) proposes free-energy-principled risk-sensitive\nfusion\
+    \ to adaptively route LLM reasoning between fast (heuristic) and deliberative (deep)\nmodes. Carnot's verify-repair\
+    \ currently selects iterations via argmax (always run if energy\nis above threshold). Replacing with ODAR-style\
+    \ routing means: use expected information gain\n(variational free energy reduction) to decide whether to\
+    \ run another verify-repair iteration,\nnot just whether energy is above threshold.\n\nThis directly operationalizes\
+    \ Phase 4 (verifier-as-free-energy hypothesis) in the verify-repair\npipeline: the decision \"should we\
+    \ repair this response?\" becomes \"does the expected free energy\nreduction justify another forward pass?\"\
+    \n\nThis is NEW scope: no ODAR routing implementation exists in the codebase.\n\nEXISTING CODE TO READ FIRST:\n\
+    \  {project_root}/python/carnot/pipeline/verify_repair.py (current argmax iteration selection)\n  {project_root}/python/carnot/models/ising.py\
+    \ (energy computation)\n  {project_root}/python/carnot/verify/semantic_energy.py (energy score for routing\
+    \ signal)\n\nTASK: Implement ODAR-style free-energy routing in VerifyRepairPipeline.\n\nCONCRETE STEPS:\n\
+    \  0. PRECONDITIONS:\n     a. verify_repair.py exists:\n        ls {project_root}/python/carnot/pipeline/verify_repair.py\n\
+    \        If missing: write honest_verdict blocked_pipeline_module_missing and exit.\n     b. numpy importable:\
+    \ .venv/bin/python -c \"import numpy; print(numpy.__version__)\"\n\n  1. Implement OdarRouter class at python/carnot/pipeline/odar_router.py:\n\
+    \     Inputs: current_energy (float), prior_energy (float), iteration (int), max_iterations (int)\n     Free-energy\
+    \ estimate:\n       delta_E = prior_energy - current_energy  # energy reduction this iteration\n       expected_reduction\
+    \ = delta_E * exp(-0.5 * iteration)  # exponential decay of expected gain\n       complexity = abs(delta_E)\
+    \ / (iteration + 1)  # per-iteration complexity cost\n       variational_free_energy = -expected_reduction\
+    \ + 0.3 * complexity  # ODAR objective\n     Decision:\n       if variational_free_energy < 0: route_to_repair\
+    \ = True (positive expected gain)\n       else: route_to_repair = False (expected gain doesn't justify\
+    \ cost)\n     Output: route_to_repair (bool), variational_free_energy (float), expected_reduction (float)\n\
+    \n  2. Add OdarRouter as optional routing mode to VerifyRepairPipeline:\n     - Add routing_mode='argmax'|'odar'\
+    \ parameter to VerifyRepairPipeline.__init__\n     - When routing_mode='odar': use OdarRouter.route() instead\
+    \ of argmax threshold check\n     - Ensure backward compatibility: existing routing_mode='argmax' unchanged\n\
+    \n  3. Evaluate ODAR routing vs argmax on 20 telemetry entries:\n     Run pipeline with routing_mode='argmax'\
+    \ and routing_mode='odar' on same entries.\n     Measure: n_iterations_argmax (avg), n_iterations_odar (avg),\n\
+    \     odar_vs_argmax_iterations_delta (negative = fewer iterations with ODAR = more efficient),\n     energy_reduction_argmax,\
+    \ energy_reduction_odar.\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/pipeline/\
+    \ -k \"odar or routing\" \\\n       -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  5.\
+    \ Write deliverable. Validate JSON before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n  \
+    \    principle: \"Terminal-prefix required.\"\n  - odar_routing_implemented:\n      principle: \"True if OdarRouter\
+    \ was added to the pipeline. Core deliverable.\"\n  - odar_vs_argmax_iterations_delta:\n      principle:\
+    \ \"Mean iteration count difference. Negative = ODAR is more efficient (fewer iterations). Positive\
+    \ = ODAR uses more iterations.\"\n  - free_energy_routing_enabled:\n      principle: \"True if pipeline\
+    \ supports routing_mode=odar. Documents Phase 4 operationalization.\"\n  - n_eval_examples:\n      principle:\
+    \ \"Must be >= 20.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n      principle:\
+    \ \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records verify_repair\
+    \ module, numpy checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"odar_routing_implemented == true\"\n   \
+    \ principle: \"OdarRouter must be in the codebase — not just described.\"\n\nDo NOT push. Do NOT modify\
     \ scripts/research_conductor.py."
 
-- id: exp2444-nco-negative-constraint-decoding
-  title: 'Phase 3: NCO Negative Constraint Decoding (arXiv:2605.10065) -- WFSA-Based Constraint Rejection'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2444_nco_negative_constraint.json
+- id: exp2456-nco-corrigendum-v2
+  title: 'Phase 4: NCO Corrigendum v2 -- Fix AUROC=0.500 Tautology from exp2444'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2456_nco_corrigendum_v2.json
   agent_type: codex
   model: gpt-5.5
-  max_turns: 40
+  max_turns: 30
   prior_failures:
-  - experiment_id: exp2276-projected-langevin-baseline
-    verdict: complete_projected_langevin_kl_delta_positive
-    addressed_by: "exp2276 implemented Projected-Langevin as a SAMPLER (arXiv:2605.05387). NCO (arXiv:2605.10065)\
-      \ is a CONSTRAINED DECODING technique using Weighted Finite State Automata — completely different approach,\
-      \ different paper, different mechanism. Langevin methods sample from distributions; NCO rejects tokens at\
-      \ decode time via finite automaton. The scope is decoding-time constraint rejection, not sampling. Genuinely\
-      \ new scope with no prior attempt."
-    retire_if_same_verdict: false
-  prompt: "CONTEXT: NCO (Negative Constraint Optimization, arXiv:2605.10065) uses Weighted\nFinite State Automata (WFSA) to\
-    \ represent negative constraints (patterns that MUST NOT\nappear in model output). The WFSA efficiently rejects tokens that\
-    \ would complete a forbidden\npattern at decode time, without requiring energy evaluation.\n\nApplication to Carnot: encode\
-    \ NSVIF Z3 UNSAT patterns as negative constraints in a WFSA.\nWhen a response token would complete a known hallucination-inducing\
-    \ sequence, the WFSA\nrejects it. This is a complementary mechanism to MH-based energy filtering (exp2442/2443).\n\nThis\
-    \ is a NEW scope: no NCO implementation exists in the codebase.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/nsvif_z3_extractor.py\
-    \ (Z3 extractor for UNSAT patterns)\n  {project_root}/results/constraint_patterns_v4.json (if exists, from exp2425)\n  {project_root}/python/carnot/pipeline/mch_fst_filter.py\
-    \ (FST pipeline reference)\n\nTASK: Implement NCOConstraintDecoder and evaluate on 20 telemetry entries.\n\nCONCRETE STEPS:\n\
-    \  0. PRECONDITIONS:\n     a. z3-solver importable: .venv/bin/python -c \"import z3; print(z3.get_version_string())\"\n\
-    \     b. Telemetry manifest:\n        ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n       \
-    \ If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n     c. NSVIF importable:\n        .venv/bin/python\
-    \ -c \"from carnot.verify.nsvif_z3_extractor import NSVIFExtractor; print('OK')\"\n\n  1. Implement NCOConstraintDecoder\
-    \ at python/carnot/pipeline/nco_decoder.py:\n     WFSA representation (CPU-feasible, no GPU needed):\n       Negative constraint\
-    \ patterns: extract UNSAT constraint cores from constraint_patterns_v4.json\n         (or from first 5 UNSAT telemetry examples\
-    \ if patterns file missing).\n       WFSA states: {{INITIAL, TRACKING_k, REJECTED}} for each negative pattern k.\n     \
-    \  For each token in response:\n         Check if token continues any tracked negative pattern.\n         If pattern k completes:\
-    \ assign rejection_score += 1.\n     Output: nco_rejection_score, n_patterns_fired, wfsa_states_visited.\n\n  2. Evaluate\
-    \ on 20 telemetry entries:\n     nco_constraint_rejection_rate: fraction of hallucinating entries where NCO fires\n     \
-    \  (rejection_score > 0 AND label=hallucination).\n     nco_false_positive_rate: fraction of clean entries where NCO fires\n\
-    \       (rejection_score > 0 AND label=clean).\n     nco_auroc: AUROC of nco_rejection_score vs ground truth labels.\n \
-    \    n_patterns_used: number of WFSA patterns loaded.\n\n  3. Compare vs NSVIF baseline:\n     nco_vs_nsvif_tpr_delta:\
-    \ difference in TPR at FPR=0.1 threshold.\n\n  4. Unit test:\n     PYTEST_ADDOPTS=\"\" .venv/bin/python -m pytest tests/python/pipeline/\
-    \ -k \"nco\" -v --no-cov 2>&1 | tail -15\n     Create test if none exists.\n\n  5. Write deliverable.\n\nREQUIRED ARTIFACT\
-    \ FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\n  - nco_validated:\n      principle: \"\
-    True if NCOConstraintDecoder ran on real telemetry.\"\n  - nco_auroc:\n      principle: \"AUROC of NCO rejection score.\
-    \ Primary metric.\"\n  - nco_constraint_rejection_rate:\n      principle: \"Fraction of hallucinating entries where NCO\
-    \ correctly fires.\"\n  - nco_false_positive_rate:\n      principle: \"Fraction of clean entries where NCO incorrectly\
-    \ fires.\"\n  - n_patterns_used:\n      principle: \"Number of WFSA patterns. Zero patterns = degenerate result.\"\n  -\
-    \ n_eval_examples:\n      principle: \"Must be 20.\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n\
-    \      principle: \"Guards against fabrication.\"\n  - preconditions_checked:\n      principle: \"Records z3, telemetry,\
-    \ nsvif checks.\"\n\nACCEPTANCE GATES:\n  - condition: \"nco_validated == true AND n_patterns_used > 0\"\n    principle:\
-    \ \"NCO must run with real WFSA patterns — zero patterns is degenerate.\"\n  - condition: \"nco_auroc != null AND n_eval_examples\
-    \ >= 15\"\n    principle: \"Must produce valid AUROC on sufficient data.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+  - experiment_id: exp2444-nco-negative-constraint
+    verdict: complete_AUROC_0.500
+    addressed_by: "exp2444 (.236) implemented NCO (arXiv:2605.10065) but achieved AUROC=0.500 — adversarially
+      flagged as tautology (exact chance-level on a 50/50 split). Root cause diagnosis: the evaluation
+      used the same 36 entries for both training the FSM pattern matcher and testing, resulting in
+      perfect memorization but no generalization (or alternatively, the constraint automaton accepted
+      all tokens equally, giving a degenerate score). Fix: (a) use 5-fold stratified CV instead of
+      single train/test split, (b) verify that nco_score variance is > 0 across examples (non-degenerate),
+      (c) run adversarial_verify.py on the artifact before submission."
+    retire_if_same_verdict: true
+  prompt: "CONTEXT: exp2444 (.236) implemented NCO Negative Constraint Decoding (arXiv:2605.10065) but\n\
+    achieved AUROC=0.500 — adversarially flagged by adversarial_verify.py as a tautology (exact\nchance level\
+    \ on a binary task with balanced classes). The retro identified this as an adversarial\nflag requiring corrigendum.\n\
+    \nRoot causes to check:\n  1. If all 36 examples received the same nco_score: the automaton is degenerate\
+    \ (no discrimination).\n  2. If nco_score has positive variance but AUROC=0.5: likely train/test leakage.\n\
+    \  3. If the automaton matched every token or no token: NCO constraint too broad/narrow.\n\nThis v2 diagnoses\
+    \ the root cause and fixes the evaluation protocol.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/nco_constraint.py\
+    \ (from exp2444, if present)\n  {project_root}/results/experiment_2444_nco_negative_constraint.json (exp2444\
+    \ result)\n\nTASK: Diagnose NCO tautology root cause, fix, re-evaluate with 5-fold CV.\n\nCONCRETE STEPS:\n\
+    \  0. PRECONDITIONS:\n     a. sklearn importable: .venv/bin/python -c \"import sklearn; print(sklearn.__version__)\"\
+    \n     b. Telemetry manifest: ls {project_root}/results/live_sota_balanced_telemetry_manifest_1480.jsonl\n\
+    \        If missing: write honest_verdict blocked_telemetry_manifest_missing and exit.\n     c. adversarial_verify.py\
+    \ exists:\n        ls {project_root}/scripts/adversarial_verify.py\n\n  1. Read nco_constraint.py (if present)\
+    \ and exp2444 artifact.\n     Compute score variance from exp2444: if all scores are identical, diagnose\
+    \ degenerate automaton.\n     Identify: was there train/test split? What was the constraint automaton pattern?\n\
+    \n  2. Fix evaluation:\n     a. Load 36 telemetry entries from live_sota_balanced_telemetry_manifest_1480.jsonl.\n\
+    \     b. For each entry: compute nco_score as number of tokens the constraint automaton REJECTS\n       \
+    \  divided by total tokens (rejection rate = proxy for constraint violation).\n        Use a simple constraint:\
+    \ reject tokens with log-probability < -10 (high-uncertainty tokens).\n     c. Verify nco_score has non-zero\
+    \ variance across 36 examples: std(scores) > 0.\n        If std=0: adjust constraint to rejection_rate\
+    \ using 25th percentile logprob threshold.\n     d. Evaluate via stratified 5-fold CV:\n        from sklearn.model_selection\
+    \ import StratifiedKFold\n        from sklearn.metrics import roc_auc_score\n        nco_auroc = mean AUROC\
+    \ across 5 folds.\n\n  3. Run adversarial_verify.py on the new artifact before finalizing:\n     .venv/bin/python\
+    \ scripts/adversarial_verify.py --artifact /tmp/exp2456_draft.json 2>&1 | tail -10\n     If TAUTOLOGY flag:\
+    \ investigate further; do NOT submit tautology artifact.\n     If clean: proceed.\n\n  4. Write deliverable.\
+    \ Validate JSON before writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix\
+    \ required.\"\n  - nco_auroc:\n      principle: \"Primary metric via 5-fold CV. Must differ from 0.500 to\
+    \ show non-degenerate discrimination.\"\n  - nco_vs_exp2444_delta:\n      principle: \"nco_auroc - 0.500.\
+    \ Positive = improvement over tautology baseline.\"\n  - root_cause_of_tautology:\n      principle: \"Documents\
+    \ why exp2444 got AUROC=0.5. Required for corrigendum record.\"\n  - score_variance:\n      principle: \"std(nco_scores)\
+    \ across 36 examples. Non-zero proves non-degenerate automation.\"\n  - adversarial_verify_passed:\n     \
+    \ principle: \"True if adversarial_verify.py returned no TAUTOLOGY or CRITICAL flags.\"\n  - n_folds:\n \
+    \     principle: \"Must be 5 (5-fold CV).\"\n  - random_seed:\n      principle: \"Must be 42.\"\n  - duration_s:\n\
+    \      principle: \"Guards against fabrication.\"\n\nACCEPTANCE GATES:\n  - condition: \"nco_auroc != 0.500\
+    \ AND score_variance > 0\"\n    principle: \"Non-degenerate AUROC is the minimum viable result. If still\
+    \ 0.5 with positive variance, NCO approach may not work on this telemetry — still a valid finding.\"\n\
+    \nDo NOT push. Do NOT modify scripts/research_conductor.py."
 
-- id: exp2445-paperv6-capstone-v236
-  title: 'Phase 4: Paper-v6 Results Table + Capstone v236 -- AUROC Ceiling Breach Synthesis'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2445_capstone_v236.json
+- id: exp2457-paperv6-capstone-v237
+  title: 'Phase 4: Paper-v6 Results Table + Capstone v237 -- Phase 1 Ship Gate + AUROC Final Synthesis'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2457_capstone_v237.json
+  agent_type: claude
   model: opus
-  max_turns: 60
+  max_turns: 100
   requires_claude: true
   gated_on:
-  - upstream: exp2438-conformal-ensemble-v1
+  - upstream: exp2448-conformal-ensemble-v2
     artifact_field: ensemble_auroc_improved
     op: ==
     value: true
   prior_failures:
-  - experiment_id: exp2432-paperv6-capstone-v235
-    verdict: complete_235_capstone_synthesis_best_auroc_0.88961
-    addressed_by: "exp2432 synthesized .235 milestone results (best_auroc=0.88961, z3_encoding_used=false finding). This v236\
-      \ capstone synthesizes new verifiers (DiffuTruth Tier 0k, PCIB Tier 0l, LogCons Z3-True v3) and the conformal p-value\
-      \ ensemble — substantially different scope with new AUROC data and Phase 1 ship gate completion status."
+  - experiment_id: exp2445-paperv6-capstone-v236
+    verdict: blocked_gate_check_failed
+    addressed_by: "exp2445 (.236) was gate-blocked because exp2438 (conformal ensemble v1) had malformed JSON
+      (Extra data at char 1999), making ensemble_auroc_improved unreadable by the conductor gate checker.
+      The AUROC itself was achieved (0.9167 confirmed via regex). exp2448 (this milestone) fixes the JSON
+      and produces a valid artifact. With ensemble_auroc_improved=true readable from exp2448, the gate will
+      pass and exp2457 will run. The underlying science is ready: phase1_ship_gate_met=true (exp2441),
+      best AUROC=0.9167 (gap=0.0069). The only blocker was the JSON malformation."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: Milestone 2026.05.236 (AUROC Ceiling Breach) targets pushing AUROC past\nthe HIVE peer ceiling of 0.9236.\
-    \ Key .235 baseline: best_auroc=0.8896 (LogCons fallback,\nz3_encoding_used=false). .236 adds:\n  DiffuTruth Tier 0k (exp2435),\
-    \ PCIB Tier 0l (exp2436), LogCons Z3-True v3 (exp2437),\n  Conformal P-Value Ensemble v1 (exp2438, gated),\n  FR-11 Online\
-    \ Learnability (exp2439), KV260 RTL Fix v5 (exp2440),\n  Phase 1 Ship Gate Completion v5 (exp2441),\n  FST MCMC Energy\
-    \ Fix v3 (exp2442), Kinetic Langevin FST (exp2443), NCO Decoding (exp2444).\n\nREQUIRES_CLAUDE JUSTIFICATION:\n  (1) Prior\
-    \ successful capstones (exp2432 .235, exp2404 .233, exp2376 .231) ALL used Claude.\n      Codex has never successfully\
-    \ synthesized a multi-milestone AUROC capstone.\n  (2) Reads 12+ experiment artifacts across 5+ directories with cross-\n\
-    \      experiment AUROC reasoning requiring global context.\n  (3) Open-ended synthesis: does conformal ensemble close the\
-    \ HIVE peer gap? Does Phase 1\n      ship gate completion change the paper submission timeline? Does z3_encoding_used=true\n\
-    \      (exp2437) produce higher AUROC than the fallback (0.8896 from exp2423)?\n      Multi-step reasoning under ambiguity\
-    \ — not mechanical computation.\n\nEXISTING ARTIFACTS TO READ:\n  {project_root}/results/experiment_2435_diffutruth_tier0k.json\n\
-    \  {project_root}/results/experiment_2436_pcib_tier0l.json\n  {project_root}/results/experiment_2437_logcons_z3_true_v3.json\n\
-    \  {project_root}/results/experiment_2438_conformal_ensemble_v1.json (gate trigger)\n  {project_root}/results/experiment_2439_fr11_online_learnability.json\n\
-    \  {project_root}/results/experiment_2440_kv260_rtl_fix_v5.json\n  {project_root}/results/experiment_2441_phase1_ship_gate_completion_v5.json\n\
-    \  {project_root}/results/experiment_2442_fst_mcmc_energy_fix_v3.json\n  {project_root}/results/experiment_2443_kinetic_langevin_fst.json\n\
-    \  {project_root}/results/experiment_2444_nco_negative_constraint.json\n  {project_root}/results/experiment_2432_capstone_v235.json\
-    \ (.235 baseline)\n  {project_root}/results/experiment_2423_hierarchical_logcons_v2.json (AUROC=0.8896 baseline)\n\nTASK:\
-    \ Compile paper-v6 results table. Synthesize .236 key findings. Update ops/status.md.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n\
-    \     a. At least exp2438 artifact must exist (gate condition):\n        ls {project_root}/results/experiment_2438_conformal_ensemble_v1.json\n\
-    \        If missing: write honest_verdict blocked_no_conformal_ensemble_artifact and exit.\n\n  1. Read all available artifacts.\
-    \ Extract:\n     - best_auroc_achieved: max AUROC across all .236 verifiers\n     - conformal_ensemble_auroc: from exp2438\n\
-    \     - logcons_z3_true_auroc: from exp2437 (compare vs 0.8896 fallback)\n     - diffutruth_auroc: from exp2435\n     -\
-    \ pcib_auroc: from exp2436\n     - auroc_gap_to_hive_peer: 0.9236 - best_auroc_achieved\n     - fr11_satisfied: from exp2439.fr11_online_learnability_passed\n\
-    \     - kv260_synthesis_succeeded: from exp2440.synthesis_succeeded\n     - phase1_ship_gate_met: from exp2441.phase1_ship_gate_met\n\
-    \     - fst_mcmc_fixed: from exp2442.mch_energy_fix_validated\n\n  2. Compile paper-v6 results table in Markdown:\n     |\
-    \ Verifier | AUROC | vs Baseline | Source |\n     |---|---|---|---|\n     (Include all verifiers from .231-.236 with AUROC\
-    \ values)\n\n  3. Write synthesis: what .236 proved, what gap remains, hardware + ship gate status,\n     Phase 4 active-inference\
-    \ validation timeline.\n\n  4. Append paper_v6_results_table and synthesis to ops/status.md (new section).\n\n  5. Write\
-    \ deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required. complete:\
-    \ with best_auroc and gap.\"\n  - best_auroc_achieved:\n      principle: \"Best AUROC from any .236 verifier. Paper-v6\
-    \ headline metric.\"\n  - auroc_gap_to_hive_peer:\n      principle: \"0.9236 - best_auroc_achieved. Primary progress signal.\"\
-    \n  - conformal_ensemble_auroc:\n      principle: \"Conformal p-value ensemble AUROC (null if exp2438 failed).\"\n  - fr11_satisfied:\n\
-    \      principle: \"FR-11 mandatory: true if exp2439 passed.\"\n  - kv260_synthesis_succeeded:\n      principle: \"KV260\
-    \ hardware track milestone.\"\n  - phase1_ship_gate_met:\n      principle: \"Phase 1 completion gate.\"\n  - paper_v6_results_table:\n\
-    \      principle: \"Markdown table for paper-v6 Section 5.\"\n  - n_paper_ready_results:\n      principle: \"Count of verifiers\
-    \ with AUROC > 0.685 baseline.\"\n  - top_3_gaps_for_237:\n      principle: \"Ordered priority list for .237 planner.\"\
-    \n  - duration_s:\n      principle: \"Guards against fabrication.\"\n\nACCEPTANCE GATES:\n  - condition: \"best_auroc_achieved\
-    \ != null\"\n    principle: \"Must have at least one AUROC result from .236.\"\n  - condition: \"fr11_satisfied != null\"\
-    \n    principle: \"FR-11 status must be explicitly recorded — mandatory per CLAUDE.md.\"\n\nDo NOT push. Do NOT modify\
-    \ scripts/research_conductor.py."
+  prompt: "CONTEXT: Milestone .237 targets AUROC ceiling breach and paper-v6 synthesis. Key results\nentering\
+    \ .237:\n- phase1_ship_gate_met=true (exp2441 .236 — MAJOR: PyPI + HF mirror + MCP docs + CLI docs)\n- Best\
+    \ AUROC = 0.9167 (conformal ensemble v1, exp2438, 7 verifiers; gap to HIVE peer = 0.0069)\n- exp2448 (.237)\
+    \ rebuilds conformal ensemble with valid JSON + PCIB (8th verifier)\n- KV260: synthesis_errors may be fixed\
+    \ by exp2452\n- FR-11: v5 soundness/completeness tracking (exp2451)\n- ODAR routing implemented (exp2455)\n\
+    \nThis capstone synthesizes .236 + .237 outcomes into the paper-v6 results table.\nRequires claude+opus:\
+    \ (1) codex has never successfully completed a capstone, (2) this requires\nreading 12+ artifact files\
+    \ and open-ended synthesis of narrative claims, (3) the framing\nof whether we've breached the HIVE peer\
+    \ ceiling requires judgment about what the conformal\nensemble results mean for the Phase 1 paper claim.\n\
+    \nEXISTING CODE TO READ FIRST:\n  {project_root}/docs/paper-v6/ or {project_root}/docs/ (paper LaTeX)\n\
+    \  {project_root}/results/experiment_2448_conformal_ensemble_v2.json (primary gate)\n  {project_root}/results/experiment_2438_conformal_ensemble_v1.json\
+    \ (first 60 chars — baseline)\n  {project_root}/results/experiment_2441_phase1_ship_gate_completion_v5.json\
+    \ (ship gate MET)\n  {project_root}/results/experiment_2451_fr11_soundness_completeness_v5.json (FR-11\
+    \ v5)\n  {project_root}/results/experiment_2452_kv260_rtl_synthesis_fix_v5.json (KV260 status)\n  {project_root}/results/experiment_2453_gatemate_ising_synthesis_v2.json\
+    \ (GateMate status)\n  {project_root}/results/experiment_2454_polarfire_smoke_v3.json (PolarFire status)\n\
+    \  {project_root}/results/experiment_2455_odar_free_energy_routing.json (ODAR status)\n\nTASK: Write paper-v6\
+    \ results table update + synthesis narrative.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. exp2448 artifact\
+    \ exists and is valid JSON:\n        .venv/bin/python -c \"import json; json.load(open('{project_root}/results/experiment_2448_conformal_ensemble_v2.json'))\"\
+    \n        If fails: write honest_verdict blocked_exp2448_artifact_unreadable and exit.\n     b. exp2441 artifact\
+    \ confirms phase1_ship_gate_met=true:\n        .venv/bin/python -c \"import json; d=json.load(open('{project_root}/results/experiment_2441_phase1_ship_gate_completion_v5.json'));\
+    \ assert d['phase1_ship_gate_met']\"\n        If fails: write honest_verdict blocked_ship_gate_not_met\
+    \ and exit.\n\n  1. Read all artifact files listed above. Extract:\n     - conformal_ensemble_auroc (from\
+    \ exp2448; primary AUROC result)\n     - auroc_gap_to_hive_peer: conformal_ensemble_auroc - 0.9236\n    \
+    \ - phase1_ship_gate_met (from exp2441; must be True)\n     - fr11_satisfied (from exp2451; soundness_tracking_enabled)\n\
+    \     - kv260_synthesis_succeeded (from exp2452)\n     - gatemate_bitstream_flashed (from exp2453)\n    \
+    \ - ssh_reachable (from exp2454; PolarFire reachable)\n     - odar_routing_implemented (from exp2455)\n\n\
+    \  2. Update paper-v6 results section:\n     Find the main results table in docs/ and update:\n       - AUROC\
+    \ row: update to conformal_ensemble_auroc from exp2448\n       - Hardware row: update KV260/GateMate/PolarFire\
+    \ status\n       - Ship gate row: mark as COMPLETE\n     Keep all existing content per CLAUDE.md no-pruning\
+    \ policy.\n\n  3. Write synthesis narrative:\n     - What the conformal ensemble result means for the paper\
+    \ claim\n     - Whether HIVE peer ceiling was breached or still has gap\n     - Phase 1 ship gate status\
+    \ (ship-ready)\n     - Hardware progress summary\n     - FR-11 continuous learning status\n     - ODAR Phase\
+    \ 4 integration status\n\n  4. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n  \
+    \    principle: \"Terminal-prefix required. complete: with summary of key outcomes.\"\n  - best_auroc_achieved:\n\
+    \      principle: \"Primary metric — the conformal ensemble AUROC from exp2448.\"\n  - auroc_gap_to_hive_peer:\n\
+    \      principle: \"conformal_ensemble_auroc - 0.9236. Negative = gap remains; positive = BREACHED.\"\n  -\
+    \ phase1_ship_gate_met:\n      principle: \"Must be True — the foundational Phase 1 achievement.\"\n  - paper_results_updated:\n\
+    \      principle: \"True if the paper-v6 results table was updated.\"\n  - n_paper_ready_experiments:\n  \
+    \    principle: \"Count of .236/.237 experiments that contribute headline-quality results to paper.\"\n\
+    \  - hardware_status_summary:\n      principle: \"One-line per board (KV260/GateMate/PolarFire) — current\
+    \ synthesis/flash state.\"\n  - fr11_satisfied:\n      principle: \"True if exp2451 completed soundness/completeness\
+    \ tracking.\"\n  - preconditions_checked:\n      principle: \"Records exp2448 readable and ship gate met.\"\
+    \n\nACCEPTANCE GATES:\n  - condition: \"phase1_ship_gate_met == true\"\n    principle: \"Phase 1 ship is\
+    \ the foundational claim. If somehow not met, do not claim paper-ready.\"\n  - condition: \"best_auroc_achieved\
+    \ != null\"\n    principle: \"Must report the actual AUROC from conformal ensemble v2.\"\n\nDo NOT push.\
+    \ Do NOT modify scripts/research_conductor.py."
 
-- id: exp2446-retro-v236
-  title: 'Phase 4: Milestone 2026.05.236 Operational Retrospective'
-  milestone: 2026.05.236
-  deliverable: results/experiment_2446_retro_v236.json
+- id: exp2458-retro-v237
+  title: 'Phase 4: Milestone 2026.05.237 Operational Retrospective'
+  milestone: 2026.05.237
+  deliverable: results/experiment_2458_retro_v237.json
   agent_type: codex
   model: gpt-5.5
-  max_turns: 25
+  max_turns: 20
   prior_failures:
-  - experiment_id: exp2433-retro-v235
-    verdict: complete_retro_complete_n_experiments_completed_13
-    addressed_by: "exp2433 is the .235 operational retrospective — completed successfully with 13/13 tasks. This task\
-      \ is the .236 retrospective — standard recurring pattern, not a failure rerun. Different milestone, different\
-      \ artifacts (exp2434-exp2445), different top_3_gaps_for_237."
+  - experiment_id: exp2446-retro-v236
+    verdict: complete_retro_generated_with_10_completed_1_failed_1_blocked
+    addressed_by: "exp2446 successfully completed the .236 retro. This task is the standard recurring retro
+      pattern for .237 — different milestone, different deliverable (experiment_2458_retro_v237.json),
+      different outcomes to summarize."
     retire_if_same_verdict: false
-  prompt: "CONTEXT: Milestone 2026.05.236 (AUROC Ceiling Breach: DiffuTruth + PCIB + Conformal\nEnsemble, RTL Synthesis Fix,\
-    \ Phase 1 Ship Gate Completion) has completed.\nWrite structured retrospective for all 13 tasks (exp2434-exp2446).\n\nEXISTING\
-    \ ARTIFACTS TO READ (check which exist first):\n  {project_root}/results/experiment_2434_archive.json\n  {project_root}/results/experiment_2435_diffutruth_tier0k.json\n\
-    \  {project_root}/results/experiment_2436_pcib_tier0l.json\n  {project_root}/results/experiment_2437_logcons_z3_true_v3.json\n\
-    \  {project_root}/results/experiment_2438_conformal_ensemble_v1.json\n  {project_root}/results/experiment_2439_fr11_online_learnability.json\n\
-    \  {project_root}/results/experiment_2440_kv260_rtl_fix_v5.json\n  {project_root}/results/experiment_2441_phase1_ship_gate_completion_v5.json\n\
-    \  {project_root}/results/experiment_2442_fst_mcmc_energy_fix_v3.json\n  {project_root}/results/experiment_2443_kinetic_langevin_fst.json\n\
-    \  {project_root}/results/experiment_2444_nco_negative_constraint.json\n  {project_root}/results/experiment_2445_capstone_v236.json\n\
-    \nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. Check which artifacts exist:\n        for f in 2434 2435 2436 2437 2438\
-    \ 2439 2440 2441 2442 2443 2444 2445; do\n          ls {project_root}/results/experiment_${{f}}*.json 2>/dev/null && echo\
-    \ \"present: $f\" || echo \"missing: $f\"\n        done\n\n  1. Read each artifact. Extract: status, key_result.\n     Compute\
-    \ n_experiments_completed, n_failed, n_gate_blocks.\n\n  2. Compute:\n     - best_236_verifier_auroc: max AUROC from exp2435-exp2438\
-    \ (null if all missing)\n     - auroc_gap_to_hive_peer_at_236_close: 0.9236 - best_236_verifier_auroc\n     - fr11_satisfied:\
-    \ exp2439.fr11_online_learnability_passed (null if missing)\n     - kv260_synthesis_succeeded: exp2440.synthesis_succeeded\
-    \ (null if missing)\n     - phase1_ship_gate_met: exp2441.phase1_ship_gate_met (null if missing)\n     - fst_mcmc_fixed:\
-    \ exp2442.mch_energy_fix_validated (null if missing)\n\n  3. Write task_outcomes list (one entry per exp2434-exp2445).\n\
-    \n  4. Identify top_3_gaps_for_237: based on what .236 achieved and what remains.\n\n  5. Update ops/status.md with .236\
-    \ summary (ADD — do not replace existing).\n\n  6. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
-    \      principle: \"Terminal-prefix required. complete: with n_experiments_completed.\"\n  - retro_complete:\n      principle:\
-    \ \"Must be true — this task always runs.\"\n  - n_experiments_completed:\n      principle: \"Count of tasks with\
-    \ OK status.\"\n  - n_failed:\n      principle: \"Count with FAIL status.\"\n  - n_gate_blocks:\n      principle: \"Count\
-    \ gate-blocked tasks.\"\n  - best_236_verifier_auroc:\n      principle: \"Best AUROC from .236. Key progress metric.\"\n\
-    \  - auroc_gap_to_hive_peer_at_236_close:\n      principle: \"0.9236 - best_236_verifier_auroc. Remaining gap.\"\n  - fr11_satisfied:\n\
-    \      principle: \"FR-11 mandatory compliance flag.\"\n  - kv260_synthesis_succeeded:\n      principle: \"Hardware track\
-    \ milestone flag.\"\n  - phase1_ship_gate_met:\n      principle: \"Phase 1 completion gate.\"\n  - fst_mcmc_fixed:\n   \
-    \   principle: \"FST degenerate acceptance fixed flag.\"\n  - task_outcomes:\n      principle: \"Per-task status list —\
-    \ audit trail for .237 planner.\"\n  - top_3_gaps_for_237:\n      principle: \"Ordered priority list — seed for .237\
-    \ planning.\"\n  - milestone:\n      principle: \"Must be '2026.05.236'.\"\n  - generated_at:\n      principle: \"UTC timestamp.\"\
-    \n  - duration_s:\n      principle: \"Guards against fabrication.\"\n\nACCEPTANCE GATES:\n  - condition: \"retro_complete\
-    \ == true\"\n    principle: \"Retro always runs — it is the milestone close signal.\"\n\nDo NOT push. Do NOT modify\
-    \ scripts/research_conductor.py."
+  prompt: "CONTEXT: Milestone 2026.05.237 targets AUROC final breach + paper capstone + hardware\ncontinuity\
+    \ (KV260 RTL fix, GateMate synthesis + flash, PolarFire smoke). Tasks: exp2447-exp2458.\n\nEXISTING CODE\
+    \ TO READ FIRST:\n  {project_root}/results/ (list files matching experiment_244*.json and experiment_245*.json)\n\
+    \nTASK: Write milestone .237 operational retrospective.\n\nCONCRETE STEPS:\n  1. Scan results/ for all\
+    \ experiment_244[7-9]*.json and experiment_245[0-8]*.json files.\n  2. For each task (exp2447-exp2458):\
+    \ check if deliverable exists and extract honest_verdict.\n  3. Count: n_completed, n_missing, n_blocked,\
+    \ n_failed.\n  4. Extract key metrics:\n     - best_237_verifier_auroc: from exp2448 (conformal_ensemble_auroc)\n\
+    \     - auroc_gap_to_hive_peer: 0.9236 - best_237_verifier_auroc\n     - fr11_satisfied: from exp2451\n \
+    \    - kv260_synthesis_succeeded: from exp2452\n     - gatemate_bitstream_flashed: from exp2453\n     - polarfire_ssh_reachable:\
+    \ from exp2454 (ssh_reachable field)\n     - phase1_ship_gate_met: from exp2457 or exp2441\n  5. Identify:\
+    \ top 3 successes, top 3 gaps for .238.\n  6. Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n\
+    \      principle: \"Terminal-prefix required. complete: retro generated.\"\n  - retro_complete:\n      principle:\
+    \ \"True.\"\n  - n_experiments_completed:\n      principle: \"Count of tasks with terminal complete/success/passed/shipped\
+    \ verdict.\"\n  - best_237_verifier_auroc:\n      principle: \"The best AUROC achieved in .237 (from conformal\
+    \ ensemble v2).\"\n  - phase1_ship_gate_met:\n      principle: \"True (confirmed in .236). Documents that\
+    \ Phase 1 is shipped.\"\n  - top_3_gaps_for_238:\n      principle: \"The 3 most important unresolved items\
+    \ — determines .238 design.\"\n\nACCEPTANCE GATES:\n  - condition: \"retro_complete == true\"\n    principle:\
+    \ \"Retro must complete to close the milestone.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
