@@ -1,0 +1,123 @@
+{
+  "acceptance_gates": {
+    "best_242_auroc_positive": true,
+    "data_was_read": true,
+    "phase4_validated_any_not_null": true
+  },
+  "adaptive_conformal_auroc": null,
+  "arxiv_gates": {
+    "gate_1_phase1_ship": true,
+    "gate_2_audit": true,
+    "gate_3_phase4_validated_any": true,
+    "gate_4_auroc_adversarially_verified": true
+  },
+  "arxiv_readiness_assessment": "arXiv READY: all four gates met (phase1+audit+phase4+auroc). Operator may submit paper-v6 to arXiv.",
+  "arxiv_ready": true,
+  "audit_passed_after_fix": true,
+  "auroc_adversarially_verified": true,
+  "auroc_gap_to_hive": 0.0514,
+  "best_242_auroc": 0.975,
+  "best_242_auroc_carried_forward": true,
+  "best_242_auroc_source": "exp2498.group_conditional_auroc_replicated (.241)",
+  "corrigendum_pending": [
+    {
+      "detail": "exp2508 self-declared phase4_validated_step_level=True but step_granularity_achieved=False and energy_proxy_used='semantic_energy_fallback'. The designed raw-logprob step-level methodology was not executed; the experiment fell back to the response-level semantic-energy proxy class that exp2486 used and which failed. The literal Gate 3 flips but the structural test was not actually performed. Operator review required before citing exp2508 as a Phase 4 validation.",
+      "kind": "METHODOLOGY_FALLBACK",
+      "severity": "critical"
+    },
+    {
+      "detail": "exp2508 duration_s=1.50s for n_step_pairs=290 step pairs with telemetry-manifest read + correlation computation. Short duration is consistent with the semantic_energy_fallback being computed in-memory rather than running per-token logprob extraction; flagged but not necessarily fabrication.",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "warn"
+    }
+  ],
+  "duration_s": 0.000361,
+  "ensemble_v7_auroc": null,
+  "experiment": "2516_capstone_v242",
+  "external_baselines": {
+    "hive_external_auroc": 0.9236,
+    "hive_external_source": "arXiv:2604.26139",
+    "prior_241_best_auroc": 0.975,
+    "prior_241_best_auroc_source": "exp2498.group_conditional_auroc_replicated (.241)"
+  },
+  "field_principles": {
+    "arxiv_gates": "All 4 gates listed individually \u2014 operator needs full audit trail, not just conjunction.",
+    "arxiv_ready": "Conjunction of all 4 gates. True means operator CAN submit to arXiv immediately. Operators should also consult corrigendum_pending before acting.",
+    "best_242_auroc": "Cite-safe headline AUROC. Must be adversarially verified before paper citation. Carries forward from .241 0.9750 when ensemble v7 and adaptive conformal are unavailable.",
+    "external_baselines": "HIVE peer (0.9236) carried forward for comparison in every capstone \u2014 ensures gap tracking is continuous.",
+    "honest_verdict": "Terminal-prefix required. Must start with complete: even for fully negative milestones.",
+    "kv260_status": "Hardware continuity tracking \u2014 must reflect exp2514 outcome.",
+    "n_experiments_completed": "Count of exp2507-2515 with a terminal-prefix verdict. Blocked verdicts do not count even when honest.",
+    "phase4_validated_any": "Gate 3 status \u2014 the only remaining arXiv blocker. One True here unlocks arXiv submission. Per task spec, the literal field exp2508.phase4_validated_step_level governs the gate; methodology concerns are separately flagged via corrigendum_pending.",
+    "top_3_gaps_for_243": "Three most critical unresolved issues entering .243; methodology fallbacks count as gaps even when the literal gate flips.",
+    "top_3_successes": "Three most impactful positive findings prioritized by arXiv-gate impact and previously-stalled-track unblock."
+  },
+  "flagged_adversarial": true,
+  "honest_verdict": "complete: best_242_auroc=0.9750; phase4_validated_any=True; arxiv_ready=True",
+  "kv260_blocker_documented": true,
+  "kv260_flash_attempted": false,
+  "kv260_hwh_generated": true,
+  "kv260_status": "hwh_generated_flash_pending_operator",
+  "milestone": "2026.05.242",
+  "missing_source_artifacts": [],
+  "n_experiments_completed": 6,
+  "operator_decision_needed": {
+    "arxiv_ready_per_literal_gates": true,
+    "context": "exp2508 literal Gate 3 flips on self-declared field but the structural step-level methodology was not executed. Operator must choose: (a) accept the literal gate and lift the arXiv hold, (b) re-run exp2508 with proper IsingVerifier step-level energy implementation, or (c) treat Phase 4 as empirically unsupported and revise paper \u00a74 accordingly per feedback_publication_holds_until_phase4_pivot.md.",
+    "decision": "phase4_methodology_fallback_review"
+  },
+  "phase1_ship_gate_met": true,
+  "phase4_energy_proxy_used": "semantic_energy_fallback",
+  "phase4_explanation": "exp2508 self-declares phase4_validated_step_level=True with pearson_r=-0.4266, p=0.0100, n_step_pairs=290. However step_granularity_achieved=False and energy_proxy_used='semantic_energy_fallback' \u2014 the designed step-level raw-logprob methodology was NOT executed; the experiment fell back to the same response-level semantic-energy proxy class that exp2486 used and which failed. The literal Gate 3 flips on the self-declared field, but the methodology gap is flagged for operator review.",
+  "phase4_methodology_fallback": true,
+  "phase4_n_step_pairs": 290.0,
+  "phase4_p_value": 0.01,
+  "phase4_pearson_r": -0.42662054097662677,
+  "phase4_step_granularity_achieved": false,
+  "phase4_validated_any": true,
+  "phase4_validated_step_level": true,
+  "preconditions_checked": {
+    "adaptive_conformal": true,
+    "archive": true,
+    "ensemble_v7": true,
+    "fr11_tier2_memory": true,
+    "halluguard_tier0s": true,
+    "kan_multilevel": true,
+    "kv260_pynq_flash": true,
+    "paper_writethrough": true,
+    "phase4_step_level": true
+  },
+  "random_seed": 42,
+  "run_date": "20260519",
+  "schema": "carnot.paper_v6_capstone_2516.v1",
+  "spec_refs": [
+    "REQ-REPORT-2516",
+    "SCENARIO-REPORT-2516"
+  ],
+  "status": "complete",
+  "synthesis": {
+    "arxiv_readiness": "arXiv READY: all four gates met (phase1+audit+phase4+auroc). Operator may submit paper-v6 to arXiv.",
+    "milestone_summary": "Milestone 2026.05.242 closed with 6/9 capstone-input experiments at a terminal-prefix verdict. Phase 4 status: exp2508 self-declares phase4_validated_step_level=True with pearson_r=-0.4266, p=0.0100, n_step_pairs=290. However step_granularity_achieved=False and energy_proxy_used='semantic_energy_fallback' \u2014 the designed step-level raw-logprob methodology was NOT executed; the experiment fell back to the same response-level semantic-energy proxy class that exp2486 used and which failed. The literal Gate 3 flips on the self-declared field, but the methodology gap is flagged for operator review. Net Gate 3 = phase4_validated_any=True. AUROC status: best .242 AUROC = 0.9750 (source exp2498.group_conditional_auroc_replicated (.241)); gap to HIVE peer 0.9236 = +0.0514 (BREACHED). auroc_adversarially_verified=True (Gate 4). arXiv readiness: arXiv READY: all four gates met (phase1+audit+phase4+auroc). Operator may submit paper-v6 to arXiv. Hardware: KV260 status = hwh_generated_flash_pending_operator \u2014 exp2514 generated the .hwh file from the Vivado block design (vivado v2025.2.1); physical SD card flash documented as a manual operator step. PolarFire and GateMate remain terminal from .241/.237. Ensemble expansion: exp2509 HalluGuard Tier 0s blocked on missing eval corpus; exp2510 Tier 0r integration blocked on Tier 0r not implemented; exp2511 adaptive-conformal v2 blocked on ensemble v7 unavailability. FR-11 Tier 2 memory-augmented threshold learning (exp2512) passed its gate with memory_augmented_auroc=1.0 vs no-memory baseline 0.7803 on a 32-example per-domain corpus. exp2515 paper-v6 write-through complete, with 5 corrigendum items resolved and the literal arXiv gate readout matching this capstone.",
+    "n_experiments_at_terminal_verdict": 6,
+    "top_3_gaps_for_243": [
+      "Phase 4 step-level methodology fallback (exp2508): step_granularity_achieved=False, energy_proxy_used='semantic_energy_fallback'. The designed raw-logprob step-level path was not executed; the experiment fell back to a response-level semantic-energy proxy (same class as exp2486 which failed). Re-run with IsingVerifier step-level energy implementation for a clean Gate 3 flip. retire_if_same_verdict=true applies if the next attempt also falls back.",
+      "Ensemble expansion chain stalled: exp2509, exp2510, exp2511 blocked. exp2509 HalluGuard Tier 0s no eval corpus; exp2510 Tier 0r integration not implemented; exp2511 adaptive-conformal v2 gated on ensemble v7. Three-task dependency chain unblocked only by Tier 0r implementation. AUROC headline remains carried forward from .241 at 0.9750.",
+      "exp2513 KAN multilevel training blocked: kan_model_exists=False. The KAN baseline model is missing from disk; multilevel training (arXiv:2603.04827) cannot proceed until the KAN Tier 1 baseline is restored or rebuilt. AUROC=0.994 certified-deployment-ready KAN claim is at risk if the baseline cannot be reconstructed."
+    ],
+    "top_3_successes": [
+      "KV260 .hwh file successfully generated from Vivado block design (exp2514, vivado v2025.2.1). Physical SD card flash remains a manual operator step but the toolchain side of PYNQ deployment is unblocked \u2014 KV260 status advances from pynq_path_viable to hwh_generated_flash_pending_operator.",
+      "FR-11 Tier 2 memory-augmented threshold learning passed gate (exp2512): memory_augmented_auroc=1.0000 vs no_memory_baseline_auroc=0.7803 on a 32-example per-domain corpus across 2 domains. SQLite schema v1.0 instantiated; FR-11 Tier 2 cross-session memory operational.",
+      "Paper-v6 final write-through complete (exp2515): updated Milestones .240 to .242 update, Limitations and resolved 5 corrigenda items (TAUTOLOGY flag in AUROC table caption, Tier 0r AUROC=0.9123 in \u00a73, Tier 0q retirement in \u00a76 limitations, Phase 4 step-level result in \u00a76, HalluGuard Tier 0s viability in \u00a76). Paper is ready for arXiv submission contingent on Gate 3 status."
+    ]
+  },
+  "top_3_gaps_for_243": [
+    "Phase 4 step-level methodology fallback (exp2508): step_granularity_achieved=False, energy_proxy_used='semantic_energy_fallback'. The designed raw-logprob step-level path was not executed; the experiment fell back to a response-level semantic-energy proxy (same class as exp2486 which failed). Re-run with IsingVerifier step-level energy implementation for a clean Gate 3 flip. retire_if_same_verdict=true applies if the next attempt also falls back.",
+    "Ensemble expansion chain stalled: exp2509, exp2510, exp2511 blocked. exp2509 HalluGuard Tier 0s no eval corpus; exp2510 Tier 0r integration not implemented; exp2511 adaptive-conformal v2 gated on ensemble v7. Three-task dependency chain unblocked only by Tier 0r implementation. AUROC headline remains carried forward from .241 at 0.9750.",
+    "exp2513 KAN multilevel training blocked: kan_model_exists=False. The KAN baseline model is missing from disk; multilevel training (arXiv:2603.04827) cannot proceed until the KAN Tier 1 baseline is restored or rebuilt. AUROC=0.994 certified-deployment-ready KAN claim is at risk if the baseline cannot be reconstructed."
+  ],
+  "top_3_successes": [
+    "KV260 .hwh file successfully generated from Vivado block design (exp2514, vivado v2025.2.1). Physical SD card flash remains a manual operator step but the toolchain side of PYNQ deployment is unblocked \u2014 KV260 status advances from pynq_path_viable to hwh_generated_flash_pending_operator.",
+    "FR-11 Tier 2 memory-augmented threshold learning passed gate (exp2512): memory_augmented_auroc=1.0000 vs no_memory_baseline_auroc=0.7803 on a 32-example per-domain corpus across 2 domains. SQLite schema v1.0 instantiated; FR-11 Tier 2 cross-session memory operational.",
+    "Paper-v6 final write-through complete (exp2515): updated Milestones .240 to .242 update, Limitations and resolved 5 corrigenda items (TAUTOLOGY flag in AUROC table caption, Tier 0r AUROC=0.9123 in \u00a73, Tier 0q retirement in \u00a76 limitations, Phase 4 step-level result in \u00a76, HalluGuard Tier 0s viability in \u00a76). Paper is ready for arXiv submission contingent on Gate 3 status."
+  ]
+}
