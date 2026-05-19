@@ -6466,3 +6466,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Prototype (arXiv:2601.18753 ICLR 2026) (⚠️ Blocked) — honest_verdict=blocked_no_eval_corpus; results/experiment_2509_halluguard_tier0s.json
 - 2026-05-19: Phase 2a: HalluGuard NTK-Based Tier 0s Verifier Prototype (arXiv:2601.18753 ICLR 2026) (⚠️ Blocked) — honest_verdict=blocked_no_eval_corpus; results/experiment_2509_halluguard_tier0s.json
 - 2026-05-19: Phase 2a: Tier 0r Integration + Conformal Ensemble v7 (10 Verifiers) (⚠️ Blocked) — honest_verdict=blocked_tier0r_not_implemented; results/experiment_2510_ensemble_v7.json
+- 2026-05-19: Phase 2a: Tier 0r Integration + Conformal Ensemble v7 (10 Verifiers) (⚠️ Blocked) — honest_verdict=blocked_tier0r_not_implemented; results/experiment_2510_ensemble_v7.json
