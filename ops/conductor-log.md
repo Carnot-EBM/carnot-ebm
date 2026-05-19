@@ -5168,3 +5168,4 @@ Ripgrep i |
 | 2026-05-19 22:59 UTC | Phase 2a: Ensemble v7b — Tier 0r Group D (fix 0.96 | OK | 81 passed, 1 warning in 2.23s |
 | 2026-05-19 23:14 UTC | Phase 2b: Adaptive Conformal v2 + ACSE (arXiv:2604 | OK | 81 passed, 1 warning in 2.37s |
 | 2026-05-19 23:25 UTC | Phase 3a: Tier 0r/0s/0u Real-Corpus AUROC Validati | OK | 81 passed, 1 warning in 2.48s |
+| 2026-05-19 23:29 UTC | Phase 3b: Tier 0v HalluField Prototype (arXiv:2509 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2549_tier0v_ |
