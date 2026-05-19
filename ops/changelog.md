@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.244 Research Planning)
+
+- Milestone 2026.05.244 research planning complete. User instruction: plan the next milestone after .243 (all tasks completed).
+- Milestone .243 outcomes (key results from retro exp2529 + capstone exp2528): AUROC=0.9750 carry-forward (ensemble v6 stable); Phase 4 exp2519 blocked_ising_verifier_not_available — root cause confirmed as `class IsingVerifier: pass` (empty stub, no methods); ensemble v7 regression 0.9750→0.9607 caused by Tier 0r in Group C (score range mismatch); arXiv submission_package_ready=False (latex_compile_success=False, abstract 522 words > 250 limit); FR-11 Tier 3 JEPA AUC improved 0.7633→0.8889; top 3 gaps: IsingVerifier stub, ensemble regression, LaTeX failure.
+- ArXiv research sweep: 2 new papers added to `research-references.md` under "Post-.243 Planning Sweep (Milestone 2026.05.244)": (1) arXiv:2605.05134 — Dynamical System Hallucination Detection (Lyapunov exponent trajectory divergence) — Tier 0t candidate; (2) arXiv:2605.03971 — Logical Consistency as Bridge (Bayesian + multi-hop logical coherence chains) — Tier 0u candidate, queued as exp2535.
+- Created `openspec/change-proposals/research-roadmap-v244.md` (293 lines): what .243 proved (5 wins, 3 gaps), three biggest gaps (IsingVerifier stub + Phase 4 ARM-EBM 4th failure, ensemble regression with Tier 0r in Group C, LaTeX compile failure + abstract overflow), architecture snapshot (ensemble v6 AUROC=0.9750 carry-forward, IsingVerifier STUB — MUST IMPLEMENT, ensemble v7 REGRESSED to 0.9607, GateMate+KV260 non-terminal hardware), 5-phase structure, dependency graph, hardware requirements (GateMate+KV260 non-terminal), decentralization compliance (Rules 1-7 all clear), exclusion manifest cross-check (0 retired patterns matched), failed-experiment rerun compliance table (5 entries), agent routing (12 codex 92.3%, 1 claude+opus 7.7%).
+- Created `research-roadmap-next.yaml` (856 lines, 13 tasks exp2530–exp2542):
+  - Phase 0: exp2530 archive .243 + activate .244 (codex)
+  - Phase 4 fix: exp2531 IsingVerifier implementation — regex arithmetic checker `energy(step_text) -> float` (codex, 45 turns, test-gated: IsingVerifier('1+1=3') energy must be 1.0, IsingVerifier('2+2=4') must be 0.0; retire_if_same_verdict=true); exp2532 Phase 4 ARM-EBM v4 NO fallback (codex, 50 turns, gated on exp2531.ising_verifier_implemented==true, gate: |pearsonr|>0.30 AND p<0.05 AND step_granularity_achieved==true, retire_if_same_verdict=true)
+  - Ensemble fix: exp2533 ensemble v7b Tier 0r Group D (codex, 45 turns, gate: v7b_auroc>=0.970); exp2534 adaptive conformal v2 ACSE (codex, gated on exp2533.v7b_auroc>=0.970)
+  - New verifier: exp2535 Tier 0u logical-consistency verifier arXiv:2605.03971 (codex, gate: tier0u_auroc>=0.75)
+  - Paper: exp2536 LaTeX compile fix + abstract trim to <250 words (codex, gate: latex_compile_success==true AND abstract_word_count<=250)
+  - Hardware: exp2537 GateMate LUT mapping fix (codex, track:hardware, gate: gatemate_lut_mismatch_resolved or gatemate_bitstream_generated); exp2538 KV260 SD card flash attempt (codex, track:hardware, gate: kv260_sd_card_flashed_successfully or kv260_flash_attempted_operator_action_needed)
+  - Self-learning: exp2539 FR-11 Tier 3 JEPA pipeline integration (codex, continuous_self_learning_task:true)
+  - Paper update: exp2540 paper-v6 Phase 4 update + citations (codex, gated on exp2532 outcome)
+  - Synthesis: exp2541 capstone v244 (claude+opus, requires_claude:true, NO HARD GATE); exp2542 retro v244 (codex)
+- Agent routing: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2541 capstone — cross-phase reasoning across 12 experiment artifacts, Phase 4 outcome interpretation, arXiv gate 3 decision under ambiguity; meets all 3 positive-criterion conditions).
+- Validation: `validate_prior_failures.py` — [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-19 (Milestone 2026.05.243 Operational Retrospective)
 
 - Operational retrospective for milestone 2026.05.243 written to `results/operational_retro_2026_05_243.json`. No experiment commits found in the timing window — milestone is planning-only (nineteenth consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with a planning-only turn. Top-3 leverage actions: (1) activate exp2518 in the same conductor session as planning; (2) deploy persistent conductor daemon to eliminate the planning-execution gap; (3) gate the retro task on minimum experiment count >= 1 to prevent empty-window retros. Roadmap pre-staged with 12 tasks (exp2518–exp2529), all validated.

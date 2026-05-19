@@ -1,0 +1,856 @@
+milestone: 2026.05.244
+milestone_title: IsingVerifier Fix + Phase 4 ARM-EBM v4 + Ensemble v7b (Group D) + arXiv LaTeX Fix + JEPA Pipeline Integration
+milestone_doc: openspec/change-proposals/research-roadmap-v244.md
+tasks:
+- id: exp2530-archive-and-activate
+  title: 'Phase 0: Archive .243 and activate .244'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2530_archive.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  prior_failures:
+  - experiment_id: exp2518-archive-and-activate
+    verdict: 'complete: Milestone 2026.05.242 already archived and conductor swapped
+      to 2026.05.243'
+    addressed_by: "exp2518 archived .242 and activated .243. This task archives .243
+      and activates .244 — standard recurring archive pattern with different milestone
+      metadata. Key .243 results to document: best_243_auroc=0.9750 (carry-forward
+      from .241, group-conditional adversarially verified); phase4_final_status=blocked_precondition
+      (IsingVerifier stub class); ensemble_v7_auroc=0.9607 (regression from 0.9750
+      — Tier 0r in Group C); latex_compile_success=False; jepa_violation_auc=0.8889
+      (exp2525); KAN rebuilt checkpoint saved (exp2523); Tier 0r implemented (exp2520);
+      arxiv_ready=False."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Milestone 2026.05.243 completed with 7/12 capstone-input experiments
+    at terminal verdict. Key results:\n- AUROC: best_243_auroc=0.9750 (carry-forward
+    from .241/.242 group-conditional adversarially-verified)\n- Phase 4: blocked_precondition
+    (IsingVerifier is a stub class, `class IsingVerifier: pass`, cannot call .energy())\n-
+    Ensemble: v7_auroc=0.9607 REGRESSION (Tier 0r Group C addition dragged Fisher
+    combination below 0.970 gate — terminal verdict, gate not met)\n- KAN: rebuilt
+    from scratch, checkpoint at models/kan_tier1_restored.safetensors (exp2523)\n-
+    JEPA: jepa_violation_auc=0.8889 (exp2525, up from 0.7633)\n- Tier 0r: implemented
+    in python/carnot/verify/tier0r_curry_howard.py, solo AUROC=0.8256 synthetic\n-
+    arXiv: arxiv_ready=False, latex_compile_success=False\n\nEXISTING CODE TO READ
+    FIRST:\n  {project_root}/research-complete.yaml (last 20 lines)\n  {project_root}/research-roadmap.yaml
+    (first 5 lines — check milestone field)\n\nTASK: Archive milestone 2026.05.243
+    to research-complete.yaml and activate .244.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n
+    \    a. Read research-roadmap.yaml first 3 lines. If milestone == '2026.05.243':
+    proceed.\n        If milestone == '2026.05.244': conductor already swapped. Check
+    research-complete.yaml\n           for 'id: 2026.05.243'. If present: write archive_ready=true
+    and exit.\n        If other: write honest_verdict blocked_roadmap_unexpected and
+    exit.\n  1. Append .243 entry to research-complete.yaml with completed: '2026-05-19'.\n
+    \    Key results:\n       exp2518: complete — archive .242, activate .243\n       exp2519:
+    complete — blocked_ising_verifier_not_available (IsingVerifier stub; Phase 4
+    v3 blocked)\n       exp2520: complete — tier0r_implemented=True, AUROC=0.8256
+    synthetic\n       exp2521: terminal — ensemble_v7_auroc=0.9607 REGRESSION (below
+    0.970 gate)\n       exp2522: complete — tier0s_auroc determined, corpus constructed\n
+    \      exp2523: complete — kan_model_rebuilt=True, checkpoint persisted\n       exp2524:
+    not_run — blocked by exp2521 gate failure\n       exp2525: complete — jepa_violation_auc=0.8889\n
+    \      exp2526: complete — kv260_flash_documentation_complete=True\n       exp2527:
+    complete — latex_compile_success=False, submission_not_ready\n       exp2528:
+    complete — best_243_auroc=0.975; phase4_final_status=blocked_precondition; arxiv_ready=False\n
+    \      exp2529: complete — retro v243\n  2. cp {project_root}/research-roadmap-next.yaml
+    {project_root}/research-roadmap.yaml\n  3. Add '## 2026-05-19 (Milestone 2026.05.244
+    activated)' stub to ops/changelog.md.\n  4. Write deliverable. Validate JSON before
+    writing.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix
+    required (complete:/success:/passed:/shipped:). Conductor reconciler classifies
+    terminal verdicts by this prefix.\"\n  - archive_ready:\n      principle: \"True
+    only after .243 entry appears in research-complete.yaml. Guards against partial
+    archive.\"\n  - milestone_archived:\n      principle: \"Records which milestone
+    was archived (2026.05.243) for audit trail.\"\n\nACCEPTANCE GATES:\n  - condition:
+    \"archive_ready == true\"\n    principle: \"Ensures research-complete.yaml records
+    .243 outcomes before .244 begins.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2531-ising-verifier-implementation
+  title: 'Phase 1a: Implement IsingVerifier.energy(step_text:str) -> float (fix stub
+    class)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2531_ising_verifier_implementation.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  prior_failures:
+  - experiment_id: exp2519-phase4-arm-ebm-v3-no-fallback
+    verdict: 'complete: blocked_ising_verifier_not_available'
+    addressed_by: "exp2519 was blocked because IsingVerifier() takes no arguments
+      and has no .energy() method — the class is a stub (`class IsingVerifier: pass`).
+      This task implements the IsingVerifier class with a real energy(step_text: str)
+      -> float method. Root cause fixed: the stub is replaced with a working implementation.
+      This is a code-writing task (different scope from exp2519's correlation test)."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: `python/carnot/verify/semantic_energy.py` defines `class IsingVerifier:
+    pass` — completely empty. Every Phase 4 ARM-EBM attempt (exp2486, exp2508, exp2519)
+    that required IsingVerifier.energy() was blocked because this class has no methods.\n\nThis
+    task WRITES the real IsingVerifier implementation. Once energy(text) works, exp2532
+    (Phase 4 ARM-EBM v4) can finally run the structural test.\n\nTHEORY: Carnot's
+    constraint-based energy should measure: how many arithmetic/logical claims in a
+    text step are internally inconsistent? A step with 'The sum of 47+28 is 76' has
+    energy=1.0 (violation). A step with 'The sum of 47+28 is 75' has energy=1.0. A
+    step with 'The sum of 47+28 is 75. Therefore the answer is 75.' has energy=0.0
+    (consistent, even if wrong for a different problem — energy measures internal
+    consistency of claims within the step, not external correctness).\n\nEXISTING
+    CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/semantic_energy.py
+    (IsingVerifier stub at bottom — add implementation there)\n  {project_root}/python/carnot/verify/tier0r_curry_howard.py
+    (Tier0rVerifier — example of a working verifier implementation to follow)\n  {project_root}/scripts/experiment_template.py
+    (ExperimentTemplate boilerplate)\n\nTASK: Implement IsingVerifier.energy(step_text:
+    str) -> float.\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a. Verify carnot.verify
+    imports work:\n        python3 -c \"from carnot.verify.semantic_energy import SemanticEnergyDetector;
+    print('ok')\"\n        If fails: write honest_verdict blocked_carnot_import_failed
+    and exit.\n     b. Confirm IsingVerifier is a stub:\n        python3 -c \"from
+    carnot.verify.semantic_energy import IsingVerifier; print(dir(IsingVerifier))\"\n
+    \       If dir() shows methods beyond __init__/__class__ etc: implementation may
+    already exist; read it and evaluate.\n  1. Implement IsingVerifier in python/carnot/verify/semantic_energy.py:\n
+    \    class IsingVerifier:\n       def __init__(self):\n           import re\n           self._num_re
+    = re.compile(r'\\b(\\d+(?:\\.\\d+)?)\\b')\n           self._arith_re = re.compile(\n
+    \              r'(\\d+(?:\\.\\d+)?)\\s*([+\\-*/])\\s*(\\d+(?:\\.\\d+)?)\\s*(?:=|equals|is)\\s*(\\d+(?:\\.\\d+)?)'\n
+    \          )\n       def energy(self, step_text: str) -> float:\n           '''Compute
+    constraint-violation energy for a text step.\n           Returns float in [0,1]:
+    0.0=no violations detected, 1.0=all claims violate.'''\n           violations,
+    total = 0, 0\n           # Check arithmetic claims: 'A op B = C'\n           for
+    m in self._arith_re.finditer(step_text):\n               a, op, b, c = float(m.group(1)),
+    m.group(2), float(m.group(3)), float(m.group(4))\n               total += 1\n
+    \              expected = {'+': a+b, '-': a-b, '*': a*b, '/': a/b if b!=0 else
+    float('inf')}[op]\n               if abs(expected - c) > 1e-6: violations += 1\n
+    \          if total == 0:\n               return 0.0  # No verifiable claims =
+    no violations\n           return violations / total\n  2. Verify: python3 -c \"from
+    carnot.verify.semantic_energy import IsingVerifier; v=IsingVerifier(); e=v.energy('2+3=5');
+    assert e==0.0; e2=v.energy('2+3=6'); assert e2==1.0; print('IsingVerifier.energy()
+    working, e1=', e, 'e2=', e2)\"\n  3. Write unit tests in tests/ confirming energy()
+    returns 0.0 for valid arithmetic and 1.0 for violations.\n  4. Confirm importability:\n
+    \    python3 -c \"from carnot.verify.semantic_energy import IsingVerifier; v=IsingVerifier();
+    print('ok, energy test:', v.energy('The sum 2+3=5'))\"\n  5. Set ising_verifier_text_energy_implemented=True
+    if energy() callable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required.\"\n  - ising_verifier_text_energy_implemented:\n      principle:
+    \"True only if IsingVerifier().energy(str) is callable and returns float in [0,1].
+    This is the gate condition for exp2532.\"\n  - energy_test_correct:\n      principle:
+    \"True if energy('2+3=5')=0.0 AND energy('2+3=6')=1.0. Confirms non-trivial
+    discrimination.\"\n  - implementation_notes:\n      principle: \"Documents which
+    heuristic was used for claim extraction — required for paper-v6 §3 methodology.\"\n
+    \ - preconditions_checked:\n      principle: \"Records which resources were verified
+    before launching.\"\n  - duration_s:\n      principle: \"Wall-clock measurement.\"\n
+    \ - random_seed:\n      principle: \"Reproducibility seed.\"\n\nACCEPTANCE GATES:\n
+    \ - condition: \"ising_verifier_text_energy_implemented == true AND energy_test_correct
+    == true\"\n    principle: \"Both conditions: importability AND correctness test
+    (non-trivial discrimination). An implementation that always returns 0.0 would
+    pass importability but fail the correctness gate.\"\n\nDo NOT push. Do NOT modify
+    scripts/research_conductor.py."
+
+- id: exp2532-phase4-arm-ebm-v4-no-fallback
+  title: 'Phase 1b: Phase 4 ARM-EBM v4 -- IsingVerifier.energy(text) NO FALLBACK
+    (retire_if_same_verdict)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2532_phase4_arm_ebm_v4.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 50
+  gated_on:
+  - upstream: exp2531-ising-verifier-implementation
+    artifact_field: ising_verifier_text_energy_implemented
+    op: '=='
+    value: true
+  prior_failures:
+  - experiment_id: exp2519-phase4-arm-ebm-v3-no-fallback
+    verdict: 'complete: blocked_ising_verifier_not_available'
+    addressed_by: "exp2519 was blocked because IsingVerifier was a stub (class IsingVerifier:
+      pass). exp2531 implements IsingVerifier.energy(step_text:str)->float with real
+      arithmetic constraint checking. This task now runs the structural Phase 4 test
+      with a working IsingVerifier — the first time in the experiment history that
+      the actual Phase 4 test can run. retire_if_same_verdict=true: if Phase 4 still
+      fails to show |pearsonr|>0.30 AND step_granularity_achieved=True with the real
+      IsingVerifier, Phase 4 is permanently retired and paper §4 documents honest
+      negative."
+    retire_if_same_verdict: true
+  - experiment_id: exp2508-phase4-step-level-arm-ebm-v2
+    verdict: 'complete: success (literal gate), step_granularity_achieved=False (methodology
+      fallback to semantic_energy_fallback)'
+    addressed_by: "exp2508 fell back to SemanticEnergy proxy because IsingVerifier
+      could not be imported. exp2531 provides the real IsingVerifier. This attempt
+      uses IsingVerifier.energy(step_text) directly on each CoT step — the structural
+      test exp2508 was supposed to perform but could not."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: IsingVerifier.energy(step_text:str) is now implemented (exp2531).
+    This is the FINAL structured attempt at Phase 4 ARM-EBM bijection. retire_if_same_verdict=true
+    — if Phase 4 fails to produce |pearsonr|>0.30 AND step_granularity_achieved=True
+    with the real IsingVerifier, Phase 4 is permanently retired.\n\nTHEORETICAL GROUNDING:\nARM-EBM
+    bijection (arXiv:2512.15605): E_LLM(x) = -log p_LLM(x) = -sum_i log p(x_i|x_{{<i}})\nFREIA
+    (arXiv:2605.04065): step-level free energy E_t = -log p(action_t|state_t)\nCarnot
+    IsingVerifier.energy(text): constraint-violation energy from arithmetic claim consistency.\nPhase
+    4 hypothesis: high Carnot energy steps (violated constraints) should correlate
+    with high ARM-EBM energy (uncertain generation).\n\nCRITICAL: This task REFUSES
+    to fall back to SemanticEnergy. IsingVerifier is required.\n\nEXISTING CODE TO
+    READ FIRST:\n  {project_root}/python/carnot/verify/semantic_energy.py (IsingVerifier
+    implementation from exp2531)\n  {project_root}/results/experiment_2531_ising_verifier_implementation.json
+    (confirm ising_verifier_text_energy_implemented==true)\n  {project_root}/results/ (find
+    telemetry manifest with token_logprob fields)\n  {project_root}/scripts/experiment_template.py\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS (check ALL — any failure exits with blocked_*, NO FALLBACK):\n
+    \    a. Verify IsingVerifier.energy() is callable on text:\n        python3 -c
+    \"from carnot.verify.semantic_energy import IsingVerifier; v=IsingVerifier(); print(v.energy('test
+    2+3=5'))\"\n        If import fails OR energy() raises: write honest_verdict blocked_ising_verifier_not_available
+    and exit.\n        DO NOT substitute SemanticEnergy. IsingVerifier is required.\n
+    \    b. Find telemetry manifest with token_logprob fields:\n        python3 -c
+    \"import json, glob; files=glob.glob('results/*telemetry*.json')+glob.glob('results/*manifest*.json');
+    [print(f, list(json.load(open(f)).keys())[:10]) for f in files[:3]]\"\n        Must
+    contain token_logprob fields. If not found: write honest_verdict blocked_no_token_logprob_manifest
+    and exit.\n     c. Count step pairs: n_step_pairs >= 100 required.\n        If
+    n_step_pairs < 100: write honest_verdict blocked_insufficient_step_pairs_n={{n}}
+    and exit.\n  1. Load telemetry manifest. Extract per-CoT-step token logprob sequences.\n
+    \ 2. For each CoT step:\n     E_arm_step = -sum(token_logprobs_for_step)  # ARM-EBM
+    formula\n     E_ising_step = IsingVerifier().energy(step_text)  # Carnot constraint
+    energy\n  3. Verify step_granularity_achieved: True if IsingVerifier.energy() was
+    called per-step (not response-level).\n  4. Compute pearson_r(E_arm_step_list,
+    E_ising_step_list) across all step pairs.\n  5. Compute p_value (scipy.stats.pearsonr).\n
+    \ 6. Set phase4_validated_step_level = (abs(pearson_r) > 0.30 AND p_value < 0.05\n
+    \    AND n_step_pairs >= 100 AND step_granularity_achieved == True AND\n     energy_proxy_used
+    == 'ising_verifier_direct').\n\nNEGATIVE RESULT PROTOCOL:\n  If gate fails: honest_verdict
+    = 'complete: phase4_step_level_arm_ebm_v4_below_threshold'\n  This triggers retire_if_same_verdict=true
+    — Phase 4 is permanently retired.\n  The arXiv proceed-with-negative-result path
+    (revise §4 as honest negative) is triggered.\n  exp2536 LaTeX fix must incorporate:
+    §4 revised to document 'Four systematic attempts to validate Phase 4\n  empirically
+    were made across milestones .240-.244. The correlation test consistently\n  produced
+    non-significant results (exp2486: pearsonr=0.108; exp2508: methodology_fallback;\n
+    \ exp2519: blocked_precondition; exp2532: [result]). Phase 4 remains a theoretical\n
+    \ hypothesis.'\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required (complete:/blocked_*). Must start with complete: if
+    any computation was performed.\"\n  - n_step_pairs:\n      principle: \"Sample
+    size for pearson_r claim — must be >= 100 for statistical credibility.\"\n  -
+    pearson_r:\n      principle: \"Core Phase 4 bijection test value. |r| > 0.30 with
+    p < 0.05 and step_granularity_achieved=True is the threshold.\"\n  - p_value:\n
+    \     principle: \"Statistical significance — required alongside correlation to
+    prevent noise-floor acceptance.\"\n  - step_granularity_achieved:\n      principle:
+    \"Must be True (IsingVerifier called per-CoT-step on step text). False = structural
+    test not performed = retire signal fires.\"\n  - phase4_validated_step_level:\n
+    \     principle: \"True only if all four conditions: |pearsonr|>0.30 AND p<0.05
+    AND n>=100 AND step_granularity_achieved=True AND energy_proxy_used='ising_verifier_direct'.\"\n
+    \ - energy_proxy_used:\n      principle: \"Must be 'ising_verifier_direct' — any
+    other value indicates methodology fallback.\"\n  - preconditions_checked:\n      principle:
+    \"Records which resources were verified before launching.\"\n  - duration_s:\n
+    \     principle: \"Wall-clock. IsingVerifier on 100+ step pairs takes > 1.0s minimum.\"\n
+    \ - random_seed:\n      principle: \"Reproducibility — set to 42.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"phase4_validated_step_level == true AND step_granularity_achieved
+    == true\"\n    principle: \"Both conditions required: IsingVerifier step-level
+    granularity AND positive correlation. A negative result (below threshold) is also
+    terminal — see NEGATIVE RESULT PROTOCOL.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2533-ensemble-v7b-tier0r-group-d
+  title: 'Phase 2a: Ensemble v7b -- Tier 0r Dedicated Group D (fix 0.9607 regression
+    from v7)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2533_ensemble_v7b.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  prior_failures:
+  - experiment_id: exp2521-ensemble-v7-tier0r-integration
+    verdict: 'terminal: 0.9607 below 0.970 regression threshold'
+    addressed_by: "exp2521 placed Tier 0r in Group C (logic-class) alongside Tier
+      0d (AUROC=0.588) and Tier 0h (AUROC=0.678). Tier 0r's proof-path scores (range
+      0.0-0.6) shifted the Group C calibration mean down, degrading the Fisher combination.
+      This task assigns Tier 0r to a new Group D (proof-path class) with independent
+      calibration — Group C sees only its original members, Group D calibrates separately.
+      Different integration approach (not a retry of exp2521's Group C assignment)."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Ensemble v7 (exp2521) regressed to AUROC=0.9607 (from 0.9750 baseline)
+    when Tier 0r was assigned to Group C. Root cause: Tier 0r's proof-path nonconformity
+    scores (mean ~0.38-0.45) are systematically lower than Tier 0d and Tier 0h scores,
+    shifting the Group C calibration mean and reducing discriminability in the Fisher
+    combination.\n\nFix: assign Tier 0r to a new Group D (proof-path class) with fully
+    independent calibration. Groups A/B/C are unchanged from .241/.242 adversarially-verified
+    baseline (AUROC=0.9750).\n\nArchitecture after fix:\n  Group A (logprob): Tier
+    0a (0.810), Tier 0b (0.8539), Tier 0f (0.8669)\n  Group B (semantic): Tier 0c
+    (0.8831), Tier 0e (0.8896), Tier 0g (0.854)\n  Group C (logic): Tier 0d (0.588),
+    Tier 0h (0.678)\n  Group D (proof-path): Tier 0r (0.8256 synthetic — only member)\n\nEXISTING
+    CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/tier0r_curry_howard.py
+    (Tier 0r implementation from exp2520)\n  Search for group-conditional calibration:\n
+    \   grep -r 'group_conditional' {project_root}/python/ --include='*.py' -l\n  {project_root}/results/experiment_2521_ensemble_v7.json
+    (v7 regression baseline to compare against)\n  {project_root}/results/experiment_2485*.json
+    (group-conditional AUROC=0.9750 baseline — what calibration code path was used?)\n
+    \ {project_root}/scripts/experiment_template.py\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n
+    \    a. Verify Tier 0r importable:\n        python3 -c \"from carnot.verify.tier0r_curry_howard
+    import Tier0rVerifier; print('ok')\"\n        If fails: write honest_verdict blocked_tier0r_not_importable
+    and exit.\n     b. Find group-conditional calibration code:\n        grep -r 'group_conditional'
+    {project_root}/python/ --include='*.py' -l\n        If not found: write honest_verdict
+    blocked_group_conditional_code_not_found and exit.\n     c. Find evaluation corpus:\n
+    \       ls {project_root}/results/*eval* 2>/dev/null || ls {project_root}/data/*corpus*
+    2>/dev/null\n        If not found: use available verifier score files from results/.\n
+    \ 1. Modify group assignment: add Group D = [Tier0rVerifier] to the calibration
+    config.\n     Groups A/B/C remain EXACTLY as in exp2485 baseline.\n  2. Re-run
+    group-conditional calibration with 10 verifiers across 4 groups, 5 seeds.\n  3.
+    Compute ensemble_v7b_auroc (mean and std across 5 seeds).\n  4. Compare: ensemble_v6_baseline=0.9750,
+    ensemble_v7_regression=0.9607.\n  5. Report regression_resolved: True if ensemble_v7b_auroc
+    >= 0.975.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required.\"\n  - ensemble_v7b_auroc:\n      principle: \"Primary
+    metric — must be >= 0.975 to restore the cite-safe headline AUROC.\"\n  - ensemble_v7b_auroc_std:\n
+    \     principle: \"Multi-seed std for reproducibility — required for paper-v6 cite-safe
+    reporting.\"\n  - ensemble_v6_baseline:\n      principle: \"Explicitly records
+    0.9750 baseline for regression detection.\"\n  - ensemble_v7_regression:\n      principle:
+    \"Explicitly records 0.9607 regression so delta is unambiguous.\"\n  - regression_resolved:\n
+    \     principle: \"True if ensemble_v7b_auroc >= 0.975. The key success flag for
+    this task.\"\n  - tier0r_group_assignment:\n      principle: \"Must be 'Group D
+    (proof-path)' — documents that Group C was not modified.\"\n  - n_seeds:\n      principle:
+    \"Must be >= 3 for multi-seed std to be meaningful.\"\n  - preconditions_checked:\n
+    \     principle: \"Records which resources were verified.\"\n  - duration_s:\n
+    \     principle: \"Wall-clock measurement.\"\n  - random_seed:\n      principle:
+    \"Base random seed.\"\n\nACCEPTANCE GATES:\n  - condition: \"ensemble_v7b_auroc
+    >= 0.975\"\n    principle: \"Restore cite-safe headline AUROC. Regression (0.9607)
+    must be fully reversed before adaptive conformal can build on the baseline.\"\n\nDo
+    NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2534-adaptive-conformal-v2-acse
+  title: 'Phase 2b: Adaptive Conformal v2 + ACSE (arXiv:2604.13991 + arXiv:2605.04295)
+    -- Gated on Ensemble v7b'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2534_adaptive_conformal_v2.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  gated_on:
+  - upstream: exp2533-ensemble-v7b-tier0r-group-d
+    artifact_field: ensemble_v7b_auroc
+    op: '>='
+    value: 0.975
+  prior_failures:
+  - experiment_id: exp2524-adaptive-conformal-v2-acse
+    verdict: 'not_run: blocked by exp2521 gate failure (ensemble_v7_auroc=0.9607 <
+      0.970)'
+    addressed_by: "exp2524 never ran because exp2521 failed the ensemble_v7_auroc>=0.970
+      gate. exp2533 fixes the regression (Tier 0r → Group D, expected >=0.975). This
+      task is gated on exp2533.ensemble_v7b_auroc>=0.975 — the same adaptive conformal
+      goal, finally unblocked."
+    retire_if_same_verdict: false
+  - experiment_id: exp2511-adaptive-conformal-v2
+    verdict: 'blocked_ensemble_v7_not_available'
+    addressed_by: "exp2511 was blocked in .242 because ensemble v7 was not built.
+      exp2533 builds ensemble v7b. This is the third queuing of adaptive conformal
+      — finally the prerequisite chain is satisfied."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Ensemble v7b is now built (exp2533, AUROC>=0.975). This task applies
+    prompt-adaptive conformal calibration as an enhancement layer.\n\nReference papers:\n-
+    arXiv:2604.13991 'Adaptive Conformal Prediction for Improving Factuality of LLM
+    Generations' — prompt-adaptive calibration with conditional coverage guarantees\n-
+    arXiv:2605.04295 'LLMs Uncertainty Quantification via Adaptive Conformal Semantic
+    Entropy (ACSE)' — semantic entropy combined with conformal calibration\n\nBaseline:
+    ensemble_v7b_auroc from exp2533 (target >= 0.975).\n\nEXISTING CODE TO READ FIRST:\n
+    \ Group-conditional calibration code (located by exp2533)\n  {project_root}/results/experiment_2533_ensemble_v7b.json
+    (v7b baseline to compare against)\n  {project_root}/scripts/experiment_template.py\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. Verify exp2533 deliverable exists and AUROC
+    >= 0.975:\n        python3 -c \"import json; d=json.load(open('results/experiment_2533_ensemble_v7b.json'));
+    assert d.get('ensemble_v7b_auroc', 0) >= 0.975, f'auroc={d.get(\\\"ensemble_v7b_auroc\\\")}'
+    ; print('ok')\"\n        If not found or AUROC < 0.975: write honest_verdict blocked_ensemble_v7b_below_threshold
+    and exit.\n  1. Implement prompt_type_classifier(prompt: str) -> str:\n     Categories:
+    [factual, reasoning, creative, code]. Heuristic keyword rules.\n  2. For ACSE
+    component: compute token logprob variance per prompt as semantic entropy proxy.\n
+    \ 3. Re-run calibration with prompt-type-conditional + ACSE entropy weighting.\n
+    \ 4. Compute adaptive_conformal_auroc over 5 seeds.\n  5. Compare to exp2533 v7b
+    baseline.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix
+    required.\"\n  - adaptive_conformal_auroc:\n      principle: \"Primary metric —
+    documents whether prompt-adaptation improves beyond fixed calibration.\"\n  - ensemble_v7b_baseline:\n
+    \     principle: \"Comparison baseline from exp2533.\"\n  - prompt_type_distribution:\n
+    \     principle: \"Shows how prompts were distributed — validates classifier is
+    not degenerate.\"\n  - acse_component_used:\n      principle: \"True if semantic
+    entropy component from arXiv:2605.04295 was incorporated.\"\n  - n_seeds:\n      principle:
+    \"Multi-seed reproducibility — must be >= 3.\"\n  - preconditions_checked:\n      principle:
+    \"Records which resources were verified.\"\n  - duration_s:\n      principle: \"Wall-clock
+    measurement.\"\n  - random_seed:\n      principle: \"Reproducibility seed.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"adaptive_conformal_auroc >= 0.975 (no regression from
+    v7b baseline)\"\n    principle: \"Adaptive calibration must not degrade the headline
+    AUROC — non-regression is the floor; improvement is welcome.\"\n\nDo NOT push.
+    Do NOT modify scripts/research_conductor.py."
+
+- id: exp2535-tier0u-logical-consistency-verifier
+  title: 'Phase 3a: Tier 0u Logical Consistency Verifier (arXiv:2605.03971, May 2026
+    -- new arxiv finding)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2535_tier0u_logical_consistency.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  prior_failures:
+  - experiment_id: exp2504-tier0r-curry-howard-viability
+    verdict: 'complete: tier0r_auroc=0.9123 (different verifier — Curry-Howard, not
+      logical consistency)'
+    addressed_by: "exp2504 was Tier 0r Curry-Howard — a type-theoretic verifier. Tier
+      0u (this task) is structurally different: it tests logical consistency between
+      a response and the model's own self-check, following arXiv:2605.03971 (Logical
+      Consistency as a Bridge, May 2026). Different theoretical foundation, different
+      implementation, different group placement. Not a rerun of exp2504."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: New arxiv finding from Post-.243 planning sweep: arXiv:2605.03971
+    'Logical Consistency as a Bridge: Improving LLM Hallucination Detection via Label
+    Constraint Modeling' (May 2026). This paper uses self-consistency constraints
+    — checking whether a model's response is logically consistent with the model's
+    own self-check verification — achieving 4.7pp improvement over LLM-judge baselines
+    on FaithDial and HaluEval.\n\nFor Carnot: Tier 0u computes a self-consistency
+    score: given a response, simulate what the model would say if asked 'does this
+    response contain any arithmetic or logical errors?' and check whether the self-check
+    verdict is consistent with the response's internal claims. The score reflects
+    cross-check consistency (low score = high self-inconsistency = likely hallucination).\n\nPractical
+    approximation (no live LLM call needed): pattern-match the response for self-referential
+    consistency signals:\n  - Does the response contain explicit self-corrections ('I
+    made an error', 'actually', 'wait')? → inconsistency signal\n  - Do the final
+    answer and intermediate steps agree? → check final number matches last computed
+    value\n  - Are there contradiction markers ('but', 'however', 'yet') near numerical
+    claims? → inconsistency signal\nScore = weighted count of self-inconsistency markers
+    / total claims\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/python/carnot/verify/tier0r_curry_howard.py
+    (Tier0rVerifier interface — follow this pattern)\n  {project_root}/python/carnot/verify/semantic_energy.py
+    (BaseVerifier interface)\n  {project_root}/results/experiment_2522_halluguard_tier0s.json
+    (HalluGuard eval corpus — reuse if available)\n  {project_root}/scripts/experiment_template.py\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. Verify carnot.verify imports work:\n        python3
+    -c \"from carnot.verify.tier0r_curry_howard import Tier0rVerifier; print('ok')\"\n
+    \       If fails: write honest_verdict blocked_carnot_import_failed and exit.\n
+    \    b. Find evaluation corpus (reuse from exp2522 or earlier if available):\n
+    \       ls {project_root}/results/experiment_2522_halluguard_tier0s.json 2>/dev/null
+    || echo 'will generate synthetic'\n  1. Implement Tier0uVerifier in python/carnot/verify/tier0u_logical_consistency.py:\n
+    \    class Tier0uVerifier:\n       def score(self, response: str) -> float:\n
+    \          '''Returns self-inconsistency score in [0,1]; 0=consistent, 1=fully
+    inconsistent.'''\n       Key signals to check:\n         - Self-correction phrases:
+    'actually', 'wait', 'I made an error', 'let me redo'\n         - Contradiction
+    markers near numbers: 'but', 'however', 'yet' within 10 tokens of a number\n
+    \        - Final answer vs intermediate steps mismatch (regex final number != last
+    computed number)\n       Score = weighted count of inconsistency signals / (total
+    numerical claims + 1)\n  2. Write unit tests.\n  3. Evaluate on corpus (real from
+    exp2522 if available, else synthetic 100 examples).\n  4. Compute tier0u_auroc.\n\nREQUIRED
+    ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\n
+    \ - tier0u_auroc:\n      principle: \"Primary viability metric — must exceed 0.70
+    to qualify for ensemble inclusion.\"\n  - tier0u_viable:\n      principle: \"Explicit
+    viability flag gates future ensemble integration. True only if AUROC > 0.70.\"\n
+    \ - n_eval:\n      principle: \"Sample size for AUROC claim — must be >= 50.\"\n
+    \ - corpus_type:\n      principle: \"'real' or 'synthetic' — distinguishes paper-citable
+    AUROC.\"\n  - methodology_note:\n      principle: \"Documents which self-consistency
+    signals were used — required for paper-v6 disclosure.\"\n  - preconditions_checked:\n
+    \     principle: \"Records which resources were verified.\"\n  - duration_s:\n
+    \     principle: \"Wall-clock measurement.\"\n  - random_seed:\n      principle:
+    \"Reproducibility seed.\"\n\nACCEPTANCE GATES:\n  - condition: \"tier0u_viable
+    == true OR corpus_construction_completed == true\"\n    principle: \"Either a
+    viable verifier (AUROC > 0.70) OR documented evidence the verifier was implemented
+    and tested. Either outcome advances the ensemble expansion track.\"\n\nDo NOT
+    push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2536-latex-compile-fix-arxiv-package-v2
+  title: 'Phase 3b: LaTeX Compile Fix + arXiv Submission Package v2 (fix latex_compile_success=False)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2536_latex_compile_fix.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 40
+  prior_failures:
+  - experiment_id: exp2527-arxiv-submission-prep
+    verdict: 'complete: submission_not_ready (latex_compile_success=False, abstract_word_count=522)'
+    addressed_by: "exp2527 identified two blockers: (a) latex_compile_success=False
+      (pdflatex pipeline error on docs/arxiv-paper/main.tex) and (b) abstract_word_count=522
+      (exceeds 250-word arXiv limit). This task diagnoses the exact pdflatex error
+      from stdout, fixes it, and trims the abstract to <= 250 words. Also incorporates
+      exp2532 Phase 4 final outcome into paper §4 (positive or negative). retire_if_same_verdict=true
+      — if pdflatex still fails after fix attempts, the compile blocker is documented
+      as requiring operator manual fix."
+    retire_if_same_verdict: true
+  prompt: "CONTEXT: arXiv submission is blocked by two issues from exp2527:\n1. latex_compile_success=False
+    — pdflatex fails on docs/arxiv-paper/main.tex\n2. abstract_word_count=522 — arXiv
+    abstract limit is 250 words\n\nAll 4 arXiv gates are met (gate_1_phase1_ship=True,
+    gate_2_audit=True, gate_3=True per literal exp2527 gate check, gate_4=True). The
+    ONLY blockers are LaTeX compile and abstract length.\n\nFULL OPERATOR-ONLY SUBMISSION
+    RULE: This task PREPARES the package and produces a checklist for OPERATOR to
+    submit. The task does NOT submit to arXiv. Per CLAUDE.md Operator-Only External
+    Publication rule: any step like 'arxiv submit' is PROHIBITED. This task ends at
+    'produce the clean package'.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/docs/arxiv-paper/main.tex
+    (paper source)\n  {project_root}/results/experiment_2527_arxiv_submission_prep.json
+    (prior state)\n  {project_root}/results/experiment_2532_phase4_arm_ebm_v4.json
+    (Phase 4 final outcome — read before updating §4)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n
+    \    a. Locate paper source:\n        ls {project_root}/docs/arxiv-paper/main.tex\n
+    \       If not found: write honest_verdict blocked_paper_not_found and exit.\n
+    \    b. Check LaTeX toolchain:\n        command -v pdflatex && pdflatex --version
+    | head -1 || echo 'pdflatex not available'\n        Set latex_available=True/False.\n
+    \ 1. Read exp2532 result to determine phase4_final_status:\n     - phase4_validated_step_level=True:
+    phase4_final_status='validated_clean'\n     - negative (|pearsonr|<=0.30 or step_granularity_achieved=False):
+    phase4_final_status='retired_negative'\n     - blocked (blocked_* verdict): phase4_final_status='blocked_precondition'\n
+    \ 2. If latex_available=True:\n     Run: cd {project_root}/docs/arxiv-paper &&
+    pdflatex -interaction=nonstopmode main.tex 2>&1 | tail -30\n     Capture exact
+    error messages. Common causes:\n       - Missing \\usepackage{}: add to preamble\n
+    \      - Undefined control sequence: search for typos in macros\n       - LaTeX
+    Error 'Can be used only in preamble': package loaded after \\begin{document}\n
+    \    Fix identified errors by editing main.tex.\n     Re-run pdflatex after each
+    fix until exit code == 0.\n  3. Update §4 based on phase4_final_status:\n     -
+    'validated_clean': add IsingVerifier step-level correlation result\n     - 'retired_negative':
+    Add paragraph: 'Four systematic attempts to validate the Phase 4 free-energy hypothesis
+    empirically were made across milestones .240-.244 (Exp 2486, 2508, 2519, 2532).
+    The correlation between Carnot IsingVerifier energy and ARM-EBM energy at per-CoT-step
+    granularity consistently produced non-significant results (largest |r|=0.4266,
+    step_granularity_achieved=False). Phase 4 remains a theoretical hypothesis; future
+    work should investigate deeper integration of token-level log-probability signals
+    with constraint-based energy computation.'\n     - 'blocked_precondition': carry
+    forward exp2527 §4 language\n  4. Trim abstract to <= 250 words. Preserve key
+    claims; remove redundant details.\n  5. Re-run pdflatex. Set latex_compile_success=(exit
+    code == 0).\n  6. Count abstract words. Set abstract_word_count.\n  7. Set submission_package_ready
+    = (latex_compile_success AND abstract_word_count <= 250).\n\nREQUIRED ARTIFACT
+    FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\n
+    \ - submission_package_ready:\n      principle: \"True if LaTeX compiles AND abstract
+    <= 250 words. True = operator can submit to arXiv immediately.\"\n  - latex_compile_success:\n
+    \     principle: \"Must be True before arXiv submission — arXiv's LaTeX compiler
+    is strict.\"\n  - abstract_word_count:\n      principle: \"Must be <= 250 for
+    arXiv. 522 words was the blocker from exp2527.\"\n  - phase4_final_status:\n      principle:
+    \"Terminal Phase 4 determination from exp2532 result.\"\n  - latex_errors_fixed:\n
+    \     principle: \"List of specific LaTeX errors that were identified and fixed
+    — audit trail for paper reviewer.\"\n  - preconditions_checked:\n      principle:
+    \"Records which resources were verified.\"\n  - duration_s:\n      principle:
+    \"Wall-clock. LaTeX compile + abstract trimming takes > 10.0s minimum.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"latex_compile_success == true AND abstract_word_count
+    <= 250\"\n    principle: \"Both conditions required for arXiv submission readiness.\"\n\nDo
+    NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2537-gatemate-lut-mapping-fix
+  title: 'Phase 4a (Hardware): GateMate A1 yosys/nextpnr LUT Mapping Workaround (last
+    GateMate blocker)'
+  milestone: 2026.05.244
+  track: hardware
+  deliverable: results/experiment_2537_gatemate_lut_mapping.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  prior_failures:
+  - experiment_id: exp2477-kv260-bitstream-pack
+    verdict: 'complete: GateMate timing benchmark done — GateMate reaches TERMINAL
+      state (different claim from .239 status)'
+    addressed_by: "The GateMate terminal state declaration in exp2477 was premature:
+      the yosys↔nextpnr LUT mapping mismatch was later discovered (CC_LUT3/CC_LUT2
+      emitted vs CC_LUT4 expected). This task explicitly addresses the LUT mismatch
+      which is the ONLY remaining software blocker for end-to-end GateMate bitstream
+      flow. The terminal state requires gatemate_bitstream_flashed=True, which requires
+      P&R to succeed, which requires the LUT fix."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: GateMate A1 hardware status: DirtyJTAG onboard (1209:c0ca) verified
+    working (JTAG detect returns 0x20000001 GM1Ax IDCODE); netlist synthesized (136
+    cells, ~0.7% of A1 budget); yosys↔nextpnr-himbaechel LUT mapping mismatch BLOCKS
+    P&R. The mismatch: yosys 0.64 emits CC_LUT3/CC_LUT2/CC_LUT1 primitives, but nextpnr-himbaechel
+    0.10 ONLY accepts CC_LUT4. Two known workarounds:\n  A. 'synth_gatemate -abc9':
+    The -abc9 flag in yosys's synth_gatemate command uses ABC9 logic optimization,
+    which typically reduces to CC_LUT4 cells. Try this first.\n  B. techmap pass: Add
+    a techmap pass after synthesis to convert CC_LUT3/CC_LUT2 → CC_LUT4 with don't-cares
+    on unused inputs.\n\nHardware-Task Continuity Discipline: GateMate terminal state
+    = n=16 Ising tile flashed + gatemate_bitstream_flashed=True. LUT fix → P&R →
+    bitstream → flash.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/rtl/gatemate_ising_n16.ys
+    (current yosys synthesis script)\n  {project_root}/rtl/gatemate_ising_n16.v (RTL
+    source)\n  {project_root}/ops/hardware-bringup-prep.md (GateMate status)\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. Check yosys available:\n        command -v
+    yosys && yosys --version | head -1\n        If not found: write honest_verdict
+    blocked_yosys_not_found and exit.\n     b. Check nextpnr-himbaechel available:\n
+    \       command -v nextpnr-himbaechel && nextpnr-himbaechel --version | head -1\n
+    \       If not found: write honest_verdict blocked_nextpnr_not_found and exit.\n
+    \    c. Check RTL source exists:\n        ls {project_root}/rtl/gatemate_ising_n16.v\n
+    \       If not found: write honest_verdict blocked_rtl_not_found and exit.\n  1.
+    Try workaround A — synth_gatemate -abc9:\n     Create rtl/gatemate_ising_n16_abc9.ys
+    with: synth_gatemate -abc9 -top ising_n16 -json gatemate_ising_n16_abc9.json\n
+    \    Run: yosys rtl/gatemate_ising_n16_abc9.ys 2>&1\n     Check if output JSON
+    contains only CC_LUT4 cells:\n       python3 -c \"import json; d=json.load(open('rtl/gatemate_ising_n16_abc9.json'));
+    cells=[c['type'] for c in d.get('modules',{}).get('ising_n16',{}).get('cells',{}).values()];
+    lut3=[c for c in cells if 'LUT3' in c or 'LUT2' in c or 'LUT1' in c]; print('LUT3/2/1
+    cells:', len(lut3))\"\n  2. If LUT3/2/1 cells still present after -abc9: try workaround
+    B (techmap pass).\n     Add to .ys: techmap -map +/gatemate/cells_map.v after
+    synth_gatemate.\n  3. Once CC_LUT4-only netlist produced: run nextpnr-himbaechel:\n
+    \    nextpnr-himbaechel --device GateMate-A1-EVB-2M-1 --json gatemate_ising_n16_abc9.json
+    --write gatemate_ising_n16.pnr.json\n  4. If P&R succeeds: report gatemate_lut_mapping_resolved=True,
+    pnr_complete=True.\n  5. Attempt bitstream generation: (requires nextpnr-himbaechel
+    --cc-bitstream output or packer)\n     Record gatemate_bitstream_generated status.\n\nREQUIRED
+    ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.
+    blocked_* verdicts are valid for missing tools.\"\n  - gatemate_lut_mapping_resolved:\n
+    \     principle: \"True if CC_LUT4-only netlist was produced. This is the structural
+    breakthrough for end-to-end flow.\"\n  - pnr_complete:\n      principle: \"True
+    if nextpnr-himbaechel P&R succeeded after LUT fix.\"\n  - gatemate_bitstream_generated:\n
+    \     principle: \"True if bitstream pack succeeded. GateMate terminal state requires
+    this.\"\n  - workaround_used:\n      principle: \"'abc9', 'techmap', or 'none'
+    — documents which fix resolved the mismatch.\"\n  - thermal_note:\n      principle:
+    \"GateMate is passively cooled; sustained tests risk thermal throttling per ops/hardware-bringup-prep.md.\"\n
+    \ - preconditions_checked:\n      principle: \"Records which tools were verified
+    available.\"\n  - duration_s:\n      principle: \"Wall-clock measurement.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"gatemate_lut_mapping_resolved == true OR gatemate_lut_blocker_documented
+    == true\"\n    principle: \"Either the LUT mismatch is fixed (progress) or the
+    exact error is documented for operator/toolchain upgrade path (forward motion).\"\n\nDo
+    NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2538-kv260-sd-card-flash-attempt
+  title: 'Phase 4b (Hardware): KV260 SD Card Flash Attempt'
+  milestone: 2026.05.244
+  track: hardware
+  deliverable: results/experiment_2538_kv260_sd_flash.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  prior_failures:
+  - experiment_id: exp2526-kv260-sd-card-flash
+    verdict: 'complete: kv260_flash_documentation_complete=True (SD card device not
+      detected, operator commands documented)'
+    addressed_by: "exp2526 documented the exact operator commands for PYNQ SD card
+      flash but /dev/sd* was not detected at runtime. This task attempts the automated
+      portions again with an expanded device search (check /dev/sd*, /dev/mmcblk*,
+      /dev/disk*) and also attempts to locate or download the PYNQ SD image if wget
+      is available. If still no writable block device: update operator_commands with
+      the .244 PYNQ image URL and exact flash recipe. Forward motion on every run."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: KV260 status: kv260_hwh_generated=True (exp2514), pynq_available
+    researched (exp2526), SD card prep fully documented. Physical flash requires an
+    SD card device accessible from the dev machine.\n\nHardware-Task Continuity Discipline:
+    KV260 terminal state = board-level latency transcript + kv260_synthesis_succeeded=True.
+    SD card flash is the next concrete step.\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/results/experiment_2526_kv260_sd_card_flash.json
+    (operator_commands from exp2526)\n  {project_root}/ops/hardware-bringup-prep.md\n
+    \ find {project_root} -name '*.hwh' 2>/dev/null | head -3 (locate .hwh file)\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. Locate .hwh file:\n        find {project_root}
+    -name '*.hwh' 2>/dev/null | head -3\n        Record kv260_hwh_path.\n     b. Check
+    for writable block devices:\n        ls /dev/sd* /dev/mmcblk* /dev/disk* 2>/dev/null
+    | head -10\n        Set sd_card_detected=(any device found).\n     c. Check pynq
+    package:\n        python3 -c \"import pynq; print(pynq.__version__)\" 2>/dev/null
+    && echo 'pynq available' || echo 'pynq not available'\n  1. Read operator_commands
+    from exp2526 artifact.\n  2. Verify PYNQ SD image availability:\n     ls /tmp/kv260*.img
+    /tmp/kv260*.zip 2>/dev/null || ls ~/Downloads/kv260*.img 2>/dev/null || echo 'image
+    not present'\n  3. If sd_card_detected=True AND .hwh present:\n     a. Attempt
+    wget PYNQ image: wget -q --spider https://github.com/Xilinx/PYNQ/releases/download/v3.0/kv260-starter-kit-3.0.img.zip
+    && echo 'URL reachable' || echo 'URL not reachable'\n     b. If URL reachable
+    AND sd_card_detected: download and attempt flash steps from exp2526 operator_commands.\n
+    \    c. Set kv260_flash_attempted=True.\n  4. If sd_card_detected=False:\n     Update
+    operator_commands with latest PYNQ v3.0 URL and exact dd command.\n     Set kv260_flash_documentation_complete=True.\n\nREQUIRED
+    ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.
+    blocked_* valid for missing hardware.\"\n  - kv260_hwh_path:\n      principle:
+    \"Location of .hwh file — required for operator physical flash.\"\n  - sd_card_detected:\n
+    \     principle: \"Whether a writable SD card device is present.\"\n  - kv260_flash_attempted:\n
+    \     principle: \"True if automated flash was attempted.\"\n  - kv260_flash_documentation_complete:\n
+    \     principle: \"True if operator commands for manual flash are documented.\"\n
+    \ - operator_commands:\n      principle: \"Exact shell commands for operator to
+    complete flash — prevents next milestone needing to re-derive procedure.\"\n  -
+    preconditions_checked:\n      principle: \"Records which resources were verified.\"\n
+    \ - duration_s:\n      principle: \"Wall-clock measurement.\"\n\nACCEPTANCE GATES:\n
+    \ - condition: \"kv260_flash_attempted == true OR kv260_flash_documentation_complete
+    == true\"\n    principle: \"Either physical flash (progress) or documented operator
+    commands (forward motion).\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2539-fr11-tier3-jepa-pipeline-integration
+  title: 'Phase 5a: FR-11 Tier 3 JEPA Integration into VerifyRepairPipeline (Continuous
+    Self-Learning)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2539_fr11_jepa_pipeline.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 45
+  continuous_self_learning_task: true
+  prior_failures:
+  - experiment_id: exp2525-fr11-tier3-jepa-phase4-integration
+    verdict: 'complete: jepa_violation_auc=0.8889 (JEPA trained with extended features,
+      not integrated into pipeline)'
+    addressed_by: "exp2525 improved JEPA violation AUC to 0.8889 (up from 0.7633
+      baseline). The JEPA predictor is now strong enough to deploy as a 'predict first'
+      fast-path in VerifyRepairPipeline. This task is structurally different from
+      exp2525: instead of training the JEPA, it integrates the trained JEPA into
+      VerifyRepairPipeline.verify() as an optional fast-path gate — if JEPA predicts
+      low violation probability (<0.2), skip full Ising verification. Not a rerun
+      of exp2525's training task."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: FR-11 Tier 3 JEPA predictor has jepa_violation_auc=0.8889 (exp2525).
+    This is strong enough to deploy as a 'predict first' fast-path in VerifyRepairPipeline.\n\nARCHITECTURE:
+    Current VerifyRepairPipeline.verify() always runs full Ising verification. After
+    integration:\n  1. JEPA predicts violation probability from response features
+    (logprob_variance, ising_energy_response_level, etc.)\n  2. If p_violation < 0.2
+    (high confidence low violation): skip Ising verification → fast-path return (energy=0.0,
+    verified=True)\n  3. If p_violation >= 0.2: run full Ising verification as normal\n
+    The fast-path saves computation for clearly non-violating responses while maintaining
+    full verification for uncertain ones.\n\nEXISTING CODE TO READ FIRST:\n  Search
+    for JEPA code: grep -r 'jepa' {project_root}/python/carnot/ --include='*.py' -l\n
+    \ Search for VerifyRepairPipeline: grep -r 'VerifyRepairPipeline' {project_root}/python/
+    --include='*.py' -l | head -5\n  {project_root}/results/experiment_2525_fr11_tier3_jepa_integration.json
+    (JEPA model state — what features? where is model saved?)\n  {project_root}/scripts/experiment_template.py\n\nCONCRETE
+    STEPS:\n  0. PRECONDITIONS:\n     a. Verify JEPA code exists:\n        grep -r
+    'jepa' {project_root}/python/carnot/ --include='*.py' -l | head -3\n        If
+    not found: write honest_verdict blocked_jepa_not_found and exit.\n     b. Verify
+    VerifyRepairPipeline exists:\n        grep -r 'VerifyRepairPipeline' {project_root}/python/
+    --include='*.py' -l | head -3\n        If not found: write honest_verdict blocked_pipeline_not_found
+    and exit.\n     c. Check JEPA model is loadable:\n        Read exp2525 results
+    to find JEPA model artifact path.\n        If path is None or not found: note
+    jepa_model_path_missing but proceed with feature-vector approach.\n  1. Add JEPA
+    fast-path to VerifyRepairPipeline.verify():\n     - If jepa_predictor loaded:
+    compute p_violation from response features\n     - If p_violation < 0.2: return
+    early (energy=0.0, skipped_verification=True)\n     - Else: run normal verification\n
+    \    - Log fast_path_used=True/False per invocation for metrics\n  2. If JEPA
+    model not loadable: implement feature-vector approach as fallback:\n     - Use
+    response_length + logprob_variance as simple fast-path features\n     - If both
+    signals < 0.1: fast-path skip\n  3. Test integration on 20 synthetic examples
+    (10 simple arithmetic, 10 complex).\n  4. Report jepa_fast_path_rate (fraction
+    of examples that used fast-path).\n  5. Set jepa_pipeline_integrated=True if
+    any fast-path integration was wired.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n
+    \     principle: \"Terminal-prefix required.\"\n  - jepa_pipeline_integrated:\n
+    \     principle: \"True if JEPA (or feature-vector proxy) is wired into VerifyRepairPipeline.
+    The continuous self-learning milestone deliverable.\"\n  - jepa_fast_path_rate:\n
+    \     principle: \"Fraction of test examples that used the JEPA fast-path. Rate
+    > 0.0 confirms the pipeline fires the predictor.\"\n  - jepa_baseline_auc:\n      principle:
+    \"Records 0.8889 baseline from exp2525 — documents the AUC that motivated integration.\"\n
+    \ - fast_path_threshold:\n      principle: \"p_violation threshold below which
+    Ising verification is skipped — required for ops/e2e-test-plan.md update.\"\n
+    \ - preconditions_checked:\n      principle: \"Records which resources were verified.\"\n
+    \ - duration_s:\n      principle: \"Wall-clock measurement.\"\n  - random_seed:\n
+    \     principle: \"Reproducibility seed.\"\n\nACCEPTANCE GATES:\n  - condition:
+    \"jepa_pipeline_integrated == true\"\n    principle: \"Continuous self-learning
+    mandate: every milestone must advance the self-learning architecture. JEPA integration
+    into the inference path is the Tier 3 milestone deliverable.\"\n\nDo NOT push.
+    Do NOT modify scripts/research_conductor.py."
+
+- id: exp2540-paper-v6-phase4-update-citations
+  title: 'Phase 5b: Paper-v6 Phase 4 Final Outcome Update + Missing Citations (arXiv:2512.02080
+    + new papers)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2540_paper_update.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 35
+  prior_failures:
+  - experiment_id: exp2515-paper-v6-writethrough-arxiv-gate
+    verdict: 'complete: paper_updated=True, arxiv_ready=True (per literal gates, Gate
+      3 methodology caveat noted)'
+    addressed_by: "exp2515 updated the paper before Phase 4 was permanently resolved.
+      This task incorporates the FINAL Phase 4 determination from exp2532 (either validated_clean
+      or retired_negative) plus adds missing citations: 4/delta Bound (arXiv:2512.02080),
+      Fast-Slow Training (arXiv:2605.12484), new .244 sweep papers (arXiv:2605.03971,
+      arXiv:2605.05134). These are distinct additions not in exp2515's scope."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: This task updates paper-v6 with two sets of changes:\n1. Phase
+    4 final determination (from exp2532): 'validated_clean' (add positive §4 result)
+    OR 'retired_negative' (revise §4 as honest negative documentation)\n2. Missing
+    citations that have been identified across multiple milestones but not yet added\n\nKEY
+    MISSING CITATIONS:\n  - arXiv:2512.02080 (4/delta Bound): Carnot's verify-repair
+    pipeline IS the absorbing Markov chain that Dantas et al. prove terminates in
+    E[n] <= 4/delta iterations. Score this as a §3 methodology cite.\n  - arXiv:2605.12484
+    (Fast-Slow Training, Learning Fast and Slow): validates Carnot's architecture
+    (slow verifier ensemble + fast LLM context iteration). §3 architecture-validation
+    cite.\n  - arXiv:2605.03971 (Logical Consistency): §3 related work (new Tier 0u
+    verifier approach).\n  - arXiv:2605.05134 (Dynamical System Hallucination Detection):
+    §3 related work (peer method).\n\nEXISTING CODE TO READ FIRST:\n  {project_root}/docs/arxiv-paper/main.tex\n
+    \ {project_root}/results/experiment_2532_phase4_arm_ebm_v4.json (Phase 4 final
+    outcome)\n  {project_root}/results/experiment_2536_latex_compile_fix.json (LaTeX
+    fix status — read if available)\n\nCONCRETE STEPS:\n  0. PRECONDITIONS:\n     a.
+    Locate paper source:\n        ls {project_root}/docs/arxiv-paper/main.tex\n        If
+    not found: write honest_verdict blocked_paper_not_found and exit.\n  1. Read exp2532
+    result for phase4_final_status.\n  2. Update §4 based on phase4_final_status:\n
+    \    'validated_clean': add positive correlation result with pearsonr, n_step_pairs,
+    p_value\n     'retired_negative' or 'blocked_precondition': add negative documentation
+    paragraph per exp2536 template\n  3. Add bibliography entries for missing citations
+    in main.tex (\\bibitem or BibTeX).\n  4. Add in-text citations where appropriate:\n
+    \    §3: add 4/delta Bound cite near verify-repair iterations discussion\n     §3:
+    add Fast-Slow Training cite near architecture description\n     §3 related work:
+    add Logical Consistency + Dynamical System peers\n  5. Report paper_updated=True.\n\nREQUIRED
+    ARTIFACT FIELDS:\n  - honest_verdict:\n      principle: \"Terminal-prefix required.\"\n
+    \ - paper_updated:\n      principle: \"True if main.tex was modified with Phase
+    4 outcome and new citations.\"\n  - citations_added:\n      principle: \"List
+    of arXiv IDs added — audit trail for paper reviewer.\"\n  - phase4_section_updated:\n
+    \     principle: \"True if §4 was updated with exp2532 final outcome.\"\n  - preconditions_checked:\n
+    \     principle: \"Records which resources were verified.\"\n  - duration_s:\n
+    \     principle: \"Wall-clock measurement.\"\n\nACCEPTANCE GATES:\n  - condition:
+    \"paper_updated == true\"\n    principle: \"Paper must reflect the final Phase
+    4 determination and include key missing citations before arXiv submission.\"\n\nDo
+    NOT push. Do NOT modify scripts/research_conductor.py."
+
+- id: exp2541-capstone-v244
+  title: 'Phase 6: Capstone v244 -- Milestone 2026.05.244 Final Synthesis (NO HARD
+    GATE)'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2541_capstone_v244.json
+  agent_type: claude
+  model: opus
+  requires_claude: true
+  max_turns: 100
+  prior_failures:
+  - experiment_id: exp2528-capstone-v243
+    verdict: 'complete: best_243_auroc=0.9750; phase4_final_status=blocked_precondition;
+      arxiv_ready=False'
+    addressed_by: "exp2528 was the .243 capstone. This is the .244 capstone — synthesizes
+      a different artifact set (exp2530-exp2540). Different milestone with different
+      outcomes. Capstones are recurring milestone-terminal tasks; each synthesizes
+      a distinct set. Not a rerun of exp2528."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: You are producing the milestone 2026.05.244 capstone artifact.
+    This requires synthesizing experiment artifacts (exp2530-exp2540) into a single
+    coherent milestone report.\n\nWHY requires_claude: true — Multi-artifact synthesis
+    across 11 files + cross-phase reasoning under ambiguity. The capstone must: (1)
+    determine whether exp2532 resolved or retired Phase 4 cleanly, (2) assess whether
+    ensemble v7b (exp2533) restored AUROC >= 0.975 and whether adaptive conformal
+    (exp2534) improved further, (3) evaluate arXiv submission readiness given exp2536
+    LaTeX fix + exp2540 paper update outcomes, (4) make a concrete operator_recommendation
+    for arXiv submission. These require open-ended cross-phase judgment calls. Meets
+    all 3 positive-criterion conditions per CLAUDE.md Codex-Default discipline.\n\nNO
+    HARD GATE: This experiment has no acceptance gate. The capstone reflects reality
+    as it is.\n\nFILES TO READ (in order):\n  {project_root}/results/experiment_2530_archive.json\n
+    \ {project_root}/results/experiment_2531_ising_verifier_implementation.json\n
+    \ {project_root}/results/experiment_2532_phase4_arm_ebm_v4.json\n  {project_root}/results/experiment_2533_ensemble_v7b.json\n
+    \ {project_root}/results/experiment_2534_adaptive_conformal_v2.json\n  {project_root}/results/experiment_2535_tier0u_logical_consistency.json\n
+    \ {project_root}/results/experiment_2536_latex_compile_fix.json\n  {project_root}/results/experiment_2537_gatemate_lut_mapping.json\n
+    \ {project_root}/results/experiment_2538_kv260_sd_flash.json\n  {project_root}/results/experiment_2539_fr11_jepa_pipeline.json\n
+    \ {project_root}/results/experiment_2540_paper_update.json\n  {project_root}/openspec/change-proposals/research-roadmap-v244.md\n\nREQUIRED
+    SYNTHESIS FIELDS:\n  1. n_experiments_completed: count of exp2530-exp2540 with
+    terminal honest_verdict\n  2. best_244_auroc: best AUROC from ensemble v7b (exp2533)
+    or adaptive conformal (exp2534), whichever is higher. If neither improved, carry
+    forward best_243_auroc=0.9750.\n  3. auroc_adversarially_verified: True if best_244_auroc
+    confirmed across >= 3 seeds without adversarial flags.\n  4. phase4_final_status:
+    'validated_clean' if exp2532.phase4_validated_step_level=True AND step_granularity_achieved=True;\n
+    \    'retired_negative' if exp2532 produced negative result (retire_if_same_verdict
+    fired); 'blocked_precondition' if exp2531 failed to implement IsingVerifier;\n
+    \    'carry_forward' if exp2532 not run.\n  5. phase4_permanently_retired: True
+    if phase4_final_status == 'retired_negative' (retire_if_same_verdict triggered).\n
+    \ 6. arxiv_ready: True if latex_compile_success=True AND abstract_word_count <=
+    250 AND all 4 gates met AND paper_updated=True.\n  7. operator_recommendation:
+    'submit_now' if arxiv_ready=True; 'latex_fix_remaining' if latex failed; 'revise_paper_first'
+    if paper update needed; 'request_operator_decision' if Phase 4 ambiguous.\n  8.
+    top_3_successes: three most impactful positive findings.\n  9. top_3_gaps_for_245:
+    three most critical unresolved issues entering .245.\n  10. honest_verdict: 'complete:
+    best_244_auroc=X.XXXX; phase4_final_status=Y; arxiv_ready=True/False'\n\nHONESTY
+    PROTOCOL:\n  - If phase4_final_status='retired_negative': arXiv may still proceed
+    if paper §4 documents the honest negative. operator_recommendation should reflect
+    this.\n  - If phase4_final_status='validated_clean': recommend 'submit_now' if
+    arxiv_ready.\n  - Do NOT mark arxiv_ready=True unless latex_compile_success=True
+    AND abstract_word_count<=250.\n  - Carry forward any corrigendum_pending items
+    from exp2528 not resolved in this milestone.\n\nREQUIRED ARTIFACT FIELDS:\n  -
+    honest_verdict:\n      principle: \"Terminal-prefix required. Must start with complete:.\"\n
+    \ - best_244_auroc:\n      principle: \"Cite-safe headline AUROC. Carries forward
+    0.9750 if ensemble v7b unavailable.\"\n  - phase4_final_status:\n      principle:
+    \"Terminal Phase 4 determination — the decision point for arXiv submission.\"\n
+    \ - phase4_permanently_retired:\n      principle: \"True if retire_if_same_verdict
+    fired — operator should not propose Phase 4 validation tasks in .245+.\"\n  -
+    arxiv_ready:\n      principle: \"True only if latex_compile_success AND abstract_word_count<=250
+    AND all 4 gates AND paper_updated. This is what triggers 'submit_now' recommendation.\"\n
+    \ - operator_recommendation:\n      principle: \"Concrete operator action: submit_now
+    / latex_fix_remaining / revise_paper_first / request_operator_decision.\"\n  -
+    external_baselines:\n      principle: \"HIVE peer (0.9236) carried forward for
+    continuous gap tracking.\"\n  - kv260_status:\n      principle: \"Hardware continuity
+    tracking — must reflect exp2538 outcome.\"\n  - gatemate_status:\n      principle:
+    \"Hardware continuity tracking — must reflect exp2537 outcome.\"\n\nDo NOT push.
+    Do NOT modify scripts/research_conductor.py."
+
+- id: exp2542-retro-v244
+  title: 'Phase 6: Operational Retrospective v244'
+  milestone: 2026.05.244
+  deliverable: results/experiment_2542_retro_v244.json
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 20
+  prior_failures:
+  - experiment_id: exp2529-retro-v243
+    verdict: 'complete: best_243_auroc=0.975; phase4_final_status=blocked_precondition;
+      arxiv_ready=False'
+    addressed_by: "exp2529 was the .243 operational retrospective. This is the .244
+      retro — reads exp2541 capstone v244 artifacts. Recurring milestone-terminal
+      task; different input data per milestone. Not a rerun of exp2529."
+    retire_if_same_verdict: false
+  prompt: "CONTEXT: Milestone 2026.05.244 has completed. Produce an operational retrospective.\n\nFILES
+    TO READ:\n  {project_root}/results/experiment_2541_capstone_v244.json (capstone)\n
+    \ {project_root}/ops/changelog.md (last 30 lines)\n  {project_root}/ops/known-issues.md
+    (first 50 lines)\n\nTASK: Write a brief operational retrospective following schema
+    carnot.operational_retro.v67.\n\nCONCRETE STEPS:\n  1. Count n_experiments_completed
+    from capstone.\n  2. Read best_244_auroc, phase4_final_status, arxiv_ready, operator_recommendation
+    from capstone.\n  3. Identify top 3 successes and top 3 gaps for .245.\n  4.
+    Write deliverable.\n\nREQUIRED ARTIFACT FIELDS:\n  - honest_verdict:\n      principle:
+    \"Terminal-prefix required (complete:).\"\n  - schema:\n      principle: \"carnot.operational_retro.v67.\"\n
+    \ - n_experiments_completed:\n      principle: \"Completion rate denominator for
+    milestone health tracking.\"\n  - best_244_auroc:\n      principle: \"Carry-forward
+    of headline AUROC for trend tracking across milestones.\"\n  - phase4_final_status:\n
+    \     principle: \"Terminal Phase 4 determination — arXiv gating signal.\"\n  -
+    arxiv_ready:\n      principle: \"Terminal arXiv gate status — the milestone outcome
+    that matters most.\"\n  - operator_recommendation:\n      principle: \"submit_now
+    / latex_fix_remaining / revise_paper_first / request_operator_decision — actionable
+    output.\"\n  - top_3_successes:\n      principle: \"Most impactful wins — used
+    by planner as carry-forward bias for .245 direction.\"\n  - top_3_gaps_for_245:\n
+    \     principle: \"Most critical unresolved issues — primary input to .245 planner.\"\n\nACCEPTANCE
+    GATES:\n  - condition: \"honest_verdict starts with 'complete:'\"\n    principle:
+    \"Retro is always terminal — it reads already-completed artifacts, not compute-bound
+    resources.\"\n\nDo NOT push. Do NOT modify scripts/research_conductor.py."

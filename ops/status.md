@@ -1,6 +1,36 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.243 research planning complete)
+**Last Updated:** 2026-05-19 (milestone 2026.05.244 research planning complete)
+
+## Session 2026-05-19 - Milestone 2026.05.244 Research Planning Complete
+
+**Milestone 2026.05.243 COMPLETED: key results from retro exp2529 + capstone exp2528:**
+- **AUROC 0.9750 carry-forward** — group-conditional ensemble v6 stable.
+- **Phase 4 ARM-EBM v3 (exp2519)**: blocked_ising_verifier_not_available — IsingVerifier is a stub class `class IsingVerifier: pass` with no methods. Root cause of ALL 4 consecutive Phase 4 failures identified.
+- **Ensemble v7 regression (exp2521)**: AUROC dropped 0.9750→0.9607 after Tier 0r placed in Group C. Tier 0r score range incompatible with Group C calibration.
+- **arXiv submission package (exp2527)**: submission_package_ready=False — latex_compile_success=False; abstract_word_count=522 exceeds 250-word limit.
+- **FR-11 Tier 3 JEPA (exp2525)**: AUC improved 0.7633→0.8889.
+- **Top 3 gaps for .244**: (1) IsingVerifier stub not implemented; (2) Ensemble v7 regression needs Group D for Tier 0r; (3) LaTeX compile failure + abstract too long.
+
+**Milestone 2026.05.244 PLANNED as IsingVerifier Fix + Phase 4 ARM-EBM v4 + Ensemble v7b (Group D) + arXiv LaTeX Fix + JEPA Pipeline Integration.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v244.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2530`–`exp2542`)
+- ID allocation: milestone `.243` used through `exp2529`, so `.244` starts at `exp2530`.
+- Research references updated with Post-.243 Planning Sweep: 2 new papers: arXiv:2605.05134 (Dynamical System Hallucination Detection — Tier 0t candidate) and arXiv:2605.03971 (Logical Consistency as Bridge — Tier 0u candidate, queued as exp2535).
+- **Milestone title**: "IsingVerifier Fix + Phase 4 ARM-EBM v4 + Ensemble v7b (Group D) + arXiv LaTeX Fix + JEPA Pipeline Integration"
+- **Three critical gaps targeted**:
+  1. IsingVerifier stub fix (exp2531): implement `energy(step_text: str) -> float` regex-based arithmetic constraint checker; enables Phase 4 clean run for first time.
+  2. Phase 4 ARM-EBM v4 (exp2532, gated on exp2531): re-run with real IsingVerifier; retire_if_same_verdict=true means permanent retirement if STILL blocked_precondition.
+  3. Ensemble v7b (exp2533): move Tier 0r to dedicated Group D; no-regression gate AUROC>=0.970.
+- **Other experiments**: exp2534 adaptive conformal v2 ACSE (gated on exp2533.v7b_auroc>=0.970); exp2535 Tier 0u logical-consistency verifier (arXiv:2605.03971); exp2536 LaTeX compile fix + abstract trim to <250 words; exp2537 GateMate LUT mapping fix (hardware); exp2538 KV260 SD card flash attempt (hardware); exp2539 FR-11 Tier 3 JEPA pipeline integration (continuous_self_learning_task:true); exp2540 paper-v6 Phase 4 update + citations (gated on exp2532 outcome); exp2541 capstone claude+opus (requires_claude, NO HARD GATE); exp2542 retro codex.
+- **Critical path**: exp2531 (IsingVerifier fix) → exp2532 (Phase 4 ARM-EBM v4) → exp2540 (paper-v6 update based on Phase 4 outcome) → exp2541 (capstone recommendation). Also: exp2533 (Group D) → exp2534 (adaptive conformal); exp2536 (LaTeX fix) → exp2541 (arXiv-ready decision).
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2541 capstone).
+- Validation: `validate_prior_failures.py` — [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.244. Critical path: exp2531 (IsingVerifier implementation — the root cause fix for 4 consecutive Phase 4 failures). If exp2531 succeeds and exp2532 validates Phase 4 with |pearsonr|>0.30 AND p<0.05, then Phase 4 ARM-EBM bijection hypothesis will be validated for the first time — enabling paper-v6 §4 empirical evidence and unblocking arXiv Gate 3.
+
+---
 
 ## Session 2026-05-19 - Milestone 2026.05.243 Research Planning Complete
 

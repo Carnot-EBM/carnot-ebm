@@ -1,5 +1,14 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-19 Milestone 2026.05.244 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (Turn 0) | 2026-05-19T19:00:00Z | 2026-05-19T19:36:38Z | Full .244 planning session: read 11 required files + 7 artifact files; ran arxiv research sweep (2 new papers: arXiv:2605.05134 Dynamical System Hallucination Detection, arXiv:2605.03971 Logical Consistency as Bridge); updated research-references.md; wrote openspec/change-proposals/research-roadmap-v244.md (293 lines); wrote research-roadmap-next.yaml (856 lines, 13 tasks exp2530–exp2542). Context compaction mid-session. | ~180k |
+| 2 (resumed) | 2026-05-19T19:36:38Z | 2026-05-19T19:38:00Z | Resumed from context compaction: ran validate_prior_failures.py (OK — no schema errors, no violations); ran audit_roadmap_gates.py (roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited); updated ops/metrics.md, ops/status.md, ops/changelog.md. | ~20k |
+
 ## Session: 2026-05-19 Milestone 2026.05.243 Research Planning
 
 ### Turn Log
