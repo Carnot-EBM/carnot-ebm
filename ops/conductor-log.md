@@ -4987,3 +4987,4 @@ Ripgrep i |
 | 2026-05-19 01:10 UTC | Phase 0: Archive .236 and activate .237 | OK | cache hit: 81 passed, 1 warning in 2.33s |
 | 2026-05-19 01:19 UTC | Phase 1: Conformal P-Value Ensemble v2 -- Fix JSON | OK | 100 passed, 1 warning in 3.72s |
 | 2026-05-19 01:24 UTC | Phase 1: HalluField Tier 0m Verifier (arXiv:2509.1 | OK | 81 passed, 1 warning in 2.42s |
+| 2026-05-19 01:33 UTC | Phase 1: LaaB ACL 2026 Full Meta-Judgment Bridge v | OK | 100 passed, 1 warning in 3.72s |
