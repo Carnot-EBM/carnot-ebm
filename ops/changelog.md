@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-19 (Milestone 2026.05.242 Operational Retrospective)
+
+- Operational retrospective for milestone 2026.05.242 written to `results/operational_retro_2026_05_242.json`. No experiment commits found in the timing window — milestone is in activation/planning phase only. Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with planning-only turn. Top-3 leverage actions: (1) launch exp2507 activation immediately; (2) pre-warm dual GPUs for parallel exp2509+exp2510 Phase 2a ensemble expansion; (3) flag exp2508 ARM-EBM (retire_if_same_verdict:true, 5 prior failures) for immediate operator review upon completion. Roadmap gate audit previously confirmed passing (0 schema errors, 11 tasks). Docs updated: changelog + roadmap.md Completed Milestones table.
+
 ## 2026-05-19 (Milestone 2026.05.242 Research Planning)
 
 - Milestone 2026.05.242 research planning complete. User instruction: plan the next milestone after .241 (all tasks completed, 8/10 with 1 MISSING and 1 GATE_BLOCKED).

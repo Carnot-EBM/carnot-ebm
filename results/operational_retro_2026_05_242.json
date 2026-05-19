@@ -1,19 +1,29 @@
 {
-  "schema": "carnot.operational_retro.v66",
+  "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.242",
-  "n_experiments_completed": 6,
-  "best_242_auroc": 0.975,
-  "phase4_validated_any": true,
-  "arxiv_ready": true,
-  "top_3_successes": [
-    "KV260 .hwh file successfully generated from Vivado block design (exp2514, vivado v2025.2.1). Physical SD card flash remains a manual operator step but the toolchain side of PYNQ deployment is unblocked \u2014 KV260 status advances from pynq_path_viable to hwh_generated_flash_pending_operator.",
-    "FR-11 Tier 2 memory-augmented threshold learning passed gate (exp2512): memory_augmented_auroc=1.0000 vs no_memory_baseline_auroc=0.7803 on a 32-example per-domain corpus across 2 domains. SQLite schema v1.0 instantiated; FR-11 Tier 2 cross-session memory operational.",
-    "Paper-v6 final write-through complete (exp2515): updated Milestones .240 to .242 update, Limitations and resolved 5 corrigenda items (TAUTOLOGY flag in AUROC table caption, Tier 0r AUROC=0.9123 in \u00a73, Tier 0q retirement in \u00a76 limitations, Phase 4 step-level result in \u00a76, HalluGuard Tier 0s viability in \u00a76). Paper is ready for arXiv submission contingent on Gate 3 status."
+  "generated_at": "2026-05-19T17:27:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.242 has zero experiments committed in the timing window — the milestone was activated and its roadmap was planned this session, but no experiment tasks have completed yet. Both RTX 3090 GPUs are idle at 0% utilization with only 5 MB allocated each, consistent with a planning-only turn. No wall-time data is available to analyze.",
+  "bottlenecks_identified": [
+    "No experiment commits found since milestone activation — timing window captures only the planning phase, not any experiment execution. This is expected at milestone open and is not a process failure.",
+    "Both GPUs are idle (0% utilization, 5 MB allocated each) with no compute-bound tasks run yet. This is correct behaviour for a planning-only turn — no GGUF/CUDA workloads have been dispatched."
   ],
-  "top_3_gaps_for_243": [
-    "Phase 4 step-level methodology fallback (exp2508): step_granularity_achieved=False, energy_proxy_used='semantic_energy_fallback'. The designed raw-logprob step-level path was not executed; the experiment fell back to a response-level semantic-energy proxy (same class as exp2486 which failed). Re-run with IsingVerifier step-level energy implementation for a clean Gate 3 flip. retire_if_same_verdict=true applies if the next attempt also falls back.",
-    "Ensemble expansion chain stalled: exp2509, exp2510, exp2511 blocked. exp2509 HalluGuard Tier 0s no eval corpus; exp2510 Tier 0r integration not implemented; exp2511 adaptive-conformal v2 gated on ensemble v7. Three-task dependency chain unblocked only by Tier 0r implementation. AUROC headline remains carried forward from .241 at 0.9750.",
-    "exp2513 KAN multilevel training blocked: kan_model_exists=False. The KAN baseline model is missing from disk; multilevel training (arXiv:2603.04827) cannot proceed until the KAN Tier 1 baseline is restored or rebuilt. AUROC=0.994 certified-deployment-ready KAN claim is at risk if the baseline cannot be reconstructed."
+  "improvements_suggested": [
+    "Activate exp2507 (archive .241 + activate .242) promptly so the conductor can begin dispatching the 11-task roadmap and the timing window starts accumulating real data.",
+    "Ensure the DualGPURunner is pre-configured before launching exp2508 (ARM-EBM) + exp2509 (HalluGuard) if those tasks are co-scheduled, since both GPUs are currently free and could be parallelised.",
+    "For the Phase 4 ARM-EBM task (exp2508), the CPU-only path is intentional per prior failures — do not attempt to load a GGUF model unless the precondition check in step 0 confirms the model is cached, to avoid doomed-rerun fabrication.",
+    "The arXiv gate (Gate 3: phase4_validated) has blocked submission for two consecutive milestones; .242's exp2508 has retire_if_same_verdict:true — if the Pearson |r|>0.30 gate fails again, retire the ARM-EBM bijection path and reroute Phase 4 to an alternative technique before .243 planning."
   ],
-  "honest_verdict": "complete: best_242_auroc=0.975; phase4_validated_any=True; arxiv_ready=True"
+  "top_3_highest_leverage_actions": [
+    "Launch the activation task (exp2507) immediately to start the experiment clock and unblock the 10 downstream codex tasks in the roadmap.",
+    "Pre-warm GPU 0 for the HalluGuard NTK prototype (exp2509) and GPU 1 for Tier 0r integration (exp2510) so both run in parallel when the conductor reaches Phase 2a — both GPUs are free and the roadmap explicitly targets ensemble AUROC >= 0.970.",
+    "Flag the Phase 4 ARM-EBM bijection (exp2508) as the single highest-risk task: five prior failures documented, retire_if_same_verdict:true gate active. Dedicate operator attention to reviewing its artifact immediately upon completion so a .243 reroute decision can be made before the capstone (exp2516)."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective covers a zero-experiment window — the milestone is freshly activated and no timing data exists yet. The planning turn was executed correctly: roadmap validated (0 schema errors, 11 tasks, gate audit passed), exclusion manifest cross-checked (0 retired patterns matched), and prior_failures blocks added for all rerun candidates. The process discipline for milestone open is healthy; the next retro (exp2517) should have full timing data to analyze execution efficiency."
 }

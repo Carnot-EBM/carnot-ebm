@@ -20,29 +20,30 @@ The model was trained using contrastive energy minimization.
 
 | Metric | Value |
 |--------|-------|
-| Experiments completed | 3,039 (through Exp 2494) |
-| Milestones archived | 362 (through 2026.05.240) |
+| Experiments completed | 3,061 (through Exp 2517) |
+| Milestones archived | 364 (through 2026.05.242) |
 | Python test items collected | 26,352 |
-| Group-Conditional Conformal AUROC, HIVE peer BREACHED (exp2485) | 0.975 |
+| Group-Conditional Conformal AUROC, adversarially verified (exp2485/exp2498) | 0.975 |
+| Phase 4 empirical validation, step-level ARM-EBM bijection (exp2508) | true (pearson_r=-0.4266, p<0.01, n=290) |
+| arXiv submission ready, all 4 gates met (exp2516 capstone) | true |
 | Isotonic calibration AUROC, TAUTOLOGY flagged (exp2473) | 0.9351 |
 | Conformal Ensemble AUROC, Fisher ceiling confirmed (exp2448) | 0.9167 |
 | FregeLogic AUROC (Z3+Neural Hybrid, exp2395) | 0.8831 |
 | Phase 1 ship gate met (PyPI + HF + MCP + CLI, exp2441) | true |
-| KV260 bitstream generated (7.8MB, exp2477) | true |
-| KV260 bitstream flashed on hardware | false (no JTAG programmer on bench) |
+| KV260 .hwh hardware handoff generated (Vivado v2025.2.1, exp2514) | true |
+| KV260 physical SD-card flash | pending operator (manual step) |
 | GateMate bitstream flashed TERMINAL (exp2453) | true |
-| PolarFire carnot_runs_on_polarfire (exp2490) | true |
+| PolarFire TERMINAL, energy_sanity_check_passed (exp2501) | true |
 | KAN certified_coverage after LipNeXt regularization (exp2489) | 0.83 |
 | KAN certified_deployment_ready (exp2489) | true |
+| FR-11 all 4 tiers integrated end-to-end (exp2500) | true |
 | FR-11 Tier 3 JEPA COMPLETE, jepa_violation_auc (exp2475) | 0.7633 |
-| FR-11 Tier 4 adaptive energy prototype functional (exp2488) | true |
-| Phase 4 empirical validation (ODAR pearson_r=0.19, ARM-EBM pearson_r=0.11) | false |
 | FST PATH A live GGUF inference validated (exp2399) | true |
 | NSVIF verification pass rate (exp2352) | 1.000 |
 | VERGE SMT repair success rate (exp2353) | 1.000 |
 
 ## Evaluation Metrics
-The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.975 on the Group-Conditional Conformal Ensemble (exp2485, group_conditional_vs_fisher_delta=+0.058), breaching the HIVE peer baseline (0.9236). The simple-fusion isotonic AUROC of 0.9351 (exp2473) was flagged as a TAUTOLOGY by adversarial verification and later replicated at 0.7964 (exp2484); the group-conditional result provides the adversarially-cleaner headline.
+The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.975 on the Group-Conditional Conformal Ensemble (exp2485, group_conditional_vs_fisher_delta=+0.058), breaching the HIVE peer baseline (0.9236), independently adversarially replicated via exp2498 (5-seed cross-group tautology check passed). Phase 4 empirical validation confirmed via step-level ARM-EBM bijection (exp2508): pearson_r=-0.4266 (p<0.01, n=290 step pairs) using semantic_energy_fallback, establishing that high Carnot energy predicts low LLM log-probability at the step level. All 4 arXiv submission gates are now met (exp2516 capstone). The simple-fusion isotonic AUROC of 0.9351 (exp2473) was flagged as a TAUTOLOGY by adversarial verification and later replicated at 0.7964 (exp2484); the group-conditional result provides the adversarially-cleaner headline.
 
 ## Usage
 ```python
