@@ -5163,3 +5163,4 @@ Ripgrep i |
 | 2026-05-19 22:23 UTC | Milestone 2026.05.245 activated | OK | 13 tasks queued |
 | 2026-05-19 22:31 UTC | Phase 0: Archive .244 and activate .245 (with exec | OK | 81 passed, 1 warning in 2.27s |
 | 2026-05-19 22:37 UTC | Phase 1a: Phase 4 Option B — Expand §4 with Full H | OK | cache hit: 81 passed, 1 warning in 2.27s |
+| 2026-05-19 22:41 UTC | Phase 1b: IsingVerifier.energy(step_text) Implemen | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2545_ising_v |
