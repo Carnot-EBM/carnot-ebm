@@ -1,0 +1,16 @@
+{
+  "available_flash_tools": [
+    "vivado"
+  ],
+  "dirtyjtag_kv260_compatible": false,
+  "experiment": "exp2491-kv260-flash-docs",
+  "experiment_id": "2491",
+  "honest_verdict": "complete_kv260_flash_docs: Documented flash requirements for KV260 and explored DirtyJTAG / OpenOCD feasibility. DirtyJTAG is physically incompatible (3.3V vs 1.8V and Vivado hw_server mismatch) and OpenOCD requires complex ZynqMP PS initializations absent from xilinx_zynqmp.cfg. Vivado Tcl path and physical programmer options documented in docs/kv260_flash_requirements.md.",
+  "kv260_flash_requirements_written": true,
+  "milestone": "2026.05.239",
+  "openocd_flash_feasible": false,
+  "openocd_kv260_path": null,
+  "preconditions_checked": true,
+  "schema": "results/v1",
+  "vivado_tcl_commands": "open_hw_manager\nconnect_hw_server\nopen_hw_target\nset_property PROGRAM.FILE {bitstream.bit} [get_hw_devices xck26*]\nprogram_hw_devices"
+}
