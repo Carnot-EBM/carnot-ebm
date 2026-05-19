@@ -6309,3 +6309,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-19: Phase 3: NCO Negative Constraint Decoding (arXiv:2605.10065) -- WFSA-Based Constraint Rejection (✅ Complete) — honest_verdict=complete: AUROC=0.500; results/experiment_2444_nco_negative_constraint.json
 - 2026-05-19: Phase 4: Milestone 2026.05.236 Operational Retrospective (⚠️ Blocked) — honest_verdict=complete: retro generated with 10 completed, 1 failed, 1 blocked.; results/experiment_2446_retro_v236.json
 - 2026-05-19: Phase 4: Milestone 2026.05.236 Operational Retrospective (Complete) — 0 experiments in timing window; both GPUs idle at 0%; recurring activation-gap bottleneck; pre-stage .237 roadmap recommended; results/operational_retro_2026_05_236.json
+- 2026-05-19: Phase 0: Archive .236 and activate .237 (✅ Complete) — honest_verdict=complete: Conductor already swapped roadmap to 2026.05.237 and archived 2026.05.236.; results/experiment_2447_archive.json
