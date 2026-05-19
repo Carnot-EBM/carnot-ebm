@@ -461,7 +461,10 @@ class HiveEnsembleDetector:
         ):
             function = getattr(module, function_name, None)
             if callable(function):
-                return _finite_float(function(entry), function_name)
+                result = function(entry)
+                if isinstance(result, tuple):
+                    result = result[0]
+                return _finite_float(result, function_name)
 
         verifier_cls = getattr(module, "LaaBVerifier", None)
         if verifier_cls is not None:
