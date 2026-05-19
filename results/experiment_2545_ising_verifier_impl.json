@@ -2,34 +2,80 @@
   "experiment": 2545,
   "title": "IsingVerifier text energy implementation",
   "run_date": "2026-05-19",
-  "honest_verdict": "blocked_carnot_import_failed",
-  "ising_verifier_text_energy_implemented": false,
-  "energy_test_correct": false,
-  "implementation_method": "not_attempted_precondition_failed",
+  "honest_verdict": "Terminal-prefix required. complete: IsingVerifier text arithmetic energy is implemented and focused verification passed under the repo-local PYTHONPATH.",
+  "ising_verifier_text_energy_implemented": true,
+  "energy_test_correct": true,
+  "implementation_method": "regex_arith_re",
   "preconditions_checked": {
     "codex_md_read": true,
-    "semantic_energy_detector_import": {
+    "claude_md_read": true,
+    "semantic_energy_file_read": true,
+    "semantic_energy_detector_import_unprefixed": {
       "command": "python3 -c \"from carnot.verify.semantic_energy import SemanticEnergyDetector; print('import ok')\"",
       "passed": false,
-      "stderr": "ModuleNotFoundError: No module named 'carnot'"
+      "stderr": "ModuleNotFoundError: No module named 'carnot'",
+      "resolution": "Repo-local source import works with PYTHONPATH=python; focused verification used that prefix."
     },
-    "ising_verifier_existing_methods": {
-      "command": "python3 -c \"from carnot.verify.semantic_energy import IsingVerifier; iv=IsingVerifier(); print('methods:', [m for m in dir(iv) if not m.startswith('_')])\"",
-      "passed": false,
-      "skipped_reason": "semantic_energy_detector_import_failed"
+    "semantic_energy_detector_import_repo_prefix": {
+      "command": "PYTHONPATH=python python3 -c \"from carnot.verify.semantic_energy import SemanticEnergyDetector; print('import ok')\"",
+      "passed": true,
+      "stdout": "import ok"
     },
-    "openspec_capabilities_scanned_for_req": true
+    "ising_verifier_existing_methods_repo_prefix": {
+      "command": "PYTHONPATH=python python3 -c \"from carnot.verify.semantic_energy import IsingVerifier; iv=IsingVerifier(); print('methods:', [m for m in dir(iv) if not m.startswith('_')])\"",
+      "passed": true,
+      "methods": [
+        "energy"
+      ],
+      "finding": "Existing method was partial: it discriminated 2+3=5 vs 2+3=6 but missed uppercase EQUALS because the regex lacked re.IGNORECASE."
+    },
+    "openspec_requirements_confirmed": [
+      "openspec/capabilities/pipeline/spec.md: REQ-TIER0-007",
+      "openspec/capabilities/self-learning/spec.md: REQ-LEARN-1209-2"
+    ],
+    "e2e_plan_checked": {
+      "path": "ops/e2e-test-plan.md",
+      "applicable_e2e_found": false,
+      "reason": "The listed E2E checks cover Ising model training/sampling, bindings, serialization, code verification, hardware scoring, learning, and continuous latent evaluation; none applies to this text-only arithmetic energy class."
+    }
   },
-  "duration_s": 37.0,
+  "verification": {
+    "direct_discrimination": {
+      "command": "PYTHONPATH=python python3 -c \"from carnot.verify.semantic_energy import IsingVerifier; iv=IsingVerifier(); assert iv.energy('The sum 2+3=5') == 0.0; assert iv.energy('The sum 2+3=6') == 1.0; assert iv.energy('no arithmetic here') == 0.0; print('all tests passed')\"",
+      "passed": true,
+      "stdout": "all tests passed"
+    },
+    "bounded_float_gate": {
+      "command": "PYTHONPATH=python python3 -c \"from carnot.verify.semantic_energy import IsingVerifier; iv=IsingVerifier(); vals=[iv.energy('2+3=5'), iv.energy('2+3=6'), iv.energy('no arithmetic here')]; assert all(isinstance(v, float) for v in vals); assert all(0.0 <= v <= 1.0 for v in vals); print(vals)\"",
+      "passed": true,
+      "stdout": "[0.0, 1.0, 0.0]"
+    },
+    "pytest": {
+      "command": "PYTHONPATH=python uv run --no-sync python -m pytest -q tests/python/verify/test_ising_verifier.py --no-cov -n 0",
+      "passed": true,
+      "stdout": "1 passed in 0.32s"
+    },
+    "ruff": {
+      "command": "ruff check python/carnot/verify/semantic_energy.py tests/python/verify/test_ising_verifier.py && ruff format --check python/carnot/verify/semantic_energy.py tests/python/verify/test_ising_verifier.py",
+      "passed": true,
+      "stdout": "All checks passed! 2 files already formatted"
+    },
+    "spec_coverage": {
+      "command": "python3 scripts/check_spec_coverage.py tests/python/verify/test_ising_verifier.py",
+      "passed": true,
+      "stdout": "OK: All tests reference specification requirements."
+    }
+  },
+  "duration_s": 229.0,
   "random_seed": 42,
   "acceptance_gates": {
-    "ising_verifier_text_energy_implemented_and_energy_test_correct": false
+    "ising_verifier_text_energy_implemented_and_energy_test_correct": true
   },
   "field_principles": {
     "honest_verdict": "Terminal-prefix required.",
     "ising_verifier_text_energy_implemented": "True only if IsingVerifier().energy(str) returns float in [0,1] and discrimination test passes. Gate condition for downstream callers.",
     "energy_test_correct": "True if energy('2+3=5')=0.0 AND energy('2+3=6')=1.0. Confirms non-trivial discrimination.",
-    "implementation_method": "'regex_arith_re' or 'manual_search' — documents what approach was used for audit trail.",
+    "implementation_method": "'regex_arith_re' or 'manual_search'; documents what approach was used for audit trail.",
     "preconditions_checked": "Records which resources were verified before launching.",
     "duration_s": "Wall-clock measurement.",
     "random_seed": "Set to 42."

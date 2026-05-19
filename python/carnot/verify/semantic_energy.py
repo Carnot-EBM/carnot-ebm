@@ -191,29 +191,41 @@ class SemanticEnergyDetector:
                 entropy -= probability * math.log(probability)
         return float(entropy)
 
+
 SemanticEnergy = SemanticEnergyDetector
 
+
 class IsingVerifier:
+    """Compute arithmetic constraint-violation energy for a text step.
+
+    Returns float in [0,1]: 0.0 = no violations detected, 1.0 = all claims violated.
+    Detects claims of the form 'A op B = C' (e.g. '47+28=76') and checks
+    whether C equals the computed result of A op B.
+    """
+
     def __init__(self):
         import re
-        self._num_re = re.compile(r'\b(\d+(?:\.\d+)?)\b')
+
         self._arith_re = re.compile(
-            r'(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)\s*(?:=|equals|is)\s*(\d+(?:\.\d+)?)'
+            r"(\d+(?:\.\d+)?)\s*([+\-*/])\s*(\d+(?:\.\d+)?)"  # A op B
+            r"\s*(?:=|equals|is)\s*(\d+(?:\.\d+)?)",  # = C
+            re.IGNORECASE,
         )
 
     def energy(self, step_text: str) -> float:
-        '''Compute constraint-violation energy for a text step.
-        Returns float in [0,1]: 0.0=no violations detected, 1.0=all claims violate.'''
         violations, total = 0, 0
-        # Check arithmetic claims: 'A op B = C'
         for m in self._arith_re.finditer(step_text):
             a, op, b, c = float(m.group(1)), m.group(2), float(m.group(3)), float(m.group(4))
             total += 1
-            expected = {'+': a+b, '-': a-b, '*': a*b, '/': a/b if b!=0 else float('inf')}[op]
+            try:
+                expected = {
+                    "+": a + b,
+                    "-": a - b,
+                    "*": a * b,
+                    "/": a / b if b != 0 else float("inf"),
+                }[op]
+            except (ZeroDivisionError, KeyError):
+                continue
             if abs(expected - c) > 1e-6:
                 violations += 1
-        if total == 0:
-            return 0.0  # No verifiable claims = no violations
-        return violations / total
-
-
+        return violations / total if total > 0 else 0.0
