@@ -17,6 +17,8 @@ from pathlib import Path
 
 import pytest
 import yaml
+
+pytest.importorskip("pydantic")
 from pydantic import ValidationError
 
 # Make scripts/ importable when running pytest from repo root.

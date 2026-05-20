@@ -17,9 +17,10 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import numpy as np
-import onnx
-import onnxruntime as ort
 import pytest
+
+onnx = pytest.importorskip("onnx")
+ort = pytest.importorskip("onnxruntime")
 
 # ---------------------------------------------------------------------------
 # Architecture constants from Exp 66 hyperparameters (results JSON)

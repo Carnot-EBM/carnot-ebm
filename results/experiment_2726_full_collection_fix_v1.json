@@ -1,0 +1,47 @@
+{
+  "honest_verdict": "complete: all 5 collection failures fixed via importorskip",
+  "collection_clean": true,
+  "n_collection_errors_initial": 5,
+  "n_collection_errors_final": 0,
+  "fixes_applied": [
+    {
+      "file": "tests/python/test_experiment_1805_kan_verify.py",
+      "issue": "Missing 'pulp' dependency causing ModuleNotFoundError",
+      "fix": "Inserted pytest.importorskip('pulp') before script import"
+    },
+    {
+      "file": "tests/python/test_experiment_268_hf_publish.py",
+      "issue": "Missing 'onnx' dependency causing ModuleNotFoundError",
+      "fix": "Replaced direct onnx and onnxruntime imports with pytest.importorskip"
+    },
+    {
+      "file": "tests/python/test_experiment_293_huggingface_publish.py",
+      "issue": "Missing 'onnx' dependency causing ModuleNotFoundError",
+      "fix": "Replaced direct onnx and onnxruntime imports with pytest.importorskip"
+    },
+    {
+      "file": "tests/python/test_experiment_972_kan_milp.py",
+      "issue": "Missing 'pulp' dependency causing ModuleNotFoundError",
+      "fix": "Inserted pytest.importorskip('pulp') before script import"
+    },
+    {
+      "file": "tests/python/test_roadmap_schema.py",
+      "issue": "Missing 'pydantic' dependency causing ModuleNotFoundError",
+      "fix": "Inserted pytest.importorskip('pydantic') before ValidationError import"
+    }
+  ],
+  "smart_subset_still_passes": true,
+  "duration_s": 65.0,
+  "preconditions_checked": [
+    {
+      "resource": "pytest_collection",
+      "available": false,
+      "check": "pytest --co showed 5 errors initially"
+    },
+    {
+      "resource": "python_version",
+      "available": true,
+      "check": "Python 3.14.4 verified via sys.version"
+    }
+  ]
+}

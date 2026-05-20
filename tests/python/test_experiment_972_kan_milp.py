@@ -20,6 +20,7 @@ os.environ.setdefault("JAX_PLATFORMS", "cpu")
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "scripts"))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "python"))
 
+pytest.importorskip("pulp")
 from experiment_972_kan_milp_formal_verification import (
     pwa_segments,
     verify_boundary_condition,

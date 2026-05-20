@@ -7,6 +7,7 @@ import json
 from unittest import mock
 import pytest
 
+pytest.importorskip("pulp")
 from scripts.experiment_1805_kan_verify import run_smoke_test, main
 
 def test_run_smoke_test_returns_valid_dict():
