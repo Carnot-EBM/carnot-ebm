@@ -5410,3 +5410,4 @@ Ripgrep i |
 | 2026-05-20 11:39 UTC | Capstone v252: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:41 UTC | Capstone v252: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:43 UTC | Milestone .252 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 11:45 UTC | Milestone .252 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
