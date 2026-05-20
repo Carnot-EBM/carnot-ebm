@@ -5369,3 +5369,4 @@ Ripgrep i |
 | 2026-05-20 10:01 UTC | Capstone v251: Cross-Artifact Synthesis + Operator | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 10:03 UTC | Capstone v251: Cross-Artifact Synthesis + Operator | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 10:05 UTC | Milestone .251 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 10:07 UTC | Milestone .251 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
