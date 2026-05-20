@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.257",
+  "generated_at": "2026-05-20T20:53:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.257 had 0 experiments committed to the timing window — the thirty-second consecutive empty-timing-window retro. Both RTX 3090 GPUs remained idle at 0% utilization (41C/49C) with only 5MB allocated each. No compute-bound tasks were active this milestone, so GPU idle state is not a bottleneck.",
+  "bottlenecks_identified": [
+    "Timing-script look-back window not anchored to conductor-state.json activation timestamp — root cause of 32-milestone zero-execution streak; persists unresolved across every prior retro recommendation.",
+    "No zero-artifact alarm: conductor can activate a milestone and proceed to retro generation without emitting any experiment commits, burning a milestone slot with zero research output.",
+    "Retro task fires at or immediately after activation, before any substantive experiment has time to complete — structural ordering flaw in the conductor's milestone close sequence."
+  ],
+  "improvements_suggested": [
+    "Fix timing-script look-back to use conductor-state.json activation timestamp as the deterministic lower bound (eliminates root cause of the 32-milestone zero-execution streak).",
+    "Wire a zero-artifact alarm: if no experiment result JSON lands in results/ within 60 minutes of milestone activation, emit a conductor alert and hold retro generation until at least one experiment completes.",
+    "Introduce a milestone-open sentinel commit at activation time — a zero-content commit whose timestamp gives the timing script a reliable anchor independent of experiment arrival.",
+    "Schedule the retro task as the LAST item in the milestone's task queue, not the first, so it can only fire after earlier tasks have had a chance to produce artifacts."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to conductor-state.json activation timestamp — eliminates root cause of the 32-milestone zero-execution streak in a single one-line change to the timing query.",
+    "Wire zero-artifact alarm at 60 min post-activation — structural backstop that prevents the conductor from closing a milestone with 0 experiments when the root-cause fix has not yet landed.",
+    "Activate at least one non-retro GGUF inference experiment in the same session as milestone activation — breaks the zero-execution streak with no structural changes required; both RTX 3090s are healthy and waiting."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This is the thirty-second consecutive empty-timing-window retro. The timing-script root cause has been identified, documented, and recommended for a fix across at least eight prior milestones without landing; it must be treated as a P0 infrastructure task in 2026.05.258, not deferred again as a background suggestion. GPU hardware (dual RTX 3090, 41C/49C, 0% utilization) is healthy and capable — the bottleneck is entirely in conductor dispatch, not in compute availability."
+}

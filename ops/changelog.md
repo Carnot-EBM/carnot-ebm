@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.257 Operational Retro)
+
+- Operational retro v257 written (results/operational_retro_2026_05_257.json). TIMING DATA: 0 experiments committed in timing window (thirty-second consecutive empty-timing-window retro). Bottlenecks: timing-script look-back window not anchored to conductor-state.json activation timestamp (root cause, persists unresolved across 8+ prior retros); no zero-artifact alarm to halt retro before any experiments complete; retro task ordering fires before substantive experiments. Top leverage actions: fix timing-script look-back to activation timestamp; wire zero-artifact alarm at 60 min post-activation; activate at least one GGUF inference experiment in same session as activation. GPUs idle at 0% (41C/49C); no compute-bound tasks to assess.
+
 ## 2026-05-20 (Milestone 2026.05.257 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.257. Milestone .256 (exp2686–exp2698) partially executed — 3 of 13 artifacts landed (exp2695 NEXUS v2 real violations, exp2696 paper v6 fallback, exp2697 KV260 Branch B). 51st consecutive zero-execution milestone per retro timing window. Conductor diagnosis task exp2687 itself did not execute.

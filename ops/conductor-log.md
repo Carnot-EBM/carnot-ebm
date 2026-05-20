@@ -5576,3 +5576,24 @@ Ripgrep i |
 | 2026-05-20 19:43 UTC | SOTA GGUF Live Pipeline Validation v2: Ensemble on | OK | 81 passed in 2.04s |
 | 2026-05-20 19:49 UTC | Tier 0f: Semantic Reward Calibration for Tier 0e E | OK | 100 passed in 3.65s |
 | 2026-05-20 19:54 UTC | Multi-Agent Scaling Audit: AUROC vs k Curve + ME R | OK | cache hit: 100 passed in 3.65s |
+| 2026-05-20 20:02 UTC | Property-Guided Counterexample Repair Loop (arXiv: | FAIL | Post-tests failed: 5 failed, 140 passed in 2.93s |
+| 2026-05-20 20:04 UTC | Property-Guided Counterexample Repair Loop (arXiv: | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.80s |
+| 2026-05-20 20:06 UTC | Property-Guided Counterexample Repair Loop (arXiv: | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.80s |
+| 2026-05-20 20:08 UTC | FR-11 Tier 3: ORCA TTT v2 + Grounded Continuation  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.82s |
+| 2026-05-20 20:10 UTC | FR-11 Tier 3: ORCA TTT v2 + Grounded Continuation  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.81s |
+| 2026-05-20 20:13 UTC | FR-11 Tier 3: ORCA TTT v2 + Grounded Continuation  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.81s |
+| 2026-05-20 20:15 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.81s |
+| 2026-05-20 20:17 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.77s |
+| 2026-05-20 20:19 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.83s |
+| 2026-05-20 20:21 UTC | Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.78s |
+| 2026-05-20 20:23 UTC | Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.77s |
+| 2026-05-20 20:25 UTC | Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.82s |
+| 2026-05-20 20:27 UTC | Linear Probe Calibration for Tier 0e EORM: 10x Spe | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.77s |
+| 2026-05-20 20:29 UTC | Linear Probe Calibration for Tier 0e EORM: 10x Spe | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.90s |
+| 2026-05-20 20:32 UTC | Linear Probe Calibration for Tier 0e EORM: 10x Spe | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.88s |
+| 2026-05-20 20:34 UTC | KV260 Hardware Continuity .257 (NON-TERMINAL — SD  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.78s |
+| 2026-05-20 20:36 UTC | KV260 Hardware Continuity .257 (NON-TERMINAL — SD  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.78s |
+| 2026-05-20 20:38 UTC | KV260 Hardware Continuity .257 (NON-TERMINAL — SD  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.80s |
+| 2026-05-20 20:40 UTC | Capstone v257: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.86s |
+| 2026-05-20 20:42 UTC | Capstone v257: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.77s |
+| 2026-05-20 20:44 UTC | Capstone v257: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed: 5 failed, 140 passed in 2.79s |
