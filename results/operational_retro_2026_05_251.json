@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.251",
+  "generated_at": "2026-05-20T10:18:46Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.251 completed 0 experiments — the twenty-sixth consecutive empty-timing-window retro. No compute-bound tasks were launched and both RTX 3090 GPUs remained idle at 0% utilisation throughout. The root cause remains the timing-script look-back window not being anchored to the conductor-state.json activation timestamp, meaning experiment commits from active task runs are not captured by the retro data-collection pass.",
+  "bottlenecks_identified": [
+    "Timing-script look-back window not anchored to conductor-state.json activation timestamp — root cause of 26 consecutive empty-window retros; committed experiments from active runs fall outside the capture window.",
+    "scikit-learn (sklearn) absent from active Python environment — exp2596, exp2597, exp2600 (tier0s retrain, tier0u fix, safety corpus verifier) remain blocked_sklearn across multiple milestones with no resolution.",
+    "IPFS mirror path not propagated from exp2553 arXiv package to IPFS pinning task (exp2599 blocked_arxiv_package_not_found) — Rule 3 distribution mirroring compliance stalled.",
+    "Both RTX 3090 GPUs idle at 0% with 5 MB residual allocation; no compute-bound experiments were activated this milestone to leverage available GPU capacity."
+  ],
+  "improvements_suggested": [
+    "Fix timing-script look-back to use conductor-state.json `activated_at` field as the start-of-window anchor, replacing the current fixed-duration look-back that misses commits made before the retro task is queued.",
+    "Add scikit-learn to the project pinned dependency list and include `python -c 'import sklearn'` as mandatory precondition step 0 in all tasks invoking sklearn-backed verifiers (tier0s, tier0u, safety corpus).",
+    "Propagate the arxiv submission package path from exp2553 artifact into a known environment variable or ops/server.md entry so that exp2599-class IPFS mirror tasks can locate it without re-discovering it each milestone.",
+    "Activate at least one sklearn-unblocked or GPU-bound experiment in the same conductor session as the roadmap planning turn — breaking the no-activation pattern requires a same-session launch, not a deferred next-milestone plan.",
+    "Add a conductor pre-launch gate that refuses to activate a retro task if experiments_completed == 0 AND the milestone has tasks still in pending state — forcing at least one non-retro task to complete before the retro fires."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to anchor on conductor-state.json activation timestamp — eliminates the data-invisible streak for all future retros at near-zero implementation cost.",
+    "Install scikit-learn as a milestone-0 precondition (single pip install command) — immediately unblocks exp2596 (tier0s retrain), exp2597 (tier0u fix), and exp2600 (safety corpus verifier), resolving three multi-milestone blocked chains in one action.",
+    "Activate at least one non-retro experiment in the same conductor session as milestone activation — breaks the 26-milestone zero-execution streak and validates that the pipeline is operationally live before the retro window opens."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Twenty-six consecutive empty-timing-window retros reflect a structural mismatch between the retro data-collection mechanism and the conductor experiment-commit pattern — not a research-throughput failure per se, since experiments have been completing (ops/changelog.md confirms work across the exp2545-exp2600 range). The retro is measuring the wrong window. The meta-lesson is that an operational metric which consistently returns zero is almost certainly a tooling bug, not a true signal that zero work happened; the fix should have been treated as P0 after the third consecutive empty window, not the twenty-sixth."
+}
