@@ -5351,3 +5351,5 @@ Ripgrep i |
 | 2026-05-20 09:37 UTC | Multi-Exit KAN Energy Verifier: Per-Layer Predicti | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:39 UTC | Multi-Exit KAN Energy Verifier: Per-Layer Predicti | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:41 UTC | BB-UCP Label-Free Conformal Calibration (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2622) |
+| 2026-05-20 09:41 UTC | KV260 Hardware Continuity (Branch A: SD Flash; Bra | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 09:43 UTC | BB-UCP Label-Free Conformal Calibration (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2622) |
