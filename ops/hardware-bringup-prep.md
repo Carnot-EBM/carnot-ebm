@@ -206,3 +206,9 @@ not hardware.
 ## Why nothing further can be done from this session
 
 Without sudo (udev rule), the DirtyJTAG and FlashPro5 USB raw devices remain root-only. The conductor's experiments would face the same "fails to open device" error. Once the udev rule lands, every subsequent JTAG/flash op should work from non-root.
+
+## KV260
+- date: 20260520
+- sd_card_status: "absent across .254-.256 Branch B consecutive"
+- next_step: "Operator: insert SD card with PYNQ image. After insert: re-run kv260 task."
+- latest_bitstream: "carnot_ising_v4 (load via: xmutil loadapp carnot_ising_v2_n64)"
