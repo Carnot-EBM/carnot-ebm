@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.250 Operational Retrospective)
+
+- Operational retrospective for milestone 2026.05.250 written to `results/operational_retro_2026_05_250.json`. Zero experiment commits found — twenty-fifth consecutive empty-timing-window retro. Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. Root cause of the 25-milestone execution drought confirmed as sklearn not installed in the conductor Python environment, blocking exp2596 (tier0s retrain), exp2597 (tier0u fix), and exp2600 (safety corpus) with `honest_verdict: blocked_sklearn`. Top-3 leverage actions: (1) activate exp2609 (scikit-learn install) same-session as this retro to unblock the full retrain dependency chain; (2) fix timing-script look-back to anchor to conductor-state.json activation timestamp to eliminate false-empty retro reports; (3) deploy persistent conductor daemon to close the structural planning-execution gap. Estimated time savings: 0% (no execution data this milestone).
+
 ## 2026-05-20 (Milestone 2026.05.250 Research Planning Complete)
 
 - Milestone 2026.05.250 planned: "sklearn Fix + Verifier Recovery + Semantic Energy Tier 0z + Safety Tier B"

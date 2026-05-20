@@ -5329,3 +5329,4 @@ Ripgrep i |
 | 2026-05-20 08:00 UTC | Milestone .250 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 08:02 UTC | Milestone .250 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 08:04 UTC | Milestone .250 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 08:34 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
