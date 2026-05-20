@@ -5476,3 +5476,4 @@ Ripgrep i |
 | 2026-05-20 14:34 UTC | FR-11 Tier 2: NEXUS Symbolic Constraint Memory (ar | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 14:36 UTC | FR-11 Tier 2: NEXUS Symbolic Constraint Memory (ar | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 14:38 UTC | FR-11 Tier 2: NEXUS Symbolic Constraint Memory (ar | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 14:40 UTC | Ensemble v11: Tier 0e + Tier 0l + 5-Seed Adversari | SKIP | Pre-tests failing, self-heal failed:  |
