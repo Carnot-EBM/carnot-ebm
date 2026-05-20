@@ -1,6 +1,51 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.257 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.258 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.258 Research Planning Complete
+
+**Milestone 2026.05.257 PARTIALLY EXECUTED: 3 of 13 tasks produced artifacts (exp2699 archive/activate, exp2700 conductor postmortem ROOT CAUSE IDENTIFIED, exp2704 scaling audit saturation_k=2). 10 tasks produced no artifacts. 52nd consecutive zero-execution milestone per retro timing window.**
+
+**CONDUCTOR STALL ROOT CAUSE CONFIRMED (exp2700)**: `tests/python/inference/test_hw_dab.py` (commit 8ade7c530, 2026-05-16) imports `torch` at top-level; torch NOT installed in `.venv`. When this file appears in `git diff --name-only HEAD~1`, pytest collection crashes → `run_tests()` returns False → every conductor task SKIPs. Amplifier: `MAX_HEAL_ATTEMPTS = 0` at scripts/research_conductor.py:4085. Fix designed as exp2713 in .258.
+
+**exp2704 FINDING**: saturation_k=2, saturation_auroc=0.993, total_lift=-0.003. Negative total_lift signals verifier behavioral entanglement. exp2723 (NEW) implements de-entangled reweighting (arXiv:2604.07650).
+
+**Milestone 2026.05.258 PLANNED as "Pre-Test Cascade Fix v1 + Phase 1 Ship v5 + GGUF Live Eval v3 + ODAR Routing + FR-11 ORCA TTT v2".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v258.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2712`–`exp2724`)
+- ID allocation: milestone `.257` used through `exp2711`, so `.258` starts at `exp2712`.
+- Research references updated with Post-.257 Planning Sweep (2026-05-20): 2 new papers added:
+  - arXiv:2604.07650 (Behavioral Entanglement Reweighting — de-entangle correlated verifiers; NEW exp2723)
+  - arXiv:2602.23681 (ODAR Free-Energy Routing — FEP-derived fast/deliberative-path selector; exp2720 + Phase 4 active inference)
+- **Three biggest gaps targeted**:
+  1. **Conductor pre-test cascade (structural root cause of 51-milestone stall)**: exp2713 (codex) installs torch CPU wheel + patches test_hw_dab.py with pytest.importorskip("torch") + clears ops/.pretest-cache.json. `pretest_cascade_fixed: bool` gates all Phase B-D tasks.
+  2. **Phase 1 ship still HOLD**: exp2714 (gated on exp2713) executes autonomous prep (README.md + RELEASES.md + operator_ship_checklist_v5).
+  3. **Live GGUF eval never validated**: exp2715 (gated on exp2713) — N=50 FoVer prompts, random_seed=42, PRECONDITIONS: CUDA + model cache checks before any inference.
+- **Phase structure**:
+  - Phase A (exp2712–exp2713): Archive .257, Pre-Test Cascade Fix v1 (CRITICAL PATH)
+  - Phase B (exp2714–exp2720): Phase 1 ship, live eval, Tier 0f, counterexample repair, linear probe, ORCA TTT v2, ODAR+K-scaling — all gated on exp2713
+  - Phase C (exp2721–exp2723): Paper v6 theory, KV260 continuity, Behavioral Entanglement Reweighting (NEW)
+  - Phase D (exp2724): Capstone v258 (claude/opus)
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude/opus (exp2724 capstone — requires_claude: true, within 2/13 ceiling).
+- **Hardware continuity**: exp2722 KV260 (NON-TERMINAL mandatory per CLAUDE.md — SD card absent 3+ consecutive, Branch B continues).
+- **FR-11 mandate**: exp2719 (ORCA TTT v2, continuous_self_learning_task: true). FR-11 Tier 2 COMPLETED in .256 (exp2695).
+- **New research contributions**:
+  - Behavioral Entanglement Reweighting (arXiv:2604.07650) — de-entangle k=2 saturation plateau via pairwise correlation weights; NEW exp2723
+  - ODAR FEP Routing (arXiv:2602.23681) — Phase 4 active inference implementation pattern; exp2720 ODAR + T2 VegAS
+- Exclusion manifest cross-check: 0 scope matches found across all retired experiment IDs.
+- **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13 codex), prior_failures (13/13 with mandatory 4-field structure), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2719 ORCA TTT v2), Hardware-Task Continuity (exp2722 KV260), Exclusion Manifest 0 matches, Operator-Only publication discipline (no submission steps in any task prompt).
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.258. exp2712 (archive/activate) → **exp2713 (pre-test cascade fix — CRITICAL, gates all Phase B-D tasks)** → exp2714 (Phase 1 ship v5) → exp2715 (GGUF live eval v3) → remaining tasks in dependency order.
+
+**Operator action required**:
+- Execute recovery commands from exp2700 artifact OR let exp2713 run automatically — whichever comes first. Copy-pasteable commands: `pip install --index-url https://download.pytorch.org/whl/cpu torch && sed -i 's/^import torch$/try:\\n    import torch\\nexcept ImportError:\\n    torch = None/' tests/python/inference/test_hw_dab.py && rm -f ops/.pretest-cache.json`.
+- Consider setting `MAX_HEAL_ATTEMPTS = 1` in `scripts/research_conductor.py` (currently 0 per 2026-05-03 emergency; must be done by operator, NOT in any experiment prompt).
+- Phase 1 ship: after exp2714 produces checklist, `git tag v<version> && git push origin main v<version>` (CI publishes to PyPI automatically via OIDC trusted publishing).
+- arXiv v6 submission: HOLDS until Phase 4 validates (OPERATOR-ONLY per Operator-Only External Publication rule).
+- KV260: insert SD card with PYNQ image to enable Branch A (board absent 3+ consecutive milestones — Branch B hardened-check continues until operator resolves).
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.257 Research Planning Complete
 

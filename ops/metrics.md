@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.258 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (resumed) | 2026-05-20T21:12:38Z | 2026-05-20T21:16:00Z | Resumed from context compaction: confirmed both output files created (openspec/change-proposals/research-roadmap-v258.md + research-roadmap-next.yaml with 13 tasks exp2712-exp2724 for milestone 2026.05.258); updated ops/status.md, ops/changelog.md, ops/metrics.md. Key findings from .257: 3/13 artifacts landed (exp2699 archive, exp2700 conductor postmortem ROOT CAUSE = test_hw_dab.py torch import + MAX_HEAL_ATTEMPTS=0, exp2704 scaling audit saturation_k=2 negative total_lift). 2 new papers added to research-references.md (arXiv:2604.07650 Behavioral Entanglement, arXiv:2602.23681 ODAR). Agent routing: 12 codex + 1 claude/opus (exp2724 capstone). Cascade fix exp2713 gates all Phase B-D tasks. All CLAUDE.md mandatory disciplines applied. | ~30k |
+
+Note: Full planning session ran before context compaction: read research-program.md, ops/status.md, research-roadmap.yaml, results/experiment_2700_conductor_postmortem_v2.json, results/experiment_2704_multi_agent_scaling_audit.json, results/operational_retro_2026_05_257.json, ops/exclusion_manifest.yaml, ops/conductor-log.md, ops/changelog.md, ops/known-issues.md, research-references.md; ran arxiv research (arXiv:2604.07650, arXiv:2602.23681 discovered); created both output files. Full session token estimate ~240k.
+
+---
+
 ## Session: 2026-05-20 Milestone 2026.05.257 Research Planning
 
 ### Turn Log

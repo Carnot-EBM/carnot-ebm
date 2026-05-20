@@ -1,3 +1,44 @@
+## 2026-05-20 Post-.257 Planning Sweep (Milestone 2026.05.258)
+
+This sweep was run after milestone `.257` completed with 3 of 13 experiments executed
+(exp2699 archive, exp2700 conductor postmortem v2, exp2704 multi-agent scaling audit).
+Root cause of 51-milestone conductor stall identified: `tests/python/inference/test_hw_dab.py`
+imports torch (not installed in .venv) + MAX_HEAL_ATTEMPTS=0 → pre-test cascade blocks all dispatch.
+Two papers promoted from known-issues.md for .258 experiments:
+
+### Behavioral Entanglement and Reweighted Verifier Ensembles
+
+- **Paper:** "Behavioral Entanglement and Reweighting Verifier Ensembles" (arXiv:2604.07650, Apr 2026).
+- **What:** Demonstrates that uniform-weight AND-composition of LLM verifiers is suboptimal due to
+  correlated failure patterns ("behavioral entanglement"). De-entangled reweighting using a
+  diversity-weighted ensemble yielded up to 4.5% accuracy lift on reasoning benchmarks. The
+  reweighting is computed from calibration data alone (no retraining required).
+- **Relevance to Carnot:** Directly applicable after exp2704's result (saturation_k=2,
+  saturation_auroc=0.993). The high single-verifier AUROC (~0.991) and low total_lift (-0.003)
+  suggests our current ensemble is over-correlated (behavioral entanglement). De-entangled
+  reweighting could unlock the remaining lift. Candidate experiment: measure Carnot verifier
+  pairwise correlation matrix, apply reweighting, re-measure AUROC. exp2723 in .258.
+- **Sources:** https://arxiv.org/abs/2604.07650
+
+### ODAR: Principled Adaptive Routing for LLM Reasoning via Active Inference
+
+- **Paper:** "ODAR: Principled Adaptive Routing for LLM Reasoning via Active Inference"
+  (arXiv:2602.23681, Feb 2026).
+- **What:** Uses a free-energy-principled, risk-sensitive fusion mechanism to route between
+  fast (direct-answer) and deliberative (chain-of-thought) agents. Tested across 23 benchmarks
+  with reduced computational overhead vs uniform sampling. The routing criterion is derived from
+  the Free Energy Principle (Friston 2010), making it a concrete Phase-4 implementation pattern.
+- **Relevance to Carnot:** ODAR directly merges Phase 4 (active inference) and the Fast-Slow
+  Variant tracks. Carnot's Phase 4 program measured alpha_t across 5 experiments without
+  convergence (inaccessible at ensemble-output level). ODAR shows that a different FEP-derived
+  target (routing decision, not alpha_t measurement) succeeds operationally. Concrete .258 proposal:
+  ODAR-style routing in verify_repair pipeline — free-energy criterion selects whether to invoke
+  the verifier at all (fast path) or run full verify-repair iteration (deliberative path). Part of
+  exp2720 in .258.
+- **Sources:** https://arxiv.org/abs/2602.23681
+
+---
+
 ## 2026-05-20 Post-.256 Planning Sweep (Milestone 2026.05.257)
 
 This sweep was run after milestone `.256` completed with only 3 of 13 experiments executed

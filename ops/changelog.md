@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.258 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.258. Milestone .257 (exp2699–exp2711) partially executed — 3 of 13 artifacts landed (exp2699 archive, exp2700 conductor postmortem ROOT CAUSE IDENTIFIED, exp2704 scaling audit). 52nd consecutive zero-execution milestone per retro timing window. 10 tasks produced no artifacts.
+  - **CONDUCTOR ROOT CAUSE CONFIRMED**: `tests/python/inference/test_hw_dab.py` (commit 8ade7c530) imports `torch` at top-level; torch NOT installed in `.venv` → pytest collection crash → run_tests() returns False → every task SKIPs. Amplifier: `MAX_HEAL_ATTEMPTS = 0`. Fix = exp2713 (installs torch CPU wheel + pytest.importorskip patch + clears .pretest-cache.json).
+  - **exp2704 FINDING**: saturation_k=2, saturation_auroc=0.993, total_lift=-0.003. Negative total_lift = behavioral entanglement between verifiers. New exp2723 (arXiv:2604.07650 de-entangled reweighting) targets this.
+  - **Milestone title**: "Pre-Test Cascade Fix v1 + Phase 1 Ship v5 + GGUF Live Eval v3 + ODAR Routing + FR-11 ORCA TTT v2"
+  - **arxiv sweep** (2 new papers added to `research-references.md`):
+    - arXiv:2604.07650 (Behavioral Entanglement Reweighting — de-entangle correlated verifier ensemble members; NEW exp2723)
+    - arXiv:2602.23681 (ODAR Free-Energy Routing — FEP-derived fast-path/deliberative-path selector; exp2720 + Phase 4 active inference)
+  - **Three biggest gaps**:
+    1. Pre-test cascade (root of 51-milestone stall) — exp2713 structural fix (torch install + test patch + cache clear)
+    2. Phase 1 ship still HOLD — exp2714 autonomous prep (README + RELEASES + operator_ship_checklist_v5), gated on exp2713
+    3. Live GGUF eval never validated — exp2715 N=50 FoVer, random_seed=42, PRECONDITIONS: CUDA + model cache, gated on exp2713
+  - **Roadmap doc created**: `openspec/change-proposals/research-roadmap-v258.md`
+  - **Execution queue created**: `research-roadmap-next.yaml` (13 tasks: exp2712–exp2724; overwrites .257 version)
+  - **Agent routing**: 12 codex/gpt-5.5 (exp2712–exp2723) + 1 claude/opus (exp2724 capstone, requires_claude: true) — within 2/13 ceiling
+  - **Gate pattern**: exp2713 produces `pretest_cascade_fixed: bool` → all Phase B-D experiments gated on this field; if fix fails, downstream gate-block cleanly rather than burning Sonnet budget
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13), prior_failures (13/13 — all 4 mandatory sub-fields present), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2719 ORCA TTT v2 continuous_self_learning_task: true), Hardware-Task Continuity (exp2722 KV260 NON-TERMINAL, Branch B), Exclusion Manifest cross-check (0 scope matches), Operator-Only publication discipline (no submission steps)
+
 ## 2026-05-20 (Milestone 2026.05.257 Operational Retro)
 
 - Operational retro v257 written (results/operational_retro_2026_05_257.json). TIMING DATA: 0 experiments committed in timing window (thirty-second consecutive empty-timing-window retro). Bottlenecks: timing-script look-back window not anchored to conductor-state.json activation timestamp (root cause, persists unresolved across 8+ prior retros); no zero-artifact alarm to halt retro before any experiments complete; retro task ordering fires before substantive experiments. Top leverage actions: fix timing-script look-back to activation timestamp; wire zero-artifact alarm at 60 min post-activation; activate at least one GGUF inference experiment in same session as activation. GPUs idle at 0% (41C/49C); no compute-bound tasks to assess.
