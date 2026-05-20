@@ -5608,3 +5608,4 @@ Ripgrep i |
 | 2026-05-20 22:08 UTC | Linear Probe Calibration for Tier 0e EORM v2: 10x  | OK | 100 passed in 3.63s |
 | 2026-05-20 22:11 UTC | FR-11 Tier 3: ORCA TTT v2 + Grounded Continuation  | OK | 81 passed in 2.17s |
 | 2026-05-20 22:16 UTC | ODAR Free-Energy Routing Prototype + T2 VegAS K-Sc | OK | 145 passed in 3.39s |
+| 2026-05-20 22:20 UTC | Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2721_paper_v |
