@@ -5199,3 +5199,5 @@ Ripgrep i |
 | 2026-05-20 01:26 UTC | Phase 3a: Tier 0t Dynamical System Verifier (arXiv | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 01:29 UTC | Phase 3b: Tier 0v HalluField Retry + Tier 0w Diffu | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 01:31 UTC | Phase 3b: Tier 0v HalluField Retry + Tier 0w Diffu | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-20 01:33 UTC | Phase 3b: Tier 0v HalluField Retry + Tier 0w Diffu | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-20 01:35 UTC | Phase 3c: Ensemble v8 — Integrate Viable New Verif | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2561-tier0t-dynamical-system) |
