@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.255 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (resumed) | 2026-05-20T15:25:29Z | 2026-05-20T15:41:05Z | Resumed from context compaction: confirmed all .254 tasks complete; full .255 milestone plan already produced — research-references.md updated (4 new papers: arXiv:2502.20379 Multi-Agent Verification Scaling, arXiv:2604.01411 T² Scaling Laws, arXiv:2604.13991 Adaptive Conformal Prediction, arXiv:2604.01170 ORCA TTT); openspec/change-proposals/research-roadmap-v255.md created; research-roadmap-next.yaml created (13 tasks exp2673-exp2685: archive, ship v2, GGUF live eval, Tier 0f semantic calibration, property repair, scaling audit, ORCA TTT v2, T² VegAS, NEXUS v2, ARM-EBM paper, KV260 continuity, conformal gate, capstone); all CLAUDE.md mandatory disciplines applied (Codex-Default 12/13, prior_failures 13/13, PRECONDITIONS on all compute-bound, principle-annotated fields, terminal-prefix verdicts, FR-11 mandate 2/13 continuous_self_learning_task, exclusion manifest cross-check 0 matches). Updated ops/metrics.md. | ~180k |
+
+Note: Full planning session ran before context compaction: read research-program.md, _bmad/prd.md, _bmad/architecture.md, ops/status.md, ops/changelog.md, research-complete.yaml, research-roadmap.yaml, ops/conductor-log.md, research-references.md, research-hardware-wishlist.md, ops/known-issues.md, ops/exclusion_manifest.yaml, ops/active-priorities.md, results/operational_retro_2026_05_254.json; ran Explore subagent for arxiv papers; created both output files. Full session token estimate ~200k.
+
+---
+
 ## Session: 2026-05-20 Milestone 2026.05.254 Research Planning
 
 ### Turn Log

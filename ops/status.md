@@ -1,6 +1,41 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.254 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.255 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.255 Research Planning Complete
+
+**Milestone 2026.05.254 COMPLETED: all 13 tasks (exp2660–exp2672) confirmed complete.**
+
+**Milestone 2026.05.255 PLANNED as "SOTA GGUF Live Eval + Tier 0f Semantic Calibration + FR-11 TTT v2 + Phase 1 Ship v2".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v255.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2673`–`exp2685`)
+- ID allocation: milestone `.254` used through `exp2672`, so `.255` starts at `exp2673`.
+- Research references updated with Post-.254 Planning Sweep (2026-05-20): 4 new papers added:
+  - arXiv:2502.20379 (Multi-Agent Verification: Scaling Test-Time Compute — k-verifier saturation)
+  - arXiv:2604.01411 (T²: Test-Time Scaling Makes Overtraining Compute-Optimal — VegAS K laws)
+  - arXiv:2604.13991 (Adaptive Conformal Prediction for Improving Factuality — Tier 0 conformal gate)
+  - arXiv:2604.01170 (ORCA: Online Reasoning Calibration via TTT — conformal stopping for FR-11)
+- **Three biggest gaps targeted**:
+  1. **GPU capacity idle — no live GGUF pipeline validation (HIGHEST PRIORITY)**: exp2675 runs ensemble v11 on N=50 live GGUF outputs from Qwen3.6-35B + Gemma-4-31B. Both RTX 3090s (48GB VRAM) idle since .253.
+  2. **Phase 1 ship still not shipped (HIGHEST OPS PRIORITY)**: exp2674 reads exp2662 and executes remaining autonomous ship prep actions (RELEASES.md, README.md Phase 1 section, HF model card draft).
+  3. **Tier 0e calibration — false positives on paraphrase pairs**: exp2676 implements Tier 0f semantic reward calibration (arXiv:2605.15588) on top of exp2663's Tier 0e model.
+- **Phase structure**:
+  - Phase A (exp2673–exp2675): Archive .254, Phase 1 ship v2, SOTA GGUF live validation
+  - Phase B (exp2676–exp2678): Tier 0f calibration, property-guided repair, scaling audit
+  - Phase C (exp2679–exp2681): ORCA TTT v2 + FR-11, T² VegAS K-scaling, NEXUS v2 real violations
+  - Phase D (exp2682–exp2685): ARM-EBM paper v6, KV260 continuity, conformal gate, capstone
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2685 capstone — requires_claude: true).
+- **Hardware continuity**: exp2683 KV260 (NON-TERMINAL mandatory per CLAUDE.md). GateMate (graduated .247) + PolarFire (graduated .241) TERMINAL.
+- **FR-11 mandate**: exp2679 (ORCA TTT v2, continuous_self_learning_task: true) + exp2681 (NEXUS v2, continuous_self_learning_task: true).
+- **Key gate**: exp2679 gates on exp2667.adversarially_verified == true (completed in .254).
+- Exclusion manifest cross-check: 0 scope matches found across all retired experiment IDs.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.255. exp2673 (archive/activate) → exp2675 (GGUF live eval, puts GPUs to work) → then research tasks in dependency order.
+
+**Operator action required**: Phase 1 ship gates from exp2674 (PyPI publish + HF mirror + git tag push). arXiv v6 submission after exp2682 completes (OPERATOR-ONLY per Operator-Only External Publication rule). KV260: insert SD card to enable Branch A (bitstream flash) in exp2683.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.254 Research Planning Complete
 

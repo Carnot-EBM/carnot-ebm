@@ -1,5 +1,23 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.255 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.255. All 13 tasks in .254 (exp2660–exp2672) confirmed complete by user before this session.
+  - **Milestone title**: "SOTA GGUF Live Eval + Tier 0f Semantic Calibration + FR-11 TTT v2 + Phase 1 Ship v2"
+  - **arxiv sweep** (4 new papers added to `research-references.md`):
+    - arXiv:2502.20379 (Multi-Agent Verification: Scaling Test-Time Compute — k-verifier saturation study; justifies ensemble-size audit via AUROC-vs-k curve; exp2678)
+    - arXiv:2604.01411 (T²: Test-Time Scaling Makes Overtraining Compute-Optimal — compute-optimal K for VegAS candidate selection; exp2680)
+    - arXiv:2604.13991 (Adaptive Conformal Prediction for Improving Factuality — prompt-dependent calibration; Tier 0 conformal gate; exp2684)
+    - arXiv:2604.01170 (ORCA: Online Reasoning Calibration via TTT — conformal stopping for TTT loop; FR-11 TTT v2; exp2679)
+  - **Three biggest gaps**:
+    1. GPU capacity idle — no live GGUF pipeline validation (exp2675: N=50 Qwen3.6-35B + Gemma-4-31B)
+    2. Phase 1 ship still not shipped — autonomous prep actions remaining (exp2674)
+    3. Tier 0e calibration — false positives on paraphrase pairs (exp2676: Tier 0f semantic calibration)
+  - **Roadmap doc created**: `openspec/change-proposals/research-roadmap-v255.md`
+  - **Execution queue created**: `research-roadmap-next.yaml` (13 tasks: exp2673–exp2685)
+  - **Agent routing**: 12 codex/gpt-5.5 + 1 claude+opus (exp2685 capstone, requires_claude: true)
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13), prior_failures (13/13), PRECONDITIONS on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2679 + exp2681 continuous_self_learning_task: true), Hardware-Task Continuity (exp2683 KV260 NON-TERMINAL), Exclusion Manifest cross-check (0 scope matches), Operator-Only publication (no submission steps in any task prompt)
+
 ## 2026-05-20 (Milestone 2026.05.254 Operational Retrospective)
 
 - [outer-loop] Operational retrospective for milestone 2026.05.254.

@@ -1,3 +1,40 @@
+## 2026-05-20 Post-.254 Planning Sweep (Milestone 2026.05.255)
+
+This sweep was run after milestone `.254` completed (venv hardening; Phase 1 ship close; Tier 0e EORM;
+Tier 0l layer-wise drift; VegAS K=3 candidate selection; NEXUS FR-11 Tier 2 symbolic memory; Ensemble
+v11 5-seed adversarial validation; ODAR free-energy routing; external benchmark; KV260 continuity;
+arXiv v6 package; capstone synthesis). Four new papers identified:
+
+### Multi-Agent Verification: Scaling Test-Time Compute with Multiple Verifiers
+
+- **Paper:** "Multi-Agent Verification: Scaling Test-Time Compute with Multiple Verifiers" (arXiv:2502.20379, Feb 2025).
+- **What:** Establishes that scaling the NUMBER of verifiers (k) at test time is a distinct and effective dimension for improving LLM output quality, independent of increasing inference samples. The paper measures AUROC vs k (number of verifiers) and identifies the saturation point where additional verifiers add diminishing returns. Key finding: verifier diversity (different architectures or training objectives) dominates verifier count beyond k=4-6.
+- **Relevance to Carnot:** Directly applicable to the k=16 verifier ensemble (Tier 0a–0z). exp2678 in .255 proposes measuring Carnot's AUROC vs k curve on FoVer corpus to identify the saturation point and optimal subset. Paper-v6 §3 can cite as the empirical basis for the "k=16 is sufficient" claim — or as evidence we should prune to a tighter optimal subset.
+- **Sources:** https://arxiv.org/abs/2502.20379
+
+### T²: Test-Time Scaling Makes Overtraining Compute-Optimal
+
+- **Paper:** "Test-Time Scaling Makes Overtraining Compute-Optimal" (arXiv:2604.01411, April 2026).
+- **What:** Introduces Train-to-Test (T²) framework with joint scaling laws for model size, training tokens, and inference samples. The core insight: with K inference samples (candidates) and a strong verifier, models can be "overtrained" at small size while achieving large-model quality at test time — the verifier corrects for overtraining artifacts. Provides compute-optimal K as a function of verifier quality.
+- **Relevance to Carnot:** Direct theoretical grounding for VegAS K=3 candidate selection (exp2665, .254). T² predicts the optimal K for Carnot's verifier ensemble quality — if ensemble v11 AUROC ≈ 0.87, T² provides a formula for optimal K. exp2680 in .255 uses T² to evaluate the VegAS K efficiency frontier, replacing ad-hoc K=3 with a principled choice.
+- **Sources:** https://arxiv.org/abs/2604.01411
+
+### Adaptive Conformal Prediction for Improving Factuality of LLM Generations
+
+- **Paper:** "Adaptive Conformal Prediction for Improving Factuality of Generations by Large Language Models" (arXiv:2604.13991, April 2026).
+- **What:** Proposes adaptive conformal prediction with prompt-dependent calibration sets for factuality improvement. Unlike standard conformal methods with fixed calibration, this approach adjusts the nonconformity threshold based on prompt complexity/type, achieving better validity-efficiency tradeoffs under distribution shift. Coverage guarantee maintained at 90% marginal while improving factuality by 15% on TruthfulQA.
+- **Relevance to Carnot:** Candidate Tier 0 conformal verifier using adaptive nonconformity scores. Carnot's current conformal work (BB-UCP, PASC) uses fixed calibration. Adaptive calibration would handle the OOD challenge in HalluScan+PARALLAX benchmarks — different prompts require different coverage thresholds. exp2684 in .255 prototypes this as a lightweight conformal gate on top of the existing ensemble.
+- **Sources:** https://arxiv.org/abs/2604.13991
+
+### ORCA: Online Reasoning Calibration via Test-Time Training
+
+- **Paper:** "Online Reasoning Calibration: Test-Time Training Enables Generalizable Conformal LLM Reasoning" (arXiv:2604.01170, April 2026).
+- **What:** ORCA framework combines conformal prediction with test-time training (TTT) for calibrated reasoning. Learns a lightweight conformal score function that adapts to each input query cluster during TTT iterations. Achieves 97.3% coverage (vs 90% target) with 23% efficiency gain over standard conformal methods. Key insight: conformal score is updated jointly with TTT weight updates — the coverage guarantee tightens as TTT improves calibration.
+- **Relevance to Carnot:** Direct extension of VerifierDrivenTTT (exp2624, .251). Carnot's TTT loop uses verifier energy as the training signal; ORCA adds conformal stopping: stop TTT when the conformal prediction set collapses to a single answer with coverage guarantee. exp2679 in .255 implements ORCA-style stopping in the existing TTT loop, addressing the "when to stop iterating" question that FR-11 Tier 3 left open. Cross-reference arXiv:2604.01413 (MiCP adaptive stopping, already in research-references.md).
+- **Sources:** https://arxiv.org/abs/2604.01170
+
+---
+
 ## 2026-05-20 Post-.253 Planning Sweep (Milestone 2026.05.254)
 
 This sweep was run after milestone `.253` completed with zero experiments (pre-test infrastructure
