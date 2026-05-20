@@ -3267,6 +3267,24 @@ class VerifyRepairPipeline:
             "failure_messages": failure_messages
         }
 
+    def odar_route(self, prompt: str, context_energy: float | None = None) -> str:
+        """ODAR-style free-energy routing: selects fast or deliberative path.
+
+        Free energy proxy: F = complexity(prompt) - confidence(context_energy)
+        where complexity = len(prompt.split()) / 100 (normalized word count)
+        and confidence = 1 - context_energy if context_energy is not None else 0.5
+
+        Routing criterion: if F < threshold (0.3): fast_path (skip verification)
+                          else: deliberative_path (full verify-repair)
+        """
+        complexity = len(prompt.split()) / 100.0
+        confidence = 1.0 - context_energy if context_energy is not None else 0.5
+        f_proxy = complexity - confidence
+        if f_proxy < 0.3:
+            return "fast_path"
+        else:
+            return "deliberative_path"
+
 
 
 class CASALTier:
