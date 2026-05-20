@@ -1,6 +1,47 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.247 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.250 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.250 Research Planning Complete
+
+**Milestones 2026.05.247–249 COMPLETED: key results confirmed from artifact reads:**
+- **JEPA online learning wired** (exp2602, .249): `online_update()` + `get_session_stats()` added to `VerifyRepairPipeline`; partial_fit tested with synthetic observations. FR-11 Tier 3 mandate satisfied.
+- **Ensemble v7b AUROC stable**: 0.9857 (adversarially verified, no regressions).
+- **25 consecutive empty retros**: n_experiments_completed=0 in every retro since .224. Root cause confirmed: sklearn not installed in conductor Python environment.
+- **tier0s AUROC = 0.3758 (real corpus)**: exp2596 blocked_sklearn; exp2597 blocked_sklearn (tier0u=0.5360); exp2600 blocked_sklearn (safety corpus).
+- **GateMate TERMINAL** (.247 capstone exp2580): graduated from per-milestone mandatory inclusion.
+- **PolarFire TERMINAL** (.241 exp2501): graduated.
+- **KV260 NON-TERMINAL**: SD card absent; synthesis succeeded; PYNQ path viable.
+- **arXiv package ready** (arxiv_ready_v4=True, exp2558, .246): operator submission pending (OPERATOR-ONLY action).
+
+**Milestone 2026.05.250 PLANNED as sklearn Fix + Verifier Recovery + Semantic Energy Tier 0z + Safety Tier B.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v250.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2608`–`exp2620`)
+- ID allocation: milestone `.249` used through `exp2607`, so `.250` starts at `exp2608`.
+- Research references updated with Post-.249 Planning Sweep (2026-05-20): 5 new papers added:
+  - arXiv:2508.14496 (Semantic Energy / Tier 0z — training-free Boltzmann energy over semantic clusters; OOD-robust)
+  - arXiv:2604.01473 (SelfGrader: Stable Jailbreak Detection — safety feature reference)
+  - arXiv:2601.03600 (ALERT: Zero-shot Jailbreak Detection — Shannon entropy baseline)
+  - arXiv:2603.23854 (Symbolic-KAN: discrete symbolic structure — KAN enhancement)
+  - arXiv:2505.19475 (Continuous Self-Improvement via Verifier-Driven TTT — FR-11 support)
+- **PRIMARY STRUCTURAL FIX**: exp2609 installs scikit-learn before any downstream retrain task runs. This unblocks the entire chain of 5+ previously-blocked experiments.
+- **Three critical gaps targeted**:
+  1. **Verifier recovery** (HIGHEST PRIORITY): exp2609 (sklearn fix) → exp2610 (tier0s retrain, target AUROC > 0.65) + exp2611 (tier0u TF-IDF fix, target > 0.60) + exp2612 (Tier 0z training-free Boltzmann, target > 0.55).
+  2. **Ensemble v9**: exp2615 (incorporate improved tier0s/tier0u + Tier 0z models, target AUROC ≥ 0.95).
+  3. **Safety Tier B**: exp2613 (safety corpus 200 pairs + Tier0x, target safety_auroc > 0.60) → exp2616 (Group F ensemble + paper §7 stub).
+- **Distribution compliance**: exp2614 (HF model card + IPFS CID — Rule 3).
+- **Self-learning mandate**: exp2617 (JEPA real-data eval on 50 FoVer examples with online_update() active — continuous_self_learning_task: true).
+- **Hardware continuity**: exp2618 KV260 (Branch A: SD detected → flash; Branch B: SD absent → update prep script). GateMate + PolarFire TERMINAL (graduated).
+- **Critical path**: exp2609 (sklearn fix) → exp2610+exp2611+exp2613 → exp2615+exp2616 → exp2619 (capstone).
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2619 capstone — requires_claude: true for multi-artifact cross-synthesis).
+- Validation: `validate_prior_failures.py` — [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.250. Critical path: exp2608 (archive/activate) → exp2609 (sklearn fix) → exp2610+exp2611+exp2613. Operator action needed before exp2618: KV260 SD card insertion.
+
+**Operator action required**: arXiv submission (arxiv_ready_v4=True since .246, exp2558) — package ready at `docs/arxiv-submission/`; operator must submit per Operator-Only External Publication rule.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.247 Research Planning Complete
 

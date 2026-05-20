@@ -1,3 +1,50 @@
+## 2026-05-20 Post-.249 Planning Sweep (Milestone 2026.05.250)
+
+This sweep was run after milestone `.249` completed (n_experiments_completed=0 — 24th consecutive
+empty-timing-window retro; structural sklearn-missing blocker identified — exp2596/exp2597/exp2600
+all emitted honest_verdict=blocked_sklearn). Headline AUROC carry-forward: 0.9857. GateMate
+TERMINAL. KV260 NON-TERMINAL (SD absent). Three critical gaps entering .250: (a) sklearn not
+installed → blocks tier0s/tier0u retrain AND safety corpus build AND ensemble v9; (b) HF model
+card citations + IPFS mirror still unexecuted (Rule 3); (c) Semantic Energy Tier 0z (new verifier
+from arXiv:2508.14496) identified as promising OOD-robust alternative to failed NTK-proxy verifiers.
+
+### Semantic Energy: Detecting LLM Hallucination Beyond Entropy
+
+- **Paper:** "Semantic Energy: Detecting LLM Hallucination Beyond Entropy" (arXiv:2508.14496, 2025).
+- **What:** Introduces a novel uncertainty estimation framework that operates directly on LLM logits, combining semantic clustering with a Boltzmann-inspired energy distribution. Rather than raw entropy (which is noisy and misses semantic-level uncertainty), Semantic Energy clusters token predictions into semantic groups (synonyms, paraphrases, logically-equivalent continuations) and computes a Boltzmann energy E = -log Z where Z is the partition function over semantic-cluster probability masses. Low Z (high spread across clusters) = high hallucination risk. No training required — computed purely from logit outputs.
+- **Relevance to Carnot:** Prime Tier 0z verifier candidate. The Boltzmann formulation is DIRECTLY analogous to Carnot's energy-basin framework: correct outputs concentrate probability mass in one semantic cluster (low energy), hallucinations spread mass across multiple clusters (high energy). The no-training property is critical: it avoids the synthetic-to-real distribution gap that collapsed tier0s (NTK-proxy, 0.3758 real) and tier0u (self-consistency template, 0.5360 real). The semantic clustering step can be implemented using TF-IDF cosine similarity without a separate embedding model. Queued as exp2612 in .250.
+- **Sources:** https://arxiv.org/abs/2508.14496
+
+### SelfGrader: Stable Jailbreak Detection via Token-Level Logits
+
+- **Paper:** "SelfGrader: Stable Jailbreak Detection for Large Language Models using Token-Level Logits" (arXiv:2604.01473, April 2026).
+- **What:** Exploits LLM hidden representations during the processing of potentially-malicious queries. Key insight: the model's token-level logit distribution shifts measurably when processing unsafe prompts — the distribution concentrates on refusal tokens even when the model ultimately complies (indicating internal safety signal suppression). SelfGrader is training-free: computes jailbreak probability from logit entropy patterns at specific token positions without any classifier training. Evaluated on standard jailbreak benchmarks; outperforms fine-tuned classifiers in out-of-distribution generalization.
+- **Relevance to Carnot:** Reference implementation for the Safety Tier B classifier. The token-level logit entropy approach is directly implementable using llama.cpp logit outputs — no model modification required. The training-free property makes it robust to the distribution gap that collapsed tier0s/tier0u. For Carnot's safety verifier, the SelfGrader pattern (logit entropy at critical tokens) is a candidate to supplement or replace the Shannon entropy + compliance_run_length features in exp2613/exp2615.
+- **Sources:** https://arxiv.org/abs/2604.01473
+
+### ALERT: Zero-shot LLM Jailbreak Detection via Internal Discrepancy Amplification
+
+- **Paper:** "ALERT: Zero-shot LLM Jailbreak Detection via Internal Discrepancy Amplification" (arXiv:2601.03600, January 2026).
+- **What:** Addresses jailbreak detection without jailbreak-labeled training data (zero-shot). Key contribution: layer-wise, module-wise, and token-wise amplification of the internal discrepancy between how the model represents a query versus a safe-prompt control. Hallucination risk is quantified by how much the internal representation diverges from the model's baseline safe-representation manifold across layers. Evaluated on zero-shot jailbreak benchmarks; achieves competitive AUROC against supervised methods.
+- **Relevance to Carnot:** Second Safety Tier B reference. The zero-shot property directly addresses Carnot's problem with safety corpus scarcity (allenai/wildguard requires HF credentials; synthetic templates are unreliable). ALERT's layer-wise discrepancy pattern could be approximated using llama.cpp logit-sequence comparisons across layers — implementable as a training-free extension to the safety verifier. Architecturally, the "internal discrepancy" maps to Carnot's constraint violation energy: the more the representation deviates from the safe-manifold attractor, the higher the energy.
+- **Sources:** https://arxiv.org/abs/2601.03600
+
+### Symbolic-KAN: Kolmogorov-Arnold Networks with Discrete Symbolic Structure
+
+- **Paper:** "Symbolic-KAN: Kolmogorov-Arnold Networks with Discrete Symbolic Structure for Interpretable Learning" (arXiv:2603.23854, March 2026).
+- **What:** Bridges KAN interpretability and scalability by embedding discrete symbolic structure directly within a trainable deep network. Represents multivariate functions as compositions of learned univariate primitives drawn from a finite symbolic library (polynomial, trigonometric, rational, etc.). Symbolic-KAN reliably recovers correct governing structures in data-driven regression — achieving >90% correct primitive identification on synthetic benchmarks where standard KANs often converge to numerically-correct but symbolically-obscure activations.
+- **Relevance to Carnot:** Enhancement path for Carnot's KAN energy tier (currently AUROC=0.994 on synthetic FoVer, certified deployment ready). Symbolic-KAN's discrete symbolic library would make the KAN energy function human-interpretable: "the verifier fires because it detects a linear combination of token entropy + bigram overlap above threshold" is more auditable than a continuous activation function. Also directly addresses the research-program priority of "Tier 4: Adaptive Structure" — symbolic primitives can be added/removed dynamically as the energy landscape evolves. Relevant to Phase 3 verifier-as-substrate work. Queued as future KAN enhancement.
+- **Sources:** https://arxiv.org/abs/2603.23854
+
+### Continuous Self-Improvement of LLMs by Test-time Training with Verifier-Driven Sample Selection
+
+- **Paper:** "Continuous Self-Improvement of Large Language Models by Test-time Training with Verifier-Driven Sample Selection" (arXiv:2505.19475, May 2025).
+- **What:** Presents a framework where a verifier assigns reliability scores to model responses and selects high-confidence examples for test-time fine-tuning, creating a continuous feedback loop. Key finding: verifier-driven selection is strictly better than random selection for test-time training — even a weak verifier (AUROC 0.65) provides meaningful improvement signal. The framework applies to any verifier architecture and any LLM; no ground-truth labels required. Demonstrates consistent improvement across mathematical and commonsense reasoning benchmarks.
+- **Relevance to Carnot:** Direct theoretical support for Carnot's FR-11 (Continuous Self-Learning) architecture. The paper proves that even Carnot's current-state verifiers (ensemble v7b AUROC=0.9857 on FoVer) would enable meaningful self-improvement signal — the verifier's reliability score IS the Tier 1 online weight update signal. This paper also quantifies the minimum verifier quality for useful improvement: AUROC > 0.65 is sufficient. Carnot's ensemble exceeds this threshold by a large margin, making the JEPA online_update() integration (exp2602) load-bearing for future self-improvement work. Also supports the arXiv:2507.00075 (LLM Self-Improvement Training Dynamics) framing.
+- **Sources:** https://arxiv.org/abs/2505.19475
+
+---
+
 ## 2026-05-20 Post-.248 Planning Sweep (Milestone 2026.05.249)
 
 This sweep was run after milestone `.248` completed (n_experiments_completed=0 — 23rd consecutive

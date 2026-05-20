@@ -1,5 +1,13 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.250 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-20T06:34:32Z | 2026-05-20T06:48:22Z | Plan milestone 2026.05.250: read 11 required files + 8 artifact files (exp2595–exp2602, retro .249); arxiv sweep (5 new papers: arXiv:2508.14496 Semantic Energy/Tier0z, arXiv:2604.01473 SelfGrader safety, arXiv:2601.03600 ALERT jailbreak, arXiv:2603.23854 Symbolic-KAN, arXiv:2505.19475 Verifier-TTT); updated research-references.md; wrote openspec/change-proposals/research-roadmap-v250.md; wrote research-roadmap-next.yaml (13 tasks exp2608–exp2620, sklearn-fix critical path). validate_prior_failures.py: OK. audit_roadmap_gates.py: roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited. Context compaction mid-session (resumed from summary). | ~190k |
+
 ## Session: 2026-05-20 Milestone 2026.05.247 Research Planning
 
 ### Turn Log

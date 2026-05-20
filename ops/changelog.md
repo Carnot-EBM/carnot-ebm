@@ -1,5 +1,24 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.250 Research Planning Complete)
+
+- Milestone 2026.05.250 planned: "sklearn Fix + Verifier Recovery + Semantic Energy Tier 0z + Safety Tier B"
+- research-roadmap-next.yaml written (13 tasks exp2608–exp2620). Validated: validate_prior_failures.py [OK] no schema errors, no violations. audit_roadmap_gates.py: roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+- openspec/change-proposals/research-roadmap-v250.md created (249 lines).
+- research-references.md updated with 5 new papers from Post-.249 planning sweep:
+  - arXiv:2508.14496 (Semantic Energy / Tier 0z — training-free Boltzmann energy over semantic clusters; OOD-robust by design)
+  - arXiv:2604.01473 (SelfGrader: Stable Jailbreak Detection — safety feature engineering reference for Tier B)
+  - arXiv:2601.03600 (ALERT: Zero-shot Jailbreak Detection — Shannon entropy baseline for safety classifier)
+  - arXiv:2603.23854 (Symbolic-KAN: discrete symbolic structure — KAN enhancement path for FR-12)
+  - arXiv:2505.19475 (Continuous Self-Improvement via Verifier-Driven TTT — FR-11 support)
+- Root cause confirmed for 25 consecutive empty retros: sklearn not installed in conductor Python environment, blocking exp2596 (tier0s retrain), exp2597 (tier0u fix), exp2600 (safety corpus) with `honest_verdict: blocked_sklearn`. PRIMARY FIX: exp2609 installs scikit-learn before downstream chain runs.
+- Critical gaps targeted: (1) tier0s real AUROC=0.3758, tier0u=0.5360 — exp2609→exp2610+exp2611 retrain chain; (2) OOD robustness — exp2612 Tier 0z training-free Boltzmann verifier; (3) Safety Tier B — exp2613+exp2616; (4) Rule 3 distribution compliance — exp2614 HF+IPFS; (5) Ensemble v9 — exp2615 (gated on retrain success); (6) JEPA real-data eval — exp2617 (FR-11 continuous_self_learning_task).
+- Agent routing: 12 codex/gpt-5.5 (92.3%), 1 claude+opus (exp2619 capstone only). Codex-default discipline maintained.
+- Hardware continuity: exp2618 KV260 (Branch A: flash attempt if SD card; Branch B: update prep script). GateMate + PolarFire TERMINAL (graduated).
+- Exclusion manifest cross-check: 0 scope matches. Exclusion manifest cleared for all 13 tasks.
+- All prior_failures blocks complete: exp2610←exp2596 (blocked_sklearn), exp2611←exp2597 (blocked_sklearn), exp2613←exp2600 (blocked_sklearn), exp2614←exp2598/exp2599 (may not have run), exp2615←exp2604 (gated, may not have run), exp2616←exp2601 (gated on safety_verifier_viable), exp2617←exp2576/exp2589 (JEPA integration .247/.249 — different scope: evaluation not re-integration).
+- Dependency graph: exp2609 (sklearn fix) → exp2610+exp2611+exp2613 (retrain chain) → exp2615+exp2616 (ensemble+safety integration) → exp2619 (capstone).
+
 ## 2026-05-20 (Milestone 2026.05.248 Operational Retrospective)
 
 - Operational retrospective for milestone 2026.05.248 written to `results/operational_retro_2026_05_248.json`. Zero experiment commits found — milestone is planning-only (twenty-third consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. No experiments were activated before the retro trigger. Top-3 leverage actions: (1) activate exp2569 or exp2572 immediately after this retro in the same session to break the 23-milestone zero-execution streak; (2) deploy persistent conductor daemon to eliminate the structural planning-execution gap; (3) gate the retro trigger on minimum_experiments_completed >= 1 to prevent empty-window retros consuming turn budget. Estimated time savings: 0% (no execution data).
