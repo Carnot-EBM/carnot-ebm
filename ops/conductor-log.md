@@ -5499,3 +5499,4 @@ Ripgrep i |
 | 2026-05-20 15:46 UTC | Archive .254 + Activate .255 | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 15:48 UTC | Archive .254 + Activate .255 | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 15:50 UTC | Archive .254 + Activate .255 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 15:52 UTC | Phase 1 Ship v2: Execute Remaining Autonomous Ship | SKIP | Pre-tests failing, self-heal failed:  |
