@@ -5272,3 +5272,22 @@ Ripgrep i |
 | 2026-05-20 05:29 UTC | Safety Corpus 200 Pairs + Tier0xSafetyVerifier | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2600_safety_ |
 | 2026-05-20 05:32 UTC | Safety Corpus 200 Pairs + Tier0xSafetyVerifier | FAIL | No file changes produced |
 | 2026-05-20 05:34 UTC | Safety Ensemble Group F + Paper §7 Stub | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2600) |
+| 2026-05-20 05:57 UTC | JEPA v3 Online Integration: Session-Level Update i | FAIL | Post-tests failed: 2 failed, 161 passed, 1 warning in 3.96s |
+| 2026-05-20 05:59 UTC | Safety Ensemble Group F + Paper §7 Stub | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2600) |
+| 2026-05-20 05:59 UTC | JEPA v3 Online Integration: Session-Level Update i | OK | Deliverable already exists in repo |
+| 2026-05-20 06:00 UTC | KV260 Hardware Continuity: SD Flash or Prep Script | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 10.28s |
+| 2026-05-20 06:02 UTC | Safety Ensemble Group F + Paper §7 Stub | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2600) |
+| 2026-05-20 06:02 UTC | KV260 Hardware Continuity: SD Flash or Prep Script | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 8.94s |
+| 2026-05-20 06:04 UTC | KV260 Hardware Continuity: SD Flash or Prep Script | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 10.87s |
+| 2026-05-20 06:06 UTC | Ensemble v9: Incorporate Real-Corpus-Validated tie | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2596) |
+| 2026-05-20 06:07 UTC | Tier 0y CoT Consistency Verifier (arXiv:2603.03538 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 13.26s |
+| 2026-05-20 06:09 UTC | Ensemble v9: Incorporate Real-Corpus-Validated tie | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2596) |
+| 2026-05-20 06:09 UTC | Tier 0y CoT Consistency Verifier (arXiv:2603.03538 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 11.85s |
+| 2026-05-20 06:11 UTC | Ensemble v9: Incorporate Real-Corpus-Validated tie | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2596) |
+| 2026-05-20 06:12 UTC | Tier 0y CoT Consistency Verifier (arXiv:2603.03538 | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 11.41s |
+| 2026-05-20 06:14 UTC | Milestone .249 Capstone Synthesis | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 12.76s |
+| 2026-05-20 06:17 UTC | Milestone .249 Capstone Synthesis | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 12.96s |
+| 2026-05-20 06:19 UTC | Milestone .249 Capstone Synthesis | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 11.61s |
+| 2026-05-20 06:21 UTC | Milestone .249 Retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 9.94s |
+| 2026-05-20 06:24 UTC | Milestone .249 Retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 10.75s |
+| 2026-05-20 06:26 UTC | Milestone .249 Retrospective | SKIP | Pre-tests failing, self-heal failed: 2 failed, 161 passed, 1 warning in 9.35s |

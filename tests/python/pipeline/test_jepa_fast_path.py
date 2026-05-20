@@ -179,3 +179,38 @@ class TestPipelineJEPAFastPath:
         result = pipeline.verify(question="What is 1+1?", response="2")
         # With threshold=0.0 the fast path cannot fire since p_violation >= 0.0
         assert result.mode != "JEPA_FAST_PATH"
+
+    def test_online_update_batches_partial_fit_and_reports_stats(self) -> None:
+        """REQ-JEPA-007, SCENARIO-JEPA-013: online updates trigger JEPA partial_fit."""
+
+        class RecordingPredictor(JEPAFastPathPredictor):
+            """Small test double that records online batches instead of training."""
+
+            def __init__(self) -> None:
+                super().__init__()
+                self.partial_fit_batches: list[list[dict[str, object]]] = []
+
+            def partial_fit(self, observations: list[dict[str, object]]) -> None:
+                self.partial_fit_batches.append(list(observations))
+
+        predictor = RecordingPredictor()
+        pipeline = VerifyRepairPipeline(jepa_fast_path_predictor=predictor)
+
+        for idx in range(15):
+            pipeline.online_update(
+                {
+                    "text": f"synthetic observation {idx}",
+                    "label": idx % 2,
+                    "energy": float(idx) / 10.0,
+                    "fast_path_taken": idx % 3 == 0,
+                }
+            )
+
+        stats = pipeline.get_session_stats()
+
+        assert len(predictor.partial_fit_batches) == 1
+        assert len(predictor.partial_fit_batches[0]) == 10
+        assert len(pipeline._session_log) == 5
+        assert stats["n_observations"] == 15
+        assert stats["n_partial_fits"] == 1
+        assert stats["current_fast_path_rate"] == pytest.approx(5 / 15)

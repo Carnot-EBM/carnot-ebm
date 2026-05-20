@@ -564,10 +564,16 @@ class VerifyRepairPipeline:
         # When set, predict_p_violation is called in verify() before Ising;
         # if p < jepa_fast_path_threshold the Ising pass is skipped entirely.
         self._jepa_fast_path_predictor = jepa_fast_path_predictor
+        self._jepa_predictor = jepa_fast_path_predictor
         self._jepa_fast_path_threshold = jepa_fast_path_threshold
+        self._session_log: list[dict[str, Any]] = []
+        self._session_observations_seen = 0
+        self._session_fast_path_taken = 0
+        self._jepa_partial_fits = 0
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
+
             self._repair_router = OdarRouter(max_iterations=max_repairs)
 
         # Restore persisted learning state if session_memory was provided
@@ -620,6 +626,72 @@ class VerifyRepairPipeline:
     def get_balance_ratio(self) -> float:
         """Return the current balance ratio (fraction of tokens constrained vs free)."""
         return getattr(self, "balance_ratio", 1.0)
+
+    def online_update(self, observation: dict[str, Any]) -> None:
+        """Record one verified observation and periodically update JEPA online.
+
+        **Detailed explanation for engineers:**
+            FR-11 continuous self-learning receives verifier feedback one case
+            at a time, while most predictors learn more stably from a small
+            batch. This hook keeps those concerns separate: callers stream
+            observations into the pipeline, and the pipeline hands the JEPA
+            predictor a 10-case batch only when enough fresh observations have
+            accumulated. Predictors without ``partial_fit`` remain valid
+            inference-only gates, so existing fast-path deployments keep their
+            previous behaviour.
+
+        Args:
+            observation: Dict with ``text``, ``label``, ``energy``, and
+                ``fast_path_taken`` fields.
+
+        Raises:
+            ValueError: If any required observation field is missing.
+
+        Spec: REQ-JEPA-007, SCENARIO-JEPA-013
+        """
+        required_keys = {"text", "label", "energy", "fast_path_taken"}
+        missing = required_keys.difference(observation)
+        if missing:
+            missing_list = ", ".join(sorted(missing))
+            raise ValueError(f"online_update observation missing required fields: {missing_list}")
+
+        self._session_log.append(dict(observation))
+        self._session_observations_seen += 1
+        if bool(observation["fast_path_taken"]):
+            self._session_fast_path_taken += 1
+
+        if len(self._session_log) < 10:
+            return
+
+        predictor = getattr(self, "_jepa_predictor", None)
+        if predictor is None:
+            predictor = getattr(self, "_jepa_fast_path_predictor", None)
+        partial_fit = getattr(predictor, "partial_fit", None)
+        if callable(partial_fit):
+            partial_fit(list(self._session_log))
+            self._jepa_partial_fits += 1
+            self._session_log = []
+
+    def get_session_stats(self) -> dict:
+        """Return online-learning counters for this pipeline session.
+
+        The counters are session-local rather than persisted. They answer the
+        operational questions FR-11 needs during a run: how many verifier
+        feedback events reached the pipeline, whether JEPA has actually
+        received online update batches, and how often the observed traffic used
+        the JEPA fast path.
+
+        Spec: REQ-JEPA-007, SCENARIO-JEPA-013
+        """
+        n_observations = self._session_observations_seen
+        current_fast_path_rate = (
+            self._session_fast_path_taken / n_observations if n_observations else 0.0
+        )
+        return {
+            "n_observations": n_observations,
+            "n_partial_fits": self._jepa_partial_fits,
+            "current_fast_path_rate": current_fast_path_rate,
+        }
 
     @property
     def has_model(self) -> bool:
@@ -1435,6 +1507,7 @@ class VerifyRepairPipeline:
         # CRANE (arXiv:2502.09061) balance ratio gating
         if getattr(self, "balance_ratio", 1.0) < 1.0:
             import random
+
             if random.random() > self.balance_ratio:
                 baseline_score = _with_fst_certificate(
                     VerificationResult(
@@ -2269,9 +2342,7 @@ class VerifyRepairPipeline:
                     prior_energy = current_energy + 1.0
 
                 route_to_repair, vfe, _ = self._repair_router.route(
-                    current_energy=current_energy,
-                    prior_energy=prior_energy,
-                    iteration=i
+                    current_energy=current_energy, prior_energy=prior_energy, iteration=i
                 )
                 if not route_to_repair:
                     logger.info("ODAR routing VFE=%.3f >= 0. Stopping repair.", vfe)

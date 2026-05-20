@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.249",
+  "generated_at": "2026-05-20T06:32:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.249 had 0 experiments committed in the timing window — the twenty-fourth consecutive empty-timing-window retro. Both RTX 3090 GPUs are idle at 0% utilization with only 5 MB allocated each. The persistent pattern of sklearn-blocked experiments (exp2596, exp2597, exp2600) from the tail of .248 activity indicates a missing dependency that is blocking the real-corpus retrain and safety-verifier tracks entering .249.",
+  "bottlenecks_identified": [
+    "Timing-script / commit-pattern misalignment persists: 0 experiments appear in the timing window despite active .248/.249 work visible in changelog. The retro look-back window does not capture commits made within the current milestone activation window.",
+    "sklearn dependency absent from active venv: exp2596 (tier0s retrain), exp2597 (tier0u TF-IDF fix), and exp2600 (safety corpus verifier) all blocked_sklearn. This is a recurring pre-condition failure that the planner has not resolved across multiple milestones.",
+    "IPFS mirror blocked (exp2599): arxiv submission package not found at expected path — the arXiv submission package prep task (exp2553) completed but the artifact path was not communicated to the IPFS pinning task.",
+    "24 consecutive empty timing windows: the structural mismatch between how the retro timing script counts commits and how the conductor activates milestones means every retro reports 0 experiments, degrading the operational record."
+  ],
+  "improvements_suggested": [
+    "Fix sklearn availability: add 'pip install scikit-learn' as a PRECONDITIONS step 0 check in every task that imports sklearn, with honest_verdict 'blocked_sklearn' on failure — already happening — but the planner should also add a milestone-level pre-activation check that sklearn is installed in the active venv before queuing tasks that require it.",
+    "Fix timing-script look-back window: the retro script must use the milestone activation timestamp (from ops/conductor-state.json) as the lower bound for commit scanning, not a fixed wall-clock offset. This is the root cause of 24 consecutive empty windows.",
+    "Persist conductor daemon between milestones: the 24-milestone zero-execution streak is partly caused by the conductor process not surviving session boundaries. A systemd unit or tmux-persistent process would capture experiments that currently fall outside the timing window.",
+    "Wire retro gate on min_experiments_completed >= 1: if the timing window returns 0 experiments but the changelog shows completed tasks in the milestone range, the retro script should fall back to changelog-based counting and flag the discrepancy.",
+    "Resolve IPFS path communication: exp2553 (arxiv package v3) must write the package path to a shared state file (e.g., ops/conductor-state.json under 'arxiv_package_path') so exp2599 (IPFS mirror) can find it without hardcoding the path."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the retro timing-script look-back window to use milestone activation timestamp from ops/conductor-state.json — this single change will end the 24-consecutive-empty-window streak and restore operational visibility at zero experiment cost.",
+    "Install scikit-learn in the active venv as a milestone-activation precondition check — unblocks exp2596 (tier0s retrain), exp2597 (tier0u fix), and exp2600 (safety verifier) in one pip install command, recovering 3 blocked tasks in .249.",
+    "Activate at least one sklearn-unblocked experiment (e.g., exp2601 or equivalent) in the same session as this retro write, so .249 records at least 1 completed experiment and breaks the zero-execution streak."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The 24th consecutive empty timing window is no longer a measurement anomaly — it is a persistent structural failure that makes the operational record unreliable as a planning input. The planner has correctly identified sklearn-blocking and timing-script misalignment as root causes across multiple milestones, but neither has been fixed mechanically. Until the timing-script fix lands, retrospectives provide qualitative value (bottleneck identification, changelog review) but zero quantitative value (wall-time analysis, GPU efficiency, experiment throughput). The highest-leverage action this milestone is fixing the measurement infrastructure, not running more experiments."
+}

@@ -539,6 +539,21 @@ The deterministic Exp 2550 evaluation shall:
 - set `jepa_discrimination_achieved=true` only when `fast_path_rate` is in `[0.30, 0.80]`
   and `fast_path_precision >= 0.80`.
 
+### REQ-JEPA-007: Session Online Update Hook
+
+`VerifyRepairPipeline` shall expose an `online_update(observation)` method for
+FR-11 continuous self-learning sessions. The method shall accept observations
+with `text`, `label`, `energy`, and `fast_path_taken` fields; append each
+observation to an in-memory session log; and, whenever at least 10 observations
+are buffered, call `partial_fit(buffered_observations)` on the configured JEPA
+predictor if that method is available. After a successful `partial_fit`, the
+buffer shall be reset so the next update batch only contains fresh session
+observations.
+
+`VerifyRepairPipeline` shall also expose `get_session_stats()` returning
+`n_observations`, `n_partial_fits`, and `current_fast_path_rate` for the current
+pipeline session.
+
 ## Scenarios
 
 ### SCENARIO-VERIFY-001: Sudoku Constraint Satisfaction
@@ -3502,6 +3517,15 @@ hedged or contradictory responses
 **And** the fast-path precision is at least 0.80
 **And** `jepa_discrimination_achieved` is true only when the rate is in `[0.30, 0.80]`
 and precision is at least 0.80
+
+### SCENARIO-JEPA-013: Session Online Update Triggers Partial Fit
+
+**Given** a `VerifyRepairPipeline` configured with a JEPA predictor that exposes
+`partial_fit`
+**When** 15 online observations are submitted through `online_update`
+**Then** the predictor receives at least one 10-observation `partial_fit` batch
+**And** `get_session_stats()` reports 15 observations, at least one partial fit,
+and a bounded `current_fast_path_rate`
 
 ### SCENARIO-VERIFY-065: Clean Reasoning Trace Produces No Defects
 

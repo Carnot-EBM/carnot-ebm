@@ -3,155 +3,774 @@
 # SW Build 6403652 on Thu Mar 19 13:47:00 MDT 2026
 # IP Build 6403511 on Thu Mar 19 12:41:45 MDT 2026
 # SharedData Build 6403650 on Thu Mar 19 14:02:13 MDT 2026
-# Start of session at: Tue May 19 12:55:48 2026
-# Process ID         : 2093093
+# Start of session at: Wed May 20 01:55:57 2026
+# Process ID         : 2457243
 # Current directory  : /home/ianblenke/github.com/ianblenke/carnot
-# Command line       : vivado -mode batch -source /home/ianblenke/github.com/ianblenke/carnot/generate_hwh.tcl
+# Command line       : vivado -mode batch -source hardware/kv260/synth_kanele.tcl
 # Log file           : /home/ianblenke/github.com/ianblenke/carnot/vivado.log
 # Journal file       : /home/ianblenke/github.com/ianblenke/carnot/vivado.jou
 # Running On         : icbfl1
 # Platform           : cachyos
 # Operating System   : CachyOS
 # Processor Detail   : AMD Ryzen AI 9 HX 370 w/ Radeon 890M
-# CPU Frequency      : 4879.346 MHz
+# CPU Frequency      : 3301.238 MHz
 # CPU Physical cores : 12
 # CPU Logical cores  : 24
 # Host memory        : 134305 MB
 # Swap memory        : 154618 MB
 # Total Virtual      : 288924 MB
-# Available Virtual  : 137580 MB
+# Available Virtual  : 100221 MB
 #-----------------------------------------------------------
-source /home/ianblenke/github.com/ianblenke/carnot/generate_hwh.tcl
-# open_project /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.xpr
-WARNING: [filemgmt 56-3] IPUserFilesDir: Could not find the directory '/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.ip_user_files'.
-Scanning sources...
-Finished scanning sources
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:ac701:part0:1.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/ac701/1.4/board.xml as part xc7a200tfbg676-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:emb-plus-vpr-4616:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/emb-plus-vpr-4616/1.0/board.xml as part xcve2302-sfva784-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:emb-plus-vpr-4616:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/emb-plus-vpr-4616/1.1/board.xml as part xcve2302-sfva784-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:kc705:part0:1.6 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kc705/1.6/board.xml as part xc7k325tffg900-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:kc705:part0:1.7 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kc705/1.7/board.xml as part xc7k325tffg900-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:kcu105:part0:1.6 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kcu105/1.6/board.xml as part xcku040-ffva1156-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:kcu105:part0:1.7 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kcu105/1.7/board.xml as part xcku040-ffva1156-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:kcu116:part0:1.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kcu116/1.4/board.xml as part xcku5p-ffvb676-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:kcu116:part0:1.5 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kcu116/1.5/board.xml as part xcku5p-ffvb676-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:kcu1500:part0:1.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/kcu1500/1.2/board.xml as part xcku115-flvb2104-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:scu200:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/scu200/1.0/board.xml as part xcsu200p-sbva1024-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:scu35:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/scu35/1.0/board.xml as part xcsu35p-sbvb625-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:sp701:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/sp701/1.0/board.xml as part xc7s100fgga676-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:sp701:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/sp701/1.1/board.xml as part xc7s100fgga676-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:v80:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/v80/1.0/board.xml as part xcv80-lsva4737-2mhp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vc707:part0:1.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vc707/1.4/board.xml as part xc7vx485tffg1761-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vc707:part0:1.5 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vc707/1.5/board.xml as part xc7vx485tffg1761-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vc709:part0:1.8 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vc709/1.8/board.xml as part xc7vx690tffg1761-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190:part0:2.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/production/2.2/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190:part0:3.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/production/3.0/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190:part0:3.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/production/3.1/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190:part0:3.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/production/3.2/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190:part0:3.3 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/production/3.3/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190:part0:3.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190/production/3.4/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_newl:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190_newl/production/1.0/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_newl:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190_newl/production/1.1/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_newl:part0:1.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190_newl/production/1.2/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vck190_newl:part0:1.3 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vck190_newl/production/1.3/board.xml as part xcvc1902-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu108:part0:1.6 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu108/1.6/board.xml as part xcvu095-ffva2104-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu108:part0:1.7 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu108/1.7/board.xml as part xcvu095-ffva2104-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu110:part0:1.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu110/1.4/board.xml as part xcvu190-flgc2104-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu118:part0:2.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu118/2.0/board.xml as part xcvu9p-flga2104-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu118:part0:2.3 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu118/2.3/board.xml as part xcvu9p-flga2104-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu118:part0:2.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu118/2.4/board.xml as part xcvu9p-flga2104-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu128:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu128/production/1.0/board.xml as part xcvu37p-fsvh2892-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu129:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu129/production/1.0/board.xml as part xcvu29p-fsga2577-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vcu1525:part0:1.3 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vcu1525/1.3/board.xml as part xcvu9p-fsgd2104-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/production/1.0/board.xml as part xcve2802-vsvh1760-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/production/1.1/board.xml as part xcve2802-vsvh1760-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek280:part0:1.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek280/production/1.2/board.xml as part xcve2802-vsvh1760-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek385:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek385/1.0/board.xml as part xc2ve3858-ssva2112-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek385:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek385/1.1/board.xml as part xc2ve3858-ssva2112-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vek385_1:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vek385_2/1.0/board.xml as part xc2ve3858-ssva2112-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vermeo_t1_mpsoc:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vermeo_t1_mpsoc/1.0/board.xml as part xczu19eg-ffvd1760-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vermeo_t1_rfsoc:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vermeo_t1_rfsoc/1.0/board.xml as part xczu21dr-ffvd1156-2l-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vhk158:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vhk158/production/1.0/board.xml as part xcvh1582-vsva3697-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vhk158:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vhk158/production/1.1/board.xml as part xcvh1582-vsva3697-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vhk158:part0:1.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vhk158/production/1.2/board.xml as part xcvh1582-vsva3697-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180:part0:2.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/production/2.2/board.xml as part xcvm1802-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180:part0:3.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/production/3.0/board.xml as part xcvm1802-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180:part0:3.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/production/3.1/board.xml as part xcvm1802-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180:part0:3.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/production/3.2/board.xml as part xcvm1802-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180:part0:3.3 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180/production/3.3/board.xml as part xcvm1802-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_newl:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180_newl/production/1.0/board.xml as part xcvm1802-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vmk180_newl:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vmk180_newl/production/1.1/board.xml as part xcvm1802-vsva2197-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk120:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk120/production/1.0/board.xml as part xcvp1202-vsva2785-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk120:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk120/production/1.1/board.xml as part xcvp1202-vsva2785-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk120:part0:1.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk120/production/1.2/board.xml as part xcvp1202-vsva2785-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk180:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk180/production/1.0/board.xml as part xcvp1802-lsvc4072-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk180:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk180/production/1.1/board.xml as part xcvp1802-lsvc4072-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vpk180:part0:1.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vpk180/production/1.2/board.xml as part xcvp1802-lsvc4072-2mp-e-s specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vrk160:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vrk160/1.0/board.xml as part xcvr1602-vsva2488-2mp-e-s-es1 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vrk160:part0:1.1 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vrk160/1.1/board.xml as part xcvr1602-vsva2488-2mp-e-s-es1 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:vrk165_es:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/vrk165/es/1.0/board.xml as part xcvr1652-vsva2488-2mp-e-s-es1 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zc706:part0:1.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zc706/1.4/board.xml as part xc7z045ffg900-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zc706:part0:1.5 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zc706/1.5/board.xml as part xc7z045ffg900-2 specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu102:part0:3.3 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu102/3.3/board.xml as part xczu9eg-ffvb1156-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu102:part0:3.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu102/3.4/board.xml as part xczu9eg-ffvb1156-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu111:part0:1.2 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu111/1.2/board.xml as part xczu28dr-ffvg1517-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu111:part0:1.3 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu111/1.3/board.xml as part xczu28dr-ffvg1517-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu111:part0:1.4 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu111/1.4/board.xml as part xczu28dr-ffvg1517-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu1275:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu1275/1.0/board.xml as part xczu29dr-ffvf1760-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu1285:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu1285/1.0/board.xml as part xczu39dr-ffvf1760-2-i specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208:part0:2.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208/production/2.0/board.xml as part xczu48dr-fsvg1517-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu208ld:part0:2.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu208ld/production/2.0/board.xml as part xczu58dr-fsvg1517-2-i specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216:part0:2.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216/production/2.0/board.xml as part xczu49dr-ffvf1760-2-e specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu216ld:part0:2.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu216ld/production/2.0/board.xml as part xczu59dr-ffvf1760-2-i specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670:part0:2.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670/2.0/board.xml as part xczu67dr-fsve1156-2-i specified in board_part file is either invalid or not available
-WARNING: [Board 49-26] cannot add Board Part xilinx.com:zcu670ld:part0:1.0 available at /tools/Xilinx/2025.2.1/data/xhub/boards/XilinxBoardStore/boards/Xilinx/zcu670ld/1.0/board.xml as part xczu57dr-fsve1156-2-i specified in board_part file is either invalid or not available
+source hardware/kv260/synth_kanele.tcl
+# set part "xck26-sfvc784-2LV-c"
+# set top_module "kanele_top"
+# set rtl_files [list \
+#     "hardware/kv260/kanele_lut.v" \
+#     "hardware/kv260/kanele_top.v" \
+# ]
+# set output_dir "output/kanele_synth"
+# file mkdir $output_dir
+# create_project -in_memory -part $part
+# add_files $rtl_files
+# set_property top $top_module [current_fileset]
+# synth_design -top $top_module -part $part -flatten_hierarchy rebuilt
+Command: synth_design -top kanele_top -part xck26-sfvc784-2LV-c -flatten_hierarchy rebuilt
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xck26'
+INFO: [Synth 8-7079] Multithreading enabled for synth_design using a maximum of 7 processes.
+INFO: [Synth 8-7078] Launching helper process for spawning children vivado processes
+INFO: [Synth 8-7075] Helper process launched with PID 2457603
+---------------------------------------------------------------------------------
+Starting Synthesize : Time (s): cpu = 00:00:06 ; elapsed = 00:00:07 . Memory (MB): peak = 2066.238 ; gain = 386.633 ; free physical = 20905 ; free virtual = 92928
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'kanele_top' [/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/kanele_top.v:4]
+INFO: [Synth 8-6157] synthesizing module 'kanele_lut' [/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/kanele_lut.v:1]
+INFO: [Synth 8-6157] synthesizing module 'LUT6' [/tools/Xilinx/2025.2.1/Vivado/scripts/rt/data/unisim_comp.v:95419]
+	Parameter INIT bound to: 64'b1010101010101010101010101010101010101010101010101010101010101010 
+INFO: [Synth 8-6155] done synthesizing module 'LUT6' (0#1) [/tools/Xilinx/2025.2.1/Vivado/scripts/rt/data/unisim_comp.v:95419]
+INFO: [Synth 8-6155] done synthesizing module 'kanele_lut' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/kanele_lut.v:1]
+INFO: [Synth 8-6155] done synthesizing module 'kanele_top' (0#1) [/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/kanele_top.v:4]
+---------------------------------------------------------------------------------
+Finished Synthesize : Time (s): cpu = 00:00:08 ; elapsed = 00:00:08 . Memory (MB): peak = 2150.207 ; gain = 470.602 ; free physical = 21269 ; free virtual = 92909
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2165.051 ; gain = 485.445 ; free physical = 21150 ; free virtual = 92789
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xck26-sfvc784-2LV-c
+INFO: [Device 21-403] Loading part xck26-sfvc784-2LV-c
+INFO: [Synth 8-6742] Reading net delay rules and data
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2165.051 ; gain = 485.445 ; free physical = 21115 ; free virtual = 92755
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:09 ; elapsed = 00:00:10 . Memory (MB): peak = 2173.957 ; gain = 494.352 ; free physical = 21068 ; free virtual = 92708
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Registers : 
+	                1 Bit    Registers := 1     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 1248 (col length:96)
+BRAMs: 288 (col length: RAMB18 96 RAMB36 48)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:22 . Memory (MB): peak = 2968.059 ; gain = 1288.453 ; free physical = 20434 ; free virtual = 91691
+---------------------------------------------------------------------------------
+No constraint files found.
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:00:17 ; elapsed = 00:00:22 . Memory (MB): peak = 2968.059 ; gain = 1288.453 ; free physical = 20425 ; free virtual = 91682
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:00:17 ; elapsed = 00:00:22 . Memory (MB): peak = 2968.059 ; gain = 1288.453 ; free physical = 20424 ; free virtual = 91680
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19827 ; free virtual = 91084
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19827 ; free virtual = 91084
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19826 ; free virtual = 91083
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19826 ; free virtual = 91083
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19826 ; free virtual = 91084
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19826 ; free virtual = 91084
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++-+--------------+----------+
+| |BlackBox name |Instances |
++-+--------------+----------+
++-+--------------+----------+
+
+Report Cell Usage: 
++------+-----+------+
+|      |Cell |Count |
++------+-----+------+
+|1     |BUFG |     1|
+|2     |LUT6 |     1|
+|3     |FDRE |     1|
+|4     |IBUF |     8|
+|5     |OBUF |     1|
++------+-----+------+
+
+Report Instance Areas: 
++------+-----------+-----------+------+
+|      |Instance   |Module     |Cells |
++------+-----------+-----------+------+
+|1     |top        |           |    12|
+|2     |  lut_inst |kanele_lut |     1|
++------+-----------+-----------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19826 ; free virtual = 91083
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 0 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.902 ; gain = 1308.297 ; free physical = 19824 ; free virtual = 91082
+Synthesis Optimization Complete : Time (s): cpu = 00:00:21 ; elapsed = 00:00:26 . Memory (MB): peak = 2987.910 ; gain = 1308.297 ; free physical = 19824 ; free virtual = 91081
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3013.715 ; gain = 0.000 ; free physical = 19925 ; free virtual = 91182
+INFO: [Netlist 29-17] Analyzing 9 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3088.309 ; gain = 0.000 ; free physical = 19700 ; free virtual = 90958
+INFO: [Project 1-111] Unisim Transformation Summary:
+  A total of 9 instances were transformed.
+  BUFG => BUFGCE: 1 instance 
+  IBUF => IBUF (IBUFCTRL, INBUF): 8 instances
+
+Synth Design complete | Checksum: 57dfd0e
+INFO: [Common 17-83] Releasing license: Synthesis
+19 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:00:28 ; elapsed = 00:00:31 . Memory (MB): peak = 3088.344 ; gain = 1408.738 ; free physical = 19674 ; free virtual = 90932
+INFO: [Common 17-2834] synth_design peak Physical Memory [PSS] (MB): overall = 2535.345; main = 2526.494; forked = 355.308
+INFO: [Common 17-2834] synth_design peak Virtual Memory [VSS] (MB): overall = 3989.059; main = 3088.312; forked = 1020.996
+# write_checkpoint -force ${output_dir}/post_synth.dcp
+Write ShapeDB Complete: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3124.941 ; gain = 0.000 ; free physical = 19659 ; free virtual = 90917
+INFO: [Common 17-1381] The checkpoint '/home/ianblenke/github.com/ianblenke/carnot/output/kanele_synth/post_synth.dcp' has been generated.
+# opt_design
+Command: opt_design
+Attempting to get a license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xck26'
+Running DRC as a precondition to command opt_design
+
+Starting DRC Task
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Project 1-461] DRC finished with 0 Errors
+INFO: [Project 1-462] Please refer to the DRC report (report_drc) for more information.
+
+Time (s): cpu = 00:00:00.63 ; elapsed = 00:00:00.52 . Memory (MB): peak = 3173.785 ; gain = 48.844 ; free physical = 19583 ; free virtual = 90841
+
+Starting Cache Timing Information Task
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Ending Cache Timing Information Task | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:11 ; elapsed = 00:00:11 . Memory (MB): peak = 3309.551 ; gain = 135.766 ; free physical = 20658 ; free virtual = 90455
+
+Starting Logic Optimization Task
+
+Phase 1 Initialization
+
+Phase 1.1 Core Generation And Design Setup
+Phase 1.1 Core Generation And Design Setup | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19969 ; free virtual = 89768
+
+Phase 1.2 Setup Constraints And Sort Netlist
+Phase 1.2 Setup Constraints And Sort Netlist | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19969 ; free virtual = 89768
+Phase 1 Initialization | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19969 ; free virtual = 89768
+
+Phase 2 Timer Update And Timing Data Collection
+
+Phase 2.1 Detect if minReqCache needed
+Phase 2.1 Detect if minReqCache needed | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19969 ; free virtual = 89768
+
+Phase 2.2 Timer Update
+Phase 2.2 Timer Update | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19969 ; free virtual = 89768
+
+Phase 2.3 Timing Data Collection
+Phase 2.3 Timing Data Collection | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19969 ; free virtual = 89768
+Phase 2 Timer Update And Timing Data Collection | Checksum: 11717f42e
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19969 ; free virtual = 89768
+
+Phase 3 Retarget
+INFO: [Opt 31-1851] Number of loadless carry chains removed were: 0
+INFO: [Opt 31-1834] Total Chains To Be Transformed Were: 0 AND Number of Transformed insts Created are: 0
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+INFO: [Opt 31-49] Retargeted 0 cell(s).
+Phase 3 Retarget | Checksum: 1ec9a5544
+
+Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19968 ; free virtual = 89767
+Retarget | Checksum: 1ec9a5544
+INFO: [Opt 31-389] Phase Retarget created 0 cells and removed 1 cells
+
+Phase 4 Constant propagation
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Phase 4 Constant propagation | Checksum: 1ec9a5544
+
+Time (s): cpu = 00:00:00.02 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19968 ; free virtual = 89767
+Constant propagation | Checksum: 1ec9a5544
+INFO: [Opt 31-389] Phase Constant propagation created 0 cells and removed 0 cells
+
+Phase 5 Sweep
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19968 ; free virtual = 89767
+INFO: [Constraints 18-11670] Building netlist checker database with flags, 0x8
+Done building netlist checker database: Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19968 ; free virtual = 89767
+Phase 5 Sweep | Checksum: 29126a744
+
+Time (s): cpu = 00:00:00.03 ; elapsed = 00:00:00.03 . Memory (MB): peak = 3629.457 ; gain = 0.000 ; free physical = 19968 ; free virtual = 89767
+Sweep | Checksum: 29126a744
+INFO: [Opt 31-389] Phase Sweep created 0 cells and removed 5 cells
+
+Phase 6 BUFG optimization
+INFO: [Opt 31-1077] Phase BUFG optimization inserted 0 global clock buffer(s) for CLOCK_LOW_FANOUT.
+Phase 6 BUFG optimization | Checksum: 29126a744
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3678.301 ; gain = 48.844 ; free physical = 19966 ; free virtual = 89765
+BUFG optimization | Checksum: 29126a744
+INFO: [Opt 31-662] Phase BUFG optimization created 0 cells of which 0 are BUFGs and removed 0 cells.
+
+Phase 7 Shift Register Optimization
+INFO: [Opt 31-1064] SRL Remap converted 0 SRLs to 0 registers and converted 0 registers of register chains to 0 SRLs
+Phase 7 Shift Register Optimization | Checksum: 29126a744
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3678.301 ; gain = 48.844 ; free physical = 19966 ; free virtual = 89765
+Shift Register Optimization | Checksum: 29126a744
+INFO: [Opt 31-389] Phase Shift Register Optimization created 0 cells and removed 0 cells
+
+Phase 8 Post Processing Netlist
+Phase 8 Post Processing Netlist | Checksum: 29126a744
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3678.301 ; gain = 48.844 ; free physical = 19966 ; free virtual = 89765
+Post Processing Netlist | Checksum: 29126a744
+INFO: [Opt 31-389] Phase Post Processing Netlist created 0 cells and removed 0 cells
+
+Phase 9 Finalization
+
+Phase 9.1 Finalizing Design Cores and Updating Shapes
+Phase 9.1 Finalizing Design Cores and Updating Shapes | Checksum: 1379bb559
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.04 . Memory (MB): peak = 3678.301 ; gain = 48.844 ; free physical = 19966 ; free virtual = 89765
+
+Phase 9.2 Verifying Netlist Connectivity
+
+Starting Connectivity Check Task
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3678.301 ; gain = 0.000 ; free physical = 19966 ; free virtual = 89765
+Phase 9.2 Verifying Netlist Connectivity | Checksum: 1379bb559
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3678.301 ; gain = 48.844 ; free physical = 19964 ; free virtual = 89764
+Phase 9 Finalization | Checksum: 1379bb559
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3678.301 ; gain = 48.844 ; free physical = 19964 ; free virtual = 89764
+Opt_design Change Summary
+=========================
+
+
+-------------------------------------------------------------------------------------------------------------------------
+|  Phase                        |  #Cells created  |  #Cells Removed  |  #Constrained objects preventing optimizations  |
+-------------------------------------------------------------------------------------------------------------------------
+|  Retarget                     |               0  |               1  |                                              0  |
+|  Constant propagation         |               0  |               0  |                                              0  |
+|  Sweep                        |               0  |               5  |                                              0  |
+|  BUFG optimization            |               0  |               0  |                                              0  |
+|  Shift Register Optimization  |               0  |               0  |                                              0  |
+|  Post Processing Netlist      |               0  |               0  |                                              0  |
+-------------------------------------------------------------------------------------------------------------------------
+
+
+Ending Logic Optimization Task | Checksum: 1379bb559
+
+Time (s): cpu = 00:00:00.04 ; elapsed = 00:00:00.05 . Memory (MB): peak = 3678.301 ; gain = 48.844 ; free physical = 19964 ; free virtual = 89764
+
+Starting Power Optimization Task
+INFO: [Pwropt 34-132] Skipping clock gating for clocks with a period < 2.00 ns.
+Ending Power Optimization Task | Checksum: 1379bb559
+
+Time (s): cpu = 00:00:00.01 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3678.301 ; gain = 0.000 ; free physical = 19920 ; free virtual = 89720
+
+Starting Final Cleanup Task
+Ending Final Cleanup Task | Checksum: 1379bb559
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3678.301 ; gain = 0.000 ; free physical = 19920 ; free virtual = 89720
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3678.301 ; gain = 0.000 ; free physical = 19916 ; free virtual = 89715
+INFO: [Common 17-83] Releasing license: Implementation
+22 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+opt_design completed successfully
+opt_design: Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 3678.301 ; gain = 553.359 ; free physical = 19916 ; free virtual = 89715
+# place_design
+Command: place_design
+Attempting to get a license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-83] Releasing license: Implementation
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+INFO: [Timing 38-35] Done setting XDC timing constraints.
+Running DRC as a precondition to command place_design
+INFO: [DRC 23-27] Running DRC with 8 threads
+INFO: [Vivado_Tcl 4-198] DRC finished with 0 Errors
+INFO: [Vivado_Tcl 4-199] Please refer to the DRC report (report_drc) for more information.
+INFO: [Place 30-611] Multithreading enabled for place_design using a maximum of 8 CPUs
+
+Starting Placer Task
+
+Phase 1 Placer Initialization
+
+Phase 1.1 Placer Initialization Netlist Sorting
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3678.301 ; gain = 0.000 ; free physical = 19843 ; free virtual = 89642
+Phase 1.1 Placer Initialization Netlist Sorting | Checksum: dcf85651
+
+Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.01 . Memory (MB): peak = 3678.301 ; gain = 0.000 ; free physical = 19843 ; free virtual = 89642
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 3678.301 ; gain = 0.000 ; free physical = 19843 ; free virtual = 89642
+
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device
+Phase 1.2 IO Placement/ Clock Placement/ Build Placer Device | Checksum: 1902d45d9
+
+Time (s): cpu = 00:00:00.41 ; elapsed = 00:00:00.16 . Memory (MB): peak = 3763.777 ; gain = 85.477 ; free physical = 19826 ; free virtual = 89626
+
+Phase 1.3 Build Placer Netlist Model
+Phase 1.3 Build Placer Netlist Model | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 3812.621 ; gain = 134.320 ; free physical = 19381 ; free virtual = 89180
+
+Phase 1.4 Constrain Clocks/Macros
+Phase 1.4 Constrain Clocks/Macros | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 3812.621 ; gain = 134.320 ; free physical = 19381 ; free virtual = 89180
+Phase 1 Placer Initialization | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:03 ; elapsed = 00:00:03 . Memory (MB): peak = 3812.621 ; gain = 134.320 ; free physical = 19381 ; free virtual = 89180
+
+Phase 2 Global Placement
+
+Phase 2.1 Floorplanning
+
+Phase 2.1.1 Partition Driven Placement
+
+Phase 2.1.1.1 PBP: Partition Driven Placement
+Phase 2.1.1.1 PBP: Partition Driven Placement | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 3812.621 ; gain = 134.320 ; free physical = 19379 ; free virtual = 89178
+
+Phase 2.1.1.2 PBP: Clock Region Placement
+INFO: [Place 30-3162] Check ILP status : ILP-based clock placer completed successfully.
+Phase 2.1.1.2 PBP: Clock Region Placement | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:04 ; elapsed = 00:00:03 . Memory (MB): peak = 3812.621 ; gain = 134.320 ; free physical = 19373 ; free virtual = 89173
+
+Phase 2.1.1.3 PBP: Compute Congestion
+Phase 2.1.1.3 PBP: Compute Congestion | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 4065.934 ; gain = 387.633 ; free physical = 18132 ; free virtual = 87931
+
+Phase 2.1.1.4 PBP: Add part constraints
+Phase 2.1.1.4 PBP: Add part constraints | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 4065.934 ; gain = 387.633 ; free physical = 18130 ; free virtual = 87930
+Phase 2.1.1 Partition Driven Placement | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 4065.934 ; gain = 387.633 ; free physical = 18130 ; free virtual = 87930
+Phase 2.1 Floorplanning | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 4065.934 ; gain = 387.633 ; free physical = 18130 ; free virtual = 87930
+
+Phase 2.2 Update Timing before SLR Path Opt
+Phase 2.2 Update Timing before SLR Path Opt | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 4065.934 ; gain = 387.633 ; free physical = 18130 ; free virtual = 87929
+
+Phase 2.3 Post-Processing in Floorplanning
+Phase 2.3 Post-Processing in Floorplanning | Checksum: 252fd64e0
+
+Time (s): cpu = 00:00:16 ; elapsed = 00:00:07 . Memory (MB): peak = 4065.934 ; gain = 387.633 ; free physical = 18151 ; free virtual = 87950
+
+Phase 2.4 Global Place Phase1
+Phase 2.4 Global Place Phase1 | Checksum: 1cabce8bd
+
+Time (s): cpu = 00:00:35 ; elapsed = 00:00:12 . Memory (MB): peak = 4201.621 ; gain = 523.320 ; free physical = 18086 ; free virtual = 87886
+
+Phase 2.5 Global Place Phase2
+WARNING: [Place 46-29] Timing had been disabled during Placer and, therefore, physical synthesis in Placer will be skipped.
+Phase 2.5 Global Place Phase2 | Checksum: 1e3b46da2
+
+Time (s): cpu = 00:00:48 ; elapsed = 00:00:16 . Memory (MB): peak = 4205.621 ; gain = 527.320 ; free physical = 17779 ; free virtual = 87581
+Phase 2 Global Placement | Checksum: 1e3b46da2
+
+Time (s): cpu = 00:00:48 ; elapsed = 00:00:16 . Memory (MB): peak = 4205.621 ; gain = 527.320 ; free physical = 17779 ; free virtual = 87581
+
+Phase 3 Detail Placement
+
+Phase 3.1 Commit Multi Column Macros
+Phase 3.1 Commit Multi Column Macros | Checksum: 1e3b46da2
+
+Time (s): cpu = 00:01:00 ; elapsed = 00:00:19 . Memory (MB): peak = 4205.621 ; gain = 527.320 ; free physical = 17442 ; free virtual = 87244
+
+Phase 3.2 Commit Most Macros & LUTRAMs
+Phase 3.2 Commit Most Macros & LUTRAMs | Checksum: 1e3b46da2
+
+Time (s): cpu = 00:01:00 ; elapsed = 00:00:19 . Memory (MB): peak = 4205.621 ; gain = 527.320 ; free physical = 17442 ; free virtual = 87244
+
+Phase 3.3 Small Shape DP
+
+Phase 3.3.1 Small Shape Clustering
+Phase 3.3.1 Small Shape Clustering | Checksum: 1f57c422a
+
+Time (s): cpu = 00:01:13 ; elapsed = 00:00:24 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 17221 ; free virtual = 87023
+
+Phase 3.3.2 Slice Area Swap
+
+Phase 3.3.2.1 Slice Area Swap Initial
+Phase 3.3.2.1 Slice Area Swap Initial | Checksum: 2234d915c
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:24 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 17221 ; free virtual = 87023
+Phase 3.3.2 Slice Area Swap | Checksum: 2234d915c
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:24 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 17219 ; free virtual = 87021
+Phase 3.3 Small Shape DP | Checksum: 1cce6877d
+
+Time (s): cpu = 00:01:14 ; elapsed = 00:00:24 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 17218 ; free virtual = 87020
+
+Phase 3.4 Re-assign LUT pins
+Phase 3.4 Re-assign LUT pins | Checksum: 1cce6877d
+
+Time (s): cpu = 00:01:15 ; elapsed = 00:00:25 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 17137 ; free virtual = 86939
+
+Phase 3.5 Pipeline Register Optimization
+Phase 3.5 Pipeline Register Optimization | Checksum: 1cce6877d
+
+Time (s): cpu = 00:01:15 ; elapsed = 00:00:25 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 17137 ; free virtual = 86939
+Phase 3 Detail Placement | Checksum: 1cce6877d
+
+Time (s): cpu = 00:01:15 ; elapsed = 00:00:25 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 17137 ; free virtual = 86939
+
+Phase 4 Post Placement Optimization and Clean-Up
+
+Phase 4.1 Post Commit Optimization
+Phase 4.1 Post Commit Optimization | Checksum: 1cce6877d
+
+Time (s): cpu = 00:01:27 ; elapsed = 00:00:29 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 16780 ; free virtual = 86583
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 15979 ; free virtual = 85796
+
+Phase 4.2 Post Placement Cleanup
+Phase 4.2 Post Placement Cleanup | Checksum: 20127f360
+
+Time (s): cpu = 00:01:47 ; elapsed = 00:00:39 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 15979 ; free virtual = 85796
+
+Phase 4.3 Placer Reporting
+
+Phase 4.3.1 Print Estimated Congestion
+INFO: [Place 30-612] Post-Placement Estimated Congestion 
+ ________________________________________________________________________
+|           | Global Congestion | Long Congestion   | Short Congestion  |
+| Direction | Region Size       | Region Size       | Region Size       |
+|___________|___________________|___________________|___________________|
+|      North|                1x1|                1x1|                1x1|
+|___________|___________________|___________________|___________________|
+|      South|                1x1|                1x1|                1x1|
+|___________|___________________|___________________|___________________|
+|       East|                1x1|                1x1|                1x1|
+|___________|___________________|___________________|___________________|
+|       West|                1x1|                1x1|                1x1|
+|___________|___________________|___________________|___________________|
+
+Phase 4.3.1 Print Estimated Congestion | Checksum: 20127f360
+
+Time (s): cpu = 00:01:47 ; elapsed = 00:00:39 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 15979 ; free virtual = 85796
+Phase 4.3 Placer Reporting | Checksum: 20127f360
+
+Time (s): cpu = 00:01:47 ; elapsed = 00:00:39 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 15979 ; free virtual = 85796
+
+Phase 4.4 Final Placement Cleanup
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 15979 ; free virtual = 85796
+
+Time (s): cpu = 00:01:47 ; elapsed = 00:00:39 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 15979 ; free virtual = 85796
+Phase 4 Post Placement Optimization and Clean-Up | Checksum: 20127f360
+
+Time (s): cpu = 00:01:47 ; elapsed = 00:00:39 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 15979 ; free virtual = 85796
+Ending Placer Task | Checksum: 1db19ee97
+
+Time (s): cpu = 00:01:47 ; elapsed = 00:00:39 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 15979 ; free virtual = 85796
+12 Infos, 1 Warnings, 0 Critical Warnings and 0 Errors encountered.
+place_design completed successfully
+place_design: Time (s): cpu = 00:01:49 ; elapsed = 00:00:40 . Memory (MB): peak = 4217.832 ; gain = 539.531 ; free physical = 15979 ; free virtual = 85795
+# route_design
+Command: route_design
+Attempting to get a license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xck26'
+
+
+Starting Routing Task
+INFO: [Route 35-254] Multithreading enabled for route_design using a maximum of 8 CPUs
+
+Phase 1 Build RT Design
+Checksum: PlaceDB: c9e02c63 ConstDB: 0 ShapeSum: 16e0d005 RouteDB: fa58f22f
+Nodegraph reading from file.  Time (s): cpu = 00:00:00.63 ; elapsed = 00:00:00.64 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 15983 ; free virtual = 85800
+Post Restoration Checksum: NetGraph: 4f842d7a | NumContArr: 798c8cf3 | Constraints: 500313a4 | Timing: c2a8fa9d
+Phase 1 Build RT Design | Checksum: 1dbbcc8ae
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16207 ; free virtual = 85639
+
+Phase 2 Router Initialization
+INFO: [Route 35-64] No timing constraints were detected. The router will operate in resource-optimization mode.
+
+Phase 2.1 Fix Topology Constraints
+Phase 2.1 Fix Topology Constraints | Checksum: 1dbbcc8ae
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16207 ; free virtual = 85639
+
+Phase 2.2 Pre Route Cleanup
+Phase 2.2 Pre Route Cleanup | Checksum: 1dbbcc8ae
+
+Time (s): cpu = 00:00:05 ; elapsed = 00:00:05 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16207 ; free virtual = 85639
+
+Phase 2.3 Global Clock Net Routing
+ Number of Nodes with overlaps = 0
+Phase 2.3 Global Clock Net Routing | Checksum: 1aa0b8307
+
+Time (s): cpu = 00:00:06 ; elapsed = 00:00:05 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16198 ; free virtual = 85631
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 4
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 4
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+Phase 2 Router Initialization | Checksum: 16d895aeb
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:05 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16195 ; free virtual = 85628
+
+Phase 3 Global Routing
+Phase 3 Global Routing | Checksum: 16d895aeb
+
+Time (s): cpu = 00:00:07 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16195 ; free virtual = 85628
+
+Phase 4 Initial Routing
+
+Phase 4.1 Initial Net Routing Pass
+Phase 4.1 Initial Net Routing Pass | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16188 ; free virtual = 85620
+Phase 4 Initial Routing | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16187 ; free virtual = 85620
+
+Phase 5 Rip-up And Reroute
+
+Phase 5.1 Global Iteration 0
+Phase 5.1 Global Iteration 0 | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16187 ; free virtual = 85620
+Phase 5 Rip-up And Reroute | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16187 ; free virtual = 85620
+
+Phase 6 Delay and Skew Optimization
+Phase 6 Delay and Skew Optimization | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16187 ; free virtual = 85620
+
+Phase 7 Post Hold Fix
+
+Phase 7.1 Hold Fix Iter
+Phase 7.1 Hold Fix Iter | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16187 ; free virtual = 85620
+Phase 7 Post Hold Fix | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16187 ; free virtual = 85620
+
+Phase 8 Route finalize
+
+Router Utilization Summary
+  Global Vertical Routing Utilization    = 0.000137191 %
+  Global Horizontal Routing Utilization  = 0 %
+  Routable Net Status*
+  *Does not include unroutable nets such as driverless and loadless.
+  Run report_route_status for detailed report.
+  Number of Failed Nets               = 0
+    (Failed Nets is the sum of unrouted and partially routed nets)
+  Number of Unrouted Nets             = 0
+  Number of Partially Routed Nets     = 0
+  Number of Node Overlaps             = 0
+
+
+--GLOBAL Congestion:
+Utilization threshold used for congestion level computation: 0.85
+Congestion Report
+North Dir 1x1 Area, Max Cong = 0.938967%, No Congested Regions.
+South Dir 1x1 Area, Max Cong = 0.473934%, No Congested Regions.
+East Dir 1x1 Area, Max Cong = 0%, No Congested Regions.
+West Dir 1x1 Area, Max Cong = 0%, No Congested Regions.
+
+------------------------------
+Reporting congestion hotspots
+------------------------------
+Direction: North
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: South
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: East
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+Direction: West
+----------------
+Congested clusters found at Level 0
+Effective congestion level: 0 Aspect Ratio: 1 Sparse Ratio: 0
+
+Phase 8 Route finalize | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16186 ; free virtual = 85618
+
+Phase 9 Verifying routed nets
+
+ Verification completed successfully
+Phase 9 Verifying routed nets | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16185 ; free virtual = 85618
+
+Phase 10 Depositing Routes
+Phase 10 Depositing Routes | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16185 ; free virtual = 85617
+
+Phase 11 Resolve XTalk
+
+Skipping xtalk assignment for non timing driven mode.
+Phase 11 Resolve XTalk | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16185 ; free virtual = 85617
+
+Phase 12 Post Process Routing
+Phase 12 Post Process Routing | Checksum: 16bcb834a
+
+Time (s): cpu = 00:00:08 ; elapsed = 00:00:06 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16185 ; free virtual = 85617
+Time taken to check if laguna hold fix is required (in secs): 0
+Skip PhysOpt in Router because non-negative WNS value: 1e+30 .
+Total Elapsed time in route_design: 7.54 secs
+
+Phase 13 Post-Route Event Processing
+Phase 13 Post-Route Event Processing | Checksum: 1dcf2bde5
+
+Time (s): cpu = 00:00:10 ; elapsed = 00:00:08 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16141 ; free virtual = 85577
+INFO: [Route 35-16] Router Completed Successfully
+Ending Routing Task | Checksum: 1dcf2bde5
+
+Time (s): cpu = 00:00:10 ; elapsed = 00:00:08 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16141 ; free virtual = 85577
+
+Routing Is Done.
+INFO: [Common 17-83] Releasing license: Implementation
+5 Infos, 0 Warnings, 0 Critical Warnings and 0 Errors encountered.
+route_design completed successfully
+route_design: Time (s): cpu = 00:00:10 ; elapsed = 00:00:08 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16140 ; free virtual = 85576
+# write_bitstream -force ${output_dir}/kanele_top.bit
+Command: write_bitstream -force output/kanele_synth/kanele_top.bit
+Attempting to get a license for feature 'Implementation' and/or device 'xck26'
+INFO: [Common 17-349] Got license for feature 'Implementation' and/or device 'xck26'
+Running DRC as a precondition to command write_bitstream
 INFO: [IP_Flow 19-234] Refreshing IP repositories
 INFO: [IP_Flow 19-1704] No user IP repositories specified
 INFO: [IP_Flow 19-2313] Loaded Vivado IP repository '/tools/Xilinx/2025.2.1/data/ip'.
-INFO: [Ipptcl 7-1463] No Compatible Board Interface found. Board Tab not created in customize GUI
-INFO: [PSU-0] Address Range of DDR (0x7ff00000 to 0x7fffffff) is reserved by PMU for internal purpose.
-# open_bd_design [get_files *.bd]
-Reading block design file </home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.srcs/sources_1/bd/carnot_ising_bd/carnot_ising_bd.bd>...
-Adding component instance block -- xilinx.com:ip:zynq_ultra_ps_e:3.5 - zynq_ultra_ps_e_0
-Adding component instance block -- xilinx.com:ip:smartconnect:1.0 - axi_smartconnect_0
-Adding component instance block -- xilinx.com:ip:proc_sys_reset:5.0 - proc_sys_reset_0
-Adding component instance block -- xilinx.com:module_ref:ising_sampler_128_sync:1.0 - ising_sampler_0
-Successfully read diagram <carnot_ising_bd> from block design file </home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.srcs/sources_1/bd/carnot_ising_bd/carnot_ising_bd.bd>
-# generate_target all [get_files *.bd]
-INFO: [BD 41-1662] The design 'carnot_ising_bd.bd' is already validated. Therefore parameter propagation will not be re-run.
-Verilog Output written to : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.v
-Verilog Output written to : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/sim/carnot_ising_bd.v
-Verilog Output written to : /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/hdl/carnot_ising_bd_wrapper.v
-INFO: [PSU-0] Address Range of DDR (0x7ff00000 to 0x7fffffff) is reserved by PMU for internal purpose.
-INFO: [xilinx.com:ip:zynq_ultra_ps_e:3.5-0] carnot_ising_bd_zynq_ultra_ps_e_0_0: 
-Changes in your design (including the PCW configuration settings) are not automatically exported from Vivado to Amd's SDK, Petalinux or Yocto.
-This is by design to avoid disrupting existing embedded development efforts. To have any changes of your design taking effect in the embedded software flow please export your
-design by going through Vivado's main menu, click on File, then Export finally select Export Hardware, please ensure you click on the Include BitStream option.
-The auto-generated HDF file is all you need to import in Amd's SDK, Petalinux or Yocto for your changes to be reflected in the Embedded Software Flow.
-For more information, please consult PG201, section: Exporting PCW Settings to Embedded Software Flows
-INFO: [PSU-0] Address Range of DDR (0x7ff00000 to 0x7fffffff) is reserved by PMU for internal purpose.
-INFO: [IP_Flow 19-5611] Unable to find an associated reset port for the interface 'M_AXI_HPM0_FPD'. A default connection has been created.
-INFO: [BD 41-1029] Generation completed for the IP Integrator block zynq_ultra_ps_e_0 .
-Exporting to file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/bd_0/hw_handoff/carnot_ising_bd_axi_smartconnect_0_0.hwh
-Generated Hardware Definition File /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/ip/carnot_ising_bd_axi_smartconnect_0_0/bd_0/synth/carnot_ising_bd_axi_smartconnect_0_0.hwdef
-INFO: [BD 41-1029] Generation completed for the IP Integrator block axi_smartconnect_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block proc_sys_reset_0 .
-INFO: [BD 41-1029] Generation completed for the IP Integrator block ising_sampler_0 .
-Exporting to file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/hw_handoff/carnot_ising_bd.hwh
-Generated Hardware Definition File /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/synth/carnot_ising_bd.hwdef
-INFO: [BD 41-3262] Generated VHDL Instantiation Template file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/carnot_ising_bd.vho
-INFO: [BD 41-3262] Generated Verilog Instantiation Template file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/carnot_ising_bd.veo
-INFO: [BD 41-3262] Generated System Verilog Instantiation Template file /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/project/carnot_ising.gen/sources_1/bd/carnot_ising_bd/carnot_ising_bd_sv.sveo
-generate_target: Time (s): cpu = 00:00:13 ; elapsed = 00:00:13 . Memory (MB): peak = 1877.984 ; gain = 27.887 ; free physical = 74904 ; free virtual = 130543
-# write_hw_platform -fixed -include_bit -force /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa
-INFO: [Projectvivado 1-1918] Creating Hardware Platform: /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa ...
-ERROR: [Hsi 55-2023] No IPI block design hardware handoff files present in the hardware definition file /home/ianblenke/github.com/ianblenke/carnot/.Xil/Vivado-2093093-icbfl1/HWH/temp.hdf
-ERROR: [Pfi 67-8] Hardware Design is not available
-INFO: [Projectvivado 1-1943] The Hardware Platform can be used for Hardware
-INFO: [Projectvivado 1-1941] Successfully created Hardware Platform: /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa
-ERROR: [Common 17-39] 'write_hw_platform' failed due to earlier errors.
+INFO: [DRC 23-27] Running DRC with 8 threads
+ERROR: [DRC NSTD-1] Unspecified I/O Standard: 4 out of 4 logical ports use I/O standard (IOSTANDARD) value 'DEFAULT', instead of a user assigned specific value. This may cause I/O contention or incompatibility with the board power or connectivity affecting performance, signal integrity or in extreme cases cause damage to the device or the components to which it is connected. To correct this violation, specify all I/O standards. This design will fail to generate a bitstream unless all logical ports have a user specified I/O standard value defined. To allow bitstream creation with unspecified I/O standard values (not recommended), use this command: set_property SEVERITY {Warning} [get_drc_checks NSTD-1].  NOTE: When using the Vivado Runs infrastructure (e.g. launch_runs Tcl command), add this command to a .tcl file and add that file as a pre-hook for write_bitstream step for the implementation run. Problem ports: in_val[0], clk, out_val, and rst.
+ERROR: [DRC UCIO-1] Unconstrained Logical Port: 4 out of 4 logical ports have no user assigned specific location constraint (LOC). This may cause I/O contention or incompatibility with the board power or connectivity affecting performance, signal integrity or in extreme cases cause damage to the device or the components to which it is connected. To correct this violation, specify all pin locations. This design will fail to generate a bitstream unless all logical ports have a user specified site LOC constraint defined.  To allow bitstream creation with unspecified pin locations (not recommended), use this command: set_property SEVERITY {Warning} [get_drc_checks UCIO-1].  NOTE: When using the Vivado Runs infrastructure (e.g. launch_runs Tcl command), add this command to a .tcl file and add that file as a pre-hook for write_bitstream step for the implementation run.  Problem ports: in_val[0], clk, out_val, and rst.
+INFO: [Vivado 12-3199] DRC finished with 2 Errors
+INFO: [Vivado 12-3200] Please refer to the DRC report (report_drc) for more information.
+ERROR: [Vivado 12-1345] Error(s) found during DRC. Bitgen not run.
+INFO: [Common 17-83] Releasing license: Implementation
+8 Infos, 0 Warnings, 0 Critical Warnings and 3 Errors encountered.
+write_bitstream failed
+write_bitstream: Time (s): cpu = 00:00:02 ; elapsed = 00:00:21 . Memory (MB): peak = 4217.832 ; gain = 0.000 ; free physical = 16268 ; free virtual = 85048
+ERROR: [Common 17-39] 'write_bitstream' failed due to earlier errors.
 
     while executing
-"write_hw_platform -fixed -include_bit -force /home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_bd/carnot_ising_bd.xsa"
-    (file "/home/ianblenke/github.com/ianblenke/carnot/generate_hwh.tcl" line 4)
-INFO: [Common 17-206] Exiting Vivado at Tue May 19 12:56:08 2026...
+"write_bitstream -force ${output_dir}/kanele_top.bit"
+    (file "hardware/kv260/synth_kanele.tcl" line 35)
+INFO: [Common 17-206] Exiting Vivado at Wed May 20 01:57:57 2026...
