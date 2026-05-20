@@ -5530,3 +5530,4 @@ Ripgrep i |
 | 2026-05-20 16:49 UTC | KV260 Hardware Continuity .255 (NON-TERMINAL — SD  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:51 UTC | KV260 Hardware Continuity .255 (NON-TERMINAL — SD  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:53 UTC | Adaptive Conformal Factuality Gate: Prompt-Depende | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 16:55 UTC | Adaptive Conformal Factuality Gate: Prompt-Depende | SKIP | Pre-tests failing, self-heal failed:  |
