@@ -60,11 +60,16 @@ path = hf_hub_download(repo_id="Carnot-EBM/ThinkPRM-v3", filename="checkpoint.sa
 ```
 
 ## Citation
-```bibtex
-@software{carnot2026,
-  author = {The Carnot Authors (ian@blenke.com)},
-  title = {Carnot: Energy-Based Verification},
-  year = {2026},
-  url = {https://github.com/ianblenke/carnot}
-}
-```
+
+Carnot: Energy-Based Verification and Repair of LLM Outputs
+
+- Authors: Ian Blenke et al.
+- Status: Preprint under review (arXiv ID pending operator submission)
+- GitHub: https://github.com/Carnot-EBM/carnot-ebm
+- PyPI: `pip install carnot-ebm`
+
+## Distribution Channels
+
+- HuggingFace: https://huggingface.co/Carnot-EBM (primary)
+- IPFS: CID pending exp2599
+- GitHub: https://github.com/Carnot-EBM/carnot-ebm

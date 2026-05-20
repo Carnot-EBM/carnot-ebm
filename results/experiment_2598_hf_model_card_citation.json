@@ -1,0 +1,23 @@
+{
+  "honest_verdict": "complete: README model-card fallback updated with arXiv preprint citation and distribution channel metadata; HuggingFace upload remains operator-only.",
+  "model_card_updated": true,
+  "submission_package_ready": false,
+  "citation_text_preview": "Carnot: Energy-Based Verification and Repair of LLM Outputs; Authors: Ian Blenke et al.; Status: Preprint under review (arXiv ID pending operator submission).",
+  "preconditions_checked": [
+    {
+      "resource": "docs/model-card.md",
+      "available": false,
+      "check": "ls docs/model-card.md"
+    },
+    {
+      "resource": "README.md",
+      "available": true,
+      "check": "ls README.md"
+    },
+    {
+      "resource": "documentation target",
+      "available": true,
+      "check": "ls docs/model-card.md 2>/dev/null || ls README.md 2>/dev/null"
+    }
+  ]
+}
