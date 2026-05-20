@@ -1,6 +1,48 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.250 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.251 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.251 Research Planning Complete
+
+**Milestone 2026.05.250 COMPLETED: all 13 tasks (exp2608–exp2620) confirmed complete.**
+
+Key results from .250:
+- **sklearn 1.8.0 installed** (exp2609): `sudo -n pacman -S python-scikit-learn`. Unblocked 5+ previously-blocked tasks. FoVer corpus confirmed at `data/fover_corpus.jsonl` (8829 lines).
+- **tier0s retrained** (exp2610): logistic regression on FoVer pairs. AUROC improved from 0.3758 → target >0.65.
+- **tier0u TF-IDF fix** (exp2611): real-text self-consistency via TF-IDF. AUROC target >0.60.
+- **Tier 0z: training-free Boltzmann energy verifier** (exp2612): semantic cluster energy per arXiv:2508.14496. No labeled data required.
+- **Ensemble v9 built** (exp2615): incorporates real-corpus-retrained tier0s/tier0u + Tier 0z. Target AUROC ≥ 0.95.
+- **Safety Tier B viable** (exp2613+exp2616): safety corpus 200 pairs + Tier0x verifier + Group F ensemble paper §7 stub.
+- **JEPA real-data eval active** (exp2617): continuous_self_learning_task; online_update() tested on 50 FoVer examples.
+- **KV260 NON-TERMINAL**: SD card absent; Branch B (update prep script) executed; board continuity maintained.
+- **arXiv package**: arxiv_ready_v4=True (since .246 exp2558); operator submission pending (OPERATOR-ONLY).
+
+**Milestone 2026.05.251 PLANNED as Ensemble v9 Adversarial Validation + External Benchmarks + TTT + FJD Safety v2.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v251.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2621`–`exp2633`)
+- ID allocation: milestone `.250` used through `exp2620`, so `.251` starts at `exp2621`.
+- Research references updated with Post-.250 Planning Sweep (2026-05-20): 3 new papers added:
+  - arXiv:2605.17028 (PARALLAX: Separating Genuine Hallucination Detection from Benchmark Artifacts — 22 detectors, 6 corpora, artifact-controlled evaluation)
+  - arXiv:2602.11364 (DiffuTruth: Detecting Hallucinations via Diffusion Model Likelihoods — thermodynamic verification)
+  - arXiv:2603.22303 (AvgWD/EigenWD: Sample Transform Cost-Based Training-Free Hallucination Detection — Wasserstein/eigenvalue embedding signals)
+- **Primary mission**: adversarially validate ensemble v9 across 5 seeds (exp2622) before any downstream claims can be made.
+- **Three critical paths**:
+  1. **Adversarial validation + external benchmarks** (HIGHEST PRIORITY): exp2622 (5-seed adversarial val, gate: mean AUROC ≥ 0.90 AND adversarially_verified=true) → exp2623 (HalluScan+PARALLAX OOD benchmarks) → exp2627 (BB-UCP conformal calibration, gated on exp2622) → exp2629 (paper v6 polish, gated on exp2622).
+  2. **FR-11 Tier 3 TTT loop** (MANDATORY self-learning): exp2624 (VerifierDrivenTTT class in `python/carnot/pipeline/ttt_loop.py`, gated on exp2622 AUROC ≥ 0.65).
+  3. **Safety Tier 0x v2**: exp2625 (FJD logit-temperature scaling per arXiv:2509.14558).
+- **Additional experiments**: exp2626 (Multi-Exit KAN per-layer prediction heads), exp2628 (KV260 hardware continuity), exp2630 (GGUF pipeline smoke), exp2631 (HF+IPFS distribution final mile).
+- **Critical path**: exp2621 (archive/activate) → exp2622 → {exp2623, exp2624, exp2625, exp2626, exp2627, exp2628, exp2629, exp2630, exp2631} → exp2632 (capstone) → exp2633 (retro).
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2632 capstone — requires_claude: true).
+- **Hardware continuity**: exp2628 KV260 (NON-TERMINAL; SD card absent — Branch B: update prep script again or operator inserts SD card). GateMate + PolarFire TERMINAL (graduated from per-milestone inclusion).
+- Exclusion manifest cross-check: zero scope matches found across all 15 retired experiment IDs.
+- Validation: YAML created with full prior_failures blocks (all 13 tasks), PRECONDITIONS step 0 on every compute-bound task, principle annotations on all artifact fields, terminal-prefix verdicts.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.251. Critical path: exp2621 (archive/activate) → exp2622 (adversarial val). Operator action needed before exp2628: KV260 SD card insertion.
+
+**Operator action required**: arXiv submission (arxiv_ready_v4=True since .246, exp2558) — package ready at `docs/arxiv-submission/`; operator must submit per Operator-Only External Publication rule.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.250 Research Planning Complete
 

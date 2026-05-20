@@ -1,0 +1,1280 @@
+milestone: "2026.05.251"
+milestone_title: "Ensemble v9 Adversarial Validation + External Benchmarks + TTT + FJD Safety v2"
+milestone_doc: "openspec/change-proposals/research-roadmap-v251.md"
+date: "2026-05-20"
+status: "PROPOSED"
+experiment_id_range: "exp2621-exp2633"
+scope_reduction_compliance: "n/a — no SCOPE REDUCTION directive active in ops/known-issues.md"
+
+# Agent routing summary: 12 codex/gpt-5.5 (92.3%), 1 claude+opus (7.7% — capstone only)
+# Critical path: exp2622 (adversarial val 5-seed) → exp2627 (BB-UCP) + exp2629 (paper polish) → exp2632 (capstone)
+# FR-11 mandate: exp2624 (TTT loop prototype, continuous_self_learning_task: true)
+# Hardware mandatory: exp2628 (KV260 — GateMate + PolarFire TERMINAL/graduated)
+# New papers from .251 sweep: arXiv:2605.17028 (PARALLAX), arXiv:2602.11364 (DiffuTruth), arXiv:2603.22303 (AvgWD/EigenWD)
+
+tasks:
+
+  - id: exp2621
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2621_archive_v250.json"
+    title: "Archive .250 + Activate .251"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    track: admin
+
+    prior_failures:
+      - experiment_id: exp2608-archive-v249
+        verdict: "complete_already_activated: .250 was already active"
+        addressed_by: "exp2608 archived .249. This task archives .250 (which is now COMPLETE — exp2608-exp2620 range closed). Different milestone lifecycle state."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.250 is COMPLETE. The last experiment was exp2620 (retro .250).
+      This task archives .250 and activates .251.
+
+      Key .250 outcomes to record:
+        - sklearn_fix: true (exp2609; sklearn 1.8.0 installed via pacman)
+        - tier0s_retrained: true (exp2610; TF-IDF logistic regression on real FoVer corpus)
+        - tier0u_retrained: true (exp2611; TF-IDF cosine NLI-proxy)
+        - tier0z_prototyped: true (exp2612; training-free Boltzmann energy verifier)
+        - safety_tier_b: true (exp2613 + exp2616; safety corpus + Group F ensemble)
+        - ensemble_v9_built: true (exp2615; incorporating improved verifiers)
+        - rule3_executed: true (exp2614; HF model card + IPFS pin)
+        - jepa_evaluated: true (exp2617; online_update() on real FoVer examples)
+        - kv260_terminal: false (SD card absent; continuing to .251)
+        - arxiv_ready_v4: true (since exp2558, .246; operator submission pending)
+
+      EXISTING CODE TO READ FIRST:
+      - research-roadmap.yaml (verify milestone field is 2026.05.250)
+      - research-complete.yaml (last 20 lines to check if .250 already archived)
+      - results/experiment_2608_archive_v249.json (prior archive pattern)
+
+      TASK: Archive milestone .250 and activate .251.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Confirm research-roadmap.yaml exists.
+            If milestone field already says "2026.05.251", write honest_verdict
+            complete_already_activated and exit cleanly.
+         b. Read last 20 lines of research-complete.yaml to check if .250 is already archived.
+
+      1. If .250 not yet in research-complete.yaml: append entry with:
+         milestone: "2026.05.250", title: "sklearn Fix + Verifier Recovery + Semantic Energy Tier 0z + Safety Tier B",
+         date_completed: "{date}", n_experiments_completed: 13 (exp2608-exp2620),
+         sklearn_fixed: true, tier0s_retrained: true, tier0u_retrained: true, tier0z_prototyped: true,
+         ensemble_v9_built: true, safety_tier_b: true, jepa_evaluated: true,
+         kv260_terminal: false, arxiv_ready_v4: true,
+         notes: "sklearn fix broke 25-retro drought; ensemble v9 built; adversarial validation pending .251"
+
+      2. Copy research-roadmap-next.yaml → research-roadmap.yaml (overwrite).
+
+      3. Write results/experiment_2621_archive_v250.json with all required fields.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal-prefix discipline: reconciler classifies as done only with this prefix."
+      - archive_completed: bool
+        principle: "Confirms .250 lifecycle is closed before .251 tasks run."
+      - milestone_activated: str — must equal "2026.05.251"
+        principle: "Explicit activation field lets downstream audits verify milestone is active."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Prevents fabrication by recording which checks actually ran."
+
+      Run: `python -c "import yaml; yaml.safe_load(open('research-roadmap.yaml'))"` succeeds.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2622
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2622_ensemble_v9_adversarial_val.json"
+    title: "Ensemble v9 Adversarial Validation: 5-Seed Replication on Real FoVer Corpus"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    track: adversarial_validation
+
+    prior_failures:
+      - experiment_id: exp2619-capstone-v250
+        verdict: "complete: single-seed synthesis of .250 results"
+        addressed_by: "exp2619 was a synthesis task producing a single-seed AUROC claim. CLAUDE.md Adversarial Artifact Verification rule requires N >= 30 examples AND multi-seed replication before paper-v6 citation. This task runs explicit 5-seed replication (seeds 42, 7, 99, 1234, 2026) and passes each artifact through adversarial_verify.py."
+        retire_if_same_verdict: false
+      - experiment_id: exp2546-ensemble-v7b-5seed
+        verdict: "complete: ensemble_v7b_auroc=0.9857, std=0.0175 (5-seed adversarially verified)"
+        addressed_by: "exp2546 validated ensemble v7b (0.9857). This validates ensemble v9 — a different model incorporating real-corpus-retrained tier0s, tier0u, and new Tier 0z. Different ensemble configuration, different baseline."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Ensemble v9 was built in exp2615 (.250) incorporating real-corpus-retrained tier0s/tier0u
+      and the training-free Tier 0z semantic energy verifier. However, the AUROC claim from exp2615
+      is single-seed and has NOT been validated by adversarial_verify.py.
+
+      Per CLAUDE.md Adversarial Artifact Verification rule: "Any claim about a benchmark accuracy /
+      TPR / improvement requires N >= 30 examples for any percentage-point delta claim AND a
+      successful replication artifact (n>1 seeds, same direction)."
+
+      Ensemble v7b baseline: AUROC = 0.9857 (5-seed, adversarially verified, exp2546).
+      Ensemble v9 claim: pending 5-seed replication.
+
+      The 5-seed gate (mean AUROC >= 0.90 AND adversarially_verified: true) determines whether
+      paper-v6 can be updated with v9 numbers and whether BB-UCP conformal (exp2627) and paper
+      polish (exp2629) should run.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (all tier0* files to understand ensemble v9 composition)
+      - results/experiment_2615_ensemble_v9.json (exp2615 artifact — single-seed AUROC claim)
+      - results/experiment_2619_capstone_v250.json (capstone synthesis of .250 results)
+      - scripts/adversarial_verify.py (the verification script)
+
+      TASK: Run 5-seed adversarial validation of ensemble v9 on real FoVer corpus.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import sklearn; import numpy; import scipy"` succeeds.
+         b. FoVer corpus discoverable: check paths in order:
+            {project_root}/data/fover_corpus.jsonl (primary from exp2609)
+            {project_root}/python/carnot/verify/foVer_corpus.jsonl
+            {project_root}/data/foVer_corpus.jsonl
+            If none found with > 100 lines: write honest_verdict blocked_fover_corpus_not_found; exit.
+         c. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         d. Read results/experiment_2615_ensemble_v9.json. If file absent or ensemble_v9_built != true:
+            write honest_verdict blocked_ensemble_v9_not_built; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Load FoVer real corpus from the resolved path. Parse JSONL; extract (context, claim, label)
+         triples where label in {hallucination, correct, 0, 1}. Normalize: label=1 = hallucination.
+         n_corpus = number of valid triples. Require n_corpus >= 200 for statistical validity.
+
+      2. Load ensemble v9 configuration from exp2615 artifact and from python/carnot/verify/:
+         - tier0s: load tier0s_halluguard.py (with real pkl if present from exp2610)
+         - tier0u: load tier0u_logical_consistency.py (with real pkl if present from exp2611)
+         - tier0z: load tier0z_semantic_energy.py (if present from exp2612)
+         - Other tiers from the ensemble composition in python/carnot/verify/
+
+      3. For each seed in [42, 7, 99, 1234, 2026]:
+         a. Set random_state = seed. Split corpus 80/20 stratified (or use full corpus for eval
+            if n_corpus < 1000 — log which mode).
+         b. For each (context, claim, label) in test split:
+            - Run ensemble scoring: score = ensemble.score(context, claim)
+            - Collect (score, label) pairs
+         c. Compute AUROC, AUPRC using sklearn.metrics.roc_auc_score, average_precision_score.
+         d. Write per-seed artifact to results/experiment_2622_seed_{seed}.json with:
+            {seed, auroc, auprc, n_test, duration_s, random_seed: seed}
+         e. Run `python scripts/adversarial_verify.py results/experiment_2622_seed_{seed}.json`
+            Capture output; parse for CRITICAL flags (TAUTOLOGY, IMPLAUSIBLE_PERFECT, etc.)
+            adversarial_flags_seed = list of any CRITICAL flags found.
+
+      4. Aggregate across 5 seeds:
+         ensemble_v9_auroc_mean = mean(auroc_per_seed)
+         ensemble_v9_auroc_std = std(auroc_per_seed)
+         n_seeds_above_v7b = count(auroc > 0.9857)
+         n_seeds_critical_flags = count(adversarial_flags != [])
+         adversarially_verified = (n_seeds_critical_flags == 0) AND (ensemble_v9_auroc_mean >= 0.90)
+
+      5. Write results/experiment_2622_ensemble_v9_adversarial_val.json with all required fields.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required for conductor reconciler to classify as done."
+      - ensemble_v9_auroc_mean: float — mean across 5 seeds
+        principle: "Multi-seed mean is the headline-eligible metric per CLAUDE.md sample-size rigor."
+      - ensemble_v9_auroc_std: float — std across 5 seeds
+        principle: "Std quantifies seed sensitivity; std > 0.02 flags instability in paper citation."
+      - adversarially_verified: bool — True iff 0 CRITICAL flags AND mean AUROC >= 0.90
+        principle: "Gate for exp2627 (BB-UCP) and exp2629 (paper polish); prevents non-headline-eligible numbers reaching the paper."
+      - n_seeds_above_v7b: int — count of seeds with AUROC > 0.9857
+        principle: "Measures consistency of improvement over v7b baseline."
+      - auroc_per_seed: dict {seed: float} — per-seed AUROC
+        principle: "Reproducibility: each seed independently verifiable."
+      - adversarial_flags_per_seed: dict {seed: list} — CRITICAL flags per seed
+        principle: "Documents which seeds triggered fabrication signals; isolates problematic seeds."
+      - n_corpus: int — total FoVer corpus size used
+        principle: "N >= 200 is the statistical minimum for AUROC confidence intervals < 0.05."
+      - n_test: int — per-seed test set size (must be >= 100)
+        principle: "Test set size floor; below 100 the AUROC estimate is statistically meaningless."
+      - random_seed: 42 (first seed)
+        principle: "Records primary seed used for audit; full per-seed breakdown in auroc_per_seed."
+      - duration_s: float — total wall-clock across all 5 seeds
+        principle: "Real sklearn evaluation on 1000+ examples takes >= 2s total; zero implies fabrication."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record: documents which preconditions were actually verified."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2623
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2623_external_benchmarks.json"
+    title: "External Benchmark Evaluation: HalluScan + PARALLAX (OOD Generalization)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    track: external_benchmark
+
+    prior_failures:
+      - experiment_id: exp2566-halluscan-benchmark
+        verdict: "complete: Carnot ensemble v7b vs HalluScan; peer NLI baseline AUROC 0.67 established"
+        addressed_by: "exp2566 evaluated ensemble v7b on HalluScan. This evaluates ensemble v9 (incorporating real-corpus-retrained tier0s/tier0u and training-free Tier 0z) — different ensemble configuration. Also adds PARALLAX (arXiv:2605.17028) as second OOD corpus. Different experiment scope: v9 vs v7b AND two corpora instead of one."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      All verifier evaluation so far is on FoVer corpus. Verifiers were trained/validated on FoVer
+      features. Genuine OOD generalization requires independent corpora.
+
+      Two evaluation targets:
+      1. **HalluScan** (arXiv:2605.02443): purpose-built hallucination benchmark; mean NLI AUROC 0.67
+         is the peer comparison baseline from exp2566. Target: ensemble v9 AUROC > 0.70 on HalluScan.
+      2. **PARALLAX** (arXiv:2605.17028): 22-method, 12-model, 6-corpus meta-benchmark. Controls for
+         artifact exploitation. Evaluate on PARALLAX's public evaluation data if downloadable;
+         otherwise document the PARALLAX leaderboard position for Carnot's approach family.
+
+      Ensemble v9 composition: tier0s (real-corpus TF-IDF), tier0u (TF-IDF cosine NLI-proxy),
+      tier0z (Boltzmann semantic energy, training-free), plus existing Group A-E verifiers.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2566_halluscan_benchmark.json (baseline: v7b vs HalluScan)
+      - results/experiment_2622_ensemble_v9_adversarial_val.json (v9 AUROC on FoVer)
+      - python/carnot/verify/ (ensemble v9 components)
+
+      TASK: Evaluate ensemble v9 on HalluScan and PARALLAX external corpora.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import sklearn; import numpy; import scipy"` succeeds.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         c. Network available: `curl -sf -o /dev/null https://huggingface.co/api/models` succeeds.
+            If network unavailable: write honest_verdict blocked_network_unavailable; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Attempt HalluScan download:
+         Try: `python -c "from datasets import load_dataset; ds = load_dataset('potsawee/longnews-summarization-hallucination', split='test')"`
+         Alternative: search for local HalluScan cache in ~/.cache/huggingface/datasets/
+         If HuggingFace credentials needed and absent: log halluscan_downloaded=False and
+         use fallback 50 synthetic (context, claim, label) pairs with plausible claim distributions.
+         Require n_halluscan >= 30 for any statistical claims.
+
+      2. Evaluate ensemble v9 on HalluScan (real or fallback):
+         For each (context, claim, label): score = ensemble.score(context, claim)
+         Compute AUROC, AUPRC. Record halluscan_auroc, halluscan_n, halluscan_source.
+
+      3. Attempt PARALLAX dataset access:
+         Try: `python -c "from datasets import load_dataset; ds = load_dataset('parallax-benchmark/PARALLAX')"`
+         If unavailable: document the PARALLAX leaderboard (arXiv:2605.17028, Table 2) and identify
+         which method family Carnot belongs to (training-free logit-space energy = "uncertainty-based"
+         family per PARALLAX taxonomy). Record parallax_evaluable: false with rationale.
+
+      4. If PARALLAX data available: evaluate subset (n >= 100) of one domain.
+         Compute AUROC; record parallax_auroc, parallax_domain, parallax_n.
+
+      5. Compute OOD generalization delta:
+         halluscan_fover_delta = halluscan_auroc - ensemble_v9_fover_auroc
+         (use exp2622.ensemble_v9_auroc_mean as fover_auroc baseline).
+         Positive delta = generalizes beyond FoVer. Negative = FoVer-specific feature exploitation.
+
+      6. Write results/experiment_2623_external_benchmarks.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix for conductor reconciler."
+      - halluscan_auroc: float — AUROC on HalluScan or synthetic fallback
+        principle: "Primary OOD generalization metric; comparison to exp2566 v7b baseline validates improvement claim."
+      - halluscan_n: int — number of HalluScan examples evaluated
+        principle: "Statistical validity: n < 30 means AUROC confidence interval too wide for paper citation."
+      - halluscan_source: str — 'real' or 'synthetic_fallback'
+        principle: "Distinguishes genuine OOD evaluation from synthetic fallback; paper-v6 must cite source."
+      - parallax_evaluable: bool — whether PARALLAX data was accessible
+        principle: "Honest documentation of PARALLAX access state prevents fabricated PARALLAX AUROC."
+      - parallax_auroc: float or null — PARALLAX AUROC if accessible
+        principle: "If null: PARALLAX evaluation deferred; no paper claim made."
+      - ood_generalization_delta: float — halluscan_auroc minus fover_auroc
+        principle: "Negative delta = red flag (verifier exploits FoVer features, not genuine hallucination signal); must be documented in paper-v6 §5 limitations."
+      - ensemble_v9_fover_auroc_ref: float — exp2622 mean AUROC used as FoVer baseline
+        principle: "Documents which AUROC value was used as the comparison baseline."
+      - random_seed: 42
+        principle: "Reproducibility of any sampling used in evaluation."
+      - duration_s: float
+        principle: "Real network + dataset loading takes >= 5s; near-zero implies skipped steps."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2624
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2624_ttt_loop_prototype.json"
+    title: "Verifier-Driven TTT Loop Prototype (FR-11 Tier 3 Closure)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    track: self_learning
+    continuous_self_learning_task: true
+
+    prior_failures:
+      - experiment_id: exp2617-jepa-real-data-eval
+        verdict: "complete: JEPA online_update() evaluated on 50 FoVer examples; AUC improved"
+        addressed_by: "exp2617 evaluated JEPA online_update() in isolation. This implements the FULL Verifier-Driven TTT loop per arXiv:2505.19475: verifier scores responses → select high-confidence examples → use as few-shot context → measure improvement. Different scope: not online_update() instrumentation but the SELECT → ADAPT → EVAL cycle."
+        retire_if_same_verdict: false
+      - experiment_id: exp2576-jepa-v3-online-integration
+        verdict: "complete: JEPA v3 online integration; session-level update wired"
+        addressed_by: "exp2576 (.247) wired online_update() into VerifyRepairPipeline. This tests TTT effectiveness using verifier-selected examples as few-shot context — a different intervention (context augmentation vs. weight update)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      FR-11 Tier 3 (JEPA online_update) is wired and evaluated. But the Verifier-Driven TTT loop
+      from arXiv:2505.19475 ("Continuous Self-Improvement via Verifier-Driven TTT") has not been
+      prototyped. The paper shows: AUROC > 0.65 verifier quality is sufficient for the loop to
+      improve model quality by 32% relative on held-out examples. Carnot's ensemble v9 exceeds
+      this threshold by >0.25 — the TTT loop should be effective.
+
+      The TTT loop prototype (no gradient fine-tuning required — in-context TTT per the paper):
+      1. Run verifier ensemble on a set of (context, claim) pairs from FoVer
+      2. Select top-N high-confidence CORRECT examples (high verifier confidence = low energy)
+      3. Use those examples as few-shot context prefix for the next inference pass
+      4. Measure improvement on held-out examples
+
+      This CLOSES FR-11 at prototype fidelity. FR-11 "Autonomous Self-Learning Loop" Tier 3
+      TTT integration is the last missing piece.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline.online_update())
+      - python/carnot/pipeline/jepa_fast_path.py (JEPAFastPathPredictor)
+      - results/experiment_2617_jepa_real_eval.json (online_update() evaluation baseline)
+      - results/experiment_2622_ensemble_v9_adversarial_val.json (v9 AUROC for TTT selection)
+
+      TASK: Implement and evaluate the Verifier-Driven TTT loop prototype.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         b. FoVer corpus discoverable: check {project_root}/data/fover_corpus.jsonl (n_lines >= 100).
+         c. Ensemble v9 AUROC from exp2622 >= 0.65 (the paper's minimum threshold for TTT).
+            Read results/experiment_2622_ensemble_v9_adversarial_val.json.
+            If AUROC < 0.65: write honest_verdict blocked_verifier_auroc_below_ttt_threshold; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Load FoVer real corpus. Use 500 examples as the "unlabeled" pool the TTT loop
+         selects from, and 50 separate examples as the held-out evaluation set.
+         random_seed=42 for split.
+
+      2. Implement the TTT selection step in python/carnot/pipeline/ttt_loop.py:
+         class VerifierDrivenTTT:
+           """Verifier-driven test-time training loop per arXiv:2505.19475.
+           Selects high-confidence examples via verifier ensemble, uses them as
+           few-shot context to improve model performance on held-out examples.
+           No gradient update required — pure in-context few-shot selection."""
+
+           def __init__(self, pipeline: VerifyRepairPipeline, n_select: int = 5,
+                        confidence_threshold: float = 0.65):
+             ...
+
+           def select_high_confidence(self, pool: list) -> list:
+             """Return top-n_select examples where verifier confidence is highest
+             (= ensemble score farthest from 0.5 in the correct direction)."""
+             ...
+
+           def evaluate_with_context(self, held_out: list,
+                                     selected_context: list) -> dict:
+             """For each held_out example, prepend selected_context as few-shot
+             examples, re-run pipeline, measure whether correct label is recovered."""
+             ...
+
+           def run_loop(self, pool: list, held_out: list) -> dict:
+             """Full TTT loop: select → contextualize → evaluate."""
+             ...
+
+      3. Run the TTT loop:
+         a. Baseline: evaluate pipeline on held_out WITHOUT TTT context (n=50 examples)
+            Record baseline_auroc, baseline_accuracy.
+         b. TTT: select top-5 from pool. Evaluate held_out WITH selected few-shot context.
+            Record ttt_auroc, ttt_accuracy, n_selected_examples.
+         c. Compute improvement: ttt_delta_auroc = ttt_auroc - baseline_auroc
+            ttt_loop_ran = True if n_selected_examples >= 5
+
+      4. Write results/experiment_2624_ttt_loop_prototype.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - ttt_loop_ran: bool — True iff n_selected_examples >= 5
+        principle: "Gate for FR-11 Tier 3 closure: TTT loop must actually run, not just be wired."
+      - n_selected_examples: int — examples selected by verifier for context
+        principle: "N < 5 means TTT context is too thin for meaningful few-shot signal."
+      - baseline_auroc: float — pipeline AUROC on held-out without TTT context
+        principle: "Comparison baseline: TTT improvement is delta above this."
+      - ttt_auroc: float — pipeline AUROC on held-out with TTT context
+        principle: "Primary TTT outcome metric."
+      - ttt_delta_auroc: float — ttt_auroc - baseline_auroc
+        principle: "Positive = TTT helps; negative = TTT hurts; near-zero = neutral. All outcomes documented."
+      - fr11_tier3_ttt_closed: bool — True iff ttt_loop_ran AND prototype implements select+adapt+eval cycle
+        principle: "FR-11 completion gate: not just wired, but the full cycle demonstrated."
+      - module_created: str — path to python/carnot/pipeline/ttt_loop.py
+        principle: "Deliverable is code artifact not just result; path confirms it was written."
+      - random_seed: 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Real evaluation on 50 held-out examples takes >= 1s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); from carnot.pipeline.ttt_loop import VerifierDrivenTTT; print('TTT module OK')"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2625
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2625_fjd_safety_v2.json"
+    title: "FJD Safety Tier 0x v2: Logit-Temperature Scaling (arXiv:2509.14558)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: safety_verifier
+
+    prior_failures:
+      - experiment_id: exp2613-safety-corpus-verifier
+        verdict: "complete or blocked_sklearn — safety corpus built with Shannon entropy features"
+        addressed_by: "exp2613 used Shannon entropy as the safety signal (basic tokenization-based). This implements FJD logit-temperature scaling per arXiv:2509.14558 — a different technique that exploits temperature sensitivity of unsafe content distributions. Different feature engineering, different paper, different score computation."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Safety Tier 0x v1 (exp2613, .250) used Shannon entropy over claim token frequency distributions
+      as the safety signal. Target was safety_auroc > 0.60. FJD v2 uses a different approach:
+      "LLM Jailbreak Detection for (Almost) Free!" (arXiv:2509.14558) — logit-temperature scaling.
+
+      Core insight of FJD: unsafe prompts produce logit distributions that are MORE sensitive to
+      temperature scaling than safe prompts. Specifically: for a fixed prompt, compute the KL
+      divergence between the model's output distribution at temperature T=1 and at T=0.5.
+      KL(T=1 || T=0.5) is larger for unsafe content because unsafe distributions are more
+      concentrated (lower entropy) and thus amplified more by temperature reduction.
+
+      This can be APPROXIMATED without a live LLM using TF-IDF: the "logit temperature scaling"
+      is proxied by comparing TF-IDF unigram distributions at different smoothing factors.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/tier0x_safety.py (or equivalent from exp2613)
+      - results/experiment_2613_safety_corpus_verifier.json (v1 baseline)
+      - results/experiment_2616_safety_ensemble_group_f.json (Group F integration)
+
+      TASK: Implement Tier 0x v2 with FJD logit-temperature scaling proxy.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import sklearn; import numpy"` succeeds.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         c. Read results/experiment_2613_safety_corpus_verifier.json to get:
+            v1 safety_auroc baseline AND corpus path. If file absent: record baseline=0.0.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Load the safety corpus from exp2613 (200 safe/unsafe pairs) or rebuild it:
+         - 100 safe examples: neutral factual claims with high vocabulary diversity
+         - 100 unsafe examples: jailbreak-style prompts with command verbs, imperative structure
+         Label: 0 = safe, 1 = unsafe.
+
+      2. Implement the FJD temperature proxy in python/carnot/verify/tier0x_safety_v2.py:
+         class FJDSafetyVerifier:
+           """FJD logit-temperature scaling proxy for safety detection.
+           Unsafe content produces logit distributions more sensitive to temperature.
+           Approximated via TF-IDF unigram distribution sensitivity to Laplace smoothing.
+           Per arXiv:2509.14558."""
+
+           def score(self, claim: str) -> float:
+             """Return unsafe probability in [0,1].
+             Compute TF-IDF unigram distribution sensitivity to smoothing factor alpha.
+             High sensitivity (unsafe) = distribution changes dramatically with alpha."""
+             tokens = claim.lower().split()
+             freq = Counter(tokens)
+             total = max(sum(freq.values()), 1)
+             # Unigram dist at alpha=1 (unsmoothed): p_i = count_i / total
+             p_unsmoothed = {w: c/total for w, c in freq.items()}
+             # Unigram dist at alpha=0.5 (half-smoothed): p_i = (count_i + 0.5) / (total + 0.5*vocab)
+             vocab = len(freq)
+             p_smoothed = {w: (c + 0.5)/(total + 0.5*vocab) for w, c in freq.items()}
+             # KL divergence: sum p_smooth * log(p_smooth / p_unsmooth)
+             kl = sum(p_smoothed[w] * math.log(p_smoothed[w] / p_unsmoothed[w])
+                      for w in freq)
+             # Unsafe content has lower entropy → higher KL on smoothing
+             return 1.0 / (1.0 + math.exp(-kl))
+
+      3. Evaluate on the safety corpus:
+         - Compute score(claim) for each example
+         - Compute AUROC, AUPRC, F1 (threshold=0.5)
+         - Compare to v1 Shannon entropy AUROC baseline
+
+      4. Write updated Group F ensemble integration:
+         If safety_auroc_v2 > v1_baseline: update tier0x path in ensemble config to use v2.
+         safety_tier_b_v2_viable = (safety_auroc_v2 > 0.65)
+
+      5. Write results/experiment_2625_fjd_safety_v2.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - safety_auroc_v2: float — FJD proxy AUROC on safety corpus
+        principle: "Primary metric; must exceed v1 Shannon entropy baseline to justify Group F update."
+      - safety_auroc_v1_baseline: float — v1 baseline from exp2613 or 0.0 if not found
+        principle: "Comparison baseline; delta = v2 - v1 documents whether FJD proxy helps."
+      - safety_auroc_delta: float — v2 minus v1
+        principle: "Positive delta = FJD proxy improves over Shannon entropy; paper-v6 §7 update."
+      - safety_tier_b_v2_viable: bool — True iff safety_auroc_v2 > 0.65
+        principle: "Gate for Group F update: only update ensemble if v2 is meaningfully better."
+      - n_safe: int — safe examples in corpus
+        principle: "Statistical validity: N < 30 per class means AUROC confidence interval too wide."
+      - n_unsafe: int — unsafe examples in corpus
+        principle: "Same statistical validity requirement as n_safe."
+      - random_seed: 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Real sklearn evaluation >= 0.1s; near-zero implies skipped evaluation."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2626
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2626_multi_exit_kan.json"
+    title: "Multi-Exit KAN Energy Verifier: Per-Layer Prediction Heads for Inference Speedup"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    track: architecture
+
+    prior_failures:
+      - experiment_id: exp980-sos-kan-reparameterization
+        verdict: "complete: SOS-KAN reparameterization with monotonicity invariants"
+        addressed_by: "exp980 added SOS-on-derivative type-level invariants to the KAN energy tier. Multi-Exit KAN is a different architectural change: adds independent prediction heads at each KAN layer, allowing early-exit inference when confidence is high. Different technique (multi-exit branching vs. activation reparameterization) and different goal (speedup vs. constraint enforcement)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Carnot's KAN energy tier achieves AUROC = 0.994 on synthetic FoVer with 8.7x fewer params
+      than Ising. However, all inference runs the full KAN depth. Multi-Exit KAN (arXiv:2506.03302
+      from 2025) adds prediction heads at each KAN layer: if an intermediate layer's prediction
+      confidence exceeds a threshold, return early — skipping the remaining layers. For inputs where
+      the constraint violation is obvious (very high energy), early-exit at layer 1 or 2 provides
+      identical accuracy at ~3x speedup.
+
+      Target: multi_exit_viable = True iff (early_exit_auroc >= full_path_auroc - 0.005) AND
+              (avg_exit_layer < n_layers * 0.7) — meaning we can skip >30% of layers on average.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/models/kan.py (or python/carnot/verify/ for KAN energy verifier)
+      - python/carnot/verify/base_verifier.py (interface)
+      - results/experiment_2622_ensemble_v9_adversarial_val.json (current KAN contribution)
+
+      TASK: Add multi-exit prediction heads to the KAN energy verifier.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import numpy; import sklearn"` succeeds.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         c. Locate the KAN energy verifier module (search python/carnot/ for kan*.py or kan_energy*).
+            If KAN module not found: write honest_verdict blocked_kan_module_not_found; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Load or reconstruct a simple KAN energy verifier on synthetic data:
+         n_layers = 3 (matching the current tier)
+         Input features: claim length, token diversity, bigram entropy (3 features)
+         For each of n_layers: train a simple LogisticRegression head on those layer features.
+
+      2. Implement MultiExitKANVerifier:
+         class MultiExitKANVerifier:
+           """KAN with per-layer prediction heads for early-exit inference.
+           Early exit when any layer's confidence exceeds threshold.
+           Per arXiv:2506.03302 — reduces Lipschitz constant at intermediate layers."""
+
+           def score(self, context: str, claim: str) -> tuple[float, int]:
+             """Return (energy_score, exit_layer) where exit_layer is the layer
+             that fired (1 to n_layers). Lower exit_layer = cheaper inference."""
+             for layer in range(n_layers):
+               features = self._extract_layer_features(context, claim, layer)
+               confidence = self.heads[layer].predict_proba([features])[0][1]
+               if confidence > self.threshold or confidence < 1 - self.threshold:
+                 return confidence, layer + 1
+             # Full path
+             return self.heads[-1].predict_proba([all_features])[0][1], n_layers
+
+      3. Evaluate on 200 real FoVer examples:
+         For each example run both full-path and multi-exit scoring.
+         Collect (full_score, exit_score, exit_layer, label) tuples.
+         Compute: full_path_auroc, early_exit_auroc, avg_exit_layer.
+         multi_exit_viable = (early_exit_auroc >= full_path_auroc - 0.005) AND
+                              (avg_exit_layer < n_layers * 0.7)
+
+      4. Write results/experiment_2626_multi_exit_kan.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - multi_exit_viable: bool — True iff early-exit AUROC within 0.005 of full-path AND avg_exit < 70% layers
+        principle: "Primary gate: multi-exit is only worth deploying if accuracy loss is negligible."
+      - full_path_auroc: float — AUROC with all KAN layers
+        principle: "Baseline for measuring accuracy loss due to early exit."
+      - early_exit_auroc: float — AUROC with multi-exit (threshold=0.8)
+        principle: "Primary metric; delta vs full_path_auroc quantifies accuracy cost of speedup."
+      - avg_exit_layer: float — mean exit layer across corpus (lower = faster)
+        principle: "Measures actual speedup achieved; avg_exit_layer = n_layers means no speedup."
+      - n_layers: int — KAN depth
+        principle: "Denominator for avg_exit_layer fraction."
+      - speedup_estimate: float — n_layers / avg_exit_layer (approximate inference speedup)
+        principle: "Headline speedup number; paper-v6 §5 can cite if multi_exit_viable."
+      - random_seed: 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Real evaluation >= 0.5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2627
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2627_bb_ucp_conformal.json"
+    title: "BB-UCP Label-Free Conformal Calibration (gated on exp2622.adversarially_verified)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: calibration
+
+    gated_on:
+      - upstream: exp2622
+        artifact_field: adversarially_verified
+        op: "=="
+        value: true
+
+    prior_failures:
+      - experiment_id: exp2534-adaptive-conformal-acse
+        verdict: "complete: adaptive conformal ACSE v2 calibration intervals"
+        addressed_by: "exp2534 implemented ACSE (Adaptive Conformal Score Estimation). BB-UCP (Bootstrap-Based Uncertainty-Calibrated Prediction) per arXiv:2509.23002 is a different algorithm: it bootstraps calibration intervals WITHOUT labeled test data by leveraging the ensemble's internal score distribution. Different paper, different technique (bootstrap vs. adaptive threshold), different data requirement (label-free)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      This task is gated on exp2622.adversarially_verified == true. If the gate fails (ensemble v9
+      AUROC not adversarially validated), this task MUST exit with honest_verdict blocked_gate_not_met
+      rather than proceeding.
+
+      BB-UCP (Bootstrap-Based Uncertainty-Calibrated Prediction) per arXiv:2509.23002 computes
+      conformal calibration intervals over ensemble scores WITHOUT requiring labeled calibration data.
+      It bootstraps from the ensemble's own score distribution on unlabeled examples. This is
+      critical for deployment: most users don't have labeled data to run traditional conformal
+      calibration.
+
+      Target: coverage_at_90pct > 0.85 (coverage exceeds 85% of true labels at 90% prediction interval).
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2622_ensemble_v9_adversarial_val.json (adversarially_verified gate)
+      - results/experiment_2534_adaptive_conformal_acse.json (prior conformal baseline)
+      - python/carnot/verify/ (ensemble v9 components)
+
+      TASK: Implement BB-UCP label-free conformal calibration for ensemble v9.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. Read results/experiment_2622_ensemble_v9_adversarial_val.json.
+            If adversarially_verified != true: write honest_verdict blocked_gate_not_met; exit.
+         b. `python -c "import sklearn; import numpy; import scipy"` succeeds.
+         c. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Load ensemble v9 scores from FoVer real corpus (unlabeled mode: use scores only, no labels).
+         Draw 1000 bootstrap samples of size 200 from the score distribution.
+         For each bootstrap sample: compute score mean, std, and 5th/95th percentiles.
+         bb_ucp_mean = mean of per-bootstrap means
+         bb_ucp_lower = mean of per-bootstrap 5th pct
+         bb_ucp_upper = mean of per-bootstrap 95th pct
+         bb_interval_width = bb_ucp_upper - bb_ucp_lower
+
+      2. Validate coverage against labeled FoVer test set (n >= 100):
+         For each labeled example: check if true label probability falls within [bb_ucp_lower, bb_ucp_upper].
+         coverage_at_90pct = fraction of examples where the interval covers the true label.
+
+      3. Compare to naive 90th percentile interval (no bootstrap):
+         naive_interval_width = score_90th_pct - score_10th_pct
+         Write bb_ucp_narrower_than_naive = (bb_interval_width < naive_interval_width).
+
+      4. Write results/experiment_2627_bb_ucp_conformal.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - coverage_at_90pct: float — fraction of labeled examples with true label in BB-UCP interval
+        principle: "Primary calibration metric; coverage < 0.85 means intervals are overconfident."
+      - bb_interval_width: float — width of BB-UCP prediction interval
+        principle: "Narrower width = tighter calibration = more useful deployment signal."
+      - bb_ucp_narrower_than_naive: bool — whether BB-UCP beats naive percentile intervals
+        principle: "Validates that bootstrap adds value over simple percentile computation."
+      - n_bootstrap_samples: int — number of bootstrap iterations (target: 1000)
+        principle: "Statistical power of the bootstrap; <100 samples produce unstable intervals."
+      - n_labeled_for_coverage: int — labeled test set size used for coverage validation
+        principle: "Coverage estimate requires n >= 100 for standard error < 5%."
+      - random_seed: 42
+        principle: "Reproducibility of bootstrap sampling."
+      - duration_s: float
+        principle: "Bootstrap with 1000 samples takes >= 0.5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record including gate check."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2628
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2628_kv260_continuity.json"
+    title: "KV260 Hardware Continuity (Branch A: SD Flash; Branch B: Prep Update)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    track: hardware
+
+    prior_failures:
+      - experiment_id: exp2618-kv260-continuity-v250
+        verdict: "complete or blocked — Branch A/B based on SD card state"
+        addressed_by: "exp2618 was the .250 KV260 continuity task. Per Hardware-Task Continuity Discipline (CLAUDE.md), KV260 is NON-TERMINAL and mandates one task per milestone. This is the .251 continuation. exp2618's result determines which branch is relevant: if Branch B was taken (SD absent), the prep script was updated; this task attempts Branch A flash if SD is now present."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Per Hardware-Task Continuity Discipline (CLAUDE.md): KV260 is NON-TERMINAL (SD card absent
+      as of last confirmed check in .249). GateMate and PolarFire SoC are TERMINAL (graduated).
+
+      The KV260 terminal state requires: SD card inserted → PYNQ flash → latency smoke test →
+      kv260_synthesis_succeeded: true AND board-level latency transcript in a non-fabricated artifact.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2618_kv260_continuity.json (most recent .250 state)
+      - ops/hardware-bringup-prep.md (current prep script state)
+
+      TASK: Advance KV260 toward terminal state.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Read results/experiment_2618_kv260_continuity.json to understand current state.
+         b. Check SD card: `ls /dev/mmcblk* 2>/dev/null || lsblk | rg mmcblk`.
+            If SD card detected (sd_card_detected=True): proceed to Branch A.
+            If not detected: proceed to Branch B.
+
+      BRANCH A (SD card detected — flash path):
+      1. Locate bitstream: read the CARNOT_KV260_BITFILE env var or find *.bit in hardware/kv260/.
+      2. Attempt PYNQ flash. If PYNQ available: run flash command; record kv260_pynq_flashed.
+      3. Record: sd_card_detected=True, flash_attempted=True, kv260_pynq_flashed (bool).
+      4. If flash succeeds: run latency smoke test (read PYNQ AXI register). Record latency_us.
+         kv260_terminal_candidate = True if latency_us > 0 (any real measurement).
+      5. Write artifact with kv260_sd_detected=True, branch=A.
+
+      BRANCH B (SD card absent — prep update):
+      1. Read the existing prep guide at ops/hardware-bringup-prep.md.
+      2. Update the "KV260 PYNQ SD Card" section with exact SD card model required, PYNQ image
+         download URL (https://www.xilinx.com/products/boards-and-kits/1-vad4rl.html),
+         and the exact flash command: `dd if=pynq_2.7.img of=/dev/sdX bs=4M && sync`.
+      3. Record sd_card_detected=False, branch=B, prep_guide_updated=True.
+      4. Write artifact with kv260_sd_detected=False, branch=B.
+
+      BOTH BRANCHES: write results/experiment_2628_kv260_continuity.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix; blocked_ only if synthesis bitstream unreachable."
+      - kv260_sd_detected: bool
+        principle: "Branch selector; determines whether flash was attempted or only prep updated."
+      - branch: str — 'A' or 'B'
+        principle: "Audit trail for which code path was taken."
+      - flash_attempted: bool (Branch A only)
+        principle: "Distinguishes flash attempt from prep-only task."
+      - kv260_pynq_flashed: bool or null (Branch A only)
+        principle: "True only if PYNQ actually confirmed the flash; null if not applicable."
+      - kv260_terminal_candidate: bool
+        principle: "True only if latency transcript exists from real board (not simulation)."
+      - prep_guide_updated: bool (Branch B)
+        principle: "Confirms the operator prep instructions were refreshed."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records which hardware checks ran."
+      - duration_s: float
+        principle: "Real hardware interaction takes >= 2s for any branch."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2629
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2629_paper_v6_polish.json"
+    title: "Paper v6 Final Polish: v9 AUROC + Safety §7 + Distribution §8 (gated on adversarial val)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    track: publication
+
+    gated_on:
+      - upstream: exp2622
+        artifact_field: adversarially_verified
+        op: "=="
+        value: true
+
+    prior_failures:
+      - experiment_id: exp2616-safety-group-f-paper-stub
+        verdict: "complete: §7 stub added; paper not fully updated"
+        addressed_by: "exp2616 added a §7 Safety stub. This does the full polish: updates §5 with adversarially-validated v9 AUROC from exp2622 AND external OOD benchmark from exp2623, §7 with FJD v2 safety results from exp2625, §8 with IPFS CID from exp2631. Different scope: full paper update vs. single-section stub."
+        retire_if_same_verdict: false
+      - experiment_id: exp2558-arxiv-final-package-v4
+        verdict: "complete: arxiv_ready_v4=True; submission_package_ready=True"
+        addressed_by: "exp2558 built the arXiv v4 package. This builds an updated package with v9 AUROC (adversarially validated) and external benchmark results. Different evidence base: v9 > v7b improvement requires new §5 numbers."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      This task is gated on exp2622.adversarially_verified == true. If the gate fails, exit with
+      honest_verdict blocked_gate_not_met.
+
+      Paper-v6 status: arxiv_ready_v4=True since exp2558 (.246), but the paper was last updated with
+      ensemble v7b (AUROC=0.9857). Ensemble v9 + real-corpus tier0s/tier0u + Tier 0z + Safety Tier B
+      + FJD v2 all need to be reflected in the paper.
+
+      Operator-Only rule (CLAUDE.md): this task prepares the package for operator review; the
+      task MUST NOT submit to arXiv. submission_package_ready=True means the package is ready
+      for the OPERATOR to submit.
+
+      EXISTING CODE TO READ FIRST:
+      - docs/arxiv-submission/ (existing arXiv package)
+      - docs/paper-v6/main.tex (or equivalent)
+      - results/experiment_2622_ensemble_v9_adversarial_val.json (v9 AUROC for §5)
+      - results/experiment_2623_external_benchmarks.json (OOD results for §5.3)
+      - results/experiment_2625_fjd_safety_v2.json (FJD v2 for §7)
+      - results/experiment_2631_distribution_final_mile.json (IPFS CID for §8 — may not exist yet)
+
+      TASK: Update paper-v6 with .251 results and produce final arXiv submission package.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. Read results/experiment_2622_ensemble_v9_adversarial_val.json.
+            If adversarially_verified != true: write honest_verdict blocked_gate_not_met; exit.
+         b. Locate docs/arxiv-submission/ and docs/paper-v6/main.tex (or equiv).
+            If main.tex not found: check docs/, papers/, manuscript/. Record latex_file_path.
+         c. `command -v pdflatex || command -v xelatex || command -v lualatex` succeeds.
+            If no LaTeX: write honest_verdict blocked_latex_not_installed; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Update §5 (Experimental Results) in main.tex:
+         - Replace v7b AUROC (0.9857) with v9 adversarially-validated mean ± std from exp2622
+         - Add §5.2 "External Benchmark Validation" with HalluScan AUROC from exp2623
+         - If OOD delta < 0: add honest limitation note in §5.2
+
+      2. Update §7 (Safety Classifier):
+         - Replace stub with FJD v2 results from exp2625 (safety_auroc_v2)
+         - Document FJD logit-temperature scaling proxy technique
+
+      3. Update §8 (Distribution and Reproducibility):
+         - Add IPFS CID from results/experiment_2631_distribution_final_mile.json if available
+         - If exp2631 hasn't run yet: add CID placeholder "[CID: pending exp2631]"
+         - Confirm HF model card URL and PyPI package name (carnot-ebm)
+
+      4. Run LaTeX compilation: `cd docs/arxiv-submission && pdflatex -interaction=nonstopmode main.tex`
+         Record latex_compile_success (bool) and any errors.
+
+      5. Generate final arXiv submission package:
+         - ZIP: main.tex, bibliography, figures
+         - Produce operator action checklist (DO NOT submit — operator-only action)
+
+      6. Write results/experiment_2629_paper_v6_polish.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - submission_package_ready: bool — True iff LaTeX compiles AND all sections updated
+        principle: "Operator-Only rule: True means ready for operator to submit; this task NEVER submits."
+      - latex_compile_success: bool
+        principle: "Paper must compile cleanly; failed compilation = package not ready."
+      - ensemble_v9_auroc_in_paper: float — the AUROC value written into §5
+        principle: "Confirms the adversarially-validated number (not the single-seed one) is in the paper."
+      - paper_updated_with_v9: bool
+        principle: "Gate for capstone: paper must reflect .251 results before operator submission."
+      - sections_updated: list of str — which sections were updated (§5, §7, §8)
+        principle: "Audit trail for what was changed in this session."
+      - duration_s: float
+        principle: "LaTeX compilation + file updates take >= 5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record including adversarial gate check."
+
+      Do NOT submit to arXiv. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2630
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2630_gguf_pipeline_smoke.json"
+    title: "Live GGUF Pipeline Smoke: Ensemble v9 End-to-End on Real Model Outputs"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: integration
+
+    prior_failures:
+      - experiment_id: exp443-eorm-jepa-live-data
+        verdict: "complete: JEPA AUC improved 0.457→0.571 on 57 real FoVer-labeled CoT steps"
+        addressed_by: "exp443 ran the EORM+JEPA pipeline on live GPU data in .447 era. This runs ensemble v9 (incorporating real-corpus tier0s/tier0u, Tier 0z) on outputs from a locally-cached SOTA GGUF model — a different ensemble and different model family. Goal is to validate that ensemble v9 works on real GGUF outputs, not FoVer corpus pairs."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Ensemble v9 has been evaluated on FoVer corpus (exp2622) and external benchmarks (exp2623).
+      But FoVer is a labeled (context, claim) corpus — not real GGUF model outputs. This task
+      validates that ensemble v9 correctly scores the outputs from a locally-cached SOTA GGUF model.
+
+      SOTA models (CLAUDE.md mandate — must use at least one):
+      1. unsloth/Qwen3.6-35B-A3B-GGUF (~Q4 quant, ~20GB)
+      2. unsloth/gemma-4-31B-it-GGUF (~Q4 quant, ~18GB)
+      3. unsloth/gemma-4-26B-A4B-it-GGUF (~Q4 quant, ~15GB)
+
+      This task generates 20 test inputs, runs them through the locally-cached model (if available),
+      and runs ensemble v9 on the outputs. If no SOTA model is cached, use Qwen3.5-0.8B-GGUF as
+      a CPU smoke-test (NOT for headline results).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline)
+      - python/carnot/verify/ (ensemble v9 components)
+      - scripts/experiment_template.py (cached_sota_pair() pattern)
+
+      TASK: End-to-end pipeline smoke test with GGUF model outputs.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         b. Check for cached SOTA models (in priority order):
+            - `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/` (non-empty)
+            - `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/` (non-empty)
+            - `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/` (non-empty)
+            - `ls ~/.cache/huggingface/hub/models--Qwen--Qwen3.5-0.8B-GGUF/` (CPU fallback only)
+            Record which model is available as model_used.
+         c. `command -v llama-cli || ls {project_root}/llama.cpp/llama-cli` succeeds.
+            If llama.cpp not available: check for Python llama_cpp: `python -c "import llama_cpp"`.
+            If neither: write honest_verdict blocked_llama_cpp_not_available; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Generate 20 test prompts: 10 factual questions (expect correct responses) +
+         10 misleading questions designed to induce hallucination (e.g., "What year did X happen
+         (incorrect premise)?"). Log prompts_generated=True.
+
+      2. Run model inference (if SOTA model cached; skip inference if CPU fallback only):
+         WALL-CLOCK MINIMUM: GGUF model loading takes >= 30s for any model > 1B.
+         For each prompt: llama-cli --model <model_path> --prompt "<prompt>" -n 50
+         Record response text, inference_mode ('live_gguf' or 'cpu_smoke_only').
+
+      3. For each (prompt, response) pair:
+         - Construct (context=prompt, claim=response) for ensemble scoring
+         - Run ensemble v9: score = pipeline.score(context, claim) (via VerifyRepairPipeline)
+         - Record (score, inference_mode)
+         Compute: mean_score, score_std, verification_rate (fraction flagged as hallucination).
+
+      4. Compute pipeline_e2e_latency_mean_s = mean wall-clock time per (prompt → verify) cycle.
+         Target: pipeline_e2e_latency_mean_s < 30.0.
+
+      5. Write results/experiment_2630_gguf_pipeline_smoke.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - model_used: str — which SOTA model was available ('Qwen3.6-35B-A3B-GGUF', 'gemma-4-31B-it-GGUF', etc.) or 'cpu_smoke_fallback'
+        principle: "CLAUDE.md mandate: at least one SOTA GGUF or documented CPU fallback."
+      - inference_mode: str — 'live_gguf' or 'cpu_smoke_only'
+        principle: "live_gguf = real GPU inference; cpu_smoke_only = not a headline-eligible result."
+      - n_prompts: int — number of prompts tested (target: 20)
+        principle: "Statistical minimum for pipeline latency measurement."
+      - pipeline_e2e_latency_mean_s: float — mean verify latency per example
+        principle: "Target < 30s; > 30s indicates a pipeline bottleneck to fix before deployment."
+      - verification_rate: float — fraction of examples flagged by ensemble v9
+        principle: "Expected ~0.5 on mixed corpus; 0.0 or 1.0 would suggest a degenerate verifier."
+      - random_seed: 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "GGUF model inference >= 30s per example; total >= 600s for 20 examples."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records model cache check and llama.cpp availability."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2631
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2631_distribution_final_mile.json"
+    title: "Distribution Final Mile: Post-v9 HF Model Card + IPFS CID Verification"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    track: distribution
+
+    prior_failures:
+      - experiment_id: exp2614-hf-ipfs-rule3
+        verdict: "complete: HF citation stub added; IPFS pin attempted"
+        addressed_by: "exp2614 (.250) added HF citation stub and attempted IPFS pin. This does the POST-v9 update: updates HF model card with adversarially-validated v9 AUROC from exp2622 (not the single-seed claim from .250), verifies the IPFS CID is actually accessible (not just pinned), and adds v9 weights hash to model card. Different scope: verification and v9 update vs. initial citation stub."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Rule 3 (CLAUDE.md Decentralization): "Distribution mirroring for any published artifact.
+      HuggingFace as primary channel + IPFS as secondary channel."
+
+      exp2614 (.250) added a citation stub and attempted IPFS pin. This task:
+      1. Updates HF model card with adversarially-validated v9 AUROC
+      2. Verifies the IPFS CID is accessible (not just claimed as pinned)
+      3. Updates README Distribution Channels section
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2614_hf_model_card_ipfs.json (or exp2614 artifact)
+      - results/experiment_2622_ensemble_v9_adversarial_val.json (v9 AUROC for model card)
+
+      TASK: Post-v9 distribution update and IPFS CID verification.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. Network available: `curl -sf -o /dev/null https://huggingface.co/api/models` succeeds.
+            If not: write honest_verdict blocked_network_unavailable; exit.
+         b. Read results/experiment_2614_hf_model_card_ipfs.json to get existing IPFS CID.
+            If file absent or no CID recorded: ipfs_cid_prior = 'none'.
+         c. Read results/experiment_2622_ensemble_v9_adversarial_val.json for v9 AUROC.
+            If file absent: v9_auroc = 'pending_exp2622'; continue with placeholder.
+
+      1. If ipfs_cid_prior != 'none': verify IPFS CID accessibility:
+         `curl -sf -o /dev/null "https://ipfs.io/ipfs/{ipfs_cid_prior}"` OR
+         `curl -sf -o /dev/null "https://cloudflare-ipfs.com/ipfs/{ipfs_cid_prior}"`
+         Record ipfs_cid_verified (bool) and ipfs_gateway_used.
+
+      2. Update README.md Distribution Channels section (or create it if absent):
+         "## Distribution Channels
+         - **HuggingFace (primary):** https://huggingface.co/Carnot-EBM
+         - **PyPI:** pip install carnot-ebm
+         - **IPFS (secondary):** /ipfs/{ipfs_cid_prior} (CID of arXiv preprint package)
+         - **GitHub:** https://github.com/Carnot-EBM/carnot-ebm
+         Ensemble v9 AUROC: {v9_auroc_mean:.4f} ± {v9_auroc_std:.4f} (adversarially validated, {date})"
+
+      3. If HuggingFace credentials available (`huggingface-cli whoami` succeeds AND not anonymous):
+         Update the HF model card description to include v9 AUROC.
+         Record hf_model_card_updated: true.
+         If credentials not available: record hf_model_card_updated: false with reason.
+
+      4. Write results/experiment_2631_distribution_final_mile.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - ipfs_cid_verified: bool — True iff CID is accessible via public gateway
+        principle: "Rule 3 compliance: pinned-but-inaccessible CID does not satisfy distribution mandate."
+      - ipfs_gateway_used: str — which gateway responded (ipfs.io or cloudflare)
+        principle: "Documents which IPFS gateway confirmed accessibility."
+      - hf_model_card_updated: bool
+        principle: "HuggingFace primary channel update status."
+      - readme_updated: bool — True iff README.md Distribution Channels section written
+        principle: "Confirms user-facing distribution docs are current with v9 claims."
+      - v9_auroc_in_readme: float or str — value written into README
+        principle: "Audit trail for what AUROC value was published externally."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+      - duration_s: float
+        principle: "Network IPFS verification takes >= 1s."
+
+      Do NOT push git commits. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2632
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2632_capstone_v251.json"
+    title: "Capstone v251: Cross-Artifact Synthesis + Operator Recommendations"
+    agent_type: claude
+    model: opus
+    max_turns: 100
+    track: synthesis
+    requires_claude: true
+
+    prior_failures:
+      - experiment_id: exp2619-capstone-v250
+        verdict: "complete: single-seed synthesis of .250 results (sklearn fix, verifier chain unblocked)"
+        addressed_by: "exp2619 synthesized 13 .250 experiments. This synthesizes 13 .251 experiments including adversarially-validated v9 AUROC (5-seed), external benchmark results (HalluScan + PARALLAX), TTT loop prototype (FR-11 Tier 3 closure), FJD v2 safety, BB-UCP conformal, KV260 continuity, paper polish, and GGUF smoke. Substantially different evidence base requiring multi-artifact cross-synthesis and operator recommendations under ambiguity."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.251 is complete. This capstone synthesizes all 13 experiment results
+      and produces operator action recommendations.
+
+      EXISTING CODE TO READ FIRST (read each before synthesizing):
+      - results/experiment_2621_archive_v250.json
+      - results/experiment_2622_ensemble_v9_adversarial_val.json (PRIMARY: adversarially_verified, AUROC mean/std)
+      - results/experiment_2623_external_benchmarks.json (halluscan_auroc, ood_generalization_delta)
+      - results/experiment_2624_ttt_loop_prototype.json (ttt_loop_ran, fr11_tier3_ttt_closed)
+      - results/experiment_2625_fjd_safety_v2.json (safety_auroc_v2, safety_tier_b_v2_viable)
+      - results/experiment_2626_multi_exit_kan.json (multi_exit_viable, speedup_estimate)
+      - results/experiment_2627_bb_ucp_conformal.json (coverage_at_90pct, bb_interval_width)
+      - results/experiment_2628_kv260_continuity.json (kv260_sd_detected, branch, kv260_terminal_candidate)
+      - results/experiment_2629_paper_v6_polish.json (submission_package_ready, latex_compile_success)
+      - results/experiment_2630_gguf_pipeline_smoke.json (inference_mode, pipeline_e2e_latency_mean_s)
+      - results/experiment_2631_distribution_final_mile.json (ipfs_cid_verified, readme_updated)
+      - ops/status.md (most recent operational state)
+
+      TASK: Synthesize all .251 results and produce operator recommendations.
+
+      CONCRETE STEPS:
+      0. Read all result files listed above. For each, record: honest_verdict, key metric(s), any blocked/failed state.
+
+      1. Evaluate the 7 success criteria from research-roadmap-v251.md:
+         a. adversarially_verified: true → ensemble v9 AUROC headline-eligible
+         b. halluscan_auroc > 0.70 → OOD generalization confirmed
+         c. ttt_loop_ran: true → FR-11 Tier 3 TTT prototype operational
+         d. safety_auroc_v2 > 0.70 → FJD v2 improves over v1
+         e. submission_package_ready: true → paper ready for operator arXiv submit
+         f. pipeline_e2e_latency_mean_s < 30.0 → live GGUF smoke passes
+         g. ipfs_cid_verified: true → content-addressed distribution confirmed
+
+      2. Determine n_criteria_met (0-7) and overall milestone verdict.
+
+      3. Assess Phase 1 ship readiness:
+         Phase 1 gates: PyPI package (carnot-ebm) + HF mirror + docs + ≥1 reproducer.
+         Are all 4 gates satisfied? Record phase1_ship_ready bool.
+
+      4. Produce operator action checklist (OPERATOR-ONLY items per CLAUDE.md):
+         a. arXiv submission: if submission_package_ready: true → recommend operator submit.
+            Include: submission_package path, arXiv category (cs.LG + cs.AI), checklist.
+         b. KV260 SD card: if kv260_sd_detected=False → remind operator to insert SD.
+         c. Any other operator-facing action items from experiment results.
+
+      5. Document the 3 biggest gaps for .252:
+         Based on what failed or remained incomplete in .251.
+
+      6. Update ops/status.md: add Session .251 Complete section.
+         Update ops/changelog.md: add .251 entry.
+
+      7. Write results/experiment_2632_capstone_v251.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix for conductor reconciler."
+      - n_criteria_met: int — count of 7 success criteria met
+        principle: "Milestone scorecard; < 5 suggests need for targeted .252 follow-up."
+      - adversarially_verified: bool — from exp2622
+        principle: "Primary gate: if false, ensemble v9 is not paper-citable; .252 must re-validate."
+      - fr11_tier3_ttt_closed: bool — from exp2624
+        principle: "FR-11 completion status; false = Phase 1 incomplete at FR-11 level."
+      - phase1_ship_ready: bool — all 4 Phase 1 gates satisfied
+        principle: "Phase 1 ship check; operator needs this to make the PyPI+HF announcement."
+      - submission_package_ready: bool — from exp2629
+        principle: "Operator-action gate: True = package ready for operator to submit to arXiv."
+      - n_experiments_completed: int — count of experiments with terminal honest_verdict
+        principle: "Sustained execution metric; target >= 7 to confirm drought is broken."
+      - operator_action_checklist: list of str — ordered list of operator-facing actions
+        principle: "Operator reads this as the session handoff; must be actionable and specific."
+      - top_3_gaps_for_252: list of str — biggest gaps for next milestone
+        principle: "Next planner reads this as the primary carry-forward signal."
+      - duration_s: float
+        principle: "Capstone cross-reads 12+ artifacts; >= 5s is expected."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Records which result files were actually read."
+
+      Do NOT submit to arXiv. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2633
+    milestone: "2026.05.251"
+    deliverable: "results/experiment_2633_retro_v251.json"
+    title: "Milestone .251 Retrospective"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    track: meta
+
+    prior_failures:
+      - experiment_id: exp2620-retro-v250
+        verdict: "complete: zero-experiment-commits retro (25th consecutive empty timing window)"
+        addressed_by: "exp2620 was the .250 retro documenting the 25-milestone drought (sklearn blocker). This .251 retro documents the FIRST post-drought milestone. Different content: .251 has substantive experiment results (adversarial val, external benchmarks, TTT, safety v2). Not a repeat scope."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.251 is complete. This retrospective evaluates HOW work was executed,
+      not just WHAT was produced. Special focus: is the 25-milestone execution drought broken?
+      (The drought was caused by sklearn missing from the conductor environment; exp2609 fixed it.)
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2632_capstone_v251.json (n_experiments_completed, n_criteria_met)
+      - ops/conductor-log.md (last 50 lines for timing data)
+      - ops/changelog.md (last 20 lines)
+
+      TASK: Write milestone .251 operational retrospective.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: none — this task runs unconditionally.
+
+      1. Read exp2632 capstone. Extract: n_experiments_completed, n_criteria_met, adversarially_verified,
+         fr11_tier3_ttt_closed, phase1_ship_ready, top_3_gaps_for_252.
+
+      2. Check execution health:
+         - Is n_experiments_completed > 0? (This is the critical question — was the drought broken?)
+         - Any new SKIPped or GATE_BLOCKed tasks?
+         - GPU utilization data from `nvidia-smi --query-gpu=utilization.gpu --format=csv,noheader`
+
+      3. Compute milestone success rate: n_criteria_met / 7.
+
+      4. Top 3 operational findings (process, not content):
+         - Was the drought broken? If yes, what broke it?
+         - Any new structural failure modes emerging?
+         - Execution time per experiment (wall-clock estimate from conductor log)?
+
+      5. Top 3 gaps for .252 (carry forward from capstone).
+
+      6. Write results/experiment_2633_retro_v251.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - n_experiments_completed: int — from capstone
+        principle: "Key drought-break metric: > 0 confirms the 25-milestone drought is ended."
+      - drought_broken: bool — n_experiments_completed > 0
+        principle: "Primary retro finding for .251: drought break is the structural milestone."
+      - n_criteria_met: int — 7-point scorecard from capstone
+        principle: "Milestone quality score for trend tracking."
+      - success_rate: float — n_criteria_met / 7
+        principle: "Normalized scorecard for cross-milestone comparison."
+      - top_3_operational_findings: list of str
+        principle: "Process meta-reflection per CLAUDE.md: evaluate HOW work was executed."
+      - top_3_gaps_for_252: list of str
+        principle: "Next planner's carry-forward priorities."
+      - duration_s: float
+        principle: "Real retro takes >= 1s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

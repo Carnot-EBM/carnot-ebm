@@ -1,5 +1,20 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.251 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.251. All 13 tasks in .250 (exp2608–exp2620) confirmed complete by user before this session.
+  - **arxiv sweep** (3 new papers added to `research-references.md`):
+    - arXiv:2605.17028 (PARALLAX: Separating Genuine Hallucination Detection from Benchmark Artifacts — 22 detectors, 6 corpora, artifact-controlled evaluation — added to exp2623 as second OOD benchmark)
+    - arXiv:2602.11364 (DiffuTruth: Detecting Hallucinations via Diffusion Model Likelihoods — thermodynamic verification, validates Carnot's energy-basin framework — paper-v6 §2 citation candidate)
+    - arXiv:2603.22303 (AvgWD/EigenWD: Sample Transform Cost-Based Training-Free Hallucination Detection — Wasserstein/eigenvalue embedding signals — future Tier 0w candidate)
+  - **Updated**: `openspec/change-proposals/research-roadmap-v251.md` (added Post-.250 Planning Sweep new papers header)
+  - **Created**: `research-roadmap-next.yaml` (13 tasks exp2621–exp2633, milestone 2026.05.251)
+  - **Milestone title**: "Ensemble v9 Adversarial Validation + External Benchmarks + TTT + FJD Safety v2"
+  - **Critical path**: exp2621 (archive/activate) → exp2622 (5-seed adversarial val, mean AUROC ≥ 0.90) → {exp2623 (HalluScan+PARALLAX), exp2624 (FR-11 TTT), exp2625 (FJD safety), exp2626 (Multi-Exit KAN), exp2627 (BB-UCP conformal), exp2628 (KV260), exp2629 (paper v6 polish), exp2630 (GGUF smoke), exp2631 (HF+IPFS)} → exp2632 (capstone) → exp2633 (retro)
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13 codex, 1/13 claude+opus for capstone), prior_failures blocks (13/13 tasks, all 4 sub-fields), PRECONDITIONS step 0 (all compute-bound tasks), principle-annotated artifact fields, terminal-prefix verdict discipline, Operator-Only External Publication (exp2629/2631 never submit), Hardware-Task Continuity (KV260 exp2628 — GateMate+PolarFire TERMINAL), Exclusion-Manifest cross-check (0 scope matches across 15 retired IDs).
+  - **FR-11 self-learning task**: exp2624 (VerifierDrivenTTT class, `python/carnot/pipeline/ttt_loop.py`, continuous_self_learning_task: true)
+  - **Gate structure**: exp2627 and exp2629 both structurally gated on exp2622.adversarially_verified==true
+
 ## 2026-05-20 (Milestone 2026.05.250 Operational Retrospective)
 
 - Operational retrospective for milestone 2026.05.250 written to `results/operational_retro_2026_05_250.json`. Zero experiment commits found — twenty-fifth consecutive empty-timing-window retro. Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. Root cause of the 25-milestone execution drought confirmed as sklearn not installed in the conductor Python environment, blocking exp2596 (tier0s retrain), exp2597 (tier0u fix), and exp2600 (safety corpus) with `honest_verdict: blocked_sklearn`. Top-3 leverage actions: (1) activate exp2609 (scikit-learn install) same-session as this retro to unblock the full retrain dependency chain; (2) fix timing-script look-back to anchor to conductor-state.json activation timestamp to eliminate false-empty retro reports; (3) deploy persistent conductor daemon to close the structural planning-execution gap. Estimated time savings: 0% (no execution data this milestone).

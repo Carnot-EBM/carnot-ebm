@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.251 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-20T08:43:22Z | 2026-05-20T08:58:50Z | Plan milestone 2026.05.251: read 12 project files, arxiv sweep (3 new papers: arXiv:2605.17028 PARALLAX, arXiv:2602.11364 DiffuTruth, arXiv:2603.22303 AvgWD/EigenWD), updated research-references.md, updated openspec/change-proposals/research-roadmap-v251.md, created research-roadmap-next.yaml (13 tasks exp2621-exp2633). All CLAUDE.md mandatory disciplines applied: Codex-Default (12/13 codex), prior_failures blocks (13/13 tasks), PRECONDITIONS step 0 (all compute-bound tasks), principle-annotated artifact fields, terminal-prefix verdict discipline, Hardware-Task Continuity (KV260 only — GateMate+PolarFire TERMINAL). Exclusion manifest cross-check: 0 scope matches found across 15 retired IDs. Context compaction occurred mid-session; resumed from summary. | TBD |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
+
+---
+
 ## Session: 2026-05-20 Milestone 2026.05.250 Research Planning
 
 ### Turn Log

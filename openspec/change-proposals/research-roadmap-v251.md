@@ -5,6 +5,13 @@
 **Date:** 2026-05-20
 **Status:** PROPOSED
 
+## Post-.250 Planning Sweep New Papers (2026-05-20)
+
+Three new papers added to research-references.md from the .251 planning sweep:
+- **arXiv:2605.17028** (PARALLAX) — Meta-evaluation of 22 hallucination detectors on 6 corpora; artifact-controlled leaderboard; queued as additional evaluation target in exp2623.
+- **arXiv:2602.11364** (DiffuTruth / Energy of Falsehood) — Thermodynamic verification using NLI contradiction scores; validates Carnot's energy-basin hallucination framework; paper-v6 §2 citation.
+- **arXiv:2603.22303** (AvgWD/EigenWD) — Training-free embedding-geometry hallucination signals; candidate Tier 0w verifier requiring only embedding access.
+
 ---
 
 ## What Milestone .250 Proved (7 wins, 3 gaps)

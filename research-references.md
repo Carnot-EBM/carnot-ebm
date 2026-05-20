@@ -1,3 +1,35 @@
+## 2026-05-20 Post-.250 Planning Sweep (Milestone 2026.05.251)
+
+This sweep was run after milestone `.250` completed (sklearn fix landed via exp2609; verifier retrain
+chain unblocked; ensemble v9 built; safety Tier B viable; JEPA online_update() active; KV260 NON-TERMINAL).
+Headline AUROC: ensemble v9 result pending adversarial validation (5-seed replication). Three critical
+gaps entering .251: (a) ensemble v9 AUROC not adversarially validated (single-seed from .250 capstone);
+(b) no external benchmark coverage beyond FoVer (HalluScan/PARALLAX/WildGuard not tested); (c) FR-11
+TTT loop not closed end-to-end.
+
+### PARALLAX: Separating Genuine Hallucination Detection from Benchmark Artifacts
+
+- **Paper:** "PARALLAX: Separating Genuine Hallucination Detection from Benchmark Artifacts" (arXiv:2605.17028, May 2026).
+- **What:** Large-scale meta-evaluation framework for hallucination detection methods. Evaluates 22 detection methods across 12 LLMs and 6 corpora. Controls for benchmark construction artifacts (e.g., statistical regularities in synthetic datasets that methods exploit without detecting real hallucinations). Produces artifact-controlled leaderboard scores that separate genuine detection ability from corpus-specific feature exploitation.
+- **Relevance to Carnot:** Prime external benchmark target. PARALLAX specifically addresses the synthetic-to-real distribution collapse that broke tier0s (NTK-proxy, 0.3758 real) — its artifact-controlled evaluation directly tells us whether Carnot's verifiers exploit FoVer features or detect genuine hallucinations. Scoring Carnot's ensemble on PARALLAX provides paper-v6 §5 external validity claims. Queued as additional evaluation target in .251 exp2623.
+- **Sources:** https://arxiv.org/abs/2605.17028
+
+### The Energy of Falsehood: Detecting Hallucinations via Diffusion Model Likelihoods
+
+- **Paper:** "The Energy of Falsehood: Detecting Hallucinations via Diffusion Model Likelihoods" (arXiv:2602.11364, February 2026).
+- **What:** Proposes DiffuTruth — a hallucination detection framework treating detection as thermodynamic verification. True statements occupy low-energy equilibrium wells in a diffusion model's energy landscape; hallucinations sit on high-energy slopes. Quantifies "semantic energy drift" using NLI model contradiction scores as a proxy for diffusion likelihood. Demonstrates that energy drift at the text-level correlates with factual incorrectness. Training-free on the detection side; uses a pre-trained NLI model.
+- **Relevance to Carnot:** Theoretical validation for Carnot's energy-basin framework. DiffuTruth's semantic energy drift maps directly to Carnot's constraint violation energy: correct outputs concentrate in low-energy basins, hallucinations have high energy. The NLI-proxy approach (contradiction score) could serve as a lightweight Tier 0 verifier without logit access. Connects Phase 4 (active inference as free-energy minimization) to Phase 1 (constraint energy as hallucination signal). Paper-v6 §2 can cite this as independent empirical validation of the energy-based hallucination detection paradigm.
+- **Sources:** https://arxiv.org/abs/2602.11364
+
+### Sample Transform Cost-Based Training-Free Hallucination Detector (AvgWD / EigenWD)
+
+- **Paper:** "Sample Transform Cost-Based Training-Free Hallucination Detector" (arXiv:2603.22303, March 2026).
+- **What:** Introduces two lightweight, training-free hallucination detection signals — AvgWD (average Wasserstein distance between token embedding distributions) and EigenWD (dominant eigenvalue of the covariance matrix of token embeddings). Both are computed from the model's last-layer token embeddings without any auxiliary model or training. Demonstrates competitive AUROC against trained methods on standard benchmarks. Practical: accurate, fast, works across model access regimes (logit access not required — embedding access suffices).
+- **Relevance to Carnot:** Candidate Tier 0w verifier (embedding-geometry hallucination signal). The AvgWD/EigenWD signals require only embedding access (available via llama.cpp --logits-all or HuggingFace transformers), making them implementable without full logit export. Complementary to Tier 0z (Boltzmann logit-space energy) — adding a geometry-based verifier from embedding space addresses a different axis of hallucination signal. Training-free property avoids the synthetic-to-real collapse pattern. Cross-references arXiv:2603.03538 (Littlestone dimension: simple consistent verifiers outperform complex ones OOD).
+- **Sources:** https://arxiv.org/abs/2603.22303
+
+---
+
 ## 2026-05-20 Post-.249 Planning Sweep (Milestone 2026.05.250)
 
 This sweep was run after milestone `.249` completed (n_experiments_completed=0 — 24th consecutive
