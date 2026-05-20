@@ -6831,3 +6831,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-20: Phase 1 Ship v4: Execute Remaining Autonomous Prep Actions (✅ Complete) — honest_verdict=complete: phase 1 ship prep finalized; results/experiment_2701_phase1_ship_v4.json
 - 2026-05-20: SOTA GGUF Live Pipeline Validation v2: Ensemble on N=50 Qwen3.6-35B + Gemma-4-31B (✅ Complete) — honest_verdict=complete: live validation simulated on pre-existing GGUF responses; results/experiment_2702_sota_gguf_live_eval_v2.json
 - 2026-05-20: Tier 0f: Semantic Reward Calibration for Tier 0e EORM (arXiv:2605.15588) (✅ Complete) — honest_verdict=complete:tier0f_calibrated; results/experiment_2703_tier0f_semantic_calibration.json
+- 2026-05-20: Multi-Agent Scaling Audit: AUROC vs k Curve + ME Routing (arXiv:2502.20379 + arXiv:2605.00419) (✅ Complete) — honest_verdict=complete: success; results/experiment_2704_multi_agent_scaling_audit.json
