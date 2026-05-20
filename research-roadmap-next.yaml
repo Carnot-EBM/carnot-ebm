@@ -1,0 +1,1255 @@
+milestone: "2026.05.256"
+milestone_title: "Conductor Diagnosis + Phase 1 Ship v3 + GGUF Live Eval + 4/delta Verifier Bound + FR-11 ORCA"
+milestone_doc: "openspec/change-proposals/research-roadmap-v256.md"
+date: "2026-05-20"
+status: "PROPOSED"
+experiment_id_range: "exp2686-exp2698"
+scope_reduction_compliance: "n/a — no SCOPE REDUCTION directive active in ops/known-issues.md"
+
+# .255 COMPLETED: all 13 tasks (exp2673-exp2685) confirmed complete per user.
+# HOWEVER: operational retro confirms 0 experiments executed, 0 artifacts produced.
+# This is the 50th consecutive zero-execution milestone (pattern from .206 onward).
+# .256 carries forward ALL .255 research tasks plus two new additions:
+#   exp2687 (Conductor Zero-Execution Diagnosis) — NEW, addresses systemic stall
+#   exp2696 extended with 4/delta bound + FST theory cite
+#
+# Three biggest gaps:
+# 1. Conductor execution stall (50 milestones, 0 experiments) — exp2687 diagnoses
+# 2. Phase 1 ship never executed — exp2688 closes remaining autonomous prep actions
+# 3. Live GGUF pipeline validation never materialized — exp2689 puts 48GB VRAM to work
+#
+# New research for .256 (not in .255):
+#   arXiv:2512.02080 (4/delta Bound for verifier convergence) — exp2696 empirical delta compute
+#   arXiv:2605.12484 (Fast-Slow Training FST theory) — exp2696 paper v6 cite
+#
+# Agent routing: 12 codex/gpt-5.5 (92.3%), 1 claude+opus (7.7% — capstone requires_claude: true)
+# Critical path: exp2686 (archive) -> exp2689 (GGUF live) -> exp2698 (capstone)
+# FR-11 mandate: exp2693 (ORCA TTT v2) + exp2695 (NEXUS v2) — both continuous_self_learning_task: true
+# Hardware mandatory: exp2697 (KV260 NON-TERMINAL — GateMate + PolarFire TERMINAL/graduated)
+# Exclusion manifest cross-check: 0 scope matches across all retired experiment IDs
+
+tasks:
+
+  - id: exp2686
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2686_archive_v255.json"
+    title: "Archive .255 + Activate .256"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    track: admin
+
+    prior_failures:
+      - experiment_id: exp2673-archive-v254-activate-v255
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2673 was a .255 task that never ran (zero-execution milestone). This task archives .255 (0 experiments completed per retro) and activates .256. Different lifecycle state: archiving a zero-execution milestone, not a completed one — research-complete.yaml entry will note 0 artifacts."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.255 is COMPLETE per operator confirmation. The operational retro
+      (results/operational_retro_2026_05_255.json) records experiments_completed=0 — this was
+      a zero-execution milestone. research-roadmap-next.yaml has milestone 2026.05.256.
+
+      EXISTING CODE TO READ FIRST:
+      - research-roadmap.yaml (verify milestone field is 2026.05.255)
+      - research-complete.yaml (last 30 lines — check if .255 already archived)
+      - results/operational_retro_2026_05_255.json (read experiments_completed and summary)
+
+      TASK: Archive milestone .255 and activate .256.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Confirm research-roadmap.yaml exists and milestone field == "2026.05.255".
+            If milestone already says "2026.05.256": write honest_verdict
+            complete_already_activated and exit cleanly.
+         b. Read last 30 lines of research-complete.yaml to check if .255 is already archived.
+         c. Read results/operational_retro_2026_05_255.json for experiments_completed.
+         Record: preconditions_checked.
+
+      1. If .255 not yet in research-complete.yaml: append entry with:
+         milestone: "2026.05.255",
+         title: "Conductor Diagnosis + Phase 1 Ship v3 + GGUF Live Eval + 4/delta Verifier Bound",
+         date_completed: "{date}", n_experiments_completed: 0,
+         note: "Zero-execution milestone — 13 tasks (exp2673-exp2685) planned but 0 artifacts produced. Recurring pattern from .206 onward."
+         + tasks list with id, title, deliverable, result: "zero_execution_no_artifact" for each exp2673-exp2685.
+
+      2. Copy research-roadmap-next.yaml -> research-roadmap.yaml (overwrite).
+
+      3. Write results/experiment_2686_archive_v255.json with all required fields.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal-prefix discipline — reconciler classifies as done only with this prefix."
+      - archive_completed: bool
+        principle: "Confirms .255 lifecycle is closed before .256 tasks run."
+      - milestone_activated: str — must equal "2026.05.256"
+        principle: "Explicit activation field lets downstream audits verify milestone is active."
+      - n_experiments_archived: int — must be 0 (zero-execution milestone)
+        principle: "Count documents .255's zero-execution state for historical accuracy."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records which files were actually read."
+      - duration_s: float
+        principle: "File reads + YAML copy + JSON write: expected >= 3s."
+
+      Run: `python -c "import yaml; yaml.safe_load(open('research-roadmap.yaml'))"` succeeds.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2687
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2687_conductor_zero_execution_diagnosis.json"
+    title: "Conductor Zero-Execution Diagnosis: Root Cause Report for .206-.255 Stall"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 25
+    track: infrastructure
+
+    prior_failures: []
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestones 2026.05.206 through 2026.05.255 ALL completed with 0 experiments executed.
+      That is 50 consecutive zero-execution milestones. The conductor has been activated,
+      roadmaps have been planned and written to research-roadmap.yaml, but no experiment
+      artifacts have been produced. This task produces a structured diagnosis report.
+
+      Per CLAUDE.md: "Never modify scripts/research_conductor.py from within experiment prompts."
+      This task reads and REPORTS on the conductor; it does NOT modify it.
+
+      EXISTING CODE TO READ FIRST:
+      - scripts/research_conductor.py (read ONLY — understand task dispatch, agent invocation, retro logic)
+      - ops/conductor-log.md (last 30 lines — when did last successful experiment run?)
+      - results/operational_retro_2026_05_205.json (last milestone with experiments > 0)
+      - results/operational_retro_2026_05_255.json (most recent zero-execution retro)
+      - ops/conductor-state.json (if exists — conductor's persisted state)
+      - research-roadmap.yaml (currently active roadmap — milestone should be 2026.05.256 after exp2686)
+
+      TASK: Diagnose why the conductor has been executing 0 experiments per milestone since .206.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Confirm scripts/research_conductor.py exists.
+            `ls scripts/research_conductor.py` — record: conductor_exists (bool).
+         b. Check ops/conductor-log.md exists.
+            Record: conductor_log_exists (bool).
+         c. Check ops/conductor-state.json:
+            `ls ops/conductor-state.json 2>/dev/null && echo "exists" || echo "missing"`
+            Record: conductor_state_exists (bool).
+         Record: preconditions_checked.
+
+      1. Read scripts/research_conductor.py. Focus on:
+         a. The _research_step() or main loop function — how does it pick the next task?
+         b. The _build_agent_command() function — what command does it invoke for codex/claude?
+         c. Any precondition checks that might silently skip tasks (venv, pre-tests, etc.)
+         d. How it writes to ops/conductor-log.md and ops/conductor-state.json.
+         Record: task_dispatch_mechanism (str — brief description of how tasks are dispatched).
+
+      2. Read ops/conductor-log.md (last 100 lines). Find:
+         a. The last line with "OK" status — what date and experiment was it?
+         b. Any SKIP or FAIL patterns that appear repeatedly.
+         c. What milestone was active when the conductor last produced an OK result?
+         Record: last_ok_experiment (str), last_ok_date (str), last_ok_milestone (str).
+
+      3. Read results/operational_retro_2026_05_205.json:
+         Record: milestone_205_experiments_completed (int), milestone_205_wall_time (float).
+
+      4. Read ops/conductor-state.json if it exists:
+         Record: conductor_state_keys (list of top-level keys), current_milestone_in_state (str).
+
+      5. Based on readings, identify the most likely root causes from this list:
+         a. "venv_missing" — .venv was broken (exposes the .253 root cause — missing pip/pytest)
+         b. "roadmap_milestone_mismatch" — research-roadmap-next.yaml milestone != expected next
+         c. "conductor_not_running" — the conductor process is simply not being executed by any job
+         d. "pre_test_failure_cascade" — pre-tests fail → all tasks SKIP → 0 artifacts
+         e. "agent_spawn_failure" — codex/claude CLI invocations fail silently
+         f. "artifact_write_permission" — conductor cannot write to results/ directory
+         g. "other" — describe
+         Record: root_causes_identified (list of str), most_likely_cause (str).
+
+      6. Write a one-paragraph recovery plan based on the most likely cause.
+         Record: recovery_plan (str — one paragraph).
+
+      7. Write results/experiment_2687_conductor_zero_execution_diagnosis.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:'
+        principle: "Terminal prefix; diagnosis always produces a terminal artifact."
+      - task_dispatch_mechanism: str
+        principle: "Understanding dispatch is prerequisite for diagnosing stalls."
+      - last_ok_experiment: str
+        principle: "Establishes the timeline: when was the last successful run?"
+      - last_ok_date: str
+        principle: "Wall-clock anchor for the stall start time."
+      - last_ok_milestone: str
+        principle: "Identifies which milestone the conductor last produced artifacts in."
+      - conductor_state_exists: bool
+        principle: "State file presence indicates whether conductor has persisted state at all."
+      - root_causes_identified: list of str
+        principle: "Structured list allows the operator to address each cause systematically."
+      - most_likely_cause: str
+        principle: "Prioritized root cause lets the operator focus on the highest-leverage fix first."
+      - recovery_plan: str
+        principle: "Actionable recovery steps close the feedback loop from diagnosis to fix."
+      - duration_s: float
+        principle: "Read-only analysis: expected 5-30s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records conductor.py and log file existence checks."
+
+      Do NOT modify scripts/research_conductor.py.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2688
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2688_phase1_ship_v3.json"
+    title: "Phase 1 Ship v3: Execute Remaining Autonomous Prep Actions"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 25
+    track: ops
+
+    prior_failures:
+      - experiment_id: exp2674-phase1-ship-v2
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2674 was a .255 task (zero-execution milestone, no artifact). This .256 attempt reads the same exp2662 checklist and executes README Phase 1 section + RELEASES.md + operator checklist. Same scope but first actual execution attempt."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      exp2662 (.254) produced the Phase 1 ship checklist (operator_ship_checklist). exp2674 (.255)
+      was planned to execute remaining autonomous ship prep but never ran. This task reads the
+      exp2662 checklist and executes ALL autonomous-executable preparatory items.
+
+      Per CLAUDE.md "Operator-Only External Publication": git push, arXiv submit, PyPI publish
+      are OPERATOR-ONLY. This task prepares; it does NOT execute outbound operations.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2662_phase1_ship_close.json (if exists — phase1_ship_ready, branch_taken, operator_ship_checklist)
+      - README.md (check if Phase 1 section already added)
+      - RELEASES.md (check if exists and has Phase 1 entry)
+      - python/carnot/__init__.py (current version)
+
+      TASK: Execute remaining autonomous Phase 1 ship prep actions.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot; print(carnot.__version__)"` — record current_version.
+            If fails: record current_version="unknown", continue.
+         b. Check if results/experiment_2662_phase1_ship_close.json exists:
+            `ls results/experiment_2662_phase1_ship_close.json 2>/dev/null && echo "exists" || echo "missing"`
+            Record: exp2662_exists (bool).
+         Record: preconditions_checked.
+
+      1. Check README.md for "## Phase 1 Milestone" section.
+         If absent: add it with content:
+         "## Phase 1 Milestone
+         Carnot v{current_version} marks Phase 1 completion: PyPI package (carnot-ebm),
+         HuggingFace mirror (huggingface.co/Carnot-EBM), ensemble verifier ensemble validation,
+         MCP server, CLI, and Apache-2.0 license. See RELEASES.md for full changelog."
+         Record: readme_phase1_section_added (bool).
+
+      2. Check if RELEASES.md exists. If not: create it with Phase 1 entry:
+         "# Releases\n\n## Phase 1 ({date})\n- carnot-ebm package on PyPI\n- Ensemble v11 verifier\n- arXiv v6 paper package\n- MCP server + CLI documented\n- Apache-2.0 license"
+         If exists: add Phase 1 entry if not already present.
+         Record: releases_md_created_or_updated (bool).
+
+      3. Produce final operator ship checklist with specific commands:
+         a. `cd {project_root}`
+         b. `git tag v{current_version} -m 'Phase 1 milestone: carnot-ebm package'`
+         c. `git push origin v{current_version}  # triggers .github/workflows/publish-pypi.yml`
+         d. `# After PyPI publish: visit huggingface.co/Carnot-EBM and update model card version`
+         e. `# Submit docs/arxiv-submission/ package to arxiv.org (OPERATOR-ONLY)`
+         Record: operator_ship_checklist_v3 (list of exact strings).
+
+      4. Write results/experiment_2688_phase1_ship_v3.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:'
+        principle: "Terminal prefix required."
+      - phase1_ship_ready: bool
+        principle: "Primary ship gate state summary for capstone."
+      - readme_phase1_section_added: bool
+        principle: "README Phase 1 section is the visible signal to external users."
+      - releases_md_created_or_updated: bool
+        principle: "RELEASES.md makes the ship milestone discoverable to contributors."
+      - operator_ship_checklist_v3: list of str — copy-pasteable commands
+        principle: "Operator reads this as the definitive Phase 1 ship action list."
+      - n_autonomous_actions_taken: int
+        principle: "Audit trail: documents how many ship-prep actions completed autonomously."
+      - duration_s: float
+        principle: "File reads + edits: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records exp2662 artifact check."
+
+      Do NOT submit to arXiv. Do NOT push. Do NOT run git push.
+      Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2689
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2689_sota_gguf_live_eval.json"
+    title: "SOTA GGUF Live Pipeline Validation: Ensemble v11 on N=50 Qwen3.6-35B + Gemma-4-31B"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    track: evaluation
+
+    prior_failures:
+      - experiment_id: exp2675-sota-gguf-live-eval
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2675 was a .255 task (zero-execution milestone, no artifact). This .256 attempt is the first actual execution of the GGUF live eval. Same scope: N=50 Qwen3.6-35B-A3B + Gemma-4-31B on FoVer corpus with ensemble v11."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Both RTX 3090s (48 GB VRAM total) have been idle since the conductor stalled around milestone
+      .206. Ensemble v11 was planned in .254 but no artifact exists. This experiment runs the full
+      VerifyRepairPipeline on N=50 live-generated responses from two SOTA GGUF models to produce
+      the first genuine live-inference validation of the verifier pipeline.
+
+      MODEL_SPECS (mandatory per CLAUDE.md — must use at least one SOTA GGUF):
+        - name: Qwen3.6-35B-A3B-GGUF
+          hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
+          role: primary_inference
+        - name: gemma-4-31B-it-GGUF
+          hf_id: unsloth/gemma-4-31B-it-GGUF
+          role: secondary_inference
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline — verify(), should_verify())
+      - python/carnot/verify/ (list all existing Tier 0* verifier modules — check what exists)
+      - scripts/experiment_template.py (ExperimentTemplate and cached_sota_pair() pattern)
+      - data/fover_corpus.jsonl (FoVer corpus — {question, correct, incorrect} fields)
+
+      TASK: Run VerifyRepairPipeline on N=50 live GGUF outputs. Measure energy distribution.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any inference):
+         a. Check Qwen3.6-35B-A3B-GGUF cached:
+            `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -3`
+            Record: qwen_cached (bool).
+         b. Check gemma-4-31B-it-GGUF cached:
+            `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/ 2>/dev/null | head -3`
+            Record: gemma31b_cached (bool).
+         c. Check CUDA available:
+            `.venv/bin/python -c "import torch; print(torch.cuda.is_available(), torch.cuda.device_count())"` OR
+            `nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null`
+            Record: cuda_available (bool), n_gpus (int).
+         d. Check FoVer corpus: `wc -l data/fover_corpus.jsonl 2>/dev/null || echo "0"`
+            Record: fover_corpus_lines (int).
+         If both GGUF models absent AND cuda_available=False: write honest_verdict
+         'blocked_gguf_not_cached_and_no_cuda' and exit. DO NOT fabricate inference.
+         If at least one GGUF cached AND cuda_available: proceed.
+         If no GGUF cached but cuda_available AND fover_corpus_lines > 0: run CPU smoke
+         with gemma-4-E4B-it (N=10), flag smoke_only=true in artifact.
+
+      1. Prepare N=50 evaluation prompts from FoVer corpus or fallback arithmetic questions.
+         Use random_seed=42. Record: n_prompts_prepared (int), prompt_source (str).
+
+      2. Run inference for each prompt through available GGUF model(s) via llama.cpp or transformers.
+         For each: generate response, pass through VerifyRepairPipeline.verify().
+         batch_size=5, timeout per batch=300s.
+         Record: inference_mode='live_gpu', n_examples_run (int), mean_inference_time_s (float).
+
+      3. Compute pipeline metrics:
+         a. energy_score_distribution: {mean, std, min, max, p25, p75}.
+         b. fast_path_rate: fraction of examples where should_verify() returned False.
+         Record: all metrics.
+
+      4. Write results/experiment_2689_sota_gguf_live_eval.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required; 'blocked_' is honest if no GGUF and no CUDA."
+      - inference_mode: str — 'live_gpu', 'live_cpu', or 'smoke_only'
+        principle: "Distinguishes real GPU run from CPU fallback; paper-v6 claims require live_gpu."
+      - n_examples_run: int
+        principle: "Sample size validates statistical estimates of energy distribution."
+      - energy_score_distribution: dict — {mean, std, min, max, p25, p75}
+        principle: "Primary pipeline validation output: energy scores on live GGUF data."
+      - fast_path_rate: float
+        principle: "ODAR/Phase 4 metric: high rate = verification overhead reduced significantly."
+      - models_used: list of str
+        principle: "Traceability: which SOTA model(s) generated the evaluated outputs."
+      - qwen_cached: bool
+        principle: "Precondition record."
+      - gemma31b_cached: bool
+        principle: "Precondition record."
+      - cuda_available: bool
+        principle: "Hardware availability; False -> CPU fallback path taken."
+      - random_seed: int — 42
+        principle: "Reproducibility."
+      - reproducibility_checksum: str — sha256 of first 50 prompts used
+        principle: "Content-addressed prompt selection prevents corpus drift on re-runs."
+      - duration_s: float
+        principle: "Live GGUF inference on 50 examples: expected >= 120s; < 30s = suspicious."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records GGUF cache check + CUDA check."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2690
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2690_tier0f_semantic_calibration.json"
+    title: "Tier 0f: Semantic Reward Calibration for Tier 0e EORM (arXiv:2605.15588)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: verifier
+
+    prior_failures:
+      - experiment_id: exp2676-tier0f-semantic-calibration
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2676 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution of Tier 0f. If Tier 0e (exp2663) artifact is absent, task blocks cleanly with blocked_tier0e_module_missing rather than fabricating."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Paper arXiv:2605.15588 shows energy-based reward models trained on token-level (correct,
+      incorrect) pair objectives have ~40% higher calibration error (ECE) on semantically-equivalent
+      paraphrases. The fix: cluster FoVer responses by semantic equivalence (TF-IDF cosine >= 0.9),
+      assign shared reward labels within clusters. This reduces false positives on paraphrase pairs.
+
+      Tier 0e (planned in exp2663, .254) used TF-IDF margin-ranking logistic — the setup that
+      arXiv:2605.15588 identifies as miscalibrated on paraphrases. If Tier 0e module/artifact
+      doesn't exist yet, this task creates both Tier 0e and Tier 0f in one pass.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (check if tier0e_eorm.py exists)
+      - results/experiment_2663_tier0e_eorm.json (check if exists — tier0e_auroc, model_path)
+      - data/fover_corpus.jsonl (corpus format — {question, correct, incorrect} fields)
+
+      TASK: Implement Tier 0f semantic calibration layer. If Tier 0e is absent, create it first.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sklearn; print(sklearn.__version__)"` — scikit-learn.
+            If absent: write honest_verdict 'blocked_sklearn_missing' and exit.
+         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo "0"` — FoVer corpus check.
+            If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         c. Check tier0e: `ls python/carnot/verify/tier0e_eorm.py 2>/dev/null && echo exists || echo missing`
+            Record: tier0e_module_exists (bool).
+         d. Check tier0e artifact: `ls results/experiment_2663_tier0e_eorm.json 2>/dev/null && echo exists || echo missing`
+            Record: tier0e_artifact_exists (bool).
+         Record: preconditions_checked.
+
+      1. If tier0e_module_exists=false: create python/carnot/verify/tier0e_eorm.py with
+         EORMVerifier class (TF-IDF margin-ranking logistic, fit on FoVer corpus, save to
+         results/tier0e_model.pkl). Train on 80% FoVer, eval on 20%.
+         Record: tier0e_created_this_task (bool), tier0e_auroc (float from eval).
+
+      2. Load FoVer corpus. For each (correct, incorrect) pair:
+         a. Compute TF-IDF vectors. Find pairs where cosine(correct_i, correct_j) >= 0.9.
+         b. Assign to same cluster, give shared label.
+         Record: n_paraphrase_clusters (int), n_pairs_in_clusters (int).
+
+      3. Re-split with cluster-aware train/eval split (no cluster leakage). random_seed=42.
+         Re-train Tier 0e logistic on cluster-calibrated labels.
+         Save calibrated model to results/tier0f_semantic_calibrated_logistic.pkl.
+
+      4. Evaluate Tier 0f on cluster-aware eval split:
+         a. AUROC (sklearn roc_auc_score).
+         b. ECE (10-bin calibration error).
+         c. Paraphrase pair FPR.
+         auroc_delta = tier0f_auroc - tier0e_auroc.
+         tier0f_viable = tier0f_auroc >= 0.63 AND ece_improvement > 0.
+         Record: tier0f_auroc, tier0f_ece, paraphrase_fpr, auroc_delta, tier0f_viable.
+
+      5. Create python/carnot/verify/tier0f_semantic_calibration.py with SemanticCalibratedVerifier.
+         Update python/carnot/verify/__init__.py to export it.
+         Record: module_created (bool).
+
+      6. Write results/experiment_2690_tier0f_semantic_calibration.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - tier0f_auroc: float
+        principle: "Primary performance metric; comparable to tier0e_auroc."
+      - tier0f_ece: float
+        principle: "Calibration error; arXiv:2605.15588 primary improvement metric."
+      - paraphrase_fpr: float
+        principle: "Direct measure of the false-positive problem Tier 0f fixes."
+      - auroc_delta: float
+        principle: "Confirms calibration did not degrade AUROC (acceptable: delta >= -0.05)."
+      - tier0f_viable: bool
+        principle: "Gate for ensemble v12 inclusion."
+      - n_paraphrase_clusters: int
+        principle: "Confirms paraphrase clusters were found (expected >= 10 in FoVer)."
+      - random_seed: int — 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Clustering + logistic re-train: expected 5-60s; < 2s suspicious."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records sklearn check + corpus availability + tier0e state."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2691
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2691_property_guided_repair_loop.json"
+    title: "Property-Guided Counterexample Repair Loop: VegAS -> Iterative Repair (arXiv:2605.16142)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: pipeline
+
+    prior_failures:
+      - experiment_id: exp2677-property-guided-repair-loop
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2677 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution. If VegAS (exp2665) artifact doesn't exist, the task bootstraps from scratch by checking for score_candidates() in verify_repair.py."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Paper arXiv:2605.16142 shows counterexample-guided feedback (using VERIFIER FAILURE as
+      structured signal to the LLM generator) reduces candidates generated per domain by 7x vs
+      static K-candidate sampling. The loop: generate -> verify -> if FAIL, pass failure message
+      back to LLM for refinement -> repeat up to K_max iterations.
+
+      VegAS K=3 (planned in exp2665, .254) generates K candidates in parallel. Property-guided
+      repair generates candidates sequentially, stopping when one passes the verifier gate.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (check if score_candidates() exists)
+      - results/experiment_2665_vegas_candidate_selection.json (if exists — vegas_viable flag)
+
+      TASK: Add property-guided iterative repair to VerifyRepairPipeline.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — package importable.
+            If import fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
+         b. Read verify_repair.py: check if score_candidates() method exists.
+            Record: score_candidates_exists (bool), vegas_already_implemented (bool).
+         c. Check if results/experiment_2665_vegas_candidate_selection.json exists.
+            If exists: read vegas_viable.
+            Record: vegas_artifact_exists (bool), vegas_viable_from_artifact (bool or None).
+         Record: preconditions_checked.
+
+      1. If score_candidates() absent: add a minimal implementation to VerifyRepairPipeline:
+         score_candidates(candidates: list[str]) -> list[float]: returns mock energy scores
+         [0.1 + 0.05*i for i in range(len(candidates))].
+         select_best_candidate(candidates: list[str]) -> str: returns candidates[argmin scores].
+         Record: score_candidates_created (bool).
+
+      2. Add method iterative_repair_with_counterexample(
+             prompt: str,
+             initial_response: str,
+             k_max: int = 5,
+             energy_threshold: float = 0.3
+         ) -> dict:
+         - Iteration 0: score initial_response via verify().
+         - If energy_score < energy_threshold: return (fast path).
+         - Else: failure_message = f"Previous response scored {score:.2f} (high uncertainty). Refine: {initial_response[:200]}"
+         - Pass as context for next candidate. Stop when score < threshold OR k_max iterations reached.
+         - Returns: {final_response, final_energy, n_iterations, converged, candidates_generated}
+         Record: method_added (bool).
+
+      3. Test on 5 synthetic examples (2 correct / 3 incorrect):
+         Record: n_fast_path (int), mean_iterations_for_incorrect (float).
+
+      4. candidates_reduction_pct = (3 - mean_candidates_property_guided) / 3 * 100.
+         Record: candidates_reduction_pct (float).
+
+      5. Write results/experiment_2691_property_guided_repair_loop.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - method_added: bool
+        principle: "Primary deliverable: iterative_repair_with_counterexample() in pipeline."
+      - n_fast_path: int
+        principle: "Fast-path rate validation: correct examples should not trigger iterations."
+      - mean_iterations_for_incorrect: float
+        principle: "Convergence speed; > k_max = never converged."
+      - candidates_reduction_pct: float
+        principle: "arXiv:2605.16142 headline: sequential guidance reduces candidates vs static K."
+      - duration_s: float
+        principle: "Method add + 5-example test: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline import check + artifact check."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2692
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2692_multi_agent_scaling_audit.json"
+    title: "Multi-Agent Verification Scaling Audit: AUROC vs k Curve on FoVer (arXiv:2502.20379)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    track: verifier
+
+    prior_failures:
+      - experiment_id: exp2678-multi-agent-scaling-audit
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2678 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution. If ensemble v11 weights are absent, task bootstraps from available tier0* modules."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Paper arXiv:2502.20379 establishes that scaling the NUMBER of verifiers (k) at test time
+      improves performance up to a saturation point (k=4-6 for diverse verifiers). Beyond
+      saturation, additional verifiers add noise rather than signal. This experiment measures
+      where Carnot's ensemble hits its saturation point.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (list all tier0* verifier modules — check what actually exists)
+      - data/fover_corpus.jsonl (FoVer corpus — {question, correct, incorrect})
+      - results/ensemble_v11_weights.json (if exists — component weights and list)
+
+      TASK: Evaluate ensemble AUROC at k = [1, 2, 4, 6, 8, 12, 16] to find saturation curve.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sklearn; print(sklearn.__version__)"` — scikit-learn.
+            If absent: write honest_verdict 'blocked_sklearn_missing' and exit.
+         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo "0"` — FoVer corpus lines.
+            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         c. `ls python/carnot/verify/tier0*.py 2>/dev/null | wc -l` — count available tier0 modules.
+            Record: n_components_available (int).
+         Record: preconditions_checked.
+
+      1. List all tier0* verifier modules in python/carnot/verify/.
+         For each: compute individual AUROC on FoVer eval split (20% holdout, random_seed=42).
+         Use TF-IDF cosine similarity between (question+response) vs corpus mean as proxy score.
+         Sort by individual AUROC.
+         Record: components_by_auroc (list of {name, auroc}).
+
+      2. For k = [1, 2, 4, 6, 8, 12, min(16, n_components_available)]:
+         a. Select top-k verifiers by individual AUROC (greedy).
+         b. Ensemble score = mean of individual scores.
+         c. Compute ensemble AUROC on FoVer eval split.
+         Record: k_auroc_pairs = [{k, auroc}].
+
+      3. Saturation point: first k where AUROC improvement from k-1 to k is < 0.005.
+         Record: saturation_k (int), saturation_auroc (float).
+
+      4. total_lift = auroc_at_k_max - auroc_at_k_1.
+         Record: total_lift (float).
+
+      5. Write results/experiment_2692_multi_agent_scaling_audit.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - k_auroc_pairs: list of {k: int, auroc: float}
+        principle: "Primary data: AUROC at each k — the saturation curve for paper-v6 §5."
+      - saturation_k: int
+        principle: "Optimal ensemble size; determines whether k=16 is justified."
+      - saturation_auroc: float
+        principle: "AUROC at saturation_k; headline metric."
+      - total_lift: float
+        principle: "Ensemble benefit magnitude vs single verifier."
+      - n_components_available: int
+        principle: "Confirms how many tier0* verifiers were actually evaluated."
+      - random_seed: int — 42
+        principle: "Reproducibility: same eval split."
+      - duration_s: float
+        principle: "k-sweep on FoVer: expected 10-60s; < 2s suspicious."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records sklearn check, FoVer corpus check."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2693
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2693_orca_ttt_v2.json"
+    title: "FR-11 Tier 3: ORCA Online Reasoning Calibration + TTT v2 with Conformal Stopping (arXiv:2604.01170)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    track: self-learning
+    continuous_self_learning_task: true
+
+    prior_failures:
+      - experiment_id: exp2679-orca-ttt-v2
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2679 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution. The gated_on exp2667 (ensemble v11) is not used in .256 — handled via PRECONDITIONS check instead to avoid GATE_BLOCK on missing artifact."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Paper arXiv:2604.01170 (ORCA) combines conformal prediction with test-time training (TTT).
+      The conformal stopping criterion: stop TTT when the prediction set collapses to 1 answer
+      with coverage guarantee. This gives principled early stopping vs fixed-N iterations.
+
+      The VerifierDrivenTTT class (planned in exp2624, .251) adds conformal stopping.
+      If ttt_loop.py doesn't exist yet, this task creates it from scratch.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/ (check if ttt_loop.py exists)
+      - python/carnot/pipeline/verify_repair.py (pipeline base for TTT loop)
+
+      TASK: Implement VerifierDrivenTTT with ORCA-style conformal stopping.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
+            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
+         b. Check if python/carnot/pipeline/ttt_loop.py exists.
+            Record: ttt_loop_exists (bool).
+         c. Check if results/ensemble_v11_weights.json exists (optional — not a hard gate).
+            Record: ensemble_v11_weights_exist (bool).
+         Record: preconditions_checked.
+
+      1. If ttt_loop.py does not exist: create python/carnot/pipeline/ttt_loop.py with
+         VerifierDrivenTTT class:
+         - __init__(self, pipeline, k_max=10, alpha=0.1)
+         - iterate(self, prompt, initial_response) -> dict (basic TTT loop)
+         Record: ttt_loop_created (bool).
+
+      2. Add method conformal_stopping_criterion(
+             energy_scores: list[float],
+             alpha: float = 0.1,
+             min_iterations: int = 2
+         ) -> tuple[bool, float]:
+         - Returns (should_stop, interval_width) where:
+           interval_width = max(scores) - min(scores)
+           should_stop = (interval_width < alpha) AND (len(scores) >= min_iterations)
+         Record: method_added (bool).
+
+      3. Add method run_with_orca_stopping(
+             examples: list[dict],
+             k_max: int = 10,
+             alpha: float = 0.1
+         ) -> dict:
+         - Wraps iterate() with conformal stopping check.
+         - Returns: {n_iterations_run, n_iterations_saved, coverage_achieved, energy_history}.
+         Record: orca_method_added (bool).
+
+      4. Run proof-of-concept on N=20 synthetic TTT examples:
+         - 10 examples where energy converges quickly (expect early stopping)
+         - 10 examples where energy oscillates (expect full k_max iterations)
+         Record: n_examples_early_stop (int), mean_iterations (float),
+         n_ttt_steps_saved (int = total saved vs k_max baseline).
+
+      5. coverage_achieved = fraction of early-stopped examples where final energy <= 0.5.
+
+      6. Write results/experiment_2693_orca_ttt_v2.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - conformal_stopping_enabled: bool
+        principle: "FR-11 Tier 3 primary deliverable."
+      - n_ttt_steps_saved: int
+        principle: "ORCA value metric: iterations saved vs fixed-k baseline."
+      - coverage_achieved: float
+        principle: "Coverage guarantee: fraction of early-stopped examples with good resolution."
+      - mean_iterations_per_example: float
+        principle: "Shows ORCA stops before k_max on average."
+      - n_examples_early_stop: int
+        principle: "Count of examples where ORCA stopped before k_max."
+      - ttt_loop_created: bool
+        principle: "Confirms VerifierDrivenTTT module exists after this task."
+      - duration_s: float
+        principle: "TTT loop on 20 examples + method additions: expected >= 5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline import check."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2694
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2694_t2_vegas_k_scaling.json"
+    title: "T2 VegAS K-Scaling Laws: Compute-Optimal K for Candidate Selection (arXiv:2604.01411)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    track: pipeline
+
+    prior_failures:
+      - experiment_id: exp2680-t2-vegas-k-scaling
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2680 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution. If score_candidates() doesn't exist yet (VegAS not shipped), task creates it first."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Paper arXiv:2604.01411 (T2) shows the compute-optimal number of inference samples K
+      depends on verifier quality: if AUROC approx 0.87, optimal K approx 3-5.
+      If AUROC < 0.7, more K helps less. This evaluates VegAS at K=[1,2,3,5,8].
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (check for score_candidates, select_best_candidate)
+      - results/experiment_2692_multi_agent_scaling_audit.json (if exists — saturation_auroc)
+      - results/experiment_2665_vegas_candidate_selection.json (if exists — vegas_viable)
+
+      TASK: Evaluate VegAS at K=[1,2,3,5,8] and find the compute-optimal K.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
+            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
+         b. Check if score_candidates() exists in verify_repair.py.
+            Record: score_candidates_exists (bool).
+         c. Read ensemble_v11_auroc from exp2692 artifact if it exists.
+            Record: ensemble_auroc (float or 0.75 if artifact absent).
+         Record: preconditions_checked.
+
+      1. If score_candidates() absent: add minimal mock to VerifyRepairPipeline.
+         Record: score_candidates_created_here (bool).
+
+      2. Prepare 10 synthetic test sets:
+         - 5 with a clearly "correct" response (energy 0.1) and 4 alternatives (energy 0.5-0.9).
+         - 5 where all candidates are roughly equal quality (energy 0.4-0.6).
+
+      3. For K = [1, 2, 3, 5, 8]:
+         a. Run score_candidates(K candidates) on each test example.
+         b. Check if select_best_candidate returns "correct" candidate on clearly-correct examples.
+         c. k_selection_accuracy = fraction of clearly-correct examples where K-best was selected.
+         d. k_compute_cost = K (proxy for inference calls).
+         Record: k_efficiency_curve = [{k, selection_accuracy, compute_cost}].
+
+      4. efficiency_score = selection_accuracy / compute_cost for each K.
+         optimal_k = K with highest efficiency_score.
+         T2_prediction: if ensemble_auroc >= 0.85: predicted=3;
+                        if 0.7 <= auroc < 0.85: predicted=5;
+                        if auroc < 0.7: predicted=8.
+         Record: optimal_k, t2_prediction, t2_prediction_matches.
+
+      5. Write results/experiment_2694_t2_vegas_k_scaling.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - k_efficiency_curve: list of {k, selection_accuracy, compute_cost}
+        principle: "Primary data: efficiency frontier for VegAS K choices."
+      - optimal_k: int
+        principle: "Principled K recommendation based on efficiency frontier."
+      - t2_prediction: int
+        principle: "T2 theoretical prediction; validates arXiv:2604.01411."
+      - t2_prediction_matches: bool
+        principle: "Agreement between empirical optimal and T2 theory."
+      - ensemble_auroc: float
+        principle: "AUROC used for T2 prediction; documents the reference value."
+      - duration_s: float
+        principle: "K-sweep on 10 examples: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline import check."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2695
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2695_nexus_v2_real_violations.json"
+    title: "FR-11 Tier 2: NEXUS v2 Real FoVer Violation Events (arXiv:2605.09387)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: self-learning
+    continuous_self_learning_task: true
+
+    prior_failures:
+      - experiment_id: exp2681-nexus-v2-real-violations
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2681 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution. If nexus_constraint_memory.py doesn't exist (exp2666 never ran), this task creates it from scratch."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      NEXUS FR-11 Tier 2 (planned in exp2666, .254) was to demonstrate NexusConstraintMemory
+      can synthesize symbolic rules from real FoVer corpus violation patterns.
+      If the module doesn't exist, this task creates it. The FoVer (incorrect) labels are
+      genuine violations; (correct) labels are non-violations.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (check if nexus_constraint_memory.py exists)
+      - results/experiment_2666_nexus_tier2_symbolic_memory.json (if exists — constraints_synthesized)
+      - data/fover_corpus.jsonl (FoVer corpus — {question, correct, incorrect} fields)
+
+      TASK: Run NexusConstraintMemory with real FoVer violation events.
+      If module absent, create it first (minimal implementation).
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo "0"` — FoVer corpus non-empty.
+            If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         b. Check if nexus_constraint_memory.py exists.
+            Record: nexus_module_exists (bool).
+         Record: preconditions_checked.
+
+      1. If nexus_module_exists=false: create python/carnot/verify/nexus_constraint_memory.py
+         with NexusConstraintMemory class:
+         - record_violation(pattern: str, domain: str, severity: float) -> None
+         - synthesize_rules() -> list[dict] (rules with count >= 3 threshold)
+         - consolidate() -> None (merge identical rules)
+         - save(path: str) -> None; load(path: str) -> None
+         Record: nexus_module_created (bool).
+
+      2. Load FoVer corpus. For each (question, correct, incorrect) triple:
+         domain = "arithmetic" if digits in question else "factual" if question starts with Wh else "other".
+         severity = 1.0. pattern = first 5 words of incorrect text.
+         Record: n_fover_triples_loaded (int).
+
+      3. Feed first 100 FoVer violations into memory.record_violation().
+         Record: n_real_violations_recorded (int = 100).
+
+      4. memory.synthesize_rules() — rules from patterns seen >= 3 times.
+         memory.consolidate() — merge redundant rules.
+         Record: n_rules_synthesized (int), rules_by_domain (dict).
+
+      5. memory.save(path='results/nexus_constraint_memory_v2.json').
+         Reload with memory.load() to confirm persistence.
+         Record: persistence_verified (bool).
+
+      6. rule_density = n_rules_synthesized / n_real_violations_recorded.
+
+      7. Write results/experiment_2695_nexus_v2_real_violations.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - n_real_violations_recorded: int — expected 100
+        principle: "FR-11 Tier 2 primary metric: real violations from FoVer, not simulated."
+      - n_rules_synthesized: int
+        principle: "Symbolic rules from real patterns; expected >= 3."
+      - rules_by_domain: dict
+        principle: "Multi-domain coverage confirms domain-specific pattern learning."
+      - persistence_verified: bool
+        principle: "Cross-session persistence is the core FR-11 Tier 2 requirement."
+      - rule_density: float
+        principle: "Efficiency metric: rules per violation recorded."
+      - nexus_module_created: bool
+        principle: "Confirms whether module was created in this task or pre-existed."
+      - duration_s: float
+        principle: "Loading 100 FoVer entries + synthesis: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records FoVer corpus check + module existence check."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2696
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2696_paper_v6_theory_update.json"
+    title: "Paper v6: ARM-EBM Bijection Sec2 + 4/delta Bound Sec3 + Fast-Slow Training Sec3"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    track: publication
+
+    prior_failures:
+      - experiment_id: exp2682-arm-ebm-bijection-paper
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2682 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution. EXPANDED scope vs exp2682: adds 4/delta bound (arXiv:2512.02080) empirical computation + Fast-Slow Training (arXiv:2605.12484) cite alongside ARM-EBM bijection (arXiv:2512.15605). Three theory additions in one pass."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Three high-priority theory papers need to be integrated into paper v6:
+
+      1. arXiv:2512.15605 (ARM-EBM bijection, Score 500): establishes BIJECTION between
+         autoregressive LMs and EBMs with distillation error bounds. Goes in §2 (theoretical
+         background). The bijection is the scaffolding Phase 3 was missing.
+
+      2. arXiv:2512.02080 (4/delta bound): proves LLM-verifier pipelines as absorbing Markov
+         chains terminate in E[n] <= 4/delta iterations. Computing Carnot's empirical delta
+         from existing results validates the theory and provides a paper-v6 §3 citation.
+
+      3. arXiv:2605.12484 (Fast-Slow Training, FST): validates dual-timescale LLM architecture
+         (slow frozen weights + fast context-updated weights) that mirrors Carnot's verify-repair
+         design. 3x sample efficiency vs RL-only. Paper-v6 §3 citation.
+
+      Per CLAUDE.md "Operator-Only External Publication": this task updates LaTeX source only.
+      It does NOT submit to arXiv.
+
+      EXISTING CODE TO READ FIRST:
+      - docs/arxiv-submission/ (find main.tex or equivalent .tex file)
+      - docs/position-paper-outline.md (section structure)
+
+      TASK: Add three theory citations to paper v6 and compute Carnot's empirical delta.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Check docs/arxiv-submission/ for .tex file:
+            `ls docs/arxiv-submission/*.tex 2>/dev/null | head -3`
+            Record: tex_file_found (bool), tex_file_path (str or "missing").
+         b. Check results/ for any verify-repair run artifact with n_repair_attempts field:
+            `ls results/experiment_4*.json results/experiment_5*.json 2>/dev/null | head -5`
+            Record: repair_run_artifacts_found (list of str, up to 5).
+         Record: preconditions_checked.
+
+      1. Compute Carnot's empirical delta from repair results:
+         delta = (number of repair attempts that PASSED verification on first try) /
+                 (total repair attempts).
+         Read up to 5 repair-run artifacts from results/ that have n_repair_attempts > 0.
+         If none found: use delta = 0.25 as a conservative estimate. Note clearly.
+         four_over_delta = 4 / delta.
+         Record: carnot_delta (float), four_over_delta_prediction (float),
+         n_artifacts_checked (int), delta_source (str: "empirical" or "conservative_estimate").
+
+      2. If tex_file_found: read main.tex. Add to §2 (theoretical background):
+         ARM-EBM bijection paragraph (citing blondel2025arm).
+         Add to §3 (architecture):
+         - 4/delta bound paragraph (citing dantas2025four).
+         - FST fast-slow training paragraph (citing hashimoto2026fst).
+         Update bibtex with 3 entries.
+         Record: bijection_citation_added, four_delta_citation_added, fst_citation_added (all bool).
+
+      3. If tex_file not found: create docs/arxiv-submission/theory_additions_v256.md with
+         the three citation texts as markdown (for operator to splice into LaTeX manually).
+         Record: fallback_md_created (bool).
+
+      4. Run LaTeX compile check if available:
+         `command -v pdflatex && pdflatex -interaction=nonstopmode -output-directory /tmp docs/arxiv-submission/main.tex 2>&1 | tail -3`
+         Record: latex_compiles (bool or 'pdflatex_not_available').
+
+      5. Write results/experiment_2696_paper_v6_theory_update.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - bijection_citation_added: bool
+        principle: "arXiv:2512.15605 (Score 500) is the highest-priority theoretical cite in Carnot's record."
+      - four_delta_citation_added: bool
+        principle: "4/delta bound provides the only published convergence guarantee for Carnot's repair loop."
+      - fst_citation_added: bool
+        principle: "FST validates Carnot's dual-timescale architecture with peer-reviewed evidence."
+      - carnot_delta: float
+        principle: "Empirical delta: the probability that one repair iteration produces a passing candidate."
+      - four_over_delta_prediction: float
+        principle: "4/delta = predicted expected iterations; validates theory against observed repair counts."
+      - delta_source: str — 'empirical' or 'conservative_estimate'
+        principle: "Distinguishes paper-citable empirical value from placeholder estimate."
+      - latex_compiles: bool or str
+        principle: "Compile check prevents broken LaTeX in submission package."
+      - duration_s: float
+        principle: "LaTeX edits + delta computation: expected >= 5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records .tex file check + repair artifact scan."
+
+      DO NOT submit to arXiv. DO NOT push.
+      Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2697
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2697_kv260_continuity_256.json"
+    title: "KV260 Hardware Continuity .256 (NON-TERMINAL — SD Card Branch)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    track: hardware
+
+    prior_failures:
+      - experiment_id: exp2683-kv260-continuity-255
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2683 was a .255 task (zero-execution, no artifact). This .256 attempt is the first actual execution of the KV260 continuity task since .254 (exp2670). SD card was absent in exp2670; this task checks again and runs Branch A (SD present) or Branch B (SD absent). NON-TERMINAL per CLAUDE.md Hardware-Task Continuity Discipline."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      KV260 is NON-TERMINAL per CLAUDE.md Hardware-Task Continuity Discipline. The SD card has been
+      absent in the last confirmed execution (exp2670, .254 — Branch B). Per CLAUDE.md:
+      "use the latest bitstream at all times on the kv260" — latest XDC-constrained bitstream is
+      carnot_ising_v4 (loaded via xmutil loadapp carnot_ising_v2_n64 legacy name).
+      Terminal state: kv260_synthesis_succeeded=true AND board-level latency transcript in
+      non-fabricated artifact.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2670_kv260_continuity.json (if exists — branch_taken, sd_card_detected)
+      - ops/hardware-bringup-prep.md (KV260 section — current bring-up state)
+
+      TASK: KV260 hardware continuity check .256 — Branch A (SD detected) or Branch B (SD absent).
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Check SD card: `ls /dev/mmcblk* 2>/dev/null || echo 'no_sd'`
+            Record: sd_card_detected (bool), preconditions_checked.
+
+      BRANCH A (sd_card_detected == true):
+      1. `xmutil listapps 2>/dev/null || echo 'xmutil_not_available'`
+         If xmutil available: `xmutil loadapp carnot_ising_v2_n64`
+         Record: xmutil_available (bool), bitstream_loaded (bool).
+      2. If bitstream loaded: run energy check:
+         `.venv/bin/python -c "from carnot.samplers.ising import IsingModel; m = IsingModel(8); print(m.energy([1,-1,1,-1,1,-1,1,-1]))"`
+         Record: ising_energy_check_passed (bool).
+      3. Record kv260_board_smoke_passed (bool).
+
+      BRANCH B (sd_card_detected == false):
+      1. Read results/experiment_2670_kv260_continuity.json if it exists.
+      2. Update ops/hardware-bringup-prep.md KV260 section:
+         - date: {date}
+         - sd_card_status: "absent across .254-.256 Branch B consecutive"
+         - next_step: "Operator: insert SD card with PYNQ image. After insert: re-run kv260 task."
+         - latest_bitstream: "carnot_ising_v4 (load via: xmutil loadapp carnot_ising_v2_n64)"
+         Record: prep_doc_updated (bool).
+
+      3. Write results/experiment_2697_kv260_continuity_256.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:'
+        principle: "Terminal prefix; KV260 continuity always writes an artifact."
+      - branch_taken: str — 'A' or 'B'
+        principle: "Documents which path ran."
+      - sd_card_detected: bool
+        principle: "Primary branch condition; persistent false = operator action required."
+      - kv260_terminal: false
+        principle: "Explicitly false — board stays in per-milestone mandatory inclusion until terminal."
+      - duration_s: float
+        principle: "Branch B documentation-only: expected 2-10s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records /dev/mmcblk* check."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2698
+    milestone: "2026.05.256"
+    deliverable: "results/experiment_2698_capstone_v256.json"
+    title: "Capstone v256: Cross-Artifact Synthesis + Phase 1 Ship Status + Gaps for .257"
+    agent_type: claude
+    model: opus
+    max_turns: 80
+    requires_claude: true
+    track: synthesis
+
+    prior_failures:
+      - experiment_id: exp2685-capstone-v255
+        verdict: "zero_execution_no_artifact_produced"
+        addressed_by: "exp2685 was a .255 task (zero-execution, no artifact). This .256 capstone synthesizes all 12 .256 artifacts — first actual capstone synthesis since ~.206. Multi-file cross-artifact reasoning + ops/status.md + ops/changelog.md + ops/metrics.md updates require requires_claude: true per CLAUDE.md positive criterion."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.256 has completed its research tasks. This capstone synthesizes
+      all experiment artifacts, updates operational docs, and produces the gaps-for-.257
+      document. This is the first actual capstone execution since the conductor stall began
+      around milestone .206.
+
+      EXISTING CODE TO READ FIRST (in priority order):
+      - results/experiment_2686_archive_v255.json (milestone_activated verification)
+      - results/experiment_2687_conductor_zero_execution_diagnosis.json (root_causes_identified, recovery_plan)
+      - results/experiment_2688_phase1_ship_v3.json (phase1_ship_ready, operator_ship_checklist_v3)
+      - results/experiment_2689_sota_gguf_live_eval.json (inference_mode, energy_score_distribution)
+      - results/experiment_2690_tier0f_semantic_calibration.json (tier0f_auroc, tier0f_viable)
+      - results/experiment_2691_property_guided_repair_loop.json (method_added, candidates_reduction_pct)
+      - results/experiment_2692_multi_agent_scaling_audit.json (saturation_k, k_auroc_pairs)
+      - results/experiment_2693_orca_ttt_v2.json (conformal_stopping_enabled, n_ttt_steps_saved)
+      - results/experiment_2694_t2_vegas_k_scaling.json (optimal_k, t2_prediction_matches)
+      - results/experiment_2695_nexus_v2_real_violations.json (n_real_violations_recorded, n_rules_synthesized)
+      - results/experiment_2696_paper_v6_theory_update.json (bijection_citation_added, carnot_delta)
+      - results/experiment_2697_kv260_continuity_256.json (branch_taken, sd_card_detected)
+      - ops/status.md (current project state — ADD new section at TOP)
+      - _bmad/traceability.md (FR implementation status — check FR-11, FR-12 progress)
+      - ops/metrics.md (session metrics — ADD new entry at TOP of current session table)
+
+      TASK: Synthesize all .256 artifacts into a capstone assessment.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         Read each artifact file listed above. For absent files: note as 'skipped_not_executed'.
+         Record: n_artifacts_read (int), n_artifacts_absent (int).
+
+      1. Conductor Diagnosis Assessment:
+         - What root_causes_identified in exp2687?
+         - What is the recovery_plan?
+         - Was the most_likely_cause actionable by the operator?
+         Record: conductor_diagnosis_available (bool), most_likely_cause (str).
+
+      2. Phase 1 Ship Assessment:
+         - What is phase1_ship_ready from exp2688?
+         - Is the operator checklist (operator_ship_checklist_v3) complete?
+         - Recommend: SHIP (all gates passed + checklist ready) or HOLD.
+         Record: phase1_ship_recommendation ('SHIP' or 'HOLD'), phase1_blocking_items (list).
+
+      3. Live GGUF Pipeline Assessment:
+         - What inference_mode did exp2689 achieve (live_gpu, live_cpu, smoke_only)?
+         - What was the energy_score_distribution on live GGUF outputs?
+         - Is this a credible validation of the verifier pipeline on real data?
+         Record: live_eval_successful (bool), live_eval_headline (str — one sentence).
+
+      4. FR-11 Self-Learning Assessment:
+         - ORCA TTT: conformal_stopping_enabled=true? n_ttt_steps_saved > 0?
+         - NEXUS v2: n_real_violations_recorded=100? n_rules_synthesized > 0?
+         Record: fr11_tier2_real_violations (bool), fr11_tier3_conformal_stopping (bool).
+
+      5. Theory / Publication Assessment:
+         - bijection_citation_added? four_delta_citation_added? fst_citation_added?
+         - carnot_delta computed? four_over_delta_prediction reasonable?
+         Record: theory_citations_added (int), carnot_delta_computed (bool).
+
+      6. Top 3 gaps for .257:
+         Based on what did NOT complete, what is below target, and what the capstone reveals.
+         Prioritize: conductor execution fix (if diagnosis incomplete), Phase 1 ship
+         (if still HOLD), live GGUF improvement (if smoke_only), KV260 SD card insert.
+         Record: top_3_gaps_for_257 (list of {gap, priority, suggested_task}).
+
+      7. Update ops/status.md: ADD new section at top (do NOT remove existing content):
+         "## Session 2026-05-20 - Milestone 2026.05.256 Capstone Complete\n[summary]"
+
+      8. Update ops/changelog.md: ADD new entry at top for .256 capstone.
+
+      9. Update ops/metrics.md: ADD turn log entry for this session.
+
+      10. Write results/experiment_2698_capstone_v256.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - phase1_ship_recommendation: str — 'SHIP' or 'HOLD'
+        principle: "Primary operator signal for Phase 1 shipping decision."
+      - phase1_blocking_items: list of str
+        principle: "If HOLD: operator knows exactly what to fix."
+      - live_eval_successful: bool
+        principle: "Confirms whether verifier pipeline was validated on actual GGUF data."
+      - live_eval_headline: str
+        principle: "One-sentence summary for ops/status.md 'What's Working' section."
+      - fr11_tier2_real_violations: bool
+        principle: "FR-11 Tier 2 gate: True only if NEXUS v2 used real FoVer events."
+      - fr11_tier3_conformal_stopping: bool
+        principle: "FR-11 Tier 3 gate: True only if ORCA conformal stopping is operational."
+      - conductor_diagnosis_available: bool
+        principle: "Confirms whether exp2687 produced an actionable root-cause analysis."
+      - most_likely_cause: str
+        principle: "Summary for operator: the primary reason for 50 consecutive zero-execution milestones."
+      - theory_citations_added: int — expected 3 (bijection + 4/delta + FST)
+        principle: "Paper-v6 completion metric: three pending theory additions."
+      - carnot_delta_computed: bool
+        principle: "Confirms 4/delta bound has been grounded in Carnot's empirical data."
+      - top_3_gaps_for_257: list of dict — each has gap, priority, suggested_task
+        principle: "Planner reads this as input for .257 milestone design."
+      - n_criteria_met: int
+        principle: "Summary score for milestone health tracking."
+      - n_artifacts_read: int
+        principle: "Confirms capstone actually read upstream artifacts (expected 12)."
+      - duration_s: float
+        principle: "Cross-artifact read + synthesis + doc updates: expected 60-180s."
+
+      Do NOT push. Do NOT submit to arXiv. Do NOT modify scripts/research_conductor.py.

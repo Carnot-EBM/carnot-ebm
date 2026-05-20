@@ -1,3 +1,25 @@
+## 2026-05-20 Post-.255 Planning Sweep (Milestone 2026.05.256)
+
+This sweep was run after milestone `.255` completed with zero experiments executed (recurring
+zero-execution pattern from .206 onward). Two new papers promoted from research-studying.md
+and known-issues.md for direct inclusion in .256 experiments:
+
+### The 4/δ Bound: Designing Predictable LLM-Verifier Systems
+
+- **Paper:** "The 4/δ Bound: Designing Predictable LLM-Verifier Systems for Formal Method Guarantees" (arXiv:2512.02080, Dec 2025).
+- **What:** Models the LLM-verifier pipeline as an absorbing Markov chain (CodeGen → Compilation → InvariantSynth → SMTSolving) and proves termination with E[n] ≤ 4/δ expected iterations, validated across 90,000 trials. The bound δ is the per-iteration probability of the LLM producing a candidate that passes verification. Tighter δ (better LLM) means fewer iterations needed.
+- **Relevance to Carnot:** Carnot's verify-repair pipeline is structurally this absorbing Markov chain. Computing Carnot's empirical δ from repair-run data (fraction of repair candidates that pass ensemble verification on first try) would validate the 4/δ prediction against measured iteration counts. This is a paper-v6 §3 citation and also a concrete experiment: compute δ from results in `results/` and verify the 4/δ prediction. Previously in research-studying.md and known-issues.md; now promoted to .256 experiment (exp2695).
+- **Sources:** https://arxiv.org/abs/2512.02080
+
+### Learning, Fast and Slow: Towards LLMs That Adapt Continually (FST)
+
+- **Paper:** "Learning, Fast and Slow: Towards LLMs That Adapt Continually" (arXiv:2605.12484, May 2026).
+- **What:** Fast-Slow Training (FST) partitions LLM learning into slow weights (RL-updated parameters, frozen at inference) and fast weights (ICL-updated context, updated each inference call). Reports 3x sample efficiency vs RL-only, 70% less KL drift, and successful continual learning where parameter-only RL stalls. Validated on multi-task continual learning benchmarks.
+- **Relevance to Carnot:** Carnot's verify-repair architecture maps directly: slow = k=16 verifier ensemble + base LLM (frozen); fast = verifier-output-summary that re-prompts the LLM each iteration. FST provides peer-validated theoretical scaffolding for this dual-timescale design and explains the FR-11 stalls (parameter-only RL is strictly worse than fast-slow). Paper-v6 §3 cite + FR-11 architecture rethink. Previously in research-studying.md; now promoted to .256 paper task (exp2696).
+- **Sources:** https://arxiv.org/abs/2605.12484
+
+---
+
 ## 2026-05-20 Post-.254 Planning Sweep (Milestone 2026.05.255)
 
 This sweep was run after milestone `.254` completed (venv hardening; Phase 1 ship close; Tier 0e EORM;

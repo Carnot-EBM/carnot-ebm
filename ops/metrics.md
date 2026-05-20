@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.256 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (resumed) | 2026-05-20T17:24:53Z | 2026-05-20T17:28:00Z | Resumed from context compaction (mid-ops-update): confirmed both output files created successfully (openspec/change-proposals/research-roadmap-v256.md + research-roadmap-next.yaml with 13 tasks exp2686-exp2698); updated ops/status.md, ops/changelog.md, ops/metrics.md. Critical finding: 50 consecutive zero-execution milestones (.206–.255); exp2687 NEW conductor diagnosis task added. 2 new papers added to research-references.md (arXiv:2512.02080 4/δ bound, arXiv:2605.12484 FST). All CLAUDE.md mandatory disciplines applied: Codex-Default (12/13), prior_failures (13/13), PRECONDITIONS (all compute-bound), principle-annotated fields, terminal-prefix verdicts, FR-11 mandate (exp2693+exp2695), Hardware-Task Continuity (exp2697 KV260 NON-TERMINAL), Exclusion Manifest 0 matches. | ~30k |
+
+Note: Full planning session ran before context compaction: read research-program.md, _bmad/prd.md, _bmad/architecture.md, ops/status.md, ops/changelog.md, research-complete.yaml, research-roadmap.yaml, ops/conductor-log.md, research-references.md, research-hardware-wishlist.md, ops/known-issues.md, ops/exclusion_manifest.yaml, results/operational_retro_2026_05_255.json; ran arxiv research (arXiv:2512.02080, arXiv:2605.12484 discovered); created both output files. Full session token estimate ~220k.
+
+---
+
 ## Session: 2026-05-20 Milestone 2026.05.255 Research Planning
 
 ### Turn Log

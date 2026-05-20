@@ -1,6 +1,44 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.255 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.256 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.256 Research Planning Complete
+
+**Milestone 2026.05.255 COMPLETED (zero-execution): all 13 tasks (exp2673–exp2685) queued but not executed — 50th consecutive zero-execution milestone.**
+
+**CRITICAL DISCOVERY: Milestones .206–.255 (50 consecutive) all had experiments_completed = 0. Conductor dispatch pipeline stalled. exp2687 (NEW) will diagnose root cause.**
+
+**Milestone 2026.05.256 PLANNED as "Conductor Diagnosis + Phase 1 Ship v3 + GGUF Live Eval + 4/δ Verifier Bound + FR-11 ORCA".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v256.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2686`–`exp2698`)
+- ID allocation: milestone `.255` used through `exp2685`, so `.256` starts at `exp2686`.
+- Research references updated with Post-.255 Planning Sweep (2026-05-20): 2 new papers added:
+  - arXiv:2512.02080 (4/δ Bound — LLM-verifier Markov chain convergence guarantee; E[n] ≤ 4/δ iterations; exp2696 paper cite + empirical δ computation)
+  - arXiv:2605.12484 (Fast-Slow Training — validates dual-timescale verify-repair as 3x sample-efficient vs RL-only; exp2696 paper §3 cite)
+- **Zero-execution analysis**: 50 consecutive milestones (.206–.255) completed with 0 experiments. `results/operational_retro_2026_05_255.json` confirms `experiments_completed: 0`, `total_wall_time_minutes: 0`, both RTX 3090s idle at 0% utilization. Root cause unknown — exp2687 (NEW) dedicated conductor diagnosis task.
+- **Three biggest gaps targeted**:
+  1. **Conductor execution stall (50 consecutive zero-execution milestones — STRUCTURAL FAILURE)**: exp2687 runs conductor diagnosis health report with root-cause + recovery plan.
+  2. **Phase 1 ship still not shipped (HIGHEST OPS PRIORITY)**: exp2688 executes remaining autonomous ship prep actions (RELEASES.md, README.md Phase 1 section, HF model card draft). Operator push required after.
+  3. **Live GGUF pipeline validation never materialized**: exp2689 runs ensemble v11 on N=50 live GGUF outputs from Qwen3.6-35B-A3B + Gemma-4-31B-it. Both RTX 3090s idle.
+- **Phase structure**:
+  - Phase A (exp2686–exp2688): Archive .255, conductor diagnosis (NEW), Phase 1 ship v3
+  - Phase B (exp2689–exp2692): SOTA GGUF live eval, Tier 0f calibration, property repair, scaling audit
+  - Phase C (exp2693–exp2695): ORCA TTT v2 (FR-11), T² VegAS K-scaling, NEXUS v2 (FR-11)
+  - Phase D (exp2696–exp2698): Paper v6 (ARM-EBM §2 + 4/δ §3 + FST §3), KV260 continuity, capstone
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2698 capstone — requires_claude: true).
+- **Hardware continuity**: exp2697 KV260 (NON-TERMINAL mandatory per CLAUDE.md — SD card absent).
+- **FR-11 mandate**: exp2693 (ORCA TTT v2, continuous_self_learning_task: true) + exp2695 (NEXUS v2, continuous_self_learning_task: true).
+- Exclusion manifest cross-check: 0 scope matches found across all retired experiment IDs.
+- **New research contributions**:
+  - 4/δ convergence bound (arXiv:2512.02080) — first paper-grounded convergence guarantee for Carnot's repair loop; empirical δ computed in exp2696
+  - Fast-Slow Training (arXiv:2605.12484) — validates Carnot's dual-timescale architecture; closes theoretical foundation gap in paper-v6 §3 alongside ARM-EBM bijection
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.256. exp2686 (archive/activate) → exp2687 (conductor diagnosis — addresses 50-milestone stall) → exp2689 (GGUF live eval, puts GPUs to work) → research tasks in dependency order.
+
+**Operator action required**: Phase 1 ship gates from exp2688 (PyPI publish + HF mirror + git tag push). arXiv v6 submission after exp2696 completes (OPERATOR-ONLY per Operator-Only External Publication rule). KV260: insert SD card to enable Branch A (bitstream flash) in exp2697.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.255 Research Planning Complete
 

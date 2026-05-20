@@ -1,5 +1,22 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.256 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.256. Milestone .255 (exp2673–exp2685) confirmed as 50th consecutive zero-execution milestone — no artifacts produced.
+  - **CRITICAL DISCOVERY**: 50 consecutive milestones (.206–.255) with `experiments_completed: 0`. Conductor dispatch pipeline stalled. `results/operational_retro_2026_05_255.json` confirms both RTX 3090s idle at 0% utilization.
+  - **Milestone title**: "Conductor Diagnosis + Phase 1 Ship v3 + GGUF Live Eval + 4/δ Verifier Bound + FR-11 ORCA"
+  - **arxiv sweep** (2 new papers added to `research-references.md`):
+    - arXiv:2512.02080 (4/δ Bound for LLM-Verifier Markov chain convergence — E[n] ≤ 4/δ iterations; first paper-grounded convergence guarantee for Carnot's repair loop; exp2696 empirical δ computation)
+    - arXiv:2605.12484 (Fast-Slow Training — dual-timescale verify-repair 3x sample-efficient vs RL-only; closes paper-v6 §3 theoretical foundation gap alongside ARM-EBM bijection; exp2696 cite)
+  - **Three biggest gaps**:
+    1. Conductor execution stall (50 consecutive zero-execution milestones) — NEW exp2687 conductor diagnosis health report
+    2. Phase 1 ship still not shipped — exp2688 remaining autonomous prep actions
+    3. Live GGUF pipeline validation never materialized — exp2689 N=50 Qwen3.6-35B + Gemma-4-31B live eval
+  - **Roadmap doc created**: `openspec/change-proposals/research-roadmap-v256.md`
+  - **Execution queue created**: `research-roadmap-next.yaml` (13 tasks: exp2686–exp2698)
+  - **Agent routing**: 12 codex/gpt-5.5 + 1 claude+opus (exp2698 capstone, requires_claude: true)
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13), prior_failures (13/13 — all with `zero_execution_no_artifact_produced` verdict for carry-overs), PRECONDITIONS on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2693 ORCA + exp2695 NEXUS v2 continuous_self_learning_task: true), Hardware-Task Continuity (exp2697 KV260 NON-TERMINAL), Exclusion Manifest cross-check (0 scope matches), Operator-Only publication (no submission steps in any task prompt)
+
 ## 2026-05-20 (Milestone 2026.05.255 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.255. All 13 tasks in .254 (exp2660–exp2672) confirmed complete by user before this session.
