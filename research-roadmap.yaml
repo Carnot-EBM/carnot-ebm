@@ -1,108 +1,119 @@
-milestone: "2026.05.258"
-milestone_title: "Pre-Test Cascade Fix v1 + Phase 1 Ship v5 + GGUF Live Eval v3 + ODAR Routing + FR-11 ORCA TTT v2"
-milestone_doc: "openspec/change-proposals/research-roadmap-v258.md"
+milestone: "2026.05.259"
+milestone_title: "Verifier Energy Debug v1 + Full Test Fix + pdflatex Install + OTV Fast Path + FR-11 ORCA-NEXUS"
+milestone_doc: "openspec/change-proposals/research-roadmap-v259.md"
 date: "2026-05-20"
 status: "PROPOSED"
-experiment_id_range: "exp2712-exp2724"
+experiment_id_range: "exp2725-exp2737"
 scope_reduction_compliance: "n/a — no SCOPE REDUCTION directive active in ops/known-issues.md"
 
-# .257 COMPLETED: 3 of 13 tasks produced artifacts:
-#   exp2699 (archive/activate), exp2700 (conductor postmortem v2), exp2704 (multi-agent scaling audit).
-#   10 tasks produced no artifacts (conductor pre-test cascade stall continues).
+# .258 COMPLETED: 13 of 13 tasks produced artifacts — first full milestone since cascade fix.
+# 8 of 12 acceptance criteria met.
 #
-# KEY .257 FINDINGS:
-#   exp2700: ROOT CAUSE of 51-milestone stall = tests/python/inference/test_hw_dab.py imports torch
-#            (not installed in .venv) + MAX_HEAL_ATTEMPTS=0 => pre-test cascade blocks ALL dispatch.
-#            Recovery commands documented in results/experiment_2700_conductor_postmortem_v2.json.
-#   exp2704: saturation_k=2, saturation_auroc=0.993, me_adequate=true. Negative total_lift (-0.003)
-#            suggests behavioral entanglement in current verifier mix => motivates exp2723.
+# KEY .258 FINDINGS:
+#   exp2713: cascade fixed (pretest_cascade_fixed=true, smart_subset_passes=true)
+#            BUT full_collection_clean=false — other collection errors remain
+#   exp2714: phase1_ship_ready=true. operator_ship_checklist_v5 complete.
+#   exp2715: inference_mode=live_gpu on 50 examples (RTX 3090, 125s) BUT
+#            energy_score_distribution=all-zero — DEGENERATE VERIFIER (most critical gap)
+#   exp2716: tier0f_auroc=0.992, tier0f_viable=true
+#   exp2717: candidates_reduction_pct=60.0 via property-guided iterative repair
+#   exp2718: probe_ece=0.0087, speedup_factor=1.85e6 (IMPLAUSIBLE — adversarial flag)
+#   exp2719: conformal_stopping_enabled=true, n_ttt_steps_saved=79 (FR-11 Tier 3 DONE)
+#   exp2720: odar_routing_added=true, t2_prediction_matches=true
+#   exp2721: BLOCKED — pdflatex_available=false (3rd consecutive pdflatex block)
+#   exp2722: Branch B (4th consecutive — SD card absent)
+#   exp2723: auroc_lift=-0.008 (NEGATIVE), high_entanglement=false — hypothesis NOT confirmed
+#   exp2724: capstone 8/12 criteria; cascade_fixed=true; phase1_ship_recommendation=SHIP
 #
-# Three biggest gaps for .258:
-#   1. Pre-test cascade structural fix (P0) — exp2713 installs torch CPU + patches test + clears cache
-#   2. GGUF live eval v3 (RTX 3090s idle since ~.206) — exp2715 gated on exp2713.pretest_cascade_fixed
-#   3. Phase 1 ship v5 (still HOLD after 3 failed attempts) — exp2714 gated on exp2713
+# New research for .259 (post-.258 sweep, 4 papers added to research-references.md):
+#   arXiv:2508.14496 (Semantic Energy — Boltzmann over semantic clusters; exp2731 Tier 0g)
+#   arXiv:2603.01025 (OTV — One-Token Verification; 90% token reduction; exp2728 fast path)
+#   arXiv:2602.01090 (FALCON — hard constraints + soft generation; exp2734 repair integration)
+#   arXiv:2506.03723 (Verbalized Confidence — Phase 4 active inference cite; paper-v6)
 #
-# New research for .258 (post-.257 sweep, 2 papers added to research-references.md):
-#   arXiv:2604.07650 (Behavioral Entanglement Reweighting — 4.5% lift; exp2723 de-entangled weighting)
-#   arXiv:2602.23681 (ODAR free-energy routing — 23 benchmarks; exp2720 Phase-4 active inference)
+# Three biggest gaps for .259:
+#   1. VERIFIER PRODUCES ZERO ENERGY on live GGUF (Gap 1) — exp2727 diagnostic debug
+#   2. pdflatex not installed (Gap 2) — exp2729 toolchain install + theory citations v3
+#   3. Full test collection not clean (Gap 3) — exp2726 collection fix
 #
-# FR-11 mandate: exp2719 (ORCA TTT v2, continuous_self_learning_task: true)
-# Hardware continuity: exp2722 (KV260 NON-TERMINAL — SD card absent, 4th consecutive Branch B)
-#   GateMate: TERMINAL (graduated in .247). PolarFire: TERMINAL (graduated in .241).
+# FR-11 mandate: exp2733 (ORCA-NEXUS Integration, continuous_self_learning_task: true)
+# Hardware continuity: exp2735 (KV260 NON-TERMINAL — SD card absent, 5th consecutive Branch B)
+#   GateMate: TERMINAL (graduated .247). PolarFire: TERMINAL (graduated .241).
 # Exclusion manifest cross-check: 0 scope matches across all retired IDs
-# Agent routing: 12 codex/gpt-5.5 (92.3%), 1 claude/opus (exp2724 capstone, requires_claude: true)
-#   Within 2/13 (15.4%) ceiling. exp2724 meets all 3 positive criteria.
+# Agent routing: 12 codex/gpt-5.5 (92.3%), 1 claude/opus (exp2737 capstone, requires_claude: true)
+#   Within 2/13 (15.4%) ceiling. exp2737 meets all 3 positive criteria.
 #
-# GATE TOPOLOGY: exp2712 -> exp2713 -> {{exp2714, exp2715, exp2716, exp2717, exp2718, exp2719, exp2720, exp2723}}
-#                exp2721 independent (pdflatex gate). exp2722 independent (hardware).
-#                exp2724 reads all upstream artifacts.
+# GATE TOPOLOGY: exp2725 → all; exp2729 → exp2736 (latex_compiles gate)
+#                exp2737 reads all upstream artifacts.
 
 tasks:
 
-  - id: exp2712
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2712_archive_v257.json"
-    title: "Archive .257 + Activate .258"
+  - id: exp2725
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2725_archive_v258.json"
+    title: "Archive .258 + Activate .259"
     agent_type: codex
     model: gpt-5.5
     max_turns: 20
     track: admin
 
     prior_failures:
-      - experiment_id: exp2699-archive-v256-activate-v257
-        verdict: "complete: archived .256 (3 experiments completed), activated .257"
-        addressed_by: "exp2699 completed successfully in .257. This exp2712 archives .257 (3 artifacts: exp2699 archive, exp2700 postmortem, exp2704 scaling audit; 10 absent) and activates .258. Different lifecycle state: .257 partial-execution milestone. research-complete.yaml entry will note 3 artifacts produced."
+      - experiment_id: exp2712-archive-v257-activate-v258
+        verdict: "complete: archived .257 (3 experiments completed), activated .258"
+        addressed_by: "exp2712 completed successfully in .258. This exp2725 archives .258 (13 artifacts, all complete; 8 of 12 criteria met; cascade_fixed=true). Different lifecycle state: .258 was the first full-execution milestone since the conductor cascade was fixed. research-complete.yaml entry will note cascade_fixed milestone."
         retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      Milestone 2026.05.257 is COMPLETE per operator confirmation. Three experiments produced
-      artifacts: exp2699 (archive/activate), exp2700 (conductor postmortem v2 — root cause
-      identified), exp2704 (multi-agent scaling audit). research-roadmap-next.yaml has milestone
-      2026.05.258.
+      Milestone 2026.05.258 is COMPLETE per operator confirmation. All 13 experiments produced
+      artifacts (8 of 12 acceptance criteria met). research-roadmap-next.yaml has milestone
+      2026.05.259. Key .258 finding: cascade fixed (pretest_cascade_fixed=true) BUT verifier
+      produces degenerate zero energy on live GGUF (exp2715).
 
       EXISTING CODE TO READ FIRST:
-      - research-roadmap.yaml (verify milestone field is 2026.05.257)
-      - research-complete.yaml (last 30 lines — check if .257 already archived)
-      - results/experiment_2700_conductor_postmortem_v2.json (most_likely_cause for archive note)
-      - results/experiment_2704_multi_agent_scaling_audit.json (saturation_k, saturation_auroc)
+      - research-roadmap.yaml (verify milestone field is 2026.05.258)
+      - research-complete.yaml (last 30 lines — check if .258 already archived)
+      - results/experiment_2724_capstone_v258.json (cascade_fixed, n_criteria_met, top_3_gaps_for_259)
+      - results/experiment_2715_sota_gguf_live_eval_v3.json (energy_score_distribution)
 
-      TASK: Archive milestone .257 and activate .258.
+      TASK: Archive milestone .258 and activate .259.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
-         a. Confirm research-roadmap.yaml exists and milestone field == "2026.05.257".
-            If milestone already says "2026.05.258": write honest_verdict
+         a. Confirm research-roadmap.yaml exists and milestone field == "2026.05.258".
+            If milestone already says "2026.05.259": write honest_verdict
             'complete_already_activated' and exit cleanly.
-         b. Read last 30 lines of research-complete.yaml to check if .257 is already archived.
-         c. Read results/experiment_2700_conductor_postmortem_v2.json for most_likely_cause.
+         b. Read last 30 lines of research-complete.yaml to check if .258 already archived.
+         c. Read results/experiment_2724_capstone_v258.json for n_criteria_met, cascade_fixed.
          Record: preconditions_checked.
 
-      1. If .257 not yet in research-complete.yaml: append entry with:
-         milestone: "2026.05.257",
-         title: "Conductor Postmortem v2 + Phase 1 Ship v4 + GGUF Live Eval v2 + Linear Probe Calibration + FR-11 ORCA TTT v2",
-         date_completed: "{date}", n_experiments_completed: 3,
-         note: "Partial-execution milestone — 3 of 13 tasks ran (exp2699 archive, exp2700 conductor postmortem ROOT CAUSE IDENTIFIED, exp2704 multi-agent scaling audit saturation_k=2). Conductor stall identified: test_hw_dab.py imports torch (not installed) + MAX_HEAL_ATTEMPTS=0."
-         + tasks list with id, title, deliverable, result for each exp2699-exp2711.
+      1. If .258 not yet in research-complete.yaml: append entry with:
+         milestone: "2026.05.258",
+         title: "Pre-Test Cascade Fix v1 + Phase 1 Ship v5 + GGUF Live Eval v3 + ODAR Routing + FR-11 ORCA TTT v2",
+         date_completed: "{date}", n_experiments_completed: 13,
+         note: "First full-execution milestone since cascade fix (exp2713 pretest_cascade_fixed=true). 8/12 criteria met. Critical finding: verifier energy_score_distribution=all-zero on live GGUF (exp2715) — degenerate verifier. Phase1_ship_ready=true. FR-11 Tier 3 ORCA conformal stopping operational (exp2719)."
+         + tasks list with id, title, deliverable, result for each exp2712-exp2724.
 
       2. Copy research-roadmap-next.yaml -> research-roadmap.yaml (overwrite).
 
-      3. Write results/experiment_2712_archive_v257.json with all required fields.
+      3. Write results/experiment_2725_archive_v258.json with all required fields.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'complete_'
         principle: "Terminal-prefix discipline — reconciler classifies as done only with this prefix."
       - archive_completed: bool
-        principle: "Confirms .257 lifecycle is closed before .258 tasks run."
-      - milestone_activated: str — must equal "2026.05.258"
+        principle: "Confirms .258 lifecycle is closed before .259 tasks run."
+      - milestone_activated: str — must equal "2026.05.259"
         principle: "Explicit activation field lets downstream audits verify milestone is active."
-      - n_experiments_archived: int — must be 3
-        principle: "Count documents .257 partial-execution state for historical accuracy."
-      - root_cause_summary: str — from exp2700 most_likely_cause
-        principle: "Propagates conductor postmortem finding to archive record for historical traceability."
-      - preconditions_checked: list of {{resource, available, check}}
+      - n_experiments_archived: int — must be 13
+        principle: "Count documents .258 full-execution state for historical accuracy."
+      - cascade_fixed_carried_forward: bool — true (from exp2724.cascade_fixed)
+        principle: "Propagates cascade fix status to .259 activation record."
+      - live_gguf_degenerate_gap_noted: bool — true (from exp2715 all-zero energy)
+        principle: "Documents the most critical .258 finding for .259 priority queue."
+      - preconditions_checked: list of {resource, available, check}
         principle: "Anti-fabrication: records which files were actually read."
       - duration_s: float
         principle: "File reads + YAML copy + JSON write: expected >= 3s."
@@ -111,13 +122,13 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2713
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2713_pretest_cascade_fix_v1.json"
-    title: "Pre-Test Cascade Fix v1: Torch CPU Install + Test Patch + Cache Clear"
+  - id: exp2726
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2726_full_collection_fix_v1.json"
+    title: "Full Test Suite Collection Fix v1: Eliminate Remaining --co Failures"
     agent_type: codex
     model: gpt-5.5
-    max_turns: 25
+    max_turns: 30
     track: infrastructure
 
     prior_failures: []
@@ -126,943 +137,959 @@ tasks:
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      NEW EXPERIMENT for .258 — no prior failures for this specific scope.
+      NEW EXPERIMENT for .259 — no prior failures for this specific scope.
 
-      exp2700 identified the root cause of 51 consecutive zero-execution milestones:
-      tests/python/inference/test_hw_dab.py imports torch as a top-level statement.
-      Torch is NOT installed in .venv. When the conductor's smart-subset pre-test includes
-      this file, pytest collection fails -> run_tests() returns False -> every task SKIPs.
-      Amplifier: MAX_HEAL_ATTEMPTS=0 (intentional operator emergency 2026-05-03; cannot modify
-      scripts/research_conductor.py from experiment prompts per CLAUDE.md).
-
-      Recovery commands documented in results/experiment_2700_conductor_postmortem_v2.json.
+      exp2713 fixed the test_hw_dab.py cascade but reported full_collection_clean=false:
+        `.venv/bin/pytest tests/python/ --co -q 2>&1` shows collection errors beyond test_hw_dab.py.
+      The conductor's smart-subset (test_pipeline_extract.py, test_docs.py, test_hw_dab.py) is
+      currently green. However, if a future git diff includes a test file with a missing import,
+      the full-collection path could cascade again. This task eliminates all remaining --co failures.
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_2700_conductor_postmortem_v2.json (recovery_commands, root_causes_identified)
-      - tests/python/inference/test_hw_dab.py (current import statement)
-      - ops/.pretest-cache.json (if exists — check current fingerprint)
+      - results/experiment_2713_pretest_cascade_fix_v1.json (full_collection_clean: false)
+      - tests/python/ (list all test files)
 
-      TASK: Fix the pre-test cascade. Produce pretest_cascade_fixed: bool as the gate for all
-      downstream Phase B-D experiments.
+      TASK: Find and fix all remaining pytest collection failures in tests/python/.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
-         a. `ls tests/python/inference/test_hw_dab.py 2>/dev/null && echo exists || echo missing`
-            Record: test_file_exists (bool).
-         b. `ls .venv/bin/pip 2>/dev/null && echo exists || echo missing`
-            Record: pip_available (bool).
-         c. `ls .venv/bin/pytest 2>/dev/null && echo exists || echo missing`
-            Record: pytest_available (bool).
-         If test_file_exists=false: write honest_verdict 'blocked_test_file_missing' and exit.
-         If pip_available=false: write honest_verdict 'blocked_pip_missing' and exit.
+         a. `.venv/bin/pytest tests/python/ --co -q 2>&1 | tail -20`
+            Record: n_collection_errors_initial (int), collection_error_messages (list of str — first 5).
+            If n_collection_errors_initial == 0: write honest_verdict 'complete_collection_already_clean' and exit.
+         b. `.venv/bin/python -c "import sys; sys.version"` — Python version.
          Record: preconditions_checked.
 
-      1. FIX A — Install torch CPU wheel:
-         `.venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch 2>&1 | tail -3`
-         Record: torch_install_exit_code (int), torch_install_success (bool).
+      1. For each collection error found: identify the failing test file and the missing import.
+         Apply the graceful importorskip pattern:
+           If `import X` fails with ImportError/ModuleNotFoundError:
+           Replace with `X = pytest.importorskip("X")`
+           Or install X via `.venv/bin/pip install X` if X is a lightweight standard package.
+         NEVER install packages that require CUDA/GPU hardware (torch with CUDA) — use importorskip.
+         Record: fixes_applied (list of {file, issue, fix}).
 
-      2. FIX B — Patch test file for graceful import (safe long-term fix):
-         Read tests/python/inference/test_hw_dab.py. Find the line `import torch`.
-         If the line exists and is NOT already using importorskip:
-           Replace `import torch` with the two-line form:
-             `import pytest`
-             `torch = pytest.importorskip("torch")`
-           Write the patched file back.
-           Record: test_patched (bool), patch_was_needed (bool).
-         Else: Record: test_patched=false, patch_was_needed=false.
+      2. Verify: `.venv/bin/pytest tests/python/ --co -q 2>&1 | tail -5`
+         Record: n_collection_errors_final (int), collection_clean (bool = n_collection_errors_final == 0).
 
-      3. VERIFY — run smart subset:
+      3. Run smart-subset to confirm it still passes:
          `.venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py tests/python/inference/test_hw_dab.py -q --no-cov -o addopts= 2>&1 | tail -5`
-         Record: smart_subset_passes (bool), smart_subset_output (str — last 3 lines).
-         Also run full collection check:
-         `.venv/bin/pytest tests/python/ --co -q 2>&1 | tail -5`
-         Record: full_collection_clean (bool).
+         Record: smart_subset_still_passes (bool).
 
-      4. CLEAR CACHE — invalidate stale pretest cache:
-         `rm -f ops/.pretest-cache.json && echo cleared || echo not_found`
-         Record: cache_cleared (bool).
-
-      5. GATE FIELD: pretest_cascade_fixed = (torch_install_success OR test_patched) AND smart_subset_passes
-         Record: pretest_cascade_fixed (bool).
-
-      6. Operator note (add to artifact):
-         "MAX_HEAL_ATTEMPTS=0 remains at 0 per 2026-05-03 operator emergency. Operator should
-         review whether to set MAX_HEAL_ATTEMPTS=1 in scripts/research_conductor.py now that the
-         cascade root cause is fixed. See results/experiment_2700_conductor_postmortem_v2.json
-         recovery_commands Step 9 for rationale."
-         Record: max_heal_attempts_note (str).
-
-      7. Write results/experiment_2713_pretest_cascade_fix_v1.json.
+      4. Write results/experiment_2726_full_collection_fix_v1.json.
 
       REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix; blocked_pip_missing or blocked_test_file_missing if preconditions fail."
-      - pretest_cascade_fixed: bool
-        principle: "GATE FIELD for all Phase B-D experiments in .258. True only if smart_subset_passes."
-      - torch_install_success: bool
-        principle: "Documents whether pip install torch succeeded; alternative is patch-only fix."
-      - test_patched: bool
-        principle: "Documents whether importorskip patch was applied; long-term safe fix."
-      - smart_subset_passes: bool
-        principle: "Primary fix verification: conductor's own pre-test path confirmed green."
-      - full_collection_clean: bool
-        principle: "Confirms no OTHER collection errors lurk that could cause future cascades."
-      - cache_cleared: bool
-        principle: "Stale cache must be cleared for conductor to re-evaluate next iteration."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records test_hw_dab.py + pip + pytest existence."
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required; complete_collection_already_clean is also valid."
+      - collection_clean: bool
+        principle: "Primary gate: True means no future git-diff can re-trigger a collection cascade."
+      - n_collection_errors_initial: int
+        principle: "Baseline count — confirms we found and addressed actual errors."
+      - n_collection_errors_final: int
+        principle: "Post-fix count — zero means collection cascade risk eliminated."
+      - fixes_applied: list of {file, issue, fix}
+        principle: "Audit trail: which files were patched and why."
+      - smart_subset_still_passes: bool
+        principle: "Regression check: conductor pre-test still green after full-collection fixes."
       - duration_s: float
-        principle: "pip install + test run: expected >= 30s; < 5s suspicious."
+        principle: "Collection check + fixes + reverification: expected >= 5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records initial collection run and Python version."
 
       Do NOT modify scripts/research_conductor.py.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2714
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2714_phase1_ship_v5.json"
-    title: "Phase 1 Ship v5: Execute Remaining Autonomous Prep Actions"
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 25
-    track: ops
-
-    gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
-        op: '=='
-        value: true
-
-    prior_failures:
-      - experiment_id: exp2701-phase1-ship-v4
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2701 (.257) and predecessors exp2688 (.256) and exp2674 (.255) all failed due to the conductor pre-test cascade (now fixed in exp2713). This .258 attempt is gated on exp2713.pretest_cascade_fixed == true, ensuring the cascade is fixed before this runs. Same scope: README.md Phase 1 section + RELEASES.md + operator_ship_checklist_v5."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      Phase 1 ship preparation has failed in three consecutive milestones (.255/.256/.257) due to
-      the conductor pre-test cascade (now fixed by exp2713). This task executes all autonomous-
-      executable prep. Per CLAUDE.md Operator-Only External Publication: git push, arXiv submit,
-      PyPI publish are OPERATOR-ONLY. This task prepares; it does NOT push or publish.
-
-      EXISTING CODE TO READ FIRST:
-      - README.md (check if Phase 1 section already added by prior attempts)
-      - RELEASES.md (check if exists and has Phase 1 entry)
-      - python/carnot/__init__.py (current __version__)
-      - results/experiment_2700_conductor_postmortem_v2.json (recovery_commands — cite in checklist)
-
-      TASK: Execute remaining autonomous Phase 1 ship prep actions.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `.venv/bin/python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot; print(carnot.__version__)"` — record current_version.
-            If fails: try `grep '__version__' python/carnot/__init__.py | head -1` — record current_version.
-         b. `ls README.md 2>/dev/null && echo exists || echo missing`
-            Record: readme_exists (bool).
-         c. `ls RELEASES.md 2>/dev/null && echo exists || echo missing`
-            Record: releases_md_exists (bool).
-         Record: preconditions_checked.
-
-      1. Check README.md for "## Phase 1 Milestone" section.
-         If absent: add it after the first ## heading with content:
-         "## Phase 1 Milestone\n\nCarnot v{{current_version}} marks Phase 1 completion: the carnot-ebm
-         package on PyPI, HuggingFace mirror (huggingface.co/Carnot-EBM), ensemble verifier validation,
-         MCP server, CLI, and Apache-2.0 license. The verifier pipeline runs on live GGUF outputs
-         from state-of-the-art models (Qwen3.6-35B, Gemma-4-31B). See RELEASES.md for changelog."
-         Record: readme_phase1_section_added (bool), readme_already_had_section (bool).
-
-      2. Check RELEASES.md. If absent: create with Phase 1 entry:
-         "# Carnot Releases\n\n## Phase 1 ({date})\n\n- carnot-ebm package on PyPI (Apache-2.0)\n- Ensemble verifier (k=16 Tier 0a-0z) validated on FoVer corpus\n- NEXUS Tier 2 symbolic constraint memory (FR-11 Tier 2 complete per exp2695)\n- MCP server + CLI for external integrators\n- HuggingFace mirror: huggingface.co/Carnot-EBM\n- See docs/arxiv-submission/ for research paper"
-         If exists: add Phase 1 entry if not already present.
-         Record: releases_md_created_or_updated (bool).
-
-      3. Produce final operator ship checklist v5 with specific commands:
-         a. `cd {project_root}`
-         b. `# Step 1 (if not done): conductor pre-test cascade fix — run exp2713 or manually install torch`
-         c. `.venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch`
-         d. `rm -f ops/.pretest-cache.json`
-         e. `# Step 2: commit ship prep files`
-         f. `git add README.md RELEASES.md && git commit -m '[operator] Phase 1 milestone: README + RELEASES.md'`
-         g. `# Step 3: tag and push (triggers CI publish to PyPI via OIDC trusted publishing)`
-         h. `git tag v{{current_version}} -m 'Phase 1 milestone: carnot-ebm package'`
-         i. `git push origin main v{{current_version}}  # OPERATOR-ONLY per CLAUDE.md`
-         j. `# Step 4: after CI publishes to PyPI: update HuggingFace model card at huggingface.co/Carnot-EBM`
-         k. `# Step 5: arXiv submission HOLDS until Phase 4 validates (OPERATOR-ONLY per CLAUDE.md)`
-         Record: operator_ship_checklist_v5 (list of exact strings).
-
-      4. Write results/experiment_2714_phase1_ship_v5.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - phase1_ship_ready: bool
-        principle: "Primary ship gate: True if README + RELEASES.md both exist with Phase 1 content."
-      - readme_phase1_section_added: bool
-        principle: "README Phase 1 section is the visible signal to external users."
-      - releases_md_created_or_updated: bool
-        principle: "RELEASES.md makes the ship milestone discoverable to contributors."
-      - operator_ship_checklist_v5: list of str — copy-pasteable commands
-        principle: "Operator reads this as the definitive Phase 1 ship action list."
-      - current_version: str
-        principle: "Records the carnot version being shipped; traceability."
-      - n_autonomous_actions_taken: int
-        principle: "Audit trail: how many ship-prep actions completed autonomously."
-      - duration_s: float
-        principle: "File reads + edits + JSON write: expected >= 3s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records README check + version import."
-
-      Do NOT submit to arXiv. Do NOT push. Do NOT run git push.
-      Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2715
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2715_sota_gguf_live_eval_v3.json"
-    title: "SOTA GGUF Live Pipeline Validation v3: Ensemble on N=50 Qwen3.6-35B + Gemma-4-31B"
+  - id: exp2727
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2727_verifier_energy_debug_v1.json"
+    title: "Live GGUF Verifier Energy Debug v1: Trace Zero-Energy Collapse on Qwen3.6-35B"
     agent_type: codex
     model: gpt-5.5
     max_turns: 50
     track: evaluation
 
-    gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
-        op: '=='
-        value: true
-
-    prior_failures:
-      - experiment_id: exp2702-sota-gguf-live-eval-v2
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2702 (.257), exp2689 (.256), exp2675 (.255) all failed due to conductor pre-test cascade (now fixed in exp2713). This .258 attempt is gated on exp2713.pretest_cascade_fixed == true. Identical scope: N=50 live GGUF outputs from Qwen3.6-35B + Gemma-4-31B through VerifyRepairPipeline. If cascade is fixed and RTX 3090 available, this is the first actual live eval in the series."
-        retire_if_same_verdict: true
+    prior_failures: []
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      Both RTX 3090s (48 GB VRAM total) have been idle since conductor stall at ~.206.
-      The pre-test cascade has been fixed by exp2713 (gated). This is the first opportunity for
-      genuine live GGUF pipeline validation.
+      NEW EXPERIMENT for .259 — exp2715 (.258) found that running VerifyRepairPipeline.verify()
+      on 50 live Qwen3.6-35B-A3B-GGUF outputs produces energy_score_distribution=all-zero
+      (mean=std=min=max=0.0, fast_path_rate=0.0). This is a degenerate verifier output.
 
-      MODEL_SPECS (mandatory per CLAUDE.md SOTA GGUF requirement):
+      Root cause hypotheses (from capstone exp2724):
+        H1: verify() computes energy=0 because FoVer TF-IDF features do NOT transfer to Qwen3.6 format
+        H2: The verifier Tier 0 models compute score=0 because Qwen3.6 responses fall outside the training distribution
+        H3: There is a bug in verify() that short-circuits to 0 for any input not in the FoVer corpus
+
+      MODEL_SPECS (mandatory per CLAUDE.md SOTA GGUF requirement — PRECONDITIONS gated):
         - name: Qwen3.6-35B-A3B-GGUF
           hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
-          role: primary_inference
-        - name: gemma-4-31B-it-GGUF
-          hf_id: unsloth/gemma-4-31B-it-GGUF
-          role: secondary_inference
+          role: diagnostic_inference
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline.verify(), should_verify())
-      - python/carnot/verify/ (list all existing Tier 0* verifier modules)
-      - scripts/experiment_template.py (cached_sota_pair() pattern)
-      - data/fover_corpus.jsonl (FoVer corpus — {{question, correct, incorrect}} fields)
+      - python/carnot/pipeline/verify_repair.py (verify(), should_verify(), score_candidates())
+      - python/carnot/verify/ (list all tier0* modules — check for FoVer-dependency in feature extraction)
+      - data/fover_corpus.jsonl (FoVer corpus format — compare to live GGUF response format)
+      - results/experiment_2715_sota_gguf_live_eval_v3.json (fast_path_rate, energy_score_distribution)
 
-      TASK: Run VerifyRepairPipeline on N=50 live GGUF outputs. Measure energy distribution.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS (check BEFORE any inference):
-         a. Check Qwen3.6-35B-A3B-GGUF cached:
-            `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -3`
-            Record: qwen_cached (bool).
-         b. Check gemma-4-31B-it-GGUF cached:
-            `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF/ 2>/dev/null | head -3`
-            Record: gemma31b_cached (bool).
-         c. Check RTX 3090 GPUs:
-            `nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null`
-            Record: cuda_available (bool), n_gpus (int), gpu_names (list).
-            Adversarial note: if gpu_names includes 'RTX 3090', cuda_available=true; do NOT accept gfx1100 (fabrication signal).
-         d. Check FoVer corpus: `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
-            Record: fover_corpus_lines (int).
-         e. Check CUDA torch:
-            `.venv/bin/python -c "import torch; print(torch.cuda.is_available())" 2>/dev/null || echo false`
-            Record: torch_cuda_available (bool).
-         If BOTH GGUF models absent AND cuda_available=False:
-            write honest_verdict 'blocked_gguf_not_cached_and_no_cuda' and exit. DO NOT fabricate inference.
-         If at least one GGUF cached AND (cuda_available OR torch_cuda_available): proceed.
-         If no GGUF cached but CUDA available: attempt CPU smoke with gemma-4-E4B-it (N=10),
-         flag smoke_only=true.
-
-      1. Prepare N=50 evaluation prompts from FoVer corpus (random_seed=42).
-         Record: n_prompts_prepared (int), prompt_source (str).
-         reproducibility_checksum = sha256 of first 50 question strings concatenated.
-
-      2. Run inference for each prompt via available GGUF model(s) (llama.cpp or transformers).
-         batch_size=5, timeout per batch=300s.
-         Record: inference_mode ('live_gpu', 'live_cpu', 'smoke_only'),
-         n_examples_run (int), mean_inference_time_s (float), model_used (str).
-
-      3. Pass each response through VerifyRepairPipeline.verify().
-         Compute:
-         a. energy_score_distribution: {{mean, std, min, max, p25, p75}}
-         b. fast_path_rate: fraction where should_verify() returned False
-         Record all metrics.
-
-      4. Write results/experiment_2715_sota_gguf_live_eval_v3.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required; 'blocked_' is honest if no GGUF and no CUDA."
-      - inference_mode: str — 'live_gpu', 'live_cpu', or 'smoke_only'
-        principle: "paper-v6 claims require live_gpu; smoke_only is insufficient for headline."
-      - n_examples_run: int
-        principle: "Sample size validates statistical estimates of energy distribution."
-      - energy_score_distribution: dict — {{mean, std, min, max, p25, p75}}
-        principle: "Primary pipeline validation output: energy scores on live GGUF data."
-      - fast_path_rate: float
-        principle: "ODAR/Phase 4 metric: high rate = verification overhead reduced."
-      - model_used: str
-        principle: "Traceability: which SOTA model generated evaluated outputs."
-      - models_checked: list of str — PRECONDITIONS check result
-        principle: "Anti-fabrication: records which GGUF models were found cached."
-      - cuda_available: bool
-        principle: "Hardware availability; False -> CPU fallback path taken."
-      - gpu_names: list of str
-        principle: "Adversarial check: must contain RTX 3090, not gfx1100 (fabrication signal)."
-      - random_seed: int — 42
-        principle: "Reproducibility."
-      - reproducibility_checksum: str — sha256 of first 50 prompts
-        principle: "Content-addressed prompt selection prevents corpus drift on re-runs."
-      - duration_s: float
-        principle: "Live GGUF inference on 50 examples: expected >= 120s; < 30s = suspicious."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records GGUF cache check + CUDA check."
-
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2716
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2716_tier0f_semantic_calibration_v2.json"
-    title: "Tier 0f: Semantic Reward Calibration for Tier 0e EORM v2 (arXiv:2605.15588)"
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 35
-    track: verifier
-
-    gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
-        op: '=='
-        value: true
-
-    prior_failures:
-      - experiment_id: exp2703-tier0f-semantic-calibration
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2703 (.257) failed due to conductor pre-test cascade (now fixed in exp2713). Gated on exp2713.pretest_cascade_fixed. Same scope: cluster-aware paraphrase calibration on FoVer corpus. If Tier 0e absent, creates both Tier 0e + 0f in this task."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      arXiv:2605.15588 shows energy-based reward models trained on token-level (correct, incorrect)
-      pair objectives have ~40% higher calibration error (ECE) on semantically-equivalent paraphrases.
-      Fix: cluster FoVer responses by semantic equivalence (TF-IDF cosine >= 0.9), assign shared
-      reward labels within clusters.
-
-      Tier 0e uses TF-IDF margin-ranking logistic. If Tier 0e module absent, create both
-      Tier 0e + 0f here.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/ (check if tier0e_eorm.py exists)
-      - results/experiment_2663_tier0e_eorm.json (if exists — tier0e_auroc, model_path)
-      - data/fover_corpus.jsonl (corpus format)
-
-      TASK: Implement Tier 0f semantic calibration. If Tier 0e absent, create it first.
+      TASK: Diagnose why verify() returns zero energy on live GGUF outputs. Produce a verified non-zero
+      energy on at least 5 examples by fixing the root cause.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
-         a. `.venv/bin/python -c "import sklearn; print(sklearn.__version__)"` — scikit-learn.
-            If absent: write honest_verdict 'blocked_sklearn_missing' and exit.
-         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0` — FoVer corpus.
-            If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
-         c. `ls python/carnot/verify/tier0e_eorm.py 2>/dev/null && echo exists || echo missing`
-            Record: tier0e_module_exists (bool).
+         a. Check Qwen3.6-35B-A3B-GGUF cached:
+            `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -3`
+            Record: qwen_cached (bool).
+         b. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
+            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
+         c. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0` — FoVer corpus.
+            Record: fover_corpus_lines (int).
+         d. `nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null`
+            Record: cuda_available (bool), gpu_names (list).
          Record: preconditions_checked.
 
-      1. If tier0e_module_exists=false: create python/carnot/verify/tier0e_eorm.py with
-         EORMVerifier (TF-IDF margin-ranking logistic on FoVer; save to results/tier0e_model.pkl).
-         Train 80% FoVer, eval 20%. Record: tier0e_created_this_task (bool), tier0e_auroc (float).
+      1. DIAGNOSTIC: Load one FoVer example (correct answer) and one live synthetic Qwen-format response.
+         Run verify() on both and compare intermediate feature vectors.
+         a. FoVer example: read first entry from data/fover_corpus.jsonl.
+            Run: pipeline.verify(fover_example.question, fover_example.correct)
+            Record: fover_energy (float), fover_n_verifiers_active (int).
+         b. Synthetic Qwen3.6-format response (short markdown response like "**Answer:** 5"):
+            Run: pipeline.verify("What is 2+3?", "**Answer:** 5")
+            Record: synthetic_energy (float), synthetic_n_verifiers_active (int).
+         If both are zero: hypothesis H1 or H3 confirmed — proceed to Step 2.
+         If FoVer non-zero but synthetic=zero: H1 confirmed (format mismatch). Proceed to Step 3.
 
-      2. Load FoVer corpus. Find pairs where TF-IDF cosine(correct_i, correct_j) >= 0.9.
-         Assign to same cluster, give shared label.
-         Record: n_paraphrase_clusters (int), n_pairs_in_clusters (int).
+      2. TRACE: Read verify() source. For each tier0* verifier called:
+         a. Check if it applies TF-IDF or learned features that require FoVer vocab to be non-empty
+         b. Check if it has a trivial fast-path that returns 0.0 for unknown inputs
+         c. Check if TF-IDF vectorizer was fit on FoVer corpus at module import time
+         Record: root_cause_hypothesis (str), root_cause_confirmed (bool), root_cause_code_location (str).
 
-      3. Cluster-aware train/eval split (no cluster leakage, random_seed=42). Re-train logistic.
-         Save to results/tier0f_semantic_calibrated_logistic.pkl.
+      3. FIX: Based on root cause, apply the minimal targeted fix:
+         - If TF-IDF vocab missing: re-fit on FoVer corpus and save model
+         - If fast-path short-circuit: add logging to distinguish fast-path vs genuine zero-energy
+         - If format mismatch: add text normalizer that strips markdown/code-block formatting before feature extraction
+         Record: fix_applied (str), fix_description (str).
 
-      4. Evaluate Tier 0f: AUROC, ECE (10-bin), paraphrase_fpr.
-         auroc_delta = tier0f_auroc - tier0e_auroc.
-         tier0f_viable = tier0f_auroc >= 0.63 AND ece_improvement > 0.
-         Record: tier0f_auroc, tier0f_ece, paraphrase_fpr, auroc_delta, tier0f_viable.
+      4. VERIFY FIX: Re-run verify() on 5 test inputs (2 FoVer, 3 synthetic Qwen-format):
+         Record: n_non_zero_energies (int), energy_values (list of float — 5 values).
+         verifier_discriminative = (n_non_zero_energies >= 3 AND max(energy_values) - min(energy_values) > 0.01).
 
-      5. Create python/carnot/verify/tier0f_semantic_calibration.py with SemanticCalibratedVerifier.
-         Update python/carnot/verify/__init__.py to export it.
+      5. If qwen_cached AND cuda_available: run 10 real GGUF examples (random_seed=42, batch_size=2):
+         Record: live_gguf_energy_mean (float), live_gguf_energy_std (float).
+         live_gguf_discriminative = live_gguf_energy_std > 0.01.
+         smoke_only = false.
+         Else: smoke_only = true.
 
-      6. Write results/experiment_2716_tier0f_semantic_calibration_v2.json.
+      6. Write results/experiment_2727_verifier_energy_debug_v1.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - tier0f_auroc: float
-        principle: "Primary performance metric; must not regress vs tier0e."
-      - tier0f_ece: float
-        principle: "Calibration error — arXiv:2605.15588 primary improvement metric."
-      - paraphrase_fpr: float
-        principle: "Measure of the false-positive problem Tier 0f fixes."
-      - auroc_delta: float
-        principle: "Confirms calibration did not degrade AUROC (acceptable: delta >= -0.05)."
-      - tier0f_viable: bool
-        principle: "Gate for ensemble v12 inclusion."
-      - n_paraphrase_clusters: int
-        principle: "Confirms paraphrase clusters were found (expected >= 10 in FoVer)."
+      - root_cause_hypothesis: str
+        principle: "Names the verified root cause of zero-energy collapse — prevents rerun without fix."
+      - root_cause_confirmed: bool
+        principle: "True if root cause was traced to specific code location; false if still ambiguous."
+      - fix_applied: str
+        principle: "Describes what was changed in the codebase to fix the degenerate output."
+      - verifier_discriminative: bool
+        principle: "Primary gate: True if verify() produces non-zero energy on >= 3 of 5 test inputs."
+      - n_non_zero_energies: int
+        principle: "Confirms verifier produces meaningful scores after fix."
+      - energy_values: list of float
+        principle: "Adversarial check: all-zero means fix failed; variance > 0.01 means non-degenerate."
+      - fover_energy: float
+        principle: "FoVer diagnostic baseline — should be non-zero if feature extraction works."
+      - synthetic_energy: float
+        principle: "Format-mismatch diagnostic: zero on synthetic = format problem, not data problem."
       - random_seed: int — 42
         principle: "Reproducibility."
       - duration_s: float
-        principle: "Clustering + logistic re-train: expected 5-60s; < 2s suspicious."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records sklearn check + corpus + tier0e state."
+        principle: "Diagnostic reads + fix + 5-example verify: expected >= 10s; < 3s suspicious."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records GGUF cache + pipeline import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2717
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2717_property_guided_repair_loop_v2.json"
-    title: "Property-Guided Counterexample Repair Loop v2 (arXiv:2605.16142 + arXiv:2603.25810 ExVerus)"
+  - id: exp2728
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2728_otv_fast_path.json"
+    title: "OTV One-Token Verification Fast Path (arXiv:2603.01025): KV-Cache Probe for Cheap Routing"
     agent_type: codex
     model: gpt-5.5
     max_turns: 35
     track: pipeline
 
-    gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
-        op: '=='
-        value: true
-
-    prior_failures:
-      - experiment_id: exp2705-property-guided-repair-loop
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2705 (.257) failed due to conductor pre-test cascade (now fixed in exp2713). Gated on exp2713.pretest_cascade_fixed. Same scope: iterative_repair_with_counterexample() + ExVerus-style structured failure messages (arXiv:2603.25810). If score_candidates() absent, adds a mock first."
-        retire_if_same_verdict: true
+    prior_failures: []
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      arXiv:2605.16142: counterexample-guided feedback reduces candidates generated per domain
-      by 7x. arXiv:2603.25810 (ExVerus): structured failure message format — not just "failed"
-      but "failed because counterexample: X = Y, violates constraint Z" — improves repair quality.
-      This experiment adds iterative_repair_with_counterexample() to VerifyRepairPipeline with
-      ExVerus-style structured failure messages.
+      NEW EXPERIMENT for .259 — no prior failures for this specific scope.
+
+      arXiv:2603.01025 "One-Token Verification for Reasoning Correctness Estimation" (Mar 2026):
+      Probes the model's key-value cache with a single verification token to produce a soft correctness
+      probability without additional generation. 90% token reduction vs full verification. AUROC 0.75+
+      on MATH and HumanEval CoT.
+
+      Carnot context: exp2720 added ODAR free-energy routing (fast/deliberative path). OTV can serve as
+      an ultra-cheap PRE-SCREEN before ODAR: if OTV's KV probe says "high confidence", skip ODAR entirely.
+      Two-tier architecture: OTV → (if uncertain) → ODAR → (if deliberative) → full ensemble.
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (score_candidates, select_best_candidate, verify)
-      - results/experiment_2665_vegas_candidate_selection.json (if exists — vegas_viable)
-      - results/experiment_2715_sota_gguf_live_eval_v3.json (if exists — fast_path_rate for context)
+      - python/carnot/pipeline/verify_repair.py (should_verify(), odar_route() from exp2720)
+      - python/carnot/verify/ (existing tier0* modules)
 
-      TASK: Add property-guided iterative repair with structured counterexample messages.
+      TASK: Implement OTV-style single-token verification probe for fast-path routing.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
          a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
             If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
-         b. Check score_candidates() exists in verify_repair.py: `grep -c 'def score_candidates' python/carnot/pipeline/verify_repair.py 2>/dev/null || echo 0`
-            Record: score_candidates_exists (bool).
+         b. `grep -c 'def odar_route' python/carnot/pipeline/verify_repair.py 2>/dev/null || echo 0`
+            Record: odar_route_exists (bool).
          Record: preconditions_checked.
 
-      1. If score_candidates() absent: add minimal mock to VerifyRepairPipeline:
-         score_candidates(candidates) -> list[float]: [0.1 + 0.05*i for i in range(len(candidates))]
-         select_best_candidate(candidates) -> str: candidates[argmin(scores)]
-         Record: score_candidates_created (bool).
+      1. Implement OTV probe (without requiring actual GGUF inference — use TF-IDF proxy):
+         Add otv_probe(prompt: str, response: str) -> float to VerifyRepairPipeline:
+         """OTV-style one-token verification: computes a soft correctness probability
+         from response features without additional generation.
 
-      2. Add iterative_repair_with_counterexample(
-             prompt: str, initial_response: str,
-             k_max: int = 5, energy_threshold: float = 0.3
-         ) -> dict:
-         - Iteration 0: score initial_response.
-         - If energy_score < energy_threshold: return (fast path).
-         - ExVerus-style failure message:
-           "Counterexample found: response scored {{score:.3f}} (threshold={{energy_threshold}}).
-            Constraint violated: energy > {{energy_threshold}}. Specific failure:
-            response fragment '{{initial_response[:100]}}' does not satisfy low-energy criterion.
-            Please revise to reduce energy."
-         - Pass failure message as context for next candidate. Repeat until score < threshold OR k_max.
-         - Returns: {{final_response, final_energy, n_iterations, converged, failure_messages}}
-         Record: method_added (bool).
+         Proxy implementation (no KV cache available without transformer inference):
+         - TF-IDF of response (reuse existing feature extraction)
+         - Dot product with a "correctness direction" vector (trained on FoVer correct/incorrect pairs)
+         - Sigmoid to produce probability in [0, 1]
+         Returns: confidence float in [0, 1]. High = likely correct. Low = uncertain.
+         """
+         Record: otv_probe_added (bool).
 
-      3. Test on 5 synthetic examples (2 correct / 3 incorrect):
-         Record: n_fast_path (int), mean_iterations_for_incorrect (float),
-         candidates_reduction_pct = (k_max - mean_iterations_for_incorrect) / k_max * 100.
+      2. Train correctness direction on FoVer corpus (80/20 split, random_seed=42):
+         a. Load FoVer corpus
+         b. TF-IDF features for correct and incorrect answers
+         c. Logistic regression weight vector as correctness direction
+         d. Save to results/otv_correctness_probe.pkl
+         Record: probe_trained (bool), probe_auroc (float on eval split).
+         otv_fast_path_viable = probe_auroc >= 0.65.
 
-      4. Write results/experiment_2717_property_guided_repair_loop_v2.json.
+      3. Add two-tier routing to VerifyRepairPipeline:
+         route(prompt: str, response: str, otv_threshold=0.8, odar_threshold=0.3) -> str:
+         """Two-tier routing:
+         Step 1: OTV probe — if confidence >= otv_threshold: return 'fast_path_otv'
+         Step 2: ODAR route — if F < odar_threshold: return 'fast_path_odar'
+         Step 3: return 'deliberative_path'
+         """
+         Record: two_tier_routing_added (bool).
+
+      4. Test on 20 synthetic examples (10 correct / 10 incorrect, random_seed=42):
+         n_otv_skipped: examples where otv probe confidence >= 0.8 (OTV fast path)
+         n_odar_skipped: remaining examples where ODAR fast path fires
+         n_deliberative: remaining requiring full ensemble
+         total_savings_pct = (n_otv_skipped + n_odar_skipped) / 20 * 100
+         Record: n_otv_skipped, n_odar_skipped, n_deliberative, total_savings_pct.
+
+      5. Write results/experiment_2728_otv_fast_path.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - method_added: bool
-        principle: "Primary deliverable: iterative_repair_with_counterexample() in pipeline."
-      - exverus_structured_message: bool
-        principle: "True if failure messages use ExVerus-style structured format (arXiv:2603.25810)."
-      - n_fast_path: int
-        principle: "Fast-path rate: correct examples should not trigger iterations."
-      - mean_iterations_for_incorrect: float
-        principle: "Convergence speed."
-      - candidates_reduction_pct: float
-        principle: "arXiv:2605.16142 headline: sequential guidance reduces candidates vs static K."
+      - otv_probe_added: bool
+        principle: "Primary deliverable: OTV probe method in VerifyRepairPipeline."
+      - probe_auroc: float
+        principle: "OTV accuracy: arXiv:2603.01025 claims 0.75+; validate on FoVer."
+      - otv_fast_path_viable: bool
+        principle: "Gate for two-tier routing deployment: True if probe_auroc >= 0.65."
+      - two_tier_routing_added: bool
+        principle: "Confirms OTV + ODAR two-tier routing is wired in pipeline."
+      - total_savings_pct: float
+        principle: "Routing efficiency: fraction of examples that skip full ensemble via fast paths."
+      - n_otv_skipped: int
+        principle: "Attribution: how many saves from OTV first tier."
+      - n_odar_skipped: int
+        principle: "Attribution: how many saves from ODAR second tier."
+      - random_seed: int — 42
+        principle: "Reproducibility."
       - duration_s: float
-        principle: "Method add + 5-example test: expected >= 3s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pipeline import check."
+        principle: "Logistic train + 20-example routing test: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline import + odar_route existence."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2718
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2718_linear_probe_calibration_v2.json"
-    title: "Linear Probe Calibration for Tier 0e EORM v2: 10x Speed vs Multi-Generation (arXiv:2512.22245)"
+  - id: exp2729
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2729_paper_v6_theory_v3.json"
+    title: "pdflatex Toolchain Install + Paper v6 Theory v3: ARM-EBM + 4/delta + FST Citations"
     agent_type: codex
     model: gpt-5.5
-    max_turns: 30
-    track: verifier
-
-    gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
-        op: '=='
-        value: true
+    max_turns: 35
+    track: publication
 
     prior_failures:
-      - experiment_id: exp2709-linear-probe-calibration
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2709 (.257) failed due to conductor pre-test cascade (now fixed in exp2713). Gated on exp2713.pretest_cascade_fixed. Same scope: LinearProbeCalibrator on Tier 0e TF-IDF features (arXiv:2512.22245). Creates Tier 0e if absent."
-        retire_if_same_verdict: true
+      - experiment_id: exp2721-paper-v6-theory-update-v2
+        verdict: "blocked_paper_v6_toolchain_or_source_missing"
+        addressed_by: "exp2721 (.258) blocked because pdflatex was not on PATH and no .tex source was found. This exp2729 FIRST installs texlive-latex-base via sudo apt-get before attempting any LaTeX work — a step exp2721 explicitly did not take. Different approach: toolchain installation is step 1, citation addition is step 2."
+        retire_if_same_verdict: false
+      - experiment_id: exp2708-paper-v6-theory-update
+        verdict: "complete: fallback markdown created; pdflatex unavailable, no .tex source found"
+        addressed_by: "exp2708 (.257) wrote a fallback markdown instead of editing .tex. exp2721 (.258) was explicitly blocked. This attempt installs pdflatex first (apt-get). If apt-get is unavailable or texlive fails to install, write blocked_pdflatex_install_failed — not a silent fallback."
+        retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      arXiv:2512.22245 "Calibrating LLM Judges: Linear Probes for Fast and Reliable Uncertainty
-      Estimation" (Dec 2025): uses interpretability-based linear probes on frozen embeddings for
-      calibrated uncertainty. 10x faster than multi-generation methods. Better ECE than ensemble
-      temperature scaling. Key: linear probe on the SAME TF-IDF vectors already computed in Tier 0e.
+      Three consecutive milestones (.257-.258) failed to add theory citations to paper v6 because
+      pdflatex is not installed. This experiment installs texlive FIRST, then adds citations.
+      Per CLAUDE.md: this task does NOT submit to arXiv (OPERATOR-ONLY).
+
+      Three theory papers to integrate:
+      1. arXiv:2512.15605 (ARM-EBM bijection) → §2 theoretical background
+      2. arXiv:2512.02080 (4/delta bound) → §3 architecture (carnot_delta computed from repair data)
+      3. arXiv:2605.12484 (FST Fast-Slow Training) → §3 architecture
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/tier0e_eorm.py (if exists — EORMVerifier class)
-      - python/carnot/verify/tier0f_semantic_calibration.py (if exists — SemanticCalibratedVerifier)
-      - data/fover_corpus.jsonl (corpus)
+      - docs/arxiv-submission/ (list all files — look for .tex)
+      - docs/ (find *.tex at depth <=3)
+      - results/experiment_2721_paper_v6_theory_update_v2.json (carnot_delta=0.25, pdflatex_available=false)
 
-      TASK: Implement LinearProbeCalibrator on Tier 0e TF-IDF features. Measure ECE improvement.
+      TASK: Install pdflatex. Find .tex source. Add three theory citations. Compile.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `command -v pdflatex 2>/dev/null && echo available || echo missing`
+            Record: pdflatex_initially_available (bool).
+         b. `find docs/ -name '*.tex' 2>/dev/null | head -5`
+            `find . -maxdepth 3 -name '*.tex' 2>/dev/null | head -5`
+            Record: tex_files_found (list of str).
+         Record: preconditions_checked.
+
+      1. INSTALL pdflatex (if not already available):
+         `sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-fonts-recommended 2>&1 | tail -3`
+         If sudo fails: `apt-get install -y texlive-latex-base 2>&1 | tail -3` (may work without sudo in container)
+         Record: install_exit_code (int), pdflatex_after_install (bool = pdflatex now on PATH).
+         If pdflatex still unavailable after install attempt: write honest_verdict 'blocked_pdflatex_install_failed' and exit.
+
+      2. If tex_files_found is empty: search for main.tex alternatives:
+         `find . -name 'main.tex' -o -name 'paper.tex' -o -name '*.tex' 2>/dev/null | head -5`
+         If still none: check docs/arxiv-submission/ for ANY file that might be a paper draft:
+         `ls docs/arxiv-submission/ 2>/dev/null`
+         If STILL no .tex source: write honest_verdict 'blocked_no_tex_source_found' and exit.
+         Record: tex_file_path (str).
+
+      3. Read main .tex file. Compute carnot_delta from repair artifacts:
+         `grep -rl '"n_repair_attempts"' results/ 2>/dev/null | head -5`
+         If found: delta = sum(passed)/sum(attempts). Else: delta = 0.25 (conservative).
+         Record: carnot_delta (float), delta_source (str).
+
+      4. Add to §2 (after theoretical background paragraph):
+         ARM-EBM bijection cite (blondel2025arm, arXiv:2512.15605).
+      5. Add to §3 (architecture section):
+         4/delta bound cite (dantas2025four, arXiv:2512.02080) with empirical delta.
+         FST cite (hashimoto2026fst, arXiv:2605.12484).
+      6. Update .bib with 3 entries if not already present.
+      Record: bijection_citation_added, four_delta_citation_added, fst_citation_added (bool).
+
+      7. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+         Record: latex_compiles (bool), compile_output (str — last 3 lines).
+
+      8. Write results/experiment_2729_paper_v6_theory_v3.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required; blocked_pdflatex_install_failed or blocked_no_tex_source_found if prerequisites fail."
+      - pdflatex_after_install: bool
+        principle: "Primary precondition: pdflatex must be on PATH before citation work can proceed."
+      - bijection_citation_added: bool
+        principle: "arXiv:2512.15605 ARM-EBM — highest-priority theoretical cite (Score 500)."
+      - four_delta_citation_added: bool
+        principle: "arXiv:2512.02080 4/delta — only published convergence guarantee for Carnot repair loop."
+      - fst_citation_added: bool
+        principle: "arXiv:2605.12484 FST — validates dual-timescale architecture with peer evidence."
+      - carnot_delta: float
+        principle: "Empirical delta: probability one repair iteration passes; paper-citable if delta_source=empirical."
+      - delta_source: str — 'empirical' or 'conservative_estimate'
+        principle: "Distinguishes paper-citable value from placeholder."
+      - latex_compiles: bool
+        principle: "GATE FIELD for exp2736 (arXiv package prep): compiles = .tex source is valid."
+      - tex_file_path: str
+        principle: "Documents which .tex file was modified — traceability for paper version control."
+      - duration_s: float
+        principle: "apt install + LaTeX edits + compile: expected >= 30s; < 10s suspicious."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pdflatex initial state + .tex search result."
+
+      DO NOT submit to arXiv. DO NOT push.
+      Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2730
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2730_hf_mirror_ship_v6.json"
+    title: "HuggingFace Mirror Prep + Phase 1 Ship v6 Final: IPFS CID Placeholder + Operator Checklist v6"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 25
+    track: ops
+
+    prior_failures:
+      - experiment_id: exp2714-phase1-ship-v5
+        verdict: "complete: Phase 1 ship prep actions completed autonomously."
+        addressed_by: "exp2714 (.258) completed: phase1_ship_ready=true, operator_ship_checklist_v5 present. This exp2730 has EXPANDED scope — adds HuggingFace model card update draft + IPFS CID anchor placeholder per CLAUDE.md Rule 3 distribution mirroring. Different: exp2714 only produced README + RELEASES.md + checklist; exp2730 adds HF model card + IPFS mirror text."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Per exp2714 (.258): phase1_ship_ready=true. README has Phase 1 section. RELEASES.md created.
+      operator_ship_checklist_v5 is complete. Capstone capstone v258 recommends "SHIP".
+
+      Per CLAUDE.md Rule 3 (distribution mirroring): "Trained weights, model cards, datasets, and
+      Python packages must be published through at least two independent channels. Preferred: HuggingFace
+      as primary channel + IPFS as secondary channel."
+
+      This experiment prepares the HuggingFace model card update and IPFS placeholder so that when the
+      operator runs git tag + git push, HF mirror + IPFS anchor are ready to complete.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2714_phase1_ship_v5.json (operator_ship_checklist_v5, current_version)
+      - README.md (Phase 1 section content)
+      - RELEASES.md (Phase 1 entry)
+
+      TASK: Prepare HuggingFace model card update draft + IPFS CID placeholder. Produce final
+      operator_ship_checklist_v6 with HF + IPFS steps added.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `ls README.md && echo exists || echo missing` — Record: readme_exists (bool).
+         b. `ls RELEASES.md && echo exists || echo missing` — Record: releases_exists (bool).
+         c. `grep -c 'Phase 1' README.md 2>/dev/null || echo 0`
+            Record: phase1_section_present (bool).
+         d. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot; print(carnot.__version__)"` 2>/dev/null || grep '__version__' python/carnot/__init__.py | head -1`
+            Record: current_version (str).
+         Record: preconditions_checked.
+
+      1. Create docs/hf_model_card_update_v1.md with draft model card update:
+         """# Carnot EBM — Phase 1 Release (v{current_version})
+
+         Carnot is an open-source energy-based verification framework for LLM outputs.
+         Apache-2.0. PyPI: pip install carnot-ebm.
+
+         ## Verification Pipeline
+         - k=16 Tier 0 verifier ensemble (Tier 0a-0z, AUROC 0.993 on FoVer corpus)
+         - Tier 0f semantic calibration (ECE-improved paraphrase handling)
+         - FR-11 self-learning: NEXUS symbolic constraint memory + ORCA conformal TTT stopping
+         - ODAR free-energy routing (fast path / deliberative path)
+
+         ## Usage
+         pip install carnot-ebm
+         from carnot.pipeline import VerifyRepairPipeline
+         # See GitHub for MCP server + CLI docs
+
+         ## Reproduce
+         GitHub: https://github.com/Carnot-EBM/carnot-ebm
+         IPFS: [CID placeholder — to be added after IPFS upload]
+         """
+         Record: hf_model_card_draft_created (bool).
+
+      2. Create docs/ipfs_anchor_placeholder.md with IPFS distribution note:
+         """# IPFS Distribution Placeholder — Carnot Phase 1
+
+         Per CLAUDE.md Rule 3 (distribution mirroring), the carnot-ebm source distribution
+         will be pinned to IPFS after the PyPI release is confirmed.
+
+         ## Steps for operator:
+         1. After PyPI publish (via CI): download carnot-ebm-{version}.tar.gz from PyPI
+         2. `ipfs add carnot-ebm-{version}.tar.gz` → note the CID
+         3. Pin via Filecoin-backed service (web3.storage / Storj / Filebase)
+         4. Update README.md IPFS section with CID
+         5. Update HuggingFace model card with CID
+
+         ## CID: [TO BE FILLED BY OPERATOR AFTER IPFS PIN]
+         """
+         Record: ipfs_placeholder_created (bool).
+
+      3. Produce operator_ship_checklist_v6 (adds HF + IPFS steps to v5):
+         All v5 steps + new steps:
+           "# HF Step: after PyPI confirms, visit huggingface.co/Carnot-EBM and update model card with docs/hf_model_card_update_v1.md content"
+           "# IPFS Step: ipfs add carnot-ebm-{version}.tar.gz (or use web3.storage) — document CID in docs/ipfs_anchor_placeholder.md"
+         Record: operator_ship_checklist_v6 (list of str).
+
+      4. Write results/experiment_2730_hf_mirror_ship_v6.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - hf_model_card_draft_created: bool
+        principle: "HuggingFace primary channel mirror: model card draft ready for operator upload."
+      - ipfs_placeholder_created: bool
+        principle: "IPFS secondary channel: placeholder doc per CLAUDE.md Rule 3 distribution mirroring."
+      - operator_ship_checklist_v6: list of str
+        principle: "Complete operator action list including PyPI + HF + IPFS steps."
+      - current_version: str
+        principle: "Records exact version being shipped for traceability."
+      - phase1_ship_ready: bool — true (confirmed from exp2714)
+        principle: "Carry-forward: Phase 1 ship gate remains satisfied."
+      - duration_s: float
+        principle: "File reads + doc creation + JSON write: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records README, RELEASES.md, version checks."
+
+      Do NOT push. Do NOT submit to arXiv.
+      Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2731
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2731_semantic_energy_tier0g.json"
+    title: "Semantic Energy Verifier Tier 0g (arXiv:2508.14496): Boltzmann Cluster Energy for Live GGUF"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    track: verifier
+
+    prior_failures: []
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      NEW EXPERIMENT for .259 — motivated by exp2715's degenerate energy scores.
+
+      arXiv:2508.14496 "Semantic Energy: Detecting LLM Hallucination Beyond Entropy" (Aug 2025):
+      Clusters LLM outputs by semantic equivalence (cosine similarity of TF-IDF or embedding vectors),
+      then assigns energy via a Boltzmann distribution over cluster probabilities:
+        E(x) = -log P(cluster(x)) where P(cluster) = size(cluster) / total_outputs
+      Low-energy = high-probability cluster = likely correct. High-energy = rare cluster = likely hallucination.
+      Validated: TruthfulQA AUROC 0.82, HaluEval AUROC 0.79. Non-degenerate by design.
+
+      Context: exp2727 investigates WHY exp2715's energy was all-zero. Semantic Energy (this task)
+      provides an ALTERNATIVE verifier that avoids zero-energy collapse regardless of exp2727's finding.
+      Both tasks are independent and complementary.
+
+      MODEL_SPECS (mandatory per CLAUDE.md SOTA GGUF — used only if GGUF cached for validation):
+        - name: Qwen3.6-35B-A3B-GGUF
+          hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
+          role: optional_validation
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (list all tier0* modules — add tier0g_semantic_energy.py)
+      - data/fover_corpus.jsonl (FoVer corpus — used for training and baseline)
+      - python/carnot/verify/__init__.py (export pattern)
+
+      TASK: Implement Tier 0g Semantic Energy Verifier. Evaluate on FoVer corpus. Confirm non-degenerate.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
          a. `.venv/bin/python -c "import sklearn; print(sklearn.__version__)"` — scikit-learn.
             If absent: write honest_verdict 'blocked_sklearn_missing' and exit.
-         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0` — FoVer corpus.
+         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
+            Record: fover_corpus_lines (int).
             If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
-         c. `ls python/carnot/verify/tier0e_eorm.py 2>/dev/null && echo exists || echo missing`
-            Record: tier0e_exists (bool).
+         c. Check Qwen3.6 GGUF cached (optional validation only):
+            `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -1`
+            Record: qwen_cached (bool).
          Record: preconditions_checked.
 
-      1. Load FoVer corpus. Compute TF-IDF features (random_seed=42). Label: 1 for (q, correct), 0 for (q, incorrect). Train/eval split: 80/20.
-         Record: n_corpus_pairs (int).
+      1. Load FoVer corpus. Compute TF-IDF features (random_seed=42, max_features=5000).
+         n_corpus_entries = number of (question, answer) pairs.
+         Record: n_corpus_entries (int).
 
-      2. Baseline: if tier0e_exists: load EORMVerifier and evaluate ECE on eval split.
-         Else: train simple logistic on TF-IDF. Record: baseline_ece (float), baseline_auroc (float).
+      2. Implement SemanticEnergyVerifier:
+         For a (question, response) pair:
+           a. Compute TF-IDF of response
+           b. Find k=5 nearest neighbors in FoVer corpus (by cosine similarity)
+           c. Cluster assignment: bin by cosine distance (< 0.3 = same cluster, else new cluster)
+           d. E(response) = -log(cluster_size / n_corpus_entries + epsilon)
+         Save cluster index to results/tier0g_cluster_index.pkl.
+         Record: module_created (bool), n_clusters (int).
 
-      3. LinearProbeCalibrator: fit sklearn CalibratedClassifierCV(cv=5, method='isotonic') on the logistic's uncalibrated probabilities.
-         probe_ece = calibration-based ECE (10 bins). probe_auroc = roc_auc_score on calibrated probabilities.
-         Record: probe_ece (float), probe_auroc (float).
+      3. Evaluate on FoVer eval split (80/20, random_seed=42):
+         For each (question, correct) and (question, incorrect) pair:
+         Energy for correct answer should be LOWER than incorrect (verifier direction check).
+         tier0g_auroc = roc_auc_score(labels=[0,0,...,1,1,...], scores=energies)
+         tier0g_ece = calibration ECE (10 bins)
+         tier0g_non_degenerate = (energy_std > 0.01 AND energy_max - energy_min > 0.1)
+         Record: tier0g_auroc (float), tier0g_ece (float), tier0g_non_degenerate (bool).
 
-      4. Speed comparison:
-         multi_generation_simulated_time_s = n_eval_examples * 2.0  # 2s per generation, simulated
-         linear_probe_time_s = measured time for probe.predict_proba on eval set
-         speedup_factor = multi_generation_simulated_time_s / max(linear_probe_time_s, 0.001)
-         Record: speedup_factor (float), linear_probe_time_s (float).
+      4. Adversarial check: run on 3 synthetic Qwen3.6-format responses (markdown, special tokens):
+         Confirm energies are non-zero (critical: must not reproduce exp2715 zero-energy collapse).
+         Record: synthetic_energies (list of 3 floats), all_non_zero (bool).
 
-      5. Create python/carnot/verify/linear_probe_calibrator.py with LinearProbeCalibrator class:
-         - fit(features, labels) -> self
-         - calibrate(features) -> probabilities
-         - ece(predictions, labels, n_bins=10) -> float
+      5. If qwen_cached: read 3 cached GGUF output examples and compute energy.
+         Record: live_gguf_tested (bool).
+         gguf_energies (list of float — 3 values). gguf_non_degenerate (bool).
+
+      6. Create python/carnot/verify/tier0g_semantic_energy.py with SemanticEnergyVerifier.
          Update python/carnot/verify/__init__.py to export it.
-         Record: module_created (bool).
 
-      6. probe_viable = probe_ece < baseline_ece AND probe_auroc >= baseline_auroc - 0.05.
-
-      7. Write results/experiment_2718_linear_probe_calibration_v2.json.
+      7. Write results/experiment_2731_semantic_energy_tier0g.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - probe_ece: float
-        principle: "Primary calibration metric; arXiv:2512.22245 claims ECE < baseline."
-      - probe_auroc: float
-        principle: "AUROC under calibration — must not degrade significantly from baseline."
-      - baseline_ece: float
-        principle: "Pre-calibration reference ECE; delta = baseline_ece - probe_ece."
-      - speedup_factor: float
-        principle: "arXiv:2512.22245 headline: 10x faster than multi-generation; validate claim."
-      - probe_viable: bool
-        principle: "Gate for future ensemble integration of calibrated Tier 0e."
+      - tier0g_auroc: float
+        principle: "Primary accuracy metric; arXiv:2508.14496 claims 0.79-0.82 AUROC."
+      - tier0g_non_degenerate: bool
+        principle: "Critical gate: True confirms Semantic Energy avoids exp2715 zero-energy collapse."
+      - synthetic_energies: list of float
+        principle: "Adversarial check: must be non-zero on markdown/code responses (degenerate verifier test)."
+      - all_non_zero: bool
+        principle: "Confirms Semantic Energy works on Qwen3.6-format responses without zero-collapse."
+      - tier0g_ece: float
+        principle: "Calibration quality: lower is better (arXiv:2508.14496 secondary metric)."
+      - n_clusters: int
+        principle: "Confirms clustering is non-trivial (expected > 10 for FoVer corpus)."
       - module_created: bool
-        principle: "LinearProbeCalibrator module exists in python/carnot/verify/ after this task."
+        principle: "SemanticEnergyVerifier module exists in python/carnot/verify/ after this task."
       - random_seed: int — 42
-        principle: "Reproducibility: same TF-IDF + train/eval split as Tier 0e."
+        principle: "Reproducibility."
       - duration_s: float
-        principle: "Fitting logistic + calibration on FoVer: expected 2-30s; < 1s suspicious."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records sklearn check + FoVer corpus + tier0e check."
+        principle: "TF-IDF fit + k-NN clustering + eval: expected 5-60s; < 2s suspicious."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records sklearn + FoVer corpus + GGUF cache check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2719
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2719_orca_ttt_v2.json"
-    title: "FR-11 Tier 3: ORCA TTT v2 + Grounded Continuation Stopping (arXiv:2604.01170 + arXiv:2605.14175)"
+  - id: exp2732
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2732_entanglement_retirement_diversity_audit.json"
+    title: "Behavioral Entanglement Lineage Retirement + Diversity-Maximizing Verifier Selection Audit"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 25
+    track: verifier
+
+    prior_failures:
+      - experiment_id: exp2723-behavioral-entanglement-reweighting
+        verdict: "complete: auroc_lift=-0.008 (NEGATIVE); high_entanglement=false; reweighting did not improve discrimination"
+        addressed_by: "exp2723 (.258) showed pairwise Pearson correlation is low (high_entanglement=false), making the de-entangled reweighting premise incorrect. This exp2732 has DIFFERENT scope: (1) formally documents the retirement of the Pearson-correlation-based reweighting approach, and (2) implements a DIFFERENT diversity criterion (diversity-maximizing greedy selection: pick verifiers that maximize ensemble coverage, not minimize pairwise correlation). This is an analysis + alternative selection task, not a rerun of correlation-based reweighting."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      exp2723 (.258): auroc_lift=-0.008 (NEGATIVE), high_entanglement=false. The behavioral entanglement
+      reweighting hypothesis was NOT confirmed. Pairwise Pearson correlation between Carnot's verifiers is
+      low — they are NOT behaviorally entangled by this criterion.
+
+      IMPLICATION: The saturation at k=2 (exp2704) is NOT caused by verifier entanglement. Alternative
+      explanation: the verifiers are complementary but redundant at k>2 — each additional verifier adds
+      precision but not recall. This calls for a DIVERSITY criterion, not an entanglement criterion.
+
+      This task: (1) formally retires the Pearson-correlation entanglement reweighting approach,
+      (2) implements diversity-maximizing greedy verifier selection (covers cases the ensemble misses).
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2723_behavioral_entanglement_reweighting.json (correlation_matrix, auroc_lift)
+      - python/carnot/verify/ (list all tier0* verifier modules)
+      - data/fover_corpus.jsonl (FoVer corpus)
+
+      TASK: Retire Pearson-correlation reweighting. Implement diversity-maximizing greedy selection.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `ls results/experiment_2723_behavioral_entanglement_reweighting.json 2>/dev/null && echo exists || echo missing`
+            Record: exp2723_artifact_exists (bool).
+         b. `.venv/bin/python -c "import sklearn; print(sklearn.__version__)"` — scikit-learn.
+            If absent: write honest_verdict 'blocked_sklearn_missing' and exit.
+         c. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0` — FoVer corpus.
+            If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         Record: preconditions_checked.
+
+      1. Formally retire the Pearson-correlation reweighting approach:
+         Write a retirement record in the artifact explaining:
+         - Why retired: high_entanglement=false (exp2723) means the approach's premise was wrong
+         - What was learned: verifiers have low pairwise correlation, so uniform weighting is near-optimal
+         - Alternative: diversity-maximizing selection (greedy coverage)
+         Record: entanglement_lineage_retired (bool = true), retirement_reason (str).
+
+      2. Implement diversity-maximizing greedy selection:
+         diversity_select(verifier_scores_matrix, labels, k_target: int = 4) -> list of indices:
+         """Greedy selection: start with best single verifier (highest AUROC), then add each
+         verifier that maximizes F1 improvement on the examples the current ensemble misses.
+         This targets recall gaps (examples no current verifier catches) rather than
+         correlation reduction (entanglement premise)."""
+         Record: diversity_select_added (bool).
+
+      3. Evaluate on FoVer eval split (80/20, random_seed=42):
+         - Uniform ensemble AUROC (use all available tier0* verifiers)
+         - Diversity-selected k=4 ensemble AUROC
+         - diversity_lift = diversity_selected_auroc - uniform_auroc
+         Record: uniform_auroc (float), diversity_selected_auroc (float), diversity_lift (float).
+         diversity_viable = diversity_lift > 0.001.
+
+      4. Write results/experiment_2732_entanglement_retirement_diversity_audit.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - entanglement_lineage_retired: bool — true
+        principle: "Formally closes the Pearson-correlation reweighting lineage per Failed-Experiment Rerun Discipline."
+      - retirement_reason: str
+        principle: "Documents WHY retired — high_entanglement=false means premise was wrong, not implementation."
+      - diversity_select_added: bool
+        principle: "New approach implemented: coverage-maximizing selection vs correlation minimization."
+      - diversity_lift: float
+        principle: "Primary result: positive lift validates the diversity-maximizing alternative."
+      - diversity_viable: bool
+        principle: "Gate for ensemble v12 inclusion: True if diversity_lift > 0.001."
+      - uniform_auroc: float
+        principle: "Baseline: all verifiers uniform weight."
+      - diversity_selected_auroc: float
+        principle: "New approach AUROC: should be >= uniform_auroc."
+      - random_seed: int — 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Greedy selection + AUROC eval: expected 3-30s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records exp2723 artifact + sklearn + FoVer corpus."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2733
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2733_orca_nexus_integration_v1.json"
+    title: "FR-11 Tier 3+: ORCA-NEXUS Integration v1 — Online Violation Learning with Conformal Stopping"
     agent_type: codex
     model: gpt-5.5
     max_turns: 40
     track: self-learning
     continuous_self_learning_task: true
 
-    gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
-        op: '=='
-        value: true
-
     prior_failures:
-      - experiment_id: exp2706-orca-ttt-v2
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2706 (.257) failed due to conductor pre-test cascade (now fixed in exp2713). Gated on exp2713.pretest_cascade_fixed. Same scope: VerifierDrivenTTT with ORCA conformal stopping + Grounded Continuation dual stopping (FR-11 Tier 3). FR-11 Tier 2 COMPLETED in .256 (exp2695 NEXUS v2, fr11_tier2_real_violations=true)."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      arXiv:2604.01170 (ORCA): conformal stopping — stop TTT when energy interval width < alpha.
-      arXiv:2605.14175 (Grounded Continuation): dependency-graph stopping — stop when all
-      evidence-claim leaf nodes are verified. Combining both gives dual stopping signals.
-
-      FR-11 Tier 2 (NEXUS v2) COMPLETED in .256 (exp2695: 100 real FoVer violations, 5 rules,
-      persistence_verified=true). FR-11 Tier 3 (ORCA conformal stopping) remains open.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/ (check if ttt_loop.py exists)
-      - python/carnot/pipeline/verify_repair.py (pipeline base)
-
-      TASK: Implement VerifierDrivenTTT with ORCA + Grounded Continuation dual stopping. (FR-11 Tier 3)
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
-            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
-         b. `ls python/carnot/pipeline/ttt_loop.py 2>/dev/null && echo exists || echo missing`
-            Record: ttt_loop_exists (bool).
-         Record: preconditions_checked.
-
-      1. If ttt_loop.py absent: create with VerifierDrivenTTT:
-         - __init__(self, pipeline, k_max=10, alpha=0.1)
-         - iterate(self, prompt, initial_response) -> dict (basic TTT loop)
-         Record: ttt_loop_created (bool).
-
-      2. Add ORCA conformal stopping criterion:
-         conformal_stopping_criterion(energy_scores: list[float], alpha=0.1, min_iterations=2) -> (bool, float):
-         interval_width = max(scores) - min(scores)
-         should_stop = (interval_width < alpha) AND (len(scores) >= min_iterations)
-         Record: orca_method_added (bool).
-
-      3. Add Grounded Continuation stopping criterion (arXiv:2605.14175):
-         dependency_graph_stopping(response_segments: list[str], verified_mask: list[bool]) -> bool:
-         # Simplified: if all(verified_mask) return True (all claims verified, stop)
-         Record: gc_stopping_added (bool).
-
-      4. Add run_with_dual_stopping(examples: list[dict], k_max=10, alpha=0.1) -> dict:
-         - Uses BOTH criteria: stop when EITHER orca OR gc_stopping says stop.
-         - Returns: {{n_iterations_run, n_stopped_by_orca, n_stopped_by_gc, coverage_achieved}}
-         Record: dual_stopping_added (bool).
-
-      5. Run proof-of-concept on N=20 synthetic examples (random_seed=42):
-         - 10 examples where energy converges quickly (energy list decreasing)
-         - 10 examples where energy oscillates (energy list noisy)
-         Record: n_examples_early_stop (int), mean_iterations (float),
-         n_ttt_steps_saved (int), n_stopped_by_orca (int), n_stopped_by_gc (int).
-
-      6. coverage_achieved = fraction of early-stopped examples where final energy <= 0.5.
-
-      7. Write results/experiment_2719_orca_ttt_v2.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - conformal_stopping_enabled: bool
-        principle: "FR-11 Tier 3 primary deliverable: ORCA conformal stopping operational."
-      - gc_stopping_enabled: bool
-        principle: "arXiv:2605.14175 new contribution: dependency-graph stopping as dual criterion."
-      - n_ttt_steps_saved: int
-        principle: "ORCA value metric: iterations saved vs fixed-k baseline."
-      - coverage_achieved: float
-        principle: "Coverage guarantee: fraction of early-stopped with good resolution."
-      - n_stopped_by_orca: int
-        principle: "Attribution: how many stops driven by conformal criterion."
-      - n_stopped_by_gc: int
-        principle: "Attribution: how many stops driven by dependency-graph criterion."
-      - mean_iterations_per_example: float
-        principle: "Shows dual stopping reduces mean iterations below k_max."
-      - ttt_loop_created: bool
-        principle: "Confirms VerifierDrivenTTT module exists after this task."
-      - random_seed: int — 42
-        principle: "Reproducibility."
-      - duration_s: float
-        principle: "TTT loop on 20 examples: expected >= 5s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pipeline import check."
-
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2720
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2720_odar_routing_t2_vegas.json"
-    title: "ODAR Free-Energy Routing Prototype + T2 VegAS K-Scaling (arXiv:2602.23681 + arXiv:2604.01411)"
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 35
-    track: pipeline
-
-    gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
-        op: '=='
-        value: true
-
-    prior_failures:
-      - experiment_id: exp2707-t2-vegas-k-scaling
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2707 (.257) failed due to conductor pre-test cascade (now fixed in exp2713). EXPANDED scope vs exp2707: adds ODAR free-energy routing prototype (arXiv:2602.23681) — the Phase 4 active inference routing mechanism — alongside the T2 VegAS K-scaling analysis. T2 analysis now uses confirmed exp2704 results (saturation_k=2, saturation_auroc=0.993): T2 formula predicts optimal K=3 (AUROC >= 0.85 threshold). Different technique (ODAR routing + T2 analysis) vs exp2707 (T2 only)."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      PART A — ODAR (arXiv:2602.23681): free-energy-principled routing selects between fast-path
-      (skip verification) and deliberative-path (full verify-repair) based on FEP-derived risk
-      criterion. 23-benchmark success demonstrates FEP-derived routing is operationally viable.
-      Phase 4 active inference track: instead of measuring alpha_t (ensemble-inaccessible),
-      implement ODAR-style fast/deliberative routing in verify_repair pipeline.
-
-      PART B — T2 VegAS K-Scaling (arXiv:2604.01411): compute-optimal K depends on verifier
-      quality. exp2704 gave saturation_auroc=0.993. T2 formula: if AUROC >= 0.85 → K_optimal = 3;
-      if AUROC >= 0.7 → K_optimal = 5; else → K_optimal = 8.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (should_verify(), score_candidates(), verify())
-      - results/experiment_2704_multi_agent_scaling_audit.json (saturation_k=2, saturation_auroc=0.993)
-      - results/experiment_2665_vegas_candidate_selection.json (if exists — vegas_viable)
-
-      TASK: Add ODAR-style routing to verify_repair pipeline. Evaluate T2 optimal K.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
-            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
-         b. Read results/experiment_2704_multi_agent_scaling_audit.json for saturation_auroc.
-            If absent: use ensemble_auroc = 0.75 (conservative).
-            Record: ensemble_auroc (float), auroc_source ('exp2704_artifact' or 'conservative_estimate').
-         Record: preconditions_checked.
-
-      PART A: ODAR Routing Implementation:
-      1. Add odar_route(prompt: str, context_energy: float = None) -> str to VerifyRepairPipeline:
-         """ODAR-style free-energy routing: selects fast or deliberative path.
-
-         Free energy proxy: F = complexity(prompt) - confidence(context_energy)
-         where complexity = len(prompt.split()) / 100 (normalized word count)
-         and confidence = 1 - context_energy if context_energy is not None else 0.5
-
-         Routing criterion: if F < threshold (0.3): fast_path (skip verification)
-                           else: deliberative_path (full verify-repair)
-         """
-         Record: odar_routing_added (bool).
-
-      2. Test on 10 synthetic examples:
-         - 5 short/simple prompts (expect fast_path)
-         - 5 long/complex prompts with high energy (expect deliberative_path)
-         Record: n_fast_path_routed (int), n_deliberative_routed (int),
-         odar_fast_path_pct (float).
-
-      PART B: T2 VegAS K-Scaling:
-      3. T2 prediction: t2_optimal_k = 3 if ensemble_auroc >= 0.85 else (5 if >= 0.70 else 8)
-         Record: t2_optimal_k (int), t2_prediction (str — rationale).
-
-      4. K-efficiency curve: for K=[1,2,3,5,8], simulate candidate selection accuracy on
-         10 synthetic test sets (random_seed=42). efficiency_score = accuracy / K.
-         optimal_k = K with highest efficiency_score.
-         t2_prediction_matches = (optimal_k == t2_optimal_k)
-         Record: k_efficiency_curve (list of {{k, accuracy, efficiency_score}}), optimal_k, t2_prediction_matches.
-
-      5. Write results/experiment_2720_odar_routing_t2_vegas.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - odar_routing_added: bool
-        principle: "Primary Phase 4 deliverable: ODAR-style routing in verify_repair pipeline."
-      - odar_fast_path_pct: float
-        principle: "Routing efficiency: what fraction of examples take the low-cost fast path."
-      - t2_optimal_k: int
-        principle: "T2 theory prediction based on ensemble_auroc=0.993."
-      - optimal_k: int
-        principle: "Empirical compute-optimal K from efficiency frontier."
-      - t2_prediction_matches: bool
-        principle: "Validates arXiv:2604.01411 T2 theory against empirical efficiency curve."
-      - ensemble_auroc: float
-        principle: "AUROC used for T2 prediction; sourced from exp2704 artifact."
-      - auroc_source: str — 'exp2704_artifact' or 'conservative_estimate'
-        principle: "Traceability: distinguishes empirical from placeholder value."
-      - k_efficiency_curve: list of {{k, accuracy, efficiency_score}}
-        principle: "Primary T2 data: efficiency frontier for VegAS K choices."
-      - random_seed: int — 42
-        principle: "Reproducibility."
-      - duration_s: float
-        principle: "Routing implementation + K-sweep: expected >= 5s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pipeline import + exp2704 artifact check."
-
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2721
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2721_paper_v6_theory_update_v2.json"
-    title: "Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3 + Fast-Slow Training §3 (Precondition-Gated)"
-    agent_type: codex
-    model: gpt-5.5
-    max_turns: 30
-    track: publication
-
-    prior_failures:
-      - experiment_id: exp2708-paper-v6-theory-update
-        verdict: "complete: fallback markdown created; pdflatex unavailable, no .tex source found"
-        addressed_by: "exp2708 (.257) produced a fallback markdown (docs/arxiv-submission/theory_additions_v256.md) because pdflatex was absent. This .258 attempt is strictly precondition-gated: if pdflatex STILL unavailable OR .tex source STILL absent, write blocked_ IMMEDIATELY (no fallback markdown — operator must fix toolchain). Different from exp2708 because: (1) explicit blocked_ rather than silent fallback, (2) more aggressive .tex source search, (3) re-derives carnot_delta from actual repair artifacts."
+      - experiment_id: exp2719-orca-ttt-v2
+        verdict: "complete: conformal_stopping_enabled=True, n_ttt_steps_saved=79, GC dependency stopping operational"
+        addressed_by: "exp2719 (.258) completed the ORCA conformal stopping (FR-11 Tier 3). This exp2733 has EXPANDED scope: integrates ORCA stopping WITH NEXUS symbolic constraint memory (exp2695, FR-11 Tier 2). The new task runs ORCA TTT on real FoVer violations (not synthetic examples) and feeds learned constraints into NexusConstraintMemory.synthesize_rules(). Different deliverable: ORCA-NEXUS online integration producing learned_rules (str count) from real violations."
         retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      Three high-priority theory papers need integration into paper v6:
-      1. arXiv:2512.15605 (ARM-EBM bijection, Score 500) → §2 theoretical background
-      2. arXiv:2512.02080 (4/delta bound) → §3 architecture (with empirical delta from Carnot data)
-      3. arXiv:2605.12484 (Fast-Slow Training, FST) → §3 architecture
+      FR-11 Tier 2 (NEXUS v2): COMPLETED in .256 (exp2695 — 100 FoVer violations, 5 rules, persistence).
+      FR-11 Tier 3 (ORCA TTT v2): COMPLETED in .258 (exp2719 — conformal_stopping, 79 steps saved).
+      This experiment integrates both: use ORCA conformal stopping TO DRIVE rule synthesis in NEXUS.
 
-      exp2708 (.257) wrote theory_additions_v256.md as fallback (no pdflatex, no .tex source).
-      Per CLAUDE.md: this task does NOT submit to arXiv (OPERATOR-ONLY).
+      Integration design:
+      1. For each FoVer violation, run ORCA TTT loop (up to k=10 iterations, conformal stopping)
+      2. When conformal stopping fires (energy interval width < alpha), extract the final low-energy
+         response as a "repair example"
+      3. Feed (violation, repair) pairs into NexusConstraintMemory.synthesize_rules()
+      4. Measure: how many new rules were synthesized? Are rules better than pattern-only synthesis?
 
       EXISTING CODE TO READ FIRST:
-      - docs/arxiv-submission/ (check for .tex files)
-      - docs/ (check for .tex files at any depth)
-      - docs/arxiv-submission/theory_additions_v256.md (fallback markdown from exp2708, if exists)
-      - results/experiment_2708_paper_v6_theory_update.json (delta_source, carnot_delta)
+      - python/carnot/pipeline/ttt_loop.py (VerifierDrivenTTT from exp2719 — check if exists)
+      - python/carnot/verify/nexus_constraint_memory.py (or nexus_*.py — from exp2695)
+      - data/fover_corpus.jsonl (FoVer corpus)
 
-      TASK: Add three theory citations to paper v6. If toolchain absent, write blocked_ immediately.
+      TASK: Integrate ORCA TTT stopping with NEXUS online constraint learning. (FR-11 Tier 3+)
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
-         a. `command -v pdflatex 2>/dev/null && echo available || echo missing`
-            Record: pdflatex_available (bool).
-         b. `find docs/ -name '*.tex' 2>/dev/null | head -3`
-            `find . -maxdepth 3 -name '*.tex' 2>/dev/null | head -3`
-            Record: tex_file_found (bool), tex_file_path (str or "missing").
-         c. Compute Carnot's empirical delta from repair artifacts:
-            `grep -rl '"n_repair_attempts"' results/ 2>/dev/null | head -5`
-            If found: read n_repair_attempts and n_repairs_passed for each; delta = sum(passed)/sum(attempts).
-            Else: delta = 0.25 (conservative).
-            Record: carnot_delta (float), delta_source ('empirical' or 'conservative_estimate').
-         If pdflatex_available=false OR tex_file_found=false:
-            write honest_verdict 'blocked_paper_v6_toolchain_or_source_missing' and exit.
-            DO NOT write fallback markdown — operator must install pdflatex first.
+         a. `ls python/carnot/pipeline/ttt_loop.py 2>/dev/null && echo exists || echo missing`
+            Record: ttt_loop_exists (bool).
+         b. `ls python/carnot/verify/nexus_constraint_memory.py 2>/dev/null || ls python/carnot/verify/nexus*.py 2>/dev/null | head -1`
+            Record: nexus_module_exists (bool), nexus_module_path (str).
+         c. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
+            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
+         d. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
+            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
          Record: preconditions_checked.
 
-      1. If both preconditions pass: read main .tex file.
-         Add to §2: ARM-EBM bijection paragraph citing blondel2025arm.
-         Add to §3:
-           - 4/delta bound paragraph (citing dantas2025four) with Carnot empirical delta.
-           - FST paragraph (citing hashimoto2026fst).
-         Update .bib with 3 entries.
-         Record: bijection_citation_added, four_delta_citation_added, fst_citation_added (bool).
+      1. If ttt_loop_exists=false: create minimal VerifierDrivenTTT stub (per exp2719 pattern):
+         iterate(prompt, initial_response, k_max=10, alpha=0.1) -> dict
+         conformal_stopping_criterion(energy_scores, alpha=0.1, min_iterations=2) -> (bool, float)
+         Record: ttt_stub_created (bool).
 
-      2. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp docs/arxiv-submission/main.tex 2>&1 | tail -5`
-         Record: latex_compiles (bool).
+      2. If nexus_module_exists=false: create minimal NexusConstraintMemory stub:
+         add_violation(question, wrong_answer, energy_score) -> None
+         synthesize_rules(min_support=3) -> list of str
+         Record: nexus_stub_created (bool).
 
-      3. Write results/experiment_2721_paper_v6_theory_update_v2.json.
+      3. Load N=30 FoVer violations from corpus (random_seed=42):
+         Violations = (question, incorrect_answer) pairs.
+         For each violation: simulate ORCA TTT (use pipeline.verify() to compute energy):
+           - energy_scores = [pipeline.verify(q, r) for r in iteration_responses]
+           - conformal_stopping_criterion(energy_scores, alpha=0.1)
+           - If stopped: record repair_example = (violation, iteration_responses[-1])
+         Record: n_violations_processed (int), n_orca_stopped_early (int), n_repairs_found (int).
+
+      4. Feed (violation, repair) pairs to NEXUS:
+         For each repair: nexus.add_violation(question, wrong_answer, energy_score)
+         synthesized_rules = nexus.synthesize_rules(min_support=3)
+         Record: n_rules_synthesized (int), synthesized_rules_sample (list of str — first 3).
+
+      5. orca_nexus_integration_viable = (n_repairs_found >= 5 AND n_rules_synthesized >= 1).
+
+      6. Write results/experiment_2733_orca_nexus_integration_v1.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required; blocked_ is honest if toolchain missing."
-      - bijection_citation_added: bool
-        principle: "Score 500 paper — highest-priority theoretical cite in Carnot's record."
-      - four_delta_citation_added: bool
-        principle: "4/delta provides the only published convergence guarantee for Carnot's repair loop."
-      - fst_citation_added: bool
-        principle: "FST validates dual-timescale architecture with peer-reviewed evidence."
-      - carnot_delta: float
-        principle: "Empirical delta: probability one repair iteration produces a passing candidate."
-      - delta_source: str — 'empirical' or 'conservative_estimate'
-        principle: "Distinguishes paper-citable value from placeholder."
-      - latex_compiles: bool
-        principle: "Compile check prevents broken LaTeX in submission package."
-      - pdflatex_available: bool
-        principle: "Documents toolchain state; False means toolchain fix required before paper work."
+        principle: "Terminal prefix required."
+      - orca_nexus_integration_viable: bool
+        principle: "FR-11 integration gate: True if ORCA-driven violations feed NEXUS rule synthesis."
+      - n_violations_processed: int
+        principle: "Confirms ORCA TTT loop ran on real FoVer data (not synthetic examples)."
+      - n_orca_stopped_early: int
+        principle: "ORCA value: early stops = fewer iterations needed per online learning step."
+      - n_repairs_found: int
+        principle: "Repair quality: how many ORCA loops converged to a lower-energy response."
+      - n_rules_synthesized: int
+        principle: "NEXUS value: new rules generated from ORCA-driven repair examples."
+      - synthesized_rules_sample: list of str
+        principle: "Qualitative audit: are the synthesized rules meaningful (not trivial prefix patterns)?"
+      - random_seed: int — 42
+        principle: "Reproducibility."
       - duration_s: float
-        principle: "LaTeX edits + delta computation: expected >= 5s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pdflatex check + .tex search + artifact scan."
+        principle: "30 violations + ORCA + NEXUS synthesis: expected >= 10s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records TTT loop + NEXUS module + pipeline import + FoVer corpus."
 
-      DO NOT submit to arXiv. DO NOT push.
-      Do NOT modify scripts/research_conductor.py.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2722
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2722_kv260_continuity_258.json"
-    title: "KV260 Hardware Continuity .258 (NON-TERMINAL — SD Card Branch)"
+  - id: exp2734
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2734_falcon_repair_integration.json"
+    title: "FALCON Property-Constrained Repair Integration (arXiv:2602.01090): Grammar + Semantic Repair"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: pipeline
+
+    prior_failures:
+      - experiment_id: exp2717-property-guided-repair-loop-v2
+        verdict: "complete: method_added=True, candidates_reduction_pct=60.0"
+        addressed_by: "exp2717 (.258) completed property-guided iterative repair with ExVerus counterexample messages (60% candidates reduction). This exp2734 has EXPANDED scope: adds FALCON-style separation of syntactic validity (grammar-constrained decoding) from semantic feasibility (exp2717's ExVerus repair). Different deliverable: adds a grammar_check() gating step BEFORE the iterative repair loop, per FALCON's two-layer architecture (arXiv:2602.01090)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      NEW EXPERIMENT for .259 — motivated by arXiv:2602.01090 (FALCON).
+
+      arXiv:2602.01090 "FALCON: Hard Constraints Meet Soft Generation" (Feb 2026):
+      Separates syntactic validity (grammar-constrained decoding using formal grammars) from
+      semantic feasibility (iterative repair operators). Grammar-constrained generation guarantees
+      structurally valid outputs; repair operators guarantee semantic constraint satisfaction.
+
+      Carnot mapping:
+      - Grammar check (syntactic): does the response match expected format? (e.g., JSON schema, code structure)
+      - Semantic repair (semantic): does the response satisfy energy constraints? (existing exp2717)
+
+      Two-layer FALCON integration:
+      Layer 1: grammar_check() — reject responses that fail format constraints (fast, cheap)
+      Layer 2: iterative_repair_with_counterexample() — repair responses that pass format but fail energy
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (iterative_repair_with_counterexample from exp2717)
+      - results/experiment_2717_property_guided_repair_loop_v2.json (method_added, candidates_reduction_pct)
+
+      TASK: Add FALCON-style grammar_check() layer. Integrate with exp2717's iterative repair.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
+            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
+         b. `grep -c 'def iterative_repair_with_counterexample' python/carnot/pipeline/verify_repair.py 2>/dev/null || echo 0`
+            Record: repair_method_exists (bool = count > 0).
+         Record: preconditions_checked.
+
+      1. If repair_method_exists=false: add stub iterative_repair_with_counterexample() per exp2717 pattern.
+         Record: repair_stub_added (bool).
+
+      2. Add grammar_check(response: str, format_type: str = 'text') -> (bool, str):
+         """FALCON Layer 1: syntactic validity check.
+
+         Supported format_types:
+         - 'text': always passes (free-form text) [fast path]
+         - 'json': checks json.loads(response) succeeds
+         - 'code_python': checks compile(response, '<string>', 'exec') succeeds
+         - 'number': checks response.strip() is a valid float
+
+         Returns: (valid: bool, reason: str)
+         """
+         Record: grammar_check_added (bool).
+
+      3. Add falcon_repair(prompt: str, initial_response: str, format_type: str = 'text',
+                           k_max: int = 5, energy_threshold: float = 0.3) -> dict:
+         """FALCON two-layer repair:
+         Layer 1: grammar_check(initial_response, format_type)
+           If invalid: return {failed: 'grammar', reason: str, n_iterations: 0}
+         Layer 2: iterative_repair_with_counterexample(prompt, initial_response, k_max, energy_threshold)
+         Returns: {final_response, final_energy, n_iterations, converged, layers_applied}
+         """
+         Record: falcon_repair_added (bool).
+
+      4. Test on 15 synthetic examples (5 text / 5 json / 5 code_python, random_seed=42):
+         - 3 correct format responses per type
+         - 2 incorrect format responses per type
+         Record: n_grammar_rejected (int), n_grammar_passed (int),
+         n_semantic_repair_triggered (int), n_converged (int),
+         total_candidates_reduction_pct (float).
+
+      5. Write results/experiment_2734_falcon_repair_integration.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - falcon_repair_added: bool
+        principle: "Primary deliverable: FALCON two-layer repair method in VerifyRepairPipeline."
+      - grammar_check_added: bool
+        principle: "arXiv:2602.01090 Layer 1: syntactic validity gating before semantic repair."
+      - n_grammar_rejected: int
+        principle: "Layer 1 efficiency: grammar rejects save full semantic repair computation."
+      - total_candidates_reduction_pct: float
+        principle: "Combined Layer 1 + Layer 2 reduction vs naive k_max attempts."
+      - n_converged: int
+        principle: "End-to-end repair quality: how many passed both layers + reached low energy."
+      - duration_s: float
+        principle: "Grammar check + iterative repair + 15 examples: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline import + repair method existence."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2735
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2735_kv260_continuity_259.json"
+    title: "KV260 Hardware Continuity .259 (NON-TERMINAL — SD Card Branch, 5th Consecutive)"
     agent_type: codex
     model: gpt-5.5
     max_turns: 20
     track: hardware
 
     prior_failures:
-      - experiment_id: exp2710-kv260-continuity-257
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2710 (.257) failed due to conductor pre-test cascade. This .258 attempt does NOT gate on exp2713.pretest_cascade_fixed because the cascade fix invalidates the pretest cache — and KV260 hardware check (/dev/mmcblk*) is independent of the Python test suite. Running independently as designed. SD card absent in .254/.256/.257 (three consecutive Branch B). This is the 4th expected Branch B unless operator inserted SD card."
+      - experiment_id: exp2722-kv260-continuity-258
+        verdict: "complete: branch_taken=B, consecutive_branch_b_runs=4, sd_card_absent=true"
+        addressed_by: "exp2722 (.258) was the 4th consecutive Branch B. This exp2735 is the 5th expected consecutive Branch B unless operator inserted SD card since .258. Different: escalation urgency higher (5th consecutive); operator notice must be more explicit. Terminal state is unchanged: kv260_synthesis_succeeded=true AND board-level latency transcript."
         retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      KV260 is NON-TERMINAL per CLAUDE.md Hardware-Task Continuity Discipline. SD card absent
-      in exp2710 (.257) and exp2670 (.254) — four consecutive Branch B expected unless operator
-      inserted SD card since last check. Terminal state: kv260_synthesis_succeeded=true AND
-      board-level latency transcript in a non-fabricated artifact.
+      KV260 is NON-TERMINAL per CLAUDE.md Hardware-Task Continuity Discipline.
+      SD card absent in exp2722 (.258), exp2710 (.257), exp2670 (.254) — five consecutive Branch B
+      expected unless operator inserted SD card since last check.
       Per CLAUDE.md: "use the latest bitstream at all times on the kv260."
       Latest XDC-constrained bitstream: carnot_ising_v4 (loaded via: xmutil loadapp carnot_ising_v2_n64).
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_2710_kv260_continuity_257.json (if exists — branch_taken, sd_card_detected)
+      - results/experiment_2722_kv260_continuity_258.json (branch_taken, consecutive_branch_b_runs)
       - ops/hardware-bringup-prep.md (KV260 section — current bring-up state)
 
-      TASK: KV260 hardware continuity .258 — Branch A (SD detected) or Branch B (SD absent).
+      TASK: KV260 hardware continuity .259 — Branch A (SD detected) or Branch B (SD absent).
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
@@ -1078,15 +1105,15 @@ tasks:
       3. Record: kv260_board_smoke_passed (bool).
 
       BRANCH B (sd_card_detected == false):
-      1. Read results/experiment_2710_kv260_continuity_257.json if it exists.
+      1. Read results/experiment_2722_kv260_continuity_258.json if exists.
       2. Update ops/hardware-bringup-prep.md KV260 section:
          - date: {date}
-         - sd_card_status: "absent across .254/.256/.257/.258 (four consecutive Branch B runs)"
-         - next_step: "OPERATOR: insert SD card with PYNQ image. This is the 4th consecutive Branch B — escalated. After insertion: re-run kv260 task."
+         - sd_card_status: "absent across .254/.256/.257/.258/.259 (FIVE consecutive Branch B runs — OPERATOR ESCALATED)"
+         - next_step: "OPERATOR URGENT: insert SD card with PYNQ image. 5th consecutive Branch B. Hardware track will remain mandatory per CLAUDE.md until board reaches terminal state. After insertion: re-run kv260 task."
          - latest_bitstream: "carnot_ising_v4 (load via: xmutil loadapp carnot_ising_v2_n64)"
          Record: prep_doc_updated (bool).
 
-      3. Write results/experiment_2722_kv260_continuity_258.json.
+      3. Write results/experiment_2735_kv260_continuity_259.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:'
@@ -1097,28 +1124,28 @@ tasks:
         principle: "Primary branch condition; persistent false = operator action required."
       - kv260_terminal: false
         principle: "Explicitly false — board stays in per-milestone mandatory inclusion."
-      - consecutive_branch_b_runs: int — expected 4 (.254, .256, .257, .258) if Branch B
-        principle: "Tracks operator urgency signal: 4 consecutive = escalate operator notice."
+      - consecutive_branch_b_runs: int — expected 5 if Branch B
+        principle: "Escalation signal: 5 consecutive = strongly escalate operator notice."
       - duration_s: float
         principle: "Branch B documentation-only: expected 2-10s."
-      - preconditions_checked: list of {{resource, available, check}}
+      - preconditions_checked: list of {resource, available, check}
         principle: "Anti-fabrication: records /dev/mmcblk* check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2723
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2723_behavioral_entanglement_reweighting.json"
-    title: "Behavioral Entanglement Reweighting for Verifier Ensemble (arXiv:2604.07650)"
+  - id: exp2736
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2736_arxiv_submission_package_prep.json"
+    title: "Paper v6 arXiv Submission Package Prep (Operator-Only Submission)"
     agent_type: codex
     model: gpt-5.5
-    max_turns: 35
-    track: verifier
+    max_turns: 30
+    track: publication
 
     gated_on:
-      - upstream: exp2713-pretest-cascade-fix-v1
-        artifact_field: pretest_cascade_fixed
+      - upstream: exp2729-pdflatex-install-paper-v6-theory-v3
+        artifact_field: latex_compiles
         op: '=='
         value: true
 
@@ -1128,97 +1155,80 @@ tasks:
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      NEW EXPERIMENT for .258 — directly motivated by exp2704 result.
-
-      arXiv:2604.07650 "Behavioral Entanglement and Reweighting Verifier Ensembles" (Apr 2026):
-      uniform-weight AND-composition of LLM verifiers is suboptimal due to correlated failure
-      patterns ("behavioral entanglement"). De-entangled reweighting using diversity-weighted
-      ensemble yielded up to 4.5% accuracy lift.
-
-      exp2704 (.257) showed saturation_k=2, saturation_auroc=0.993, total_lift=-0.003.
-      The NEGATIVE total_lift (adding verifiers reduced overall AUROC) is a behavioral entanglement
-      signal — the additional verifiers are correlated with the first. De-entangled reweighting
-      could restore the expected positive lift.
+      NEW EXPERIMENT for .259 — first attempt at arXiv submission PACKAGE PREPARATION.
+      This task is gated on exp2729.latex_compiles=true (pdflatex available + .tex source exists).
+      Per CLAUDE.md Operator-Only External Publication: arXiv submission is OPERATOR-ONLY.
+      This task ONLY prepares the package and checklist — it does NOT submit.
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/ (list all tier0* verifier modules — need pairwise correlation matrix)
-      - data/fover_corpus.jsonl (FoVer corpus)
-      - results/experiment_2704_multi_agent_scaling_audit.json (k_auroc_pairs, components_by_auroc)
+      - results/experiment_2729_paper_v6_theory_v3.json (tex_file_path, latex_compiles, carnot_delta)
+      - docs/arxiv-submission/ (paper files)
 
-      TASK: Measure pairwise behavioral entanglement. Apply de-entangled reweighting. Measure AUROC lift.
+      TASK: Prepare arXiv submission package. Produce operator action checklist.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
-         a. `.venv/bin/python -c "import sklearn; print(sklearn.__version__)"` — scikit-learn.
-            If absent: write honest_verdict 'blocked_sklearn_missing' and exit.
-         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0` — FoVer corpus.
-            If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
-         c. `ls python/carnot/verify/tier0*.py 2>/dev/null | wc -l` — count available modules.
-            Record: n_components_available (int).
-            If n_components_available < 2: write honest_verdict 'blocked_insufficient_verifiers' and exit.
+         a. `command -v pdflatex 2>/dev/null && echo available || echo missing`
+            Record: pdflatex_available (bool).
+            If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
+         b. Read results/experiment_2729_paper_v6_theory_v3.json for tex_file_path.
+            `ls {tex_file_path} 2>/dev/null && echo exists || echo missing`
+            Record: tex_source_exists (bool).
+            If false: write honest_verdict 'blocked_tex_source_missing' and exit.
+         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -3`
+            Record: pdf_compiles (bool).
+            If false: write honest_verdict 'blocked_pdf_compile_failed' and exit.
          Record: preconditions_checked.
 
-      1. Load FoVer corpus (80/20 split, random_seed=42). Compute individual verifier scores on
-         eval split for each available tier0* module (TF-IDF proxy).
-         Record: component_scores (dict: name -> list of scores).
+      1. Count total pages in PDF: `pdfinfo /tmp/main.pdf 2>/dev/null | grep Pages`
+         Record: n_pages (int).
+         Count words in abstract: `pdftotext /tmp/main.pdf - 2>/dev/null | head -50 | wc -w`
+         Record: abstract_word_count (int, approximate).
 
-      2. Compute pairwise Pearson correlation matrix of verifier scores.
-         Record: correlation_matrix (dict: name_pair -> correlation), mean_pairwise_correlation (float).
-         high_entanglement = mean_pairwise_correlation > 0.7 (threshold from arXiv:2604.07650 paper).
+      2. Check that required sections are present in .tex source:
+         `grep -c '\\section{Introduction}' {tex_file_path}` etc.
+         Record: sections_present (list of str — which sections found).
 
-      3. Compute de-entangled weights:
-         weight_i = 1 - (sum of |corr(i,j)| for j != i) / (n_components - 1)
-         Normalize weights to sum to 1.
-         Record: diversity_weights (dict: name -> weight).
+      3. Verify all three theory citations landed (from exp2729):
+         `grep -c 'blondel2025arm\|dantas2025four\|hashimoto2026fst' {tex_file_path}`
+         Record: n_theory_citations_present (int).
 
-      4. Evaluate uniform ensemble vs de-entangled ensemble on eval split:
-         uniform_auroc: mean of individual scores -> roc_auc
-         reweighted_auroc: weighted mean of individual scores -> roc_auc
-         auroc_lift = reweighted_auroc - uniform_auroc
-         Record: uniform_auroc (float), reweighted_auroc (float), auroc_lift (float).
-         reweighting_viable = reweighted_auroc > uniform_auroc AND auroc_lift > 0.001.
+      4. Produce operator_arxiv_checklist (list of str):
+         - "Step 1: Review PDF at /tmp/main.pdf (or recompile)"
+         - "Step 2: Verify author list and affiliations"
+         - "Step 3: Check arXiv category: cs.AI (primary), cs.LG (secondary)"
+         - "Step 4: Upload to arxiv.org (OPERATOR-ONLY per CLAUDE.md)"
+         - "Step 5: After arxiv submit: update HuggingFace model card with arXiv link"
+         - "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
 
-      5. Create python/carnot/verify/deentangled_ensemble.py with DeentangledEnsemble:
-         - fit(verifier_scores_matrix, labels) -> self (compute weights)
-         - predict(verifier_scores_matrix) -> weighted ensemble scores
-         Update python/carnot/verify/__init__.py to export it.
-         Record: module_created (bool).
-
-      6. Write results/experiment_2723_behavioral_entanglement_reweighting.json.
+      5. Write results/experiment_2736_arxiv_submission_package_prep.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - uniform_auroc: float
-        principle: "Baseline ensemble AUROC (comparable to exp2704 saturation_auroc=0.993)."
-      - reweighted_auroc: float
-        principle: "Primary result: AUROC after de-entangled reweighting."
-      - auroc_lift: float
-        principle: "arXiv:2604.07650 headline: positive lift expected from reweighting."
-      - mean_pairwise_correlation: float
-        principle: "Behavioral entanglement measure; > 0.7 validates the reweighting motivation."
-      - high_entanglement: bool
-        principle: "Confirms whether the saturation_k=2 exp2704 result was due to entanglement."
-      - reweighting_viable: bool
-        principle: "Gate for ensemble v12: True if reweighting provides meaningful lift."
-      - module_created: bool
-        principle: "DeentangledEnsemble module exists in python/carnot/verify/ after this task."
-      - n_components_available: int
-        principle: "Confirms how many verifiers participated in correlation analysis."
-      - random_seed: int — 42
-        principle: "Reproducibility."
+      - submission_package_ready: bool
+        principle: "True if package is ready for OPERATOR to submit; this task never submits."
+      - pdf_compiles: bool
+        principle: "Paper compiles to valid PDF — gate for operator submission."
+      - n_pages: int
+        principle: "Page count validates paper is complete (expected 8-15 pages for conference)."
+      - n_theory_citations_present: int — expected 3
+        principle: "Confirms all three theory cites from exp2729 landed in final PDF."
+      - operator_arxiv_checklist: list of str
+        principle: "Operator reads this as the definitive arXiv submission action list."
       - duration_s: float
-        principle: "Correlation matrix + reweighting + eval: expected 5-30s; < 1s suspicious."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records sklearn check + FoVer corpus check + verifier count."
+        principle: "pdflatex compile + grep + checklist: expected >= 10s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pdflatex + .tex source + PDF compile checks."
 
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
+      DO NOT submit to arXiv. DO NOT push.
+      Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2724
-    milestone: "2026.05.258"
-    deliverable: "results/experiment_2724_capstone_v258.json"
-    title: "Capstone v258: Cross-Artifact Synthesis + Conductor Fix Status + Phase 1 Ship + Gaps for .259"
+  - id: exp2737
+    milestone: "2026.05.259"
+    deliverable: "results/experiment_2737_capstone_v259.json"
+    title: "Capstone v259: Cross-Artifact Synthesis + Verifier Debug + Phase 1 Ship + Gaps for .260"
     agent_type: claude
     model: opus
     max_turns: 80
@@ -1226,114 +1236,113 @@ tasks:
     track: synthesis
 
     prior_failures:
-      - experiment_id: exp2711-capstone-v257
-        verdict: "zero_execution_no_artifact_produced"
-        addressed_by: "exp2711 (.257) failed due to conductor pre-test cascade (now fixed in exp2713). This .258 capstone attempts to synthesize all 12 upstream artifacts. With cascade fixed, earlier experiments should produce artifacts for synthesis. Multi-file cross-artifact synthesis (12+ files) + doc updates across ops/status.md + ops/changelog.md + ops/metrics.md requires requires_claude: true per CLAUDE.md positive criteria (5+ file choreography + open-ended judgment under ambiguity when artifacts absent)."
+      - experiment_id: exp2724-capstone-v258
+        verdict: "complete: capstone synthesis of 12 .258 artifacts; cascade fixed, Phase 1 ship-ready, paper v6 toolchain blocked, KV260 SD absent"
+        addressed_by: "exp2724 (.258) completed capstone synthesis of 12 artifacts (8/12 criteria met). This exp2737 has different scope: synthesizes 12 NEW .259 artifacts; the key new synthesis questions are (1) did exp2727 fix the degenerate verifier? (2) did exp2729 install pdflatex and add citations? (3) was exp2736 arXiv package prep successful? These are .259-specific synthesis questions not addressed in exp2724."
         retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      Milestone 2026.05.258 has completed its research tasks. This capstone synthesizes all
-      experiment artifacts, updates operational docs, and produces the gaps-for-.259 document.
+      Milestone 2026.05.259 has completed its research tasks. This capstone synthesizes all
+      experiment artifacts, updates operational docs, and produces the gaps-for-.260 document.
 
       EXISTING CODE TO READ FIRST (in priority order):
-      - results/experiment_2712_archive_v257.json (milestone_activated verification)
-      - results/experiment_2713_pretest_cascade_fix_v1.json (pretest_cascade_fixed, most_likely_cause)
-      - results/experiment_2714_phase1_ship_v5.json (phase1_ship_ready, operator_ship_checklist_v5)
-      - results/experiment_2715_sota_gguf_live_eval_v3.json (inference_mode, energy_score_distribution)
-      - results/experiment_2716_tier0f_semantic_calibration_v2.json (tier0f_auroc, tier0f_viable)
-      - results/experiment_2717_property_guided_repair_loop_v2.json (method_added, candidates_reduction_pct)
-      - results/experiment_2718_linear_probe_calibration_v2.json (probe_ece, probe_viable, speedup_factor)
-      - results/experiment_2719_orca_ttt_v2.json (conformal_stopping_enabled, n_ttt_steps_saved)
-      - results/experiment_2720_odar_routing_t2_vegas.json (odar_routing_added, t2_prediction_matches)
-      - results/experiment_2721_paper_v6_theory_update_v2.json (bijection_citation_added, carnot_delta)
-      - results/experiment_2722_kv260_continuity_258.json (branch_taken, consecutive_branch_b_runs)
-      - results/experiment_2723_behavioral_entanglement_reweighting.json (reweighted_auroc, auroc_lift)
+      - results/experiment_2725_archive_v258.json (milestone_activated verification)
+      - results/experiment_2726_full_collection_fix_v1.json (collection_clean)
+      - results/experiment_2727_verifier_energy_debug_v1.json (verifier_discriminative, root_cause_hypothesis, fix_applied)
+      - results/experiment_2728_otv_fast_path.json (otv_fast_path_viable, total_savings_pct)
+      - results/experiment_2729_paper_v6_theory_v3.json (pdflatex_after_install, latex_compiles, bijection_citation_added)
+      - results/experiment_2730_hf_mirror_ship_v6.json (hf_model_card_draft_created, operator_ship_checklist_v6)
+      - results/experiment_2731_semantic_energy_tier0g.json (tier0g_auroc, tier0g_non_degenerate)
+      - results/experiment_2732_entanglement_retirement_diversity_audit.json (entanglement_lineage_retired, diversity_viable)
+      - results/experiment_2733_orca_nexus_integration_v1.json (orca_nexus_integration_viable, n_rules_synthesized)
+      - results/experiment_2734_falcon_repair_integration.json (falcon_repair_added, total_candidates_reduction_pct)
+      - results/experiment_2735_kv260_continuity_259.json (branch_taken, consecutive_branch_b_runs)
+      - results/experiment_2736_arxiv_submission_package_prep.json (submission_package_ready — if exists)
       - ops/status.md (ADD new section at TOP — NEVER remove existing content)
       - _bmad/traceability.md (check FR-11, FR-12 progress)
       - ops/metrics.md (ADD new entry)
 
-      TASK: Synthesize all .258 artifacts into a capstone assessment.
+      TASK: Synthesize all .259 artifacts into a capstone assessment.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
          Read each artifact file listed above. Note absent files as 'skipped_not_executed'.
          Record: n_artifacts_read (int), n_artifacts_absent (int).
 
-      1. Conductor Fix Assessment:
-         - Did exp2713 fix the cascade? (pretest_cascade_fixed field)
-         - smart_subset_passes? Is the cascade resolved for future milestones?
-         - Operator note: MAX_HEAL_ATTEMPTS still 0; should operator review setting it to 1?
-         Record: cascade_fixed (bool), cascade_fix_durable (bool).
+      1. Verifier Energy Debug Assessment:
+         - Did exp2727 fix the degenerate zero-energy problem? (verifier_discriminative)
+         - What was the root cause? (root_cause_hypothesis, root_cause_confirmed)
+         - Is the fix durable? (fix_applied describes the change)
+         Record: verifier_fixed (bool), verifier_fix_root_cause (str).
 
-      2. Phase 1 Ship Assessment:
-         - phase1_ship_ready from exp2714?
-         - operator_ship_checklist_v5 complete?
-         - Recommend: SHIP or HOLD.
+      2. Paper v6 / Toolchain Assessment:
+         - Did exp2729 install pdflatex? (pdflatex_after_install)
+         - Did LaTeX compile? (latex_compiles)
+         - Were all 3 theory cites added? (bijection_citation_added, four_delta_citation_added, fst_citation_added)
+         - Was arXiv package ready? (submission_package_ready from exp2736 — may be absent if gate failed)
+         Record: paper_v6_toolchain_fixed (bool), theory_citations_added (int), arxiv_package_ready (bool).
+
+      3. Phase 1 Ship Assessment:
+         - HF model card draft created? (exp2730.hf_model_card_draft_created)
+         - IPFS placeholder? (exp2730.ipfs_placeholder_created)
+         - operator_ship_checklist_v6 complete?
          Record: phase1_ship_recommendation ('SHIP' or 'HOLD'), phase1_blocking_items (list).
 
-      3. Live GGUF Pipeline Assessment:
-         - inference_mode from exp2715 (live_gpu, live_cpu, smoke_only, or absent)?
-         - energy_score_distribution on live GGUF outputs?
-         Record: live_eval_successful (bool), live_eval_headline (str).
-
-      4. FR-11 Self-Learning Assessment:
-         - FR-11 Tier 2: COMPLETED in .256 (exp2695, carries forward).
-         - FR-11 Tier 3: ORCA TTT v2 (exp2719) — conformal_stopping_enabled?
-         Record: fr11_tier2_real_violations (true — carries forward),
-         fr11_tier3_conformal_stopping (bool from exp2719).
-
-      5. New Research Assessment:
-         - Behavioral entanglement (exp2723): auroc_lift > 0? high_entanglement confirmed?
-         - ODAR routing (exp2720): odar_routing_added? fast_path_pct?
-         - Linear probe calibration (exp2718): probe_viable? speedup_factor?
+      4. New Research Assessment:
+         - OTV fast path (exp2728): viable? total_savings_pct?
+         - Semantic Energy Tier 0g (exp2731): tier0g_auroc? non-degenerate?
+         - Entanglement retirement (exp2732): lineage retired? diversity_viable?
+         - ORCA-NEXUS integration (exp2733): viable? n_rules_synthesized?
+         - FALCON repair (exp2734): falcon_repair_added? candidates_reduction_pct?
          Record: new_research_highlights (list of str — key findings).
 
-      6. Theory / Publication Assessment:
-         - Paper v6 theory cites: bijection, 4/delta, FST all landed?
-         - pdflatex available or still blocked?
-         Record: theory_citations_added (int), paper_v6_blocked (bool).
+      5. FR-11 Self-Learning Assessment:
+         - FR-11 Tier 2: COMPLETED in .256 (exp2695 carries forward).
+         - FR-11 Tier 3: COMPLETED in .258 (exp2719 carries forward).
+         - FR-11 Tier 3+: ORCA-NEXUS (exp2733) — orca_nexus_integration_viable?
+         Record: fr11_tier2_done (true), fr11_tier3_done (true), fr11_tier3_plus_viable (bool).
 
-      7. Top 3 gaps for .259:
-         Prioritize based on what did NOT execute, what is below target, what capstone reveals.
-         Record: top_3_gaps_for_259 (list of {{gap, priority, suggested_task}}).
+      6. Top 3 gaps for .260:
+         Prioritize based on what did NOT execute, what is below target, what this capstone reveals.
+         Record: top_3_gaps_for_260 (list of {gap, priority, suggested_task}).
 
-      8. Update ops/status.md: ADD new section at top (NEVER remove existing content):
-         "## Session {date} - Milestone 2026.05.258 Capstone Complete\n[summary]"
+      7. Update ops/status.md: ADD new section at top (NEVER remove existing content):
+         "## Session {date} - Milestone 2026.05.259 Capstone Complete\n[summary]"
 
-      9. Update ops/changelog.md: ADD new entry at top for .258 capstone.
+      8. Update ops/changelog.md: ADD new entry at top for .259 capstone.
 
-      10. Update ops/metrics.md: ADD turn log entry for this session.
+      9. Update ops/metrics.md: ADD turn log entry for this session.
 
-      11. Write results/experiment_2724_capstone_v258.json.
+      10. Write results/experiment_2737_capstone_v259.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'complete_'
         principle: "Terminal prefix required."
-      - cascade_fixed: bool
-        principle: "Primary .258 structural outcome: was the 51-milestone conductor stall resolved?"
-      - cascade_fix_durable: bool
-        principle: "True if smart_subset_passes + cache_cleared — fix will persist to future milestones."
+      - verifier_fixed: bool
+        principle: "Primary .259 structural outcome: did we fix the degenerate verifier?"
+      - verifier_fix_root_cause: str
+        principle: "Names the confirmed root cause — prevents recurrence in future milestones."
+      - paper_v6_toolchain_fixed: bool
+        principle: "pdflatex now available — enables all future paper citation + compile tasks."
+      - theory_citations_added: int — expected 3 if exp2729 succeeded
+        principle: "ARM-EBM + 4/delta + FST citations: paper-v6 theoretical completion metric."
+      - arxiv_package_ready: bool
+        principle: "Submission package ready for operator — Phase 4 validation still required before submit."
       - phase1_ship_recommendation: str — 'SHIP' or 'HOLD'
         principle: "Primary operator signal for Phase 1 shipping decision."
-      - phase1_blocking_items: list of str
-        principle: "If HOLD: operator knows exactly what to fix."
-      - live_eval_successful: bool
-        principle: "Confirms whether verifier pipeline was validated on actual GGUF data."
-      - live_eval_headline: str
-        principle: "One-sentence summary for ops/status.md."
-      - fr11_tier2_real_violations: bool — expected true (carry-forward from exp2695)
+      - fr11_tier2_done: bool — true (carry-forward from exp2695)
         principle: "FR-11 Tier 2 gate: NEXUS v2 completed in .256."
-      - fr11_tier3_conformal_stopping: bool
-        principle: "FR-11 Tier 3 gate: True only if ORCA conformal stopping operational."
-      - theory_citations_added: int — expected 3 (bijection + 4/delta + FST) if pdflatex available
-        principle: "Paper-v6 completion metric."
+      - fr11_tier3_done: bool — true (carry-forward from exp2719)
+        principle: "FR-11 Tier 3 gate: ORCA conformal stopping completed in .258."
+      - fr11_tier3_plus_viable: bool
+        principle: "FR-11 Tier 3+ gate: ORCA-NEXUS integration produces online learned rules."
       - new_research_highlights: list of str
-        principle: "Summarizes .258 new contributions (ODAR routing, behavioral entanglement, linear probe)."
-      - top_3_gaps_for_259: list of dict — each with gap, priority, suggested_task
-        principle: "Planner reads this as input for .259 milestone design."
+        principle: "Summarizes .259 new contributions for ops/status.md."
+      - top_3_gaps_for_260: list of dict — each with gap, priority, suggested_task
+        principle: "Planner reads this as input for .260 milestone design."
       - n_criteria_met: int
         principle: "Summary score for milestone health tracking."
       - n_artifacts_read: int
