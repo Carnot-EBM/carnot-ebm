@@ -1,0 +1,33 @@
+{
+  "experiment": 2599,
+  "schema": "carnot-experiment-v1",
+  "title": "IPFS mirror for arXiv preprint package",
+  "run_date": "2026-05-20",
+  "status": "blocked",
+  "honest_verdict": "complete: blocked_arxiv_package_not_found",
+  "ipfs_cid": "blocked_arxiv_package_not_found",
+  "ipfs_available": false,
+  "readme_updated": false,
+  "submission_package_ready": false,
+  "operator_action_needed": true,
+  "preconditions_checked": [
+    {
+      "resource": "docs/arxiv-submission/",
+      "available": false,
+      "check": "ls docs/arxiv-submission/"
+    },
+    {
+      "resource": "https://ipfs.io",
+      "available": true,
+      "check": "curl -sf -o /dev/null https://ipfs.io 2>/dev/null"
+    }
+  ],
+  "manual_steps": [
+    "Restore or generate docs/arxiv-submission/ from the exp2558 arxiv_ready_v4 package.",
+    "Re-run the IPFS mirror task after docs/arxiv-submission/ exists and is non-empty.",
+    "ipfs add -rq docs/arxiv-submission/ | tail -1",
+    "ipfs pin add <CID>",
+    "Update README.md Distribution Channels with the resulting CID."
+  ],
+  "notes": "Required package path docs/arxiv-submission/ is absent, so no content-addressed CID or SHA-256 placeholder could be produced honestly. Network precondition passed."
+}
