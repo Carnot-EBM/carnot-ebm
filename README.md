@@ -71,5 +71,5 @@ Carnot: Energy-Based Verification and Repair of LLM Outputs
 ## Distribution Channels
 
 - HuggingFace: https://huggingface.co/Carnot-EBM (primary)
-- IPFS: CID pending exp2599
+- IPFS: blocked_arxiv_package_not_found (exp2599; docs/arxiv-submission/ missing, no CID generated)
 - GitHub: https://github.com/Carnot-EBM/carnot-ebm

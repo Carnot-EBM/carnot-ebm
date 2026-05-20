@@ -7,7 +7,7 @@
   "honest_verdict": "complete: blocked_arxiv_package_not_found",
   "ipfs_cid": "blocked_arxiv_package_not_found",
   "ipfs_available": false,
-  "readme_updated": false,
+  "readme_updated": true,
   "submission_package_ready": false,
   "operator_action_needed": true,
   "preconditions_checked": [
@@ -27,7 +27,7 @@
     "Re-run the IPFS mirror task after docs/arxiv-submission/ exists and is non-empty.",
     "ipfs add -rq docs/arxiv-submission/ | tail -1",
     "ipfs pin add <CID>",
-    "Update README.md Distribution Channels with the resulting CID."
+    "Replace README.md Distribution Channels blocked status with the resulting CID."
   ],
-  "notes": "Required package path docs/arxiv-submission/ is absent, so no content-addressed CID or SHA-256 placeholder could be produced honestly. Network precondition passed."
+  "notes": "Required package path docs/arxiv-submission/ is absent, so no content-addressed CID or SHA-256 placeholder could be produced honestly. Network precondition passed. README.md documents the blocked exp2599 IPFS mirror status until the package is restored and pinned."
 }
