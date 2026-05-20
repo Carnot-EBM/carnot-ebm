@@ -5379,3 +5379,4 @@ Ripgrep i |
 | 2026-05-20 10:48 UTC | GGUF Full-Scale Benchmark: 100 Examples with SOTA  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 10:50 UTC | GGUF Full-Scale Benchmark: 100 Examples with SOTA  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 10:52 UTC | GGUF Full-Scale Benchmark: 100 Examples with SOTA  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 10:54 UTC | Tier 0w: AvgWD/EigenWD Embedding-Geometry Hallucin | SKIP | Pre-tests failing, self-heal failed:  |
