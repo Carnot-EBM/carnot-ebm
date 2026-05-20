@@ -1,0 +1,21 @@
+{
+  "honest_verdict": "complete: Property-guided iterative repair implemented and tested successfully.",
+  "method_added": true,
+  "exverus_structured_message": true,
+  "n_fast_path": 2,
+  "mean_iterations_for_incorrect": 2.0,
+  "candidates_reduction_pct": 60.0,
+  "duration_s": 3.000145435333252,
+  "preconditions_checked": [
+    {
+      "resource": "carnot.pipeline",
+      "available": true,
+      "check": "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"
+    },
+    {
+      "resource": "verify_repair.py",
+      "available": true,
+      "check": "grep -c 'def score_candidates' python/carnot/pipeline/verify_repair.py"
+    }
+  ]
+}

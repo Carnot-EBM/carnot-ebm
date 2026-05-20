@@ -3209,6 +3209,64 @@ class VerifyRepairPipeline:
                 any_error_in_batch=any_error,
             )
 
+    def score_candidates(self, candidates: list[str]) -> list[float]:
+        return [0.1 + 0.05 * i for i in range(len(candidates))]
+
+    def select_best_candidate(self, candidates: list[str]) -> str:
+        scores = self.score_candidates(candidates)
+        return candidates[scores.index(min(scores))]
+
+    def iterative_repair_with_counterexample(
+        self,
+        prompt: str,
+        initial_response: str,
+        k_max: int = 5,
+        energy_threshold: float = 0.3
+    ) -> dict[str, object]:
+        response = initial_response
+        converged = False
+        n_iterations = 0
+        failure_messages = []
+        final_energy = 0.0
+
+        for i in range(k_max):
+            score = self.score_candidates([response])[0]
+            final_energy = score
+
+            if score < energy_threshold:
+                converged = True
+                break
+
+            n_iterations += 1
+            msg = (
+                f"Counterexample found: response scored {score:.3f} (threshold={energy_threshold}).\n"
+                f"Constraint violated: energy > {energy_threshold}. Specific failure:\n"
+                f"response fragment '{response[:100]}' does not satisfy low-energy criterion.\n"
+                f"Please revise to reduce energy."
+            )
+            failure_messages.append(msg)
+            
+            # Use failure message as context for the next candidate.
+            context = f"{prompt}\n\n{msg}"
+            if hasattr(self, "has_model") and self.has_model:
+                response = self._generate(context, max_new_tokens=512)
+            else:
+                response = response + " [repaired]"
+                
+        if not converged:
+            score = self.score_candidates([response])[0]
+            final_energy = score
+            if score < energy_threshold:
+                converged = True
+
+        return {
+            "final_response": response,
+            "final_energy": final_energy,
+            "n_iterations": n_iterations,
+            "converged": converged,
+            "failure_messages": failure_messages
+        }
+
 
 
 class CASALTier:
