@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.254 Operational Retrospective)
+
+- [outer-loop] Operational retrospective for milestone 2026.05.254.
+  - **Result**: Zero experiments completed — no commits found since milestone activation (retro triggered immediately at open).
+  - **GPU state**: Both RTX 3090s idle (0% utilization, 43C / 47C) — hardware healthy and fully available.
+  - **Primary bottleneck identified**: Retro triggered before any tasks activated; clean baseline milestone.
+  - **Artifact**: `results/operational_retro_2026_05_254.json` (schema: carnot.operational_retro.v64)
+  - **Top action for this milestone**: Activate first GGUF inference task immediately to put 48 GB discrete VRAM to work; pre-stage roadmap for .255.
+
 ## 2026-05-20 (Milestone 2026.05.253 Operational Retrospective)
 
 - [outer-loop] Operational retrospective for milestone 2026.05.253.

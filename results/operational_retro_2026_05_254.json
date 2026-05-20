@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.254",
+  "generated_at": "2026-05-20T15:23:56Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.254 was freshly activated with no experiment commits recorded before retrospective generation. Zero experiments completed and zero wall time consumed; the milestone represents a clean activation baseline. Both RTX 3090 GPUs are idle and available for the first experiment tasks.",
+  "bottlenecks_identified": [
+    "No experiments were activated before retrospective generation — milestone opened with zero throughput. This is not a system failure but indicates the retro was triggered immediately on activation before any tasks had time to run.",
+    "Both GPUs idle at 0% utilization (5 MB allocated each, 0% compute) with no compute-bound tasks in flight — GPU capacity is entirely available but unutilized."
+  ],
+  "improvements_suggested": [
+    "Ensure the first experiment task is activated within minutes of milestone open to avoid zero-throughput milestones. Consider adding a conductor health-check that flags if no tasks activate within 15 minutes of milestone open.",
+    "With both RTX 3090s fully idle, the first batch of tasks should include at least one GGUF inference task to validate GPU readiness before the milestone accumulates wall time. DualGPURunner is appropriate when 2+ models are loaded in parallel — queue paired Qwen3.6-35B + Gemma-4-31B tasks to exercise both cards simultaneously.",
+    "Pre-stage research-roadmap-next.yaml before milestone activation so the conductor can immediately activate tasks without waiting for the planner sub-process. Per the Pre-Staged Roadmap Convention in CLAUDE.md, a pre-staged YAML with the correct milestone field causes the planner to be skipped entirely.",
+    "Review ops/known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES before the first task is activated — overdue-priority entries (pending 3+ milestones) must be addressed this milestone per the Overdue-Priority Forcing Function rule."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Activate the first concrete experiment task immediately: with 48 GB discrete VRAM free across two RTX 3090s and zero tasks in flight, any GGUF inference or training experiment can start without resource contention. The highest immediate ROI is launching a queued SOTA-model task (Qwen3.6-35B-A3B-GGUF or Gemma-4-31B-it-GGUF) to put GPU capacity to work.",
+    "Pre-stage research-roadmap-next.yaml for milestone 2026.05.255 now, while context from the current milestone's known-issues and prior retros is fresh. A pre-staged roadmap saves one full planner-sub-process invocation (~5-10 min wall time) at the next milestone boundary and preserves operator-trust priorities per CLAUDE.md.",
+    "Run at least one FPGA hardware task per the Hardware-Task Continuity Discipline: KV260, GateMate A1-EVB-2M, and PolarFire SoC all have open tasks queued in ops/known-issues.md and none are at their terminal state. Queuing at least one board task this milestone preserves per-milestone per-board compliance."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A zero-experiment milestone is not a failure — it is an honest reflection of a retro triggered at activation before work began. The operational value of this retrospective is establishing a clean baseline and surfacing the pre-work checklist (pre-staged roadmap, GPU readiness validation, FPGA task queuing) before wall time accumulates. Future milestones should compare their throughput against this 0-experiment baseline to measure ramp-up latency from activation to first completed task."
+}

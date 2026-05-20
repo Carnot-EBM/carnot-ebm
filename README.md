@@ -17,7 +17,7 @@ The model was trained on the FoVer dataset, a curated corpus of verified formal 
 The model was trained using contrastive energy minimization.
 
 ## Evaluation Metrics
-The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set.
+The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set. The current Carnot ensemble (v7b) achieves AUROC=0.9857 adversarially verified across 5 seeds (exp2546, Milestone .245), exceeding the HIVE peer baseline (0.9236) by +0.0621.
 
 ## Usage
 ```python
@@ -34,6 +34,6 @@ path = hf_hub_download(repo_id="Carnot-EBM/ThinkPRM-v3", filename="checkpoint.sa
   author = {The Carnot Authors (ian@blenke.com)},
   title = {Carnot: Energy-Based Verification},
   year = {2026},
-  url = {https://github.com/ianblenke/carnot}
+  url = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
