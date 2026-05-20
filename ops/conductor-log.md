@@ -5417,3 +5417,4 @@ Ripgrep i |
 | 2026-05-20 12:23 UTC | Archive .252 + Activate .253 | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 12:25 UTC | Archive .252 + Activate .253 | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 12:27 UTC | Archive .252 + Activate .253 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 12:29 UTC | Phase 1 Ship Close: Execute Ship Actions or Close  | SKIP | Pre-tests failing, self-heal failed:  |
