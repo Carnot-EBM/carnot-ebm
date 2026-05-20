@@ -46,6 +46,8 @@ try:
         build_sat_energy,
         parse_dimacs,
     )
+    from carnot.verify.tier0e_eorm import EORMVerifier
+    from carnot.verify.tier0f_semantic_calibration import SemanticCalibratedVerifier
 except ModuleNotFoundError as exc:  # pragma: no cover - raw system Python without JAX.
     if exc.name != "jax":
         raise
@@ -83,4 +85,6 @@ else:
         "property_test",
         "repair",
         "safe_exec_function",
+        "EORMVerifier",
+        "SemanticCalibratedVerifier",
     ]

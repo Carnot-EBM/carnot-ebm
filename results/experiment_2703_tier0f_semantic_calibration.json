@@ -1,0 +1,34 @@
+{
+  "honest_verdict": "complete:tier0f_calibrated",
+  "tier0f_auroc": 0.9914783693451962,
+  "tier0f_ece": 0.15667150577957883,
+  "paraphrase_fpr": 0.1952054794520548,
+  "auroc_delta": 0.00046365403784998094,
+  "tier0f_viable": true,
+  "n_paraphrase_clusters": 634,
+  "n_pairs_in_clusters": 1404,
+  "random_seed": 42,
+  "duration_s": 0.6914064884185791,
+  "preconditions_checked": [
+    {
+      "resource": "sklearn",
+      "available": true,
+      "check": "import sklearn"
+    },
+    {
+      "resource": "fover_corpus.jsonl",
+      "available": true,
+      "check": "file exists"
+    },
+    {
+      "resource": "tier0e_module",
+      "available": false,
+      "check": "ls python/carnot/verify/tier0e_eorm.py"
+    },
+    {
+      "resource": "tier0e_artifact",
+      "available": false,
+      "check": "ls results/experiment_2663_tier0e_eorm.json"
+    }
+  ]
+}
