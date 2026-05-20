@@ -5610,3 +5610,4 @@ Ripgrep i |
 | 2026-05-20 22:16 UTC | ODAR Free-Energy Routing Prototype + T2 VegAS K-Sc | OK | 145 passed in 3.39s |
 | 2026-05-20 22:20 UTC | Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2721_paper_v |
 | 2026-05-20 22:25 UTC | Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2721_paper_v |
+| 2026-05-20 22:30 UTC | Paper v6: ARM-EBM Bijection §2 + 4/delta Bound §3  | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2721_paper_v |
