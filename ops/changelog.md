@@ -1,5 +1,14 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.253 Operational Retrospective)
+
+- [outer-loop] Operational retrospective for milestone 2026.05.253.
+  - **Result**: Zero experiments completed — no commits found since milestone activation.
+  - **GPU state**: Both RTX 3090s idle (0% utilization, 42C / 45C) — hardware healthy, issue is in planning/activation pipeline.
+  - **Primary bottleneck identified**: Activation-to-first-experiment gap consumed entire milestone window; conductor stall suspected.
+  - **Artifact**: `results/operational_retro_2026_05_253.json` (schema: carnot.operational_retro.v64)
+  - **Top action for next milestone**: Diagnose conductor stall via `ops/conductor-log.md` and `ops/conductor-state.json` before activating 2026.05.254.
+
 ## 2026-05-20 (Milestone 2026.05.253 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.253. All 13 tasks in .252 (exp2634–exp2646) confirmed complete by user before this session.

@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.253",
+  "generated_at": "2026-05-20T13:35:43Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.253 had no experiment commits recorded since activation. Both GPUs (RTX 3090 x2) were idle at 0% utilization with only 5 MB allocated each, consistent with no compute-bound tasks having run. No wall time or throughput data is available for analysis.",
+  "bottlenecks_identified": [
+    "No experiments launched or committed during this milestone — the milestone produced zero throughput. This is the primary bottleneck: the activation-to-first-experiment gap consumed the entire milestone window."
+  ],
+  "improvements_suggested": [
+    "Verify conductor activation completed successfully and that research-roadmap-next.yaml was consumed; a zero-experiment milestone typically indicates the conductor stalled at activation rather than at execution.",
+    "Check ops/conductor-log.md and ops/conductor-state.json for the last activation event to diagnose whether the planner failed to emit a YAML, the activation guard blocked the milestone, or a doomed-rerun cascade blocked all tasks before launch.",
+    "If the zero-experiment outcome was caused by a YAML validation failure, run scripts/exclusion_manifest_lint.py against the rejected roadmap draft to surface the blocking condition before the next milestone is activated.",
+    "Both RTX 3090 GPUs are healthy and idle (42C / 45C) — no thermal or hardware issue is responsible. The issue is purely in the planning/activation pipeline, not in compute availability."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Diagnose conductor stall: read ops/conductor-log.md and ops/conductor-state.json to identify whether the milestone was blocked at YAML validation, doomed-rerun check, or another gate — then fix the root cause before activating 2026.05.254.",
+    "Pre-stage research-roadmap-next.yaml for milestone 2026.05.254 per the Pre-Staged Roadmap Convention in CLAUDE.md, ensuring all exclusion-manifest cross-checks and principal-annotated artifact fields are present before handing off to the conductor.",
+    "Run scripts/exclusion_manifest_lint.py and ops/known-issues.md review jointly before drafting the next roadmap to prevent another cascade-block from a retired experiment_id or a scope-reduction directive being ignored."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A zero-experiment milestone is a process failure at the orchestration layer, not at the research layer. The GPUs, toolchain, and models are available and healthy; the conductor or planner failed to translate the activation into launched work. The retrospective framework correctly surfaces this as a pipeline bottleneck rather than attributing it to slow individual experiments — that distinction matters for the next corrective action."
+}
