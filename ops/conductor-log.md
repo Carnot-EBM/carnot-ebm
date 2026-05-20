@@ -5234,3 +5234,4 @@ Ripgrep i |
 | 2026-05-20 03:03 UTC | Phase 2b: Tier 0u Real-Corpus Fix — Improved Self- | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:06 UTC | Phase 2b: Tier 0u Real-Corpus Fix — Improved Self- | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:08 UTC | Phase 3a: Safety/Jailbreak Corpus + Ising Safety V | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-20 03:10 UTC | Phase 3a: Safety/Jailbreak Corpus + Ising Safety V | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
