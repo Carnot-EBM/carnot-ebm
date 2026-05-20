@@ -320,6 +320,48 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-20 (17:00Z): KV260 XDC-Constrained Real-Board Bitstream Refresh (.245+ MANDATORY Hardware)
+
+**Origin:** 2026-05-20 ~12:55 EDT operator directive ("use the latest
+bitstream at all times on the kv260, this board is only used for
+experiment iteration") + discovery that `.241 exp2477's bitstream is
+CI-only (unconstrained pins, no XDC, no .dtbo) and NOT real-board-
+deployable. Codified as
+`feedback_kv260_latest_bitstream_must_be_xdc_constrained.md` in memory.
+
+Current board state (verified 2026-05-20 12:55 EDT):
+- Active overlay: `carnot_ising_v2_n64_image_1` (= v4 bitstream, Apr 27
+  build via v4_bd project with proper XDC; loaded under legacy v2_n64
+  name because the dtbo references that name)
+- `ssh kria` → 192.168.51.98 reachable
+- /dev/uio0..uio4 available for AXI access
+- bootgen at /usr/bin/bootgen for .bit → .bit.bin conversion on-board
+
+**The gap:** real-board bitstream stack is ~3 weeks stale relative to
+`hardware/kv260/carnot_ising_top.v` RTL. Conductor's `.241-`.244 KV260
+work touched the synthesis flow only; nobody refreshed the actual
+board with a current XDC-constrained chain.
+
+**Mandatory `.245+ task spec:** exp24XX-kv260-real-board-bitstream-refresh
+- agent_type: claude (requires_claude: true, multi-file Vivado + XDC)
+- model: opus, max_turns: 100
+- Concrete steps include: write XDC for AXI-Lite to KV260 PS-PL
+  boundary; run full Vivado synth→place→route→write_bitstream;
+  generate matching dtbo; scp .bit+.dtbo to kria:/tmp; bootgen on
+  board; place in /lib/firmware/xilinx/carnot_ising_v5/ with
+  shell.json; xmutil loadapp; smoke test via `/dev/uio0` AXI read.
+- prior_failures cites exp2477 (CI-only) with addressed_by noting
+  this v3 writes XDC properly.
+- Acceptance gates: bitstream_real_board_deployable=True AND
+  on_board_smoke_passed=True.
+
+**Cross-references:** memory entry + exp2477 TCL example + v4_bd
+canonical source + ssh kria alias + carnot_ising_top.v RTL source.
+
+**Why MANDATORY:** Without this refresh, every `.245+ KV260 experiment
+runs against an outdated Apr-27 bitstream. The operator's "latest
+bitstream at all times" directive requires a fresh real-board build.
+
 ### NEW 2026-05-19 (03:10Z): Qwen Censorship-Circuit Audit + Paper-v6 Disclosure — Verifier Coverage Gap (.238+ MANDATORY)
 
 **Origin:** 2026-05-19 ~03:10Z operator-shared blog post analysis from
