@@ -5496,3 +5496,4 @@ Ripgrep i |
 | 2026-05-20 15:14 UTC | Capstone v254: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 15:42 UTC | Plan milestone 2026.05.255 | OK | 13 tasks proposed |
 | 2026-05-20 15:44 UTC | Milestone 2026.05.255 activated | OK | 13 tasks queued |
+| 2026-05-20 15:46 UTC | Archive .254 + Activate .255 | SKIP | Pre-tests failing, self-heal failed:  |
