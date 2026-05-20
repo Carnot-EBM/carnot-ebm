@@ -5564,3 +5564,4 @@ Ripgrep i |
 | 2026-05-20 18:19 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 18:21 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 18:21 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 18:30 UTC | FR-11 Tier 2: NEXUS v2 Real FoVer Violation Events | OK | 81 passed in 2.46s |
