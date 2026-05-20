@@ -1,0 +1,204 @@
+{
+  "acceptance_gates": [
+    {
+      "condition": "no_hard_gate",
+      "passed": true,
+      "principle": "Capstones reflect reality; they do not gate. The deliverable is validity of the schema, not a numeric threshold."
+    }
+  ],
+  "auroc_adversarially_verified": false,
+  "best_247_auroc": 0.9857142857142858,
+  "best_247_auroc_source": "exp2546_v7b_carryforward",
+  "duration_s": 0.00019,
+  "experiment": "exp2580",
+  "external_baselines": {
+    "carnot_minus_halluscan": 0.3157,
+    "carnot_minus_hive": 0.0621,
+    "halluscan_peer_arxiv": "arXiv:2605.02443",
+    "halluscan_peer_auroc": 0.67,
+    "hive_peer_arxiv": "arXiv:2604.26139",
+    "hive_peer_auroc": 0.9236
+  },
+  "field_principles": {
+    "best_247_auroc": "Carry-forward or improved headline AUROC. Carry-forward 0.9857 if ensemble v9 regressed, was adversarially flagged, or didn't run. Only update if exp2579.ensemble_v9_viable=True AND no regression detected.",
+    "duration_s": "Wall-clock measurement for the capstone synthesis itself.",
+    "external_baselines": "HIVE peer (0.9236, arXiv:2604.26139) and HalluScan peer (0.67 mean, arXiv:2605.02443) carried forward for continuous gap tracking.",
+    "gatemate_status": "Hardware continuity tracking per CLAUDE.md Hardware-Task Continuity Discipline. Reflects exp2577 outcome (terminal / manual_repair_attempted / jtag_not_detected); carries forward .246 terminal state if exp2577 did not run.",
+    "honest_verdict": "Terminal-prefix required. Must start with complete:.",
+    "ipfs_mirror_status": "Rule 3 (mandatory mirroring) compliance tracking. 'pinned_cid_known' iff exp2571.ipfs_cid IS NOT NULL; 'documented_operator_needed' otherwise.",
+    "jepa_online_active": "FR-11 Tier 3 mandate deliverable -- continuous self-learning active? True iff exp2576.jepa_online_learning_active=True.",
+    "kv260_status": "Hardware continuity tracking per CLAUDE.md Hardware-Task Continuity Discipline. Reflects exp2578 outcome (sd_flashed / sd_absent_prep_updated); carries forward .246 non-terminal state if exp2578 did not run.",
+    "n_experiments_completed": "Count of exp2569-exp2579 artifacts whose honest_verdict starts with a terminal prefix (complete:/success:/passed:/shipped:). Blocked verdicts do NOT count.",
+    "operator_recommendation": "submit_arxiv_now / update_hf_cards_push_ipfs / continue_safety_classifier / hardware_terminal_pending / all_tracks_advancing. Drives the operator's next action; honesty about ambiguity matters.",
+    "preconditions_checked": "Records which source artifacts were present and read.",
+    "process_flags": "Any non-terminal honesty signals collected from the source artifacts -- fabrication flags, malformed verdict prefixes, blocked-precondition tasks, execution-layer gaps when too many planned tasks produced no artifact.",
+    "random_seed": "42 -- synthesis is deterministic but the field is convention.",
+    "safety_classifier_viable": "Tier B product milestone deliverable -- is the safety classifier viable? True iff exp2574.safety_verifier_viable=True AND exp2575.safety_integration_complete=True. Both gates must hold; the field is read from artifacts, never inferred from sibling state.",
+    "tier0s_real_improvement": "Documents whether the real-corpus verifier gap narrowed for tier0s. True iff exp2572.tier0s_improved=True.",
+    "tier0u_real_improvement": "Documents whether the real-corpus verifier gap narrowed for tier0u. True iff exp2573.tier0u_improved=True.",
+    "top_3_gaps_for_248": "Three most critical unresolved issues entering .248.",
+    "top_3_successes": "Three most impactful positive findings of .247."
+  },
+  "gatemate_status": {
+    "approach_a_attempted": false,
+    "approach_b_attempted": true,
+    "bitstream_flashed": true,
+    "diagnosis_summary": "Run gmpack INPUT.cfg OUTPUT.bit, then flash OUTPUT.bit via openFPGALoader. Both tools ship in /opt/oss-cad-suite/.",
+    "flash_attempted": true,
+    "jtag_detected": true,
+    "next_blocker": "on_board_ising_sampler_timing_benchmark_pending_capture_harness",
+    "outcome": "carry_forward_from_246",
+    "ran": true,
+    "smoke_test_result": "indirect_pass: post-flash JTAG re-enumeration ('openFPGALoader -c dirtyJtag --detect') returns the GateMate GM1Ax IDCODE 0x20000001 confirming chip is alive, configured, and not bricked by the flash. Direct on-board Ising-sampler output capture (UART/SPI/GPIO timing transcript) requires an instrumented host-side capture harness not present on this bench and is deferred to follow-up. The flash itself reported 'Load SRAM via JTAG: 100.00%  Done' \u2014 the standard openFPGALoader success message for GateMate SRAM configuration.",
+    "terminal": true
+  },
+  "hardware_terminal_states": {
+    "gatemate": {
+      "approach_a_attempted": false,
+      "approach_b_attempted": true,
+      "bitstream_flashed": true,
+      "diagnosis_summary": "Run gmpack INPUT.cfg OUTPUT.bit, then flash OUTPUT.bit via openFPGALoader. Both tools ship in /opt/oss-cad-suite/.",
+      "flash_attempted": true,
+      "jtag_detected": true,
+      "next_blocker": "on_board_ising_sampler_timing_benchmark_pending_capture_harness",
+      "outcome": "carry_forward_from_246",
+      "ran": true,
+      "smoke_test_result": "indirect_pass: post-flash JTAG re-enumeration ('openFPGALoader -c dirtyJtag --detect') returns the GateMate GM1Ax IDCODE 0x20000001 confirming chip is alive, configured, and not bricked by the flash. Direct on-board Ising-sampler output capture (UART/SPI/GPIO timing transcript) requires an instrumented host-side capture harness not present on this bench and is deferred to follow-up. The flash itself reported 'Load SRAM via JTAG: 100.00%  Done' \u2014 the standard openFPGALoader success message for GateMate SRAM configuration.",
+      "terminal": true
+    },
+    "kv260": {
+      "flash_attempted": false,
+      "next_blocker": "blocked_no_sd_media_inserted_and_pynq_url_unreachable",
+      "operator_procedure_documented": false,
+      "outcome": "carry_forward_from_246",
+      "progress": "carry_forward_from_exp2551_no_change",
+      "pynq_url_reachable": false,
+      "ran": false,
+      "sd_media_inserted": false,
+      "terminal": false
+    }
+  },
+  "honest_verdict": "complete: best_247_auroc=0.9857; tier0s_improved=False; safety_viable=False; gatemate=terminal; jepa_online=False",
+  "ipfs_mirror_status": "documented_operator_needed",
+  "jepa_online_active": false,
+  "kv260_status": {
+    "flash_attempted": false,
+    "next_blocker": "blocked_no_sd_media_inserted_and_pynq_url_unreachable",
+    "operator_procedure_documented": false,
+    "outcome": "carry_forward_from_246",
+    "progress": "carry_forward_from_exp2551_no_change",
+    "pynq_url_reachable": false,
+    "ran": false,
+    "sd_media_inserted": false,
+    "terminal": false
+  },
+  "milestone": "2026.05.247",
+  "n_experiments_completed": 0,
+  "n_planned": 11,
+  "operator_recommendation": "hardware_terminal_pending",
+  "preconditions_checked": [
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2569_archive.json",
+      "resource": "results/experiment_2569_archive.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2570_hf_model_cards.json",
+      "resource": "results/experiment_2570_hf_model_cards.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2571_ipfs_mirror.json",
+      "resource": "results/experiment_2571_ipfs_mirror.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2572_tier0s_retrain.json",
+      "resource": "results/experiment_2572_tier0s_retrain.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2573_tier0u_fix.json",
+      "resource": "results/experiment_2573_tier0u_fix.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2574_safety_corpus.json",
+      "resource": "results/experiment_2574_safety_corpus.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2575_safety_ensemble.json",
+      "resource": "results/experiment_2575_safety_ensemble.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2576_jepa_v3_online.json",
+      "resource": "results/experiment_2576_jepa_v3_online.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2577_gatemate_continuity.json",
+      "resource": "results/experiment_2577_gatemate_continuity.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2578_kv260_continuity.json",
+      "resource": "results/experiment_2578_kv260_continuity.json"
+    },
+    {
+      "available": false,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2579_ensemble_v9.json",
+      "resource": "results/experiment_2579_ensemble_v9.json"
+    },
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2567_capstone_v246.json",
+      "resource": "results/experiment_2567_capstone_v246.json"
+    }
+  ],
+  "process_flags": [
+    {
+      "detail": "11 of 11 planned tasks (exp2569-exp2579) produced no artifact. Root-cause hypothesis: either conductor task-pickup stalled mid-milestone or codex/claude agent budget exhausted before queue drain. Mitigate in .248 by (a) checkpointing each task pre-pickup and (b) verifying the conductor write the failure-ledger row even when the agent exits without artifact.",
+      "experiment": null,
+      "kind": "EXECUTION_LAYER_GAP",
+      "severity": "critical"
+    }
+  ],
+  "random_seed": 42,
+  "safety_classifier_viable": false,
+  "schema": "carnot.capstone.v247",
+  "tier0s_real_improvement": false,
+  "tier0u_real_improvement": false,
+  "title": "Milestone .247 Capstone Synthesis",
+  "top_3_gaps_for_248": [
+    {
+      "area": "execution_layer_gap",
+      "rank": 1,
+      "summary": "Execution-layer gap continues: many .247 tasks produced no artifact (same failure mode as .246). Conductor pickup or agent budget exhaustion suspected. .248 needs a pre-pickup checkpoint and a failure-ledger write even on agent exit without artifact, so the gap is visible to the next planner rather than silently carried forward through successive milestones."
+    },
+    {
+      "area": "real_corpus_verifier_gap",
+      "rank": 2,
+      "summary": "Tier0s/tier0u real-corpus AUROC gap still open: the .246 paper errata corrected the headline claim but the underlying verifiers remain near-random on natural text. .248 must re-queue exp2572 (tier0s retrain) and exp2573 (tier0u fix) with explicit GPU preconditions and corpus-source assertions."
+    },
+    {
+      "area": "safety_classifier_unviable",
+      "rank": 3,
+      "summary": "Tier B safety/jailbreak classifier not yet viable: exp2574 (safety corpus + Ising verifier) and/or exp2575 (ensemble integration) did not produce terminal artifacts. .248 must re-prototype with a smaller initial corpus (50 pairs) or retire the lineage in favor of an alternative product surface."
+    }
+  ],
+  "top_3_successes": [
+    {
+      "experiment": "exp2567",
+      "rank": 1,
+      "summary": "Carry-forward from .246: GateMate A1-EVB-2M bitstream remains flashed; chip alive and not bricked. No new forward progress in .247 due to execution layer gap."
+    },
+    {
+      "experiment": null,
+      "rank": 2,
+      "summary": "No new experiment artifacts in .247 (execution-layer gap). Cite-safe headline AUROC carries forward at 0.9857 from .245 ensemble v7b; the prior milestone's results remain the operator's best public claim."
+    }
+  ]
+}
