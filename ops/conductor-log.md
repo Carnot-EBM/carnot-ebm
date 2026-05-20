@@ -5237,3 +5237,5 @@ Ripgrep i |
 | 2026-05-20 03:10 UTC | Phase 3a: Safety/Jailbreak Corpus + Ising Safety V | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:12 UTC | Phase 3a: Safety/Jailbreak Corpus + Ising Safety V | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:14 UTC | Phase 3b: Safety Ensemble Integration + Paper §7 S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2574-safety-corpus-verifier) |
+| 2026-05-20 03:14 UTC | Phase 4: JEPA v3 Online Integration — Real-Data Ch | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-20 03:16 UTC | Phase 3b: Safety Ensemble Integration + Paper §7 S | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2574-safety-corpus-verifier) |
