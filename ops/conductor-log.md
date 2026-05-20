@@ -5188,3 +5188,5 @@ Ripgrep i |
 | 2026-05-20 01:04 UTC | Phase 1a: Paper-v6 Errata — Retire Inflated tier0s | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 01:06 UTC | Phase 1a: Paper-v6 Errata — Retire Inflated tier0s | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 01:08 UTC | Phase 1b: arXiv Final Submission Package v4 (post- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2557-paper-errata-tier0s-tier0u) |
+| 2026-05-20 01:13 UTC | Phase 2a (Hardware): GateMate .cfg Format Fix — CC | OK | 81 passed, 1 warning in 2.29s |
+| 2026-05-20 01:15 UTC | Phase 1b: arXiv Final Submission Package v4 (post- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2557-paper-errata-tier0s-tier0u) |
