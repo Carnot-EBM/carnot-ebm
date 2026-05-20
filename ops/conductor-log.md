@@ -5443,3 +5443,5 @@ Ripgrep i |
 | 2026-05-20 13:09 UTC | External Benchmark: Carnot Ensemble v11 vs EORM Le | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 13:11 UTC | KV260 Hardware Continuity .253 (Branch A: SD Flash | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 13:13 UTC | KV260 Hardware Continuity .253 (Branch A: SD Flash | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 13:15 UTC | KV260 Hardware Continuity .253 (Branch A: SD Flash | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 13:17 UTC | arXiv Final Package v6: Ensemble v11 + EORM Compar | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2653) |
