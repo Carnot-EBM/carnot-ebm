@@ -1,0 +1,40 @@
+{
+  "honest_verdict": "complete: Phase 1 ship prep actions completed autonomously.",
+  "phase1_ship_ready": true,
+  "readme_phase1_section_added": false,
+  "readme_already_had_section": true,
+  "releases_md_created_or_updated": true,
+  "operator_ship_checklist_v5": [
+    "cd /home/ianblenke/github.com/ianblenke/carnot",
+    "# Step 1 (if not done): conductor pre-test cascade fix \u2014 run exp2713 or manually install torch",
+    ".venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch",
+    "rm -f ops/.pretest-cache.json",
+    "# Step 2: commit ship prep files",
+    "git add README.md RELEASES.md && git commit -m '[operator] Phase 1 milestone: README + RELEASES.md'",
+    "# Step 3: tag and push (triggers CI publish to PyPI via OIDC trusted publishing)",
+    "git tag v0.1.0b1 -m 'Phase 1 milestone: carnot-ebm package'",
+    "git push origin main v0.1.0b1  # OPERATOR-ONLY per CLAUDE.md",
+    "# Step 4: after CI publishes to PyPI: update HuggingFace model card at huggingface.co/Carnot-EBM",
+    "# Step 5: arXiv submission HOLDS until Phase 4 validates (OPERATOR-ONLY per CLAUDE.md)"
+  ],
+  "current_version": "0.1.0b1",
+  "n_autonomous_actions_taken": 1,
+  "duration_s": 5.2,
+  "preconditions_checked": [
+    {
+      "resource": "version",
+      "available": true,
+      "check": "import carnot; print(carnot.__version__)"
+    },
+    {
+      "resource": "README.md",
+      "available": true,
+      "check": "ls README.md"
+    },
+    {
+      "resource": "RELEASES.md",
+      "available": true,
+      "check": "ls RELEASES.md"
+    }
+  ]
+}
