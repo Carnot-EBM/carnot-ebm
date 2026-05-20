@@ -5526,3 +5526,4 @@ Ripgrep i |
 | 2026-05-20 16:41 UTC | ARM-EBM Bijection Paper v6 Integration: arXiv:2512 | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:43 UTC | ARM-EBM Bijection Paper v6 Integration: arXiv:2512 | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:45 UTC | ARM-EBM Bijection Paper v6 Integration: arXiv:2512 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 16:47 UTC | KV260 Hardware Continuity .255 (NON-TERMINAL — SD  | SKIP | Pre-tests failing, self-heal failed:  |
