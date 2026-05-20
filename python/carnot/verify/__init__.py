@@ -49,6 +49,10 @@ try:
     from carnot.verify.tier0e_eorm import EORMVerifier
     from carnot.verify.tier0f_semantic_calibration import SemanticCalibratedVerifier
     from carnot.verify.linear_probe_calibrator import LinearProbeCalibrator
+    from carnot.verify.deentangled_ensemble import DeentangledEnsemble
+    from carnot.verify.tier0r_curry_howard import Tier0rVerifier
+    from carnot.verify.tier0s_halluguard import Tier0sVerifier
+    from carnot.verify.tier0u_logical_consistency import Tier0uVerifier
 except ModuleNotFoundError as exc:  # pragma: no cover - raw system Python without JAX.
     if exc.name != "jax":
         raise
@@ -89,4 +93,8 @@ else:
         "EORMVerifier",
         "SemanticCalibratedVerifier",
         "LinearProbeCalibrator",
+        "DeentangledEnsemble",
+        "Tier0rVerifier",
+        "Tier0sVerifier",
+        "Tier0uVerifier",
     ]

@@ -1,0 +1,139 @@
+{
+  "experiment": "exp2724",
+  "title": "Milestone 2026.05.258 Capstone Synthesis",
+  "milestone": "2026.05.258",
+  "run_date": "2026-05-20T22:53:43Z",
+  "schema_version": "1.0",
+  "honest_verdict": "complete: capstone synthesis of 12 .258 artifacts; cascade fixed, Phase 1 ship-ready, paper v6 toolchain blocked, KV260 SD absent",
+
+  "n_artifacts_read": 12,
+  "n_artifacts_absent": 0,
+  "artifacts_read": [
+    "experiment_2712_archive_v257.json",
+    "experiment_2713_pretest_cascade_fix_v1.json",
+    "experiment_2714_phase1_ship_v5.json",
+    "experiment_2715_sota_gguf_live_eval_v3.json",
+    "experiment_2716_tier0f_semantic_calibration_v2.json",
+    "experiment_2717_property_guided_repair_loop_v2.json",
+    "experiment_2718_linear_probe_calibration_v2.json",
+    "experiment_2719_orca_ttt_v2.json",
+    "experiment_2720_odar_routing_t2_vegas.json",
+    "experiment_2721_paper_v6_theory_update_v2.json",
+    "experiment_2722_kv260_continuity_258.json",
+    "experiment_2723_behavioral_entanglement_reweighting.json"
+  ],
+
+  "cascade_fixed": true,
+  "cascade_fix_durable": true,
+  "cascade_fix_evidence": {
+    "exp2713_pretest_cascade_fixed": true,
+    "exp2713_smart_subset_passes": true,
+    "most_likely_cause": "torch missing from venv + non-graceful import; fixed by torch install + graceful import patch",
+    "operator_review_needed": "MAX_HEAL_ATTEMPTS still 0; operator should consider setting to 1 to allow auto-recovery before manual escalation"
+  },
+
+  "phase1_ship_recommendation": "SHIP",
+  "phase1_ship_ready": true,
+  "phase1_blocking_items": [],
+  "phase1_notes": "exp2714 phase1_ship_ready=True. Per feedback_phase_1_ship_decoupled, Phase 1 ship is NOT gated on hardware (KV260 SD absence) or paper publication (pdflatex blocked). Operator ship checklist v5 is queued and complete.",
+
+  "live_eval_successful": true,
+  "live_eval_headline": "exp2715 ran live_gpu inference on 50 examples via Qwen3.6-35B-A3B-GGUF; pipeline executed end-to-end but energy_score_distribution degenerated to all-zero (mean=std=0.0) — verifier output non-discriminative on this corpus and needs investigation in .259",
+  "live_eval_caveat": "fast_path_rate=0.0 and all energy quantiles equal 0.0 indicates a degenerate / non-discriminating verifier output rather than a representative score distribution",
+
+  "fr11_tier2_real_violations": true,
+  "fr11_tier2_evidence": "Carries forward from exp2695 (.256 NEXUS v2)",
+  "fr11_tier3_conformal_stopping": true,
+  "fr11_tier3_evidence": "exp2719 conformal_stopping_enabled=True, n_ttt_steps_saved=79, GC dependency stopping operational",
+
+  "new_research_highlights": [
+    "Tier 0f semantic calibration v2 (exp2716): AUROC 0.992, viable — strong semantic calibration result",
+    "Property-guided repair loop (exp2717): 60% candidates reduction via property-guided iterative repair",
+    "Linear probe calibrator (exp2718): probe_ece=0.0087, speedup_factor=1.85e6 — speedup magnitude is suspicious and needs adversarial-verify in .259",
+    "ORCA TTT v2 (exp2719): conformal stopping operational, 79 TTT steps saved",
+    "ODAR routing T2 Vegas (exp2720): odar_routing_added=True, t2_prediction_matches=True",
+    "Behavioral entanglement reweighting (exp2723): auroc_lift=-0.008 (NEGATIVE) — hypothesis NOT confirmed; high_entanglement=False; reweighting did not improve discrimination"
+  ],
+
+  "theory_citations_added": 0,
+  "paper_v6_blocked": true,
+  "paper_v6_block_reason": "exp2721 honest_verdict=blocked_paper_v6_toolchain_or_source_missing; pdflatex_available=False; bijection_citation_added=False; carnot_delta value computed (0.25) but not landed into source",
+
+  "kv260_status": {
+    "branch_taken": "B",
+    "consecutive_branch_b_runs": 4,
+    "sd_card_absent": true,
+    "operator_escalated": true,
+    "note": "Phase 1 ship is decoupled from KV260 per feedback_phase_1_ship_decoupled; KV260 is sovereignty-tier hardware work, not Phase 1 gate"
+  },
+
+  "top_3_gaps_for_259": [
+    {
+      "gap": "Paper v6 toolchain blocked: pdflatex unavailable + bijection/4-delta/FST citations not landed in source",
+      "priority": "high",
+      "suggested_task": "Install pdflatex (texlive-latex-base + texlive-latex-recommended) and verify paper-v6 source tree integrity; then re-run exp2721-equivalent to add bijection, 4/delta, and FST citations with carnot_delta=0.25",
+      "agent_type": "codex"
+    },
+    {
+      "gap": "Live GGUF energy_score_distribution degenerate (all-zero on 50-example Qwen3.6-35B run)",
+      "priority": "high",
+      "suggested_task": "Debug exp2715 verifier output pipeline: trace why energy scores collapse to 0.0 on live GPU inference; add adversarial-verify pre-check (METHODOLOGY_MISSING + DURATION_TOO_SHORT) and include non-trivial energy distribution as an acceptance gate",
+      "agent_type": "codex"
+    },
+    {
+      "gap": "Behavioral entanglement reweighting (exp2723) showed negative auroc_lift (-0.008); hypothesis NOT confirmed",
+      "priority": "medium",
+      "suggested_task": "Either (a) retire behavioral-entanglement-reweighting lineage per Failed-Experiment Rerun Discipline with prior_failures block, OR (b) propose a structurally different reweighting basis (e.g., causal-attention entropy instead of co-violation frequency) with clear differentiation",
+      "agent_type": "codex"
+    },
+    {
+      "gap": "Linear probe speedup_factor=1.85e6 is implausibly high; needs adversarial-verify replication",
+      "priority": "medium",
+      "suggested_task": "Re-run exp2718 with explicit wall-clock instrumentation, sample-size justification, and a baseline comparison that ensures the linear probe is doing equivalent work to what it replaces (not a degenerate no-op)",
+      "agent_type": "codex"
+    },
+    {
+      "gap": "KV260 Branch B for 4 consecutive milestones (SD card absent)",
+      "priority": "low_for_ship_blocking_for_hardware_track",
+      "suggested_task": "Per hardware-task continuity discipline, queue a documentation-only KV260 task until operator restores SD card; do NOT attempt to flash without precondition checks",
+      "agent_type": "codex"
+    }
+  ],
+
+  "n_criteria_met": 8,
+  "n_criteria_total": 12,
+  "criteria_breakdown": {
+    "milestone_activation": true,
+    "cascade_fix": true,
+    "phase1_ship_prep": true,
+    "live_gguf_eval_ran": true,
+    "tier0f_semantic_calibration": true,
+    "property_guided_repair": true,
+    "linear_probe_calibration": true,
+    "orca_conformal_stopping": true,
+    "odar_routing": true,
+    "paper_v6_citations": false,
+    "kv260_continuity": false,
+    "behavioral_entanglement_confirmed": false
+  },
+
+  "random_seed": 20260520,
+  "reproducibility_checksum": "exp2724-258-capstone-12artifacts-8of12-criteria",
+  "preconditions_checked": [
+    {"resource": "12 upstream artifact files", "available": true},
+    {"resource": "results/ directory writable", "available": true}
+  ],
+
+  "duration_s": 90.0,
+
+  "field_provenance": {
+    "cascade_fixed": "exp2713.pretest_cascade_fixed",
+    "cascade_fix_durable": "exp2713.smart_subset_passes AND cache write succeeded",
+    "phase1_ship_recommendation": "exp2714.phase1_ship_ready=True AND feedback_phase_1_ship_decoupled",
+    "live_eval_successful": "exp2715.inference_mode=live_gpu",
+    "fr11_tier2_real_violations": "exp2695 (.256) carries forward",
+    "fr11_tier3_conformal_stopping": "exp2719.conformal_stopping_enabled",
+    "theory_citations_added": "exp2721 was blocked, no citations landed",
+    "top_3_gaps_for_259": "Synthesized from blocked + negative-result + adversarial-flag artifacts"
+  }
+}
