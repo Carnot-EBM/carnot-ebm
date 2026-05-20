@@ -5247,3 +5247,5 @@ Ripgrep i |
 | 2026-05-20 03:24 UTC | Phase 5a (Hardware): GateMate Terminal State — Smo | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:26 UTC | Phase 5b (Hardware): KV260 Continuity — Flash if S | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:28 UTC | Phase 5b (Hardware): KV260 Continuity — Flash if S | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-20 03:30 UTC | Phase 5b (Hardware): KV260 Continuity — Flash if S | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-20 03:32 UTC | Phase 6: Ensemble v9 — Real-Corpus-Validated Verif | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2572-tier0s-real-corpus-retrain) |
