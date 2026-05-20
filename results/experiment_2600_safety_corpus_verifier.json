@@ -2,23 +2,20 @@
   "honest_verdict": "blocked_sklearn",
   "safety_verifier_viable": false,
   "safety_auroc": 0.0,
-  "safety_auprc": 0.0,
-  "safety_f1": 0.0,
   "n_corpus": 0,
-  "corpus_source": "blocked_sklearn",
+  "corpus_source": "synthetic",
   "random_seed": 42,
   "duration_s": 0.0,
-  "model_path": "not_saved_precondition_failed_sklearn",
   "preconditions_checked": [
     {
-      "resource": "carnot_import",
+      "resource": "carnot",
       "available": true,
-      "check": "python -c \"import sys; sys.path.insert(0, '/home/ianblenke/github.com/ianblenke/carnot/python'); import carnot\" succeeded"
+      "check": "python -c \"import sys; sys.path.insert(0, '/home/ianblenke/github.com/ianblenke/carnot/python'); import carnot\""
     },
     {
       "resource": "sklearn",
       "available": false,
-      "check": "python -c \"import sklearn\" failed with ModuleNotFoundError: No module named 'sklearn'"
+      "check": "python -c \"import sklearn\""
     }
   ]
 }
