@@ -6639,3 +6639,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-20: tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consistency (⚠️ Blocked) — honest_verdict=blocked_sklearn; results/experiment_2597_tier0u_real_fix.json
 - 2026-05-20: HuggingFace Model Card Citation Update (✅ Complete) — honest_verdict=complete: README model-card fallback updated with arXiv preprint citation and distribution channel metadata; HuggingFace upload remains operator-only.; results/experiment_2598_hf_model_card_citation.json
 - 2026-05-20: IPFS Mirror: Pin arXiv Preprint + Generate CID (⚠️ Blocked) — honest_verdict=complete: blocked_arxiv_package_not_found; results/experiment_2599_ipfs_mirror.json
+- 2026-05-20: IPFS Mirror: Pin arXiv Preprint + Generate CID (⚠️ Blocked) — honest_verdict=complete: blocked_arxiv_package_not_found; results/experiment_2599_ipfs_mirror.json
