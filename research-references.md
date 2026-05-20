@@ -1,3 +1,30 @@
+## 2026-05-20 Post-.246 Planning Sweep (Milestone 2026.05.247)
+
+This sweep was run after milestone `.246` was planned (expected: paper errata applied, arxiv_ready_v4=True for operator submission; GateMate strtol fix attempted via CC1 toolchain / openFPGALoader HEAD; KV260 operator docs updated; new verifiers tier0t/0v/0w evaluated with PYTHONPATH fix; ensemble v8 attempted; JEPA real FoVer training; HalluScan external benchmark). Three critical gaps entering .247: (a) tier0s/tier0u verifiers remain near-random on real corpus despite paper errata correcting claims — need actual algorithmic fix; (b) publication distribution trail needed post-arXiv (HuggingFace model card citations + IPFS mirror per Rule 3); (c) Tier B Safety/Jailbreak Classifier is the next commercially viable product.
+
+### Agentic Systems as Boosting Weak Reasoning Models
+
+- **Paper:** "Agentic Systems as Boosting Weak Reasoning Models" (arXiv:2605.14163, May 2026).
+- **What:** Demonstrates that weak LLM reasoning models can be combined in a verifier ensemble to match or exceed the performance of strong single models. Uses a critic-comparator orchestration pattern where multiple weak verifiers vote on candidate responses, with a meta-judge aggregating signals. Key finding: committee search with k verifiers scales better per-token than a single large model across math and coding tasks.
+- **Relevance to Carnot:** Provides peer validation for Carnot's ensemble approach (k=10 verifiers). The critic-comparator pattern maps onto Carnot's Fisher p-value combination. Also suggests that the ensemble's meta-verification capacity grows with additional weak verifiers — supporting the .247 Ensemble v9 track that adds real-corpus-validated tier0s/tier0u replacements. The boosting framework is a potential upgrade path for the Fisher combination layer.
+- **Sources:** https://arxiv.org/abs/2605.14163
+
+### Federated Language Models Under Bandwidth Budgets: Distillation Rates and Conformal Coverage
+
+- **Paper:** "Federated Language Models Under Bandwidth Budgets: Distillation Rates and Conformal Coverage" (arXiv:2605.09986, May 2026).
+- **What:** Proves distribution-free conformal prediction bounds for federated LLM factuality under retrieval-bandwidth constraints. Shows that conformal coverage guarantees can be maintained with O(log n) communication rounds even when calibration sets are distributed across clients. Key result: conformal thresholds computed on local calibration sets converge to the global optimal threshold at a rate matching single-machine conformal.
+- **Relevance to Carnot:** Supports Carnot's conformal calibration track (exp2485, group-conditional AUROC=0.9750) with a theoretical efficiency result. The bandwidth-budget framing is analogous to Carnot's per-verifier calibration overhead: each verifier group's calibration set is effectively a "client" with limited overlap. The convergence result means smaller per-group calibration sets (currently ~100 examples per group) may be theoretically sufficient — important context for the Tier B Safety classifier which will need its own small calibration corpus.
+- **Sources:** https://arxiv.org/abs/2605.09986
+
+### Decomposing Large-Scale Ising Problems on FPGAs
+
+- **Paper:** "Decomposing Large-Scale Ising Problems on FPGAs" (arXiv:2602.15985, Feb 2026).
+- **What:** Proposes a hybrid FPGA-Ising architecture that decomposes large Ising problems into overlapping subgraphs solved on a single FPGA, achieving approximately 10,000× energy reduction versus CPU-based QUBO solvers. The decomposition uses a graph partitioning strategy that preserves Ising coupling structure across subgraph boundaries, with a fusion step that reconciles boundary spin states.
+- **Relevance to Carnot:** Direct reference for the KV260 hardware acceleration track. Carnot's Ising sampler currently runs on CPU (183× faster than thrml in software); this paper shows a 10,000× path via FPGA decomposition. The graph decomposition approach directly applies to Carnot's constraint graph: each verifier's constraint set is a subgraph, and the GateMate/KV260 bitstream can implement the subgraph solver. Cross-reference with arXiv:2604.17109 (fully parallel Ising machine already in references) and the KV260 PYNQ deployment track.
+- **Sources:** https://arxiv.org/abs/2602.15985
+
+---
+
 ## 2026-05-20 Post-.245 Planning Sweep (Milestone 2026.05.246)
 
 This sweep was run after milestone `.245` completed (9/11 capstone-input artifacts at terminal verdict — best_245_auroc=0.9857 (ensemble v7b Group D, 5-seed adversarially verified); phase4_final_status=retired_negative_option_b (§4.4 honest negative subsection landed in main.tex, citing exp2486/2508/2519/2532); arxiv_ready=True (first time, all 4 gates satisfied); operator_recommendation=submit_now. Hardware: GateMate JTAG detected live but openFPGALoader strtol parse error on .cfg (nextpnr-himbaechel dialect vs openFPGALoader 0.13 parser incompatibility); KV260 SD media physically absent. Tier0v HalluField blocked (carnot import failed — PYTHONPATH issue). Real-corpus validation revealed: tier0s 0.3758 (vs synth 1.0), tier0u 0.5360 (vs synth 0.96), tier0r 0.9414 on FoVer (solid). Three critical gaps: (a) paper-v6 tier0s/tier0u inflated synthetic AUROC claims must be corrected before operator submits, (b) GateMate strtol parse error and KV260 SD media, (c) new viable verifiers needed for ensemble expansion.

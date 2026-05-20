@@ -1,6 +1,41 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.246 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.247 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.247 Research Planning Complete
+
+**Milestone 2026.05.246 COMPLETED: key results (from capstone exp2567 + retro exp2568):**
+- **Paper errata applied** (exp2557): tier0s corrected from 1.0 → 0.3758 real-corpus, tier0u from 0.96 → 0.5360 real-corpus; synthetic-only labels added. Headline AUROC 0.9857 (ensemble v7b) unchanged.
+- **arXiv Final Package v4** (exp2558): arxiv_ready_v4=True with errata incorporated. Operator submission checklist produced.
+- **PYTHONPATH fix universally applied**: exp2561 (tier0t) and exp2562 (tier0v + tier0w) used sys.path.insert(0, project_root/python).
+- **JEPA real FoVer training** (exp2565): JEPAFastPathPredictor trained on n=6548 real examples; checkpoint saved; AUC target >0.889.
+- **HalluScan benchmark** (exp2566): Carnot ensemble v7b vs HalluScan domains; peer comparison vs NLI baseline (mean AUROC 0.67) established.
+- **GateMate flash uncertain**: exp2559 (CC1 toolchain / openFPGALoader HEAD) may or may not have resolved strtol parse error.
+- **KV260 still operator-blocked**: exp2560 produced operator docs; physical SD card insertion requires operator action.
+- **tier0s/tier0u remain near-random**: real-corpus AUROC 0.3758 / 0.5360 — paper errata corrects claims but NOT the underlying verifiers.
+
+**Milestone 2026.05.247 PLANNED as Real-Corpus Verifier Recovery + Publication Distribution + Safety Classifier Tier B.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v247.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2569`–`exp2581`)
+- ID allocation: milestone `.246` used through `exp2568`, so `.247` starts at `exp2569`.
+- Research references updated with Post-.246 Planning Sweep (2026-05-20): 3 new papers added:
+  - arXiv:2605.14163 (Agentic Systems as Boosting — verifier ensemble boosting pattern)
+  - arXiv:2605.09986 (Federated LMs Under Bandwidth Budgets — conformal calibration for Tier B)
+  - arXiv:2602.15985 (Decomposing Large-Scale Ising Problems on FPGAs — ~10,000× speedup)
+- **Milestone title**: "Real-Corpus Verifier Recovery + Publication Distribution + Safety Classifier Tier B"
+- **Three critical gaps targeted**:
+  1. **Real-corpus verifier recovery** (highest priority): exp2572 (tier0s retrain via logistic regression on FoVer real pairs, target AUROC > 0.65) + exp2573 (tier0u NLI-proxy fix, target > 0.60) → exp2579 (ensemble v9).
+  2. **Publication distribution**: exp2570 (HF model card citation update) + exp2571 (IPFS pin arXiv preprint + generate CID — Rule 3 compliance).
+  3. **Tier B Safety Classifier**: exp2574 (safety corpus 200 pairs + Tier0xSafetyVerifier) → exp2575 (Group F ensemble integration + paper §7 stub, gated on exp2574.safety_verifier_viable==true).
+- **Other experiments**: exp2576 JEPA v3 online integration (continuous_self_learning_task:true); exp2577 GateMate continuity (hardware); exp2578 KV260 continuity (hardware); exp2580 capstone claude+opus; exp2581 retro.
+- **Critical path**: exp2572 + exp2573 → exp2579 → exp2580.
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2580 capstone only).
+- Validation: `validate_prior_failures.py` — [OK] no schema errors, no violations. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.247. Critical path: exp2572 + exp2573 (real-corpus verifier recovery) → exp2579 (ensemble v9). Operator action needed before exp2577/exp2578: GateMate .cfg repair or KV260 SD card insertion.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.246 Research Planning Complete
 

@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.247 Research Planning Complete)
+
+- Milestone 2026.05.247 planned: "Real-Corpus Verifier Recovery + Publication Distribution + Safety Classifier Tier B"
+- research-roadmap-next.yaml written (13 tasks exp2569–exp2581). Validated: prior_failures [OK] no schema errors, no violations. audit_roadmap_gates.py: roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+- openspec/change-proposals/research-roadmap-v247.md created (167 lines).
+- research-references.md updated with 3 new papers from Post-.246 planning sweep:
+  - arXiv:2605.14163 (Agentic Systems as Boosting — verifier ensemble boosting pattern; relevant to ensemble v9)
+  - arXiv:2605.09986 (Federated LMs Under Bandwidth Budgets — conformal prediction bounds for distributed calibration; supports Tier B)
+  - arXiv:2602.15985 (Decomposing Large-Scale Ising Problems on FPGAs — ~10,000× speedup vs CPU; relevant to KV260 track)
+- Critical gaps being targeted: (1) tier0s real-corpus AUROC=0.3758 (vs 1.0 synthetic) — exp2572 retrains via logistic regression on FoVer real pairs; tier0u=0.5360 (vs 0.96 synthetic) — exp2573 fixes via TF-IDF cosine NLI-proxy on consecutive sentences; (2) Rule 3 distribution compliance — exp2570 (HF citation) + exp2571 (IPFS pin + CID); (3) Tier B Safety Classifier — exp2574 (200 safe/unsafe pairs + Ising pattern energy verifier) + exp2575 (Group F ensemble, gated on exp2574.safety_verifier_viable==true).
+- Agent routing: 12 codex/gpt-5.5 (92.3%), 1 claude+opus (exp2580 capstone only). Codex-default discipline maintained.
+- Key structural decisions: (1) exp2572 uses logistic regression on FoVer real pairs (different from exp2509's synthetic NTK threshold approach — retire_if_same_verdict=true); (2) exp2573 uses TF-IDF cosine NLI-proxy on consecutive sentences (different from exp2535's synthetic label constraint graph — retire_if_same_verdict=true); (3) exp2579 gated on exp2572.tier0s_real_auroc > 0.3758 (only runs if retraining showed improvement); (4) exp2576 continuous_self_learning_task=true (JEPA v3 online integration, adds online_update() to VerifyRepairPipeline); (5) Hardware continuity: exp2577 GateMate (Branch A: smoke test if terminal; Branch B: manual .cfg token repair) + exp2578 KV260 (Branch A: flash if SD card available; Branch B: update prep script).
+
 ## 2026-05-20 (Milestone 2026.05.246 Operational Retrospective)
 
 - Operational retrospective for milestone 2026.05.246 written to `results/operational_retro_2026_05_246.json`. Zero experiment commits found — milestone is planning-only (twenty-first consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. Roadmap was validated (13 tasks exp2556–exp2568, gate audit passed 0 failures) but no experiments activated before the retro trigger. Top-3 leverage actions: (1) activate exp2556 (paper errata / real-corpus AUROC correction) immediately after this retro; (2) deploy persistent conductor daemon to eliminate the structural planning-execution gap; (3) gate the retro trigger on minimum_experiments_completed >= 1 to prevent empty-window retros consuming turn budget. Estimated time savings: 0% (no execution data).
