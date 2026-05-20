@@ -320,6 +320,163 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-20 (17:30Z): VibeServe Integration — Related-Work + K-Block Verify + Jump-Forward Decoding (.245+ MANDATORY)
+
+**Origin:** 2026-05-20 operator-shared blog
+syfi.cs.washington.edu/blog/2026-05-12-introducing-vibeserve/ from UW
+SyFI lab. VibeServe is an agentic system that synthesizes bespoke
+LLM-serving runtimes per deployment (Claude / Codex CLI as the
+underlying agentic substrate). Two findings load-bearing for Carnot:
+
+1. **Methodological mirror**: VibeServe's architecture (2 nested loops +
+   persistent memory + specialized agents in fresh contexts + skills
+   library) is structurally identical to Carnot's conductor+planner+
+   adversarial-verify+verifier-library design. Independent validation
+   that the agentic-research-loop pattern generalizes.
+
+2. **Specific technique candidates with measured wins on Carnot-adjacent
+   problem axes**:
+   - Case B: 5.95× over vLLM via "predicted outputs verified in K-token
+     blocks" — structurally identical to Carnot's verify-and-repair,
+     but exposes a serving-grade API
+   - Case E: 2.6× on constrained JSON via grammar-based jump-forward
+     decoding on MacBook (Apple Silicon) — directly applicable to
+     Carnot's CSL grammar / FST PATH C constraint-satisfaction work
+
+3. **MacBook 6.27× (Case F) + 2.6× (Case E) results validate the
+   consumer-hardware sovereignty bet** (CLAUDE.md decentralization
+   Rule 5 + SOTA Local Models). VibeServe shows the same hardware
+   class produces measurable wins; Carnot's PolarFire-RISC-V path
+   (exp2466 / exp2490) is the analogous play on different silicon.
+
+**Three `.245+ tasks queued (a/b/c per operator):**
+
+```yaml
+# (a) Paper-v6 §Related Work citation
+- id: exp24XX-paper-v6-vibeserve-related-work
+  title: "Phase 4: Paper-v6 §Related Work — Add VibeServe (UW SyFI) Agentic-Synthesis Cite"
+  track: paper
+  agent_type: codex      # mechanical doc integration
+  model: gpt-5.5
+  max_turns: 30
+  deliverable: results/experiment_24XX_paperv6_vibeserve_cite.json
+  prompt: |
+    CONTEXT: VibeServe (UW SyFI lab, syfi.cs.washington.edu/blog/2026-
+    05-12-introducing-vibeserve/) is an independent agentic-system-
+    synthesis architecture reaching the same nested-loop design as
+    Carnot's conductor. Add a paragraph to docs/arxiv-paper/main.tex
+    §Related Work citing it as methodological corroboration:
+    - 2 nested loops + persistent memory + specialized agents in
+      fresh contexts + skills library
+    - Same Claude/Codex CLI agentic substrate
+    - Different problem domain (LLM serving) but same architectural
+      pattern
+    - Their honest failure framing (Case C 6 accuracy-gate failures
+      before iter 7 success) mirrors Carnot's adversarial-verify
+      discipline catching exp1100 fabrication + 0.9351 non-replication
+    Add carnot.bib entry citing the blog post URL.
+
+# (b) K-block verification interface
+- id: exp24XX-carnot-k-block-verify-api
+  title: "Phase 1: Carnot K-Block Verification Interface (VibeServe Case B Pattern)"
+  track: verifier
+  agent_type: claude     # multi-file API design + tests
+  requires_claude: true
+  model: sonnet
+  max_turns: 80
+  deliverable: results/experiment_24XX_carnot_k_block_verify.json
+  prompt: |
+    CONTEXT: VibeServe Case B achieved 5.95× over vLLM via
+    "predicted outputs verified in K-token blocks." This is
+    structurally Carnot's verify-and-repair pipeline reframed as
+    a serving-time speedup API.
+
+    CONCRETE STEPS:
+      1. Add carnot.verify.verify_k_block(prompt, k_block_tokens,
+         expected_constraint) -> {accepted: bool, accepted_prefix:
+         tokens, reject_at_index: int | null}
+      2. Wire into python/carnot/pipeline/verify_repair.py as an
+         alternate fast-path; fall back to token-by-token on K-block
+         reject.
+      3. Smoke test on cached telemetry: 100 examples, K=4, measure
+         k_block_accept_rate, avg_verified_tokens_per_call.
+      4. Benchmark vs token-by-token baseline: vibe_speedup =
+         token_baseline_us / k_block_us. Target >= 2× on cached
+         telemetry (lower than VibeServe's 5.95x because we're not
+         doing full serving stack; just the verification layer).
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict
+      - k_block_accept_rate
+      - vibe_speedup
+      - n_eval_examples (must be >= 100)
+      - duration_s
+      - preconditions_checked
+
+    ACCEPTANCE GATES:
+      - condition: "vibe_speedup >= 1.5 AND k_block_accept_rate >= 0.5"
+        principle: "Below 1.5x not worth the API; below 50% accept
+                    rate means the verify-K-then-fall-back overhead
+                    dominates the speedup."
+
+# (c) Jump-forward decoding for constrained generation
+- id: exp24XX-carnot-jump-forward-decoding-csl
+  title: "Phase 2: Carnot Jump-Forward Decoding for CSL/FST PATH C (VibeServe Case E Pattern)"
+  track: verifier
+  agent_type: claude     # cross-file integration with FST pipeline
+  requires_claude: true
+  model: sonnet
+  max_turns: 60
+  deliverable: results/experiment_24XX_jump_forward_csl.json
+  prompt: |
+    CONTEXT: VibeServe Case E achieved 2.6× on constrained JSON via
+    grammar-based jump-forward decoding on MacBook. Carnot's CSL
+    grammar work + FST PATH C is the analogous constraint-satisfaction
+    path; jump-forward can speed it up at the same grammar-mask points.
+
+    CONCRETE STEPS:
+      1. Add carnot.samplers.jump_forward(prompt, grammar, model)
+         that uses the grammar's deterministic-suffix detection to
+         skip forward through grammar-determined tokens (no model
+         call for tokens where the grammar admits only one
+         continuation).
+      2. Integrate into python/carnot/pipeline/fst_pipeline.py
+         PATH C (constrained-generation path).
+      3. Benchmark constrained JSON generation on cached telemetry:
+         100 examples, measure tokens_skipped_by_grammar, jump_forward_speedup.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict
+      - jump_forward_speedup
+      - tokens_skipped_by_grammar (must be > 0)
+      - constrained_output_validity_rate (must be == 1.0 — grammar
+        guarantees validity)
+      - n_eval_examples (must be >= 100)
+      - duration_s
+
+    ACCEPTANCE GATES:
+      - condition: "jump_forward_speedup >= 1.5 AND constrained_output_validity_rate == 1.0"
+        principle: "Below 1.5x or any validity violation means grammar
+                    integration is wrong."
+```
+
+**Why MANDATORY:** VibeServe is the strongest external validation of
+the Carnot agentic-loop architecture seen this session — independent
+UW group, different domain, same methodology. The cite improves paper-
+v6 credibility. The K-block + jump-forward techniques translate
+directly to measurable Carnot wins on verifier-side serving and
+constrained-generation paths.
+
+**Cross-references:**
+- `syfi.cs.washington.edu/blog/2026-05-12-introducing-vibeserve/` (source)
+- `ops/operator-followup.md` — companion document (operator-action
+  list including UW SyFI outreach proposal per CLAUDE.md
+  Operator-Only External Publication rule)
+- `feedback_paper_integrity_audit.md` — the discipline mirror VibeServe
+  shows externally
+- CLAUDE.md "SOTA Local Models" — VibeServe Case E/F MacBook results
+  validate the consumer-hardware bet
+
 ### NEW 2026-05-20 (17:00Z): KV260 XDC-Constrained Real-Board Bitstream Refresh (.245+ MANDATORY Hardware)
 
 **Origin:** 2026-05-20 ~12:55 EDT operator directive ("use the latest
