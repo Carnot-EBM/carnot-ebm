@@ -5249,3 +5249,5 @@ Ripgrep i |
 | 2026-05-20 03:28 UTC | Phase 5b (Hardware): KV260 Continuity — Flash if S | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:30 UTC | Phase 5b (Hardware): KV260 Continuity — Flash if S | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 03:32 UTC | Phase 6: Ensemble v9 — Real-Corpus-Validated Verif | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2572-tier0s-real-corpus-retrain) |
+| 2026-05-20 03:39 UTC | Phase 7a: Capstone v247 — Milestone 2026.05.247 Fi | OK | 81 passed, 1 warning in 2.39s |
+| 2026-05-20 03:41 UTC | Phase 6: Ensemble v9 — Real-Corpus-Validated Verif | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2572-tier0s-real-corpus-retrain) |
