@@ -5482,3 +5482,4 @@ Ripgrep i |
 | 2026-05-20 14:46 UTC | ODAR Free-Energy Routing: Phase 4 Active Inference | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 14:48 UTC | ODAR Free-Energy Routing: Phase 4 Active Inference | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 14:50 UTC | ODAR Free-Energy Routing: Phase 4 Active Inference | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 14:52 UTC | External Benchmark: Carnot Ensemble v11 vs EORM Le | SKIP | Pre-tests failing, self-heal failed:  |
