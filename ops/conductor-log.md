@@ -5502,3 +5502,4 @@ Ripgrep i |
 | 2026-05-20 15:52 UTC | Phase 1 Ship v2: Execute Remaining Autonomous Ship | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 15:54 UTC | Phase 1 Ship v2: Execute Remaining Autonomous Ship | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 15:56 UTC | Phase 1 Ship v2: Execute Remaining Autonomous Ship | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 15:58 UTC | SOTA GGUF Live Pipeline Validation: Ensemble v11 o | SKIP | Pre-tests failing, self-heal failed:  |
