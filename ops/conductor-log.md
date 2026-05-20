@@ -5412,3 +5412,5 @@ Ripgrep i |
 | 2026-05-20 11:43 UTC | Milestone .252 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:45 UTC | Milestone .252 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:47 UTC | Milestone .252 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 12:19 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-20 12:21 UTC | Milestone 2026.05.253 activated | OK | 13 tasks queued |
