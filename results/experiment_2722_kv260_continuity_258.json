@@ -1,0 +1,15 @@
+{
+  "honest_verdict": "complete: KV260 continuity check .258 performed, SD card absent, operator escalated after 4 consecutive failures.",
+  "branch_taken": "B",
+  "sd_card_detected": false,
+  "kv260_terminal": false,
+  "consecutive_branch_b_runs": 4,
+  "duration_s": 5.0,
+  "preconditions_checked": [
+    {
+      "resource": "sd_card",
+      "available": false,
+      "check": "ls /dev/mmcblk* 2>/dev/null || echo no_sd"
+    }
+  ]
+}

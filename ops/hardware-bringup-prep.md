@@ -209,6 +209,6 @@ Without sudo (udev rule), the DirtyJTAG and FlashPro5 USB raw devices remain roo
 
 ## KV260
 - date: 20260520
-- sd_card_status: "absent across .254-.256 Branch B consecutive"
-- next_step: "Operator: insert SD card with PYNQ image. After insert: re-run kv260 task."
+- sd_card_status: "absent across .254/.256/.257/.258 (four consecutive Branch B runs)"
+- next_step: "OPERATOR: insert SD card with PYNQ image. This is the 4th consecutive Branch B — escalated. After insertion: re-run kv260 task."
 - latest_bitstream: "carnot_ising_v4 (load via: xmutil loadapp carnot_ising_v2_n64)"
