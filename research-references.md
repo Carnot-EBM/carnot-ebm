@@ -1,3 +1,50 @@
+## 2026-05-20 Post-.251 Planning Sweep (Milestone 2026.05.252)
+
+This sweep was run after milestone `.251` completed (ensemble v9 adversarially validated 5-seed; external
+benchmarks HalluScan+PARALLAX evaluated; TTT loop prototype built; FJD safety v2 implemented; BB-UCP
+conformal calibrated; GGUF pipeline smoke 20 examples; paper v6 polish with v9 numbers; distribution
+HF+IPFS final mile). Three critical gaps entering .252: (a) GGUF benchmark was only 20 examples (smoke
+test) — need 100+ for statistical validity; (b) no Tier 0w embedding-geometry verifier (AvgWD/EigenWD
+from arXiv:2603.22303 identified in .251 sweep but not yet prototyped); (c) TTT scale-up needed — .251
+prototype was 50 examples at 5 selected, statistical significance not established.
+
+### Distributional EBMs for Uncertainty-Aware Structured LLM Reasoning
+
+- **Paper:** "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning" (arXiv:2605.18871, May 2026).
+- **What:** Proposes decomposed energy functions combining learned quality scorers with constraint penalties. Uses heterogeneous ensembles of low-rank adapters as energy components. Achieves 53% relative reduction in constraint violations on structured outputs compared to standalone models. Introduces a distributional EBM training objective that directly optimizes for uncertainty calibration rather than point-estimate accuracy.
+- **Relevance to Carnot:** Direct validation of Carnot's ensemble-of-verifiers design. The low-rank adapter ensemble pattern maps to Carnot's Tier 0a–0z verifier composition. The distributional training objective explains WHY diverse verifiers with different inductive biases (logprob, TF-IDF, semantic energy, embedding geometry) outperform single-method approaches — each adapter captures a different mode of the uncertainty distribution. Paper-v6 §3 can cite as architectural validation.
+- **Sources:** https://arxiv.org/abs/2605.18871
+
+### Statistical Framework for Auditing Behavioral Entanglement in Verifier Ensembles
+
+- **Paper:** "How Independent are Large Language Models? Statistical Framework for Auditing Behavioral Entanglement and Reweighting Verifier Ensembles" (arXiv:2604.07650, April 2026).
+- **What:** Develops statistical methods for analyzing hidden dependencies between supposedly diverse models (or verifiers). Introduces "behavioral entanglement coefficient" — a pairwise independence score based on response correlation on a shared evaluation corpus. Proposes de-entangled reweighting: inverse-entanglement-weighted ensemble aggregation that achieves 4.5% accuracy gain over majority voting by downweighting correlated verifiers. Framework applies to any ensemble of classifiers.
+- **Relevance to Carnot:** Directly applicable to Carnot's Tier 0a–0z ensemble. Tier 0s and tier0u were both retrained on FoVer TF-IDF features in .250 — they may be behaviorally entangled. De-entangled reweighting could push ensemble v10 AUROC above the v9 carry-forward without adding new verifiers. Queued as exp2637 in .252: run entanglement audit on ensemble v9 then apply reweighting.
+- **Sources:** https://arxiv.org/abs/2604.07650
+
+### PASC: Pipeline-Aware Conformal Prediction for Multi-Stage NLP Systems
+
+- **Paper:** "PASC: Pipeline-Aware Conformal Prediction" (arXiv:2605.18812, May 2026).
+- **What:** Addresses uncertainty quantification in multi-stage NLP pipelines where errors compound across stages (RAG → generate → verify). Provides joint coverage guarantees for the full pipeline, not just individual stages. The PASC algorithm achieves 96.4% end-to-end coverage vs 93.4% for Bonferroni independence assumption. Key insight: modeling inter-stage correlations via covariance tightens the joint prediction interval significantly.
+- **Relevance to Carnot:** Carnot's verify-repair pipeline is exactly the multi-stage structure PASC targets: extract → verify → repair → re-verify. BB-UCP (exp2627, .251) provides single-stage calibration; PASC extends this to the full pipeline with formal joint coverage guarantees. Paper-v6 §6 can cite PASC as the multi-stage extension of BB-UCP. Queued as exp2641 in .252.
+- **Sources:** https://arxiv.org/abs/2605.18812
+
+### ANCORA: Learning to Question via Manifold-Anchored Self-Play for Verifiable Reasoning
+
+- **Paper:** "ANCORA: Learning to Question via Manifold-Anchored Self-Play for Verifiable Reasoning" (arXiv:2604.27644, April 2026).
+- **What:** A unified policy that learns to generate verifiable problems, solve them, and convert verifier feedback into self-improvement through manifold-anchored self-play. The manifold anchor prevents mode collapse (a key failure mode in self-play learning). Achieves 81.5% pass@1 on test-time training benchmarks for code verification tasks. Demonstrates that verifier-driven self-play outperforms supervised fine-tuning with 4x fewer labeled examples.
+- **Relevance to Carnot:** Validates and extends the Verifier-Driven TTT loop prototyped in exp2624 (.251). ANCORA's manifold anchoring directly addresses the Dark Room failure mode identified in project memory (Q12: in-situ PCD without epistemic regularization causes mode-collapse onto null-space). The "generate verifiable problems + solve + convert verifier feedback" loop is Carnot's FR-11 Tier 3 TTT at full scale. Queued for potential exp2639 TTT scale-up integration.
+- **Sources:** https://arxiv.org/abs/2604.27644
+
+### Test-time Recursive Thinking: Self-Improvement without External Feedback
+
+- **Paper:** "Test-time Recursive Thinking: Self-Improvement without External Feedback" (arXiv:2602.03094, February 2026).
+- **What:** Enables self-improvement through iterative refinement using rollout-specific strategies and self-generated verification signals. The key contribution is "recursive verification": the model generates multiple candidate solutions, uses an internal verifier to rank them, then uses the ranking signal to refine subsequent generations. Open-source models reach 100% accuracy on AIME benchmarks. No external training labels required — the verifier signal is derived from consistency across rollouts.
+- **Relevance to Carnot:** Provides a simpler path to FR-11 Tier 3 than ANCORA: recursive self-verification without gradient updates. Carnot's verifier ensemble can serve as the external verifier in the recursive loop, potentially outperforming self-generated verification signals. The rollout consistency signal maps to Carnot's energy function: low energy = high consistency across rollouts. Concrete .252 connection: the TTT scale-up in exp2639 can adopt the recursive rollout pattern to measure improvement at 100+ examples.
+- **Sources:** https://arxiv.org/abs/2602.03094
+
+---
+
 ## 2026-05-20 Post-.250 Planning Sweep (Milestone 2026.05.251)
 
 This sweep was run after milestone `.250` completed (sklearn fix landed via exp2609; verifier retrain

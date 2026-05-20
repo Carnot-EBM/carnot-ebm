@@ -1,5 +1,28 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.252 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.252. All 13 tasks in .251 (exp2621–exp2633) confirmed complete by user before this session.
+  - **Milestone title**: "Ensemble v10 + Tier 0w Verifier + TTT Scale-Up + Phase 1 Ship Readiness"
+  - **arxiv sweep** (5 new papers added to `research-references.md`):
+    - arXiv:2605.18871 (Distributional EBMs via Stein Operators — EBM score-matching for hallucination detection; candidate for Phase-3 substrate)
+    - arXiv:2604.07650 (Behavioral Entanglement in Verifier Ensembles — pairwise correlation audit; de-entangled reweighting 4.5% AUROC gain)
+    - arXiv:2605.18812 (PASC: Pipeline-Aware Conformal Prediction — 96.4% joint vs 93.4% Bonferroni; multi-stage extract→verify→repair coverage guarantee)
+    - arXiv:2604.27644 (ANCORA: Manifold-Anchored Selection for TTT — anti-collapse mechanism; addresses Q12 Dark Room failure mode)
+    - arXiv:2602.03094 (Recursive Thinking Machines — meta-token recurrence for depth-adaptable EBMs; Phase-3 substrate candidate)
+  - **Created**: `openspec/change-proposals/research-roadmap-v252.md`
+  - **Created**: `research-roadmap-next.yaml` (13 tasks exp2634–exp2646, milestone 2026.05.252)
+  - **Validated**: `validate_prior_failures.py` [OK] no schema errors, no violations. `audit_roadmap_gates.py` roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+  - **Critical path**: exp2634 (archive/activate) → exp2636 (Tier 0w) + exp2637 (entanglement audit) → exp2638 (ensemble v10 + 5-seed adversarial val) → exp2643 (arXiv v5 package, gated) → exp2645 (capstone, Phase 1 ship decision).
+  - **Three biggest gaps addressed**:
+    1. GGUF benchmark only 20 examples (exp2635: scale to N=100 + CI)
+    2. No Tier 0w AvgWD/EigenWD verifier (exp2636: implement from arXiv:2603.22303)
+    3. TTT scale-up lacking statistical significance (exp2639: N=100 + t-test + ANCORA manifold anchoring)
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13 codex, 1/13 claude+opus for capstone), prior_failures blocks (13/13 tasks, all 4 sub-fields), PRECONDITIONS step 0 (all compute-bound tasks), principle-annotated artifact fields, terminal-prefix verdict discipline, Operator-Only External Publication (exp2643/2645 never submit), Hardware-Task Continuity (KV260 exp2644 — NON-TERMINAL), Exclusion-Manifest cross-check (0 scope matches across retired IDs).
+  - **FR-11 self-learning task**: exp2639 (TTT N=100, 5 seeds, scipy t-test, continuous_self_learning_task: true, ANCORA manifold anchoring)
+  - **Phase 1 ship readiness audit**: exp2642 (first systematic 4-gate check: PyPI, HF mirror, docs, reproducer)
+  - **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2645 capstone — requires_claude: true)
+
 ## 2026-05-20 (Milestone 2026.05.251 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.251. All 13 tasks in .250 (exp2608–exp2620) confirmed complete by user before this session.

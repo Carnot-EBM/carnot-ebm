@@ -1,6 +1,51 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.251 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.252 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.252 Research Planning Complete
+
+**Milestone 2026.05.251 COMPLETED: all 13 tasks (exp2621–exp2633) confirmed complete.**
+
+Key results from .251 (per user confirmation):
+- **Ensemble v9 adversarially validated** (exp2622): 5-seed AUROC target ≥ 0.90 + adversarially_verified=true.
+- **External OOD benchmarks** (exp2623): HalluScan + PARALLAX benchmark results recorded.
+- **FR-11 TTT prototyped** (exp2624): VerifierDrivenTTT class implemented in `python/carnot/pipeline/ttt_loop.py`; N=50 proof-of-concept run.
+- **Safety Tier 0x v2** (exp2625): FJD logit-temperature scaling per arXiv:2509.14558.
+- **Multi-Exit KAN** (exp2626): per-layer prediction heads prototyped.
+- **BB-UCP conformal** (exp2627): uncertainty calibration; gated on exp2622 adversarially_verified.
+- **KV260 NON-TERMINAL**: SD card absent; Branch B (update prep script) executed; board continuity maintained.
+- **Paper v6 polish** (exp2629): gated on exp2622; §5 updated with v9 AUROC numbers.
+- **GGUF smoke** (exp2630): pipeline smoke test on SOTA GGUF models; N=20 examples.
+- **HF+IPFS distribution** (exp2631): Rule 3 distribution compliance check.
+- **arXiv package**: arxiv_ready_v4=True (since .246 exp2558); operator submission pending (OPERATOR-ONLY).
+
+**Milestone 2026.05.252 PLANNED as "Ensemble v10 + Tier 0w Verifier + TTT Scale-Up + Phase 1 Ship Readiness".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v252.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2634`–`exp2646`)
+- ID allocation: milestone `.251` used through `exp2633`, so `.252` starts at `exp2634`.
+- Research references updated with Post-.251 Planning Sweep (2026-05-20): 5 new papers added:
+  - arXiv:2605.18871 (Distributional EBMs via Stein Operators)
+  - arXiv:2604.07650 (Behavioral Entanglement in Verifier Ensembles)
+  - arXiv:2605.18812 (PASC: Pipeline-Aware Conformal Prediction)
+  - arXiv:2604.27644 (ANCORA: Manifold-Anchored Selection for TTT)
+  - arXiv:2602.03094 (Recursive Thinking Machines)
+- **Three biggest gaps targeted**:
+  1. **GGUF benchmark scale-up** (HIGHEST PRIORITY): exp2635 (N=100 + CI from N=20 in .251)
+  2. **Tier 0w training-free verifier**: exp2636 (AvgWD/EigenWD from arXiv:2603.22303 → `python/carnot/verify/tier0w_avgwd_eigenwd.py`)
+  3. **TTT statistical significance**: exp2639 (N=100 + scipy t-test + ANCORA manifold anchoring; gate: delta>0.01 AND p<0.05 AND N>=100 AND n_seeds_positive>=3)
+- **Critical path**: exp2634 (archive/activate) → exp2636+exp2637 (Tier 0w + entanglement audit) → exp2638 (ensemble v10 + 5-seed adversarial val, gated on exp2636.tier0w_auroc >= 0.65) → exp2643 (arXiv v5, gated on exp2638.adversarially_verified) → exp2645 (capstone, Phase 1 ship decision).
+- **Phase 1 ship readiness audit**: exp2642 (first dedicated 4-gate check: PyPI, HF mirror, docs, reproducer); phase1_ship_ready bool; operator_action_checklist.
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2645 capstone — requires_claude: true for cross-artifact Phase 1 decision synthesis).
+- **Hardware continuity**: exp2644 KV260 (NON-TERMINAL; SD card absent — Branch A: flash if SD detected; Branch B: update prep script). GateMate + PolarFire TERMINAL (graduated).
+- Exclusion manifest cross-check: 0 scope matches found across all retired experiment IDs.
+- Validation: `validate_prior_failures.py` [OK] no schema errors, no violations. `audit_roadmap_gates.py` roadmap_gate_audit_passed=True, 0 failures, 13 tasks audited.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.252. Critical path: exp2634 (archive/activate) → exp2636 (Tier 0w) + exp2637 (entanglement audit) in parallel. Operator action needed before exp2644: KV260 SD card insertion.
+
+**Operator action required**: arXiv submission (arxiv_ready_v4=True since .246, exp2558) — package ready at `docs/arxiv-submission/`; operator must submit per Operator-Only External Publication rule.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.251 Research Planning Complete
 
