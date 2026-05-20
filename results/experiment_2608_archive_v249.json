@@ -1,0 +1,37 @@
+{
+  "schema": "carnot.archive.v1",
+  "honest_verdict": "complete_already_activated: .250 was already active and .249 was already present in research-complete.yaml; no duplicate archive append or roadmap overwrite performed",
+  "archive_completed": true,
+  "milestone_activated": "2026.05.250",
+  "preconditions_checked": [
+    {
+      "resource": "research-roadmap.yaml",
+      "available": true,
+      "check": "exists and milestone field is already 2026.05.250"
+    },
+    {
+      "resource": "research-complete.yaml",
+      "available": true,
+      "check": "last 20 lines read before activation decision"
+    },
+    {
+      "resource": "research-complete.yaml",
+      "available": true,
+      "check": "contains milestone 2026.05.249 with exp2595 through exp2607 entries"
+    },
+    {
+      "resource": "results/experiment_2595_archive_v248.json",
+      "available": true,
+      "check": "prior archive artifact read for archive schema and already-activated precedent"
+    },
+    {
+      "resource": "research-roadmap-next.yaml",
+      "available": false,
+      "check": "not required because research-roadmap.yaml is already activated to 2026.05.250"
+    }
+  ],
+  "experiment": "exp2608",
+  "milestone": "2026.05.250",
+  "archive_action": "skipped_already_activated",
+  "notes": "Precondition 0a applied: active roadmap already says 2026.05.250, so exp2608 exits cleanly without appending a duplicate .249 archive entry or copying a missing next-roadmap file."
+}
