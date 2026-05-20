@@ -1,0 +1,29 @@
+{
+  "duration_s": 0.0,
+  "feature_description": "Blocked before training: sklearn is unavailable, so the requested TF-IDF unigram/bigram NLI-proxy with context/claim cosine similarity, token lengths, overlap coefficient, and Jaccard features was not fitted.",
+  "honest_verdict": "blocked_sklearn",
+  "model_path": "not_saved_precondition_failed_sklearn",
+  "n_test": 0,
+  "n_train": 0,
+  "preconditions_checked": [
+    {
+      "available": false,
+      "check": "python -c \"import sklearn; print(sklearn.__version__)\" failed with ModuleNotFoundError: No module named 'sklearn'",
+      "resource": "sklearn"
+    },
+    {
+      "available": true,
+      "check": "data/fover_corpus.jsonl exists and is non-empty with 8829 lines",
+      "resource": "fover_corpus"
+    },
+    {
+      "available": true,
+      "check": "python -c \"import sys; sys.path.insert(0, '/home/ianblenke/github.com/ianblenke/carnot/python'); import carnot\" succeeded",
+      "resource": "carnot_import"
+    }
+  ],
+  "random_seed": 42,
+  "tier0u_improved": false,
+  "tier0u_real_auprc": 0.0,
+  "tier0u_real_auroc": 0.0
+}
