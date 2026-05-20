@@ -320,6 +320,291 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-20 (19:00Z): Phase 4 Canonical Resolution — IsingVerifier.energy() Implementation + Fair Test (.257+ MANDATORY)
+
+**Origin:** 2026-05-20 operator strategic clarification — Phase 4 is
+neither "needs more data" nor "needs revisiting" yet, because **the
+canonical hypothesis has never been fairly tested**. Cumulative record
+across 8 attempts (.239-.245) shows:
+
+| Category | Count |
+|---|---|
+| Tests of the canonical IsingVerifier.energy(step) → free-energy claim | **0** |
+| Tests of PROXIES (SemanticEnergy at response-level, ARM-EBM bijection) | 4 (1 weak positive, 2 refuted, 1 invalid) |
+| Tests blocked / infrastructure-failed | 3 (exp2496 gemini crashes, exp2519 stub-not-importable, exp2532 3-fail-skipped) |
+| Honest-negative documentation (paper §4.4) | 1 (exp2544 Option B) |
+
+The structural problem: **`IsingVerifier.energy(step_text:str) -> float`
+is a STUB** in `python/carnot/verify/semantic_energy.py` (`class
+IsingVerifier: pass` per `.244 retro). Every Phase 4 test must either
+fall back to a proxy (METHODOLOGY_FALLBACK flagged in exp2508) or
+honestly block (exp2519 did the right thing). The canonical test
+cannot run until the implementation ships.
+
+Paper-v6 §4.4 documents this as honest-negative via exp2544 (acceptable
+for arXiv readiness per `.246 gate-3 redefinition). **But the
+scientific question is not closed** — Phase 4 v1 hasn't been refuted,
+just untested under the canonical methodology.
+
+**Two-task chain queued for .257+ to actually resolve this:**
+
+```yaml
+# Task 1: Engineering — implement the missing energy function
+- id: exp24XX-ising-verifier-step-energy-implementation
+  title: "Phase 1: IsingVerifier.energy(step_text) — Implement Canonical Step-Level Energy (Phase 4 Unblock)"
+  track: verifier
+  agent_type: claude         # multi-file design + tests
+  requires_claude: true
+  model: opus                # complex cross-file work; Opus appropriate
+  max_turns: 100
+  deliverable: results/experiment_24XX_ising_verifier_step_energy.json
+  prior_failures:
+    - experiment_id: exp2519-phase4-arm-ebm-v3
+      verdict: blocked_ising_verifier_not_available
+      addressed_by: "exp2519 honestly emitted blocked_precondition rather
+        than falling back to SemanticEnergy proxy a third time. This v3
+        task is the engineering prerequisite — write the IsingVerifier
+        class with a real step_text → energy method that the canonical
+        Phase 4 test (next task in this chain) can call."
+      retire_if_same_verdict: true
+    - experiment_id: exp2531-ising-verifier-implementation
+      verdict: 3-fail-skipped (gemini crash storm .244)
+      addressed_by: "exp2531 was queued in .244 but lost to the gemini-cli
+        429-retry crash storm (10+ consecutive failures). This task
+        re-stages with explicit operator_override + claude routing to
+        avoid the lost-task scope-match block."
+      retire_if_same_verdict: true
+  operator_override: "2026-05-20 19:00Z operator authorized as Phase 4
+    resolution path after .245 exp2544 documented honest negative.
+    Engineering prereq for the canonical fair test."
+  prompt: |
+    CONTEXT: Phase 4 hypothesis requires IsingVerifier.energy(step_text:
+    str) -> float. The class is currently a stub
+    ("class IsingVerifier: pass") in python/carnot/verify/semantic_energy.py.
+    Without this method, every Phase 4 empirical test must fall back to
+    a proxy (METHODOLOGY_FALLBACK per exp2508). The fall-back path is
+    correctly blocked by retire_if_methodology_fallback discipline. This
+    task ships the canonical implementation.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. python/carnot/verify/semantic_energy.py exists
+         b. IsingVerifier class is a stub (verify via grep "class IsingVerifier" + pass body)
+         c. Existing SemanticEnergy class is functional (for cross-validation)
+         d. Existing constraint-set machinery in python/carnot/verify/
+
+      1. Design the energy function per Phase 4 theory:
+         - Input: step_text (str) — a single reasoning step from a chain-of-thought
+         - Output: float — energy value where LOWER energy ↔ MORE consistent
+           with the step's logical content
+         - Operational definition (subject to design judgment):
+           Compute the Ising energy E = -sum_i h_i * sigma_i - sum_{ij} J_ij * sigma_i * sigma_j
+           where:
+           * sigma_i ∈ {-1, +1} are binary features extracted from step_text
+             (e.g., presence of negation tokens, numerical claims, citations)
+           * h_i are per-feature bias terms (learned or hand-tuned from FoVer)
+           * J_ij are pairwise coupling terms (constraint-violation penalties)
+
+      2. Implement IsingVerifier:
+         - __init__(self, h: dict[str, float] | None = None,
+                    J: dict[tuple[str, str], float] | None = None,
+                    feature_extractor: Callable[[str], dict[str, int]] | None = None)
+         - energy(self, step_text: str) -> float — the canonical Phase 4 entry point
+         - score(self, step_text: str) -> float — optional [0, 1] normalized version
+         - Document the design choices inline (verbose-layman per CLAUDE.md)
+
+      3. Calibrate against the FoVer corpus:
+         - Load existing FoVer pairs (results/live_sota_balanced_telemetry_manifest_1480.jsonl)
+         - For each correct/incorrect pair, compute energy on both
+         - Verify directionality: mean(energy_correct) < mean(energy_incorrect)
+         - If directionality FAILS: this is a real research finding —
+           the hypothesis as stated may need reformulation BEFORE running
+           the canonical test. Report honestly.
+
+      4. Add unit tests covering: energy is finite, energy is deterministic
+         (same input → same output), at least one h or J term materially
+         affects energy.
+
+      5. Cross-validation against SemanticEnergy at response level:
+         - Aggregate step-level IsingVerifier.energy to response level
+         - Pearson r vs SemanticEnergy.energy at response level
+         - Document the correlation as a sanity-check metric
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required."
+      - ising_verifier_implemented:
+          principle: "True iff IsingVerifier.energy(step_text) is callable
+                      and returns finite float on real step text."
+      - directionality_check_passed:
+          principle: "True iff mean(energy_correct) < mean(energy_incorrect)
+                      on FoVer calibration set. False is a real finding,
+                      not a failure to report — the hypothesis as stated
+                      may need reformulation."
+      - n_calibration_pairs:
+          principle: "Must be >= 100. Statistical noise floor."
+      - cross_validation_pearson_r_vs_semantic_energy:
+          principle: "Sanity check that the new energy function is in the
+                      same family as SemanticEnergy (which had r=-0.43 in
+                      exp2508). Expected |r| > 0.2 if they're measuring
+                      related things."
+      - unit_tests_added:
+          principle: "Test count for energy determinism + finiteness +
+                      sensitivity to h/J terms."
+      - duration_s:
+          principle: "Real Vivado-class engineering takes 15+ min; rules
+                      out fabrication."
+      - reproducibility_checksum:
+          principle: "Content hash of the implemented module + tests."
+
+    ACCEPTANCE GATES:
+      - condition: "ising_verifier_implemented == true AND n_calibration_pairs >= 100"
+        principle: "Engineering prereq for canonical Phase 4 test."
+
+# Task 2: Research — canonical Phase 4 fair test
+- id: exp24XX-phase4-canonical-fair-test
+  title: "Phase 1: Phase 4 Canonical Fair Test — IsingVerifier Step-Level Energy on Real Corpus (NO FALLBACK)"
+  track: verifier
+  agent_type: codex          # codex sufficient for evaluation task
+  model: gpt-5.5
+  max_turns: 50
+  deliverable: results/experiment_24XX_phase4_canonical_fair_test.json
+  depends_on: [exp24XX-ising-verifier-step-energy-implementation]
+  prior_failures:
+    - experiment_id: exp2519-phase4-arm-ebm-v3
+      verdict: blocked_ising_verifier_not_available
+      addressed_by: "Previous task in this chain ships the
+        IsingVerifier.energy implementation. This task is the actual
+        canonical Phase 4 test on the now-shipped implementation."
+      retire_if_same_verdict: true
+    - experiment_id: exp2508-phase4-step-level-arm-ebm
+      verdict: methodology_fallback_proxy_semantic_energy
+      addressed_by: "exp2508 used SemanticEnergy at response level as a
+        fallback when IsingVerifier wasn't available. This task uses
+        the REAL IsingVerifier.energy at step level — the canonical
+        operationalization. No fallback allowed."
+      retire_if_same_verdict: true
+  prompt: |
+    CONTEXT: This is the canonical Phase 4 test. The IsingVerifier.energy
+    method has shipped (prior task in chain). The hypothesis: lower
+    step-level energy correlates with step correctness. This test
+    measures that correlation on real data with real verifier.
+
+    NO FALLBACK ALLOWED. If IsingVerifier is not importable, OR if the
+    method raises, OR if the calibration corpus is unavailable, EMIT
+    honest_verdict blocked_<resource> and EXIT. Do NOT substitute
+    SemanticEnergy or any other proxy.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS (NO FALLBACK):
+         a. from carnot.verify.semantic_energy import IsingVerifier;
+            iv = IsingVerifier(); assert callable(iv.energy)
+         b. Real corpus: results/live_sota_balanced_telemetry_manifest_1480.jsonl
+            exists and has >= 100 step pairs with correctness labels
+         c. NOT a mock — verify by sampling 3 random entries and confirming
+            they reference real GGUF model outputs (CLAUDE.md SOTA Local Models)
+
+      1. Sample 290 step pairs from the corpus (matches exp2508's n
+         for direct comparability):
+         - 145 correct steps
+         - 145 incorrect steps
+         - Each pair has (step_text, correctness_label) with label ∈ {correct, incorrect}
+
+      2. For each step: energy = IsingVerifier().energy(step_text)
+         - Record (energy, correctness_label) tuples
+         - Compute pearson_r between energy and (1 if correct else 0)
+
+      3. Statistical test:
+         - p_value via scipy.stats.pearsonr
+         - 95% CI on r via bootstrap with n_bootstrap=1000
+
+      4. Decision (Phase 4 verdict):
+         - phase4_verdict = 'validated_clean' if pearson_r <= -0.2 AND p_value < 0.01
+         - phase4_verdict = 'refuted' if abs(pearson_r) < 0.1
+         - phase4_verdict = 'mixed_needs_reformulation' if -0.2 < pearson_r < 0 AND p_value < 0.01
+         - phase4_verdict = 'weak_no_strong_evidence' otherwise
+
+      5. NO PROXY FALLBACK. If anything fails, emit blocked_<reason>.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict:
+          principle: "Terminal-prefix required. complete: with
+                      phase4_verdict OR blocked_<resource>."
+      - phase4_verdict:
+          principle: "One of: validated_clean / refuted /
+                      mixed_needs_reformulation / weak_no_strong_evidence /
+                      blocked_<resource>."
+      - pearson_r:
+          principle: "Step-level energy vs correctness correlation. Sign
+                      AND magnitude AND p_value together drive the
+                      phase4_verdict."
+      - p_value:
+          principle: "Pearson significance test."
+      - r_95_ci_low, r_95_ci_high:
+          principle: "Bootstrap 95% confidence interval on r."
+      - n_step_pairs:
+          principle: "Must be 290 to match exp2508."
+      - step_granularity_achieved:
+          principle: "Must be true — this is the WHOLE POINT of the
+                      canonical test. If true is not achievable, emit
+                      blocked_<reason>, not a fallback."
+      - energy_proxy_used:
+          principle: "Must be 'IsingVerifier.energy' literal. Any proxy
+                      substitution is a methodology violation."
+      - duration_s:
+          principle: "Rules out fabrication. 290 step energy evaluations
+                      should take seconds-minutes on CPU."
+      - random_seed:
+          principle: "Must be 42 for reproducibility."
+
+    ACCEPTANCE GATES:
+      - condition: "phase4_verdict != null AND step_granularity_achieved == true"
+        principle: "Test must produce a definitive verdict on the
+                    canonical operationalization."
+      - condition: "energy_proxy_used == 'IsingVerifier.energy'"
+        principle: "No fallback. The METHODOLOGY_FALLBACK pattern from
+                    exp2508 must not recur."
+
+    Decision-tree for the next milestone planner:
+      - phase4_verdict == 'validated_clean':
+          Revise paper-v6 §4.4 from honest-negative to validated.
+          Phase 4 hypothesis stands.
+      - phase4_verdict == 'refuted':
+          Phase 4 v1 hypothesis is dead. Either reformulate (Phase 4 v2
+          with different theoretical claim) or retire from paper-v6 main
+          claims. Either way, the scientific question IS closed.
+      - phase4_verdict == 'mixed_needs_reformulation':
+          The energy function is directionally right but magnitude is
+          task-dependent. Theoretical revisiting needed — not more
+          tests of THIS form.
+      - phase4_verdict == 'weak_no_strong_evidence':
+          Insufficient power. Either increase n (more data DOES help here)
+          or accept that the effect, if real, is too small to be useful
+          for verification.
+```
+
+**Why MANDATORY.** The .245 exp2544 honest-negative documentation is a
+PAPER-V6 holding pattern, not a scientific verdict. The hypothesis
+itself remains structurally untested. Without this two-task chain,
+Phase 4 stays in indefinite "unvalidated" limbo. The chain produces a
+decisive empirical answer on the canonical operationalization — either
+the hypothesis is supported, refuted, or needs theoretical revisiting.
+The answer matters for paper-v6 (whether §4.4 revises), for future
+verifier design (whether to invest in energy-based vs heuristic
+verifiers), and for the project's research strategy.
+
+**Cross-references:**
+
+- `feedback_publication_holds_until_phase4_pivot.md` (memory, 2026-05-02)
+- `.246 commit `ef832bb5d` (gate-3 redefinition)
+- `results/experiment_2544_phase4_option_b.json` (the holding pattern)
+- `results/experiment_2508_phase4_step_level_arm_ebm.json` (the fallback-
+  proxy positive signal that motivated this canonical test)
+- `python/carnot/verify/semantic_energy.py` — file containing the
+  IsingVerifier stub to be implemented
+- `docs/arxiv-paper/main.tex` §4.4 — paper section to revise based on
+  outcome
+
 ### NEW 2026-05-20 (17:30Z): VibeServe Integration — Related-Work + K-Block Verify + Jump-Forward Decoding (.245+ MANDATORY)
 
 **Origin:** 2026-05-20 operator-shared blog
