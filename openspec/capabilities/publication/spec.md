@@ -922,6 +922,49 @@ AND `arxiv_ready == true`
 AND `submission_package_ready == true`
 AND `operator_submission_checklist` contains browser-only operator actions.
 
+### REQ-PUBLISH-031: Exp 2554 Milestone .245 Capstone Synthesis Artifact
+
+The Exp 2554 capstone runner MUST produce
+`results/experiment_2554_capstone_v245.json` by reading the 11 .245 task
+artifacts (exp2543 through exp2553) and synthesizing a single coherent
+milestone report. The runner MUST NOT attempt any external submission, MUST
+NOT modify any source paper or paper bibliography, and MUST be a pure-function
+synthesis with no network access.
+
+The artifact MUST include `honest_verdict`, `n_experiments_completed`,
+`best_245_auroc`, `auroc_adversarially_verified`, `phase4_final_status`,
+`arxiv_ready`, `operator_recommendation`, `hardware_terminal_states`,
+`gatemate_status`, `kv260_status`, `jepa_discrimination_improved`,
+`top_3_successes`, `top_3_gaps_for_246`, `external_baselines`,
+`process_flags`, `preconditions_checked`, and `duration_s`.
+
+`arxiv_ready` MUST be read directly from `exp2553.arxiv_ready` and MUST NOT
+be softened or inferred. `phase4_final_status` MUST be
+`retired_negative_option_b` when `exp2544.phase4_section_expanded == true`
+AND `exp2544.phase4_honest_negative_documented == true`; otherwise it MUST
+be `blocked_precondition`. `best_245_auroc` MUST be the cite-safe headline:
+ensemble v7b's 5-seed mean when adversarially clean, adaptive conformal's
+mean only when it is both higher AND adversarially clean, otherwise the
+carry-forward `0.9750` baseline from exp2498.
+
+### SCENARIO-PUBLISH-031: All Eleven .245 Artifacts Land And ArXiv Is Ready
+
+**Given** results/experiment_2543_archive.json through
+results/experiment_2553_arxiv_package_v3.json all exist on disk
+AND exp2544 records `phase4_section_expanded == true` and
+`phase4_honest_negative_documented == true`
+AND exp2546 records `ensemble_v7b_auroc >= 0.975` across at least 3 seeds
+without `flagged_adversarial`
+AND exp2553 records `arxiv_ready == true`
+**When** the Exp 2554 capstone runner executes
+**Then** it writes `results/experiment_2554_capstone_v245.json`
+AND `honest_verdict` starts with `complete:`
+AND `arxiv_ready == true`
+AND `phase4_final_status == "retired_negative_option_b"`
+AND `operator_recommendation == "submit_now"`
+AND `best_245_auroc` is the ensemble v7b headline number
+AND `auroc_adversarially_verified == true`.
+
 
 ## Implementation Status
 
@@ -953,6 +996,7 @@ AND `operator_submission_checklist` contains browser-only operator actions.
 | REQ-PUBLISH-024 | Proposed | Exp 1582 Phase 1 software ship readiness ledger |
 | REQ-PUBLISH-025 | Implemented | Exp 2103 PyPI publish dry run artifact |
 | REQ-PUBLISH-030 | Implemented | Exp 2553 arXiv package v3 readiness artifact |
+| REQ-PUBLISH-031 | Implemented | Exp 2554 milestone .245 capstone synthesis artifact |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
