@@ -5347,3 +5347,4 @@ Ripgrep i |
 | 2026-05-20 09:29 UTC | FJD Safety Tier 0x v2: Logit-Temperature Scaling ( | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:31 UTC | FJD Safety Tier 0x v2: Logit-Temperature Scaling ( | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:33 UTC | FJD Safety Tier 0x v2: Logit-Temperature Scaling ( | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 09:35 UTC | Multi-Exit KAN Energy Verifier: Per-Layer Predicti | SKIP | Pre-tests failing, self-heal failed:  |
