@@ -5192,3 +5192,4 @@ Ripgrep i |
 | 2026-05-20 01:15 UTC | Phase 1b: arXiv Final Submission Package v4 (post- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2557-paper-errata-tier0s-tier0u) |
 | 2026-05-20 01:15 UTC | Phase 2b (Hardware): KV260 Operator Flash Document | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 01:17 UTC | Phase 1b: arXiv Final Submission Package v4 (post- | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2557-paper-errata-tier0s-tier0u) |
+| 2026-05-20 01:17 UTC | Phase 2b (Hardware): KV260 Operator Flash Document | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
