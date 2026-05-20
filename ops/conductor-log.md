@@ -5429,3 +5429,4 @@ Ripgrep i |
 | 2026-05-20 12:47 UTC | VegAS Verifier-Guided Candidate Selection in Verif | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 12:49 UTC | VegAS Verifier-Guided Candidate Selection in Verif | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 12:51 UTC | VegAS Verifier-Guided Candidate Selection in Verif | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 12:53 UTC | FR-11 Tier 2: NEXUS Symbolic Constraint Memory (ar | SKIP | Pre-tests failing, self-heal failed:  |
