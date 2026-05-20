@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.247",
+  "generated_at": "2026-05-20T03:55:58Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "No experiment commits were recorded within the timing window for milestone 2026.05.247 — this is a planning-only milestone (twenty-second consecutive empty-timing-window retro). The 13-task roadmap (exp2569–exp2581) was validated with gate audit passing and pre-staged for activation; no compute-bound work executed.",
+  "bottlenecks_identified": [
+    "Structural planning-execution gap: 22 consecutive milestones have completed planning without any experiment execution within the timing window. The conductor loop reaches the retro trigger before activating any experiment tasks.",
+    "GPU resources fully idle (both RTX 3090s at 0% utilization, 5 MB allocated each) despite a validated roadmap with compute-bound tasks (exp2572, exp2573, exp2574, exp2575, exp2576) ready to run.",
+    "Retro trigger fires before experiment activation — the retro is capturing the planning phase rather than the execution phase, making timing-window data structurally empty every milestone."
+  ],
+  "improvements_suggested": [
+    "Activate at least one experiment task (exp2569 HF citation compliance or exp2572 tier0s real-corpus retraining) in the same session immediately after planning, before the retro trigger fires.",
+    "Deploy a persistent conductor daemon that runs between operator sessions to close the planning-execution gap without requiring operator presence to initiate each experiment.",
+    "Gate the retro trigger on minimum_experiments_completed >= 1 to prevent empty-timing-window retros from consuming turn budget and obscuring the structural pipeline stall.",
+    "Consider reducing milestone scope to 8 tasks (from 13) so the conductor can complete the full cycle within a single operator session, rather than deferring execution to a follow-on session that may not occur before the next retro fires."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Activate exp2569 (HF citation compliance) or exp2572 (tier0s real-corpus AUROC retraining) immediately in the same session as this retro, converting this milestone from planning-only to execution-in-progress before session end.",
+    "Deploy a persistent conductor daemon (openspec/change-proposals/conductor-process-isolation.md) to eliminate the structural gap between planning and execution across operator session boundaries.",
+    "Modify the retro trigger in scripts/research_conductor.py to require minimum_experiments_completed >= 1 before firing an operational retro, preventing the 22-consecutive-empty-window pattern from recurring."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The twenty-second consecutive empty-timing-window retro confirms this is a structural issue with the conductor's retro trigger firing too early in the milestone lifecycle, not a one-off gap. The validated roadmap and idle GPUs indicate readiness to execute; the blocking factor is the session boundary between planning and activation. The highest-leverage operational change is same-session activation — zero infrastructure investment required, immediate impact."
+}

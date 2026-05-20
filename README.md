@@ -20,13 +20,13 @@ The model was trained using contrastive energy minimization.
 
 | Metric | Value |
 |--------|-------|
-| Experiments completed | 3,101 (through Exp 2567) |
-| Milestones archived | 367 (through 2026.05.245) |
+| Experiments completed | 3,102 (through Exp 2568) |
+| Milestones archived | 368 (through 2026.05.246) |
 | Python test items collected | 26,352 |
 | Ensemble v7b AUROC, adversarially verified 5-seed (exp2546, .245) | 0.9857 |
-| arXiv submission | arxiv_ready=True (.245 capstone exp2554); operator_recommendation=submit_now; paper errata (tier0s/tier0u) pending before submission (.246) |
+| arXiv submission | arxiv_ready_v4=True (.246 exp2558); paper errata applied (tier0s corrected 1.0→0.3758, tier0u corrected 0.96→0.5360, exp2557); operator submission checklist produced |
 | GateMate TERMINAL (exp2559, .246) | bitstream flashed on real silicon via gmpack packer; indirect smoke-test pass (post-flash JTAG re-enumeration IDCODE 0x20000001); on-board sampler timing benchmark deferred |
-| Real-corpus AUROC gap discovered (exp2548, .245) | tier0s: 1.0 synthetic → 0.3758 real (FoVer n=6548); tier0u: 0.96 → 0.5360; tier0r: 0.9414 stable; inflated synthetic claims being corrected in .246 |
+| Real-corpus AUROC gap (exp2548, .245) | tier0s: 1.0 synthetic → 0.3758 real (FoVer n=6548); tier0u: 0.96 → 0.5360; tier0r: 0.9414 stable; claims corrected in paper errata exp2557 (.246) |
 | Phase 4 Option B executed (exp2544, .245) | §4.4 honest negative subsection in main.tex; Gate-3 phase4_resolved=True; 3 experiments across 4 milestones, no validated bijection |
 | IsingVerifier implemented (exp2545, .245) | regex arithmetic checker; energy(text)->float test-passing |
 | JEPA fast-path integrated (exp2539, .244 → exp2550, .245) | fast_path_rate in [0.30, 0.80] on balanced corpus |
@@ -48,7 +48,7 @@ The model was trained using contrastive energy minimization.
 | VERGE SMT repair success rate (exp2353) | 1.000 |
 
 ## Evaluation Metrics
-The model achieved a headline AUROC of 0.9857 on the Ensemble v7b Group-Conditional Conformal Ensemble (exp2546, adversarially verified 5-seed, std=0.0175), exceeding the HIVE peer baseline (0.9236) by +0.0621 and the HalluScan peer mean (0.67) by +0.3157. The prior 0.975 result (exp2485/exp2498) was the adversarially-replicated group-conditional v5 baseline; v7b Tier 0r Group D reassignment raised it further. Milestone 2026.05.245 ("Phase 4 Option B + arXiv Submission + Ensemble v7b + Hardware Flash + JEPA Real Evaluation", exp2543–exp2555): arxiv_ready=True for the first time (exp2553, all 4 gates satisfied, operator_recommendation=submit_now); Phase 4 Option B §4.4 honest negative subsection executed (exp2544, 3 experiments across 4 milestones, no validated bijection); IsingVerifier implemented (exp2545); real-corpus AUROC gap discovered (exp2548 — tier0s: 1.0 synthetic → 0.3758 real FoVer n=6548; tier0u: 0.96 → 0.5360; tier0r: 0.9414 stable — inflated synthetic claims being corrected in .246 exp2557). Milestone 2026.05.246 partial (exp2559 complete): GateMate bitstream FLASHED on real silicon (exp2559 via gmpack packer; post-flash JTAG re-enumeration IDCODE 0x20000001 confirmed; on-board sampler timing benchmark deferred). Paper errata (tier0s/tier0u synthetic AUROCs) must be applied before operator arXiv submission.
+The model achieved a headline AUROC of 0.9857 on the Ensemble v7b Group-Conditional Conformal Ensemble (exp2546, adversarially verified 5-seed, std=0.0175), exceeding the HIVE peer baseline (0.9236) by +0.0621 and the HalluScan peer mean (0.67) by +0.3157. The prior 0.975 result (exp2485/exp2498) was the adversarially-replicated group-conditional v5 baseline; v7b Tier 0r Group D reassignment raised it further. Milestone 2026.05.245 ("Phase 4 Option B + arXiv Submission + Ensemble v7b + Hardware Flash + JEPA Real Evaluation", exp2543–exp2555): arxiv_ready=True for the first time (exp2553, all 4 gates satisfied, operator_recommendation=submit_now); Phase 4 Option B §4.4 honest negative subsection executed (exp2544, 3 experiments across 4 milestones, no validated bijection); IsingVerifier implemented (exp2545); real-corpus AUROC gap discovered (exp2548 — tier0s: 1.0 synthetic → 0.3758 real FoVer n=6548; tier0u: 0.96 → 0.5360; tier0r: 0.9414 stable). Milestone 2026.05.246 ("Post-arXiv Paper Integrity + Hardware Terminal + Ensemble Expansion v8", exp2556–exp2568): paper errata applied (exp2557 — tier0s corrected 1.0→0.3758 real-corpus, tier0u corrected 0.96→0.5360 real-corpus); arXiv Final Package v4 ready (exp2558, arxiv_ready_v4=True, errata incorporated, operator submission checklist produced); JEPA real FoVer training checkpoint saved (exp2565, n=6548 examples); HalluScan benchmark evaluated (exp2566, Carnot v7b AUROC=0.9857 vs NLI baseline 0.67). Milestone .247 targets real-corpus verifier recovery (tier0s >0.65, tier0u >0.60) and publication distribution (HF + IPFS).
 
 ## Usage
 ```python
