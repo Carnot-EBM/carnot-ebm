@@ -17,7 +17,7 @@ The model was trained on the FoVer dataset, a curated corpus of verified formal 
 The model was trained using contrastive energy minimization.
 
 ## Evaluation Metrics
-The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set. The current Carnot ensemble (v7b) achieves AUROC=0.9857 adversarially verified across 5 seeds (exp2546, Milestone .245), exceeding the HIVE peer baseline (0.9236) by +0.0621.
+The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set. The current Carnot ensemble (v11, Milestone .254) builds on the cite-safe headline AUROC=0.9857 adversarially verified across 5 seeds (exp2546, Milestone .245), exceeding the HIVE peer baseline (0.9236) by +0.0621. Ensemble v11 adds Tier 0e EORM energy verifier, Tier 0l layer-wise verifier, and VegAS K=3 candidate selection (exp2663-exp2667, Milestone .254).
 
 ## Usage
 ```python

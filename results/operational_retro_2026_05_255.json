@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.255",
+  "generated_at": "2026-05-20T17:09:30Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.255 completed 0 experiments with 0 minutes of recorded wall time. No experiment commits were found since milestone activation, indicating the milestone was either a planning-only cycle or experiments have not yet been committed. No compute-bound tasks ran, so GPU utilization analysis is not applicable.",
+  "bottlenecks_identified": [
+    "No experiments completed or committed during this milestone window — planning or activation overhead consumed the full cycle without delivering experiment artifacts.",
+    "Both RTX 3090 GPUs remained idle at 0% utilization throughout the milestone (5 MB allocated each, no active compute workloads). While this is not a bug in the absence of compute-bound tasks, it represents an opportunity cost when the planner has queued GPU-dependent experiments.",
+    "Zero wall-time experiments suggests either: (a) the milestone activated but no tasks were dispatched to agents, or (b) agents ran but results were not committed before retro generation."
+  ],
+  "improvements_suggested": [
+    "Add a conductor-side activation health check: if no experiment result artifacts exist within 30 minutes of milestone activation, emit an alert to the operator and attempt to re-dispatch the first queued task.",
+    "Implement a 'milestone heartbeat' commit: have the conductor write a lightweight status artifact every N minutes during a milestone so that empty-milestone retros can distinguish 'no tasks dispatched' from 'tasks dispatched but uncommitted'.",
+    "Pre-warm the DualGPURunner harness at milestone activation so GPU 0 (Qwen) and GPU 1 (Gemma) are ready to serve inference the moment the first compute-bound task activates — eliminating cold-start latency for the first experiment of each milestone.",
+    "Review the task-dispatch pipeline for this milestone: verify that research-roadmap-next.yaml was correctly consumed by the conductor and that tasks were actually handed off to codex/claude subagents.",
+    "Audit whether a pre-staged roadmap was present for 2026.05.255 and whether its milestone field matched the expected value — a stale pre-staged roadmap would cause the conductor to skip planner and then fail to dispatch tasks if the YAML had errors."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Wire a conductor-side 'zero-artifact alarm': if milestone wall time exceeds 60 minutes with 0 completed experiments, automatically page the operator and log a structured warning to ops/known-issues.md. This directly prevents silent empty-milestone cycles from consuming calendar time.",
+    "Add a post-activation dispatch verification step to scripts/research_conductor.py that confirms each task in research-roadmap-next.yaml was successfully handed to its designated agent (codex/claude) and received an acknowledgment — failing fast on dispatch errors rather than discovering them at retro time.",
+    "Introduce a milestone-open commit convention: immediately upon activation, the conductor commits a 'milestone open' artifact listing all scheduled tasks and their assigned agents. This makes empty-milestone detection trivial and provides a handoff document if the session is interrupted."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This milestone produced no experimental output, which is itself an operational signal worth capturing. The retro discipline correctly surfaces this zero-output state rather than fabricating results — the anti-hallucination guard and TIMING DATA block held. The highest-priority process improvement is closing the feedback loop between milestone activation and task dispatch confirmation, so that empty milestones become impossible to reach silently."
+}

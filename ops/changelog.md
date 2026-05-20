@@ -18,6 +18,15 @@
   - **Agent routing**: 12 codex/gpt-5.5 + 1 claude+opus (exp2685 capstone, requires_claude: true)
   - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13), prior_failures (13/13), PRECONDITIONS on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2679 + exp2681 continuous_self_learning_task: true), Hardware-Task Continuity (exp2683 KV260 NON-TERMINAL), Exclusion Manifest cross-check (0 scope matches), Operator-Only publication (no submission steps in any task prompt)
 
+## 2026-05-20 (Milestone 2026.05.255 Operational Retrospective)
+
+- [outer-loop] Operational retrospective for milestone 2026.05.255.
+  - **Result**: Zero experiments completed — no commits found since milestone activation. Milestone was a zero-output cycle.
+  - **GPU state**: Both RTX 3090s idle (0% utilization, 5 MB allocated each, 43C / 50C) — hardware healthy and available.
+  - **Primary bottleneck identified**: No experiment artifacts committed during the milestone window; planning or activation overhead consumed the cycle without dispatching tasks to completion.
+  - **Artifact**: `results/operational_retro_2026_05_255.json` (schema: carnot.operational_retro.v64)
+  - **Top 3 actions for next milestone**: (1) Wire conductor zero-artifact alarm to page operator at 60 min with 0 experiments; (2) Add post-activation dispatch verification confirming each task was handed to its agent; (3) Introduce milestone-open commit listing all scheduled tasks at activation time.
+
 ## 2026-05-20 (Milestone 2026.05.254 Operational Retrospective)
 
 - [outer-loop] Operational retrospective for milestone 2026.05.254.
