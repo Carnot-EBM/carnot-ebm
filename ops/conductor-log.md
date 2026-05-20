@@ -5431,3 +5431,5 @@ Ripgrep i |
 | 2026-05-20 12:51 UTC | VegAS Verifier-Guided Candidate Selection in Verif | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 12:53 UTC | FR-11 Tier 2: NEXUS Symbolic Constraint Memory (ar | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 12:55 UTC | FR-11 Tier 2: NEXUS Symbolic Constraint Memory (ar | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 12:57 UTC | FR-11 Tier 2: NEXUS Symbolic Constraint Memory (ar | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 12:59 UTC | Ensemble v11: Tier 0e + Tier 0l + 5-Seed Adversari | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2649) |
