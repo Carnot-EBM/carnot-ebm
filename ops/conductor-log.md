@@ -5344,3 +5344,4 @@ Ripgrep i |
 | 2026-05-20 09:23 UTC | Verifier-Driven TTT Loop Prototype (FR-11 Tier 3 C | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:25 UTC | Verifier-Driven TTT Loop Prototype (FR-11 Tier 3 C | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:27 UTC | Verifier-Driven TTT Loop Prototype (FR-11 Tier 3 C | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 09:29 UTC | FJD Safety Tier 0x v2: Logit-Temperature Scaling ( | SKIP | Pre-tests failing, self-heal failed:  |
