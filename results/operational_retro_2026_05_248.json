@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.248",
+  "generated_at": "2026-05-20T04:18:09Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.248 completed zero experiments — no experiment commits were found in the timing window, making this the twenty-third consecutive empty-timing-window retrospective. Both RTX 3090 GPUs remained idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. The structural gap between milestone planning and experiment activation persists and is the primary operational bottleneck.",
+  "bottlenecks_identified": [
+    "Structural planning-execution gap: milestones are planned and roadmaps are pre-staged but no experiments are activated within the same turn budget window, resulting in 23 consecutive zero-experiment retros.",
+    "Retro trigger fires before any experiments have a chance to run, consuming turn budget on zero-data analysis rather than on forwarding research.",
+    "No persistent conductor daemon: each session starts cold and must re-read the roadmap before activating tasks, adding overhead before any experiment begins."
+  ],
+  "improvements_suggested": [
+    "Activate the first 1-2 experiments from the pre-staged roadmap (exp2569 or exp2572) immediately after the retro completes in the same session — this is the single highest-leverage change.",
+    "Deploy a persistent conductor daemon that activates experiments automatically between operator sessions, eliminating the planning-execution gap structurally.",
+    "Gate the retro trigger on minimum_experiments_completed >= 1 so that empty-window retros do not fire (and consume turn budget) when the milestone has not yet begun executing.",
+    "Wire a session-start activation guard: if research-roadmap.yaml contains unactivated tasks from the current milestone, activate the first eligible task before doing anything else."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Same-session activation: immediately after this retro, activate exp2569 (or exp2572 for real-corpus AUROC recovery) — this alone would break the 23-milestone zero-execution streak.",
+    "Persistent conductor daemon: deploying a background daemon that activates experiments between operator sessions would close the structural planning-execution gap for all future milestones.",
+    "Retro gate on minimum_experiments_completed >= 1: prevents empty-window retros from firing and consuming turn budget, freeing that budget for actual experiment work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The recurring pattern of 23 consecutive planning-only milestones is a process-level failure that deserves direct operator attention, not continued retro-writing. The retrospective machinery is functioning correctly — it is accurately reporting an empty timing window — but the higher-order problem is that the activation step never follows the planning step within the same operational session. Until same-session activation becomes the default behavior, retros will continue to report zero experiments and provide no execution data to analyze."
+}

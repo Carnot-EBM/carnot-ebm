@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.248 Operational Retrospective)
+
+- Operational retrospective for milestone 2026.05.248 written to `results/operational_retro_2026_05_248.json`. Zero experiment commits found — milestone is planning-only (twenty-third consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. No experiments were activated before the retro trigger. Top-3 leverage actions: (1) activate exp2569 or exp2572 immediately after this retro in the same session to break the 23-milestone zero-execution streak; (2) deploy persistent conductor daemon to eliminate the structural planning-execution gap; (3) gate the retro trigger on minimum_experiments_completed >= 1 to prevent empty-window retros consuming turn budget. Estimated time savings: 0% (no execution data).
+
 ## 2026-05-20 (Milestone 2026.05.247 Operational Retrospective)
 
 - Operational retrospective for milestone 2026.05.247 written to `results/operational_retro_2026_05_247.json`. Zero experiment commits found — milestone is planning-only (twenty-second consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. Roadmap was validated (13 tasks exp2569–exp2581, gate audit passed 0 failures) but no experiments activated before the retro trigger. Top-3 leverage actions: (1) activate exp2569 or exp2572 immediately after this retro in the same session; (2) deploy persistent conductor daemon to eliminate the structural planning-execution gap; (3) gate the retro trigger on minimum_experiments_completed >= 1 to prevent empty-window retros consuming turn budget. Estimated time savings: 0% (no execution data).
