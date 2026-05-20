@@ -5208,3 +5208,4 @@ Ripgrep i |
 | 2026-05-20 01:39 UTC | Phase 4a: Feasibility-Aware Conformal Calibration  | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 01:41 UTC | Phase 5a: JEPA Real FoVer Data Training (n=6548; A | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
 | 2026-05-20 01:43 UTC | Phase 5a: JEPA Real FoVer Data Training (n=6548; A | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
+| 2026-05-20 01:45 UTC | Phase 5a: JEPA Real FoVer Data Training (n=6548; A | FAIL | Codex CLI error: u finish the real work inside 10 minutes, that is correct an |
