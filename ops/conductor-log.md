@@ -5357,3 +5357,5 @@ Ripgrep i |
 | 2026-05-20 09:45 UTC | BB-UCP Label-Free Conformal Calibration (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2622) |
 | 2026-05-20 09:45 UTC | KV260 Hardware Continuity (Branch A: SD Flash; Bra | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:47 UTC | Paper v6 Final Polish: v9 AUROC + Safety §7 + Dist | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2622) |
+| 2026-05-20 09:47 UTC | Live GGUF Pipeline Smoke: Ensemble v9 End-to-End o | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 09:49 UTC | Paper v6 Final Polish: v9 AUROC + Safety §7 + Dist | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2622) |
