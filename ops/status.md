@@ -1,6 +1,40 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.252 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.253 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.253 Research Planning Complete
+
+**Milestone 2026.05.252 COMPLETED: all 13 tasks (exp2634–exp2646) confirmed complete.**
+
+**Milestone 2026.05.253 PLANNED as "Phase 1 Ship Launch + EORM Tier 0e + ODAR Free-Energy Routing + Ensemble v11".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v253.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2647`–`exp2659`)
+- ID allocation: milestone `.252` used through `exp2646`, so `.253` starts at `exp2647`.
+- Research references updated with Post-.252 Planning Sweep (2026-05-20): 6 new papers added:
+  - arXiv:2505.14999 (EORM: Energy Outcome Reward Model, 55M param, 90.7% GSM8k)
+  - arXiv:2605.12620 (VegAS: Verifier-Guided Action Selection, K=3, 8.7% math improvement)
+  - arXiv:2604.16217 (Layer-Wise Representation Conformal, Tier 0l candidate)
+  - arXiv:2604.01413 (MiCP: Adaptive Stopping Conformal, 34% cost reduction)
+  - arXiv:2605.09387 (NEXUS: Continual Symbolic Constraint Learning, FR-11 Tier 2)
+  - arXiv:2602.23681 (ODAR: Free-Energy Routing, Phase 4 active inference operational)
+- **Three biggest gaps targeted**:
+  1. **Phase 1 Ship Launch** (HIGHEST PRIORITY): exp2648 executes the 4-gate ship actions audited in .252 (exp2642)
+  2. **EORM Tier 0e trained verifier**: exp2649 (55M-param energy verifier per arXiv:2505.14999; TF-IDF proxy on FoVer corpus)
+  3. **ODAR free-energy routing**: exp2654 (Phase 4 active inference operational; KL-gated fast/slow path)
+- **Critical path**: exp2649 (Tier 0e EORM) → exp2653 (ensemble v11 adversarial validation, gated on tier0e_viable) → exp2657 (arXiv v6, gated on adversarially_verified)
+- **Phase 1 ship execution**: exp2648 executes ship-close actions; phase1_ship_closed bool; operator submission checklist for arXiv v6 after exp2657 completes.
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2658 capstone — requires_claude: true).
+- **Hardware continuity**: exp2656 KV260 (NON-TERMINAL mandatory per CLAUDE.md). GateMate + PolarFire TERMINAL (graduated).
+- **FR-11 mandate**: exp2652 (NEXUS Tier 2 symbolic constraint memory, continuous_self_learning_task: true).
+- Exclusion manifest cross-check: 0 scope matches found across all retired experiment IDs.
+- Validation: YAML validated — 13 tasks exp2647–exp2659, zero exclusion-manifest conflicts, all prior_failures fields present.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.253. exp2647 (archive/activate) → exp2648 (Phase 1 ship) + exp2649 (Tier 0e EORM) in parallel.
+
+**Operator action required**: Phase 1 ship gates from exp2648 (PyPI publish + HF mirror + docs + reproducer). arXiv v6 submission after exp2657 completes (OPERATOR-ONLY per Operator-Only External Publication rule).
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.252 Research Planning Complete
 

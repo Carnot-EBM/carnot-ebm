@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.253 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.253. All 13 tasks in .252 (exp2634–exp2646) confirmed complete by user before this session.
+  - **Milestone title**: "Phase 1 Ship Launch + EORM Tier 0e + ODAR Free-Energy Routing + Ensemble v11"
+  - **arxiv sweep** (6 new papers added to `research-references.md`):
+    - arXiv:2505.14999 (EORM: Energy Outcome Reward Model — 55M param trained energy verifier, margin ranking loss, 90.7% GSM8k; Tier 0e candidate)
+    - arXiv:2605.12620 (VegAS: Verifier-Guided Action Selection — K=3 repair candidates, ensemble scoring, 8.7% math improvement; pipeline upgrade)
+    - arXiv:2604.16217 (Layer-Wise Representation Conformal — TF-IDF inter-sentence drift proxy; OOD-robust; Tier 0l candidate)
+    - arXiv:2604.01413 (MiCP: Adaptive Stopping Conformal — multi-turn early stopping, 34% cost reduction; future pipeline optimization)
+    - arXiv:2605.09387 (NEXUS: Continual Symbolic Constraint Learning — cross-session constraint memory; FR-11 Tier 2 reference implementation)
+    - arXiv:2602.23681 (ODAR: Free-Energy Routing — KL-gated fast/slow path; Phase 4 active inference operational implementation)
+  - **Created**: `openspec/change-proposals/research-roadmap-v253.md`
+  - **Created**: `research-roadmap-next.yaml` (13 tasks exp2647–exp2659, milestone 2026.05.253)
+  - **Validated**: YAML structure check passed — 13 tasks exp2647–exp2659, 12 codex + 1 claude, zero exclusion-manifest conflicts, all prior_failures fields present.
+  - **Critical path**: exp2649 (Tier 0e EORM) → exp2653 (ensemble v11 adversarial validation, gated on tier0e_viable) → exp2657 (arXiv v6, gated on adversarially_verified)
+  - **Three biggest gaps addressed**:
+    1. Phase 1 ship execution (exp2648: executes 4-gate ship actions from .252 audit exp2642)
+    2. No EORM trained energy verifier (exp2649: Tier 0e TF-IDF proxy per arXiv:2505.14999 on FoVer corpus)
+    3. No Phase 4 active inference operational (exp2654: ODAR KL-gated routing per arXiv:2602.23681)
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13 codex, 1/13 claude+opus for capstone), prior_failures blocks (13/13 tasks, all 4 sub-fields), PRECONDITIONS step 0 (all compute-bound tasks), principle-annotated artifact fields, terminal-prefix verdict discipline, Operator-Only External Publication (exp2657 never submits), Hardware-Task Continuity (KV260 exp2656 — NON-TERMINAL), Exclusion-Manifest cross-check (0 scope matches across retired IDs).
+  - **FR-11 self-learning task**: exp2652 (NEXUS Tier 2 symbolic constraint memory, continuous_self_learning_task: true)
+  - **VegAS candidate selection**: exp2651 (K=3 repair candidates, verifier-ensemble scoring, picks lowest energy)
+  - **Tier 0l layer-wise verifier**: exp2650 (information drift + context anchoring TF-IDF proxy)
+  - **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2658 capstone — requires_claude: true)
+
 ## 2026-05-20 (Milestone 2026.05.252 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.252. All 13 tasks in .251 (exp2621–exp2633) confirmed complete by user before this session.

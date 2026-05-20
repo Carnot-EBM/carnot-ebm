@@ -1,0 +1,1455 @@
+milestone: "2026.05.253"
+milestone_title: "Phase 1 Ship Launch + EORM Tier 0e + ODAR Free-Energy Routing + Ensemble v11"
+milestone_doc: "openspec/change-proposals/research-roadmap-v253.md"
+date: "2026-05-20"
+status: "PROPOSED"
+experiment_id_range: "exp2647-exp2659"
+scope_reduction_compliance: "n/a — no SCOPE REDUCTION directive active in ops/known-issues.md"
+
+# Agent routing summary: 12 codex/gpt-5.5 (92.3%), 1 claude+opus (7.7% — capstone only)
+# Critical path: exp2649 (Tier 0e) → exp2653 (ensemble v11) → exp2657 (arXiv v6)
+# FR-11 mandate: exp2652 (NEXUS Tier 2 symbolic constraint memory, continuous_self_learning_task: true)
+# Hardware mandatory: exp2656 (KV260 — GateMate + PolarFire TERMINAL/graduated)
+# New papers from .253 sweep: arXiv:2505.14999 (EORM), arXiv:2605.12620 (VegAS),
+#   arXiv:2604.16217 (Layer-Wise Conformal), arXiv:2605.09387 (NEXUS), arXiv:2602.23681 (ODAR)
+
+tasks:
+
+  - id: exp2647
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2647_archive_v252.json"
+    title: "Archive .252 + Activate .253"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    track: admin
+
+    prior_failures:
+      - experiment_id: exp2634-archive-v251
+        verdict: "complete: .251 archived and .252 activated"
+        addressed_by: "exp2634 archived .251. This task archives .252 (which is now COMPLETE — exp2634-exp2646 range closed). Different milestone lifecycle state: archiving .252, not .251."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.252 is COMPLETE. The last experiment was exp2646 (retro .252).
+      This task archives .252 and activates .253.
+
+      Key .252 outcomes to record:
+        - gguf_fullscale_benchmark: from exp2635 artifact (n_evaluated, inference_mode, pipeline_e2e_latency_mean_s)
+        - tier0w_viable: from exp2636 (tier0w_auroc)
+        - entanglement_audited: true (exp2637)
+        - ensemble_v10_adversarially_verified: from exp2638 (adversarially_verified bool, ensemble_v10_auroc_mean)
+        - fr11_tier3_headline_closed: from exp2639 (fr11_tier3_headline_closed bool, p_value)
+        - symbolic_kan_viable: from exp2640 (symbolic_kan_viable bool)
+        - pasc_coverage_achieved: from exp2641 (coverage_joint_90pct)
+        - phase1_ship_ready: from exp2642 (phase1_ship_ready bool, n_gates_passed)
+        - arxiv_v5_ready: from exp2643 (submission_package_ready bool)
+        - kv260_terminal: false (NON-TERMINAL; continuing to .253)
+        - n_criteria_met: from exp2645 capstone
+
+      EXISTING CODE TO READ FIRST:
+      - research-roadmap.yaml (verify milestone field is 2026.05.252)
+      - research-complete.yaml (last 20 lines to check if .252 already archived)
+      - results/experiment_2634_archive_v251.json (prior archive pattern)
+      - results/experiment_2645_capstone_v252.json (read key outcomes to populate .252 archive entry)
+
+      TASK: Archive milestone .252 and activate .253.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Confirm research-roadmap.yaml exists and milestone field == "2026.05.252".
+            If milestone already says "2026.05.253", write honest_verdict
+            complete_already_activated and exit cleanly.
+         b. Read last 20 lines of research-complete.yaml to check if .252 is already archived.
+
+      1. Read results/experiment_2645_capstone_v252.json to get key outcomes.
+         If file absent: use placeholder values (adversarially_verified=unknown, etc.)
+
+      2. If .252 not yet in research-complete.yaml: append entry with:
+         milestone: "2026.05.252",
+         title: "GGUF Full-Scale Benchmark + Ensemble v10 + TTT Scale-Up + Phase 1 Ship Audit",
+         date_completed: "{date}", n_experiments_completed: 13 (exp2634-exp2646),
+         (plus key outcome fields from capstone).
+
+      3. Copy research-roadmap-next.yaml → research-roadmap.yaml (overwrite).
+
+      4. Write results/experiment_2647_archive_v252.json with all required fields.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal-prefix discipline: reconciler classifies as done only with this prefix."
+      - archive_completed: bool
+        principle: "Confirms .252 lifecycle is closed before .253 tasks run."
+      - milestone_activated: str — must equal "2026.05.253"
+        principle: "Explicit activation field lets downstream audits verify milestone is active."
+      - n_experiments_archived: int — must be 13 (exp2634-exp2646)
+        principle: "Count confirms full .252 range was closed, not a partial archive."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Prevents fabrication by recording which checks actually ran."
+
+      Run: `python -c "import yaml; yaml.safe_load(open('research-roadmap.yaml'))"` succeeds.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2648
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2648_phase1_ship_close.json"
+    title: "Phase 1 Ship Close: Execute Ship Actions or Close Remaining Gates"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 25
+    track: ops
+
+    prior_failures:
+      - experiment_id: exp2642-phase1-ship-readiness-audit
+        verdict: "complete: phase1_ship_ready=bool; n_gates_passed; operator_action_checklist produced"
+        addressed_by: "exp2642 AUDITED the 4 Phase 1 gates (PyPI, HF mirror, docs, reproducer). This task EXECUTES the ship actions. Different scope: audit vs. execution. If phase1_ship_ready=True: prepares release notes and operator ship checklist. If False: executes the autonomously-doable items from exp2642.operator_action_checklist."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone .252 exp2642 audited all 4 Phase 1 ship gates and produced phase1_ship_ready (True or
+      False) and an operator_action_checklist. This task executes the next step based on that outcome.
+
+      Per CLAUDE.md "Operator-Only External Publication": public announcements and arXiv submission
+      are OPERATOR-ONLY. But internal operations (git release tag preparation, README Phase 1 section
+      update, HF model card update) CAN be done autonomously as preparation for operator action.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2642_phase1_ship_readiness.json (REQUIRED: read phase1_ship_ready, n_gates_passed, operator_action_checklist)
+      - results/experiment_2645_capstone_v252.json (phase1_ship_recommendation from capstone)
+      - README.md (current Phase 1 state in docs)
+      - python/carnot/__init__.py (current version)
+
+      TASK: Execute Phase 1 ship actions or close remaining gates.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Read results/experiment_2642_phase1_ship_readiness.json.
+            Record: phase1_ship_ready (bool), n_gates_passed (int), operator_action_checklist (list).
+            If file absent: use n_gates_passed=0 and proceed to Branch B.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot; print(carnot.__version__)"` — record current_version.
+
+      BRANCH A (phase1_ship_ready == true — all 4 gates passed):
+      1. Determine target release version:
+         - If current_version < "0.2.0": target_version = "0.2.0"
+         - If current_version >= "0.2.0": target_version = bump patch (current_version.patch + 1)
+         Record: target_release_version.
+
+      2. Update README.md: Add "## Phase 1 Milestone" section if not present:
+         "Carnot v{target_release_version} marks Phase 1 completion: PyPI package (carnot-ebm),
+          HuggingFace mirror (huggingface.co/Carnot-EBM), ensemble verifier AUROC {v10_auroc},
+          MCP server, CLI, and Apache-2.0 license. See RELEASES.md for full changelog."
+         Record: readme_updated = True.
+
+      3. Check if CHANGELOG.md or RELEASES.md exists. If not: create RELEASES.md with Phase 1 entry.
+         Record: release_notes_file.
+
+      4. Write operator ship checklist (DO NOT execute git operations — provide exact commands):
+         a. "git tag v{target_release_version} -m 'Phase 1 milestone: carnot-ebm PyPI package'"
+         b. "git push origin v{target_release_version}"
+         c. "This triggers .github/workflows/publish-pypi.yml to publish carnot-ebm to PyPI"
+         d. "After publish: visit huggingface.co/Carnot-EBM and update model card with new version"
+         e. "Optional: create GitHub Release with body from RELEASES.md"
+         Record: operator_ship_checklist (list of exact commands).
+
+      5. Write results/experiment_2648_phase1_ship_close.json with branch_taken="A".
+
+      BRANCH B (phase1_ship_ready == false OR file absent):
+      1. For each item in operator_action_checklist (from exp2642):
+         a. Categorize: can_execute_autonomously (True if it's a file update, config change, or local
+            script run) OR requires_operator (True if it's a network publish, git push to remote,
+            or external announcement).
+         b. For autonomously-executable items: execute them and record action_taken.
+         c. For operator-required items: document exact steps.
+         Record: n_items_executed_autonomously, n_items_requiring_operator.
+
+      2. Write results/experiment_2648_phase1_ship_close.json with branch_taken="B".
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - phase1_ship_ready: bool — from exp2642 (or False if file absent)
+        principle: "Documents whether Phase 1 was ready to ship entering this task."
+      - branch_taken: str — 'A' (all gates passed) or 'B' (gates not all passed)
+        principle: "Audit trail for which execution path was taken."
+      - ship_execution_attempted: bool
+        principle: "True if any ship actions were prepared or executed (Branch A)."
+      - operator_ship_checklist: list of str — exact commands for operator to run
+        principle: "Operator reads this as the Phase 1 ship action list; must be copy-pasteable."
+      - readme_updated: bool
+        principle: "README Phase 1 section update is the visible signal that ship is in progress."
+      - n_items_executed_autonomously: int (Branch B only)
+        principle: "Progress metric: how many blocking items could be closed without operator."
+      - duration_s: float
+        principle: "File reads and potential README edit take >= 2s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records exp2642 artifact read."
+
+      Do NOT submit to arXiv. Do NOT push. Do NOT run git push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2649
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2649_tier0e_eorm.json"
+    title: "Tier 0e: EORM Energy Outcome Reward Model Verifier (arXiv:2505.14999)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    track: verifier
+
+    prior_failures:
+      - experiment_id: exp2636-tier0w-avgwd-eigenwd
+        verdict: "complete: Tier 0w AvgWD/EigenWD implemented; tier0w_auroc on FoVer"
+        addressed_by: "exp2636 implemented Tier 0w (training-free AvgWD/EigenWD embedding-geometry signals). Tier 0e is fundamentally different: (a) TRAINED (not training-free) — learns margin energy from (correct, incorrect) FoVer pairs; (b) pairwise ranking objective (margin loss) rather than unsupervised geometry; (c) arXiv:2505.14999 EORM paper, not arXiv:2603.22303 AvgWD; (d) different discriminative signal: energy difference between correct/incorrect pair, not within-claim variance."
+        retire_if_same_verdict: true
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      arXiv:2505.14999 introduces Energy Outcome Reward Model (EORM) — a 55M-parameter verifier that
+      learns to rank CoT solutions by energy. Key insight: train a verifier on (correct_claim,
+      incorrect_claim) PAIRS with a margin ranking loss, so correct outputs always have lower energy
+      than incorrect ones. Achieves 90.7% GSM8k verification coverage.
+
+      For Carnot, implement a TF-IDF-proxy EORM (no external embedding model required):
+      - Feature: TF-IDF vector of (context + correct_claim) MINUS TF-IDF vector of (context + incorrect_claim)
+      - Label: +1 (correct_claim has lower energy = margin satisfied)
+      - Model: LogisticRegression on the difference vector
+      - Prediction: sigmoid(dot(w, claim_vec - incorrect_baseline)) approximates energy score
+
+      This is the TRAINED complement to Tier 0z (training-free Boltzmann) and Tier 0w (training-free AvgWD).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (examine tier0z_semantic_energy.py and tier0w_avgwd_eigenwd.py for patterns)
+      - python/carnot/verify/base_verifier.py (BaseVerifier interface)
+      - data/fover_corpus.jsonl (corpus format — (context, claim, label))
+
+      TASK: Implement Tier 0e EORM energy ranking verifier and evaluate on FoVer real corpus.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import numpy; import sklearn; import scipy"` succeeds.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         c. FoVer corpus discoverable: check paths:
+            {project_root}/data/fover_corpus.jsonl (n_lines >= 200)
+            If absent: try {project_root}/python/carnot/verify/foVer_corpus.jsonl
+            If none found: write honest_verdict blocked_fover_corpus_not_found; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Load FoVer real corpus (JSONL). Parse (context, claim, label) triples.
+         n_corpus = number of valid triples with label in {0, 1, 'hallucination', 'correct'}.
+         Require n_corpus >= 200.
+
+      2. Construct PAIRWISE training data for EORM:
+         - From the corpus, pair each correct example (label=0) with a randomly sampled incorrect
+           example (label=1) from the same batch.
+         - For each pair: compute difference features:
+           diff_features = tfidf(context + correct_claim) - tfidf(context + incorrect_claim)
+         - Label: +1 (the difference should be positive for correct < incorrect energy).
+         - n_pairs = min(n_corpus // 2, 1000)  # At most 1000 pairs for training.
+         Record n_pairs.
+
+      3. Implement Tier0eEROM in python/carnot/verify/tier0e_eorm.py:
+
+         from sklearn.feature_extraction.text import TfidfVectorizer
+         from sklearn.linear_model import LogisticRegression
+         import numpy as np
+
+         class Tier0eEROM:
+             """Energy Outcome Reward Model verifier.
+             Per arXiv:2505.14999: trains on (correct_claim, incorrect_claim) pairs with a margin
+             ranking loss. In this TF-IDF proxy implementation, the margin is learned via
+             LogisticRegression on (correct_features - incorrect_features). The result is a
+             directional energy scorer: score(correct) < score(incorrect) for well-trained model.
+
+             Why pairwise training matters: unlike binary classification on individual claims,
+             pairwise EORM explicitly encodes the energy ordering. Correct outputs occupy a lower-
+             energy region of the feature space than incorrect outputs — which is EXACTLY the
+             theoretical claim of Carnot's energy-basin framework. EORM provides empirical
+             validation of this claim via supervised pairwise ranking."""
+
+             def __init__(self):
+                 self.vectorizer = TfidfVectorizer(ngram_range=(1,2), max_features=500)
+                 self.model = LogisticRegression(C=1.0, max_iter=500)
+                 self._fitted = False
+
+             def fit(self, contexts, correct_claims, incorrect_claims):
+                 """Train on (context, correct, incorrect) triples.
+                 Learns that feature(context+correct) - feature(context+incorrect) predicts +1."""
+                 all_texts = [c + ' ' + cl for c, cl in
+                              zip(contexts + contexts,
+                                  correct_claims + incorrect_claims)]
+                 self.vectorizer.fit(all_texts)
+                 X_pos = self.vectorizer.transform([c + ' ' + cl for c, cl in zip(contexts, correct_claims)]).toarray()
+                 X_neg = self.vectorizer.transform([c + ' ' + cl for c, cl in zip(contexts, incorrect_claims)]).toarray()
+                 X_diff = X_pos - X_neg
+                 y = np.ones(len(X_diff))
+                 self.model.fit(X_diff, y)
+                 self._fitted = True
+
+             def score(self, context: str, claim: str) -> float:
+                 """Return hallucination probability in [0,1]. Higher = more likely hallucinated.
+                 Computed as 1 - P(this claim is the 'correct' member of an implicit pair)."""
+                 if not self._fitted:
+                     return 0.5
+                 try:
+                     x = self.vectorizer.transform([context + ' ' + claim]).toarray()
+                     # Score = P(claim acts like incorrect_claim = hallucinated)
+                     # We use 1 - P(+1 class) as hallucination probability
+                     prob = self.model.predict_proba(x)[0]
+                     return float(1.0 - prob[1])  # prob[1] = P(correct), so 1-prob[1] = P(hallucinated)
+                 except Exception:
+                     return 0.5
+
+      4. Train Tier0eEROM:
+         - Split corpus 80/20 stratified (random_seed=42).
+         - From TRAINING split: construct n_pairs pairs (pair correct+incorrect within label groups).
+         - Call tier0e.fit(contexts_train, correct_claims, incorrect_claims).
+         Record: n_pairs_trained.
+
+      5. Evaluate on test split (20%, n_test >= 40):
+         For each (context, claim, label) in test split:
+           raw_score = tier0e.score(context, claim)
+         Compute: tier0e_auroc (sklearn.metrics.roc_auc_score), tier0e_auprc.
+
+      6. Compute tier0e_viable = (tier0e_auroc >= 0.65).
+         Note: target is >= 0.70 but viable threshold for downstream ensemble is 0.65.
+
+      7. Run `python scripts/adversarial_verify.py results/experiment_2649_tier0e_eorm.json`
+         Capture CRITICAL flags.
+
+      8. Write results/experiment_2649_tier0e_eorm.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required for conductor reconciler."
+      - tier0e_auroc: float — AUROC on FoVer test set
+        principle: "Primary viability gate: >= 0.65 required for exp2653 ensemble v11 integration."
+      - tier0e_auprc: float — AUPRC on FoVer test set
+        principle: "AUPRC is more informative under class imbalance than AUROC."
+      - tier0e_viable: bool — True iff tier0e_auroc >= 0.65
+        principle: "Gate for exp2653: viability flag enables ensemble v11 integration decision."
+      - n_pairs_trained: int — number of (correct, incorrect) pairs used for training
+        principle: "Statistical validity of pairwise ranking model; low n_pairs = unreliable energy."
+      - n_test: int — test set size (must be >= 40)
+        principle: "AUROC estimate on n < 40 has confidence interval > 0.1 — too wide for paper."
+      - module_created: str — path to python/carnot/verify/tier0e_eorm.py
+        principle: "Deliverable is code artifact; path confirms it was actually written."
+      - adversarial_flags: list — CRITICAL flags from adversarial_verify.py
+        principle: "Adversarial verification required before any AUROC claim enters paper-v6."
+      - random_seed: 42
+        principle: "Reproducibility of train/test split."
+      - duration_s: float
+        principle: "Real sklearn training + evaluation on 200+ examples takes >= 1s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: corpus discovery and sklearn availability documented."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python');
+           from carnot.verify.tier0e_eorm import Tier0eEROM; print('Tier0e EORM OK')"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2650
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2650_tier0l_layer_wise.json"
+    title: "Tier 0l: Layer-Wise Information Drift Verifier (arXiv:2604.16217)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    track: verifier
+
+    prior_failures:
+      - experiment_id: exp2641-pasc-pipeline-conformal
+        verdict: "complete: PASC joint coverage implemented; coverage_joint_90pct documented"
+        addressed_by: "exp2641 implemented PASC multi-stage conformal prediction (pipeline-level calibration). Tier 0l is a fundamentally different scope: it is a NEW VERIFIER (per-claim hallucination scorer) using layer-wise information drift as the discriminative signal — per arXiv:2604.16217. Different paper, different mechanism (verifier score vs. pipeline calibration), different deliverable (tier0l.py module vs. conformal calibration artifact)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      arXiv:2604.16217 shows that layer-wise information scores from LLM internal representations
+      are more robust to distribution shift than output-level token probabilities. Key insight:
+      hallucinated content introduces NOVEL information NOT grounded in the context — measurable as
+      high drift between the information content of early vs. late parts of the claim relative to
+      the context.
+
+      TF-IDF proxy implementation (no access to model internals required):
+      - "Information drift" proxy: cosine distance between TF-IDF(context + claim_first_half) and
+        TF-IDF(context + claim_second_half). Hallucinated claims often introduce novel terms in the
+        second half that don't align with the context established in the first half.
+      - "Context anchoring" proxy: 1 - cosine_similarity(TF-IDF(context), TF-IDF(claim)).
+        Correctly grounded claims have high similarity to the context.
+
+      Hypothesis: high information drift AND low context anchoring → hallucination.
+      Target: tier0l_auroc >= 0.65 on FoVer real corpus (N >= 200).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (examine tier0w_avgwd_eigenwd.py for TF-IDF pattern)
+      - python/carnot/verify/base_verifier.py (BaseVerifier interface)
+      - data/fover_corpus.jsonl (corpus format)
+
+      TASK: Implement Tier 0l layer-wise information drift verifier and evaluate on FoVer.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import numpy; import sklearn; import scipy"` succeeds.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         c. FoVer corpus: {project_root}/data/fover_corpus.jsonl (n_lines >= 200).
+            If absent: write honest_verdict blocked_fover_corpus_not_found; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Load FoVer corpus. Parse (context, claim, label) triples. n_corpus = count.
+
+      2. Implement Tier0lVerifier in python/carnot/verify/tier0l_layer_wise.py:
+
+         from sklearn.feature_extraction.text import TfidfVectorizer
+         from sklearn.metrics.pairwise import cosine_similarity
+         import numpy as np
+
+         class Tier0lVerifier:
+             """Layer-wise information drift verifier.
+             Per arXiv:2604.16217: hallucinations introduce novel information not grounded in context,
+             detectable as drift between early and late claim content relative to context.
+             Implemented as TF-IDF proxy for layer-wise representation drift.
+
+             Why this works: factually correct claims should 'anchor' to context-established facts
+             throughout. Hallucinated claims often drift toward invented content in later sentences.
+             This drift is measurable without model access via TF-IDF cosine distances."""
+
+             def __init__(self):
+                 self.vectorizer = TfidfVectorizer(ngram_range=(1,2), max_features=500)
+
+             def fit(self, texts: list):
+                 self.vectorizer.fit(texts)
+
+             def _information_drift(self, context: str, claim: str) -> float:
+                 """Drift = cosine distance between context+claim_first_half and context+claim_second_half."""
+                 words = claim.split()
+                 mid = max(1, len(words) // 2)
+                 first_half = ' '.join(words[:mid])
+                 second_half = ' '.join(words[mid:]) if words[mid:] else first_half
+                 try:
+                     v1 = self.vectorizer.transform([context + ' ' + first_half]).toarray()
+                     v2 = self.vectorizer.transform([context + ' ' + second_half]).toarray()
+                     cos_sim = cosine_similarity(v1, v2)[0][0]
+                     return 1.0 - cos_sim  # drift = 1 - similarity
+                 except Exception:
+                     return 0.5
+
+             def _context_anchoring(self, context: str, claim: str) -> float:
+                 """Anchoring score = 1 - cosine_similarity(context, claim). High = poorly anchored."""
+                 try:
+                     vc = self.vectorizer.transform([context]).toarray()
+                     vl = self.vectorizer.transform([claim]).toarray()
+                     cos_sim = cosine_similarity(vc, vl)[0][0]
+                     return 1.0 - cos_sim  # anchoring_score
+                 except Exception:
+                     return 0.5
+
+             def score(self, context: str, claim: str) -> float:
+                 """Return hallucination probability in [0,1]. Higher = more likely hallucinated."""
+                 drift = self._information_drift(context, claim)
+                 anchoring = self._context_anchoring(context, claim)
+                 return (drift + anchoring) / 2.0  # combined score
+
+      3. Fit vectorizer on 80% of corpus texts (random_seed=42).
+         Compute tier0l scores for all test examples.
+
+      4. Evaluate on test split (20%, n_test >= 40):
+         tier0l_auroc = roc_auc_score(labels, [verifier.score(ctx, clm) for ctx, clm in test]).
+         drift_only_auroc = roc_auc_score(labels, drift_scores only).
+         anchoring_only_auroc = roc_auc_score(labels, anchoring_scores only).
+         dominant_signal = 'drift' if drift_only_auroc > anchoring_only_auroc else 'anchoring'.
+
+      5. tier0l_viable = (tier0l_auroc >= 0.65).
+
+      6. Run adversarial_verify.py. Capture CRITICAL flags.
+
+      7. Write results/experiment_2650_tier0l_layer_wise.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - tier0l_auroc: float — combined drift+anchoring AUROC
+        principle: "Primary viability metric: >= 0.65 required for exp2653 ensemble v11 integration."
+      - drift_only_auroc: float — information drift signal alone
+        principle: "Component decomposition: paper-v6 §5 can cite if drift is dominant."
+      - anchoring_only_auroc: float — context anchoring signal alone
+        principle: "Component decomposition: isolates anchoring contribution."
+      - dominant_signal: str — 'drift' or 'anchoring'
+        principle: "Informs which signal to emphasize if only one verifier slot available."
+      - tier0l_viable: bool — True iff tier0l_auroc >= 0.65
+        principle: "Gate for exp2653 ensemble v11: viability flag enables integration decision."
+      - n_test: int
+        principle: "Statistical validity: n < 40 = AUROC confidence interval too wide."
+      - module_created: str — path to tier0l_layer_wise.py
+        principle: "Deliverable is code artifact."
+      - adversarial_flags: list
+        principle: "Adversarial verification required before AUROC enters paper-v6."
+      - random_seed: 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Real sklearn evaluation on 200+ examples takes >= 1s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python');
+           from carnot.verify.tier0l_layer_wise import Tier0lVerifier; print('Tier0l OK')"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2651
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2651_vegas_candidate_selection.json"
+    title: "VegAS Verifier-Guided Candidate Selection in VerifyRepairPipeline (arXiv:2605.12620)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    track: pipeline
+
+    prior_failures:
+      - experiment_id: exp2639-ttt-scaleup
+        verdict: "complete: TTT scale-up N=100; fr11_tier3_headline_closed bool"
+        addressed_by: "exp2639 (TTT scale-up) selects FEW-SHOT CONTEXT examples to prepend to the prompt to improve verification. VegAS (arXiv:2605.12620) is fundamentally different: it generates K=3 REPAIR CANDIDATE RESPONSES and scores each with the verifier ensemble, selecting the lowest-energy candidate. Different mechanism (context selection vs. output selection), different paper, different target (FR-11 Tier 3 vs. pipeline accuracy improvement)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      arXiv:2605.12620 (VegAS: Verifier-Guided Action Selection) proposes generating K candidate
+      responses and scoring each with a lightweight verifier, selecting the one with lowest energy
+      (best verifier score). Achieves 8.7% math reasoning improvement vs greedy sampling without
+      additional training.
+
+      For Carnot: instead of a single repair attempt, generate K=3 repair candidates by running the
+      repair step K=3 times with slight variation (temperature or prompt variation), then score each
+      with the ensemble verifier and select the lowest-energy candidate as the final output.
+
+      This implements the "score_candidates MCP tool" from research-program.md Tier A product
+      ("Candidate Ranker") and validates the VegAS approach on Carnot's FoVer evaluation corpus.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline — target for enhancement)
+      - python/carnot/verify/ (ensemble v10 scorer interface)
+      - data/fover_corpus.jsonl (evaluation corpus)
+
+      TASK: Implement VegAS K=3 candidate selection in VerifyRepairPipeline and evaluate impact.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import numpy; import sklearn"` succeeds.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         c. Verify python/carnot/pipeline/verify_repair.py exists.
+            If absent: write honest_verdict blocked_verify_repair_not_found; exit.
+         d. FoVer corpus: {project_root}/data/fover_corpus.jsonl (n_lines >= 200).
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Add score_candidates method to VerifyRepairPipeline (or create a thin wrapper):
+         def score_candidates(self, context: str, candidates: list[str]) -> tuple[str, list[float]]:
+             """VegAS: score K candidate claims with ensemble, return (best_candidate, all_scores).
+             The best candidate is the one with LOWEST energy (highest confidence of correctness).
+             Per arXiv:2605.12620: verifier-guided selection from K candidates outperforms
+             greedy single-output generation without additional model training."""
+             scores = [self.score(context, c) for c in candidates]
+             # score() returns hallucination probability; lower = more likely correct
+             best_idx = int(np.argmin(scores))
+             return candidates[best_idx], scores
+
+      2. Simulate K=3 candidate generation on FoVer corpus:
+         For each (context, claim, label) in 100-example evaluation set (random_seed=42):
+           # Simulate K=3 candidates: the real claim + 2 augmented variants
+           # (In production, K=3 would come from LLM with temperature variation)
+           candidate_0 = claim  # original
+           candidate_1 = claim + ' (rephrased)'  # minimal augmentation
+           candidate_2 = claim[:len(claim)//2] + ' (truncated variant)'
+           candidates = [candidate_0, candidate_1, candidate_2]
+           best_candidate, scores = pipeline.score_candidates(context, candidates)
+           # Check: did VegAS select the original (correct) claim when label=0?
+           vegas_selected_original = (best_candidate == candidate_0)
+
+      3. Compute VegAS metrics:
+         vegas_precision_baseline = fraction of examples where ensemble correctly flags label=1 WITHOUT candidate selection
+         vegas_precision_with_selection = fraction where VegAS picks the lowest-energy candidate AND that candidate is label=0
+         Note: with simulated K=3 (not real K=3 repair), the gain will be modest; document this as methodology limitation.
+         candidate_diversity_mean = mean pairwise cosine distance between candidates (measures simulation quality)
+
+      4. Measure computational overhead:
+         vegas_latency_factor = pipeline time with K=3 scoring / pipeline time with K=1 (single score)
+         Record: latency_factor_3x (expected ~3.0 for K=3 with no batching).
+
+      5. Write results/experiment_2651_vegas_candidate_selection.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - score_candidates_implemented: bool — True if method added to VerifyRepairPipeline
+        principle: "Primary deliverable: VegAS API is code, not just eval results."
+      - vegas_precision_baseline: float — baseline ensemble precision on 100 examples without VegAS
+        principle: "Reference for measuring VegAS improvement."
+      - vegas_precision_with_selection: float — precision with K=3 candidate selection
+        principle: "Primary metric: improvement over baseline (or not) is the research finding."
+      - delta_precision: float — vegas_precision_with_selection - vegas_precision_baseline
+        principle: "Net VegAS contribution; paper-v6 §4 cites if positive."
+      - latency_factor_3x: float — timing overhead of K=3 vs K=1 scoring
+        principle: "Overhead is the cost of VegAS; should be ~3x for K=3 without batching."
+      - simulation_note: str — explicit note that K=3 candidates are simulated (not real LLM rollouts)
+        principle: "Honest methodology documentation: simulated candidates cannot replicate real VegAS gains."
+      - n_evaluated: int
+        principle: "N >= 30 required for precision delta claim."
+      - random_seed: 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Scoring 100 examples × 3 candidates takes >= 2s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python');
+           from carnot.pipeline.verify_repair import VerifyRepairPipeline;
+           p=VerifyRepairPipeline(); assert hasattr(p,'score_candidates'); print('VegAS OK')"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2652
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2652_nexus_tier2_constraint_memory.json"
+    title: "FR-11 Tier 2: NEXUS Symbolic Constraint Memory (arXiv:2605.09387)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    track: self_learning
+    continuous_self_learning_task: true
+
+    prior_failures:
+      - experiment_id: exp2639-ttt-scaleup
+        verdict: "complete: Verifier-Driven TTT N=100; fr11_tier3_headline_closed bool"
+        addressed_by: "exp2639 (.252) scaled FR-11 Tier 3 (JEPA/TTT context adaptation). This task advances FR-11 Tier 2 (Constraint Memory): cross-session symbolic constraint accumulation via NEXUS pattern (arXiv:2605.09387). Different tier (Tier 2 vs. Tier 3), different mechanism (persistent symbolic rules across sessions vs. in-context few-shot selection), different deliverable (constraint memory module vs. TTT evaluation artifact)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      FR-11 Tier 2 (research-program.md): "Cache verified facts across sessions. Learn per-user and
+      per-domain error patterns. ConstraintStateMachine (Exp 125) persists across sessions.
+      Consolidate learned patterns into reusable constraint templates."
+
+      arXiv:2605.09387 (NEXUS): continual learning of symbolic constraints from violation patterns.
+      Four-step cycle:
+        1. DETECT: accumulate violation events (which constraints fired, which passed)
+        2. SYNTHESIZE: from repeated violation patterns, generate symbolic rule templates
+        3. CONSOLIDATE: merge redundant templates
+        4. AUTO-ADD: prepend synthesized constraints to future sessions for the same domain
+
+      Key evaluation: after 3 simulated sessions with the same repeating error pattern, does session 3
+      benefit from memory (fewer repeat violations) compared to session 1 (cold start)?
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline — where constraints apply)
+      - python/carnot/verify/ (constraint modules — identify any ConstraintStateMachine if present)
+      - data/fover_corpus.jsonl (FoVer corpus for simulated sessions)
+
+      TASK: Implement NEXUS-style symbolic constraint memory and demonstrate Tier 2 cross-session improvement.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         b. FoVer corpus: {project_root}/data/fover_corpus.jsonl (n_lines >= 300 for 3 sessions × 100).
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Implement NexusConstraintMemory in python/carnot/learn/nexus_constraint_memory.py:
+
+         class NexusConstraintMemory:
+             """NEXUS-style symbolic constraint memory for FR-11 Tier 2.
+             Accumulates violation events across sessions, synthesizes symbolic rule templates,
+             and auto-adds learned constraints to future sessions.
+
+             Per arXiv:2605.09387: symbolic constraints are more compact and transferable than
+             neural weights. After 3 sessions with the same error pattern, session 3 should
+             see fewer repeat violations because the memory has learned which constraints to
+             apply proactively. This is Tier 2 of Carnot's self-learning architecture:
+             cross-session pattern learning, not within-session adaptation."""
+
+             def __init__(self):
+                 self.violation_log = []     # list of {session_id, verifier_id, score, label}
+                 self.constraint_templates = {}  # pattern -> symbolic constraint template
+                 self.session_id = 0
+
+             def record_violation(self, context, claim, verifier_scores, label):
+                 """Record which verifiers fired (score > 0.5) for this (context, claim, label)."""
+                 fired = [v for v, s in verifier_scores.items() if s > 0.5]
+                 self.violation_log.append({
+                     'session_id': self.session_id,
+                     'fired_verifiers': fired,
+                     'was_hallucination': (label == 1),
+                 })
+
+             def synthesize_templates(self, min_frequency=3):
+                 """Synthesize constraint templates from violation patterns.
+                 A 'pattern' = frozenset of verifiers that co-fired on hallucinations.
+                 Templates are created for patterns that occur >= min_frequency times."""
+                 from collections import Counter
+                 hallucination_patterns = [
+                     frozenset(e['fired_verifiers'])
+                     for e in self.violation_log
+                     if e['was_hallucination'] and e['fired_verifiers']
+                 ]
+                 pattern_counts = Counter(hallucination_patterns)
+                 self.constraint_templates = {
+                     str(sorted(pattern)): count
+                     for pattern, count in pattern_counts.items()
+                     if count >= min_frequency
+                 }
+                 return self.constraint_templates
+
+             def get_active_constraints(self):
+                 """Return symbolic constraint templates to apply in next session."""
+                 return list(self.constraint_templates.keys())
+
+             def advance_session(self):
+                 self.session_id += 1
+
+      2. Simulate 3 sessions on FoVer corpus (100 examples each, random_seed=42):
+         Session 1 (cold start): evaluate ensemble v10 on 100 examples, record all violations.
+         Session 2: synthesize templates from session 1 violations; evaluate ensemble with templates.
+         Session 3: synthesize templates from sessions 1+2; evaluate ensemble with templates.
+         For each session:
+           - violation_rate = fraction of correct examples flagged (false positive rate proxy)
+           - detection_rate = fraction of hallucinations detected (true positive rate)
+         Compare: session_3_improvement = (session_3_detection_rate - session_1_detection_rate)
+                  session_3_fp_change = session_3_violation_rate - session_1_violation_rate
+
+      3. Determine nexus_session3_improvement:
+         True if session_3_detection_rate > session_1_detection_rate AND session_3_violation_rate <= session_1_violation_rate + 0.05
+         (Session 3 detects more hallucinations without substantially more false positives)
+
+      4. Write results/experiment_2652_nexus_tier2_constraint_memory.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - nexus_session3_improvement: bool — True if session 3 improves detection vs session 1
+        principle: "FR-11 Tier 2 primary gate: cross-session learning benefit demonstrated."
+      - session_1_detection_rate: float
+        principle: "Cold-start baseline: no cross-session memory."
+      - session_3_detection_rate: float
+        principle: "With memory: should be >= session_1 for Tier 2 to be viable."
+      - session_1_violation_rate: float (false positive proxy)
+        principle: "Baseline false positive rate."
+      - session_3_violation_rate: float
+        principle: "Memory should not substantially increase false positives."
+      - n_constraint_templates: int — templates synthesized by session 3
+        principle: "Quantifies how many patterns NEXUS learned from 2 sessions of experience."
+      - module_created: str — path to nexus_constraint_memory.py
+        principle: "Deliverable is code artifact."
+      - n_examples_per_session: int — must be >= 30 per session
+        principle: "Statistical minimum per CLAUDE.md: N >= 30 for rate claims."
+      - random_seed: 42
+        principle: "Reproducibility of session splits."
+      - duration_s: float
+        principle: "3-session evaluation on 100 examples each takes >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python');
+           from carnot.learn.nexus_constraint_memory import NexusConstraintMemory;
+           m=NexusConstraintMemory(); print('NEXUS OK')"`.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2653
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2653_ensemble_v11_adversarial_val.json"
+    title: "Ensemble v11: Tier 0e + Tier 0l + 5-Seed Adversarial Validation"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 45
+    track: adversarial_validation
+
+    gated_on:
+      - upstream: exp2649
+        artifact_field: tier0e_viable
+        op: "=="
+        value: true
+
+    prior_failures:
+      - experiment_id: exp2638-ensemble-v10-adversarial-val
+        verdict: "complete: ensemble_v10 5-seed adversarially validated"
+        addressed_by: "exp2638 (.252) validated ensemble v10 (composition: tier0s/tier0u/tier0z/tier0w + de-entangled weights). Ensemble v11 adds: (a) Tier 0e EORM margin-ranking verifier from exp2649, (b) Tier 0l layer-wise info drift verifier from exp2650. Different composition, different experiment, same 5-seed validation protocol."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      This task is gated on exp2649.tier0e_viable == true. If the gate fails (Tier 0e not viable),
+      write honest_verdict blocked_gate_not_met and exit.
+
+      Ensemble v11 incorporates:
+      1. All ensemble v10 verifiers (from .252 exp2638 composition — includes de-entangled weights)
+      2. Tier 0e EORM margin-ranking verifier from exp2649 (if tier0e_viable == true)
+      3. Tier 0l layer-wise info drift verifier from exp2650 (if tier0l_auroc >= 0.60)
+
+      Per CLAUDE.md Adversarial Artifact Verification rule: 5-seed adversarial validation with
+      adversarial_verify.py on each seed artifact.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2649_tier0e_eorm.json (tier0e_auroc — gate check)
+      - results/experiment_2650_tier0l_layer_wise.json (tier0l_auroc — integration decision)
+      - python/carnot/verify/ensemble_deentangled_weights.json (weights from .252 exp2637)
+      - results/experiment_2638_ensemble_v10_adversarial_val.json (v10 baseline: adversarially_verified, auroc_mean)
+
+      TASK: Build ensemble v11 and run 5-seed adversarial validation.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. Read results/experiment_2649_tier0e_eorm.json.
+            If tier0e_viable != true: write honest_verdict blocked_gate_not_met; exit.
+         b. `python -c "import sklearn; import numpy; import scipy"` succeeds.
+         c. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         d. FoVer corpus: {project_root}/data/fover_corpus.jsonl (n_lines >= 200).
+         e. Check if tier0l_auroc >= 0.60 from exp2650: if so, include Tier 0l; else skip (still viable).
+         If ANY precondition fails (except tier0l): write honest_verdict blocked_<resource> and exit.
+
+      1. Load FoVer real corpus. n_corpus = count.
+
+      2. Build ensemble v11:
+         - Load all tier0* modules from python/carnot/verify/ (same as v10)
+         - Load Tier0eEROM from tier0e_eorm.py (exp2649)
+         - If tier0l_auroc >= 0.60: load Tier0lVerifier from tier0l_layer_wise.py (exp2650)
+         - Load de-entangled weights from ensemble_deentangled_weights.json (from .252 exp2637)
+         - Add new tiers to the weight dict with initial weight = mean(existing_weights)
+         - Normalize total weights to sum to 1.0
+         - Ensemble v11 = weighted aggregation: score_v11 = sum(w_i * score_i) for all active tiers
+
+      3. For each seed in [42, 7, 99, 1234, 2026]:
+         a. Set random_state = seed. Split corpus 80/20 stratified.
+         b. Fit/retrain any trainable tiers (tier0e, tier0l) on training split.
+         c. For each (context, claim, label) in test split:
+            score = ensemble_v11.score(context, claim) using de-entangled + new-tier weights
+         d. Compute AUROC, AUPRC.
+         e. Write per-seed artifact: results/experiment_2653_seed_{seed}.json.
+         f. Run: python scripts/adversarial_verify.py results/experiment_2653_seed_{seed}.json
+            Capture CRITICAL flags.
+
+      4. Aggregate across 5 seeds:
+         ensemble_v11_auroc_mean = mean(auroc_per_seed)
+         ensemble_v11_auroc_std = std(auroc_per_seed)
+         n_seeds_above_v10 = count(auroc > exp2638_adversarially_verified_auroc_mean)
+         n_seeds_critical_flags = count(adversarial_flags_seed != [])
+         adversarially_verified = (n_seeds_critical_flags == 0) AND (ensemble_v11_auroc_mean >= 0.90)
+
+      5. Write results/experiment_2653_ensemble_v11_adversarial_val.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - ensemble_v11_auroc_mean: float — mean AUROC across 5 seeds
+        principle: "Multi-seed mean is the headline-eligible metric per CLAUDE.md sample-size rigor."
+      - ensemble_v11_auroc_std: float — std across 5 seeds
+        principle: "Std documents seed stability; high std flags unstable ensemble."
+      - adversarially_verified: bool — True iff 0 CRITICAL flags AND mean AUROC >= 0.90
+        principle: "Gate for exp2657 (arXiv v6): only headline-eligible v11 AUROC enters the paper."
+      - n_seeds_above_v10: int — count with AUROC > v10 baseline
+        principle: "Improvement direction: v11 >= v10 on majority of seeds required for paper claim."
+      - tier0e_included: bool
+        principle: "Documents whether EORM verifier contributed to v11."
+      - tier0l_included: bool
+        principle: "Documents whether layer-wise verifier contributed to v11."
+      - auroc_per_seed: dict {seed: float}
+        principle: "Per-seed reproducibility."
+      - adversarial_flags_per_seed: dict {seed: list}
+        principle: "Documents which seeds triggered CRITICAL flags."
+      - n_corpus: int
+        principle: "Total corpus size; N >= 200 required."
+      - random_seed: 42
+        principle: "Primary seed."
+      - duration_s: float
+        principle: "5-seed evaluation on 200+ examples takes >= 5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: gate check + corpus check documented."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2654
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2654_odar_free_energy_routing.json"
+    title: "ODAR Free-Energy Routing: Phase 4 Active Inference Gate (arXiv:2602.23681)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 40
+    track: pipeline
+
+    prior_failures:
+      - experiment_id: exp2639-ttt-scaleup
+        verdict: "complete: TTT scale-up N=100; fr11_tier3_headline_closed bool"
+        addressed_by: "exp2639 scaled the JEPA/TTT context-adaptation loop (Tier 3). ODAR is fundamentally different: it implements Phase 4 (active inference) by using KL divergence between ensemble prior and posterior as a FREE-ENERGY GATE that decides WHETHER to run verification at all. ODAR doesn't adapt the context — it adaptively skips or triggers verification based on uncertainty. arXiv:2602.23681 vs. exp2639's ANCORA manifold anchoring: different paper, different mechanism."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      arXiv:2602.23681 (ODAR) implements adaptive routing for LLM reasoning via active inference
+      principles. Key insight: free energy = KL(posterior || prior); when a fast agent's output has
+      LOW free energy (ensemble is confident), skip the slow verification path. When free energy is
+      HIGH (ensemble is uncertain), trigger the full deliberative verification path.
+
+      For Carnot: the "prior" is the initial ensemble score on the raw claim; the "posterior" is the
+      ensemble score after one repair iteration. KL divergence between these two distributions (pre-
+      and post-repair) measures how much the ensemble CHANGED ITS MIND about the claim's energy.
+
+      High KL (ensemble changed a lot) → full repair loop (slow path).
+      Low KL (ensemble barely changed) → fast-path skip further iterations.
+
+      This is Phase 4 (active inference hypothesis): the verifier IS the free-energy term α_t × μ_P
+      in the active inference loop. ODAR makes this operational.
+
+      Target: odar_overhead_reduction_pct >= 20% (verification calls reduced by >= 20%) while
+      maintaining odar_accuracy_retention >= 0.95 (relative to full-verification AUROC).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline — add ODAR gating here)
+      - python/carnot/verify/ (ensemble scoring interface)
+      - data/fover_corpus.jsonl (evaluation corpus)
+
+      TASK: Implement ODAR free-energy gating in VerifyRepairPipeline and evaluate overhead reduction.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import numpy; import sklearn"` succeeds.
+         b. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         c. python/carnot/pipeline/verify_repair.py exists.
+         d. FoVer corpus: {project_root}/data/fover_corpus.jsonl (n_lines >= 200).
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Add ODAR gating to VerifyRepairPipeline:
+         def odar_gate(self, context: str, claim: str, kl_threshold: float = 0.05) -> dict:
+             """ODAR free-energy gating for VerifyRepairPipeline.
+             Per arXiv:2602.23681: the KL divergence between the ensemble's pre-repair and post-repair
+             score distributions measures variational free energy. High KL = high uncertainty = run full
+             repair loop. Low KL = ensemble confident = fast-path skip.
+
+             Why this implements Phase 4 (active inference): the ensemble score IS the free-energy
+             functional F = E - H (energy minus entropy). KL divergence between pre/post is the
+             information gain from the verification step — which is exactly alpha_t in the
+             active inference free-energy principle (research-program.md Phase 4 track)."""
+             score_prior = self.score(context, claim)    # initial ensemble score (prior)
+             # Simulate repair: minor semantic perturbation as repair proxy
+             repaired = claim.strip() + '.'  # minimal repair for prototype
+             score_posterior = self.score(context, repaired)  # post-repair score
+             kl_approx = abs(score_posterior - score_prior)   # KL proxy for binary distributions
+             fast_path = (kl_approx < kl_threshold)
+             return {
+                 'score_prior': score_prior,
+                 'score_posterior': score_posterior,
+                 'kl_approx': kl_approx,
+                 'fast_path': fast_path,
+                 'verification_skipped': fast_path,
+             }
+
+      2. Evaluate ODAR gating on 100 FoVer examples (random_seed=42):
+         For each (context, claim, label):
+           result = pipeline.odar_gate(context, claim, kl_threshold=0.05)
+           Record: fast_path (bool), kl_approx, score_prior, label.
+
+      3. Tune kl_threshold via grid search {0.02, 0.05, 0.10, 0.15, 0.20}:
+         For each threshold:
+           n_fast_path = count(kl_approx < threshold)
+           # AUROC using score_prior for fast-path examples, score_posterior for slow-path
+           combined_scores = [r.score_prior if r.fast_path else r.score_posterior for r in results]
+           auroc_threshold = roc_auc_score(labels, combined_scores)
+           overhead_reduction_pct = (n_fast_path / n_examples) * 100
+         Select optimal_threshold = highest threshold where auroc >= 0.95 * full_auroc.
+
+      4. Record final metrics at optimal_threshold:
+         odar_overhead_reduction_pct = overhead_reduction at optimal_threshold
+         odar_accuracy_retention = auroc_with_odar / full_auroc (fraction retained)
+         phase4_active_inference_validated = (odar_overhead_reduction_pct >= 20) AND (odar_accuracy_retention >= 0.95)
+
+      5. Write results/experiment_2654_odar_free_energy_routing.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - odar_overhead_reduction_pct: float — percentage of verification calls skipped by fast path
+        principle: "Primary ODAR metric: >= 20% reduction is the viability threshold."
+      - odar_accuracy_retention: float — fraction of full-verification AUROC retained with ODAR
+        principle: "Accuracy cost: >= 0.95 retention means ODAR doesn't degrade quality."
+      - phase4_active_inference_validated: bool — True iff both targets met
+        principle: "Phase 4 gate: ODAR implements active inference; True = Phase 4 hypothesis supported."
+      - optimal_kl_threshold: float — best threshold from grid search
+        principle: "Operational parameter for production deployment."
+      - full_auroc: float — AUROC with full verification (no fast path)
+        principle: "Reference for odar_accuracy_retention denominator."
+      - auroc_with_odar: float — AUROC with ODAR gating at optimal threshold
+        principle: "Primary comparison: should be >= 0.95 * full_auroc."
+      - threshold_sweep: list of {threshold, overhead_reduction_pct, auroc}
+        principle: "Full sweep documents the accuracy-overhead trade-off."
+      - n_evaluated: int
+        principle: "Statistical minimum: N >= 30 for rate claims."
+      - random_seed: 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Grid search over 5 thresholds × 100 examples takes >= 1s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2655
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2655_external_eorm_benchmark.json"
+    title: "External Benchmark: Carnot Ensemble v11 vs EORM Leaderboard (arXiv:2505.14999)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: benchmark
+
+    prior_failures:
+      - experiment_id: exp2623-halluscan-parallax-benchmarks
+        verdict: "complete: HalluScan + PARALLAX OOD benchmarks evaluated for ensemble v9"
+        addressed_by: "exp2623 (.251) evaluated ensemble v9 against HalluScan and PARALLAX benchmarks. This task evaluates ensemble v11 against a different benchmark family: the EORM leaderboard from arXiv:2505.14999 which focuses on energy-based reward model performance on GSM8k and HumanEval. Different model version (v11 vs v9), different benchmark (EORM leaderboard vs HalluScan/PARALLAX)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      arXiv:2505.14999 (EORM) reports performance on GSM8k verification (90.7% coverage) and HumanEval.
+      This task positions Carnot's ensemble v11 relative to EORM by evaluating on analogous tasks.
+
+      Note: full GSM8k/HumanEval evaluation requires live LLM inference (blocked if no SOTA GGUF cached).
+      This task MUST document what comparison is feasible given available resources.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2653_ensemble_v11_adversarial_val.json (ensemble_v11_auroc_mean)
+      - results/experiment_2635_gguf_fullscale_benchmark.json (GGUF benchmark results from .252)
+      - results/experiment_2623_halluscan_parallax.json (HalluScan OOD benchmark from .251)
+      - python/carnot/pipeline/verify_repair.py (pipeline for evaluation)
+
+      TASK: Compare Carnot ensemble v11 against EORM benchmark results; document leaderboard position.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` succeeds.
+         b. Read results/experiment_2653_ensemble_v11_adversarial_val.json.
+            If absent or adversarially_verified != true: use ensemble_v11_auroc from available artifact.
+         c. Check for cached SOTA models (for live benchmark fallback):
+            `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/` or similar.
+            Record: live_inference_available (bool).
+
+      1. Compile EORM reference numbers from arXiv:2505.14999 (use documented numbers, not live access):
+         eorm_gsm8k_coverage = 0.907  # 90.7% from paper
+         eorm_model_size = 55e6       # 55M parameters
+         Record as reference values (not measured by this experiment).
+
+      2. If live_inference_available (SOTA GGUF cached):
+         Run 30 GSM8k-style math problems (from a public test set or synthesized):
+         For each problem + model response:
+           score = ensemble_v11.score(problem, response)
+           Record (score, is_correct_by_golden_answer).
+         Compute carnot_gsm8k_precision = precision at score > 0.5 threshold.
+         Note: this is a PROXY for EORM's coverage metric, not direct equivalence.
+
+      3. If live_inference_available == False:
+         Use FoVer AUROC as proxy:
+         carnot_fover_auroc = ensemble_v11_auroc_mean (from exp2653)
+         eorm_fover_equivalent = None  # EORM doesn't report FoVer numbers
+         comparison_mode = 'indirect' (different benchmark families)
+
+      4. Compile comparison table:
+         | System | Metric | Value | Notes |
+         | EORM (arXiv:2505.14999) | GSM8k coverage | 90.7% | 55M params, ranking objective |
+         | Carnot v11 | FoVer AUROC | {ensemble_v11_auroc_mean} | N={n_corpus}, 5-seed avg |
+         | Carnot v11 | GSM8k proxy | {carnot_gsm8k_precision or 'N/A — no live inference'} | if live |
+         Record: comparison_table (list of dict rows).
+
+      5. Determine leaderboard_position_claim:
+         A conservative claim the paper can make: "Carnot's ensemble approach (FoVer AUROC {v11_auroc})
+         is architecturally consistent with EORM's energy-ranking principle; direct GSM8k comparison
+         pending live GGUF availability."
+
+      6. Write results/experiment_2655_external_eorm_benchmark.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - ensemble_v11_auroc_mean: float — from exp2653
+        principle: "Primary Carnot metric for comparison."
+      - eorm_gsm8k_coverage_reference: float — 0.907 (from paper)
+        principle: "EORM reference number; not measured by this experiment."
+      - carnot_gsm8k_precision: float or null — measured if live_inference_available
+        principle: "Direct comparison metric; null if no live GGUF cached."
+      - live_inference_available: bool
+        principle: "Documents whether the direct benchmark was feasible."
+      - comparison_table: list of dict — per-system comparison rows
+        principle: "Paper-v6 Table 2 can use this for peer comparison."
+      - leaderboard_position_claim: str — conservative paper-v6 citeable claim
+        principle: "Paper integrity: claim must be defensible given available data."
+      - comparison_mode: str — 'direct' (GSM8k) or 'indirect' (FoVer AUROC proxy)
+        principle: "Honest documentation of comparison methodology."
+      - duration_s: float
+        principle: "Compilation + optional GSM8k run takes >= 1s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: documents GGUF cache check and exp2653 read."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2656
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2656_kv260_continuity.json"
+    title: "KV260 Hardware Continuity .253 (Branch A: SD Flash; Branch B: Prep Update)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 25
+    track: hardware
+
+    prior_failures:
+      - experiment_id: exp2644-kv260-continuity-v252
+        verdict: "complete or blocked — Branch A/B based on SD card state"
+        addressed_by: "exp2644 was the .252 KV260 continuity task. Per Hardware-Task Continuity Discipline (CLAUDE.md), KV260 is NON-TERMINAL and mandates one task per milestone. This is the .253 continuation. exp2644's branch result determines the context for this task."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Per Hardware-Task Continuity Discipline (CLAUDE.md): KV260 is NON-TERMINAL (SD card absent
+      as of last confirmed check in .252). GateMate and PolarFire SoC are TERMINAL (graduated).
+
+      KV260 terminal state: SD card inserted → PYNQ flash → latency smoke test →
+      kv260_synthesis_succeeded: true AND board-level latency transcript in non-fabricated artifact.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2644_kv260_continuity.json (most recent .252 state)
+      - ops/hardware-bringup-prep.md (current prep script state)
+
+      TASK: Advance KV260 toward terminal state.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. Read results/experiment_2644_kv260_continuity.json to understand current state.
+         b. Check SD card: `ls /dev/mmcblk* 2>/dev/null || lsblk | grep -i mmcblk`.
+            If SD card detected (sd_card_detected=True): proceed to Branch A.
+            If not detected: proceed to Branch B.
+
+      BRANCH A (SD card detected — flash path):
+      1. Locate bitstream: read CARNOT_KV260_BITFILE env var or find *.bit in hardware/kv260/.
+      2. Attempt PYNQ flash. If PYNQ available: run flash command; record kv260_pynq_flashed.
+      3. If flash succeeds: run latency smoke test (read PYNQ AXI register).
+         Record latency_us. kv260_terminal_candidate = True if latency_us > 0.
+      4. Write artifact with kv260_sd_detected=True, branch=A.
+
+      BRANCH B (SD card absent — prep update):
+      1. Read ops/hardware-bringup-prep.md.
+      2. Update "KV260 PYNQ SD Card" section with the latest PYNQ image URL and exact flash commands.
+         Also add: "OPERATOR ACTION REQUIRED: Insert MicroSD >= 32GB UHS-I into KV260 SD slot."
+      3. Record sd_card_detected=False, branch=B, prep_guide_updated=True.
+      4. Write artifact with kv260_sd_detected=False, branch=B.
+
+      BOTH BRANCHES: write results/experiment_2656_kv260_continuity.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix; blocked_ only if synthesis bitstream missing."
+      - kv260_sd_detected: bool
+        principle: "Branch selector; determines whether flash was attempted."
+      - branch: str — 'A' or 'B'
+        principle: "Audit trail for which code path was taken."
+      - flash_attempted: bool (Branch A only, null for Branch B)
+        principle: "Distinguishes flash attempt from prep-only task."
+      - kv260_pynq_flashed: bool or null
+        principle: "True only if PYNQ confirmed the flash; null if Branch B."
+      - kv260_terminal_candidate: bool
+        principle: "True only if latency transcript from real board (not simulation)."
+      - prep_guide_updated: bool (Branch B)
+        principle: "Confirms operator prep instructions refreshed."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records hardware checks."
+      - duration_s: float
+        principle: "Real hardware interaction takes >= 2s."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2657
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2657_arxiv_v6_package.json"
+    title: "arXiv Final Package v6: Ensemble v11 + EORM Comparison (gated on adversarial val)"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 35
+    track: publication
+
+    gated_on:
+      - upstream: exp2653
+        artifact_field: adversarially_verified
+        op: "=="
+        value: true
+
+    prior_failures:
+      - experiment_id: exp2643-arxiv-v5-package
+        verdict: "complete: submission_package_ready=True (ensemble v10 numbers)"
+        addressed_by: "exp2643 (.252) built arXiv v5 with ensemble v10 adversarially-validated AUROC + GGUF 100-example benchmark. This builds v6 with ensemble v11 adversarially-validated AUROC from exp2653 AND EORM peer comparison from exp2655. Different evidence base: v11 > v10 improvement + new peer comparison requires §5 update + Table 2 addition."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      This task is gated on exp2653.adversarially_verified == true. If gate fails:
+      write honest_verdict blocked_gate_not_met; exit.
+
+      OPERATOR-ONLY rule (CLAUDE.md): this task prepares the v6 package for operator review.
+      This task MUST NOT submit to arXiv. submission_package_ready=True means ready for OPERATOR submit.
+
+      Paper-v6 currently has: ensemble v10 adversarially-validated AUROC (from .252 exp2643).
+      arXiv v6 updates: ensemble v11 AUROC + EORM peer comparison table.
+
+      EXISTING CODE TO READ FIRST:
+      - docs/arxiv-submission/ (existing arXiv package)
+      - results/experiment_2653_ensemble_v11_adversarial_val.json (v11 AUROC for §5)
+      - results/experiment_2655_external_eorm_benchmark.json (EORM comparison for Table 2)
+      - results/experiment_2654_odar_free_energy_routing.json (ODAR Phase 4 result for §4)
+      - results/experiment_2652_nexus_tier2_constraint_memory.json (FR-11 Tier 2 for §4)
+
+      TASK: Update paper-v6 with .253 results and produce arXiv v6 submission package.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. Read results/experiment_2653_ensemble_v11_adversarial_val.json.
+            If adversarially_verified != true: write honest_verdict blocked_gate_not_met; exit.
+         b. Locate docs/arxiv-submission/main.tex. Record latex_file_path.
+         c. `command -v pdflatex || command -v xelatex || command -v lualatex` succeeds.
+            If no LaTeX: write honest_verdict blocked_latex_not_installed; exit.
+         If ANY precondition fails: write honest_verdict blocked_<resource> and exit.
+
+      1. Update §5 (Experimental Results) in main.tex:
+         - Replace v10 AUROC with v11 adversarially-validated mean ± std from exp2653.
+         - Add note: "Ensemble v11 adds Tier 0e (EORM margin-ranking energy, §5.3) and Tier 0l
+           (layer-wise information drift, §5.4)"
+
+      2. Add Table 2 "Peer Comparison" (or update if exists):
+         - EORM (arXiv:2505.14999): 90.7% GSM8k coverage, 55M params
+         - Carnot v11: FoVer AUROC {ensemble_v11_auroc_mean}, N={n_corpus}, 5-seed adversarial val
+         - Note: "Direct GSM8k comparison pending live GGUF availability (see Appendix B)"
+         From results/experiment_2655_external_eorm_benchmark.json comparison_table.
+
+      3. If exp2654.phase4_active_inference_validated == true: update §3 (Active Inference §3.4):
+         "ODAR-style free-energy gating (arXiv:2602.23681) reduces verification overhead by
+          {odar_overhead_reduction_pct:.1f}% while retaining {odar_accuracy_retention*100:.1f}% AUROC."
+
+      4. If exp2652.nexus_session3_improvement == true: update §4 (Self-Learning §4.2):
+         "FR-11 Tier 2 cross-session constraint memory demonstrates improvement across 3 sessions."
+
+      5. Run LaTeX compilation. Record latex_compile_success.
+
+      6. Write results/experiment_2657_arxiv_v6_package.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - submission_package_ready: bool — True iff LaTeX compiles AND §5 updated with v11 numbers
+        principle: "Operator-Only rule: True means operator can submit; this task never submits."
+      - latex_compile_success: bool
+        principle: "Paper must compile cleanly before operator can submit."
+      - ensemble_v11_auroc_in_paper: float — v11 AUROC written into §5
+        principle: "Confirms the adversarially-validated v11 number (not v10) is in the paper."
+      - eorm_comparison_in_paper: bool — True iff Table 2 was added/updated
+        principle: "Peer comparison strengthens paper credibility."
+      - sections_updated: list of str
+        principle: "Audit trail for what was modified."
+      - duration_s: float
+        principle: "LaTeX compilation takes >= 5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record including adversarial gate check."
+
+      Do NOT submit to arXiv. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2658
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2658_capstone_v253.json"
+    title: "Capstone v253: Cross-Artifact Synthesis + Phase 1 Ship Status + arXiv v6 Decision"
+    agent_type: claude
+    model: opus
+    max_turns: 100
+    track: synthesis
+    requires_claude: true
+
+    prior_failures:
+      - experiment_id: exp2645-capstone-v252
+        verdict: "complete: 8-criterion synthesis; phase1_ship_recommendation from .252 results"
+        addressed_by: "exp2645 synthesized 12 .252 experiments (GGUF benchmark, Tier 0w, entanglement, ensemble v10, TTT, Symbolic-KAN, PASC, Phase 1 audit, arXiv v5, KV260). This synthesizes 12 .253 experiments with a different set of findings: Phase 1 ship execution (exp2648), EORM Tier 0e (exp2649), Layer-wise Tier 0l (exp2650), VegAS pipeline (exp2651), NEXUS Tier 2 (exp2652), ensemble v11 (exp2653), ODAR Phase 4 routing (exp2654), external benchmark (exp2655), hardware (exp2656), arXiv v6 (exp2657). Different evidence base."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.253 is complete. This capstone synthesizes all 12 experiment results
+      and produces operator action recommendations focusing on Phase 1 ship status + arXiv v6.
+
+      EXISTING CODE TO READ FIRST (read each before synthesizing):
+      - results/experiment_2647_archive_v252.json
+      - results/experiment_2648_phase1_ship_close.json (PRIMARY: phase1_ship_ready, branch_taken, operator_ship_checklist)
+      - results/experiment_2649_tier0e_eorm.json (tier0e_auroc, tier0e_viable)
+      - results/experiment_2650_tier0l_layer_wise.json (tier0l_auroc)
+      - results/experiment_2651_vegas_candidate_selection.json (delta_precision, score_candidates_implemented)
+      - results/experiment_2652_nexus_tier2_constraint_memory.json (nexus_session3_improvement)
+      - results/experiment_2653_ensemble_v11_adversarial_val.json (PRIMARY: adversarially_verified, ensemble_v11_auroc_mean)
+      - results/experiment_2654_odar_free_energy_routing.json (phase4_active_inference_validated, odar_overhead_reduction_pct)
+      - results/experiment_2655_external_eorm_benchmark.json (leaderboard_position_claim)
+      - results/experiment_2656_kv260_continuity.json (kv260_sd_detected, branch)
+      - results/experiment_2657_arxiv_v6_package.json (submission_package_ready)
+      - ops/status.md (most recent state)
+
+      TASK: Synthesize all .253 results and produce Phase 1 ship + arXiv v6 + operator recommendations.
+
+      CONCRETE STEPS:
+      0. Read all result files listed above. For each: record honest_verdict, key metric(s), any blocked states.
+
+      1. Evaluate 8 success criteria for .253:
+         a. phase1_ship_executed: (exp2648.branch_taken == 'A' AND exp2648.readme_updated) — Phase 1 ship step taken
+         b. tier0e_viable: true (exp2649) — EORM verifier viable
+         c. tier0l_viable: bool (exp2650) — layer-wise verifier viable
+         d. vegas_implemented: exp2651.score_candidates_implemented — VegAS candidate selection wired
+         e. nexus_tier2_improvement: exp2652.nexus_session3_improvement — FR-11 Tier 2 cross-session benefit
+         f. ensemble_v11_adversarially_verified: true (exp2653) — v11 headline-eligible
+         g. phase4_active_inference_validated: exp2654.phase4_active_inference_validated — ODAR viable
+         h. submission_package_ready: true (exp2657) — arXiv v6 ready for operator submit
+
+      2. Determine n_criteria_met (0-8) and overall milestone verdict.
+
+      3. Phase 1 ship status update:
+         If exp2648.branch_taken == 'A' AND exp2648.readme_updated:
+           phase1_ship_status = "EXECUTING: operator checklist prepared; await git tag + push"
+         Else if exp2648.phase1_ship_ready == true:
+           phase1_ship_status = "READY: all gates passed; ship checklist produced; operator action pending"
+         Else:
+           phase1_ship_status = "BLOCKED: {n_gates_passed}/4 gates; {open_gates_list}"
+
+      4. Produce operator action checklist:
+         a. Phase 1 ship: exact git tag command + gh release create command (from exp2648)
+         b. arXiv v6: if submission_package_ready — submit checklist (OPERATOR-ONLY)
+         c. KV260: if kv260_sd_detected=False — SD card insertion reminder
+         d. Paper-v6 peer comparison: EORM comparison table ready for operator review
+
+      5. Document top 3 gaps for .254.
+
+      6. Update ops/status.md: add Session .253 Complete section.
+         Update ops/changelog.md: add .253 entry.
+
+      7. Write results/experiment_2658_capstone_v253.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - n_criteria_met: int — count of 8 success criteria met
+        principle: "Milestone scorecard; < 5 suggests targeted .254 follow-up needed."
+      - phase1_ship_status: str — 'EXECUTING', 'READY', or 'BLOCKED:...'
+        principle: "Primary operator signal: current Phase 1 announcement state."
+      - ensemble_v11_adversarially_verified: bool — from exp2653
+        principle: "Headline metric gate: paper v6 claims headline-eligible only if true."
+      - phase4_active_inference_validated: bool — from exp2654
+        principle: "Phase 4 milestone: ODAR confirms verifier-as-free-energy hypothesis."
+      - submission_package_ready: bool — from exp2657
+        principle: "arXiv v6 ready for operator submission."
+      - n_experiments_completed: int — experiments with terminal honest_verdict
+        principle: "Sustained execution metric; target >= 8 for .253."
+      - operator_action_checklist: list of str
+        principle: "Session handoff: actionable and specific for operator."
+      - top_3_gaps_for_254: list of str
+        principle: "Next planner's carry-forward priorities."
+      - duration_s: float
+        principle: "Capstone cross-reads 12+ artifacts; >= 5s expected."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Records which result files were actually read."
+
+      Do NOT submit to arXiv. Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2659
+    milestone: "2026.05.253"
+    deliverable: "results/experiment_2659_retro_v253.json"
+    title: "Milestone .253 Retrospective"
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    track: meta
+
+    prior_failures:
+      - experiment_id: exp2646-retro-v252
+        verdict: "complete: .252 retro documenting GGUF benchmark, Tier 0w, ensemble v10, TTT significance, Phase 1 ship audit"
+        addressed_by: "exp2646 documented .252 as the second consecutive execution milestone. This .253 retro documents the outcomes from .253: Phase 1 ship execution, EORM Tier 0e, VegAS pipeline, NEXUS Tier 2, ODAR Phase 4 routing, ensemble v11, arXiv v6 readiness. Different content and milestone context."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      Milestone 2026.05.253 is complete. This retrospective evaluates HOW work was executed.
+      Special focus: Phase 1 ship execution status, EORM Tier 0e viability, ODAR Phase 4 routing.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2658_capstone_v253.json (n_experiments_completed, n_criteria_met, phase1_ship_status)
+      - ops/conductor-log.md (last 50 lines for timing data)
+      - ops/changelog.md (last 20 lines)
+
+      TASK: Write milestone .253 operational retrospective.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: none — runs unconditionally.
+
+      1. Read exp2658 capstone. Extract: n_experiments_completed, n_criteria_met,
+         phase1_ship_status, ensemble_v11_adversarially_verified, phase4_active_inference_validated.
+
+      2. Check execution health:
+         - n_experiments_completed vs. 13 total tasks?
+         - Any GATE_BLOCKed or SKIP'd experiments?
+         - GPU utilization: `nvidia-smi --query-gpu=utilization.gpu,memory.used --format=csv,noheader`
+
+      3. Milestone scorecard: n_criteria_met / 8.
+
+      4. Top 3 operational findings:
+         - Phase 1 ship: EXECUTING, READY, or BLOCKED?
+         - ODAR Phase 4: validated or not?
+         - Ensemble v11: AUROC headline-eligible or not?
+
+      5. Top 3 gaps for .254 (carry forward from capstone).
+
+      6. Write results/experiment_2659_retro_v253.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'complete_'
+        principle: "Terminal prefix required."
+      - n_experiments_completed: int
+        principle: "Key execution metric: > 0 confirms sustained execution."
+      - n_criteria_met: int — 8-point scorecard
+        principle: "Milestone quality score for cross-milestone trend."
+      - success_rate: float — n_criteria_met / 8
+        principle: "Normalized scorecard."
+      - phase1_ship_status: str — from capstone
+        principle: "Primary .253 outcome: Phase 1 announcement state after this milestone."
+      - top_3_operational_findings: list of str
+        principle: "Process meta-reflection: HOW work was executed, not WHAT."
+      - top_3_gaps_for_254: list of str
+        principle: "Next planner's carry-forward signal."
+      - duration_s: float
+        principle: "Real retro takes >= 1s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication record."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.

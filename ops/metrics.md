@@ -1,5 +1,13 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.253 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (resumed) | 2026-05-20T12:16:42Z | 2026-05-20T12:17:23Z | Resumed from context compaction: validated research-roadmap-next.yaml (13 tasks exp2647-exp2659, 12 codex 1 claude, zero exclusion-manifest conflicts, all prior_failures fields present). Updated ops/metrics.md, ops/status.md, ops/changelog.md. All CLAUDE.md mandatory disciplines confirmed. | ~15k |
+
 ## Session: 2026-05-20 Milestone 2026.05.252 Research Planning
 
 ### Turn Log

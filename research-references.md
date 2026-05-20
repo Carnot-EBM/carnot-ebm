@@ -1,3 +1,125 @@
+## 2026-05-20 Post-.252 Planning Sweep (Milestone 2026.05.253)
+
+This sweep was run after milestone `.252` completed (GGUF full-scale 100-example benchmark; Tier 0w
+AvgWD/EigenWD verifier; behavioral entanglement audit; ensemble v10 built; TTT 100-example statistical
+significance test; Symbolic-KAN interpretability; PASC pipeline conformal; Phase 1 ship readiness
+audit; arXiv v5 package; KV260 continuity). Three critical gaps entering .253: (a) Phase 1 ship
+execution — if phase1_ship_ready=True, .252 documented the gates but did not execute the ship actions
+(PyPI tag release, announcement); (b) no EORM-class energy-based reward model verifier — arXiv:2505.14999
+demonstrates 55M-param EBM verifier achieves 90.7% GSM8k coverage; candidate Tier 0e; (c) ODAR
+free-energy routing not yet prototyped — arXiv:2602.23681 merges Phase 4 (active inference) and
+Fast-Slow Variant with a principled free-energy routing mechanism replacing argmax iteration selection.
+
+### Energy Outcome Reward Model: 55M-Param Efficient EBM Verifier
+
+- **Paper:** "Learning to Rank Chain-of-Thought using a Small Model" (arXiv:2505.14999, May 2026).
+- **What:** Introduces Energy Outcome Reward Model (EORM) — a 55M parameter energy-based framework
+  for ranking Chain-of-Thought solutions. Uses contrastive energy scoring: low energy = correct solution,
+  high energy = incorrect. Achieves 90.7% on GSM8k and competitive on HumanEval despite the small
+  model size. The energy landscape is learned from (correct, incorrect) CoT pairs via a margin-based
+  ranking loss, making EORM a trained (not training-free) energy-based verifier.
+- **Relevance to Carnot:** Direct precedent for Carnot's Tier 0e slot. EORM is the closest published
+  analog to what Carnot has been building: a small energy-based verifier that scores LLM outputs via
+  contrastive energy. The 55M param size means EORM runs on CPU comfortably. Key implementation
+  insight: EORM's energy function is a BiEncoder with margin ranking loss — implementable as a
+  lightweight sklearn-LogisticRegression wrapper over sentence embedding pairs. Carnot can implement
+  a TF-IDF-based EORM proxy (no external embedding model) and compare against arXiv baseline.
+  Paper-v6 §3 can cite EORM as "independent parallel development validating our energy-based ranking
+  approach." Queued as exp2649 in .253.
+- **Sources:** https://arxiv.org/abs/2505.14999
+
+### VegAS: Verifier-Guided Action Selection at Inference Time
+
+- **Paper:** "Think Twice, Act Once: Verifier-Guided Action Selection" (arXiv:2605.12620, May 2026).
+- **What:** Test-time framework where a trained verifier scores K candidate actions (reasoning steps)
+  and selects the lowest-energy action rather than committing to the first generated action. Requires
+  K model rollouts per step but verifier is lightweight (55M–100M params). Demonstrates VegAS
+  outperforms greedy sampling by 8.7% on math reasoning without additional training. Key insight:
+  verification score functions as a risk-sensitive selector, not just a post-hoc checker.
+- **Relevance to Carnot:** Direct extension of VerifyRepairPipeline: instead of one repair attempt,
+  generate K=3 repair candidates and score each with ensemble verifier, selecting the lowest-energy
+  output. This is exactly the "score_candidates MCP tool" in Tier A (research-program.md "Candidate
+  Ranker" product). VegAS validates the architecture and provides a concrete improvement path:
+  test-time candidate selection via energy ranking. Queued as exp2651 in .253.
+- **Sources:** https://arxiv.org/abs/2605.12620
+
+### Layer-Wise Information Scores for Robust Conformal Prediction
+
+- **Paper:** "Beyond Surface Statistics: Robust Conformal Prediction for LLMs via Internal
+  Representations" (arXiv:2604.16217, April 2026).
+- **What:** Uses layer-wise information scores from internal LLM representations (rather than output
+  probability distributions) for conformal prediction. Key finding: surface-level token distributions
+  shift under distribution shift, but internal layer-wise representations remain more stable. The
+  layer-wise score aggregates attention entropy, residual stream norms, and hidden state divergence
+  across layers. Achieves better validity-efficiency trade-offs under OOD conditions than token-
+  probability-based conformal methods.
+- **Relevance to Carnot:** Candidate Tier 0l verifier using layer-wise information as the
+  hallucination signal. The layer-wise information score is implementable without embedding model
+  access: TF-IDF proxy = compute per-sentence TF-IDF vectors, then measure "information drift" as
+  the cosine distance between early (sentence 1) and late (last sentence) TF-IDF vectors. Claims
+  grounded in early sentences should have lower drift from the full document than hallucinated
+  interpolations. Complementary to Tier 0w (AvgWD/EigenWD from .252): 0l captures inter-sentence
+  drift; 0w captures within-claim variance. Queued as exp2650 in .253.
+- **Sources:** https://arxiv.org/abs/2604.16217
+
+### MiCP: Adaptive Stopping for Multi-Turn LLM Reasoning via Conformal Prediction
+
+- **Paper:** "Adaptive Stopping for Multi-Turn LLM Reasoning" (arXiv:2604.01413, April 2026).
+- **What:** First conformal prediction framework for multi-turn (iterative) reasoning with early
+  stopping guarantees. Builds prediction sets across turns and stops when the prediction set collapses
+  to a single answer with guaranteed coverage. Reduces multi-turn inference cost by 34% while
+  maintaining 90% marginal coverage. Key insight: the conformal stopping criterion uses cumulative
+  conformity scores rather than per-step checks.
+- **Relevance to Carnot:** Extends PASC (multi-stage pipeline conformal, exp2641 in .252) to the
+  iterative verify-repair loop. Carnot's verify-repair can cycle through multiple repair iterations;
+  MiCP provides a principled early-stopping criterion based on coverage guarantees. If energy drops
+  below a threshold with high conformal confidence, stop iterating. Paper-v6 §6 can cite MiCP as
+  the theoretical foundation for early stopping in the repair loop.
+- **Sources:** https://arxiv.org/abs/2604.01413
+
+### NEXUS: Continual Learning of Symbolic Constraints
+
+- **Paper:** "NEXUS: Continual Learning of Symbolic Constraints for Safe and Robust Embodied
+  Planning" (arXiv:2605.09387, May 2026).
+- **What:** Framework for continual acquisition of symbolic constraints from experience across tasks.
+  NEXUS maintains a constraint memory buffer, detects when new constraints are needed (violation
+  detection), synthesizes symbolic rules from violation patterns, and consolidates redundant
+  constraints. Evaluated on embodied planning; constraints learned in early tasks transfer to
+  prevent repeat violations in later tasks. Key insight: symbolic constraints are more compact and
+  transferable than learned neural weights.
+- **Relevance to Carnot:** Direct implementation reference for FR-11 Tier 2 (Constraint Memory /
+  Trace2Skill). Carnot's ConstraintStateMachine already persists across sessions (Exp 125); NEXUS
+  provides the accumulation + consolidation loop that makes the memory actionable: (1) collect
+  violation-pattern events, (2) synthesize symbolic constraint templates, (3) consolidate redundant
+  patterns, (4) auto-add constraints for repeat offenders. The NEXUS pattern makes Tier 2's
+  "learn per-domain error patterns" goal concrete: after 3 sessions with the same user, Carnot's
+  constraint memory knows which constraint types fire for that user's domain. Queued as exp2652
+  in .253 (continuous_self_learning_task: true).
+- **Sources:** https://arxiv.org/abs/2605.09387
+
+### ODAR: Free-Energy Principled Adaptive Routing for LLM Reasoning
+
+- **Paper:** "ODAR: Principled Adaptive Routing for LLM Reasoning via Active Inference"
+  (arXiv:2602.23681, February 2026).
+- **What:** Adaptive routing mechanism for LLM reasoning that uses a "free-energy-principled,
+  risk-sensitive fusion mechanism" to select between fast (single-pass) and deliberative
+  (multi-step verification) agents. Evaluated across 23 benchmarks with reduced computational
+  overhead vs uniform sampling. Free-energy routing selects deliberative verification only when
+  the KL divergence between the prior (fast agent distribution) and posterior (verified distribution)
+  exceeds a threshold — which is exactly the variational free energy.
+- **Relevance to Carnot:** ODAR DIRECTLY MERGES Carnot's Phase 4 (active inference / verifier-as-
+  free-energy) and Fast-Slow Variant tracks. Carnot's verify-repair pipeline currently uses an
+  always-on verification strategy; ODAR provides the principled selector: verify only when
+  free-energy is high (fast-path skip otherwise). This addresses the stalled alpha_t measurement
+  track (exp1715/1721/1741/1745) by pivoting to a different free-energy target: routing mechanism
+  rather than metric measurement. Implementation for Carnot: replace VerifyRepairPipeline's
+  unconditional verify() call with an ODAR-style gate: if KL(ensemble_prior, ensemble_posterior) <
+  threshold, skip verification (fast path); else verify (slow path). Queued as exp2654 in .253.
+  Cross-references arXiv:2605.12536 (IIT↔FEP max-caliber bridge).
+- **Sources:** https://arxiv.org/abs/2602.23681
+
+---
+
 ## 2026-05-20 Post-.251 Planning Sweep (Milestone 2026.05.252)
 
 This sweep was run after milestone `.251` completed (ensemble v9 adversarially validated 5-seed; external
