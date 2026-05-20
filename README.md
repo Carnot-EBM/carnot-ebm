@@ -20,14 +20,17 @@ The model was trained using contrastive energy minimization.
 
 | Metric | Value |
 |--------|-------|
-| Experiments completed | 3,073 (through Exp 2529) |
-| Milestones archived | 365 (through 2026.05.243) |
+| Experiments completed | 3,086 (through Exp 2542) |
+| Milestones archived | 366 (through 2026.05.244) |
 | Python test items collected | 26,352 |
 | Group-Conditional Conformal AUROC, adversarially verified (exp2485/exp2498) | 0.975 |
-| Phase 4 empirical validation, step-level ARM-EBM bijection (exp2508) | true (pearson_r=-0.4266, p<0.01, n=290, semantic_energy_fallback) |
-| arXiv gates met (exp2516 capstone); LaTeX package not ready (exp2527) | gates: true; package: false (latex_compile_success=False, abstract 522 words) |
-| Ensemble v7 regression after Tier 0r added to Group C (exp2521) | AUROC 0.9750→0.9607; Tier 0r needs Group D (tracked in .244) |
-| IsingVerifier stub identified as root cause of Phase 4 failures (exp2519) | class IsingVerifier: pass — empty stub; IsingVerifier fix queued exp2531 |
+| Phase 4 resolution | Option B accepted (exp2541 capstone .244): Phase 4 documented as honest negative; Gate-3 redefined as phase4_resolved = (phase4_validated_any OR phase4_honest_negative_documented) — Option B satisfies gate; arXiv submission pending operator |
+| LaTeX compile fixed (exp2536, .244) | latex_compile_success=True; abstract trimmed 522→205 words |
+| GateMate bitstream for flash generated (exp2537, .244) | rtl/gatemate_ising_n16.cfg 16392 bytes; max F 514.67 MHz; flash pending operator |
+| JEPA fast-path integrated into VerifyRepairPipeline (exp2539, .244) | JEPAFastPathPredictor wired; fast_path_rate=1.0 (synthetic corpus; real-corpus eval in .245) |
+| Tier 0u logical-consistency verifier (exp2535, .244) | synthetic AUROC=0.96; not yet integrated into ensemble |
+| Ensemble v7 regression after Tier 0r added to Group C (exp2521) | AUROC 0.9750→0.9607; Tier 0r Group D reassignment targeted in .245 |
+| IsingVerifier stub (exp2519 root cause confirmed) | class IsingVerifier: pass — empty stub; exp2531-2534 produced no artifacts in .244; IsingVerifier implementation queued in .245 |
 | Tier 0r Curry-Howard verifier implemented (exp2520) | tier0r_implemented=True |
 | FR-11 Tier 3 JEPA AUC improved (exp2525) | 0.7633→0.8889 |
 | Isotonic calibration AUROC, TAUTOLOGY flagged (exp2473) | 0.9351 |
@@ -46,7 +49,7 @@ The model was trained using contrastive energy minimization.
 | VERGE SMT repair success rate (exp2353) | 1.000 |
 
 ## Evaluation Metrics
-The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.975 on the Group-Conditional Conformal Ensemble (exp2485, group_conditional_vs_fisher_delta=+0.058), breaching the HIVE peer baseline (0.9236), independently adversarially replicated via exp2498 (5-seed cross-group tautology check passed). Phase 4 empirical validation confirmed via step-level ARM-EBM bijection (exp2508): pearson_r=-0.4266 (p<0.01, n=290 step pairs) using semantic_energy_fallback, establishing that high Carnot energy predicts low LLM log-probability at the step level. All 4 arXiv submission gates are met (exp2516 capstone), though the submission package itself requires LaTeX fixes (exp2527: latex_compile_success=False, abstract 522 words vs 250-word limit) — targeted in milestone .244. FR-11 Tier 3 JEPA AUC improved 0.7633→0.8889 (exp2525, .243). Tier 0r Curry-Howard verifier implemented (exp2520). The simple-fusion isotonic AUROC of 0.9351 (exp2473) was flagged as a TAUTOLOGY by adversarial verification and later replicated at 0.7964 (exp2484); the group-conditional result provides the adversarially-cleaner headline. Ensemble v7 AUROC regression (0.9750→0.9607, exp2521, .243) was traced to Tier 0r score range mismatch in Group C; Group D reassignment targeted in .244 (exp2533).
+The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.975 on the Group-Conditional Conformal Ensemble (exp2485, group_conditional_vs_fisher_delta=+0.058), breaching the HIVE peer baseline (0.9236), independently adversarially replicated via exp2498 (5-seed cross-group tautology check passed). Milestone 2026.05.244 ("IsingVerifier Fix + Phase 4 ARM-EBM v4 + Ensemble v7b + arXiv LaTeX Fix + JEPA Pipeline Integration", exp2530–exp2542) completed with 5/13 execution-layer gap (exp2530–exp2534 produced no artifacts due to precondition handling gaps): LaTeX compile fixed (exp2536, latex_compile_success=True, abstract trimmed 522→205 words); GateMate bitstream generated for flash (exp2537, rtl/gatemate_ising_n16.cfg 16392 bytes, max F 514.67 MHz); JEPA fast-path integrated into VerifyRepairPipeline (exp2539); Tier 0u logical-consistency verifier added (exp2535, synthetic AUROC=0.96); Phase 4 IsingVerifier still a stub (exp2531–exp2534 produced no artifacts in .244). Operator capstone (exp2541) recommended Option B: accept Phase 4 as empirically unsupported, expand §4 with honest negative subsection; Gate-3 redefined as phase4_resolved = (phase4_validated_any OR phase4_honest_negative_documented) — Option B satisfies the gate. arXiv submission pending operator after .245 writes the honest negative §4. FR-11 Tier 3 JEPA AUC improved 0.7633→0.8889 (exp2525, .243). Tier 0r Curry-Howard verifier implemented (exp2520). Ensemble v7 AUROC regression (0.9750→0.9607, exp2521, .243) traced to Tier 0r score range mismatch in Group C; Group D reassignment targeted in .245 (exp2546).
 
 ## Usage
 ```python

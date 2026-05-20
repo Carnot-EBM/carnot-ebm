@@ -297,3 +297,4 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 
 | 2026.05.240 | complete: best_240_auroc=0.975, phase4_validated_any=False, arxiv_ready=False | 11 experiments | Phase 4 not validated; Operator hold persists |
 | 2026.05.241 | complete: best_241_auroc=0.975, phase4_validated_any=False, arxiv_ready=False | 8 experiments | 1 missing, 1 blocked; Phase 4 unvalidated; Operator hold persists |
+| 2026.05.245 | Planning-only / No experiment commits before retro | N/A | None — 0 experiments in timing window (21st consecutive empty retro); timing-script fix is the top leverage action for .246 |

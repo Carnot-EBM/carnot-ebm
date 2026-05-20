@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.245",
+  "generated_at": "2026-05-20T00:33:15Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The automated timing-data script found 0 experiment commits since milestone 2026.05.245 activation, producing a twenty-first consecutive empty-timing-window retro. No wall-clock minutes or experiment IDs are available from the authoritative TIMING DATA block; all interpretive sections reflect that absence honestly. Both RTX 3090 GPUs were idle (0% utilization, 5 MB allocated each) at retro time with no compute-bound tasks in the timing window to flag.",
+  "bottlenecks_identified": [
+    "Timing-capture gap: the automated timing script again found 0 experiment commits at retro time — this is the twenty-first consecutive empty window, indicating a structural misalignment between when experiments commit to the authoritative git log and when the retro script scans.",
+    "No compute-bound experiments were logged; therefore GPU idle status cannot be assessed and DualGPURunner relevance is indeterminate this milestone."
+  ],
+  "improvements_suggested": [
+    "Widen the timing-script look-back window to capture same-session experiment commits that land after milestone activation but before the retro task fires.",
+    "Trigger the retro task with a minimum 60-second delay after the capstone artifact commits, or have the capstone explicitly flush the git index before the retro fires.",
+    "Add a fallback path in the timing script: if 0 commits are found for the active milestone, scan ops/changelog.md for lines matching the milestone prefix and surface them as unverified timing hints (clearly labeled) so the retro is not entirely dark.",
+    "Both GPUs were idle at retro time; for the next milestone, activate the first compute-bound experiment in the same session as planning so GPU cycles are captured while the retro window is still open."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix the timing-data capture script to include within-session experiment commits: this is the root cause of 21 consecutive empty-window retros and eliminates the blind spot in every future operational analysis.",
+    "Activate the next milestone's first experiment in the same session as planning, ensuring at least one commit lands within the timing window before the retro fires.",
+    "Add an ops/changelog.md fallback to the retro script so that even when git-log returns 0 commits, the retro can surface milestone-tagged changelog entries as advisory (not authoritative) context — giving future operators a non-empty retro to act on."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Twenty-one consecutive empty-timing-window retros point to a structural process gap, not an isolated event. The retro script and the experiment-commit pipeline are misaligned by design: experiments run, commit, and are logged in ops/changelog.md well before the retro fires, but the git-log query used by the timing script does not see them. Until the timing script is fixed, every operational retro will report 0 experiments and offer no bottleneck signal — making the retro artifact structurally uninformative. The single most valuable process change this milestone can motivate is landing the timing-script fix before 2026.05.246 activates."
+}
