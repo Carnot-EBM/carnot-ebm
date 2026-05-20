@@ -5341,3 +5341,4 @@ Ripgrep i |
 | 2026-05-20 09:17 UTC | External Benchmark Evaluation: HalluScan + PARALLA | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:19 UTC | External Benchmark Evaluation: HalluScan + PARALLA | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 09:21 UTC | External Benchmark Evaluation: HalluScan + PARALLA | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 09:23 UTC | Verifier-Driven TTT Loop Prototype (FR-11 Tier 3 C | SKIP | Pre-tests failing, self-heal failed:  |
