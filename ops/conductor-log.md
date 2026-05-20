@@ -5407,3 +5407,4 @@ Ripgrep i |
 | 2026-05-20 11:35 UTC | arXiv Final Package v5: Ensemble v10 + GGUF Benchm | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2638) |
 | 2026-05-20 11:35 UTC | KV260 Hardware Continuity .252 (Branch A: SD Flash | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:37 UTC | Capstone v252: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 11:39 UTC | Capstone v252: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
