@@ -5614,3 +5614,4 @@ Ripgrep i |
 | 2026-05-20 22:35 UTC | KV260 Hardware Continuity .258 (NON-TERMINAL — SD  | OK | cache hit: 81 passed in 2.14s |
 | 2026-05-20 22:51 UTC | Behavioral Entanglement Reweighting for Verifier E | FAIL | Post-tests failed:  |
 | 2026-05-20 22:53 UTC | Behavioral Entanglement Reweighting for Verifier E | OK | Deliverable already exists in repo |
+| 2026-05-20 22:55 UTC | Capstone v258: Cross-Artifact Synthesis + Conducto | OK | cache hit: 100 passed in 6.94s |

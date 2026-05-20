@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.258",
+  "generated_at": "2026-05-20T23:01:00Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.258 recorded 0 experiments in the timing window — the thirty-third consecutive empty-timing-window retro. Both RTX 3090 GPUs were idle at 0% utilization (41C/49C); no compute-bound tasks appeared in timing scope, so gpu_idle_on_compute_bound_tasks remains null. The timing-script look-back window not being anchored to the conductor-state.json activation timestamp continues as the confirmed root cause of the zero-experiment streak.",
+  "bottlenecks_identified": [
+    "Timing-script look-back window not anchored to conductor-state.json activation timestamp — root cause of 33 consecutive empty-window retros; retro fires before committed experiment artifacts fall inside the look-back range.",
+    "No post-activation dispatch verification gate — retro executes immediately after milestone activation with no minimum-experiment-count sentinel, allowing empty retros to be filed while real work is still in flight.",
+    "Paper v6 toolchain missing — blocked any theory-update experiments that depend on a local LaTeX/paper source tree (consistent with capstone v258 findings).",
+    "KV260 SD card absent — hardware continuity task escalated to operator for fourth consecutive milestone; no programmatic resolution path available to the conductor."
+  ],
+  "improvements_suggested": [
+    "Fix timing-script look-back to use conductor-state.json 'activated_at' timestamp as the floor instead of a fixed trailing window; this single fix resolves the 33-milestone empty-window streak structurally.",
+    "Wire a zero-artifact alarm: if no experiment artifact lands within 60 minutes of milestone activation, emit a WARNING commit and halt retro until at least one non-retro experiment completes.",
+    "Require a milestone-open sentinel commit at activation time so the timing script always has at least one in-scope commit as an anchor.",
+    "Add paper v6 LaTeX toolchain precondition check to the milestone activation manifest — block paper-theory tasks from queuing until pdflatex + source tree presence is verified.",
+    "Escalate KV260 SD card as operator-action-required in known-issues.md with a hard milestone skip-limit (e.g., skip no more than 2 milestones before declaring the KV260 track suspended)."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to conductor-state.json 'activated_at' timestamp — resolves the 33-milestone empty-window retro streak in one edit with no experiment changes required.",
+    "Wire zero-artifact alarm at 60 minutes post-activation — prevents future milestones from filing empty retros while real work is still running, giving the operator an actionable signal instead of a silent empty report.",
+    "Activate the first non-retro experiment in the same conductor session as milestone activation — breaks the stall pattern by ensuring at least one compute or synthesis task completes before the retro executes."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This is the thirty-third consecutive milestone where the timing window returned zero experiments — an unambiguous systemic failure in the retro's data-collection layer, not in experiment execution itself. The recurring bottleneck (timing-script look-back not anchored to activation timestamp) has been identified and documented in at least the prior six retros; the leverage action is surgical (one-line change to scripts/session-metrics.py or equivalent), yet it has not been applied. Operationally, the milestone appears to have executed real work (capstone synthesis, cascade fix, Phase 1 ship prep) that the timing script simply cannot see; until the look-back anchor is fixed, retros will continue to under-report and any efficiency analysis derived from them will be structurally unreliable."
+}
