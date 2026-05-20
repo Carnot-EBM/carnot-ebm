@@ -5264,3 +5264,4 @@ Ripgrep i |
 | 2026-05-20 05:00 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2597_tier0u_ |
 | 2026-05-20 05:03 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | FAIL | No file changes produced |
 | 2026-05-20 05:07 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | FAIL | No file changes produced |
+| 2026-05-20 05:11 UTC | HuggingFace Model Card Citation Update | OK | cache hit: 81 passed, 1 warning in 2.33s |
