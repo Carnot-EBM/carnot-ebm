@@ -89,7 +89,7 @@ tasks:
         principle: "Explicit activation field lets downstream audits verify milestone is active."
       - n_experiments_archived: int — must be 0 (zero-execution milestone)
         principle: "Count documents .255's zero-execution state for historical accuracy."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records which files were actually read."
       - duration_s: float
         principle: "File reads + YAML copy + JSON write: expected >= 3s."
@@ -197,7 +197,7 @@ tasks:
         principle: "Actionable recovery steps close the feedback loop from diagnosis to fix."
       - duration_s: float
         principle: "Read-only analysis: expected 5-30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records conductor.py and log file existence checks."
 
       Do NOT modify scripts/research_conductor.py.
@@ -250,7 +250,7 @@ tasks:
       1. Check README.md for "## Phase 1 Milestone" section.
          If absent: add it with content:
          "## Phase 1 Milestone
-         Carnot v{current_version} marks Phase 1 completion: PyPI package (carnot-ebm),
+         Carnot v{{current_version}} marks Phase 1 completion: PyPI package (carnot-ebm),
          HuggingFace mirror (huggingface.co/Carnot-EBM), ensemble verifier ensemble validation,
          MCP server, CLI, and Apache-2.0 license. See RELEASES.md for full changelog."
          Record: readme_phase1_section_added (bool).
@@ -262,8 +262,8 @@ tasks:
 
       3. Produce final operator ship checklist with specific commands:
          a. `cd {project_root}`
-         b. `git tag v{current_version} -m 'Phase 1 milestone: carnot-ebm package'`
-         c. `git push origin v{current_version}  # triggers .github/workflows/publish-pypi.yml`
+         b. `git tag v{{current_version}} -m 'Phase 1 milestone: carnot-ebm package'`
+         c. `git push origin v{{current_version}}  # triggers .github/workflows/publish-pypi.yml`
          d. `# After PyPI publish: visit huggingface.co/Carnot-EBM and update model card version`
          e. `# Submit docs/arxiv-submission/ package to arxiv.org (OPERATOR-ONLY)`
          Record: operator_ship_checklist_v3 (list of exact strings).
@@ -285,7 +285,7 @@ tasks:
         principle: "Audit trail: documents how many ship-prep actions completed autonomously."
       - duration_s: float
         principle: "File reads + edits: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records exp2662 artifact check."
 
       Do NOT submit to arXiv. Do NOT push. Do NOT run git push.
@@ -328,7 +328,7 @@ tasks:
       - python/carnot/pipeline/verify_repair.py (VerifyRepairPipeline — verify(), should_verify())
       - python/carnot/verify/ (list all existing Tier 0* verifier modules — check what exists)
       - scripts/experiment_template.py (ExperimentTemplate and cached_sota_pair() pattern)
-      - data/fover_corpus.jsonl (FoVer corpus — {question, correct, incorrect} fields)
+      - data/fover_corpus.jsonl (FoVer corpus — {{question, correct, incorrect}} fields)
 
       TASK: Run VerifyRepairPipeline on N=50 live GGUF outputs. Measure energy distribution.
 
@@ -361,7 +361,7 @@ tasks:
          Record: inference_mode='live_gpu', n_examples_run (int), mean_inference_time_s (float).
 
       3. Compute pipeline metrics:
-         a. energy_score_distribution: {mean, std, min, max, p25, p75}.
+         a. energy_score_distribution: {{mean, std, min, max, p25, p75}}.
          b. fast_path_rate: fraction of examples where should_verify() returned False.
          Record: all metrics.
 
@@ -374,7 +374,7 @@ tasks:
         principle: "Distinguishes real GPU run from CPU fallback; paper-v6 claims require live_gpu."
       - n_examples_run: int
         principle: "Sample size validates statistical estimates of energy distribution."
-      - energy_score_distribution: dict — {mean, std, min, max, p25, p75}
+      - energy_score_distribution: dict — {{mean, std, min, max, p25, p75}}
         principle: "Primary pipeline validation output: energy scores on live GGUF data."
       - fast_path_rate: float
         principle: "ODAR/Phase 4 metric: high rate = verification overhead reduced significantly."
@@ -392,7 +392,7 @@ tasks:
         principle: "Content-addressed prompt selection prevents corpus drift on re-runs."
       - duration_s: float
         principle: "Live GGUF inference on 50 examples: expected >= 120s; < 30s = suspicious."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records GGUF cache check + CUDA check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -429,7 +429,7 @@ tasks:
       EXISTING CODE TO READ FIRST:
       - python/carnot/verify/ (check if tier0e_eorm.py exists)
       - results/experiment_2663_tier0e_eorm.json (check if exists — tier0e_auroc, model_path)
-      - data/fover_corpus.jsonl (corpus format — {question, correct, incorrect} fields)
+      - data/fover_corpus.jsonl (corpus format — {{question, correct, incorrect}} fields)
 
       TASK: Implement Tier 0f semantic calibration layer. If Tier 0e is absent, create it first.
 
@@ -492,7 +492,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Clustering + logistic re-train: expected 5-60s; < 2s suspicious."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records sklearn check + corpus availability + tier0e state."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -556,9 +556,9 @@ tasks:
          ) -> dict:
          - Iteration 0: score initial_response via verify().
          - If energy_score < energy_threshold: return (fast path).
-         - Else: failure_message = f"Previous response scored {score:.2f} (high uncertainty). Refine: {initial_response[:200]}"
+         - Else: failure_message = f"Previous response scored {{score:.2f}} (high uncertainty). Refine: {{initial_response[:200]}}"
          - Pass as context for next candidate. Stop when score < threshold OR k_max iterations reached.
-         - Returns: {final_response, final_energy, n_iterations, converged, candidates_generated}
+         - Returns: {{final_response, final_energy, n_iterations, converged, candidates_generated}}
          Record: method_added (bool).
 
       3. Test on 5 synthetic examples (2 correct / 3 incorrect):
@@ -582,7 +582,7 @@ tasks:
         principle: "arXiv:2605.16142 headline: sequential guidance reduces candidates vs static K."
       - duration_s: float
         principle: "Method add + 5-example test: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import check + artifact check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -614,7 +614,7 @@ tasks:
 
       EXISTING CODE TO READ FIRST:
       - python/carnot/verify/ (list all tier0* verifier modules — check what actually exists)
-      - data/fover_corpus.jsonl (FoVer corpus — {question, correct, incorrect})
+      - data/fover_corpus.jsonl (FoVer corpus — {{question, correct, incorrect}})
       - results/ensemble_v11_weights.json (if exists — component weights and list)
 
       TASK: Evaluate ensemble AUROC at k = [1, 2, 4, 6, 8, 12, 16] to find saturation curve.
@@ -633,13 +633,13 @@ tasks:
          For each: compute individual AUROC on FoVer eval split (20% holdout, random_seed=42).
          Use TF-IDF cosine similarity between (question+response) vs corpus mean as proxy score.
          Sort by individual AUROC.
-         Record: components_by_auroc (list of {name, auroc}).
+         Record: components_by_auroc (list of {{name, auroc}}).
 
       2. For k = [1, 2, 4, 6, 8, 12, min(16, n_components_available)]:
          a. Select top-k verifiers by individual AUROC (greedy).
          b. Ensemble score = mean of individual scores.
          c. Compute ensemble AUROC on FoVer eval split.
-         Record: k_auroc_pairs = [{k, auroc}].
+         Record: k_auroc_pairs = [{{k, auroc}}].
 
       3. Saturation point: first k where AUROC improvement from k-1 to k is < 0.005.
          Record: saturation_k (int), saturation_auroc (float).
@@ -652,7 +652,7 @@ tasks:
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - k_auroc_pairs: list of {k: int, auroc: float}
+      - k_auroc_pairs: list of {{k: int, auroc: float}}
         principle: "Primary data: AUROC at each k — the saturation curve for paper-v6 §5."
       - saturation_k: int
         principle: "Optimal ensemble size; determines whether k=16 is justified."
@@ -666,7 +666,7 @@ tasks:
         principle: "Reproducibility: same eval split."
       - duration_s: float
         principle: "k-sweep on FoVer: expected 10-60s; < 2s suspicious."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records sklearn check, FoVer corpus check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -737,7 +737,7 @@ tasks:
              alpha: float = 0.1
          ) -> dict:
          - Wraps iterate() with conformal stopping check.
-         - Returns: {n_iterations_run, n_iterations_saved, coverage_achieved, energy_history}.
+         - Returns: {{n_iterations_run, n_iterations_saved, coverage_achieved, energy_history}}.
          Record: orca_method_added (bool).
 
       4. Run proof-of-concept on N=20 synthetic TTT examples:
@@ -767,7 +767,7 @@ tasks:
         principle: "Confirms VerifierDrivenTTT module exists after this task."
       - duration_s: float
         principle: "TTT loop on 20 examples + method additions: expected >= 5s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -825,7 +825,7 @@ tasks:
          b. Check if select_best_candidate returns "correct" candidate on clearly-correct examples.
          c. k_selection_accuracy = fraction of clearly-correct examples where K-best was selected.
          d. k_compute_cost = K (proxy for inference calls).
-         Record: k_efficiency_curve = [{k, selection_accuracy, compute_cost}].
+         Record: k_efficiency_curve = [{{k, selection_accuracy, compute_cost}}].
 
       4. efficiency_score = selection_accuracy / compute_cost for each K.
          optimal_k = K with highest efficiency_score.
@@ -839,7 +839,7 @@ tasks:
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - k_efficiency_curve: list of {k, selection_accuracy, compute_cost}
+      - k_efficiency_curve: list of {{k, selection_accuracy, compute_cost}}
         principle: "Primary data: efficiency frontier for VegAS K choices."
       - optimal_k: int
         principle: "Principled K recommendation based on efficiency frontier."
@@ -851,7 +851,7 @@ tasks:
         principle: "AUROC used for T2 prediction; documents the reference value."
       - duration_s: float
         principle: "K-sweep on 10 examples: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -885,7 +885,7 @@ tasks:
       EXISTING CODE TO READ FIRST:
       - python/carnot/verify/ (check if nexus_constraint_memory.py exists)
       - results/experiment_2666_nexus_tier2_symbolic_memory.json (if exists — constraints_synthesized)
-      - data/fover_corpus.jsonl (FoVer corpus — {question, correct, incorrect} fields)
+      - data/fover_corpus.jsonl (FoVer corpus — {{question, correct, incorrect}} fields)
 
       TASK: Run NexusConstraintMemory with real FoVer violation events.
       If module absent, create it first (minimal implementation).
@@ -943,7 +943,7 @@ tasks:
         principle: "Confirms whether module was created in this task or pre-existed."
       - duration_s: float
         principle: "Loading 100 FoVer entries + synthesis: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records FoVer corpus check + module existence check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1047,7 +1047,7 @@ tasks:
         principle: "Compile check prevents broken LaTeX in submission package."
       - duration_s: float
         principle: "LaTeX edits + delta computation: expected >= 5s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records .tex file check + repair artifact scan."
 
       DO NOT submit to arXiv. DO NOT push.
@@ -1122,7 +1122,7 @@ tasks:
         principle: "Explicitly false — board stays in per-milestone mandatory inclusion until terminal."
       - duration_s: float
         principle: "Branch B documentation-only: expected 2-10s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records /dev/mmcblk* check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1209,7 +1209,7 @@ tasks:
          Based on what did NOT complete, what is below target, and what the capstone reveals.
          Prioritize: conductor execution fix (if diagnosis incomplete), Phase 1 ship
          (if still HOLD), live GGUF improvement (if smoke_only), KV260 SD card insert.
-         Record: top_3_gaps_for_257 (list of {gap, priority, suggested_task}).
+         Record: top_3_gaps_for_257 (list of {{gap, priority, suggested_task}}).
 
       7. Update ops/status.md: ADD new section at top (do NOT remove existing content):
          "## Session 2026-05-20 - Milestone 2026.05.256 Capstone Complete\n[summary]"
