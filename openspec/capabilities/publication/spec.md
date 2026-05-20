@@ -892,6 +892,36 @@ The Phase 1 Recovery task MUST produce an artifact at `results/experiment_1989_p
 **When** the Phase 1 Recovery audit executes
 **Then** it writes a complete artifact with `acceptance_gate_passed == true` and an honest verdict indicating success.
 
+### REQ-PUBLISH-030: Exp 2553 arXiv Package v3 Readiness Artifact
+
+The Exp 2553 arXiv package v3 runner MUST produce
+`results/experiment_2553_arxiv_package_v3.json` without attempting any
+credentialed arXiv submission. The runner MUST verify
+`docs/arxiv-paper/main.tex` exists, detect local TeX tooling in the order
+`tectonic` then `pdflatex`, compile `main.tex` with the detected tool, count
+abstract words from the LaTeX abstract environment, and load
+`results/experiment_2544_phase4_option_b.json` to compute the redefined Gate 3
+as `phase4_validated_any OR phase4_honest_negative_documented`.
+
+The artifact MUST include `honest_verdict`, `arxiv_ready`,
+`submission_package_ready`, `gate_3_phase4_resolved`,
+`latex_compile_success`, `abstract_word_count`,
+`operator_submission_checklist`, `preconditions_checked`, and `duration_s`.
+`arxiv_ready` MUST be true only when the four publication gates pass, the
+LaTeX compile succeeds, and the abstract word count is at most 250.
+
+### SCENARIO-PUBLISH-030: Honest Negative Resolves Gate 3 For Operator Submission
+
+**Given** the paper source exists, local TeX tooling compiles it, the abstract
+contains at most 250 words, and Exp 2544 records
+`phase4_honest_negative_documented == true`
+**When** the Exp 2553 arXiv package v3 runner executes
+**Then** it writes `results/experiment_2553_arxiv_package_v3.json`
+AND `gate_3_phase4_resolved == true`
+AND `arxiv_ready == true`
+AND `submission_package_ready == true`
+AND `operator_submission_checklist` contains browser-only operator actions.
+
 
 ## Implementation Status
 
@@ -922,6 +952,7 @@ The Phase 1 Recovery task MUST produce an artifact at `results/experiment_1989_p
 | REQ-PUBLISH-023 | Proposed | Exp 1579 ICLR 2026 OT verification framework adoption |
 | REQ-PUBLISH-024 | Proposed | Exp 1582 Phase 1 software ship readiness ledger |
 | REQ-PUBLISH-025 | Implemented | Exp 2103 PyPI publish dry run artifact |
+| REQ-PUBLISH-030 | Implemented | Exp 2553 arXiv package v3 readiness artifact |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".

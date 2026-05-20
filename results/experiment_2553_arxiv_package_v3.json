@@ -1,0 +1,122 @@
+{
+  "abstract_word_count": 212,
+  "acceptance_gates": [
+    {
+      "condition": "arxiv_ready == true",
+      "passed": true,
+      "principle": "The primary milestone success criterion. If all 4 gates met including the redefined gate-3, the paper is ready for operator submission."
+    }
+  ],
+  "arxiv_gates": {
+    "gate_1_phase1_ship": true,
+    "gate_2_audit": true,
+    "gate_3_phase4_resolved": true,
+    "gate_4_auroc_adversarially_verified": true
+  },
+  "arxiv_ready": true,
+  "best_AUROC": 0.975,
+  "best_AUROC_source_artifact": "results/experiment_2498_auroc_adversarial_v2_group_cond.json",
+  "credentialed_submission_attempted": false,
+  "duration_s": 2.742531,
+  "field_principles": {
+    "abstract_word_count": "Must be <= 250 for arXiv.",
+    "arxiv_ready": "True if all 4 gates satisfied. This is the PRIMARY output of the entire .240-.245 research track.",
+    "duration_s": "Wall-clock measurement.",
+    "gate_3_phase4_resolved": "True if phase4_validated_any OR phase4_honest_negative_documented. Redefined gate for Option B path.",
+    "honest_verdict": "Terminal-prefix required.",
+    "latex_compile_success": "Must be True -- arXiv's LaTeX compiler is strict.",
+    "operator_submission_checklist": "Concrete operator action items before submission -- prevents accidental submission without review.",
+    "preconditions_checked": "Records which resources were verified.",
+    "submission_package_ready": "True if mechanically ready for operator submission. Distinct from arxiv_ready (mechanical vs gate-based)."
+  },
+  "files_modified": [
+    "docs/arxiv-paper/main.pdf",
+    "results/experiment_2553_arxiv_package_v3.json",
+    "python/carnot/reporting/arxiv_package_v3_2553.py",
+    "tests/python/test_arxiv_package_v3_2553.py",
+    "openspec/capabilities/publication/spec.md"
+  ],
+  "gate_3_definition": "phase4_resolved = phase4_validated_any OR phase4_honest_negative_documented",
+  "gate_3_phase4_resolved": true,
+  "honest_verdict": "complete: arxiv_ready=True; latex_compile_success=True; abstract_word_count=212; gate_3_phase4_resolved=True",
+  "latex_compile": {
+    "command": [
+      "tectonic",
+      "main.tex"
+    ],
+    "engine": "tectonic",
+    "returncode": 0,
+    "stderr_tail": "s 10000) in paragraph at lines 1423--1423\nwarning: main.tex:1426: Underfull \\hbox (badness 5288) in paragraph at lines 1424--1426\nwarning: main.tex:1426: Underfull \\hbox (badness 10000) in paragraph at lines 1424--1426\nwarning: main.tex:1429: Underfull \\hbox (badness 10000) in paragraph at lines 1427--1429\nwarning: main.tex:1429: Underfull \\hbox (badness 10000) in paragraph at lines 1427--1429\nwarning: main.tex:1429: Underfull \\hbox (badness 10000) in paragraph at lines 1427--1429\nwarning: main.tex:1478: Underfull \\hbox (badness 5607) in paragraph at lines 1474--1478\nwarning: main.tex:1482: Underfull \\hbox (badness 10000) in paragraph at lines 1482--1482\nwarning: main.tex:1482: Underfull \\hbox (badness 2035) in paragraph at lines 1482--1482\nwarning: main.tex:1485: Underfull \\hbox (badness 10000) in paragraph at lines 1485--1485\nwarning: main.tex:1834: Overfull \\hbox (11.68pt too wide) in paragraph at lines 1832--1834\nwarning: main.tex:1854: Underfull \\hbox (badness 1325) in paragraph at lines 1854--1854\nwarning: main.tex:1876: Underfull \\hbox (badness 1859) in paragraph at lines 1875--1876\nwarning: warnings were issued by the TeX engine; use --print and/or --keep-logs for details.\n",
+    "stdout_tail": "note: Running TeX ...\nnote: Running BibTeX on main.aux ...\nnote: warnings were issued by BibTeX; use --print and/or --keep-logs for details.\nnote: Rerunning TeX because bibtex was run ...\nnote: Rerunning TeX because \"main.aux\" changed ...\nnote: Running xdvipdfmx ...\nnote: Writing `main.pdf` (401.09765625 KiB)\nnote: Skipped writing 3 intermediate files (use --keep-intermediates to keep them)\n",
+    "success": true
+  },
+  "latex_compile_success": true,
+  "latex_engine_used": "tectonic",
+  "mechanical_gates": {
+    "abstract_word_count_lte_250": true,
+    "latex_compile_success": true
+  },
+  "operator_submission_checklist": [
+    "[ ] Review the 4/delta citation in \u00a73 (arXiv:2512.02080)",
+    "[ ] Confirm \u00a74 Phase 4 honest negative accurately represents experiments exp2486/exp2508/exp2519/exp2532",
+    "[ ] Confirm best_AUROC=0.9750 in abstract and results section",
+    "[ ] Confirm author list and affiliation are correct",
+    "[ ] Submit to arXiv at arxiv.org/submit (category: cs.AI, cs.LG)"
+  ],
+  "phase4_honest_negative_documented": true,
+  "phase4_validated_any": false,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "check": "ls /home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex"
+    },
+    {
+      "available": true,
+      "check": "command -v tectonic",
+      "resource": "tectonic"
+    },
+    {
+      "available": false,
+      "check": "command -v pdflatex",
+      "resource": "pdflatex"
+    },
+    {
+      "available": true,
+      "check": "read phase4_honest_negative_documented",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2544_phase4_option_b.json"
+    },
+    {
+      "available": true,
+      "check": "read prior latex compile and abstract artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2536_latex_compile_fix.json"
+    },
+    {
+      "available": true,
+      "check": "read paper write-through artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2552_paper_writethrough.json"
+    },
+    {
+      "available": true,
+      "check": "verify Phase 1 ship gate artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2441_phase1_ship_gate_completion_v5.json"
+    },
+    {
+      "available": true,
+      "check": "verify integrity audit fix artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2479_paper_integrity_fix.json"
+    },
+    {
+      "available": true,
+      "check": "verify AUROC adversarial artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2498_auroc_adversarial_v2_group_cond.json"
+    }
+  ],
+  "source_artifacts": {
+    "exp2536_abstract_word_count": 205,
+    "exp2536_latex_compile_success": true,
+    "exp2552_paper_updated": true
+  },
+  "submission_attempted": false,
+  "submission_package_ready": true
+}
