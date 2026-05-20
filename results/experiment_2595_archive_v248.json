@@ -1,0 +1,40 @@
+{
+  "schema": "carnot.archive.v1",
+  "honest_verdict": "complete_already_activated: .249 was already active before exp2595; no duplicate archive append performed",
+  "archive_completed": true,
+  "milestone_activated": "2026.05.249",
+  "preconditions_checked": [
+    {
+      "resource": "research-roadmap.yaml",
+      "available": true,
+      "check": "exists and milestone field is already 2026.05.249"
+    },
+    {
+      "resource": "research-complete.yaml",
+      "available": true,
+      "check": "contains a 2026.05.248 milestone entry, so archive state is already present"
+    },
+    {
+      "resource": "results/experiment_2593*",
+      "available": false,
+      "check": "no v248 capstone artifact found"
+    },
+    {
+      "resource": "results/experiment_2580*",
+      "available": true,
+      "check": "fallback v247 capstone artifact found at results/experiment_2580_capstone_v247.json"
+    },
+    {
+      "resource": "research-roadmap-next.yaml",
+      "available": false,
+      "check": "not required because research-roadmap.yaml is already activated to 2026.05.249"
+    }
+  ],
+  "experiment": "exp2595",
+  "milestone": "2026.05.249",
+  "headline_auroc": 0.9857,
+  "gatemate_terminal": true,
+  "kv260_terminal": false,
+  "archive_action": "skipped_already_activated",
+  "notes": "Precondition 0a applied: active roadmap already says 2026.05.249, so exp2595 exits cleanly without overwriting roadmap or appending a duplicate completion entry."
+}

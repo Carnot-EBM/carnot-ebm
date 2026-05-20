@@ -63,15 +63,15 @@ tasks:
       2. Copy research-roadmap-next.yaml → research-roadmap.yaml (overwrite).
 
       3. Write results/experiment_2595_archive_v248.json with:
-         { "schema": "carnot.archive.v1", "honest_verdict": "complete: .248 archived, .249 activated",
+         {{ "schema": "carnot.archive.v1", "honest_verdict": "complete: .248 archived, .249 activated",
            "archive_completed": true, "milestone_activated": "2026.05.249",
-           "preconditions_checked": [...], "experiment": "exp2595", "milestone": "2026.05.249" }
+           "preconditions_checked": [...], "experiment": "exp2595", "milestone": "2026.05.249" }}
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'complete_'
       - archive_completed: bool — True if .248 appended to research-complete.yaml
       - milestone_activated: str — must equal "2026.05.249"
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Run: check `python -c "import yaml; yaml.safe_load(open('research-roadmap.yaml'))"` succeeds.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -105,7 +105,7 @@ tasks:
         python/carnot/verify/foVer_corpus.jsonl
         data/foVer_corpus.jsonl
         (glob: find {project_root} -name '*foVer*corpus*' -o -name '*fover*corpus*' | head -1)
-      Each entry: {context, claim, label}  where label ∈ {hallucination, correct}.
+      Each entry: {{context, claim, label}}  where label ∈ {{hallucination, correct}}.
 
       EXISTING CODE TO READ FIRST:
       - python/carnot/verify/tier0s_halluguard.py
@@ -151,7 +151,7 @@ tasks:
       - feature_description: str — documents TF-IDF + cosine approach
       - model_path: str — path to serialized pkl (or 'not_saved_auroc_below_baseline')
       - duration_s: float — wall-clock time (fabrication signal if < 1.0s for real sklearn training)
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"` to confirm no import regressions.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -227,7 +227,7 @@ tasks:
       - feature_description: str — documents TF-IDF cosine approach
       - model_path: str — path to pkl or 'not_saved_auroc_below_baseline'
       - duration_s: float — wall-clock time
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -292,7 +292,7 @@ tasks:
       - model_card_updated: bool — True if local file was edited
       - submission_package_ready: false (HF upload is operator-only)
       - citation_text_preview: str — short excerpt of the added citation text
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
@@ -356,7 +356,7 @@ tasks:
       - ipfs_available: bool — True if real IPFS pin occurred
       - readme_updated: bool — True if README.md was edited
       - submission_package_ready: false (arXiv submission is operator-only)
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
@@ -434,7 +434,7 @@ tasks:
       - corpus_source: str — "real", "synthetic", or "mixed"
       - random_seed: 42
       - duration_s: float — wall-clock time
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -495,7 +495,7 @@ tasks:
          corpus examples (from exp2600 test split). Log group_f_auroc.
 
       3. Add §7 stub to docs/paper/main.tex:
-         \section{Safety and Jailbreak Detection}
+         \section{{Safety and Jailbreak Detection}}
          with corpus description, AUROC from exp2600, Group F integration, limitations.
          Mark as \DRAFT{}.
 
@@ -506,7 +506,7 @@ tasks:
       - group_f_added: bool — True if ensemble.py updated (False if gated out)
       - safety_integration_complete: bool — True iff group_f_added AND no regression on existing groups
       - paper_section_added: bool — True if §7 written in main.tex
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
@@ -554,13 +554,13 @@ tasks:
       1. Read VerifyRepairPipeline. Locate or create the JEPA predictor reference.
 
       2. Add `online_update(self, observation: dict) -> None` to VerifyRepairPipeline:
-         - observation keys: {text, label, energy, fast_path_taken}
+         - observation keys: {{text, label, energy, fast_path_taken}}
          - Appends to self._session_log (list, initialized in __init__)
          - If len(self._session_log) >= 10: call self._jepa_predictor.partial_fit if available
          - After partial_fit: reset self._session_log to []
 
       3. Add `get_session_stats(self) -> dict` returning:
-         {n_observations: int, n_partial_fits: int, current_fast_path_rate: float}
+         {{n_observations: int, n_partial_fits: int, current_fast_path_rate: float}}
 
       4. Validate: construct VerifyRepairPipeline, call online_update() 15 times with synthetic
          observations, confirm at least 1 partial_fit triggered and get_session_stats() coherent.
@@ -574,7 +574,7 @@ tasks:
       - partial_fit_tested: bool — True iff at least 1 partial_fit triggered in validation
       - n_observations_tested: int — number of synthetic observations used in validation
       - duration_s: float — wall-clock time
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -648,7 +648,7 @@ tasks:
       - sd_card_flashed_attempt: bool — True iff Branch A ran
       - kv260_flash_attempted_operator_action_needed: bool — True iff Branch B (operator must insert SD)
       - prep_script_updated: bool — True iff kv260_sd_prep.sh updated
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
@@ -720,7 +720,7 @@ tasks:
       - verifiers_updated: list — e.g. ["tier0s", "tier0u"] or ["tier0s"]
       - random_seed: 42
       - duration_s: float — wall-clock time
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -810,7 +810,7 @@ tasks:
       - implementation_path: str — path to tier0y_cot_consistency.py
       - random_seed: 42
       - duration_s: float — wall-clock time
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
 
       Run: `python -c "import sys; sys.path.insert(0, '{project_root}/python'); import carnot"`.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -896,10 +896,10 @@ tasks:
       - jepa_online_active: bool
       - safety_classifier_viable: bool
       - ipfs_mirror_status: str — 'pinned_cid_known' or 'documented_operator_needed'
-      - kv260_status: object — {sd_media_detected, next_blocker, terminal}
+      - kv260_status: object — {{sd_media_detected, next_blocker, terminal}}
       - n_experiments_completed: int — count of exp2595-exp2605 with terminal-prefix verdicts
       - operator_recommendation: str — primary operator next action
-      - top_3_gaps_for_250: list of {rank, area, summary}
+      - top_3_gaps_for_250: list of {{rank, area, summary}}
       - random_seed: 42
       - preconditions_checked: list of source artifacts read
 
@@ -943,7 +943,7 @@ tasks:
          Read last 20 lines of ops/conductor-log.md for timing data.
 
       2. Write results/experiment_2607_retro_v249.json with schema carnot.operational_retro.v64:
-         {
+         {{
            schema, milestone, generated_at, retro_type: "operational_full",
            total_wall_time_minutes, experiments_completed,
            bottlenecks_identified (>= 2 entries),
@@ -951,7 +951,7 @@ tasks:
            top_3_highest_leverage_actions,
            estimated_time_savings_pct,
            meta_reflection: (one paragraph honest process reflection)
-         }
+         }}
 
       3. Also write results/operational_retro_2026_05_249.json with same content (parallel
          artifact for conductor's retro detection logic).
