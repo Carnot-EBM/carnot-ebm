@@ -1,3 +1,30 @@
+## 2026-05-20 Post-.245 Planning Sweep (Milestone 2026.05.246)
+
+This sweep was run after milestone `.245` completed (9/11 capstone-input artifacts at terminal verdict — best_245_auroc=0.9857 (ensemble v7b Group D, 5-seed adversarially verified); phase4_final_status=retired_negative_option_b (§4.4 honest negative subsection landed in main.tex, citing exp2486/2508/2519/2532); arxiv_ready=True (first time, all 4 gates satisfied); operator_recommendation=submit_now. Hardware: GateMate JTAG detected live but openFPGALoader strtol parse error on .cfg (nextpnr-himbaechel dialect vs openFPGALoader 0.13 parser incompatibility); KV260 SD media physically absent. Tier0v HalluField blocked (carnot import failed — PYTHONPATH issue). Real-corpus validation revealed: tier0s 0.3758 (vs synth 1.0), tier0u 0.5360 (vs synth 0.96), tier0r 0.9414 on FoVer (solid). Three critical gaps: (a) paper-v6 tier0s/tier0u inflated synthetic AUROC claims must be corrected before operator submits, (b) GateMate strtol parse error and KV260 SD media, (c) new viable verifiers needed for ensemble expansion.
+
+### Set-Valued Prediction for Large Language Models with Feasibility-Aware Coverage Guarantees
+
+- **Paper:** "Set-Valued Prediction for Large Language Models with Feasibility-Aware Coverage Guarantees" (arXiv:2603.22966, March 2026).
+- **What:** Introduces a feasibility-aware calibration framework for open-ended LLM generation that moves beyond single-point prediction. The key contribution is a **Minimum Achievable Risk Level (MRL)** — an explicit lower bound on the calibration error achievable given finite sampling constraints. Rather than forcing coverage that is impossible given the LLM's capability limits, the framework acknowledges infeasibility and derives the tightest set-valued prediction that the data can support. Evaluated across six generation tasks with five LLMs; demonstrates statistical validity and predictive efficiency.
+- **Relevance to Carnot:** Next step after group-conditional conformal calibration (exp2485, AUROC=0.9750). The current ensemble uses fixed group-conditional thresholds; MRL estimation could improve calibration by acknowledging that some prompt types cannot achieve full coverage given the verifier's signal strength. Addresses the case where tier0s/tier0u verifiers are weak on real corpus — the MRL framework would correctly shrink their contribution rather than over-counting weak signals. Queued as exp2564 in .246 milestone.
+- **Sources:** https://arxiv.org/abs/2603.22966
+
+### HalluScan: A Systematic Benchmark for Detecting and Mitigating Hallucinations in Instruction-Following LLMs
+
+- **Paper:** "HalluScan: A Systematic Benchmark for Detecting and Mitigating Hallucinations in Instruction-Following LLMs" (arXiv:2605.02443, May 2026).
+- **What:** Presents a systematic multi-domain hallucination benchmark covering scientific, medical, legal, and general domains for instruction-following LLMs. Key finding: NLI-based verification achieves AUROC 1.00 in the scientific domain for four tested models. Mean AUROC across domains is 0.67, with significant domain-specific variation. Provides a principled evaluation framework that separates detection accuracy from mitigation effectiveness.
+- **Relevance to Carnot:** External comparison target for Carnot's ensemble v7b (AUROC=0.9857 on FoVer). Running the Carnot ensemble on HalluScan would establish whether the FoVer-trained verifiers generalize to unseen benchmarks and domains. The domain-specific breakdown would identify which verifier types (logprob, semantic, proof-path) are strongest per domain — actionable for Group routing decisions. Also directly comparable to the NLI-based peer (1.0 in science) to understand Carnot's positioning. Queued as exp2566 in .246 milestone.
+- **Sources:** https://arxiv.org/abs/2605.02443
+
+### Conditional Factuality Controlled LLMs with Generalization Certificates via Conformal Sampling
+
+- **Paper:** "Conditional Factuality Controlled LLMs with Generalization Certificates via Conformal Sampling" (arXiv:2603.27403, March 2026).
+- **What:** Proposes conditional conformal prediction for LLM factuality that provides formal conditional (rather than only marginal) coverage guarantees. Proves that the conditional coverage rule is strictly more sample-efficient than marginal conformal prediction at the same target coverage under exchangeability. Key practical result: calibration set sizes can be reduced by 40-60% for equivalent conditional coverage. Evaluation on TruthfulQA, PopQA, and NQ shows consistent improvement over marginal methods.
+- **Relevance to Carnot:** Strengthens the theoretical foundation for Carnot's group-conditional conformal approach (exp2485). The paper proves conditional rules are MORE sample-efficient — meaning Carnot's per-group calibration sets may be undersized for the guarantees claimed. Queued as additional theory cite in paper-v6 §3 calibration discussion; also relevant to exp2564 feasibility-aware conformal implementation.
+- **Sources:** https://arxiv.org/abs/2603.27403
+
+---
+
 ## 2026-05-19 Post-.244 Planning Sweep (Milestone 2026.05.245)
 
 This sweep was run after milestone `.244` completed (5/13 tasks at terminal verdict — best_244_auroc=0.9750 carried forward; phase4_final_status=blocked_precondition (exp2531 IsingVerifier impl + exp2532 Phase 4 v4 both failed due to Gemini CLI JavaScript runtime error); ensemble_v7b_regression unfixed (exp2533 also Gemini-failed); LaTeX compile fixed (exp2536, latex_compile_success=True, abstract=205 words); GateMate bitstream generated (exp2537, ready-to-flash); Tier 0u implemented (exp2535, AUROC=0.96, viable); JEPA pipeline integrated (exp2539); paper updated (exp2540); arxiv_ready=False. Root cause of critical-path failures: AGENT_TYPE=gemini in conductor + Gemini CLI JS crash. Three critical gaps: (a) IsingVerifier stub still unimplemented (four consecutive milestones), (b) ensemble v7b regression still unfixed, (c) Phase 4 ARM-EBM v5 is the final structurally-distinct attempt before permanent retirement.

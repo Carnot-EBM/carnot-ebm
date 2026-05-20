@@ -1,5 +1,18 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.246 Research Planning Complete)
+
+- Milestone 2026.05.246 planned: "Post-arXiv Paper Integrity + Hardware Terminal + Ensemble Expansion v8"
+- research-roadmap-next.yaml written (13 tasks exp2556–exp2568, 66 KB). Validated: prior_failures [OK], gates audit [roadmap_gate_audit_passed=True, 0 failures, 13 tasks].
+- openspec/change-proposals/research-roadmap-v246.md created (169 lines).
+- research-references.md updated with 3 new papers from Post-.245 planning sweep:
+  - arXiv:2603.22966 (MRL feasibility-aware conformal calibration)
+  - arXiv:2605.02443 (HalluScan benchmark, mean AUROC 0.67)
+  - arXiv:2603.27403 (conditional factuality conformal with generalization certificates)
+- Critical finding carried forward: tier0s real-corpus AUROC=0.3758 (vs 1.0 synthetic); tier0u=0.5360 (vs 0.96 synthetic). Paper errata task (exp2557) is the highest-priority pre-submission task.
+- Agent routing: 11 codex/gpt-5.5 (84.6%), 2 claude+opus (exp2559 GateMate hardware, exp2567 capstone).
+- Key structural decisions: (1) exp2557→exp2558 critical path for paper integrity before arXiv submission; (2) exp2562 retire_if_same_verdict=true for Tier 0v (PYTHONPATH-aware retry); (3) exp2565 continuous_self_learning_task=true (JEPA real FoVer training).
+
 ## 2026-05-19 (Milestone 2026.05.244 Operational Retrospective — Final)
 
 - Operational retrospective for milestone 2026.05.244 written to `results/operational_retro_2026_05_244.json`. Zero experiment commits found — milestone is planning-only (no experiments reached completion before retro trigger). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. Top-3 leverage actions: (1) diagnose why 2026.05.244 produced zero commits by reading conductor-log.md and conductor-state.json; (2) pre-stage a valid research-roadmap-next.yaml for 2026.05.245 before this milestone closes; (3) ensure KV260, GateMate, and PolarFire each have a concrete forward-step task in the next milestone per Hardware-Task Continuity Discipline. Estimated time savings: 0% (no execution data). Meta-reflection: a zero-experiment milestone is a P0 process signal — root-cause the stall and confirm at least one experiment activates before the outer loop advances.

@@ -1,6 +1,42 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-19 (milestone 2026.05.245 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.246 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.246 Research Planning Complete
+
+**Milestone 2026.05.245 COMPLETED: key results from capstone exp2554:**
+- **arxiv_ready=True for the first time** — all 4 gates satisfied; operator_recommendation=submit_now.
+- **Ensemble v7b AUROC 0.9857** (exp2546, 5-seed adversarially verified, std=0.0175) — cite-safe headline metric.
+- **Phase 4 Option B executed** (exp2544) — §4.4 honest negative subsection landed in main.tex; Gate-3 redefined to `phase4_resolved = validated_any OR honest_negative_documented`.
+- **JEPA discrimination improved** (exp2550) — JEPAFastPathPredictor fast_path_rate in [0.30, 0.80] on balanced corpus; GATE_PASSED_WITHOUT_DATA adversarial flag.
+- **IsingVerifier implemented** (exp2545) — IsingVerifier().energy(text) regex arithmetic checker test-passing.
+- **Real-corpus AUROC gap discovered** (exp2548) — tier0s: 1.0 synthetic → 0.3758 real (FoVer, n=6548); tier0u: 0.96 synthetic → 0.5360 real; tier0r stable at 0.9414. INFLATED CLAIMS MUST BE CORRECTED BEFORE arXiv SUBMISSION.
+- **Hardware not flashed**: GateMate strtol parse error (.cfg dialect mismatch); KV260 SD media absent.
+- **Tier 0v blocked**: exp2549 blocked_carnot_import_failed (PYTHONPATH issue).
+- **n_experiments_completed**: 9 of 11 capstone inputs.
+
+**Milestone 2026.05.246 PLANNED as Post-arXiv Paper Integrity + Hardware Terminal + Ensemble Expansion v8.**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v246.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2556`–`exp2568`)
+- ID allocation: milestone `.245` used through `exp2555`, so `.246` starts at `exp2556`.
+- Research references updated with Post-.245 Planning Sweep (2026-05-20): 3 new papers added:
+  - arXiv:2603.22966 (MRL feasibility-aware conformal calibration — exp2564)
+  - arXiv:2605.02443 (HalluScan benchmark — mean AUROC 0.67; peer comparison target — exp2566)
+  - arXiv:2603.27403 (Conditional factuality conformal — supporting reference)
+- **Milestone title**: "Post-arXiv Paper Integrity + Hardware Terminal + Ensemble Expansion v8"
+- **Three critical gaps targeted**:
+  1. **Paper integrity** (highest priority): exp2557 corrects tier0s/tier0u inflated synthetic AUROCs in main.tex; exp2558 produces arXiv Final Package v4 (gated on exp2557).
+  2. **Hardware terminal**: exp2559 (claude+opus) GateMate strtol fix; exp2560 KV260 operator flash docs.
+  3. **Verifier expansion**: exp2561 Tier 0t; exp2562 Tier 0v+0w (PYTHONPATH-aware); exp2563 Ensemble v8.
+- **Other experiments**: exp2564 MRL conformal calibration; exp2565 JEPA real FoVer training (continuous_self_learning_task:true); exp2566 HalluScan benchmark eval; exp2567 capstone claude+opus; exp2568 retro.
+- **Critical path**: exp2557 (errata) → exp2558 (arXiv package v4) — must complete before operator submits.
+- **Agent routing**: 11 codex/gpt-5.5 (84.6%); 2 claude+opus (exp2559 hardware, exp2567 capstone).
+- Validation: `validate_prior_failures.py` — [OK]. `audit_roadmap_gates.py` — roadmap_gate_audit_passed=True.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.246. Critical path: exp2557 + exp2558 (paper integrity before arXiv submission).
+
+---
 
 ## Session 2026-05-19 - Milestone 2026.05.245 Research Planning Complete
 

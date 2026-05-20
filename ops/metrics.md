@@ -1,5 +1,13 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.246 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-19T22:03:49Z | 2026-05-20T00:50:14Z | Plan milestone 2026.05.246: read .245 capstone (exp2554 arxiv_ready=True, AUROC=0.9857), real-corpus AUROC gaps (tier0s=0.3758 vs 1.0 synthetic, tier0u=0.5360 vs 0.96 synthetic); arxiv sweep (3 new papers: arXiv:2603.22966 MRL feasibility-aware conformal, arXiv:2605.02443 HalluScan benchmark AUROC 0.67, arXiv:2603.27403 conditional factuality conformal); updated research-references.md; wrote openspec/change-proposals/research-roadmap-v246.md; wrote research-roadmap-next.yaml (13 tasks exp2556-exp2568, 66KB). Both validators: OK (no schema errors, roadmap_gate_audit_passed=True). Critical path: paper errata (exp2557) → arXiv package v4 (exp2558). Context compaction mid-session. | ~200k |
+
 ## Session: 2026-05-19 Milestone 2026.05.244 Research Planning
 
 ### Turn Log
