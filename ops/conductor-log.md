@@ -5294,3 +5294,38 @@ Ripgrep i |
 | 2026-05-20 06:50 UTC | Plan milestone 2026.05.250 | OK | 13 tasks proposed |
 | 2026-05-20 06:52 UTC | Milestone 2026.05.250 activated | OK | 13 tasks queued |
 | 2026-05-20 06:56 UTC | Archive .249 + Activate .250 | OK | cache hit: 81 passed, 1 warning in 5.58s |
+| 2026-05-20 07:09 UTC | Python Package Prerequisites: Install sklearn + Ve | FAIL | Post-tests failed:  |
+| 2026-05-20 07:11 UTC | Python Package Prerequisites: Install sklearn + Ve | OK | Deliverable already exists in repo |
+| 2026-05-20 07:12 UTC | tier0s Real-Corpus Retrain: Logistic Regression on | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:14 UTC | tier0s Real-Corpus Retrain: Logistic Regression on | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:16 UTC | tier0s Real-Corpus Retrain: Logistic Regression on | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:18 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:20 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:22 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:24 UTC | Tier 0z Semantic Energy Verifier (arXiv:2508.14496 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:26 UTC | Tier 0z Semantic Energy Verifier (arXiv:2508.14496 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:28 UTC | Tier 0z Semantic Energy Verifier (arXiv:2508.14496 | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:30 UTC | Safety Corpus 200 Pairs + Tier0x Safety Verifier ( | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:32 UTC | Safety Corpus 200 Pairs + Tier0x Safety Verifier ( | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:34 UTC | Safety Corpus 200 Pairs + Tier0x Safety Verifier ( | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:36 UTC | HF Model Card + IPFS Distribution: Rule 3 Complian | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:38 UTC | HF Model Card + IPFS Distribution: Rule 3 Complian | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:40 UTC | HF Model Card + IPFS Distribution: Rule 3 Complian | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:42 UTC | Ensemble v9: Incorporate Real-Corpus-Validated tie | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2610) |
+| 2026-05-20 07:42 UTC | Safety Ensemble Group F + Paper §7 Stub (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2613) |
+| 2026-05-20 07:42 UTC | JEPA v3 Online Learning Evaluation: Real FoVer Cor | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:44 UTC | Ensemble v9: Incorporate Real-Corpus-Validated tie | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2610) |
+| 2026-05-20 07:44 UTC | Safety Ensemble Group F + Paper §7 Stub (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2613) |
+| 2026-05-20 07:44 UTC | JEPA v3 Online Learning Evaluation: Real FoVer Cor | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:46 UTC | Ensemble v9: Incorporate Real-Corpus-Validated tie | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2610) |
+| 2026-05-20 07:46 UTC | Safety Ensemble Group F + Paper §7 Stub (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2613) |
+| 2026-05-20 07:46 UTC | JEPA v3 Online Learning Evaluation: Real FoVer Cor | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:48 UTC | KV260 Hardware Continuity: Branch A (SD Flash) or  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:50 UTC | KV260 Hardware Continuity: Branch A (SD Flash) or  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:52 UTC | KV260 Hardware Continuity: Branch A (SD Flash) or  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:54 UTC | Milestone .250 Capstone Synthesis | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:56 UTC | Milestone .250 Capstone Synthesis | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 07:58 UTC | Milestone .250 Capstone Synthesis | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 08:00 UTC | Milestone .250 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 08:02 UTC | Milestone .250 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 08:04 UTC | Milestone .250 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |

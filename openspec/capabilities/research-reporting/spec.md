@@ -4108,6 +4108,16 @@ The `honest_verdict` field must start with a terminal prefix and the `.222` gap 
 **When** the Exp 2265 retrospective generator runs
 **Then** it writes `results/experiment_2265_retro.json` with schema `carnot.operational_retro.v66`, terminal-prefixed `honest_verdict`, completion fraction in `criteria_met`, all three `.222` gap closure records, and a quantified speedup target for milestone `.224`.
 
+### REQ-REPORT-2609: Sklearn Prerequisite Fix Artifact
+
+The repository shall provide a helper module `carnot.reporting.sklearn_prereq_fix_2609` and a focused test `tests/python/test_experiment_2609_sklearn_prereq_fix.py` for generating the Exp 2609 prerequisite artifact. The artifact must be written to `results/experiment_2609_sklearn_prereq_fix.json`, use a terminal-prefixed `honest_verdict`, record whether sklearn was already installed, record the sklearn version, verify the Carnot import chain, and resolve the FoVer corpus path when a corpus with more than 100 rows is available.
+
+#### SCENARIO-REPORT-2609: Generate sklearn prerequisite artifact
+
+**Given** the active conductor Python environment and project root
+**When** the Exp 2609 helper builds the prerequisite artifact
+**Then** it writes all required sklearn, Carnot import, FoVer corpus, installation audit, and `preconditions_checked` fields needed by downstream verifier-recovery tasks.
+
 ### REQ-REPORT-2321: Milestone 2026.05.227 Operational Retrospective
 
 The repository shall provide `scripts/experiment_2321_retro.py` to generate

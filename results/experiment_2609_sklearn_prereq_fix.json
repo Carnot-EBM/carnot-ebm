@@ -1,0 +1,144 @@
+{
+  "carnot_import_error": null,
+  "carnot_import_ok": true,
+  "experiment": 2609,
+  "experiment_id": "exp2609",
+  "foVer_corpus_found": true,
+  "foVer_corpus_path": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+  "generated_at": "2026-05-20T07:04:34Z",
+  "honest_verdict": "complete: sklearn prerequisite resolved; import chain verified",
+  "install_attempts": [
+    {
+      "available": false,
+      "check": "python -c \"import sklearn; print('already installed:', sklearn.__version__)\"",
+      "error": "ModuleNotFoundError: No module named 'sklearn'",
+      "resource": "initial_sklearn_import"
+    },
+    {
+      "available": false,
+      "check": "pip install scikit-learn",
+      "error": "/bin/bash: line 1: pip: command not found",
+      "resource": "pip"
+    },
+    {
+      "available": false,
+      "check": "pip3 install scikit-learn",
+      "error": "/bin/bash: line 1: pip3: command not found",
+      "resource": "pip3"
+    },
+    {
+      "available": false,
+      "check": "python -m pip install scikit-learn",
+      "error": "/usr/bin/python: No module named pip",
+      "resource": "python_m_pip"
+    },
+    {
+      "available": false,
+      "check": "env | rg ^CONDA=; command -v conda",
+      "error": "conda not active and conda command not found",
+      "resource": "conda_active"
+    },
+    {
+      "available": false,
+      "check": "python -m ensurepip --user",
+      "error": "externally-managed-environment (PEP 668)",
+      "resource": "python_ensurepip_user"
+    },
+    {
+      "available": true,
+      "check": "sudo -n pacman -S --needed --noconfirm python-scikit-learn",
+      "resource": "python-scikit-learn",
+      "version": "1.8.0"
+    }
+  ],
+  "install_method": "sudo -n pacman -S --needed --noconfirm python-scikit-learn",
+  "install_success": true,
+  "platform": "Linux-7.0.4-1-cachyos-x86_64-with-glibc2.43",
+  "preconditions_checked": [
+    {
+      "available": false,
+      "check": "python -c \"import sklearn; print('already installed:', sklearn.__version__)\"",
+      "error": "ModuleNotFoundError: No module named 'sklearn'",
+      "resource": "initial_sklearn_import"
+    },
+    {
+      "available": false,
+      "check": "pip install scikit-learn",
+      "error": "/bin/bash: line 1: pip: command not found",
+      "resource": "pip"
+    },
+    {
+      "available": false,
+      "check": "pip3 install scikit-learn",
+      "error": "/bin/bash: line 1: pip3: command not found",
+      "resource": "pip3"
+    },
+    {
+      "available": false,
+      "check": "python -m pip install scikit-learn",
+      "error": "/usr/bin/python: No module named pip",
+      "resource": "python_m_pip"
+    },
+    {
+      "available": false,
+      "check": "env | rg ^CONDA=; command -v conda",
+      "error": "conda not active and conda command not found",
+      "resource": "conda_active"
+    },
+    {
+      "available": false,
+      "check": "python -m ensurepip --user",
+      "error": "externally-managed-environment (PEP 668)",
+      "resource": "python_ensurepip_user"
+    },
+    {
+      "available": true,
+      "check": "sudo -n pacman -S --needed --noconfirm python-scikit-learn",
+      "resource": "python-scikit-learn",
+      "version": "1.8.0"
+    },
+    {
+      "available": true,
+      "check": "python -c \"import sklearn; from sklearn.linear_model import LogisticRegression; print(sklearn.__version__)\"",
+      "error": null,
+      "resource": "sklearn.linear_model.LogisticRegression",
+      "version": "1.8.0"
+    },
+    {
+      "available": true,
+      "check": "python -c \"import sys; sys.path.insert(0, '/home/ianblenke/github.com/ianblenke/carnot/python'); import carnot; print('carnot OK')\"",
+      "error": null,
+      "resource": "carnot"
+    },
+    {
+      "available": false,
+      "check": "wc -l python/carnot/verify/foVer_corpus.jsonl 2>/dev/null",
+      "error": "missing",
+      "n_lines": 0,
+      "resource": "python/carnot/verify/foVer_corpus.jsonl"
+    },
+    {
+      "available": false,
+      "check": "wc -l data/foVer_corpus.jsonl 2>/dev/null",
+      "error": "missing",
+      "n_lines": 0,
+      "resource": "data/foVer_corpus.jsonl"
+    },
+    {
+      "available": true,
+      "check": "wc -l data/fover_corpus.jsonl 2>/dev/null",
+      "n_lines": 8829,
+      "resource": "data/fover_corpus.jsonl"
+    }
+  ],
+  "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+  "python_executable": "/usr/bin/python",
+  "python_version": "3.14.4",
+  "schema": "carnot.sklearn_prereq_fix.v1",
+  "sklearn_already_installed": false,
+  "sklearn_available": true,
+  "sklearn_import_error": null,
+  "sklearn_version": "1.8.0",
+  "status": "complete",
+  "title": "Python Package Prerequisites: Install sklearn + Verify PYTHONPATH"
+}
