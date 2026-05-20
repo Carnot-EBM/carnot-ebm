@@ -5514,3 +5514,4 @@ Ripgrep i |
 | 2026-05-20 16:17 UTC | Multi-Agent Verification Scaling Audit: AUROC vs k | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:19 UTC | Multi-Agent Verification Scaling Audit: AUROC vs k | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:21 UTC | Multi-Agent Verification Scaling Audit: AUROC vs k | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 16:23 UTC | FR-11 Tier 3: ORCA Online Reasoning Calibration +  | SKIP | Pre-tests failing, self-heal failed:  |
