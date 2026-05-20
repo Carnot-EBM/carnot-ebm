@@ -5383,3 +5383,4 @@ Ripgrep i |
 | 2026-05-20 10:56 UTC | Tier 0w: AvgWD/EigenWD Embedding-Geometry Hallucin | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 10:58 UTC | Tier 0w: AvgWD/EigenWD Embedding-Geometry Hallucin | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:00 UTC | Verifier Behavioral Entanglement Audit + De-Entang | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 11:02 UTC | Verifier Behavioral Entanglement Audit + De-Entang | SKIP | Pre-tests failing, self-heal failed:  |
