@@ -5453,3 +5453,5 @@ Ripgrep i |
 | 2026-05-20 13:23 UTC | Milestone .253 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 13:25 UTC | Milestone .253 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 13:27 UTC | Milestone .253 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 13:53 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-05-20 13:55 UTC | Milestone 2026.05.254 activated | OK | 13 tasks queued |

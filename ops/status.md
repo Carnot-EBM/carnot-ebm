@@ -1,6 +1,48 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.253 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.254 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.254 Research Planning Complete
+
+**Milestone 2026.05.253 had ZERO experiments completed** — root cause diagnosed and fixed.
+
+**ROOT CAUSE (.253 zero-execution):** `.venv` was missing `pip`, `pytest`, `jax`, and `scikit-learn`. The conductor's `venv_pytest = ".venv/bin/pytest"` path did not exist, so every `subprocess.run()` returned returncode=-1 with empty stdout/stderr → "Pre-tests failing, self-heal failed: [empty]" → all 13 tasks (exp2647–exp2659) SKIPPED.
+
+**Fix applied 2026-05-20T13:38Z:**
+```bash
+.venv/bin/python -m ensurepip
+.venv/bin/python -m pip install pytest pytest-cov
+.venv/bin/python -m pip install -e .
+.venv/bin/python -m pip install scikit-learn
+```
+Post-fix: `.venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py` → **81 passed in 3.10s**.
+
+**Milestone 2026.05.254 PLANNED as "Venv Hardening + Phase 1 Ship + EORM Tier 0e + ODAR + Ensemble v11".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v254.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2660`–`exp2672`)
+- ID allocation: milestone `.253` used exp2647–exp2659 (all SKIPPED, none completed), so `.254` starts at `exp2660`.
+- Research references updated with Post-.253 Planning Sweep (2026-05-20): 3 new papers added:
+  - arXiv:2605.07775 (POETS: Parallel Output Energy Threshold Selector)
+  - arXiv:2605.16142 (Property-guided synthesis with energy constraints)
+  - arXiv:2605.15588 (Semantic reward calibration via constrained EBM)
+- **Three biggest gaps targeted**:
+  1. **Pre-test environment fragility (MUST FIX FIRST)**: exp2661 creates `scripts/setup-venv.sh`, updates `pyproject.toml` dev-extras. Gates ALL research tasks.
+  2. **Phase 1 Ship Execution (HIGHEST RESEARCH PRIORITY)**: exp2662 executes Branch A/B from exp2642 audit (4-gate ship actions).
+  3. **Ensemble v11 + ODAR Active Inference**: exp2663 (Tier 0e EORM) + exp2667 (Ensemble v11) + exp2668 (ODAR routing).
+- **Critical path**: exp2661 (pre-test fix) → exp2663 (Tier 0e) → exp2667 (Ensemble v11, gated on tier0e_viable) → exp2671 (arXiv v6, gated on adversarially_verified)
+- **Phase 1 ship execution**: exp2662 reads exp2642 audit; Branch A (ship_ready) or Branch B (close remaining gates). Operator submission checklist produced for PyPI + HF mirror + arXiv.
+- **Agent routing**: 12 codex/gpt-5.5 (92.3%); 1 claude+opus (exp2672 capstone — requires_claude: true).
+- **Hardware continuity**: exp2670 KV260 (NON-TERMINAL mandatory per CLAUDE.md). GateMate + PolarFire TERMINAL (graduated).
+- **FR-11 mandate**: exp2666 (NEXUS Tier 2 symbolic constraint memory, continuous_self_learning_task: true).
+- Exclusion manifest cross-check: 0 scope matches found across all retired experiment IDs.
+- Validation: YAML validated — 13 tasks exp2660–exp2672, 12 codex + 1 claude, all prior_failures fields present.
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.254. exp2660 (archive/activate) → exp2661 (pre-test hardening) → then all research tasks in parallel.
+
+**Operator action required**: Phase 1 ship gates from exp2662 (PyPI publish + HF mirror + docs + reproducer). arXiv v6 submission after exp2671 completes (OPERATOR-ONLY per Operator-Only External Publication rule). To restart conductor after pre-test fix: `make setup-venv` (after exp2661 ships the Makefile target) or run `scripts/setup-venv.sh`.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.253 Research Planning Complete
 

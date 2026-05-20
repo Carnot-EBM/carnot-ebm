@@ -1,3 +1,32 @@
+## 2026-05-20 Post-.253 Planning Sweep (Milestone 2026.05.254)
+
+This sweep was run after milestone `.253` completed with zero experiments (pre-test infrastructure
+failure — `.venv` missing pip/pytest/JAX). Root cause fixed in planning session. Three new papers
+identified from the literature sweep that are relevant to .254 tasks.
+
+### POETS: Uncertainty-Aware Policy Ensembles via LoRA Branches
+
+- **Paper:** "POETS: Uncertainty-Aware LLM Optimization via Compute-Efficient Policy Ensembles" (arXiv:2605.07775, May 2026).
+- **What:** Uses lightweight LoRA branches on a frozen shared backbone to capture policy uncertainty for ensemble decision-making. Achieves O(√T) regret bounds with shared frozen backbone + multiple LoRA adapters as ensemble members. Each branch is trained with a diversity loss to prevent behavioral entanglement.
+- **Relevance to Carnot:** Complements arXiv:2604.07650 (behavioral entanglement audit, exp2637). The POETS LoRA-branch pattern is an implementation path for Carnot's ensemble diversity guarantee: each Tier 0-class verifier can be seen as a LoRA branch of a frozen semantic encoder, trained with a diversity loss to minimize pairwise correlation. Paper-v6 §3 can cite POETS as the nearest published instantiation of Carnot's ensemble architecture.
+- **Sources:** https://arxiv.org/abs/2605.07775
+
+### Property-Guided Synthesis with Counterexample-Guided Repair Loop
+
+- **Paper:** "Property-Guided LLM Program Synthesis for Planning" (arXiv:2605.16142, May 2026).
+- **What:** Counterexample-guided feedback loop where a verifier provides structured counterexamples to the LLM generator. The LLM iteratively refines its output until no counterexample is found. 7x reduction in candidate programs generated per domain vs. sampling-only approaches. Key insight: verifier-guided candidate generation (not just scoring) reduces the search space.
+- **Relevance to Carnot:** Directly validates and extends Carnot's VegAS K=3 candidate selection (exp2665). Where VegAS generates K candidates and scores them, property-guided synthesis generates candidates sequentially, using verifier failure as a signal to guide the next generation. This could evolve VegAS from "generate K then pick best" to "generate until verifier accepts" — a continuum repair loop. Also relevant to FR-11 Tier 3 TTT (exp2666 NEXUS) where the symbolic constraint memory accumulates counterexample patterns.
+- **Sources:** https://arxiv.org/abs/2605.16142
+
+### Semantic-Level Reward Calibration for LLM Verifiers
+
+- **Paper:** "Calibrating LLMs with Semantic-level Reward" (arXiv:2605.15588, May 2026).
+- **What:** Addresses calibration mismatch in LLM reward models trained on token-level objectives. Introduces a semantic-level reward that operates on meaning equivalence classes rather than token sequences. 40% reduction in calibration error (ECE) vs. token-level reward models. The semantic reward is computed via a clustering-based approach: reward = 1 if model output is in the same meaning-cluster as the reference, 0 otherwise.
+- **Relevance to Carnot:** Directly relevant to Tier 0e EORM (exp2663) calibration. Carnot's EORM proxy uses TF-IDF logistic regression trained on (correct, incorrect) pairs — but the reward signal itself may be miscalibrated if the pair labeling treats surface-form variation as errors. Semantic-level reward calibration would reduce the false-positive rate of Tier 0e on paraphrase pairs. Candidate future enhancement for ensemble v11 calibration auditing.
+- **Sources:** https://arxiv.org/abs/2605.15588
+
+---
+
 ## 2026-05-20 Post-.252 Planning Sweep (Milestone 2026.05.253)
 
 This sweep was run after milestone `.252` completed (GGUF full-scale 100-example benchmark; Tier 0w

@@ -1,5 +1,13 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.254 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-20T13:37:10Z | 2026-05-20T13:52:45Z | Plan milestone 2026.05.254: diagnosed .253 zero-execution root cause (.venv missing pip/pytest/JAX — conductor's venv_pytest path didn't exist → returncode=-1 → empty SKIP cascade), fixed interactively (ensurepip + pytest + pip install -e . + scikit-learn, 81 tests now passing), arxiv sweep (3 new papers: POETS arXiv:2605.07775, Property-guided synthesis arXiv:2605.16142, Semantic reward calibration arXiv:2605.15588), updated research-references.md, created openspec/change-proposals/research-roadmap-v254.md and research-roadmap-next.yaml (13 tasks exp2660-exp2672, 12 codex + 1 claude+opus capstone, all prior_failures present, all CLAUDE.md mandatory disciplines applied, YAML validated). | ~180k |
+
 ## Session: 2026-05-20 Milestone 2026.05.253 Research Planning
 
 ### Turn Log
