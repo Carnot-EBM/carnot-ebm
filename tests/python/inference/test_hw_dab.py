@@ -1,5 +1,5 @@
 import pytest
-import torch
+torch = pytest.importorskip("torch")
 import json
 import os
 from carnot.inference.hw_dab import HWDABLogitsProcessor, run_hw_dab_experiment

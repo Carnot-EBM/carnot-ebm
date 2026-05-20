@@ -1,0 +1,28 @@
+{
+  "honest_verdict": "complete: pre-test cascade root cause fixed via torch install and graceful import patch",
+  "pretest_cascade_fixed": true,
+  "torch_install_success": true,
+  "test_patched": true,
+  "smart_subset_passes": true,
+  "full_collection_clean": false,
+  "cache_cleared": true,
+  "preconditions_checked": [
+    {
+      "resource": "test_hw_dab.py",
+      "available": true,
+      "check": "ls tests/python/inference/test_hw_dab.py 2>/dev/null && echo exists || echo missing"
+    },
+    {
+      "resource": "pip",
+      "available": true,
+      "check": "ls .venv/bin/pip 2>/dev/null && echo exists || echo missing"
+    },
+    {
+      "resource": "pytest",
+      "available": true,
+      "check": "ls .venv/bin/pytest 2>/dev/null && echo exists || echo missing"
+    }
+  ],
+  "duration_s": 42.5,
+  "max_heal_attempts_note": "MAX_HEAL_ATTEMPTS=0 remains at 0 per 2026-05-03 operator emergency. Operator should review whether to set MAX_HEAL_ATTEMPTS=1 in scripts/research_conductor.py now that the cascade root cause is fixed. See results/experiment_2700_conductor_postmortem_v2.json recovery_commands Step 9 for rationale."
+}
