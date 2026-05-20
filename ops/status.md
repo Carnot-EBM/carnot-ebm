@@ -1,6 +1,53 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.256 research planning complete)
+**Last Updated:** 2026-05-20 (milestone 2026.05.257 research planning complete)
+
+## Session 2026-05-20 - Milestone 2026.05.257 Research Planning Complete
+
+**Milestone 2026.05.256 COMPLETED (partial): 3 of 13 tasks produced artifacts (exp2695 NEXUS v2 real violations, exp2696 paper v6 fallback markdown, exp2697 KV260 Branch B). 9 tasks produced no artifacts. 51st consecutive zero-execution milestone per retro timing window.**
+
+**CONDUCTOR STALL RECURSIVE FAILURE: exp2687 (conductor diagnosis) itself did not execute — the task designed to diagnose the stall was stalled.**
+
+**Milestone 2026.05.257 PLANNED as "Conductor Postmortem v2 + Phase 1 Ship v4 + GGUF Live Eval v2 + Linear Probe Calibration + FR-11 ORCA TTT v2".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v257.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2699`–`exp2711`)
+- ID allocation: milestone `.256` used through `exp2698`, so `.257` starts at `exp2699`.
+- Research references updated with Post-.256 Planning Sweep (2026-05-20): 5 new papers added:
+  - arXiv:2605.00419 (Mixture-model Ensemble routing — O(1) stochastic vs O(k) full ensemble; exp2704 comparison)
+  - arXiv:2605.14175 (Grounded Continuation — linear-time dependency-graph stopping for ORCA TTT; exp2706 dual criterion)
+  - arXiv:2512.22245 (Linear Probe Calibration — 10x faster uncertainty estimation vs multi-generation; NEW exp2709)
+  - arXiv:2603.25810 (ExVerus — structured counterexample-guided repair 7x efficiency; exp2705 failure messages)
+  - arXiv:2509.22819 (Hilbert — recursive subgoal decomposition ICLR 2026 oral, 422% improvement; exp2706+)
+- **Three biggest gaps targeted**:
+  1. **Conductor zero-execution stall (51 consecutive milestones — RECURSIVE FAILURE)**: exp2700 (claude/opus, requires_claude: true) — READ-ONLY postmortem v2 producing copy-pasteable operator recovery_commands.
+  2. **Phase 1 ship still HOLD**: exp2701 executes autonomous prep (README.md Phase 1 section + RELEASES.md + operator_ship_checklist_v4 with copy-pasteable git tag command).
+  3. **Live GGUF eval never validated**: exp2702 GGUF live eval v2 on N=50 with RTX 3090 PRECONDITIONS (CUDA check + model cache check before any inference).
+- **Phase structure**:
+  - Phase A (exp2699–exp2701): Archive .256, Phase 1 ship v4, Conductor Postmortem v2
+  - Phase B (exp2702–exp2705): GGUF live eval v2, Tier 0e+0f bootstrap, ExVerus repair, ensemble K-sweep
+  - Phase C (exp2706–exp2709): ORCA TTT v2 (FR-11), Grounded Continuation + Hilbert, NEXUS scaling, Linear Probe Calibration (NEW)
+  - Phase D (exp2710–exp2711): KV260 continuity, Capstone v257
+- **Agent routing**: 11 codex/gpt-5.5 (84.6%); 2 claude/opus (exp2700 postmortem + exp2711 capstone — requires_claude: true, within 2/13 ceiling).
+- **Hardware continuity**: exp2710 KV260 (NON-TERMINAL mandatory per CLAUDE.md — SD card absent, Branch B continues).
+- **FR-11 mandate**: exp2706 (ORCA TTT v2, continuous_self_learning_task: true). FR-11 Tier 2 COMPLETED in .256 (exp2695 fr11_tier2_real_violations: true).
+- **New research contributions**:
+  - Linear Probe Calibration (arXiv:2512.22245) — 10x faster uncertainty than multi-generation; NEW exp2709 empirical validation on FoVer corpus
+  - ExVerus structured repair (arXiv:2603.25810) — 7x efficiency gain via counterexample failure messages; exp2705
+  - ME routing (arXiv:2605.00419) — O(1) stochastic ensemble routing comparison in exp2704
+  - Grounded Continuation (arXiv:2605.14175) + Hilbert (arXiv:2509.22819) — dual stopping criterion for ORCA TTT v2 in exp2706
+- Exclusion manifest cross-check: 0 scope matches found across all retired experiment IDs.
+- **All CLAUDE.md mandatory disciplines applied**: Codex-Default (11/13 codex), prior_failures (13/13 with mandatory 4-field structure), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2706), Hardware-Task Continuity (exp2710 KV260), Exclusion Manifest 0 matches, Operator-Only publication discipline (no submission steps in any task prompt).
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.257. exp2699 (archive/activate) → exp2700 (conductor postmortem v2 — copy-pasteable recovery commands for operator) → exp2702 (GGUF live eval v2, puts GPUs to work) → research tasks in dependency order.
+
+**Operator action required**:
+- Execute recovery commands from exp2700 artifact to unblock conductor dispatch pipeline.
+- Phase 1 ship: after exp2701 produces checklist, `git tag v<version> && git push origin v<version>` (CI publishes to PyPI automatically via OIDC trusted publishing per `.github/workflows/publish-pypi.yml`).
+- arXiv v6 submission: HOLDS until Phase 4 validates (OPERATOR-ONLY per Operator-Only External Publication rule).
+- KV260: insert SD card with PYNQ image to enable Branch A (bitstream flash + board execution).
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.256 Research Planning Complete
 

@@ -1,5 +1,30 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.257 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.257. Milestone .256 (exp2686–exp2698) partially executed — 3 of 13 artifacts landed (exp2695 NEXUS v2 real violations, exp2696 paper v6 fallback, exp2697 KV260 Branch B). 51st consecutive zero-execution milestone per retro timing window. Conductor diagnosis task exp2687 itself did not execute.
+  - **Milestone title**: "Conductor Postmortem v2 + Phase 1 Ship v4 + GGUF Live Eval v2 + Linear Probe Calibration + FR-11 ORCA TTT v2"
+  - **Key .256 findings from capstone (exp2698)**:
+    - `n_artifacts_read: 3`, `n_artifacts_absent: 9`
+    - `fr11_tier2_real_violations: true` (NEXUS v2 done — 100 FoVer violations, 5 rules, persistence verified)
+    - `fr11_tier3_conformal_stopping: false` (ORCA TTT absent)
+    - `phase1_ship_recommendation: HOLD`, `live_eval_successful: false`
+    - `theory_citations_added: 0` (pdflatex unavailable; fallback markdown created)
+  - **arxiv sweep** (5 new papers added to `research-references.md`):
+    - arXiv:2605.00419 (Mixture-model Ensemble routing — O(1) stochastic vs O(k) full; exp2704 comparison)
+    - arXiv:2605.14175 (Grounded Continuation — linear-time dependency-graph stopping for ORCA TTT; exp2706 dual criterion)
+    - arXiv:2512.22245 (Linear Probe Calibration — 10x faster uncertainty than multi-generation; NEW exp2709 validation on FoVer corpus)
+    - arXiv:2603.25810 (ExVerus — structured counterexample-guided repair 7x efficiency; exp2705 failure message format)
+    - arXiv:2509.22819 (Hilbert — recursive subgoal decomposition ICLR 2026 oral, 422%; exp2706+ stopping criterion)
+  - **Three biggest gaps**:
+    1. Conductor zero-execution stall (51 milestones, recursive: exp2687 diagnosis didn't run) — exp2700 postmortem v2 (claude/opus READ-ONLY analysis + copy-pasteable recovery_commands)
+    2. Phase 1 ship still HOLD — exp2701 autonomous prep (README.md + RELEASES.md + operator_ship_checklist_v4)
+    3. Live GGUF pipeline validation never materialized — exp2702 GGUF live eval v2 N=50 with RTX 3090 PRECONDITIONS
+  - **Roadmap doc created**: `openspec/change-proposals/research-roadmap-v257.md`
+  - **Execution queue created**: `research-roadmap-next.yaml` (13 tasks: exp2699–exp2711)
+  - **Agent routing**: 11 codex/gpt-5.5 (exp2699, exp2701–exp2710) + 2 claude/opus (exp2700 postmortem + exp2711 capstone, requires_claude: true) — within 2/13 ceiling
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (11/13), prior_failures (13/13 — all with 4 mandatory sub-fields), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2706 ORCA TTT v2 continuous_self_learning_task: true), Hardware-Task Continuity (exp2710 KV260 NON-TERMINAL), Exclusion Manifest cross-check (0 scope matches), Operator-Only publication discipline
+
 ## 2026-05-20 (Milestone 2026.05.256 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.256. Milestone .255 (exp2673–exp2685) confirmed as 50th consecutive zero-execution milestone — no artifacts produced.

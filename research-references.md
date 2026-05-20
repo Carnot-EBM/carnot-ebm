@@ -1,3 +1,45 @@
+## 2026-05-20 Post-.256 Planning Sweep (Milestone 2026.05.257)
+
+This sweep was run after milestone `.256` completed with only 3 of 13 experiments executed
+(conductor zero-execution stall now at 51 consecutive milestones). Five new papers identified:
+
+### Rethinking LLM Ensembling from the Perspective of Mixture Models
+
+- **Paper:** "Rethinking LLM Ensembling from the Perspective of Mixture Models" (arXiv:2605.00419, May 2026).
+- **What:** Proposes Mixture-model-like Ensemble (ME) that stochastically selects a single verifier per inference step instead of computing the full ensemble distribution. Avoids expensive full-ensemble forward passes while retaining diversity benefits. Shows O(1) routing cost vs O(k) for standard ensemble.
+- **Relevance to Carnot:** Directly applicable to the k=16 verifier ensemble (Tier 0a-0z). The ME routing strategy complements VegAS K=3 candidate selection and the multi-agent scaling audit (exp2704). Could reduce ensemble inference overhead significantly while maintaining saturation_auroc — worth measuring in exp2704's k-sweep.
+- **Sources:** https://arxiv.org/abs/2605.00419
+
+### Grounded Continuation: A Linear-Time Runtime Verifier for LLM Conversations
+
+- **Paper:** "Grounded Continuation: A Linear-Time Runtime Verifier for LLM Conversations" (arXiv:2605.14175, May 2026).
+- **What:** Maintains an explicit evidence-claim dependency graph during LLM generation. Verification proceeds via graph traversal (linear time in response length) rather than full-response checking. Defines principled stopping criteria: stop when the dependency graph has no unverified leaves.
+- **Relevance to Carnot:** Directly applicable to ORCA TTT stopping criteria (exp2706). The dependency-graph stopping criterion provides a structural complement to Carnot's energy-threshold conformal stopping. Could replace or augment the interval-width heuristic in VerifierDrivenTTT.conformal_stopping_criterion(). Paper-v6 §5 peer-methodology cite.
+- **Sources:** https://arxiv.org/abs/2605.14175
+
+### Calibrating LLM Judges: Linear Probes for Fast and Reliable Uncertainty Estimation
+
+- **Paper:** "Calibrating LLM Judges: Linear Probes for Fast and Reliable Uncertainty Estimation" (arXiv:2512.22245, December 2025).
+- **What:** Uses interpretability-based linear probes on frozen LLM hidden states to calibrate uncertainty without additional generation. 10x faster than multi-generation sampling methods. Achieves better ECE than ensemble temperature scaling. Directly applied to LLM-as-judge settings.
+- **Relevance to Carnot:** Bridges ensemble calibration and computational efficiency for Tier 0e EORM. Carnot's existing TF-IDF Tier 0e is expensive; a linear probe on FoVer corpus embedding vectors could replicate calibrated uncertainty at 10x lower cost. Candidate new experiment in .257 (exp2709): implement linear probe calibration layer on top of Tier 0e. Paper-v6 §4 cite for Tier 0 calibration methodology.
+- **Sources:** https://arxiv.org/abs/2512.22245
+
+### ExVerus: Verus Proof Repair via Counterexample Reasoning
+
+- **Paper:** "ExVerus: Verus Proof Repair via Counterexample Reasoning" (arXiv:2603.25810, March 2026).
+- **What:** Structured counterexample-guided repair loop for formal verification: verifier returns counterexample → LLM receives structured failure message → LLM refines until verification passes. Reports 7x efficiency improvement in candidate generation vs sampling-only. Direct predecessor of the property-guided synthesis literature.
+- **Relevance to Carnot:** Validates and extends the property-guided counterexample repair approach in exp2705. ExVerus's structured failure message format (not just "failed" but "failed because counterexample: X") is the concrete implementation missing from Carnot's iterative_repair_with_counterexample(). The 7x efficiency claim aligns with arXiv:2605.16142's 7x candidate reduction. Paper-v6 §5 cite alongside arXiv:2605.16142.
+- **Sources:** https://arxiv.org/abs/2603.25810
+
+### Hilbert: Recursively Building Formal Proofs with Informal Reasoning
+
+- **Paper:** "Hilbert: Recursively Building Formal Proofs with Informal Reasoning" (arXiv:2509.22819, September 2025; ICLR 2026 oral).
+- **What:** Recursive subgoal decomposition: informal reasoning identifies subgoals, formal verifier checks each subgoal, failures recursively trigger sub-decomposition. 422% improvement over baselines. The recursive structure means complex proofs that fail monolithically can be verified component-by-component.
+- **Relevance to Carnot:** Directly relevant to NEXUS FR-11 Tier 2 symbolic constraint learning (exp2695 completed in .256). Hilbert's recursive decomposition mirrors Carnot's verify-repair loop structure — NexusConstraintMemory.synthesize_rules() could use hierarchical subgoal patterns rather than flat first-5-words patterns. Paper-v6 §5 peer-methodology cite alongside arXiv:2605.09387 (NEXUS).
+- **Sources:** https://arxiv.org/abs/2509.22819
+
+---
+
 ## 2026-05-20 Post-.255 Planning Sweep (Milestone 2026.05.256)
 
 This sweep was run after milestone `.255` completed with zero experiments executed (recurring

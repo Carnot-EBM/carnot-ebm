@@ -1,5 +1,17 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-20 Milestone 2026.05.257 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (resumed) | 2026-05-20T19:08:37Z | 2026-05-20T19:12:00Z | Resumed from context compaction: confirmed both output files created (openspec/change-proposals/research-roadmap-v257.md + research-roadmap-next.yaml with 13 tasks exp2699-exp2711 for milestone 2026.05.257); updated ops/status.md, ops/changelog.md, ops/metrics.md. Key findings from .256 capstone: 3/13 artifacts landed (exp2695 NEXUS v2 ✓, exp2696 paper fallback, exp2697 KV260 Branch B), fr11_tier2 DONE, conductor stall now 51 milestones (diagnosis task exp2687 itself didn't run). 5 new papers added to research-references.md (arXiv:2605.00419 ME routing, arXiv:2605.14175 Grounded Continuation, arXiv:2512.22245 Linear Probe Calibration, arXiv:2603.25810 ExVerus, arXiv:2509.22819 Hilbert). Agent routing: 11 codex + 2 claude/opus (exp2700 postmortem + exp2711 capstone). All CLAUDE.md mandatory disciplines applied. | ~25k |
+
+Note: Full planning session ran before context compaction: read research-program.md, ops/status.md, research-roadmap.yaml (1256 lines), results/experiment_2698_capstone_v256.json, results/experiment_2695_nexus_v2_real_violations.json, results/experiment_2696_paper_v6_theory_update.json, results/experiment_2697_kv260_continuity_256.json, results/operational_retro_2026_05_256.json, ops/exclusion_manifest.yaml, ops/conductor-log.md, ops/changelog.md, ops/known-issues.md, research-hardware-wishlist.md, research-references.md; ran Explore subagent for arxiv papers (5 new papers discovered); created both output files. Full session token estimate ~250k.
+
+---
+
 ## Session: 2026-05-20 Milestone 2026.05.256 Research Planning
 
 ### Turn Log
