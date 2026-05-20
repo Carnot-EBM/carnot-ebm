@@ -1,0 +1,32 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.252",
+  "generated_at": "2026-05-20T11:57:12Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.252 completed 0 experiments before the retro was written — the twenty-seventh consecutive empty-timing-window retro. Root cause remains unchanged: the timing-script look-back window is not anchored to the conductor-state.json activation timestamp, so experiments committed after activation but before the retro script fires are invisible to the data collection pass. The sklearn-blocked chain (exp2596/2597/2600) and the IPFS mirror path gap from exp2553 are unresolved carryover items from at least three prior milestones.",
+  "bottlenecks_identified": [
+    "Timing-script look-back not anchored to conductor-state.json activation timestamp — root cause of the 27-milestone consecutive empty-window streak; experiments that commit after activation but before the retro fires are never counted.",
+    "scikit-learn absent from the active venv — exp2596 (tier0s retrain), exp2597 (tier0u fix), and exp2600 (safety corpus verifier) have all emitted blocked_sklearn for at least three consecutive milestones (.249, .250, .251, now .252) without resolution.",
+    "IPFS mirror path not propagated from exp2553 — exp2599 blocked_arxiv_package_not_found because the package assembled in exp2553 was not passed forward as a filesystem artifact path; this unblock requires a one-line path constant, not new work.",
+    "Retro fires before any experiment activates same-session — the conductor activates the retro as the first or second task of each milestone, guaranteeing 0-experiment windows when the milestone just activated."
+  ],
+  "improvements_suggested": [
+    "Anchor timing-script look-back to conductor-state.json activation timestamp: replace the fixed-window search in the timing data collector with a query keyed on the activation record in conductor-state.json. This is a one-file change that resolves the 27-milestone root cause.",
+    "Install scikit-learn as a mandatory milestone precondition: add pip install scikit-learn to the conductor's environment-setup step or to the activation manifest so that exp2596/2597/2600 retries can proceed without operator intervention.",
+    "Pass IPFS/arXiv package path as a conductor artifact reference: when exp2553 writes the arXiv package, register the output path in conductor-state.json so downstream tasks (exp2599 and successors) can read it without manual path propagation.",
+    "Gate retro activation on min_experiments_completed >= 1 OR elapsed_since_activation >= N minutes: do not fire the retro as the first task of a milestone; let at least one experiment task run first so the retro has something to measure.",
+    "Both RTX 3090s are idle at 0% utilization and low temperature (39C/41C) — schedule a compute-bound experiment within the same session to break the hardware-idle pattern and validate the GPU readiness pipeline."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to use conductor-state.json activation timestamp — resolves the root cause of the 27-milestone consecutive zero-experiment streak with a single targeted code change in the timing data collector.",
+    "Install scikit-learn as a milestone activation precondition and retry exp2596 (tier0s retrain) in the same session — this unblocks three experiments (exp2596/2597/2600) that have been blocked_sklearn across at least four consecutive milestones.",
+    "Activate at least one non-retro experiment in the same session as milestone activation, before the retro fires — a process-discipline change that immediately breaks the pattern of retros reporting 0 completed experiments."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "For the twenty-seventh consecutive milestone the retro reports zero experiments — a pattern that itself signals a process failure, not a research failure. The root causes are known, documented in four consecutive retro artifacts (.249 through .252), and are all fixable with targeted one-file or one-command changes. Continued documentation of the same bottlenecks without executing the fixes is itself the bottleneck; the next milestone should treat the timing-script anchor and sklearn installation as blocking tasks ranked above all research tasks."
+}
