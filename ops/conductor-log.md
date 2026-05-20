@@ -5441,3 +5441,4 @@ Ripgrep i |
 | 2026-05-20 13:05 UTC | External Benchmark: Carnot Ensemble v11 vs EORM Le | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 13:07 UTC | External Benchmark: Carnot Ensemble v11 vs EORM Le | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 13:09 UTC | External Benchmark: Carnot Ensemble v11 vs EORM Le | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 13:11 UTC | KV260 Hardware Continuity .253 (Branch A: SD Flash | SKIP | Pre-tests failing, self-heal failed:  |
