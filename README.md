@@ -7,6 +7,10 @@ license: apache-2.0
 ## Model Description
 ThinkPRM v3 is a Process Reward Model trained to verify reasoning steps. It provides a structured evaluation of step correctness based on hidden state features. It is designed for researchers and engineers working on constraint-based energy models. This is a Phase 1 research artifact. Trained on simulated data. Do not use in production without independent validation.
 
+## Phase 1 Milestone
+
+Carnot v0.1.0b1 marks Phase 1 completion: the carnot-ebm package on PyPI, HuggingFace mirror (huggingface.co/Carnot-EBM), ensemble verifier validation, MCP server, CLI, and Apache-2.0 license. The verifier pipeline runs on live GGUF outputs from state-of-the-art models (Qwen3.6-35B, Gemma-4-31B). See RELEASES.md for changelog.
+
 ## Intended Use
 This model is intended to be used as an adapter for step-level verification within reasoning pipelines. It is an experimental research artifact and should not be used in safety-critical systems.
 

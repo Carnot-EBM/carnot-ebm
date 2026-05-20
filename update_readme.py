@@ -1,24 +1,16 @@
-import sys
 import re
 
-def update_file(filepath, replacements):
-    with open(filepath, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
-    for old, new in replacements:
-        content = content.replace(old, new)
-        
-    with open(filepath, 'w', encoding='utf-8') as f:
-        f.write(content)
+with open("README.md", "r") as f:
+    content = f.read()
 
-readme_reps = [
-    ('2,443 experiment records tracked through Exp 2109', '2,496 experiment records tracked through Exp 2109'),
-    ('179 artifact-backed completed milestone records through 2026.05.166', '186 artifact-backed completed milestone records through 2026.05.172'),
-    ('extend through milestone 2026.05.166 on 2026-05-13', 'extend through milestone 2026.05.172 on 2026-05-15'),
-    ('2,443 Experiment records tracked through Exp 2109', '2,496 Experiment records tracked through Exp 2109'),
-    ('179 artifact-backed completed milestone records', '186 artifact-backed completed milestone records'),
-    ('milestone 2026.05.166', 'milestone 2026.05.172'),
-]
-
-update_file('README.md', readme_reps)
-print("Updated README.md successfully.")
+if "## Phase 1 Milestone" not in content:
+    match = re.search(r'(## .*?\n)(.*?\n\n)(## )', content, re.DOTALL)
+    if match:
+        new_content = content[:match.start(3)] + "## Phase 1 Milestone\n\nCarnot v0.1.0b1 marks Phase 1 completion: the carnot-ebm package on PyPI, HuggingFace mirror (huggingface.co/Carnot-EBM), ensemble verifier validation, MCP server, CLI, and Apache-2.0 license. The verifier pipeline runs on live GGUF outputs from state-of-the-art models (Qwen3.6-35B, Gemma-4-31B). See RELEASES.md for changelog.\n\n" + "## " + content[match.start(3)+3:]
+        with open("README.md", "w") as f:
+            f.write(new_content)
+        print("added")
+    else:
+        print("no match")
+else:
+    print("already exists")
