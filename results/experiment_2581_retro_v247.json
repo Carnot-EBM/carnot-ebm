@@ -1,0 +1,89 @@
+{
+  "honest_verdict": "complete: n_experiments_completed=0; best_247_auroc=0.9857; safety_classifier_viable=False; tier0s_real_improvement=False; tier0u_real_improvement=False; operator_recommendation=hardware_terminal_pending",
+  "schema": "carnot.operational_retro.v69",
+  "milestone": "2026.05.247",
+  "source_capstone": "results/experiment_2580_capstone_v247.json",
+  "n_experiments_completed": 0,
+  "best_247_auroc": 0.9857142857142858,
+  "safety_classifier_viable": false,
+  "tier0s_real_improvement": false,
+  "tier0u_real_improvement": false,
+  "gatemate_status": {
+    "approach_a_attempted": false,
+    "approach_b_attempted": true,
+    "bitstream_flashed": true,
+    "diagnosis_summary": "Run gmpack INPUT.cfg OUTPUT.bit, then flash OUTPUT.bit via openFPGALoader. Both tools ship in /opt/oss-cad-suite/.",
+    "flash_attempted": true,
+    "jtag_detected": true,
+    "next_blocker": "on_board_ising_sampler_timing_benchmark_pending_capture_harness",
+    "outcome": "carry_forward_from_246",
+    "ran": true,
+    "smoke_test_result": "indirect_pass: post-flash JTAG re-enumeration ('openFPGALoader -c dirtyJtag --detect') returns the GateMate GM1Ax IDCODE 0x20000001 confirming chip is alive, configured, and not bricked by the flash. Direct on-board Ising-sampler output capture (UART/SPI/GPIO timing transcript) requires an instrumented host-side capture harness not present on this bench and is deferred to follow-up. The flash itself reported 'Load SRAM via JTAG: 100.00%  Done' \u2014 the standard openFPGALoader success message for GateMate SRAM configuration.",
+    "terminal": true
+  },
+  "kv260_status": {
+    "flash_attempted": false,
+    "next_blocker": "blocked_no_sd_media_inserted_and_pynq_url_unreachable",
+    "operator_procedure_documented": false,
+    "outcome": "carry_forward_from_246",
+    "progress": "carry_forward_from_exp2551_no_change",
+    "pynq_url_reachable": false,
+    "ran": false,
+    "sd_media_inserted": false,
+    "terminal": false
+  },
+  "operator_recommendation": "hardware_terminal_pending",
+  "top_3_successes": [
+    {
+      "rank": 1,
+      "area": "hardware_continuity",
+      "summary": "GateMate continuity remains in terminal state: JTAG is detected, the bitstream is flashed, and post-flash detection confirms GM1Ax IDCODE 0x20000001; next blocker is on_board_ising_sampler_timing_benchmark_pending_capture_harness."
+    },
+    {
+      "rank": 2,
+      "area": "headline_metric_integrity",
+      "summary": "Headline AUROC is preserved honestly at 0.9857 from the exp2546 ensemble-v7b carry-forward, with no fabricated .247 uplift."
+    },
+    {
+      "rank": 3,
+      "area": "process_honesty",
+      "summary": "The capstone records 0 completed experiments out of 11 planned and surfaces the execution-layer gap explicitly, giving .248 a clear planner input instead of silently treating missing artifacts as progress."
+    }
+  ],
+  "top_3_gaps_for_248": [
+    {
+      "rank": 1,
+      "area": "execution_layer_gap",
+      "summary": ".247 completed 0 of 11 planned experiments. .248 needs a pre-pickup checkpoint and a failure-ledger write path when an agent exits without an artifact."
+    },
+    {
+      "rank": 2,
+      "area": "verifier_and_safety_product_gap",
+      "summary": "tier0s_real_improvement=false, tier0u_real_improvement=false, and safety_classifier_viable=false. Re-queue the real-corpus verifier fixes and safety-corpus/integration tasks with explicit source-artifact assertions."
+    },
+    {
+      "rank": 3,
+      "area": "hardware_terminal_pending",
+      "summary": "GateMate still needs direct on-board Ising sampler timing capture (on_board_ising_sampler_timing_benchmark_pending_capture_harness); KV260 remains non-terminal because blocked_no_sd_media_inserted_and_pynq_url_unreachable."
+    }
+  ],
+  "acceptance_gates": [
+    {
+      "condition": "honest_verdict starts with 'complete:'",
+      "passed": true,
+      "principle": "Retro is always terminal -- reads already-completed artifacts, not compute-bound."
+    }
+  ],
+  "field_principles": {
+    "honest_verdict": "Terminal-prefix required (complete:). Retro is always terminal.",
+    "schema": "carnot.operational_retro.v69.",
+    "n_experiments_completed": "Primary milestone health metric.",
+    "best_247_auroc": "Carry-forward of headline AUROC for trend tracking.",
+    "safety_classifier_viable": "Tier B product status -- the primary new product milestone for .247.",
+    "tier0s_real_improvement": "Documents whether real-corpus verifier gap was narrowed for tier0s.",
+    "tier0u_real_improvement": "Documents whether real-corpus verifier gap was narrowed for tier0u.",
+    "operator_recommendation": "submit_arxiv_now / update_hf_cards_push_ipfs / continue_safety_classifier / hardware_terminal_pending / all_tracks_advancing.",
+    "top_3_successes": "Most impactful wins -- planner carry-forward bias input for .248.",
+    "top_3_gaps_for_248": "Most critical unresolved issues -- primary input to .248 planner."
+  }
+}
