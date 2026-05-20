@@ -5395,3 +5395,4 @@ Ripgrep i |
 | 2026-05-20 11:15 UTC | Symbolic-KAN Energy Tier: Interpretable Activation | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:17 UTC | Symbolic-KAN Energy Tier: Interpretable Activation | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:19 UTC | PASC Pipeline-Aware Conformal Prediction: Joint Co | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 11:21 UTC | PASC Pipeline-Aware Conformal Prediction: Joint Co | SKIP | Pre-tests failing, self-heal failed:  |
