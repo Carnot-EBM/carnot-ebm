@@ -5384,3 +5384,5 @@ Ripgrep i |
 | 2026-05-20 10:58 UTC | Tier 0w: AvgWD/EigenWD Embedding-Geometry Hallucin | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:00 UTC | Verifier Behavioral Entanglement Audit + De-Entang | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:02 UTC | Verifier Behavioral Entanglement Audit + De-Entang | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 11:04 UTC | Verifier Behavioral Entanglement Audit + De-Entang | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 11:06 UTC | Ensemble v10: Tier 0w + De-Entangled Reweighting + | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2636) |
