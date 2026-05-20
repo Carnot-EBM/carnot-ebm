@@ -6636,3 +6636,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-20: Archive .248 + Activate .249 (✅ Complete) — honest_verdict=complete_already_activated: .249 was already active before exp2595; no duplicate archive append performed; results/experiment_2595_archive_v248.json
 - 2026-05-20: tier0s Real-Corpus Retrain: Logistic Regression on FoVer Pairs (⚠️ Blocked) — honest_verdict=blocked_sklearn: required sklearn import precondition failed; no retraining performed; results/experiment_2596_tier0s_real_retrain.json
 - 2026-05-20: tier0s Real-Corpus Retrain: Logistic Regression on FoVer Pairs (⚠️ Blocked) — honest_verdict=blocked_sklearn; results/experiment_2596_tier0s_real_retrain.json
+- 2026-05-20: tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consistency (⚠️ Blocked) — honest_verdict=blocked_sklearn; results/experiment_2597_tier0u_real_fix.json
