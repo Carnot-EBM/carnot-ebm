@@ -5533,3 +5533,4 @@ Ripgrep i |
 | 2026-05-20 16:55 UTC | Adaptive Conformal Factuality Gate: Prompt-Depende | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:57 UTC | Adaptive Conformal Factuality Gate: Prompt-Depende | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 16:59 UTC | Capstone v255: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 17:01 UTC | Capstone v255: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
