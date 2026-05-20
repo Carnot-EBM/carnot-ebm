@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.246",
+  "generated_at": "2026-05-20T02:15:35Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.246 produced zero experiment commits before the retro trigger — a planning-only milestone. Research planning was completed (13 tasks exp2556–exp2568, roadmap gate audit passed, 0 failures), but no experiments reached execution within the timing window. Both RTX 3090 GPUs remained idle at 0% utilization, consistent with no active compute workloads.",
+  "bottlenecks_identified": [
+    "Planning-execution gap: roadmap was pre-staged and validated but conductor did not activate any experiment in the same session, producing a zero-commit milestone.",
+    "Persistent-conductor gap: without a long-running conductor daemon, experiment activation only occurs when the outer loop is explicitly invoked, creating a structural delay between planning and execution.",
+    "Retro-triggers-too-early: the retro is fired before experiments complete, creating repeated empty-timing-window artifacts that consume turn budget without operational signal."
+  ],
+  "improvements_suggested": [
+    "Activate exp2556 (or the first non-blocked task in the .246 roadmap) in the same conductor session as planning to break the planning-execution gap.",
+    "Deploy a persistent conductor daemon (background process) that continuously polls research-roadmap-next.yaml and activates queued tasks without requiring an explicit outer-loop invocation.",
+    "Gate the retro task on a minimum experiment count (>= 1 completed artifact in results/) to avoid scheduling retros against empty timing windows.",
+    "Wire the exclusion_manifest_lint.py check as a pre-activation guard so scope-matched retired experiments are blocked before they consume roadmap slots."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Activate exp2556 (paper errata / real-corpus AUROC correction task) immediately after this retro is written — it is the highest-priority pre-submission task per the .246 roadmap critical path.",
+    "Deploy the persistent conductor daemon so experiments activate without an explicit outer-loop invocation; this is the root-cause fix for the recurring planning-execution gap across 20+ consecutive empty milestones.",
+    "Gate the retro trigger on minimum_experiments_completed >= 1 in the conductor's scheduling logic to prevent empty-timing-window retros from consuming turn budget that could be spent on analysis."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This is the twenty-first consecutive empty-timing-window milestone retro. The pattern is now unambiguous: the planning layer is functioning (roadmaps are valid, gate audits pass, exclusion manifest checks clear), but the execution layer never activates within the retro window. Fixing the planning-execution gap is now the single highest-leverage process action — it would transform every future milestone from zero-data to actionable."
+}

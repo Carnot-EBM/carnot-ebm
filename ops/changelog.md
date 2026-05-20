@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.246 Operational Retrospective)
+
+- Operational retrospective for milestone 2026.05.246 written to `results/operational_retro_2026_05_246.json`. Zero experiment commits found — milestone is planning-only (twenty-first consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated each), consistent with no active compute workloads. Roadmap was validated (13 tasks exp2556–exp2568, gate audit passed 0 failures) but no experiments activated before the retro trigger. Top-3 leverage actions: (1) activate exp2556 (paper errata / real-corpus AUROC correction) immediately after this retro; (2) deploy persistent conductor daemon to eliminate the structural planning-execution gap; (3) gate the retro trigger on minimum_experiments_completed >= 1 to prevent empty-window retros consuming turn budget. Estimated time savings: 0% (no execution data).
+
 ## 2026-05-20 (Milestone 2026.05.246 Research Planning Complete)
 
 - Milestone 2026.05.246 planned: "Post-arXiv Paper Integrity + Hardware Terminal + Ensemble Expansion v8"
