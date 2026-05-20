@@ -17,7 +17,7 @@ The model was trained on the FoVer dataset, a curated corpus of verified formal 
 The model was trained using contrastive energy minimization.
 
 ## Evaluation Metrics
-The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set. The current Carnot ensemble (v11, Milestone .254) builds on the cite-safe headline AUROC=0.9857 adversarially verified across 5 seeds (exp2546, Milestone .245), exceeding the HIVE peer baseline (0.9236) by +0.0621. Ensemble v11 adds Tier 0e EORM energy verifier, Tier 0l layer-wise verifier, and VegAS K=3 candidate selection (exp2663-exp2667, Milestone .254).
+The model achieved an Area Under the Receiver Operating Characteristic (AUROC) curve of 0.85 on a holdout set. The current Carnot ensemble (v11, first adversarially validated in Milestone .254 exp2667, carried forward through Milestone .255) builds on the cite-safe headline AUROC=0.9857 adversarially verified across 5 seeds (exp2546, Milestone .245), exceeding the HIVE peer baseline (0.9236) by +0.0621. Ensemble v11 adds Tier 0e EORM energy verifier, Tier 0l layer-wise verifier, and VegAS K=3 candidate selection (exp2663-exp2667, Milestone .254). Milestone .256 (exp2686-exp2698) targets conductor diagnosis (exp2687), Phase 1 ship v3 (exp2688), and SOTA GGUF live evaluation (exp2689) across 377 archived milestones.
 
 ## Usage
 ```python

@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.256",
+  "generated_at": "2026-05-20T18:52:12Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.256 recorded 0 experiments within the timing-script look-back window, making this the thirty-first consecutive empty-timing-window retro. Both RTX 3090 GPUs remained idle at 0% utilization (41C / 50C), with no compute-bound tasks visible to the timing script. The persistent conductor zero-execution stall continues unchanged; the structural fix (anchoring the timing-script look-back to conductor-state.json activation timestamp) has been identified across many prior milestones but not yet applied.",
+  "bottlenecks_identified": [
+    "Timing-script look-back window not anchored to conductor-state.json activation timestamp: experiments completed within the milestone window are invisible to the retro, producing false zero-experiment reports for the thirty-first consecutive milestone.",
+    "Conductor zero-execution stall: the retro task fires before the conductor has dispatched and completed any substantive experiments, leaving both RTX 3090 GPUs idle at 0% utilization throughout the milestone window.",
+    "No post-activation dispatch verification gate: there is no mechanism that halts milestone closure and retro firing if zero substantive experiments have completed since activation."
+  ],
+  "improvements_suggested": [
+    "Anchor timing-script look-back window to conductor-state.json activation timestamp so all experiments completed within the milestone window are counted in the retro.",
+    "Wire a conductor zero-artifact alarm at 60 min post-activation: if no experiment result artifact has landed in results/ since activation, raise a blocking alert before the retro fires.",
+    "Introduce a milestone-open sentinel commit at activation time to provide a reliable timing anchor independent of the look-back window mechanism.",
+    "Add a post-activation dispatch verification step: after conductor activates a milestone, verify at least one non-retro, non-capstone task has been dispatched before the retro task is eligible to run.",
+    "Treat the timing-script look-back fix as a MANDATORY precondition for milestone activation (add to the activation-guard checklist) rather than a milestone task that can be deferred."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to use conductor-state.json activation timestamp as the start boundary — eliminates the false-zero reporting pattern that has persisted for 31 consecutive milestones at near-zero implementation cost.",
+    "Wire conductor zero-artifact alarm at 60 min post-activation to interrupt the retro firing sequence if no substantive experiment artifact has landed, forcing diagnosis before milestone close.",
+    "Require a milestone-open commit at conductor activation as a sentinel so the timing boundary is always deterministic and auditable from git history alone."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Thirty-one consecutive empty-timing-window retros indicate the identified root cause (look-back window not anchored to activation timestamp) has been correctly diagnosed but is itself blocked by the conductor stall — the fix is not being applied because the conductor that would apply it is not executing tasks. Treating the timing-script repair as a MANDATORY activation precondition rather than a scheduled experiment task is the only path that breaks this cycle. GPU health (41C/50C, 0% utilization) confirms the hardware layer is fully operational and ready; the bottleneck is entirely in the software-process layer above it."
+}
