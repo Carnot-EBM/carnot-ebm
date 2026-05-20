@@ -5393,3 +5393,4 @@ Ripgrep i |
 | 2026-05-20 11:11 UTC | VerifierDrivenTTT Scale-Up: 100-Example FR-11 Tier | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:13 UTC | Symbolic-KAN Energy Tier: Interpretable Activation | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 11:15 UTC | Symbolic-KAN Energy Tier: Interpretable Activation | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 11:17 UTC | Symbolic-KAN Energy Tier: Interpretable Activation | SKIP | Pre-tests failing, self-heal failed:  |
