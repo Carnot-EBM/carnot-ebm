@@ -1,29 +1,29 @@
 {
-  "duration_s": 0.28306913701817393,
-  "feature_description": "blocked before training; intended features were claim TF-IDF unigrams+bigrams, context-claim cosine similarity, claim length, overlap coefficient, and Jaccard similarity",
-  "honest_verdict": "blocked_sklearn: required sklearn import precondition failed; no retraining performed",
-  "model_path": "not_saved_precondition_failed_sklearn",
-  "n_test": 0,
+  "honest_verdict": "blocked_sklearn",
+  "tier0s_real_auroc": 0.0,
+  "tier0s_real_auprc": 0.0,
+  "tier0s_improved": false,
   "n_train": 0,
+  "n_test": 0,
+  "random_seed": 42,
+  "feature_description": "Blocked before training: sklearn is unavailable, so the requested TF-IDF unigram/bigram claim model with context-claim cosine similarity, claim length, overlap coefficient, and Jaccard features was not fitted.",
+  "model_path": "not_saved_precondition_failed_sklearn",
+  "duration_s": 0.0,
   "preconditions_checked": [
     {
+      "resource": "sklearn",
       "available": false,
-      "check": "python -c \"import sklearn; print(sklearn.__version__)\" failed: ModuleNotFoundError: No module named 'sklearn'",
-      "resource": "sklearn"
+      "check": "python -c \"import sklearn; print(sklearn.__version__)\" failed with ModuleNotFoundError: No module named 'sklearn'"
     },
     {
+      "resource": "fover_corpus",
       "available": true,
-      "check": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
-      "resource": "fover_corpus"
+      "check": "data/fover_corpus.jsonl exists and is non-empty with 8829 lines"
     },
     {
+      "resource": "carnot_import",
       "available": true,
-      "check": "import carnot succeeded",
-      "resource": "carnot_import"
+      "check": "python -c \"import sys; sys.path.insert(0, '/home/ianblenke/github.com/ianblenke/carnot/python'); import carnot\" succeeded"
     }
-  ],
-  "random_seed": 42,
-  "tier0s_improved": false,
-  "tier0s_real_auprc": 0.0,
-  "tier0s_real_auroc": 0.0
+  ]
 }
