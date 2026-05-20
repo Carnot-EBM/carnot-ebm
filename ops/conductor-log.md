@@ -5262,3 +5262,4 @@ Ripgrep i |
 | 2026-05-20 04:52 UTC | tier0s Real-Corpus Retrain: Logistic Regression on | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2596_tier0s_ |
 | 2026-05-20 04:56 UTC | tier0s Real-Corpus Retrain: Logistic Regression on | FAIL | No file changes produced |
 | 2026-05-20 05:00 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2597_tier0u_ |
+| 2026-05-20 05:03 UTC | tier0u TF-IDF NLI-Proxy Fix: Real-Text Self-Consis | FAIL | No file changes produced |
