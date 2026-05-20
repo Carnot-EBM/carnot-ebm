@@ -5491,3 +5491,4 @@ Ripgrep i |
 | 2026-05-20 15:04 UTC | arXiv Final Package v6: Ensemble v11 + EORM Compar | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 15:06 UTC | arXiv Final Package v6: Ensemble v11 + EORM Compar | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 15:08 UTC | arXiv Final Package v6: Ensemble v11 + EORM Compar | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 15:10 UTC | Capstone v254: Cross-Artifact Synthesis + Phase 1  | SKIP | Pre-tests failing, self-heal failed:  |
