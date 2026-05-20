@@ -5607,3 +5607,4 @@ Ripgrep i |
 | 2026-05-20 22:03 UTC | Property-Guided Counterexample Repair Loop v2 (arX | OK | 145 passed in 3.39s |
 | 2026-05-20 22:08 UTC | Linear Probe Calibration for Tier 0e EORM v2: 10x  | OK | 100 passed in 3.63s |
 | 2026-05-20 22:11 UTC | FR-11 Tier 3: ORCA TTT v2 + Grounded Continuation  | OK | 81 passed in 2.17s |
+| 2026-05-20 22:16 UTC | ODAR Free-Energy Routing Prototype + T2 VegAS K-Sc | OK | 145 passed in 3.39s |
