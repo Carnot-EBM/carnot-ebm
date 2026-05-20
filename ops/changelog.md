@@ -1,5 +1,33 @@
 # Carnot — Changelog
 
+## 2026-05-20 (Milestone 2026.05.259 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.259. Milestone .258 (exp2712–exp2724) FULLY EXECUTED — 13 of 13 tasks produced artifacts. 8 of 12 acceptance criteria met. First fully-executed milestone since the conductor cascade stall that began at milestone .206.
+  - **CRITICAL FINDING (exp2715)**: VerifyRepairPipeline.verify() returns all-zero energy scores on 50 live Qwen3.6-35B-A3B-GGUF examples (mean=std=min=max=0.0) despite 125s real GPU inference (RTX 3090, CUDA available). Degenerate verifier — core capability does not produce meaningful scores on SOTA GGUF outputs.
+  - **PHASE 1 SHIP READY (exp2714)**: phase1_ship_ready=true. RELEASES.md created. operator_ship_checklist_v5 complete. Operator action: `git tag v0.1.0b1 && git push origin main v0.1.0b1` triggers CI → PyPI. (OPERATOR-ONLY per CLAUDE.md External Publication rule)
+  - **CASCADE FIXED (exp2713)**: pretest_cascade_fixed=true, smart_subset_passes=true. BUT full_collection_clean=false — other pytest collection errors beyond test_hw_dab.py remain.
+  - **BEHAVIORAL ENTANGLEMENT NOT CONFIRMED (exp2723)**: auroc_lift=-0.008 (NEGATIVE). Hypothesis refuted. Pearson-correlation reweighting retired in .259 via exp2732.
+  - **FR-11 TIER 3 OPERATIONAL (exp2719)**: conformal_stopping_enabled=true, n_ttt_steps_saved=79. ORCA + Grounded Continuation dependency-graph stopping both operational.
+  - **ODAR ROUTING ADDED (exp2720)**: odar_routing_added=true, t2_prediction_matches=true. Free-energy-principled routing operational. Optimal K=3.
+  - **TIER 0f VIABLE (exp2716)**: tier0f_auroc=0.992, tier0f_viable=true.
+  - **PAPER v6 BLOCKED (exp2721)**: pdflatex_available=false. texlive not installed. Three consecutive milestones blocked on same toolchain issue.
+  - **KV260 SD CARD ABSENT (exp2722)**: 4th consecutive Branch B.
+  - **Milestone title**: "Verifier Energy Debug v1 + Full Test Fix + pdflatex Install + OTV Fast Path + FR-11 ORCA-NEXUS"
+  - **arxiv sweep** (4 new papers added to `research-references.md`):
+    - arXiv:2508.14496 (Semantic Energy — Boltzmann over semantic clusters; directly addresses degenerate zero-energy bug; Tier 0g candidate)
+    - arXiv:2603.01025 (OTV One-Token Verification — 90% token reduction via KV-cache probe; fast-path complement to ODAR)
+    - arXiv:2602.01090 (FALCON — hard constraints + soft generation; mirrors Carnot two-layer architecture; paper-v6 §5 peer cite)
+    - arXiv:2506.03723 (Verbalized Confidence — alternative Phase 4 routing signal; simpler than ODAR)
+  - **Three biggest gaps for .259**:
+    1. Live GGUF verifier produces zero energy scores (CRITICAL) — exp2727 (debug) + exp2731 (Semantic Energy Tier 0g fallback)
+    2. pdflatex not installed (3rd consecutive block) — exp2729 (apt install texlive + paper v6 theory v3)
+    3. Full test collection not clean (full_collection_clean=false) — exp2726 (full test suite collection fix v1)
+  - **Roadmap doc created**: `openspec/change-proposals/research-roadmap-v259.md`
+  - **Execution queue created**: `research-roadmap-next.yaml` (13 tasks: exp2725–exp2737; overwrites .258 version)
+  - **Agent routing**: 12 codex/gpt-5.5 (exp2725–exp2736) + 1 claude/opus (exp2737 capstone, requires_claude: true) — within 2/13 ceiling. 0 gemini (known-issues constraint)
+  - **Gate pattern**: exp2729.latex_compiles → gates exp2736 (arXiv package prep) only; all other tasks run in parallel after exp2725 to avoid cascade blocking
+  - **All CLAUDE.md mandatory disciplines applied**: Codex-Default (12/13), prior_failures (exp2729/2732/2733/2734/2735/2737 all 4 sub-fields), PRECONDITIONS step 0 on compute-bound tasks (exp2727/2728/2731/2733/2735), principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2733 ORCA-NEXUS continuous_self_learning_task: true), Hardware-Task Continuity (exp2735 KV260 NON-TERMINAL, 5th Branch B), Exclusion Manifest cross-check (0 scope matches), Operator-Only publication discipline (exp2736 produces package for operator; never submits)
+
 ## 2026-05-20 (Milestone 2026.05.258 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.258. Milestone .257 (exp2699–exp2711) partially executed — 3 of 13 artifacts landed (exp2699 archive, exp2700 conductor postmortem ROOT CAUSE IDENTIFIED, exp2704 scaling audit). 52nd consecutive zero-execution milestone per retro timing window. 10 tasks produced no artifacts.

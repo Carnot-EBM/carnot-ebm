@@ -1,3 +1,71 @@
+## 2026-05-20 Post-.258 Planning Sweep (Milestone 2026.05.259)
+
+This sweep was run after milestone `.258` completed with 13 of 13 experiments executed — first full
+milestone execution since the conductor cascade was fixed by exp2713. Key .258 findings:
+- verifier energy_score_distribution=all-zero on live GGUF output (exp2715 degenerate verifier)
+- paper v6 toolchain blocked: pdflatex unavailable (exp2721)
+- behavioral entanglement reweighting hypothesis NOT confirmed: auroc_lift=-0.008 (exp2723)
+- linear probe speedup_factor=1.85e6 implausibly high (exp2718 — adversarial-verify flagged)
+- cascade fixed: pretest_cascade_fixed=true but full_collection_clean=false (other errors remain)
+
+Four new papers identified from post-.258 literature sweep:
+
+### Semantic Energy: Detecting LLM Hallucination Beyond Entropy
+
+- **Paper:** "Semantic Energy: Detecting LLM Hallucination Beyond Entropy" (arXiv:2508.14496, Aug 2025).
+- **What:** Clusters LLM outputs by semantic equivalence (cosine similarity of embeddings), then assigns
+  energy via a Boltzmann distribution over cluster probabilities. Low-energy = high-confidence-correct;
+  high-energy = uncertain/hallucinating. Avoids per-token entropy's insensitivity to semantic paraphrases.
+  Validated on TruthfulQA (0.82 AUROC) and HaluEval (0.79 AUROC) with no retraining.
+- **Relevance to Carnot:** Directly addresses the degenerate verifier problem from exp2715
+  (energy_score_distribution=all-zero). Semantic Energy provides a principled path to non-degenerate
+  energy scores from live GGUF outputs using semantic clustering + Boltzmann weighting. Candidate for
+  Tier 0g verifier. Paper-v6 §4 cite alongside Tier 0e/0f EORM and linear probe calibration.
+- **Sources:** https://arxiv.org/abs/2508.14496
+
+### One-Token Verification for Reasoning Correctness Estimation (OTV)
+
+- **Paper:** "One-Token Verification for Reasoning Correctness Estimation" (arXiv:2603.01025, Mar 2026).
+- **What:** Probes the model's internal key-value cache with a single verification token ("is this correct?")
+  achieving 90% token reduction vs full verification. Produces a soft correctness probability from KV
+  activations without additional generation. Compatible with any autoregressive LLM. AUROC 0.75+ on
+  MATH and HumanEval chain-of-thought steps.
+- **Relevance to Carnot:** Perfect fast-path routing mechanism to complement ODAR (exp2720). OTV's
+  single-token probe gates whether to invoke the full verifier ensemble at all. Two-tier fast path:
+  OTV probe first (cheap) → if uncertain → ODAR routing → if deliberative → full ensemble. 90% cost
+  reduction aligns with Carnot's Tier 3 JEPA predictive verification design (research-program.md §Tier 3).
+  Candidate experiment exp2728 in .259.
+- **Sources:** https://arxiv.org/abs/2603.01025
+
+### FALCON: Hard Constraints Meet Soft Generation
+
+- **Paper:** "Hard Constraints Meet Soft Generation: Guaranteed Feasibility for LLM-based Combinatorial
+  Optimization" (arXiv:2602.01090, Feb 2026).
+- **What:** Separates syntactic validity (grammar-constrained decoding) from semantic feasibility
+  (iterative repair operators). Grammar-constrained generation guarantees structurally valid outputs;
+  repair operators guarantee constraint satisfaction. Adaptive sampling selects between paths based on
+  constraint violation cost.
+- **Relevance to Carnot:** Validates and extends the property-guided counterexample repair loop (exp2717).
+  FALCON's separation of syntactic (grammar) from semantic (Carnot ensemble verifier) is exactly Carnot's
+  two-layer architecture: Tier 0 fast verifiers check syntactic validity; Tier 1+ energy verifiers check
+  semantic correctness. Paper-v6 §5 peer cite alongside ExVerus (arXiv:2603.25810) and property-guided
+  synthesis (arXiv:2605.16142). exp2734 in .259 implements FALCON-style integration.
+- **Sources:** https://arxiv.org/abs/2602.01090
+
+### Verbalized Confidence Triggers Emergent Self-Verification
+
+- **Paper:** "Verbalized Confidence Triggers Self-Verification" (arXiv:2506.03723, Jun 2026).
+- **What:** Confidence-supervised fine-tuning on verbalized uncertainty expressions elicits emergent
+  self-verification behavior, improving calibration and interpretability. The key insight: verbalizing
+  confidence (not just computing it internally) activates self-consistency checking as an emergent behavior.
+- **Relevance to Carnot:** Suggests an alternative Phase 4 active inference mechanism: instead of
+  measuring free energy (ODAR approach), prompt the LLM to verbalize its confidence before verification,
+  then use the verbalized signal as a fast-path routing gate. Simpler than ODAR and potentially more
+  reliable. Candidate for Phase 4 paper-v6 §6 cite on active inference + verification routing.
+- **Sources:** https://arxiv.org/abs/2506.03723
+
+---
+
 ## 2026-05-20 Post-.257 Planning Sweep (Milestone 2026.05.258)
 
 This sweep was run after milestone `.257` completed with 3 of 13 experiments executed
