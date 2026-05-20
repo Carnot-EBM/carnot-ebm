@@ -320,6 +320,162 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-20 (19:30Z): RecMem Recurrence-Trigger for FR-11 Memory + Paper-v6 Cite (.257+ MANDATORY)
+
+**Origin:** 2026-05-20 operator-shared paper arXiv:2605.16045 "RecMem:
+Recurrence-based Memory Consolidation for Efficient and Effective Long-
+Running LLM Agents" (Dai et al., ACL 2026 Findings). Core insight:
+existing LLM-agent memory systems invoke an LLM on EVERY interaction
+("eager consolidation"). RecMem only triggers extraction when sustained
+recurrence is observed — semantically similar patterns repeat ≥N times
+before consolidation. Headline: **-87% token cost on memory construction
+while EXCEEDING accuracy** vs prior SOTA.
+
+**Carnot fit:**
+
+- FR-11 Tier 2 (`.242 exp2512: memory_augmented_auroc >= 0.95) and
+  Tier 3 JEPA (`.243 exp2525: 0.7633 → 0.8889 with response-level
+  energy + logprob variance) both extract memory features per-
+  verification. RecMem's recurrence-trigger pattern is a direct
+  candidate to reduce token cost without regressing AUROC.
+- Combined with the already-queued VibeServe Case B K-block verify
+  API (exp24XX-carnot-k-block-verify-api), RecMem-style recurrence
+  detection enables CACHED verifier outputs for repeat semantically-
+  similar queries — verifier-ensemble serving optimization.
+
+**Two `.257+ tasks queued:**
+
+```yaml
+# Task 1: FR-11 Tier 2/3 memory upgrade with RecMem recurrence trigger
+- id: exp24XX-fr11-tier2-recmem-recurrence-trigger
+  title: "Phase 2: FR-11 Tier 2/3 RecMem Recurrence-Trigger Memory Consolidation (arXiv:2605.16045)"
+  track: verifier
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 60
+  deliverable: results/experiment_24XX_fr11_recmem_recurrence_trigger.json
+  prompt: |
+    CONTEXT: arXiv:2605.16045 (RecMem, ACL 2026 Findings) shows -87%
+    memory-construction token cost via recurrence-trigger consolidation
+    — defer LLM-based memory extraction until a semantically-similar
+    pattern recurs N times. Carnot's FR-11 Tier 2/3 memory currently
+    extracts per-verification (eager). Apply RecMem's pattern.
+
+    CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. python/carnot/pipeline/fr11_*.py modules exist
+         b. FR-11 Tier 2 memory store reachable (per .242 exp2512)
+         c. Embedding model for semantic similarity:
+            python -c "from sentence_transformers import SentenceTransformer; print('ok')"
+            If missing: pip install sentence-transformers
+
+      1. Implement RecurrenceTrigger class at
+         python/carnot/pipeline/fr11_recmem.py:
+         - __init__(self, threshold: int = 3, similarity_threshold: float = 0.8)
+         - add(self, interaction: dict) -> None
+           Store the interaction in a subconscious layer (lightweight
+           embedding only, no LLM call).
+         - should_consolidate(self, new_interaction: dict) -> bool
+           Returns True if N >= threshold semantically-similar
+           interactions exist (cosine_sim > similarity_threshold).
+
+      2. Wire into FR-11 Tier 2/3:
+         - Before triggering memory extraction (which invokes the LLM),
+           call should_consolidate().
+         - If False: store in subconscious layer, skip LLM extraction.
+         - If True: do the LLM extraction, then flush the cluster.
+
+      3. Benchmark on cached telemetry (n>=100 verifications):
+         - eager_baseline: existing per-verification memory extraction
+           token cost
+         - recmem_recurrence: same workload with recurrence-trigger
+           gating
+         - token_reduction_pct: (eager - recmem) / eager * 100
+         - memory_augmented_auroc_eager: existing FR-11 Tier 2 AUROC
+         - memory_augmented_auroc_recmem: AUROC under recmem-gated
+           consolidation
+         - auroc_delta: recmem - eager (positive = improvement)
+
+      4. Unit tests covering: should_consolidate False on n < threshold,
+         True on n >= threshold, similarity_threshold respected.
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict
+      - token_reduction_pct
+      - memory_augmented_auroc_eager
+      - memory_augmented_auroc_recmem
+      - auroc_delta
+      - n_verifications (must be >= 100)
+      - recurrence_threshold_used (default 3)
+      - similarity_threshold_used (default 0.8)
+      - duration_s
+      - random_seed (must be 42)
+
+    ACCEPTANCE GATES:
+      - condition: "token_reduction_pct >= 50 AND auroc_delta >= -0.02"
+        principle: "Half the token cost with no more than 2pp AUROC
+                    regression. Below 50% reduction isn't worth the
+                    architecture change; >2pp regression means the
+                    deferred consolidation actually drops information."
+
+# Task 2: Paper-v6 §Related Work — RecMem + VibeServe joint cite
+- id: exp24XX-paperv6-recmem-related-work
+  title: "Phase 4: Paper-v6 §Related Work — Add RecMem (arXiv:2605.16045) + VibeServe Cross-Cite"
+  track: paper
+  agent_type: codex
+  model: gpt-5.5
+  max_turns: 30
+  deliverable: results/experiment_24XX_paperv6_recmem_cite.json
+  prompt: |
+    CONTEXT: Two recent agentic-system-substrate papers (VibeServe
+    syfi.cs.washington.edu/blog/2026-05-12-introducing-vibeserve/,
+    RecMem arXiv:2605.16045) share Carnot's "delay/avoid expensive
+    operations until clearly justified" pattern. Add a paragraph to
+    docs/arxiv-paper/main.tex §Related Work joining these citations.
+
+    CONCRETE STEPS:
+      1. Read docs/arxiv-paper/main.tex §Related Work.
+      2. Add a paragraph: "Two recent agentic-system papers (VibeServe
+         [cite], RecMem [cite]) independently arrived at the
+         'delay-until-justified' optimization pattern that Carnot's
+         verifier ensemble applies to verification: VibeServe
+         demonstrates ≥1.69x serving speedup via predicted-outputs
+         verified in K-token blocks, and RecMem reports -87%
+         memory-construction token cost via recurrence-triggered
+         consolidation. Carnot's K-block verify API (in development)
+         and FR-11 Tier 2/3 RecMem-recurrence-trigger memory (in
+         development) integrate these patterns directly."
+      3. Add carnot.bib entries:
+         - vibeserve_2026 (URL: syfi.cs.washington.edu/blog/2026-05-12-introducing-vibeserve/)
+         - dai_recmem_2026 (arXiv:2605.16045, Dai et al., ACL 2026 Findings)
+
+    REQUIRED ARTIFACT FIELDS:
+      - honest_verdict
+      - paragraph_added (true iff §Related Work updated)
+      - bib_entries_added (count, must be >= 2)
+      - latex_compile_success (must be true)
+
+    ACCEPTANCE GATES:
+      - condition: "paragraph_added == true AND bib_entries_added >= 2 AND latex_compile_success == true"
+        principle: "Citations integrated cleanly; LaTeX compiles."
+```
+
+**Why MANDATORY.** RecMem's -87% token reduction with EXCEEDING accuracy
+is a high-yield architectural win for FR-11 self-learning. Carnot's
+per-milestone token spend has been a recurring constraint (codex quota
+exhaustion `.234 cascade; gemini-cli 429-retry crashes `.244 storm).
+A -50% reduction in memory-construction tokens (conservative vs paper's
+-87%) materially extends every quota window. Plus the related-work cite
+joins VibeServe in strengthening paper-v6's positioning.
+
+**Cross-references:**
+- arXiv:2605.16045 (RecMem source)
+- syfi.cs.washington.edu/blog/2026-05-12-introducing-vibeserve/ (VibeServe cross-reference)
+- `.242 exp2512 FR-11 Tier 2 Memory baseline (memory_augmented_auroc >= 0.95)
+- `.243 exp2525 FR-11 Tier 3 JEPA baseline (0.7633 → 0.8889)
+- exp24XX-carnot-k-block-verify-api (already queued — VibeServe Case B
+  integration; benefits from RecMem recurrence detection for caching)
+
 ### NEW 2026-05-20 (19:00Z): Phase 4 Canonical Resolution — IsingVerifier.energy() Implementation + Fair Test (.257+ MANDATORY)
 
 **Origin:** 2026-05-20 operator strategic clarification — Phase 4 is

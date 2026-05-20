@@ -612,6 +612,14 @@ This sweep was run after milestone `.238` completed (11/12 tasks — KV260 synth
 - **Relevance to Carnot:** Direct fix for exp2467's finding that KAN energy tier has AUROC=0.994 but certified_coverage=0.0 because mean_local_lipschitz=39.5 (threshold is 5.0). LipNeXt's λ·local_lip^2 penalty added to KAN's training loss directly addresses this. Target: reduce mean_local_lipschitz from 39.5 to < 5.0 while maintaining AUROC > 0.97. If successful, KAN tier becomes both the highest-AUROC verifier AND the only certified-coverage verifier in the ensemble. Queued as exp2476 in .239 milestone.
 - **Sources:** https://arxiv.org/abs/2601.18513
 
+## 2026-05-20 Operator-Shared (agentic-substrate + memory architecture)
+
+### RecMem — Recurrence-based Memory Consolidation for Long-Running LLM Agents (arXiv:2605.16045, ACL 2026 Findings)
+- **Source:** arXiv:2605.16045, Dai/Deng/Guan/Tian/Yao/Yan/Cheng, ACL 2026 Findings (operator-shared 2026-05-20).
+- **What:** RecMem rethinks WHEN LLM-agent memory consolidation occurs. Existing systems invoke an LLM on every interaction to extract/summarize memory (eager consolidation). RecMem only triggers extraction when sustained recurrence is observed — semantically similar patterns repeat ≥N times before consolidation. Three components: (1) subconscious memory layer storing interactions via lightweight embeddings without LLM processing; (2) recurrence-based trigger gating LLM-based episodic/semantic extraction on cluster formation; (3) semantic refinement mechanism recovering fine-grained facts omitted during extraction. Headline: **-87% memory-construction token cost while EXCEEDING accuracy** vs three SOTA memory systems.
+- **Relevance to Carnot:** Direct fit for FR-11 Tier 2/Tier 3 self-learning memory. Tier 2 (`.242 exp2512: memory_augmented_auroc ≥ 0.95) and Tier 3 JEPA (`.243 exp2525: 0.7633 → 0.8889 with response-level IsingVerifier energy + logprob variance) both extract memory features per-verification (eager). RecMem's recurrence-trigger pattern is a clean candidate to gate the LLM-extraction call, reducing per-milestone token spend while preserving or improving AUROC. Combined with VibeServe Case B's K-block predicted-output verification (already queued), RecMem-style recurrence detection also enables CACHED verifier outputs for semantically-similar repeat queries — verifier-ensemble serving optimization. Operationally significant: Carnot's per-milestone token spend has been a recurring constraint (codex quota exhaustion `.234 cascade; gemini-cli 429-retry crashes `.244 storm). Conservative -50% reduction would materially extend every quota window. Queued as `.257+ MANDATORY in ops/known-issues.md (exp24XX-fr11-tier2-recmem-recurrence-trigger + exp24XX-paperv6-recmem-related-work).
+- **Sources:** https://arxiv.org/abs/2605.16045
+
 ## 2026-05-19 Operator-Shared (verifier-relevant LLM internals)
 
 ### Qwen Censorship-Circuit — mechanistic analysis of Qwen3.5-9B political deflection
