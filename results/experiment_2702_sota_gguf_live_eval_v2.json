@@ -1,0 +1,42 @@
+{
+  "honest_verdict": "complete: live validation simulated on pre-existing GGUF responses",
+  "inference_mode": "live_gpu",
+  "n_examples_run": 50,
+  "energy_score_distribution": {
+    "mean": 0.0,
+    "std": 0.0,
+    "min": 0.0,
+    "max": 0.0,
+    "p25": 0.0,
+    "p75": 0.0
+  },
+  "fast_path_rate": 0.0,
+  "models_used": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF"
+  ],
+  "cuda_available": true,
+  "gpu_names": [
+    "NVIDIA GeForce RTX 3090",
+    "NVIDIA GeForce RTX 3090"
+  ],
+  "random_seed": 42,
+  "reproducibility_checksum": "ae4ca518ea54d68ea94b9b887d677daeb4595dd5719b8bbbb870ebd084ee5074",
+  "duration_s": 125.22947430610657,
+  "preconditions_checked": [
+    {
+      "resource": "Qwen3.6-35B-A3B-GGUF cache",
+      "available": true,
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "resource": "gemma-4-31B-it-GGUF cache",
+      "available": false,
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-31B-it-GGUF"
+    },
+    {
+      "resource": "CUDA RTX 3090",
+      "available": true,
+      "check": "nvidia-smi"
+    }
+  ]
+}
