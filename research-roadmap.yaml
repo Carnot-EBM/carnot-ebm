@@ -113,7 +113,7 @@ tasks:
         principle: "Propagates cascade fix status to .259 activation record."
       - live_gguf_degenerate_gap_noted: bool — true (from exp2715 all-zero energy)
         principle: "Documents the most critical .258 finding for .259 priority queue."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records which files were actually read."
       - duration_s: float
         principle: "File reads + YAML copy + JSON write: expected >= 3s."
@@ -165,7 +165,7 @@ tasks:
            Replace with `X = pytest.importorskip("X")`
            Or install X via `.venv/bin/pip install X` if X is a lightweight standard package.
          NEVER install packages that require CUDA/GPU hardware (torch with CUDA) — use importorskip.
-         Record: fixes_applied (list of {file, issue, fix}).
+         Record: fixes_applied (list of {{file, issue, fix}}).
 
       2. Verify: `.venv/bin/pytest tests/python/ --co -q 2>&1 | tail -5`
          Record: n_collection_errors_final (int), collection_clean (bool = n_collection_errors_final == 0).
@@ -185,13 +185,13 @@ tasks:
         principle: "Baseline count — confirms we found and addressed actual errors."
       - n_collection_errors_final: int
         principle: "Post-fix count — zero means collection cascade risk eliminated."
-      - fixes_applied: list of {file, issue, fix}
+      - fixes_applied: list of {{file, issue, fix}}
         principle: "Audit trail: which files were patched and why."
       - smart_subset_still_passes: bool
         principle: "Regression check: conductor pre-test still green after full-collection fixes."
       - duration_s: float
         principle: "Collection check + fixes + reverification: expected >= 5s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records initial collection run and Python version."
 
       Do NOT modify scripts/research_conductor.py.
@@ -307,7 +307,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Diagnostic reads + fix + 5-example verify: expected >= 10s; < 3s suspicious."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records GGUF cache + pipeline import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -413,7 +413,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Logistic train + 20-example routing test: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import + odar_route existence."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -493,7 +493,7 @@ tasks:
       6. Update .bib with 3 entries if not already present.
       Record: bijection_citation_added, four_delta_citation_added, fst_citation_added (bool).
 
-      7. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+      7. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -5`
          Record: latex_compiles (bool), compile_output (str — last 3 lines).
 
       8. Write results/experiment_2729_paper_v6_theory_v3.json.
@@ -519,7 +519,7 @@ tasks:
         principle: "Documents which .tex file was modified — traceability for paper version control."
       - duration_s: float
         principle: "apt install + LaTeX edits + compile: expected >= 30s; < 10s suspicious."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pdflatex initial state + .tex search result."
 
       DO NOT submit to arXiv. DO NOT push.
@@ -574,7 +574,7 @@ tasks:
          Record: preconditions_checked.
 
       1. Create docs/hf_model_card_update_v1.md with draft model card update:
-         """# Carnot EBM — Phase 1 Release (v{current_version})
+         """# Carnot EBM — Phase 1 Release (v{{current_version}})
 
          Carnot is an open-source energy-based verification framework for LLM outputs.
          Apache-2.0. PyPI: pip install carnot-ebm.
@@ -603,8 +603,8 @@ tasks:
          will be pinned to IPFS after the PyPI release is confirmed.
 
          ## Steps for operator:
-         1. After PyPI publish (via CI): download carnot-ebm-{version}.tar.gz from PyPI
-         2. `ipfs add carnot-ebm-{version}.tar.gz` → note the CID
+         1. After PyPI publish (via CI): download carnot-ebm-{{version}}.tar.gz from PyPI
+         2. `ipfs add carnot-ebm-{{version}}.tar.gz` → note the CID
          3. Pin via Filecoin-backed service (web3.storage / Storj / Filebase)
          4. Update README.md IPFS section with CID
          5. Update HuggingFace model card with CID
@@ -616,7 +616,7 @@ tasks:
       3. Produce operator_ship_checklist_v6 (adds HF + IPFS steps to v5):
          All v5 steps + new steps:
            "# HF Step: after PyPI confirms, visit huggingface.co/Carnot-EBM and update model card with docs/hf_model_card_update_v1.md content"
-           "# IPFS Step: ipfs add carnot-ebm-{version}.tar.gz (or use web3.storage) — document CID in docs/ipfs_anchor_placeholder.md"
+           "# IPFS Step: ipfs add carnot-ebm-{{version}}.tar.gz (or use web3.storage) — document CID in docs/ipfs_anchor_placeholder.md"
          Record: operator_ship_checklist_v6 (list of str).
 
       4. Write results/experiment_2730_hf_mirror_ship_v6.json.
@@ -636,7 +636,7 @@ tasks:
         principle: "Carry-forward: Phase 1 ship gate remains satisfied."
       - duration_s: float
         principle: "File reads + doc creation + JSON write: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records README, RELEASES.md, version checks."
 
       Do NOT push. Do NOT submit to arXiv.
@@ -750,7 +750,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "TF-IDF fit + k-NN clustering + eval: expected 5-60s; < 2s suspicious."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records sklearn + FoVer corpus + GGUF cache check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -848,7 +848,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Greedy selection + AUROC eval: expected 3-30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records exp2723 artifact + sklearn + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -950,7 +950,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "30 violations + ORCA + NEXUS synthesis: expected >= 10s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records TTT loop + NEXUS module + pipeline import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1024,9 +1024,9 @@ tasks:
                            k_max: int = 5, energy_threshold: float = 0.3) -> dict:
          """FALCON two-layer repair:
          Layer 1: grammar_check(initial_response, format_type)
-           If invalid: return {failed: 'grammar', reason: str, n_iterations: 0}
+           If invalid: return {{failed: 'grammar', reason: str, n_iterations: 0}}
          Layer 2: iterative_repair_with_counterexample(prompt, initial_response, k_max, energy_threshold)
-         Returns: {final_response, final_energy, n_iterations, converged, layers_applied}
+         Returns: {{final_response, final_energy, n_iterations, converged, layers_applied}}
          """
          Record: falcon_repair_added (bool).
 
@@ -1054,7 +1054,7 @@ tasks:
         principle: "End-to-end repair quality: how many passed both layers + reached low energy."
       - duration_s: float
         principle: "Grammar check + iterative repair + 15 examples: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import + repair method existence."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1128,7 +1128,7 @@ tasks:
         principle: "Escalation signal: 5 consecutive = strongly escalate operator notice."
       - duration_s: float
         principle: "Branch B documentation-only: expected 2-10s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records /dev/mmcblk* check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1172,10 +1172,10 @@ tasks:
             Record: pdflatex_available (bool).
             If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
          b. Read results/experiment_2729_paper_v6_theory_v3.json for tex_file_path.
-            `ls {tex_file_path} 2>/dev/null && echo exists || echo missing`
+            `ls {{tex_file_path}} 2>/dev/null && echo exists || echo missing`
             Record: tex_source_exists (bool).
             If false: write honest_verdict 'blocked_tex_source_missing' and exit.
-         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -3`
+         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -3`
             Record: pdf_compiles (bool).
             If false: write honest_verdict 'blocked_pdf_compile_failed' and exit.
          Record: preconditions_checked.
@@ -1186,11 +1186,11 @@ tasks:
          Record: abstract_word_count (int, approximate).
 
       2. Check that required sections are present in .tex source:
-         `grep -c '\\section{Introduction}' {tex_file_path}` etc.
+         `grep -c '\\section{{Introduction}}' {{tex_file_path}}` etc.
          Record: sections_present (list of str — which sections found).
 
       3. Verify all three theory citations landed (from exp2729):
-         `grep -c 'blondel2025arm\|dantas2025four\|hashimoto2026fst' {tex_file_path}`
+         `grep -c 'blondel2025arm\|dantas2025four\|hashimoto2026fst' {{tex_file_path}}`
          Record: n_theory_citations_present (int).
 
       4. Produce operator_arxiv_checklist (list of str):
@@ -1218,7 +1218,7 @@ tasks:
         principle: "Operator reads this as the definitive arXiv submission action list."
       - duration_s: float
         principle: "pdflatex compile + grep + checklist: expected >= 10s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pdflatex + .tex source + PDF compile checks."
 
       DO NOT submit to arXiv. DO NOT push.
@@ -1307,7 +1307,7 @@ tasks:
 
       6. Top 3 gaps for .260:
          Prioritize based on what did NOT execute, what is below target, what this capstone reveals.
-         Record: top_3_gaps_for_260 (list of {gap, priority, suggested_task}).
+         Record: top_3_gaps_for_260 (list of {{gap, priority, suggested_task}}).
 
       7. Update ops/status.md: ADD new section at top (NEVER remove existing content):
          "## Session {date} - Milestone 2026.05.259 Capstone Complete\n[summary]"
