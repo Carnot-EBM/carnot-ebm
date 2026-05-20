@@ -818,6 +818,11 @@ $4 \text{ cycles per color} \times 4 \text{ colors} = 16
 timing budget, not a measured end-to-end CPU-vs-FPGA speedup.
 The paper therefore reports it as an architectural bound and defers
 same-$N$, same-basis CPU-vs-FPGA timing to follow-up measurement.
+Recent fully parallel probabilistic Ising-machine work with inertial
+spin dynamics has demonstrated synchronous FPGA experiments for dense
+optimization instances~\cite{zhu2026parallelisingmachine}; we treat it
+as hardware precedent for future accelerator work, not as a substitute
+for Carnot's sampler-specific detailed-balance requirement.
 
 \paragraph{FPGA latency, single-point measurement.}
 The KV260 achieves $24.83\,\mu s$ per sweep at 32 spins (max\_popcount in exp1068 artifact)
@@ -1194,19 +1199,23 @@ is NOT yet lifted even though the report classifies the work as
 partially validated. arXiv-readiness assessment for this milestone:
 arXiv NOT YET ready: formula gates met (phase1+audit+phase4\_partial) but operator hold remains until phase4\_validated=True (currently False)..
 
-\subsection{Milestones .240 to .242 update}
+\subsection{Milestones .240 to .245 update}
 
 \begin{table}[ht]
   \centering
   \begin{tabular}{lrr}
     \toprule
-    Ensemble / Metric & AUROC & CI [low, high] \\
+    Ensemble / Metric & AUROC & CI / note \\
     \midrule
     Best .241 Ensemble & 0.9750 & [0.933, 1.017] \\
-    Tier 0r & 0.9123 & \\
+    Best .245 Ensemble v7b & 0.9857 & $\sigma=0.0175$ \\
+    Tier 0r (exp2504) & 0.9123 & \\
+    Tier 0r (real corpus) & 0.9414 & $n=6{,}548$ \\
+    Tier 0s (real corpus) & 0.3758 & $n=6{,}548$ \\
+    Tier 0u (real corpus) & 0.5360 & $n=6{,}548$ \\
     \bottomrule
   \end{tabular}
-  \caption{AUROC results table. The Best .241 Ensemble row is adversarially verified (5-seed group-conditional replication, exp2498). Note: the reported \texttt{best\_241\_auroc=0.975} and \texttt{group\_conditional\_replicated=0.975} refer to the exact same method and metric from the same experiment, rather than two distinct measurements. The newly introduced Tier 0r verifier achieved an AUROC of 0.9123 (exp2504).}
+  \caption{AUROC results table. The Best .241 Ensemble row is adversarially verified (5-seed group-conditional replication, exp2498). Note: the reported \texttt{best\_241\_auroc=0.975} and \texttt{group\_conditional\_replicated=0.975} refer to the exact same method and metric from the same experiment, rather than two distinct measurements. The .245 ensemble v7b row reports exp2546's 5-seed AUROC, resolving the v7 regression relative to the 0.9750 baseline. The real-corpus Tier 0r/0s/0u rows report exp2548 on the FoVer v4 corpus; all three rows have \texttt{paper\_citable=True}, while exp2548's anomaly checker separately flags the \texttt{n\_eval\_examples} / \texttt{n\_real} bookkeeping equality for audit review.}
   \label{tab:auroc-results}
 \end{table}
 
@@ -1495,7 +1504,7 @@ scales and with different substrates.
 We attempted to empirically validate the Phase~4 free-energy bijection
 hypothesis across four consecutive milestones. The hypothesis predicts that
 Carnot constraint-violation energy (\texttt{IsingVerifier}) correlates with
-ARM-EBM~\cite{wu2025arm-ebm} token-level free energy (sum of negative
+ARM-EBM~\cite{wu2025arm-ebm,tan2025rltunedebm} token-level free energy (sum of negative
 log-probabilities) at per-CoT-step granularity. Four structured attempts were
 made:
 \begin{itemize}
@@ -1510,7 +1519,8 @@ made:
         implemented before the experiment ran).
 \end{itemize}
 Phase~4 remains a theoretical hypothesis. The active-inference free-energy
-framing (arXiv:2605.04065, arXiv:2512.15605, arXiv:2605.09515) provides strong
+framing, including game-theoretic free-energy analysis of transformer attention
+heads~\cite{bouchaffra2026gamefep}, provides strong
 theoretical motivation, but empirical validation of the bijection at
 step-level granularity was not achieved. Future work should investigate
 token-level logprob integration with constraint-based energy computation using

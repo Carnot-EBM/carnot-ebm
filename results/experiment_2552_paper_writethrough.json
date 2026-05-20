@@ -1,0 +1,78 @@
+{
+  "acceptance_gates": {
+    "Phase 4 honest negative preserved": true,
+    "paper_updated == true": true
+  },
+  "citations_added": [
+    "arXiv:2512.18730",
+    "arXiv:2604.17109",
+    "arXiv:2605.09515"
+  ],
+  "duration_s": 312.429602,
+  "ensemble_v7b_auroc": 0.9857142857142858,
+  "ensemble_v7b_auroc_std": 0.01749635530559415,
+  "ensemble_v7b_incorporated": true,
+  "field_principles": {
+    "citations_added": "List of arXiv IDs added in this task -- audit trail.",
+    "duration_s": "Wall-clock measurement.",
+    "ensemble_v7b_incorporated": "True if exp2546 AUROC result appears in the paper.",
+    "honest_verdict": "Terminal-prefix required.",
+    "paper_updated": "True if main.tex was modified with ensemble v7b results and new citations.",
+    "phase4_section_intact": "True if Section 4 honest negative from exp2544 was not overwritten.",
+    "preconditions_checked": "Records which resources were verified."
+  },
+  "files_modified": [
+    "docs/arxiv-paper/main.tex",
+    "docs/arxiv-paper/carnot.bib",
+    "results/experiment_2552_paper_writethrough.json",
+    "python/carnot/reporting/paper_v6_writethrough_2552.py",
+    "tests/python/test_experiment_2552_paper_writethrough.py"
+  ],
+  "honest_verdict": "complete: paper_updated=True; ensemble_v7b_incorporated=True; phase4_section_intact=True",
+  "n_real": 6548,
+  "paper_citable": {
+    "tier0r": true,
+    "tier0s": true,
+    "tier0u": true
+  },
+  "paper_updated": true,
+  "phase4_section_intact": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "description": "paper source",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/main.tex"
+    },
+    {
+      "available": true,
+      "description": "paper bibliography",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/docs/arxiv-paper/carnot.bib"
+    },
+    {
+      "available": true,
+      "description": "ensemble v7b source artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2546_ensemble_v7b.json"
+    },
+    {
+      "available": true,
+      "description": "real-corpus verifier source artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2548_real_corpus_validation.json"
+    },
+    {
+      "available": true,
+      "description": "Phase 4 honest-negative source artifact",
+      "resource": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2544_phase4_option_b.json"
+    }
+  ],
+  "real_corpus_verifier_aurocs": {
+    "tier0r": 0.9413750415828194,
+    "tier0s": 0.3758077973921437,
+    "tier0u": 0.535990952669208
+  },
+  "status_checks": {
+    "citations_present": true,
+    "ensemble_v7b_incorporated": true,
+    "phase4_section_intact": true,
+    "real_corpus_aurocs_incorporated": true
+  }
+}
