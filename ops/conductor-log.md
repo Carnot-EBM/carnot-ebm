@@ -5255,3 +5255,5 @@ Ripgrep i |
 | 2026-05-20 03:47 UTC | Phase 6: Ensemble v9 — Real-Corpus-Validated Verif | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2572-tier0s-real-corpus-retrain) |
 | 2026-05-20 04:09 UTC | Plan milestone 2026.05.248 | OK | 13 tasks proposed |
 | 2026-05-20 04:11 UTC | Milestone 2026.05.248 activated | OK | 13 tasks queued |
+| 2026-05-20 04:39 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-20 04:41 UTC | Milestone 2026.05.249 activated | OK | 13 tasks queued |

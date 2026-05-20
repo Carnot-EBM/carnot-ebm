@@ -1,3 +1,28 @@
+## 2026-05-20 Post-.248 Planning Sweep (Milestone 2026.05.249)
+
+This sweep was run after milestone `.248` completed (n_experiments_completed=0 — 23rd consecutive
+empty-timing-window retro; structural execution gap persists). Headline AUROC carry-forward:
+0.9857 (ensemble v7b). GateMate TERMINAL. KV260 NON-TERMINAL (SD absent). Three critical gaps
+entering .249: (a) tier0s/tier0u remain near-random on real FoVer corpus (0.3758/0.5360) despite
+multiple re-proposal attempts; (b) IPFS mirror + HF model card citations not executed (Rule 3);
+(c) Safety classifier Tier B not yet viable.
+
+### Online Learnability of Chain-of-Thought Verifiers: Soundness and Completeness Trade-offs
+
+- **Paper:** "Online Learnability of Chain-of-Thought Verifiers: Soundness and Completeness Trade-offs" (arXiv:2603.03538, 2026).
+- **What:** Characterizes optimal verifier accuracy via Littlestone dimension in an online learning framework. Proves a tight soundness-completeness trade-off curve: verifiers cannot simultaneously achieve high precision and high recall without sufficient capacity, and simple consistent verifiers outperform complex inconsistent ones on out-of-distribution examples. Motivated by IMO 2025 gold-level performance through verification augmentation.
+- **Relevance to Carnot:** Provides theoretical grounding for why tier0s/tier0u fail on natural text: their training complexity exceeds what the FoVer real-corpus distribution can support. The Littlestone criterion motivates simpler verifiers (bigram transition entropy, TF-IDF cosine overlap) that generalize better OOD. Motivates Tier 0y (exp2605) — a bigram-consistency verifier designed to sit on the efficient frontier of the soundness-completeness curve. Also supports FR-11 (online learning): the paper's online learnability result proves that soundness-completeness guarantees can be maintained with O(log T) mistakes over T examples — exactly the behavior we want from JEPA's online_update() method.
+- **Sources:** https://arxiv.org/abs/2603.03538
+
+### Theoretical Modeling of LLM Self-Improvement Training Dynamics Through Solver-Verifier Gap
+
+- **Paper:** "Theoretical Modeling of Large Language Model Self-Improvement Training Dynamics Through Solver-Verifier Gap" (arXiv:2507.00075, 2026).
+- **What:** Proposes a theoretical framework explaining LLM self-improvement as arising from the gap between solver capability (direct generation) and verifier capability (self-assessment). Enables quantification of improvement limits; shows that external data can be injected at any training stage to widen the gap. Demonstrates that a verifier that outperforms the solver's baseline is the necessary and sufficient condition for self-improvement to converge.
+- **Relevance to Carnot:** Provides theoretical scaffolding for why the tier0s/tier0u synthetic-to-real distribution gap matters: verifiers trained on synthetic data have artificially wide solver-verifier gaps that collapse on natural text. The result supports Carnot's external FoVer corpus strategy (retraining verifiers on real-labeled pairs widens the REAL solver-verifier gap). Also relevant to Phase 4 active inference hypothesis: the paper's framework predicts that Carnot's verifier ensemble improves self-improvement convergence IF the verifiers generalize to the distribution of real model outputs.
+- **Sources:** https://arxiv.org/abs/2507.00075
+
+---
+
 ## 2026-05-20 Post-.246 Planning Sweep (Milestone 2026.05.247)
 
 This sweep was run after milestone `.246` was planned (expected: paper errata applied, arxiv_ready_v4=True for operator submission; GateMate strtol fix attempted via CC1 toolchain / openFPGALoader HEAD; KV260 operator docs updated; new verifiers tier0t/0v/0w evaluated with PYTHONPATH fix; ensemble v8 attempted; JEPA real FoVer training; HalluScan external benchmark). Three critical gaps entering .247: (a) tier0s/tier0u verifiers remain near-random on real corpus despite paper errata correcting claims — need actual algorithmic fix; (b) publication distribution trail needed post-arXiv (HuggingFace model card citations + IPFS mirror per Rule 3); (c) Tier B Safety/Jailbreak Classifier is the next commercially viable product.
