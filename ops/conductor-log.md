@@ -5605,3 +5605,4 @@ Ripgrep i |
 | 2026-05-20 21:52 UTC | SOTA GGUF Live Pipeline Validation v3: Ensemble on | OK | 81 passed in 2.04s |
 | 2026-05-20 21:58 UTC | Tier 0f: Semantic Reward Calibration for Tier 0e E | OK | 81 passed in 2.12s |
 | 2026-05-20 22:03 UTC | Property-Guided Counterexample Repair Loop v2 (arX | OK | 145 passed in 3.39s |
+| 2026-05-20 22:08 UTC | Linear Probe Calibration for Tier 0e EORM v2: 10x  | OK | 100 passed in 3.63s |
