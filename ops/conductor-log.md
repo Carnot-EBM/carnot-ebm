@@ -5371,3 +5371,5 @@ Ripgrep i |
 | 2026-05-20 10:05 UTC | Milestone .251 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 10:07 UTC | Milestone .251 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 10:09 UTC | Milestone .251 Retrospective | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 10:38 UTC | Plan milestone 2026.05.252 | OK | 13 tasks proposed |
+| 2026-05-20 10:40 UTC | Milestone 2026.05.252 activated | OK | 13 tasks queued |
