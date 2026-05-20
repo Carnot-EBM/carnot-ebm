@@ -2828,3 +2828,11 @@ Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in t
 | Turn | Start | End | Description | Tokens (est) |
 |------|-------|-----|-------------|------|
 | 1 | 2026-05-19T22:03:49Z | 2026-05-19T22:20:02Z | Plan milestone 2026.05.245: read project files, arxiv sweep (5 new papers added to research-references.md), create research-roadmap-next.yaml (13 tasks exp2543-exp2555) and openspec/change-proposals/research-roadmap-v245.md. YAML validated: 13/13 tasks pass prior_failures + gates audit. Key decisions: Phase 4 Option B (honest negative §4), IsingVerifier stub fix (exp2545), ensemble v7b Group D (exp2546), GateMate+KV260 hardware flash (exp2551). | TBD |
+
+## Session: 2026-05-20 Milestone 2026.05.248 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-20T04:02:55Z | 2026-05-20T04:09:10Z | Plan milestone 2026.05.248: context from prior session (context compaction), read tail of research-references.md, retrieved arxiv sweep agent output (2 new papers: arXiv:2605.07209 stacking ensemble, arXiv:2605.00323 OSCAR online calibration), updated research-references.md, wrote openspec/change-proposals/research-roadmap-v248.md and research-roadmap-next.yaml (13 tasks exp2582-exp2594). All CLAUDE.md mandatory disciplines applied. | TBD |
