@@ -5563,3 +5563,4 @@ Ripgrep i |
 | 2026-05-20 18:17 UTC | FR-11 Tier 3: ORCA Online Reasoning Calibration +  | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 18:19 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-20 18:21 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-20 18:21 UTC | T2 VegAS K-Scaling Laws: Compute-Optimal K for Can | SKIP | Pre-tests failing, self-heal failed:  |
