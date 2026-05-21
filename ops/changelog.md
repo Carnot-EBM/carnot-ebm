@@ -7009,3 +7009,8 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-21: Cross-Corpus Per-Verifier Dual-Condition Discriminative Matrix (✅ Complete) — honest_verdict=complete: Matrix generated successfully; results/experiment_2824_cross_corpus_verifier_matrix.json
 - 2026-05-21: Capstone v267: Multi-Corpus Headline Synthesis + FoVer Overfit Thesis Resolution (❌ Failed) — honest_verdict=complete: .267 capstone synthesised under Gemini crash storm — 5 of 7 tasks failed before producing artifacts; FoVer-overfit thesis UNCONFIRMED (missing exp2820); FR-11 hypothesis UNCONFIRMED (missing exp2820); 5/10 acceptance criteria met; headline carry-forward 0.9857 (FoVer-only) maintained; results/experiment_2826_capstone_v267.json
 - 2026-05-21: Archive .267 + Activate .268 (✅ Complete) — honest_verdict=complete: archive_ready=true; archived_milestone=2026.05.267; active_milestone=2026.05.268; completed_non_fabricated=3_of_8; results/experiment_2827_archive_v267.json
+- 2026-05-21: FoVer Memory-Leakage Isolation: AUROC With vs Without FR-11 Self-Learning State (CODEX) (⚠️ Blocked) — honest_verdict=blocked_cuda: Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import torch; assert torch.cuda.is_available()
+    ^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memory_leakage_isolation.json
