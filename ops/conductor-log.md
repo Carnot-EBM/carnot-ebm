@@ -5688,3 +5688,7 @@ Ripgrep i |
 | 2026-05-21 09:01 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
 | 2026-05-21 09:03 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
 | 2026-05-21 09:05 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 09:07 UTC | CP-Router Uncertainty Routing: Entropy-Aware Confo | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 09:10 UTC | CP-Router Uncertainty Routing: Entropy-Aware Confo | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 09:12 UTC | CP-Router Uncertainty Routing: Entropy-Aware Confo | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 09:14 UTC | Paper v6 Theory v5: FEP Recheck + Delta Fix + Ense | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
