@@ -146,7 +146,7 @@ The `repair()` function runs gradient descent on violated constraints only, with
 
 - **carnot-gpu**: wgpu-based Vulkan/Metal/DX12 compute for batch energy evaluation
 - **carnot-webgpu-gateway**: distributed browser GPU compute via WebSocket
-- **FPGA Ising backend (Exp 228)**: KV260-class sparse **4096-spin** design with AXI-Lite upload, trigger, and readback semantics exposed through `FPGAIsingSampler`. The original Exp 228 checked-in artifact is **software simulation** only — it validates the control-plane contract, not synthesized FPGA throughput.
+- **FPGA Ising backend (Experiment 228 / Exp 228)**: KV260-class sparse **4096-spin** design with AXI-Lite upload, trigger, and readback semantics exposed through `FPGAIsingSampler`. The original Experiment 228 checked-in artifact is **software simulation** only — it validates the control-plane contract, not synthesized FPGA throughput.
 - **FPGA Ising sampler functional on real KV260 silicon (2026-04-22, RETRO-074 closed)**: a scaled-down bring-up configuration (`N=32` spins, `MAX_DEGREE=8`, 60 MHz `pl_clk0`, WNS +0.18 ns) now responds correctly to AXI-Lite reads and writes from the PS. First AXI transactions via `/dev/uio4` on the deployed overlay returned `REG[SPIN_COUNT] = 0x20` (32 decimal, confirming the N=32 build parameter is live in silicon) and completed a `0xDEADBEEF → control reg → read back 0xDEADBEEF` write-read roundtrip. The root cause of 12 prior PS hangs was a device-tree overlay structural bug: our dtbo targeted `/` and declared `firmware-name` at root, but Linux `fpga-manager` on Kria only releases the PS-PL AXI isolation resets (`zynqmp_reset` IDs `0x74`–`0x77`) when the overlay targets `fpga_full` and declares those resets explicitly. Without the reset release, the PL bitstream loaded (fabric reported "operating") but the PS→PL AXI boundary stayed isolated; every AXI transaction wedged CPU3 on an un-returning load instruction, cascading into RCU stalls and mmc1 IRQ starvation as secondary effects. The fix restructured the dtbo to mirror the `k26-starter-kits` reference. Secondary fixes landed in the same debug cycle: AXI-Lite read/write channels now use `aw_done`/`w_done`/`ar_done` latches for independent AR/AW/W/R handshake timing (matches SmartConnect's one-cycle-pulse behavior); LFSR advance gated on `reg_control[0]` to eliminate 2048 idle-switching flops; `interconnect_aresetn` wired to SmartConnect per Xilinx PG164; full K26 board preset (`PSU__PSS_REF_CLK__FREQMHZ = 33.333` plus 186 other PSU properties) applied via `apply_bd_automation`. The next hardware experiment runs a real Hamiltonian through the sampler and compares ground-state energies against the Python reference implementation.
 
 ### 2.5 Parallel Ising Sampler
@@ -556,6 +556,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | Constraint verification | SAT, coloring, arithmetic, logic, code, NL, scheduling | Full coverage | Production |
 | VerifyRepairPipeline | `carnot.pipeline` (extract, verify_repair, errors) | Full coverage | Production |
 | Packaged code verification | `verify_code()`, `carnot verify-code`, `verify_code_with_pbt` | Full coverage | Production |
+| Property-Based Code Verification | PBT harness via `verify_code_with_pbt`; VERIFY-030 (live trace ingestion + provenance gate), VERIFY-031 (end-user packaging); Exp 220/226/227 | Full coverage | Production |
 | Constraint extractors | Arithmetic, Code, Logic, NL, Auto | Full coverage | Production |
 | Code-verification learning | `TraceAnalyzer`, `PropertyRanker`, `RepairStrategy` | Full coverage | Production analytics |
 | MCP server | `carnot.mcp` — 9 tools, hardened | Full coverage | Production |
@@ -612,6 +613,7 @@ The 14 systematic negative results documented across 38 experiments are the proj
 - **Explicit code spec corpus (Exp 236 / VERIFY-036):** 164 tasks, 194 trace links, 8 official-test-miss traces, 5 repaired traces
 - **Hypothesis-backed verifier (Exp 224):** 5/5 under-specified bugs caught vs 0/5 execution-only, with 5/5 correct solutions preserved
 - **Dual-GPU microbenchmark (Exp 225):** 37.371s -> 32.774s on 10 questions (1.14x)
+- **Full HumanEval PBT Gemma4-E4B-it (Exp 226):** 11.6% -> 14.6% (+3.0pp, 164 problems, live GPU, inference_mode=live_gpu)
 - **Extractor comparison (Exp 206-207):** LLM 1/91 FP, Z3 3/91 FP, Regex 5/91 FP
 - **HumanEval 30 problems (Exp 208):** 16.7% -> 20.0% (+3.3pp)
 - **HumanEval 50 dual-model (Exp 220):** +2.0pp on both Qwen and Gemma

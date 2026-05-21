@@ -5779,3 +5779,4 @@ Ripgrep i |
 | 2026-05-21 13:00 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.76s |
 | 2026-05-21 13:02 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.65s |
 | 2026-05-21 13:04 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.70s |
+| 2026-05-21 13:23 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |

@@ -610,6 +610,12 @@ Verified + Repaired Answer
 <td>Production</td>
 </tr>
 <tr>
+<td>Property-Based Code Verification</td>
+<td>PBT harness via <code>verify_code_with_pbt</code>; VERIFY-030 (live trace ingestion + provenance gate), VERIFY-031 (end-user packaging); Exp 220/226/227</td>
+<td>Full coverage</td>
+<td>Production</td>
+</tr>
+<tr>
 <td>Constraint extractors</td>
 <td>Arithmetic, Code, Logic, NL, Auto</td>
 <td>Full coverage</td>
@@ -764,6 +770,7 @@ Verified + Repaired Answer
 <li><strong>Explicit code spec corpus (Exp 236 / VERIFY-036):</strong> 164 tasks, 194 trace links, 8 official-test-miss traces, 5 repaired traces</li>
 <li><strong>Hypothesis-backed verifier (Exp 224):</strong> 5/5 under-specified bugs caught vs 0/5 execution-only, with 5/5 correct solutions preserved</li>
 <li><strong>Dual-GPU microbenchmark (Exp 225):</strong> 37.371s -&gt; 32.774s on 10 questions (1.14x)</li>
+<li><strong>Full HumanEval PBT Gemma4-E4B-it (Exp 226):</strong> 11.6% -&gt; 14.6% (+3.0pp, 164 problems, live GPU)</li>
 <li><strong>Extractor comparison (Exp 206-207):</strong> LLM 1/91 FP, Z3 3/91 FP, Regex 5/91 FP</li>
 <li><strong>HumanEval 30 problems (Exp 208):</strong> 16.7% -&gt; 20.0% (+3.3pp)</li>
 <li><strong>HumanEval 50 dual-model (Exp 220):</strong> +2.0pp on both Qwen and Gemma</li>
