@@ -5644,3 +5644,4 @@ Ripgrep i |
 | 2026-05-21 02:48 UTC | KV260 Board-Level Latency Transcript (TERMINAL Ste | OK | 81 passed in 2.20s |
 | 2026-05-21 02:55 UTC | Set-Consistency Energy Network Tier 0v (arXiv:2503 | OK | 100 passed in 3.60s |
 | 2026-05-21 03:03 UTC | Empirical Delta Computation for 4/delta Paper Boun | OK | cache hit: 100 passed in 3.60s |
+| 2026-05-21 03:08 UTC | Weak-Strong Verification Policy (arXiv:2602.17633) | OK | 145 passed in 3.47s |
