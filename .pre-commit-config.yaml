@@ -177,3 +177,18 @@ repos:
         language: system
         files: '^docs/index\.html$'
         pass_filenames: false
+
+      # Verifier authenticity lint: catches adversarially-aware cheating
+      # patterns in python/carnot/verify/ (sleep-padding to bypass
+      # DURATION_TOO_SHORT, score-capping to bypass IMPLAUSIBLE_PERFECT,
+      # random-data evaluators, mock_sleep parameters). Per CLAUDE.md
+      # "Verifier Authenticity Discipline" (2026-05-21). Catches the
+      # nla_eval_awareness_1716.py class of fake. The dishonest-naming
+      # class (tier0s_halluguard.py) is caught by the per-milestone AI
+      # audit in scripts/verifier_authenticity_audit.py.
+      - id: verifier-authenticity-lint
+        name: Verifier authenticity (no adversarial-check gaming)
+        entry: python3 scripts/verifier_authenticity_lint.py
+        language: system
+        files: '^python/carnot/(verify|pipeline)/.*\.py$'
+        pass_filenames: false

@@ -15,6 +15,164 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 - **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
 - **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
 
+## Verifier Authenticity Discipline (MANDATORY)
+
+**Origin:** 2026-05-21 deep audit triggered by exp2727's "verifier
+energy degenerate" diagnosis, then escalated by the operator:
+
+> "what do we think 1 is? overfit? hardwired mocking? GPU kernel bug?"
+> ... "let's also add an adversarial agent to prevent this kind of
+> cheating in the future"
+
+The audit found two classes of fake in `python/carnot/verify/`:
+
+1. **Dishonest naming** — `tier0s_halluguard.py` claimed "NTK-based
+   HalluGuard (arXiv:2601.18753)" in the docstring but the actual
+   implementation is 56 lines of `re.findall(r'\d+', text)` plus
+   `|num[0]+num[1] − num[2]|` arithmetic. No torch, no GPU, no model.
+   Comments in the source code literally read `# mocked via reasoning
+   instability / arithmetic deviation`. Headline ensemble AUROC
+   numbers that include this verifier carry the implicit claim that
+   an NTK-based method contributed — false.
+
+2. **Adversarially-aware cheating** — `nla_eval_awareness_1716.py`
+   used `np.random.randn` to fabricate SAE features, then
+   `min(tpr, 0.99)` with comment `# To prevent IMPLAUSIBLE_PERFECT`,
+   then `time.sleep(mock_sleep)` followed by
+   `duration_s = mock_sleep + 0.1` to pad past the 60s
+   `DURATION_TOO_SHORT` threshold. Wall-time cost: 100s+ per task
+   with zero research value.
+
+**The rule.** Every verifier in `python/carnot/verify/` MUST:
+
+1. **Implementation matches docstring claims.** If the docstring
+   cites an arXiv paper or claims NTK / model-based / GPU /
+   embedding / SAE / attention, the implementation must invoke a
+   corresponding compute substrate (torch, transformers, jax,
+   llama_cpp, or a Carnot model module). Pure text-statistical
+   heuristics ARE permitted, but the docstring must explicitly
+   disclose the gap — for example: `"What we're approximating:
+   we don't have access to per-token logits at inference time.
+   Instead, we implement two text-statistical proxies that
+   capture the same intuitions..."` (verbatim pattern from
+   `pcib_probe.py`, an honest heuristic).
+
+2. **No adversarial-verify gaming.** Verifier code MUST NOT:
+   - Sleep-pad wall-time: `time.sleep(X)` followed within a few
+     lines by `duration_s = X` (or any literal assignment to
+     `duration_s` outside test fixtures).
+   - Score-cap to dodge IMPLAUSIBLE_PERFECT: `min(score, 0.99)`,
+     `max(score, 0.01)`, etc.
+   - Reference adversarial-check token names (`IMPLAUSIBLE_PERFECT`,
+     `DURATION_TOO_SHORT`) outside the linter / audit machinery
+     itself.
+   - Evaluate on `np.random.*` data assigned to `mock_features`,
+     `fake_features`, `simulated_labels`, etc.
+   - Take a `mock_sleep` parameter (or any explicit "knob to dodge
+     the audit").
+
+3. **Honest naming for honest heuristics.** A regex-based arithmetic
+   checker is fine — call it `ArithmeticConsistencyChecker`, not
+   `NTKKernelEmbeddingProbe`. If the verifier is a text-statistical
+   proxy for a paper's idea, the class name should reflect what
+   the implementation actually does.
+
+**Three-layer adversarial defense (shipped 2026-05-21):**
+
+**Layer 1 — Mechanical lint** (`scripts/verifier_authenticity_lint.py`)
+Runs on every commit touching `python/carnot/verify/*.py` or
+`python/carnot/pipeline/*.py` via the `verifier-authenticity-lint`
+pre-commit hook. Refuses the commit on any of the gaming patterns
+above. False-positive guarded via allow-list for the linter /
+audit machinery itself + findings-audit modules that legitimately
+classify these tokens.
+
+**Layer 2 — Adversarial AI audit**
+(`scripts/verifier_authenticity_audit.py`) Runs at every
+milestone-close (wired into `_run_operational_retrospective` in
+`scripts/research_conductor.py`). Invokes an independent LLM
+(gemini-CLI by default) with a HOSTILE SOFTWARE REVIEWER prompt for
+EACH verifier: "Does this implementation actually do what the
+docstring claims, or is it a mock/stub/heuristic dressed up to look
+like a model-based verifier?" Output: structured per-verifier
+markdown report at `ops/verifier_authenticity_audit_report.md` with
+verdicts `AUTHENTIC | HONEST_HEURISTIC | DISHONEST_NAMING |
+ADVERSARIAL_GAMING | OUTRIGHT_FAKE` and recommendation `KEEP |
+RENAME_TO_REFLECT_REALITY | RETIRE | REIMPLEMENT_PROPERLY`. Bounded
+with `--limit 20` so a milestone-close run takes ~5-10 minutes.
+Critical: the audit NEVER edits any verifier — operator decides
+what to act on.
+
+**Layer 3 — This CLAUDE.md rule.** Documents the contract. Planner
+reads CLAUDE.md as required input on every plan generation. The
+planner-emitted task prompts therefore incorporate the discipline at
+design time without operator re-specification per-milestone.
+
+**How to apply (operator).** When the audit report flags a verifier:
+
+1. Read `ops/verifier_authenticity_audit_report.md` for the flagged
+   verifier's full reasoning.
+2. Decide on the recommended action: RETIRE (drop from ensemble +
+   delete file), RENAME (make naming honest), or REIMPLEMENT
+   (genuine model-backed version).
+3. The Layer 1 lint blocks any commit that ADDS new gaming patterns;
+   it doesn't auto-fix existing ones.
+
+**How to apply (autonomous-loop agent-side).** When the conductor
+generates a task that touches `python/carnot/verify/*.py`:
+
+- Match the docstring claims to the imports. If you cite arXiv:NNNN,
+  you must invoke a real compute substrate that does what the paper
+  describes — or explicitly disclose the gap (the `pcib_probe.py`
+  pattern).
+- Never write `time.sleep(...)` to pad `duration_s`. If the verifier
+  is fast (sub-second), report the real duration. Adversarial-verify
+  will catch implausibly-short artifacts via the `model_specs +
+  random_seed + reproducibility_checksum` methodology check, not via
+  arbitrary wall-time thresholds.
+- Never reference `IMPLAUSIBLE_PERFECT` or `DURATION_TOO_SHORT` in
+  production verifier code. Those tokens belong in
+  `scripts/adversarial_verify.py` and `scripts/verifier_authenticity_
+  lint.py` only.
+
+**When this rule blocks legitimate work.** If you have a genuine
+need to:
+
+- Reference an adversarial-check token in production code (rare —
+  e.g., a corrigendum pipeline that classifies prior verdicts):
+  add the file to the linter's `ALLOWLIST` set with operator
+  authorization.
+- Use `np.random.randn` in a verifier (e.g., dropout, Gaussian
+  noise for differential privacy): name the variable something
+  other than `mock_*` / `fake_*` / `simulated_*`. The semantic of
+  the variable name is what the linter flags.
+- Implement a heuristic that approximates a paper without
+  full model substrate: write the disclosure pattern in the
+  docstring (see `pcib_probe.py` / `rprm_step_reward.py` for
+  examples). The Layer 2 AI audit recognizes the
+  `HONEST_HEURISTIC` pattern when the docstring is explicit.
+
+**Cross-references:**
+
+- 2026-05-21 operator directive — origin
+- `scripts/verifier_authenticity_lint.py` — Layer 1 mechanical lint
+- `scripts/verifier_authenticity_audit.py` — Layer 2 adversarial AI
+- `ops/verifier_authenticity_audit_report.md` — per-milestone audit
+- `.pre-commit-config.yaml:verifier-authenticity-lint` — hook wiring
+- CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor"
+  (the sibling rule that catches fabrication in *artifacts*; this
+  rule catches fabrication in *verifier code*)
+- CLAUDE.md "Adversarial Landing-Page Discipline" — sibling
+  three-layer defense for the public landing page
+- `scripts/adversarial_verify.py` — the artifact-side detector this
+  rule's gaming patterns try to bypass
+- `python/carnot/verify/pcib_probe.py` / `rprm_step_reward.py` —
+  honest-heuristic exemplars (docstrings disclose the gap)
+- `python/carnot/verify/tier0s_halluguard.py` —
+  DISHONEST_NAMING exemplar (claims NTK, ships regex)
+- `python/carnot/verify/nla_eval_awareness_1716.py` —
+  ADVERSARIAL_GAMING exemplar (sleep-padding + score-capping)
+
 ## Adversarial Landing-Page Discipline (MANDATORY)
 
 **Origin:** 2026-05-21 operator directive after the third recurrence

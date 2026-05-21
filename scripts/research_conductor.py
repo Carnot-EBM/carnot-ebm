@@ -3897,6 +3897,32 @@ def research_step(
                 except Exception as _e:
                     logger.warning("Adversarial audit failed (non-fatal): %s", _e)
 
+            # Verifier authenticity audit (per CLAUDE.md "Verifier
+            # Authenticity Discipline" 2026-05-21). Independent LLM
+            # invocation as HOSTILE SOFTWARE REVIEWER reads each
+            # python/carnot/verify/*.py and checks whether the
+            # implementation matches the docstring claims. Writes
+            # ops/verifier_authenticity_audit_report.md. Does NOT edit
+            # any verifier — operator decides RETIRE / RENAME / REIMPL.
+            # Bounded with --limit so a milestone-close run takes
+            # ~5-10 minutes max; the linter at scripts/verifier_
+            # authenticity_lint.py catches gaming patterns every commit.
+            if not dry_run:
+                try:
+                    logger.info("Running verifier authenticity audit...")
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "verifier_authenticity_audit.py"),
+                            "--limit", "20",
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=900,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("Verifier authenticity audit failed (non-fatal): %s", _e)
+
             logger.info("No research-roadmap-next.yaml — launching planning agent")
             if dry_run:
                 logger.info("[DRY RUN] Would launch planning agent for next milestone")

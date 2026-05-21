@@ -1,3 +1,41 @@
+## 2026-05-21 Post-.263 Planning Sweep (Milestone 2026.05.264)
+
+This sweep was run after milestone `.263` completed with 0 of 12 task artifacts produced — all tasks
+SKIP due to the pre-test cascade (WeakStrongRouter ImportError blocking conductor's pytest collection).
+Pre-test fix committed b729ba788 before .264 planning (WeakStrongRouter implemented in verify_repair.py).
+
+- **arXiv:2602.11364 — "The Energy of Falsehood: Detecting Hallucinations via Diffusion Model Likelihoods"
+  (DiffuTruth)**: Uses discrete text diffusion models as thermodynamic verification engines; quantifies
+  hallucinations through Semantic Energy derived from NLI contradiction scores (AUROC 0.70+ on fact
+  verification benchmarks). Relevance to Carnot: directly applies energy-based principles to hallucination
+  detection via diffusion likelihoods — a novel Tier 0bb candidate that complements the existing k=19
+  verifier ensemble. The thermodynamic framing aligns with Carnot's Ising-based energy computation.
+  Target: exp2797.
+
+- **arXiv:2505.19475 — "Continuous Self-Improvement of LLMs by Test-time Training with Verifier-Driven
+  Sample Selection"**: Uses verifier confidence scores to assign reliability ratings to candidate
+  responses; performs TTT on high-confidence pseudo-labeled datasets for ongoing performance improvement.
+  Relevance to Carnot: demonstrates how FR-11 Tier 4 verifier confidence can drive continual adaptation
+  — the verifier-driven selection mechanism mirrors NEXUS rule expansion in the self-learning loop.
+
+- **arXiv:2506.01369 — "Incentivizing LLMs to Self-Verify Their Answers"**: Incorporates self-verification
+  into post-training; models learn to generate longer self-checking responses for low-confidence queries
+  (test-time scaling). Relevance to Carnot: Phase 4 FEP candidate — the self-verification behavior can
+  be interpreted as free-energy minimization; low-confidence triggers longer verification chains matching
+  the FEP deliberative routing pattern validated in exp2766 (held_out_auroc=0.9989).
+
+- **arXiv:2603.19715 — "Stepwise: Neuro-Symbolic Proof Search for Automated Systems Verification"**:
+  Combines fine-tuned LMs with neuro-symbolic proof search; achieves 77.6% proof success rates on
+  automated verification benchmarks. Relevance to Carnot: the neuro-symbolic search architecture
+  complements NSVIF (arXiv:2601.17789) — both use LLM + symbolic solver; Stepwise's proof search adds
+  a structured repair path that could follow Carnot's Ising energy detection stage.
+
+- **arXiv:2602.18145 — "Detecting Contextual Hallucinations in LLMs with Frequency-Aware Attention"**:
+  Shows hallucinated tokens exhibit high-frequency attention energy patterns reflecting fragmented
+  grounding; develops a lightweight detector using frequency-based attention features. Relevance to
+  Carnot: low-cost Tier 0 hallucination signal via attention energy — complementary to Confidence
+  Geometry (arXiv:2605.16824, exp2795) as a second orthogonal attention-based verifier.
+
 ## 2026-05-21 Post-.262 Planning Sweep (Milestone 2026.05.263)
 
 This sweep was run after milestone `.262` completed with 5 of 13 task artifacts produced (exp2764–exp2769

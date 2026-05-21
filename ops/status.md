@@ -1,6 +1,54 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-21 (milestone 2026.05.262 research planning complete)
+**Last Updated:** 2026-05-21 (milestone 2026.05.264 research planning complete)
+
+## Session 2026-05-21 - Milestone 2026.05.264 Research Planning Complete
+
+**Milestone 2026.05.263 COMPLETED (all 12 tasks SKIPPED — zero artifacts). Root cause: pre-test cascade from `tests/python/test_weak_strong_router.py` importing `WeakStrongRouter, RoutingDecision` from `carnot.pipeline.verify_repair` — neither class existed, causing pytest collection ImportError, blocking ALL conductor tasks. Structural deadlock: exp2778 (the designated fix task in .263) was itself blocked by the pre-test cascade it was meant to fix. Resolved at outer-loop level before .264 planning.**
+
+**Pre-test cascade fix (commit b729ba788):** Implemented `WeakStrongRouter` class and `RoutingDecision` dataclass in `python/carnot/pipeline/verify_repair.py`. Follows arXiv:2602.17633 two-threshold policy: responses below t_low accepted, above t_high escalate to full ensemble, middle band uses Tier 0f verification. After fix: `test_weak_strong_router.py` 1/1 PASSED; 25,622 tests collect cleanly.
+
+**Milestone 2026.05.264 PLANNED as "Verifier FoVer Diagnosis + Delta H2 Fix + FR-11 N=50 + Tier 0aa/0bb + arXiv Package v5".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v264.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2789`–`exp2800`)
+- ID allocation: milestone `.263` used through `exp2788`, so `.264` starts at `exp2789`.
+- Research references updated with Post-.263 Planning Sweep (2026-05-21): 5 new papers added:
+  - arXiv:2602.11364 (DiffuTruth — Energy of Falsehood → exp2797 Tier 0bb)
+  - arXiv:2505.19475 (Self-Improvement via Verifier TTT → FR-11 Tier 4 context)
+  - arXiv:2506.01369 (Incentivizing LLMs to Self-Verify → Phase 4 FEP context)
+  - arXiv:2603.19715 (Stepwise Neuro-Symbolic Proof Search → exp2798 citation)
+  - arXiv:2602.18145 (Frequency-Aware Attention Hallucination → exp2795 comparator)
+- **Three biggest gaps targeted**:
+  1. **CRITICAL — Verifier FoVer Redirect v5**: exp2790 redirects from fresh GGUF inference to labeled FoVer violation pairs to isolate whether ArithmeticExtractor works on structured data. 5 consecutive fresh-inference attempts all produced energy_values=[0,0,0,0,0]; root cause is regex finding 0 constraints in instruction-tuned model natural-language outputs. CASE A (extractor works on FoVer) → implement LLM-as-extractor fallback. CASE B (energy=0 even on FoVer) → diagnose deeper. prior_failures: exp2779 (SKIP), exp2765 (energy=0), exp2752 (ABSENT), exp2740 (blocked_gguf_qwen36_not_cached), exp2727 (DURATION_TOO_SHORT).
+  2. **CRITICAL — Delta H2 Regression Fix**: exp2791 routes to Claude Opus (requires_claude=true). Gemini demonstrably failed 3x (rate-limited 600s each attempt). Multi-file git bisect + pipeline edit + iterative hypothesis testing across commit history = meets all 3 positive criteria. prior_failures: exp2767 (gemini rate-limited 3x), exp2754 (H2 regression confirmed, delta=0.000/60 successes), exp2744 (delta=0.000/131 attempts).
+  3. **HIGH — FR-11 Tier 4 Full Benchmark N=50**: exp2792 validates real cycle-to-cycle AUROC at production scale (vs smoke N=3 in exp2768 which took suspicious 8s). Gate: AUROC>0.85, pool_test_overlap=0, N>=50 cycles. continuous_self_learning_task=true.
+- **Phase structure**:
+  - Phase A (exp2789): Archive .263 + Activate .264
+  - Phase B (exp2790–exp2792): Critical gap fixes (FoVer redirect, delta H2 Opus, FR-11 N=50)
+  - Phase C (exp2793–exp2797): Research advancement (NEXUS 34→50+, CP-Router, Tier 0aa, Tier 0z fix/retire, DiffuTruth Tier 0bb)
+  - Phase D (exp2798–exp2799): Publication track (paper v6 theory v5 gated on exp2790+exp2791, arXiv package v5 gated on exp2798)
+  - Phase E (exp2800): Capstone v264 (claude/opus, requires_claude: true)
+- **Agent routing**: 10 gemini/gemini-3.1-pro-preview (83.3%); 2 claude/opus (exp2791 delta H2 fix + exp2800 capstone — both require_claude: true, within 2/12 ceiling).
+- **Hardware continuity**: No mandatory hardware tasks. All 3 FPGA boards at terminal state (KV260 .260, GateMate .247, PolarFire .241).
+- **FR-11 mandate**: exp2792 (FR-11 Tier 4 Full Benchmark N=50, continuous_self_learning_task: true).
+- **New research contributions**:
+  - DiffuTruth (arXiv:2602.11364) — NLI contradiction energy as hallucination signal; exp2797 Tier 0bb (NEW verifier type)
+  - Self-Improvement via Verifier TTT (arXiv:2505.19475) — FR-11 Tier 4 production context; exp2792
+  - Incentivizing Self-Verify (arXiv:2506.01369) — Phase 4 FEP framework; exp2798 theory
+  - Stepwise Neuro-Symbolic Proof Search (arXiv:2603.19715) — paper v6 theory citation; exp2798
+  - Frequency-Aware Attention Hallucination (arXiv:2602.18145) — Tier 0aa comparator; exp2795
+- Exclusion manifest cross-check: 0 scope matches found.
+- **All CLAUDE.md mandatory disciplines applied**: Gemini-Default (10/12 gemini), prior_failures (all with mandatory 4-field structure), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate (exp2792 continuous_self_learning_task=true), no hardware tasks (all boards terminal), KV260 SSH-Not-SD-Card N/A, Exclusion Manifest 0 matches, Operator-Only publication discipline (exp2799 produces package — never submits).
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.264. exp2789 (archive/activate) → exp2790 (verifier FoVer redirect v5 — CRITICAL) → exp2791 (delta H2 fix — Claude Opus) → exp2792 (FR-11 N=50 benchmark) → exp2793–exp2797 (research advancement) → exp2798 (paper theory, gated) → exp2799 (arXiv package, gated) → exp2800 (capstone, claude/opus).
+
+**Operator actions still required from .261**:
+- Phase 1 ship: `git tag v0.1.0b1 && git push origin v0.1.0b1` if not yet done (CI publishes to PyPI via OIDC).
+- HuggingFace model card update + IPFS pin: exp2774 (.262) will produce operator checklist.
+- arXiv v6 submission: HOLDS until Phase 4 empirically validates + paper revised. OPERATOR-ONLY. exp2799 will produce package for operator review.
+
+---
 
 ## Session 2026-05-21 - Milestone 2026.05.262 Research Planning Complete
 

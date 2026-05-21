@@ -5741,3 +5741,20 @@ Ripgrep i |
 | 2026-05-21 11:14 UTC | Capstone v263: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.28s |
 | 2026-05-21 11:16 UTC | Capstone v263: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
 | 2026-05-21 11:18 UTC | Capstone v263: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.13s |
+| 2026-05-21 11:45 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-21 11:47 UTC | Milestone 2026.05.264 activated | OK | 12 tasks queued |
+| 2026-05-21 11:50 UTC | Archive .263 + Activate .264 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.36s |
+| 2026-05-21 11:52 UTC | Archive .263 + Activate .264 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.38s |
+| 2026-05-21 11:54 UTC | Archive .263 + Activate .264 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.46s |
+| 2026-05-21 11:56 UTC | Verifier FoVer Redirect v5: Diagnose Zero-Energy v | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.62s |
+| 2026-05-21 11:58 UTC | Verifier FoVer Redirect v5: Diagnose Zero-Energy v | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.42s |
+| 2026-05-21 12:00 UTC | Verifier FoVer Redirect v5: Diagnose Zero-Energy v | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.41s |
+| 2026-05-21 12:02 UTC | Delta H2 Regression Fix: Git Bisect + Repair Pipel | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.60s |
+| 2026-05-21 12:04 UTC | Delta H2 Regression Fix: Git Bisect + Repair Pipel | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.38s |
+| 2026-05-21 12:07 UTC | Delta H2 Regression Fix: Git Bisect + Repair Pipel | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.36s |
+| 2026-05-21 12:09 UTC | FR-11 Tier 4 Full Benchmark N=50: Real Production  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.66s |
+| 2026-05-21 12:11 UTC | FR-11 Tier 4 Full Benchmark N=50: Real Production  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.43s |
+| 2026-05-21 12:13 UTC | FR-11 Tier 4 Full Benchmark N=50: Real Production  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.58s |
+| 2026-05-21 12:15 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.98s |
+| 2026-05-21 12:17 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 4.31s |
+| 2026-05-21 12:19 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.60s |
