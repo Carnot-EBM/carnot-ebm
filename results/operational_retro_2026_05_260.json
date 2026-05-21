@@ -1,0 +1,31 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.260",
+  "generated_at": "2026-05-21T04:00:08Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.260 had 0 experiment commits in the timing window, making this the thirty-fifth consecutive empty-timing-window retro. Both RTX 3090s were idle at 0% utilization (40C / 49C). The persistent root cause — timing-script look-back not anchored to conductor-state.json activated_at timestamp — remains unresolved across all 35 milestones.",
+  "bottlenecks_identified": [
+    "Timing-script look-back window not anchored to conductor-state.json activated_at timestamp: root cause of 35 consecutive empty-timing-window retros. The look-back captures only commits in a fixed duration prior to retro invocation; post-activation experiment commits fall outside this window, making every retro report 0 experiments regardless of actual throughput.",
+    "No post-activation dispatch verification gate: the retro fires before any experiment has committed results in the new milestone's timing window, giving no data to analyze.",
+    "Zero structural change in 35 milestones despite the root cause being diagnosed and documented since at least milestone .250: the infrastructure fix is queued but never allocated a task slot that executes before the retro runs."
+  ],
+  "improvements_suggested": [
+    "Fix timing-script look-back to use conductor-state.json activated_at as the start boundary instead of a fixed look-back duration — eliminates the root cause of all 35 empty-window retros in a single mechanical change.",
+    "Wire a zero-artifact alarm at 60 minutes post-activation so the operator is alerted before the retro fires with 0 experiments.",
+    "Dispatch at least one non-retro experiment in the same conductor session as milestone activation to ensure at least one commit exists in the timing window before the retro fires.",
+    "Treat the timing-script fix as a SCOPE REDUCTION priority task per CLAUDE.md 'Scope-Reduction-When-Flagged Discipline' — allocate it as the first task slot in the next milestone roadmap, before any research-breadth experiment."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to conductor-state.json activated_at timestamp — single mechanical change that eliminates the root cause of 35 consecutive empty-timing-window retros and restores operational visibility into experiment throughput.",
+    "Wire zero-artifact alarm at 60 min post-activation — gives operator early warning before the retro fires with 0 experiments, enabling intervention before the milestone window closes.",
+    "Activate first non-retro experiment in the same conductor session as milestone activation — ensures at least one commit lands in the timing window, breaking the structural pattern of retros with no data to analyze."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This is the thirty-fifth consecutive empty-timing-window retro with identical root cause, identical bottlenecks, and identical top-leverage actions. The retro now adds zero new information — its entire content is mechanically derivable from the prior 34. The most valuable meta-insight is that a retro producing no new information is itself a signal: the infrastructure-class fix (timing-script look-back) should preempt all research-breadth exploration in the next milestone, not compete with it as one of 13 tasks.",
+  "honest_verdict": "complete: thirty-fifth consecutive empty-timing-window retro; 0 experiments in timing scope; both RTX 3090s idle (40C/49C); gpu_idle_on_compute_bound_tasks=null; root cause (timing-script look-back not anchored to activated_at) persists 35 milestones; top action: fix timing-script look-back before next milestone activates"
+}
