@@ -211,6 +211,8 @@ lacking external grounding).
 
 This paper-v6 narrowing pass treats the following claims as the complete headline claim set. Each claim is retained only because it has checked-in empirical artifacts and a named theoretical support boundary; broader interpretations move to Appendix or future work.
 
+\paragraph{Theoretical Background.} The foundational theoretical background mapping these bounds to auto-regressive generation relies on the exact ARM-EBM bijection~\cite{blondel2025arm}.
+
 \begin{enumerate}
   \item \textbf{CLAIM-1 --- Verifier composition is bounded by measured correlation.} Carnot may claim a measured heterogeneous k=5 verifier stack and a homogeneous text-probe ceiling; it may not claim arbitrary k scaling.
   Empirical artifacts: \path{results/experiment_1093_phase1c_verifier_joint_null_space_measurement.json}, \path{results/experiment_1224_phase5c_adversarial_probe.json}, \path{results/experiment_1256_verifier_orthogonality_audit_v3.json}.
@@ -495,14 +497,14 @@ joint modeling + Wald sequential probability ratio testing.
 When a candidate is rejected by the verifier ensemble, Carnot passes
 it to a repair LLM and re-enters the cascade. This verify-repair loop
 is an absorbing Markov chain with absorption probability $\delta$ at
-each step. Dantas et al.~\cite{dantas2025fouroveedelta} prove that
+each step. Dantas et al.~\cite{dantas2025four} prove that
 such chains terminate in expected iterations
 $\mathbb{E}[n] \leq 4/\delta$,
 giving a closed-form termination guarantee: for a verifier pass rate
-of $\delta = 0.1$ (10\% of candidates accepted), the pipeline
-terminates in at most $40$ expected iterations.
+of $\delta = 0.25$ (25\% of candidates accepted), the pipeline
+terminates in at most $16$ expected iterations.
 The fast-then-slow cascade structure independently validated by
-\cite{fastslow2026} --- cheap Tier-0 probes providing high-frequency
+Hashimoto et al.~\cite{hashimoto2026fst} --- cheap Tier-0 probes providing high-frequency
 fast feedback, expensive Tier-3 Ising MCMC providing slow definitive
 constraints --- directly minimises $\delta$-per-dollar by sorting
 candidates before invoking costly verifiers.
