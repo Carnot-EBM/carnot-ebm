@@ -5848,3 +5848,4 @@ Ripgrep i |
 | 2026-05-21 15:35 UTC | Capstone v266: Multi-Corpus Headline + FoVer Overf | OK | cache hit: 81 passed in 3.86s |
 | 2026-05-21 16:03 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-21 16:30 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-21 17:00 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |
