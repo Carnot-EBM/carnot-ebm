@@ -3153,3 +3153,62 @@ Then the artifact reports complete dual-condition pass@1 and AUROC summaries,
 per-seed results, per-verifier AUROC lists for both conditions, restored FR-11
 state hashes, peer-baseline comparisons, and an `honest_verdict` prefixed
 `complete:`.
+
+### REQ-VERIFY-2831: TruthfulQA-Generation Dual-Memory Ensemble Evaluation
+
+The repository shall provide an Exp 2831 TruthfulQA-generation dual-memory
+runner that writes `results/experiment_2831_truthfulqa_ensemble_eval.json` for
+exactly 200 questions sampled from the TruthfulQA generation split with
+test-sample seed 42 and five adversarial replication seeds
+`[42, 137, 271, 314, 1729]`.
+
+Before any live TruthfulQA inference, BLEURT labeling, or verifier scoring, the
+runner MUST verify CUDA availability, HuggingFace TruthfulQA generation-split
+access, a discoverable Qwen3.6-35B-A3B GGUF cache, present FR-11 state files,
+and a cacheable BLEURT-base-128 scorer. If any precondition is missing, the
+runner MUST write a terminal `blocked_<resource>` artifact rather than
+fabricating AUROC, BLEURT thresholds, duration, candidates, labels, or
+per-verifier scores.
+
+For successful live runs, the runner MUST generate or reuse the same
+question/candidate pairs under both memory conditions: Condition A with full
+FR-11 production state and Condition B after non-destructively moving FR-11
+state aside, restarting Python, and scoring architecture-only verifier
+behavior. The ground-truth labels MUST use BLEURT-base-128 semantic similarity
+against TruthfulQA `best_answer`, with the threshold tuned on a 50-question
+held-out calibration set that does not overlap the 200-question test sample.
+The runner MUST NOT use a closed-weight LLM judge for labels. The runner MUST
+restore every FR-11 state file and prove SHA256 matches the original state
+manifest.
+
+The artifact MUST include `honest_verdict`,
+`corpus="TruthfulQA-generation"`, `n_questions=200`, `n_seeds`, Condition A
+and B AUROC means and standard deviations, `learning_contribution = A - B`,
+per-verifier AUROC lists for both conditions, `scoring_method`, a measured
+`bleurt_threshold`, random seeds, reproducibility checksum, model specs, real
+`duration_s`, precondition evidence, FR-11 state-file hashes and byte sizes,
+`state_files_restored_sha_match`, GPT-3 MC1 and published BLEURT-verifier
+comparison fields when available, field-principle annotations, and an honest
+methodology note.
+
+### SCENARIO-VERIFY-2831: Missing Preconditions Block TruthfulQA Metrics
+
+Given the Exp 2831 runner starts in an environment missing CUDA, TruthfulQA
+dataset access, the Qwen3.6 GGUF cache, FR-11 state files, or BLEURT-base-128,
+When the runner checks preconditions before live inference or BLEURT scoring,
+Then it writes `results/experiment_2831_truthfulqa_ensemble_eval.json` with
+`honest_verdict` prefixed `blocked_`, null AUROC and BLEURT-threshold metrics,
+empty per-verifier AUROC maps, populated `preconditions_checked`, preserved
+FR-11 state-file hashes, and no inferred benchmark numbers.
+
+### SCENARIO-VERIFY-2831-LIVE: Successful TruthfulQA Run Reports Dual Conditions
+
+Given all Exp 2831 live-resource preconditions are available and a real
+Qwen3.6 TruthfulQA generation, BLEURT labeling, calibration, and
+ensemble-scoring backend is configured,
+When the runner evaluates all 200 sampled TruthfulQA generation questions for
+all five seeds under production and architecture-only memory conditions,
+Then the artifact reports complete dual-condition AUROC summaries, per-seed
+results, per-verifier AUROC lists for both conditions, a non-null calibrated
+BLEURT threshold, restored FR-11 state hashes, baseline comparisons, and an
+`honest_verdict` prefixed `complete:`.

@@ -1,0 +1,246 @@
+{
+  "corpus": "TruthfulQA-generation",
+  "n_questions": 200,
+  "n_seeds": 5,
+  "test_sample_seed": 42,
+  "calibration_size": 50,
+  "scoring_method": "BLEURT-base-128, threshold tuned on 50-Q held-out",
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "d295ce7ebb7fda20faca7f59320899832e22f800e5ea70014b6f3ad6eae5ddc4",
+  "model_specs": {
+    "name": "Qwen3.6-35B-A3B-GGUF",
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "quant": "Q4_K_M",
+    "revision_sha": "a483e9e6cbd595906af30beda3187c2663a1118c",
+    "cache_complete": false,
+    "resolved_gguf": null,
+    "verifier": "ensemble_v7b",
+    "scoring_model": "BLEURT-base-128"
+  },
+  "duration_s": 0.8313767910003662,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": false,
+      "detail": "torch import ok; cuda_available=False; device_count=0"
+    },
+    {
+      "resource": "hf_truthfulqa_generation",
+      "available": false,
+      "detail": "datasets package is not installed"
+    },
+    {
+      "resource": "qwen36_gguf_cache",
+      "available": false,
+      "detail": "no real .gguf found in HF snapshots or project models directory"
+    },
+    {
+      "resource": "fr11_state_files",
+      "available": true,
+      "detail": "11 FR-11 state files discovered"
+    },
+    {
+      "resource": "bleurt_base_128",
+      "available": false,
+      "detail": "bleurt package missing and models/bleurt-base-128 was not found"
+    }
+  ],
+  "fr11_state_files": [
+    {
+      "path": "results/fr11_closure_certificate.json",
+      "sha256": "e3a0b48362e2b5217c7571eec76bd3344ae42b071161d949326cb4fa6d66dd59",
+      "n_bytes": 611
+    },
+    {
+      "path": "results/fr11_external_feedback_skill_graph_1539.json",
+      "sha256": "0422531c1773b2640531d06dba316fc4cf7906f135960067a622f71aba933c80",
+      "n_bytes": 3432
+    },
+    {
+      "path": "results/fr11_external_feedback_skill_rollback_plan_1539.json",
+      "sha256": "b397467a89438ccd1a3b5b8688b9d8e34bbedf0615bd10230250174004419b3c",
+      "n_bytes": 1643
+    },
+    {
+      "path": "results/fr11_live_policy_promotion_1524.jsonl",
+      "sha256": "fe79bbd809345e42a612b38c2e25705b41458067e88657a48093689e4bfe7738",
+      "n_bytes": 44721
+    },
+    {
+      "path": "results/fr11_policy_cache_events_1512.jsonl",
+      "sha256": "3597a09bf7ed627193b94146f731501ab3f511dc1936acfb214fd5e60409e300",
+      "n_bytes": 60543
+    },
+    {
+      "path": "results/fr11_policy_rollback_replay_1513.jsonl",
+      "sha256": "bc7d27010a77a21b2477477754f4d9c9f39946c74026cc4d2896a32fa6fc9543",
+      "n_bytes": 72660
+    },
+    {
+      "path": "results/fr11_positive_utility_skill_graph_1555.json",
+      "sha256": "3f9e1291ba1034972bdb50db7dfbb3470c6137f5615d7514a35790441de19aab",
+      "n_bytes": 462
+    },
+    {
+      "path": "results/fr11_trace2skill_daily_eval_manifest_1497.jsonl",
+      "sha256": "9cfc0f3477664242920bcd15ec1c45d0a06b79d0ffc27f31d1cf4761b5d53d30",
+      "n_bytes": 33454
+    },
+    {
+      "path": "results/nexus_constraint_memory_v2.json",
+      "sha256": "030497fb2fcde5e6bc4fd244549405568ddd7603c45d4bc549c6047fab9de00e",
+      "n_bytes": 2448
+    },
+    {
+      "path": "results/session_memory_1447/fr11_v7_dvi_v3_local_fover/session_state.json",
+      "sha256": "7bf445b2c1a4f3587517d15d2b0eecbda56d32c768352b241adcb2881fa98565",
+      "n_bytes": 184834
+    },
+    {
+      "path": "results/session_memory_1471/fr11_v8_exp1447_policy_fresh_verified_rows/session_state.json",
+      "sha256": "3c1d5205057d2f09382079fb8bc3462b49c4701aa405ab3fd3a1c62309ddeb5e",
+      "n_bytes": 16481
+    }
+  ],
+  "state_files_restored_sha_match": true,
+  "ground_truth_source": "BLEURT-base-128 semantic similarity against TruthfulQA best_answer; 50-question held-out threshold calibration; no closed-weight judge",
+  "field_principles": {
+    "honest_verdict": "Terminal prefix separates complete, blocked, and failed runs.",
+    "corpus": "Identifies the benchmark split so results are not cross-corpus mixed.",
+    "n_questions": "Sample size must be 200 to match the planned TruthfulQA subset.",
+    "n_seeds": "Five adversarial replication seeds expose seed-sensitive lifts.",
+    "condition_a_production_auroc_mean": "Production FR-11 verifier scoring quality.",
+    "condition_a_production_auroc_std": "Replication noise for production scoring.",
+    "condition_b_architecture_only_auroc_mean": "Architecture-only verifier baseline.",
+    "condition_b_architecture_only_auroc_std": "Replication noise for architecture-only.",
+    "learning_contribution": "= A - B. On TruthfulQA the contribution is expected to be near zero (FR-11 state is FoVer-derived); a positive contribution means FoVer-derived rules transferred.",
+    "per_verifier_condition_a_auroc": "Shows which production verifiers transfer.",
+    "per_verifier_condition_b_auroc": "KEY finding is which verifiers transfer from FoVer-math to TruthfulQA-factual.",
+    "scoring_method": "Records BLEURT rather than a closed-weight judge.",
+    "bleurt_threshold": "The binary label boundary must come from held-out calibration.",
+    "random_seeds_used": "Determinism is required for replication.",
+    "reproducibility_checksum": "Content hash catches corpus, model, or state drift.",
+    "model_specs": "Names the local open-weight model and scoring target.",
+    "duration_s": "Real compute takes wall-time; expected >= 1800s. Sleep-padding forbidden.",
+    "preconditions_checked": "Records exactly which resources were verified before inference.",
+    "fr11_state_files": "Names every FR-11 state file that Condition B must reset.",
+    "state_files_restored_sha_match": "Non-destructive reset proof.",
+    "methodology_note": "Honest interpretation of measured or blocked state."
+  },
+  "honest_verdict": "blocked_cuda_unavailable",
+  "blocked_resources": [
+    "cuda",
+    "hf_truthfulqa_generation",
+    "qwen36_gguf_cache",
+    "bleurt_base_128"
+  ],
+  "condition_a_production_auroc_mean": null,
+  "condition_a_production_auroc_std": null,
+  "condition_b_architecture_only_auroc_mean": null,
+  "condition_b_architecture_only_auroc_std": null,
+  "learning_contribution": null,
+  "per_verifier_condition_a_auroc": {},
+  "per_verifier_condition_b_auroc": {},
+  "bleurt_threshold": null,
+  "published_bleurt_verifier_comparators": [],
+  "baseline_comparison": {
+    "gpt3_mc1_approx": 0.28,
+    "production_minus_gpt3_mc1_approx": null,
+    "published_bleurt_verifier_best_auroc": null,
+    "production_minus_bleurt_comparator_best": null,
+    "comparison_note": "No production AUROC was measured, so baseline deltas are intentionally null."
+  },
+  "methodology_note": "Blocked before live TruthfulQA inference, BLEURT scoring, or ensemble measurement because required resources were missing: cuda, hf_truthfulqa_generation, qwen36_gguf_cache, bleurt_base_128. No AUROC, threshold, candidate, label, or per-verifier metrics were inferred.",
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "Terminal prefix separates complete, blocked, and failed runs.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "corpus": {
+      "principle": "Identifies the benchmark split so results are not cross-corpus mixed.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "n_questions": {
+      "principle": "Sample size must be 200 to match the planned TruthfulQA subset.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "n_seeds": {
+      "principle": "Five adversarial replication seeds expose seed-sensitive lifts.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "condition_a_production_auroc_mean": {
+      "principle": "Production FR-11 verifier scoring quality.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "condition_a_production_auroc_std": {
+      "principle": "Replication noise for production scoring.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "condition_b_architecture_only_auroc_mean": {
+      "principle": "Architecture-only verifier baseline.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "condition_b_architecture_only_auroc_std": {
+      "principle": "Replication noise for architecture-only.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "learning_contribution": {
+      "principle": "= A - B. On TruthfulQA the contribution is expected to be near zero (FR-11 state is FoVer-derived); a positive contribution means FoVer-derived rules transferred.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "per_verifier_condition_a_auroc": {
+      "principle": "Shows which production verifiers transfer.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "per_verifier_condition_b_auroc": {
+      "principle": "KEY finding is which verifiers transfer from FoVer-math to TruthfulQA-factual.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "scoring_method": {
+      "principle": "Records BLEURT rather than a closed-weight judge.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "bleurt_threshold": {
+      "principle": "The binary label boundary must come from held-out calibration.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "random_seeds_used": {
+      "principle": "Determinism is required for replication.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content hash catches corpus, model, or state drift.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "model_specs": {
+      "principle": "Names the local open-weight model and scoring target.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "duration_s": {
+      "principle": "Real compute takes wall-time; expected >= 1800s. Sleep-padding forbidden.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "preconditions_checked": {
+      "principle": "Records exactly which resources were verified before inference.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "fr11_state_files": {
+      "principle": "Names every FR-11 state file that Condition B must reset.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "state_files_restored_sha_match": {
+      "principle": "Non-destructive reset proof.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "methodology_note": {
+      "principle": "Honest interpretation of measured or blocked state.",
+      "satisfied_by": "blocked before measurement"
+    }
+  }
+}
