@@ -5845,3 +5845,4 @@ Ripgrep i |
 | 2026-05-21 15:29 UTC | Capstone v266: Multi-Corpus Headline + FoVer Overf | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.37s |
 | 2026-05-21 15:31 UTC | FUSE Zero-Labeled Ensemble Weighting (arXiv:2604.1 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
 | 2026-05-21 15:31 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2815) |
+| 2026-05-21 15:35 UTC | Capstone v266: Multi-Corpus Headline + FoVer Overf | OK | cache hit: 81 passed in 3.86s |
