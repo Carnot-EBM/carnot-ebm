@@ -1,0 +1,139 @@
+{
+  "corpus": "MBPP-sanitized-test",
+  "n_problems": 100,
+  "n_seeds": 5,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "3203861c4c82fe413b0ea77628f98205218d345214f85e68feef1da71b5015aa",
+  "model_specs": {
+    "name": "Qwen3.6-35B-A3B-GGUF",
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "quant": "Q4_K_M",
+    "revision_sha": "a483e9e6cbd595906af30beda3187c2663a1118c",
+    "cache_complete": false,
+    "resolved_gguf": null
+  },
+  "duration_s": 0.8714179992675781,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": false,
+      "detail": "torch import ok; cuda_available=False; device_count=0"
+    },
+    {
+      "resource": "hf_mbpp",
+      "available": false,
+      "detail": "datasets package is not installed"
+    },
+    {
+      "resource": "qwen36_gguf_cache",
+      "available": false,
+      "detail": "no real .gguf found in HF snapshots or project models directory"
+    },
+    {
+      "resource": "fr11_state_files",
+      "available": true,
+      "detail": "11 FR-11 state files discovered"
+    }
+  ],
+  "fr11_state_files": [
+    {
+      "path": "results/fr11_closure_certificate.json",
+      "sha256": "e3a0b48362e2b5217c7571eec76bd3344ae42b071161d949326cb4fa6d66dd59",
+      "n_bytes": 611
+    },
+    {
+      "path": "results/fr11_external_feedback_skill_graph_1539.json",
+      "sha256": "0422531c1773b2640531d06dba316fc4cf7906f135960067a622f71aba933c80",
+      "n_bytes": 3432
+    },
+    {
+      "path": "results/fr11_external_feedback_skill_rollback_plan_1539.json",
+      "sha256": "b397467a89438ccd1a3b5b8688b9d8e34bbedf0615bd10230250174004419b3c",
+      "n_bytes": 1643
+    },
+    {
+      "path": "results/fr11_live_policy_promotion_1524.jsonl",
+      "sha256": "fe79bbd809345e42a612b38c2e25705b41458067e88657a48093689e4bfe7738",
+      "n_bytes": 44721
+    },
+    {
+      "path": "results/fr11_policy_cache_events_1512.jsonl",
+      "sha256": "3597a09bf7ed627193b94146f731501ab3f511dc1936acfb214fd5e60409e300",
+      "n_bytes": 60543
+    },
+    {
+      "path": "results/fr11_policy_rollback_replay_1513.jsonl",
+      "sha256": "bc7d27010a77a21b2477477754f4d9c9f39946c74026cc4d2896a32fa6fc9543",
+      "n_bytes": 72660
+    },
+    {
+      "path": "results/fr11_positive_utility_skill_graph_1555.json",
+      "sha256": "3f9e1291ba1034972bdb50db7dfbb3470c6137f5615d7514a35790441de19aab",
+      "n_bytes": 462
+    },
+    {
+      "path": "results/fr11_trace2skill_daily_eval_manifest_1497.jsonl",
+      "sha256": "9cfc0f3477664242920bcd15ec1c45d0a06b79d0ffc27f31d1cf4761b5d53d30",
+      "n_bytes": 33454
+    },
+    {
+      "path": "results/nexus_constraint_memory_v2.json",
+      "sha256": "030497fb2fcde5e6bc4fd244549405568ddd7603c45d4bc549c6047fab9de00e",
+      "n_bytes": 2448
+    },
+    {
+      "path": "results/session_memory_1447/fr11_v7_dvi_v3_local_fover/session_state.json",
+      "sha256": "7bf445b2c1a4f3587517d15d2b0eecbda56d32c768352b241adcb2881fa98565",
+      "n_bytes": 184834
+    },
+    {
+      "path": "results/session_memory_1471/fr11_v8_exp1447_policy_fresh_verified_rows/session_state.json",
+      "sha256": "3c1d5205057d2f09382079fb8bc3462b49c4701aa405ab3fd3a1c62309ddeb5e",
+      "n_bytes": 16481
+    }
+  ],
+  "state_files_restored_sha_match": true,
+  "field_principles": {
+    "honest_verdict": "Terminal prefix.",
+    "corpus": "Identifies corpus.",
+    "n_problems": "Sample size.",
+    "n_seeds": "Adversarial replication.",
+    "condition_a_production_auroc_mean": "Production headline.",
+    "condition_a_production_auroc_std": "Replication noise.",
+    "condition_b_architecture_only_auroc_mean": "Architecture-only baseline.",
+    "condition_b_architecture_only_auroc_std": "Replication noise on architecture-only.",
+    "learning_contribution": "= A - B.",
+    "per_verifier_condition_a_auroc": "Per-verifier production AUROC.",
+    "per_verifier_condition_b_auroc": "Per-verifier architecture-only AUROC.",
+    "vanilla_qwen36_pass_at_1": "Baseline for model without Carnot.",
+    "random_seeds_used": "Determinism.",
+    "reproducibility_checksum": "Catches drift.",
+    "model_specs": "Names compute target.",
+    "duration_s": "Real wall-clock measurement; never padded.",
+    "preconditions_checked": "Anti-fabrication.",
+    "fr11_state_files": "Names state reset for condition B.",
+    "state_files_restored_sha_match": "Non-destructive proof.",
+    "methodology_note": "Honest interpretation."
+  },
+  "honest_verdict": "blocked_cuda_unavailable",
+  "blocked_resources": [
+    "cuda",
+    "hf_mbpp",
+    "qwen36_gguf_cache"
+  ],
+  "condition_a_production_auroc_mean": null,
+  "condition_a_production_auroc_std": null,
+  "condition_b_architecture_only_auroc_mean": null,
+  "condition_b_architecture_only_auroc_std": null,
+  "learning_contribution": null,
+  "per_verifier_condition_a_auroc": {},
+  "per_verifier_condition_b_auroc": {},
+  "vanilla_qwen36_pass_at_1": null,
+  "methodology_note": "Blocked before live MBPP inference because required resources were missing: cuda, hf_mbpp, qwen36_gguf_cache. No AUROC, pass@1, candidate, or ensemble metrics were inferred."
+}

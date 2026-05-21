@@ -19209,3 +19209,66 @@ exp2546 AUROC floor.
 **Implementation Status:** Implemented (Exp 2547)
 
 **Spec traces:** REQ-VERIFY-2547, SCENARIO-VERIFY-2547, Exp 2547
+
+## REQ-VERIFY-2829: MBPP Ensemble v7b Dual-Memory Evaluation
+
+**Capability:** verifiable-reasoning / live code-corpus ensemble evaluation
+
+The system SHALL provide an exp2829 MBPP evaluator that either runs the
+ensemble v7b protocol on live Qwen3.6-35B-A3B-GGUF outputs or writes an honest
+blocked artifact before inference when any required live resource is missing.
+
+**Requirements:**
+
+- REQ-VERIFY-2829-1: The evaluator SHALL check CUDA availability, MBPP dataset
+  accessibility, the Qwen3.6-35B-A3B-GGUF cache, and FR-11 state files before
+  launching model inference.
+- REQ-VERIFY-2829-2: If any precondition fails, the evaluator SHALL write
+  `results/experiment_2829_mbpp_ensemble_eval.json` with
+  `honest_verdict="blocked_<resource>"`, `preconditions_checked`, FR-11 state
+  metadata gathered so far, and all required schema fields with unmeasured
+  metric values left null rather than fabricated.
+- REQ-VERIFY-2829-3: When all preconditions pass, the evaluator SHALL sample
+  100 rows from the MBPP sanitized test split with deterministic seed 42,
+  generate one live-GPU Qwen3.6 candidate per problem, execute the candidates
+  against MBPP tests to obtain pass/fail ground truth, and report
+  `vanilla_qwen36_pass_at_1`.
+- REQ-VERIFY-2829-4: The evaluator SHALL score the exact same
+  `(problem, candidate)` pairs under Condition A with full FR-11 state and
+  Condition B after non-destructively moving FR-11 state files to `/tmp` and
+  restarting Python.
+- REQ-VERIFY-2829-5: The evaluator SHALL restore every moved FR-11 state file
+  and verify post-restore SHA256 equality before reporting
+  `state_files_restored_sha_match=true`.
+- REQ-VERIFY-2829-6: The evaluator SHALL repeat the dual-condition scoring
+  across seeds `[42, 137, 271, 314, 1729]`, compute mean/std AUROC for both
+  conditions, compute `learning_contribution = A_mean - B_mean`, and preserve
+  per-verifier AUROC lists for both conditions.
+- REQ-VERIFY-2829-7: `duration_s` SHALL be measured from wall-clock execution
+  and SHALL NOT be padded; scores SHALL NOT be capped to avoid adversarial
+  verification.
+
+### SCENARIO-VERIFY-2829: Missing Live Resource Blocks MBPP Evaluation
+
+**Given** CUDA, MBPP access, Qwen3.6-GGUF cache, and FR-11 state files are
+checked before inference
+**When** at least one required resource is unavailable
+**Then** the evaluator writes the exp2829 artifact with a specific
+`blocked_<resource>` verdict, records the checked preconditions, leaves
+unmeasured AUROC and pass@1 fields null, and does not fabricate live-GPU
+measurements.
+
+### SCENARIO-VERIFY-2829-LIVE: MBPP Dual-Memory AUROC Is Replicated
+
+**Given** all exp2829 preconditions pass
+**When** the evaluator completes five-seed scoring under production and
+architecture-only FR-11 memory conditions
+**Then** the artifact reports `corpus="MBPP-sanitized-test"`, `n_problems=100`,
+`n_seeds=5`, condition A/B AUROC mean/std, per-verifier AUROC lists for both
+conditions, vanilla Qwen3.6 pass@1, FR-11 state-file SHA metadata, a
+reproducibility checksum, and an honest terminal-prefix verdict.
+
+**Implementation Status:** Planned (Exp 2829)
+
+**Spec traces:** REQ-VERIFY-2829, SCENARIO-VERIFY-2829,
+SCENARIO-VERIFY-2829-LIVE, Exp 2829
