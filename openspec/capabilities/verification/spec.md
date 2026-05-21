@@ -3010,3 +3010,42 @@ Then the artifact reports `corpus_type="real"`, records `n_real` from the
 selected corpus, computes one AUROC field per importable verifier, and sets
 each verifier's `paper_citable` flag exactly when the real-corpus sample-size
 gate is satisfied.
+
+### REQ-VERIFY-2828: FoVer FR-11 Memory Leakage Isolation
+
+The repository shall provide an Exp 2828 FoVer leakage-isolation runner that
+writes `results/experiment_2828_fover_memory_leakage_isolation.json` for a
+1000-example FoVer subset and five adversarial replication seeds
+`[42, 137, 271, 314, 1729]`.
+
+Before live scoring, the runner MUST verify the required runtime resources:
+`python3` can import `torch` and reports `torch.cuda.is_available()`,
+`data/fover_corpus.jsonl` exists with at least 1000 rows,
+`results/nexus_constraint_memory_v2.json` exists, and a
+Qwen3.6-35B-A3B GGUF cache is discoverable. If any precondition is missing,
+the runner MUST write a terminal `blocked_<resource>` artifact rather than
+fabricating AUROC, duration, or per-verifier scores.
+
+For successful live runs, the runner MUST compare Condition A (full FR-11
+self-learning state loaded) against Condition B (FR-11 state files moved
+non-destructively to `/tmp/fr11_state_backup_<seed>/`, Python restarted, and
+the ensemble reloaded without NEXUS, constraint-template, or session-memory
+state). It MUST restore every state file after each seed and prove SHA256
+matches the original state manifest.
+
+The artifact MUST include the dual-condition AUROC means and standard
+deviations, `learning_contribution = A - B`, per-verifier learning
+contributions, the FR-11 state-file manifest with SHA256 and byte size,
+`state_files_restored_sha_match`, `reproducibility_checksum`, `model_specs`,
+`duration_s`, `preconditions_checked`, and an honest methodology note.
+
+### SCENARIO-VERIFY-2828: Missing CUDA Blocks Without Fabricated Metrics
+
+Given the FoVer corpus and FR-11 state files are present but the
+`python3` Torch/CUDA precondition fails,
+When the Exp 2828 runner executes,
+Then it writes `results/experiment_2828_fover_memory_leakage_isolation.json`
+with `honest_verdict` prefixed `blocked_cuda`, null AUROC metrics, an empty
+per-verifier learning contribution map, the FR-11 state-file hashes, and
+`state_files_restored_sha_match=true` because no destructive reset was
+attempted.
