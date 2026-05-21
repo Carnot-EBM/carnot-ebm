@@ -1,6 +1,262 @@
-# Research Roadmap — Milestone 2026.05.222
+# Research Roadmap vNEXT — Milestone 2026.05.267
+# Multi-Corpus Evidence Harvest + RecMem FR-11 + Delta H2 Fix v3
 
-**Title:** FST Continual Adaptation, ODAR Energy Routing, CASAL Hard Sampling, and COOL On-Device KAN
+**Milestone:** 2026.05.267
+**Author:** outer-loop planning agent (Claude) — 2026-05-21T17:25Z
+**Prior milestone:** 2026.05.266 (1 artifact: capstone only; pre-test cascade blocked all research)
+**Tasks:** exp2819–exp2829 (11 tasks)
+
+---
+
+## Context: Four Consecutive Zero-Research-Artifact Milestones
+
+Milestones .263, .264, .265, and .266 all produced zero research artifacts. The root cause
+was a self-referential pre-test gate deadlock: the conductor's smart-subset test gate was failing
+("1 failed, 80 passed"), and the only task that could fix it was itself gated on the same
+pre-test that was failing. After 3 consecutive SKIPs, the fix task was retired as "merit-failure",
+cascade-blocking all downstream research tasks.
+
+Resolution (outer-loop, 2026-05-21 ~15:35Z): Pre-test smart-subset was run manually in this
+planning session. Result: 81 passed. The `.pretest-cache.json` records the green state. Cascade
+is broken. The conductor will read the cache on next activation and proceed with tasks.
+
+Accumulated carry-forward (4 milestones):
+- FoVer Memory-Leakage Isolation (FR-11 dual-condition)
+- MBPP dual-condition corpus evaluation (N=100)
+- HumanEval dual-condition corpus evaluation (N=164)
+- TruthfulQA dual-condition corpus evaluation (N=200)
+- Cross-corpus verifier discriminative matrix
+- FUSE zero-labeled ensemble weighting
+- Paper v6 §5 multi-corpus results table
+
+Additionally, two critical unresolved gaps from .260–.264:
+- Delta H2 repair pipeline regression (empirical_delta=0.000, 5+ milestones)
+- RecMem FR-11 memory recurrence trigger (mandatory since .257, never picked up)
+
+---
+
+## What .266 Proved (and Didn't)
+
+| Status | Finding |
+|--------|---------|
+| Validated | Phase 4 FEP held_out_auroc=0.9989 (exp2766, .262) |
+| Validated | Ensemble v12 k=18, +0.011 AUROC lift (exp2756, .261) |
+| Validated | FR-11 Tier 4: cycle3 AUROC=0.9275, 34 NEXUS rules (exp2755, .261) |
+| Validated | Tier 0y ECE~5e-8 (exp2759, .261) |
+| Validated | Phase 1 v0.1.0b1 ship ready (exp2760, .261, operator action pending) |
+| Validated | Weak-strong policy fix: t_low=0.018 < t_high=0.14 (exp2758, .266 pre-cascade) |
+| Open | Verifier live-GPU: energy_values=[0,0,0,0,0] on 5 live-GGUF examples (exp2765) |
+| Open | Delta H2 regression: 0/60 successes (exp2754, confirmed .261) |
+| Untested | FoVer overfit thesis (operator hypothesis 2026-05-21) |
+| Untested | FR-11 self-learning contribution hypothesis (operator hypothesis 2026-05-21) |
+| Untested | MBPP / HumanEval / TruthfulQA cross-corpus generalization |
+| Overdue | RecMem FR-11 recurrence trigger (mandatory since .257) |
+
+---
+
+## Three Biggest Gaps
+
+### Gap 1 (CRITICAL): Multi-Corpus Evaluation - 4 Milestones Accumulated
+
+Impact: The FoVer-overfit thesis and the FR-11 self-learning contribution hypothesis remain
+entirely untested. The headline AUROC=0.9857 (exp2546) is FoVer-only. Without MBPP, HumanEval,
+TruthfulQA data points, the paper-v6 section 5 table cannot be written.
+
+Operator directive (2026-05-21, carries forward): "we want to report both with and without
+learning so we know both how effective our naive answers are as well as what benefit the
+learning is affording our solution."
+
+Resolution: exp2820 (FoVer leakage isolation, FR-11 dual-condition), exp2821 (MBPP),
+exp2822 (HumanEval), exp2823 (TruthfulQA) -- all carry-forwards with no gating on exp2810
+(the cascade is now resolved at outer-loop level).
+
+### Gap 2 (CRITICAL): Delta H2 Repair Pipeline Regression - 5+ Milestones
+
+Impact: empirical_delta=0.000 (exp2754, .261). The verify-and-repair pipeline shows zero
+improvement over baseline. Without a positive empirical delta, paper-v6 section 5 cannot
+claim repair adds value beyond detection.
+
+Prior failures:
+- exp2754 (.261): confirmed H2 regression (0/60 successes)
+- exp2767 (.262): gemini rate-limited 3x (600s each, abandoned)
+- exp2791 (.264): planned Claude Opus, never ran (pre-test cascade)
+
+Resolution: exp2826 -- Claude Opus git-bisect + repair fix.
+
+### Gap 3 (MANDATORY PRIORITY): RecMem FR-11 Memory Recurrence Trigger - 10 Milestones Overdue
+
+Impact: FR-11 Tier 2/3 memory currently extracts per-verification (eager consolidation).
+arXiv:2605.16045 (RecMem, ACL 2026 Findings) shows -87% memory-construction token cost via
+recurrence-trigger consolidation. Filed in known-issues.md as ".257+ MANDATORY". Now 10 milestones
+without pickup; CLAUDE.md "Overdue-Priority Forcing Function" mandates inclusion.
+
+Resolution: exp2827 -- RecMem RecurrenceTrigger implementation + benchmark.
+
+---
+
+## Architecture Snapshot (end of .266)
+
+Carnot Verifier Ensemble (k=18 as of exp2756):
+- Tier 0 fast verifiers (k=14 base)
+  - Tier 0f: Weak-Strong policy (FIXED exp2758, t_low=0.018 < t_high=0.14, 41% savings)
+  - Tier 0v: Set-Consistency Energy (exp2743)
+  - Tier 0w: Paraphrastic Consistency (exp2746)
+  - Tier 0x: Conformal Selective Acting (exp2757)
+  - Tier 0y: Differentiable Conformal Training ECE~5e-8 (exp2759)
+- Tier 1 medium verifiers (NLA-class + phase-3)
+- Phase 4 FEP Router: held_out_auroc=0.9989 (exp2766, .262)
+- FR-11 Tier 4 NEXUS: 34 rules, cycle3 AUROC=0.9275 (exp2755, .261)
+- Repair Pipeline: empirical_delta=0.000 (BROKEN -- exp2754, .261)
+
+FoVer corpus headline: AUROC=0.9857 (exp2546, production with FR-11 state loaded)
+Peer HIVE ceiling: AUROC=0.924
+Cross-corpus: UNMEASURED (4 milestones of blocked carry-forward)
+
+---
+
+## New Research Contributions Incorporated
+
+| Paper | ArXiv | Integration plan |
+|-------|-------|-----------------|
+| RecMem: Recurrence-based Memory Consolidation | 2605.16045 | exp2827 -- FR-11 Tier 2/3 recurrence trigger |
+| FUSE: Ensemble Composition Without Labels | 2604.18547 | exp2825 -- zero-labeled ensemble weighting |
+| Behavioral Entanglement Reweighting | 2604.07650 | exp2824/2825 context |
+| Conditional Diffusion Under Linear Constraints | 2605.05387 | paper-v6 section 3 cite |
+| Tool Receipts: Practical Hallucination Detection | 2603.10060 | paper-v6 section 4 cite |
+
+---
+
+## Phase Structure
+
+### Phase A -- Archive + Admin (exp2819)
+
+Archive both .265 and .266 to research-complete.yaml (both were zero-artifact; neither
+was archived in its own activation task). Activate .267.
+
+### Phase B -- Multi-Corpus Dual-Condition Evaluations (exp2820-exp2823)
+
+Four corpus evaluations, all dual-condition (Condition A: full FR-11 production state,
+Condition B: FR-11 state reset). Directly answers the operator directive.
+
+All Phase B tasks are independent; they run in parallel after exp2819.
+
+- exp2820: FoVer Memory Leakage Isolation (FR-11 mandate, continuous_self_learning_task: true)
+- exp2821: MBPP dual-condition (N=100, execution-based ground truth)
+- exp2822: HumanEval dual-condition (N=164, execution-based ground truth)
+- exp2823: TruthfulQA dual-condition (N=200, BLEURT semantic similarity)
+
+### Phase C -- Research Advancement (exp2824-exp2827)
+
+Independent research tasks. Run after Phase B.
+
+- exp2824: Cross-Corpus Per-Verifier Matrix (gated on exp2820)
+- exp2825: FUSE Zero-Labeled Ensemble Weighting (independent)
+- exp2826: Delta H2 Regression Fix v3 (Claude Opus; git-bisect + repair pipeline fix)
+- exp2827: RecMem FR-11 Recurrence-Trigger (MANDATORY pickup from .257)
+
+### Phase D -- Publication (exp2828)
+
+- exp2828: Paper v6 section 5 Dual-Condition Table (gated on exp2824)
+
+### Phase E -- Capstone (exp2829)
+
+- exp2829: Capstone v267 (Claude Opus; synthesis + gap analysis for .268)
+
+---
+
+## Dependency Graph
+
+exp2819 (archive .265+.266, activate .267) feeds all downstream tasks.
+
+Phase B (exp2820-exp2823): all independent after exp2819.
+- exp2820 (FoVer) -> exp2824 (cross-corpus matrix)
+- exp2824 -> exp2828 (paper table)
+
+Phase C (exp2824-exp2827): after Phase B.
+- exp2825 (FUSE), exp2826 (Delta H2), exp2827 (RecMem): all independent.
+
+Phase D (exp2828): gated on exp2824.
+Phase E (exp2829): synthesis of all prior.
+
+---
+
+## Hardware Requirements
+
+All hardware boards are at terminal state. No mandatory hardware tasks.
+
+| Board | Status |
+|-------|--------|
+| KV260 | TERMINAL (.260, 3.183 microsecond mean latency) |
+| GateMate | TERMINAL (.247, n=16 Ising bitstream flashed and smoke-tested) |
+| PolarFire | TERMINAL (.241, end-to-end Carnot dispatch validated) |
+
+---
+
+## Agent Routing
+
+9/11 gemini (81.8%) + 2/11 claude/opus (18.2%, within ceiling).
+
+exp2826 (Delta H2 fix) meets all 3 positive criteria for requires_claude: true:
+1. Gemini demonstrably failed (3x rate-limited, exp2767 -- each attempt burned 600s)
+2. Multi-file tool choreography: git-bisect across commit history + multi-file pipeline edits
+3. Multi-step open-ended hypothesis testing (H1/H2/H3) requires judgment under ambiguity
+
+exp2829 (Capstone) meets criteria 3: cross-artifact synthesis across 4 dual-condition
+corpora + per-verifier matrix + paper-v6 narrative implications = open-ended judgment.
+
+---
+
+## Acceptance Criteria
+
+| # | Criterion |
+|---|-----------|
+| 1 | Archive .265 + .266 complete (exp2819) |
+| 2 | FoVer leakage delta measured (exp2820.learning_contribution not null) |
+| 3 | MBPP dual-condition AUROC measured (exp2821) |
+| 4 | HumanEval dual-condition AUROC measured (exp2822) |
+| 5 | TruthfulQA dual-condition AUROC measured (exp2823) |
+| 6 | Cross-corpus matrix built (exp2824) |
+| 7 | FUSE weighting evaluated (exp2825) |
+| 8 | Delta H2 root cause identified or blocked (exp2826) |
+| 9 | RecMem recurrence trigger implemented (exp2827) |
+| 10 | Paper section 5 table compiled (exp2828) |
+| 11 | FR-11 mandate satisfied (exp2820.continuous_self_learning_task=true) |
+| 12 | Capstone written honestly (exp2829) |
+
+---
+
+## CLAUDE.md Compliance
+
+- Gemini-Default: 9/11 gemini, 2/11 claude/opus (both requires_claude: true)
+- Prior failures: all carry-forward tasks have full 4-field prior_failures blocks
+- PRECONDITIONS step 0: all compute-bound tasks
+- Principle-annotated artifact fields: all REQUIRED ARTIFACT FIELDS
+- Terminal-prefix verdicts: all tasks specify honest_verdict must start with terminal prefix
+- FR-11 mandate: exp2820 (continuous_self_learning_task: true)
+- Hardware continuity: all 3 boards TERMINAL
+- Exclusion manifest cross-check: 0 scope matches
+- Operator-only publication: exp2828 generates table only, never submits
+- RecMem mandatory pickup: exp2827 satisfies .257+ MANDATORY overdue priority
+- SOTA models: Qwen3.6-35B-A3B-GGUF in all inference tasks
+
+---
+
+## Note on Pre-Staged YAML
+
+The pre-staged YAML (commit 3cd85879a) had 8 tasks (exp2819-exp2826) mapping exp2825 to
+the paper table and exp2826 to capstone. This vNEXT planning pass replaces it with 11 tasks
+that add: FUSE (exp2825), Delta H2 fix (exp2826), RecMem mandatory (exp2827), and renumber
+paper table to exp2828 + capstone to exp2829. Same milestone: "2026.05.267" so the
+Pre-Staged Roadmap Convention applies -- conductor will use this YAML.
+
+---
+
+## Historical Content (2026.05.222 -- preserved per "Never remove existing content" rule)
+
+The original content of this file (research-roadmap-vNEXT.md at 2026.05.222) described
+FST Continual Adaptation, ODAR Energy Routing, CASAL Hard Sampling, and COOL On-Device KAN.
+That milestone closed. This file has been repurposed for the 2026.05.267 planning pass.
+The original content is preserved in git history (commit prior to this overwrite).
 
 **Milestone:** 2026.05.222
 **Date:** 2026-05-17
