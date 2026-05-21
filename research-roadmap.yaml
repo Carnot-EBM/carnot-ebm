@@ -1,119 +1,118 @@
-milestone: "2026.05.259"
-milestone_title: "Verifier Energy Debug v1 + Full Test Fix + pdflatex Install + OTV Fast Path + FR-11 ORCA-NEXUS"
-milestone_doc: "openspec/change-proposals/research-roadmap-v259.md"
-date: "2026-05-20"
+milestone: "2026.05.260"
+milestone_title: "Verifier Energy v2 Live GPU + KV260 Terminal Latency + Set-Consistency Tier 0v + Phase 4 FEP + FR-11 Tier 4 Self-Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-v260.md"
+date: "2026-05-21"
 status: "PROPOSED"
-experiment_id_range: "exp2725-exp2737"
+experiment_id_range: "exp2738-exp2750"
 scope_reduction_compliance: "n/a — no SCOPE REDUCTION directive active in ops/known-issues.md"
 
-# .258 COMPLETED: 13 of 13 tasks produced artifacts — first full milestone since cascade fix.
-# 8 of 12 acceptance criteria met.
+# .259 COMPLETED: 12 of 13 tasks produced artifacts — 10 of 12 criteria met.
 #
-# KEY .258 FINDINGS:
-#   exp2713: cascade fixed (pretest_cascade_fixed=true, smart_subset_passes=true)
-#            BUT full_collection_clean=false — other collection errors remain
-#   exp2714: phase1_ship_ready=true. operator_ship_checklist_v5 complete.
-#   exp2715: inference_mode=live_gpu on 50 examples (RTX 3090, 125s) BUT
-#            energy_score_distribution=all-zero — DEGENERATE VERIFIER (most critical gap)
-#   exp2716: tier0f_auroc=0.992, tier0f_viable=true
-#   exp2717: candidates_reduction_pct=60.0 via property-guided iterative repair
-#   exp2718: probe_ece=0.0087, speedup_factor=1.85e6 (IMPLAUSIBLE — adversarial flag)
-#   exp2719: conformal_stopping_enabled=true, n_ttt_steps_saved=79 (FR-11 Tier 3 DONE)
-#   exp2720: odar_routing_added=true, t2_prediction_matches=true
-#   exp2721: BLOCKED — pdflatex_available=false (3rd consecutive pdflatex block)
-#   exp2722: Branch B (4th consecutive — SD card absent)
-#   exp2723: auroc_lift=-0.008 (NEGATIVE), high_entanglement=false — hypothesis NOT confirmed
-#   exp2724: capstone 8/12 criteria; cascade_fixed=true; phase1_ship_recommendation=SHIP
+# KEY .259 FINDINGS:
+#   exp2727: verifier-energy fast-path logging fix added BUT adversarial-flagged
+#            (DURATION_TOO_SHORT=11.5s, no model_specs). Live-GPU claim PROVISIONAL.
+#   exp2729: pdflatex installed; 3 theory citations (ARM-EBM+4/delta+FST); LaTeX compiles.
+#   exp2731: Tier 0g Semantic Energy non-degenerate on synthetic BUT adversarial-flagged
+#            for GGUF (3.3s duration; gguf_non_degenerate=false, all 3 inputs = 9.085).
+#   exp2733: ORCA-NEXUS FR-11 Tier 3+ viable — 17 rules from 30 violations.
+#   exp2734: FALCON two-layer repair — 50.67% candidate reduction.
+#   exp2735: KV260 SSH reachable + bitstream loaded + uio0_first_word_read=true
+#            → READY FOR TERMINAL board-level latency transcript.
+#   exp2736: arXiv package 27pp, operator checklist v2 ready (OPERATOR-ONLY submit).
+#   exp2737 capstone: phase1_ship_recommendation=SHIP; 10/12 criteria met;
+#            adversarial_flagged=2 (exp2727, exp2731).
 #
-# New research for .259 (post-.258 sweep, 4 papers added to research-references.md):
-#   arXiv:2508.14496 (Semantic Energy — Boltzmann over semantic clusters; exp2731 Tier 0g)
-#   arXiv:2603.01025 (OTV — One-Token Verification; 90% token reduction; exp2728 fast path)
-#   arXiv:2602.01090 (FALCON — hard constraints + soft generation; exp2734 repair integration)
-#   arXiv:2506.03723 (Verbalized Confidence — Phase 4 active inference cite; paper-v6)
+# New research for .260 (post-.259 sweep, 6 papers added to research-references.md):
+#   arXiv:2602.17633 (Weak-Strong Verification Policy — optimal two-threshold routing; exp2745)
+#   arXiv:2602.11361 (Paraphrastic Consistency Probing — set-level consistency; exp2746)
+#   arXiv:2603.20927 (Active Inference FEP Engineering — factor graph routing; exp2748)
+#   arXiv:2605.19895 (Streamlined Constraint Reasoning via CNN — NEXUS complement; research)
+#   arXiv:2603.02101 (Antiferromagnetic Ising Sampling FPTAS — near-critical theory; research)
+#   arXiv:2604.20098 (Differentiable Conformal Training — carried forward from .259 sweep)
 #
-# Three biggest gaps for .259:
-#   1. VERIFIER PRODUCES ZERO ENERGY on live GGUF (Gap 1) — exp2727 diagnostic debug
-#   2. pdflatex not installed (Gap 2) — exp2729 toolchain install + theory citations v3
-#   3. Full test collection not clean (Gap 3) — exp2726 collection fix
+# Three biggest gaps for .260:
+#   1. CRITICAL: exp2727 adversarial-flagged — live GPU re-run needed (exp2740)
+#   2. HIGH: exp2731 adversarial-flagged + GGUF constant-energy diagnosis needed (exp2741)
+#   3. MEDIUM: OTV probe (auroc=0.25 < chance) + diversity-selection (lift near zero) retirement (exp2739)
 #
-# FR-11 mandate: exp2733 (ORCA-NEXUS Integration, continuous_self_learning_task: true)
-# Hardware continuity: exp2735 (KV260 NON-TERMINAL — SD card absent, 5th consecutive Branch B)
+# FR-11 mandate: exp2747 (FR-11 Tier 4 live benchmark, continuous_self_learning_task: true)
+# Hardware continuity: exp2742 (KV260 NON-TERMINAL — ready for TERMINAL latency transcript)
 #   GateMate: TERMINAL (graduated .247). PolarFire: TERMINAL (graduated .241).
-# Exclusion manifest cross-check: 0 scope matches across all retired IDs
-# Agent routing: 12 codex/gpt-5.5 (92.3%), 1 claude/opus (exp2737 capstone, requires_claude: true)
-#   Within 2/13 (15.4%) ceiling. exp2737 meets all 3 positive criteria.
+# Exclusion manifest cross-check: 0 scope matches against retired IDs for any new task
+# Agent routing: 12 gemini/gemini-3.1-pro-preview (exp2738–exp2749), 1 claude/opus (exp2750 capstone)
+#   Within 2/13 (15.4%) ceiling. exp2750 meets all 3 positive criteria.
 #
-# GATE TOPOLOGY: exp2725 → all; exp2729 → exp2736 (latex_compiles gate)
-#                exp2737 reads all upstream artifacts.
+# GATE TOPOLOGY: No hard gates except exp2744 → exp2749 (empirical delta for paper cite).
+#   Soft dependency: exp2740 success improves exp2747 quality (but exp2747 has its own PRECONDITIONS).
+#   exp2750 reads all upstream artifacts.
 
 tasks:
 
-  - id: exp2725
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2725_archive_v258.json"
-    title: "Archive .258 + Activate .259"
+  - id: exp2738
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2738_archive_v259.json"
+    title: "Archive .259 + Activate .260"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 20
     track: admin
 
     prior_failures:
-      - experiment_id: exp2712-archive-v257-activate-v258
-        verdict: "complete: archived .257 (3 experiments completed), activated .258"
-        addressed_by: "exp2712 completed successfully in .258. This exp2725 archives .258 (13 artifacts, all complete; 8 of 12 criteria met; cascade_fixed=true). Different lifecycle state: .258 was the first full-execution milestone since the conductor cascade was fixed. research-complete.yaml entry will note cascade_fixed milestone."
+      - experiment_id: exp2725-archive-v258-activate-v259
+        verdict: "complete: archived .258 (13 experiments completed, 8/12 criteria), activated .259"
+        addressed_by: "exp2725 completed successfully in .259. This exp2738 archives .259 (12 artifacts, 10/12 criteria met; 2 adversarial-flagged experiments: exp2727 + exp2731). Different lifecycle state: .259 was the second full-execution milestone after the cascade fix, with 2 adversarial flags requiring .260 re-runs."
         retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      Milestone 2026.05.258 is COMPLETE per operator confirmation. All 13 experiments produced
-      artifacts (8 of 12 acceptance criteria met). research-roadmap-next.yaml has milestone
-      2026.05.259. Key .258 finding: cascade fixed (pretest_cascade_fixed=true) BUT verifier
-      produces degenerate zero energy on live GGUF (exp2715).
+      Milestone 2026.05.259 is COMPLETE per operator confirmation. 12 of 13 experiments produced
+      artifacts (10 of 12 acceptance criteria met). research-roadmap-next.yaml has milestone
+      2026.05.260. Key .259 finding: exp2727 + exp2731 adversarial-flagged; KV260 ready for TERMINAL;
+      ORCA-NEXUS FR-11 Tier 3+ viable; pdflatex installed + arXiv package 27pp ready.
 
       EXISTING CODE TO READ FIRST:
-      - research-roadmap.yaml (verify milestone field is 2026.05.258)
-      - research-complete.yaml (last 30 lines — check if .258 already archived)
-      - results/experiment_2724_capstone_v258.json (cascade_fixed, n_criteria_met, top_3_gaps_for_259)
-      - results/experiment_2715_sota_gguf_live_eval_v3.json (energy_score_distribution)
+      - research-roadmap.yaml (verify milestone field is 2026.05.259)
+      - research-complete.yaml (last 30 lines — check if .259 already archived)
+      - results/experiment_2737_capstone_v259.json (n_criteria_met, top_3_gaps_for_260, adversarial_flagged)
 
-      TASK: Archive milestone .258 and activate .259.
+      TASK: Archive milestone .259 and activate .260.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
-         a. Confirm research-roadmap.yaml exists and milestone field == "2026.05.258".
-            If milestone already says "2026.05.259": write honest_verdict
+         a. Confirm research-roadmap.yaml exists and milestone field == "2026.05.259".
+            If milestone already says "2026.05.260": write honest_verdict
             'complete_already_activated' and exit cleanly.
-         b. Read last 30 lines of research-complete.yaml to check if .258 already archived.
-         c. Read results/experiment_2724_capstone_v258.json for n_criteria_met, cascade_fixed.
+         b. Read last 30 lines of research-complete.yaml to check if .259 already archived.
+         c. Read results/experiment_2737_capstone_v259.json for n_criteria_met, phase1_ship_recommendation.
          Record: preconditions_checked.
 
-      1. If .258 not yet in research-complete.yaml: append entry with:
-         milestone: "2026.05.258",
-         title: "Pre-Test Cascade Fix v1 + Phase 1 Ship v5 + GGUF Live Eval v3 + ODAR Routing + FR-11 ORCA TTT v2",
-         date_completed: "{date}", n_experiments_completed: 13,
-         note: "First full-execution milestone since cascade fix (exp2713 pretest_cascade_fixed=true). 8/12 criteria met. Critical finding: verifier energy_score_distribution=all-zero on live GGUF (exp2715) — degenerate verifier. Phase1_ship_ready=true. FR-11 Tier 3 ORCA conformal stopping operational (exp2719)."
-         + tasks list with id, title, deliverable, result for each exp2712-exp2724.
+      1. If .259 not yet in research-complete.yaml: append entry with:
+         milestone: "2026.05.259",
+         title: "Verifier Energy Debug v1 + Full Test Fix + pdflatex Install + OTV Fast Path + FR-11 ORCA-NEXUS",
+         date_completed: "{date}", n_experiments_completed: 12,
+         note: "Second full-execution milestone post-cascade-fix. 10/12 criteria met. CRITICAL: exp2727 + exp2731 adversarial-flagged (DURATION_TOO_SHORT + no model_specs). Verifier fast-path logging fix durable but live-GPU validation pending. KV260 ssh-reachable + bitstream loaded + uio0 readable → TERMINAL step ready. ORCA-NEXUS Tier 3+ viable (17 rules). pdflatex installed; arXiv package 27pp (OPERATOR-ONLY submit). Phase 1 ship recommendation: SHIP."
+         + tasks list with id, title, deliverable, result for each exp2725-exp2737.
 
       2. Copy research-roadmap-next.yaml -> research-roadmap.yaml (overwrite).
 
-      3. Write results/experiment_2725_archive_v258.json with all required fields.
+      3. Write results/experiment_2738_archive_v259.json with all required fields.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'complete_'
         principle: "Terminal-prefix discipline — reconciler classifies as done only with this prefix."
       - archive_completed: bool
-        principle: "Confirms .258 lifecycle is closed before .259 tasks run."
-      - milestone_activated: str — must equal "2026.05.259"
+        principle: "Confirms .259 lifecycle is closed before .260 tasks run."
+      - milestone_activated: str — must equal "2026.05.260"
         principle: "Explicit activation field lets downstream audits verify milestone is active."
-      - n_experiments_archived: int — must be 13
-        principle: "Count documents .258 full-execution state for historical accuracy."
-      - cascade_fixed_carried_forward: bool — true (from exp2724.cascade_fixed)
-        principle: "Propagates cascade fix status to .259 activation record."
-      - live_gguf_degenerate_gap_noted: bool — true (from exp2715 all-zero energy)
-        principle: "Documents the most critical .258 finding for .259 priority queue."
-      - preconditions_checked: list of {{resource, available, check}}
+      - n_experiments_archived: int — must be 12
+        principle: "Count documents .259 full-execution state for historical accuracy."
+      - n_adversarial_flagged: int — 2 (exp2727 + exp2731)
+        principle: "Propagates adversarial-flag count to .260 activation record as top-priority signal."
+      - kv260_terminal_ready_carried_forward: bool — true (from exp2735)
+        principle: "Documents KV260 readiness for terminal step in .260 priority queue."
+      - preconditions_checked: list of {resource, available, check}
         principle: "Anti-fabrication: records which files were actually read."
       - duration_s: float
         principle: "File reads + YAML copy + JSON write: expected >= 3s."
@@ -122,531 +121,520 @@ tasks:
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2726
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2726_full_collection_fix_v1.json"
-    title: "Full Test Suite Collection Fix v1: Eliminate Remaining --co Failures"
+  - id: exp2739
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2739_otv_diversity_retirement.json"
+    title: "OTV Probe + Diversity-Selection Retirement: Add Both to Exclusion Manifest"
     agent_type: gemini
     model: gemini-3.1-pro-preview
-    max_turns: 30
+    max_turns: 20
     track: infrastructure
 
-    prior_failures: []
+    prior_failures:
+      - experiment_id: exp2728-otv-fast-path
+        verdict: "complete: probe_auroc=0.25 (worse than random), otv_fast_path_viable=false; two-tier ODAR routing rescued savings (65%)"
+        addressed_by: "exp2728 (.259) showed OTV single-probe AUROC=0.25 < 0.5 (worse than chance). This exp2739 RETIRES the OTV-probe approach (adds to exclusion_manifest.yaml). Different scope: exp2728 was an implementation attempt; exp2739 is a formal retirement document. The carry-forward value (ODAR two-tier routing, 65% savings) is documented as the preferred alternative."
+        retire_if_same_verdict: true
+      - experiment_id: exp2732-entanglement-retirement-diversity-audit
+        verdict: "complete: entanglement_lineage_retired=true, diversity_lift=-8.5e-6 (essentially zero)"
+        addressed_by: "exp2732 (.259) showed diversity-maximizing greedy selection lift=-8.5e-6 (noise floor). This exp2739 RETIRES the diversity-maximizing selection approach (adds to exclusion_manifest.yaml with rationale: selection-stage gains exhausted at k=15). Different scope: exp2732 was an implementation + audit; exp2739 is a formal retirement document with exclusion_manifest.yaml entry."
+        retire_if_same_verdict: true
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      NEW EXPERIMENT for .259 — no prior failures for this specific scope.
+      Two research lineages failed in .259 and need formal retirement per CLAUDE.md
+      Failed-Experiment Rerun Discipline:
 
-      exp2713 fixed the test_hw_dab.py cascade but reported full_collection_clean=false:
-        `.venv/bin/pytest tests/python/ --co -q 2>&1` shows collection errors beyond test_hw_dab.py.
-      The conductor's smart-subset (test_pipeline_extract.py, test_docs.py, test_hw_dab.py) is
-      currently green. However, if a future git diff includes a test file with a missing import,
-      the full-collection path could cascade again. This task eliminates all remaining --co failures.
+      1. OTV probe (exp2728): probe_auroc=0.25 — worse than random chance (0.5).
+         The one-token KV-cache probe approach is not viable on FoVer corpus.
+         Carry-forward: ODAR two-tier routing (65% savings) is the working fast-path.
+
+      2. Diversity-maximizing greedy selection (exp2732): diversity_lift=-8.5e-6 — noise floor.
+         Selection-stage gains are exhausted at current k=15 ensemble.
+         Carry-forward: uniform weighting is near-optimal at current ensemble size.
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_2713_pretest_cascade_fix_v1.json (full_collection_clean: false)
-      - tests/python/ (list all test files)
+      - ops/exclusion_manifest.yaml (check existing entries, append format)
+      - results/experiment_2728_otv_fast_path.json (probe_auroc, otv_fast_path_viable)
+      - results/experiment_2732_entanglement_retirement_diversity_audit.json (diversity_lift)
 
-      TASK: Find and fix all remaining pytest collection failures in tests/python/.
+      TASK: Formally retire both lineages by adding entries to ops/exclusion_manifest.yaml.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
-         a. `.venv/bin/pytest tests/python/ --co -q 2>&1 | tail -20`
-            Record: n_collection_errors_initial (int), collection_error_messages (list of str — first 5).
-            If n_collection_errors_initial == 0: write honest_verdict 'complete_collection_already_clean' and exit.
-         b. `.venv/bin/python -c "import sys; sys.version"` — Python version.
+         a. `ls ops/exclusion_manifest.yaml && echo exists || echo missing`
+            Record: manifest_exists (bool).
+            If missing: write honest_verdict 'blocked_exclusion_manifest_missing' and exit.
+         b. `ls results/experiment_2728_otv_fast_path.json && echo exists || echo missing`
+            Record: exp2728_artifact_exists (bool).
+         c. `ls results/experiment_2732_entanglement_retirement_diversity_audit.json && echo exists || echo missing`
+            Record: exp2732_artifact_exists (bool).
          Record: preconditions_checked.
 
-      1. For each collection error found: identify the failing test file and the missing import.
-         Apply the graceful importorskip pattern:
-           If `import X` fails with ImportError/ModuleNotFoundError:
-           Replace with `X = pytest.importorskip("X")`
-           Or install X via `.venv/bin/pip install X` if X is a lightweight standard package.
-         NEVER install packages that require CUDA/GPU hardware (torch with CUDA) — use importorskip.
-         Record: fixes_applied (list of {{file, issue, fix}}).
+      1. Append OTV probe retirement to ops/exclusion_manifest.yaml:
+         ```yaml
+         - id: otv_kvcache_probe_retired
+           reason: |
+             OTV one-token KV-cache probe (arXiv:2603.01025) achieved probe_auroc=0.25 in exp2728
+             (.259) — worse than random chance (0.5 baseline). The proxy implementation (TF-IDF
+             logistic regression as "correctness direction") does not transfer to live GGUF responses.
+             Preferred alternative: ODAR two-tier routing (exp2720) achieved 65% savings without
+             a separate probe. OTV-specific fast-path is retired.
+           experiment_ids: [exp2728]
+           blocked_patterns:
+             - OTV one-token verification probe
+             - OTV fast path
+             - otv_probe
+             - correctness direction vector
+           retired_milestone: "2026.05.259"
+           retired_by_artifact: "results/experiment_2728_otv_fast_path.json"
+           retire_if_same_verdict: true
+           operator_reopen_required: true
+         ```
 
-      2. Verify: `.venv/bin/pytest tests/python/ --co -q 2>&1 | tail -5`
-         Record: n_collection_errors_final (int), collection_clean (bool = n_collection_errors_final == 0).
+      2. Append diversity-maximizing selection retirement to ops/exclusion_manifest.yaml:
+         ```yaml
+         - id: diversity_maximizing_verifier_selection_retired
+           reason: |
+             Diversity-maximizing greedy selection (exp2732, .259) achieved diversity_lift=-8.5e-6
+             — essentially zero at the noise floor. Selection-stage gains are exhausted at the
+             current k=15 ensemble; each additional verifier adds precision but not recall, making
+             selection non-beneficial. Preferred alternative: uniform weighting (near-optimal at k=15
+             per exp2732 uniform_auroc). Diversity-specific selection experiments are retired.
+           experiment_ids: [exp2732]
+           blocked_patterns:
+             - diversity-maximizing greedy selection
+             - diversity_select
+             - greedy verifier selection
+             - verifier diversity maximization
+           retired_milestone: "2026.05.259"
+           retired_by_artifact: "results/experiment_2732_entanglement_retirement_diversity_audit.json"
+           retire_if_same_verdict: true
+           operator_reopen_required: true
+         ```
 
-      3. Run smart-subset to confirm it still passes:
-         `.venv/bin/pytest tests/python/test_pipeline_extract.py tests/python/test_docs.py tests/python/inference/test_hw_dab.py -q --no-cov -o addopts= 2>&1 | tail -5`
-         Record: smart_subset_still_passes (bool).
+      3. Verify YAML parses: `python -c "import yaml; yaml.safe_load(open('ops/exclusion_manifest.yaml'))"` succeeds.
+         Record: manifest_parses (bool).
 
-      4. Write results/experiment_2726_full_collection_fix_v1.json.
+      4. Write results/experiment_2739_otv_diversity_retirement.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'complete_'
-        principle: "Terminal prefix required; complete_collection_already_clean is also valid."
-      - collection_clean: bool
-        principle: "Primary gate: True means no future git-diff can re-trigger a collection cascade."
-      - n_collection_errors_initial: int
-        principle: "Baseline count — confirms we found and addressed actual errors."
-      - n_collection_errors_final: int
-        principle: "Post-fix count — zero means collection cascade risk eliminated."
-      - fixes_applied: list of {{file, issue, fix}}
-        principle: "Audit trail: which files were patched and why."
-      - smart_subset_still_passes: bool
-        principle: "Regression check: conductor pre-test still green after full-collection fixes."
+        principle: "Terminal prefix required."
+      - retirements_landed: bool — true if both entries added and YAML parses
+        principle: "Primary gate: both lineages formally closed per Failed-Experiment Rerun Discipline."
+      - otv_retirement_added: bool
+        principle: "OTV probe retired — prevents carry-forward churn in .261+."
+      - diversity_retirement_added: bool
+        principle: "Diversity-selection retired — prevents carry-forward churn in .261+."
+      - manifest_parses: bool
+        principle: "Structural correctness: exclusion_manifest.yaml must remain valid YAML after additions."
       - duration_s: float
-        principle: "Collection check + fixes + reverification: expected >= 5s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records initial collection run and Python version."
+        principle: "File reads + YAML appends + parse check: expected >= 3s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records manifest + upstream artifact availability."
 
-      Do NOT modify scripts/research_conductor.py.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2727
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2727_verifier_energy_debug_v1.json"
-    title: "Live GGUF Verifier Energy Debug v1: Trace Zero-Energy Collapse on Qwen3.6-35B"
+  - id: exp2740
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2740_verifier_energy_debug_v2_live_gpu.json"
+    title: "Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run Clearing exp2727 Adversarial Flag"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 50
     track: evaluation
 
-    prior_failures: []
+    prior_failures:
+      - experiment_id: exp2727-verifier-energy-debug-v1
+        verdict: "complete: verifier_discriminative=true (5 non-zero energies); root_cause_confirmed; BUT flagged_adversarial=DURATION_TOO_SHORT (11.5s) + METHODOLOGY_MISSING (no model_specs)"
+        addressed_by: "exp2727 (.259) produced diagnostic logging changes (fast-path vs genuine-zero distinguishers in tier0s_halluguard.py + nup_probe.py) but was adversarial-flagged for DURATION_TOO_SHORT (11.5s with CUDA+GGUF markers present). This exp2740 ADDS: explicit CUDA precondition check, Qwen3.6-35B-A3B GGUF load precondition, min duration gate (>= 60s), model_specs field, reproducibility_checksum. Different: exp2727 claimed live_gguf but did not actually load a GGUF model. exp2740 requires GGUF to be explicitly cached and loaded before any inference call."
+        retire_if_same_verdict: true
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      NEW EXPERIMENT for .259 — exp2715 (.258) found that running VerifyRepairPipeline.verify()
-      on 50 live Qwen3.6-35B-A3B-GGUF outputs produces energy_score_distribution=all-zero
-      (mean=std=min=max=0.0, fast_path_rate=0.0). This is a degenerate verifier output.
+      exp2727 (.259) diagnosed the verifier energy fast-path short-circuit (tier0s_halluguard.py +
+      nup_probe.py return energy=0.0 for out-of-FoVer-corpus inputs). The logging fix is durable.
+      BUT exp2727 was adversarial-flagged: DURATION_TOO_SHORT (11.5s for a CUDA+GGUF run), no
+      model_specs, no reproducibility_checksum. The "verifier is now discriminative on live GGUF"
+      claim is PROVISIONAL until validated on real hardware.
 
-      Root cause hypotheses (from capstone exp2724):
-        H1: verify() computes energy=0 because FoVer TF-IDF features do NOT transfer to Qwen3.6 format
-        H2: The verifier Tier 0 models compute score=0 because Qwen3.6 responses fall outside the training distribution
-        H3: There is a bug in verify() that short-circuits to 0 for any input not in the FoVer corpus
+      This experiment clears the adversarial flag by running the verifier on RTX 3090 with explicit
+      precondition checks (CUDA available, GGUF cached, model actually loaded), duration >= 60s,
+      and all required methodology fields.
 
       MODEL_SPECS (mandatory per CLAUDE.md SOTA GGUF requirement — PRECONDITIONS gated):
         - name: Qwen3.6-35B-A3B-GGUF
           hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
-          role: diagnostic_inference
+          role: live_verification_diagnostic
+          quantization: Q4_K_M (or equivalent available)
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (verify(), should_verify(), score_candidates())
-      - python/carnot/verify/ (list all tier0* modules — check for FoVer-dependency in feature extraction)
-      - data/fover_corpus.jsonl (FoVer corpus format — compare to live GGUF response format)
-      - results/experiment_2715_sota_gguf_live_eval_v3.json (fast_path_rate, energy_score_distribution)
+      - results/experiment_2727_verifier_energy_debug_v1.json (root_cause_hypothesis, fix_applied)
+      - python/carnot/verify/tier0s_halluguard.py (check fast-path diagnostic from exp2727)
+      - python/carnot/verify/nup_probe.py (check nup_probe diagnostic from exp2727)
+      - python/carnot/pipeline/verify_repair.py (verify() method)
+      - data/fover_corpus.jsonl (FoVer corpus for diagnostic baseline)
 
-      TASK: Diagnose why verify() returns zero energy on live GGUF outputs. Produce a verified non-zero
-      energy on at least 5 examples by fixing the root cause.
+      TASK: Re-run verifier on RTX 3090 with Qwen3.6-35B GGUF. Produce non-adversarial artifact.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. Check Qwen3.6-35B-A3B-GGUF cached:
-            `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -3`
-            Record: qwen_cached (bool).
-         b. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
-            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
-         c. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0` — FoVer corpus.
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `nvidia-smi --query-gpu=name,memory.total --format=csv,noheader 2>/dev/null`
+            Record: cuda_available (bool), gpu_names (list of str), vram_mb (list of int).
+            If cuda_available=false: write honest_verdict 'blocked_cuda_not_available' and exit.
+         b. `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -5`
+            Record: qwen_gguf_cached (bool), gguf_files_found (list).
+            If qwen_gguf_cached=false: write honest_verdict 'blocked_gguf_qwen36_not_cached' and exit.
+         c. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"`
+            Record: carnot_importable (bool).
+            If carnot_importable=false: write honest_verdict 'blocked_carnot_not_importable' and exit.
+         d. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
             Record: fover_corpus_lines (int).
-         d. `nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null`
-            Record: cuda_available (bool), gpu_names (list).
+            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
          Record: preconditions_checked.
 
-      1. DIAGNOSTIC: Load one FoVer example (correct answer) and one live synthetic Qwen-format response.
-         Run verify() on both and compare intermediate feature vectors.
-         a. FoVer example: read first entry from data/fover_corpus.jsonl.
-            Run: pipeline.verify(fover_example.question, fover_example.correct)
-            Record: fover_energy (float), fover_n_verifiers_active (int).
-         b. Synthetic Qwen3.6-format response (short markdown response like "**Answer:** 5"):
-            Run: pipeline.verify("What is 2+3?", "**Answer:** 5")
-            Record: synthetic_energy (float), synthetic_n_verifiers_active (int).
-         If both are zero: hypothesis H1 or H3 confirmed — proceed to Step 2.
-         If FoVer non-zero but synthetic=zero: H1 confirmed (format mismatch). Proceed to Step 3.
+      1. FoVer baseline check (no GGUF yet):
+         Load 5 FoVer examples (correct + incorrect pairs). Run verify() on each.
+         Record: fover_energies (list of 5 floats), fover_non_zero (bool = all > 0.0).
 
-      2. TRACE: Read verify() source. For each tier0* verifier called:
-         a. Check if it applies TF-IDF or learned features that require FoVer vocab to be non-empty
-         b. Check if it has a trivial fast-path that returns 0.0 for unknown inputs
-         c. Check if TF-IDF vectorizer was fit on FoVer corpus at module import time
-         Record: root_cause_hypothesis (str), root_cause_confirmed (bool), root_cause_code_location (str).
+      2. Load Qwen3.6-35B-A3B-GGUF using llama.cpp loader (or llama_cpp_python):
+         ```python
+         from llama_cpp import Llama
+         llm = Llama(model_path=<gguf_path>, n_gpu_layers=-1, n_ctx=2048, seed=42)
+         ```
+         Record: model_loaded (bool), model_load_time_s (float).
 
-      3. FIX: Based on root cause, apply the minimal targeted fix:
-         - If TF-IDF vocab missing: re-fit on FoVer corpus and save model
-         - If fast-path short-circuit: add logging to distinguish fast-path vs genuine zero-energy
-         - If format mismatch: add text normalizer that strips markdown/code-block formatting before feature extraction
-         Record: fix_applied (str), fix_description (str).
+      3. Run 30 live inference examples (random_seed=42):
+         - 15 from FoVer corpus (10 correct + 5 incorrect)
+         - 15 novel prompts (math / reasoning questions not in FoVer)
+         For each: generate response, run verify(prompt, response).
+         Record: n_examples_run (int = 30), inference_responses (list of str — first 100 chars each).
 
-      4. VERIFY FIX: Re-run verify() on 5 test inputs (2 FoVer, 3 synthetic Qwen-format):
-         Record: n_non_zero_energies (int), energy_values (list of float — 5 values).
-         verifier_discriminative = (n_non_zero_energies >= 3 AND max(energy_values) - min(energy_values) > 0.01).
+      4. Compute verifier discriminativeness on all 30 examples:
+         energy_values = [verify(p, r) for p, r in examples]
+         verifier_discriminative = (
+           sum(1 for e in energy_values if e > 0.0) >= 10 AND
+           max(energy_values) - min(energy_values) > 0.1 AND
+           std(energy_values) > 0.01
+         )
+         Record: energy_values (list of 30 floats), energy_mean (float), energy_std (float),
+         n_non_zero (int), verifier_discriminative (bool).
 
-      5. If qwen_cached AND cuda_available: run 10 real GGUF examples (random_seed=42, batch_size=2):
-         Record: live_gguf_energy_mean (float), live_gguf_energy_std (float).
-         live_gguf_discriminative = live_gguf_energy_std > 0.01.
-         smoke_only = false.
-         Else: smoke_only = true.
+      5. Adversarial self-check before writing artifact:
+         - Confirm duration_s >= 60 (real model load + inference takes minutes)
+         - Confirm model_specs field is populated
+         - If duration_s < 30: ABORT — write honest_verdict 'blocked_suspicious_duration_too_short'
+         Record: reproducibility_checksum (md5 of gguf filename + n_examples + random_seed + energy_mean).
 
-      6. Write results/experiment_2727_verifier_energy_debug_v1.json.
+      6. Write results/experiment_2740_verifier_energy_debug_v2_live_gpu.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - root_cause_hypothesis: str
-        principle: "Names the verified root cause of zero-energy collapse — prevents rerun without fix."
-      - root_cause_confirmed: bool
-        principle: "True if root cause was traced to specific code location; false if still ambiguous."
-      - fix_applied: str
-        principle: "Describes what was changed in the codebase to fix the degenerate output."
+        principle: "Terminal prefix required; blocked_* if any precondition fails."
       - verifier_discriminative: bool
-        principle: "Primary gate: True if verify() produces non-zero energy on >= 3 of 5 test inputs."
-      - n_non_zero_energies: int
-        principle: "Confirms verifier produces meaningful scores after fix."
-      - energy_values: list of float
-        principle: "Adversarial check: all-zero means fix failed; variance > 0.01 means non-degenerate."
-      - fover_energy: float
-        principle: "FoVer diagnostic baseline — should be non-zero if feature extraction works."
-      - synthetic_energy: float
-        principle: "Format-mismatch diagnostic: zero on synthetic = format problem, not data problem."
+        principle: "PRIMARY GATE: True clears exp2727 adversarial flag (n_non_zero >= 10, std > 0.01)."
+      - energy_values: list of float (30 values)
+        principle: "Adversarial audit: all-zero = fix failed; variance > 0.01 = non-degenerate."
+      - n_non_zero: int
+        principle: "Count of examples with non-zero energy — expected >= 10 of 30."
+      - energy_mean: float
+        principle: "Population mean: non-zero confirms verifier produces meaningful scores."
+      - energy_std: float
+        principle: "Population std > 0.01 = discriminative; = 0 = degenerate."
+      - fover_energies: list of float (5 values)
+        principle: "FoVer diagnostic baseline — should be non-zero if FoVer fast-path fix is durable."
+      - model_loaded: bool
+        principle: "Confirms Qwen3.6-35B-A3B GGUF was actually loaded (not a proxy run)."
+      - model_load_time_s: float
+        principle: "Real model load time: expected >= 30s for 35B GGUF on GPU; < 5s = model not loaded."
+      - model_specs: dict with {name, hf_id, quantization, n_gpu_layers}
+        principle: "Methodology field required by adversarial_verify.py METHODOLOGY_MISSING check."
       - random_seed: int — 42
-        principle: "Reproducibility."
-      - duration_s: float
-        principle: "Diagnostic reads + fix + 5-example verify: expected >= 10s; < 3s suspicious."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records GGUF cache + pipeline import + FoVer corpus."
+        principle: "Reproducibility anchor."
+      - reproducibility_checksum: str
+        principle: "Content-addressed hash of run inputs — third parties can verify."
+      - cuda_available: bool
+        principle: "Confirms RTX 3090 was available for this run (not CPU-only fallback)."
+      - duration_s: float — MUST be >= 60
+        principle: "GATE against adversarial fabrication: GGUF load + 30 inference calls >= 60s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records CUDA + GGUF cache + carnot + FoVer corpus checks."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2728
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2728_otv_fast_path.json"
-    title: "OTV One-Token Verification Fast Path (arXiv:2603.01025): KV-Cache Probe for Cheap Routing"
+  - id: exp2741
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2741_tier0g_live_gpu_rerun.json"
+    title: "Tier 0g Semantic Energy Live GPU Re-run + Upstream GGUF Logit Diagnosis"
     agent_type: gemini
     model: gemini-3.1-pro-preview
-    max_turns: 35
-    track: pipeline
+    max_turns: 50
+    track: verifier
 
-    prior_failures: []
+    prior_failures:
+      - experiment_id: exp2731-semantic-energy-tier0g
+        verdict: "complete: tier0g_non_degenerate=true (synthetic); tier0g_auroc=0.288; BUT gguf_non_degenerate=false (all 3 GGUF inputs = 9.085), flagged_adversarial=DURATION_TOO_SHORT (3.3s)"
+        addressed_by: "exp2731 (.259) showed Tier 0g is non-degenerate on synthetic (energies 8.4-9.1, 6584 clusters) but gguf_non_degenerate=false (identical energy 9.085 across all 3 GGUF inputs). exp2731 was adversarial-flagged (3.3s for GGUF eval). This exp2741 ADDS: explicit GGUF load (Qwen3.6-35B, RTX 3090), N=30 live examples (not N=3), upstream logit diagnosis (do all GGUF inputs produce the same TF-IDF feature vector?). Different: exp2731 used 3 examples with GGUF; exp2741 uses 30 examples + traces whether the collapse is in TF-IDF feature space (GGUF markdown formatting collapses TF-IDF) or in the GGUF logit space (model returns identical token probs)."
+        retire_if_same_verdict: true
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      NEW EXPERIMENT for .259 — no prior failures for this specific scope.
+      exp2731 (.259) implemented Tier 0g Semantic Energy (arXiv:2508.14496). Non-degenerate on synthetic
+      responses (energies 8.4-9.1, std > 0.01). BUT on live GGUF: all 3 inputs produced identical energy
+      9.085, gguf_non_degenerate=false. Two root cause hypotheses:
 
-      arXiv:2603.01025 "One-Token Verification for Reasoning Correctness Estimation" (Mar 2026):
-      Probes the model's key-value cache with a single verification token to produce a soft correctness
-      probability without additional generation. 90% token reduction vs full verification. AUROC 0.75+
-      on MATH and HumanEval CoT.
+      H1: TF-IDF collapse — GGUF responses in markdown format produce nearly identical TF-IDF vectors
+          (markdown tokens dominate; actual content tokens underweighted). The k-NN search returns the
+          same cluster for all GGUF inputs.
 
-      Carnot context: exp2720 added ODAR free-energy routing (fast/deliberative path). OTV can serve as
-      an ultra-cheap PRE-SCREEN before ODAR: if OTV's KV probe says "high confidence", skip ODAR entirely.
-      Two-tier architecture: OTV → (if uncertain) → ODAR → (if deliberative) → full ensemble.
+      H2: GGUF content collapse — Qwen3.6-35B-A3B produces semantically very similar responses for
+          diverse prompts (all with similar markdown structure), so TF-IDF correctly assigns them to
+          one cluster.
+
+      Diagnosis approach: compute TF-IDF vectors for 30 live GGUF responses and measure pairwise
+      cosine similarity. If mean similarity > 0.95: H1 (TF-IDF collapse). If < 0.8: H2 (content
+      collapse). If GGUF responses are genuinely diverse (content), then the verifier needs a different
+      feature extractor (sentence embeddings, not TF-IDF).
+
+      MODEL_SPECS (mandatory per CLAUDE.md SOTA GGUF requirement):
+        - name: Qwen3.6-35B-A3B-GGUF
+          hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
+          role: live_tier0g_diagnostic
+        - name: gemma-4-26B-A4B-it-GGUF (fallback if Qwen GGUF unavailable)
+          hf_id: unsloth/gemma-4-26B-A4B-it-GGUF
+          role: fallback_live_diagnostic
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (should_verify(), odar_route() from exp2720)
-      - python/carnot/verify/ (existing tier0* modules)
+      - python/carnot/verify/tier0g_semantic_energy.py (SemanticEnergyVerifier from exp2731)
+      - results/experiment_2731_semantic_energy_tier0g.json (tier0g_auroc, cluster settings, gguf_non_degenerate)
+      - data/fover_corpus.jsonl (FoVer corpus)
 
-      TASK: Implement OTV-style single-token verification probe for fast-path routing.
+      TASK: Re-run Tier 0g on RTX 3090 with 30 live GGUF examples. Diagnose why GGUF inputs collapse.
+      Fix if H1 (TF-IDF collapse). Document if H2 (content collapse — different fix needed in .261).
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
-            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
-         b. `grep -c 'def odar_route' python/carnot/pipeline/verify_repair.py 2>/dev/null || echo 0`
-            Record: odar_route_exists (bool).
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `nvidia-smi --query-gpu=name --format=csv,noheader 2>/dev/null`
+            Record: cuda_available (bool), gpu_names (list).
+            If cuda_available=false: write honest_verdict 'blocked_cuda_not_available' and exit.
+         b. `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -3`
+            Record: qwen_gguf_cached (bool).
+            If qwen_gguf_cached=false:
+              `ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/ 2>/dev/null | head -3`
+              Record: fallback_gguf_cached (bool).
+              If fallback_gguf_cached=false: write honest_verdict 'blocked_no_gguf_cached' and exit.
+         c. `.venv/bin/python -c "import sklearn; import sys; sys.path.insert(0,'python'); import carnot.verify.tier0g_semantic_energy"`
+            Record: tier0g_importable (bool).
+            If tier0g_importable=false: write honest_verdict 'blocked_tier0g_module_missing' and exit.
+         d. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
+            Record: fover_corpus_lines (int).
          Record: preconditions_checked.
 
-      1. Implement OTV probe (without requiring actual GGUF inference — use TF-IDF proxy):
-         Add otv_probe(prompt: str, response: str) -> float to VerifyRepairPipeline:
-         """OTV-style one-token verification: computes a soft correctness probability
-         from response features without additional generation.
+      1. Load Tier 0g verifier (SemanticEnergyVerifier from exp2731).
+         Generate N=30 live GGUF responses on diverse prompts (random_seed=42):
+         - 10 math reasoning questions
+         - 10 factual questions
+         - 10 coding questions
+         Run SemanticEnergyVerifier on each response.
+         Record: live_energies (list of 30 floats), gguf_non_degenerate (bool = std(live_energies) > 0.01).
 
-         Proxy implementation (no KV cache available without transformer inference):
-         - TF-IDF of response (reuse existing feature extraction)
-         - Dot product with a "correctness direction" vector (trained on FoVer correct/incorrect pairs)
-         - Sigmoid to produce probability in [0, 1]
-         Returns: confidence float in [0, 1]. High = likely correct. Low = uncertain.
-         """
-         Record: otv_probe_added (bool).
+      2. UPSTREAM DIAGNOSIS: compute pairwise cosine similarity of TF-IDF vectors for the 30 GGUF responses:
+         ```python
+         from sklearn.metrics.pairwise import cosine_similarity
+         tfidf_matrix = vectorizer.transform(responses)
+         sim_matrix = cosine_similarity(tfidf_matrix)
+         mean_pairwise_sim = (sim_matrix.sum() - 30) / (30*29)  # exclude diagonal
+         ```
+         Record: mean_pairwise_tfidf_similarity (float), root_cause_hypothesis (str).
+         If mean_pairwise_tfidf_similarity > 0.90: root_cause = "H1: TF-IDF collapse"
+         If mean_pairwise_tfidf_similarity < 0.70: root_cause = "H2: Content collapse in model"
+         Else: root_cause = "Ambiguous (0.70-0.90 similarity)"
 
-      2. Train correctness direction on FoVer corpus (80/20 split, random_seed=42):
-         a. Load FoVer corpus
-         b. TF-IDF features for correct and incorrect answers
-         c. Logistic regression weight vector as correctness direction
-         d. Save to results/otv_correctness_probe.pkl
-         Record: probe_trained (bool), probe_auroc (float on eval split).
-         otv_fast_path_viable = probe_auroc >= 0.65.
+      3. FIX if H1 (TF-IDF collapse):
+         Replace TF-IDF with sentence embedding (use sklearn + sentence-transformers or a simple
+         word2vec average from gensim if available, or just char-n-gram TF-IDF which is more robust
+         to markdown formatting):
+         Try char-n-gram TF-IDF (analyzer='char_wb', ngram_range=(3,5)) which is less sensitive to
+         markdown token structure. Re-run diagnosis.
+         Record: fix_applied (str), fix_reduces_similarity (bool).
 
-      3. Add two-tier routing to VerifyRepairPipeline:
-         route(prompt: str, response: str, otv_threshold=0.8, odar_threshold=0.3) -> str:
-         """Two-tier routing:
-         Step 1: OTV probe — if confidence >= otv_threshold: return 'fast_path_otv'
-         Step 2: ODAR route — if F < odar_threshold: return 'fast_path_odar'
-         Step 3: return 'deliberative_path'
-         """
-         Record: two_tier_routing_added (bool).
+      4. VERIFY FIX: Re-run Tier 0g on 30 GGUF examples with fixed feature extractor.
+         Record: post_fix_energies (list of 30 floats if fixed, null if H2),
+         gguf_non_degenerate_post_fix (bool).
+         tier0g_viable = gguf_non_degenerate_post_fix OR (root_cause_hypothesis contains 'H2').
 
-      4. Test on 20 synthetic examples (10 correct / 10 incorrect, random_seed=42):
-         n_otv_skipped: examples where otv probe confidence >= 0.8 (OTV fast path)
-         n_odar_skipped: remaining examples where ODAR fast path fires
-         n_deliberative: remaining requiring full ensemble
-         total_savings_pct = (n_otv_skipped + n_odar_skipped) / 20 * 100
-         Record: n_otv_skipped, n_odar_skipped, n_deliberative, total_savings_pct.
-
-      5. Write results/experiment_2728_otv_fast_path.json.
+      5. Write results/experiment_2741_tier0g_live_gpu_rerun.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - otv_probe_added: bool
-        principle: "Primary deliverable: OTV probe method in VerifyRepairPipeline."
-      - probe_auroc: float
-        principle: "OTV accuracy: arXiv:2603.01025 claims 0.75+; validate on FoVer."
-      - otv_fast_path_viable: bool
-        principle: "Gate for two-tier routing deployment: True if probe_auroc >= 0.65."
-      - two_tier_routing_added: bool
-        principle: "Confirms OTV + ODAR two-tier routing is wired in pipeline."
-      - total_savings_pct: float
-        principle: "Routing efficiency: fraction of examples that skip full ensemble via fast paths."
-      - n_otv_skipped: int
-        principle: "Attribution: how many saves from OTV first tier."
-      - n_odar_skipped: int
-        principle: "Attribution: how many saves from ODAR second tier."
+      - gguf_non_degenerate: bool
+        principle: "Pre-fix result: True means original exp2731 fix actually worked with more examples."
+      - gguf_non_degenerate_post_fix: bool (or null if no fix needed)
+        principle: "Post-fix result: True clears the adversarial flag from exp2731."
+      - mean_pairwise_tfidf_similarity: float
+        principle: "Diagnostic: high (>0.90) = TF-IDF collapse; low (<0.70) = GGUF content collapse."
+      - root_cause_hypothesis: str
+        principle: "Names the verified root cause — prevents rerun without different fix."
+      - fix_applied: str (or null if no fix needed or H2)
+        principle: "Describes the feature-extractor change that resolved TF-IDF collapse."
+      - tier0g_viable: bool
+        principle: "Gate for ensemble v12 inclusion: True if GGUF produces non-degenerate energy."
+      - model_specs: list of {name, hf_id, role}
+        principle: "Methodology: records which GGUF model(s) generated the 30 live responses."
       - random_seed: int — 42
         principle: "Reproducibility."
-      - duration_s: float
-        principle: "Logistic train + 20-example routing test: expected >= 3s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pipeline import + odar_route existence."
+      - reproducibility_checksum: str
+        principle: "Hash of GGUF filename + n_examples + random_seed."
+      - duration_s: float — MUST be >= 30
+        principle: "GGUF load + 30 inference calls: expected >= 30s; < 10s = model not loaded."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records CUDA + GGUF cache + tier0g import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2729
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2729_paper_v6_theory_v3.json"
-    title: "pdflatex Toolchain Install + Paper v6 Theory v3: ARM-EBM + 4/delta + FST Citations"
+  - id: exp2742
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2742_kv260_latency_transcript_terminal.json"
+    title: "KV260 Board-Level Latency Transcript (TERMINAL Step) via SSH"
     agent_type: gemini
     model: gemini-3.1-pro-preview
-    max_turns: 35
-    track: publication
+    max_turns: 30
+    track: hardware
 
     prior_failures:
-      - experiment_id: exp2721-paper-v6-theory-update-v2
-        verdict: "blocked_paper_v6_toolchain_or_source_missing"
-        addressed_by: "exp2721 (.258) blocked because pdflatex was not on PATH and no .tex source was found. This exp2729 FIRST installs texlive-latex-base via sudo apt-get before attempting any LaTeX work — a step exp2721 explicitly did not take. Different approach: toolchain installation is step 1, citation addition is step 2."
-        retire_if_same_verdict: false
-      - experiment_id: exp2708-paper-v6-theory-update
-        verdict: "complete: fallback markdown created; pdflatex unavailable, no .tex source found"
-        addressed_by: "exp2708 (.257) wrote a fallback markdown instead of editing .tex. exp2721 (.258) was explicitly blocked. This attempt installs pdflatex first (apt-get). If apt-get is unavailable or texlive fails to install, write blocked_pdflatex_install_failed — not a silent fallback."
-        retire_if_same_verdict: false
+      - experiment_id: exp2735-kv260-continuity-259
+        verdict: "complete: ssh_kria_reachable=true, bitstream_loaded=true, uio_count=5, uio0_first_word_read=true, kv260_terminal=false"
+        addressed_by: "exp2735 (.259) verified SSH reachability + bitstream loaded + uio0 first word readable (kv260_terminal=false — smoke only, not TERMINAL). This exp2742 is the NEXT STEP per CLAUDE.md Hardware-Task Continuity table: 'if uio0_first_word_read=true → ready for board-level latency transcript task (terminal-step).' Different scope: exp2735 was a smoke test; exp2742 is the TERMINAL step that measures actual Ising sampler latency via repeated UIO register reads + spin-read loop on the board. If successful: kv260_synthesis_succeeded=true and KV260 graduates to TERMINAL status."
+        retire_if_same_verdict: true
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      Three consecutive milestones (.257-.258) failed to add theory citations to paper v6 because
-      pdflatex is not installed. This experiment installs texlive FIRST, then adds citations.
-      Per CLAUDE.md: this task does NOT submit to arXiv (OPERATOR-ONLY).
+      Per CLAUDE.md Hardware-Task Continuity Discipline:
+      - KV260 terminal state criteria: "board-level latency transcript landed in a non-fabricated
+        artifact + kv260_synthesis_succeeded: true"
+      - exp2735 (.259) confirmed: ssh_kria_reachable=true, bitstream_loaded=true, uio_count=5,
+        uio0_first_word_read=true. Next step is the TERMINAL board-level latency transcript.
 
-      Three theory papers to integrate:
-      1. arXiv:2512.15605 (ARM-EBM bijection) → §2 theoretical background
-      2. arXiv:2512.02080 (4/delta bound) → §3 architecture (carnot_delta computed from repair data)
-      3. arXiv:2605.12484 (FST Fast-Slow Training) → §3 architecture
+      Per CLAUDE.md KV260 SSH-Not-SD-Card Discipline: ALL board interaction via SSH.
+      PRECONDITIONS use SSH reachability — NOT host /dev/mmcblk*.
 
-      EXISTING CODE TO READ FIRST:
-      - docs/arxiv-submission/ (list all files — look for .tex)
-      - docs/ (find *.tex at depth <=3)
-      - results/experiment_2721_paper_v6_theory_update_v2.json (carnot_delta=0.25, pdflatex_available=false)
-
-      TASK: Install pdflatex. Find .tex source. Add three theory citations. Compile.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `command -v pdflatex 2>/dev/null && echo available || echo missing`
-            Record: pdflatex_initially_available (bool).
-         b. `find docs/ -name '*.tex' 2>/dev/null | head -5`
-            `find . -maxdepth 3 -name '*.tex' 2>/dev/null | head -5`
-            Record: tex_files_found (list of str).
-         Record: preconditions_checked.
-
-      1. INSTALL pdflatex (if not already available):
-         `sudo apt-get install -y texlive-latex-base texlive-latex-recommended texlive-fonts-recommended 2>&1 | tail -3`
-         If sudo fails: `apt-get install -y texlive-latex-base 2>&1 | tail -3` (may work without sudo in container)
-         Record: install_exit_code (int), pdflatex_after_install (bool = pdflatex now on PATH).
-         If pdflatex still unavailable after install attempt: write honest_verdict 'blocked_pdflatex_install_failed' and exit.
-
-      2. If tex_files_found is empty: search for main.tex alternatives:
-         `find . -name 'main.tex' -o -name 'paper.tex' -o -name '*.tex' 2>/dev/null | head -5`
-         If still none: check docs/arxiv-submission/ for ANY file that might be a paper draft:
-         `ls docs/arxiv-submission/ 2>/dev/null`
-         If STILL no .tex source: write honest_verdict 'blocked_no_tex_source_found' and exit.
-         Record: tex_file_path (str).
-
-      3. Read main .tex file. Compute carnot_delta from repair artifacts:
-         `grep -rl '"n_repair_attempts"' results/ 2>/dev/null | head -5`
-         If found: delta = sum(passed)/sum(attempts). Else: delta = 0.25 (conservative).
-         Record: carnot_delta (float), delta_source (str).
-
-      4. Add to §2 (after theoretical background paragraph):
-         ARM-EBM bijection cite (blondel2025arm, arXiv:2512.15605).
-      5. Add to §3 (architecture section):
-         4/delta bound cite (dantas2025four, arXiv:2512.02080) with empirical delta.
-         FST cite (hashimoto2026fst, arXiv:2605.12484).
-      6. Update .bib with 3 entries if not already present.
-      Record: bijection_citation_added, four_delta_citation_added, fst_citation_added (bool).
-
-      7. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -5`
-         Record: latex_compiles (bool), compile_output (str — last 3 lines).
-
-      8. Write results/experiment_2729_paper_v6_theory_v3.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required; blocked_pdflatex_install_failed or blocked_no_tex_source_found if prerequisites fail."
-      - pdflatex_after_install: bool
-        principle: "Primary precondition: pdflatex must be on PATH before citation work can proceed."
-      - bijection_citation_added: bool
-        principle: "arXiv:2512.15605 ARM-EBM — highest-priority theoretical cite (Score 500)."
-      - four_delta_citation_added: bool
-        principle: "arXiv:2512.02080 4/delta — only published convergence guarantee for Carnot repair loop."
-      - fst_citation_added: bool
-        principle: "arXiv:2605.12484 FST — validates dual-timescale architecture with peer evidence."
-      - carnot_delta: float
-        principle: "Empirical delta: probability one repair iteration passes; paper-citable if delta_source=empirical."
-      - delta_source: str — 'empirical' or 'conservative_estimate'
-        principle: "Distinguishes paper-citable value from placeholder."
-      - latex_compiles: bool
-        principle: "GATE FIELD for exp2736 (arXiv package prep): compiles = .tex source is valid."
-      - tex_file_path: str
-        principle: "Documents which .tex file was modified — traceability for paper version control."
-      - duration_s: float
-        principle: "apt install + LaTeX edits + compile: expected >= 30s; < 10s suspicious."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pdflatex initial state + .tex search result."
-
-      DO NOT submit to arXiv. DO NOT push.
-      Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2730
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2730_hf_mirror_ship_v6.json"
-    title: "HuggingFace Mirror Prep + Phase 1 Ship v6 Final: IPFS CID Placeholder + Operator Checklist v6"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 25
-    track: ops
-
-    prior_failures:
-      - experiment_id: exp2714-phase1-ship-v5
-        verdict: "complete: Phase 1 ship prep actions completed autonomously."
-        addressed_by: "exp2714 (.258) completed: phase1_ship_ready=true, operator_ship_checklist_v5 present. This exp2730 has EXPANDED scope — adds HuggingFace model card update draft + IPFS CID anchor placeholder per CLAUDE.md Rule 3 distribution mirroring. Different: exp2714 only produced README + RELEASES.md + checklist; exp2730 adds HF model card + IPFS mirror text."
-        retire_if_same_verdict: false
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      Per exp2714 (.258): phase1_ship_ready=true. README has Phase 1 section. RELEASES.md created.
-      operator_ship_checklist_v5 is complete. Capstone capstone v258 recommends "SHIP".
-
-      Per CLAUDE.md Rule 3 (distribution mirroring): "Trained weights, model cards, datasets, and
-      Python packages must be published through at least two independent channels. Preferred: HuggingFace
-      as primary channel + IPFS as secondary channel."
-
-      This experiment prepares the HuggingFace model card update and IPFS placeholder so that when the
-      operator runs git tag + git push, HF mirror + IPFS anchor are ready to complete.
+      The Carnot Ising sampler on KV260 uses UIO devices (/dev/uio0 through /dev/uio4).
+      A latency transcript measures: how long does a full spin-read cycle take?
+      Target: read all N=64 spins from UIO registers, time 100 read cycles.
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_2714_phase1_ship_v5.json (operator_ship_checklist_v5, current_version)
-      - README.md (Phase 1 section content)
-      - RELEASES.md (Phase 1 entry)
+      - ops/hardware-bringup-prep.md (KV260 section — current bring-up state, uio device map)
+      - results/experiment_2735_kv260_continuity_259.json (uio_count=5, uio0_first_word_read=true)
 
-      TASK: Prepare HuggingFace model card update draft + IPFS CID placeholder. Produce final
-      operator_ship_checklist_v6 with HF + IPFS steps added.
+      TASK: Measure KV260 board-level Ising sampler latency via SSH + on-board Python UIO reads.
+      Produce a non-fabricated latency transcript with kv260_synthesis_succeeded=true.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `ls README.md && echo exists || echo missing` — Record: readme_exists (bool).
-         b. `ls RELEASES.md && echo exists || echo missing` — Record: releases_exists (bool).
-         c. `grep -c 'Phase 1' README.md 2>/dev/null || echo 0`
-            Record: phase1_section_present (bool).
-         d. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot; print(carnot.__version__)"` 2>/dev/null || grep '__version__' python/carnot/__init__.py | head -1`
-            Record: current_version (str).
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+            If exit != 0: write honest_verdict 'blocked_kv260_ssh_unreachable' and exit.
+            Record: ssh_kria_reachable (bool).
+         b. `ssh kria 'xmutil listapps 2>/dev/null | head -20'`
+            Record: xmutil_output (str), bitstream_state (str).
          Record: preconditions_checked.
 
-      1. Create docs/hf_model_card_update_v1.md with draft model card update:
-         """# Carnot EBM — Phase 1 Release (v{{current_version}})
+      1. Load bitstream (or confirm already loaded):
+         `ssh kria 'xmutil loadapp carnot_ising_v2_n64 2>&1 | head -5'`
+         Record: bitstream_loaded (bool), loadapp_output (str).
+         If bitstream_loaded=false: write honest_verdict 'blocked_bitstream_load_failed' and exit.
 
-         Carnot is an open-source energy-based verification framework for LLM outputs.
-         Apache-2.0. PyPI: pip install carnot-ebm.
+      2. Verify UIO devices:
+         `ssh kria 'ls /dev/uio* 2>/dev/null'`
+         Record: uio_devices (list of str), uio_count (int).
+         If uio_count < 1: write honest_verdict 'blocked_uio_devices_absent' and exit.
 
-         ## Verification Pipeline
-         - k=16 Tier 0 verifier ensemble (Tier 0a-0z, AUROC 0.993 on FoVer corpus)
-         - Tier 0f semantic calibration (ECE-improved paraphrase handling)
-         - FR-11 self-learning: NEXUS symbolic constraint memory + ORCA conformal TTT stopping
-         - ODAR free-energy routing (fast path / deliberative path)
+      3. LATENCY TRANSCRIPT — 100-cycle spin-read loop on the board:
+         ```python
+         ssh kria 'python3 -c "
+         import struct, time
+         f = open(\"/dev/uio0\", \"r+b\", buffering=0)
+         latencies = []
+         for i in range(100):
+           t0 = time.perf_counter()
+           f.seek(0)
+           word = struct.unpack(\"<I\", f.read(4))[0]
+           t1 = time.perf_counter()
+           latencies.append((t1-t0)*1e6)  # microseconds
+         f.close()
+         import statistics
+         mean_us = statistics.mean(latencies)
+         std_us = statistics.stdev(latencies)
+         print(f\"mean_us={mean_us:.3f} std_us={std_us:.3f} min_us={min(latencies):.3f} max_us={max(latencies):.3f}\")
+         "
+         `
+         Parse output: kv260_latency_mean_us, kv260_latency_std_us, kv260_latency_min_us, kv260_latency_max_us.
+         Record: kv260_latency_mean_us (float), kv260_latency_std_us (float),
+         kv260_latency_min_us (float), kv260_latency_max_us (float).
 
-         ## Usage
-         pip install carnot-ebm
-         from carnot.pipeline import VerifyRepairPipeline
-         # See GitHub for MCP server + CLI docs
+      4. Determine TERMINAL status:
+         kv260_synthesis_succeeded = (uio_count >= 1 AND kv260_latency_mean_us > 0 AND
+           kv260_latency_mean_us < 1000)  # < 1ms per read cycle is physically plausible
+         kv260_terminal = kv260_synthesis_succeeded  # meets the CLAUDE.md terminal criteria
 
-         ## Reproduce
-         GitHub: https://github.com/Carnot-EBM/carnot-ebm
-         IPFS: [CID placeholder — to be added after IPFS upload]
-         """
-         Record: hf_model_card_draft_created (bool).
+      5. Update ops/hardware-bringup-prep.md KV260 section:
+         - date: {date}
+         - latency_mean_us: {kv260_latency_mean_us}
+         - n_cycles_measured: 100
+         - kv260_terminal: {kv260_terminal}
+         - next_step: "GRADUATED: KV260 terminal criteria met" OR "Recheck: latency out of range"
+         Record: prep_doc_updated (bool).
 
-      2. Create docs/ipfs_anchor_placeholder.md with IPFS distribution note:
-         """# IPFS Distribution Placeholder — Carnot Phase 1
-
-         Per CLAUDE.md Rule 3 (distribution mirroring), the carnot-ebm source distribution
-         will be pinned to IPFS after the PyPI release is confirmed.
-
-         ## Steps for operator:
-         1. After PyPI publish (via CI): download carnot-ebm-{{version}}.tar.gz from PyPI
-         2. `ipfs add carnot-ebm-{{version}}.tar.gz` → note the CID
-         3. Pin via Filecoin-backed service (web3.storage / Storj / Filebase)
-         4. Update README.md IPFS section with CID
-         5. Update HuggingFace model card with CID
-
-         ## CID: [TO BE FILLED BY OPERATOR AFTER IPFS PIN]
-         """
-         Record: ipfs_placeholder_created (bool).
-
-      3. Produce operator_ship_checklist_v6 (adds HF + IPFS steps to v5):
-         All v5 steps + new steps:
-           "# HF Step: after PyPI confirms, visit huggingface.co/Carnot-EBM and update model card with docs/hf_model_card_update_v1.md content"
-           "# IPFS Step: ipfs add carnot-ebm-{{version}}.tar.gz (or use web3.storage) — document CID in docs/ipfs_anchor_placeholder.md"
-         Record: operator_ship_checklist_v6 (list of str).
-
-      4. Write results/experiment_2730_hf_mirror_ship_v6.json.
+      6. Write results/experiment_2742_kv260_latency_transcript_terminal.json.
 
       REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - hf_model_card_draft_created: bool
-        principle: "HuggingFace primary channel mirror: model card draft ready for operator upload."
-      - ipfs_placeholder_created: bool
-        principle: "IPFS secondary channel: placeholder doc per CLAUDE.md Rule 3 distribution mirroring."
-      - operator_ship_checklist_v6: list of str
-        principle: "Complete operator action list including PyPI + HF + IPFS steps."
-      - current_version: str
-        principle: "Records exact version being shipped for traceability."
-      - phase1_ship_ready: bool — true (confirmed from exp2714)
-        principle: "Carry-forward: Phase 1 ship gate remains satisfied."
+      - honest_verdict: MUST start with 'complete:' / 'success:' / 'passed:' /
+        'shipped:' (or 'blocked_kv260_ssh_unreachable' if precondition failed)
+        principle: "Terminal prefix per Verdict Terminal-Prefix Discipline."
+      - kv260_synthesis_succeeded: bool
+        principle: "Primary TERMINAL gate: True if UIO latency measured and physically plausible (< 1ms)."
+      - kv260_terminal: bool
+        principle: "Matches kv260_synthesis_succeeded — per CLAUDE.md terminal-state graduation criteria."
+      - kv260_latency_mean_us: float
+        principle: "Primary latency metric — mean UIO register read latency in microseconds."
+      - kv260_latency_std_us: float
+        principle: "Latency consistency — low std = deterministic hardware timing."
+      - kv260_latency_min_us: float
+        principle: "Best-case latency — useful for paper-v6 hardware performance table."
+      - kv260_latency_max_us: float
+        principle: "Worst-case latency — reveals jitter from OS scheduling on the board."
+      - n_cycles_measured: int — 100
+        principle: "Sample size for adversarial check: 100 cycles gives statistically meaningful mean/std."
+      - uio_count: int
+        principle: "Confirms UIO device count consistent with exp2735 (expected 5)."
+      - bitstream_loaded: bool
+        principle: "Confirms XDC-constrained bitstream was active during measurement."
+      - ssh_kria_reachable: bool
+        principle: "Anti-fabrication: board was reachable via SSH (not a synthesized latency)."
       - duration_s: float
-        principle: "File reads + doc creation + JSON write: expected >= 3s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records README, RELEASES.md, version checks."
+        principle: "SSH round-trips + 100-cycle Python timing loop: expected 10-60s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records ssh-reachability + xmutil checks with literal commands."
 
-      Do NOT push. Do NOT submit to arXiv.
-      Do NOT modify scripts/research_conductor.py.
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2731
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2731_semantic_energy_tier0g.json"
-    title: "Semantic Energy Verifier Tier 0g (arXiv:2508.14496): Boltzmann Cluster Energy for Live GGUF"
+  - id: exp2743
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2743_tier0v_set_consistency.json"
+    title: "Set-Consistency Energy Network Tier 0v (arXiv:2503.10695): Verifier for Multi-Statement Coherence"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 40
@@ -658,30 +646,26 @@ tasks:
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      NEW EXPERIMENT for .259 — motivated by exp2715's degenerate energy scores.
+      NEW EXPERIMENT for .260 — no prior failures for this specific scope.
 
-      arXiv:2508.14496 "Semantic Energy: Detecting LLM Hallucination Beyond Entropy" (Aug 2025):
-      Clusters LLM outputs by semantic equivalence (cosine similarity of TF-IDF or embedding vectors),
-      then assigns energy via a Boltzmann distribution over cluster probabilities:
-        E(x) = -log P(cluster(x)) where P(cluster) = size(cluster) / total_outputs
-      Low-energy = high-probability cluster = likely correct. High-energy = rare cluster = likely hallucination.
-      Validated: TruthfulQA AUROC 0.82, HaluEval AUROC 0.79. Non-degenerate by design.
+      arXiv:2503.10695 "Introducing Verification Task of Set Consistency with Set-Consistency Energy
+      Networks" (Mar 2025, Mooho Song, Hyeryung Son, Jay-Yoon Lee):
+      Uses contrastive loss to learn compatibility among statement COLLECTIONS (sets), not just pairs.
+      SC-Energy assigns low energy to internally-consistent sets, high energy to contradictory sets.
+      Validated on logical consistency benchmarks.
 
-      Context: exp2727 investigates WHY exp2715's energy was all-zero. Semantic Energy (this task)
-      provides an ALTERNATIVE verifier that avoids zero-energy collapse regardless of exp2727's finding.
-      Both tasks are independent and complementary.
-
-      MODEL_SPECS (mandatory per CLAUDE.md SOTA GGUF — used only if GGUF cached for validation):
-        - name: Qwen3.6-35B-A3B-GGUF
-          hf_id: unsloth/Qwen3.6-35B-A3B-GGUF
-          role: optional_validation
+      Carnot context: Carnot's tier0u verifier checks global pairwise consistency. Set-Consistency
+      extends this to multi-statement coherence: given N statements (across a multi-step CoT), does the
+      FULL SET form a coherent, non-contradictory argument? Individual pairwise checks miss contradictions
+      that only emerge at the set level (e.g., Step 3 is consistent with Step 1 AND with Step 2, but
+      Steps 1+2+3 together imply a contradiction).
 
       EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/ (list all tier0* modules — add tier0g_semantic_energy.py)
-      - data/fover_corpus.jsonl (FoVer corpus — used for training and baseline)
+      - python/carnot/verify/ (list all tier0* modules — add tier0v_set_consistency.py after tier0u)
+      - data/fover_corpus.jsonl (FoVer corpus for training)
       - python/carnot/verify/__init__.py (export pattern)
 
-      TASK: Implement Tier 0g Semantic Energy Verifier. Evaluate on FoVer corpus. Confirm non-degenerate.
+      TASK: Implement Tier 0v Set-Consistency Energy Network. Evaluate on FoVer corpus.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
@@ -690,507 +674,98 @@ tasks:
          b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
             Record: fover_corpus_lines (int).
             If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
-         c. Check Qwen3.6 GGUF cached (optional validation only):
-            `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -1`
-            Record: qwen_cached (bool).
          Record: preconditions_checked.
 
-      1. Load FoVer corpus. Compute TF-IDF features (random_seed=42, max_features=5000).
-         n_corpus_entries = number of (question, answer) pairs.
-         Record: n_corpus_entries (int).
+      1. Load FoVer corpus. Build sets: for each question, combine the correct answer + 2 incorrect
+         answers to form triplets (sets of 3 statements). Correct set = [q, a_correct, a_correct_step2].
+         Inconsistent set = [q, a_correct, a_incorrect] (one member breaks consistency).
+         n_sets = number of such triplets built.
+         Record: n_sets (int), n_corpus_entries (int).
 
-      2. Implement SemanticEnergyVerifier:
-         For a (question, response) pair:
-           a. Compute TF-IDF of response
-           b. Find k=5 nearest neighbors in FoVer corpus (by cosine similarity)
-           c. Cluster assignment: bin by cosine distance (< 0.3 = same cluster, else new cluster)
-           d. E(response) = -log(cluster_size / n_corpus_entries + epsilon)
-         Save cluster index to results/tier0g_cluster_index.pkl.
-         Record: module_created (bool), n_clusters (int).
+      2. Implement SetConsistencyVerifier:
+         For a set of N statements:
+           a. TF-IDF feature vector for each statement
+           b. Set-level energy = contrastive score:
+              E(set) = max_pair_distance(TF-IDF pairwise cosine sim) scaled to [0, 1]
+              (high inconsistency = low min similarity = high energy)
+           c. Energy normalized to [0, 1]: 0 = perfectly consistent set, 1 = contradictory
+         Record: module_created (bool).
 
-      3. Evaluate on FoVer eval split (80/20, random_seed=42):
-         For each (question, correct) and (question, incorrect) pair:
-         Energy for correct answer should be LOWER than incorrect (verifier direction check).
-         tier0g_auroc = roc_auc_score(labels=[0,0,...,1,1,...], scores=energies)
-         tier0g_ece = calibration ECE (10 bins)
-         tier0g_non_degenerate = (energy_std > 0.01 AND energy_max - energy_min > 0.1)
-         Record: tier0g_auroc (float), tier0g_ece (float), tier0g_non_degenerate (bool).
+      3. Evaluate on held-out FoVer sets (80/20 split, random_seed=42):
+         For consistent sets: energy should be LOW (< 0.5)
+         For inconsistent sets: energy should be HIGH (> 0.5)
+         tier0v_auroc = roc_auc_score(inconsistency_labels, set_energies)
+         tier0v_precision_at_k = precision for top-k (k=10) flagged inconsistent sets
+         Record: tier0v_auroc (float), tier0v_precision_at_k (float), tier0v_viable (bool = tier0v_auroc >= 0.65).
 
-      4. Adversarial check: run on 3 synthetic Qwen3.6-format responses (markdown, special tokens):
-         Confirm energies are non-zero (critical: must not reproduce exp2715 zero-energy collapse).
-         Record: synthetic_energies (list of 3 floats), all_non_zero (bool).
+      4. Adversarial check: construct 3 synthetic inconsistent sets (known contradictions):
+         - "The sum of 2+3 is 5" + "The sum of 2+3 is 7" (arithmetic contradiction)
+         - "The cat is alive" + "The cat is dead" (logical contradiction)
+         - "X > Y" + "X < Y" (logical contradiction)
+         Each should have high energy (> 0.5).
+         Record: synthetic_inconsistency_energies (list of 3 floats), all_high_energy (bool = all > 0.4).
 
-      5. If qwen_cached: read 3 cached GGUF output examples and compute energy.
-         Record: live_gguf_tested (bool).
-         gguf_energies (list of float — 3 values). gguf_non_degenerate (bool).
-
-      6. Create python/carnot/verify/tier0g_semantic_energy.py with SemanticEnergyVerifier.
+      5. Create python/carnot/verify/tier0v_set_consistency.py with SetConsistencyVerifier.
          Update python/carnot/verify/__init__.py to export it.
 
-      7. Write results/experiment_2731_semantic_energy_tier0g.json.
+      6. Write results/experiment_2743_tier0v_set_consistency.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - tier0g_auroc: float
-        principle: "Primary accuracy metric; arXiv:2508.14496 claims 0.79-0.82 AUROC."
-      - tier0g_non_degenerate: bool
-        principle: "Critical gate: True confirms Semantic Energy avoids exp2715 zero-energy collapse."
-      - synthetic_energies: list of float
-        principle: "Adversarial check: must be non-zero on markdown/code responses (degenerate verifier test)."
-      - all_non_zero: bool
-        principle: "Confirms Semantic Energy works on Qwen3.6-format responses without zero-collapse."
-      - tier0g_ece: float
-        principle: "Calibration quality: lower is better (arXiv:2508.14496 secondary metric)."
-      - n_clusters: int
-        principle: "Confirms clustering is non-trivial (expected > 10 for FoVer corpus)."
+      - tier0v_auroc: float
+        principle: "Primary accuracy metric: set-consistency AUROC on FoVer inconsistency labels."
+      - tier0v_viable: bool
+        principle: "Gate: True if tier0v_auroc >= 0.65 (better than random, complementary to tier0u)."
+      - synthetic_inconsistency_energies: list of float (3 values)
+        principle: "Adversarial sanity check: known contradictions must produce high energy."
+      - all_high_energy: bool
+        principle: "Confirms verifier detects obvious contradictions (if False, fundamental flaw)."
+      - tier0v_precision_at_k: float
+        principle: "Precision-at-10: practical metric for flagging top inconsistent responses."
       - module_created: bool
-        principle: "SemanticEnergyVerifier module exists in python/carnot/verify/ after this task."
+        principle: "Tier 0v module exists in python/carnot/verify/ after this task."
+      - n_sets: int
+        principle: "Dataset scale: confirms set construction produced usable training data."
       - random_seed: int — 42
         principle: "Reproducibility."
       - duration_s: float
-        principle: "TF-IDF fit + k-NN clustering + eval: expected 5-60s; < 2s suspicious."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records sklearn + FoVer corpus + GGUF cache check."
+        principle: "TF-IDF + contrastive eval + export: expected 5-60s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records sklearn + FoVer corpus checks."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2732
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2732_entanglement_retirement_diversity_audit.json"
-    title: "Behavioral Entanglement Lineage Retirement + Diversity-Maximizing Verifier Selection Audit"
+  - id: exp2744
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2744_empirical_delta_paper_v6.json"
+    title: "Empirical Delta Computation for 4/delta Paper Bound + Paper v6 Author/Abstract Final Audit"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 25
-    track: verifier
-
-    prior_failures:
-      - experiment_id: exp2723-behavioral-entanglement-reweighting
-        verdict: "complete: auroc_lift=-0.008 (NEGATIVE); high_entanglement=false; reweighting did not improve discrimination"
-        addressed_by: "exp2723 (.258) showed pairwise Pearson correlation is low (high_entanglement=false), making the de-entangled reweighting premise incorrect. This exp2732 has DIFFERENT scope: (1) formally documents the retirement of the Pearson-correlation-based reweighting approach, and (2) implements a DIFFERENT diversity criterion (diversity-maximizing greedy selection: pick verifiers that maximize ensemble coverage, not minimize pairwise correlation). This is an analysis + alternative selection task, not a rerun of correlation-based reweighting."
-        retire_if_same_verdict: false
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      exp2723 (.258): auroc_lift=-0.008 (NEGATIVE), high_entanglement=false. The behavioral entanglement
-      reweighting hypothesis was NOT confirmed. Pairwise Pearson correlation between Carnot's verifiers is
-      low — they are NOT behaviorally entangled by this criterion.
-
-      IMPLICATION: The saturation at k=2 (exp2704) is NOT caused by verifier entanglement. Alternative
-      explanation: the verifiers are complementary but redundant at k>2 — each additional verifier adds
-      precision but not recall. This calls for a DIVERSITY criterion, not an entanglement criterion.
-
-      This task: (1) formally retires the Pearson-correlation entanglement reweighting approach,
-      (2) implements diversity-maximizing greedy verifier selection (covers cases the ensemble misses).
-
-      EXISTING CODE TO READ FIRST:
-      - results/experiment_2723_behavioral_entanglement_reweighting.json (correlation_matrix, auroc_lift)
-      - python/carnot/verify/ (list all tier0* verifier modules)
-      - data/fover_corpus.jsonl (FoVer corpus)
-
-      TASK: Retire Pearson-correlation reweighting. Implement diversity-maximizing greedy selection.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `ls results/experiment_2723_behavioral_entanglement_reweighting.json 2>/dev/null && echo exists || echo missing`
-            Record: exp2723_artifact_exists (bool).
-         b. `.venv/bin/python -c "import sklearn; print(sklearn.__version__)"` — scikit-learn.
-            If absent: write honest_verdict 'blocked_sklearn_missing' and exit.
-         c. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0` — FoVer corpus.
-            If 0 or missing: write honest_verdict 'blocked_fover_corpus_missing' and exit.
-         Record: preconditions_checked.
-
-      1. Formally retire the Pearson-correlation reweighting approach:
-         Write a retirement record in the artifact explaining:
-         - Why retired: high_entanglement=false (exp2723) means the approach's premise was wrong
-         - What was learned: verifiers have low pairwise correlation, so uniform weighting is near-optimal
-         - Alternative: diversity-maximizing selection (greedy coverage)
-         Record: entanglement_lineage_retired (bool = true), retirement_reason (str).
-
-      2. Implement diversity-maximizing greedy selection:
-         diversity_select(verifier_scores_matrix, labels, k_target: int = 4) -> list of indices:
-         """Greedy selection: start with best single verifier (highest AUROC), then add each
-         verifier that maximizes F1 improvement on the examples the current ensemble misses.
-         This targets recall gaps (examples no current verifier catches) rather than
-         correlation reduction (entanglement premise)."""
-         Record: diversity_select_added (bool).
-
-      3. Evaluate on FoVer eval split (80/20, random_seed=42):
-         - Uniform ensemble AUROC (use all available tier0* verifiers)
-         - Diversity-selected k=4 ensemble AUROC
-         - diversity_lift = diversity_selected_auroc - uniform_auroc
-         Record: uniform_auroc (float), diversity_selected_auroc (float), diversity_lift (float).
-         diversity_viable = diversity_lift > 0.001.
-
-      4. Write results/experiment_2732_entanglement_retirement_diversity_audit.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - entanglement_lineage_retired: bool — true
-        principle: "Formally closes the Pearson-correlation reweighting lineage per Failed-Experiment Rerun Discipline."
-      - retirement_reason: str
-        principle: "Documents WHY retired — high_entanglement=false means premise was wrong, not implementation."
-      - diversity_select_added: bool
-        principle: "New approach implemented: coverage-maximizing selection vs correlation minimization."
-      - diversity_lift: float
-        principle: "Primary result: positive lift validates the diversity-maximizing alternative."
-      - diversity_viable: bool
-        principle: "Gate for ensemble v12 inclusion: True if diversity_lift > 0.001."
-      - uniform_auroc: float
-        principle: "Baseline: all verifiers uniform weight."
-      - diversity_selected_auroc: float
-        principle: "New approach AUROC: should be >= uniform_auroc."
-      - random_seed: int — 42
-        principle: "Reproducibility."
-      - duration_s: float
-        principle: "Greedy selection + AUROC eval: expected 3-30s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records exp2723 artifact + sklearn + FoVer corpus."
-
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2733
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2733_orca_nexus_integration_v1.json"
-    title: "FR-11 Tier 3+: ORCA-NEXUS Integration v1 — Online Violation Learning with Conformal Stopping"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 40
-    track: self-learning
-    continuous_self_learning_task: true
-
-    prior_failures:
-      - experiment_id: exp2719-orca-ttt-v2
-        verdict: "complete: conformal_stopping_enabled=True, n_ttt_steps_saved=79, GC dependency stopping operational"
-        addressed_by: "exp2719 (.258) completed the ORCA conformal stopping (FR-11 Tier 3). This exp2733 has EXPANDED scope: integrates ORCA stopping WITH NEXUS symbolic constraint memory (exp2695, FR-11 Tier 2). The new task runs ORCA TTT on real FoVer violations (not synthetic examples) and feeds learned constraints into NexusConstraintMemory.synthesize_rules(). Different deliverable: ORCA-NEXUS online integration producing learned_rules (str count) from real violations."
-        retire_if_same_verdict: false
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      FR-11 Tier 2 (NEXUS v2): COMPLETED in .256 (exp2695 — 100 FoVer violations, 5 rules, persistence).
-      FR-11 Tier 3 (ORCA TTT v2): COMPLETED in .258 (exp2719 — conformal_stopping, 79 steps saved).
-      This experiment integrates both: use ORCA conformal stopping TO DRIVE rule synthesis in NEXUS.
-
-      Integration design:
-      1. For each FoVer violation, run ORCA TTT loop (up to k=10 iterations, conformal stopping)
-      2. When conformal stopping fires (energy interval width < alpha), extract the final low-energy
-         response as a "repair example"
-      3. Feed (violation, repair) pairs into NexusConstraintMemory.synthesize_rules()
-      4. Measure: how many new rules were synthesized? Are rules better than pattern-only synthesis?
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/ttt_loop.py (VerifierDrivenTTT from exp2719 — check if exists)
-      - python/carnot/verify/nexus_constraint_memory.py (or nexus_*.py — from exp2695)
-      - data/fover_corpus.jsonl (FoVer corpus)
-
-      TASK: Integrate ORCA TTT stopping with NEXUS online constraint learning. (FR-11 Tier 3+)
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `ls python/carnot/pipeline/ttt_loop.py 2>/dev/null && echo exists || echo missing`
-            Record: ttt_loop_exists (bool).
-         b. `ls python/carnot/verify/nexus_constraint_memory.py 2>/dev/null || ls python/carnot/verify/nexus*.py 2>/dev/null | head -1`
-            Record: nexus_module_exists (bool), nexus_module_path (str).
-         c. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
-            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
-         d. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
-            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
-         Record: preconditions_checked.
-
-      1. If ttt_loop_exists=false: create minimal VerifierDrivenTTT stub (per exp2719 pattern):
-         iterate(prompt, initial_response, k_max=10, alpha=0.1) -> dict
-         conformal_stopping_criterion(energy_scores, alpha=0.1, min_iterations=2) -> (bool, float)
-         Record: ttt_stub_created (bool).
-
-      2. If nexus_module_exists=false: create minimal NexusConstraintMemory stub:
-         add_violation(question, wrong_answer, energy_score) -> None
-         synthesize_rules(min_support=3) -> list of str
-         Record: nexus_stub_created (bool).
-
-      3. Load N=30 FoVer violations from corpus (random_seed=42):
-         Violations = (question, incorrect_answer) pairs.
-         For each violation: simulate ORCA TTT (use pipeline.verify() to compute energy):
-           - energy_scores = [pipeline.verify(q, r) for r in iteration_responses]
-           - conformal_stopping_criterion(energy_scores, alpha=0.1)
-           - If stopped: record repair_example = (violation, iteration_responses[-1])
-         Record: n_violations_processed (int), n_orca_stopped_early (int), n_repairs_found (int).
-
-      4. Feed (violation, repair) pairs to NEXUS:
-         For each repair: nexus.add_violation(question, wrong_answer, energy_score)
-         synthesized_rules = nexus.synthesize_rules(min_support=3)
-         Record: n_rules_synthesized (int), synthesized_rules_sample (list of str — first 3).
-
-      5. orca_nexus_integration_viable = (n_repairs_found >= 5 AND n_rules_synthesized >= 1).
-
-      6. Write results/experiment_2733_orca_nexus_integration_v1.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - orca_nexus_integration_viable: bool
-        principle: "FR-11 integration gate: True if ORCA-driven violations feed NEXUS rule synthesis."
-      - n_violations_processed: int
-        principle: "Confirms ORCA TTT loop ran on real FoVer data (not synthetic examples)."
-      - n_orca_stopped_early: int
-        principle: "ORCA value: early stops = fewer iterations needed per online learning step."
-      - n_repairs_found: int
-        principle: "Repair quality: how many ORCA loops converged to a lower-energy response."
-      - n_rules_synthesized: int
-        principle: "NEXUS value: new rules generated from ORCA-driven repair examples."
-      - synthesized_rules_sample: list of str
-        principle: "Qualitative audit: are the synthesized rules meaningful (not trivial prefix patterns)?"
-      - random_seed: int — 42
-        principle: "Reproducibility."
-      - duration_s: float
-        principle: "30 violations + ORCA + NEXUS synthesis: expected >= 10s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records TTT loop + NEXUS module + pipeline import + FoVer corpus."
-
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2734
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2734_falcon_repair_integration.json"
-    title: "FALCON Property-Constrained Repair Integration (arXiv:2602.01090): Grammar + Semantic Repair"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 35
-    track: pipeline
-
-    prior_failures:
-      - experiment_id: exp2717-property-guided-repair-loop-v2
-        verdict: "complete: method_added=True, candidates_reduction_pct=60.0"
-        addressed_by: "exp2717 (.258) completed property-guided iterative repair with ExVerus counterexample messages (60% candidates reduction). This exp2734 has EXPANDED scope: adds FALCON-style separation of syntactic validity (grammar-constrained decoding) from semantic feasibility (exp2717's ExVerus repair). Different deliverable: adds a grammar_check() gating step BEFORE the iterative repair loop, per FALCON's two-layer architecture (arXiv:2602.01090)."
-        retire_if_same_verdict: false
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      NEW EXPERIMENT for .259 — motivated by arXiv:2602.01090 (FALCON).
-
-      arXiv:2602.01090 "FALCON: Hard Constraints Meet Soft Generation" (Feb 2026):
-      Separates syntactic validity (grammar-constrained decoding using formal grammars) from
-      semantic feasibility (iterative repair operators). Grammar-constrained generation guarantees
-      structurally valid outputs; repair operators guarantee semantic constraint satisfaction.
-
-      Carnot mapping:
-      - Grammar check (syntactic): does the response match expected format? (e.g., JSON schema, code structure)
-      - Semantic repair (semantic): does the response satisfy energy constraints? (existing exp2717)
-
-      Two-layer FALCON integration:
-      Layer 1: grammar_check() — reject responses that fail format constraints (fast, cheap)
-      Layer 2: iterative_repair_with_counterexample() — repair responses that pass format but fail energy
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (iterative_repair_with_counterexample from exp2717)
-      - results/experiment_2717_property_guided_repair_loop_v2.json (method_added, candidates_reduction_pct)
-
-      TASK: Add FALCON-style grammar_check() layer. Integrate with exp2717's iterative repair.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `.venv/bin/python -c "import sys; sys.path.insert(0, 'python'); import carnot.pipeline"` — importable.
-            If fails: write honest_verdict 'blocked_carnot_pipeline_not_importable' and exit.
-         b. `grep -c 'def iterative_repair_with_counterexample' python/carnot/pipeline/verify_repair.py 2>/dev/null || echo 0`
-            Record: repair_method_exists (bool = count > 0).
-         Record: preconditions_checked.
-
-      1. If repair_method_exists=false: add stub iterative_repair_with_counterexample() per exp2717 pattern.
-         Record: repair_stub_added (bool).
-
-      2. Add grammar_check(response: str, format_type: str = 'text') -> (bool, str):
-         """FALCON Layer 1: syntactic validity check.
-
-         Supported format_types:
-         - 'text': always passes (free-form text) [fast path]
-         - 'json': checks json.loads(response) succeeds
-         - 'code_python': checks compile(response, '<string>', 'exec') succeeds
-         - 'number': checks response.strip() is a valid float
-
-         Returns: (valid: bool, reason: str)
-         """
-         Record: grammar_check_added (bool).
-
-      3. Add falcon_repair(prompt: str, initial_response: str, format_type: str = 'text',
-                           k_max: int = 5, energy_threshold: float = 0.3) -> dict:
-         """FALCON two-layer repair:
-         Layer 1: grammar_check(initial_response, format_type)
-           If invalid: return {{failed: 'grammar', reason: str, n_iterations: 0}}
-         Layer 2: iterative_repair_with_counterexample(prompt, initial_response, k_max, energy_threshold)
-         Returns: {{final_response, final_energy, n_iterations, converged, layers_applied}}
-         """
-         Record: falcon_repair_added (bool).
-
-      4. Test on 15 synthetic examples (5 text / 5 json / 5 code_python, random_seed=42):
-         - 3 correct format responses per type
-         - 2 incorrect format responses per type
-         Record: n_grammar_rejected (int), n_grammar_passed (int),
-         n_semantic_repair_triggered (int), n_converged (int),
-         total_candidates_reduction_pct (float).
-
-      5. Write results/experiment_2734_falcon_repair_integration.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' or 'blocked_'
-        principle: "Terminal prefix required."
-      - falcon_repair_added: bool
-        principle: "Primary deliverable: FALCON two-layer repair method in VerifyRepairPipeline."
-      - grammar_check_added: bool
-        principle: "arXiv:2602.01090 Layer 1: syntactic validity gating before semantic repair."
-      - n_grammar_rejected: int
-        principle: "Layer 1 efficiency: grammar rejects save full semantic repair computation."
-      - total_candidates_reduction_pct: float
-        principle: "Combined Layer 1 + Layer 2 reduction vs naive k_max attempts."
-      - n_converged: int
-        principle: "End-to-end repair quality: how many passed both layers + reached low energy."
-      - duration_s: float
-        principle: "Grammar check + iterative repair + 15 examples: expected >= 3s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pipeline import + repair method existence."
-
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2735
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2735_kv260_continuity_259.json"
-    title: "KV260 Hardware Continuity .259 (SSH-Based On-Board Smoke)"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 20
-    track: hardware
-
-    prior_failures:
-      - experiment_id: exp2722-kv260-continuity-258
-        verdict: "complete: branch_taken=B, consecutive_branch_b_runs=4, sd_card_absent=true"
-        addressed_by: "exp2722-2734 used a wrong-mechanism precondition (host /dev/mmcblk* SD card check) leftover from a pre-board-boot PYNQ-flash workflow. Per 2026-05-20 operator directive: 'why is an SD card flash required when you can ssh to kv260.local and install anything needed?' — the board has been booted with Ubuntu Xilinx and reachable via ssh kria since 2026-05-20 ~13:00 EDT. The xmutil-loadapp overlay activation path requires no SD-card swap. This exp2735 is REWRITTEN to use ssh-based on-board verification. Different: precondition checks board reachability (ssh kria 'true'), not host SD card; bitstream verification runs on the board via ssh, not on the host."
-        retire_if_same_verdict: true
-        operator_override: "2026-05-20 operator directive citing wrong-mechanism in exp2722 precondition design"
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      KV260 is NON-TERMINAL per CLAUDE.md Hardware-Task Continuity Discipline.
-      Board has been booted with Ubuntu Xilinx and reachable via `ssh kria` since
-      2026-05-20 ~13:00 EDT. The latest XDC-constrained bitstream
-      (carnot_ising_v4) is activated via `xmutil loadapp carnot_ising_v2_n64`.
-      All future board interaction is via SSH — no SD-card flash is required.
-
-      Prior exp2722-2734 used a wrong-mechanism precondition (host SD-card
-      slot check, which is meaningless for the board's state). That design is
-      retired per 2026-05-20 operator directive — see CLAUDE.md "KV260
-      SSH-Not-SD-Card Discipline" for the full rationale.
-
-      EXISTING CODE TO READ FIRST:
-      - ops/hardware-bringup-prep.md (KV260 section — current bring-up state)
-      - results/experiment_2722_kv260_continuity_258.json (prior wrong-mechanism artifact)
-
-      TASK: KV260 hardware continuity .259 — verify board reachability +
-      bitstream loaded + Ising energy smoke check, all via SSH.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS (check BEFORE any subsequent step):
-         a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
-            If exit != 0: write honest_verdict
-            `blocked_kv260_ssh_unreachable` and exit.
-            Record: ssh_kria_reachable (bool), preconditions_checked.
-         b. `ssh kria 'xmutil listapps 2>/dev/null | head -20'`
-            Record: xmutil_available (bool), active_overlay_listing (str).
-
-      1. BITSTREAM LOAD (only if preconditions passed):
-         `ssh kria 'xmutil loadapp carnot_ising_v2_n64 2>&1'`
-         Record: xmutil_loadapp_output (str), bitstream_loaded (bool — true if
-         'loaded' or 'already loaded' in output).
-
-      2. UIO VERIFICATION:
-         `ssh kria 'ls /dev/uio* 2>/dev/null'`
-         Record: uio_devices (list[str]), uio_count (int — expect 5).
-
-      3. ON-BOARD ISING SMOKE (only if uio_count >= 1):
-         `ssh kria 'python3 -c "import struct; \
-           f=open(\"/dev/uio0\",\"r+b\"); \
-           f.seek(0); print(\"uio0_first_word:\", \
-           struct.unpack(\"<I\", f.read(4))[0]); f.close()"'`
-         Record: uio0_first_word_read (bool — true if any int printed),
-         uio0_value (int or null).
-
-      4. Update ops/hardware-bringup-prep.md KV260 section:
-         - date: 2026-05-20
-         - ssh_kria: reachable / unreachable
-         - active_overlay: carnot_ising_v2_n64 (= carnot_ising_v4 bitstream)
-         - uio_devices_present: count
-         - next_step: "if uio0_first_word_read=true → ready for board-level
-           latency transcript task (terminal-step). If unreachable → operator
-           re-attach board."
-         Record: prep_doc_updated (bool).
-
-      5. Write results/experiment_2735_kv260_continuity_259.json.
-
-      REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:' / 'success:' / 'passed:' /
-        'shipped:' (or 'blocked_kv260_ssh_unreachable' if precondition failed)
-        principle: "Terminal prefix per Verdict Terminal-Prefix Discipline; blocked_ verdict if board unreachable rather than fabricated smoke."
-      - ssh_kria_reachable: bool
-        principle: "Primary precondition; true = board attached and accepting SSH."
-      - xmutil_available: bool
-        principle: "Records whether overlay-management tooling is on the board."
-      - bitstream_loaded: bool
-        principle: "Confirms latest XDC-constrained Carnot bitstream is active."
-      - uio_count: int
-        principle: "5 = standard Carnot Ising overlay; <5 = partial load."
-      - uio0_first_word_read: bool
-        principle: "Anti-fabrication: an actual register read happened on the board, not a synthesized number."
-      - kv260_terminal: false
-        principle: "Smoke != terminal; terminal requires board-level latency transcript per CLAUDE.md Hardware-Task Continuity table."
-      - duration_s: float
-        principle: "SSH round-trips: expected 5-30s for the full sequence."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records ssh-reachability + xmutil-availability checks with literal shell commands run."
-
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-
-  - id: exp2736
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2736_arxiv_submission_package_prep.json"
-    title: "Paper v6 arXiv Submission Package Prep (Operator-Only Submission)"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 30
     track: publication
 
-    gated_on:
-      - upstream: exp2729-pdflatex-install-paper-v6-theory-v3
-        artifact_field: latex_compiles
-        op: '=='
-        value: true
-
-    prior_failures: []
+    prior_failures:
+      - experiment_id: exp2729-pdflatex-install-paper-v6-theory-v3
+        verdict: "complete: pdflatex_after_install=true, latex_compiles=true, bijection_citation_added=true, carnot_delta=0.25, delta_source=conservative_estimate"
+        addressed_by: "exp2729 (.259) used carnot_delta=0.25 (conservative estimate, not empirical) because no repair artifacts with n_repair_attempts + n_repair_successes were found at search time. This exp2744 has DIFFERENT scope: (1) systematically scans ALL results/ repair artifacts for empirical delta computation, (2) updates the .tex source with delta_source='empirical', (3) runs author list audit + abstract word count. Delta computation is the new scope; exp2729 only did citation insertion."
+        retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      NEW EXPERIMENT for .259 — first attempt at arXiv submission PACKAGE PREPARATION.
-      This task is gated on exp2729.latex_compiles=true (pdflatex available + .tex source exists).
-      Per CLAUDE.md Operator-Only External Publication: arXiv submission is OPERATOR-ONLY.
-      This task ONLY prepares the package and checklist — it does NOT submit.
+      exp2729 (.259): carnot_delta=0.25 (conservative_estimate). The paper cites E[n] <= 4/delta
+      (arXiv:2512.02080) but uses a placeholder delta. Empirical delta = probability that one
+      ORCA-TTT repair iteration passes (n_repair_successes / n_repair_attempts across all experiments).
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_2729_paper_v6_theory_v3.json (tex_file_path, latex_compiles, carnot_delta)
-      - docs/arxiv-submission/ (paper files)
+      - results/experiment_2729_paper_v6_theory_v3.json (tex_file_path, carnot_delta=0.25, delta_source)
+      - results/ (grep for n_repair_attempts + n_repair_successes fields across all JSON files)
 
-      TASK: Prepare arXiv submission package. Produce operator action checklist.
+      TASK: Compute empirical delta from repair artifacts. Update paper-v6 with empirical value.
+      Run author/abstract audit. Compile and verify.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
@@ -1198,63 +773,612 @@ tasks:
             Record: pdflatex_available (bool).
             If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
          b. Read results/experiment_2729_paper_v6_theory_v3.json for tex_file_path.
-            `ls {{tex_file_path}} 2>/dev/null && echo exists || echo missing`
+            `ls {tex_file_path} 2>/dev/null && echo exists || echo missing`
             Record: tex_source_exists (bool).
             If false: write honest_verdict 'blocked_tex_source_missing' and exit.
-         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -3`
-            Record: pdf_compiles (bool).
-            If false: write honest_verdict 'blocked_pdf_compile_failed' and exit.
          Record: preconditions_checked.
 
-      1. Count total pages in PDF: `pdfinfo /tmp/main.pdf 2>/dev/null | grep Pages`
-         Record: n_pages (int).
-         Count words in abstract: `pdftotext /tmp/main.pdf - 2>/dev/null | head -50 | wc -w`
+      1. Scan results/ for empirical delta:
+         `grep -rl '"n_repair_attempts"' results/ 2>/dev/null | head -20`
+         `grep -rl '"repair_iterations"' results/ 2>/dev/null | head -20`
+         For each file found: extract n_repair_attempts + n_repair_successes.
+         Total: sum_attempts = sum(all n_repair_attempts), sum_successes = sum(all n_repair_successes)
+         empirical_delta = sum_successes / sum_attempts if sum_attempts > 0 else None.
+         Record: n_repair_artifacts_found (int), sum_attempts (int), sum_successes (int),
+         empirical_delta (float or null), delta_source ('empirical' or 'conservative_estimate').
+         empirical_delta_computed = (empirical_delta is not None AND sum_attempts >= 10).
+
+      2. Update paper-v6 .tex with delta value:
+         If empirical_delta_computed: replace "0.25" with "{empirical_delta:.3f}" in 4/delta cite section.
+         Update delta_source comment in .tex.
+         Record: tex_updated (bool).
+
+      3. Author list audit:
+         `grep -A 10 '\\author{' {tex_file_path} | head -20`
+         Record: author_list (list of str — names found), author_count (int).
+         Confirm "Ian Blenke" present (use ian@blenke.com as affiliation per memory).
+
+      4. Abstract word count:
+         `grep -A 30 '\\begin{abstract}' {tex_file_path} | grep -v '\\' | wc -w`
          Record: abstract_word_count (int, approximate).
 
-      2. Check that required sections are present in .tex source:
-         `grep -c '\\section{{Introduction}}' {{tex_file_path}}` etc.
-         Record: sections_present (list of str — which sections found).
+      5. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+         Record: latex_compiles (bool), compile_warnings (int).
 
-      3. Verify all three theory citations landed (from exp2729):
-         `grep -c 'blondel2025arm\|dantas2025four\|hashimoto2026fst' {{tex_file_path}}`
-         Record: n_theory_citations_present (int).
-
-      4. Produce operator_arxiv_checklist (list of str):
-         - "Step 1: Review PDF at /tmp/main.pdf (or recompile)"
-         - "Step 2: Verify author list and affiliations"
-         - "Step 3: Check arXiv category: cs.AI (primary), cs.LG (secondary)"
-         - "Step 4: Upload to arxiv.org (OPERATOR-ONLY per CLAUDE.md)"
-         - "Step 5: After arxiv submit: update HuggingFace model card with arXiv link"
-         - "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (per CLAUDE.md)"
-
-      5. Write results/experiment_2736_arxiv_submission_package_prep.json.
+      6. Write results/experiment_2744_empirical_delta_paper_v6.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'blocked_'
         principle: "Terminal prefix required."
-      - submission_package_ready: bool
-        principle: "True if package is ready for OPERATOR to submit; this task never submits."
-      - pdf_compiles: bool
-        principle: "Paper compiles to valid PDF — gate for operator submission."
-      - n_pages: int
-        principle: "Page count validates paper is complete (expected 8-15 pages for conference)."
-      - n_theory_citations_present: int — expected 3
-        principle: "Confirms all three theory cites from exp2729 landed in final PDF."
-      - operator_arxiv_checklist: list of str
+      - empirical_delta_computed: bool
+        principle: "Primary gate: True if delta computed from >= 10 repair attempts (citable in paper-v6)."
+      - empirical_delta: float (or null if not enough data)
+        principle: "Replaces conservative placeholder 0.25; E[n] <= 4/delta bound becomes empirical claim."
+      - delta_source: str — 'empirical' or 'conservative_estimate'
+        principle: "Distinguishes paper-citable value from placeholder — reviewers will ask for this."
+      - sum_attempts: int
+        principle: "Sample size for delta computation: >= 10 needed for citable claim."
+      - author_count: int
+        principle: "Confirms author list is complete before arXiv submission."
+      - abstract_word_count: int
+        principle: "arXiv requires abstract <= 1920 chars; word count approximates this."
+      - latex_compiles: bool
+        principle: "GATE for exp2749 (paper v2): paper must compile after delta update."
+      - tex_updated: bool
+        principle: "Confirms .tex source was modified with empirical delta value."
+      - duration_s: float
+        principle: "JSON scan + tex edit + compile: expected >= 10s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pdflatex + tex source checks."
+
+      Do NOT push. Do NOT submit to arXiv. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2745
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2745_weak_strong_verification_policy.json"
+    title: "Weak-Strong Verification Policy (arXiv:2602.17633): Optimal Two-Threshold Routing"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 35
+    track: pipeline
+
+    prior_failures: []
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      NEW EXPERIMENT for .260 — no prior failures for this specific scope.
+
+      arXiv:2602.17633 "When to Trust the Cheap Check: Weak and Strong Verification for Reasoning":
+      Formalizes two-threshold routing policy:
+        - Below t_low: weak verifier sufficient, accept (low verification cost)
+        - Above t_high: strong verifier needed, invoke full ensemble (high accuracy)
+        - Between: uncertain, apply threshold-adaptive verification cost
+
+      Carnot context: OTV probe failed (exp2728, probe_auroc=0.25), but the two-tier ODAR routing
+      achieved 65% savings. The weak-strong policy formalizes this empirical result with a principled
+      threshold derivation:
+        - Weak verifier: ODAR free-energy score (fast, model-free)
+        - Strong verifier: full Tier 0-0v ensemble (accurate, expensive)
+        - Threshold calibration: what ODAR score threshold minimizes verification cost while maintaining
+          a target false-negative rate?
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/verify_repair.py (odar_route() from exp2720, route() from exp2728)
+      - data/fover_corpus.jsonl (FoVer corpus for threshold calibration)
+
+      TASK: Implement optimal two-threshold weak-strong routing policy. Calibrate thresholds on FoVer.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sklearn; import sys; sys.path.insert(0,'python'); import carnot.pipeline"`
+            Record: pipeline_importable (bool).
+            If false: write honest_verdict 'blocked_carnot_not_importable' and exit.
+         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
+            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         Record: preconditions_checked.
+
+      1. Calibrate thresholds on FoVer eval split (random_seed=42, 80/20 split):
+         For each example: compute weak_score = odar_free_energy_score (or proxy: TF-IDF confidence),
+         compute ground_truth_label = correct (0) or incorrect (1).
+         Use Platt calibration or isotonic regression to find thresholds t_low, t_high such that:
+         - FNR (false-negative rate) at t_low <= 0.05 (accept errors < 5%)
+         - FPR (false-positive rate) at t_high <= 0.10 (over-verification < 10%)
+         Record: t_low (float), t_high (float), calibration_method (str).
+
+      2. Implement WeakStrongRouter:
+         route(prompt, response, weak_score=None) -> RoutingDecision:
+           If weak_score is None: compute weak_score from odar or TF-IDF proxy.
+           If weak_score < t_low: return RoutingDecision(path='accept', verifier='none')
+           If weak_score > t_high: return RoutingDecision(path='full_ensemble', verifier='tier0_all')
+           Else: return RoutingDecision(path='tier0f_only', verifier='semantic_calibration')
+         Add to VerifyRepairPipeline.
+         Record: weak_strong_policy_added (bool).
+
+      3. Evaluate on FoVer eval split (N=100 examples, random_seed=42):
+         n_accepted_early: examples routed to 'accept' (skip verification entirely)
+         n_partial_verify: examples routed to 'tier0f_only'
+         n_full_ensemble: examples routed to 'full_ensemble'
+         policy_savings_pct = (n_accepted_early + n_partial_verify * 0.5) / 100 * 100
+         false_negative_rate: accepted examples that were actually incorrect
+         Record: n_accepted_early, n_partial_verify, n_full_ensemble,
+         policy_savings_pct (float), false_negative_rate (float).
+         policy_viable = (policy_savings_pct >= 30.0 AND false_negative_rate <= 0.10).
+
+      4. Write results/experiment_2745_weak_strong_verification_policy.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - weak_strong_policy_added: bool
+        principle: "Primary deliverable: WeakStrongRouter added to VerifyRepairPipeline."
+      - policy_viable: bool
+        principle: "Gate: True if savings >= 30% AND false_negative_rate <= 10%."
+      - policy_savings_pct: float
+        principle: "Routing efficiency: fraction of verification cost saved vs full-ensemble always."
+      - false_negative_rate: float
+        principle: "Safety metric: fraction of incorrect responses accepted without verification."
+      - t_low: float
+        principle: "Accept-threshold: below this, weak verifier is sufficient."
+      - t_high: float
+        principle: "Escalate-threshold: above this, full ensemble required."
+      - n_accepted_early: int
+        principle: "Attribution: early-accept count (no verification cost)."
+      - random_seed: int — 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Calibration + routing eval: expected >= 5s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline import + FoVer corpus."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2746
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2746_paraphrastic_consistency_verifier.json"
+    title: "Paraphrastic Consistency Probing Verifier Tier 0w (arXiv:2602.11361)"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 35
+    track: verifier
+
+    prior_failures: []
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      NEW EXPERIMENT for .260 — no prior failures for this specific scope.
+
+      arXiv:2602.11361 "Finding the Cracks: Improving LLMs Reasoning with Paraphrastic Probing and
+      Consistency Verification" (Feb 2026):
+      Generates N paraphrastic perturbations of the input query. Models that are confident/correct
+      produce consistent answers across paraphrases. Models that are hallucinating show high energy
+      variance across paraphrastic probes.
+
+      Carnot implementation (model-agnostic — no live LLM call required):
+      - Paraphrases are pre-generated from FoVer corpus (many FoVer questions have multiple correct
+        answers — use these as paraphrase proxies)
+      - Consistency energy = std(verify(paraphrase_i, response)) across N paraphrase pairs
+        If std is low: model is consistent (low energy). If std is high: inconsistent (high energy).
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (list all tier0* modules — add tier0w_paraphrase_consistency.py)
+      - data/fover_corpus.jsonl (FoVer corpus — look for questions with multiple answer variants)
+      - python/carnot/verify/__init__.py (export pattern)
+
+      TASK: Implement Tier 0w Paraphrastic Consistency Verifier. Evaluate on FoVer.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sklearn; import sys; sys.path.insert(0,'python'); import carnot.pipeline"`
+            Record: pipeline_importable (bool).
+            If false: write honest_verdict 'blocked_carnot_not_importable' and exit.
+         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
+            Record: fover_corpus_lines (int).
+            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         Record: preconditions_checked.
+
+      1. Build paraphrase pairs from FoVer corpus:
+         Load all (question, correct_answer, incorrect_answers) triples.
+         Paraphrase proxy: find questions that have semantic similarity > 0.8 (TF-IDF cosine) —
+         these are question paraphrases. For each paraphrase pair: (q1, a) and (q2, a) where
+         q1 is semantically similar to q2.
+         n_paraphrase_pairs = count of such pairs found.
+         Record: n_paraphrase_pairs (int).
+         If n_paraphrase_pairs < 10: use simple word-shuffle paraphrases (word-level reordering).
+
+      2. Implement ParaphrasticConsistencyVerifier:
+         For a (question, response) pair:
+           a. Find N=3 semantic paraphrases of question (from FoVer or synthetic word-shuffle)
+           b. Compute verify(question_i, response) for each paraphrase i in [1..N]
+           c. Consistency energy = std(verify scores) across N paraphrases
+              Low std = consistent = low energy. High std = inconsistent = high energy.
+         Record: module_created (bool).
+
+      3. Evaluate on FoVer eval split (80/20, random_seed=42):
+         For correct answers: consistency_energy should be LOW (model's energy is stable across paraphrases)
+         For incorrect answers: consistency_energy should be HIGH (model is confused)
+         tier0w_auroc = roc_auc_score(labels, consistency_energies)
+         tier0w_viable = tier0w_auroc >= 0.55 (modest bar — paraphrase quality may be limited)
+         Record: tier0w_auroc (float), tier0w_viable (bool).
+
+      4. Adversarial check: 3 synthetic examples:
+         - Consistent pair (same math question, word-shuffled): energies should be similar (low std)
+         - Inconsistent pair (different questions mapped to same answer): energies should differ (high std)
+         Record: synthetic_consistency_energies (list of floats), paraphrase_consistency_plausible (bool).
+
+      5. Create python/carnot/verify/tier0w_paraphrase_consistency.py.
+         Update python/carnot/verify/__init__.py to export it.
+
+      6. Write results/experiment_2746_paraphrastic_consistency_verifier.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - tier0w_auroc: float
+        principle: "Primary accuracy metric: paraphrastic consistency AUROC on FoVer."
+      - tier0w_viable: bool
+        principle: "Gate: True if tier0w_auroc >= 0.55 (better than random, complements other verifiers)."
+      - synthetic_consistency_energies: list of float
+        principle: "Adversarial sanity: confirms std-based energy distinguishes consistent vs. inconsistent."
+      - paraphrase_consistency_plausible: bool
+        principle: "Basic sanity: paraphrase-consistency verifier produces plausible energy ordering."
+      - n_paraphrase_pairs: int
+        principle: "Dataset scale: confirms FoVer paraphrase extraction worked."
+      - module_created: bool
+        principle: "Tier 0w module exists in python/carnot/verify/ after this task."
+      - random_seed: int — 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Paraphrase extraction + eval: expected 5-30s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline import + FoVer corpus."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2747
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2747_fr11_tier4_learning_benchmark.json"
+    title: "FR-11 Tier 4: Continuous Self-Learning Live Benchmark — Multi-Cycle ORCA-NEXUS Learning Rate"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 40
+    track: self-learning
+    continuous_self_learning_task: true
+
+    prior_failures:
+      - experiment_id: exp2733-orca-nexus-integration-v1
+        verdict: "complete: orca_nexus_integration_viable=true; n_violations_processed=30, n_orca_stopped_early=19, n_repairs_found=17, n_rules_synthesized=17"
+        addressed_by: "exp2733 (.259) validated the ORCA-NEXUS integration end-to-end (FR-11 Tier 3+). This exp2747 has EXPANDED scope: FR-11 Tier 4 — does running MULTIPLE cycles of ORCA-NEXUS learning improve verifier accuracy? exp2733 ran one cycle; exp2747 runs 3 cycles and measures whether cycle N+1 is more accurate than cycle N. Different deliverable: learning_loop_closed=true if accuracy_cycle3 > accuracy_cycle1 (measurable improvement across cycles)."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      FR-11 Tier 4: empirical validation of continuous self-learning — does multi-cycle ORCA-NEXUS
+      learning produce measurable accuracy improvement?
+
+      exp2733 (.259) validated the ORCA-NEXUS single-cycle integration (17 rules from 30 violations).
+      This experiment runs 3 sequential learning cycles and measures whether the verifier ensemble
+      AUROC improves cycle-over-cycle on a held-out FoVer test set.
+
+      Design:
+      - Cycle 1: baseline verifier ensemble AUROC on test set
+      - Cycle 1 learning: run ORCA-NEXUS on 20 FoVer violations → synthesize rules → update ensemble
+      - Cycle 2: measure verifier AUROC on same test set (should improve if learning works)
+      - Cycle 2 learning: run ORCA-NEXUS on 20 additional violations → synthesize rules → update ensemble
+      - Cycle 3: measure verifier AUROC on same test set (should continue improving)
+      - learning_loop_closed = (auroc_cycle3 > auroc_cycle1) — positive learning signal
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/pipeline/ttt_loop.py (VerifierDrivenTTT from exp2719/exp2733)
+      - python/carnot/verify/nexus_constraint_memory.py (NexusConstraintMemory from exp2695/exp2733)
+      - python/carnot/pipeline/verify_repair.py (verify() method)
+      - data/fover_corpus.jsonl (FoVer corpus — split into learning and test sets)
+      - results/experiment_2733_orca_nexus_integration_v1.json (n_rules_synthesized=17 baseline)
+
+      TASK: Run 3-cycle ORCA-NEXUS self-learning loop. Measure AUROC improvement per cycle.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sklearn; import sys; sys.path.insert(0,'python'); import carnot.pipeline"`
+            Record: pipeline_importable (bool).
+            If false: write honest_verdict 'blocked_carnot_not_importable' and exit.
+         b. `ls python/carnot/pipeline/ttt_loop.py 2>/dev/null && echo exists || echo missing`
+            Record: ttt_loop_exists (bool).
+         c. `ls python/carnot/verify/nexus_constraint_memory.py 2>/dev/null | head -1 || ls python/carnot/verify/nexus*.py 2>/dev/null | head -1`
+            Record: nexus_exists (bool), nexus_path (str).
+         d. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
+            Record: fover_corpus_lines (int).
+            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         Record: preconditions_checked.
+
+      1. Split FoVer corpus (random_seed=42):
+         - Learning pool: 60 violations (for 3 learning cycles, 20 each)
+         - Test set: 40 examples (fixed, used for all 3 AUROC measurements)
+         Record: n_learning_pool (int = 60), n_test_set (int = 40).
+
+      2. CYCLE 1 — Baseline:
+         Measure baseline verifier AUROC on test set: auroc_cycle1 = measure_auroc(test_set).
+         Record: auroc_cycle1 (float).
+
+      3. CYCLE 1 LEARNING — Run ORCA-NEXUS on 20 violations (batch 1 of learning pool):
+         violations_batch1 = learning_pool[:20]
+         For each: run ORCA TTT loop → repairs. Feed (violation, repair) pairs to NEXUS.
+         rules_cycle1 = nexus.synthesize_rules()
+         Record: n_orca_repairs_cycle1 (int), n_rules_after_cycle1 (int).
+
+      4. CYCLE 2 — Post-learning measurement:
+         auroc_cycle2 = measure_auroc(test_set)  # Same test set, updated ensemble
+         learning_delta_cycle2 = auroc_cycle2 - auroc_cycle1
+         Record: auroc_cycle2 (float), learning_delta_cycle2 (float).
+
+      5. CYCLE 2 LEARNING — Run ORCA-NEXUS on next 20 violations (batch 2):
+         violations_batch2 = learning_pool[20:40]
+         Run ORCA → NEXUS. rules_cycle2 = nexus.synthesize_rules()
+         Record: n_rules_after_cycle2 (int).
+
+      6. CYCLE 3 — Final measurement:
+         auroc_cycle3 = measure_auroc(test_set)
+         learning_delta_cycle3 = auroc_cycle3 - auroc_cycle1  # vs baseline
+         learning_loop_closed = (auroc_cycle3 > auroc_cycle1) AND (n_learning_cycles == 3)
+         Record: auroc_cycle3 (float), learning_delta_cycle3 (float), n_learning_cycles (int = 3).
+
+      7. Write results/experiment_2747_fr11_tier4_learning_benchmark.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - learning_loop_closed: bool
+        principle: "FR-11 Tier 4 gate: True if multi-cycle learning produces positive AUROC delta."
+      - auroc_cycle1: float
+        principle: "Baseline AUROC before any ORCA-NEXUS learning."
+      - auroc_cycle2: float
+        principle: "Post-cycle-1 AUROC: expected > auroc_cycle1 if learning works."
+      - auroc_cycle3: float
+        principle: "Post-cycle-2 AUROC: final measurement."
+      - learning_delta_cycle3: float
+        principle: "Total learning gain: auroc_cycle3 - auroc_cycle1; positive = self-learning works."
+      - n_learning_cycles: int — must be 3
+        principle: "Confirms full 3-cycle protocol executed (not partial)."
+      - n_rules_after_cycle2: int
+        principle: "Rule accumulation confirms NEXUS keeps growing with more violations."
+      - random_seed: int — 42
+        principle: "Reproducibility: same test set must be used for all 3 AUROC measurements."
+      - duration_s: float — expected >= 20s
+        principle: "3-cycle ORCA + NEXUS + AUROC eval: expected >= 20s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pipeline + TTT loop + NEXUS + FoVer corpus."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2748
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2748_phase4_fep_factor_graph.json"
+    title: "Phase 4 Active Inference: FEP Factor Graph over Verifier Ensemble (arXiv:2603.20927)"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 40
+    track: research
+
+    prior_failures: []
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      NEW EXPERIMENT for .260 — Phase 4 active inference empirical validation step.
+
+      arXiv:2603.20927 "Active Inference for Physical AI Agents — An Engineering Perspective" (Mar 2026):
+      Develops Free Energy Principle (FEP) agent principles via message passing on factor graphs.
+      Provides an engineering blueprint for agents that minimize variational free energy as a unified
+      objective for action, perception, and learning.
+
+      Carnot Phase 4 hypothesis (from feedback_active_inference_phase4_committed.md):
+      "The verifier ensemble IS the alpha_t * mu_P term in the variational free energy equation.
+       Each verifier is a factor node; the joint free energy is the routing signal."
+
+      This experiment implements a factor graph over Carnot's k=15 Tier 0 verifiers:
+      - Each verifier V_i is a factor node: F_i(q, r) = verifier_energy_i(q, r)
+      - Joint variational free energy: F(q, r) = sum_i w_i * F_i(q, r) - log P_prior(r)
+        where P_prior is a uniform prior (or learned from FoVer correct-answer distribution)
+      - The ODAR free-energy score is a heuristic approximation of this joint F.
+      - This experiment computes the EXACT factor-graph F and compares to ODAR heuristic.
+
+      EXISTING CODE TO READ FIRST:
+      - python/carnot/verify/ (list all tier0* modules — enumerate k verifiers)
+      - python/carnot/pipeline/verify_repair.py (odar_route() from exp2720)
+      - data/fover_corpus.jsonl (FoVer corpus for evaluation)
+
+      TASK: Implement Phase 4 FEP factor graph. Compare to ODAR heuristic. Validate alpha_t signal.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `.venv/bin/python -c "import sklearn; import numpy; import sys; sys.path.insert(0,'python'); import carnot.verify"`
+            Record: carnot_verify_importable (bool).
+            If false: write honest_verdict 'blocked_carnot_verify_not_importable' and exit.
+         b. `wc -l data/fover_corpus.jsonl 2>/dev/null || echo 0`
+            Record: fover_corpus_lines (int).
+            If 0: write honest_verdict 'blocked_fover_corpus_missing' and exit.
+         Record: preconditions_checked.
+
+      1. Enumerate available verifier modules (all tier0* in python/carnot/verify/):
+         `ls python/carnot/verify/tier0*.py 2>/dev/null`
+         Record: n_verifiers (int), verifier_ids (list of str).
+
+      2. Implement FEP factor graph:
+         For each example (q, r):
+           factor_energies = [verifier_i.compute_energy(q, r) for verifier_i in verifiers]
+           # Equal weights initially (to compare against ODAR which has learned weights)
+           joint_fep_energy = sum(factor_energies) / n_verifiers
+           # Log-prior term (uniform: log P_prior = 0)
+           variational_free_energy = joint_fep_energy  # simplified: no KL term with uniform prior
+
+         Record: fep_factor_graph_computed (bool = True if loop runs without error).
+
+      3. Compare FEP vs ODAR on FoVer eval split (N=50, random_seed=42):
+         For each example: compute fep_energy and odar_score.
+         fep_auroc = roc_auc_score(labels, fep_energies)
+         odar_auroc = roc_auc_score(labels, odar_scores)
+         fep_vs_odar_delta = fep_auroc - odar_auroc
+         Record: fep_auroc (float), odar_auroc (float), fep_vs_odar_delta (float).
+         fep_viable = fep_auroc >= 0.60.
+
+      4. Alpha_t signal validation:
+         alpha_t is the verifier's "contribution weight" to the variational free energy.
+         For each verifier: compute alpha_i = Cov(verifier_i_energy, correct_label) / Var(verifier_i_energy)
+         Record: alpha_values (list of float — one per verifier), alpha_t_nonzero (bool = any alpha > 0.1).
+         alpha_t_mean = mean(alpha_values).
+
+      5. Write results/experiment_2748_phase4_fep_factor_graph.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - fep_factor_graph_computed: bool
+        principle: "Phase 4 primary deliverable: FEP factor graph over k verifiers implemented."
+      - fep_auroc: float
+        principle: "FEP routing accuracy: compared against ODAR heuristic."
+      - fep_viable: bool
+        principle: "Gate: True if fep_auroc >= 0.60 (better than majority of baseline heuristics)."
+      - fep_vs_odar_delta: float
+        principle: "Comparison: positive = FEP outperforms ODAR; negative = ODAR heuristic is better."
+      - alpha_t_nonzero: bool
+        principle: "Phase 4 alpha_t hypothesis: verifiers must have non-zero contribution to free energy."
+      - alpha_t_mean: float
+        principle: "Mean verifier contribution weight — low = all verifiers equally informative."
+      - n_verifiers: int
+        principle: "Confirms factor graph uses all available Tier 0 verifiers."
+      - random_seed: int — 42
+        principle: "Reproducibility."
+      - duration_s: float
+        principle: "Factor graph compute + AUROC eval: expected 5-30s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records carnot.verify import + FoVer corpus."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+
+  - id: exp2749
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2749_paper_v6_arxiv_package_v2.json"
+    title: "Paper v6 arXiv Package v2: Empirical Delta + Weak-Strong + Set-Consistency Cites"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 25
+    track: publication
+
+    gated_on:
+      - upstream: exp2744-empirical-delta-paper-v6
+        artifact_field: latex_compiles
+        op: '=='
+        value: true
+
+    prior_failures:
+      - experiment_id: exp2736-arxiv-submission-package-prep
+        verdict: "complete: submission_package_ready=true; n_pages=27; n_theory_citations_present=3; operator_arxiv_checklist ready"
+        addressed_by: "exp2736 (.259) produced the first arXiv package prep (27pp, 3 theory cites, operator checklist). This exp2749 has EXPANDED scope: adds empirical delta from exp2744 (replaces conservative 0.25), adds weak-strong verification cite (arXiv:2602.17633 from exp2745), adds set-consistency cite (arXiv:2503.10695 from exp2743). Different: exp2736 was the initial package; exp2749 is the updated v2 with .260 research results integrated."
+        retire_if_same_verdict: false
+
+    prompt: |
+      Read CLAUDE.md for project context and code style requirements.
+
+      CONTEXT:
+      exp2736 (.259) produced arXiv package v1 (27pp, operator_arxiv_checklist). This experiment
+      produces v2 with:
+      1. Empirical delta from exp2744 (carnot_delta=empirical, replaces conservative 0.25)
+      2. Weak-strong verification cite (arXiv:2602.17633, from exp2745 results)
+      3. Set-Consistency Energy Network cite (arXiv:2503.10695, from exp2743 results)
+      4. Updated page count and abstract word count check
+
+      Per CLAUDE.md Operator-Only External Publication: arXiv submission is OPERATOR-ONLY.
+      This task ONLY prepares the updated package — it does NOT submit.
+
+      EXISTING CODE TO READ FIRST:
+      - results/experiment_2744_empirical_delta_paper_v6.json (empirical_delta, tex_file_path, latex_compiles)
+      - results/experiment_2745_weak_strong_verification_policy.json (policy_viable — for cite value)
+      - results/experiment_2743_tier0v_set_consistency.json (tier0v_auroc — for cite value)
+      - results/experiment_2736_arxiv_submission_package_prep.json (tex_file_path, n_pages baseline)
+
+      TASK: Update paper-v6 with .260 results. Recompile. Produce updated operator checklist v2.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS:
+         a. `command -v pdflatex 2>/dev/null && echo available || echo missing`
+            Record: pdflatex_available (bool).
+            If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
+         b. Read results/experiment_2744_empirical_delta_paper_v6.json for tex_file_path.
+            `ls {tex_file_path} 2>/dev/null && echo exists || echo missing`
+            Record: tex_source_exists (bool).
+            If false: write honest_verdict 'blocked_tex_source_missing' and exit.
+         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -3`
+            Record: pdf_compiles_v1 (bool).
+         Record: preconditions_checked.
+
+      1. Add weak-strong verification cite (if exp2745 succeeded — policy_viable=true):
+         Add \bibitem{weak_strong_2026} to .bib file:
+         "Nathan Hittesdorf et al. 'When to Trust the Cheap Check: Weak and Strong Verification
+          for Reasoning.' arXiv:2602.17633, Feb 2026."
+         Add \cite{weak_strong_2026} in pipeline §4 (routing section).
+         Record: weak_strong_cite_added (bool).
+
+      2. Add set-consistency cite (if exp2743 succeeded — tier0v_auroc >= 0.65):
+         Add \bibitem{set_consistency_2025} to .bib:
+         "Mooho Song et al. 'Introducing Verification Task of Set Consistency with
+          Set-Consistency Energy Networks.' arXiv:2503.10695, Mar 2025."
+         Add \cite{set_consistency_2025} in verifier ensemble §3.
+         Record: set_consistency_cite_added (bool).
+
+      3. Compile v2: `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+         `pdfinfo /tmp/main.pdf 2>/dev/null | grep Pages`
+         Record: latex_compiles_v2 (bool), n_pages_v2 (int).
+
+      4. Produce operator_arxiv_checklist_v2 (adds .260 research summary):
+         All v1 steps +
+         "NOTE: As of .260, empirical_delta={empirical_delta:.3f} (replaces conservative 0.25 in paper)"
+         "NOTE: Tier 0v (set-consistency) + Tier 0w (paraphrastic consistency) added in .260"
+         "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (CLAUDE.md discipline)"
+         Record: operator_arxiv_checklist_v2 (list of str).
+
+      5. Write results/experiment_2749_paper_v6_arxiv_package_v2.json.
+
+      REQUIRED ARTIFACT FIELDS:
+      - honest_verdict: MUST start with 'complete:' or 'blocked_'
+        principle: "Terminal prefix required."
+      - paper_v6_submission_package_v2_ready: bool
+        principle: "Primary gate: True if PDF compiles and new cites are integrated."
+      - latex_compiles_v2: bool
+        principle: "Paper compiles after .260 cite additions."
+      - n_pages_v2: int
+        principle: "Updated page count — expected >= 27 (additions increase page count)."
+      - weak_strong_cite_added: bool
+        principle: "arXiv:2602.17633 cite: validates Carnot's two-tier routing with peer literature."
+      - set_consistency_cite_added: bool
+        principle: "arXiv:2503.10695 cite: positions Tier 0v as set-consistency peer work."
+      - submission_step_reserved_for_operator: bool — true
+        principle: "OPERATOR-ONLY discipline: this task never submits to arXiv."
+      - operator_arxiv_checklist_v2: list of str
         principle: "Operator reads this as the definitive arXiv submission action list."
       - duration_s: float
-        principle: "pdflatex compile + grep + checklist: expected >= 10s."
-      - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records pdflatex + .tex source + PDF compile checks."
+        principle: "Tex edits + compile: expected >= 15s."
+      - preconditions_checked: list of {resource, available, check}
+        principle: "Anti-fabrication: records pdflatex + tex source + initial compile."
 
       DO NOT submit to arXiv. DO NOT push.
       Do NOT modify scripts/research_conductor.py.
 
 
-  - id: exp2737
-    milestone: "2026.05.259"
-    deliverable: "results/experiment_2737_capstone_v259.json"
-    title: "Capstone v259: Cross-Artifact Synthesis + Verifier Debug + Phase 1 Ship + Gaps for .260"
+  - id: exp2750
+    milestone: "2026.05.260"
+    deliverable: "results/experiment_2750_capstone_v260.json"
+    title: "Capstone v260: Cross-Artifact Synthesis + KV260 Terminal Assessment + Phase 4 Validation + Gaps for .261"
     agent_type: claude
     model: opus
     max_turns: 80
@@ -1262,116 +1386,115 @@ tasks:
     track: synthesis
 
     prior_failures:
-      - experiment_id: exp2724-capstone-v258
-        verdict: "complete: capstone synthesis of 12 .258 artifacts; cascade fixed, Phase 1 ship-ready, paper v6 toolchain blocked, KV260 SD absent"
-        addressed_by: "exp2724 (.258) completed capstone synthesis of 12 artifacts (8/12 criteria met). This exp2737 has different scope: synthesizes 12 NEW .259 artifacts; the key new synthesis questions are (1) did exp2727 fix the degenerate verifier? (2) did exp2729 install pdflatex and add citations? (3) was exp2736 arXiv package prep successful? These are .259-specific synthesis questions not addressed in exp2724."
+      - experiment_id: exp2737-capstone-v259
+        verdict: "complete: .259 capstone synthesized 12 artifacts; verifier discriminative fast-path diagnosed (adversarial-flagged exp2727 + exp2731 need .260 re-run), pdflatex restored + 3 theory citations + arXiv package 27pp, ORCA-NEXUS Tier 3+ viable (17 rules), KV260 SSH continuity verified, Phase 1 ship SHIP recommended"
+        addressed_by: "exp2737 (.259) completed capstone synthesis of 12 .259 artifacts. This exp2750 synthesizes the NEW .260 artifacts: (1) did exp2740 clear exp2727 adversarial flag on live GPU? (2) did exp2741 diagnose GGUF logit collapse? (3) did exp2742 achieve KV260 terminal criteria? (4) do exp2743/2746 new verifiers improve ensemble? (5) did exp2747 FR-11 Tier 4 close the learning loop? (6) did exp2748 Phase 4 FEP validate alpha_t hypothesis? These are .260-specific synthesis questions."
         retire_if_same_verdict: false
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
-      Milestone 2026.05.259 has completed its research tasks. This capstone synthesizes all
-      experiment artifacts, updates operational docs, and produces the gaps-for-.260 document.
+      Milestone 2026.05.260 has completed its research tasks. This capstone synthesizes all
+      experiment artifacts, updates operational docs, and produces the gaps-for-.261 document.
 
       EXISTING CODE TO READ FIRST (in priority order):
-      - results/experiment_2725_archive_v258.json (milestone_activated verification)
-      - results/experiment_2726_full_collection_fix_v1.json (collection_clean)
-      - results/experiment_2727_verifier_energy_debug_v1.json (verifier_discriminative, root_cause_hypothesis, fix_applied)
-      - results/experiment_2728_otv_fast_path.json (otv_fast_path_viable, total_savings_pct)
-      - results/experiment_2729_paper_v6_theory_v3.json (pdflatex_after_install, latex_compiles, bijection_citation_added)
-      - results/experiment_2730_hf_mirror_ship_v6.json (hf_model_card_draft_created, operator_ship_checklist_v6)
-      - results/experiment_2731_semantic_energy_tier0g.json (tier0g_auroc, tier0g_non_degenerate)
-      - results/experiment_2732_entanglement_retirement_diversity_audit.json (entanglement_lineage_retired, diversity_viable)
-      - results/experiment_2733_orca_nexus_integration_v1.json (orca_nexus_integration_viable, n_rules_synthesized)
-      - results/experiment_2734_falcon_repair_integration.json (falcon_repair_added, total_candidates_reduction_pct)
-      - results/experiment_2735_kv260_continuity_259.json (branch_taken, consecutive_branch_b_runs)
-      - results/experiment_2736_arxiv_submission_package_prep.json (submission_package_ready — if exists)
+      - results/experiment_2738_archive_v259.json (milestone_activated verification)
+      - results/experiment_2739_otv_diversity_retirement.json (retirements_landed)
+      - results/experiment_2740_verifier_energy_debug_v2_live_gpu.json (verifier_discriminative, duration_s)
+      - results/experiment_2741_tier0g_live_gpu_rerun.json (gguf_non_degenerate, root_cause_hypothesis)
+      - results/experiment_2742_kv260_latency_transcript_terminal.json (kv260_synthesis_succeeded, kv260_terminal, kv260_latency_mean_us)
+      - results/experiment_2743_tier0v_set_consistency.json (tier0v_auroc, tier0v_viable)
+      - results/experiment_2744_empirical_delta_paper_v6.json (empirical_delta_computed, empirical_delta)
+      - results/experiment_2745_weak_strong_verification_policy.json (policy_viable, policy_savings_pct)
+      - results/experiment_2746_paraphrastic_consistency_verifier.json (tier0w_auroc, tier0w_viable)
+      - results/experiment_2747_fr11_tier4_learning_benchmark.json (learning_loop_closed, learning_delta_cycle3)
+      - results/experiment_2748_phase4_fep_factor_graph.json (fep_factor_graph_computed, fep_auroc, alpha_t_nonzero)
+      - results/experiment_2749_paper_v6_arxiv_package_v2.json (paper_v6_submission_package_v2_ready)
       - ops/status.md (ADD new section at TOP — NEVER remove existing content)
-      - _bmad/traceability.md (check FR-11, FR-12 progress)
+      - _bmad/traceability.md (check FR-11 Tier 4 progress)
       - ops/metrics.md (ADD new entry)
 
-      TASK: Synthesize all .259 artifacts into a capstone assessment.
+      TASK: Synthesize all .260 artifacts into a capstone assessment.
 
       CONCRETE STEPS:
       0. PRECONDITIONS:
          Read each artifact file listed above. Note absent files as 'skipped_not_executed'.
          Record: n_artifacts_read (int), n_artifacts_absent (int).
 
-      1. Verifier Energy Debug Assessment:
-         - Did exp2727 fix the degenerate zero-energy problem? (verifier_discriminative)
-         - What was the root cause? (root_cause_hypothesis, root_cause_confirmed)
-         - Is the fix durable? (fix_applied describes the change)
-         Record: verifier_fixed (bool), verifier_fix_root_cause (str).
+      1. Adversarial Flag Clearance Assessment:
+         - exp2740: Did it clear exp2727 adversarial flag? (verifier_discriminative + duration_s >= 60)
+         - exp2741: Did it diagnose GGUF collapse? (root_cause_hypothesis, gguf_non_degenerate)
+         Record: adversarial_flags_cleared (bool), verifier_live_gpu_validated (bool).
 
-      2. Paper v6 / Toolchain Assessment:
-         - Did exp2729 install pdflatex? (pdflatex_after_install)
-         - Did LaTeX compile? (latex_compiles)
-         - Were all 3 theory cites added? (bijection_citation_added, four_delta_citation_added, fst_citation_added)
-         - Was arXiv package ready? (submission_package_ready from exp2736 — may be absent if gate failed)
-         Record: paper_v6_toolchain_fixed (bool), theory_citations_added (int), arxiv_package_ready (bool).
+      2. KV260 Terminal Assessment:
+         - exp2742: kv260_synthesis_succeeded? kv260_terminal? kv260_latency_mean_us?
+         - If kv260_terminal=true: KV260 GRADUATED — remove from mandatory-per-milestone hardware list
+         Record: kv260_graduated (bool), kv260_latency_us (float or null).
 
-      3. Phase 1 Ship Assessment:
-         - HF model card draft created? (exp2730.hf_model_card_draft_created)
-         - IPFS placeholder? (exp2730.ipfs_placeholder_created)
-         - operator_ship_checklist_v6 complete?
-         Record: phase1_ship_recommendation ('SHIP' or 'HOLD'), phase1_blocking_items (list).
+      3. New Verifier Research Assessment:
+         - Tier 0v (exp2743): tier0v_auroc, tier0v_viable
+         - Tier 0w (exp2746): tier0w_auroc, tier0w_viable
+         - Weak-strong policy (exp2745): policy_viable, policy_savings_pct
+         - Are either new verifiers ensemble-integration candidates?
+         Record: new_verifiers_viable (list of str), ensemble_upgrade_candidates (list of str).
 
-      4. New Research Assessment:
-         - OTV fast path (exp2728): viable? total_savings_pct?
-         - Semantic Energy Tier 0g (exp2731): tier0g_auroc? non-degenerate?
-         - Entanglement retirement (exp2732): lineage retired? diversity_viable?
-         - ORCA-NEXUS integration (exp2733): viable? n_rules_synthesized?
-         - FALCON repair (exp2734): falcon_repair_added? candidates_reduction_pct?
-         Record: new_research_highlights (list of str — key findings).
+      4. FR-11 Tier 4 Assessment:
+         - FR-11 Tier 2: COMPLETED (.256, carry-forward)
+         - FR-11 Tier 3: COMPLETED (.258, carry-forward)
+         - FR-11 Tier 3+: VIABLE (.259, carry-forward — 17 rules)
+         - FR-11 Tier 4 (exp2747): learning_loop_closed? learning_delta_cycle3?
+         Record: fr11_tier4_closed (bool), fr11_tier4_delta (float).
 
-      5. FR-11 Self-Learning Assessment:
-         - FR-11 Tier 2: COMPLETED in .256 (exp2695 carries forward).
-         - FR-11 Tier 3: COMPLETED in .258 (exp2719 carries forward).
-         - FR-11 Tier 3+: ORCA-NEXUS (exp2733) — orca_nexus_integration_viable?
-         Record: fr11_tier2_done (true), fr11_tier3_done (true), fr11_tier3_plus_viable (bool).
+      5. Phase 4 Active Inference Assessment:
+         - exp2748: fep_factor_graph_computed? fep_auroc? alpha_t_nonzero?
+         - Does the FEP factor graph support or refute the verifier-as-alpha_t hypothesis?
+         Record: phase4_fep_viable (bool), alpha_t_hypothesis_supported (bool).
 
-      6. Top 3 gaps for .260:
+      6. Paper v6 Assessment:
+         - exp2744: empirical_delta_computed? delta value?
+         - exp2749: paper_v6_submission_package_v2_ready? n_pages_v2?
+         Record: paper_v6_empirical_delta (float or null), paper_v6_ready_for_operator (bool).
+
+      7. Top 3 gaps for .261:
          Prioritize based on what did NOT execute, what is below target, what this capstone reveals.
-         Record: top_3_gaps_for_260 (list of {{gap, priority, suggested_task}}).
+         Record: top_3_gaps_for_261 (list of {gap, priority, suggested_task}).
 
-      7. Update ops/status.md: ADD new section at top (NEVER remove existing content):
-         "## Session {date} - Milestone 2026.05.259 Capstone Complete\n[summary]"
+      8. Update ops/status.md: ADD new section at top (NEVER remove existing content):
+         "## Session {date} - Milestone 2026.05.260 Capstone Complete\n[summary]"
 
-      8. Update ops/changelog.md: ADD new entry at top for .259 capstone.
+      9. Update ops/changelog.md: ADD new entry at top for .260 capstone.
 
-      9. Update ops/metrics.md: ADD turn log entry for this session.
+      10. Update ops/metrics.md: ADD turn log entry for this session.
 
-      10. Write results/experiment_2737_capstone_v259.json.
+      11. Write results/experiment_2750_capstone_v260.json.
 
       REQUIRED ARTIFACT FIELDS:
       - honest_verdict: MUST start with 'complete:' or 'complete_'
         principle: "Terminal prefix required."
-      - verifier_fixed: bool
-        principle: "Primary .259 structural outcome: did we fix the degenerate verifier?"
-      - verifier_fix_root_cause: str
-        principle: "Names the confirmed root cause — prevents recurrence in future milestones."
-      - paper_v6_toolchain_fixed: bool
-        principle: "pdflatex now available — enables all future paper citation + compile tasks."
-      - theory_citations_added: int — expected 3 if exp2729 succeeded
-        principle: "ARM-EBM + 4/delta + FST citations: paper-v6 theoretical completion metric."
-      - arxiv_package_ready: bool
-        principle: "Submission package ready for operator — Phase 4 validation still required before submit."
-      - phase1_ship_recommendation: str — 'SHIP' or 'HOLD'
-        principle: "Primary operator signal for Phase 1 shipping decision."
-      - fr11_tier2_done: bool — true (carry-forward from exp2695)
-        principle: "FR-11 Tier 2 gate: NEXUS v2 completed in .256."
-      - fr11_tier3_done: bool — true (carry-forward from exp2719)
-        principle: "FR-11 Tier 3 gate: ORCA conformal stopping completed in .258."
-      - fr11_tier3_plus_viable: bool
-        principle: "FR-11 Tier 3+ gate: ORCA-NEXUS integration produces online learned rules."
-      - new_research_highlights: list of str
-        principle: "Summarizes .259 new contributions for ops/status.md."
-      - top_3_gaps_for_260: list of dict — each with gap, priority, suggested_task
-        principle: "Planner reads this as input for .260 milestone design."
+      - adversarial_flags_cleared: bool
+        principle: "Primary .260 structural outcome: did we clear the exp2727 + exp2731 adversarial flags?"
+      - verifier_live_gpu_validated: bool
+        principle: "Did the verifier produce discriminative energy on real RTX 3090 + Qwen3.6 GGUF?"
+      - kv260_graduated: bool
+        principle: "KV260 TERMINAL: if true, KV260 exits mandatory-per-milestone hardware tracking."
+      - kv260_latency_us: float (or null if terminal criteria not met)
+        principle: "Board-level latency — key hardware metric for paper-v6 hardware performance table."
+      - fr11_tier4_closed: bool
+        principle: "FR-11 Tier 4: multi-cycle ORCA-NEXUS produces positive learning delta."
+      - phase4_fep_viable: bool
+        principle: "Phase 4 active inference FEP factor graph produces better-than-heuristic AUROC."
+      - alpha_t_hypothesis_supported: bool
+        principle: "Verifier-as-alpha_t: does each verifier have non-zero contribution to joint free energy?"
+      - paper_v6_ready_for_operator: bool
+        principle: "Paper v6 with empirical delta + .260 cites ready for operator arXiv submission."
+      - new_verifiers_viable: list of str
+        principle: "Which new verifiers (Tier 0v, 0w) are viable for ensemble integration in .261?"
+      - top_3_gaps_for_261: list of dict — each with gap, priority, suggested_task
+        principle: "Planner reads this as input for .261 milestone design."
       - n_criteria_met: int
-        principle: "Summary score for milestone health tracking."
-      - n_artifacts_read: int
+        principle: "Summary score: out of 12 acceptance criteria defined in change-proposal."
+      - n_artifacts_read: int — expected >= 11
         principle: "Confirms capstone actually read upstream artifacts (expected 12)."
       - duration_s: float
         principle: "Cross-artifact read + synthesis + doc updates: expected 60-180s."
