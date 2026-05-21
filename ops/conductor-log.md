@@ -5791,3 +5791,26 @@ Ripgrep i |
 | 2026-05-21 13:48 UTC | TruthfulQA Corpus Ensemble Adversarial Replication | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.23s |
 | 2026-05-21 13:50 UTC | TruthfulQA Corpus Ensemble Adversarial Replication | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.55s |
 | 2026-05-21 13:53 UTC | MBPP Corpus — Both Memory Conditions (Architecture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.25s |
+| 2026-05-21 13:55 UTC | MBPP Corpus — Both Memory Conditions (Architecture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.26s |
+| 2026-05-21 13:57 UTC | MBPP Corpus — Both Memory Conditions (Architecture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.17s |
+| 2026-05-21 13:59 UTC | TruthfulQA Corpus — Both Memory Conditions (Archit | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.24s |
+| 2026-05-21 14:01 UTC | TruthfulQA Corpus — Both Memory Conditions (Archit | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.10s |
+| 2026-05-21 14:03 UTC | TruthfulQA Corpus — Both Memory Conditions (Archit | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
+| 2026-05-21 14:05 UTC | HumanEval Full (164) — Both Memory Conditions (Arc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 14:07 UTC | HumanEval Full (164) — Both Memory Conditions (Arc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.25s |
+| 2026-05-21 14:09 UTC | HumanEval Full (164) — Both Memory Conditions (Arc | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.21s |
+| 2026-05-21 14:11 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.24s |
+| 2026-05-21 14:13 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.32s |
+| 2026-05-21 14:16 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.27s |
+| 2026-05-21 14:18 UTC | Verifier FoVer Redirect v6: Live-GPU Slow-Path Val | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.14s |
+| 2026-05-21 14:20 UTC | Verifier FoVer Redirect v6: Live-GPU Slow-Path Val | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 14:22 UTC | Verifier FoVer Redirect v6: Live-GPU Slow-Path Val | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
+| 2026-05-21 14:24 UTC | FoVer Memory-Leakage Isolation: AUROC With vs With | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 14:26 UTC | FoVer Memory-Leakage Isolation: AUROC With vs With | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.25s |
+| 2026-05-21 14:28 UTC | FoVer Memory-Leakage Isolation: AUROC With vs With | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.18s |
+| 2026-05-21 14:30 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 14:32 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.17s |
+| 2026-05-21 14:34 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 14:36 UTC | Capstone v265: Multi-Corpus Headline Synthesis + G | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.13s |
+| 2026-05-21 14:39 UTC | Capstone v265: Multi-Corpus Headline Synthesis + G | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.14s |
+| 2026-05-21 14:41 UTC | Capstone v265: Multi-Corpus Headline Synthesis + G | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.16s |

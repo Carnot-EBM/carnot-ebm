@@ -426,6 +426,8 @@ door looks professional. The autonomous loop NEVER edits this set:
 | Path | Maintainer |
 |---|---|
 | `docs/index.html` (the landing page, carnot-ebm.org) | numeric stats via `scripts/sync_docs_stats.py` only; prose is operator-curated |
+| `docs/roadmap.md` (linked from landing page footer) | operator-curated; per-milestone narrative goes to `docs/research-log.md` instead |
+| `docs/research-log.md` (chronological per-milestone record) | autonomous-loop may append new milestone entries; old entries are immutable |
 | `README.md` | operator-curated |
 | `docs/blog/*.html` | operator-curated blog posts |
 | `docs/getting-started.md` | operator-curated |
