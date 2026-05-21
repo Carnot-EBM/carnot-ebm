@@ -1,0 +1,23 @@
+{
+  "honest_verdict": "complete: Phase 1 ship status verified.",
+  "phase1_shipped": true,
+  "phase1_tag_found": "v0.1.0b1",
+  "checklist_still_current": true,
+  "new_gates_opened": [],
+  "operator_ship_checklist_v7": [
+    "Phase 1 SHIPPED at v0.1.0b1. No further action needed."
+  ],
+  "duration_s": 0.0021451879874803126,
+  "preconditions_checked": [
+    {
+      "resource": "exp2730_artifact_exists",
+      "available": true,
+      "check": "ls results/experiment_2730_hf_mirror_ship_v6.json && echo exists || echo missing"
+    },
+    {
+      "resource": "phase1_tag_exists",
+      "available": true,
+      "check": "git tag --list 2>/dev/null | grep v0.1.0"
+    }
+  ]
+}
