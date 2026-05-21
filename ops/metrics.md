@@ -1,5 +1,25 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-21 Pre-Planning Doc Update (third pass, pre-.263)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-21T11:21:05Z | 2026-05-21T11:24:00Z | Pre-planning doc update (third pass, pre-.263): ran scripts/sync_docs_stats.py → docs/index.html already current (experiment count 2,286; models 16; principles 14; tests 0). Per CLAUDE.md Public Documentation Discipline: README.md is operator-curated (no edits); docs/index.html prose is operator-curated (sync_docs_stats.py mechanical numeric sync only — already current); docs/technical-report.md/html prose/abstract/introduction/narrative are operator-curated (stale counts 2,354/2,894/166/243 are in prose sections, not table cells — no update allowed). No results-table numerical cells found stale in technical-report.md. docs/technical-report.html not re-rendered (no table cell changes). honest_verdict: blocked_public_doc_operator_curated for README.md and technical-report.md prose edits. | ~8k |
+
+---
+
+## Session: 2026-05-21 Milestone 2026.05.263 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-21T05:00:00Z | 2026-05-21T10:00:09Z | Plan milestone 2026.05.263: read 11+ project files (.262 partial execution: 5 of 13 tasks ran, 7 SKIP from pre-test cascade), ran pytest to confirm ImportError in test_weak_strong_router.py, arxiv sweep (4 new papers added to research-references.md: arXiv:2605.16824, arXiv:2605.11334, arXiv:2605.13369, arXiv:2605.18871), wrote openspec/change-proposals/research-roadmap-v263.md and research-roadmap-next.yaml (12 tasks exp2777-exp2788). THREE CRITICAL GAPS: (1) pre-test cascade — WeakStrongRouter missing (exp2778), (2) verifier zero-energy 5th attempt — FoVer corpus redirect (exp2779), (3) delta H2 gemini rate-limited 3x — Claude Opus (exp2780). All CLAUDE.md mandatory disciplines applied: Gemini-Default (10/12 gemini), prior_failures (4-field structure), PRECONDITIONS step 0, principle-annotated artifact fields, terminal-prefix verdicts, hardware continuity (all boards terminal, no mandatory tasks), operator-only publication (exp2787 checklist only), exclusion manifest cross-check (0 matches), calendar-month prefix 2026.05.263. | ~120k |
+
+---
+
 ## Session: 2026-05-21 Milestone 2026.05.262 Operational Retrospective
 
 ### Turn Log

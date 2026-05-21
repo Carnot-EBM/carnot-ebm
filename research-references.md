@@ -1,3 +1,67 @@
+## 2026-05-21 Post-.262 Planning Sweep (Milestone 2026.05.263)
+
+This sweep was run after milestone `.262` completed with 5 of 13 task artifacts produced (exp2764–exp2769
+partial; exp2770–exp2776 all SKIP/FAIL). Key .262 findings:
+- exp2765: verifier live-GPU v4 ran (model loaded, N=5) but ALL energy_values=[0,0,0,0,0] — verifier
+  still not discriminative on GGUF outputs (ArithmeticExtractor finds 0 constraints)
+- exp2766: Phase 4 FEP TAUTOLOGY resolved — held_out_auroc=0.9989, fep_viable=true ✓
+- exp2767: delta H2 git bisect FAIL x3 — gemini rate-limited ("Too Many Requests") each attempt
+- exp2768: FR-11 production integration, smoke test N=3 only (duration=8s, suspicious)
+- exp2769: Tier 0z temporal/causal verifier auroc=0.5065 (barely above random — poor)
+- exp2770–exp2776: ALL SKIP — pre-test cascade from test_weak_strong_router.py ImportError
+  (WeakStrongRouter not exported from carnot.pipeline.verify_repair)
+
+Three biggest gaps for .263: (1) pre-test cascade (WeakStrongRouter ImportError),
+(2) verifier zero-energy root-fix (FoVer corpus redirect), (3) delta H2 repair (Claude/Opus required).
+
+### Confidence Geometry for LLM Reasoning Correctness
+
+- **Paper:** "Confidence Geometry Reveals Trace-Level Correctness in Large Language Model Reasoning"
+  (arXiv:2605.16824, May 2026).
+- **Authors:** Confidential attribution pending.
+- **What:** Shows that geometric structure of model confidence distributions separates correct and
+  incorrect reasoning traces. Builds a lightweight "correctness discriminator" from confidence geometry
+  features (anisotropy, principal component alignment, inter-layer divergence) that achieves 0.81 AUROC
+  on GSM8K correctness classification without any answer labels. Complements activation-probe approaches
+  by operating entirely in confidence space.
+- **Relevance to Carnot:** Directly addresses the verifier discriminability gap. Confidence geometry
+  features are extractable from llama.cpp GGUF inference via per-token logprob sequences — no access
+  to internal activations required. Candidate for Tier 0aa verifier (new verifier beyond k=19 ensemble).
+  The 0.81 AUROC on GSM8K is comparable to Carnot's best existing verifiers. Paper-v6 §3 verifier
+  design cite. exp2784 in .263.
+- **Sources:** https://arxiv.org/abs/2605.16824
+
+### VERDI: Confidence Estimation for Verification-Based LLM Judges
+
+- **Paper:** "VERDI: Confidence Estimation for Verification-Based LLM Judges" (arXiv:2605.11334, May 2026).
+- **Authors:** Confidential attribution pending.
+- **What:** Extracts structured confidence signals from verification reasoning traces using claim-level
+  margin analysis and evidence grounding scores. Achieves calibrated confidence for judge outputs without
+  requiring separate calibration sets. Shows that claim-level uncertainty aggregation outperforms
+  response-level uncertainty for verifier ensembles.
+- **Relevance to Carnot:** Complements the Tier 0y differentiable conformal calibration (exp2759, ECE~5e-8).
+  VERDI's claim-level margin approach could improve Carnot's per-constraint confidence estimates. The
+  evidence grounding score maps to Carnot's constraint extraction confidence. Candidate for Tier 0ab
+  verifier or calibration upgrade for ensemble v14. Paper-v6 §4 ensemble calibration cite.
+- **Sources:** https://arxiv.org/abs/2605.11334
+
+### QueST: Query-Conditioned Test-Time Self-Training
+
+- **Paper:** "Query-Conditioned Test-Time Self-Training" (arXiv:2605.13369, May 2026).
+- **Authors:** Confidential attribution pending.
+- **What:** Enables per-query parameter updates during inference via curriculum-generated problem-solution
+  pairs conditioned on the current query. Achieves 8.3% average improvement on math/code benchmarks.
+  Avoids catastrophic forgetting via query-specific low-rank adapters (LoRA) that are discarded after
+  each query. Different from ReVISE (arXiv:2502.14565): QueST modifies model weights transiently;
+  ReVISE refines outputs.
+- **Relevance to Carnot:** Strong complement to FR-11 Tier 4 ORCA-NEXUS TTT loop. QueST's query-specific
+  LoRA adapters could be conditioned on Carnot's energy signal — low-energy adaptation steps guided by
+  the verifier ensemble. The "discard after query" approach avoids the NEXUS memory pollution problem.
+  Candidate experiment for .264+: QueST + Carnot energy signal as TTT reward.
+- **Sources:** https://arxiv.org/abs/2605.13369
+
+---
+
 ## 2026-05-21 Post-.261 Planning Sweep (Milestone 2026.05.262)
 
 This sweep was run after milestone `.261` completed with 11 of 13 task artifacts produced, 10 of 12

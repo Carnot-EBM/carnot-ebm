@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.263",
+  "generated_at": "2026-05-21T11:24:33Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.263 had 0 experiments committed in the timing window — the thirty-eighth consecutive empty-timing-window retro. Both RTX 3090 GPUs remained idle at 0% utilization (39C/48C). The persistent root cause — timing-script look-back window not anchored to conductor-state.json activated_at timestamp — remains unresolved.",
+  "bottlenecks_identified": [
+    "Timing-script look-back window is not anchored to conductor-state.json activated_at timestamp; experiments dispatched before or after the look-back window are invisible to the retro, causing 38 consecutive empty-timing-window reports despite active milestone work.",
+    "No post-activation dispatch verification gate: the conductor does not raise an alarm when zero artifacts exist N minutes after milestone activation, allowing the empty-window pattern to persist without alerting the operator.",
+    "No same-session first-dispatch discipline: the first non-retro experiment is not required to be dispatched in the same session as milestone activation, creating a gap where timing data is never captured."
+  ],
+  "improvements_suggested": [
+    "Fix scripts/research_conductor.py timing-script look-back to use conductor-state.json activated_at as the epoch anchor instead of a fixed wall-clock window.",
+    "Wire a zero-artifact alarm: if no experiment artifact exists 60 minutes after activated_at, emit a structured warning and surface it in the retro.",
+    "Enforce same-session first-dispatch discipline: activation and first non-retro experiment must occur in the same conductor session, ensuring at least one artifact lands in the timing scope.",
+    "Add a pre-retro activation-gap diagnostic step that reads ops/conductor-log.md and reports the gap between activated_at and the first artifact commit timestamp."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to conductor-state.json activated_at — this single change would immediately resolve 38 consecutive empty-timing-window retros and restore visibility into actual milestone throughput.",
+    "Wire zero-artifact alarm at 60 minutes post-activation — converts silent empty-milestone drift into an operator-visible signal before the retro fires, enabling intervention while the milestone is still live.",
+    "Enforce same-session first-dispatch discipline — ensures at least one experiment artifact lands within the timing window each milestone, eliminating the structural gap between activation and first recorded work."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The empty-timing-window pattern has now persisted for 38 consecutive milestones. The root cause is consistently diagnosed (activated_at anchor missing) and consistently unresolved, suggesting the fix requires a deliberate operator-directed session rather than a planner-emitted task. The absence of a mechanical zero-artifact alarm means the conductor has no feedback loop to self-correct; fixing the alarm is the structural change with the lowest implementation cost and highest immediate diagnostic value."
+}

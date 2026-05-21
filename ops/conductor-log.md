@@ -5703,3 +5703,41 @@ Ripgrep i |
 | 2026-05-21 09:33 UTC | Capstone v262: Cross-Artifact Synthesis + Phase 4  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
 | 2026-05-21 09:35 UTC | Capstone v262: Cross-Artifact Synthesis + Phase 4  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.23s |
 | 2026-05-21 09:37 UTC | Capstone v262: Cross-Artifact Synthesis + Phase 4  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 10:01 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-05-21 10:03 UTC | Milestone 2026.05.263 activated | OK | 12 tasks queued |
+| 2026-05-21 10:05 UTC | Archive .262 + Activate .263 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
+| 2026-05-21 10:07 UTC | Archive .262 + Activate .263 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.28s |
+| 2026-05-21 10:09 UTC | Archive .262 + Activate .263 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 10:11 UTC | Pre-Test Fix v2: Implement WeakStrongRouter + Rout | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.23s |
+| 2026-05-21 10:13 UTC | Pre-Test Fix v2: Implement WeakStrongRouter + Rout | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.14s |
+| 2026-05-21 10:16 UTC | Pre-Test Fix v2: Implement WeakStrongRouter + Rout | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
+| 2026-05-21 10:18 UTC | Verifier FoVer Redirect v5: Bypass ArithmeticExtra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
+| 2026-05-21 10:20 UTC | Verifier FoVer Redirect v5: Bypass ArithmeticExtra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
+| 2026-05-21 10:22 UTC | Verifier FoVer Redirect v5: Bypass ArithmeticExtra | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
+| 2026-05-21 10:24 UTC | Delta H2 Regression Fix: Git Bisect + Repair Pipel | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.25s |
+| 2026-05-21 10:26 UTC | Delta H2 Regression Fix: Git Bisect + Repair Pipel | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.18s |
+| 2026-05-21 10:28 UTC | Delta H2 Regression Fix: Git Bisect + Repair Pipel | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
+| 2026-05-21 10:30 UTC | FR-11 Tier 4 Full Benchmark N=50: Real Production  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.21s |
+| 2026-05-21 10:32 UTC | FR-11 Tier 4 Full Benchmark N=50: Real Production  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 10:34 UTC | FR-11 Tier 4 Full Benchmark N=50: Real Production  | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.13s |
+| 2026-05-21 10:36 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
+| 2026-05-21 10:39 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.17s |
+| 2026-05-21 10:41 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 10:43 UTC | CP-Router Entropy-Aware Conformal Routing (arXiv:2 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.17s |
+| 2026-05-21 10:45 UTC | CP-Router Entropy-Aware Conformal Routing (arXiv:2 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 10:47 UTC | CP-Router Entropy-Aware Conformal Routing (arXiv:2 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 10:49 UTC | Confidence Geometry Verifier Tier 0aa (arXiv:2605. | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 10:51 UTC | Confidence Geometry Verifier Tier 0aa (arXiv:2605. | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.16s |
+| 2026-05-21 10:53 UTC | Confidence Geometry Verifier Tier 0aa (arXiv:2605. | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.24s |
+| 2026-05-21 10:55 UTC | Tier 0z Investigation: Why auroc=0.5065? Fix or Re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
+| 2026-05-21 10:57 UTC | Tier 0z Investigation: Why auroc=0.5065? Fix or Re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.16s |
+| 2026-05-21 10:59 UTC | Tier 0z Investigation: Why auroc=0.5065? Fix or Re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.17s |
+| 2026-05-21 11:02 UTC | Paper v6 Theory v5: FEP Claim + Verifier Diagnosis | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 11:04 UTC | Paper v6 Theory v5: FEP Claim + Verifier Diagnosis | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.18s |
+| 2026-05-21 11:06 UTC | Paper v6 Theory v5: FEP Claim + Verifier Diagnosis | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.23s |
+| 2026-05-21 11:08 UTC | arXiv Package v5: Updated with .263 Results + Oper | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.23s |
+| 2026-05-21 11:10 UTC | arXiv Package v5: Updated with .263 Results + Oper | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
+| 2026-05-21 11:12 UTC | arXiv Package v5: Updated with .263 Results + Oper | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.16s |
+| 2026-05-21 11:14 UTC | Capstone v263: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.28s |
+| 2026-05-21 11:16 UTC | Capstone v263: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
+| 2026-05-21 11:18 UTC | Capstone v263: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.13s |
