@@ -1,5 +1,25 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-21 Milestone 2026.05.262 Operational Retrospective
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-21T09:42:11Z | 2026-05-21T09:43:11Z | Write operational retrospective for milestone 2026.05.262: read existing skeleton JSON (0 experiments, 0 wall-time, null gpu_idle), filled interpretive fields (summary, bottlenecks, improvements, top_3_actions, meta_reflection), appended row to docs/roadmap.md, appended entry to ops/changelog.md. Thirty-seventh consecutive empty-timing-window retro; both RTX 3090s idle (39C/48C). | ~18k |
+
+---
+
+## Session: 2026-05-21 Pre-Planning Doc Update (second pass, pre-.262)
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 2 | 2026-05-21T09:39:39Z | 2026-05-21T09:41:39Z | Pre-planning doc update (second pass, pre-.262): ran scripts/sync_docs_stats.py → docs/index.html updated (experiment count 2,281→2,286; models 16; principles 14; tests 0 — pytest collect failed). Per CLAUDE.md Public Documentation Discipline: README.md is operator-curated (no edits); docs/index.html prose is operator-curated (sync_docs_stats.py mechanical numeric sync only); docs/technical-report.md/html prose/abstract/introduction are operator-curated (no prose edits — only results-table numerical cells permitted, none stale). honest_verdict: blocked_public_doc_operator_curated for README.md and technical-report.md prose edits. | ~12k |
+
+---
+
 ## Session: 2026-05-21 Pre-Planning Doc Update
 
 ### Turn Log

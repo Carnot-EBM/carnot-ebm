@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-21 (Milestone 2026.05.262 Operational Retrospective)
+
+- [outer-loop] Operational retrospective for milestone 2026.05.262 written to `results/operational_retro_2026_05_262.json` (schema v64). 0 experiments completed before retro generation; milestone produced no experiment commits in the timing window (thirty-seventh consecutive empty-timing-window retro). Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated, GPU 0: 39C, GPU 1: 48C); gpu_idle_on_compute_bound_tasks=null (no compute-bound tasks ran). Top-3 leverage actions: (1) diagnose activation gap via ops/conductor-log.md — determine whether research-roadmap-next.yaml for 2026.05.262 passed activation guard; (2) add milestone-activation health check: emit conductor warning if experiments_completed == 0 at retro time AND milestone_age_minutes > 60; (3) stage research-roadmap-next.yaml for 2026.05.263 immediately with all mandatory disciplines and ensure first task dispatches in same session. Roadmap table row appended to `docs/roadmap.md`.
+
 ## 2026-05-21 (Milestone 2026.05.262 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.262. Milestone .261 (exp2751–exp2763) COMPLETED — 10 of 12 acceptance criteria met. Key findings: exp2752 verifier_live_gpu_v3 ABSENT (3rd consecutive — root cause unknown, agent hit max_turns or crashed before artifact write), exp2753 FEP strategy2 AUROC=0.9947 TAUTOLOGY-flagged (best_fep_auroc==strategy2_auroc to >5 sig figs, duration_s=6.49s for "training" = suspected in-sample evaluation), exp2754 empirical_delta=0.000 H2 regression (repair pipeline broken, 0/60 successes), FR-11 Tier 4 validated (cycle3 AUROC=0.9275, pool_test_overlap=0, 34 rules), ensemble v12 k=18 +0.011 AUROC lift, conformal routing 84% savings, weak-strong orientation bug fixed 41% savings, Tier 0y ECE~5e-8, Phase 1 v0.1.0b1 shipped, paper-v6 28pp compiles, arXiv package v3 ready (HOLDS operator).

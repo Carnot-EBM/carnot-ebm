@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.262",
+  "generated_at": "2026-05-21T09:42:03Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.262 produced no experiment commits. Zero experiments completed; no wall time was consumed by conductor-launched tasks. Both RTX 3090 GPUs remained idle at 0% utilization throughout the milestone window.",
+  "bottlenecks_identified": [
+    "No experiments were activated under milestone 2026.05.262 — the milestone closed with 0 completed tasks. Root cause is not determinable from timing data alone; likely the milestone was not yet fully activated or the conductor did not fire any tasks before this retrospective was triggered.",
+    "Both GPUs (GPU 0 and GPU 1, each RTX 3090 24 GB) sat at 0% utilization and 5 MB allocated — idle state consistent with no in-flight compute-bound work. This is not a bug given zero experiments ran, but it is lost compute capacity.",
+    "No doomed-rerun blocks are present in timing data, so the zero-experiment outcome is not a ledger-enforcement artifact — the milestone simply did not dispatch work."
+  ],
+  "improvements_suggested": [
+    "Verify that the conductor's activation guard correctly transitioned the milestone to an 'active' state before planning concludes; a zero-task milestone suggests the activation handoff may not have fired.",
+    "Add a milestone-activation health check: if experiments_completed == 0 at retrospective time and milestone_age_minutes > 60, emit a conductor warning and surface the milestone for operator review before closing.",
+    "Once experiments are queued, use DualGPURunner (carnot.pipeline.dual_gpu_harness) for any parallel multi-model inference tasks to saturate both RTX 3090 GPUs simultaneously rather than leaving one idle.",
+    "Confirm that research-roadmap-next.yaml for 2026.05.262 was well-formed and passed the activation guard's YAML validation step; a parse or schema failure would silently produce zero activations."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Diagnose why 0 experiments were activated: read ops/conductor-log.md and ops/conductor-state.json to determine whether the milestone was correctly opened and whether the planner emitted a valid roadmap.",
+    "If the roadmap was emitted but tasks were not dispatched, check scripts/research_conductor.py _activate_next_roadmap() for any gate-block conditions (exclusion-manifest matches, schema errors) that silently consumed the milestone.",
+    "Stage a fresh research-roadmap-next.yaml for 2026.05.263 (following Calendar-Month Prefix Rollover rules — still 2026.05) with at least one hardware task per attached FPGA board and ensure all tasks pass pre-launch precondition discipline before the next conductor cycle."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "A zero-experiment milestone is an operational anomaly, not a research finding. The retrospective process itself worked correctly — skeleton was written, data was honestly reported as 'no data available', and no fabrication occurred. The highest-leverage next step is a root-cause investigation of the activation gap, not inference about experiment performance that never happened."
+}
