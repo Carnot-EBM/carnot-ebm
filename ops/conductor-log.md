@@ -5780,3 +5780,12 @@ Ripgrep i |
 | 2026-05-21 13:02 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.65s |
 | 2026-05-21 13:04 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.70s |
 | 2026-05-21 13:23 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |
+| 2026-05-21 13:32 UTC | Milestone 2026.05.265 activated | OK | 8 tasks queued |
+| 2026-05-21 13:34 UTC | Archive .264 + Activate .265 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.14s |
+| 2026-05-21 13:36 UTC | Archive .264 + Activate .265 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.18s |
+| 2026-05-21 13:38 UTC | Archive .264 + Activate .265 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.15s |
+| 2026-05-21 13:40 UTC | MBPP Corpus Ensemble Adversarial Replication (N=50 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.14s |
+| 2026-05-21 13:42 UTC | MBPP Corpus Ensemble Adversarial Replication (N=50 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.20s |
+| 2026-05-21 13:44 UTC | MBPP Corpus Ensemble Adversarial Replication (N=50 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 13:46 UTC | TruthfulQA Corpus Ensemble Adversarial Replication | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.31s |
+| 2026-05-21 13:48 UTC | TruthfulQA Corpus Ensemble Adversarial Replication | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.23s |

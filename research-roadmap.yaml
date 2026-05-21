@@ -1,1144 +1,629 @@
-milestone: "2026.05.264"
-milestone_title: "Verifier FoVer Diagnosis + Delta H2 Fix + FR-11 N=50 + Tier 0aa/0bb + arXiv Package v5"
-milestone_doc: "openspec/change-proposals/research-roadmap-v264.md"
-date: "2026-05-21"
-status: "PROPOSED"
-experiment_id_range: "exp2789-exp2800"
-scope_reduction_compliance: "n/a — no SCOPE REDUCTION directive active in ops/known-issues.md"
+# Pre-staged roadmap — milestone 2026.05.265
+#
+# Author: outer-loop (Claude) per operator directive 2026-05-21:
+#   "Authorized. MBPP + TruthfulQA + HumanEval first. We can re-visit
+#   the rest after we see those results."
+#
+# Context: the deep audit on 2026-05-21 confirmed that the production
+# headline AUROC=0.9857 (Ensemble v7b on FoVer, exp2546) is measured
+# on a single corpus shape (math-step-error pairs). The Tier 0s
+# verifier was confirmed to be a regex+arithmetic heuristic that
+# returns 0.0 on non-arithmetic inputs (now honestly documented per
+# CLAUDE.md "Verifier Authenticity Discipline"). Generalization
+# beyond FoVer is unmeasured.
+#
+# This milestone expands the corpus surface to three independent
+# benchmarks (MBPP code, TruthfulQA factuality, HumanEval full code
+# generation) under the same 5-seed adversarial-replication
+# protocol that produced the FoVer headline. After these land,
+# operator will decide on HaluEval + FEVER (the deferred corpora).
+#
+# Per CLAUDE.md "Pre-Staged Roadmap Convention" — this file is
+# preserved by the conductor's _plan_next_milestone() check at
+# activation time. Per CLAUDE.md "Gemini-Default for Experiments"
+# all experiment tasks default to agent_type: gemini.
 
-# .263 COMPLETED (ALL SKIPPED): 0 of 12 artifacts produced.
-# ALL 12 tasks SKIP due to pre-test cascade: WeakStrongRouter + RoutingDecision missing from
-# carnot.pipeline.verify_repair caused pytest collection ImportError, which the conductor's
-# self-heal could not fix because it was not sophisticated enough to add a new class.
-#
-# PRE-TEST FIX COMMITTED BEFORE .264 PLANNING:
-#   commit b729ba788: "[outer-loop] Fix pre-test cascade: implement WeakStrongRouter +
-#   RoutingDecision in verify_repair.py"
-#   WeakStrongRouter and RoutingDecision dataclass now in verify_repair.py.
-#   25,622 tests collect cleanly (no ImportError). ✓
-#
-# KEY .262 FINDINGS CARRIED FORWARD:
-#   exp2765: verifier energy=0 on all 5 GGUF outputs — ArithmeticExtractor finds 0 constraints
-#            in IT model outputs. FIX STRATEGY: FoVer corpus redirect (exp2790).
-#   exp2766: FEP TAUTOLOGY resolved — held_out_auroc=0.9989, fep_viable=true. ✓
-#   exp2768: FR-11 production integration smoke N=3, 8s (suspicious). Full N=50 in exp2792.
-#   exp2769: Tier 0z AUROC=0.5065 (barely above random). Diagnose in exp2796.
-#   exp2767: Delta H2 fix FAIL x3 — gemini rate-limited. Claude Opus in exp2791.
-#
-# THREE BIGGEST GAPS:
-#   1. CRITICAL: Verifier zero-energy (5th attempt) — exp2790 FoVer corpus redirect
-#   2. CRITICAL: Delta H2 regression unfixed — exp2791 Claude Opus (gemini failed 3x)
-#   3. HIGH: 8 experiments SKIPPED in .263 need re-run — exp2792-exp2800
-#
-# New research for .264 (post-.263 sweep, 5 new papers added to research-references.md):
-#   arXiv:2602.11364 (DiffuTruth — Energy of Falsehood — exp2797 Tier 0bb)
-#   arXiv:2505.19475 (Self-Improvement via Verifier TTT — FR-11 Tier 4 context)
-#   arXiv:2506.01369 (Incentivizing LLMs to Self-Verify — Phase 4 FEP context)
-#   arXiv:2603.19715 (Stepwise Neuro-Symbolic Proof Search — exp2798 citation)
-#   arXiv:2602.18145 (Frequency-Aware Attention Hallucination — exp2795 comparator)
-#
-# Hardware: all 3 boards at terminal state — no mandatory hardware tasks.
-#   KV260 TERMINAL (.260 exp2742), GateMate TERMINAL (.247), PolarFire TERMINAL (.241).
-#
-# FR-11 mandate: exp2792 (FR-11 Tier 4 Full Benchmark N=50, continuous_self_learning_task: true)
-#
-# Exclusion manifest cross-check: 0 scope matches found.
-#
-# Agent routing: 10 gemini/gemini-3.1-pro-preview (exp2789-exp2790, exp2792-exp2799),
-#   2 claude/opus (exp2791 delta H2 fix, exp2800 capstone)
-#   Within 2/12 ceiling. Both meet ALL 3 positive criteria for requires_claude.
-#   exp2791: (1) gemini demonstrably failed 3x rate-limited, (2) multi-file git bisect + pipeline edit,
-#            (3) iterative hypothesis testing across commit history requires cross-context reasoning.
-#   exp2800: capstone synthesis always claude/opus per milestone convention.
-#
-# Gate topology:
-#   exp2798 gated on exp2790.fover_energy_nonzero AND exp2791.root_cause_identified
-#   exp2799 gated on exp2798.latex_compiles_v5
+milestone: "2026.05.265"
 
 tasks:
 
-  - id: exp2789
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2789_archive_v263.json"
-    title: "Archive .263 + Activate .264"
+  - id: exp2801
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2801_archive_v264.json"
+    title: "Archive .264 + Activate .265"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 20
     track: admin
-
-    prior_failures:
-      - experiment_id: exp2777-archive-v262-activate-v263
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2777 was SKIPPED because the conductor's pre-test check failed due to WeakStrongRouter ImportError. Outer-loop commit b729ba788 fixes this: WeakStrongRouter + RoutingDecision now in verify_repair.py; 25,622 tests collect cleanly. Different failure mode: pre-test fixed before .264 planning."
-        retire_if_same_verdict: false
-
     prompt: |
-      Read CLAUDE.md for project context and code style requirements.
+      Read CLAUDE.md for project context.
 
-      CONTEXT:
-      Milestone 2026.05.263 is COMPLETE per operator confirmation. 0 of 12 experiments produced
-      artifacts — ALL SKIPPED due to pre-test cascade (WeakStrongRouter ImportError).
-      The pre-test cascade has been FIXED: commit b729ba788 implements WeakStrongRouter +
-      RoutingDecision in python/carnot/pipeline/verify_repair.py.
-      research-roadmap-next.yaml has milestone 2026.05.264.
-
-      EXISTING CODE TO READ FIRST:
-      - research-roadmap.yaml (verify milestone field is 2026.05.263)
-      - research-complete.yaml (last 30 lines — check if .263 already archived)
-      - results/experiment_2766_phase4_fep_adversarial_recheck.json (fep_viable=true, carried fwd)
-
-      TASK: Archive milestone .263 and activate .264.
+      TASK: Standard milestone activation. Archive milestone 2026.05.264
+      to research-complete.yaml; activate this milestone 2026.05.265
+      from research-roadmap.yaml.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. Confirm research-roadmap.yaml exists and milestone field == "2026.05.263".
-            If milestone already says "2026.05.264": write honest_verdict
-            'complete_already_activated' and exit cleanly.
-         b. Read last 30 lines of research-complete.yaml to check if .263 already archived.
-         c. Read results/experiment_2766_phase4_fep_adversarial_recheck.json for fep_viable.
-         Record: preconditions_checked.
-
-      1. If .263 not yet in research-complete.yaml: append milestone entry with:
-         id: "2026.05.263"
-         title: "Pre-Test Fix v2 + Verifier FoVer Redirect + Delta H2 Repair + Confidence Geometry + arXiv Package v5"
-         completed: today's date
-         finding: "All 12 tasks SKIP due to WeakStrongRouter ImportError pre-test cascade. Pre-test fixed in outer-loop session before .264 planning (commit b729ba788). Key .262 carries: FEP resolved (held_out_auroc=0.9989), verifier zero-energy unresolved, delta H2 unresolved."
-         For each of exp2777-exp2788: list id, title, deliverable, result: "SKIP — pre-test cascade"
-
-      2. Update research-roadmap.yaml: change milestone field to "2026.05.264".
-
-      3. Write artifact to results/experiment_2789_archive_v263.json with fields:
-         honest_verdict: "complete: archived .263, activated .264"
-         archive_completed: true
-         milestone_activated: "2026.05.264"
-         n_experiments_archived: 12
-         n_experiments_that_ran: 0
-         pretest_cascade_root_cause: "WeakStrongRouter ImportError in test_weak_strong_router.py"
-         pretest_fix_committed: "b729ba788"
-         fep_resolved_carried_forward: true
-         verifier_zero_energy_carried_forward: true
-         delta_h2_regression_carried_forward: true
-         preconditions_checked: [{resource, available, check}, ...]
-         duration_s: <elapsed>
-         random_seed: 42
+        1. Read research-roadmap.yaml current milestone field.
+        2. Read research-complete.yaml to confirm .264 isn't already archived.
+        3. Append .264 milestone block from research-roadmap.yaml to research-complete.yaml.
+        4. Confirm .265 is the active milestone field in research-roadmap.yaml.
+        5. Write deliverable artifact.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix lets conductor classify success without re-running; must start with complete:/success:/passed:/shipped:."
-        archive_completed:
-          principle: "Boolean gate — downstream planner skips re-archive attempt."
-        pretest_fix_committed:
-          principle: "Records the outer-loop fix commit hash for audit trail; confirms the structural deadlock is resolved before .264 experiments run."
-        preconditions_checked:
-          principle: "Records which resources were verified; pre-empts fabrication mode."
-        duration_s:
-          principle: "Real bookkeeping takes measurable wall time; near-zero duration signals no work done."
+        - honest_verdict: MUST start with 'complete:' or 'complete_'
+          principle: "Terminal prefix per Verdict Terminal-Prefix Discipline."
+        - archived_milestone: str
+          principle: "Records which milestone was archived."
+        - activated_milestone: str
+          principle: "Records which milestone is now active."
+        - duration_s: float
+          principle: "Wall-time measurement; expected 5-30s for admin."
 
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` to capture start and end timestamps.
+  - id: exp2802
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2802_mbpp_ensemble_eval.json"
+    title: "MBPP Corpus Ensemble Adversarial Replication (N=500, 5 seeds)"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 60
+    track: corpus
+    prompt: |
+      Read CLAUDE.md for project context, especially "Verifier Authenticity
+      Discipline" (no sleep-padding, no score-capping, no random-data
+      evaluation) and "Adversarial Artifact Verification + Sample-Size
+      Rigor" (random_seed + reproducibility_checksum mandatory).
+
+      CONTEXT: per operator directive 2026-05-21, expand evaluation
+      surface beyond FoVer (the single corpus driving the 0.9857
+      headline). MBPP is industry-standard for Python code generation;
+      execution-based ground-truth makes hallucination detection
+      well-defined (correct code passes tests; incorrect code fails).
+
+      TASK: Run the production verifier ensemble v7b against MBPP test
+      split (500 problems) and compute AUROC under 5-seed adversarial
+      replication.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE any subsequent step):
+           a. `python3 -c "import torch; assert torch.cuda.is_available()"`
+              — if false, blocked_cuda_not_available
+           b. `python3 -c "from datasets import load_dataset; load_dataset('mbpp', 'sanitized', split='test')"`
+              — if HF unreachable, blocked_huggingface_mbpp_unreachable
+           c. `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/`
+              — if empty, blocked_model_not_cached_qwen36
+           Record preconditions_checked.
+
+        1. Load MBPP test split via `datasets.load_dataset("mbpp",
+           "sanitized", split="test")` (500 problems).
+        2. For each problem, run live-GPU inference (Qwen3.6-35B-A3B-GGUF
+           via llama.cpp) to generate a candidate solution.
+        3. Execute the candidate against the test cases — this gives
+           ground-truth (pass/fail). Real execution; no static-analysis
+           proxy.
+        4. Score each (problem, candidate) pair with the production
+           verifier ensemble v7b — record per-verifier scores AND the
+           ensemble's final hallucination probability.
+        5. Repeat steps 2-4 with 5 different random seeds (42, 137,
+           271, 314, 1729) to measure replication std.
+        6. Compute AUROC per seed against ground-truth (pass=clean,
+           fail=hallucination). Report mean + std across 5 seeds.
+        7. Compare to MBPP peer baselines: vanilla Qwen3.6 pass@1 +
+           any published verifier baselines on MBPP.
+        8. Write artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: MUST start with 'complete:' / 'success:' /
+          'passed:' / 'shipped:' (or 'blocked_<resource>' on precondition fail)
+          principle: "Terminal prefix per Verdict Terminal-Prefix Discipline."
+        - corpus: "MBPP-sanitized-test"
+          principle: "Identifies which corpus was used."
+        - n_problems: 500
+          principle: "Sample size for statistical claims."
+        - n_seeds: 5
+          principle: "Adversarial replication seed count per .241 5-seed protocol."
+        - ensemble_auroc_per_seed: list[float] (length 5)
+          principle: "Raw AUROC for each seed; mean+std derived from these."
+        - ensemble_auroc_mean: float
+          principle: "Headline number for this corpus."
+        - ensemble_auroc_std: float
+          principle: "Adversarial-verify discipline requires std for the headline claim."
+        - per_verifier_auroc: dict[str, list[float]] — verifier_id → [auroc_seed1, ..., auroc_seed5]
+          principle: "Per-verifier breakdown exposes which verifiers contribute on this corpus shape vs FoVer."
+        - vanilla_qwen36_pass_at_1: float
+          principle: "Baseline for the model without Carnot — establishes the headroom Carnot operates in."
+        - random_seeds_used: [42, 137, 271, 314, 1729]
+          principle: "Determinism is the precondition for reproducibility."
+        - reproducibility_checksum: str (sha256 of corpus + model_specs + random_seeds)
+          principle: "Catches silent corpus or model-version drift between this artifact and any future replication."
+        - model_specs: {name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}
+          principle: "Real compute requires naming what was compute'd on."
+        - duration_s: float (MUST be ≥ 5*N*per-problem-inference-time; expect ≥1800s for full run)
+          principle: "Real compute takes wall-time; missing or short duration is fabrication signal."
+        - preconditions_checked: list[{resource, available, check}]
+          principle: "Anti-fabrication: records what was verified before running."
+        - methodology_note: str
+          principle: "If any verifier shows low AUROC (<0.6), explain why honestly; this is expected per the input-shape-overfit thesis."
+
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp2790
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2790_verifier_fover_redirect_v5.json"
-    title: "Verifier FoVer Redirect v5: Diagnose Zero-Energy via Known Violation Corpus"
+  - id: exp2803
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2803_truthfulqa_ensemble_eval.json"
+    title: "TruthfulQA Corpus Ensemble Adversarial Replication (N=817, 5 seeds)"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 60
+    track: corpus
+    prompt: |
+      Read CLAUDE.md, especially "Verifier Authenticity Discipline" and
+      "Adversarial Artifact Verification".
+
+      CONTEXT: per operator directive 2026-05-21, expand evaluation
+      beyond FoVer to test factuality generalization. TruthfulQA is the
+      industry-standard adversarial-truthfulness benchmark (Lin et al.
+      2022, arXiv:2109.07958, 817 Qs across 38 categories). Carnot has
+      never been measured on TruthfulQA; FoVer-trained verifiers may
+      perform near-random.
+
+      TASK: Run the production verifier ensemble v7b against TruthfulQA
+      generation split and compute AUROC under 5-seed adversarial
+      replication.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `python3 -c "import torch; assert torch.cuda.is_available()"`
+           b. `python3 -c "from datasets import load_dataset; load_dataset('truthful_qa', 'generation')"`
+              — if HF unreachable, blocked_huggingface_truthfulqa_unreachable
+           c. Qwen3.6-35B-A3B-GGUF cached (same check as exp2802)
+           Record preconditions_checked.
+
+        1. Load TruthfulQA generation split (817 questions).
+        2. For each question, run live-GPU Qwen3.6-35B inference to
+           generate a candidate answer.
+        3. Compute ground-truth via TruthfulQA's reference (best_answer
+           field). Two scoring modes:
+              - GPT-judge mode: NOT used (operator-directive: avoid
+                closed-weight dependencies per CLAUDE.md
+                Decentralization rule 2)
+              - BLEURT mode: install bleurt-base-128 (HF, MIT license)
+                and compute semantic similarity. Threshold tuned on a
+                held-out 50-Q calibration set.
+        4. Score each (question, candidate) with the production
+           verifier ensemble v7b.
+        5. Repeat 2-4 with 5 seeds (42, 137, 271, 314, 1729).
+        6. AUROC per seed vs BLEURT-derived truthful/untruthful labels.
+        7. Compare to TruthfulQA peer baselines: GPT-3 MC1 ~28%, any
+           published BLEURT verifier comparator.
+        8. Write artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: MUST start with 'complete:' / 'success:' / 'passed:' / 'shipped:'
+          principle: "Terminal prefix per Verdict Terminal-Prefix Discipline."
+        - corpus: "TruthfulQA-generation"
+          principle: "Identifies which corpus was used."
+        - n_questions: 817
+          principle: "Sample size."
+        - n_seeds: 5
+          principle: "Adversarial replication seed count."
+        - ensemble_auroc_per_seed: list[float] (length 5)
+          principle: "Raw AUROC for each seed."
+        - ensemble_auroc_mean: float
+          principle: "Headline number for this corpus."
+        - ensemble_auroc_std: float
+          principle: "Required by adversarial-verify discipline."
+        - per_verifier_auroc: dict[str, list[float]]
+          principle: "Per-verifier breakdown — KEY finding will be which verifiers transfer from FoVer-math to TruthfulQA-factual."
+        - scoring_method: "BLEURT-base-128, threshold tuned on 50-Q held-out"
+          principle: "Documents how 'truthful' was operationalized."
+        - bleurt_threshold: float
+          principle: "Reproducibility — anyone replicating must use the same threshold."
+        - random_seeds_used: [42, 137, 271, 314, 1729]
+          principle: "Determinism precondition for reproducibility."
+        - reproducibility_checksum: str
+          principle: "Catches corpus or model drift."
+        - model_specs: dict
+          principle: "Names the compute target."
+        - duration_s: float (expected ≥1800s for 5-seed run)
+          principle: "Real compute takes wall-time."
+        - preconditions_checked: list
+          principle: "Anti-fabrication."
+        - methodology_note: str — REQUIRED if ensemble_auroc_mean < 0.7
+          principle: "Low AUROC on a new corpus is an honest finding (FoVer-shape overfit thesis), not a failure — but the artifact must say so explicitly."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2804
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2804_humaneval_full_ensemble_eval.json"
+    title: "HumanEval Full (164 problems) Ensemble Adversarial Replication (5 seeds)"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 60
+    track: corpus
+    prompt: |
+      Read CLAUDE.md, especially "Verifier Authenticity Discipline" and
+      "Adversarial Artifact Verification".
+
+      CONTEXT: extending prior HumanEval verify-and-repair work
+      (carrying +3.0pp and the 0→36% pass@1 lift on the SOTA 35B model)
+      to a full ensemble adversarial-replication run on all 164
+      problems. Code execution gives clean ground-truth.
+
+      TASK: Run the production verifier ensemble v7b against HumanEval
+      full and compute AUROC under 5-seed adversarial replication.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. CUDA available
+           b. `python3 -c "from datasets import load_dataset; load_dataset('openai_humaneval')"`
+              — if HF unreachable, blocked_huggingface_humaneval_unreachable
+           c. Qwen3.6-35B-A3B-GGUF cached
+           Record preconditions_checked.
+
+        1. Load HumanEval test split (164 problems).
+        2. For each problem, run live-GPU inference to generate a
+           candidate solution.
+        3. Execute candidate against the problem's test_list (real
+           execution, sandboxed; CARNOT_USE_SANDBOX=1 if available).
+        4. Score with verifier ensemble v7b.
+        5. 5 seeds (same set as exp2802/2803).
+        6. AUROC per seed.
+        7. Compare to Qwen3.6 vanilla pass@1 + any peer HumanEval
+           verifier baselines.
+        8. Write artifact.
+
+      REQUIRED ARTIFACT FIELDS: same shape as exp2802 (MBPP) but
+        - corpus: "HumanEval-full"
+        - n_problems: 164
+        - pass_at_1_vanilla: float
+        - pass_at_1_after_carnot_correct: float (the verify-and-repair lift number)
+        Other fields identical to exp2802. All with principle annotations
+        per CLAUDE.md "Principle-Annotated Artifact Fields".
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2805
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2805_cross_corpus_verifier_analysis.json"
+    title: "Cross-Corpus Per-Verifier Discriminative Power Analysis"
+    agent_type: gemini
+    model: gemini-3.1-pro-preview
+    max_turns: 30
+    track: analysis
+    requires:
+      - exp2802.ensemble_auroc_mean
+      - exp2803.ensemble_auroc_mean
+      - exp2804.ensemble_auroc_mean
+    prompt: |
+      Read CLAUDE.md.
+
+      CONTEXT: with exp2802 (MBPP), exp2803 (TruthfulQA), exp2804
+      (HumanEval) artifacts produced, this task synthesizes a per-
+      verifier matrix showing which verifiers transfer across corpus
+      shapes and which are corpus-specific. Expected finding: Tier 0s
+      (arithmetic-consistency heuristic per its honest docstring) will
+      contribute on FoVer + parts of HumanEval+MBPP but near-zero on
+      TruthfulQA factuality.
+
+      TASK: Build a verifier × corpus AUROC matrix and identify
+      transfer patterns.
+
+      CONCRETE STEPS:
+        1. Load exp2802, exp2803, exp2804 artifacts.
+        2. Extract per_verifier_auroc from each.
+        3. Add FoVer baseline from results/experiment_2546*.json.
+        4. Build matrix: rows = verifiers, columns = corpora (FoVer,
+           MBPP, TruthfulQA, HumanEval).
+        5. Compute per-verifier mean AUROC + variance across corpora.
+        6. Identify "transfer verifiers" (mean AUROC ≥ 0.75 across all 4
+           corpora) vs "corpus-specific verifiers" (high on one,
+           random on others).
+        7. Surface diversity gap: are we one-verifier-deep on
+           non-FoVer corpora?
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: MUST start with 'complete:' / 'success:'
+          principle: "Terminal prefix."
+        - verifier_corpus_matrix: dict[verifier_id, dict[corpus, auroc]]
+          principle: "Full matrix; downstream paper-v6 table."
+        - transfer_verifiers: list[str]
+          principle: "Names verifiers that generalize."
+        - corpus_specific_verifiers: list[str]
+          principle: "Names verifiers that don't transfer."
+        - diversity_gap_on_non_fover: bool
+          principle: "True if fewer than 3 verifiers reach AUROC ≥ 0.75 on each non-FoVer corpus — signals need for new diverse verifiers."
+        - duration_s: float
+          principle: "Pure analysis; expected 30-120s (no model inference)."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2806
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2806_verifier_energy_redirect_v6.json"
+    title: "Verifier FoVer Redirect v6: Live-GPU Slow-Path Validation"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 50
     track: research
-    continuous_self_learning_task: false
 
     prior_failures:
-      - experiment_id: exp2779-verifier-fover-redirect-v5
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2779 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes the cascade. Same research scope (FoVer corpus redirect); blocked only by pre-test infra, not by a research failure."
-        retire_if_same_verdict: false
-      - experiment_id: exp2765-verifier-live-gpu-v4
-        verdict: "complete:verifier_live_gpu_v4 — verifier_discriminative=false, energy=[0,0,0,0,0], DURATION_TOO_SHORT flagged"
-        addressed_by: "exp2765 confirmed ArithmeticExtractor finds 0 constraints in IT model outputs (all 5 gemma-4-26B responses). This exp2790 tests FoVer corpus (known violations) instead of fresh inference to isolate whether the extractor works on structured data."
-        retire_if_same_verdict: false
-      - experiment_id: exp2752-verifier-live-gpu-v3
-        verdict: "Gemini CLI error: Stalled after 600s silence (3rd ABSENT)"
-        addressed_by: "exp2752 was absent (agent stalled). exp2765 fixed the stall with STUB-FIRST protocol. This exp2790 uses FoVer corpus, independent of model loading."
-        retire_if_same_verdict: false
-      - experiment_id: exp2740-verifier-energy-debug-v2-live-gpu
-        verdict: "blocked_gguf_qwen36_not_cached"
-        addressed_by: "exp2740 blocked because Qwen3.6 GGUF was not cached. exp2790 uses gemma-4-26B-A4B-it-GGUF (confirmed cached in exp2765). More importantly, FoVer corpus approach is independent of GGUF availability."
-        retire_if_same_verdict: false
-      - experiment_id: exp2727-verifier-energy-debug-v1
-        verdict: "complete: verifier_energy_zero_root_cause diagnosed (adversarial-flagged DURATION_TOO_SHORT + METHODOLOGY_MISSING)"
-        addressed_by: "exp2727 found energy=0 with too-short duration. Root cause now clearer from exp2765: ArithmeticExtractor returns 0 constraints for IT outputs. This exp2790 tests FoVer pairs to isolate whether the extractor works on structured violations."
-        retire_if_same_verdict: false
+      - experiment_id: exp2727
+        verdict: "complete: diagnosed zero-energy fast-path and added logging"
+        addressed_by: "exp2727 diagnosed the Tier 0s short-circuit; subsequent v2/v3/v4/v5 chain was blocked or produced zero-energy due to other issues. The 2026-05-21 audit confirmed Tier 0s as an arithmetic-only heuristic (now disclosed in docstring); this v6 measures slow-path verifiers (KAN, Z3, semantic-consistency) DIRECTLY on FoVer + the three new corpora, bypassing Tier 0s entirely."
+        retire_if_same_verdict: true
 
     prompt: |
-      Read CLAUDE.md for project context and code style requirements.
+      Read CLAUDE.md, especially the "Verifier Authenticity Discipline"
+      that shipped 2026-05-21.
 
-      CONTEXT:
-      The verifier produces energy=0.0 on all live GGUF model outputs (confirmed in exp2765:
-      5 responses from gemma-4-26B-A4B-it-GGUF all gave energy=0). The root cause is the
-      ArithmeticExtractor: it uses regex patterns like "X + Y = Z" to find arithmetic constraints,
-      but instruction-tuned models write natural language answers, not arithmetic equations.
+      CONTEXT: exp2727 (.259) diagnosed the Tier 0s fast-path returning
+      0.0 for non-arithmetic inputs. The .260+ v2-v5 chain produced
+      blocked / zero-energy artifacts. The 2026-05-21 deep audit
+      confirmed Tier 0s is an arithmetic-consistency heuristic by
+      design (docstring updated). The remaining question: do the
+      OTHER verifiers in the ensemble (KAN, Z3, semantic-consistency,
+      AST) have similar fast-path-zero issues?
 
-      This is the 5th consecutive attempt to validate verifier discriminativeness. Previous approaches
-      all tried to extract constraints from FRESH model generations. This attempt uses a different
-      strategy: TEST ON FOVER CORPUS (known violation pairs).
-
-      The FoVer corpus contains labeled pairs where the model response VIOLATES a formal constraint.
-      If the verifier produces energy > 0 on FoVer violation pairs, the extractor DOES work on structured
-      data but NOT on fresh IT model outputs. This proves we need an LLM-as-extractor fallback.
-      If the verifier produces energy = 0 even on FoVer pairs, the problem is deeper.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/extract.py (ArithmeticExtractor, AutoExtractor — understand extraction)
-      - python/carnot/pipeline/verify_repair.py lines 1299-1500 (verify() method — understand flow)
-      - data/fover_corpus.jsonl (first 5 lines — understand the data format)
-
-      TASK: Test the verifier on FoVer corpus pairs and diagnose the zero-energy root cause.
+      TASK: Run each non-Tier-0s verifier in the ensemble against
+      both FoVer and a small held-out non-arithmetic set; record per-
+      verifier energy distribution.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `ls {project_root}/data/fover_corpus.jsonl` — confirm corpus exists and has content.
-            If not: try `ls {project_root}/data/` for similar files. If no corpus: write
-            honest_verdict 'blocked_fover_corpus_missing' and exit.
-         b. `cd {project_root} && .venv/bin/python -c "from carnot.pipeline.verify_repair import VerifyRepairPipeline; print('import OK')"` — confirm importable.
-         c. `wc -l {project_root}/data/fover_corpus.jsonl` — record corpus size.
-         Record: preconditions_checked.
-
-      1. Load 20 FoVer violation pairs from data/fover_corpus.jsonl.
-         Parse as JSONL. For each pair, extract: question (or context), violated_response, violation_type.
-         If the JSONL format differs, read the first line to understand structure.
-
-      2. Initialize VerifyRepairPipeline WITHOUT a model (verify-only mode):
-         ```python
-         from carnot.pipeline.verify_repair import VerifyRepairPipeline
-         pipeline = VerifyRepairPipeline()
-         ```
-
-      3. For each of the 20 FoVer pairs, call:
-         ```python
-         result = pipeline.verify(question=pair.get("question",""), response=pair.get("violated_response",""))
-         energy = result.energy
-         n_constraints = len(result.constraints)
-         ```
-         Record energy and n_constraints for each pair.
-
-      4. Compute summary statistics:
-         - fover_energies: list of float
-         - n_nonzero_energy: count of pairs with energy > 0
-         - n_constraints_extracted: list of int (how many constraints each pair got)
-         - energy_mean: mean across pairs
-         - fraction_nonzero: n_nonzero_energy / 20
-
-      5. DIAGNOSE based on results:
-         CASE A: fraction_nonzero > 0.5 (most FoVer pairs get non-zero energy):
-           → diagnosis = "extractor_works_on_fover_but_not_live_outputs"
-           → fix_required = "add LLM-as-extractor fallback for non-structured inputs"
-           → Implement the fallback: in AutoExtractor, if all extractors return 0 constraints
-             AND response_length > 50, call a simple NL claim extractor that extracts
-             factual claims using heuristics (sentences containing numbers, comparisons).
-             Test on the 5 GGUF responses from exp2765 if available in
-             results/experiment_2765_verifier_live_gpu_v4.json.
-
-         CASE B: fraction_nonzero < 0.2 (FoVer pairs ALSO get zero energy):
-           → diagnosis = "energy_computation_broken_at_deeper_level"
-           → Add debug logging to extract.py AutoExtractor: log each extractor's input and output.
-           → Run 3 FoVer pairs with debug logging to identify where the pipeline breaks.
-           → Report the specific failure point.
-
-      6. Write artifact with diagnosis, fix summary (or fix code if implemented), and test results.
+        0. PRECONDITIONS: CUDA available, model cached, FoVer corpus
+           available. Record preconditions_checked.
+        1. Pick 100 FoVer step pairs + 100 TruthfulQA Q&A pairs.
+        2. For each non-Tier-0s verifier in the ensemble, score all
+           200 inputs.
+        3. Report energy distribution (mean, std, n_zeros) for each
+           verifier × corpus shape.
+        4. If any verifier returns 0.0 for >50% of TruthfulQA inputs,
+           flag it as a likely arithmetic-only-shape verifier.
+        5. Write artifact.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required; must start with complete:/success:/passed:/shipped:."
-        fover_energy_nonzero: bool
-          principle: "Primary gate — downstream exp2798 paper theory is gated on this field."
-        diagnosis: str
-          principle: "Human-readable diagnosis string; maps directly to fix strategy."
-        fraction_nonzero: float
-          principle: "Fraction of FoVer pairs with non-zero energy; statistical summary."
-        n_fover_pairs_tested: int
-          principle: "Sample size for claim validation."
-        energy_values_fover: list of float
-        n_constraints_extracted_per_pair: list of int
-        fix_implemented: bool
-        fix_description: str
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-        reproducibility_checksum: str
+        - honest_verdict: MUST start with 'complete:' (or 'blocked_*')
+          principle: "Terminal prefix."
+        - verifiers_tested: list[str]
+          principle: "Names exactly which verifiers were probed."
+        - per_verifier_energy_distribution: dict[verifier_id, {fover: {mean, std, n_zeros}, truthfulqa: {mean, std, n_zeros}}]
+          principle: "Distributional summary identifies dead verifiers on non-arithmetic inputs."
+        - suspected_shape_specific_verifiers: list[str]
+          principle: "Anti-fabrication: lists verifiers with >50% zero-energy on TruthfulQA — same class of issue as Tier 0s, surfaced for operator review."
+        - duration_s: float (expected ≥ 600s for 200 examples × N verifiers)
+          principle: "Real compute takes wall-time."
+        - preconditions_checked: list
+          principle: "Anti-fabrication."
 
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp2791
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2791_delta_h2_regression_fix.json"
-    title: "Delta H2 Regression Fix: Git Bisect + Repair Pipeline Repair (Claude Opus)"
-    agent_type: claude
-    model: opus
-    max_turns: 100
-    requires_claude: true
-    track: research
-
-    prior_failures:
-      - experiment_id: exp2780-delta-h2-regression-fix
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2780 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same Claude Opus scope; unblocked."
-        retire_if_same_verdict: false
-      - experiment_id: exp2767-delta-h2-regression-fix
-        verdict: "FAIL x3 — Gemini CLI 'Too Many Requests' rate-limited; stalled 600s each attempt"
-        addressed_by: "exp2767 stalled 3 times due to Gemini API rate limiting on the complex git bisect + multi-file pipeline debug scope. This exp2791 routes to Claude Opus which does not have the same rate-limiting pattern for tool-use-heavy tasks. The git bisect + file inspection scope is unchanged, but the agent backend has been replaced."
-        retire_if_same_verdict: false
-      - experiment_id: exp2754-empirical-delta-audit
-        verdict: "complete: root_cause=H2_regression, delta=0.000, 0/60 successes"
-        addressed_by: "exp2754 diagnosed the H2 regression (verbose per-attempt logging confirmed 0/60 repairs succeed). This exp2791 uses git bisect to FIND the regression commit and then FIX it. Different goal: repair the pipeline, not diagnose the symptom."
-        retire_if_same_verdict: false
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      The VerifyRepairPipeline's repair stage produces empirical_delta=0.000. All 0/131 repair
-      attempts succeed (exp2754). The root cause was identified as "H2 regression" — a regression
-      introduced in the repair pipeline code between the last known-good delta milestone and .261.
-
-      Per arXiv:2605.12270 (Failure Modes of LLM Repair), 22% of repair failures are "regression
-      introductions" — the repair succeeds at the target error but introduces new violations. This
-      matches the H2 pattern: the repair generates a response, but the verify-after-repair step
-      detects the repaired response as equally or more violated.
-
-      Previous attempt (exp2767) stalled 3x due to Gemini rate limiting. This attempt uses Claude Opus.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (verify_and_repair method — the repair loop)
-      - python/carnot/pipeline/repair_prompt.py (if exists — repair prompt construction)
-      - results/experiment_2754_empirical_delta_audit.json (root_cause, verbose_repair_log if present)
-      - git log --oneline python/carnot/pipeline/ -30 (recent changes to repair pipeline)
-
-      TASK: Find and fix the H2 regression in the repair pipeline.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `cd {project_root} && .venv/bin/python -c "from carnot.pipeline.verify_repair import VerifyRepairPipeline; print('import OK')"` — confirm importable.
-         b. `ls {project_root}/data/fover_corpus.jsonl` — confirm corpus exists.
-         c. Read results/experiment_2754_empirical_delta_audit.json — understand what verbose logging revealed.
-         d. Run `cd {project_root} && git log --oneline python/carnot/pipeline/ -30 2>&1 | head -30` — identify recent commits.
-         Record: preconditions_checked.
-
-      1. Read results/experiment_2754_empirical_delta_audit.json carefully.
-         Note: what is the root_cause field? What does verbose_repair_log show?
-         Identify the specific failure pattern: does repair generate an empty response? Does it return
-         the same response? Does the re-verify step show energy increasing?
-
-      2. Inspect the repair pipeline code:
-         - Read python/carnot/pipeline/verify_repair.py: the verify_and_repair() method
-         - Trace the repair loop: how is the repair prompt constructed? How is the repaired response
-           scored? What determines if repair "succeeded"?
-
-      3. Run a minimal reproduction test WITHOUT a live model (use the FoVer corpus to simulate):
-         ```python
-         from carnot.pipeline.verify_repair import VerifyRepairPipeline
-         import json
-         pairs = [json.loads(l) for l in open("data/fover_corpus.jsonl")][:5]
-         pipeline = VerifyRepairPipeline()
-         for p in pairs:
-             result = pipeline.verify(p.get("question",""), p.get("violated_response",""))
-             print(f"energy={result.energy}, n_constraints={len(result.constraints)}")
-         ```
-         This tests whether the verify stage produces non-zero energy (prerequisite for delta > 0).
-
-      4. Based on results:
-         CASE A (verify produces non-zero energy on FoVer):
-           The verify stage works. The delta=0 issue is in the repair stage.
-           Read the repair loop logic. Look for these regression patterns:
-           - Repair prompt that asks to "rewrite" without specifying what to fix → model may produce same response
-           - Delta check that uses the SAME verify call before and after → same energy = delta=0 by construction
-           - Off-by-one: comparing energy of wrong iteration
-           Fix the specific bug found. Test with N=10 FoVer pairs.
-
-         CASE B (verify produces zero energy on FoVer):
-           The zero-energy issue is not yet fixed (exp2790 should address this, but if it
-           didn't, report the same energy=0 diagnosis).
-           Set delta_fixed=false, root_cause_identified=true with diagnosis="energy_zero_upstream".
-
-      5. If fix found and implemented: run N=20 FoVer pairs through verify_and_repair() with a mock
-         repair function (just return "The corrected answer is 42."):
-         ```python
-         def mock_repair_fn(violation_context):
-             return "The corrected answer is 42."
-         ```
-         Check that empirical_delta > 0 (mock repair produces different energy than original).
-
-      6. Record findings, write artifact.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required for conductor classification."
-        delta_fixed: bool
-          principle: "Primary gate — exp2798 paper theory v5 depends on this."
-        root_cause_identified: bool
-        regression_commit: str or null
-          principle: "Git commit hash of the regression, if found via bisect."
-        fix_description: str
-        empirical_delta_post_fix: float
-          principle: "Measured delta after fix; must be > 0.10 for paper claim to be valid."
-        n_pairs_tested: int
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-        reproducibility_checksum: str
-
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2792
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2792_fr11_full_benchmark_n50.json"
-    title: "FR-11 Tier 4 Full Benchmark N=50: Real Production Validation"
+  - id: exp2807a
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2807a_fover_memory_leakage_isolation.json"
+    title: "FoVer Memory-Leakage Isolation: AUROC With vs Without FR-11 Self-Learning State"
     agent_type: gemini
     model: gemini-3.1-pro-preview
-    max_turns: 40
+    max_turns: 50
     track: research
-    continuous_self_learning_task: true
-
-    prior_failures:
-      - experiment_id: exp2781-fr11-full-benchmark-n50
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2781 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same N=50 benchmark scope."
-        retire_if_same_verdict: true
-      - experiment_id: exp2768-fr11-production-integration
-        verdict: "complete: smoke test passed (N=3, duration=8s — suspicious low duration)"
-        addressed_by: "exp2768 only ran N=3 examples with duration=8s — too short to be a real benchmark. This exp2792 targets N=50 with proper timing gates and verifies cycle-to-cycle AUROC progression is not fabricated."
-        retire_if_same_verdict: false
-
     prompt: |
-      Read CLAUDE.md for project context and code style requirements.
+      Read CLAUDE.md, especially "Verifier Authenticity Discipline" and
+      "Adversarial Artifact Verification + Sample-Size Rigor".
 
-      CONTEXT:
-      FR-11 Tier 4 (ORCA-NEXUS continuous self-learning) was validated in exp2755 (AUROC=0.9275,
-      34 rules, cycle3 with pool_test_overlap=0). The production integration in exp2768 was a
-      smoke test (N=3, duration=8s) — insufficient for a headline claim.
+      CONTEXT (2026-05-21 operator hypothesis): "could it be that the
+      self-learning has internalized the entire FoVer set having seen
+      it repeatedly and used that between runs?" Investigation
+      confirmed multiple FR-11 self-learning state files persist FoVer-
+      derived patterns across runs:
+        - results/nexus_constraint_memory_v2.json (FoVer violation patterns)
+        - data/constraint_templates_*.json (constraint templates)
+        - data/fr11_ssd_training_v3.jsonl (FR-11 SSD training data)
+        - data/fr11_zenil_distill_v2.jsonl (FR-11 Zenil distillation)
+        - in-memory state via python/carnot/pipeline/{session_memory,
+          cross_session_relay, self_learning_replay,
+          query_time_memory_policy}.py
+      The headline AUROC=0.9857 (exp2546) was an aggregator-of-cached-
+      scores with 15ms wall time and 3/5 seeds saturated at 1.0 — the
+      methodology gap compounds the leakage risk.
 
-      This experiment runs the full FR-11 Tier 4 benchmark at N=50 with proper statistical gates.
-      This is the primary continuous_self_learning_task for milestone .264 per the FR-11 mandate.
+      TASK: Run the production verifier ensemble v7b against FoVer
+      under two memory conditions and report the delta:
+        Condition A: WITH full FR-11 self-learning state loaded
+                     (current production config)
+        Condition B: WITH all FR-11 self-learning state RESET
+                     (architecture-only verification)
 
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/verify_repair.py (learning_mode parameter added in exp2768)
-      - results/experiment_2755_fr11_tier4_adversarial_recheck_v2.json (benchmark protocol)
-      - results/experiment_2768_fr11_production_integration.json (smoke test config)
+      Delta = condition_a_auroc - condition_b_auroc
 
-      TASK: Run FR-11 Tier 4 benchmark at N=50 with real cycle-to-cycle progression measurement.
+      If delta > 0.05, self-learning leakage is a substantial
+      contributor to the headline. If delta < 0.02, leakage is
+      minimal and the architecture carries the AUROC.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `cd {project_root} && .venv/bin/python -c "from carnot.pipeline.verify_repair import VerifyRepairPipeline; vr = VerifyRepairPipeline(learning_mode=True); print('learning_mode OK')"` — confirm learning_mode works.
-         b. `ls {project_root}/data/fover_corpus.jsonl && wc -l {project_root}/data/fover_corpus.jsonl` — confirm corpus has ≥ 150 examples (50 for learning pool + 50 for cycle2 pool + 50 for held-out test).
-         c. Read results/experiment_2755_fr11_tier4_adversarial_recheck_v2.json to understand cycle structure.
-         If any precondition fails: write honest_verdict 'blocked_<resource>' and exit.
-         Record: preconditions_checked.
+        0. PRECONDITIONS:
+           a. `python3 -c "import torch; assert torch.cuda.is_available()"`
+           b. `test -f data/fover_corpus.jsonl`
+           c. `test -f results/nexus_constraint_memory_v2.json`
+           d. Qwen3.6-35B-A3B-GGUF cached
+           Record preconditions_checked.
 
-      1. Set up FR-11 Tier 4 benchmark with 3 cycles:
-         - Seed 42. Load N=150 FoVer pairs. Split: first 50 = learning pool (cycle1), next 50 = cycle2 pool, last 50 = held-out test.
-         - Cycle 1: train NEXUS constraint memory on learning pool (50 pairs). Evaluate on held-out test → auroc_cycle1.
-         - Cycle 2: add cycle2 pool to NEXUS memory. Re-evaluate on SAME held-out test → auroc_cycle2.
-         - Cycle 3: re-evaluate without adding new data → auroc_cycle3.
-         - pool_test_overlap: verify learning pool and test set have 0 overlap by ID.
+        1. Identify ALL FR-11 state files; document SHA256, byte size.
 
-      2. Compute learning progression metrics:
-         - delta_cycle1_to_cycle3 = auroc_cycle3 - auroc_cycle1
-         - n_rules_after_cycle2: count unique rules in NEXUS memory
+        2. Condition A — production config:
+           Load FoVer test set (n=1000 random subset, seed=42).
+           Run ensemble v7b with all FR-11 state available.
+           Record per-verifier scores + ensemble AUROC.
 
-      3. Adversarial check:
-         - If auroc_cycle1 == auroc_cycle2 to 5 sig figs AND duration_s < 30: set adversarial_flag=true, honest_verdict='blocked_suspicious_tautology'
-         - If total duration_s < 5: set honest_verdict='blocked_duration_too_short'
+        3. Condition B — memory reset:
+           Move FR-11 state files to /tmp/fr11_state_backup/ (NON-
+           destructive — restore at end).
+           Restart Python interpreter to clear in-memory state.
+           Reload verifier ensemble; confirm import-time logs show NO
+           NEXUS / constraint-template / session-memory loaded.
+           Run on the SAME FoVer subset, same input order.
+           Record per-verifier scores + ensemble AUROC.
 
-      4. Write artifact with full benchmark results.
+        4. Repeat (2)-(3) for 5 seeds (42, 137, 271, 314, 1729).
 
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required; blocked_* if adversarial check fails."
-        fr11_full_benchmark_validated: bool
-          principle: "True if N≥50 AND AUROC > 0.85 AND pool_test_overlap=0 — headline claim gate."
-        auroc_cycle1: float
-        auroc_cycle2: float
-        auroc_cycle3: float
-        delta_cycle1_to_cycle3: float
-          principle: "Learning progression metric; must be > 0 for the self-learning claim to hold."
-        pool_test_overlap: int
-          principle: "Must be 0; non-zero overlap means AUROC is inflated by train-test leakage."
-        n_rules_final: int
-        n_fover_pairs_used: int
-        adversarial_flag: bool
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-        reproducibility_checksum: str
+        5. Restore FR-11 state from /tmp/fr11_state_backup/. Confirm
+           SHAs match original. Verify with a smoke-test run that
+           verifier ensemble loads NEXUS rules correctly.
 
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
+        6. Compute condition-A and condition-B AUROC mean ± std.
+           Compute delta = mean_A - mean_B.
 
-  - id: exp2793
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2793_nexus_expansion_50_rules.json"
-    title: "NEXUS Constraint Memory Expansion: 34 to 50+ Domain Rules"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 40
-    track: research
+        7. Per-verifier delta — which verifiers degrade most without
+           memory? (This identifies which verifiers are "memory-
+           dependent" vs "architecture-pure".)
 
-    prior_failures:
-      - experiment_id: exp2782-nexus-expansion-50-rules
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2782 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same NEXUS expansion scope."
-        retire_if_same_verdict: true
-      - experiment_id: exp2771-nexus-constraint-memory-expansion
-        verdict: "SKIP x3 — pre-tests failing (test_weak_strong_router.py ImportError cascade)"
-        addressed_by: "exp2771 was SKIPPED because the conductor's pre-test check failed due to WeakStrongRouter ImportError. exp2793 re-attempts the same NEXUS expansion scope after the outer-loop pre-test fix."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      The NEXUS constraint memory system was validated with 34 rules in exp2755 (cycle3 AUROC=0.9275).
-      The goal is to expand to 50+ domain rules to improve coverage. This was planned for .262 as
-      exp2771 and .263 as exp2782 but was SKIPped both times due to the pre-test cascade. The pre-test
-      cascade is now FIXED (outer-loop commit b729ba788 before .264 planning).
-
-      Per arXiv:2505.19475 (Self-Improvement via Verifier TTT): verifier-driven sample selection works
-      best when the rule set covers the domain adequately. Expanding from 34 to 50+ rules improves
-      coverage for edge-case violations.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/pipeline/nexus_constraint_memory.py (NexusConstraintMemory — current 34 rules)
-      - results/experiment_2755_fr11_tier4_adversarial_recheck_v2.json (current 34 rules list)
-      - python/carnot/pipeline/verify_repair.py (how NEXUS is used in the pipeline)
-
-      TASK: Expand NEXUS constraint memory from 34 to 50+ rules and verify AUROC improvement.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `cd {project_root} && .venv/bin/python -c "from carnot.pipeline.nexus_constraint_memory import NexusConstraintMemory; m = NexusConstraintMemory(); print('OK, rules:', len(m.domain_rules))"` — confirm current count.
-         b. Confirm current rule count matches expectations from exp2755 (target: 34 or more).
-         Record: preconditions_checked.
-
-      1. Read the current 34 rules in NexusConstraintMemory. Identify the domain categories covered.
-
-      2. Add 16+ new rules across domains not yet covered:
-         - Mathematical: additional arithmetic, algebra, geometric constraints beyond current
-         - Logical: temporal ordering, causal chain constraints, contradiction detection
-         - Factual consistency: numerical quantity preservation, named entity consistency
-         - Code: type safety, loop bound, null pointer patterns
-         Each new rule needs: name, pattern (regex or keyword heuristic), violation_description,
-         energy_weight (float between 0.1 and 1.0).
-
-      3. Run AUROC test on FoVer corpus to verify expansion improves or maintains AUROC:
-         ```python
-         from carnot.pipeline.nexus_constraint_memory import NexusConstraintMemory
-         mem = NexusConstraintMemory()
-         # Load 100 FoVer pairs from data/fover_corpus.jsonl
-         # Compute AUROC before and after adding new rules
-         ```
-
-      4. Record: n_rules_before, n_rules_after, auroc_before_expansion, auroc_after_expansion.
+        8. Write artifact. Be honest. A non-trivial delta is not a
+           failure — it's an honest finding that changes the paper-v6
+           narrative ("0.9857 is the production-config AUROC; the
+           architecture-only AUROC is X; the gap is FR-11's
+           contribution and operates as intended self-learning").
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required."
-        nexus_rules_expanded: bool
-          principle: "True if n_rules_after >= 50."
-        n_rules_before: int
-        n_rules_after: int
-        auroc_before_expansion: float
-        auroc_after_expansion: float
-        new_rule_categories: list of str
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-        reproducibility_checksum: str
+        - honest_verdict: MUST start with 'complete:' / 'success:'
+          principle: "Terminal prefix per Verdict Terminal-Prefix Discipline."
+        - condition_a_auroc_mean: float
+          principle: "Production-config AUROC (with FR-11 self-learning state)."
+        - condition_a_auroc_std: float
+          principle: "Replication noise on production-config across 5 seeds."
+        - condition_b_auroc_mean: float
+          principle: "Memory-reset AUROC — measures the architecture's actual generalization without self-learning contribution."
+        - condition_b_auroc_std: float
+          principle: "Replication noise on memory-reset across 5 seeds."
+        - leakage_delta: float
+          principle: "Direct measurement of self-learning contribution. > 0.05 = substantial; 0.02-0.05 = moderate; < 0.02 = minimal. Naming is neutral — substantial FR-11 contribution is the intended design, but the paper must disclose it."
+        - per_verifier_leakage_delta: dict[str, float]
+          principle: "Which specific verifiers rely on FR-11 memory vs which are architecture-pure."
+        - fr11_state_files: list[{path, sha256, n_bytes}]
+          principle: "Names the persisted state that was reset — operator can verify."
+        - state_reset_protocol: str
+          principle: "Documents HOW memory was reset (move-to-/tmp + interpreter restart)."
+        - state_files_restored_sha_match: true
+          principle: "Proves FR-11 state was restored to original SHAs after measurement (non-destructive)."
+        - n_examples: 1000
+          principle: "Sample size."
+        - n_seeds: 5
+          principle: "Adversarial replication."
+        - random_seeds_used: [42, 137, 271, 314, 1729]
+          principle: "Determinism precondition for reproducibility."
+        - reproducibility_checksum: str
+          principle: "Catches corpus / model / state drift across replications."
+        - model_specs: dict
+          principle: "Names compute target."
+        - duration_s: float
+          principle: "Expected >= 3600s for 2 conditions x 5 seeds x N=1000 live inference. Sleep-padding forbidden per CLAUDE.md Verifier Authenticity Discipline."
+        - preconditions_checked: list
+          principle: "Anti-fabrication."
+        - methodology_note: str
+          principle: "Honest interpretation of the delta. If delta is large, frame as 'FR-11 self-learning contribution operates as designed, with operator awareness for paper-v6 narrative.' If delta is small, frame as 'architecture carries the headline, FR-11 is supplementary.' Either is publishable; misrepresenting it would not be."
 
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp2794
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2794_cp_router_entropy_routing.json"
-    title: "CP-Router Entropy-Aware Conformal Routing (arXiv:2505.19970): Tier 0 Integration"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 40
-    track: research
-
-    prior_failures:
-      - experiment_id: exp2783-cp-router-entropy-routing
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2783 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same CP-Router scope."
-        retire_if_same_verdict: true
-      - experiment_id: exp2772-cp-router-uncertainty-routing
-        verdict: "SKIP x3 — pre-tests failing (test_weak_strong_router.py ImportError cascade)"
-        addressed_by: "exp2772 was SKIPPED due to pre-test cascade. Same scope; different milestone."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      arXiv:2505.19970 (CP-Router) applies conformal prediction to route between a lightweight LLM and
-      a large reasoning model, using entropy-aware thresholds. This complements Carnot's existing
-      conformal routing (exp2757: 84% savings, anytime-valid) and ODAR (exp2720: K=3, 65% savings).
-
-      CP-Router's key insight: use entropy of the model's response distribution (approximated via
-      token logprob variance) to select routing thresholds with formal coverage guarantees.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/tier0x_conformal_routing.py (current Tier 0x — understand interface)
-      - results/experiment_2757_conformal_selective_acting.json (84% savings benchmark)
-      - python/carnot/pipeline/odar_router.py (ODAR router — understand RoutingDecision interface)
-
-      TASK: Implement CP-Router entropy routing and benchmark against existing conformal routing.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `cd {project_root} && .venv/bin/python -c "from carnot.verify.tier0x_conformal_routing import Tier0xConformalRouter; print('OK')"` — confirm Tier 0x importable.
-         b. `ls {project_root}/data/fover_corpus.jsonl` — confirm corpus accessible.
-         If any precondition fails: write honest_verdict 'blocked_<resource>' and exit.
-         Record: preconditions_checked.
-
-      1. Implement `python/carnot/verify/tier0_cp_router.py`:
-         - Class `CPRouterTier0`:
-           * `__init__(self, alpha=0.1)` — alpha is the conformal coverage target (1-alpha coverage)
-           * `compute_entropy(self, logprob_sequence: list[float]) -> float` — Shannon entropy of per-token logprobs (approximation; use abs values since logprobs are negative)
-           * `calibrate(self, calibration_pairs: list[dict]) -> float` — compute threshold from calibration data
-           * `route(self, logprob_sequence: list[float], cached_threshold: float) -> str` — returns "fast_path" if entropy < threshold, else "deliberative"
-
-      2. Benchmark on FoVer corpus (N=200 pairs split 100 calibration + 100 test):
-         - Use TF-IDF logprob approximation (vectorize response, compute entropy of tf-idf weights as proxy)
-         - Compare savings% and coverage against Tier 0x (exp2757: 84% savings, 1.2% FNR)
-         - Accept if savings >= 20% AND coverage_guarantee demonstrated
-
-      3. If CP-Router shows comparable performance to Tier 0x: document as alternative routing method.
-         If CP-Router shows better calibration: candidate for Tier 0 upgrade.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required."
-        cp_router_viable: bool
-          principle: "True if savings >= 20% AND coverage_guarantee=true."
-        cp_router_savings_pct: float
-        cp_router_fnr: float
-        tier0x_savings_pct: float
-        coverage_guarantee: bool
-        files_created: list of str
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-        reproducibility_checksum: str
-
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2795
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2795_confidence_geometry_tier0aa.json"
-    title: "Confidence Geometry Verifier Tier 0aa (arXiv:2605.16824 + arXiv:2605.11334)"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 40
-    track: research
-
-    prior_failures:
-      - experiment_id: exp2784-confidence-geometry-tier0aa
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2784 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same Tier 0aa scope."
-        retire_if_same_verdict: false
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      Two papers from the post-.262 sweep:
-      1. arXiv:2605.16824 (Confidence Geometry): Shows that geometric structure of model confidence
-         distributions separates correct/incorrect reasoning traces. Key features: anisotropy of
-         confidence distribution, principal component alignment across layers, inter-layer divergence.
-         Achieves 0.81 AUROC on GSM8K without answer labels using only per-token logprob sequences.
-      2. arXiv:2605.11334 (VERDI): Extracts claim-level confidence margins and evidence grounding
-         scores from verification traces. Achieves calibrated confidence for judge outputs.
-
-      Additionally, arXiv:2602.18145 (Frequency-Aware Attention) shows hallucinated tokens exhibit
-      high-frequency attention energy patterns — a complementary orthogonal signal.
-
-      Both approaches work on per-token logprob sequences from GGUF inference (no internal activations
-      required). These are directly applicable to Carnot because llama_cpp provides per-token logprobs.
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/tier0w_paraphrase_consistency.py (Tier 0w — pattern for new verifier)
-      - python/carnot/verify/tier0y_conformal_calibration.py (Tier 0y — calibration pattern)
-      - python/carnot/pipeline/verify_repair.py (how tier verifiers are registered)
-
-      TASK: Implement Confidence Geometry Tier 0aa verifier and benchmark AUROC.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `ls {project_root}/data/fover_corpus.jsonl` — confirm corpus accessible.
-         b. `cd {project_root} && .venv/bin/python -c "from carnot.verify.tier0w_paraphrase_consistency import Tier0wParaphraseConsistency; print('OK')"` — pattern reference.
-         Record: preconditions_checked.
-
-      1. Implement `python/carnot/verify/tier0aa_confidence_geometry.py`:
-         - Class `Tier0aaConfidenceGeometry`:
-           * `compute_features(self, logprob_sequence: list[float]) -> dict`:
-             - `entropy`: Shannon entropy of per-token logprobs
-             - `variance`: variance of logprob sequence
-             - `anisotropy`: ratio of max-to-mean absolute logprob values
-             - `monotonicity`: fraction of tokens where logprob decreases
-           * `score(self, question: str, response: str) -> float`:
-             Use heuristic: parse the response for token-level confidence proxies (sentence length
-             variance as monotonicity proxy; word frequency distribution as entropy proxy via TF-IDF).
-             Return a [0,1] energy score where high score = high uncertainty = potential violation.
-
-      2. Evaluate on FoVer corpus (N=200, equal violation/correct split if available):
-         - Compute AUROC of tier0aa scores for discrimination between violation and correct responses.
-         - Compute correlation with Tier 0w (from exp2756: corr_with_0w known from ensemble v12).
-
-      3. If AUROC > 0.70: Tier 0aa is a viable candidate. Register in ensemble_config.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required."
-        confidence_geometry_auroc: float
-          principle: "Must be > 0.70 for Tier 0aa to be a viable candidate."
-        tier0aa_viable: bool
-        tier0aa_corr_with_tier0w: float
-          principle: "Correlation with existing best-decorrelated verifier; low = diverse."
-        files_created: list of str
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-        reproducibility_checksum: str
-
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2796
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2796_tier0z_investigation.json"
-    title: "Tier 0z Investigation: Why auroc=0.5065? Fix or Retire"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 30
-    track: research
-
-    prior_failures:
-      - experiment_id: exp2785-tier0z-investigation
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2785 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same Tier 0z investigation scope."
-        retire_if_same_verdict: true
-      - experiment_id: exp2769-ensemble-v13-tier0z
-        verdict: "complete: tier0z implemented and evaluated — tier0z_auroc=0.5065 (barely above random)"
-        addressed_by: "exp2769 found tier0z_auroc=0.5065 which is barely above random. This exp2796 diagnoses WHY the temporal/causal verifier underperforms and either fixes it or retires the scope. Different goal: diagnosis + decision, not implementation."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      Tier 0z (temporal/causal consistency verifier) was implemented in exp2769 but achieved
-      AUROC=0.5065 — barely above random chance (0.5 baseline). The corr_with_0w=0.0 indicates
-      it is uncorrelated with existing verifiers, which is GOOD for diversity, but AUROC=0.5065
-      means it provides no discriminative signal.
-
-      Either the implementation is buggy (AUROC should be higher), or temporal/causal consistency
-      is not a relevant signal for the FoVer corpus violations (domain mismatch).
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/tier0z_temporal_causal.py (Tier 0z implementation from exp2769)
-      - results/experiment_2769_ensemble_v13_tier0z.json (what was implemented, AUROC details)
-      - data/fover_corpus.jsonl (first 10 lines — understand violation types in corpus)
-
-      TASK: Diagnose Tier 0z AUROC=0.5065 and either fix or retire.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `cd {project_root} && .venv/bin/python -c "from carnot.verify.tier0z_temporal_causal import Tier0zTemporalCausal; print('OK')"` — confirm importable.
-         b. Read results/experiment_2769_ensemble_v13_tier0z.json for implementation details.
-         Record: preconditions_checked.
-
-      1. Read tier0z_temporal_causal.py. Understand what it computes.
-
-      2. Check FoVer corpus violations: do they include temporal/causal violations?
-         Sample 20 FoVer pairs and count how many involve temporal ordering or causal chain issues.
-         If < 5 involve temporal/causal violations: DOMAIN MISMATCH — retire Tier 0z for FoVer.
-
-      3. If domain mismatch: check if a FIX EXISTS that makes temporal/causal more general:
-         Could it detect numerical ordering violations? Could it detect logical sequence errors?
-         If yes: implement the fix and re-evaluate. Gate: AUROC > 0.65 after fix.
-         If no: retire Tier 0z.
-
-      4. Decision:
-         - If fixed and AUROC > 0.65: tier0z_fixed=true, tier0z_retired=false
-         - If can't fix or AUROC remains near 0.5: tier0z_retired=true
-           Add to ops/exclusion_manifest.yaml as a new entry with:
-           id: tier0z_temporal_causal_fover_domain_mismatch
-           reason: "Tier 0z AUROC=0.5065 in exp2769; domain mismatch confirmed (temporal/causal patterns not present in FoVer corpus violations). Retired after exp2796 diagnosis."
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required."
-        tier0z_verdict: str ("fixed", "retired", or "partially_improved")
-          principle: "Decisive outcome; avoids carrying forward a known-bad verifier."
-        tier0z_auroc_after: float
-        tier0z_fixed: bool
-        tier0z_retired: bool
-        domain_mismatch_confirmed: bool
-        n_temporal_violations_in_fover: int
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2797
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2797_diffutruth_tier0bb.json"
-    title: "DiffuTruth Tier 0bb: Energy of Falsehood via Diffusion Likelihoods (arXiv:2602.11364)"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 40
-    track: research
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      arXiv:2602.11364 (DiffuTruth) introduces a thermodynamic verification approach:
-      - Uses discrete text diffusion models as thermodynamic verification engines
-      - Quantifies hallucinations through "Semantic Energy" derived from NLI contradiction scores
-      - Achieves AUROC 0.70+ on fact verification benchmarks WITHOUT external knowledge bases
-      - The energy scoring is: E(response) = NLI_contradiction_score(premise, response) * temperature_weight
-
-      This is directly applicable to Carnot: it adds a thermodynamic energy signal that is
-      orthogonal to the existing k=19 ensemble (which uses Ising/KAN/semantic energy), not
-      NLI-based diffusion energy. A new Tier 0bb based on NLI contradiction scores would
-      complement the ensemble with a formally-grounded hallucination energy signal.
-
-      NOTE: We do NOT need a full diffusion model. The key insight is the NLI score as energy proxy.
-      Use a lightweight NLI approach (HuggingFace transformers cross-encoder or sentence-transformers
-      if available, otherwise TF-IDF based contradiction heuristic).
-
-      EXISTING CODE TO READ FIRST:
-      - python/carnot/verify/tier0aa_confidence_geometry.py (Tier 0aa — pattern for new verifier)
-      - python/carnot/verify/tier0w_paraphrase_consistency.py (Tier 0w — another pattern)
-      - python/carnot/pipeline/verify_repair.py (how tier verifiers are registered)
-
-      TASK: Implement DiffuTruth-inspired Tier 0bb verifier using NLI contradiction energy.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `ls {project_root}/data/fover_corpus.jsonl` — confirm corpus accessible.
-         b. `cd {project_root} && .venv/bin/python -c "from carnot.verify.tier0aa_confidence_geometry import Tier0aaConfidenceGeometry; print('OK')"` — pattern reference (if exists from exp2795; if not, use tier0w as pattern).
-         Record: preconditions_checked.
-
-      1. Implement `python/carnot/verify/tier0bb_diffutruth_nli.py`:
-         - Class `Tier0bbDiffuTruthNLI`:
-           * `__init__(self, temperature: float = 1.0)`
-           * `compute_nli_contradiction(self, premise: str, hypothesis: str) -> float`:
-             Use the MOST AVAILABLE of these approaches (check in order):
-             (a) `from sentence_transformers import CrossEncoder; model = CrossEncoder('cross-encoder/nli-deberta-v3-small'); score = model.predict([[premise, hypothesis]])[0][1]`  # entailment=0, neutral=1, contradiction=2
-             (b) Simple keyword heuristic: count negation words (not, never, no, incorrect, wrong) in hypothesis that contradict claims in premise. Score in [0,1].
-           * `score(self, question: str, response: str) -> float`:
-             Use question as premise, response as hypothesis.
-             Return `compute_nli_contradiction(question, response) * self.temperature`
-             (higher score = more contradiction = higher energy = more likely hallucination)
-
-      2. Evaluate on FoVer corpus (N=100 pairs):
-         - Compute AUROC of tier0bb scores for discrimination between violation and correct responses.
-         - Compute correlation with Tier 0w (arXiv:2602.11361, paraphrase consistency verifier).
-
-      3. If AUROC > 0.65: viable Tier 0bb candidate. Register in ensemble_config.
-         If AUROC < 0.60: document as baseline comparator (not added to ensemble).
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required."
-        diffutruth_tier0bb_auroc: float
-          principle: "Must be > 0.65 for Tier 0bb to be a viable candidate; > 0.70 for headline claim."
-        tier0bb_viable: bool
-        tier0bb_corr_with_tier0w: float
-          principle: "Correlation with paraphrase consistency verifier; low = diverse."
-        nli_approach_used: str
-          principle: "Documents which NLI approach was available — important for reproducibility."
-        files_created: list of str
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-        reproducibility_checksum: str
-
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2798
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2798_paper_v6_theory_v5.json"
-    title: "Paper v6 Theory v5: FEP Claim + Verifier Diagnosis + Delta Status Update"
-    agent_type: gemini
-    model: gemini-3.1-pro-preview
-    max_turns: 40
-    track: publication
-
-    gated_on:
-      - upstream: exp2790-verifier-fover-redirect-v5
-        artifact_field: fover_energy_nonzero
-        op: "!="
-        value: null
-      - upstream: exp2791-delta-h2-regression-fix
-        artifact_field: root_cause_identified
-        op: "=="
-        value: true
-
-    prior_failures:
-      - experiment_id: exp2786-paper-v6-theory-v5
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2786 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same theory update scope."
-        retire_if_same_verdict: true
-      - experiment_id: exp2773-paper-v6-theory-v5
-        verdict: "SKIP x3 — pre-tests failing (test_weak_strong_router.py ImportError cascade)"
-        addressed_by: "exp2773 was SKIPPED due to pre-test cascade. Same scope."
-        retire_if_same_verdict: true
-
-    prompt: |
-      Read CLAUDE.md for project context and code style requirements.
-
-      CONTEXT:
-      Paper-v6 theory needs to be updated with .262-.264 findings:
-      1. FEP claim validated (exp2766: held_out_auroc=0.9989 — cite this)
-      2. Verifier diagnosis (exp2790: FoVer redirect results)
-      3. Delta H2 status (exp2791: either fixed or root cause identified)
-      4. New verifiers: Tier 0aa Confidence Geometry (exp2795 if viable) + Tier 0bb DiffuTruth (exp2797 if viable)
-      5. Per arXiv:2506.01369 (Incentivizing Self-Verify): the FEP routing can be interpreted as
-         incentivizing the model to self-verify low-confidence responses — cite as theoretical grounding.
-
-      EXISTING CODE TO READ FIRST:
-      - docs/technical-report.md (current theory sections — ONLY update results tables, NOT prose)
-      - results/experiment_2766_phase4_fep_adversarial_recheck.json (FEP results to cite)
-      - results/experiment_2790_verifier_fover_redirect_v5.json (verifier diagnosis)
-      - results/experiment_2791_delta_h2_regression_fix.json (delta status)
-      - results/experiment_2795_confidence_geometry_tier0aa.json (Tier 0aa AUROC if it exists)
-      - results/experiment_2797_diffutruth_tier0bb.json (Tier 0bb AUROC if it exists)
-
-      TASK: Update paper-v6 results tables with .262-.264 findings.
-
-      IMPORTANT: This task MUST follow the Public Documentation Discipline in CLAUDE.md:
-      - Update ONLY numerical cells in results tables
-      - Do NOT modify prose sections (abstract, introduction, narrative)
-      - Do NOT add internal jargon (experiment IDs, milestone numbers, flag syntax) to prose
-      - Do NOT edit docs/index.html
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. Read results/experiment_2766_phase4_fep_adversarial_recheck.json — get held_out_auroc.
-         b. Read results/experiment_2790_verifier_fover_redirect_v5.json — get fover_energy_nonzero, diagnosis.
-         c. Read results/experiment_2791_delta_h2_regression_fix.json — get delta_fixed, empirical_delta_post_fix.
-         d. Check if docs/technical-report.md exists: `ls {project_root}/docs/technical-report.md`.
-         e. Confirm pdflatex available: `command -v pdflatex` (for LaTeX path); if not, update markdown only.
-         Record: preconditions_checked.
-
-      1. Update docs/technical-report.md results tables ONLY:
-         - Phase 4 FEP section: add row for held_out_auroc=0.9989 (from exp2766)
-         - Verifier section: add row for Confidence Geometry Tier 0aa AUROC (from exp2795, if viable)
-         - Verifier section: add row for DiffuTruth Tier 0bb AUROC (from exp2797, if viable)
-         - Repair pipeline section: update empirical_delta status (from exp2791)
-
-      2. If LaTeX paper exists at docs/paper-v6/main.tex, update the same tables there.
-         Run: `cd {project_root}/docs/paper-v6 && pdflatex main.tex 2>&1 | tail -5`
-
-      3. Write artifact with latex_compiles_v5 status.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required."
-        latex_compiles_v5: bool
-          principle: "Gate for exp2799 arXiv package v5."
-        fep_claim_included: bool
-        delta_status_updated: bool
-        theory_citations_added: int
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
-
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2799
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2799_arxiv_package_v5.json"
-    title: "arXiv Package v5: Updated with .264 Results + Operator Checklist (OPERATOR-ONLY Submit)"
+  - id: exp2807
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2807_paper_v6_multicorpus_table.json"
+    title: "Paper v6 §5: Multi-Corpus Results Table + Per-Verifier Breakdown"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 30
     track: publication
-
-    gated_on:
-      - upstream: exp2798-paper-v6-theory-v5
-        artifact_field: latex_compiles_v5
-        op: "=="
-        value: true
-
-    prior_failures:
-      - experiment_id: exp2787-arxiv-package-v5
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2787 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Same arXiv package assembly scope."
-        retire_if_same_verdict: true
-      - experiment_id: exp2775-arxiv-package-v5
-        verdict: "SKIP x3 — pre-tests failing (test_weak_strong_router.py ImportError cascade)"
-        addressed_by: "exp2775 was SKIPPED due to pre-test cascade. Same scope."
-        retire_if_same_verdict: true
-
+    requires:
+      - exp2802.ensemble_auroc_mean
+      - exp2803.ensemble_auroc_mean
+      - exp2804.ensemble_auroc_mean
+      - exp2805.verifier_corpus_matrix
     prompt: |
-      Read CLAUDE.md for project context and code style requirements.
+      Read CLAUDE.md, especially "Operator-Only External Publication"
+      (this task only PREPARES the table; submission stays operator-only).
 
-      CONTEXT:
-      arXiv package v3 was ready as of exp2762 (.261). This experiment updates it with .262-.264
-      results and produces a fresh operator checklist.
-
-      CRITICAL: Per CLAUDE.md "Operator-Only External Publication" rule:
-      - This task MUST NOT submit to arXiv.
-      - This task MUST NOT call `arxiv submit` or any equivalent.
-      - This task produces the package + checklist for OPERATOR review only.
-
-      EXISTING CODE TO READ FIRST:
-      - results/experiment_2762_arxiv_package_v3.json (current package status)
-      - results/experiment_2798_paper_v6_theory_v5.json (paper compile status)
-      - docs/paper-v6/main.tex (if exists — paper content)
-
-      TASK: Assemble arXiv package v5 and generate operator checklist.
+      CONTEXT: exp2802-2805 produce per-corpus AUROC numbers; this
+      task integrates them into paper-v6 §5 (results) as a multi-
+      corpus headline table.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. Read results/experiment_2798_paper_v6_theory_v5.json — confirm latex_compiles_v5=true.
-         b. Read results/experiment_2762_arxiv_package_v3.json — understand v3 package contents.
-         c. `ls {project_root}/docs/paper-v6/` — list current paper files.
-         Record: preconditions_checked.
-
-      1. Count paper pages: `cd {project_root}/docs/paper-v6 && pdflatex main.tex 2>/dev/null && pdfinfo main.pdf 2>/dev/null | grep Pages` or use word count as proxy.
-
-      2. Generate operator_checklist_v5 with these sections:
-         - Package contents: list of files to include in arXiv submission
-         - .264 results to verify before submission: FEP claim (held_out_auroc=0.9989),
-           verifier diagnosis status, delta fix status
-         - Submission steps (OPERATOR performs these, NOT this task):
-           Step 1: operator reviews paper PDF
-           Step 2: operator submits at https://arxiv.org/submit
-         - Publication hold status: HOLDS until Phase 4 empirically validated (per feedback_publication_holds_until_phase4_pivot.md)
-         - submission_package_ready: true if package is assembled; OPERATOR submits, not this task
-
-      3. Write artifact.
+        1. Load exp2802 (MBPP), exp2803 (TruthfulQA), exp2804 (HumanEval),
+           exp2805 (cross-corpus matrix) artifacts.
+        2. Add to docs/arxiv-paper/main.tex §5 results table:
+              Corpus | N | Ensemble AUROC (mean ± std) | Peer baseline
+              FoVer  | 8829 | 0.9857 ± 0.018 (exp2546) | HIVE 0.924
+              MBPP   | 500  | <from exp2802>           | <peer>
+              TruthfulQA | 817 | <from exp2803>        | <peer>
+              HumanEval | 164 | <from exp2804>         | <peer>
+        3. Add per-verifier breakdown subsection citing exp2805 matrix.
+        4. Run pdflatex; confirm compile success.
+        5. Do NOT submit. Update arxiv_ready_v5 flag.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required."
-        arxiv_package_v5_ready: bool
-        submission_package_ready: bool
-          principle: "True if package assembled for OPERATOR — never auto-submitted."
-        n_pages: int
-        operator_checklist_v5: dict
-        paper_hold_reason: str
-          principle: "Explicitly record why submission is on hold — prevents autonomous submission."
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
+        - honest_verdict: MUST start with 'complete:'
+          principle: "Terminal prefix."
+        - paper_v6_compile_success: bool
+          principle: "Did pdflatex succeed."
+        - corpora_in_table: list[str]
+          principle: "Names corpora present in the results table."
+        - submission_package_ready: bool
+          principle: "True if package is operator-ready; the task itself NEVER submits per Operator-Only External Publication rule."
+        - duration_s: float
+          principle: "Wall-time; expected 30-120s for pdflatex + edits."
 
-      IMPORTANT: The `submission_package_ready` field documents readiness for OPERATOR.
-      This task ends at package assembly. OPERATOR submits. Do NOT call arxiv submit.
-
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
-  - id: exp2800
-    milestone: "2026.05.264"
-    deliverable: "results/experiment_2800_capstone_v264.json"
-    title: "Capstone v264: Cross-Artifact Synthesis + Gap Analysis for .265"
+  - id: exp2808
+    milestone: "2026.05.265"
+    deliverable: "results/experiment_2808_capstone_v265.json"
+    title: "Capstone v265: Multi-Corpus Headline Synthesis + Gap Analysis"
     agent_type: claude
-    model: opus
+    model: sonnet
     max_turns: 100
-    requires_claude: true
     track: capstone
-
-    prior_failures:
-      - experiment_id: exp2788-capstone-v263
-        verdict: "SKIP — pre-tests failing (WeakStrongRouter ImportError cascade)"
-        addressed_by: "exp2788 was SKIPPED due to pre-test cascade. Outer-loop commit b729ba788 fixes this. Capstone scope is always milestone-specific — different synthesis target (.264 vs .263 findings)."
-        retire_if_same_verdict: false
-      - experiment_id: exp2776-capstone-v262
-        verdict: "SKIP x3 — pre-tests failing (test_weak_strong_router.py ImportError cascade)"
-        addressed_by: "exp2776 was SKIPPED due to pre-test cascade. Same cascade, different milestone."
-        retire_if_same_verdict: false
+    requires_claude: true
+    # Justification: cross-artifact synthesis across 4 corpora,
+    # per-verifier matrix, paper-v6 narrative implications, and
+    # gap-list-for-.266 require multi-file judgment under ambiguity
+    # — meets all 3 positive criteria of "requires_claude: true" per
+    # CLAUDE.md "Gemini-Default for Experiments".
 
     prompt: |
-      Read CLAUDE.md for project context and code style requirements.
+      Read CLAUDE.md.
 
-      CONTEXT:
-      You are the capstone agent for milestone 2026.05.264. Read ALL .264 experiment artifacts
-      and produce a synthesis of what was accomplished, what remains, and the top 3 gaps for .265.
-
-      EXISTING CODE TO READ FIRST (all .264 artifacts):
-      - results/experiment_2789_archive_v263.json
-      - results/experiment_2790_verifier_fover_redirect_v5.json
-      - results/experiment_2791_delta_h2_regression_fix.json
-      - results/experiment_2792_fr11_full_benchmark_n50.json
-      - results/experiment_2793_nexus_expansion_50_rules.json
-      - results/experiment_2794_cp_router_entropy_routing.json
-      - results/experiment_2795_confidence_geometry_tier0aa.json
-      - results/experiment_2796_tier0z_investigation.json
-      - results/experiment_2797_diffutruth_tier0bb.json
-      - results/experiment_2798_paper_v6_theory_v5.json (may not exist if gated)
-      - results/experiment_2799_arxiv_package_v5.json (may not exist if gated)
-
-      TASK: Synthesize .264 outcomes and identify the top 3 gaps for .265.
+      TASK: Synthesize milestone .265 results into a multi-corpus
+      headline narrative. Produce a structured capstone artifact that:
+        - Confirms or refutes the FoVer-shape-overfit thesis
+        - Identifies which verifiers transfer vs which are corpus-specific
+        - Updates the paper-v6 narrative direction
+        - Lists gaps for .266 (which deferred corpora to prioritize,
+          which non-transferring verifiers need replacement or retirement)
+        - Recommends to operator: re-pin headline, or keep FoVer-only
+          as primary
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: Read all .264 artifacts that exist. For absent ones, note as absent.
-         Record: preconditions_checked.
-
-      1. Synthesize outcomes across all artifacts:
-         - verifier_diagnosis_complete: what did exp2790 find? Is energy=0 fixed?
-         - delta_fixed: did exp2791 repair the pipeline? What is empirical_delta_post_fix?
-         - fr11_validated: did exp2792 run N=50? What are cycle1-3 AUROCs?
-         - nexus_expanded: did exp2793 reach 50+ rules?
-         - cp_router_viable: did exp2794 achieve ≥20% savings with coverage guarantee?
-         - tier0aa_viable: did exp2795 achieve AUROC > 0.70?
-         - tier0z_resolved: did exp2796 fix or retire Tier 0z?
-         - tier0bb_viable: did exp2797 DiffuTruth achieve AUROC > 0.65?
-         - paper_updated: did exp2798 compile?
-         - arxiv_package_ready: is exp2799 ready for operator?
-
-      2. Count acceptance criteria met (out of 12).
-
-      3. Identify top 3 gaps for .265:
-         - Focus on what STILL blocks the paper submission
-         - Focus on what STILL blocks verifier in-vivo validation (zero energy on GGUF outputs)
-         - Focus on what the next logical research step is from the .264 findings
-
-      4. Write final synthesis artifact.
+        1. Load all 7 prior task artifacts (exp2801-2807).
+        2. Read CLAUDE.md "Verifier Authenticity Discipline" for
+           context on the audit thesis that drove this milestone.
+        3. Read ops/verifier_authenticity_audit_report.md if present.
+        4. Build the multi-corpus narrative honestly. If TruthfulQA
+           AUROC came in low, say so. If MBPP transfer worked, say so.
+        5. Update ops/status.md with the multi-corpus results.
+        6. Write capstone artifact.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Terminal prefix required; capstone is always terminal."
-        n_criteria_met: int
-        n_criteria_total: int (12)
-        verifier_diagnosis_complete: bool
-        delta_fixed: bool
-        fr11_validated: bool
-        nexus_expanded: bool
-        paper_updated: bool
-        arxiv_package_ready: bool
-        phase4_validated: bool
-        phase1_shipped: bool (carried from exp2760 — v0.1.0b1)
-        top_3_gaps_for_265: list of str
-          principle: "Forward-looking planning artifact; feeds directly into .265 planning."
-        n_artifacts_read: int
-        n_artifacts_absent: int
-        preconditions_checked: list
-        duration_s: float
-        random_seed: 42
+        - honest_verdict: MUST start with 'complete:'
+          principle: "Terminal prefix."
+        - corpora_headline_table: dict[corpus, {n, auroc_mean, auroc_std, peer}]
+          principle: "The actual multi-corpus headline."
+        - fover_shape_overfit_confirmed: bool (true if non-FoVer mean AUROC < FoVer AUROC by >0.10)
+          principle: "Operationalizes the thesis as a falsifiable check."
+        - transfer_verifiers: list[str]
+          principle: "Verifiers that generalize."
+        - corpus_specific_verifiers: list[str]
+          principle: "Verifiers that don't."
+        - recommended_headline_repin: bool
+          principle: "True if operator should consider re-pinning the headline number."
+        - gaps_for_266: list[{title, rationale}]
+          principle: "Forward queue: HaluEval, FEVER, or other priorities."
+        - acceptance_criteria_met: int
+          principle: "Out of 10 declared criteria for this milestone."
+        - duration_s: float
+          principle: "Wall-time; expected 600-1800s for thorough synthesis."
 
-      Run `date -u +"%Y-%m-%dT%H:%M:%SZ"` at start and end.
       Do NOT push. Do NOT modify scripts/research_conductor.py.
