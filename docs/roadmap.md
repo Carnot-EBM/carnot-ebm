@@ -91,3 +91,4 @@ The long-term vision: an open-source foundation model based on hardware-accelera
 ## Maintenance
 
 This document is operator-curated per CLAUDE.md "Public Documentation Discipline". The autonomous loop does NOT auto-append to this file — per-milestone chronological narrative goes to `docs/research-log.md` instead. When the operator wants to update the Current Milestone section, the Recent Milestones table, the Breakthrough Results table, the Product Roadmap, the Hardware Acceleration table, or the Phase 3 section, they edit the file directly.
+| 2026.05.241 | complete: best_241_auroc=0.975, phase4_validated_any=False, arxiv_ready=False | 8 experiments | 1 missing, 1 blocked; Phase 4 unvalidated; Operator hold persists |

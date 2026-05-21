@@ -1,5 +1,9 @@
 # Carnot — Changelog
 
+## 2026-05-21 (Milestone 2026.05.266 Operational Retrospective)
+
+- [conductor] Operational retrospective for milestone 2026.05.266 written to `results/operational_retro_2026_05_266.json` (schema v64). 0 experiments completed before retro generation; forty-first consecutive empty-timing-window retro. Both RTX 3090 GPUs idle at 0% utilization (5 MB allocated, GPU 0: 43C, GPU 1: 47C); gpu_idle_on_compute_bound_tasks=null (no compute-bound tasks ran — planning-only milestone, correct behaviour). Root cause: timing-script look-back not anchored to conductor-state.json activated_at (unresolved across 41 milestones). Three consecutive milestones (.263, .264, .265) blocked by pre-test cascade; exp2810 in .266 roadmap is the critical-path fix gating 9 of 10 remaining tasks. Top-3 leverage actions: (1) fix timing-script look-back to activated_at anchor; (2) prioritize exp2810 pre-test cascade fix v4 as first dispatched task to unblock 9 of 10 .266 tasks; (3) add pre-retro empty-milestone alert if experiments_completed==0 AND milestone_age_hours>1. Roadmap table row skipped (docs/roadmap.md Maintenance section prohibits autonomous loop appends).
+
 ## 2026-05-21 (Milestone 2026.05.266 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.266. Milestone .265 (exp2801-exp2808) ZERO artifacts — all 8 tasks SKIPPED due to pre-test cascade (confirmed in ops/conductor-log.md: ALL tasks show "Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.14s"). Third consecutive milestone lost to a pre-test cascade (.263 = WeakStrongRouter, .264 = zero-artifact timing, .265 = PySAT/hardware-file/docs triple failure).

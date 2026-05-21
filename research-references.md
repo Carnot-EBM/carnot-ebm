@@ -1,3 +1,60 @@
+## 2026-05-21 Post-.266 Planning Sweep (Milestone 2026.05.267)
+
+This sweep was run after milestone `.266` completed with 0 research artifacts (capstone only), due to
+the pre-test cascade blocking all conductor tasks. The cascade is now resolved (pre-test cache shows
+81 passed). The sweep focuses on papers complementing the multi-corpus evaluation mandate.
+
+### EBM-CoT: Energy-Based Calibration for Implicit Chain-of-Thought
+
+- **Paper:** "Think Consistently, Reason Efficiently: Energy-Based Calibration for Implicit
+  Chain-of-Thought" (arXiv:2511.07124, Nov 2025).
+- **Authors:** (attribution pending).
+- **What:** EBM-CoT refines latent reasoning by dynamically adjusting trajectories toward
+  lower-energy, high-consistency regions in continuous thought space. Achieves 7-12% improvement
+  on math/code benchmarks by calibrating reasoning consistency via energy landscape navigation.
+  Proposes an energy-based discriminator that scores intermediate reasoning states without
+  enumerating all possible chains.
+- **Relevance to Carnot:** Direct implementation candidate for a new Tier 0ac verifier. The
+  energy-based consistency score operates on partial reasoning traces (not just final outputs),
+  which sidesteps the ArithmeticExtractor regex failure mode: instead of parsing structured
+  equations, it scores reasoning-consistency energy at the latent level. Compatible with
+  llama.cpp logprob outputs (no internal activation access needed). Target: exp2827.
+- **Sources:** https://arxiv.org/abs/2511.07124
+
+### Tool Receipts for Practical Hallucination Detection
+
+- **Paper:** "Tool Receipts, Not Zero-Knowledge Proofs: Practical Hallucination Detection
+  for AI Agents" (arXiv:2603.10060, Mar 2026).
+- **Authors:** (attribution pending).
+- **What:** Addresses hallucination detection in LLM agent outputs by leveraging tool execution
+  traces and trust-level indicators. Achieves 98.7% accuracy on fully-verified agent responses.
+  The "receipt" metaphor: each tool call leaves a verifiable trace; the detector aggregates
+  traces into a trust score without requiring model-internal access.
+- **Relevance to Carnot:** Validates Carnot's external-signal verification philosophy. Tool
+  receipt aggregation maps to Carnot's per-verifier score aggregation in the ensemble. The
+  98.7% on agent traces is directly comparable to Carnot's 0.9857 AUROC on FoVer. Candidate
+  paper-v6 §4 peer cite for the "external signals vs self-report" comparison.
+- **Sources:** https://arxiv.org/abs/2603.10060
+
+### Behavioral Entanglement Reweighting in Verifier Ensembles
+
+- **Paper:** "How Independent are Large Language Models? A Statistical Framework for Auditing
+  Behavioral Entanglement and Reweighting Verifier Ensembles" (arXiv:2604.07650, Apr 2026).
+- **Authors:** (attribution pending).
+- **What:** Analyzes hidden behavioral dependencies in multi-model verifier ensembles caused by
+  shared pretraining and alignment. Proposes de-entangled reweighting that achieves 4.5% accuracy
+  gains over majority voting. Statistical audit framework detects when two verifiers share hidden
+  failure modes ("behavioral entanglement") and adjusts their combined weight accordingly.
+- **Relevance to Carnot:** Directly relevant to exp2825 (FUSE zero-labeled weighting). FUSE
+  uses mutual-agreement patterns to downweight correlated verifiers; Behavioral Entanglement
+  Reweighting provides a complementary statistical test for whether FUSE's de-correlation
+  actually eliminates the shared failure modes. The 4.5% lift on entangled ensembles is
+  additive to FUSE's zero-labeled benefit. Paper-v6 §4 ensemble diversity cite. Note: this
+  paper was listed in the .262 sweep; re-cited here as it's directly relevant to exp2825.
+- **Sources:** https://arxiv.org/abs/2604.07650
+
+---
+
 ## 2026-05-21 Post-.265 Planning Sweep (Milestone 2026.05.266)
 
 This sweep was run after milestone `.265` completed with 0 of 8 task artifacts produced — all tasks

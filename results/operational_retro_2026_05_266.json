@@ -1,32 +1,31 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.266",
-  "generated_at": "2026-05-21T15:41:55Z",
+  "generated_at": "2026-05-21T16:08:52Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.266 produced zero experiments in the timing window — the same structural pattern that has recurred across many consecutive milestones. The timing-script look-back epoch is not anchored to the conductor-state.json activation timestamp, so all real milestone work falls outside the measured window. The milestone was additionally impacted by an ongoing pre-test cascade failure that blocked the conductor from dispatching non-retro research tasks.",
+  "summary": "Milestone 2026.05.266 was planned but no experiments were dispatched in the timing window. The outer-loop research planning session staged a 10-task roadmap (exp2809-exp2818) targeting pre-test cascade repair, multi-corpus FoVer overfit evaluation, and FUSE zero-label verifier ensemble composition. This is the forty-first consecutive empty-timing-window retro; experiments_completed=0 is a timing-script infrastructure gap, not a research failure.",
   "bottlenecks_identified": [
-    "Timing-script look-back window is not anchored to conductor-state.json activated_at timestamp — root cause of all consecutive empty-timing-window retros; wall-clock work is happening but is invisible to this metric layer.",
-    "Pre-test cascade blocking the conductor has persisted across multiple milestones; the task designated to repair it was itself subject to the same gate that was failing, creating a structural deadlock that requires outer-loop (operator or Claude outer-loop) intervention rather than an in-conductor fix.",
-    "No post-activation dispatch verification gate exists; the conductor can complete a full milestone with zero non-retro experiments dispatched and the retro is the only artifact that surfaces this.",
-    "No same-session first-dispatch discipline is mechanically enforced; the first non-retro experiment is not guaranteed to launch within the same conductor session as milestone activation."
+    "Timing-script look-back is not anchored to conductor-state.json activated_at, causing every retro to report 0 experiments completed regardless of actual milestone output. This has persisted for 41+ consecutive milestones.",
+    "Three consecutive milestones (.263, .264, .265) were entirely blocked by a pre-test cascade (PySAT import error + missing KV260 Verilog stub + docs assertion). The .266 roadmap correctly gates 9 of 10 tasks on exp2810 pretest_cascade_fixed=true, making the cascade fix the critical path.",
+    "No compute-bound tasks ran this milestone; gpu_idle_on_compute_bound_tasks=null. GPU idle is NOT a bottleneck here — this is correct behaviour for a planning-only milestone with no GGUF/CUDA code path."
   ],
   "improvements_suggested": [
-    "Fix timing-script look-back to use conductor-state.json activated_at as the epoch boundary instead of a rolling wall-clock window; this will make timing data meaningful for every future milestone.",
-    "Wire a zero-artifact alarm that fires at 60 minutes post-activation if no non-retro experiment artifact has been committed; surfaces the empty-dispatch pattern within the same session rather than only at retro time.",
-    "Enforce same-session first-dispatch discipline mechanically in the conductor: the activation step should queue and launch at least one non-retro experiment before writing the activation artifact.",
-    "Address the pre-test cascade failure at the outer-loop level (operator or outer-loop Claude session), not as a conductor-gated task; the structural deadlock requires a layer above the conductor to break the cycle.",
-    "Add a pre-launch check that verifies the test suite is passing before milestone activation, and blocks activation if the pre-test gate is already failing — preventing the cascade from propagating into the next milestone."
+    "Fix timing-script look-back to use conductor-state.json activated_at as the left boundary of the timing window. This is the root cause of 41 consecutive empty-window retros.",
+    "Add a pre-retro health check: conductor emits WARNING and blocks retro generation if experiments_completed == 0 AND milestone_age_minutes > 60, prompting operator review before retro fires.",
+    "Merge the three failing pre-test root causes (PySAT import, discrete_sb_256_tb.v stub, docs assertion) into a single exp2810 atomic fix with all-three-must-pass acceptance gate, rather than fixing them separately across milestones — this avoids partial-fix re-cascade.",
+    "Stage a milestone-activation sentinel commit (empty commit message '[conductor] milestone N activated') at task-dispatch start, providing a deterministic timing boundary independent of the look-back script.",
+    "Consider a DualGPURunner engagement check: if 2+ GGUF models are loaded in exp2811-exp2814 (multi-corpus evaluation tasks), verify DualGPURunner is invoked rather than sequential single-GPU loading."
   ],
   "top_3_highest_leverage_actions": [
-    "Fix the timing-script look-back epoch to conductor-state.json activated_at — this single change unblocks 40+ milestones of invisible operational data and restores the retro's ability to identify real bottlenecks.",
-    "Break the pre-test cascade deadlock at the outer-loop scope (operator session) rather than queuing another in-conductor fix task; a failing test gate cannot self-heal from inside the conductor.",
-    "Wire a 60-minute post-activation zero-artifact alarm so the empty-dispatch pattern is surfaced and actionable within the same conductor session instead of only at retro close."
+    "Fix timing-script look-back to conductor-state.json activated_at anchor — eliminates the 41-milestone recurring empty-window retro pattern with a single code change in scripts/research_conductor.py (BLOCKED per task instructions: do not modify research_conductor.py this turn; queue for next outer-loop session).",
+    "Prioritize exp2810 pre-test cascade fix v4 as the first dispatched task in .266 — three consecutive zero-artifact milestones (.263, .264, .265) represent ~30 experiment-slots of lost research capacity; a successful fix unblocks 9 of 10 remaining .266 tasks immediately.",
+    "Add a pre-retro empty-milestone alert: if experiments_completed == 0 at retro generation time and milestone_age_hours > 1, emit a conductor WARNING that halts retro and surfaces the gap to the operator before wall-time is consumed by downstream planning cycles."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "This retro is the latest in a long series of structurally identical retros: empty timing window, zero experiments in scope, the same root-cause diagnosis repeated. The operational discipline of writing accurate retros is functioning correctly — the retro faithfully reports what it can measure. What is not functioning is the feedback loop: the root cause (timing-epoch misconfiguration + pre-test cascade) has been diagnosed accurately for many consecutive milestones but has not been repaired because the repair requires action at a layer above the conductor. The highest-leverage meta-improvement is not another task in the conductor but a direct outer-loop intervention to fix the timing script and unblock the test suite."
+  "meta_reflection": "Three consecutive milestones lost to a pre-test cascade (.263, .264, .265) demonstrate that a single unchecked failing test can deadlock an entire milestone when the fix task is inside the blocked milestone. The .266 roadmap correctly addresses this by structuring exp2810 as a dependency-bearing outer-loop fix (requires_claude: true, max_turns: 100) rather than a gemini experiment task. The recurring 41-milestone empty-timing-window pattern is now the highest-priority infrastructure gap — it obscures real milestone throughput data and makes operational retrospectives structurally unreliable."
 }
