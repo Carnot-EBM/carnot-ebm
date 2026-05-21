@@ -6924,3 +6924,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-21: Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run Clearing exp2727 Adversarial Flag (⚠️ Blocked) — honest_verdict=blocked_gguf_qwen36_not_cached; results/experiment_2740_verifier_energy_debug_v2_live_gpu.json
 - 2026-05-21: Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run Clearing exp2727 Adversarial Flag (⚠️ Blocked) — honest_verdict=blocked_gguf_qwen36_not_cached; results/experiment_2740_verifier_energy_debug_v2_live_gpu.json
 - 2026-05-21: Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run Clearing exp2727 Adversarial Flag (⚠️ Blocked) — honest_verdict=blocked_gguf_qwen36_not_cached; results/experiment_2740_verifier_energy_debug_v2_live_gpu.json
+- 2026-05-21: Tier 0g Semantic Energy Live GPU Re-run + Upstream GGUF Logit Diagnosis (✅ Complete) — honest_verdict=complete: Tier 0g semantic energy diagnosis finished; results/experiment_2741_tier0g_live_gpu_rerun.json
