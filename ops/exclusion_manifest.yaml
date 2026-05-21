@@ -330,3 +330,34 @@ retired_extras:
     retired_by_artifact: "results/experiment_1563_specann_rejection_architecture_record.json"
     operator_reopen_required: true
     retire_if_same_verdict: true
+  # Added 2026-05-20 — operator directive: "why is an SD CARD flash required
+  # when you can ssh to kv260.local and install anything needed?"
+  - id: kv260_host_sd_card_precondition_retired
+    reason: |
+      The KV260 has run Ubuntu Xilinx and been reachable via `ssh kria` since
+      2026-05-20 ~13:00 EDT. The carnot_ising_v4 bitstream is activated at
+      runtime via `xmutil loadapp carnot_ising_v2_n64`. Any future Carnot
+      bitstream update is delivered via `ssh + scp + xmutil` — no host SD
+      card flash is required. The `ls /dev/mmcblk*` precondition used by
+      exp2670/exp2710/exp2722 (and originally queued for exp2735) checks the
+      HOST machine's SD card slot, not the board's state; this is wrong-
+      mechanism and was burning per-milestone wall time on a non-applicable
+      branch. Any future task whose preconditions include host /dev/mmcblk*
+      for KV260 is retired. Use ssh-reachability + xmutil + on-board uio
+      verification instead (see CLAUDE.md Pre-Launch Preconditions table KV260
+      row).
+    experiment_ids:
+      - exp2670
+      - exp2710
+      - exp2722
+    blocked_patterns:
+      - KV260 SD Card Branch
+      - KV260 Continuity SD Card
+      - SD Card Branch
+      - /dev/mmcblk for kv260
+      - host SD card for kv260
+      - host SD card flash for kv260
+    retired_milestone: "2026.05.258"
+    retired_by_artifact: "results/experiment_2722_kv260_continuity_258.json"
+    operator_reopen_required: true
+    retire_if_same_verdict: true

@@ -1063,7 +1063,7 @@ tasks:
   - id: exp2735
     milestone: "2026.05.259"
     deliverable: "results/experiment_2735_kv260_continuity_259.json"
-    title: "KV260 Hardware Continuity .259 (NON-TERMINAL — SD Card Branch, 5th Consecutive)"
+    title: "KV260 Hardware Continuity .259 (SSH-Based On-Board Smoke)"
     agent_type: codex
     model: gpt-5.5
     max_turns: 20
@@ -1072,64 +1072,88 @@ tasks:
     prior_failures:
       - experiment_id: exp2722-kv260-continuity-258
         verdict: "complete: branch_taken=B, consecutive_branch_b_runs=4, sd_card_absent=true"
-        addressed_by: "exp2722 (.258) was the 4th consecutive Branch B. This exp2735 is the 5th expected consecutive Branch B unless operator inserted SD card since .258. Different: escalation urgency higher (5th consecutive); operator notice must be more explicit. Terminal state is unchanged: kv260_synthesis_succeeded=true AND board-level latency transcript."
-        retire_if_same_verdict: false
+        addressed_by: "exp2722-2734 used a wrong-mechanism precondition (host /dev/mmcblk* SD card check) leftover from a pre-board-boot PYNQ-flash workflow. Per 2026-05-20 operator directive: 'why is an SD card flash required when you can ssh to kv260.local and install anything needed?' — the board has been booted with Ubuntu Xilinx and reachable via ssh kria since 2026-05-20 ~13:00 EDT. The xmutil-loadapp overlay activation path requires no SD-card swap. This exp2735 is REWRITTEN to use ssh-based on-board verification. Different: precondition checks board reachability (ssh kria 'true'), not host SD card; bitstream verification runs on the board via ssh, not on the host."
+        retire_if_same_verdict: true
+        operator_override: "2026-05-20 operator directive citing wrong-mechanism in exp2722 precondition design"
 
     prompt: |
       Read CLAUDE.md for project context and code style requirements.
 
       CONTEXT:
       KV260 is NON-TERMINAL per CLAUDE.md Hardware-Task Continuity Discipline.
-      SD card absent in exp2722 (.258), exp2710 (.257), exp2670 (.254) — five consecutive Branch B
-      expected unless operator inserted SD card since last check.
-      Per CLAUDE.md: "use the latest bitstream at all times on the kv260."
-      Latest XDC-constrained bitstream: carnot_ising_v4 (loaded via: xmutil loadapp carnot_ising_v2_n64).
+      Board has been booted with Ubuntu Xilinx and reachable via `ssh kria` since
+      2026-05-20 ~13:00 EDT. The latest XDC-constrained bitstream
+      (carnot_ising_v4) is activated via `xmutil loadapp carnot_ising_v2_n64`.
+      All future board interaction is via SSH — no SD-card flash is required.
+
+      Prior exp2722-2734 used a wrong-mechanism precondition (host /dev/mmcblk*
+      SD card check). That design is retired per 2026-05-20 operator directive.
 
       EXISTING CODE TO READ FIRST:
-      - results/experiment_2722_kv260_continuity_258.json (branch_taken, consecutive_branch_b_runs)
       - ops/hardware-bringup-prep.md (KV260 section — current bring-up state)
+      - results/experiment_2722_kv260_continuity_258.json (prior wrong-mechanism artifact)
 
-      TASK: KV260 hardware continuity .259 — Branch A (SD detected) or Branch B (SD absent).
+      TASK: KV260 hardware continuity .259 — verify board reachability +
+      bitstream loaded + Ising energy smoke check, all via SSH.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS:
-         a. `ls /dev/mmcblk* 2>/dev/null || echo no_sd`
-            Record: sd_card_detected (bool), preconditions_checked.
+      0. PRECONDITIONS (check BEFORE any subsequent step):
+         a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+            If exit != 0: write honest_verdict
+            `blocked_kv260_ssh_unreachable` and exit.
+            Record: ssh_kria_reachable (bool), preconditions_checked.
+         b. `ssh kria 'xmutil listapps 2>/dev/null | head -20'`
+            Record: xmutil_available (bool), active_overlay_listing (str).
 
-      BRANCH A (sd_card_detected == true):
-      1. `xmutil listapps 2>/dev/null || echo xmutil_not_available`
-         If available: `xmutil loadapp carnot_ising_v2_n64`
-         Record: xmutil_available (bool), bitstream_loaded (bool).
-      2. If loaded: `.venv/bin/python -c "from carnot.samplers.ising import IsingModel; m = IsingModel(8); print(m.energy([1,-1,1,-1,1,-1,1,-1]))"`
-         Record: ising_energy_check_passed (bool).
-      3. Record: kv260_board_smoke_passed (bool).
+      1. BITSTREAM LOAD (only if preconditions passed):
+         `ssh kria 'xmutil loadapp carnot_ising_v2_n64 2>&1'`
+         Record: xmutil_loadapp_output (str), bitstream_loaded (bool — true if
+         'loaded' or 'already loaded' in output).
 
-      BRANCH B (sd_card_detected == false):
-      1. Read results/experiment_2722_kv260_continuity_258.json if exists.
-      2. Update ops/hardware-bringup-prep.md KV260 section:
-         - date: {date}
-         - sd_card_status: "absent across .254/.256/.257/.258/.259 (FIVE consecutive Branch B runs — OPERATOR ESCALATED)"
-         - next_step: "OPERATOR URGENT: insert SD card with PYNQ image. 5th consecutive Branch B. Hardware track will remain mandatory per CLAUDE.md until board reaches terminal state. After insertion: re-run kv260 task."
-         - latest_bitstream: "carnot_ising_v4 (load via: xmutil loadapp carnot_ising_v2_n64)"
+      2. UIO VERIFICATION:
+         `ssh kria 'ls /dev/uio* 2>/dev/null'`
+         Record: uio_devices (list[str]), uio_count (int — expect 5).
+
+      3. ON-BOARD ISING SMOKE (only if uio_count >= 1):
+         `ssh kria 'python3 -c "import struct; \
+           f=open(\"/dev/uio0\",\"r+b\"); \
+           f.seek(0); print(\"uio0_first_word:\", \
+           struct.unpack(\"<I\", f.read(4))[0]); f.close()"'`
+         Record: uio0_first_word_read (bool — true if any int printed),
+         uio0_value (int or null).
+
+      4. Update ops/hardware-bringup-prep.md KV260 section:
+         - date: 2026-05-20
+         - ssh_kria: reachable / unreachable
+         - active_overlay: carnot_ising_v2_n64 (= carnot_ising_v4 bitstream)
+         - uio_devices_present: count
+         - next_step: "if uio0_first_word_read=true → ready for board-level
+           latency transcript task (terminal-step). If unreachable → operator
+           re-attach board."
          Record: prep_doc_updated (bool).
 
-      3. Write results/experiment_2735_kv260_continuity_259.json.
+      5. Write results/experiment_2735_kv260_continuity_259.json.
 
       REQUIRED ARTIFACT FIELDS:
-      - honest_verdict: MUST start with 'complete:'
-        principle: "Terminal prefix; KV260 continuity always writes an artifact."
-      - branch_taken: str — 'A' or 'B'
-        principle: "Documents which path ran."
-      - sd_card_detected: bool
-        principle: "Primary branch condition; persistent false = operator action required."
+      - honest_verdict: MUST start with 'complete:' / 'success:' / 'passed:' /
+        'shipped:' (or 'blocked_kv260_ssh_unreachable' if precondition failed)
+        principle: "Terminal prefix per Verdict Terminal-Prefix Discipline; blocked_ verdict if board unreachable rather than fabricated smoke."
+      - ssh_kria_reachable: bool
+        principle: "Primary precondition; true = board attached and accepting SSH."
+      - xmutil_available: bool
+        principle: "Records whether overlay-management tooling is on the board."
+      - bitstream_loaded: bool
+        principle: "Confirms latest XDC-constrained Carnot bitstream is active."
+      - uio_count: int
+        principle: "5 = standard Carnot Ising overlay; <5 = partial load."
+      - uio0_first_word_read: bool
+        principle: "Anti-fabrication: an actual register read happened on the board, not a synthesized number."
       - kv260_terminal: false
-        principle: "Explicitly false — board stays in per-milestone mandatory inclusion."
-      - consecutive_branch_b_runs: int — expected 5 if Branch B
-        principle: "Escalation signal: 5 consecutive = strongly escalate operator notice."
+        principle: "Smoke != terminal; terminal requires board-level latency transcript per CLAUDE.md Hardware-Task Continuity table."
       - duration_s: float
-        principle: "Branch B documentation-only: expected 2-10s."
+        principle: "SSH round-trips: expected 5-30s for the full sequence."
       - preconditions_checked: list of {{resource, available, check}}
-        principle: "Anti-fabrication: records /dev/mmcblk* check."
+        principle: "Anti-fabrication: records ssh-reachability + xmutil-availability checks with literal shell commands run."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 

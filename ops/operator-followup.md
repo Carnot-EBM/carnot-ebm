@@ -229,6 +229,30 @@ shipped. `ops/known-issues.md` queued the `.245+ XDC-refresh task.
 Outcome: FPGA `operating`, `/dev/uio0..uio4` available, Carnot Ising
 sampler accessible for future verifier-on-FPGA experiments.
 
+### 2026-05-20 ~22:45 EDT: KV260 SD-card-flash workflow retired
+
+Operator question: "why is an SD CARD flash required when you can ssh
+to kv260.local and install anything needed?" Honest answer: it isn't.
+exp2670/2710/2722 (and the originally-queued exp2735 for `.259) all
+used a `ls /dev/mmcblk*` precondition on the HOST, which checks
+whether the host machine has an SD card inserted — meaningless for the
+board's state. Wrong-mechanism leftover from a pre-board-boot
+PYNQ-flash workflow.
+
+Outcome (this turn):
+- exp2735 rewritten to use `ssh -o ConnectTimeout=5 kria 'true'` +
+  on-board xmutil + uio0 register read (research-roadmap.yaml:1063+)
+- CLAUDE.md Pre-Launch Preconditions table KV260 row updated to
+  ssh-reachability
+- `ops/exclusion_manifest.yaml` gained
+  `kv260_host_sd_card_precondition_retired` entry blocking the scope
+  pattern from future planners
+- Memory `feedback_kv260_ssh_not_sd_card.md` shipped + MEMORY.md
+  indexed
+- Per-milestone KV260 continuity check now runs the actual on-board
+  smoke (the real terminal-state progress signal) instead of escalating
+  on a phantom host-SD-card-absent branch
+
 ### 2026-05-19: Phase 1 ship gate met + paper-v6 LaTeX package ready
 
 - `carnot-ebm 0.1.0b1` on PyPI

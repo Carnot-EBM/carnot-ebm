@@ -988,7 +988,7 @@ verdict.
 | Vivado toolchain | `command -v vivado` AND `vivado -version` returns >=2024.1 |
 | yosys + openFPGALoader | both `command -v yosys` AND `command -v openFPGALoader` succeed |
 | PolarFire SSH | `ssh -o ConnectTimeout=5 polarfire 'true'` returns 0 |
-| KV260 hardware | `lsusb \| grep -q '0e8d:201c'` (or whatever the actual VID:PID is) |
+| KV260 hardware (board booted, reachable via SSH) | `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. The board has run Ubuntu Xilinx since 2026-05-20 ~13:00 EDT; SD-card-flash workflows are obsolete (2026-05-20 operator directive — interact with the board via SSH, not by flashing a host SD card with PYNQ). |
 | THRML installed | `python -c "import thrml; print(thrml.__version__)"` succeeds |
 | Network for arXiv/HF | `curl -sf -o /dev/null https://huggingface.co/api/models` succeeds |
 
