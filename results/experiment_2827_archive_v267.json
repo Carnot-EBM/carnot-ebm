@@ -1,0 +1,58 @@
+{
+  "activated_milestone": "2026.05.268",
+  "activation": {
+    "confirmed": true,
+    "expected_active_milestone": "2026.05.268",
+    "observed_active_milestone_after": "2026.05.268",
+    "observed_active_milestone_before": "2026.05.268",
+    "research_roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+  },
+  "archive": {
+    "appended_this_run": false,
+    "decision": "Corrected the existing .267 archive row.",
+    "duplicate_count_after": 1,
+    "existing_entry_after_run": true,
+    "existing_entry_before_run": true,
+    "existing_entry_corrected": true,
+    "partial_status_note": ".267 was a partial milestone: exp2819-exp2822 all SKIP (pre-restart gemini-cli crash storm); exp2823 retired as fabrication (legacy/fabricated/, exclusion manifest entry); exp2824 + exp2825 complete; capstone exp2826 complete.",
+    "research_complete_path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml"
+  },
+  "archive_ready": true,
+  "archived_milestone": "2026.05.267",
+  "archived_milestone_experiments_completed": 3,
+  "completed": "2026-05-21",
+  "duration_s": 0.082195,
+  "field_principles": {
+    "activated_milestone": "Records which milestone is now active.",
+    "archived_milestone": "Records which milestone was archived.",
+    "archived_milestone_experiments_completed": "Honest count: .267 had 3 of 8 tasks produce non-fabricated artifacts.",
+    "duration_s": "Wall-time measurement for this admin action.",
+    "honest_verdict": "Terminal prefix per Verdict Terminal-Prefix Discipline."
+  },
+  "honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.267; active_milestone=2026.05.268; completed_non_fabricated=3_of_8",
+  "id": "exp2827-archive-v267-activate-v268",
+  "notes": [
+    "scripts/research_conductor.py was not modified.",
+    "No push was performed.",
+    "Ops status/changelog/traceability docs were left for the conductor reconciler."
+  ],
+  "preconditions_checked": {
+    "fabricated_retirement": {
+      "command": "check ops/exclusion_manifest.yaml and legacy/fabricated/README.md",
+      "passed": true
+    },
+    "research_complete_archive": {
+      "command": "search research-complete.yaml for 2026.05.267",
+      "observed_after_count": 1,
+      "observed_before_count": 1,
+      "passed": true
+    },
+    "roadmap_milestone": {
+      "command": "yaml.safe_load(research-roadmap.yaml).milestone",
+      "expected": "2026.05.268",
+      "observed": "2026.05.268",
+      "passed": true
+    }
+  },
+  "schema": "carnot.archive_activation.v1"
+}

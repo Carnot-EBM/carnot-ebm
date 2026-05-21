@@ -4328,3 +4328,42 @@ conductor
 terminal-prefixed `honest_verdict`, `archive_ready=true`,
 `milestone_archived=2026.05.244`, the execution-gap diagnosis, no duplicate
 archive entry, and no modification to `scripts/research_conductor.py`.
+
+### REQ-REPORT-2827: Archive Milestone 2026.05.267 and Confirm 2026.05.268 Activation
+
+The repository shall provide an Exp 2827 archive generator that writes
+`results/experiment_2827_archive_v267.json` with schema
+`carnot.archive_activation.v1`.
+
+The generator must read the active `research-roadmap.yaml` milestone before
+making archive decisions and must confirm `2026.05.268` is active. It must read
+`research-complete.yaml`, avoid duplicate `2026.05.267` archive entries, and
+ensure the archive row honestly records the partial .267 outcome:
+
+- Exp 2819 through Exp 2822 were skipped because of the pre-restart
+  gemini-cli crash storm.
+- Exp 2823 was retired as fabricated and moved to `legacy/fabricated/` with an
+  exclusion-manifest entry.
+- Exp 2824, Exp 2825, and Exp 2826 produced non-fabricated artifacts.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:` or `complete_`
+- `archived_milestone`, equal to `2026.05.267`
+- `archived_milestone_experiments_completed`, equal to `3`
+- `activated_milestone`, equal to `2026.05.268`
+- `duration_s`, a wall-clock duration for the archive generator run
+
+The generator must not modify `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-2827: Idempotent .267 Partial Archive and .268 Activation
+
+**Given** `research-roadmap.yaml` is already active on `2026.05.268`
+**And** `research-complete.yaml` may already contain a generic
+`2026.05.267` archive row
+**When** the Exp 2827 archive generator runs
+**Then** it writes `results/experiment_2827_archive_v267.json` with a
+terminal-prefixed `honest_verdict`, `archived_milestone=2026.05.267`,
+`archived_milestone_experiments_completed=3`,
+`activated_milestone=2026.05.268`, no duplicate archive entry, and no
+modification to `scripts/research_conductor.py`.

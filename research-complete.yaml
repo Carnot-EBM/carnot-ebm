@@ -21882,40 +21882,44 @@ milestones:
     deliverable: results/experiment_2818_capstone_v266.json
     result: OK (conductor)
 - id: 2026.05.267
-  title: ''
+  title: 'Partial milestone: Gemini CLI crash storm and fabricated TruthfulQA retirement'
   doc: ''
   completed: '2026-05-21'
-  finding: See conductor log for per-experiment results.
+  finding: Partial milestone. Four early tasks skipped during the pre-restart gemini-cli crash storm; one artifact was retired
+    as fabricated; three tasks produced non-fabricated artifacts.
+  partial_status_note: '.267 was a partial milestone: exp2819-exp2822 all SKIP (pre-restart gemini-cli crash storm); exp2823
+    retired as fabrication (legacy/fabricated/, exclusion manifest entry); exp2824 + exp2825 complete; capstone exp2826 complete.'
+  archived_milestone_experiments_completed: 3
   tasks:
   - id: exp2819
     title: Archive .266 + Activate .267
     deliverable: results/experiment_2819_archive_v266.json
-    result: OK (conductor)
+    result: SKIP (pre-restart gemini-cli crash storm)
   - id: exp2820
-    title: 'FoVer Memory-Leakage Isolation: AUROC With vs Without FR-11 Self-Learning State'
+    title: FoVer Memory-Leakage Isolation
     deliverable: results/experiment_2820_fover_memory_leakage_isolation.json
-    result: OK (conductor)
+    result: SKIP (pre-restart gemini-cli crash storm)
   - id: exp2821
-    title: "MBPP Corpus \u2014 Both Memory Conditions (Architecture-Only + Production, N=100, 5 seeds each)"
+    title: MBPP Corpus Dual-Condition Evaluation
     deliverable: results/experiment_2821_mbpp_ensemble_eval.json
-    result: OK (conductor)
+    result: SKIP (pre-restart gemini-cli crash storm)
   - id: exp2822
-    title: "HumanEval Full (164) \u2014 Both Memory Conditions (5 seeds each)"
+    title: HumanEval Full Dual-Condition Evaluation
     deliverable: results/experiment_2822_humaneval_full_ensemble_eval.json
-    result: OK (conductor)
+    result: SKIP (pre-restart gemini-cli crash storm)
   - id: exp2823
-    title: "TruthfulQA Corpus \u2014 Both Memory Conditions (N=200, 5 seeds each)"
-    deliverable: results/experiment_2823_truthfulqa_ensemble_eval.json
-    result: OK (conductor)
+    title: TruthfulQA Corpus Dual-Condition Evaluation
+    deliverable: legacy/fabricated/experiment_2823_truthfulqa_ensemble_eval.json
+    result: RETIRED as fabrication (legacy/fabricated/; ops/exclusion_manifest.yaml entry)
   - id: exp2824
-    title: Cross-Corpus Per-Verifier Dual-Condition Discriminative Matrix
+    title: Cross-Corpus Per-Verifier Dual-Condition Matrix
     deliverable: results/experiment_2824_cross_corpus_verifier_matrix.json
-    result: OK (conductor)
+    result: OK (non-fabricated artifact)
   - id: exp2825
-    title: "Paper v6 \xA75: Multi-Corpus Dual-Condition Results Table + Self-Learning Disclosure"
+    title: Paper v6 Section 5 Results Table
     deliverable: results/experiment_2825_paper_v6_multicorpus_table.json
-    result: OK (conductor)
+    result: OK (non-fabricated artifact)
   - id: exp2826
-    title: 'Capstone v267: Multi-Corpus Headline Synthesis + FoVer Overfit Thesis Resolution'
+    title: Capstone v267
     deliverable: results/experiment_2826_capstone_v267.json
-    result: OK (conductor)
+    result: OK (non-fabricated capstone artifact)
