@@ -1,0 +1,45 @@
+{
+  "honest_verdict": "complete: HF model card draft and IPFS anchor placeholder created.",
+  "hf_model_card_draft_created": true,
+  "ipfs_placeholder_created": true,
+  "operator_ship_checklist_v6": [
+    "cd /home/ianblenke/github.com/ianblenke/carnot",
+    "# Step 1 (if not done): conductor pre-test cascade fix — run exp2713 or manually install torch",
+    ".venv/bin/pip install --index-url https://download.pytorch.org/whl/cpu torch",
+    "rm -f ops/.pretest-cache.json",
+    "# Step 2: commit ship prep files",
+    "git add README.md RELEASES.md && git commit -m '[operator] Phase 1 milestone: README + RELEASES.md'",
+    "# Step 3: tag and push (triggers CI publish to PyPI via OIDC trusted publishing)",
+    "git tag v0.1.0b1 -m 'Phase 1 milestone: carnot-ebm package'",
+    "git push origin main v0.1.0b1  # OPERATOR-ONLY per CLAUDE.md",
+    "# Step 4: after CI publishes to PyPI: update HuggingFace model card at huggingface.co/Carnot-EBM",
+    "# Step 5: arXiv submission HOLDS until Phase 4 validates (OPERATOR-ONLY per CLAUDE.md)",
+    "# HF Step: after PyPI confirms, visit huggingface.co/Carnot-EBM and update model card with docs/hf_model_card_update_v1.md content",
+    "# IPFS Step: ipfs add carnot-ebm-0.1.0b1.tar.gz (or use web3.storage) — document CID in docs/ipfs_anchor_placeholder.md"
+  ],
+  "current_version": "0.1.0b1",
+  "phase1_ship_ready": true,
+  "duration_s": 4.5,
+  "preconditions_checked": [
+    {
+      "resource": "README.md",
+      "available": true,
+      "check": "ls README.md && echo exists || echo missing"
+    },
+    {
+      "resource": "RELEASES.md",
+      "available": true,
+      "check": "ls RELEASES.md && echo exists || echo missing"
+    },
+    {
+      "resource": "phase1_section_present",
+      "available": true,
+      "check": "grep -c 'Phase 1' README.md 2>/dev/null || echo 0"
+    },
+    {
+      "resource": "current_version",
+      "available": true,
+      "check": ".venv/bin/python -c \"import sys; sys.path.insert(0, 'python'); import carnot; print(carnot.__version__)\" 2>/dev/null || grep '__version__' python/carnot/__init__.py | head -1"
+    }
+  ]
+}
