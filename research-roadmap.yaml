@@ -62,7 +62,7 @@ tasks:
   - id: exp2802
     milestone: "2026.05.265"
     deliverable: "results/experiment_2802_mbpp_ensemble_eval.json"
-    title: "MBPP Corpus Ensemble Adversarial Replication (N=500, 5 seeds)"
+    title: "MBPP Corpus — Both Memory Conditions (Architecture-Only + Production, 5 seeds each)"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 60
@@ -83,6 +83,14 @@ tasks:
       split (500 problems) and compute AUROC under 5-seed adversarial
       replication.
 
+      OPERATOR DIRECTIVE 2026-05-21: "we want to report both with and
+      without learning so we know both how effective our naive answers
+      are as well as what benefit the learning is affording our
+      solution." Therefore this task runs the ensemble TWICE — once
+      with FR-11 self-learning state RESET (architecture-only) and
+      once with full FR-11 state loaded (production config). The
+      reported headline is BOTH numbers, not just one.
+
       CONCRETE STEPS:
         0. PRECONDITIONS (check BEFORE any subsequent step):
            a. `python3 -c "import torch; assert torch.cuda.is_available()"`
@@ -91,25 +99,48 @@ tasks:
               — if HF unreachable, blocked_huggingface_mbpp_unreachable
            c. `ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/`
               — if empty, blocked_model_not_cached_qwen36
+           d. FR-11 state files present (nexus_constraint_memory_v2.json
+              etc. — see exp2807a for the full list)
            Record preconditions_checked.
 
         1. Load MBPP test split via `datasets.load_dataset("mbpp",
            "sanitized", split="test")` (500 problems).
+
         2. For each problem, run live-GPU inference (Qwen3.6-35B-A3B-GGUF
            via llama.cpp) to generate a candidate solution.
+
         3. Execute the candidate against the test cases — this gives
            ground-truth (pass/fail). Real execution; no static-analysis
            proxy.
-        4. Score each (problem, candidate) pair with the production
-           verifier ensemble v7b — record per-verifier scores AND the
-           ensemble's final hallucination probability.
-        5. Repeat steps 2-4 with 5 different random seeds (42, 137,
-           271, 314, 1729) to measure replication std.
-        6. Compute AUROC per seed against ground-truth (pass=clean,
-           fail=hallucination). Report mean + std across 5 seeds.
-        7. Compare to MBPP peer baselines: vanilla Qwen3.6 pass@1 +
+
+        4. CONDITION A — production config (full FR-11 self-learning
+           state loaded): score each (problem, candidate) with the
+           verifier ensemble v7b. Record per-verifier scores and
+           ensemble AUROC for this condition.
+
+        5. CONDITION B — architecture-only (FR-11 state RESET): move
+           all FR-11 state files to /tmp/fr11_state_backup_<seed>/
+           NON-destructively, restart Python interpreter to clear
+           in-memory state, reload ensemble (confirm via logs that
+           no NEXUS/constraint-template/session-memory loaded), score
+           the same (problem, candidate) pairs. Record per-verifier
+           scores and ensemble AUROC for this condition.
+
+        6. Restore FR-11 state files to original location; verify
+           SHA256 match.
+
+        7. Repeat steps 2-6 with 5 random seeds (42, 137, 271, 314,
+           1729). For each seed: compute and record BOTH condition-A
+           and condition-B AUROC.
+
+        8. Compute headline for both conditions: mean ± std across 5
+           seeds. Compute learning_contribution = mean_A - mean_B.
+
+        9. Compare to MBPP peer baselines: vanilla Qwen3.6 pass@1 +
            any published verifier baselines on MBPP.
-        8. Write artifact.
+
+        10. Write artifact with BOTH conditions reported as primary
+            headline (NOT just the production config).
 
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:' / 'success:' /
@@ -121,35 +152,58 @@ tasks:
           principle: "Sample size for statistical claims."
         - n_seeds: 5
           principle: "Adversarial replication seed count per .241 5-seed protocol."
-        - ensemble_auroc_per_seed: list[float] (length 5)
-          principle: "Raw AUROC for each seed; mean+std derived from these."
-        - ensemble_auroc_mean: float
-          principle: "Headline number for this corpus."
-        - ensemble_auroc_std: float
-          principle: "Adversarial-verify discipline requires std for the headline claim."
-        - per_verifier_auroc: dict[str, list[float]] — verifier_id → [auroc_seed1, ..., auroc_seed5]
-          principle: "Per-verifier breakdown exposes which verifiers contribute on this corpus shape vs FoVer."
+
+        # BOTH CONDITIONS — operator directive 2026-05-21: report both
+        # naive (architecture-only) and learning-augmented numbers so
+        # the paper can disclose the learning's contribution honestly.
+
+        - condition_a_production_auroc_per_seed: list[float] (length 5)
+          principle: "Per-seed AUROC with full FR-11 self-learning state loaded — the production config."
+        - condition_a_production_auroc_mean: float
+          principle: "Production-config headline; what users get out-of-the-box with FR-11 enabled."
+        - condition_a_production_auroc_std: float
+          principle: "Replication noise on production config."
+
+        - condition_b_architecture_only_auroc_per_seed: list[float] (length 5)
+          principle: "Per-seed AUROC with FR-11 state RESET — the naive architecture-only baseline."
+        - condition_b_architecture_only_auroc_mean: float
+          principle: "Architecture-only headline; what the verifier ensemble achieves without any accumulated learning."
+        - condition_b_architecture_only_auroc_std: float
+          principle: "Replication noise on architecture-only."
+
+        - learning_contribution: float
+          principle: "= condition_a_mean - condition_b_mean. Direct measurement of the benefit FR-11 self-learning provides on this corpus."
+
+        - per_verifier_condition_a_auroc: dict[str, list[float]]
+          principle: "Per-verifier per-seed AUROC under production config; exposes which verifiers contribute most when memory is available."
+        - per_verifier_condition_b_auroc: dict[str, list[float]]
+          principle: "Per-verifier per-seed AUROC under architecture-only; exposes which verifiers are pure architecture vs which rely on accumulated memory."
+
         - vanilla_qwen36_pass_at_1: float
           principle: "Baseline for the model without Carnot — establishes the headroom Carnot operates in."
         - random_seeds_used: [42, 137, 271, 314, 1729]
-          principle: "Determinism is the precondition for reproducibility."
-        - reproducibility_checksum: str (sha256 of corpus + model_specs + random_seeds)
+          principle: "Determinism precondition for reproducibility."
+        - reproducibility_checksum: str
           principle: "Catches silent corpus or model-version drift between this artifact and any future replication."
         - model_specs: {name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}
           principle: "Real compute requires naming what was compute'd on."
-        - duration_s: float (MUST be ≥ 5*N*per-problem-inference-time; expect ≥1800s for full run)
-          principle: "Real compute takes wall-time; missing or short duration is fabrication signal."
+        - duration_s: float
+          principle: "Real compute takes wall-time; expected >=3600s for 2 conditions x 5 seeds x N=500 live inference. Sleep-padding forbidden per CLAUDE.md Verifier Authenticity Discipline."
         - preconditions_checked: list[{resource, available, check}]
-          principle: "Anti-fabrication: records what was verified before running."
+          principle: "Anti-fabrication."
+        - fr11_state_files: list[{path, sha256, n_bytes}]
+          principle: "Names the persisted state that was reset for condition B — operator can verify."
+        - state_files_restored_sha_match: true
+          principle: "Proves FR-11 state restored to original SHAs (non-destructive)."
         - methodology_note: str
-          principle: "If any verifier shows low AUROC (<0.6), explain why honestly; this is expected per the input-shape-overfit thesis."
+          principle: "Honest interpretation. Examples: 'Architecture carries the headline; FR-11 supplementary' (small learning_contribution) or 'FR-11 self-learning provides substantial benefit; ensemble v7b's headline AUROC is the production-config number, with architecture-only baseline at X' (large learning_contribution). Either is publishable; misrepresenting is not."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2803
     milestone: "2026.05.265"
     deliverable: "results/experiment_2803_truthfulqa_ensemble_eval.json"
-    title: "TruthfulQA Corpus Ensemble Adversarial Replication (N=817, 5 seeds)"
+    title: "TruthfulQA Corpus — Both Memory Conditions (Architecture-Only + Production, 5 seeds each)"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 60
@@ -165,9 +219,14 @@ tasks:
       never been measured on TruthfulQA; FoVer-trained verifiers may
       perform near-random.
 
-      TASK: Run the production verifier ensemble v7b against TruthfulQA
-      generation split and compute AUROC under 5-seed adversarial
-      replication.
+      OPERATOR DIRECTIVE 2026-05-21: run BOTH memory conditions — see
+      exp2802 for the dual-condition protocol. Report architecture-only
+      AND production-config AUROCs, plus learning_contribution delta.
+
+      TASK: Run the verifier ensemble v7b against TruthfulQA generation
+      split under TWO memory conditions (architecture-only / FR-11
+      reset, AND production / full FR-11 state loaded). Compute AUROC
+      for each condition under 5-seed adversarial replication.
 
       CONCRETE STEPS:
         0. PRECONDITIONS:
@@ -175,26 +234,30 @@ tasks:
            b. `python3 -c "from datasets import load_dataset; load_dataset('truthful_qa', 'generation')"`
               — if HF unreachable, blocked_huggingface_truthfulqa_unreachable
            c. Qwen3.6-35B-A3B-GGUF cached (same check as exp2802)
+           d. FR-11 state files present
            Record preconditions_checked.
 
         1. Load TruthfulQA generation split (817 questions).
         2. For each question, run live-GPU Qwen3.6-35B inference to
            generate a candidate answer.
-        3. Compute ground-truth via TruthfulQA's reference (best_answer
-           field). Two scoring modes:
-              - GPT-judge mode: NOT used (operator-directive: avoid
-                closed-weight dependencies per CLAUDE.md
-                Decentralization rule 2)
-              - BLEURT mode: install bleurt-base-128 (HF, MIT license)
-                and compute semantic similarity. Threshold tuned on a
-                held-out 50-Q calibration set.
-        4. Score each (question, candidate) with the production
-           verifier ensemble v7b.
-        5. Repeat 2-4 with 5 seeds (42, 137, 271, 314, 1729).
-        6. AUROC per seed vs BLEURT-derived truthful/untruthful labels.
-        7. Compare to TruthfulQA peer baselines: GPT-3 MC1 ~28%, any
+        3. Compute ground-truth via BLEURT-base-128 semantic similarity
+           against the reference best_answer (NO closed-weight judge per
+           CLAUDE.md Decentralization rule 2). Threshold tuned on a
+           held-out 50-Q calibration set.
+        4. CONDITION A — production config: score with verifier
+           ensemble v7b (full FR-11 state loaded). Record per-verifier
+           scores + ensemble AUROC.
+        5. CONDITION B — architecture-only: move FR-11 state files to
+           /tmp/fr11_state_backup_<seed>/ non-destructively, restart
+           Python, reload ensemble, confirm no NEXUS/constraint-
+           template/session-memory loaded, score the same (q, c) pairs.
+           Record per-verifier scores + ensemble AUROC.
+        6. Restore FR-11 state files; verify SHA256 match.
+        7. Repeat 2-6 with 5 seeds (42, 137, 271, 314, 1729).
+        8. Compute both conditions' mean ± std; learning_contribution = A - B.
+        9. Compare to TruthfulQA peer baselines: GPT-3 MC1 ~28%, any
            published BLEURT verifier comparator.
-        8. Write artifact.
+        10. Write artifact with BOTH conditions as primary headline.
 
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:' / 'success:' / 'passed:' / 'shipped:'
@@ -205,14 +268,27 @@ tasks:
           principle: "Sample size."
         - n_seeds: 5
           principle: "Adversarial replication seed count."
-        - ensemble_auroc_per_seed: list[float] (length 5)
-          principle: "Raw AUROC for each seed."
-        - ensemble_auroc_mean: float
-          principle: "Headline number for this corpus."
-        - ensemble_auroc_std: float
-          principle: "Required by adversarial-verify discipline."
-        - per_verifier_auroc: dict[str, list[float]]
-          principle: "Per-verifier breakdown — KEY finding will be which verifiers transfer from FoVer-math to TruthfulQA-factual."
+
+        # Both conditions per operator directive 2026-05-21.
+        - condition_a_production_auroc_per_seed: list[float]
+          principle: "Per-seed AUROC with full FR-11 state loaded (production config)."
+        - condition_a_production_auroc_mean: float
+          principle: "Production-config headline for TruthfulQA."
+        - condition_a_production_auroc_std: float
+          principle: "Replication noise."
+        - condition_b_architecture_only_auroc_per_seed: list[float]
+          principle: "Per-seed AUROC with FR-11 state reset (architecture-only)."
+        - condition_b_architecture_only_auroc_mean: float
+          principle: "Architecture-only headline for TruthfulQA — naive baseline."
+        - condition_b_architecture_only_auroc_std: float
+          principle: "Replication noise on architecture-only."
+        - learning_contribution: float
+          principle: "= A - B. Direct measurement. On TruthfulQA the contribution is expected to be near zero (FR-11 state is FoVer-derived); a positive contribution means rules transferred."
+        - per_verifier_condition_a_auroc: dict[str, list[float]]
+          principle: "Per-verifier production-config AUROC."
+        - per_verifier_condition_b_auroc: dict[str, list[float]]
+          principle: "Per-verifier architecture-only AUROC — KEY finding is which verifiers transfer from FoVer-math to TruthfulQA-factual."
+
         - scoring_method: "BLEURT-base-128, threshold tuned on 50-Q held-out"
           principle: "Documents how 'truthful' was operationalized."
         - bleurt_threshold: float
@@ -223,19 +299,23 @@ tasks:
           principle: "Catches corpus or model drift."
         - model_specs: dict
           principle: "Names the compute target."
-        - duration_s: float (expected ≥1800s for 5-seed run)
-          principle: "Real compute takes wall-time."
+        - duration_s: float
+          principle: "Real compute takes wall-time; expected >=3600s for 2 conditions x 5 seeds x N=817 live inference. Sleep-padding forbidden per CLAUDE.md Verifier Authenticity Discipline."
         - preconditions_checked: list
           principle: "Anti-fabrication."
-        - methodology_note: str — REQUIRED if ensemble_auroc_mean < 0.7
-          principle: "Low AUROC on a new corpus is an honest finding (FoVer-shape overfit thesis), not a failure — but the artifact must say so explicitly."
+        - fr11_state_files: list[{path, sha256, n_bytes}]
+          principle: "Names the persisted state reset for condition B."
+        - state_files_restored_sha_match: true
+          principle: "Proves FR-11 state restored to original SHAs (non-destructive)."
+        - methodology_note: str — REQUIRED if either AUROC mean < 0.7
+          principle: "Low AUROC on a new corpus is an honest finding (FoVer-shape overfit thesis), not a failure — but the artifact must say so explicitly. Same for low architecture-only AUROC: it's the naive baseline, not a target."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2804
     milestone: "2026.05.265"
     deliverable: "results/experiment_2804_humaneval_full_ensemble_eval.json"
-    title: "HumanEval Full (164 problems) Ensemble Adversarial Replication (5 seeds)"
+    title: "HumanEval Full (164) — Both Memory Conditions (Architecture-Only + Production, 5 seeds each)"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 60
@@ -249,8 +329,12 @@ tasks:
       to a full ensemble adversarial-replication run on all 164
       problems. Code execution gives clean ground-truth.
 
-      TASK: Run the production verifier ensemble v7b against HumanEval
-      full and compute AUROC under 5-seed adversarial replication.
+      OPERATOR DIRECTIVE 2026-05-21: run BOTH memory conditions —
+      architecture-only AND production. See exp2802 for the full
+      protocol. Report both AUROCs + learning_contribution.
+
+      TASK: Run the verifier ensemble v7b against HumanEval full under
+      TWO memory conditions, 5 seeds each.
 
       CONCRETE STEPS:
         0. PRECONDITIONS:
@@ -258,6 +342,7 @@ tasks:
            b. `python3 -c "from datasets import load_dataset; load_dataset('openai_humaneval')"`
               — if HF unreachable, blocked_huggingface_humaneval_unreachable
            c. Qwen3.6-35B-A3B-GGUF cached
+           d. FR-11 state files present
            Record preconditions_checked.
 
         1. Load HumanEval test split (164 problems).
@@ -265,35 +350,56 @@ tasks:
            candidate solution.
         3. Execute candidate against the problem's test_list (real
            execution, sandboxed; CARNOT_USE_SANDBOX=1 if available).
-        4. Score with verifier ensemble v7b.
-        5. 5 seeds (same set as exp2802/2803).
-        6. AUROC per seed.
-        7. Compare to Qwen3.6 vanilla pass@1 + any peer HumanEval
+        4. CONDITION A — production config: score with verifier
+           ensemble v7b (full FR-11 state). Record per-verifier scores
+           + ensemble AUROC.
+        5. CONDITION B — architecture-only: move FR-11 state files
+           non-destructively, restart Python, reload ensemble, confirm
+           no NEXUS/constraint-template/session-memory loaded, score
+           same (problem, candidate) pairs. Record per-verifier scores
+           + ensemble AUROC.
+        6. Restore FR-11 state files; verify SHA256 match.
+        7. Repeat 2-6 with 5 seeds (42, 137, 271, 314, 1729).
+        8. Compute both conditions' mean ± std; learning_contribution
+           = A - B.
+        9. Compare to Qwen3.6 vanilla pass@1 + any peer HumanEval
            verifier baselines.
-        8. Write artifact.
+        10. Write artifact with BOTH conditions as primary headline.
 
-      REQUIRED ARTIFACT FIELDS: same shape as exp2802 (MBPP) but
-        - corpus: "HumanEval-full"
-        - n_problems: 164
-        - pass_at_1_vanilla: float
-        - pass_at_1_after_carnot_correct: float (the verify-and-repair lift number)
-        Other fields identical to exp2802. All with principle annotations
-        per CLAUDE.md "Principle-Annotated Artifact Fields".
+      REQUIRED ARTIFACT FIELDS: same dual-condition shape as exp2802,
+        but with:
+          - corpus: "HumanEval-full"
+          - n_problems: 164
+          - pass_at_1_vanilla: float
+          - pass_at_1_after_carnot_correct_production: float
+          - pass_at_1_after_carnot_correct_architecture_only: float
+            principle: "Repair-pipeline lift under both memory conditions — paper-v6 table reports both numbers."
+        Plus all the condition_a_*, condition_b_*, learning_contribution,
+        per_verifier_*, fr11_state_files, state_files_restored_sha_match,
+        random_seeds_used, reproducibility_checksum, model_specs,
+        duration_s, preconditions_checked, methodology_note fields from
+        exp2802. All with principle annotations per CLAUDE.md
+        "Principle-Annotated Artifact Fields".
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
   - id: exp2805
     milestone: "2026.05.265"
     deliverable: "results/experiment_2805_cross_corpus_verifier_analysis.json"
-    title: "Cross-Corpus Per-Verifier Discriminative Power Analysis"
+    title: "Cross-Corpus Per-Verifier Dual-Condition Discriminative Matrix"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 30
     track: analysis
     requires:
-      - exp2802.ensemble_auroc_mean
-      - exp2803.ensemble_auroc_mean
-      - exp2804.ensemble_auroc_mean
+      - exp2802.condition_a_production_auroc_mean
+      - exp2802.condition_b_architecture_only_auroc_mean
+      - exp2803.condition_a_production_auroc_mean
+      - exp2803.condition_b_architecture_only_auroc_mean
+      - exp2804.condition_a_production_auroc_mean
+      - exp2804.condition_b_architecture_only_auroc_mean
+      - exp2807a.condition_a_auroc_mean
+      - exp2807a.condition_b_auroc_mean
     prompt: |
       Read CLAUDE.md.
 
@@ -305,35 +411,52 @@ tasks:
       contribute on FoVer + parts of HumanEval+MBPP but near-zero on
       TruthfulQA factuality.
 
-      TASK: Build a verifier × corpus AUROC matrix and identify
-      transfer patterns.
+      TASK: Build a verifier × corpus × condition AUROC matrix and
+      identify transfer patterns + memory-dependence patterns.
+
+      OPERATOR DIRECTIVE 2026-05-21: matrix must be 3-D — rows =
+      verifiers, columns = corpora (FoVer / MBPP / TruthfulQA /
+      HumanEval), and EACH corpus has TWO conditions (architecture-
+      only vs production). This makes the FR-11 self-learning
+      contribution visible per-verifier per-corpus.
 
       CONCRETE STEPS:
-        1. Load exp2802, exp2803, exp2804 artifacts.
-        2. Extract per_verifier_auroc from each.
-        3. Add FoVer baseline from results/experiment_2546*.json.
-        4. Build matrix: rows = verifiers, columns = corpora (FoVer,
-           MBPP, TruthfulQA, HumanEval).
-        5. Compute per-verifier mean AUROC + variance across corpora.
-        6. Identify "transfer verifiers" (mean AUROC ≥ 0.75 across all 4
-           corpora) vs "corpus-specific verifiers" (high on one,
-           random on others).
-        7. Surface diversity gap: are we one-verifier-deep on
-           non-FoVer corpora?
+        1. Load exp2802, exp2803, exp2804, exp2807a artifacts (each
+           has per_verifier_condition_a_auroc + per_verifier_condition_b_auroc).
+        2. Build dual matrix: verifier × corpus, separately for each
+           condition. Then compute per-cell learning-contribution =
+           A_cell - B_cell.
+        3. Identify FOUR verifier classes:
+           - ARCHITECTURE_TRANSFER: condition-B AUROC ≥ 0.75 on ALL
+             corpora. The true cross-corpus workhorses.
+           - MEMORY_AUGMENTED: condition-A AUROC ≥ 0.75 but condition-B
+             AUROC < 0.65 on FoVer (or original training corpus).
+             These verifiers carry the production headline but ARE
+             contaminated by self-learning.
+           - CORPUS_SPECIFIC: high on one corpus, near-random on others
+             regardless of condition. e.g. Tier 0s (arithmetic-only).
+           - LOW_SIGNAL: AUROC < 0.65 across all corpus×condition cells.
+             Candidates for retirement.
+        4. Surface diversity gap on each non-FoVer corpus: how many
+           ARCHITECTURE_TRANSFER verifiers cover it?
 
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:' / 'success:'
           principle: "Terminal prefix."
-        - verifier_corpus_matrix: dict[verifier_id, dict[corpus, auroc]]
-          principle: "Full matrix; downstream paper-v6 table."
-        - transfer_verifiers: list[str]
-          principle: "Names verifiers that generalize."
+        - verifier_corpus_dual_matrix: dict[verifier_id, dict[corpus, {production, architecture_only, delta}]]
+          principle: "Full 3-D matrix; downstream paper-v6 §5 dual-condition table."
+        - architecture_transfer_verifiers: list[str]
+          principle: "Verifiers with condition-B AUROC >= 0.75 on ALL corpora — the cross-corpus workhorses, paper-v6 §5 headline."
+        - memory_augmented_verifiers: list[str]
+          principle: "Verifiers where production AUROC is high but architecture-only is low — FR-11 carries them. Must be disclosed in §5.1."
         - corpus_specific_verifiers: list[str]
-          principle: "Names verifiers that don't transfer."
+          principle: "Verifiers that work on one corpus shape only (e.g. Tier 0s on arithmetic). Acceptable as cheap pre-filters but not headline contributors."
+        - low_signal_verifiers: list[str]
+          principle: "AUROC < 0.65 across all cells — retirement candidates."
         - diversity_gap_on_non_fover: bool
-          principle: "True if fewer than 3 verifiers reach AUROC ≥ 0.75 on each non-FoVer corpus — signals need for new diverse verifiers."
+          principle: "True if fewer than 3 architecture-transfer verifiers cover each non-FoVer corpus — signals need for new diverse verifiers."
         - duration_s: float
-          principle: "Pure analysis; expected 30-120s (no model inference)."
+          principle: "Pure analysis; expected 30-180s (no model inference)."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
 
@@ -523,36 +646,62 @@ tasks:
   - id: exp2807
     milestone: "2026.05.265"
     deliverable: "results/experiment_2807_paper_v6_multicorpus_table.json"
-    title: "Paper v6 §5: Multi-Corpus Results Table + Per-Verifier Breakdown"
+    title: "Paper v6 §5: Multi-Corpus Dual-Condition Results Table + Per-Verifier Breakdown"
     agent_type: gemini
     model: gemini-3.1-pro-preview
     max_turns: 30
     track: publication
     requires:
-      - exp2802.ensemble_auroc_mean
-      - exp2803.ensemble_auroc_mean
-      - exp2804.ensemble_auroc_mean
+      - exp2802.condition_a_production_auroc_mean
+      - exp2802.condition_b_architecture_only_auroc_mean
+      - exp2803.condition_a_production_auroc_mean
+      - exp2803.condition_b_architecture_only_auroc_mean
+      - exp2804.condition_a_production_auroc_mean
+      - exp2804.condition_b_architecture_only_auroc_mean
+      - exp2807a.condition_a_auroc_mean
+      - exp2807a.condition_b_auroc_mean
       - exp2805.verifier_corpus_matrix
     prompt: |
       Read CLAUDE.md, especially "Operator-Only External Publication"
       (this task only PREPARES the table; submission stays operator-only).
 
-      CONTEXT: exp2802-2805 produce per-corpus AUROC numbers; this
-      task integrates them into paper-v6 §5 (results) as a multi-
-      corpus headline table.
+      OPERATOR DIRECTIVE 2026-05-21: report BOTH architecture-only and
+      production AUROCs in the paper, so the FR-11 self-learning
+      contribution is disclosed clearly.
+
+      TASK: Integrate exp2802-2807a results into paper-v6 §5 as a
+      dual-condition multi-corpus table.
 
       CONCRETE STEPS:
         1. Load exp2802 (MBPP), exp2803 (TruthfulQA), exp2804 (HumanEval),
-           exp2805 (cross-corpus matrix) artifacts.
-        2. Add to docs/arxiv-paper/main.tex §5 results table:
-              Corpus | N | Ensemble AUROC (mean ± std) | Peer baseline
-              FoVer  | 8829 | 0.9857 ± 0.018 (exp2546) | HIVE 0.924
-              MBPP   | 500  | <from exp2802>           | <peer>
-              TruthfulQA | 817 | <from exp2803>        | <peer>
-              HumanEval | 164 | <from exp2804>         | <peer>
-        3. Add per-verifier breakdown subsection citing exp2805 matrix.
-        4. Run pdflatex; confirm compile success.
-        5. Do NOT submit. Update arxiv_ready_v5 flag.
+           exp2807a (FoVer leakage isolation), exp2805 (verifier matrix).
+        2. Add to docs/arxiv-paper/main.tex §5 results table — DUAL
+           CONDITION format:
+
+              Corpus    | N   | Architecture-only AUROC | Production AUROC | Learning Δ | Peer baseline
+              FoVer     | 1000| <exp2807a B mean ± std> | <2807a A m±s>   | <Δ>        | HIVE 0.924
+              MBPP      | 500 | <exp2802 B m±s>         | <2802 A m±s>    | <Δ>        | <peer>
+              TruthfulQA| 817 | <exp2803 B m±s>         | <2803 A m±s>    | <Δ>        | GPT-3 MC1 ~28%
+              HumanEval | 164 | <exp2804 B m±s>         | <2804 A m±s>    | <Δ>        | <peer>
+
+           Architecture-only column establishes the naive baseline.
+           Production column shows the deployed system. Learning Δ
+           column makes the FR-11 contribution explicit and auditable.
+
+        3. Add §5.1 subsection "Self-Learning Contribution Disclosure":
+           Document that the production-config AUROC includes the
+           contribution of FR-11 accumulated state (NEXUS rules,
+           constraint templates, session memory derived from prior
+           FoVer training). Cite exp2807a explicitly. Disclose that
+           the architecture-only baseline measures the verifier
+           ensemble without any accumulated learning.
+
+        4. Add §5.2 per-verifier breakdown subsection citing exp2805.
+           Show which verifiers are architecture-pure (transfer across
+           corpora) vs which rely on FR-11 memory (degrade without it).
+
+        5. Run pdflatex; confirm compile success.
+        6. Do NOT submit. Update arxiv_ready_v5 flag for operator review.
 
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:'

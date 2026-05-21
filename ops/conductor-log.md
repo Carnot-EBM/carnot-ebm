@@ -5789,3 +5789,5 @@ Ripgrep i |
 | 2026-05-21 13:44 UTC | MBPP Corpus Ensemble Adversarial Replication (N=50 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
 | 2026-05-21 13:46 UTC | TruthfulQA Corpus Ensemble Adversarial Replication | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.31s |
 | 2026-05-21 13:48 UTC | TruthfulQA Corpus Ensemble Adversarial Replication | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.23s |
+| 2026-05-21 13:50 UTC | TruthfulQA Corpus Ensemble Adversarial Replication | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.55s |
+| 2026-05-21 13:53 UTC | MBPP Corpus — Both Memory Conditions (Architecture | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.25s |
