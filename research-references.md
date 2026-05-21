@@ -1,3 +1,42 @@
+## 2026-05-21 Post-.259 Planning Sweep (Milestone 2026.05.260)
+
+This sweep was run after milestone `.259` completed with 12 of 13 experiments producing artifacts
+(exp2725–exp2737, 10/12 criteria met). Key .259 findings:
+- exp2727: verifier energy root cause traced to fast-path short-circuit; logging fix added but
+  adversarial-flagged (11.5s duration, fover_energy=0.0 — fix was incomplete, needs real GPU re-run)
+- exp2729: pdflatex installed, 3 theory citations (ARM-EBM + 4/delta + FST), arXiv package ready (27pp)
+- exp2735: KV260 SSH reachable, bitstream loaded, uio_count=5, uio0_first_word_read=true — ready for
+  TERMINAL board-level latency transcript
+- exp2737 capstone: phase1_ship_recommendation=SHIP, fr11_tier3_plus_viable=true (17 rules via ORCA-NEXUS)
+
+### Differentiable Conformal Training for LLM Reasoning Factuality
+- **Paper:** "Differentiable Conformal Training for LLM Reasoning Factuality" (arXiv:2604.20098, Apr 2026).
+- **Authors:** Nathan Hittesdorf, Marco Salzetta, Lu Cheng.
+- **What:** Develops differentiable conformal methods enabling end-to-end training for improved hallucination
+  filtering in LLM reasoning. Combines conformal theory with gradient-based calibration rather than post-hoc
+  threshold adjustment. Unlike adaptive conformal (arXiv:2604.13991), this trains the calibration module.
+- **Relevance to Carnot:** Carnot's Tier 0e EORM (exp2663/2716) uses static calibration. Differentiable
+  conformal training could improve calibration ECE below the current 0.0087 (exp2718) by learning the
+  calibration jointly with the energy predictor. Candidate for Tier 0e calibration upgrade in .260+.
+
+### Adaptive Controllable Architecture of Analog Ising Machine
+- **Paper:** "Adaptive Controllable Architecture of Analog Ising Machine" (arXiv:2602.05595, Feb 2026).
+- **Authors:** Langyu Li, Ruoyu Wu, Yong Wang, Guofeng Zhang, Jinhu Lu, Qing Gao, Yu Pan.
+- **What:** FPGA-controlled LC-oscillator Ising machine achieving twofold speedup and 7% accuracy improvement
+  on MaxCut optimization via adaptive architecture control. Demonstrates practical hybrid FPGA+analog sampling.
+- **Relevance to Carnot:** Hardware acceleration precedent for Ising-based sampling beyond digital FPGA.
+  Relevant if Carnot pursues analog co-processor path (post-KV260 terminal). Strategic Phase-2 reference.
+
+### Set-Consistency Energy Networks
+- **Paper:** "Introducing Verification Task of Set Consistency with Set-Consistency Energy Networks"
+  (arXiv:2503.10695, Mar 2025). Authors: Mooho Song, Hyeryung Son, Jay-Yoon Lee.
+- **What:** Uses contrastive loss to learn compatibility among statement COLLECTIONS (sets), not just pairs.
+  Addresses logical inconsistencies across multiple statements simultaneously. SC-Energy assigns low energy
+  to internally-consistent statement sets and high energy to contradictory sets.
+- **Relevance to Carnot:** Extends Carnot's logical consistency verifier (tier0u) from pairwise checks to
+  set-level checks. Candidate for tier0v_set_consistency.py — a new orthogonal verifier signal for
+  multi-step reasoning chains where individual pairwise checks miss cross-step contradictions.
+
 ## 2026-05-20 Post-.258 Planning Sweep (Milestone 2026.05.259)
 
 This sweep was run after milestone `.258` completed with 13 of 13 experiments executed — first full

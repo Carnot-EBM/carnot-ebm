@@ -1,30 +1,30 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.259",
-  "generated_at": "2026-05-21T01:09:22Z",
+  "generated_at": "2026-05-21T01:36:28Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.259 shows 0 experiments in the timing window — the thirty-fourth consecutive empty-timing-window retro. The persistent root cause is the timing-script look-back not being anchored to the conductor-state.json activation timestamp; work completed after activation falls outside the measurement window. Both RTX 3090 GPUs are idle at 0% utilization (40C/49C), consistent with no compute-bound tasks in scope.",
+  "summary": "Milestone 2026.05.259 produced 0 experiment commits in the timing window — the thirty-fourth consecutive empty-timing-window retro — due to the timing script's look-back not being anchored to the conductor-state.json activation timestamp. Both RTX 3090 GPUs were fully idle (0% utilization, 41C/49C) throughout; gpu_idle_on_compute_bound_tasks is null because no compute-bound tasks appear in the timing scope. Twelve experiments (exp2727–exp2737 plus the capstone) were completed outside the timing window and are documented in the changelog but cannot be counted here.",
   "bottlenecks_identified": [
-    "TIMING-SCRIPT BLIND SPOT (root cause, persists 34 milestones): the look-back window used to collect TIMING DATA is not anchored to the conductor-state.json activated_at timestamp. Experiments that run after activation are invisible to the retro unless they happen to fall within the default look-back window. This causes every retro to report 0 experiments even when meaningful work has been done in the milestone.",
-    "NO POST-ACTIVATION DISPATCH VERIFICATION GATE: the conductor does not verify that at least one non-retro experiment has been dispatched and completed within N minutes of activation. Without this gate, a milestone can close with only the retro and capstone tasks recorded in the timing window.",
-    "PERSISTENT UNRESOLVED INFRASTRUCTURE DEBT: the timing-script fix has been the top leverage action in every retro since at least .220 but has not been committed. Each milestone that runs without the fix wastes the retro's diagnostic value entirely."
+    "Timing-script look-back window is not anchored to conductor-state.json activated_at timestamp — root cause of 34 consecutive empty-timing-window retros; all real experiment work falls outside the measurement window.",
+    "No post-activation dispatch verification gate: the conductor can complete activation and write the retro without confirming that at least one non-retro experiment was dispatched in the same session.",
+    "Persistent infrastructure debt: the look-back fix has been the top leverage action for 34 consecutive milestones without being implemented, indicating no closed feedback loop between retro recommendations and roadmap planning."
   ],
   "improvements_suggested": [
-    "Anchor timing-script look-back to conductor-state.json activated_at field: compute look_back_since = activated_at from conductor-state.json rather than a fixed wall-clock offset. This is the single highest-leverage change — it converts every future retro from 0-data to full-data.",
-    "Wire a zero-artifact alarm at 60 minutes post-activation: if no non-retro experiment result file has been committed to results/ within 60 minutes of the conductor-state.json activated_at timestamp, emit a WARNING to ops/conductor-log.md and halt new planning until at least one experiment completes.",
-    "Require a milestone-open sentinel commit at activation time: the conductor should write a results/milestone_open_<milestone>.json stub at the moment it activates a new milestone. This gives the timing script an unambiguous anchor even if the conductor-state.json timestamp is unavailable.",
-    "Activate at least one GGUF inference or synthesis experiment in the same conductor session as milestone activation: the pattern of retro-fires-before-any-task-runs is compounded when the conductor exits after activation without dispatching work. A post-activation dispatch requirement prevents this."
+    "Anchor the timing data extraction script to conductor-state.json activated_at rather than a fixed look-back window; this would immediately resolve the empty-timing-window problem.",
+    "Wire a zero-artifact alarm that fires 60 minutes after milestone activation if no non-retro experiment commit has landed; alert the operator before the retro is written.",
+    "Require the conductor to dispatch the first non-retro experiment in the same session as milestone activation, so at least one experiment always falls within the timing window.",
+    "Add an infrastructure-slot enforcement check: if the same improvement has appeared in improvements_suggested for 5+ consecutive milestones without a corresponding YAML task, auto-elevate it to MANDATORY-NEXT-MILESTONE PRIORITIES in ops/known-issues.md."
   ],
   "top_3_highest_leverage_actions": [
-    "FIX TIMING-SCRIPT LOOK-BACK: change scripts/research_conductor.py (or the retro-generation script) to read activated_at from ops/conductor-state.json and use that as the start of the measurement window instead of a fixed offset. Estimated impact: converts 34+ consecutive 0-data retros into actionable operational data immediately.",
-    "WIRE ZERO-ARTIFACT ALARM: add a post-activation check in the conductor that fires if results/ contains no new files 60 minutes after activated_at. This surfaces conductor dispatch stalls before the milestone closes rather than after.",
-    "DISPATCH FIRST NON-RETRO EXPERIMENT SAME-SESSION AS ACTIVATION: change the conductor's activation flow so that after writing conductor-state.json for the new milestone, it immediately dispatches the first queued non-retro experiment rather than exiting. Eliminates the activation-to-first-experiment gap that causes empty timing windows."
+    "Fix scripts/session-metrics.py (or equivalent timing extractor) to use conductor-state.json activated_at as the look-back anchor — eliminates the empty-timing-window problem for all future milestones in a single one-time fix.",
+    "Wire a post-activation zero-artifact alarm at T+60min — prevents the retro from being the first artifact written after activation by surfacing the gap to the operator in real time.",
+    "Add a roadmap-level infrastructure task for the timing fix in .260 with a doomed-rerun block if it has appeared in improvements_suggested for 5+ prior milestones — closes the feedback loop between retro output and planner input."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "This is the thirty-fourth consecutive empty-timing-window retro. The root cause has been precisely diagnosed (timing-script look-back not anchored to activation timestamp) and documented in every retro since at least .220, yet the fix has not shipped. The retro infrastructure is in a stable broken state — it produces accurate reports of 0-in-window while the actual milestone work happens outside the window. The meta-lesson is that infrastructure debt that does not cause immediate operational failures tends to persist indefinitely; the timing-script fix needs to be treated as a blocked gate on future planning, not a deferred improvement."
+  "meta_reflection": "For the thirty-fourth consecutive milestone, the retro's most actionable finding is the same: fix the timing-script look-back. The fact that this recommendation has not propagated into a concrete roadmap task indicates a structural gap in the feedback loop between retro output and planner input — the retro writes into ops/changelog.md but no mechanism reads retro improvements_suggested when drafting research-roadmap-next.yaml. Closing that loop — even by a simple grep of the retro's top_3_highest_leverage_actions into the known-issues.md MANDATORY-NEXT-MILESTONE PRIORITIES section — would have higher expected value than any single experiment proposed for .260."
 }
