@@ -5659,3 +5659,4 @@ Ripgrep i |
 | 2026-05-21 05:06 UTC | Verifier Live-GPU v3: gemma-4-26B-A4B-it-GGUF Dire | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
 | 2026-05-21 05:29 UTC | Verifier Live-GPU v3: gemma-4-26B-A4B-it-GGUF Dire | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1204s (355s silence). Last out |
 | 2026-05-21 05:35 UTC | Phase 4 FEP Aggregator Redesign v2: Normalized Alp | OK | 81 passed in 3.82s |
+| 2026-05-21 05:46 UTC | Empirical Delta Root-Cause Audit: Verbose Repair L | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2754_empiric |
