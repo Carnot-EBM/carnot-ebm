@@ -552,7 +552,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 
 | Component | Files | Tests | Status |
 |-----------|-------|-------|--------|
-| Core EBM (Rust + JAX) | 12 crates + 8 Python modules | 104 Rust + 1049 Python | Alpha |
+| Core EBM (Rust + JAX) | 12 crates + 8 Python modules | 229 Rust + 25,639 Python | Alpha |
 | Constraint verification | SAT, coloring, arithmetic, logic, code, NL, scheduling | Full coverage | Production |
 | VerifyRepairPipeline | `carnot.pipeline` (extract, verify_repair, errors) | Full coverage | Production |
 | Packaged code verification | `verify_code()`, `carnot verify-code`, `verify_code_with_pbt` | Full coverage | Production |

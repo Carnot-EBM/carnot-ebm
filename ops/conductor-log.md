@@ -5847,3 +5847,4 @@ Ripgrep i |
 | 2026-05-21 15:31 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2815) |
 | 2026-05-21 15:35 UTC | Capstone v266: Multi-Corpus Headline + FoVer Overf | OK | cache hit: 81 passed in 3.86s |
 | 2026-05-21 16:03 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
+| 2026-05-21 16:30 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
