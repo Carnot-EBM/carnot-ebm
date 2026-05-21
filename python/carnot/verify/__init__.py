@@ -102,3 +102,4 @@ else:
         "Tier0uVerifier",
         "SetConsistencyVerifier",
     ]
+from .tier0w_paraphrase_consistency import ParaphrasticConsistencyVerifier
