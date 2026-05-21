@@ -222,7 +222,7 @@ This paper-v6 narrowing pass treats the following claims as the complete headlin
   Empirical artifacts: \path{results/experiment_1068_kv260_smoke_test_v9.json}, \path{results/experiment_1094_phase2a_sampler_correctness_audit.json}, \path{results/experiment_1451_discrete_sb_rtl_lint_sim_rerun.json}, \path{results/experiment_1460_hardware_portfolio_narrowing.json}.
   Theoretical support: single-site Gibbs detailed balance; chromatic-Glauber batching under graph-coloring constraints; scope-reduction hardware portfolio gate.
   Boundary: Does not claim same-basis CPU-vs-FPGA speedup, KV260 board execution for new bitstreams, Extropic execution, NPU acceleration, or photonic execution..
-  \item \textbf{CLAIM-3 --- Energy verifier calibration is distribution-bound.} Carnot may claim in-distribution SOS-KAN calibration, a measured SOTA-output energy-ordering inversion, and a SOTA-inclusive retrain that fixes the observed inversion on its validation split.
+  \item \textbf{CLAIM-3 --- Energy verifier calibration is distribution-bound.} Carnot may claim in-distribution SOS-KAN calibration~\cite{diff_conformal_2026}, a measured SOTA-output energy-ordering inversion, and a SOTA-inclusive retrain that fixes the observed inversion on its validation split.
   Empirical artifacts: \path{results/experiment_1072_sos_kan_v3_neural_gram.json}, \path{results/experiment_1100_cascade_validation_sota_outputs.json}, \path{results/experiment_1120_energy_verifier_retrain_sota.json}, \path{results/experiment_1265_diffutruth_vs_carnot_baseline.json}.
   Theoretical support: Goodhart/reward-hacking interpretation of verifier-shaped optimization; energy-based calibration under distribution shift; OOD boundary between FoVer and optimized SOTA-output corpora.
   Boundary: Does not claim universal verifier dominance, cross-corpus DiffuTruth dominance, or future SOTA-family generalization..
@@ -1951,3 +1951,4 @@ the inversion is an OOD boundary on the energy class, not a
 falsification of the framework.
 
 \end{document}
+ent}

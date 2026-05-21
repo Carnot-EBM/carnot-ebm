@@ -1,0 +1,37 @@
+{
+  "honest_verdict": "complete: arXiv package v3 generated with new citations.",
+  "paper_v6_submission_package_v3_ready": true,
+  "latex_compiles_v3": true,
+  "n_pages_v3": 28,
+  "conformal_cite_added": true,
+  "diff_conformal_cite_added": true,
+  "submission_step_reserved_for_operator": true,
+  "operator_arxiv_checklist_v3": [
+    "Step 1: Review PDF at /tmp/main.pdf (or recompile)",
+    "Step 2: Verify author list and affiliations",
+    "Step 3: Check arXiv category: cs.AI (primary), cs.LG (secondary)",
+    "Step 4: Upload to arxiv.org (OPERATOR-ONLY per CLAUDE.md)",
+    "Step 5: After arxiv submit: update HuggingFace model card with arXiv link",
+    "NOTE: As of .260, empirical_delta=0.000 (replaces conservative 0.25 in paper)",
+    "NOTE: Tier 0v (set-consistency) + Tier 0w (paraphrastic consistency) added in .260",
+    "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (CLAUDE.md discipline)",
+    "NOTE: FEP redesign result = True (from exp2753 best_fep_auroc)",
+    "NOTE: Ensemble k=18 AUROC = 0.6124708624708625 (from exp2756)",
+    "NOTE: Empirical delta root cause = H2 regression (from exp2754)",
+    "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (CLAUDE.md)",
+    "NOTE: Phase 4 FEP viable = True — submission hold continues if False"
+  ],
+  "duration_s": 15.0,
+  "preconditions_checked": [
+    {
+      "resource": "pdflatex",
+      "available": true,
+      "check": "command -v pdflatex"
+    },
+    {
+      "resource": "tex_source",
+      "available": true,
+      "check": "ls docs/arxiv-paper/main.tex"
+    }
+  ]
+}
