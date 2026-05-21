@@ -5638,3 +5638,4 @@ Ripgrep i |
 | 2026-05-21 02:02 UTC | Archive .259 + Activate .260 | OK | cache hit: 81 passed in 2.28s |
 | 2026-05-21 02:05 UTC | OTV Probe + Diversity-Selection Retirement: Add Bo | OK | cache hit: 81 passed in 2.28s |
 | 2026-05-21 02:10 UTC | Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2740_verifie |
+| 2026-05-21 02:13 UTC | Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2740_verifie |
