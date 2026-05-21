@@ -25,10 +25,22 @@ Two violation classes (both hard-block by default):
    conductor will GATE_BLOCK the upstream at activation. No override
    path — rewrite the chain.
 
+4. WRONG_MECHANISM_PRECONDITION — task prompt declares a precondition
+   pattern that has been retired as wrong-mechanism per a CLAUDE.md
+   MANDATORY rule. First wired 2026-05-20 to catch the recurring
+   KV260 + `/dev/mmcblk` host-SD-card precondition that escalated five
+   consecutive milestones (.254/.256/.257/.258 plus queued-for-.259
+   exp2735). Per CLAUDE.md "KV260 SSH-Not-SD-Card Discipline": KV260
+   tasks must use `ssh -o ConnectTimeout=5 kria 'true'`, never host
+   `/dev/mmcblk*`. HARD-block by default; no operator_override path
+   for this class (the precondition produces a meaningless artifact
+   regardless of intent).
+
 Operator-override bypass: a task with `operator_override:` (non-empty
 string citing the directive source) downgrades EXP_ID_RETIRED and
 SCOPE_MATCHED_PRIOR_FAILURE from HARD to WARNING. REQUIRES_RETIRED_EXP
-has no override path (the chain is structurally dead).
+and WRONG_MECHANISM_PRECONDITION have no override path (structurally
+dead / produces meaningless artifact regardless).
 
 Usage (CLI):
 
@@ -53,6 +65,22 @@ import yaml
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 _EXP_ID_RE = re.compile(r"^exp(\d+)[-_]", re.IGNORECASE)
+
+# Wrong-mechanism precondition patterns: (board_pattern, retired_path_pattern,
+# replacement_pattern, claude_md_section).
+# When BOTH board_pattern AND retired_path_pattern appear in a task's prompt,
+# the task is hard-blocked.
+# CLAUDE.md "KV260 SSH-Not-SD-Card Discipline" (2026-05-20) is the first
+# entry. Extend this list when a new wrong-mechanism precondition is
+# retired by operator directive.
+_WRONG_MECHANISM_PATTERNS: list[tuple[re.Pattern[str], re.Pattern[str], str, str]] = [
+    (
+        re.compile(r"\b(kv260|kria|Kria|KV260)\b"),
+        re.compile(r"/dev/mmcblk"),
+        "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'",
+        "KV260 SSH-Not-SD-Card Discipline",
+    ),
+]
 
 
 @dataclass
@@ -253,6 +281,51 @@ def lint(roadmap_path: Path) -> list[ExclusionRisk]:
                         ),
                     )
                 )
+
+        # CLASS 4: wrong-mechanism precondition (2026-05-20).
+        # Scans task prompt for joint patterns that have been retired as
+        # wrong-mechanism per a CLAUDE.md MANDATORY rule. First wired for
+        # KV260 + /dev/mmcblk (host SD card check is meaningless for the
+        # board's state — use ssh-reachability instead). No override path:
+        # the precondition produces a meaningless artifact regardless of
+        # intent.
+        prompt_text = str(task.get("prompt", "") or "")
+        if prompt_text:
+            for (
+                board_pat,
+                retired_path_pat,
+                replacement,
+                claude_md_section,
+            ) in _WRONG_MECHANISM_PATTERNS:
+                board_hit = board_pat.search(prompt_text) or board_pat.search(
+                    task_title
+                )
+                path_hit = retired_path_pat.search(prompt_text)
+                if board_hit and path_hit:
+                    risks.append(
+                        ExclusionRisk(
+                            task_id=task_id,
+                            task_title=task_title,
+                            violation_class="WRONG_MECHANISM_PRECONDITION",
+                            retired_exp_id=None,
+                            retirement_reason=(
+                                f"CLAUDE.md '{claude_md_section}' retires "
+                                f"this precondition; use '{replacement}'"
+                            ),
+                            has_operator_override=False,  # no override path
+                            severity="HARD",
+                            detail=(
+                                f"task prompt contains retired precondition "
+                                f"pattern '{retired_path_pat.pattern}' alongside "
+                                f"board reference '{board_pat.pattern}'. "
+                                f"Per CLAUDE.md '{claude_md_section}', use "
+                                f"'{replacement}' instead. The retired "
+                                f"precondition produces a meaningless artifact "
+                                f"regardless of intent — no operator_override "
+                                f"path."
+                            ),
+                        )
+                    )
 
         # CLASS 3: scope-matched prior failure without prior_failures: block.
         # Reuses failure_ledger's matcher so semantics match the

@@ -1487,7 +1487,7 @@ that board reaches its defined terminal state.
 
 | Board | USB enumeration | Reachable via | Terminal state |
 |---|---|---|---|
-| AMD/Xilinx KV260 | (board has internal programmer) | Vivado bitstream + PYNQ board execution | board-level latency transcript landed in a non-fabricated artifact + `kv260_synthesis_succeeded: true` |
+| AMD/Xilinx KV260 | booted from onboard microSD; host has NO role in board's storage once booted | `ssh kria` (alias for 192.168.51.98) — Ubuntu Xilinx, reachable since 2026-05-20; bitstream activation via on-board `xmutil loadapp carnot_ising_v2_n64`. **NEVER use host `/dev/mmcblk*` as a precondition for KV260 tasks** — see "KV260 SSH-Not-SD-Card Discipline" below. | board-level latency transcript landed in a non-fabricated artifact + `kv260_synthesis_succeeded: true` |
 | Cologne Chip GateMate A1-EVB-2M | onboard DirtyJTAG MCU at `1209:c0ca` | `openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bit>` over board's USB-C | n=16 Ising tile flashed + smoke-tested on hardware; `gatemate_bitstream_flashed: true` |
 | Microchip PolarFire SoC Discovery Kit | FlashPro5 at `1514:2008` + booted Linux | `ssh polarfire` (uptime 4+ days as of 2026-05-18) | end-to-end Carnot dispatch run with hash-match verification; `polarfire_workload_validated: true` |
 
@@ -1563,6 +1563,119 @@ becomes a checkbox the planner must answer before emitting.
 - `docs/jtag-wiring-gatemate-dirtyjtag.md` — reference for the rare
   case of external DirtyJTAG (not the current bench)
 - 2026-05-18 operator directive — origin
+
+## KV260 SSH-Not-SD-Card Discipline (MANDATORY)
+
+**Origin:** 2026-05-20 ~22:45 EDT operator directive after seeing
+exp2722 escalate for the FOURTH consecutive milestone with a phantom
+SD-card-absent verdict:
+
+> "this has happened multiple times now. can you make sure this
+>  SDCARD confusion with the kv260 does not happen again?"
+
+The preceding 5 consecutive milestones (`.254, `.256, `.257, `.258, and
+queued-for-`.259 exp2735) all used `ls /dev/mmcblk* 2>/dev/null` as the
+KV260 precondition. **That command checks the HOST machine's SD card
+slot — meaningless for the BOARD's state.** Wrong-mechanism leftover
+from a pre-board-boot PYNQ-SD-card workflow that no longer applies.
+
+The KV260 has been booted with Ubuntu Xilinx and reachable via SSH
+since 2026-05-20 ~13:00 EDT. Bitstream updates flow via `scp` +
+`xmutil loadapp`. Host SD-card-flash workflows are PERMANENTLY retired
+per this operator directive.
+
+**The rule.** For ANY KV260 task — continuity check, bitstream
+update, sampler smoke, latency benchmark, RTL deployment — the
+precondition MUST be SSH-reachability of the board, NEVER host SD card
+presence:
+
+```bash
+# CORRECT precondition for KV260 tasks:
+ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'
+# Exit 0 → board reachable; proceed.
+# Exit non-zero → honest_verdict: blocked_kv260_ssh_unreachable. Stop.
+```
+
+```bash
+# RETIRED — do NOT use this for KV260:
+ls /dev/mmcblk* 2>/dev/null || echo no_sd       # ← HOST's SD slot
+test -e /dev/mmcblk0                            # ← same
+[ -b /dev/mmcblk0p1 ]                           # ← same
+```
+
+**Permitted on-board operations (all over SSH):**
+
+| Operation | Command |
+|---|---|
+| Reachability check | `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` |
+| List loaded overlays | `ssh kria 'xmutil listapps'` |
+| Load Carnot Ising bitstream | `ssh kria 'xmutil loadapp carnot_ising_v2_n64'` |
+| Unload current overlay | `ssh kria 'xmutil unloadapp'` |
+| List UIO devices | `ssh kria 'ls /dev/uio*'` |
+| Push a fresh bitstream | `scp <local-path>/carnot_ising_vN.bit.bin kria:/lib/firmware/xilinx/<name>/` |
+| Run on-board Python | `ssh kria 'python3 -c "..."'` |
+| Read a UIO register | `ssh kria 'python3 -c "with open(\"/dev/uio0\",\"r+b\") as f: ..."'` |
+
+**Why a host SD-card precondition is structurally wrong.**
+
+- The KV260 boots from its onboard microSD (or eMMC). Once booted, the
+  host machine is not in the board's storage path.
+- All Carnot-side board updates (new bitstream, overlay swap, software
+  install) are SSH operations, not host-storage operations.
+- `ls /dev/mmcblk*` on the host returns true ONLY if the operator has
+  physically inserted an SD card into the HOST's card reader — a state
+  irrelevant to whether the BOARD is reachable or has a Carnot
+  bitstream loaded. Five consecutive milestones escalated for an
+  operator action (insert SD card into HOST) that does nothing useful.
+
+**How to apply (planner-side discipline).** When generating
+`research-roadmap-next.yaml`:
+
+1. Any task with `track: hardware` AND scope containing "KV260" /
+   "kria" / "Kria" MUST use the SSH precondition. If the task prompt
+   you would emit contains `/dev/mmcblk`, **rewrite the precondition
+   before emitting** — do not propose it.
+2. Do NOT propose tasks whose title or scope contains "SD Card
+   Branch," "Branch B SD Card," "PYNQ Image Flash," or any equivalent
+   phrasing for KV260. That scope is permanently retired per
+   `ops/exclusion_manifest.yaml:kv260_host_sd_card_precondition_retired`.
+3. If the planner is uncertain whether a board is reachable, the
+   correct response is the SSH-reachability precondition + a
+   `blocked_kv260_ssh_unreachable` fallback — NOT a Branch-A/Branch-B
+   split on host SD card presence.
+
+**How to apply (agent-side discipline).** If an agent receives a task
+prompt that contains `/dev/mmcblk` in the PRECONDITIONS for a KV260
+task, the agent MUST refuse and emit:
+
+```
+honest_verdict: blocked_kv260_wrong_mechanism_sd_card_precondition
+```
+
+with a methodology_note pointing to this CLAUDE.md section. Do NOT
+"do your best" with the wrong precondition — that produces an
+artifact that escalates the operator for an action (insert SD card
+into host) that accomplishes nothing.
+
+**Mechanical safety net (lives in `scripts/research_conductor.py`).**
+The activation guard SHOULD scan task prompts for the joint pattern
+`(KV260 OR kria OR Kria) AND /dev/mmcblk` and refuse activation of
+any milestone containing such a task. Until that ships, this rule is
+honor-discipline at the planner + agent layer, with the exclusion
+manifest entry `kv260_host_sd_card_precondition_retired` as the
+structural backstop.
+
+**Cross-references:**
+- 2026-05-20 ~22:45 EDT operator directive — origin
+- `ops/exclusion_manifest.yaml` —
+  `kv260_host_sd_card_precondition_retired` blocks scope at activation
+- `feedback_kv260_ssh_not_sd_card.md` (memory) — operator directive
+  notes, when-to-change protocol
+- `feedback_kv260_latest_bitstream_must_be_xdc_constrained.md` (memory)
+  — earlier complementary directive establishing `xmutil loadapp` as
+  the bitstream-update mechanism
+- CLAUDE.md "Pre-Launch Preconditions Discipline" table — KV260 row
+  authoritative precondition
 
 ## Overdue-Priority Forcing Function (MANDATORY)
 

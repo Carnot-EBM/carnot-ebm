@@ -1086,8 +1086,10 @@ tasks:
       (carnot_ising_v4) is activated via `xmutil loadapp carnot_ising_v2_n64`.
       All future board interaction is via SSH — no SD-card flash is required.
 
-      Prior exp2722-2734 used a wrong-mechanism precondition (host /dev/mmcblk*
-      SD card check). That design is retired per 2026-05-20 operator directive.
+      Prior exp2722-2734 used a wrong-mechanism precondition (host SD-card
+      slot check, which is meaningless for the board's state). That design is
+      retired per 2026-05-20 operator directive — see CLAUDE.md "KV260
+      SSH-Not-SD-Card Discipline" for the full rationale.
 
       EXISTING CODE TO READ FIRST:
       - ops/hardware-bringup-prep.md (KV260 section — current bring-up state)

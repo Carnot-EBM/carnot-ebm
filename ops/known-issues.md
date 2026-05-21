@@ -1167,7 +1167,7 @@ its defined terminal state. The three attached boards as of 2026-05-18:
 
 | Board | Next forward step | Terminal state |
 |---|---|---|
-| AMD/Xilinx KV260 | Resume `exp2440` (synthesis_errors=1 fix) → bitstream pack → board flash → PYNQ latency transcript | `kv260_synthesis_succeeded: true` AND `kv260_board_latency_ms` recorded |
+| AMD/Xilinx KV260 (booted, reachable via `ssh kria` since 2026-05-20) | XDC-constrained bitstream refresh (scp + `xmutil loadapp`) → on-board uio register read smoke → board-level latency transcript via SSH. **NO host SD-card flash — per CLAUDE.md "KV260 SSH-Not-SD-Card Discipline".** | `kv260_synthesis_succeeded: true` AND `kv260_board_latency_ms` recorded from a non-fabricated artifact |
 | Cologne Chip GateMate A1-EVB-2M | yosys 0.64 → nextpnr-himbaechel CC_LUT mapping workaround (`synth_gatemate -abc9`) → P&R → flash n=16 Ising tile | `gatemate_bitstream_flashed: true` AND on-board sampler timing benchmark |
 | Microchip PolarFire SoC Discovery Kit | Precondition-gated SSH smoke (already queued separately below) → CPU-only Ising sampler → adaptive-K PCD prototype | `polarfire_workload_validated: true` (non-fabricated artifact with hash-match) |
 
