@@ -7024,3 +7024,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
     import torch; assert torch.cuda.is_available()
     ^^^^^^^^^^^^
 ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memory_leakage_isolation.json
+- 2026-05-21: MBPP Corpus — Both Memory Conditions (CODEX, N=100, 5 seeds each) (⚠️ Blocked) — honest_verdict=blocked_cuda_unavailable; results/experiment_2829_mbpp_ensemble_eval.json
