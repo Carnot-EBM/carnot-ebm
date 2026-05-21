@@ -573,7 +573,7 @@ The architecture is model-agnostic (Experiment 69), scales to 5000+ variables (E
 | WOPR games | Hashi, Slitherlink, Connect Four, Hex, Nonogram, Futoshiki, Kakuro, and Masyu cartridges | Targeted tests | Experimental |
 | Learned verifiers | NCE/SNL/optimization training, CD Ising | Full coverage | Research |
 | Activation analysis | Extraction, direction, steering, concepts | Full coverage | Research (negative results) |
-| GPU compute | wgpu Vulkan + WebGPU gateway | 4 Rust tests | Experimental |
+| GPU compute | wgpu Vulkan + WebGPU gateway | 14 Rust tests | Experimental |
 | Autoresearch | 50-iteration self-improvement, Trace2Skill, Ising gate | Full coverage | Alpha |
 | Research conductor | Autonomous Claude Code agent loop, YAML-driven | N/A | Experimental |
 | PyPI packaging | source install plus extras for rust/mcp/cuda/llm; public PyPI release blocked by Exp 1582 | Integration tests | Beta/blocker |

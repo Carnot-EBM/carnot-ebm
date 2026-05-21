@@ -5758,3 +5758,24 @@ Ripgrep i |
 | 2026-05-21 12:15 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.98s |
 | 2026-05-21 12:17 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 4.31s |
 | 2026-05-21 12:19 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.60s |
+| 2026-05-21 12:22 UTC | CP-Router Entropy-Aware Conformal Routing (arXiv:2 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 144 passed in 3.69s |
+| 2026-05-21 12:24 UTC | CP-Router Entropy-Aware Conformal Routing (arXiv:2 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.89s |
+| 2026-05-21 12:26 UTC | CP-Router Entropy-Aware Conformal Routing (arXiv:2 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.70s |
+| 2026-05-21 12:28 UTC | Confidence Geometry Verifier Tier 0aa (arXiv:2605. | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.71s |
+| 2026-05-21 12:30 UTC | Confidence Geometry Verifier Tier 0aa (arXiv:2605. | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.69s |
+| 2026-05-21 12:32 UTC | Confidence Geometry Verifier Tier 0aa (arXiv:2605. | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.74s |
+| 2026-05-21 12:34 UTC | Tier 0z Investigation: Why auroc=0.5065? Fix or Re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.71s |
+| 2026-05-21 12:36 UTC | Tier 0z Investigation: Why auroc=0.5065? Fix or Re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.71s |
+| 2026-05-21 12:39 UTC | Tier 0z Investigation: Why auroc=0.5065? Fix or Re | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.69s |
+| 2026-05-21 12:41 UTC | DiffuTruth Tier 0bb: Energy of Falsehood via Diffu | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.68s |
+| 2026-05-21 12:43 UTC | DiffuTruth Tier 0bb: Energy of Falsehood via Diffu | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.67s |
+| 2026-05-21 12:45 UTC | DiffuTruth Tier 0bb: Energy of Falsehood via Diffu | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.85s |
+| 2026-05-21 12:47 UTC | Paper v6 Theory v5: FEP Claim + Verifier Diagnosis | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.67s |
+| 2026-05-21 12:49 UTC | Paper v6 Theory v5: FEP Claim + Verifier Diagnosis | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.76s |
+| 2026-05-21 12:51 UTC | Paper v6 Theory v5: FEP Claim + Verifier Diagnosis | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.71s |
+| 2026-05-21 12:53 UTC | arXiv Package v5: Updated with .264 Results + Oper | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.62s |
+| 2026-05-21 12:55 UTC | arXiv Package v5: Updated with .264 Results + Oper | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.72s |
+| 2026-05-21 12:58 UTC | arXiv Package v5: Updated with .264 Results + Oper | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.66s |
+| 2026-05-21 13:00 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.76s |
+| 2026-05-21 13:02 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.65s |
+| 2026-05-21 13:04 UTC | Capstone v264: Cross-Artifact Synthesis + Gap Anal | SKIP | Pre-tests failing, self-heal failed: 1 failed, 99 passed in 3.70s |
