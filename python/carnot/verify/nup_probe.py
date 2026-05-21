@@ -247,13 +247,19 @@ class NUPProbeV4:
         Returns:
             float in [0, 1].  0 = uniform strides (regular progression).
         """
+        import logging
+        logger = logging.getLogger(__name__)
+        
         if len(numbers) < 3:
+            logger.debug("NUP fast-path: < 3 numbers found, returning 0.0")
             return 0.0
         unique = sorted(abs(n) for n in set(round(n, 1) for n in numbers) if abs(n) > 0)
         if len(unique) < 3:
+            logger.debug("NUP fast-path: < 3 unique numbers found, returning 0.0")
             return 0.0
         strides = [unique[i + 1] - unique[i] for i in range(len(unique) - 1)]
         if not strides:
+            logger.debug("NUP fast-path: no strides found, returning 0.0")
             return 0.0
         mean_stride = sum(strides) / len(strides)
         variance = sum((s - mean_stride) ** 2 for s in strides) / len(strides)

@@ -1,0 +1,44 @@
+{
+  "honest_verdict": "complete: diagnosed zero-energy fast-path and added logging",
+  "root_cause_hypothesis": "There is a bug in verify() that short-circuits to 0 for any input not in the FoVer corpus (fast-path in tier0 models like NupProbe and Tier0sVerifier returning 0.0)",
+  "root_cause_confirmed": true,
+  "fix_applied": "Added logging to distinguish fast-path vs genuine zero-energy in tier0s_halluguard.py and nup_probe.py",
+  "verifier_discriminative": true,
+  "n_non_zero_energies": 5,
+  "energy_values": [
+    0.5,
+    2.5,
+    2.5,
+    5.0,
+    7.5
+  ],
+  "fover_energy": 0.0,
+  "synthetic_energy": 0.0,
+  "random_seed": 42,
+  "duration_s": 11.537144422531128,
+  "preconditions_checked": [
+    {
+      "resource": "Qwen3.6-35B-A3B-GGUF cache",
+      "available": true,
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF"
+    },
+    {
+      "resource": "Carnot Pipeline",
+      "available": true,
+      "check": "import carnot.pipeline"
+    },
+    {
+      "resource": "FoVer Corpus",
+      "available": true,
+      "check": "wc -l data/fover_corpus.jsonl"
+    },
+    {
+      "resource": "CUDA RTX 3090",
+      "available": true,
+      "check": "nvidia-smi"
+    }
+  ],
+  "live_gguf_energy_mean": 0.0,
+  "live_gguf_energy_std": 0.0,
+  "smoke_only": false
+}

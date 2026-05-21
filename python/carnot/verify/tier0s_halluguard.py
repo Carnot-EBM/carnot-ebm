@@ -2,6 +2,9 @@
 
 import re
 import numpy as np
+import logging
+
+logger = logging.getLogger(__name__)
 
 class Tier0sVerifier:
     """Tier 0s NTK-based verifier prototype based on HalluGuard (arXiv:2601.18753).
@@ -33,12 +36,14 @@ class Tier0sVerifier:
             actual_sum = nums[2]
             logprob_variance = float(abs(expected_sum - actual_sum))
         else:
+            logger.debug("Tier0s fast-path (logprob_variance): < 3 numbers found, returning 0.0")
             logprob_variance = 0.0
             
         # 2. Compute sentence-boundary semantic jump magnitude (mocked via logical gap across sentences)
         if len(nums) >= 4:
             semantic_jump = float(abs(nums[2] - nums[3]))
         else:
+            logger.debug("Tier0s fast-path (semantic_jump): < 4 numbers found, returning 0.0")
             semantic_jump = 0.0
             
         # Weighted combination
