@@ -1,6 +1,47 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-21 (milestone 2026.05.260 research planning complete)
+**Last Updated:** 2026-05-21 (milestone 2026.05.261 research planning complete)
+
+## Session 2026-05-21 - Milestone 2026.05.261 Research Planning Complete
+
+**Milestone 2026.05.260 COMPLETED: 10 of 12 acceptance criteria met (exp2738–exp2750). Key outcomes: KV260 GRADUATED (kv260_terminal=true, 3.183μs mean latency — all 3 FPGA boards permanently graduated), FR-11 Tier 4 learning loop closed (IMPLAUSIBLE_PERFECT re-check needed), Phase 4 FEP FAILS (auroc=0.489~random), verifier live-GPU BLOCKED (Qwen3.6-35B-A3B-GGUF not cached), empirical_delta=0.000 (suspicious), weak-strong t_low=0.184 > t_high=0.107 (INVERTED).**
+
+**Milestone 2026.05.261 PLANNED as "Verifier Live-GPU v3 + Phase 4 FEP Redesign v2 + Empirical Delta Audit + Ensemble v12 + Conformal Routing".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v261.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2751`–`exp2763`)
+- ID allocation: milestone `.260` used through `exp2750`, so `.261` starts at `exp2751`.
+- Research references updated with Post-.260 Planning Sweep (2026-05-21): 1 new paper added:
+  - arXiv:2605.20270 (Conformal Selective Acting: Anytime-Valid Risk Control for RLVR-Trained LLMs — addresses threshold inversion in exp2745; exp2757)
+- **Three biggest gaps targeted**:
+  1. **CRITICAL — Verifier Live-GPU v3 BLOCKED**: exp2752 targets gemma-4-26B-A4B-it-GGUF as PRIMARY (confirmed cached), N=30, duration>=60s gate, no Qwen fallback dependency. prior_failures: exp2727 (DURATION_TOO_SHORT), exp2740 (blocked_gguf_qwen36_not_cached). retire_if_same_verdict=true.
+  2. **CRITICAL — Phase 4 FEP redesign**: exp2753 replaces raw Cov/Var formula with 3 normalized pooling strategies (softmax-|alpha|, logistic regression, temperature-scaled geometric mean). Gate: fep_auroc>=0.70 AND fep_vs_odar_delta>=0. prior_failures: exp2748 (auroc=0.489, unscaled alpha).
+  3. **HIGH — Empirical delta=0.000 root cause**: exp2754 runs verbose per-attempt logging on N=20 FoVer violations, classifies as H1 (definitional mismatch), H2 (regression), or H3 (FoVer ceiling). prior_failures: exp2744 (delta=0.000/131 attempts).
+- **Phase structure**:
+  - Phase A (exp2751): Archive .260 + Activate .261
+  - Phase B (exp2752–exp2754): Critical gap fixes (live-GPU v3, FEP redesign v2, empirical delta audit)
+  - Phase C (exp2755–exp2759): Quality checks + new research (FR-11 re-check, ensemble v12, conformal routing Tier 0x, weak-strong fix v2, differentiable conformal Tier 0y)
+  - Phase D (exp2760–exp2762): Publication + ship (Phase 1 ship status v7, paper v6 theory v4, arXiv package v3)
+  - Phase E (exp2763): Capstone v261 (claude/opus, requires_claude: true)
+- **Agent routing**: 12 gemini/gemini-3.1-pro-preview (92.3%); 1 claude/opus (exp2763 capstone — requires_claude: true, within 2/13 ceiling).
+- **Hardware continuity**: No mandatory hardware tasks. All 3 FPGA boards graduated:
+  - KV260 (exp2742, .260): kv260_terminal=true, 3.183μs mean latency
+  - GateMate (exp graduated .247): gatemate bitstream flashed + smoke-tested
+  - PolarFire (exp graduated .241): polarfire end-to-end dispatch validated
+- **FR-11 mandate**: exp2755 (FR-11 Tier 4 Adversarial Re-check v2, continuous_self_learning_task: true). Re-validates IMPLAUSIBLE_PERFECT auroc_cycle2=1.0 from exp2747 using independent test set (seed 42 for learning pool, seed 123 for test set).
+- **New research contributions**:
+  - Conformal Selective Acting (arXiv:2605.20270) — anytime-valid risk control routing; exp2757 Tier 0x
+  - Differentiable Conformal Training (arXiv:2604.20098) — end-to-end calibration; exp2759 Tier 0y
+- Exclusion manifest cross-check: 0 scope matches found.
+- **All CLAUDE.md mandatory disciplines applied**: Gemini-Default (12/13 gemini), prior_failures (13/13 with mandatory 4-field structure), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate, no hardware tasks (boards graduated), KV260 SSH-Not-SD-Card discipline, Exclusion Manifest 0 matches, Operator-Only publication discipline (exp2762 prepares package but never submits).
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.261. exp2751 (archive/activate) → exp2752 (verifier live-GPU v3 — CRITICAL) → exp2753 (FEP redesign v2 — CRITICAL) → exp2754 (empirical delta audit) → remaining tasks in dependency order → exp2763 (capstone, claude/opus).
+
+**Operator actions still required from .260**:
+- Phase 1 ship: `git tag v0.1.0b1 && git push origin v0.1.0b1` (CI publishes to PyPI via OIDC); HuggingFace model card update; IPFS pin. Phase 1 ship is NOT gated on paper, hardware, or Phase 4.
+- arXiv v6 submission: HOLDS until Phase 4 empirically validates AND paper v6 revised with results. OPERATOR-ONLY. exp2762 produces package for operator review.
+
+---
 
 ## Session 2026-05-21 - Milestone 2026.05.260 Research Planning Complete
 

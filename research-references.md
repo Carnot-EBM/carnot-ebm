@@ -1,3 +1,31 @@
+## 2026-05-21 Post-.260 Planning Sweep (Milestone 2026.05.261)
+
+This sweep was run after milestone `.260` completed with 10 of 12 acceptance criteria met
+(exp2738–exp2750). Key .260 findings:
+- exp2740: BLOCKED — Qwen3.6-35B-A3B-GGUF not cached; verifier live-GPU claim still unvalidated
+- exp2741: Tier 0g char-n-gram TF-IDF fix landed (gguf_non_degenerate_post_fix=true) but adversarial-flagged (31.5s < 60s gate)
+- exp2742: KV260 GRADUATED — kv260_terminal=true, 3.183μs mean latency (board permanently exits per-milestone tracking)
+- exp2748: Phase 4 FEP aggregator FAILS (auroc=0.489 ~ random; alpha values unscaled/negative)
+- exp2747: FR-11 Tier 4 learning loop CLOSED (+0.245 AUROC delta) but auroc_cycle2=1.0 (adversarial re-check needed)
+- exp2744: Empirical delta = 0.000 (suspicious; 0/131 repair attempts succeed)
+- exp2750 capstone: top_3_gaps_for_261 = [verifier live-GPU v3, Phase 4 FEP redesign, empirical delta audit]
+
+### Conformal Selective Acting: Anytime-Valid Risk Control for RLVR-Trained LLMs
+- **Paper:** "Conformal Selective Acting: Anytime-Valid Risk Control for RLVR-Trained LLMs"
+  (arXiv:2605.20270, May 2026).
+- **Authors:** Hamed Khosravi, Xiaoming Huo.
+- **What:** Introduces anytime-valid risk control using conformal prediction for selective task engagement in
+  RLVR-trained LLMs. Provides formal coverage guarantees for routing decisions across sequential outputs.
+  Unlike threshold-calibrated routing (which requires held-out calibration sets), anytime-valid control
+  provides sequential guarantees without requiring independent calibration data.
+- **Relevance to Carnot:** Addresses the inverted threshold problem in exp2745 (t_low=0.184 > t_high=0.107).
+  Anytime-valid conformal prediction provides principled routing with formal guarantees rather than calibrated
+  thresholds. Candidate for replacing the weak-strong policy Platt calibration approach. Paper-v6 §4 routing
+  methodology cite alongside arXiv:2602.17633 (weak-strong) and arXiv:2602.23681 (ODAR).
+- **Sources:** https://arxiv.org/abs/2605.20270
+
+---
+
 ## 2026-05-21 Post-.259 Planning Sweep (Milestone 2026.05.260)
 
 This sweep was run after milestone `.259` completed with 12 of 13 experiments producing artifacts

@@ -10,6 +10,16 @@
 
 ---
 
+## Session: 2026-05-21 Milestone 2026.05.261 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 (context compaction continuation) | 2026-05-21T04:18:22Z | 2026-05-21T04:18:36Z | Context compaction continuation: verified both .261 milestone files present and correct (research-roadmap-next.yaml 1558 lines, research-roadmap-v261.md 299 lines). Updated ops/metrics.md and ops/changelog.md. | ~5k |
+
+---
+
 ## Session: 2026-05-21 Milestone 2026.05.260 Research Planning
 
 ### Turn Log
