@@ -21,15 +21,24 @@ class NexusConstraintMemory:
         """
         self.violations[domain][pattern].append(severity)
 
-    def synthesize_rules(self) -> List[Dict[str, Any]]:
+    def add_violation(self, question: str, wrong_answer: str, energy_score: float) -> None:
         """
-        Synthesize rules from patterns seen >= 3 times.
-        Returns the synthesized rules.
+        Record a violation event from ORCA TTT integration.
+        """
+        domain = "ORCA_TTT"
+        pattern = f"Repair needed for Q: {question[:30]}... due to {wrong_answer[:30]}..."
+        self.record_violation(pattern, domain, energy_score)
+
+    def synthesize_rules(self, min_support: int = 3) -> List[str]:
+        """
+        Synthesize rules from patterns seen >= min_support times.
+        Returns the synthesized rules as strings.
         """
         self.rules = []
+        synthesized_rule_strings = []
         for domain, patterns in self.violations.items():
             for pattern, severities in patterns.items():
-                if len(severities) >= 3:
+                if len(severities) >= min_support:
                     avg_severity = sum(severities) / len(severities)
                     self.rules.append({
                         "pattern": pattern,
@@ -37,7 +46,8 @@ class NexusConstraintMemory:
                         "count": len(severities),
                         "avg_severity": avg_severity
                     })
-        return self.rules
+                    synthesized_rule_strings.append(f"[{domain}] IF {pattern} THEN avg_energy={avg_severity:.2f}")
+        return synthesized_rule_strings
 
     def consolidate(self) -> None:
         """

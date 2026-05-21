@@ -1,0 +1,37 @@
+{
+  "honest_verdict": "complete: successfully integrated ORCA conformal stopping with NEXUS",
+  "orca_nexus_integration_viable": true,
+  "n_violations_processed": 30,
+  "n_orca_stopped_early": 19,
+  "n_repairs_found": 17,
+  "n_rules_synthesized": 17,
+  "synthesized_rules_sample": [
+    "[ORCA_TTT] IF Repair needed for Q: gsm8k_927_4_0... due to Her $280.00 towels have a $56.... THEN avg_energy=0.45",
+    "[ORCA_TTT] IF Repair needed for Q: gsm8k_1952_2_0... due to If Marnie eats 10 chips a day ... THEN avg_energy=0.45",
+    "[ORCA_TTT] IF Repair needed for Q: gsm8k_139_3_0... due to You will save $3 + $5 = $<<3+5... THEN avg_energy=0.45"
+  ],
+  "random_seed": 42,
+  "duration_s": 0.004709720611572266,
+  "preconditions_checked": [
+    {
+      "resource": "ttt_loop.py",
+      "available": true,
+      "check": "ls python/carnot/pipeline/ttt_loop.py"
+    },
+    {
+      "resource": "nexus_constraint_memory.py",
+      "available": true,
+      "check": "ls python/carnot/verify/nexus_constraint_memory.py"
+    },
+    {
+      "resource": "carnot.pipeline import",
+      "available": true,
+      "check": ".venv/bin/python -c ..."
+    },
+    {
+      "resource": "data/fover_corpus.jsonl",
+      "available": true,
+      "check": "wc -l data/fover_corpus.jsonl"
+    }
+  ]
+}

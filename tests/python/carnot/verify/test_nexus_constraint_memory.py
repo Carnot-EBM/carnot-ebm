@@ -11,16 +11,36 @@ def test_nexus_constraint_memory_record_and_synthesize():
     memory.record_violation("pattern A", "domain1", 0.8)
     memory.record_violation("pattern A", "domain1", 0.6)
     
-    # Record 2 identical violations (should not synthesize)
+    # Record 2 identical violations (should not synthesize with default min_support=3)
     memory.record_violation("pattern B", "domain1", 1.0)
     memory.record_violation("pattern B", "domain1", 1.0)
     
     rules = memory.synthesize_rules()
     assert len(rules) == 1
-    assert rules[0]["pattern"] == "pattern A"
-    assert rules[0]["domain"] == "domain1"
-    assert rules[0]["count"] == 3
-    assert rules[0]["avg_severity"] == (1.0 + 0.8 + 0.6) / 3
+    assert "pattern A" in rules[0]
+    assert "domain1" in rules[0]
+    
+    # Check internal rules dicts that memory keeps
+    assert len(memory.rules) == 1
+    assert memory.rules[0]["pattern"] == "pattern A"
+    assert memory.rules[0]["domain"] == "domain1"
+    assert memory.rules[0]["count"] == 3
+    assert abs(memory.rules[0]["avg_severity"] - (1.0 + 0.8 + 0.6) / 3) < 1e-6
+
+def test_nexus_constraint_memory_add_violation():
+    memory = NexusConstraintMemory()
+    q = "What is 2+2?"
+    a = "It is 5."
+    e = 0.95
+    
+    memory.add_violation(q, a, e)
+    
+    domain = "ORCA_TTT"
+    pattern = f"Repair needed for Q: {q[:30]}... due to {a[:30]}..."
+    
+    assert domain in memory.violations
+    assert pattern in memory.violations[domain]
+    assert memory.violations[domain][pattern] == [e]
 
 def test_nexus_constraint_memory_consolidate():
     memory = NexusConstraintMemory()
