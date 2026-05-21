@@ -397,3 +397,22 @@ retired_extras:
     retired_by_artifact: "results/experiment_2732_entanglement_retirement_diversity_audit.json"
     retire_if_same_verdict: true
     operator_reopen_required: true
+  # Added 2026-05-21 — fabricated artifact retirement.
+  # exp2823 (.267) TruthfulQA Dual-Condition produced a "complete:"
+  # artifact in 9.58e-05 seconds (95 microseconds) during the
+  # gemini-cli 0.42.0 chunk-VWGAOW57.js crash window. Real 5-seed x
+  # dual-condition x 200-question live-GPU eval is impossible in
+  # microseconds. Artifact moved to legacy/fabricated/. Conductor
+  # planner must not propose downstream work depending on this
+  # number; re-run honestly under codex/claude in a future milestone.
+  - experiment_id: 2823
+    completed_milestone: "2026.05.267"
+    reason: |
+      Fabricated under gemini-cli 0.42.0 chunk-VWGAOW57.js intermittent-
+      success window. duration_s=9.58e-05 (95 microseconds) on a
+      claimed live-GPU 5-seed x dual-condition x 200-question
+      TruthfulQA evaluation. flagged_adversarial=True on the artifact
+      itself. Moved to legacy/fabricated/. Honest re-run under
+      codex/claude pending; this experiment_id retired from
+      reuse to prevent the number from being cited as a real result.
+    retire_if_same_verdict: true
