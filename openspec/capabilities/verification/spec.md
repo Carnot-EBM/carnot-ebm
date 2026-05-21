@@ -3099,3 +3099,57 @@ Then the artifact reports complete dual-condition AUROC summaries, per-seed
 results, per-verifier AUROC lists for both conditions, restored FR-11 state
 hashes, `vanilla_qwen36_pass_at_1`, and an `honest_verdict` prefixed
 `complete:`.
+
+### REQ-VERIFY-2830: HumanEval-Full Dual-Memory Ensemble Evaluation
+
+The repository shall provide an Exp 2830 HumanEval-full dual-memory runner
+that writes `results/experiment_2830_humaneval_full_ensemble_eval.json` for
+the full 164-problem `openai_humaneval` test split and five adversarial
+replication seeds `[42, 137, 271, 314, 1729]`.
+
+Before any live HumanEval inference, candidate execution, repair, or verifier
+scoring, the runner MUST verify CUDA availability, HuggingFace
+`openai_humaneval` dataset access, a discoverable Qwen3.6-35B-A3B GGUF cache,
+and present FR-11 state files. If any precondition is missing, the runner MUST
+write a terminal `blocked_<resource>` artifact rather than fabricating pass@1,
+AUROC, duration, candidate, execution, or per-verifier scores.
+
+For successful live runs, the runner MUST use clean code-execution
+ground-truth for the same problem/candidate pairs under both memory
+conditions: Condition A with full FR-11 production state and Condition B after
+non-destructively moving FR-11 state aside, restarting Python, and scoring
+architecture-only verifier behavior. The runner MUST restore every FR-11 state
+file and prove SHA256 matches the original state manifest.
+
+The artifact MUST include `honest_verdict`, `corpus="HumanEval-full"`,
+`n_problems=164`, `n_seeds`, `pass_at_1_vanilla`,
+`pass_at_1_after_carnot_correct_production`,
+`pass_at_1_after_carnot_correct_architecture_only`, Condition A and B AUROC
+means and standard deviations, `learning_contribution`, per-verifier AUROC
+lists for both conditions, random seeds, reproducibility checksum, model specs,
+real `duration_s`, precondition evidence, FR-11 state-file hashes and byte
+sizes, `state_files_restored_sha_match`, peer-baseline comparison fields, and
+an honest methodology note.
+
+### SCENARIO-VERIFY-2830: Missing Preconditions Block HumanEval Metrics
+
+Given the Exp 2830 runner starts in an environment missing CUDA,
+`openai_humaneval` dataset access, the Qwen3.6 GGUF cache, or FR-11 state
+files,
+When the runner checks preconditions before live inference or code execution,
+Then it writes `results/experiment_2830_humaneval_full_ensemble_eval.json`
+with `honest_verdict` prefixed `blocked_`, null AUROC and pass@1 metrics,
+empty per-verifier AUROC maps, populated `preconditions_checked`, preserved
+FR-11 state-file hashes, and no inferred benchmark numbers.
+
+### SCENARIO-VERIFY-2830-LIVE: Successful HumanEval Run Reports Dual Conditions
+
+Given all Exp 2830 live-resource preconditions are available and a real
+Qwen3.6 HumanEval generation, code-execution, repair, and ensemble-scoring
+backend is configured,
+When the runner evaluates all 164 HumanEval problems for all five seeds under
+production and architecture-only memory conditions,
+Then the artifact reports complete dual-condition pass@1 and AUROC summaries,
+per-seed results, per-verifier AUROC lists for both conditions, restored FR-11
+state hashes, peer-baseline comparisons, and an `honest_verdict` prefixed
+`complete:`.

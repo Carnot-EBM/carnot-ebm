@@ -1,0 +1,166 @@
+{
+  "corpus": "HumanEval-full",
+  "n_problems": 164,
+  "n_seeds": 5,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "d794bb18add83cd5c3a1e52b5bb8c7e9fb0680c5194e1c91e04578875d0a562e",
+  "model_specs": {
+    "name": "Qwen3.6-35B-A3B-GGUF",
+    "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "quant": "Q4_K_M",
+    "revision_sha": "a483e9e6cbd595906af30beda3187c2663a1118c",
+    "cache_complete": false,
+    "resolved_gguf": null
+  },
+  "duration_s": 0.9179084300994873,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": false,
+      "detail": "torch import ok; cuda_available=False; device_count=0"
+    },
+    {
+      "resource": "hf_openai_humaneval",
+      "available": false,
+      "detail": "datasets package is not installed"
+    },
+    {
+      "resource": "qwen36_gguf_cache",
+      "available": false,
+      "detail": "no real .gguf found in HF snapshots or project models directory"
+    },
+    {
+      "resource": "fr11_state_files",
+      "available": true,
+      "detail": "11 FR-11 state files discovered"
+    }
+  ],
+  "fr11_state_files": [
+    {
+      "path": "results/fr11_closure_certificate.json",
+      "sha256": "e3a0b48362e2b5217c7571eec76bd3344ae42b071161d949326cb4fa6d66dd59",
+      "n_bytes": 611
+    },
+    {
+      "path": "results/fr11_external_feedback_skill_graph_1539.json",
+      "sha256": "0422531c1773b2640531d06dba316fc4cf7906f135960067a622f71aba933c80",
+      "n_bytes": 3432
+    },
+    {
+      "path": "results/fr11_external_feedback_skill_rollback_plan_1539.json",
+      "sha256": "b397467a89438ccd1a3b5b8688b9d8e34bbedf0615bd10230250174004419b3c",
+      "n_bytes": 1643
+    },
+    {
+      "path": "results/fr11_live_policy_promotion_1524.jsonl",
+      "sha256": "fe79bbd809345e42a612b38c2e25705b41458067e88657a48093689e4bfe7738",
+      "n_bytes": 44721
+    },
+    {
+      "path": "results/fr11_policy_cache_events_1512.jsonl",
+      "sha256": "3597a09bf7ed627193b94146f731501ab3f511dc1936acfb214fd5e60409e300",
+      "n_bytes": 60543
+    },
+    {
+      "path": "results/fr11_policy_rollback_replay_1513.jsonl",
+      "sha256": "bc7d27010a77a21b2477477754f4d9c9f39946c74026cc4d2896a32fa6fc9543",
+      "n_bytes": 72660
+    },
+    {
+      "path": "results/fr11_positive_utility_skill_graph_1555.json",
+      "sha256": "3f9e1291ba1034972bdb50db7dfbb3470c6137f5615d7514a35790441de19aab",
+      "n_bytes": 462
+    },
+    {
+      "path": "results/fr11_trace2skill_daily_eval_manifest_1497.jsonl",
+      "sha256": "9cfc0f3477664242920bcd15ec1c45d0a06b79d0ffc27f31d1cf4761b5d53d30",
+      "n_bytes": 33454
+    },
+    {
+      "path": "results/nexus_constraint_memory_v2.json",
+      "sha256": "030497fb2fcde5e6bc4fd244549405568ddd7603c45d4bc549c6047fab9de00e",
+      "n_bytes": 2448
+    },
+    {
+      "path": "results/session_memory_1447/fr11_v7_dvi_v3_local_fover/session_state.json",
+      "sha256": "7bf445b2c1a4f3587517d15d2b0eecbda56d32c768352b241adcb2881fa98565",
+      "n_bytes": 184834
+    },
+    {
+      "path": "results/session_memory_1471/fr11_v8_exp1447_policy_fresh_verified_rows/session_state.json",
+      "sha256": "3c1d5205057d2f09382079fb8bc3462b49c4701aa405ab3fd3a1c62309ddeb5e",
+      "n_bytes": 16481
+    }
+  ],
+  "state_files_restored_sha_match": true,
+  "ground_truth_source": "official HumanEval check() execution",
+  "field_principles": {
+    "honest_verdict": "Terminal prefix separates complete, blocked, and failed runs.",
+    "corpus": "Identifies the benchmark split so results are not cross-corpus mixed.",
+    "n_problems": "HumanEval-full sample size must be 164 to support benchmark claims.",
+    "n_seeds": "Five adversarial replication seeds expose seed-sensitive lifts.",
+    "condition_a_production_auroc_mean": "Production verifier scoring quality.",
+    "condition_a_production_auroc_std": "Replication noise for production scoring.",
+    "condition_b_architecture_only_auroc_mean": "Architecture-only verifier scoring baseline.",
+    "condition_b_architecture_only_auroc_std": "Replication noise for architecture-only scoring.",
+    "condition_a_production_pass_at_1_mean": "Production repair-pipeline pass@1.",
+    "condition_a_production_pass_at_1_std": "Production pass@1 replication noise.",
+    "condition_b_architecture_only_pass_at_1_mean": "Architecture-only repair-pipeline pass@1.",
+    "condition_b_architecture_only_pass_at_1_std": "Architecture-only pass@1 replication noise.",
+    "pass_at_1_vanilla": "Qwen3.6 baseline before Carnot correction.",
+    "pass_at_1_after_carnot_correct_production": "Repair-pipeline lift under both memory conditions.",
+    "pass_at_1_after_carnot_correct_architecture_only": "Repair-pipeline lift under both memory conditions.",
+    "learning_contribution": "Production minus architecture-only pass@1.",
+    "auroc_learning_contribution": "Production minus architecture-only AUROC.",
+    "per_verifier_condition_a_auroc": "Per-verifier production AUROC.",
+    "per_verifier_condition_b_auroc": "Per-verifier architecture-only AUROC.",
+    "random_seeds_used": "Determinism for replication.",
+    "reproducibility_checksum": "Content hash catches corpus, model, or state drift.",
+    "model_specs": "Names the compute target actually required by the task.",
+    "duration_s": "Real wall-clock measurement; never sleep-padded.",
+    "preconditions_checked": "Anti-fabrication evidence recorded before inference.",
+    "fr11_state_files": "Names every FR-11 state file that Condition B must reset.",
+    "state_files_restored_sha_match": "Non-destructive reset proof.",
+    "ground_truth_source": "HumanEval correctness comes from code execution.",
+    "peer_humaneval_verifier_baselines": "External comparison context.",
+    "baseline_comparison": "Shows lift versus vanilla and peer baselines.",
+    "methodology_note": "Honest interpretation of measured or blocked state."
+  },
+  "honest_verdict": "blocked_cuda_unavailable",
+  "blocked_resources": [
+    "cuda",
+    "hf_openai_humaneval",
+    "qwen36_gguf_cache"
+  ],
+  "condition_a_production_auroc_mean": null,
+  "condition_a_production_auroc_std": null,
+  "condition_b_architecture_only_auroc_mean": null,
+  "condition_b_architecture_only_auroc_std": null,
+  "condition_a_production_pass_at_1_mean": null,
+  "condition_a_production_pass_at_1_std": null,
+  "condition_b_architecture_only_pass_at_1_mean": null,
+  "condition_b_architecture_only_pass_at_1_std": null,
+  "pass_at_1_vanilla": null,
+  "pass_at_1_after_carnot_correct_production": null,
+  "pass_at_1_after_carnot_correct_architecture_only": null,
+  "learning_contribution": null,
+  "auroc_learning_contribution": null,
+  "repair_lift_production_vs_vanilla": null,
+  "repair_lift_architecture_only_vs_vanilla": null,
+  "per_verifier_condition_a_auroc": {},
+  "per_verifier_condition_b_auroc": {},
+  "peer_humaneval_verifier_baselines": [],
+  "baseline_comparison": {
+    "production_minus_vanilla": null,
+    "architecture_only_minus_vanilla": null,
+    "production_minus_peer_best": null,
+    "peer_best_pass_at_1": null
+  },
+  "methodology_note": "Blocked before live HumanEval inference, code execution, or repair because required resources were missing: cuda, hf_openai_humaneval, qwen36_gguf_cache. No pass@1, AUROC, candidate, execution, or ensemble metrics were inferred."
+}
