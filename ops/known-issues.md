@@ -5783,3 +5783,7 @@ Result: `torch 2.11.0+cu128`, `cuda compiled: 12.8`, device count = 2.
 **Recurrence prevention TODO:** add a torch index-url pin to `pyproject.toml` (under `[tool.uv]` or `[[tool.uv.index]]`) so any future `pip install` resolves the CUDA wheel automatically. Without this pin, any milestone task that runs `pip install -r requirements.txt` or `pip install --upgrade torch` can re-install the CPU-only variant.
 
 **Affected milestones:** `.268 (all 4 corpus tasks failed precondition before this fix; honest blocked_cuda artifacts in `results/experiment_2828-2831_*.json`). Next conductor iteration should re-attempt and produce real measurements.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).

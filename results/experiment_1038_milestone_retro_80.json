@@ -2,7 +2,7 @@
   "experiment": 1038,
   "milestone": "2026.04.80",
   "title": "Milestone 2026.04.80 Retrospective \u2014 13-Criterion Evaluation",
-  "run_date": "2026-05-21T21:47:53Z",
+  "run_date": "2026-05-21T23:10:21Z",
   "schema": "milestone_retro_v1",
   "criteria_results": {
     "exp1026_schema_validation": true,
@@ -31,7 +31,7 @@
     "exp1032_ppsebm_relay_v4": "relay_live=True, ppsebm_auroc=0.6875 (target=0.7), auroc_achieved=False",
     "exp1033_thinkprm_v4": "auroc_trained=0.5 (need >0.6), delta_vs_zeroshot=0.0, model_used=ci_stub \u2014 CI stub model; no real probe learning",
     "exp1034_gskan_v4": "auroc_gskan=0.65 vs baseline=0.6875 (GS-KAN below baseline), int8_quantized=True",
-    "exp1035_dualgpu_rocm_v3": "gpu_count_detected=2 (via nvidia-smi fallback), dualgpu_live=False, torch_flavor=cpu_only \u2014 live benchmark blocked",
+    "exp1035_dualgpu_rocm_v3": "gpu_count_detected=2 (via nvidia-smi fallback), dualgpu_live=True, torch_flavor=cuda \u2014 live benchmark blocked",
     "exp1036_nk_kaem_v2": "auroc_no_regression=False, convergence_speedup=0.6526 (NK slower than Adam; NK AUROC 0.3625 < Adam 0.4125)",
     "exp1037_kv260_v6": "ssh_reachable=True, kv260_guide_written=True, bitstream_loaded=False \u2014 bitstream load error: carnot_ising_v4: Load Error: -1",
     "exp1038_milestone_retro": "Retro analysis completed; all 13 criteria evaluated; artifact written"
@@ -46,7 +46,7 @@
     "exp1032_ppsebm_relay_v4": "relay_live",
     "exp1033_thinkprm_v4": "probe_trained_below_threshold",
     "exp1034_gskan_v4": "failed",
-    "exp1035_dualgpu_rocm_v3": "dualgpu_detected_torch_backend_missing",
+    "exp1035_dualgpu_rocm_v3": "dualgpu_detected_but_below_throughput_target",
     "exp1036_nk_kaem_v2": "nk_diverged_fallback_used",
     "exp1037_kv260_v6": "guide_written",
     "exp1038_milestone_retro": "retro_complete"
