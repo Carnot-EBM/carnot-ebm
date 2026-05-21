@@ -588,27 +588,27 @@ walls the naive recipe cannot push past.
 
 \begin{table}[h]
 \centering
-\caption{Multi-Corpus Dual-Condition Evaluation (exp2820--exp2823)}
+\caption{Multi-Corpus Dual-Condition Evaluation (exp2828--exp2832)}
 \label{tab:multi_corpus}
 \begin{tabular}{l c c c c l}
 \toprule
 Corpus & N & Architecture-only AUROC & Production AUROC & Learning $\Delta$ & Peer baseline \\
 \midrule
-FoVer & 1000 & 0.60 $\pm$ 0.05 & 0.85 $\pm$ 0.05 & +0.25 & HIVE 0.924 \\
-MBPP & 100 & 0.80 $\pm$ 0.02 & 0.80 $\pm$ 0.02 & 0.00 & $<$peer$>$ \\
-HumanEval & 164 & 0.80 $\pm$ 0.02 & 0.80 $\pm$ 0.02 & 0.00 & $<$peer$>$ \\
-TruthfulQA & 200 & 0.69 $\pm$ 0.02 & 0.68 $\pm$ 0.02 & -0.01 & GPT-3 MC1 $\sim$28\% \\
+FoVer & 1000 & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & HIVE 0.924 \\
+MBPP & 100 & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & peer baseline not established \\
+HumanEval & 164 & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & peer baseline not established \\
+TruthfulQA & 200 & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & \emph{unmeasured (blocked CUDA)} & GPT-3 MC1 $\sim$28\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 \subsection{Self-Learning Contribution Disclosure}
 \label{sec:self_learning_disclosure}
-Per exp2820, the Production AUROC for FoVer includes the accumulated FR-11 state (NEXUS rules, constraint templates, and session memory derived from prior FoVer training). This makes the continuous self-learning contribution explicit.
+Exp 2828 reports \texttt{learning\_contribution is unmeasured} because the FoVer dual-condition run ended at blocked CUDA before inference. The per-verifier contribution field reports: No per-verifier learning-contribution rows were measured. This disclosure keeps the accumulated FR-11 state separate from the architecture-only baseline.
 
 \subsection{Per-verifier Breakdown}
 \label{sec:per_verifier_breakdown}
-The exp2824 matrix analysis isolates verifier performance across conditions, highlighting the distinction between memory-augmented and architecture-transfer verifiers.
+Exp 2832 provides the per-verifier cross-corpus matrix used by this table. It contains 0 measured verifier rows; architecture-transfer: none; memory-augmented: none; corpus-specific: none; low-signal: none. The non-FoVer diversity-gap flag is \texttt{true}. Methodology note: No synthetic verifier rows were inferred. The upstream artifacts contained empty per-verifier AUROC maps, so the real-data matrix is empty and the diversity gap remains open.
 
 Section~\ref{sec:bounds} corrects v2's geometric-mean joint-volume
 approximation, states the correct $\sqrt{\det(\Sigma)}$ factor, and

@@ -1,0 +1,124 @@
+{
+  "honest_verdict": "complete: exp2828-2832 artifacts integrated honestly; at least one dual-condition AUROC remains unmeasured, so arxiv_ready_v7=false",
+  "paper_v6_compile_success": true,
+  "corpora_in_table": [
+    "FoVer",
+    "MBPP",
+    "HumanEval",
+    "TruthfulQA"
+  ],
+  "submission_package_ready": false,
+  "arxiv_ready_v7": false,
+  "duration_s": 0.4434974193572998,
+  "all_dual_condition_auroc_measured": false,
+  "table_rows": [
+    {
+      "corpus": "FoVer",
+      "n": 1000,
+      "architecture_only": null,
+      "architecture_only_std": null,
+      "production": null,
+      "production_std": null,
+      "learning_delta": null,
+      "peer": "HIVE 0.924",
+      "honest_verdict": "blocked_cuda: Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; assert torch.cuda.is_available()\n    ^^^^^^^^^^^^\nModuleNotFoundError: No module named 'torch'",
+      "measured": false
+    },
+    {
+      "corpus": "MBPP",
+      "n": 100,
+      "architecture_only": null,
+      "architecture_only_std": null,
+      "production": null,
+      "production_std": null,
+      "learning_delta": null,
+      "peer": "peer baseline not established",
+      "honest_verdict": "blocked_cuda_unavailable",
+      "measured": false
+    },
+    {
+      "corpus": "HumanEval",
+      "n": 164,
+      "architecture_only": null,
+      "architecture_only_std": null,
+      "production": null,
+      "production_std": null,
+      "learning_delta": null,
+      "peer": "peer baseline not established",
+      "honest_verdict": "blocked_cuda_unavailable",
+      "measured": false
+    },
+    {
+      "corpus": "TruthfulQA",
+      "n": 200,
+      "architecture_only": null,
+      "architecture_only_std": null,
+      "production": null,
+      "production_std": null,
+      "learning_delta": null,
+      "peer": "GPT-3 MC1 $\\sim$28\\%",
+      "honest_verdict": "blocked_cuda_unavailable",
+      "measured": false
+    }
+  ],
+  "source_artifacts": {
+    "FoVer": {
+      "path": "results/experiment_2828_fover_memory_leakage_isolation.json",
+      "honest_verdict": "blocked_cuda: Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; assert torch.cuda.is_available()\n    ^^^^^^^^^^^^\nModuleNotFoundError: No module named 'torch'",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    },
+    "MBPP": {
+      "path": "results/experiment_2829_mbpp_ensemble_eval.json",
+      "honest_verdict": "blocked_cuda_unavailable",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    },
+    "HumanEval": {
+      "path": "results/experiment_2830_humaneval_full_ensemble_eval.json",
+      "honest_verdict": "blocked_cuda_unavailable",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    },
+    "TruthfulQA": {
+      "path": "results/experiment_2831_truthfulqa_ensemble_eval.json",
+      "honest_verdict": "blocked_cuda_unavailable",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    },
+    "Matrix": {
+      "path": "results/experiment_2832_cross_corpus_verifier_matrix_v2.json",
+      "honest_verdict": "complete: upstream artifacts loaded but no measured per-verifier AUROC rows were present",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    }
+  },
+  "compile_result": {
+    "success": true,
+    "engine": "pdflatex",
+    "command": [
+      "pdflatex",
+      "-interaction=nonstopmode",
+      "main.tex"
+    ],
+    "returncode": 0,
+    "stdout_tail": "0.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.p\nfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/\ntexmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts\n/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/am\nsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.p\nfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share\n/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fon\nts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public\n/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm\nsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/\nshare/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-di\nst/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texmf-dist/fonts/type1\n/public/amsfonts/cm/cmtt8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfont\ns/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm100\n0.pfb>\nOutput written on main.pdf (27 pages, 648438 bytes).\nTranscript written on main.log.\n",
+    "stderr_tail": ""
+  },
+  "paper_path": "docs/arxiv-paper/main.tex",
+  "submission_attempted": false,
+  "credentialed_submission_attempted": false,
+  "operator_only_external_publication": true,
+  "field_principles": {
+    "honest_verdict": "Terminal prefix.",
+    "paper_v6_compile_success": "Did pdflatex succeed.",
+    "corpora_in_table": "Names corpora present in the dual-condition results table.",
+    "submission_package_ready": "True if operator-ready; task NEVER submits per Operator-Only rule.",
+    "duration_s": "Expected 30-120s for pdflatex + edits."
+  }
+}
