@@ -54,6 +54,7 @@ try:
     from carnot.verify.tier0r_curry_howard import Tier0rVerifier
     from carnot.verify.tier0s_halluguard import Tier0sVerifier
     from carnot.verify.tier0u_logical_consistency import Tier0uVerifier
+    from carnot.verify.tier0v_set_consistency import SetConsistencyVerifier
 except ModuleNotFoundError as exc:  # pragma: no cover - raw system Python without JAX.
     if exc.name != "jax":
         raise
@@ -99,4 +100,5 @@ else:
         "Tier0rVerifier",
         "Tier0sVerifier",
         "Tier0uVerifier",
+        "SetConsistencyVerifier",
     ]
