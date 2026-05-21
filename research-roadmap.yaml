@@ -112,9 +112,9 @@ tasks:
         - data/constraint_templates_*.json
         - data/fr11_ssd_training_v3.jsonl
         - data/fr11_zenil_distill_v2.jsonl
-        - in-memory state via python/carnot/pipeline/{session_memory,
+        - in-memory state via python/carnot/pipeline/{{session_memory,
           cross_session_relay, self_learning_replay,
-          query_time_memory_policy}.py
+          query_time_memory_policy}}.py
 
       TASK: Run the production verifier ensemble v7b against FoVer
       (n=1000 random subset, seed=42) under TWO memory conditions:
@@ -170,7 +170,7 @@ tasks:
           principle: "= A - B. Direct measurement of FR-11 self-learning contribution. > 0.05 = substantial; 0.02-0.05 = moderate; < 0.02 = minimal."
         - per_verifier_learning_contribution: dict[str, float]
           principle: "Which specific verifiers degrade most without FR-11 memory."
-        - fr11_state_files: list[{path, sha256, n_bytes}]
+        - fr11_state_files: list[{{path, sha256, n_bytes}}]
           principle: "Names the persisted state that was reset."
         - state_files_restored_sha_match: true
           principle: "Proves FR-11 state was restored to original SHAs (non-destructive)."
@@ -182,7 +182,7 @@ tasks:
           principle: "Determinism precondition for reproducibility."
         - reproducibility_checksum: str
           principle: "Catches corpus / model / state drift."
-        - model_specs: {name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}
+        - model_specs: {{name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}}
           principle: "Names compute target."
         - duration_s: float
           principle: "Expected >= 3600s for 2 conditions x 5 seeds x N=1000 live inference. Sleep-padding forbidden per CLAUDE.md Verifier Authenticity Discipline."
@@ -268,13 +268,13 @@ tasks:
           principle: "Determinism."
         - reproducibility_checksum: str
           principle: "Catches drift."
-        - model_specs: {name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}
+        - model_specs: {{name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}}
           principle: "Names compute target."
         - duration_s: float
           principle: "Expected >= 1800s. Sleep-padding forbidden."
         - preconditions_checked: list
           principle: "Anti-fabrication."
-        - fr11_state_files: list[{path, sha256, n_bytes}]
+        - fr11_state_files: list[{{path, sha256, n_bytes}}]
           principle: "Names state reset for condition B."
         - state_files_restored_sha_match: true
           principle: "Non-destructive proof."
@@ -454,7 +454,7 @@ tasks:
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:' / 'success:'
           principle: "Terminal prefix."
-        - verifier_corpus_dual_matrix: dict[verifier_id, dict[corpus, {production, architecture_only, delta}]]
+        - verifier_corpus_dual_matrix: dict[verifier_id, dict[corpus, {{production, architecture_only, delta}}]]
           principle: "Full 3-D matrix; downstream paper-v6 §5 dual-condition table."
         - architecture_transfer_verifiers: list[str]
           principle: "Verifiers with condition-B AUROC >= 0.75 on ALL corpora — the cross-corpus workhorses, paper-v6 §5 headline."
@@ -583,7 +583,7 @@ tasks:
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:'
           principle: "Terminal prefix."
-        - corpora_headline_table: dict[corpus, {n, architecture_only_mean_std, production_mean_std, learning_delta, peer}]
+        - corpora_headline_table: dict[corpus, {{n, architecture_only_mean_std, production_mean_std, learning_delta, peer}}]
           principle: "The actual multi-corpus dual-condition headline."
         - fover_shape_overfit_confirmed: bool
           principle: "Operationalized: true if non-FoVer architecture-only AUROC < FoVer architecture-only AUROC by >0.10."
@@ -596,7 +596,7 @@ tasks:
           principle: "Verifier classification carried from exp2824."
         - recommended_headline_repin: bool
           principle: "True if operator should consider re-pinning the headline."
-        - gaps_for_268: list[{title, rationale}]
+        - gaps_for_268: list[{{title, rationale}}]
           principle: "Forward queue: HaluEval, FEVER, or other priorities surfaced by .267 results."
         - acceptance_criteria_met: int
           principle: "Out of 10 declared criteria for this milestone."

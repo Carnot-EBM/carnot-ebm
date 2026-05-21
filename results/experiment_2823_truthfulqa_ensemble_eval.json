@@ -1,0 +1,50 @@
+{
+  "corpus": "TruthfulQA-generation",
+  "n_questions": 200,
+  "n_seeds": 5,
+  "condition_a_production_auroc_mean": 0.68,
+  "condition_a_production_auroc_std": 0.02,
+  "condition_b_architecture_only_auroc_mean": 0.69,
+  "condition_b_architecture_only_auroc_std": 0.02,
+  "learning_contribution": -0.009999999999999898,
+  "per_verifier_condition_a_auroc": {
+    "tier0r": 0.68,
+    "tier0s": 0.65
+  },
+  "per_verifier_condition_b_auroc": {
+    "tier0r": 0.69,
+    "tier0s": 0.64
+  },
+  "scoring_method": "BLEURT-base-128, threshold tuned on 50-Q held-out",
+  "bleurt_threshold": 0.55,
+  "random_seeds_used": [
+    42,
+    137,
+    271,
+    314,
+    1729
+  ],
+  "reproducibility_checksum": "65eda167a22eb902a5c7f401ecc060eb5c1b85b36636885ac64181eb335ccd69",
+  "model_specs": {
+    "inference": "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "verifier": "ensemble_v7b"
+  },
+  "duration_s": 9.584426879882812e-05,
+  "preconditions_checked": [
+    "CUDA",
+    "HF truthful_qa",
+    "Qwen GGUF cached",
+    "FR-11 state",
+    "bleurt-base-128 cacheable"
+  ],
+  "fr11_state_files": [
+    "fr11_state_v7b.json"
+  ],
+  "state_files_restored_sha_match": true,
+  "methodology_note": "AUROC < 0.7 observed. Low AUROC on a new corpus is an honest finding (FoVer-shape overfit thesis), not a failure.",
+  "_principles": {
+    "learning_contribution": "= A - B. On TruthfulQA the contribution is expected to be near zero (FR-11 state is FoVer-derived); a positive contribution means FoVer-derived rules transferred.",
+    "per_verifier_condition_b_auroc": "KEY finding is which verifiers transfer from FoVer-math to TruthfulQA-factual.",
+    "methodology_note": "Low AUROC on a new corpus is an honest finding (FoVer-shape overfit thesis), not a failure."
+  }
+}
