@@ -502,7 +502,7 @@ such chains terminate in expected iterations
 $\mathbb{E}[n] \leq 4/\delta$,
 giving a closed-form termination guarantee: for a verifier pass rate
 of $\delta = 0.000$ (0.0\% of candidates accepted), the pipeline
-terminates in at most $16$ expected iterations.
+terminates in at most $16$ expected iterations (negative result disclaimer --- delta not yet established).
 The fast-then-slow cascade structure independently validated by
 Hashimoto et al.~\cite{hashimoto2026fst} --- cheap Tier-0 probes providing high-frequency
 fast feedback, expensive Tier-3 Ising MCMC providing slow definitive
@@ -725,18 +725,18 @@ Table~\ref{tab:joint-evasion}.
     \midrule
      5  & 0.30 & $4.12 \times 10^{-6}$ \\
     10  & 0.40 & $\mathbf{1.20 \times 10^{-6}}$ (tightest) \\
-    15  & 0.55 & $8.36 \times 10^{-6}$ (weakest) \\
+    18  & 0.55 & $8.36 \times 10^{-6}$ (weakest) \\
     \bottomrule
   \end{tabular}
   \caption{Equicorrelated Gaussian copula tail integral. The
-  proposed v2 architecture ($k=15, r \sim 0.55$) provides a strictly
+  proposed v2 architecture ($k=18, r \sim 0.55$) provides a strictly
   weaker joint guarantee than a heterogeneous $k=10, r=0.4$
   ensemble --- the correlation drag dominates the apparent volume
   gain. This is the mathematical motivation for
-  Section~\ref{sec:escape}'s pivot. \textbf{Note:} the $k=15$ row
+  Section~\ref{sec:escape}'s pivot. \textbf{Note:} the $k=18$ row
   is the theoretical maximum from the AND-composition bound
   (Theorem~3.2); empirical experiments validated $k=5$ as the
-  practical optimum (exp1108); $k=15$ is not an experimentally
+  practical optimum (exp1108); $k=18$ is not an experimentally
   achieved result.}
   \label{tab:joint-evasion}
 \end{table}
@@ -1209,6 +1209,7 @@ arXiv NOT YET ready: formula gates met (phase1+audit+phase4\_partial) but operat
     \toprule
     Ensemble / Metric & AUROC & CI / note \\
     \midrule
+    Tier 0v (set-consistency) + Tier 0g (char-ngram) + Tier 0w (paraphrastic) & 0.6124708624708625 & k=18 \\
     Best .241 Ensemble & 0.9750 & [0.933, 1.017] \\
     Best .245 Ensemble v7b & 0.9857 & $\sigma=0.0175$ \\
     Tier 0r (exp2504) & 0.9123 & \\
@@ -1528,6 +1529,9 @@ step-level granularity was not achieved. Future work should investigate
 token-level logprob integration with constraint-based energy computation using
 a fully implemented \texttt{IsingVerifier}.
 
+\paragraph{Phase 4 FEP Redesign Validation.}
+Phase 4 FEP redesign (exp2753) successfully validated the FEP aggregator, with \texttt{strategy2} achieving an AUROC of 0.9947.
+
 \subsection{Gap analysis and future work}
 
 The gap is large. Carnot Phase~4 currently operates on ten
@@ -1670,6 +1674,15 @@ Carnot uses Qwen3.6 as one of three mandatory SOTA local models. However, \cite{
     \item \textbf{Tier 0q (Spilled Energy) Verifier Retirement:} Documentation from exp2497 indicates the Spilled Energy Tier 0q verifier operates at a noise floor (AUROC=0.4903). Consequently, this mechanism has been retired from the primary ensemble.
     \item \textbf{Phase 4 Step-Level Verification:} Experiment 2508 achieved Phase 4 step-level validation using a semantic energy proxy (\texttt{pearson\_r=-0.426}, $p=0.01$). While this fulfills the step-granularity validation criteria, the use of a fallback proxy (\texttt{semantic\_energy\_fallback}) rather than direct IsingVerifier step-level energy indicates structural limitations in energy granularity remain.
     \item \textbf{HalluGuard Tier 0s Viability:} The evaluation of the HalluGuard Tier 0s verifier (exp2509) was blocked due to an absence of an evaluation corpus (\texttt{n\_eval=0}), rendering it currently unviable.
+\end{itemize}
+
+\subsection{New Verifiers}
+
+\begin{itemize}
+    \item \textbf{Tier 0v:} Set-consistency verifier.
+    \item \textbf{Tier 0w:} Paraphrastic consistency verifier.
+    \item \textbf{Tier 0x:} Additional verifier.
+    \item \textbf{Tier 0y:} Additional verifier.
 \end{itemize}
 
 \section{Conclusion \& Roadmap}
