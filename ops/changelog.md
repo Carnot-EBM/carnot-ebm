@@ -7014,3 +7014,8 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
     import torch; assert torch.cuda.is_available()
     ^^^^^^^^^^^^
 ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memory_leakage_isolation.json
+- 2026-05-21: FoVer Memory-Leakage Isolation: AUROC With vs Without FR-11 Self-Learning State (CODEX) (⚠️ Blocked) — honest_verdict=blocked_cuda: Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+    import torch; assert torch.cuda.is_available()
+    ^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memory_leakage_isolation.json
