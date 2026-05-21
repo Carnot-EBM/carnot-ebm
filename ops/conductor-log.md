@@ -5875,3 +5875,5 @@ Ripgrep i |
     at async file:///usr/lib/node_modules/ |
 | 2026-05-21 18:16 UTC | HumanEval Full (164) — Both Memory Conditions (5 s | FAIL | Gemini CLI error: OW57.js:309732:14)
     at async file:///usr/lib/node_modules |
+| 2026-05-21 18:20 UTC | TruthfulQA Corpus — Both Memory Conditions (N=200, | FAIL | Gemini CLI error: OW57.js:309732:14)
+    at async file:///usr/lib/node_modules |
