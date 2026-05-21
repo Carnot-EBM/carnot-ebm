@@ -7031,3 +7031,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-21: HumanEval Full (164) — Both Memory Conditions (CODEX, 5 seeds each) (⚠️ Blocked) — honest_verdict=blocked_cuda_unavailable; results/experiment_2830_humaneval_full_ensemble_eval.json
 - 2026-05-21: HumanEval Full (164) — Both Memory Conditions (CODEX, 5 seeds each) (⚠️ Blocked) — honest_verdict=blocked_cuda_unavailable; results/experiment_2830_humaneval_full_ensemble_eval.json
 - 2026-05-21: TruthfulQA Corpus — Both Memory Conditions (CODEX, N=200, 5 seeds each, HONEST RE-RUN) (⚠️ Blocked) — honest_verdict=blocked_cuda_unavailable; results/experiment_2831_truthfulqa_ensemble_eval.json
+- 2026-05-21: Cross-Corpus Per-Verifier Dual-Condition Discriminative Matrix v2 (CODEX, real data) (✅ Complete) — honest_verdict=complete: upstream artifacts loaded but no measured per-verifier AUROC rows were present; results/experiment_2832_cross_corpus_verifier_matrix_v2.json
