@@ -367,6 +367,45 @@ class RepairResult:
     history: list[VerificationResult]
 
 
+@dataclass
+class RoutingDecision:
+    path: str
+    verifier: str
+
+
+class WeakStrongRouter:
+    def __init__(self, t_low: float, t_high: float):
+        self.t_low = t_low
+        self.t_high = t_high
+
+    def route(self, prompt: str, response: str, weak_score: float | None = None) -> RoutingDecision:
+        if weak_score is None:
+            # TF-IDF Proxy
+            import pickle
+            import os
+            proxy_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "results", "weak_strong_proxy.pkl")
+            if not os.path.exists(proxy_path):
+                proxy_path = "results/weak_strong_proxy.pkl"
+            if os.path.exists(proxy_path):
+                with open(proxy_path, "rb") as f:
+                    data = pickle.load(f)
+                    vectorizer = data["vectorizer"]
+                    model = data["model"]
+                X = vectorizer.transform([response])
+                weak_score = float(model.predict_proba(X)[0, 1])
+            else:
+                # ODAR free energy proxy fallback
+                complexity = len(prompt.split()) / 100.0
+                weak_score = complexity - 0.5
+        
+        if weak_score < self.t_low:
+            return RoutingDecision(path='accept', verifier='none')
+        elif weak_score > self.t_high:
+            return RoutingDecision(path='full_ensemble', verifier='tier0_all')
+        else:
+            return RoutingDecision(path='tier0f_only', verifier='semantic_calibration')
+
+
 # ---------------------------------------------------------------------------
 # Pipeline class
 # ---------------------------------------------------------------------------
@@ -454,6 +493,7 @@ class VerifyRepairPipeline:
         balance_ratio: float = 1.0,
         jepa_fast_path_predictor: Any | None = None,
         jepa_fast_path_threshold: float = 0.2,
+        weak_strong_router: WeakStrongRouter | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -566,6 +606,7 @@ class VerifyRepairPipeline:
         self._jepa_fast_path_predictor = jepa_fast_path_predictor
         self._jepa_predictor = jepa_fast_path_predictor
         self._jepa_fast_path_threshold = jepa_fast_path_threshold
+        self.weak_strong_router = weak_strong_router
         self._session_log: list[dict[str, Any]] = []
         self._session_observations_seen = 0
         self._session_fast_path_taken = 0
