@@ -1,0 +1,23 @@
+{
+  "honest_verdict": "success: KV260 continuity .259 verified via SSH",
+  "ssh_kria_reachable": true,
+  "xmutil_available": true,
+  "bitstream_loaded": true,
+  "uio_count": 5,
+  "uio0_first_word_read": true,
+  "uio0_value": 0,
+  "kv260_terminal": false,
+  "duration_s": 24.5,
+  "preconditions_checked": [
+    {
+      "resource": "ssh_reachability",
+      "available": true,
+      "check": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'"
+    },
+    {
+      "resource": "xmutil",
+      "available": true,
+      "check": "ssh kria 'sudo xmutil listapps 2>/dev/null | head -20'"
+    }
+  ]
+}

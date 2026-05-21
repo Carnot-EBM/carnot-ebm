@@ -208,10 +208,8 @@ not hardware.
 Without sudo (udev rule), the DirtyJTAG and FlashPro5 USB raw devices remain root-only. The conductor's experiments would face the same "fails to open device" error. Once the udev rule lands, every subsequent JTAG/flash op should work from non-root.
 
 ## KV260
-- date: 20260520
-- ssh_kria: "reachable since 2026-05-20 ~13:00 EDT (Ubuntu Xilinx; `ssh kria` alias resolves to 192.168.51.98)"
-- active_overlay: "carnot_ising_v2_n64 (= carnot_ising_v4 XDC-constrained bitstream)"
-- uio_devices_present: 5 (/dev/uio0..uio4)
-- precondition_for_kv260_tasks: "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true' — NEVER host /dev/mmcblk* per CLAUDE.md 'KV260 SSH-Not-SD-Card Discipline' (2026-05-20)"
-- next_step: "XDC-constrained bitstream refresh (scp + xmutil loadapp), then board-level latency transcript via SSH. The prior 'insert SD card with PYNQ image' next_step (.254/.256/.257/.258 escalations) was wrong-mechanism leftover from a pre-board-boot workflow; retired per 2026-05-20 operator directive — see ops/operator-followup.md Completed 2026-05-20 ~22:45."
-- latest_bitstream: "carnot_ising_v4 (load via: ssh kria 'xmutil loadapp carnot_ising_v2_n64')"
+- date: 2026-05-20
+- ssh_kria: reachable
+- active_overlay: carnot_ising_v2_n64 (= carnot_ising_v4 bitstream)
+- uio_devices_present: 5
+- next_step: if uio0_first_word_read=true → ready for board-level latency transcript task (terminal-step). If unreachable → operator re-attach board.
