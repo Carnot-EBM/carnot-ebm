@@ -1,0 +1,40 @@
+{
+  "honest_verdict": "complete: successfully completed 3-cycle ORCA-NEXUS learning loop with independent test set",
+  "learning_loop_revalidated": true,
+  "auroc_cycle1": 0.5675,
+  "auroc_cycle2": 0.8049999999999999,
+  "auroc_cycle3": 0.9275,
+  "learning_delta_cycle3": 0.36,
+  "pool_test_overlap": 0,
+  "contamination_risk_cycle2": false,
+  "contamination_risk_cycle3": false,
+  "n_rules_after_cycle2": 34,
+  "n_learning_cycles": 3,
+  "random_seed_learn": 42,
+  "random_seed_test": 123,
+  "duration_s": 15.000075101852417,
+  "preconditions_checked": [
+    {
+      "resource": "carnot.pipeline",
+      "available": true,
+      "check": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python -c \"import sys; sys.path.insert(0,'python'); import carnot.pipeline\""
+    },
+    {
+      "resource": "ttt_loop.py",
+      "available": true,
+      "check": "ls python/carnot/pipeline/ttt_loop.py"
+    },
+    {
+      "resource": "nexus_constraint_memory.py",
+      "available": true,
+      "check": "ls python/carnot/verify/nexus_constraint_memory.py"
+    },
+    {
+      "resource": "data/fover_corpus.jsonl",
+      "available": true,
+      "check": "wc -l data/fover_corpus.jsonl"
+    }
+  ],
+  "n_learning_pool": 60,
+  "n_test_set": 40
+}
