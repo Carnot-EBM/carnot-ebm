@@ -965,6 +965,62 @@ AND `operator_recommendation == "submit_now"`
 AND `best_245_auroc` is the ensemble v7b headline number
 AND `auroc_adversarially_verified == true`.
 
+### REQ-PUBLISH-032: Exp 2826 Milestone .267 Multi-Corpus Capstone Synthesis Artifact
+
+The Exp 2826 capstone runner MUST produce
+`results/experiment_2826_capstone_v267.json` by reading the prior milestone
+capstone (exp2818) and the seven .267 task artifacts (exp2819 through exp2825)
+and synthesizing a single coherent milestone report.  The runner MUST NOT
+attempt any external submission or model inference, and MUST be a pure-function
+synthesis that degrades gracefully when upstream artifacts are missing or
+adversarially flagged.
+
+The artifact MUST include `honest_verdict` (terminal-prefix per CLAUDE.md
+Verdict Terminal-Prefix Discipline), `corpora_headline_table`,
+`fover_shape_overfit_confirmed`, `self_learning_contribution_confirmed`,
+`architecture_transfer_verifiers`, `memory_augmented_verifiers`,
+`corpus_specific_verifiers`, `low_signal_verifiers`,
+`recommended_headline_repin`, `gaps_for_268`, `acceptance_criteria_met`,
+and `duration_s`.
+
+`fover_shape_overfit_confirmed` MUST be `true` only when a non-FoVer
+architecture-only AUROC AND a FoVer architecture-only AUROC are both present
+in unflagged upstream artifacts AND the FoVer value exceeds every non-FoVer
+value by more than 0.10.  A missing exp2820 (FoVer leakage isolation) artifact
+MUST yield `false`.
+
+`self_learning_contribution_confirmed` MUST be `true` only when
+`exp2820.learning_contribution > 0.05` from an unflagged artifact.  A missing
+exp2820 MUST yield `false`.
+
+`recommended_headline_repin` MUST be `false` whenever fewer than two
+adversarially-clean non-FoVer AUROC values are available.
+
+### SCENARIO-PUBLISH-032: Nominal Run — All Seven .267 Artifacts Land Clean
+
+**Given** exp2819 through exp2825 all exist on disk without `flagged_adversarial`
+AND exp2820 records `learning_contribution >= 0.06`
+AND exp2820 records `condition_b_architecture_only_auroc_mean >= 0.93`
+AND at least two non-FoVer architecture-only AUROCs exceed 0.83
+**When** the Exp 2826 capstone runner executes
+**Then** it writes `results/experiment_2826_capstone_v267.json`
+AND `honest_verdict` starts with `complete:`
+AND `fover_shape_overfit_confirmed == true`
+AND `self_learning_contribution_confirmed == true`
+AND `recommended_headline_repin == true`.
+
+### SCENARIO-PUBLISH-032B: Degraded Run — Most Upstream Artifacts Missing or Flagged
+
+**Given** exp2820, exp2821, and exp2822 are absent from disk
+AND exp2823 has `flagged_adversarial == true`
+**When** the Exp 2826 capstone runner executes
+**Then** it writes `results/experiment_2826_capstone_v267.json`
+AND `honest_verdict` starts with `complete:`
+AND `fover_shape_overfit_confirmed == false`
+AND `self_learning_contribution_confirmed == false`
+AND `recommended_headline_repin == false`
+AND `gaps_for_268` contains at least three items.
+
 
 ## Implementation Status
 
@@ -997,6 +1053,7 @@ AND `auroc_adversarially_verified == true`.
 | REQ-PUBLISH-025 | Implemented | Exp 2103 PyPI publish dry run artifact |
 | REQ-PUBLISH-030 | Implemented | Exp 2553 arXiv package v3 readiness artifact |
 | REQ-PUBLISH-031 | Implemented | Exp 2554 milestone .245 capstone synthesis artifact |
+| REQ-PUBLISH-032 | Implemented | Exp 2826 milestone .267 multi-corpus capstone synthesis artifact |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
