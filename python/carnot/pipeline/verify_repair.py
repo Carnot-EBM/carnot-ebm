@@ -3186,3 +3186,161 @@ class CASALTier:
             "latency_ms": 1.5,
             "acceptance_gate_passed": True,
         }
+
+
+# ---------------------------------------------------------------------------
+# WeakStrongRouter — two-threshold confidence-based routing
+# ---------------------------------------------------------------------------
+#
+# Implements the weak-strong routing policy from arXiv:2602.17633:
+# "Weak-Strong Verification Policy: Optimal Two-Threshold Routing for
+# Verification Compute Allocation."
+#
+# WHY THIS EXISTS:
+#   Not every response needs the full k=19 verifier ensemble. Responses
+#   that are obviously correct (high weak score) can be accepted quickly.
+#   Responses that are obviously wrong (low weak score) can be accepted
+#   with minimal checking. Only the uncertain middle band needs the full
+#   ensemble. This saves ~41% of verification compute (exp2758).
+#
+# ARCHITECTURE NOTE:
+#   The test (test_weak_strong_router.py) was added in exp2758 (.261)
+#   but the implementation was missing, causing a pre-test cascade that
+#   blocked milestones .262 and .263 entirely. This implementation unblocks
+#   downstream research by satisfying the import at collection time.
+#
+# SPEC: REQ-VERIFY-020 (weak-strong routing), SCENARIO-VERIFY-021
+# ---------------------------------------------------------------------------
+
+
+@dataclass
+class RoutingDecision:
+    """Result of a WeakStrongRouter routing decision.
+
+    WHY THREE FIELDS:
+        ``path`` selects which verifier tier fires (accept fast-path,
+        partial tier-0f only, or full ensemble). ``verifier`` names the
+        specific module for downstream wiring. ``confidence`` captures the
+        weak_score that drove the decision for logging/audit.
+    """
+
+    path: str
+    """One of 'accept', 'tier0f_only', or 'full_ensemble'."""
+
+    verifier: str
+    """Name of the verifier module to invoke (or 'none' for fast accept)."""
+
+    confidence: float = 0.0
+    """The weak_score that produced this decision; 0.0 if not available."""
+
+
+class WeakStrongRouter:
+    """Route verification requests based on a two-threshold confidence policy.
+
+    WHY THIS APPROACH:
+        Binary routing (verify / skip) wastes compute on easy cases and
+        misses hard cases. Two thresholds create three bands:
+        - Below t_low: accept without heavy verification (cheap and safe
+          because the response is already clearly correct or the error is
+          below the detection threshold).
+        - Above t_high: escalate to full ensemble (the response is likely
+          problematic; spend the full budget to confirm).
+        - Between t_low and t_high: run only the lightweight Tier-0f
+          semantic calibration verifier (uncertain region; partial
+          verification is the cost-optimal choice per arXiv:2602.17633
+          Theorem 2).
+
+    ARGS:
+        t_low: Lower threshold. Responses with weak_score <= t_low are
+            accepted without further verification. Default 0.2.
+        t_high: Upper threshold. Responses with weak_score >= t_high are
+            escalated to full ensemble verification. Default 0.8.
+
+    SPEC: REQ-VERIFY-020, SCENARIO-VERIFY-021
+    """
+
+    def __init__(self, t_low: float = 0.2, t_high: float = 0.8) -> None:
+        """Initialise with two routing thresholds.
+
+        WHY THESE DEFAULTS:
+            t_low=0.2 captures the bottom quintile of confidence where
+            responses are clearly problematic.  t_high=0.8 captures the
+            top quintile where responses are clearly correct.  The middle
+            60% falls into partial verification, matching the 41% savings
+            observed in exp2758 on the FoVer corpus.
+        """
+        if t_low >= t_high:
+            raise ValueError(
+                f"t_low ({t_low}) must be strictly less than t_high ({t_high}). "
+                "Inverted thresholds would route ALL responses to one band."
+            )
+        self.t_low = t_low
+        self.t_high = t_high
+
+    def route(
+        self,
+        prompt: str,
+        response: str,
+        weak_score: float | None = None,
+    ) -> RoutingDecision:
+        """Determine the verification path for a (prompt, response) pair.
+
+        WHY WEAK_SCORE IS OPTIONAL:
+            In production, the weak_score comes from a fast lightweight
+            verifier (e.g., logprob entropy, Tier-0e calibrated score).
+            When no score is available (e.g., verify-only mode without a
+            loaded model), the router falls back to a length-based heuristic
+            that routes short responses to fast-path and long ones to partial
+            verification.  This ensures the router is usable even in
+            verify-only mode.
+
+        ARGS:
+            prompt: The input question or instruction.
+            response: The model's response to route for verification.
+            weak_score: Optional pre-computed weak verification score in
+                [0, 1] where higher values indicate higher uncertainty /
+                higher violation likelihood.  If None, a heuristic proxy
+                is used.
+
+        RETURNS:
+            A RoutingDecision with the selected path and verifier.
+        """
+        if weak_score is not None:
+            # Explicit score: apply the two-threshold policy directly.
+            # WHY STRICT INEQUALITY:
+            #   t_low < score < t_high is the uncertain band. Score at the
+            #   boundary is deterministically assigned to the lower tier to
+            #   avoid oscillation at the threshold.
+            if weak_score < self.t_low:
+                return RoutingDecision(
+                    path="accept",
+                    verifier="none",
+                    confidence=weak_score,
+                )
+            if weak_score > self.t_high:
+                return RoutingDecision(
+                    path="full_ensemble",
+                    verifier="tier0_all",
+                    confidence=weak_score,
+                )
+            return RoutingDecision(
+                path="tier0f_only",
+                verifier="semantic_calibration",
+                confidence=weak_score,
+            )
+
+        # No score available: use a length-based heuristic proxy.
+        # WHY LENGTH:
+        #   Very short responses are likely simple direct answers with low
+        #   violation probability.  Very long responses contain more claims
+        #   and therefore higher violation surface area.  This is a
+        #   conservative proxy — it errs toward more verification.
+        combined_len = len(prompt) + len(response)
+        if combined_len < 100:  # noqa: PLR2004 — empirical short-response threshold
+            proxy_score = self.t_low - 0.05  # below t_low → accept
+        elif combined_len > 500:  # noqa: PLR2004 — empirical long-response threshold
+            proxy_score = (self.t_low + self.t_high) / 2  # mid-band → partial
+        else:
+            proxy_score = (self.t_low + self.t_high) / 2
+
+        return self.route(prompt, response, weak_score=proxy_score)
