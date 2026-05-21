@@ -5761,3 +5761,25 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
 Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+
+### 2026-05-21 18:15 EDT: torch 2.12.0+cpu replaced GPU build in .venv
+
+**Symptom:** Every `.268 dual-condition corpus task (exp2828 FoVer, exp2829 MBPP, exp2830 HumanEval, exp2831 TruthfulQA) emitted `blocked_cuda_unavailable` despite `nvidia-smi` showing 2 × RTX 3090s with driver 595.71.05.
+
+**Root cause:** `.venv/`'s torch package was the CPU-only build (`torch 2.12.0+cpu`, `cuda compiled: None`). At some point in the recent 24 hours it got installed from default PyPI instead of the CUDA wheel index. Unclear which pip operation caused the regression.
+
+**Fix applied 2026-05-21 18:15 EDT:**
+```
+.venv/bin/pip install --upgrade --index-url https://download.pytorch.org/whl/cu128 \
+  torch torchvision torchaudio
+```
+
+Result: `torch 2.11.0+cu128`, `cuda compiled: 12.8`, device count = 2.
+
+**Recurrence prevention TODO:** add a torch index-url pin to `pyproject.toml` (under `[tool.uv]` or `[[tool.uv.index]]`) so any future `pip install` resolves the CUDA wheel automatically. Without this pin, any milestone task that runs `pip install -r requirements.txt` or `pip install --upgrade torch` can re-install the CPU-only variant.
+
+**Affected milestones:** `.268 (all 4 corpus tasks failed precondition before this fix; honest blocked_cuda artifacts in `results/experiment_2828-2831_*.json`). Next conductor iteration should re-attempt and produce real measurements.
