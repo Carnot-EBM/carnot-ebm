@@ -5663,3 +5663,4 @@ Ripgrep i |
 | 2026-05-21 05:54 UTC | Empirical Delta Root-Cause Audit: Verbose Repair L | OK | 81 passed in 3.55s |
 | 2026-05-21 06:01 UTC | FR-11 Tier 4 Adversarial Re-check v2: Independent  | OK | cache hit: 81 passed in 3.55s |
 | 2026-05-21 06:11 UTC | Ensemble v12 Integration: Add Tier 0v + Tier 0g-ch | OK | 145 passed in 6.59s |
+| 2026-05-21 06:15 UTC | Conformal Selective Acting Tier 0x (arXiv:2605.202 | OK | 145 passed in 4.80s |
