@@ -1,6 +1,53 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-20 (milestone 2026.05.258 research planning complete)
+**Last Updated:** 2026-05-21 (milestone 2026.05.260 research planning complete)
+
+## Session 2026-05-21 - Milestone 2026.05.260 Research Planning Complete
+
+**Milestone 2026.05.259 COMPLETED: 12 of 13 tasks produced artifacts — 10 of 12 acceptance criteria met. 2 adversarial-flagged experiments (exp2727 verifier energy, exp2731 Tier 0g semantic energy). phase1_ship_recommendation=SHIP per capstone exp2737.**
+
+**Milestone 2026.05.260 PLANNED as "Verifier Energy v2 Live GPU + KV260 Terminal Latency + Set-Consistency Tier 0v + Phase 4 FEP + FR-11 Tier 4 Self-Learning".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v260.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2738`–`exp2750`)
+- ID allocation: milestone `.259` used through `exp2737`, so `.260` starts at `exp2738`.
+- Research references updated with Post-.259 Planning Sweep (2026-05-21): 6 new papers added:
+  - arXiv:2602.17633 (Weak-Strong Verification Policy — optimal two-threshold routing; exp2745)
+  - arXiv:2602.11361 (Paraphrastic Consistency Probing — consistency variance across paraphrase perturbations; exp2746)
+  - arXiv:2603.20927 (Active Inference FEP Engineering — factor graph routing; exp2748)
+  - arXiv:2605.19895 (Streamlined Constraint Reasoning via CNN — NEXUS complement; research)
+  - arXiv:2603.02101 (Antiferromagnetic Ising Sampling FPTAS — near-critical sampling theory; research)
+  - arXiv:2503.10695 (Set-Consistency Energy Networks — energy over statement sets; exp2743)
+- **Three biggest gaps targeted**:
+  1. **CRITICAL — Adversarial flag exp2727 (verifier energy)**: exp2740 re-runs on RTX 3090 + Qwen3.6-35B GGUF, explicit CUDA precondition, minimum duration_s >= 60. prior_failures: exp2727 verdict=adversarial_flagged. retire_if_same_verdict=true.
+  2. **HIGH — Adversarial flag exp2731 (Tier 0g)**: exp2741 diagnoses H1 (TF-IDF collapse) vs H2 (GGUF constant logits) via instrumented GGUF call path. prior_failures: exp2731. retire_if_same_verdict=true.
+  3. **MEDIUM — OTV probe + diversity selection retirement**: exp2739 adds both to ops/exclusion_manifest.yaml (probe_auroc=0.25, diversity_lift=-8.5e-6).
+- **Phase structure**:
+  - Phase A (exp2738–exp2739): Archive .259 + Activate .260, OTV+Diversity retirement
+  - Phase B (exp2740–exp2741): Adversarial fix re-runs (verifier energy v2, Tier 0g live GPU)
+  - Phase C (exp2742): KV260 TERMINAL board-level latency transcript
+  - Phase D (exp2743–exp2746): New verifier research (Set-Consistency Tier 0v, empirical delta, weak-strong policy, paraphrastic consistency Tier 0w)
+  - Phase E (exp2747–exp2748): FR-11 Tier 4 self-learning live benchmark + Phase 4 FEP factor graph
+  - Phase F (exp2749–exp2750): Paper v6 arXiv package v2 + Capstone v260 (claude/opus)
+- **Agent routing**: 12 gemini/gemini-3.1-pro-preview (92.3%); 1 claude/opus (exp2750 capstone — requires_claude: true, within 2/13 ceiling).
+- **Hardware continuity**: exp2742 KV260 TERMINAL (board reachable via SSH, bitstream loaded, uio0_first_word_read=true — ready for latency transcript per exp2735).
+- **FR-11 mandate**: exp2747 (FR-11 Tier 4 continuous self-learning, continuous_self_learning_task: true). FR-11 Tier 2 COMPLETED in .256 (exp2695). FR-11 Tier 3 COMPLETED in .258 (exp2719). FR-11 Tier 3+ VIABLE in .259 (exp2733, 17 rules).
+- **New research contributions**:
+  - Set-Consistency Energy Networks (arXiv:2503.10695) — energy over statement sets (not pairs); exp2743 Tier 0v
+  - Weak-Strong Verification Policy (arXiv:2602.17633) — optimal two-threshold routing; exp2745
+  - Paraphrastic Consistency (arXiv:2602.11361) — consistency variance as energy signal; exp2746 Tier 0w
+  - Phase 4 Active Inference FEP (arXiv:2603.20927) — factor graph over verifier ensemble; exp2748
+- Exclusion manifest cross-check: 0 scope matches found.
+- **All CLAUDE.md mandatory disciplines applied**: Gemini-Default (2026-05-20, all 12 non-capstone tasks use gemini), prior_failures (13/13 with mandatory 4-field structure), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate, Hardware-Task Continuity (exp2742 KV260), KV260 SSH-Not-SD-Card discipline (ssh precondition, no /dev/mmcblk*), Exclusion Manifest 0 matches, Operator-Only publication discipline (no submission steps).
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.260. exp2738 (archive/activate) → exp2739 (OTV+diversity retirement) → exp2740 (verifier energy v2 live GPU — CRITICAL) → exp2741 (Tier 0g live GPU) → exp2742 (KV260 TERMINAL) → remaining tasks in dependency order → exp2750 (capstone).
+
+**Operator action required**:
+- Phase 1 ship checklist from exp2730: `git tag v0.1.0b1 && git push origin v0.1.0b1` (CI publishes to PyPI via OIDC); HuggingFace model card update; IPFS pin via web3.storage. Phase 1 ship is NOT gated on paper, hardware, or Phase 4 (per operator directive 2026-05-08).
+- arXiv v6 submission: HOLDS until Phase 4 empirically validates (OPERATOR-ONLY per Operator-Only External Publication rule). exp2749 produces operator-ready package only.
+- KV260: already SSH-reachable (verified exp2735); exp2742 will attempt board-level latency transcript via SSH.
+
+---
 
 ## Session 2026-05-20 - Milestone 2026.05.258 Research Planning Complete
 

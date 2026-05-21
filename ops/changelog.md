@@ -1,5 +1,12 @@
 # Carnot — Changelog
 
+## 2026-05-21 (Milestone 2026.05.260 Research Planning)
+
+- [outer-loop] Research planning for milestone 2026.05.260. Milestone .259 (exp2725–exp2737) FULLY EXECUTED — 12 of 13 tasks produced artifacts, 10 of 12 acceptance criteria met. 2 adversarial-flagged experiments (exp2727 verifier energy debug, exp2731 Tier 0g semantic energy — both DURATION_TOO_SHORT + METHODOLOGY_MISSING). KV260 SSH reachable + bitstream loaded + uio0_first_word_read=true (ready for TERMINAL). phase1_ship_recommendation=SHIP per capstone exp2737.
+- [outer-loop] arxiv sweep: 6 new papers added to research-references.md (arXiv:2602.17633 Weak-Strong Verification Policy, arXiv:2602.11361 Paraphrastic Consistency, arXiv:2603.20927 Active Inference FEP, arXiv:2605.19895 CNN Constraint Reasoning, arXiv:2603.02101 Antiferromagnetic Ising FPTAS, arXiv:2503.10695 Set-Consistency Energy Networks).
+- [outer-loop] Created openspec/change-proposals/research-roadmap-v260.md (220 lines): milestone design with three biggest gaps (exp2727+exp2731 adversarial flags, KV260 TERMINAL, OTV+diversity retirement), phase structure A-F, 12 acceptance criteria, dependency graph, FR-11 mandate, hardware continuity table, agent routing.
+- [outer-loop] Created research-roadmap-next.yaml (1502 lines): 13 tasks exp2738–exp2750 for milestone 2026.05.260. Gemini-Default applied (12/13 gemini + 1 claude/opus capstone). All mandatory disciplines: prior_failures 4-field structure, PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 Tier 4 (exp2747), KV260 SSH-Not-SD-Card (exp2742), exclusion manifest 0 scope matches, Operator-Only publication (no submission steps). Key experiments: exp2740 verifier energy v2 live GPU (RTX 3090 + Qwen3.6-35B, duration >= 60s gate), exp2741 Tier 0g live GPU + GGUF logit diagnosis, exp2742 KV260 TERMINAL latency transcript, exp2743 Set-Consistency Tier 0v, exp2744 empirical delta + paper audit, exp2745 weak-strong verification policy, exp2746 paraphrastic consistency Tier 0w, exp2747 FR-11 Tier 4 continuous self-learning benchmark, exp2748 Phase 4 FEP factor graph.
+
 ## 2026-05-20 (Milestone 2026.05.259 Research Planning)
 
 - [outer-loop] Research planning for milestone 2026.05.259. Milestone .258 (exp2712–exp2724) FULLY EXECUTED — 13 of 13 tasks produced artifacts. 8 of 12 acceptance criteria met. First fully-executed milestone since the conductor cascade stall that began at milestone .206.

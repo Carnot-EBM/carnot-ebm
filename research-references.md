@@ -37,6 +37,64 @@ This sweep was run after milestone `.259` completed with 12 of 13 experiments pr
   set-level checks. Candidate for tier0v_set_consistency.py — a new orthogonal verifier signal for
   multi-step reasoning chains where individual pairwise checks miss cross-step contradictions.
 
+### When to Trust the Cheap Check: Weak and Strong Verification for Reasoning
+- **Paper:** "When to Trust the Cheap Check: Weak and Strong Verification for Reasoning"
+  (arXiv:2602.17633, Feb 2026).
+- **What:** Formalizes weak verification (self-consistency, proxy rewards) vs. strong verification (external
+  inspection), providing optimal two-threshold routing policies: below t1 = accept, above t2 = full
+  verification, between = escalate. Derives conditions under which the cheap check is sufficient to trust.
+- **Relevance to Carnot:** Directly addresses OTV probe failure (exp2728 probe_auroc=0.25 worse than chance).
+  The weak-strong policy formalizes ODAR two-tier routing with an optimal policy derivation. Replaces the
+  failed OTV single-probe with a principled confidence-based routing scheme. Paper-v6 §4 peer cite.
+- **Sources:** https://arxiv.org/abs/2602.17633
+
+### Finding the Cracks: Paraphrastic Probing and Consistency Verification
+- **Paper:** "Finding the Cracks: Improving LLMs Reasoning with Paraphrastic Probing and Consistency
+  Verification" (arXiv:2602.11361, Feb 2026).
+- **What:** Generates paraphrastic perturbations of the query and checks energy consistency across the model's
+  responses to perturbed inputs. Models that are correct are consistent across paraphrases; models that are
+  hallucinating show high energy variance across paraphrastic probes. Improves multi-step reasoning error
+  detection without majority voting.
+- **Relevance to Carnot:** Addresses the set-consistency gap — individual pairwise checks miss cross-step
+  contradictions. Paraphrastic probing provides a model-agnostic consistency signal that works on any
+  response format without requiring constraint extraction. Candidate for Tier 0w_paraphrase_consistency.py.
+- **Sources:** https://arxiv.org/abs/2602.11361
+
+### Active Inference for Physical AI Agents: An Engineering Perspective
+- **Paper:** "Active Inference for Physical AI Agents — An Engineering Perspective" (arXiv:2603.20927, Mar 2026).
+- **Authors:** Friston et al. / active inference research group.
+- **What:** Develops Free Energy Principle (FEP) agent principles from first principles via message passing on
+  factor graphs. Provides an engineering-level implementation blueprint for active inference agents that
+  minimize variational free energy as a unified objective for action, perception, and learning.
+- **Relevance to Carnot:** Direct Phase 4 active inference implementation reference. Maps Carnot's verifier
+  ensemble to a factor graph (each verifier is a factor node). Variational free energy over the factor graph
+  becomes the routing signal (replaces ODAR's ad-hoc free energy estimate with a principled FEP derivation).
+  Alpha_t derivation for verifier-as-free-energy hypothesis (feedback_active_inference_phase4_committed.md).
+- **Sources:** https://arxiv.org/abs/2603.20927
+
+### Streamlined Constraint Reasoning via CNN Pattern Recognition
+- **Paper:** "Streamlined Constraint Reasoning via CNN Pattern Recognition on Enumerated Solutions"
+  (arXiv:2605.19895, May 2026).
+- **What:** Combines CNN-based pattern detection on enumerated valid constraint solutions with LLM-driven
+  MiniZinc constraint synthesis. The CNN learns structural patterns from solution sets; the LLM synthesizes
+  new constraint programs from CNN-detected patterns. Achieves 40% reduction in constraint-checking time.
+- **Relevance to Carnot:** Complementary to Z3/SAT-based NSVIF constraints in Carnot's verifier ensemble.
+  The CNN pattern learning approach generalizes to Carnot's Tier 0 verifiers as a learned structural
+  consistency check. Candidate for accelerating the NEXUS rule synthesis in FR-11 (exp2733 synthesized 17
+  rules; CNN patterns could generalize these to new constraint types without manual specification).
+- **Sources:** https://arxiv.org/abs/2605.19895
+
+### Sampling from the Antiferromagnetic Ising Model: Theoretical Advance
+- **Paper:** "Sampling from the Antiferromagnetic Ising Model on Bipartite, Regular Expander Graphs"
+  (arXiv:2603.02101, Mar 2026).
+- **What:** Provides a fully polynomial-time approximation scheme (FPTAS) for the antiferromagnetic Ising
+  partition function via polymer models and cluster expansion. Extends efficient sampling to near-critical
+  temperatures where Glauber dynamics is slow.
+- **Relevance to Carnot:** Theoretical basis for improving the THRML/Carnot sampler at near-critical
+  temperatures (beta ~ 1.05 bottleneck seen in prior parity sweep). KV260 Ising machine sampler benefits
+  from near-critical sampling theory. Phase-3 theoretical foundation for hardware-accelerated sampling.
+- **Sources:** https://arxiv.org/abs/2603.02101
+
 ## 2026-05-20 Post-.258 Planning Sweep (Milestone 2026.05.259)
 
 This sweep was run after milestone `.258` completed with 13 of 13 experiments executed — first full

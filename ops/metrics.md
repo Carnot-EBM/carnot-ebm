@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-21 Milestone 2026.05.260 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-21T00:00:00Z | 2026-05-21T01:55:25Z | Plan milestone 2026.05.260: read 11 project files (research-program.md, _bmad/prd.md, architecture.md, ops/status.md, ops/changelog.md, research-complete.yaml, research-roadmap.yaml, exclusion_manifest.yaml, capstone v259 artifact, hardware-bringup-prep.md, research-references.md); arxiv sweep (6 new papers added: arXiv:2602.17633 Weak-Strong Verification, arXiv:2602.11361 Paraphrastic Consistency, arXiv:2603.20927 Active Inference FEP, arXiv:2605.19895 CNN Constraint Reasoning, arXiv:2603.02101 Antiferromagnetic Ising FPTAS, arXiv:2503.10695 Set-Consistency Energy Networks); created openspec/change-proposals/research-roadmap-v260.md (220 lines) and research-roadmap-next.yaml (1502 lines, 13 tasks exp2738-exp2750). Adversarial flags from .259 (exp2727+exp2731) addressed by exp2740+exp2741. KV260 TERMINAL step (exp2742). OTV+diversity retirement (exp2739). FR-11 Tier 4 live benchmark (exp2747). Phase 4 FEP factor graph (exp2748). Agent routing: 12 gemini + 1 claude/opus (capstone exp2750). All CLAUDE.md mandatory disciplines applied: Gemini-Default (2026-05-20 supersedes Codex-Default), prior_failures 4-field structure, PRECONDITIONS blocks, principle-annotated artifact fields, terminal-prefix verdicts, hardware continuity, KV260 SSH-Not-SD-Card, exclusion manifest 0 scope matches. | ~80k |
+
+Note: `scripts/session-metrics.py` referenced by `CLAUDE.md` is not present in this checkout, so authoritative token extraction was not available.
+
 ## Session: 2026-05-20 Milestone 2026.05.258 Research Planning
 
 ### Turn Log
