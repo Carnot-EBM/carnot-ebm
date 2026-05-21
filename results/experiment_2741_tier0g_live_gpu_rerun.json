@@ -1,0 +1,46 @@
+{
+  "honest_verdict": "complete: Tier 0g semantic energy diagnosis finished",
+  "gguf_non_degenerate": false,
+  "gguf_non_degenerate_post_fix": true,
+  "mean_pairwise_tfidf_similarity": 0.95,
+  "root_cause_hypothesis": "H1: TF-IDF collapse",
+  "fix_applied": "Switched to char-n-gram TF-IDF (analyzer='char_wb', ngram_range=(3,5))",
+  "tier0g_viable": true,
+  "model_specs": [
+    {
+      "name": "gemma-4-26B-A4B-it-GGUF",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "role": "fallback_live_diagnostic"
+    }
+  ],
+  "random_seed": 42,
+  "reproducibility_checksum": "8afb64886202199933ef7855ba2d1616",
+  "duration_s": 31.5,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": true,
+      "check": "nvidia-smi"
+    },
+    {
+      "resource": "qwen_gguf_cache",
+      "available": false,
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/"
+    },
+    {
+      "resource": "fallback_gguf_cache",
+      "available": true,
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/"
+    },
+    {
+      "resource": "tier0g_importable",
+      "available": true,
+      "check": "import carnot.verify.tier0g_semantic_energy"
+    },
+    {
+      "resource": "fover_corpus",
+      "available": true,
+      "check": "wc -l data/fover_corpus.jsonl"
+    }
+  ]
+}

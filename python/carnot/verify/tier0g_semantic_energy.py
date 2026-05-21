@@ -10,7 +10,7 @@ from sklearn.cluster import DBSCAN
 class SemanticEnergyVerifier:
     def __init__(self, corpus_path="data/fover_corpus.jsonl", max_features=5000, random_seed=42):
         self.corpus_path = corpus_path
-        self.vectorizer = TfidfVectorizer(max_features=max_features)
+        self.vectorizer = TfidfVectorizer(max_features=max_features, analyzer='char_wb', ngram_range=(3,5))
         self.corpus_texts = []
         
         if os.path.exists(corpus_path):
