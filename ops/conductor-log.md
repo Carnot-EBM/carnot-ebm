@@ -5851,3 +5851,5 @@ Ripgrep i |
 | 2026-05-21 17:00 UTC | Plan next milestone | FAIL | Claude Code error: Error: Reached max turns (50) |
 | 2026-05-21 17:33 UTC | Plan next milestone | FAIL | Claude Code error: Wall-clock+idle timeout after 1201s (1201s silence). Last ou |
 | 2026-05-21 17:36 UTC | Milestone 2026.05.267 activated | OK | 8 tasks queued |
+| 2026-05-21 17:40 UTC | Archive .266 + Activate .267 | FAIL | Gemini CLI error: s:309732:14)
+    at async file:///usr/lib/node_modules/@goog |
