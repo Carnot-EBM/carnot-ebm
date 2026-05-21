@@ -12,7 +12,7 @@ unlabelled_data = [
 ]
 
 # Write to the specified results directory
-result_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1854_vl_proxy.json"
+result_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1854_vl_proxy.json"
 proxy.run_experiment_and_save(unlabelled_data, result_path)
 
 print(f"Successfully wrote results to {result_path}")

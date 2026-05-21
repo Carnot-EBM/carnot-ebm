@@ -347,11 +347,6 @@
         <p class="r-desc">EBFT continuous self-learning loop and CASAL Primal-Dual sampler implementation on Phase 4 substrate provide empirical grounding for near-critical verification scaling.</p>
         <div class="r-stats"><span class="r-before">Prior empirical bounds extended</span> <span class="r-after">Exp 1688&ndash;1698</span></div>
       </div>
-      <div class="r-card">
-        <span class="r-tag">Hardware Profiling</span>
-        <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Recent milestones keep showing that synthesis-only work, blocked gates, and missing terminal artifacts dominate wall-clock time.</p>
-        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 2005</span></div>
       </div>
     </div>
   </div>
@@ -403,25 +398,17 @@
         <div class="bento-icon">E</div>
         <h3 class="bento-title">Why &ldquo;Energy-Based&rdquo;?</h3>
         <p class="bento-text">
-          The framework beneath all this comes from physics. An Energy-Based Model
-          is a function that assigns a single number (energy) to a candidate answer,
-          where low energy = valid and high energy = invalid. This gives us two
-          useful things: a scoring rule that doesn't need per-question tuning, and
-          a gradient we can descend on when repairing. The same maths maps onto
-          specialised hardware (FPGA Ising machines, thermodynamic samplers) which
-          is why Carnot can scale beyond CPUs. A working prototype runs on a KV260
-          FPGA board (April 2026), and the latest QuantKAN path preserves
-          AUROC=0.9801 after 3-bit edge quantization with a 2.5&times; LUT-KAN
-          simulation speedup. The latest Discrete SB path has a KV260 RTL
-          specification that fits the estimated budget, with no synthesis or
-          board-execution claim yet.
+          The framework beneath all this comes from physics. An
+          Energy-Based Model assigns a single number (energy) to a
+          candidate answer, where low energy means valid and high
+          energy means invalid. This gives a scoring rule that does not
+          need per-question tuning, plus a gradient that the repair
+          step can descend on. The same mathematics maps onto
+          specialized hardware (FPGA Ising machines, thermodynamic
+          samplers), which is why Carnot can scale beyond conventional
+          CPUs.
         </p>
       </div>
-      <div class="r-card">
-        <span class="r-tag">Hardware Profiling</span>
-        <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates and missing terminal artifacts remain the higher operational risk.</p>
-        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 2005</span></div>
       </div>
     </div>
   </div>
@@ -472,250 +459,42 @@
         <div class="bento-icon">R</div>
         <h3 class="bento-title">Multi-step reasoning</h3>
         <p class="bento-text">
-          For chain-of-thought answers, each step can be checked against the
-          ones before it. A verified-fact memory catches contradictions that
-          span several steps &mdash; the classic "confident but inconsistent"
-          failure. The production default now uses a five-verifier
-          AND-compose ensemble with SOS-KAN, SemEnergy, AST, semantic
-          consistency, and Z3 checks, plus an information-asymmetric MARCH
-          claim-check loop for high-risk responses. The latest GRPO-VPS full
-          training run improves 80% &rarr; 95% on its evaluation slice. Phase-5
-          in-situ training now passes its first stability gates, but the Spera
-          orthogonality audit found k_eff&asymp;1 in a k=3 verifier ensemble, so
-          joint verifier diversity is now a paper- and scale-up gate. The latest
-          k=5 audit clears the production correlation gate with max r=0.462 and
-          k_eff=1.76, while the Q11 TSS diagnostic exposes a remaining
-          sign-bottleneck vulnerability score of 0.453. The latest
-          Phase-3 frontier artifacts add a trained Boltzmann-GPT contrastive
-          pass (AUROC 0.9607), classify NRGPT recurrence non-monotonicity as
-          causal-context shift rather than an architecture failure, and add
-          PRIME verifier weights plus certificate-memory replay, FSNet/SnareNet
-          continuous repair, and an EST gaming-defense proxy measurement. The
-          .102 artifacts recover the local SOTA GGUF runtime with
-          Qwen3.6-35B-A3B and Gemma4-31B-it loaded through llama.cpp, measure
-          ConstraintBench/SATQuest answer stability at 0.90, and compare raw,
-          GBNF, DCCD, and repaired certificates. The certificate parse rate is
-          0.712, below the 0.75 downstream gate, so semantic validators,
-          safe-prefix Cactus, and DVI certificate-tail updates remain gated.
-          .103/.104 artifacts recover multi-token certificate prompts,
-          classify parser and semantic failure modes, dry-run dynamic grammar
-          dispatch at parse rate 1.0 without SOTA inference, and preserve
-          failure-type memory non-forgetting at 1.0. Milestone .105 diagnosed
-          &lt;think&gt; token budget exhaustion as the root cause of
-          certificate_parse_rate=0.0. Milestone .106 resolved it: CRANE
-          tag-first prefix injection (Exp 1366) reached
-          certificate_parse_rate=1.0; DiffuTruth non-equilibrium complement
-          measured AUROC 0.867 (Exp 1367); FR-11 self-learning v3 achieved
-          delta +1.596429 with non-forgetting rate 1.0 (Exp 1374). Milestone
-          .107 ran the full-scale 100-case pipeline with certificate_parse_rate
-          1.0, repair_hint_precision 1.0, and semantic_validation_pass_rate
-          0.59 (Exp 1382); FR-11 v4 extended to 59 fresh-verified cases with
-          delta +1.791484 (Exp 1388); arXiv v11 bundle is submission-ready.
-          Milestone .108 deployed DVI v2 + SECL combined calibration (Exp
-          1404), extended FR-11 v5 to 1,508 fresh-verified cases with delta
-          +1.449 (Exp 1405), fixed semantic validation failures 30/30 (Exp
-          1406), and ran a 200-case full-scale pipeline with
-          semantic_validation_pass_rate=1.0 / full_pipeline_pass_rate=0.305
-          (Exp 1407). GRPO v8 NGRPO produced no improvement and was retired.
-          12/13 criteria met. Post-milestone, structured verdict records (Exp
-          1408), SessionMemory portable packs (Exp 1403), manipulable-signal
-          constraint template, NLAH conductor charter (Exp 1280), meta-harness
-          search (Exp 1281), and streaming verification API (Exp 1411) shipped.
-          Milestone .109 met 10/13 criteria: repair diagnosis found 100
-          executable STEP_REWRITE hints (Exp 1413), the local Qwen repair
-          executor was deployed but accepted 0/20 repairs (Exp 1414), DVI v3
-          improved AUROC delta to +0.011842 but failed the non-forgetting gate
-          at 0.968604 (Exp 1415), EBM-CoT v3 temperature scaling preserved
-          AUROC 0.985375 while reducing variance (Exp 1416), the pipeline v3
-          retry stayed at full_pipeline_pass_rate=0.305 and the exact rerun was
-          retired (Exp 1419), PRM v1 measured AUROC 0.832874 on available step
-          labels (Exp 1423), and Discrete SB RTL spec work completed without a
-          hardware claim (Exp 1422). Milestone .110 met 12/14 criteria: DCCD
-          schema-constrained repair v2 accepted 20/20 prototype repairs (Exp
-          1428), MCMC best-of-N reached 1.0 repair success on the 20-case pool
-          without live SOTA inference (Exp 1429), the gated 50-case pipeline
-          micro-validation reached full_pipeline_pass_rate=0.62 with repair
-          success 0.666667 but remains non-headline (Exp 1431), DVI v3 was
-          replay-threshold calibrated and deployed with non-forgetting 1.0
-          (Exp 1432), FR-11 v6 found zero new promoted cases (Exp 1433), PRM v2
-          filled all 478 missing local step labels and reached AUROC 0.851789
-          (Exp 1434), DPO remains reranker-only until a direct GGUF adapter path
-          exists (Exp 1435), anchored dual-path latent repair preserved accuracy
-          1.0 to 1.0 where raw descent fell to 0.25 (Exp 1436), and Discrete SB
-          lint/sim was blocked on a missing RTL source (Exp 1437). Milestone
-          .111 met 10/14 criteria and did not clear the threshold: the live
-          SOTA runtime preflight found cached Qwen3.6-35B and Gemma4-31B GGUF
-          files and idle RTX 3090s, but llama.cpp could not load
-          libcudart.so.12, so repair v3, the energy reranker, and 100-case
-          pre-scale stayed gated. The non-runtime tracks advanced: spec
-          coverage debt fell 71 to 0, Discrete SB RTL source plus lint/sim
-          completed with no hardware claim, FR-11 v7 grew fresh-verified cases
-          from 1,508 to 1,664 with non-forgetting 1.0, PRM v3 showed 0.0pp
-          selector lift on a saturated prototype pool, LTLZinc generated 24
-          finite-trace cases, and EBT/NRGPT remained smoke-only. Milestone .112
-          met 14/14 criteria by reducing scope and retiring noisy lines: 1,132
-          artifacts were classified as 547 signal, 138 noise, and 447 ambiguous;
-          active known-issues priorities were trimmed from 24 to 7; GRPO/VPRM,
-          WOPR puzzle cartridges, HardNet++/DSP variants, and the validation-error
-          repair-context line were retired; hardware scope narrowed to three
-          active tracks; paper-v6 narrowed to four anchored claims; and the live
-          local SOTA GGUF runtime recovered with Qwen3.6-35B-A3B smoke inference.
-          Milestone .113 met 12/12 criteria: live SOTA top-k telemetry became
-          available, HALT/Spilled Energy telemetry was retired as non-headline,
-          BEAVER-lite produced sound live-logprob bounds, FR-11 v8 grew verified
-          memory from 1,664 to 1,676 cases with zero soundness mistakes, STATIC
-          CSR certificates matched existing parser acceptance with 0 false
-          accepts/rejects, and THRML parity stayed simulator-only because
-          <code>thrml</code> was not importable. Milestone .114 met 12/13
-          criteria with one honest THRML gate skip: balanced live telemetry wrote
-          36 rows, Semantic Energy/logit telemetry was retired after lexical
-          baselines matched it, BEAVER-lite calibrated 18 live-prefix constraints
-          with no empirical violations, FR-11 query-time memory improved bounded
-          replay success from 0.5 to 1.0 with 0 soundness mistakes, CCTU produced
-          a 20-case executable tool-use benchmark, V_1 pairwise self-verification
-          underperformed executable energy ranking, and partial-trace localization
-          reached top-1 1.0 on 9 injected failures without a decoded-quality claim.
-          Milestone .115 met 12/12 criteria: trigger-token certificate export
-          measured parse 0.30 / validation 0.10 with false-accept rate 0.0,
-          ConstrainPrompt-style safe-DSL validators compiled at rate 0.933333
-          with good-pass and bad-reject rates 1.0, interwhen replay emitted 40
-          monitor events with 0 false interruptions, HoVer safe-prefix
-          continuation improved validator pass rate from 0.0 to 0.666667,
-          FR-11 trace2skill evaluated 24 skills with 12 promotions and 0
-          soundness mistakes, deterministic plan-graph energy localized
-          injected dependency faults at node/edge top-1 1.0, and THRML import
-          plus simulator-only parity passed with no hardware claim. Milestone
-          .116 met 13/13 criteria: safe-DSL verifier induction compiled 2/2
-          candidate verifiers with coverage 1.0 and false accepts 0.0,
-          trigger+grammar certificate decoding reached parse and validation
-          rates 1.0 on bounded live local SOTA rows, executable monitors
-          normalized 60 events, plan-graph structural contracts caught 60/60
-          injected violations, FR-11 verifier-feedback accepted and replayed
-          84 policy updates with 0 soundness mistakes, 24 rollback-passing
-          trace2skill entries were packaged, and THRML/KAN/KV260 remained
-          simulator or source-level with no hardware claim. Milestone .117 met
-          14/14 criteria: the runtime-contract E2E harness linked 458 cases
-          with false-accept rate 0.0, live Qwen3.6-35B-A3B contract-guided
-          repair remained bounded at 2 cases with 0.0 acceptance lift, CDG
-          root-cause ordering improved fix efficiency by 0.05015, product-line
-          staged rescue moved parse and oracle agreement to 1.0, FR-11 live
-          policy promotion loaded 24 rollback-passing updates with no model
-          weight mutation, and THRML/Carnot simulator-only parity scaled to
-          n=128 plus four n=32 topologies with KL 0.0 and no TSU claim.
-          Milestone .118 met 13/14 criteria: automata-guided contract decoding
-          moved parse and contract acceptance from 0.0 to 1.0 with false
-          accepts 0.0, BEAVER-lite bounded 78 prefixes with no violations,
-          residual-drift replay classified 134 multi-turn cases, product-line
-          staged scaling reached syntax, feasibility, and oracle agreement 1.0
-          on 40 cases, claim isolation reduced verifier calls from 18 to 7, and
-          THRML simulator parity advanced to n=256 plus four n=64 topologies.
-          SATQuest CNF verification carries forward because solver-oracle false
-          accepts reached 0.166667, and FR-11 external-feedback promotion stays
-          query-time-only because utility delta remained 0.0.
-          Milestone .119 met 12/13 criteria: SATQuest solver-oracle false
-          accepts were repaired from 3 to 0, live SOTA SATQuest re-eval kept
-          solver-oracle false accepts at 0 over 30 cases, residual drift repaired
-          64/64 replay cases, product-line staged scale reached parse,
-          feasibility, and oracle agreement 1.0 on 120 cases, claim isolation
-          reduced verifier budget from 75 to 23, FR-11 v14 passed the
-          positive-utility gate with utility delta 1.0, and Weaver-style
-          verification routing reduced cost from 399 to 358 with false accepts
-          0.0. The .119 THRML independent-RNG audit proved separate code and RNG
-          paths but failed bounded KL at max KL 0.169802350136, so Extropic scale
-          claims remain blocked.
-         Milestone .136 evaluated the EqM Gradient Sampler on System-2 reasoning benchmarks (MATH and GSM8K), successfully deployed CIKAN verification on FPGA hardware, and completed the full E2E pipeline with live telemetry and continual learning.
+          For chain-of-thought answers, each step is checked against the
+          ones that came before. A verified-fact memory catches the classic
+          "confident but inconsistent" failure mode where individual steps
+          look correct in isolation but contradict one another. The
+          production verifier is an ensemble of complementary checks
+          (symbolic, energy-based, and consistency-based) AND-composed so
+          a candidate must pass all of them.
         </p>
       </div>
       <div class="bento-card span-2">
         <div class="bento-icon">O</div>
         <h3 class="bento-title">Research operations</h3>
         <p class="bento-text">
-          Carnot's autoresearch loop now includes a local Claude/Codex usage
-          snapshot for operators: Codex reads the newest token_count event,
-          Claude aggregates local token usage without echoing credentials, and
-          Claude quota percentage remains unavailable unless structured numeric
-          fields exist. Output is available as a compact table or JSON, with
-          focused regression coverage passing.
-          Exp 1421 also fixed the focused embedding-store runtime failure
-          cluster with 100% line coverage on the touched store module, while
-          preserving the full-suite debt disclosure: the collection is clean,
-          but the full Python suite remains red on pre-existing failures. The
-          current collection-only snapshot reports 24,316 Python items. The
-          .112 scope-reduction pass added artifact signal/noise and mandatory
-          priority ledgers. The .116 closeout records runtime-contract,
-          FR-11 feedback, product-line solver-oracle, THRML conformance, KAN
-          shape-normalization, and KV260 source-property gates; the .117
-          closeout adds a 458-case runtime-contract E2E harness, CDG and
-          product-line rescue gates, and THRML parity scaling through n=128.
-          The .118 closeout adds the orphan-test guard, XGrammar/ABS contract
-          masks, SATQuest false-accept carry-forward, residual-drift ledgers,
-          product-line staged scaling, claim-isolation routing, ARM/EBT
-          diagnostic-only routing, THRML n=256/n=64 scaling, and Extropic
-          readiness packets while preserving the no-hardware-claim boundary.
-          The .119 closeout adds SATQuest zero-false-accept repair, product-line
-          120-case scale, claim-router and verification-compute routing scale,
-          FR-11 positive-utility evidence, and a THRML RNG/KL blocker. The .120
-          archive adds sampler-security falsifications,
-          candidate-warm-start validation, Soft-Gibbs coverage bounds, k=6
-          rho(C) adversarial-curve measurement, and FR-11 retention audits. The
-          .121 artifacts settle the BRAIN training-dynamics question,
-          add a DCCD/JSONSchemaBench structured-output smoke, reverse the
-          collapsed FR-11 v14 retention, record nine audit-time Phase-1 ship blockers, and
-          rescope hardware around simulator-only Z1 drift correction plus
-          blocked Wormhole/PolarFire access. The .146/.147 artifacts
-          normalize ROCE/HILED evidence, compile ROCE constraints to executable
-          validator trees, add BEAVER-lite bounds with residual risk 0.0, and
-          block live-SOTA ROCE evaluation until the mandated Qwen3.6-35B and
-          Gemma4-31B GGUFs are available. The latest .148 result layer keeps
-          that SOTA cache/runtime gap open, retires downstream gate-skipped
-          scopes, and records that the .147 11% compute-dedupe speedup target
-          is not proven yet. The .148 operational retro measured 112.1 minutes
-          across 10 experiments with one compute-bound task; Exp 1890 took
-          41.3 minutes, Exp 2005 took 39.5 minutes, and compute-bound GPU idle
-          was not flagged.
+          Carnot is developed through an autonomous research loop: a
+          planner generates experiment proposals, an inner agent runs
+          each experiment, and an adversarial-verify pass catches
+          fabricated or methodology-incomplete artifacts before they
+          influence headline claims. Every experiment artifact is
+          stored as a structured JSON record with reproducibility
+          metadata.
         </p>
       </div>
       <div class="bento-card span-2">
         <div class="bento-icon">A</div>
         <h3 class="bento-title">APIs &amp; portable memory</h3>
         <p class="bento-text">
-          The public integration surface now includes structured
-          <code>VerdictRecord</code> outputs, async <code>verify_stream</code>
-          candidate verification, MCP verdict-event payloads, and portable
-          <code>SessionMemory</code> JSON packs for export, import, diff, merge,
-          and replace workflows. The .116 artifacts add a bounded safe-DSL
-          verifier induction pack, trigger+grammar certificate decoder, and
-          portable rollback-passing trace2skill pack. The public API additions
-          shipped with focused regression coverage in Exps 1403, 1408, and 1411;
-          the .116 packs are manifest-backed artifacts in Exps 1507, 1508, and
-          1514. The .117 artifacts connect those packs into a runtime-contract
-          E2E manifest and carry-forward gates for contract-guided repair,
-          product-line rescue, FR-11 live policy promotion, and THRML scaling.
-          The .118 artifacts add automata-mask contract generation, residual
-          drift and BEAVER-lite manifest surfaces, a product-line scale gate,
-          and an Extropic transcript schema for future authenticated hardware
-          access.
-          The .119/.120 surfaces add SATQuest witness/certificate manifests,
-          residual-drift repair-policy artifacts, product-line scale manifests,
-          verification-compute router policy files, vendored-Gibbs regression
-          coverage, candidate-warm-start benchmark artifacts, and Soft-Gibbs
-          residual coverage-bound artifacts. The .121 surfaces add structured
-          output benchmark rows for mandated SOTA GGUFs, Phase-1 ship-readiness
-          ledger evidence, paper-v6 sampler/OT integration artifacts, and
-          hardware-access preflight records that preserve the no-hardware-claim
-          boundary. The .146/.147 surfaces add normalized artifact contracts,
-          ROCE validator-tree compilation to Python/PySAT/Z3 backends, and
-          BEAVER-lite validator-tree bounds while keeping executable validators
-          as the final acceptance authority. The .148 surfaces add an
-          activation-contract artifact plus blocked DCCD/llguidance and
-          p-bit/p-dit gate-check artifacts, but no new live model-quality claim.
+          Carnot exposes its verifier and repair capabilities through
+          multiple integration surfaces: a Python API, a command-line
+          tool, an MCP server, and an HTTP REST endpoint. Verdicts are
+          structured <code>VerdictRecord</code> objects. Streaming
+          verification, candidate-level reranking, and portable
+          <code>SessionMemory</code> packs (export, import, diff, merge)
+          let callers integrate the framework without lock-in to a
+          single surface.
         </p>
       </div>
-      <div class="r-card">
-        <span class="r-tag">Hardware Profiling</span>
-        <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Milestone .146 completed 20 synthesis-only experiments in 52.5 minutes. GPU idle was appropriate, not a compute bottleneck.</p>
-        <div class="r-stats"><span class="r-before">Synthesis timing and closeout batching remain the targets</span> <span class="r-after">ops/changelog .146</span></div>
       </div>
       <div class="bento-card span-2">
         <div class="bento-icon">P</div>
@@ -1847,11 +1626,6 @@
         surfaced it is in the public research record, and the headlines above
         reflect only what survived.
       </p>
-      <div class="r-card">
-        <span class="r-tag">Hardware Profiling</span>
-        <h3 class="r-title">DualGPURunner Idle Analysis</h3>
-        <p class="r-desc">Recent closeouts show GPU idleness is expected for synthesis-only work; blocked gates and missing terminal artifacts remain the higher operational risk.</p>
-        <div class="r-stats"><span class="r-before">SOTA runtime and gate-artifact gaps remain</span> <span class="r-after">Exp 2005</span></div>
       </div>
       <div class="r-card">
         <span class="r-tag">Hardware &mdash; KV260 Vivado Synthesis</span>

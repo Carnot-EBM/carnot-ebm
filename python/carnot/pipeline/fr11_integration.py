@@ -12,7 +12,7 @@ class FR11IntegrationPipeline:
         
         # Tier 3: JEPA weights / feature importance
         self.tier3_jepa_weights = {}
-        tier3_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2475_fr11_tier3_jepa.json"
+        tier3_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2475_fr11_tier3_jepa.json"
         if os.path.exists(tier3_path):
             with open(tier3_path, "r") as f:
                 data = json.load(f)

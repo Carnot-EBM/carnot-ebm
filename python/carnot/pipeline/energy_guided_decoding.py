@@ -27,7 +27,7 @@ class EGDWrapper:
         best_candidate = min(candidates, key=lambda c: self.energy_fn(c))
         return best_candidate
 
-def run_experiment_1670(output_path: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1670_egd.json"):
+def run_experiment_1670(output_path: str = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1670_egd.json"):
     """
     Runs the experiment to evaluate the hallucination "Yes-ratio" bias.
     """

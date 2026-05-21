@@ -367,60 +367,6 @@ class RepairResult:
     history: list[VerificationResult]
 
 
-@dataclass
-class RoutingDecision:
-    path: str
-    verifier: str
-
-
-class WeakStrongRouter:
-    def __init__(self, t_low: float, t_high: float):
-        self.t_low = t_low
-        self.t_high = t_high
-
-    def route(self, prompt: str, response: str, weak_score: float | None = None) -> RoutingDecision:
-        if weak_score is None:
-            # TF-IDF Proxy
-            import pickle
-            import os
-            proxy_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "results", "weak_strong_proxy.pkl")
-            if not os.path.exists(proxy_path):
-                proxy_path = "results/weak_strong_proxy.pkl"
-            if os.path.exists(proxy_path):
-                with open(proxy_path, "rb") as f:
-                    data = pickle.load(f)
-                    vectorizer = data["vectorizer"]
-                    model = data["model"]
-                X = vectorizer.transform([response])
-                weak_score = float(model.predict_proba(X)[0, 1])
-            else:
-                # ODAR free energy proxy fallback
-                complexity = len(prompt.split()) / 100.0
-                weak_score = complexity - 0.5
-        
-        if weak_score < self.t_low:
-            return RoutingDecision(path='accept', verifier='none')
-        elif weak_score > self.t_high:
-            return RoutingDecision(path='full_ensemble', verifier='tier0_all')
-        else:
-            return RoutingDecision(path='tier0f_only', verifier='semantic_calibration')
-
-
-class AnytimeValidConformalRouter:
-    def __init__(self, alpha: float = 0.10):
-        self.alpha = alpha
-        self.energy_history: list[float] = []
-
-    def route(self, energy: float) -> str:
-        import numpy as np
-        self.energy_history.append(energy)
-        Q = np.quantile(self.energy_history, 1 - self.alpha)
-        if energy <= Q:
-            return 'accept'
-        else:
-            return 'full_ensemble'
-
-
 # ---------------------------------------------------------------------------
 # Pipeline class
 # ---------------------------------------------------------------------------
@@ -508,8 +454,6 @@ class VerifyRepairPipeline:
         balance_ratio: float = 1.0,
         jepa_fast_path_predictor: Any | None = None,
         jepa_fast_path_threshold: float = 0.2,
-        weak_strong_router: WeakStrongRouter | None = None,
-        conformal_router: AnytimeValidConformalRouter | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -620,18 +564,10 @@ class VerifyRepairPipeline:
         # When set, predict_p_violation is called in verify() before Ising;
         # if p < jepa_fast_path_threshold the Ising pass is skipped entirely.
         self._jepa_fast_path_predictor = jepa_fast_path_predictor
-        self._jepa_predictor = jepa_fast_path_predictor
         self._jepa_fast_path_threshold = jepa_fast_path_threshold
-        self.weak_strong_router = weak_strong_router
-        self.conformal_router = conformal_router
-        self._session_log: list[dict[str, Any]] = []
-        self._session_observations_seen = 0
-        self._session_fast_path_taken = 0
-        self._jepa_partial_fits = 0
         self._repair_router = None
         if self.routing_mode == "odar":
             from carnot.pipeline.odar_router import OdarRouter
-
             self._repair_router = OdarRouter(max_iterations=max_repairs)
 
         # Restore persisted learning state if session_memory was provided
@@ -665,7 +601,7 @@ class VerifyRepairPipeline:
         # can dispatch to both GPUs concurrently for ~2x throughput.
         self._second_model_spec: dict[str, str] | None = second_model_spec
 
-        self.verifier_list = [f"v{i}" for i in range(1, 16)] + ["tier0g", "tier0v", "tier0w", "nla_verifier"]
+        self.verifier_list = [f"v{i}" for i in range(1, 16)] + ["nla_verifier"]
 
         if model is not None:
             self._load_model(model)
@@ -684,72 +620,6 @@ class VerifyRepairPipeline:
     def get_balance_ratio(self) -> float:
         """Return the current balance ratio (fraction of tokens constrained vs free)."""
         return getattr(self, "balance_ratio", 1.0)
-
-    def online_update(self, observation: dict[str, Any]) -> None:
-        """Record one verified observation and periodically update JEPA online.
-
-        **Detailed explanation for engineers:**
-            FR-11 continuous self-learning receives verifier feedback one case
-            at a time, while most predictors learn more stably from a small
-            batch. This hook keeps those concerns separate: callers stream
-            observations into the pipeline, and the pipeline hands the JEPA
-            predictor a 10-case batch only when enough fresh observations have
-            accumulated. Predictors without ``partial_fit`` remain valid
-            inference-only gates, so existing fast-path deployments keep their
-            previous behaviour.
-
-        Args:
-            observation: Dict with ``text``, ``label``, ``energy``, and
-                ``fast_path_taken`` fields.
-
-        Raises:
-            ValueError: If any required observation field is missing.
-
-        Spec: REQ-JEPA-007, SCENARIO-JEPA-013
-        """
-        required_keys = {"text", "label", "energy", "fast_path_taken"}
-        missing = required_keys.difference(observation)
-        if missing:
-            missing_list = ", ".join(sorted(missing))
-            raise ValueError(f"online_update observation missing required fields: {missing_list}")
-
-        self._session_log.append(dict(observation))
-        self._session_observations_seen += 1
-        if bool(observation["fast_path_taken"]):
-            self._session_fast_path_taken += 1
-
-        if len(self._session_log) < 10:
-            return
-
-        predictor = getattr(self, "_jepa_predictor", None)
-        if predictor is None:
-            predictor = getattr(self, "_jepa_fast_path_predictor", None)
-        partial_fit = getattr(predictor, "partial_fit", None)
-        if callable(partial_fit):
-            partial_fit(list(self._session_log))
-            self._jepa_partial_fits += 1
-            self._session_log = []
-
-    def get_session_stats(self) -> dict:
-        """Return online-learning counters for this pipeline session.
-
-        The counters are session-local rather than persisted. They answer the
-        operational questions FR-11 needs during a run: how many verifier
-        feedback events reached the pipeline, whether JEPA has actually
-        received online update batches, and how often the observed traffic used
-        the JEPA fast path.
-
-        Spec: REQ-JEPA-007, SCENARIO-JEPA-013
-        """
-        n_observations = self._session_observations_seen
-        current_fast_path_rate = (
-            self._session_fast_path_taken / n_observations if n_observations else 0.0
-        )
-        return {
-            "n_observations": n_observations,
-            "n_partial_fits": self._jepa_partial_fits,
-            "current_fast_path_rate": current_fast_path_rate,
-        }
 
     @property
     def has_model(self) -> bool:
@@ -1565,7 +1435,6 @@ class VerifyRepairPipeline:
         # CRANE (arXiv:2502.09061) balance ratio gating
         if getattr(self, "balance_ratio", 1.0) < 1.0:
             import random
-
             if random.random() > self.balance_ratio:
                 baseline_score = _with_fst_certificate(
                     VerificationResult(
@@ -2400,7 +2269,9 @@ class VerifyRepairPipeline:
                     prior_energy = current_energy + 1.0
 
                 route_to_repair, vfe, _ = self._repair_router.route(
-                    current_energy=current_energy, prior_energy=prior_energy, iteration=i
+                    current_energy=current_energy,
+                    prior_energy=prior_energy,
+                    iteration=i
                 )
                 if not route_to_repair:
                     logger.info("ODAR routing VFE=%.3f >= 0. Stopping repair.", vfe)
@@ -3266,190 +3137,6 @@ class VerifyRepairPipeline:
                 caught_error=(ctype in caught_types),
                 any_error_in_batch=any_error,
             )
-
-    def score_candidates(self, candidates: list[str]) -> list[float]:
-        return [0.1 + 0.05 * i for i in range(len(candidates))]
-
-    def select_best_candidate(self, candidates: list[str]) -> str:
-        scores = self.score_candidates(candidates)
-        return candidates[scores.index(min(scores))]
-
-    def iterative_repair_with_counterexample(
-        self,
-        prompt: str,
-        initial_response: str,
-        k_max: int = 5,
-        energy_threshold: float = 0.3
-    ) -> dict[str, object]:
-        response = initial_response
-        converged = False
-        n_iterations = 0
-        failure_messages = []
-        final_energy = 0.0
-
-        for i in range(k_max):
-            score = self.score_candidates([response])[0]
-            final_energy = score
-
-            if score < energy_threshold:
-                converged = True
-                break
-
-            n_iterations += 1
-            msg = (
-                f"Counterexample found: response scored {score:.3f} (threshold={energy_threshold}).\n"
-                f"Constraint violated: energy > {energy_threshold}. Specific failure:\n"
-                f"response fragment '{response[:100]}' does not satisfy low-energy criterion.\n"
-                f"Please revise to reduce energy."
-            )
-            failure_messages.append(msg)
-            
-            # Use failure message as context for the next candidate.
-            context = f"{prompt}\n\n{msg}"
-            if hasattr(self, "has_model") and self.has_model:
-                response = self._generate(context, max_new_tokens=512)
-            else:
-                response = response + " [repaired]"
-                
-        if not converged:
-            score = self.score_candidates([response])[0]
-            final_energy = score
-            if score < energy_threshold:
-                converged = True
-
-        return {
-            "final_response": response,
-            "final_energy": final_energy,
-            "n_iterations": n_iterations,
-            "converged": converged,
-            "failure_messages": failure_messages
-        }
-
-    def grammar_check(self, response: str, format_type: str = 'text') -> tuple[bool, str]:
-        """FALCON Layer 1: syntactic validity check.
-
-        Supported format_types:
-        - 'text': always passes (free-form text) [fast path]
-        - 'json': checks json.loads(response) succeeds
-        - 'code_python': checks compile(response, '<string>', 'exec') succeeds
-        - 'number': checks response.strip() is a valid float
-
-        Returns: (valid: bool, reason: str)
-        """
-        if format_type == 'text':
-            return True, ""
-        elif format_type == 'json':
-            import json
-            try:
-                json.loads(response)
-                return True, ""
-            except json.JSONDecodeError as e:
-                return False, f"JSON parsing failed: {e}"
-        elif format_type == 'code_python':
-            try:
-                compile(response, '<string>', 'exec')
-                return True, ""
-            except SyntaxError as e:
-                return False, f"Python compilation failed: {e}"
-        elif format_type == 'number':
-            try:
-                float(response.strip())
-                return True, ""
-            except ValueError as e:
-                return False, f"Invalid number: {e}"
-        return False, f"Unknown format type: {format_type}"
-
-    def falcon_repair(
-        self,
-        prompt: str,
-        initial_response: str,
-        format_type: str = 'text',
-        k_max: int = 5,
-        energy_threshold: float = 0.3
-    ) -> dict[str, object]:
-        """FALCON two-layer repair:
-        Layer 1: grammar_check(initial_response, format_type)
-          If invalid: return {failed: 'grammar', reason: str, n_iterations: 0}
-        Layer 2: iterative_repair_with_counterexample(prompt, initial_response, k_max, energy_threshold)
-        Returns: {final_response, final_energy, n_iterations, converged, layers_applied}
-        """
-        valid, reason = self.grammar_check(initial_response, format_type)
-        if not valid:
-            return {
-                "failed": "grammar",
-                "reason": reason,
-                "n_iterations": 0
-            }
-        
-        result = self.iterative_repair_with_counterexample(
-            prompt, initial_response, k_max, energy_threshold
-        )
-        result["layers_applied"] = ["grammar", "semantic"]
-        return result
-
-    def odar_route(self, prompt: str, context_energy: float | None = None) -> str:
-        """ODAR-style free-energy routing: selects fast or deliberative path.
-
-        Free energy proxy: F = complexity(prompt) - confidence(context_energy)
-        where complexity = len(prompt.split()) / 100 (normalized word count)
-        and confidence = 1 - context_energy if context_energy is not None else 0.5
-
-        Routing criterion: if F < threshold (0.3): fast_path (skip verification)
-                          else: deliberative_path (full verify-repair)
-        """
-        complexity = len(prompt.split()) / 100.0
-        confidence = 1.0 - context_energy if context_energy is not None else 0.5
-        f_proxy = complexity - confidence
-        if f_proxy < 0.3:
-            return "fast_path"
-        else:
-            return "deliberative_path"
-
-    def otv_probe(self, prompt: str, response: str) -> float:
-        """OTV-style one-token verification: computes a soft correctness probability
-        from response features without additional generation.
-
-        Proxy implementation (no KV cache available without transformer inference):
-        - TF-IDF of response (reuse existing feature extraction)
-        - Dot product with a "correctness direction" vector (trained on FoVer correct/incorrect pairs)
-        - Sigmoid to produce probability in [0, 1]
-        Returns: confidence float in [0, 1]. High = likely correct. Low = uncertain.
-        """
-        import os
-        import pickle
-        probe_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "results", "otv_correctness_probe.pkl")
-        if not os.path.exists(probe_path):
-            probe_path = "results/otv_correctness_probe.pkl" # Try cwd
-            if not os.path.exists(probe_path):
-                return 0.5  # fallback if not trained
-
-        with open(probe_path, "rb") as f:
-            data = pickle.load(f)
-            vectorizer = data["vectorizer"]
-            model = data["model"]
-
-        X = vectorizer.transform([response])
-        prob = model.predict_proba(X)[0, 1]
-        return float(prob)
-
-    def route(self, prompt: str, response: str, otv_threshold: float = 0.8, odar_threshold: float = 0.3) -> str:
-        """Two-tier routing:
-        Step 1: OTV probe — if confidence >= otv_threshold: return 'fast_path_otv'
-        Step 2: ODAR route — if F < odar_threshold: return 'fast_path_odar'
-        Step 3: return 'deliberative_path'
-        """
-        confidence = self.otv_probe(prompt, response)
-        if confidence >= otv_threshold:
-            return 'fast_path_otv'
-        
-        complexity = len(prompt.split()) / 100.0
-        odar_conf = 0.5
-        f_proxy = complexity - odar_conf
-        if f_proxy < odar_threshold:
-            return 'fast_path_odar'
-
-        return 'deliberative_path'
-
 
 
 class CASALTier:

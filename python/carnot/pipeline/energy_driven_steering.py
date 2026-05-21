@@ -49,7 +49,7 @@ class EnergyDrivenSteerer:
         return steered_states
 
 
-def run_eds_evaluation(output_path: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1677_eds.json") -> dict:
+def run_eds_evaluation(output_path: str = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1677_eds.json") -> dict:
     """
     Evaluates the EDS prototype on a small logical task for local SOTA GGUF models.
     """
