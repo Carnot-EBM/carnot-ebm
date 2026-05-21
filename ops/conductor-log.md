@@ -5628,3 +5628,4 @@ Ripgrep i |
 | 2026-05-21 00:29 UTC | Semantic Energy Verifier Tier 0g (arXiv:2508.14496 | OK | 100 passed in 5.11s |
 | 2026-05-21 00:34 UTC | Behavioral Entanglement Lineage Retirement + Diver | OK | 81 passed in 3.27s |
 | 2026-05-21 00:40 UTC | FR-11 Tier 3+: ORCA-NEXUS Integration v1 — Online  | OK | 104 passed in 5.80s |
+| 2026-05-21 00:44 UTC | FALCON Property-Constrained Repair Integration (ar | OK | 145 passed in 4.65s |
