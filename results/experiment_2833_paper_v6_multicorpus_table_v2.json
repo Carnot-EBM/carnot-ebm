@@ -120,5 +120,18 @@
     "corpora_in_table": "Names corpora present in the dual-condition results table.",
     "submission_package_ready": "True if operator-ready; task NEVER submits per Operator-Only rule.",
     "duration_s": "Expected 30-120s for pdflatex + edits."
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.4434974193572998 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
