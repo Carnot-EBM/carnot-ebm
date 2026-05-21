@@ -5814,3 +5814,34 @@ Ripgrep i |
 | 2026-05-21 14:36 UTC | Capstone v265: Multi-Corpus Headline Synthesis + G | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.13s |
 | 2026-05-21 14:39 UTC | Capstone v265: Multi-Corpus Headline Synthesis + G | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.14s |
 | 2026-05-21 14:41 UTC | Capstone v265: Multi-Corpus Headline Synthesis + G | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.16s |
+| 2026-05-21 15:04 UTC | Plan milestone 2026.05.266 | OK | 10 tasks proposed |
+| 2026-05-21 15:06 UTC | Milestone 2026.05.266 activated | OK | 10 tasks queued |
+| 2026-05-21 15:08 UTC | Archive .265 + Activate .266 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.21s |
+| 2026-05-21 15:10 UTC | Archive .265 + Activate .266 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.18s |
+| 2026-05-21 15:12 UTC | Archive .265 + Activate .266 | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.18s |
+| 2026-05-21 15:14 UTC | Pre-Test Cascade Fix v4: PySAT Mock + Hardware Stu | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.12s |
+| 2026-05-21 15:16 UTC | Pre-Test Cascade Fix v4: PySAT Mock + Hardware Stu | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.76s |
+| 2026-05-21 15:19 UTC | Pre-Test Cascade Fix v4: PySAT Mock + Hardware Stu | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.75s |
+| 2026-05-21 15:21 UTC | FoVer Memory Leakage Isolation: AUROC With vs With | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:21 UTC | MBPP Corpus — Both Memory Conditions (Architecture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:21 UTC | HumanEval Full (164) — Both Memory Conditions (Arc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:21 UTC | TruthfulQA Corpus — Both Memory Conditions (Archit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:21 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.19s |
+| 2026-05-21 15:23 UTC | FoVer Memory Leakage Isolation: AUROC With vs With | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:23 UTC | MBPP Corpus — Both Memory Conditions (Architecture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:23 UTC | HumanEval Full (164) — Both Memory Conditions (Arc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:23 UTC | TruthfulQA Corpus — Both Memory Conditions (Archit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:23 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.16s |
+| 2026-05-21 15:25 UTC | FoVer Memory Leakage Isolation: AUROC With vs With | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:25 UTC | MBPP Corpus — Both Memory Conditions (Architecture | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:25 UTC | HumanEval Full (164) — Both Memory Conditions (Arc | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:25 UTC | TruthfulQA Corpus — Both Memory Conditions (Archit | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:25 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.17s |
+| 2026-05-21 15:27 UTC | FUSE Zero-Labeled Ensemble Weighting (arXiv:2604.1 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:27 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2815) |
+| 2026-05-21 15:27 UTC | Capstone v266: Multi-Corpus Headline + FoVer Overf | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.17s |
+| 2026-05-21 15:29 UTC | FUSE Zero-Labeled Ensemble Weighting (arXiv:2604.1 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:29 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2815) |
+| 2026-05-21 15:29 UTC | Capstone v266: Multi-Corpus Headline + FoVer Overf | SKIP | Pre-tests failing, self-heal failed: 1 failed, 80 passed in 2.37s |
+| 2026-05-21 15:31 UTC | FUSE Zero-Labeled Ensemble Weighting (arXiv:2604.1 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2810) |
+| 2026-05-21 15:31 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2815) |

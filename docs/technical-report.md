@@ -1,6 +1,6 @@
 # Carnot: Energy-Based Verification for LLM Output
 
-## A Technical Report
+## A Technical Report — 2,200+ Experiments Across the Project's Research Record
 
 **Author:** Ian Blenke
 **Date:** 2026-05-21
