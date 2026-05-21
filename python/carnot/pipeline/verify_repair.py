@@ -3267,6 +3267,68 @@ class VerifyRepairPipeline:
             "failure_messages": failure_messages
         }
 
+    def grammar_check(self, response: str, format_type: str = 'text') -> tuple[bool, str]:
+        """FALCON Layer 1: syntactic validity check.
+
+        Supported format_types:
+        - 'text': always passes (free-form text) [fast path]
+        - 'json': checks json.loads(response) succeeds
+        - 'code_python': checks compile(response, '<string>', 'exec') succeeds
+        - 'number': checks response.strip() is a valid float
+
+        Returns: (valid: bool, reason: str)
+        """
+        if format_type == 'text':
+            return True, ""
+        elif format_type == 'json':
+            import json
+            try:
+                json.loads(response)
+                return True, ""
+            except json.JSONDecodeError as e:
+                return False, f"JSON parsing failed: {e}"
+        elif format_type == 'code_python':
+            try:
+                compile(response, '<string>', 'exec')
+                return True, ""
+            except SyntaxError as e:
+                return False, f"Python compilation failed: {e}"
+        elif format_type == 'number':
+            try:
+                float(response.strip())
+                return True, ""
+            except ValueError as e:
+                return False, f"Invalid number: {e}"
+        return False, f"Unknown format type: {format_type}"
+
+    def falcon_repair(
+        self,
+        prompt: str,
+        initial_response: str,
+        format_type: str = 'text',
+        k_max: int = 5,
+        energy_threshold: float = 0.3
+    ) -> dict[str, object]:
+        """FALCON two-layer repair:
+        Layer 1: grammar_check(initial_response, format_type)
+          If invalid: return {failed: 'grammar', reason: str, n_iterations: 0}
+        Layer 2: iterative_repair_with_counterexample(prompt, initial_response, k_max, energy_threshold)
+        Returns: {final_response, final_energy, n_iterations, converged, layers_applied}
+        """
+        valid, reason = self.grammar_check(initial_response, format_type)
+        if not valid:
+            return {
+                "failed": "grammar",
+                "reason": reason,
+                "n_iterations": 0
+            }
+        
+        result = self.iterative_repair_with_counterexample(
+            prompt, initial_response, k_max, energy_threshold
+        )
+        result["layers_applied"] = ["grammar", "semantic"]
+        return result
+
     def odar_route(self, prompt: str, context_energy: float | None = None) -> str:
         """ODAR-style free-energy routing: selects fast or deliberative path.
 
