@@ -5888,3 +5888,4 @@ Ripgrep i |
 | 2026-05-21 19:06 UTC | Milestone 2026.05.268 activated | OK | 8 tasks queued |
 | 2026-05-21 19:17 UTC | Archive .267 + Activate .268 | OK | 81 passed in 4.05s |
 | 2026-05-21 19:32 UTC | FoVer Memory-Leakage Isolation: AUROC With vs With | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2828_fover_m |
+| 2026-05-21 19:38 UTC | FoVer Memory-Leakage Isolation: AUROC With vs With | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2828_fover_m |
