@@ -5647,3 +5647,4 @@ Ripgrep i |
 | 2026-05-21 03:08 UTC | Weak-Strong Verification Policy (arXiv:2602.17633) | OK | 145 passed in 3.47s |
 | 2026-05-21 03:13 UTC | Paraphrastic Consistency Probing Verifier Tier 0w  | OK | 100 passed in 3.80s |
 | 2026-05-21 03:17 UTC | FR-11 Tier 4: Continuous Self-Learning Live Benchm | OK | cache hit: 100 passed in 3.80s |
+| 2026-05-21 03:23 UTC | Phase 4 Active Inference: FEP Factor Graph over Ve | OK | 81 passed in 2.16s |
