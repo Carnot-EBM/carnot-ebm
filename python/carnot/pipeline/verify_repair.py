@@ -3285,6 +3285,51 @@ class VerifyRepairPipeline:
         else:
             return "deliberative_path"
 
+    def otv_probe(self, prompt: str, response: str) -> float:
+        """OTV-style one-token verification: computes a soft correctness probability
+        from response features without additional generation.
+
+        Proxy implementation (no KV cache available without transformer inference):
+        - TF-IDF of response (reuse existing feature extraction)
+        - Dot product with a "correctness direction" vector (trained on FoVer correct/incorrect pairs)
+        - Sigmoid to produce probability in [0, 1]
+        Returns: confidence float in [0, 1]. High = likely correct. Low = uncertain.
+        """
+        import os
+        import pickle
+        probe_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))), "results", "otv_correctness_probe.pkl")
+        if not os.path.exists(probe_path):
+            probe_path = "results/otv_correctness_probe.pkl" # Try cwd
+            if not os.path.exists(probe_path):
+                return 0.5  # fallback if not trained
+
+        with open(probe_path, "rb") as f:
+            data = pickle.load(f)
+            vectorizer = data["vectorizer"]
+            model = data["model"]
+
+        X = vectorizer.transform([response])
+        prob = model.predict_proba(X)[0, 1]
+        return float(prob)
+
+    def route(self, prompt: str, response: str, otv_threshold: float = 0.8, odar_threshold: float = 0.3) -> str:
+        """Two-tier routing:
+        Step 1: OTV probe — if confidence >= otv_threshold: return 'fast_path_otv'
+        Step 2: ODAR route — if F < odar_threshold: return 'fast_path_odar'
+        Step 3: return 'deliberative_path'
+        """
+        confidence = self.otv_probe(prompt, response)
+        if confidence >= otv_threshold:
+            return 'fast_path_otv'
+        
+        complexity = len(prompt.split()) / 100.0
+        odar_conf = 0.5
+        f_proxy = complexity - odar_conf
+        if f_proxy < odar_threshold:
+            return 'fast_path_odar'
+
+        return 'deliberative_path'
+
 
 
 class CASALTier:
