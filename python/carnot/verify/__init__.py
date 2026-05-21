@@ -48,6 +48,7 @@ try:
     )
     from carnot.verify.tier0e_eorm import EORMVerifier
     from carnot.verify.tier0f_semantic_calibration import SemanticCalibratedVerifier
+    from carnot.verify.tier0g_semantic_energy import SemanticEnergyVerifier
     from carnot.verify.linear_probe_calibrator import LinearProbeCalibrator
     from carnot.verify.deentangled_ensemble import DeentangledEnsemble
     from carnot.verify.tier0r_curry_howard import Tier0rVerifier
@@ -92,6 +93,7 @@ else:
         "safe_exec_function",
         "EORMVerifier",
         "SemanticCalibratedVerifier",
+        "SemanticEnergyVerifier",
         "LinearProbeCalibrator",
         "DeentangledEnsemble",
         "Tier0rVerifier",
