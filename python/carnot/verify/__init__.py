@@ -103,6 +103,7 @@ else:
         "SetConsistencyVerifier",
     ]
 from .tier0w_paraphrase_consistency import ParaphrasticConsistencyVerifier
+from .tier0z_temporal_causal import TemporalCausalConsistencyVerifier
 
 from .tier0y_conformal_calibration import ConformalCalibrationVerifier
 

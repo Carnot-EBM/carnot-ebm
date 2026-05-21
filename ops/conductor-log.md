@@ -5678,3 +5678,13 @@ Ripgrep i |
 | 2026-05-21 08:10 UTC | Empirical Delta H2 Regression Fix: Git Bisect + Pi | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
 | 2026-05-21 08:26 UTC | Empirical Delta H2 Regression Fix: Git Bisect + Pi | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
 | 2026-05-21 08:42 UTC | Empirical Delta H2 Regression Fix: Git Bisect + Pi | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
+| 2026-05-21 08:47 UTC | FR-11 Tier 4 Production Integration: Wire ORCA-NEX | OK | 164 passed in 4.88s |
+| 2026-05-21 08:52 UTC | Ensemble v13: Tier 0z Temporal/Causal Consistency  | FAIL | Gemini CLI error: 7.js:309732:14)
+    at async file:///usr/lib/node_modules/@g |
+| 2026-05-21 08:54 UTC | Ensemble v13: Tier 0z Temporal/Causal Consistency | OK | Deliverable already exists in repo |
+| 2026-05-21 08:54 UTC | Repair Pipeline Forensic: Detect-Repair-Verify Sta | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 08:57 UTC | Repair Pipeline Forensic: Detect-Repair-Verify Sta | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 08:59 UTC | Repair Pipeline Forensic: Detect-Repair-Verify Sta | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 09:01 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 09:03 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
+| 2026-05-21 09:05 UTC | NEXUS Constraint Memory Expansion: 34 to 50+ Domai | SKIP | Pre-tests failing, self-heal failed: consistent_text = "The system failed. There |
