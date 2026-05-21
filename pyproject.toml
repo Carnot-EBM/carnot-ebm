@@ -100,6 +100,14 @@ version = {attr = "carnot._version.__version__"}
 
 [tool.pytest.ini_options]
 testpaths = ["tests/python", "tests/integration"]
+# scripts/experiments/ added to pythonpath 2026-05-21 — root-level
+# experiment_*.py / run_experiment_*.py / train_kan.py were moved
+# from repo root to scripts/experiments/ for a presentable repo
+# layout. Tests still `from experiment_2740 import ...` etc., so the
+# directory must be on sys.path during test collection. The same
+# directory works for any direct python invocation that goes through
+# pytest's rootdir setup.
+pythonpath = ["scripts/experiments"]
 # tests/archive/ contains tests for completed experiments and deprecated
 # modules (activation-based EBMs). Run explicitly: pytest tests/archive/
 addopts = [
