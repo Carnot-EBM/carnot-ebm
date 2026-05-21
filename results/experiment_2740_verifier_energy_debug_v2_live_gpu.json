@@ -49,7 +49,8 @@
     "name": "Qwen3.6-35B-A3B-GGUF",
     "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
     "role": "live_verification_diagnostic",
-    "quantization": "Q4_K_M"
+    "quantization": "Q4_K_M",
+    "n_gpu_layers": -1
   },
   "random_seed": 42,
   "reproducibility_checksum": "",
@@ -59,22 +60,22 @@
     {
       "resource": "cuda",
       "available": true,
-      "check": "NVIDIA GeForce RTX 3090"
+      "check": "nvidia-smi --query-gpu=name,memory.total --format=csv,noheader"
     },
     {
-      "resource": "gguf_qwen36",
+      "resource": "qwen_gguf",
       "available": false,
-      "check": "ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/"
+      "check": "ls ~/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/ 2>/dev/null | head -5"
     },
     {
-      "resource": "carnot_importable",
+      "resource": "carnot",
       "available": true,
-      "check": ".venv/bin/python -c 'import carnot.pipeline'"
+      "check": "import carnot.pipeline"
     },
     {
-      "resource": "fover_corpus",
+      "resource": "fover",
       "available": true,
-      "check": "8829 lines"
+      "check": "wc -l data/fover_corpus.jsonl"
     }
   ]
 }
