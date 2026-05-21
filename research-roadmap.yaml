@@ -114,7 +114,7 @@ tasks:
         principle: "Documents KV260 graduation — no mandatory hardware task in .261."
       - fep_redesign_needed_carried_forward: bool — true (fep_auroc=0.489 in exp2748)
         principle: "Top-priority gap: Phase 4 FEP produces random predictions."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records which files were actually read."
       - duration_s: float
         principle: "File reads + YAML copy + JSON write: expected >= 3s."
@@ -253,7 +253,7 @@ tasks:
         principle: "Confirms gemma-4-26B-A4B-it-GGUF was actually loaded via llama_cpp."
       - model_load_time_s: float
         principle: "Real model load: expected >= 30s for 26B GGUF; < 5s = model not loaded."
-      - model_specs: dict with {name, hf_id, quantization, n_gpu_layers}
+      - model_specs: dict with {{name, hf_id, quantization, n_gpu_layers}}
         principle: "Methodology field required by adversarial_verify.py METHODOLOGY_MISSING check."
       - random_seed: int — 42
         principle: "Reproducibility anchor."
@@ -263,7 +263,7 @@ tasks:
         principle: "Confirms GPU was available (not a CPU-only fallback run)."
       - duration_s: float — MUST be >= 30
         principle: "GATE against adversarial fabrication: GGUF load + 30 inferences cannot be < 30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records CUDA + GGUF cache + llama_cpp + file checks."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -366,11 +366,11 @@ tasks:
          # ODAR auroc from exp2748: fep_vs_odar_delta=-0.484 with fep_auroc=0.489
          # => odar_auroc = 0.489 + 0.484 = 0.973 (approximately)
          odar_auroc_baseline = 0.973  # from exp2748
-         strategies = {
+         strategies = {{
            'strategy1': strategy1_auroc,
            'strategy2': strategy2_auroc,
            'strategy3': strategy3_auroc,
-         }
+         }}
          best_strategy = argmax(strategies)
          best_fep_auroc = strategies[best_strategy]
          fep_vs_odar_delta = best_fep_auroc - odar_auroc_baseline
@@ -413,7 +413,7 @@ tasks:
         principle: "Confirms same verifier count as exp2748 (expected 8)."
       - duration_s: float
         principle: "Feature matrix build + 3 strategy comparisons: expected 5-30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records carnot.verify import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -525,7 +525,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Code read + 20 verbose repair iterations: expected 5-60s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records ttt_loop import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -665,7 +665,7 @@ tasks:
         principle: "Test set seed — DIFFERENT from learning pool to ensure independence."
       - duration_s: float — expected >= 15s
         principle: "3-cycle ORCA + NEXUS + AUROC: expected >= 15s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline + ttt + nexus + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -746,7 +746,7 @@ tasks:
          For Tier 0g, Tier 0v, Tier 0w: compute correlation with [tier0a, tier0e, tier0f, tier0u, most_similar_other]
          new_verifier_max_correlation = max pairwise correlation between NEW verifiers and existing ones
          orthogonality_sufficient = new_verifier_max_correlation < 0.90 for at least 2 of 3 new verifiers
-         Record: new_verifier_correlations (dict — {verifier: max_correlation_with_existing}),
+         Record: new_verifier_correlations (dict — {{verifier: max_correlation_with_existing}}),
          orthogonality_sufficient (bool).
 
       4. Update python/carnot/pipeline/verify_repair.py to include Tier 0g/0v/0w in the default
@@ -777,7 +777,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Feature matrix (100x18) + AUROC + correlation: expected 5-30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records carnot.verify + module existence + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -865,14 +865,14 @@ tasks:
       3. Compare to weak-strong policy (exp2745 baseline):
          # exp2745: policy_savings_pct=82%, false_negative_rate=0.0 (suspicious — inverted thresholds)
          # Compare: is conformal savings reasonable (20-50%) without inverted thresholds?
-         conformal_vs_weak_strong_comparison = {
+         conformal_vs_weak_strong_comparison = {{
            "conformal_savings": conformal_savings_pct,
            "weak_strong_savings": 82.0,  # exp2745
            "conformal_fnr": false_negative_rate,
            "weak_strong_fnr": 0.0,  # suspicious (likely inverted)
            "conformal_has_formal_guarantee": anytime_valid_guarantee,
            "weak_strong_has_formal_guarantee": False,  # threshold inversion means no guarantee
-         }
+         }}
          Record: conformal_vs_weak_strong_comparison (dict).
 
       4. Add AnytimeValidConformalRouter to verify_repair.py as an alternative router option.
@@ -901,7 +901,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Sequential routing simulation: expected 5-15s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1011,7 +1011,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Code read + calibration fix + re-evaluation: expected 5-20s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records verify_repair module + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1139,7 +1139,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Feature extraction + gradient descent (100 steps) + eval: expected 5-30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records tier0e import + FoVer corpus + sklearn."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1198,7 +1198,7 @@ tasks:
          Record: new_gates_opened (list of str — any new PRE-SHIP requirements since .259), checklist_still_current (bool).
 
       3. Produce operator_ship_checklist_v7:
-         If phase1_shipped=true: checklist = ["Phase 1 SHIPPED at {tag}. No further action needed."]
+         If phase1_shipped=true: checklist = ["Phase 1 SHIPPED at {{tag}}. No further action needed."]
          If phase1_shipped=false: checklist = exp2730's v6 checklist + any new_gates_opened + current status note.
          Must include: git tag command, PyPI publish instructions, HuggingFace model card update, IPFS CID note.
          Record: operator_ship_checklist_v7 (list of str).
@@ -1220,7 +1220,7 @@ tasks:
         principle: "Updated operator action list — key handoff artifact for human review."
       - duration_s: float
         principle: "File reads + git tag check: expected 3-10s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records exp2730 artifact + git tag check."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1274,10 +1274,10 @@ tasks:
             Record: pdflatex_available (bool).
             If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
          b. Read results/experiment_2744_empirical_delta_paper_v6.json for tex_file_path.
-            `ls {tex_file_path} && echo exists || echo missing`
+            `ls {{tex_file_path}} && echo exists || echo missing`
             Record: tex_source_exists (bool).
             If false: write honest_verdict 'blocked_tex_source_missing' and exit.
-         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -3`
+         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -3`
             Record: pdf_compiles_baseline (bool).
          Record: preconditions_checked.
 
@@ -1292,7 +1292,7 @@ tasks:
       3. Read exp2754 artifact. Update 4/delta cite section per paper_v6_recommendation:
          Record: delta_section_updated (bool), delta_update_str (str — brief sentence).
 
-      4. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+      4. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -5`
          `pdfinfo /tmp/main.pdf 2>/dev/null | grep Pages || echo unknown`
          Record: latex_compiles_v4 (bool), n_pages_v4 (int), compile_warnings (int).
 
@@ -1315,7 +1315,7 @@ tasks:
         principle: "Path to .tex source — carried forward for exp2762."
       - duration_s: float
         principle: "JSON reads + tex edits + compile: expected >= 15s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pdflatex + tex source + baseline compile."
 
       DO NOT submit to arXiv. DO NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1368,37 +1368,37 @@ tasks:
             Record: pdflatex_available (bool).
             If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
          b. Read results/experiment_2761_paper_v6_theory_v4.json for tex_file_path.
-            `ls {tex_file_path} && echo exists || echo missing`
+            `ls {{tex_file_path}} && echo exists || echo missing`
             Record: tex_source_exists (bool).
             If false: write honest_verdict 'blocked_tex_source_missing' and exit.
          Record: preconditions_checked.
 
       1. Add conformal selective acting cite (if exp2757 conformal_routing_viable=true):
-         Add \bibitem{conformal_selective_2026} to .bib:
+         Add \bibitem{{conformal_selective_2026}} to .bib:
          "Hamed Khosravi, Xiaoming Huo. 'Conformal Selective Acting: Anytime-Valid Risk Control
           for RLVR-Trained LLMs.' arXiv:2605.20270, May 2026."
-         Add \cite{conformal_selective_2026} in pipeline §4 routing section.
+         Add \cite{{conformal_selective_2026}} in pipeline §4 routing section.
          Record: conformal_cite_added (bool).
 
       2. Add differentiable conformal cite (if exp2759 tier0y_viable=true):
-         Add \bibitem{diff_conformal_2026} to .bib:
+         Add \bibitem{{diff_conformal_2026}} to .bib:
          "Nathan Hittesdorf, Marco Salzetta, Lu Cheng. 'Differentiable Conformal Training for
           LLM Reasoning Factuality.' arXiv:2604.20098, Apr 2026."
-         Add \cite{diff_conformal_2026} in verifier calibration §3.
+         Add \cite{{diff_conformal_2026}} in verifier calibration §3.
          Record: diff_conformal_cite_added (bool).
 
       3. Final compile:
-         `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+         `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -5`
          `pdfinfo /tmp/main.pdf 2>/dev/null | grep Pages`
          Record: latex_compiles_v3 (bool), n_pages_v3 (int).
 
       4. Produce operator_arxiv_checklist_v3:
          All v2 steps +
-         "NOTE: FEP redesign result = {fep_viable} (from exp2753 best_fep_auroc)"
-         "NOTE: Ensemble k=18 AUROC = {ensemble_v12_auroc} (from exp2756)"
-         "NOTE: Empirical delta root cause = {root_cause} (from exp2754)"
+         "NOTE: FEP redesign result = {{fep_viable}} (from exp2753 best_fep_auroc)"
+         "NOTE: Ensemble k=18 AUROC = {{ensemble_v12_auroc}} (from exp2756)"
+         "NOTE: Empirical delta root cause = {{root_cause}} (from exp2754)"
          "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (CLAUDE.md)"
-         "NOTE: Phase 4 FEP viable = {fep_viable} — submission hold continues if False"
+         "NOTE: Phase 4 FEP viable = {{fep_viable}} — submission hold continues if False"
          Record: operator_arxiv_checklist_v3 (list of str).
 
       5. Write results/experiment_2762_arxiv_package_v3.json.
@@ -1422,7 +1422,7 @@ tasks:
         principle: "Operator reads this as the definitive arXiv submission action list."
       - duration_s: float
         principle: "Tex edits + compile: expected >= 10s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pdflatex + tex source."
 
       DO NOT submit to arXiv. DO NOT push.
@@ -1516,7 +1516,7 @@ tasks:
 
       9. Top 3 gaps for .262:
          Prioritize based on what did NOT execute or is below target.
-         Record: top_3_gaps_for_262 (list of {gap, priority, suggested_task}).
+         Record: top_3_gaps_for_262 (list of {{gap, priority, suggested_task}}).
 
       10. Update ops/status.md: ADD new section at top (NEVER remove existing content):
           "## Session {date} - Milestone 2026.05.261 Capstone Complete\n[summary]"

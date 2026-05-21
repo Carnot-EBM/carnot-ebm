@@ -5653,3 +5653,4 @@ Ripgrep i |
 | 2026-05-21 03:56 UTC | Capstone v260: Cross-Artifact Synthesis + KV260 Te | OK | Deliverable already exists in repo |
 | 2026-05-21 04:20 UTC | Plan milestone 2026.05.261 | OK | 13 tasks proposed |
 | 2026-05-21 04:22 UTC | Milestone 2026.05.261 activated | OK | 13 tasks queued |
+| 2026-05-21 04:29 UTC | Archive .260 + Activate .261 | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-VWGAOW5 |
