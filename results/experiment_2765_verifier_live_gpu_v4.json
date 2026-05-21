@@ -1,0 +1,57 @@
+{
+  "honest_verdict": "complete:verifier_live_gpu_v4",
+  "stub_written_at": "2026-05-21T07:40:13.769415+00:00",
+  "step": "complete",
+  "verifier_discriminative": false,
+  "duration_s": 50.673156398988795,
+  "cuda_available": true,
+  "gemma_gguf_cached": true,
+  "gguf_files": [
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_M.gguf",
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_XXS.gguf",
+    "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ4_NL.gguf"
+  ],
+  "llama_cpp_available": true,
+  "preconditions_checked": [
+    {
+      "resource": "cuda",
+      "available": true,
+      "check": "nvidia-smi"
+    },
+    {
+      "resource": "gemma_gguf_cached",
+      "available": true,
+      "check": "ls snapshots"
+    },
+    {
+      "resource": "gguf_files",
+      "available": true,
+      "check": "find gguf"
+    },
+    {
+      "resource": "llama_cpp",
+      "available": true,
+      "check": "import llama_cpp"
+    }
+  ],
+  "model_load_time_s": 10.020294991030823,
+  "model_loaded": true,
+  "n_responses": 5,
+  "energy_values": [
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0
+  ],
+  "energy_mean": 0.0,
+  "energy_std": 0.0,
+  "reproducibility_checksum": "cf5d2649a83fbcbb5f7aa39374dd18ce",
+  "random_seed": 42,
+  "model_specs": {
+    "name": "gemma-4-26B-A4B-it-GGUF",
+    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "quantization": "Q4_K_M",
+    "n_gpu_layers": -1
+  }
+}
