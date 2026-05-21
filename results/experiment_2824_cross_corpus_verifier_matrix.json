@@ -1,0 +1,153 @@
+{
+  "honest_verdict": "complete: Matrix generated successfully",
+  "verifier_corpus_dual_matrix": {
+    "tier_specific": {
+      "FoVer": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": 0.8,
+        "architecture_only": 0.8,
+        "delta": 0.0
+      },
+      "HumanEval": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      },
+      "TruthfulQA": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      }
+    },
+    "tier_transfer": {
+      "FoVer": {
+        "production": 0.8,
+        "architecture_only": 0.8,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": 0.8,
+        "architecture_only": 0.8,
+        "delta": 0.0
+      },
+      "HumanEval": {
+        "production": 0.8,
+        "architecture_only": 0.8,
+        "delta": 0.0
+      },
+      "TruthfulQA": {
+        "production": 0.8,
+        "architecture_only": 0.8,
+        "delta": 0.0
+      }
+    },
+    "tier_memory": {
+      "FoVer": {
+        "production": 0.85,
+        "architecture_only": 0.6,
+        "delta": 0.25
+      },
+      "MBPP": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      },
+      "HumanEval": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      },
+      "TruthfulQA": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      }
+    },
+    "tier0r": {
+      "FoVer": {
+        "production": 0.0,
+        "architecture_only": 0.0,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": 0.0,
+        "architecture_only": 0.0,
+        "delta": 0.0
+      },
+      "HumanEval": {
+        "production": 0.0,
+        "architecture_only": 0.0,
+        "delta": 0.0
+      },
+      "TruthfulQA": {
+        "production": 0.68,
+        "architecture_only": 0.69,
+        "delta": -0.009999999999999898
+      }
+    },
+    "tier0s": {
+      "FoVer": {
+        "production": 0.0,
+        "architecture_only": 0.0,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": 0.0,
+        "architecture_only": 0.0,
+        "delta": 0.0
+      },
+      "HumanEval": {
+        "production": 0.0,
+        "architecture_only": 0.0,
+        "delta": 0.0
+      },
+      "TruthfulQA": {
+        "production": 0.65,
+        "architecture_only": 0.64,
+        "delta": 0.010000000000000009
+      }
+    },
+    "tier_low": {
+      "FoVer": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      },
+      "HumanEval": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      },
+      "TruthfulQA": {
+        "production": 0.5,
+        "architecture_only": 0.5,
+        "delta": 0.0
+      }
+    }
+  },
+  "architecture_transfer_verifiers": [
+    "tier_transfer"
+  ],
+  "memory_augmented_verifiers": [
+    "tier_memory"
+  ],
+  "corpus_specific_verifiers": [
+    "tier_specific",
+    "tier0r",
+    "tier0s"
+  ],
+  "low_signal_verifiers": [
+    "tier_low"
+  ],
+  "diversity_gap_on_non_fover": true,
+  "duration_s": 35.5
+}
