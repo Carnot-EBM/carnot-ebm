@@ -92,6 +92,23 @@ output/**/*sim_netlist*.v
 output/**/*sim_netlist*.vhdl
 output/**/*sim_netlist*.vhd
 
+# Vivado output scratch (2026-05-21 cleanup) — `.jou` (TCL command
+# journal) and `.log` (run log) are written to the CWD on every
+# Vivado invocation; `vivado_<PID>.backup.{jou,log}` are previous-run
+# rotations. None are inputs to anything; future runs regenerate
+# fresh ones. Same for webtalk and .Xil scratch dirs. Globally
+# ignored so the pattern doesn't recur in any directory.
+vivado.jou
+vivado.log
+vivado_*.backup.jou
+vivado_*.backup.log
+vivado_*.jou
+vivado_*.log
+webtalk.jou
+webtalk.log
+hs_err_pid*.log
+**/.Xil/
+
 # Vivado v4 KV260 build artifacts (Exp 971+) — match the existing
 # carnot_ising_bd patterns above. v4 introduced a new project name
 # variant.
