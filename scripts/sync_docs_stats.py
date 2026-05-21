@@ -14,28 +14,22 @@ import sys
 
 
 def count_experiments() -> int:
-    """Count experiments from the experiment log summary table."""
-    log_path = os.path.join(os.path.dirname(__file__), "..", "ops", "experiment-log.md")
-    if not os.path.exists(log_path):
+    """Count experiments by counting results/experiment_*.json files.
+
+    Source-of-truth: the actual experiment artifact files. Previously this
+    counted rows in ops/experiment-log.md, but that file became stale
+    (last updated April 2026 while experiments kept running to 2700+),
+    causing the landing page to display 35 instead of 2,250+. The
+    results/ directory is unambiguous and self-updating.
+    """
+    results_dir = os.path.join(os.path.dirname(__file__), "..", "results")
+    if not os.path.isdir(results_dir):
         return 0
-    with open(log_path) as f:
-        content = f.read()
-    # Count all experiment rows in the summary table (| # | or | — |)
-    count = 0
-    in_table = False
-    for line in content.split("\n"):
-        if "| # |" in line:
-            in_table = True
-            continue
-        if in_table and line.startswith("|"):
-            if "---" in line:
-                continue
-            count += 1
-        elif in_table and not line.startswith("|"):
-            if line.strip() == "":
-                continue
-            break
-    return count
+    return sum(
+        1
+        for fname in os.listdir(results_dir)
+        if fname.startswith("experiment_") and fname.endswith(".json")
+    )
 
 
 def count_models() -> int:
@@ -98,11 +92,18 @@ def update_index(experiments: int, models: int, principles: int, tests: int) -> 
         pattern = rf'(<div class="stat-num">)\d[^<]*(</div><div class="stat-label">{label})'
         return re.sub(pattern, rf"\g<1>{value}\g<2>", content)
 
-    content = replace_stat(content, "Experiments", str(experiments))
+    # Clean labels (post-2026-05-20 site cleanup — see CLAUDE.md
+    # "Public Documentation Discipline"). Old verbose labels removed:
+    # never re-introduce internal jargon (experiment IDs, milestone
+    # numbers, "Ensemble v7b", "adversarially verified 5-seed", etc.)
+    # in the visible stat-label strings.
+    content = replace_stat(content, "Experiment runs", f"{experiments:,}")
+    content = replace_stat(content, "Experiments", f"{experiments:,}")  # legacy
     content = replace_stat(content, "Models", str(models))
     content = replace_stat(content, "Principles", str(principles))
     if tests > 0:
-        content = replace_stat(content, "Tests", f"{tests:,}")
+        content = replace_stat(content, "Automated tests", f"{tests:,}")
+        content = replace_stat(content, "Tests", f"{tests:,}")  # legacy
 
     if content != original:
         with open(index_path, "w") as f:

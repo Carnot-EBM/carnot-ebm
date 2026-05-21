@@ -15,6 +15,108 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 - **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
 - **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
 
+## Public Documentation Discipline (MANDATORY)
+
+**Origin:** 2026-05-20 operator directive ("once again, the carnot-
+ebm.org GitHub pages seems to be devolving back into a fever dream").
+Filed after the second cycle of the landing page drifting from
+hand-curated professional copy into a wall of internal jargon:
+experiment IDs (`exp2713`), milestone numbers (`.258 fully executed`),
+internal flag syntax (`pretest_cascade_fixed=True`), and internal
+acronyms (`NupProbe`, `ORCA-NEXUS`, `Tier 0f`) spliced verbatim into
+the public-facing "Latest closeout" card.
+
+**Root cause:** the conductor's `_update_docs_before_planning()` ran an
+AI sub-agent every milestone with `ops/changelog.md` and `research-
+complete.yaml` (both jargon-heavy) in its input set, and a permissive
+prompt ("Update ALL documentation"). The agent dutifully copied
+conductor-debug-syntax into the landing page.
+
+**The rule.** Public-facing documents have an audience of strangers
+who don't know what `.259` means, who haven't read the conductor logs,
+and who will judge the project's credibility by whether the front
+door looks professional. The autonomous loop NEVER edits this set:
+
+| Path | Maintainer |
+|---|---|
+| `docs/index.html` (the landing page, carnot-ebm.org) | numeric stats via `scripts/sync_docs_stats.py` only; prose is operator-curated |
+| `README.md` | operator-curated |
+| `docs/blog/*.html` | operator-curated blog posts |
+| `docs/getting-started.md` | operator-curated |
+| `docs/cli-usage.md` | operator-curated |
+| `docs/mcp-server.md` | operator-curated |
+| `docs/CNAME` | DNS — never touched |
+
+The autonomous loop MAY edit `docs/technical-report.md` /
+`docs/technical-report.html` but ONLY to update results-table numerical
+cells. Prose sections (abstract, introduction, narrative) are
+operator-curated.
+
+**Forbidden content in any auto-edit to any public-facing document:**
+
+- Raw experiment IDs (`expNNNN`, `Exp NNNN`) in prose. Tables of
+  experimental results MAY cite them in a "source" column.
+- Internal milestone numbers (`.NNN`, `2026.MM.NNN`) in prose.
+- Internal flag syntax (`foo_bar=True`, `=False`).
+- Internal acronyms (NupProbe, ORCA-NEXUS, NEXUS, Tier 0X, FR-NN,
+  HardNet++, GRPO v8, etc.) without a one-line plain-English gloss
+  when first used.
+- Milestone-specific narrative ("Milestone .258 fully executed",
+  "the conductor cascade stall that began at milestone .206").
+- Adjectives that imply review status the project doesn't have
+  ("peer-reviewed", "published") unless the artifact actually has
+  that status.
+
+**How to apply (autonomous-loop agent-side).** When invoked by
+`_update_docs_before_planning()` or any equivalent doc-update
+trigger:
+
+- If the prompt asks for changes to a file in the operator-curated
+  set above, REFUSE and emit an empty diff. Write
+  `honest_verdict: blocked_public_doc_operator_curated` if the task
+  requires a verdict.
+- If the prompt asks for prose edits to `docs/technical-report.md`,
+  refuse the prose part — only edit results tables.
+- If the only available content for an "update the landing page" task
+  is conductor-debug-syntax (raw IDs, flags, milestone-narrative),
+  STOP and emit the empty diff.
+
+**Mechanical enforcement (lives in
+`scripts/research_conductor.py:_update_docs_before_planning`).** The
+function now:
+
+1. Runs `scripts/sync_docs_stats.py` for numeric-only landing-page
+   updates. Mechanical, deterministic, no AI invention.
+2. Calls the AI sub-agent ONLY with a severely-constrained prompt
+   covering technical-report results tables. The prompt explicitly
+   forbids touching the landing page, README, blog, or
+   operator-curated docs, and explicitly forbids the content
+   patterns listed above.
+
+**How to test a public-docs change.** Before pushing a change to any
+public-facing document, read it as a stranger:
+
+- Would someone who has never used Carnot understand what this says?
+- Are there acronyms or IDs that mean nothing without context?
+- Does any sentence read like a copy-pasted commit message or
+  retrospective entry?
+
+If any answer is yes, the change is not ready.
+
+**Cross-references:**
+
+- 2026-05-20 operator directive — origin (and the prior recurrence
+  noted with "once again")
+- `scripts/sync_docs_stats.py` — the mechanical numeric-sync path
+- `scripts/research_conductor.py:_update_docs_before_planning` — the
+  constrained AI-sub-agent path
+- CLAUDE.md "Documentation and Communication Standards" (above) — no
+  emojis, professional tone (the broader frame this rule operates
+  within)
+- CLAUDE.md "Operator-Only External Publication" — the
+  external-submission counterpart; this rule is its always-public-
+  but-still-internal-source-of-truth counterpart
+
 ## Security Requirements
 
 - **All embedded secrets must use SOPS encryption** at rest. Never commit plaintext API keys, tokens, or credentials.

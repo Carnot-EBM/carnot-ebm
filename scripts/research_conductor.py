@@ -2328,33 +2328,67 @@ def _update_docs_before_planning(push: bool = True) -> bool:
     logger.info("UPDATING DOCS BEFORE PLANNING")
     logger.info("=" * 60)
 
+    # 2026-05-20 operator directive ("the carnot-ebm.org GitHub pages
+    # seems to be devolving back into a fever dream") + CLAUDE.md "Public
+    # Documentation Discipline" rule shipped 2026-05-20: this autonomous
+    # doc-update path is the recurring source of landing-page drift.
+    # The agent reads ops/changelog.md + research-complete.yaml as input,
+    # which contain raw experiment IDs, milestone numbers, and internal
+    # flags. Past iterations dutifully spliced "exp2713 — pretest_cascade_
+    # fixed=True" verbatim into public copy. The fix: numeric-only
+    # mechanical sync via sync_docs_stats.py (no AI agent on the landing
+    # page), and a SEVERELY constrained AI prompt for the technical
+    # report only.
+    #
+    # Stats sync: mechanical, deterministic, never invents prose.
+    logger.info("Running sync_docs_stats.py for mechanical numeric updates")
+    try:
+        subprocess.run(
+            [sys.executable, str(PROJECT_ROOT / "scripts" / "sync_docs_stats.py")],
+            cwd=PROJECT_ROOT,
+            timeout=120,
+            check=False,
+        )
+    except Exception as _e:
+        logger.warning("sync_docs_stats.py failed (non-fatal): %s", _e)
+
     doc_prompt = (
         f"You are working on the Carnot EBM framework in {PROJECT_ROOT}.\n"
         f"Read CLAUDE.md for project context.\n\n"
-        f"TASK: Update ALL documentation to reflect the latest experiment results.\n"
-        f"This runs BEFORE the planning agent, so docs must be current.\n\n"
-        f"READ FIRST:\n"
-        f"- ops/status.md — current experiment count and results\n"
-        f"- ops/changelog.md — recent experiments\n"
-        f"- research-complete.yaml — all completed milestones\n\n"
-        f"UPDATE THESE FILES:\n"
-        f"1. docs/index.html — update stats (experiment count, test count),\n"
-        f"   results cards with latest numbers, capabilities if new ones added\n"
-        f"2. README.md — update experiment count, key results table\n"
-        f"3. docs/technical-report.md — update abstract AND header with latest\n"
-        f"   experiment count, key results, milestone count. Add new sections\n"
-        f"   for any major new findings not yet documented.\n"
-        f"4. docs/technical-report.html — FULLY RE-RENDER from the updated\n"
-        f"   technical-report.md. The HTML must match the markdown content.\n"
-        f"   Keep the same dark theme CSS, nav bar, and footer styling.\n\n"
+        f"TASK: Update ONLY the technical report's results tables to reflect\n"
+        f"the latest experiment numbers. NOTHING ELSE.\n\n"
+        f"CONSTRAINED SCOPE — files you MAY touch:\n"
+        f"- docs/technical-report.md — UPDATE TABLES of results (AUROC, FPR,\n"
+        f"  TPR, ECE) with the latest numerical values from the freshest\n"
+        f"  adversarially-verified artifacts in results/. NEVER touch the\n"
+        f"  abstract, the introduction, or any prose section.\n"
+        f"- docs/technical-report.html — RE-RENDER only the table cells you\n"
+        f"  updated in technical-report.md. Do not touch any other element.\n\n"
+        f"FILES YOU MUST NOT TOUCH (PUBLIC-FACING — see CLAUDE.md 'Public\n"
+        f"Documentation Discipline' MANDATORY rule):\n"
+        f"- docs/index.html (THE LANDING PAGE) — owned by sync_docs_stats.py\n"
+        f"  for numeric updates and hand-curated for prose. NEVER edit.\n"
+        f"- README.md — operator-curated; never auto-edited.\n"
+        f"- docs/blog/*.html — operator-curated blog posts; never auto-edited.\n"
+        f"- docs/getting-started.md, docs/cli-usage.md, docs/mcp-server.md —\n"
+        f"  operator-curated.\n\n"
+        f"FORBIDDEN CONTENT IN ANY EDIT (will trigger CLAUDE.md violation):\n"
+        f"- Raw experiment IDs (expNNNN, Exp NNNN) in prose. Tables of\n"
+        f"  experimental results MAY cite them in a 'source' column.\n"
+        f"- Internal milestone numbers (.NNN, 2026.MM.NNN) in prose.\n"
+        f"- Internal flag syntax (foo_bar=True, =False) in prose.\n"
+        f"- Internal acronyms (NupProbe, ORCA-NEXUS, NEXUS, Tier 0X, FR-NN)\n"
+        f"  without a one-line plain-English gloss when first used.\n"
+        f"- Emojis (per CLAUDE.md Documentation and Communication Standards).\n"
+        f"- Milestone-specific narrative ('Milestone .258 fully executed').\n\n"
         f"RULES:\n"
-        f"- Update numbers, results, and add new findings sections\n"
-        f"- Keep changes minimal and focused on accuracy\n"
+        f"- If no updated tables are needed, write NOTHING. Empty diff is fine.\n"
+        f"- Keep changes minimal and focused on numerical accuracy.\n"
         f"- Do NOT modify scripts/research_conductor.py\n"
         f"- Do NOT push\n"
     )
 
-    success, output = run_agent(doc_prompt, max_turns=30, timeout=600)
+    success, output = run_agent(doc_prompt, max_turns=20, timeout=480)
 
     if success and git_has_changes():
         run_cmd(["git", "add", "-A"])
