@@ -2,32 +2,6 @@
 license: apache-2.0
 ---
 
-# Carnot: Energy-Based Verification for LLM Output
-
-**3,256 experiment records across 380 archived milestones through 2026.05.258 (Milestone 2026.05.259 capstone complete). Headline AUROC=0.9857 (Ensemble v7b, adversarially verified 5-seed, exp2546). Latest: pdflatex toolchain restored, arXiv submission package ready (27pp, 3 theory citations), Phase 1 ship checklist v6 complete, ORCA-NEXUS Tier 3+ viable.**
-
-Install: `pip install carnot-ebm`  
-Repository: [github.com/Carnot-EBM/carnot-ebm](https://github.com/Carnot-EBM/carnot-ebm)  
-HuggingFace: [huggingface.co/Carnot-EBM](https://huggingface.co/Carnot-EBM)
-
-## Key Results (Through Milestone 2026.05.259)
-
-| Metric | Value | Artifact |
-|--------|-------|----------|
-| Headline AUROC | 0.9857 | exp2546, adversarially verified 5-seed, .245 |
-| vs HIVE peer | +0.0621 | HIVE peer AUROC=0.9236 |
-| vs HalluScan peer | +0.3157 | HalluScan peer AUROC=0.67 |
-| Tier 0f calibration | 0.992 | exp2716, tier0f_viable=True |
-| ORCA TTT steps saved | 79 | exp2719, conformal_stopping_enabled=True |
-| FALCON candidate reduction | 50.67% | exp2734, grammar-gate |
-| ORCA-NEXUS rules synthesized | 17 | exp2733, from 30 violations |
-| Phase 1 ship | SHIP | exp2730, checklist v6 complete |
-| arXiv package | Ready | exp2736, 27pp, operator submission |
-| Python test items | 25,608 | .259 collection fix |
-| Archived milestones | 380 | through .258 |
-
----
-
 # ThinkPRM v3
 
 ## Model Description

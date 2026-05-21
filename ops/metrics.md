@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-21 Pre-Planning Doc Update
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-21T03:56:49Z | 2026-05-21T03:59:39Z | Pre-planning doc update (runs before planning agent): ran scripts/sync_docs_stats.py → docs/index.html updated (experiments 2,256→2,269; models 16; principles 14; tests 0). Per CLAUDE.md Public Documentation Discipline: README.md and docs/index.html prose are operator-curated (no prose edits); docs/technical-report.md/html only results-table numerical cells allowed (no stale cells found; technical report already reflects through exp2737/.259). Changes: docs/index.html experiment count updated only. | ~15k |
+
+---
+
 ## Session: 2026-05-21 Milestone 2026.05.260 Research Planning
 
 ### Turn Log

@@ -5649,3 +5649,5 @@ Ripgrep i |
 | 2026-05-21 03:17 UTC | FR-11 Tier 4: Continuous Self-Learning Live Benchm | OK | cache hit: 100 passed in 3.80s |
 | 2026-05-21 03:23 UTC | Phase 4 Active Inference: FEP Factor Graph over Ve | OK | 81 passed in 2.16s |
 | 2026-05-21 03:28 UTC | Paper v6 arXiv Package v2: Empirical Delta + Weak- | OK | cache hit: 81 passed in 2.16s |
+| 2026-05-21 03:54 UTC | Capstone v260: Cross-Artifact Synthesis + KV260 Te | FAIL | Post-tests failed: 2 failed, 260 passed in 673.33s (0:11:13) |
+| 2026-05-21 03:56 UTC | Capstone v260: Cross-Artifact Synthesis + KV260 Te | OK | Deliverable already exists in repo |

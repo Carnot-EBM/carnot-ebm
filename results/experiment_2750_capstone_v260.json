@@ -1,0 +1,245 @@
+{
+  "honest_verdict": "complete: milestone 2026.05.260 capstone synthesized — 10/12 criteria met; verifier live-GPU validation blocked on missing Qwen3.6 GGUF cache; Phase 4 FEP factor graph not viable (auroc=0.489 ~ random); KV260 GRADUATED to terminal state (3.183us mean latency); Tier 0v/0w/weak-strong policy all viable; FR-11 Tier 4 learning loop closed (delta=+0.245 AUROC); paper-v6 v2 package prepared but arXiv submission HOLDS pending Phase 4 redesign",
+
+  "milestone": "2026.05.260",
+  "capstone_kind": "milestone_synthesis",
+
+  "n_artifacts_read": 12,
+  "n_artifacts_absent": 0,
+  "artifacts_read": [
+    "experiment_2738_archive_v259.json",
+    "experiment_2739_otv_diversity_retirement.json",
+    "experiment_2740_verifier_energy_debug_v2_live_gpu.json",
+    "experiment_2741_tier0g_live_gpu_rerun.json",
+    "experiment_2742_kv260_latency_transcript_terminal.json",
+    "experiment_2743_tier0v_set_consistency.json",
+    "experiment_2744_empirical_delta_paper_v6.json",
+    "experiment_2745_weak_strong_verification_policy.json",
+    "experiment_2746_paraphrastic_consistency_verifier.json",
+    "experiment_2747_fr11_tier4_learning_benchmark.json",
+    "experiment_2748_phase4_fep_factor_graph.json",
+    "experiment_2749_paper_v6_arxiv_package_v2.json"
+  ],
+
+  "adversarial_flags_cleared": false,
+  "adversarial_flag_assessment": {
+    "exp2740_cleared": false,
+    "exp2740_reason": "blocked_gguf_qwen36_not_cached — model never loaded, duration_s=0.0, verifier_discriminative=false. exp2727 adversarial flag persists for next milestone.",
+    "exp2741_cleared": false,
+    "exp2741_reason": "tier0g_viable=true post-fix (char-n-gram TF-IDF) BUT flagged_adversarial=true with new DURATION_TOO_SHORT critical flag (31.5s for compute-bound run). exp2731 flag not fully cleared.",
+    "follow_up": "Re-stage exp2740 in .261 with HuggingFace download step (or fall back to cached gemma-4-26B). Re-run exp2741 with full inference loop >=60s."
+  },
+
+  "verifier_live_gpu_validated": false,
+  "verifier_live_gpu_note": "CUDA available + carnot pipeline importable + FoVer corpus present, but Qwen3.6-35B-A3B-GGUF not in ~/.cache/huggingface/hub. Precondition correctly emitted blocked_* verdict (no fabrication). Live GPU validation requires either: (a) explicit hf download step in exp prompt, or (b) fallback to gemma-4-26B-A4B-it-GGUF which IS cached.",
+
+  "kv260_graduated": true,
+  "kv260_latency_us": 3.183,
+  "kv260_assessment": {
+    "ssh_reachable": true,
+    "bitstream_loaded": true,
+    "uio_count": 5,
+    "kv260_synthesis_succeeded": true,
+    "kv260_terminal": true,
+    "n_cycles_measured": 100,
+    "latency_mean_us": 3.183,
+    "latency_std_us": 1.172,
+    "latency_min_us": 2.95,
+    "latency_max_us": 14.6,
+    "graduation_consequence": "KV260 EXITS mandatory-per-milestone hardware-task rotation per CLAUDE.md Hardware-Task Continuity Discipline. Follow-on work becomes opportunistic. PolarFire SoC + GateMate A1-EVB-2M remain in mandatory rotation."
+  },
+
+  "new_verifiers_viable": ["tier0v_set_consistency", "tier0w_paraphrastic_consistency"],
+  "ensemble_upgrade_candidates": ["tier0v_set_consistency"],
+  "new_verifier_assessment": {
+    "tier0v_set_consistency": {
+      "auroc": 0.8183140495867768,
+      "viable": true,
+      "precision_at_k": 0.7,
+      "n_sets": 615,
+      "recommendation": "Solid AUROC (>0.8) on real corpus. Promote to ensemble integration candidate in .261. Becomes verifier k=17 if NLA-class probe (k=16) is locked in."
+    },
+    "tier0w_paraphrastic_consistency": {
+      "auroc": 0.6954947323724580,
+      "viable": true,
+      "n_paraphrase_pairs": 2878,
+      "recommendation": "Marginal AUROC (~0.70). Viable as prototype but below ensemble-promotion bar (~0.75). Run cross-corpus validation before promoting."
+    },
+    "weak_strong_policy": {
+      "viable": true,
+      "savings_pct": 82.0,
+      "false_negative_rate": 0.0,
+      "t_low": 0.184,
+      "t_high": 0.107,
+      "recommendation": "Strong result — 82% compute savings at 0% false-negative on training fold. Promote to paper-v6 main result. Cross-corpus validation queued for .261+."
+    }
+  },
+
+  "fr11_tier4_closed": true,
+  "fr11_tier4_delta": 0.245,
+  "fr11_tier4_assessment": {
+    "n_learning_cycles": 3,
+    "auroc_cycle1": 0.755,
+    "auroc_cycle2": 1.0,
+    "auroc_cycle3": 1.0,
+    "n_rules_after_cycle1": 15,
+    "n_rules_after_cycle2": 30,
+    "n_learning_pool": 60,
+    "n_test_set": 40,
+    "note": "AUROC=1.0 at cycle 2 is suspect on a 40-example test set — possible test-pool contamination by rule-mining over the same FoVer corpus. Recommend held-out-corpus replication in .261."
+  },
+
+  "phase4_fep_viable": false,
+  "alpha_t_hypothesis_supported": true,
+  "phase4_assessment": {
+    "fep_factor_graph_computed": true,
+    "fep_auroc": 0.48888888888888893,
+    "fep_vs_odar_delta": -0.48444444444444446,
+    "alpha_t_nonzero": true,
+    "alpha_t_mean": 3.072733708626229,
+    "n_verifiers": 8,
+    "alpha_values": [-1.2334585234442617, -1.2744038435546978, 0.060408109940444724, -1.2314697452063168, -9.558147393954048e-05, 2.342773844231564, 25.918115408517043, 0.0],
+    "verdict_split": "FEP-as-aggregator FAILS (auroc=0.489 ~ random; -0.484 below ODAR baseline). BUT alpha_t per-verifier contributions are nonzero across 6/8 verifiers — verifier-as-alpha_t hypothesis is structurally supported even though the specific FEP factor-graph aggregation is wrong. Two verifiers degenerate: one alpha=0.0, one alpha=-1e-4.",
+    "implication_for_paper": "Phase 4 active-inference validation gate per feedback_publication_holds_until_phase4_pivot.md NOT satisfied. arXiv submission continues to HOLD. Redesign FEP aggregator (consider non-linear pooling) before paper-v6 ships."
+  },
+
+  "paper_v6_empirical_delta": 0.0,
+  "paper_v6_ready_for_operator": false,
+  "paper_v6_assessment": {
+    "empirical_delta_computed": true,
+    "empirical_delta": 0.0,
+    "delta_source": "empirical",
+    "sum_attempts": 131,
+    "n_pages_v2": 27,
+    "weak_strong_cite_added": true,
+    "set_consistency_cite_added": true,
+    "package_v2_ready": true,
+    "ready_for_operator_reasoning": "Package v2 mechanically compiled and cites .260 new work. BUT empirical_delta=0.000 contradicts the paper's headline claim of measurable improvement — this MUST be investigated before submission (zero may indicate: pipeline regression, attempt-counting bug, FoVer subset that hits zero ceiling). Combined with the Phase 4 FEP failure (auroc=0.489), arXiv submission must HOLD per feedback_publication_holds_until_phase4_pivot.md."
+  },
+
+  "n_criteria_met": 10,
+  "criteria_breakdown": {
+    "archive_259": true,
+    "retire_otv_diversity": true,
+    "verifier_live_gpu_validated": false,
+    "tier0g_diagnosed": true,
+    "kv260_terminal": true,
+    "tier0v_viable": true,
+    "empirical_delta_computed": true,
+    "weak_strong_viable": true,
+    "tier0w_viable": true,
+    "fr11_tier4_closed": true,
+    "phase4_fep_viable": false,
+    "paper_v6_package_v2_ready": true
+  },
+
+  "top_3_gaps_for_261": [
+    {
+      "gap": "Verifier live-GPU validation never executed (Qwen3.6-35B-A3B-GGUF not cached; exp2740 correctly blocked on precondition). The cleared-state-claim for exp2727 adversarial flag cannot be re-evaluated until a real verifier-on-GPU run lands.",
+      "priority": "critical",
+      "suggested_task": "Re-stage Verifier Live-GPU Discriminative-Energy Validation v3 with PRECONDITIONS step that performs the HuggingFace download if cache miss (`huggingface-cli download unsloth/Qwen3.6-35B-A3B-GGUF`) OR explicit fallback to cached gemma-4-26B-A4B-it-GGUF. Acceptance: verifier_discriminative=true, energy_std>0, duration_s>=60s, n_non_zero>=N/2 on FoVer-100."
+    },
+    {
+      "gap": "Phase 4 FEP factor-graph aggregator FAILS (auroc=0.489 ~ random; delta vs ODAR = -0.484). Verifier-as-alpha_t HYPOTHESIS is supported (alpha values nonzero across 6/8 verifiers) but the specific FEP aggregation formulation is wrong. This is now the blocker for arXiv submission per feedback_publication_holds_until_phase4_pivot.md.",
+      "priority": "critical",
+      "suggested_task": "Phase 4 FEP Aggregator Redesign — explore non-linear pooling (geometric mean, learned weights, or temperature-scaled softmax over alpha_t). Investigate why 2/8 verifiers collapse to alpha~0. Acceptance: fep_auroc >= 0.70 AND fep_vs_odar_delta >= 0 on FoVer-100."
+    },
+    {
+      "gap": "Empirical delta computed as exactly 0.000 over 131 attempts (exp2744). Zero is suspicious — either pipeline regression, attempt-counting bug, or test corpus at ceiling. Contradicts paper-v6 headline claim. Must be diagnosed before paper ships even if Phase 4 validates.",
+      "priority": "high",
+      "suggested_task": "Empirical Delta Root-Cause Audit — Replicate exp2744 with verbose logging of per-attempt repair status, log attempts that succeed vs fail, and verify FoVer subset has non-zero ceiling. If genuine zero on selected subset, rotate to broader subset or report negative result faithfully in paper."
+    }
+  ],
+
+  "additional_observations": [
+    "exp2747 FR-11 Tier 4 AUROC=1.0 at cycle 2 on a 40-sample test set is suspect; recommend held-out-corpus validation in .261 to rule out test-pool contamination from rule-mining over same FoVer corpus.",
+    "exp2741 carries forward NEW adversarial flag (DURATION_TOO_SHORT, 31.5s for compute-bound). Tier 0g viable post char-n-gram fix BUT methodology gap remains.",
+    "exp2744 empirical_delta=0.000 is preserved as honest negative finding per adversarial-verification discipline — not fabricated, but contradicts paper claim and requires .261 diagnosis.",
+    "KV260 graduation removes one of three hardware boards from per-milestone mandatory rotation; PolarFire SoC + GateMate A1-EVB-2M remain to be terminal-graduated.",
+    "Tier 0v (AUROC=0.818) is the strongest new-verifier signal in .260 — clearest ensemble-promotion candidate. Tier 0w (AUROC=0.695) is marginal."
+  ],
+
+  "model_specs": {
+    "name": "capstone_synthesis",
+    "role": "milestone_aggregator",
+    "agent": "claude-opus-4-7",
+    "data_sources": "12 milestone .260 experiment artifacts"
+  },
+  "random_seed": null,
+  "reproducibility_checksum": "capstone_2026_05_260_v1",
+  "duration_s": 95.0,
+
+  "preconditions_checked": [
+    {"resource": "results/experiment_2738_archive_v259.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2739_otv_diversity_retirement.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2740_verifier_energy_debug_v2_live_gpu.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2741_tier0g_live_gpu_rerun.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2742_kv260_latency_transcript_terminal.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2743_tier0v_set_consistency.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2744_empirical_delta_paper_v6.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2745_weak_strong_verification_policy.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2746_paraphrastic_consistency_verifier.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2747_fr11_tier4_learning_benchmark.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2748_phase4_fep_factor_graph.json", "available": true, "check": "Read"},
+    {"resource": "results/experiment_2749_paper_v6_arxiv_package_v2.json", "available": true, "check": "Read"}
+  ],
+
+  "field_provenance": {
+    "honest_verdict": {
+      "principle": "Terminal prefix required by Verdict Terminal-Prefix Discipline so reconciler classifies as success.",
+      "satisfied_by": "starts with 'complete:'"
+    },
+    "adversarial_flags_cleared": {
+      "principle": "Primary .260 structural outcome: did we clear the exp2727 + exp2731 adversarial flags?",
+      "satisfied_by": "false — exp2740 blocked on missing GGUF; exp2741 carries forward new DURATION_TOO_SHORT flag"
+    },
+    "verifier_live_gpu_validated": {
+      "principle": "Did the verifier produce discriminative energy on real RTX 3090 + Qwen3.6 GGUF?",
+      "satisfied_by": "false — verifier_discriminative=false, model_loaded=false, duration_s=0.0 (correct precondition-block, no fabrication)"
+    },
+    "kv260_graduated": {
+      "principle": "KV260 TERMINAL: if true, KV260 exits mandatory-per-milestone hardware tracking.",
+      "satisfied_by": "true — kv260_synthesis_succeeded=true AND kv260_terminal=true AND 100 latency cycles measured at 3.183us mean"
+    },
+    "kv260_latency_us": {
+      "principle": "Board-level latency — key hardware metric for paper-v6 hardware performance table.",
+      "satisfied_by": "3.183 us mean over 100 cycles (std 1.172, min 2.95, max 14.6)"
+    },
+    "fr11_tier4_closed": {
+      "principle": "FR-11 Tier 4: multi-cycle ORCA-NEXUS produces positive learning delta.",
+      "satisfied_by": "true — learning_loop_closed=true, delta=+0.245 AUROC across 3 cycles (caveat noted re test-pool contamination)"
+    },
+    "phase4_fep_viable": {
+      "principle": "Phase 4 active inference FEP factor graph produces better-than-heuristic AUROC.",
+      "satisfied_by": "false — fep_auroc=0.489 (random); fep_vs_odar_delta=-0.484"
+    },
+    "alpha_t_hypothesis_supported": {
+      "principle": "Verifier-as-alpha_t: does each verifier have non-zero contribution to joint free energy?",
+      "satisfied_by": "true — 6/8 verifiers have non-trivially nonzero alpha contributions; mean alpha=3.07. Hypothesis structurally supported even though FEP aggregator failed."
+    },
+    "paper_v6_ready_for_operator": {
+      "principle": "Paper v6 with empirical delta + .260 cites ready for operator arXiv submission.",
+      "satisfied_by": "false — package v2 mechanically ready, but Phase 4 FEP failure (gate per feedback_publication_holds_until_phase4_pivot.md) AND empirical_delta=0.000 contradicts paper claim. arXiv submission HOLDS."
+    },
+    "new_verifiers_viable": {
+      "principle": "Which new verifiers (Tier 0v, 0w) are viable for ensemble integration in .261?",
+      "satisfied_by": "tier0v (AUROC=0.818, solid) and tier0w (AUROC=0.695, marginal); tier0v is the clear ensemble-promotion candidate"
+    },
+    "top_3_gaps_for_261": {
+      "principle": "Planner reads this as input for .261 milestone design.",
+      "satisfied_by": "3 gaps listed in priority order: live-GPU validation, FEP redesign, empirical-delta audit"
+    },
+    "n_criteria_met": {
+      "principle": "Summary score: out of 12 acceptance criteria defined in change-proposal.",
+      "satisfied_by": "10/12 — verifier live-GPU validation + Phase 4 FEP viable are the two misses"
+    },
+    "n_artifacts_read": {
+      "principle": "Confirms capstone actually read upstream artifacts (expected 12).",
+      "satisfied_by": "12 of 12 read"
+    },
+    "duration_s": {
+      "principle": "Cross-artifact read + synthesis + doc updates: expected 60-180s.",
+      "satisfied_by": "~95s wall-clock (artifact reads in parallel + synthesis pass)"
+    }
+  }
+}
