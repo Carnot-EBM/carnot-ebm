@@ -130,7 +130,7 @@ tasks:
         principle: "Phase 4 FEP claim requires held-out validation before paper claim."
       - delta_h2_regression_carried_forward: bool — true (exp2754 delta=0.000)
         principle: "Repair pipeline broken — paper 4/delta cite blocked."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records which files were actually read."
       - duration_s: float
         principle: "File reads + YAML copy + JSON write: expected >= 3s."
@@ -278,7 +278,7 @@ tasks:
         principle: "Confirms gemma-4-26B-A4B-it-GGUF was actually loaded via llama_cpp."
       - model_load_time_s: float
         principle: "Real GGUF load: expected >= 30s; < 5s = model not loaded (adversarial gate)."
-      - model_specs: dict with {name, hf_id, quantization, n_gpu_layers}
+      - model_specs: dict with {{name, hf_id, quantization, n_gpu_layers}}
         principle: "Methodology field required by adversarial_verify.py METHODOLOGY_MISSING check."
       - stub_written_at: str
         principle: "Confirms stub-first protocol executed (anti-absent-artifact discipline)."
@@ -290,7 +290,7 @@ tasks:
         principle: "Confirms GPU was available (not CPU-only fallback)."
       - duration_s: float — MUST be >= 30 for complete: verdict
         principle: "GATE against adversarial fabrication: GGUF load + 5 inferences cannot be < 30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records CUDA + GGUF cache + llama_cpp checks."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -417,7 +417,7 @@ tasks:
         principle: "Content-addressed hash: n_loo + n_held_out + round(held_out_auroc,6) + seed."
       - duration_s: float
         principle: "LOO-CV on N examples: expected > 1s; < 0.1s = not actually running CV."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records verifier import + corpus size checks."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -486,8 +486,8 @@ tasks:
              initial_energy = pipeline.verify(ex['prompt'], ex['response'])
              repaired = pipeline.repair(ex['prompt'], ex['response'])
              final_energy = pipeline.verify(ex['prompt'], repaired)
-             results.append({'improved': final_energy < initial_energy,
-                             'initial_energy': initial_energy, 'final_energy': final_energy})
+             results.append({{'improved': final_energy < initial_energy,
+                             'initial_energy': initial_energy, 'final_energy': final_energy}})
          baseline_delta = sum(r['improved'] for r in results) / len(results)
          Record: baseline_delta_n20 (float). Expected: 0.000.
 
@@ -502,7 +502,7 @@ tasks:
                  bisect_commits_checked (list of str).
 
       3. If regression_commit found:
-         a. Read the diff: `git show {regression_commit} -- python/carnot/pipeline/`
+         a. Read the diff: `git show {{regression_commit}} -- python/carnot/pipeline/`
             Identify the specific change that broke repair.
          b. Fix the regression: edit the appropriate file(s) to restore working repair behavior.
             (Do NOT simply revert the commit — apply a targeted fix that preserves other changes.)
@@ -540,7 +540,7 @@ tasks:
         principle: "Content-addressed hash of N=100 validation run."
       - duration_s: float
         principle: "Git operations + repair runs: expected > 10s for N=100 execution."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline importable + corpus size."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -643,7 +643,7 @@ tasks:
         principle: "Describes which files were modified and WHY the integration point was chosen."
       - duration_s: float
         principle: "Code read + edit + smoke test: expected > 5s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records ttt_loop + nexus availability."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -761,7 +761,7 @@ tasks:
         principle: "k=18 if not added, k=19 if added."
       - duration_s: float
         principle: "Implement + score + correlate: expected > 5s for corpus scoring."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -829,7 +829,7 @@ tasks:
 
       3. Identify bottleneck:
          bottleneck_stage = argmax(detect_failure_rate, repair_failure_rate, improve_failure_rate)
-         Record: bottleneck_stage (str in {"detect", "repair", "verify", "regression", "multiple"}).
+         Record: bottleneck_stage (str in {{"detect", "repair", "verify", "regression", "multiple"}}).
 
       4. Cross-reference with exp2767 findings if available.
 
@@ -850,11 +850,11 @@ tasks:
         principle: "Fraction of repairs that introduced new violations (H2 regression proxy)."
       - n_examples: int — 20
         principle: "Sample size for forensic; small enough to be fast, large enough to see pattern."
-      - per_example_results: list of {detected, repair_attempted, improved, regression_introduced}
+      - per_example_results: list of {{detected, repair_attempted, improved, regression_introduced}}
         principle: "Full per-example audit trail for debugging."
       - duration_s: float
         principle: "Instrument + run 20 examples: expected > 5s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -942,7 +942,7 @@ tasks:
         principle: "Reproducibility anchor for any sampling done."
       - duration_s: float
         principle: "Rule synthesis + scoring: expected > 5s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1036,7 +1036,7 @@ tasks:
         principle: "How CP-Router compares to conformal selective acting (exp2757) — complementary or redundant?"
       - duration_s: float
         principle: "Implement + calibrate + evaluate: expected > 2s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1124,7 +1124,7 @@ tasks:
         principle: "Table 1 reflects ensemble v13 status (k=18 or k=19)."
       - duration_s: float
         principle: "Read + edit + compile: expected > 10s for pdflatex compilation."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pdflatex + paper file availability."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1206,7 +1206,7 @@ tasks:
         principle: "MANDATORY: operator-only external publication discipline."
       - duration_s: float
         principle: "Read + generate: expected > 2s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication."
 
       Do NOT push. Do NOT push to HuggingFace. Do NOT pin to IPFS.
@@ -1258,7 +1258,7 @@ tasks:
       1. Verify paper compilation: `cd docs/paper-v6 && pdflatex -interaction=nonstopmode main.tex 2>&1 | tail -5`
          Record: compilation_clean (bool), n_pages_v5 (int).
 
-      2. Check abstract word count: `grep -A 20 "\\begin{abstract}" docs/paper-v6/main.tex | wc -w`
+      2. Check abstract word count: `grep -A 20 "\\begin{{abstract}}" docs/paper-v6/main.tex | wc -w`
          Record: abstract_word_count (int). arXiv limit: 1920 chars.
 
       3. Verify author list: `grep "\\author{" docs/paper-v6/main.tex | head -5`
@@ -1298,7 +1298,7 @@ tasks:
         principle: "Document why submission still HOLDS (Phase 4 validation status per exp2766)."
       - duration_s: float
         principle: "Compile + check + assemble: expected > 10s for pdflatex."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records paper compile status."
 
       Do NOT submit to arXiv. Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1403,7 +1403,7 @@ tasks:
         principle: "k=18 or k=19 depending on exp2769 tier0z viability."
       - paper_v6_submission_unblocked: bool
         principle: "fep_viable AND verifier_live_gpu_validated — the two gates for arXiv submission."
-      - top_3_gaps_for_263: list of {gap, priority, suggested_task}
+      - top_3_gaps_for_263: list of {{gap, priority, suggested_task}}
         principle: "Planner reads this as primary input for .263 milestone design."
       - n_criteria_met: int
         principle: "Out of 12 acceptance criteria — summary score."
@@ -1423,7 +1423,7 @@ tasks:
         principle: "Content-addressed hash of synthesis inputs."
       - duration_s: float
         principle: "12 artifact reads + synthesis + artifact write: expected 60-180s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records which artifacts were read vs absent."
 
       Do NOT push. Do NOT submit to arXiv. Do NOT modify scripts/research_conductor.py.

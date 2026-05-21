@@ -1,0 +1,28 @@
+{
+  "honest_verdict": "complete_already_activated",
+  "archive_completed": true,
+  "milestone_activated": "2026.05.262",
+  "n_experiments_archived": 13,
+  "phase1_shipped_carried_forward": true,
+  "verifier_live_gpu_unvalidated_carried_forward": true,
+  "fep_tautology_flag_carried_forward": true,
+  "delta_h2_regression_carried_forward": true,
+  "preconditions_checked": [
+    {
+      "resource": "research-roadmap.yaml",
+      "available": true,
+      "check": "milestone field == 2026.05.262 (already activated)"
+    },
+    {
+      "resource": "research-complete.yaml",
+      "available": true,
+      "check": "read last lines to check if .261 already archived"
+    },
+    {
+      "resource": "results/experiment_2763_capstone_v261.json",
+      "available": true,
+      "check": "read for n_criteria_met, phase1_shipped"
+    }
+  ],
+  "duration_s": 5.5
+}
