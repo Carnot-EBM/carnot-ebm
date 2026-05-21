@@ -88,6 +88,42 @@ all = [
     "carnot[llm,mcp,rust,dwave]",
 ]
 
+# ----------------------------------------------------------------------
+# uv index pin for PyTorch CUDA wheel (added 2026-05-21).
+#
+# Why this exists:
+#   On 2026-05-21 the .venv's torch was found to be 2.12.0+cpu (default
+#   PyPI wheel without CUDA). 4 dual-condition GPU tasks in .268 emitted
+#   blocked_cuda_unavailable as a result. The CPU-only wheel had been
+#   silently substituted by an earlier `pip install` operation that
+#   resolved torch from pypi.org instead of download.pytorch.org/whl/cu128.
+#
+# What this does:
+#   When `uv pip install` (or `uv sync`) resolves torch / torchvision /
+#   torchaudio, it pulls from the pytorch-cu128 index instead of PyPI.
+#   This makes "+cu128" the structural default on this project.
+#
+# What this DOESN'T do:
+#   Plain `pip install` (without uv) ignores [tool.uv.*] sections. For
+#   that case, scripts/check_torch_cuda.py runs at pre-commit time and
+#   refuses any commit if torch.version.cuda is None. The conductor's
+#   pre-test gate ALSO indirectly catches this via the smart-subset
+#   tests that exercise GPU paths.
+#
+# To override (if CUDA gets bumped):
+#   Update the URL below to whatever stable cu1NN matches the deployed
+#   CUDA runtime, then run:
+#     uv pip install --reinstall --upgrade torch torchvision torchaudio
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu128" }
+torchvision = { index = "pytorch-cu128" }
+torchaudio = { index = "pytorch-cu128" }
+
 [tool.setuptools.packages.find]
 where = ["python"]
 

@@ -192,3 +192,15 @@ repos:
         language: system
         files: '^python/carnot/(verify|pipeline)/.*\.py$'
         pass_filenames: false
+
+      # Torch CUDA build guard: catches the 2026-05-21 regression where
+      # `torch 2.12.0+cpu` silently replaced the CUDA build, causing all
+      # GPU-bound .268 experiment tasks to emit blocked_cuda_unavailable.
+      # Refuses any commit where .venv's torch.version.cuda is None.
+      # Pairs with the [[tool.uv.index]] pin in pyproject.toml.
+      - id: check-torch-cuda
+        name: torch CUDA build check (no CPU-only regression)
+        entry: python3 scripts/check_torch_cuda.py
+        language: system
+        pass_filenames: false
+        always_run: true
