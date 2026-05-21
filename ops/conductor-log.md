@@ -5661,3 +5661,4 @@ Ripgrep i |
 | 2026-05-21 05:35 UTC | Phase 4 FEP Aggregator Redesign v2: Normalized Alp | OK | 81 passed in 3.82s |
 | 2026-05-21 05:46 UTC | Empirical Delta Root-Cause Audit: Verbose Repair L | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2754_empiric |
 | 2026-05-21 05:54 UTC | Empirical Delta Root-Cause Audit: Verbose Repair L | OK | 81 passed in 3.55s |
+| 2026-05-21 06:01 UTC | FR-11 Tier 4 Adversarial Re-check v2: Independent  | OK | cache hit: 81 passed in 3.55s |
