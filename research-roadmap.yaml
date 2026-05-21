@@ -112,7 +112,7 @@ tasks:
         principle: "Propagates adversarial-flag count to .260 activation record as top-priority signal."
       - kv260_terminal_ready_carried_forward: bool — true (from exp2735)
         principle: "Documents KV260 readiness for terminal step in .260 priority queue."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records which files were actually read."
       - duration_s: float
         principle: "File reads + YAML copy + JSON write: expected >= 3s."
@@ -233,7 +233,7 @@ tasks:
         principle: "Structural correctness: exclusion_manifest.yaml must remain valid YAML after additions."
       - duration_s: float
         principle: "File reads + YAML appends + parse check: expected >= 3s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records manifest + upstream artifact availability."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -353,7 +353,7 @@ tasks:
         principle: "Confirms Qwen3.6-35B-A3B GGUF was actually loaded (not a proxy run)."
       - model_load_time_s: float
         principle: "Real model load time: expected >= 30s for 35B GGUF on GPU; < 5s = model not loaded."
-      - model_specs: dict with {name, hf_id, quantization, n_gpu_layers}
+      - model_specs: dict with {{name, hf_id, quantization, n_gpu_layers}}
         principle: "Methodology field required by adversarial_verify.py METHODOLOGY_MISSING check."
       - random_seed: int — 42
         principle: "Reproducibility anchor."
@@ -363,7 +363,7 @@ tasks:
         principle: "Confirms RTX 3090 was available for this run (not CPU-only fallback)."
       - duration_s: float — MUST be >= 60
         principle: "GATE against adversarial fabrication: GGUF load + 30 inference calls >= 60s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records CUDA + GGUF cache + carnot + FoVer corpus checks."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -489,7 +489,7 @@ tasks:
         principle: "Describes the feature-extractor change that resolved TF-IDF collapse."
       - tier0g_viable: bool
         principle: "Gate for ensemble v12 inclusion: True if GGUF produces non-degenerate energy."
-      - model_specs: list of {name, hf_id, role}
+      - model_specs: list of {{name, hf_id, role}}
         principle: "Methodology: records which GGUF model(s) generated the 30 live responses."
       - random_seed: int — 42
         principle: "Reproducibility."
@@ -497,7 +497,7 @@ tasks:
         principle: "Hash of GGUF filename + n_examples + random_seed."
       - duration_s: float — MUST be >= 30
         principle: "GGUF load + 30 inference calls: expected >= 30s; < 10s = model not loaded."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records CUDA + GGUF cache + tier0g import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -577,7 +577,7 @@ tasks:
          import statistics
          mean_us = statistics.mean(latencies)
          std_us = statistics.stdev(latencies)
-         print(f\"mean_us={mean_us:.3f} std_us={std_us:.3f} min_us={min(latencies):.3f} max_us={max(latencies):.3f}\")
+         print(f\"mean_us={{mean_us:.3f}} std_us={{std_us:.3f}} min_us={{min(latencies):.3f}} max_us={{max(latencies):.3f}}\")
          "
          `
          Parse output: kv260_latency_mean_us, kv260_latency_std_us, kv260_latency_min_us, kv260_latency_max_us.
@@ -591,9 +591,9 @@ tasks:
 
       5. Update ops/hardware-bringup-prep.md KV260 section:
          - date: {date}
-         - latency_mean_us: {kv260_latency_mean_us}
+         - latency_mean_us: {{kv260_latency_mean_us}}
          - n_cycles_measured: 100
-         - kv260_terminal: {kv260_terminal}
+         - kv260_terminal: {{kv260_terminal}}
          - next_step: "GRADUATED: KV260 terminal criteria met" OR "Recheck: latency out of range"
          Record: prep_doc_updated (bool).
 
@@ -625,7 +625,7 @@ tasks:
         principle: "Anti-fabrication: board was reachable via SSH (not a synthesized latency)."
       - duration_s: float
         principle: "SSH round-trips + 100-cycle Python timing loop: expected 10-60s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records ssh-reachability + xmutil checks with literal commands."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -731,7 +731,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "TF-IDF + contrastive eval + export: expected 5-60s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records sklearn + FoVer corpus checks."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -773,7 +773,7 @@ tasks:
             Record: pdflatex_available (bool).
             If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
          b. Read results/experiment_2729_paper_v6_theory_v3.json for tex_file_path.
-            `ls {tex_file_path} 2>/dev/null && echo exists || echo missing`
+            `ls {{tex_file_path}} 2>/dev/null && echo exists || echo missing`
             Record: tex_source_exists (bool).
             If false: write honest_verdict 'blocked_tex_source_missing' and exit.
          Record: preconditions_checked.
@@ -789,20 +789,20 @@ tasks:
          empirical_delta_computed = (empirical_delta is not None AND sum_attempts >= 10).
 
       2. Update paper-v6 .tex with delta value:
-         If empirical_delta_computed: replace "0.25" with "{empirical_delta:.3f}" in 4/delta cite section.
+         If empirical_delta_computed: replace "0.25" with "{{empirical_delta:.3f}}" in 4/delta cite section.
          Update delta_source comment in .tex.
          Record: tex_updated (bool).
 
       3. Author list audit:
-         `grep -A 10 '\\author{' {tex_file_path} | head -20`
+         `grep -A 10 '\\author{' {{tex_file_path}} | head -20`
          Record: author_list (list of str — names found), author_count (int).
          Confirm "Ian Blenke" present (use ian@blenke.com as affiliation per memory).
 
       4. Abstract word count:
-         `grep -A 30 '\\begin{abstract}' {tex_file_path} | grep -v '\\' | wc -w`
+         `grep -A 30 '\\begin{{abstract}}' {{tex_file_path}} | grep -v '\\' | wc -w`
          Record: abstract_word_count (int, approximate).
 
-      5. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+      5. Compile: `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -5`
          Record: latex_compiles (bool), compile_warnings (int).
 
       6. Write results/experiment_2744_empirical_delta_paper_v6.json.
@@ -828,7 +828,7 @@ tasks:
         principle: "Confirms .tex source was modified with empirical delta value."
       - duration_s: float
         principle: "JSON scan + tex edit + compile: expected >= 10s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pdflatex + tex source checks."
 
       Do NOT push. Do NOT submit to arXiv. Do NOT modify scripts/research_conductor.py.
@@ -930,7 +930,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Calibration + routing eval: expected >= 5s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1035,7 +1035,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Paraphrase extraction + eval: expected 5-30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1153,7 +1153,7 @@ tasks:
         principle: "Reproducibility: same test set must be used for all 3 AUROC measurements."
       - duration_s: float — expected >= 20s
         principle: "3-cycle ORCA + NEXUS + AUROC eval: expected >= 20s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pipeline + TTT loop + NEXUS + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1260,7 +1260,7 @@ tasks:
         principle: "Reproducibility."
       - duration_s: float
         principle: "Factor graph compute + AUROC eval: expected 5-30s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records carnot.verify import + FoVer corpus."
 
       Do NOT push. Do NOT modify scripts/research_conductor.py.
@@ -1315,34 +1315,34 @@ tasks:
             Record: pdflatex_available (bool).
             If false: write honest_verdict 'blocked_pdflatex_not_available' and exit.
          b. Read results/experiment_2744_empirical_delta_paper_v6.json for tex_file_path.
-            `ls {tex_file_path} 2>/dev/null && echo exists || echo missing`
+            `ls {{tex_file_path}} 2>/dev/null && echo exists || echo missing`
             Record: tex_source_exists (bool).
             If false: write honest_verdict 'blocked_tex_source_missing' and exit.
-         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -3`
+         c. `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -3`
             Record: pdf_compiles_v1 (bool).
          Record: preconditions_checked.
 
       1. Add weak-strong verification cite (if exp2745 succeeded — policy_viable=true):
-         Add \bibitem{weak_strong_2026} to .bib file:
+         Add \bibitem{{weak_strong_2026}} to .bib file:
          "Nathan Hittesdorf et al. 'When to Trust the Cheap Check: Weak and Strong Verification
           for Reasoning.' arXiv:2602.17633, Feb 2026."
-         Add \cite{weak_strong_2026} in pipeline §4 (routing section).
+         Add \cite{{weak_strong_2026}} in pipeline §4 (routing section).
          Record: weak_strong_cite_added (bool).
 
       2. Add set-consistency cite (if exp2743 succeeded — tier0v_auroc >= 0.65):
-         Add \bibitem{set_consistency_2025} to .bib:
+         Add \bibitem{{set_consistency_2025}} to .bib:
          "Mooho Song et al. 'Introducing Verification Task of Set Consistency with
           Set-Consistency Energy Networks.' arXiv:2503.10695, Mar 2025."
-         Add \cite{set_consistency_2025} in verifier ensemble §3.
+         Add \cite{{set_consistency_2025}} in verifier ensemble §3.
          Record: set_consistency_cite_added (bool).
 
-      3. Compile v2: `pdflatex -interaction=nonstopmode -output-directory /tmp {tex_file_path} 2>&1 | tail -5`
+      3. Compile v2: `pdflatex -interaction=nonstopmode -output-directory /tmp {{tex_file_path}} 2>&1 | tail -5`
          `pdfinfo /tmp/main.pdf 2>/dev/null | grep Pages`
          Record: latex_compiles_v2 (bool), n_pages_v2 (int).
 
       4. Produce operator_arxiv_checklist_v2 (adds .260 research summary):
          All v1 steps +
-         "NOTE: As of .260, empirical_delta={empirical_delta:.3f} (replaces conservative 0.25 in paper)"
+         "NOTE: As of .260, empirical_delta={{empirical_delta:.3f}} (replaces conservative 0.25 in paper)"
          "NOTE: Tier 0v (set-consistency) + Tier 0w (paraphrastic consistency) added in .260"
          "NOTE: arXiv submission HOLDS until Phase 4 active inference validates (CLAUDE.md discipline)"
          Record: operator_arxiv_checklist_v2 (list of str).
@@ -1368,7 +1368,7 @@ tasks:
         principle: "Operator reads this as the definitive arXiv submission action list."
       - duration_s: float
         principle: "Tex edits + compile: expected >= 15s."
-      - preconditions_checked: list of {resource, available, check}
+      - preconditions_checked: list of {{resource, available, check}}
         principle: "Anti-fabrication: records pdflatex + tex source + initial compile."
 
       DO NOT submit to arXiv. DO NOT push.
@@ -1458,7 +1458,7 @@ tasks:
 
       7. Top 3 gaps for .261:
          Prioritize based on what did NOT execute, what is below target, what this capstone reveals.
-         Record: top_3_gaps_for_261 (list of {gap, priority, suggested_task}).
+         Record: top_3_gaps_for_261 (list of {{gap, priority, suggested_task}}).
 
       8. Update ops/status.md: ADD new section at top (NEVER remove existing content):
          "## Session {date} - Milestone 2026.05.260 Capstone Complete\n[summary]"
