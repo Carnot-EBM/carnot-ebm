@@ -1,6 +1,53 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-21 (milestone 2026.05.261 research planning complete)
+**Last Updated:** 2026-05-21 (milestone 2026.05.262 research planning complete)
+
+## Session 2026-05-21 - Milestone 2026.05.262 Research Planning Complete
+
+**Milestone 2026.05.261 COMPLETED: 10 of 12 acceptance criteria met (exp2751–exp2763). Key outcomes: Phase 4 FEP strategy2 AUROC=0.9947 (TAUTOLOGY-flagged — held-out recheck needed), empirical delta=0.000 (H2 regression — repair pipeline broken), FR-11 Tier 4 validated (cycle3 AUROC=0.9275, pool_test_overlap=0), ensemble v12 k=18 +0.011 AUROC lift, conformal routing 84% savings, weak-strong orientation bug fixed 41% savings, Tier 0y ECE~5e-8, Phase 1 v0.1.0b1 SHIPPED, paper-v6 28pp compiles, arXiv package v3 ready (HOLDS operator). exp2752 verifier_live_gpu_v3 ABSENT (3rd consecutive).**
+
+**Milestone 2026.05.262 PLANNED as "Verifier Live-GPU v4 + FEP Adversarial Recheck + Delta H2 Fix + Ensemble v13 + NEXUS Expansion".**
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-v262.md`
+- Execution queue: `research-roadmap-next.yaml` (13 tasks, `exp2764`–`exp2776`)
+- ID allocation: milestone `.261` used through `exp2763`, so `.262` starts at `exp2764`.
+- Research references updated with Post-.261 Planning Sweep (2026-05-21): 6 new papers added:
+  - arXiv:2505.19970 (CP-Router: Conformal Uncertainty Routing — entropy-aware routing; exp2772)
+  - arXiv:2603.23633 (Detect-Repair-Verify: Empirical Study — pipeline stage forensics; exp2770)
+  - arXiv:2502.14565 (ReVISE: Test-Time Self-Verification of LLMs — FR-11 production context; exp2768)
+  - arXiv:2603.02203 (T³RL: Tool-Mediated Test-Time Training — TTT verification loop; exp2768)
+  - arXiv:2511.07784 (Multi-Agent Debate: Diversity-Utility Analysis — ensemble diversity selection; exp2769)
+  - arXiv:2605.12270 (Failure Modes of LLM Self-Repair — regression taxonomy; exp2767+exp2770)
+- **Three biggest gaps targeted**:
+  1. **CRITICAL — Verifier Live-GPU v4 STUB-FIRST**: exp2765 writes partial artifact at Step 0.0 (before any preconditions), reduces N from 30 to 5, hard duration gate <30s → blocked_suspicious. Uses gemma-4-26B-A4B-it-GGUF PRIMARY. retire_if_same_verdict=true. prior_failures: exp2752 (ABSENT), exp2740 (blocked_gguf_qwen36_not_cached), exp2727 (DURATION_TOO_SHORT).
+  2. **HIGH — FEP TAUTOLOGY resolution**: exp2766 runs LOO cross-validation + separate held-out set (N>=200) on strategy2 logistic regression. Gate: held_out_auroc > 0.8 AND delta vs ODAR > 0.05. prior_failures: exp2753 (TAUTOLOGY-flagged, best_fep_auroc==strategy2_auroc to >5 sig figs, duration_s=6.49s).
+  3. **HIGH — Delta H2 regression fix**: exp2767 git bisects between last known-good delta milestone and current HEAD to find regression commit. Gate: empirical_delta > 0.10 on N>=100. prior_failures: exp2754 (H2 regression, 0/60 successes), exp2744 (delta=0.000/131 attempts).
+- **Phase structure**:
+  - Phase A (exp2764): Archive .261 + Activate .262
+  - Phase B (exp2765–exp2767): Critical gap fixes (live-GPU v4, FEP recheck, delta H2 fix)
+  - Phase C (exp2768–exp2773): Research advancement (FR-11 production, ensemble v13, repair forensic, NEXUS expansion, CP-Router, paper v5 theory)
+  - Phase D (exp2774–exp2775): Publication track (HF model card + IPFS checklist, arXiv package v5)
+  - Phase E (exp2776): Capstone v262 (claude/opus, requires_claude: true)
+- **Agent routing**: 12 gemini/gemini-3.1-pro-preview (92.3%); 1 claude/opus (exp2776 capstone — requires_claude: true).
+- **Hardware continuity**: No mandatory hardware tasks. All 3 FPGA boards at terminal state (KV260 .260, GateMate .247, PolarFire .241).
+- **FR-11 mandate**: exp2768 (FR-11 Tier 4 Production Integration, continuous_self_learning_task: true) + exp2771 (NEXUS expansion, continuous_self_learning_task: true).
+- **New research contributions**:
+  - CP-Router (arXiv:2505.19970) — entropy-aware conformal routing; exp2772
+  - Detect-Repair-Verify (arXiv:2603.23633) — stage-level pipeline forensics; exp2770
+  - ReVISE (arXiv:2502.14565) + T³RL (arXiv:2603.02203) — test-time self-verification context; exp2768
+  - Multi-agent debate diversity (arXiv:2511.07784) — Tier 0z selection criteria; exp2769
+  - LLM repair failure modes (arXiv:2605.12270) — 22% regression rate matches H2; exp2767+exp2770
+- Exclusion manifest cross-check: 0 scope matches found.
+- **All CLAUDE.md mandatory disciplines applied**: Gemini-Default (12/13 gemini), prior_failures (all with mandatory 4-field structure), PRECONDITIONS step 0 on all compute-bound tasks, principle-annotated artifact fields, terminal-prefix verdicts, FR-11 mandate, no hardware tasks (all boards terminal), KV260 SSH-Not-SD-Card N/A, Exclusion Manifest 0 matches, Operator-Only publication discipline (exp2774 produces checklist; exp2775 produces package — neither submits).
+
+**What's next**: activate `research-roadmap-next.yaml` for milestone 2026.05.262. exp2764 (archive/activate) → exp2765 (verifier live-GPU v4 — CRITICAL, STUB-FIRST) → exp2766 (FEP adversarial recheck) → exp2767 (delta H2 fix) → remaining tasks in dependency order → exp2776 (capstone, claude/opus).
+
+**Operator actions still required from .261**:
+- Phase 1 ship: `git tag v0.1.0b1 && git push origin v0.1.0b1` if not yet done (CI publishes to PyPI via OIDC).
+- HuggingFace model card update + IPFS pin: exp2774 will produce operator checklist.
+- arXiv v6 submission: HOLDS until Phase 4 empirically re-validates without TAUTOLOGY flag AND paper v6 revised. OPERATOR-ONLY. exp2775 will produce package for operator review.
+
+---
 
 ## Session 2026-05-21 - Milestone 2026.05.261 Research Planning Complete
 

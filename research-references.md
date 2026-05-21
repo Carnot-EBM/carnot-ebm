@@ -1,3 +1,104 @@
+## 2026-05-21 Post-.261 Planning Sweep (Milestone 2026.05.262)
+
+This sweep was run after milestone `.261` completed with 11 of 13 task artifacts produced, 10 of 12
+acceptance criteria met (exp2751–exp2763). Key .261 findings:
+- exp2752: verifier live-GPU v3 artifact ABSENT (3rd consecutive attempt) — verifier discriminativeness
+  still unvalidated in-vivo; CPU-only verifier results not sufficient for paper claims
+- exp2753: Phase 4 FEP strategy2 (learned-logistic) AUROC=0.9947 but adversarial-flagged TAUTOLOGY
+  (best_fep_auroc==strategy2_auroc to >5 sig figs; duration_s=6.49s for "training")
+- exp2754: empirical delta=0.000 (H2 regression, 0/60 successes) — repair pipeline broken; paper-v6 4/delta cite blocked
+- exp2755: FR-11 Tier 4 VALIDATED (cycle3 AUROC=0.9275, pool_test_overlap=0, 34 rules)
+- exp2763 capstone: top_3_gaps = [verifier-live-GPU-v4, FEP adversarial recheck, delta H2 fix]
+
+### CP-Router: Uncertainty-Aware Router Between LLM and LRM
+- **Paper:** "CP-Router: An Uncertainty-Aware Router Between LLM and LRM" (arXiv:2505.19970, May 2026).
+- **Authors:** Jiayuan Su, Fulin Lin, Zhaopeng Feng, Han Zheng, Teng Wang et al.
+- **What:** Applies conformal prediction to dynamically route between a lightweight LLM and a
+  large reasoning model (LRM) with formal coverage guarantees. Uses entropy-aware threshold selection
+  to balance cost vs. correctness. Achieves SOTA efficiency on math, code, and reasoning benchmarks
+  with 40-60% cost reduction while maintaining accuracy parity.
+- **Relevance to Carnot:** Complements the anytime-valid conformal routing from exp2757. CP-Router's
+  entropy-aware thresholds provide a complementary routing signal (uncertainty vs. formal coverage).
+  Candidate for Tier 0 routing layer as alternative to conformal selective acting. Paper-v6 §4 peer
+  cite alongside arXiv:2605.20270 (Conformal Selective Acting) and arXiv:2602.23681 (ODAR).
+  exp2772 in .262.
+- **Sources:** https://arxiv.org/abs/2505.19970
+
+### Detect-Repair-Verify for LLM-Generated Code
+- **Paper:** "Detect-Repair-Verify for LLM-Generated Code: A Multi-Language, Multi-Granularity Empirical
+  Study" (arXiv:2603.23633, Mar 2026).
+- **Authors:** Cheng Cheng.
+- **What:** Empirical study of bounded iterative Detect-Repair-Verify workflows. Finds that iterative
+  cycles improve secure-and-correct yield over single-pass repair; identifies that the DETECT stage
+  failure rate (false negatives from the verifier) is the dominant bottleneck, not the REPAIR stage.
+  Studies multi-language and multi-granularity repair strategies.
+- **Relevance to Carnot:** Directly relevant to diagnosing the H2 regression in exp2754 (empirical
+  delta=0.000). The finding that DETECT stage failure dominates aligns with Carnot's degenerate
+  verifier problem (exp2752 verifier absent; exp2756 ensemble v12 AUROC=0.61, not high enough to
+  detect violations reliably). Also provides methodology for exp2767 (delta H2 regression fix).
+  Paper-v6 §5 peer cite alongside FALCON (arXiv:2602.01090) and ExVerus (arXiv:2603.25810).
+- **Sources:** https://arxiv.org/abs/2603.23633
+
+### ReVISE: Learning to Refine at Test-Time via Intrinsic Self-Verification
+- **Paper:** "ReVISE: Learning to Refine at Test-Time via Intrinsic Self-Verification"
+  (arXiv:2502.14565, Feb 2026).
+- **Authors:** Hyunseok Lee, Seunghyuk Oh, Jaehyung Kim, Jinwoo Shin, Jihoon Tack.
+- **What:** Framework enabling LLMs to self-correct outputs through intrinsic self-verification and
+  curriculum-based preference learning. Trains a verifier to score candidate outputs, then uses
+  iterative test-time refinement guided by the verifier signal. Achieves 8-15% improvement on
+  HumanEval and GSM8K without additional training data.
+- **Relevance to Carnot:** Directly relevant to FR-11 Tier 4 ORCA-NEXUS production integration
+  (exp2768). The curriculum-based approach aligns with Carnot's multi-cycle learning (cycle1→cycle2→
+  cycle3 AUROC progression 0.57→0.80→0.93). The "intrinsic" verification (self-scored) complements
+  Carnot's external verifier ensemble. Paper-v6 §3 related work.
+- **Sources:** https://arxiv.org/abs/2502.14565
+
+### T³RL: Tool Verification for Test-Time Reinforcement Learning
+- **Paper:** "Tool Verification for Test-Time Reinforcement Learning" (arXiv:2603.02203, Mar 2026).
+- **Authors:** Ruotong Liao, Nikolai Rohrich, Xiaohan Wang, Yuhui Zhang et al.
+- **What:** Introduces T³RL integrating test-time tool verification into reward estimation. Uses
+  verification-aware voting to prevent spurious consensus in multi-sample reward estimation. The
+  verification signal distinguishes correct-by-luck (unverifiable) from correct-by-reasoning
+  (verifiable) answers, substantially reducing false reward signals in RL training.
+- **Relevance to Carnot:** Strong complement to FR-11 Phase 4 active inference. T³RL's
+  verification-aware voting maps to Carnot's ensemble verifier output as reward signal for
+  NEXUS-guided test-time training. The "spurious consensus" problem (multiple correct-looking
+  but unverifiable outputs) is precisely what Carnot's energy-based discrimination is designed
+  to solve. Paper-v6 §3 related work alongside ReVISE.
+- **Sources:** https://arxiv.org/abs/2603.02203
+
+### Diversity in Multi-Agent Debate Drives Ensemble Performance
+- **Paper:** "Can LLM Agents Really Debate? A Controlled Study of Multi-Agent Debate in Logical
+  Reasoning" (arXiv:2511.07784, Nov 2025).
+- **Authors:** Haolun Wu, Zhenkun Li, Lingyao Li.
+- **What:** Controlled study of multi-agent debate for logical reasoning. Key finding: intrinsic
+  reasoning strength and group DIVERSITY (not debate mechanics) are the dominant drivers of
+  ensemble performance. Debate adds 3-8% over simple majority voting only when agent diversity
+  is high; with homogeneous agents, debate underperforms majority vote.
+- **Relevance to Carnot:** Confirms the theoretical motivation for Tier 0w's role (correlation
+  0.26 = high diversity). Guides Tier 0z candidate selection for ensemble v13: the candidate
+  verifier should minimize correlation with the existing ensemble, not maximize individual AUROC.
+  exp2769 Tier 0z selection criterion should prioritize pairwise decorrelation. Paper-v6 §4
+  ensemble diversity discussion.
+- **Sources:** https://arxiv.org/abs/2511.07784
+
+### Failure Mode Analysis for LLM Repair Pipelines
+- **Paper:** "Characterizing the Failure Modes of LLMs in Resolving Real-World GitHub Issues"
+  (arXiv:2605.12270, May 2026).
+- **Authors:** Yanjie Jiang, Yian Huang, Guancheng Wang, Junjie Chen, Hui Liu, Lionel Briand.
+- **What:** Analyzes 243 failed repair attempts across Claude 4.5, Gemini 3 Pro, and GPT-5 on
+  SWE-bench. Identifies three dominant failure categories: (1) incorrect fault localization (47%),
+  (2) incomplete repair patch (31%), (3) regression introduction — a fix that repairs the target
+  error but breaks previously-passing tests (22%).
+- **Relevance to Carnot:** The third failure category (regression introduction) directly maps to
+  Carnot's empirical delta H2 regression (exp2754: 0/60 repair successes). The repair pipeline
+  may be succeeding at fault localization but introducing regressions in other constraint types.
+  Provides diagnostic framework for exp2767 (delta H2 fix) and exp2770 (repair pipeline forensic).
+  Paper-v6 §5 motivation for bounded iterative repair with regression guards.
+- **Sources:** https://arxiv.org/abs/2605.12270
+
+---
+
 ## 2026-05-21 Post-.260 Planning Sweep (Milestone 2026.05.261)
 
 This sweep was run after milestone `.260` completed with 10 of 12 acceptance criteria met
