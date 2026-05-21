@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.261",
+  "generated_at": "2026-05-21T07:07:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Timing script found 0 experiment commits since activation of 2026.05.261 — this is the thirty-sixth consecutive empty-timing-window retro, caused by the known unresolved root cause: the timing look-back window is not anchored to the conductor-state.json activated_at timestamp, so experiments dispatched after activation fall outside the measurement window. Both RTX 3090s are idle at 0% utilization (39C / 47C); gpu_idle_on_compute_bound_tasks is null because no compute-bound experiments appear in the timing data.",
+  "bottlenecks_identified": [
+    "Root cause (persists 36 milestones): timing-script look-back window is not anchored to conductor-state.json activated_at timestamp — all post-activation experiment commits fall outside the measurement window, producing empty-timing-window retros every milestone.",
+    "No post-activation dispatch verification gate: there is no alarm or check that fires when 0 experiment artifacts have been committed N minutes after activation, so the empty-window condition is only discovered at retro-write time.",
+    "No structural change has been made to the timing script or dispatch gate over 36 consecutive milestones despite the root cause being diagnosed and documented each milestone."
+  ],
+  "improvements_suggested": [
+    "Fix timing-script look-back to use conductor-state.json activated_at as the epoch, replacing the current wall-clock-offset approach.",
+    "Wire a zero-artifact alarm in the conductor: if no experiment artifact has been committed within 60 minutes of activation, emit a conductor-level WARNING and surface it in the next planning cycle.",
+    "Dispatch the first non-retro experiment in the same session as milestone activation so at least one artifact lands in the measurement window and validates the timing fix.",
+    "Add a retro-preamble check: if experiments_completed == 0 AND changelog shows post-activation artifacts, log a 'timing_window_mismatch' flag and cite the diagnosed root cause rather than a generic empty-window message."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script look-back to conductor-state.json activated_at: eliminates the root cause of 36 consecutive empty-window retros in a single code change (scripts/research_conductor.py timing epoch).",
+    "Wire zero-artifact alarm at 60 minutes post-activation: provides structural detection of the dispatch-gap pattern without waiting for retro time, allowing same-session recovery.",
+    "Enforce same-session first-dispatch discipline: planner must queue at least one non-retro experiment for activation session so the timing fix is immediately verifiable and the milestone does not open with 0 artifacts."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Thirty-six milestones of the same diagnosed and undisputed root cause — timing-script look-back not anchored to activated_at — represents a process discipline failure, not a technical mystery. The meta-lesson is that a bottleneck cited in a retro without a queued implementation task will recur indefinitely; the fix must be a concrete task in the NEXT milestone's roadmap, not a suggestion in the current retro. Until that task ships, this section will read identically every milestone."
+}
