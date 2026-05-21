@@ -5859,3 +5859,5 @@ Ripgrep i |
     at async file:///usr/lib/node_modules/@ |
 | 2026-05-21 17:49 UTC | FoVer Memory-Leakage Isolation: AUROC With vs With | FAIL | Gemini CLI error: s:309732:14)
     at async file:///usr/lib/node_modules/@goog |
+| 2026-05-21 17:53 UTC | FoVer Memory-Leakage Isolation: AUROC With vs With | FAIL | Gemini CLI error: 57.js:309732:14)
+    at async file:///usr/lib/node_modules/@ |
