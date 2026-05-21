@@ -1,0 +1,54 @@
+{
+  "honest_verdict": "complete: upstream artifacts loaded but no measured per-verifier AUROC rows were present",
+  "verifier_corpus_dual_matrix": {},
+  "architecture_transfer_verifiers": [],
+  "memory_augmented_verifiers": [],
+  "corpus_specific_verifiers": [],
+  "low_signal_verifiers": [],
+  "diversity_gap_on_non_fover": true,
+  "duration_s": 0.0003612041473388672,
+  "upstream_artifact_statuses": {
+    "FoVer": {
+      "honest_verdict": "blocked_cuda: Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; assert torch.cuda.is_available()\n    ^^^^^^^^^^^^\nModuleNotFoundError: No module named 'torch'",
+      "n_condition_a_verifiers": 0,
+      "n_condition_b_verifiers": 0,
+      "path": "results/experiment_2828_fover_memory_leakage_isolation.json"
+    },
+    "MBPP": {
+      "honest_verdict": "blocked_cuda_unavailable",
+      "n_condition_a_verifiers": 0,
+      "n_condition_b_verifiers": 0,
+      "path": "results/experiment_2829_mbpp_ensemble_eval.json"
+    },
+    "HumanEval": {
+      "honest_verdict": "blocked_cuda_unavailable",
+      "n_condition_a_verifiers": 0,
+      "n_condition_b_verifiers": 0,
+      "path": "results/experiment_2830_humaneval_full_ensemble_eval.json"
+    },
+    "TruthfulQA": {
+      "honest_verdict": "blocked_cuda_unavailable",
+      "n_condition_a_verifiers": 0,
+      "n_condition_b_verifiers": 0,
+      "path": "results/experiment_2831_truthfulqa_ensemble_eval.json"
+    }
+  },
+  "classification_thresholds": {
+    "architecture_transfer_floor": 0.75,
+    "high_signal_floor": 0.75,
+    "low_signal_ceiling": 0.65,
+    "memory_delta_floor": 0.1,
+    "required_architecture_transfer_per_non_fover": 3
+  },
+  "field_principles": {
+    "honest_verdict": "Terminal prefix.",
+    "verifier_corpus_dual_matrix": "Full 3-D matrix; downstream paper-v6 section 5 dual-condition table.",
+    "architecture_transfer_verifiers": "Verifiers whose architecture-only signal transfers across every corpus.",
+    "memory_augmented_verifiers": "Verifiers whose production signal depends materially on FR-11 memory.",
+    "corpus_specific_verifiers": "High-signal verifiers that do not transfer globally.",
+    "low_signal_verifiers": "Verifiers below useful AUROC on every measured cell.",
+    "diversity_gap_on_non_fover": "True if fewer than 3 architecture-transfer verifiers cover each non-FoVer corpus.",
+    "duration_s": "Pure artifact analysis wall time; never padded."
+  },
+  "methodology_note": "No synthetic verifier rows were inferred. The upstream artifacts contained empty per-verifier AUROC maps, so the real-data matrix is empty and the diversity gap remains open."
+}

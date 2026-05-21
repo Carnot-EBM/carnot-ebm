@@ -3212,3 +3212,50 @@ Then the artifact reports complete dual-condition AUROC summaries, per-seed
 results, per-verifier AUROC lists for both conditions, a non-null calibrated
 BLEURT threshold, restored FR-11 state hashes, baseline comparisons, and an
 `honest_verdict` prefixed `complete:`.
+
+### REQ-VERIFY-2832: Cross-Corpus Verifier Dual-Condition Matrix
+
+The repository shall provide an Exp 2832 analyzer that reads only the real
+Exp 2828 FoVer, Exp 2829 MBPP, Exp 2830 HumanEval-full, and Exp 2831
+TruthfulQA-generation JSON artifacts and writes
+`results/experiment_2832_cross_corpus_verifier_matrix_v2.json`.
+
+The analyzer MUST construct a full verifier-by-corpus-by-condition matrix from
+the upstream `per_verifier_condition_a_auroc` and
+`per_verifier_condition_b_auroc` fields. Upstream scalar AUROC values and
+per-seed AUROC lists MUST both be normalized to means. Missing, blocked, null,
+or empty upstream measurements MUST NOT be replaced with synthetic fallback
+verifiers or default AUROC values; they are recorded as absent measured data.
+
+The artifact MUST include `honest_verdict` prefixed `complete:` or `success:`,
+`verifier_corpus_dual_matrix`, `architecture_transfer_verifiers`,
+`memory_augmented_verifiers`, `corpus_specific_verifiers`,
+`low_signal_verifiers`, `diversity_gap_on_non_fover`, and a real
+`duration_s`. Architecture-transfer verifiers are those with
+architecture-only AUROC at least 0.75 on every measured corpus. Memory-augmented
+verifiers are those whose production AUROC reaches at least 0.75 while
+architecture-only AUROC is below 0.65 or whose production-minus-architecture
+delta is at least 0.10. Low-signal verifiers have all measured AUROCs below
+0.65. Remaining high-signal verifiers are corpus-specific. The diversity-gap
+flag is true when fewer than three architecture-transfer verifiers cover any
+non-FoVer corpus.
+
+### SCENARIO-VERIFY-2832: Matrix Uses Real Upstream Artifacts Without Imputation
+
+Given the four Exp 2828-2831 artifacts contain a mix of scalar and per-seed
+per-verifier AUROC measurements,
+When the Exp 2832 analyzer runs,
+Then the emitted matrix contains one entry per measured verifier with FoVer,
+MBPP, HumanEval, and TruthfulQA condition cells, each populated from measured
+values or null when that verifier was absent from a corpus, and every verifier
+appears in exactly one of the four classification lists.
+
+### SCENARIO-VERIFY-2832-BLOCKED-UPSTREAM: Blocked Inputs Stay Empty
+
+Given the four Exp 2828-2831 artifacts are terminal blocked artifacts with
+empty per-verifier AUROC maps,
+When the Exp 2832 analyzer runs,
+Then it writes a terminal `complete:` artifact with an empty
+`verifier_corpus_dual_matrix`, all four classification lists empty,
+`diversity_gap_on_non_fover=true`, and methodology text explaining that no
+synthetic verifier rows were inferred.
