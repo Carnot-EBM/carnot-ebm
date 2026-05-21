@@ -1,25 +1,33 @@
-import re
-import glob
-import yaml
 import os
+import json
 
-with open('research-complete.yaml', 'r') as f:
-    docs = yaml.safe_load(f)
+sum_attempts = 0
+sum_successes = 0
 
-milestones = len(docs)
-tasks = sum(len(m.get('tasks', [])) for m in docs)
-max_id = 0
-for m in docs:
-    for t in m.get('tasks', []):
-        match = re.search(r'exp(\d+)-', t.get('id', ''))
-        if match:
-            id_val = int(match.group(1))
-            if id_val > max_id:
-                max_id = id_val
+for root, dirs, files in os.walk('results'):
+    for f in files:
+        if f.endswith('.json'):
+            path = os.path.join(root, f)
+            try:
+                with open(path) as fp:
+                    data = json.load(fp)
+                    # it could be at the top level or nested.
+                    # Let's search recursively
+                    def search(d):
+                        global sum_attempts, sum_successes
+                        if isinstance(d, dict):
+                            if 'n_repair_attempts' in d:
+                                sum_attempts += d['n_repair_attempts']
+                            if 'n_repair_successes' in d:
+                                sum_successes += d['n_repair_successes']
+                            for v in d.values():
+                                search(v)
+                        elif isinstance(d, list):
+                            for v in d:
+                                search(v)
+                    search(data)
+            except Exception:
+                pass
 
-total_experiments = 2868 + (max_id - 2166)
-
-print(f"Total experiments: {total_experiments}")
-print(f"Max Exp: {max_id}")
-print(f"Milestones: {milestones}")
-print(f"Tasks: {tasks}")
+print(f"sum_attempts={sum_attempts}")
+print(f"sum_successes={sum_successes}")
