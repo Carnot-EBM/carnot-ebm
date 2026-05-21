@@ -5880,3 +5880,4 @@ Ripgrep i |
 | 2026-05-21 18:23 UTC | TruthfulQA Corpus — Both Memory Conditions (N=200, | FAIL | Gemini CLI error: 7.js:309732:14)
     at async file:///usr/lib/node_modules/@g |
 | 2026-05-21 18:30 UTC | TruthfulQA Corpus — Both Memory Conditions (N=200, | OK | 81 passed in 4.77s |
+| 2026-05-21 18:37 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | OK | 81 passed in 4.58s |
