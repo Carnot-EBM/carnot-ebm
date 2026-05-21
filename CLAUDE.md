@@ -15,6 +15,122 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 - **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
 - **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
 
+## Adversarial Landing-Page Discipline (MANDATORY)
+
+**Origin:** 2026-05-21 operator directive after the third recurrence
+of bloat on carnot-ebm.org:
+
+> "there are also way too many evidence cards of questionable value
+>  in the GitHub pages. how do we keep the GitHub pages in check
+>  with an adversarial agent going forward?"
+
+The "Public Documentation Discipline" rule (above) FORBIDS the
+autonomous-loop docs-update path from touching `docs/index.html`.
+That stops new drift. But it doesn't catch:
+
+1. **Accumulated drift before the rule shipped** — closeout-style
+   r-cards ("13/13 criteria met — Milestone .94"), bento-card prose
+   that grew from 30 words to 1,409 over many milestones, 199 result
+   cards where 15-20 would do.
+2. **Subtle drift the prompt-level forbid can't detect** — sentences
+   that look fine in isolation but read like internal status when
+   placed on a public landing page.
+3. **The operator's own edits** — even hand-curated copy drifts
+   over time without external review.
+
+The defense is a three-layer adversarial system. Layer 1 is
+mechanical (commit-time, fast, false-positive-prone but catches
+obvious patterns). Layer 2 is an independent LLM in
+hostile-stranger-reviewer mode (per-milestone, slow, catches
+subtle drift). Layer 3 is this CLAUDE.md rule (design-time, the
+contract).
+
+**Layer 1 — Mechanical lint
+(`scripts/pages_fever_dream_lint.py`).** Runs on every commit
+touching `docs/index.html` via the
+`pages-fever-dream-lint` pre-commit hook. Refuses the commit
+on violation. Rules:
+
+| Rule | Cap | Violation |
+|---|---|---|
+| bento-card body word count | 120 words | per-card bloat |
+| r-card body word count | 60 words | per-card bloat |
+| bento-grid total card count | 12 cards | section bloat |
+| results-grid total card count | 20 cards | section bloat |
+| footer paragraph word count | 100 words | footer drift |
+| raw experiment IDs in card prose (`Exp\s+\d{3,4}`) | 0 | internal jargon |
+| milestone narrative in card prose (`Milestone \.NNN`, `2026.MM.NNN`) | 0 | internal jargon |
+| flag syntax in card prose (`foo=True`) | 0 | internal jargon |
+| internal acronyms (NupProbe, ORCA-NEXUS, FR-11 vN, Tier 0X, GRPO vN, etc.) | < 3 per card | internal jargon |
+
+**Layer 2 — Adversarial AI audit
+(`scripts/pages_adversarial_audit.py`).** Runs at every
+milestone-close (called from `_run_operational_retrospective`
+in `scripts/research_conductor.py`). Invokes the gemini-CLI (or
+claude — model is incidental, the prompt is the adversarial
+layer) with a hostile-stranger prompt that asks: "I have 30
+seconds to skim carnot-ebm.org. Would I keep reading or close
+the tab?" Output is `ops/docs_audit_report.md`, structured
+markdown: TL;DR + top 3 problems + detailed findings +
+recommended operator actions.
+
+**Critical: the audit NEVER edits the landing page.** Per
+"Public Documentation Discipline" the landing page is operator-
+curated. The audit's role is to surface drift; the operator
+decides what to act on. Non-fatal: if the audit fails (quota,
+network), the conductor's milestone-close path continues.
+
+**Layer 3 — This CLAUDE.md rule.** Documents the contract.
+Planner reads CLAUDE.md as required input on every plan
+generation. The planner-emitted task prompts therefore
+incorporate the discipline at design time without operator
+re-specification per-milestone.
+
+**How to apply (operator).** When the milestone-close audit
+report flags drift:
+
+1. Read `ops/docs_audit_report.md`.
+2. Decide which findings to act on — the audit is advisory.
+3. Edit `docs/index.html` by hand. Pre-commit will block any
+   change that introduces a Layer 1 violation.
+
+**How to apply (autonomous agents).** Never edit
+`docs/index.html` from within a conductor task or sub-agent.
+The audit + lint layers catch escapes; the simpler
+discipline is "don't touch the landing page from autonomous
+work."
+
+**How to apply (manual / outer-loop session).** Run
+`python3 scripts/pages_fever_dream_lint.py` before any
+landing-page commit to confirm clean. Run `python3
+scripts/pages_adversarial_audit.py` for a fresh adversarial
+review if the lint is clean but you suspect drift the
+mechanical rules miss.
+
+**When to update the lint thresholds.** Only with operator
+authorization. Raising a cap to accommodate accumulated drift
+is a anti-pattern — fix the drift instead.
+
+**When to update the adversarial prompt
+(`scripts/pages_adversarial_audit.py:ADVERSARIAL_PROMPT`).**
+When new drift patterns appear that the current prompt misses,
+extend the "Check for" list. Keep the hostile-stranger frame
+intact.
+
+**Cross-references:**
+
+- 2026-05-21 operator directive — origin
+- `scripts/pages_fever_dream_lint.py` — Layer 1 mechanical lint
+- `scripts/pages_adversarial_audit.py` — Layer 2 adversarial AI
+- `ops/docs_audit_report.md` — per-milestone audit output
+- `.pre-commit-config.yaml:pages-fever-dream-lint` — Layer 1 hook
+- CLAUDE.md "Public Documentation Discipline" (above) — the
+  forbid-autonomous-edits rule that this defense complements
+- CLAUDE.md "Documentation and Communication Standards" (top of
+  file) — no emojis, professional tone, never delete content
+- `scripts/canonical_url_lint.py` + `scripts/exclusion_manifest_lint.py`
+  — sibling structural-discipline linters
+
 ## Canonical Repository URL Discipline (MANDATORY)
 
 **Origin:** 2026-05-20 operator directive (second sweep, this time

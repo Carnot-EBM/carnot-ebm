@@ -3875,6 +3875,28 @@ def research_step(
             if not dry_run:
                 _run_operational_retrospective(push=push)
 
+            # Adversarial landing-page audit (per CLAUDE.md "Adversarial
+            # Landing-Page Discipline" 2026-05-21). Independent LLM
+            # invocation reads docs/index.html as a HOSTILE STRANGER and
+            # writes ops/docs_audit_report.md. Does NOT edit the page;
+            # operator owns it per Public Documentation Discipline.
+            # Non-fatal: even if the audit fails (gemini quota, network),
+            # the milestone-close path continues.
+            if not dry_run:
+                try:
+                    logger.info("Running adversarial landing-page audit...")
+                    subprocess.run(
+                        [
+                            sys.executable,
+                            str(PROJECT_ROOT / "scripts" / "pages_adversarial_audit.py"),
+                        ],
+                        cwd=PROJECT_ROOT,
+                        timeout=720,
+                        check=False,
+                    )
+                except Exception as _e:
+                    logger.warning("Adversarial audit failed (non-fatal): %s", _e)
+
             logger.info("No research-roadmap-next.yaml — launching planning agent")
             if dry_run:
                 logger.info("[DRY RUN] Would launch planning agent for next milestone")

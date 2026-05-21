@@ -164,3 +164,16 @@ repos:
         language: system
         pass_filenames: false
         always_run: true
+
+      # Adversarial landing-page lint: catches fever-dream patterns
+      # (bloated cards, per-milestone narrative, raw expNNNN, internal
+      # acronyms, section card-count caps exceeded). Layer 1 of the
+      # defense; Layer 2 is the periodic AI audit at
+      # scripts/pages_adversarial_audit.py. Per CLAUDE.md "Adversarial
+      # Landing-Page Discipline" (2026-05-21).
+      - id: pages-fever-dream-lint
+        name: Landing-page bloat / jargon / drift lint
+        entry: python3 scripts/pages_fever_dream_lint.py
+        language: system
+        files: '^docs/index\.html$'
+        pass_filenames: false
