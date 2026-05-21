@@ -46,5 +46,23 @@
     "learning_contribution": "= A - B. On TruthfulQA the contribution is expected to be near zero (FR-11 state is FoVer-derived); a positive contribution means FoVer-derived rules transferred.",
     "per_verifier_condition_b_auroc": "KEY finding is which verifiers transfer from FoVer-math to TruthfulQA-factual.",
     "methodology_note": "Low AUROC on a new corpus is an honest finding (FoVer-shape overfit thesis), not a failure."
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "condition_a_production_auroc_std=0.02 and condition_b_architecture_only_auroc_std=0.02 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=9.584426879882812e-05 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }
