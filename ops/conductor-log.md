@@ -5666,3 +5666,4 @@ Ripgrep i |
 | 2026-05-21 06:15 UTC | Conformal Selective Acting Tier 0x (arXiv:2605.202 | OK | 145 passed in 4.80s |
 | 2026-05-21 06:26 UTC | Weak-Strong Policy Fix v2: Diagnose Inverted Thres | OK | 81 passed in 2.26s |
 | 2026-05-21 06:34 UTC | Differentiable Conformal Training Tier 0y (arXiv:2 | OK | 100 passed in 3.68s |
+| 2026-05-21 06:39 UTC | Phase 1 Ship Status Check v7: Confirm Checklist Cu | OK | 81 passed in 2.17s |
