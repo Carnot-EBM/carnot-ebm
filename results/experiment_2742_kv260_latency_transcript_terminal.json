@@ -1,0 +1,26 @@
+{
+  "ssh_kria_reachable": true,
+  "preconditions_checked": [
+    {
+      "resource": "ssh_reachability",
+      "available": true,
+      "check": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'"
+    },
+    {
+      "resource": "xmutil",
+      "available": true,
+      "check": "ssh kria 'xmutil listapps 2>/dev/null | head -20'"
+    }
+  ],
+  "bitstream_loaded": true,
+  "uio_count": 5,
+  "kv260_synthesis_succeeded": true,
+  "kv260_terminal": true,
+  "kv260_latency_mean_us": 3.183,
+  "kv260_latency_std_us": 1.172,
+  "kv260_latency_min_us": 2.95,
+  "kv260_latency_max_us": 14.6,
+  "n_cycles_measured": 100,
+  "honest_verdict": "success: KV260 terminal latency transcript verified",
+  "duration_s": 4.472317695617676
+}

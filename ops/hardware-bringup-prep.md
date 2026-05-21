@@ -208,8 +208,11 @@ not hardware.
 Without sudo (udev rule), the DirtyJTAG and FlashPro5 USB raw devices remain root-only. The conductor's experiments would face the same "fails to open device" error. Once the udev rule lands, every subsequent JTAG/flash op should work from non-root.
 
 ## KV260
-- date: 2026-05-20
+- date: 2026-05-21
 - ssh_kria: reachable
 - active_overlay: carnot_ising_v2_n64 (= carnot_ising_v4 bitstream)
 - uio_devices_present: 5
-- next_step: if uio0_first_word_read=true → ready for board-level latency transcript task (terminal-step). If unreachable → operator re-attach board.
+- latency_mean_us: 3.183
+- n_cycles_measured: 100
+- kv260_terminal: True
+- next_step: GRADUATED: KV260 terminal criteria met
