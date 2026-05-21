@@ -3049,3 +3049,53 @@ with `honest_verdict` prefixed `blocked_cuda`, null AUROC metrics, an empty
 per-verifier learning contribution map, the FR-11 state-file hashes, and
 `state_files_restored_sha_match=true` because no destructive reset was
 attempted.
+
+### REQ-VERIFY-2829: MBPP Dual-Memory Ensemble Evaluation
+
+The repository shall provide an Exp 2829 MBPP dual-memory runner that writes
+`results/experiment_2829_mbpp_ensemble_eval.json` for exactly 100 examples
+from the MBPP sanitized test split and five adversarial replication seeds
+`[42, 137, 271, 314, 1729]`.
+
+Before any live MBPP inference or verifier scoring, the runner MUST verify
+CUDA availability, HuggingFace MBPP dataset access, a discoverable
+Qwen3.6-35B-A3B GGUF cache, and present FR-11 state files. If any
+precondition is missing, the runner MUST write a terminal `blocked_<resource>`
+artifact rather than fabricating AUROC, pass@1, duration, candidate, or
+per-verifier scores.
+
+For successful live runs, the runner MUST generate or reuse the same
+problem/candidate pairs for both memory conditions: Condition A with full
+FR-11 state and Condition B after non-destructively moving FR-11 state to
+`/tmp`, restarting Python, and scoring architecture-only verifier behavior.
+The runner MUST restore every FR-11 state file and prove SHA256 matches the
+original state manifest.
+
+The artifact MUST include `honest_verdict`, corpus identity, `n_problems`,
+`n_seeds`, Condition A and B AUROC means and standard deviations,
+`learning_contribution = A - B`, per-verifier AUROC lists for both
+conditions, `vanilla_qwen36_pass_at_1`, random seeds, reproducibility
+checksum, model specs, real `duration_s`, precondition evidence, FR-11
+state-file hashes and byte sizes, `state_files_restored_sha_match`, and an
+honest methodology note.
+
+### SCENARIO-VERIFY-2829: Missing Preconditions Block MBPP Metrics
+
+Given the Exp 2829 runner starts in an environment missing CUDA, MBPP dataset
+access, the Qwen3.6 GGUF cache, or FR-11 state files,
+When the runner checks preconditions before live inference,
+Then it writes `results/experiment_2829_mbpp_ensemble_eval.json` with
+`honest_verdict` prefixed `blocked_`, null AUROC and pass@1 metrics, empty
+per-verifier AUROC maps, populated `preconditions_checked`, and no inferred
+benchmark numbers.
+
+### SCENARIO-VERIFY-2829-LIVE: Successful MBPP Run Reports Dual Conditions
+
+Given all Exp 2829 live-resource preconditions are available and a real
+Qwen3.6 MBPP generation plus ensemble-scoring backend is configured,
+When the runner evaluates all five seeds under production and
+architecture-only memory conditions,
+Then the artifact reports complete dual-condition AUROC summaries, per-seed
+results, per-verifier AUROC lists for both conditions, restored FR-11 state
+hashes, `vanilla_qwen36_pass_at_1`, and an `honest_verdict` prefixed
+`complete:`.
