@@ -1,0 +1,44 @@
+{
+  "honest_verdict": "complete: ensemble v12 evaluated",
+  "ensemble_v12_viable": true,
+  "ensemble_v12_auroc": 0.6124708624708625,
+  "ensemble_v11_auroc": 0.6013986013986015,
+  "auroc_lift": 0.011072261072261003,
+  "n_verifiers_v12": 18,
+  "orthogonality_sufficient": true,
+  "new_verifier_correlations": {
+    "tier0g": 0.5136319228791921,
+    "tier0v": 0.7287331292924075,
+    "tier0w": 0.26256907827192744
+  },
+  "ensemble_updated": true,
+  "random_seed": 42,
+  "duration_s": 5.01374888420105,
+  "preconditions_checked": [
+    {
+      "resource": "carnot.verify",
+      "available": true,
+      "check": "import carnot.verify"
+    },
+    {
+      "resource": "tier0g_module",
+      "available": true,
+      "check": "ls python/carnot/verify/tier0g_semantic_energy.py"
+    },
+    {
+      "resource": "tier0v_module",
+      "available": true,
+      "check": "ls python/carnot/verify/tier0v_set_consistency.py"
+    },
+    {
+      "resource": "tier0w_module",
+      "available": true,
+      "check": "ls python/carnot/verify/tier0w_paraphrase_consistency.py"
+    },
+    {
+      "resource": "fover_corpus",
+      "available": true,
+      "check": "wc -l data/fover_corpus.jsonl"
+    }
+  ]
+}
