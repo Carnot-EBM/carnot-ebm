@@ -53,5 +53,13 @@
     "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
     "quantization": "Q4_K_M",
     "n_gpu_layers": -1
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=50.673156398988795 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
