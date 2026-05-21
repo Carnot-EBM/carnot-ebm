@@ -406,6 +406,21 @@ class WeakStrongRouter:
             return RoutingDecision(path='tier0f_only', verifier='semantic_calibration')
 
 
+class AnytimeValidConformalRouter:
+    def __init__(self, alpha: float = 0.10):
+        self.alpha = alpha
+        self.energy_history: list[float] = []
+
+    def route(self, energy: float) -> str:
+        import numpy as np
+        self.energy_history.append(energy)
+        Q = np.quantile(self.energy_history, 1 - self.alpha)
+        if energy <= Q:
+            return 'accept'
+        else:
+            return 'full_ensemble'
+
+
 # ---------------------------------------------------------------------------
 # Pipeline class
 # ---------------------------------------------------------------------------
@@ -494,6 +509,7 @@ class VerifyRepairPipeline:
         jepa_fast_path_predictor: Any | None = None,
         jepa_fast_path_threshold: float = 0.2,
         weak_strong_router: WeakStrongRouter | None = None,
+        conformal_router: AnytimeValidConformalRouter | None = None,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -607,6 +623,7 @@ class VerifyRepairPipeline:
         self._jepa_predictor = jepa_fast_path_predictor
         self._jepa_fast_path_threshold = jepa_fast_path_threshold
         self.weak_strong_router = weak_strong_router
+        self.conformal_router = conformal_router
         self._session_log: list[dict[str, Any]] = []
         self._session_observations_seen = 0
         self._session_fast_path_taken = 0
