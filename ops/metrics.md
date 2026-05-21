@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-21 Milestone 2026.05.266 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-21T14:00:00Z | 2026-05-21T15:03:06Z | Plan milestone 2026.05.266: read 11+ project files (.265 = 0/8 tasks — 40th consecutive empty retro, root cause: "1 failed, 80 passed in 2.14s" pre-test cascade). Ran pytest: confirmed 3 failing tests (PySAT RuntimeError, FileNotFoundError hardware/kv260/discrete_sb_256_tb.v, docs assertion None). Ran arxiv sweep: 5 new papers added to research-references.md (arXiv:2604.18547 FUSE, 2603.04304 V₁, 2604.23577 RouteNLP, 2602.03094 TRT, 2605.16020 VAN-Ising). Created openspec/change-proposals/research-roadmap-v266.md (248 lines). Created research-roadmap-next.yaml (1061 lines, 10 tasks exp2809-exp2818). Critical path: exp2810 (pre-test cascade fix v4, claude/opus) — ALL corpus evals gated on pretest_cascade_fixed=true. Gemini-Default: 8/10 gemini + 2 claude/opus (within 2/10 ceiling). All mandatory disciplines applied (prior_failures, PRECONDITIONS, principle-annotations, terminal-prefix verdicts, exclusion manifest 0 matches). | ~180k |
+
+---
+
 ## Session: 2026-05-21 Pre-Planning Doc Update (third pass, pre-.263)
 
 ### Turn Log
