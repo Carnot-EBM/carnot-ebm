@@ -361,3 +361,39 @@ retired_extras:
     retired_by_artifact: "results/experiment_2722_kv260_continuity_258.json"
     operator_reopen_required: true
     retire_if_same_verdict: true
+
+  - id: otv_kvcache_probe_retired
+    reason: |
+      OTV one-token KV-cache probe (arXiv:2603.01025) achieved probe_auroc=0.25 in exp2728
+      (.259) — worse than random chance (0.5 baseline). The proxy implementation (TF-IDF
+      logistic regression as "correctness direction") does not transfer to live GGUF responses.
+      Preferred alternative: ODAR two-tier routing (exp2720) achieved 65% savings without
+      a separate probe. OTV-specific fast-path is retired.
+    experiment_ids: [exp2728]
+    blocked_patterns:
+      - OTV one-token verification probe
+      - OTV fast path
+      - otv_probe
+      - correctness direction vector
+    retired_milestone: "2026.05.259"
+    retired_by_artifact: "results/experiment_2728_otv_fast_path.json"
+    retire_if_same_verdict: true
+    operator_reopen_required: true
+
+  - id: diversity_maximizing_verifier_selection_retired
+    reason: |
+      Diversity-maximizing greedy selection (exp2732, .259) achieved diversity_lift=-8.5e-6
+      — essentially zero at the noise floor. Selection-stage gains are exhausted at the
+      current k=15 ensemble; each additional verifier adds precision but not recall, making
+      selection non-beneficial. Preferred alternative: uniform weighting (near-optimal at k=15
+      per exp2732 uniform_auroc). Diversity-specific selection experiments are retired.
+    experiment_ids: [exp2732]
+    blocked_patterns:
+      - diversity-maximizing greedy selection
+      - diversity_select
+      - greedy verifier selection
+      - verifier diversity maximization
+    retired_milestone: "2026.05.259"
+    retired_by_artifact: "results/experiment_2732_entanglement_retirement_diversity_audit.json"
+    retire_if_same_verdict: true
+    operator_reopen_required: true
