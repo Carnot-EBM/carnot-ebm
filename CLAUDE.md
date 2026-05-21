@@ -491,22 +491,29 @@ compares the existing draft's `milestone:` field against this
 expectation. Stale prefixes (e.g., `2026.04.120` drafted in May)
 trigger planner re-run.
 
-## Codex-Default for Experiments (MANDATORY — Quota Preservation)
+## Gemini-Default for Experiments (MANDATORY — Quota Preservation)
 
-**Origin:** 2026-05-02 user directive ("default all new experiments to
-agent_type:codex + model:gpt-5.5") was filed only to user-memory and the
-.95 planner Sonnet emitted `agent_type: claude` on 11 of 13 .95 tasks
-because user-memory is unreachable from the planner sub-process.
-2026-05-03 ~23:30Z user re-issued the directive at 85% weekly quota
-with 2.5 days to reset: "If you don't ensure that codex is used by the
-conductor and research experiments in the loop, I can ensure you that
-you will run out of quota sometime tomorrow." This rule moves the
-directive into CLAUDE.md (planner-readable) and is mechanically
-enforced at the conductor layer.
+**Origin:** 2026-05-20 operator directive after seeing every `.259 task
+declare `agent_type: codex` in the YAML while runtime coercion
+(`GEMINI_FORCE_EXPERIMENTS=1`) rewrote every one to gemini:
+
+> "why are we still using codex? I said to switch to gemini"
+
+The previous "Codex-Default for Experiments" rule (preserved below for
+historical context) ran a two-layer defense: planner emits codex; runtime
+coerces codex → gemini. That worked operationally but made the YAML
+deceptive — the declared `agent_type` did not match what actually ran.
+This rule flips the planner-emit default to gemini directly so the YAML
+is honest. Runtime coercion env vars (`GEMINI_FORCE_EXPERIMENTS=1`,
+`CODEX_FORCE_EXPERIMENTS=1`) are kept as emergency operator overrides for
+quota windows where the YAML choice and the available-quota choice
+disagree.
 
 **The rule.** When planning a new milestone, **all experiment tasks
-default to `agent_type: codex` and `model: gpt-5.5`** unless the task
-genuinely cannot be performed by codex. The exceptions are narrow:
+default to `agent_type: gemini` and `model: gemini-3.1-pro-preview`**
+unless the task meets the positive criterion for `agent_type: claude`
+(below) or genuinely needs codex (see exceptions). The exceptions are
+narrow:
 
 1. **Planner tasks** — the planner itself stays `agent_type: claude`
    via `AGENT_TYPE_PLANNER=claude` env. Planning is reasoning-heavy
@@ -514,52 +521,74 @@ genuinely cannot be performed by codex. The exceptions are narrow:
 2. **Cross-file refactors with deep tool use** — tasks that need
    Claude's tool-use ergonomics (multi-file Edit + Read + Bash
    choreography). When the planner picks Claude here, it MUST set
-   `requires_claude: true` on the task as a documented bypass.
-   Without that flag, the conductor's `CODEX_FORCE_EXPERIMENTS=1`
-   coercion will silently downgrade `claude` → `codex` at launch.
-3. **Operationally critical fixes during outer-loop self-healing** —
-   if Claude is the outer loop applying structural fixes mid-session,
-   that work continues (the user is in the room). This rule governs
+   `requires_claude: true` on the task as a documented bypass. Without
+   that flag, runtime coercion treats Claude as the wrong default and
+   may rewrite it.
+3. **Operationally critical fixes during outer-loop self-healing** — if
+   Claude is the outer loop applying structural fixes mid-session, that
+   work continues (the user is in the room). This rule governs
    *autonomous* loop work, not interactive operator turns.
+4. **Tasks that genuinely need codex** — gpt-5.5-specific tool
+   ergonomics, or operator explicitly directed codex for this task.
+   Set `agent_type: codex` + `model: gpt-5.5` + `requires_codex: true`
+   so the `GEMINI_FORCE_EXPERIMENTS=1` runtime coercion does not
+   silently rewrite it.
 
 **Mechanical enforcement (lives in `scripts/research_conductor.py`).**
-The conductor coerces per-task `agent_type: claude` → `agent_type:
-codex` when env `CODEX_FORCE_EXPERIMENTS=1` is set AND the task has
-no `requires_claude: true` flag. Logs a WARNING per coercion. Planner
-and retro paths are NOT affected — those use `AGENT_TYPE_PLANNER` and
-`AGENT_TYPE_RETRO` env overrides directly and bypass the coercion.
+The conductor coerces per-task agent_type at task-launch time based on
+operator quota directives:
+
+- `GEMINI_FORCE_EXPERIMENTS=1` (typical) → coerces `codex → gemini`
+  unless task has `requires_codex: true`. Mostly a no-op under the new
+  Gemini-Default planner rule, but kept so a misbehaved planner emit
+  still routes correctly.
+- `CODEX_FORCE_EXPERIMENTS=1` (quota-emergency flip) → coerces
+  `claude → codex` unless task has `requires_claude: true`, AND coerces
+  `gemini → codex` unless task has `requires_gemini: true`. Used when
+  gemini quota is constrained and codex is available; flips the routing
+  without a roadmap edit.
+
+Logs a WARNING per coercion. Planner and retro paths are NOT affected
+— those use `AGENT_TYPE_PLANNER` and `AGENT_TYPE_RETRO` env overrides
+directly and bypass the coercion.
 
 **How to apply (planner-side discipline).** When you generate
 `research-roadmap-next.yaml`:
 
-- **Default** every experiment task to `agent_type: codex`, `model:
-  gpt-5.5`.
+- **Default** every experiment task to `agent_type: gemini`, `model:
+  gemini-3.1-pro-preview`.
 - **Justify** any task you mark `agent_type: claude` with a one-line
-  comment AND set `requires_claude: true`. If you can't articulate
-  why codex would fail for the task, codex is the correct choice.
+  comment AND set `requires_claude: true`. If you can't articulate why
+  gemini would fail for the task, gemini is the correct choice. The
+  same positive criterion applies as before (see below — the bar is
+  about reasoning depth and tool choreography, not about which agent is
+  the new default).
+- **Justify** any task you mark `agent_type: codex` with a one-line
+  comment AND set `requires_codex: true`. The bar is "this task
+  genuinely needs gpt-5.5" or "operator explicitly directed codex" —
+  not "I think codex is faster."
 - **Never use claude** for routine retros, doc passes, schema
   validation, simple analysis tasks, or experiments that primarily
-  read/run scripts. These all work fine on codex.
-- **Audit pass before emitting**: count the number of `agent_type:
-  claude` entries in the roadmap. If more than 2 of 13 tasks are
-  claude (the .95 ratio of 11/13 is the failure mode this rule
-  prevents), re-evaluate each one and flip to codex unless
-  `requires_claude` is genuinely warranted.
+  read/run scripts. These all work fine on gemini.
+- **Audit pass before emitting**: the YAML should be roughly
+  `~11/13 gemini + 1-2 claude + 0-1 codex` for a typical 13-task
+  milestone. If more than 2 of 13 tasks are claude, re-evaluate each
+  one against the positive criterion. If any task is codex without
+  `requires_codex: true`, fix it.
 
 **Positive criterion for `requires_claude: true` (must meet ALL three).**
-Origin: the .96 planner over-applied `requires_claude: true` to 5 of
-13 tasks (1232/1233/1234/1235/1238); on inspection only 1 was genuinely
-Claude-justified. The remaining 4 were downgraded to codex with no
-quality loss. Root cause: planner conflated "task importance" with
-"reasoning depth required." Fix: a positive criterion that the planner
-must satisfy before flagging `requires_claude: true`:
+Originally written for the Codex-Default era — the bar is about
+*reasoning depth + tool choreography*, not about which agent is the new
+default. The criterion below substitutes "gemini" for the previous
+"codex" wherever the comparison was about default-vs-Claude capability;
+the structural test is unchanged.
 
 ```
 requires_claude: true is justified only when the task meets ALL of:
 
-  1. CODEX HAS DEMONSTRABLY FAILED at this specific task category in
+  1. GEMINI HAS DEMONSTRABLY FAILED at this specific task category in
      a prior milestone (cite the experiment ID + verdict in the YAML
-     comment), OR codex's known capability profile makes failure
+     comment), OR gemini's known capability profile makes failure
      plausible for THIS specific task structure (not just "important
      work" in general).
 
@@ -575,43 +604,67 @@ requires_claude: true is justified only when the task meets ALL of:
      evaluated by a deterministic gate (spectral norm bounded, AUROC
      above threshold, schema validation passing, test suite green),
      then a weaker agent that produces the same gate-passing artifact
-     is equivalent — codex is the correct choice. Claude's edge is
+     is equivalent — gemini is the correct choice. Claude's edge is
      handling open-ended judgment under ambiguity, not running scripts
      that have known correctness criteria.
 ```
 
-**What `requires_claude: true` is NOT for.** None of these alone, nor
-in combination, justify the flag:
+**Positive criterion for `requires_codex: true` (must meet ANY of).**
+2026-05-20 addition. The codex bypass exists for narrow cases:
+
+```
+requires_codex: true is justified when the task meets ANY of:
+
+  1. THE OPERATOR EXPLICITLY DIRECTED codex for this task (cite the
+     directive in the YAML comment — operator message timestamp or
+     known-issues.md entry).
+
+  2. THE TASK NEEDS gpt-5.5-SPECIFIC TOOL ERGONOMICS that gemini-3.1-
+     pro-preview cannot match (rare; codex was historically default,
+     so most legacy task categories work fine on gemini now).
+
+  3. GEMINI QUOTA IS EXHAUSTED and the operator has set
+     `CODEX_FORCE_EXPERIMENTS=1` to flip the runtime coercion. In this
+     case `requires_codex: true` is unnecessary (the coercion will
+     route there automatically) but is fine as a redundant signal.
+```
+
+**What neither flag is for.** None of these alone, nor in combination,
+justify a non-gemini choice:
 
 - `priority: critical` — task importance is orthogonal to agent choice
 - `priority: high` — same
 - `publication-blocking` — say so in the comment, not via agent choice
 - "high-stakes" — the artifact's review is what protects against stakes,
   not the agent that produced it
-- "should be careful" / "needs accuracy" — codex is also careful and
+- "should be careful" / "needs accuracy" — gemini is also careful and
   accurate within its capability envelope; the question is whether the
   work exceeds that envelope
 - GPU training duration — long training runs are GPU-cost-bound, not
-  agent-cost-bound; codex monitors training fine
-- Multi-step instructions — codex handles 50+ turn tasks competently;
+  agent-cost-bound; gemini monitors training fine
+- Multi-step instructions — gemini handles 50+ turn tasks competently;
   Claude is only needed when the steps require cross-context reasoning
   beyond what the prompt + tool outputs can encode
 
-**Calibration table** (populate as evidence accumulates; current
-entries from .95 retro + .96 downgrade analysis):
+**Calibration table** (populate as evidence accumulates; entries
+updated to reflect the gemini-default as of 2026-05-20):
 
 | Task category | Default agent | Why |
 |--------------|---------------|-----|
-| Numerical audits + matplotlib output | codex | Mechanical with deterministic correctness criteria |
-| LaTeX integration of pre-drafted prose | codex | Mechanical splice, no original judgment |
-| GPU training supervision | codex | Compute-bound; agent role is monitoring |
-| Mechanical gate evaluation | codex | Numerical thresholds substitute for reasoning |
-| Constrained design work (candidates pre-proposed) | codex | Pattern-matching from existing candidate set |
-| Routine retrospectives | codex | Templated structure |
-| Schema validation / doc reconciliation | codex | Mechanical |
+| Numerical audits + matplotlib output | gemini | Mechanical with deterministic correctness criteria |
+| LaTeX integration of pre-drafted prose | gemini | Mechanical splice, no original judgment |
+| GPU training supervision | gemini | Compute-bound; agent role is monitoring |
+| Mechanical gate evaluation | gemini | Numerical thresholds substitute for reasoning |
+| Constrained design work (candidates pre-proposed) | gemini | Pattern-matching from existing candidate set |
+| Routine retrospectives | gemini | Templated structure |
+| Schema validation / doc reconciliation | gemini | Mechanical |
+| Failure-ledger pattern detection across milestone history | gemini | 1M-token-context advantage; feed entire research-complete.yaml |
+| Architecture coherence audits (Phase-3..7) | gemini | Long-context synthesis |
+| Multi-paper literature synthesis (3-5 papers full text) | gemini | Long-context advantage |
 | Open-ended paper PROSE writing (first draft, novel framing) | claude | High-judgment under ambiguity |
 | Cross-file refactors with 5+ file Edit/Read/Bash | claude | Multi-file tool choreography (the original spec exception) |
 | Deep theoretical framing (e.g., new Spera/CAF-class formalism) | claude | Multi-step reasoning + cross-context synthesis |
+| Operator-directed codex tasks | codex | Per operator directive only |
 
 **Why this is in CLAUDE.md, not just in user-memory.** User-memory is
 unreachable from the planner sub-process. Mechanical conductor
@@ -619,6 +672,36 @@ enforcement catches the failure post-plan but wastes planner time
 emitting plans that get coerced. Putting the rule in CLAUDE.md (which
 the planner reads as required input) means the planner respects it at
 design time AND the conductor coerces if it slips. Defense in depth.
+
+---
+
+### Historical: Codex-Default rule (preserved per "Never remove existing content" rule)
+
+The 2026-05-02 / 2026-05-03 Codex-Default rule was the predecessor to
+this Gemini-Default rule. It was filed when Anthropic Claude quota was
+the binding constraint and codex (gpt-5.5) was the open path. The rule
+specified `agent_type: codex` + `model: gpt-5.5` as the default for all
+experiment tasks, with the same `requires_claude: true` positive
+criterion as above (substituting codex for gemini in the comparison).
+The rule was operationally enforced via the same conductor coercion
+mechanism (`CODEX_FORCE_EXPERIMENTS=1` rewriting `claude → codex`).
+
+It was superseded 2026-05-20 because:
+
+1. Gemini-CLI returned to viability (the `.220-`.226 crash storm
+   ended; gemini-3.1-pro-preview now stable).
+2. Codex quota dynamics inverted (gemini quota window now broader).
+3. The runtime coercion (`GEMINI_FORCE_EXPERIMENTS=1` rewriting
+   `codex → gemini`) made the YAML deceptive — declared codex tasks
+   ran as gemini. Operator surfaced the surface-vs-runtime mismatch:
+   "why are we still using codex? I said to switch to gemini."
+
+The Codex-Default era's calibration table entries (which originally
+read "codex" in the default-agent column for all mechanical tasks)
+are now `gemini` per the same reasoning that put them in the default
+column originally — those tasks are agent-fungible at the default
+tier. The `requires_claude` positive criterion is unchanged structurally;
+only the comparator agent (gemini, not codex) has been swapped.
 
 ## Operator-Only External Publication (MANDATORY)
 

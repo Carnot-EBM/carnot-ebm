@@ -4303,30 +4303,45 @@ def research_step(
     # read user-memory). When CODEX_FORCE_EXPERIMENTS=1 is set, coerce
     # per-task claude → codex unless the task carries an explicit
     # `requires_claude: true` flag (reserved for tasks that genuinely need
-    # Claude's tool ergonomics — e.g., complex multi-file refactors). The
-    # planner and retro call sites at lines ~2361/2495/2873 are NOT affected
-    # — those paths use AGENT_TYPE_PLANNER / AGENT_TYPE_RETRO env overrides
-    # directly and bypass this per-task coercion.
-    if (
-        os.environ.get("CODEX_FORCE_EXPERIMENTS") == "1"
-        and task_agent_type == "claude"
-        and not task.get("requires_claude")
-    ):
-        logger.warning(
-            "CODEX_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
-            "claude → codex (operator quota directive 2026-05-03 23:30Z; "
-            "set requires_claude:true to bypass)",
-            task.get("id", "?"),
-        )
-        task_agent_type = "codex"
+    # Claude's tool ergonomics — e.g., complex multi-file refactors).
+    #
+    # 2026-05-20 extension: now that planner-default is gemini per CLAUDE.md
+    # "Gemini-Default for Experiments," CODEX_FORCE_EXPERIMENTS=1 ALSO
+    # coerces per-task `gemini` → `codex` (when gemini quota is exhausted
+    # and codex is open). A task carrying `requires_gemini: true` is
+    # exempted (reserved for genuinely long-context-only work).
+    #
+    # The planner and retro call sites at lines ~2361/2495/2873 are NOT
+    # affected — those paths use AGENT_TYPE_PLANNER / AGENT_TYPE_RETRO env
+    # overrides directly and bypass this per-task coercion.
+    if os.environ.get("CODEX_FORCE_EXPERIMENTS") == "1":
+        if task_agent_type == "claude" and not task.get("requires_claude"):
+            logger.warning(
+                "CODEX_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
+                "claude → codex (operator quota directive 2026-05-03 23:30Z; "
+                "set requires_claude:true to bypass)",
+                task.get("id", "?"),
+            )
+            task_agent_type = "codex"
+        elif task_agent_type == "gemini" and not task.get("requires_gemini"):
+            logger.warning(
+                "CODEX_FORCE_EXPERIMENTS=1: coercing task %r agent_type "
+                "gemini → codex (gemini quota window; set "
+                "requires_gemini:true to bypass)",
+                task.get("id", "?"),
+            )
+            task_agent_type = "codex"
     # 2026-05-11 13:20Z mirror coercion for gemini-only window: codex
     # quota exhausted until reset (operator directive 10:25Z). When
     # GEMINI_FORCE_EXPERIMENTS=1 is set, coerce per-task `codex` →
-    # `gemini` unless the task carries `requires_codex: true`. The
-    # planner reads CLAUDE.md "Codex-Default" as input and ignores
-    # transient known-issues.md windows, so a planner-level discipline
-    # rule alone is insufficient. Mechanical defense in depth here.
-    # Unset this env when codex quota recovers.
+    # `gemini` unless the task carries `requires_codex: true`.
+    #
+    # Post 2026-05-20 planner-default flip: with the planner now emitting
+    # gemini directly, this coercion mostly catches the rare case where
+    # the planner explicitly chose codex (`agent_type: codex` without
+    # `requires_codex: true` — usually a planner-discipline lapse under
+    # the new Gemini-Default rule). The env var is kept so the operator
+    # can still flip routing without re-editing the roadmap.
     if (
         os.environ.get("GEMINI_FORCE_EXPERIMENTS") == "1"
         and task_agent_type == "codex"
