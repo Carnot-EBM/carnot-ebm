@@ -5674,3 +5674,4 @@ Ripgrep i |
 | 2026-05-21 07:30 UTC | Milestone 2026.05.262 activated | OK | 13 tasks queued |
 | 2026-05-21 07:34 UTC | Archive .261 + Activate .262 | OK | cache hit: 81 passed in 2.17s |
 | 2026-05-21 07:41 UTC | Verifier Live-GPU v4: Stub-First Protocol, N=5, ge | OK | cache hit: 81 passed in 2.17s |
+| 2026-05-21 07:54 UTC | Phase 4 FEP Adversarial Recheck: LOO Cross-Validat | OK | cache hit: 81 passed in 2.17s |
