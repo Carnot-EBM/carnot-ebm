@@ -6901,3 +6901,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-20: Archive .258 + Activate .259 (✅ Complete) — honest_verdict=complete_already_activated; results/experiment_2725_archive_v258.json
 - 2026-05-20: Full Test Suite Collection Fix v1: Eliminate Remaining --co Failures (✅ Complete) — honest_verdict=complete: all 5 collection failures fixed via importorskip; results/experiment_2726_full_collection_fix_v1.json
 - 2026-05-21: Live GGUF Verifier Energy Debug v1: Trace Zero-Energy Collapse on Qwen3.6-35B (✅ Complete) — honest_verdict=complete: diagnosed zero-energy fast-path and added logging; results/experiment_2727_verifier_energy_debug_v1.json
+- 2026-05-21: OTV One-Token Verification Fast Path (arXiv:2603.01025): KV-Cache Probe for Cheap Routing (✅ Complete) — honest_verdict=complete: otv fast path evaluated successfully; results/experiment_2728_otv_fast_path.json
