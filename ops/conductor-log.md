@@ -5641,3 +5641,4 @@ Ripgrep i |
 | 2026-05-21 02:13 UTC | Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2740_verifie |
 | 2026-05-21 02:18 UTC | Verifier Energy Debug v2 Live GPU: RTX 3090 Re-run | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2740_verifie |
 | 2026-05-21 02:35 UTC | Tier 0g Semantic Energy Live GPU Re-run + Upstream | OK | 100 passed in 3.83s |
+| 2026-05-21 02:48 UTC | KV260 Board-Level Latency Transcript (TERMINAL Ste | OK | 81 passed in 2.20s |
