@@ -5655,3 +5655,6 @@ Ripgrep i |
 | 2026-05-21 04:22 UTC | Milestone 2026.05.261 activated | OK | 13 tasks queued |
 | 2026-05-21 04:29 UTC | Archive .260 + Activate .261 | FAIL | Gemini CLI error: usr/lib/node_modules/@google/gemini-cli/bundle/chunk-VWGAOW5 |
 | 2026-05-21 04:32 UTC | Archive .260 + Activate .261 | OK | cache hit: 81 passed in 4.57s |
+| 2026-05-21 04:53 UTC | Verifier Live-GPU v3: gemma-4-26B-A4B-it-GGUF Dire | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: he best experience, |
+| 2026-05-21 05:06 UTC | Verifier Live-GPU v3: gemma-4-26B-A4B-it-GGUF Dire | FAIL | Gemini CLI error: Stalled after 600s silence. Last output:  enabled. All tool  |
+| 2026-05-21 05:29 UTC | Verifier Live-GPU v3: gemma-4-26B-A4B-it-GGUF Dire | FAIL | Gemini CLI error: Wall-clock+idle timeout after 1204s (355s silence). Last out |

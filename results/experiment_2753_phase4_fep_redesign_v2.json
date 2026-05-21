@@ -1,0 +1,28 @@
+{
+  "honest_verdict": "complete: FEP redesign validated",
+  "fep_viable": true,
+  "best_fep_auroc": 0.9947089947089947,
+  "best_strategy": "strategy2",
+  "fep_vs_odar_delta": 0.021708994708994678,
+  "strategy1_auroc": 0.544973544973545,
+  "strategy2_auroc": 0.9947089947089947,
+  "strategy3_auroc": 0.9788359788359788,
+  "fep_aggregator_implemented": true,
+  "alpha_t_hypothesis_updated": true,
+  "random_seed": 42,
+  "n_verifiers": 8,
+  "duration_s": 6.490281820297241,
+  "preconditions_checked": [
+    {
+      "resource": "carnot.verify",
+      "available": true,
+      "check": "import_test"
+    },
+    {
+      "resource": "fover_corpus",
+      "available": true,
+      "check": "line_count"
+    }
+  ],
+  "summary": "The simple sum formula failed because verifiers have different scales and signs (some anti-correlated with incorrectness). By adopting the learned logistic regression or temperature-scaled pooling, we normalize the scales and correctly invert anti-correlated verifiers, restoring the verifier-as-alpha_t hypothesis."
+}
