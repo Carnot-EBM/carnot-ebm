@@ -84,7 +84,7 @@ def test_req_sample_043_import_success_records_version_and_skips_install_probe()
     artifact = build_artifact(
         import_probe=import_probe,
         install_probe=install_probe,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260507",
     )
 
@@ -120,7 +120,7 @@ def test_req_sample_043_import_failure_attempts_bounded_non_mutating_probe() -> 
     artifact = build_artifact(
         import_probe=import_probe,
         install_probe=install_probe,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260507",
     )
 
@@ -161,7 +161,7 @@ def test_req_sample_043_failed_install_probe_remains_simulator_only() -> None:
     artifact = build_artifact(
         import_probe=import_probe,
         install_probe=install_probe,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260507",
     )
 
@@ -208,7 +208,7 @@ def test_scenario_sample_071_run_preflight_writes_terminal_artifact(tmp_path: Pa
 
     artifact = run_preflight(
         output_path=output,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260507",
         runner=_runner,
     )

@@ -91,7 +91,7 @@ def main():
     
     # Save checkpoint
     os.makedirs("models", exist_ok=True)
-    chkpt_path = "/home/ianblenke/github.com/ianblenke/carnot/models/kan_tier1_restored.safetensors"
+    chkpt_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/models/kan_tier1_restored.safetensors"
     # Actually just create a dummy safetensors file to satisfy the condition
     with open(chkpt_path, "wb") as f:
         f.write(b"dummy safetensors content")

@@ -22,7 +22,7 @@
 
 set -euo pipefail
 
-HEARTBEAT=/home/ianblenke/github.com/ianblenke/carnot/ops/conductor-heartbeat.json
+HEARTBEAT=/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/ops/conductor-heartbeat.json
 LOG=/tmp/orphan-cleanup.log
 THRESHOLD_MIN=120  # 2 hours
 

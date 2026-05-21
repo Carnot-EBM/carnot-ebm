@@ -118,7 +118,7 @@ def test_req_kona_009_builds_complete_publication_hold_boundary() -> None:
 
     artifact = exp1362.build_artifact(
         _sources(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
 

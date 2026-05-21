@@ -7,7 +7,7 @@ import time
 def main():
     start_time = time.time()
     records = []
-    with open('/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl', 'r') as f:
+    with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl', 'r') as f:
         for line in f:
             if line.strip():
                 records.append(json.loads(line))

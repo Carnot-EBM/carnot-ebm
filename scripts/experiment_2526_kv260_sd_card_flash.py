@@ -13,7 +13,7 @@ def run_experiment() -> Dict[str, Any]:
     
     # 0a. Locate the generated .hwh file
     hwh_path = None
-    known_path = "/home/ianblenke/github.com/ianblenke/carnot/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh"
+    known_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/output/carnot_ising_v4_bd/project/carnot_ising_v4.gen/sources_1/bd/carnot_ising_v4_bd/hw_handoff/carnot_ising_v4_bd.hwh"
     if os.path.exists(known_path):
         hwh_path = known_path
         

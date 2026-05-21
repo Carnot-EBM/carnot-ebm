@@ -15,7 +15,7 @@ kv260_yosys_succeeded = False
 phase1_ship_gate_met = False
 
 for task in tasks:
-    pattern = f"/home/ianblenke/github.com/ianblenke/carnot/results/experiment_{task}*.json"
+    pattern = f"/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_{task}*.json"
     files = glob.glob(pattern)
     if not files:
         print(f"Task {task} missing")

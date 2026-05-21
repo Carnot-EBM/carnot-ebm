@@ -6,11 +6,11 @@ import sys
 
 def test_experiment_2427_runs():
     # Run the experiment script
-    result = subprocess.run([sys.executable, "/home/ianblenke/github.com/ianblenke/carnot/scripts/experiment_2427_kv260_yosys.py"], capture_output=True, text=True)
+    result = subprocess.run([sys.executable, "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/scripts/experiment_2427_kv260_yosys.py"], capture_output=True, text=True)
     assert result.returncode == 0
     
     # Check the json file
-    json_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2427_kv260_yosys_v4.json"
+    json_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2427_kv260_yosys_v4.json"
     assert os.path.exists(json_path)
     
     with open(json_path, "r") as f:

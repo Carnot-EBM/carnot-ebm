@@ -4,7 +4,7 @@ from typing import List, Tuple
 from carnot.models.tier4_adaptive_prototype import SimpleAdaptiveKAN, detect_new_pattern, adapt_structure
 
 def load_history_from_db() -> List[float]:
-    db_path = "/home/ianblenke/github.com/ianblenke/carnot/data/constraint_memory.db"
+    db_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/data/constraint_memory.db"
     history = []
     
     domain_to_x = {

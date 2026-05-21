@@ -6,7 +6,7 @@ import time
 def main():
     verifier = HierarchicalLogConsVerifier()
     
-    with open('/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl', 'r') as f:
+    with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl', 'r') as f:
         entries = [json.loads(line) for line in f][:36]
         
     scores = []
@@ -49,7 +49,7 @@ def main():
         "verifier": "logcons_z3_true",
         "scores": results
     }
-    with open('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2437_logcons_z3_scores.json', 'w') as f:
+    with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2437_logcons_z3_scores.json', 'w') as f:
         json.dump(out_scores, f)
 
 if __name__ == '__main__':

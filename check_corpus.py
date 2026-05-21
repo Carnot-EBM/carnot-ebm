@@ -1,7 +1,7 @@
 import glob
 import json
 
-files = glob.glob('/home/ianblenke/github.com/ianblenke/carnot/results/*eval*') + glob.glob('/home/ianblenke/github.com/ianblenke/carnot/data/*corpus*')
+files = glob.glob('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/*eval*') + glob.glob('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/data/*corpus*')
 for f in files:
     try:
         content = open(f).read()

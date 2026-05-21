@@ -67,7 +67,7 @@ def run_experiment(output_path: str, model_name: str):
     return report
 
 if __name__ == "__main__":
-    output_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1765_eval.json"
+    output_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1765_eval.json"
     model_name = "unsloth/gemma-4-26B-A4B-it-GGUF"
     run_experiment(output_path, model_name)
     print(f"Experiment completed. Results saved to {output_path}")

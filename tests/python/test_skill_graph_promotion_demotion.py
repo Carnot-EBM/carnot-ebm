@@ -93,7 +93,7 @@ def test_req_learn_1302_in_progress_artifact_is_durable(tmp_path: Path) -> None:
 
     artifact = write_in_progress_artifact(
         out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -109,7 +109,7 @@ def test_scenario_learn_1302_builds_promotion_demotion_and_expiry_counts() -> No
 
     artifact = build_artifact(
         _exp1288_fixture(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert artifact["status"] == "complete"
@@ -154,7 +154,7 @@ def test_req_learn_1302_run_loads_exp1288_and_writes_results_only(tmp_path: Path
     artifact = run(
         results_dir=results_dir,
         out_path=out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -170,7 +170,7 @@ def test_req_learn_1302_missing_memory_update_reports_no_write() -> None:
 
     artifact = build_artifact(
         _exp1288_fixture(memory_update_written=False),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert artifact["status"] == "complete"

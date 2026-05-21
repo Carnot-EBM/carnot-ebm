@@ -464,7 +464,7 @@ def run_experiment(
     fover_path: Path | str = DEFAULT_FOVER_PATH,
     output_path: Path | str = DEFAULT_RESULT_PATH,
     run_date: str = RUN_DATE,
-    project_root: str = "/home/ianblenke/github.com/ianblenke/carnot",
+    project_root: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     build_fraction: float = DEFAULT_BUILD_FRACTION,
 ) -> dict[str, Any]:
     """Run Exp 1288 and persist the final verifier-feedback replay artifact."""

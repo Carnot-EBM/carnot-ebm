@@ -22,7 +22,7 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 DEFAULT_OUT_PATH = REPO_ROOT / "results" / "experiment_2609_sklearn_prereq_fix.json"
 
 SCHEMA = "carnot.sklearn_prereq_fix.v1"

@@ -28,7 +28,7 @@
 # must not abort the whole run.
 set -u
 
-cd /home/ianblenke/github.com/ianblenke/carnot
+cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
 
 # Source codex env (AGENT_TYPE_PLANNER, CODEX_FORCE_EXPERIMENTS, etc.)
 if [ -f /home/ianblenke/.carnot/conductor_state.sh ]; then
@@ -103,7 +103,7 @@ EOF
     --dangerously-bypass-approvals-and-sandbox \
     --color never \
     --model gpt-5.5 \
-    --cd /home/ianblenke/github.com/ianblenke/carnot \
+    --cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm \
     --ephemeral \
     - 2>&1 | tail -20
 

@@ -71,7 +71,7 @@ def test_req1370_exp1369_non_sat_semantic_rows_produce_localized_hints() -> None
     artifact = mod.build_verge_mcs_repair_localization_artifact(
         exp1369_artifact=_exp1369_semantic_artifact(),
         run_date="20260505",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)

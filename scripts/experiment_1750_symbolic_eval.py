@@ -98,7 +98,7 @@ def train_symbolic_kan(X, Y):
     accuracy = float(jnp.mean(preds == Y_jax))
     return float(accuracy)
 
-def run_experiment(output_path: str = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1750_symbolic_eval.json"):
+def run_experiment(output_path: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1750_symbolic_eval.json"):
     X, Y = generate_toy_dataset()
     cikan_acc = train_cikan(X, Y)
     skan_acc = train_symbolic_kan(X, Y)

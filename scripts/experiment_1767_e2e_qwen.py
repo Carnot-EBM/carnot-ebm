@@ -44,7 +44,7 @@ def run_experiment(output_path: str, model_name: str):
     return report
 
 if __name__ == "__main__":
-    output_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1767_e2e_qwen.json"
+    output_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1767_e2e_qwen.json"
     model_name = MODEL_SPECS["qwen"]
     run_experiment(output_path, model_name)
     print(f"Experiment completed. Results saved to {output_path}")

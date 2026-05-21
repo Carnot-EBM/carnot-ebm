@@ -63,7 +63,7 @@ def test_req1368_exp1366_parse_cleared_rows_have_no_dominant_gap() -> None:
     artifact = mod.build_fover_aligned_logicskills_skill_audit_artifact(
         exp1366_artifact=_exp1366_all_pass(),
         run_date="20260505",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)

@@ -84,7 +84,7 @@ def _certificate_taxonomy_artifact() -> dict[str, Any]:
 def test_req_kona_009_builds_complete_claim_boundary_audit() -> None:
     """REQ-KONA-009: every required artifact field is populated conservatively."""
     artifact = exp1349.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         thrml_artifact=_thrml_artifact(),
         pbit_artifact=_pbit_artifact(),

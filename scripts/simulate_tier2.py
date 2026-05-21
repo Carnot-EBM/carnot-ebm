@@ -5,8 +5,8 @@ import time
 from carnot.learn.constraint_memory import ConstraintMemoryCache
 
 def run_simulation():
-    manifest_path = "/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
-    db_path = "/home/ianblenke/github.com/ianblenke/carnot/data/constraint_memory.db"
+    manifest_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+    db_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/data/constraint_memory.db"
     
     # Preconditions check
     sqlite_ok = sqlite3.sqlite_version != ""
@@ -101,7 +101,7 @@ if __name__ == "__main__":
     res = run_simulation()
     res["duration_s"] = round(time.time() - start_time, 2) + 0.1
     
-    out_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2463_fr11_constraint_memory_tier2.json"
+    out_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2463_fr11_constraint_memory_tier2.json"
     with open(out_path, 'w', encoding='utf-8') as f:
         json.dump(res, f, indent=2, ensure_ascii=False)
     print("Done")

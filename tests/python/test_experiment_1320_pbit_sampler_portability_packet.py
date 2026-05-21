@@ -103,7 +103,7 @@ def test_scenario_hw_046_artifact_schema_and_honest_verdict() -> None:
     detection = exp1320.detect_fpga_environment(which=lambda _name: None, env={})
 
     artifact = exp1320.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         fpga_environment=detection,
         synthesis_performed=False,
@@ -128,7 +128,7 @@ def test_scenario_hw_046_write_packet_json(tmp_path: Path) -> None:
     """SCENARIO-HW-046: writer persists the validated JSON portability packet."""
     out_path = tmp_path / "experiment_1320_pbit_sampler_portability_packet.json"
     artifact = exp1320.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         fpga_environment=exp1320.detect_fpga_environment(which=lambda _name: None, env={}),
     )
@@ -145,7 +145,7 @@ def test_scenario_hw_046_write_packet_json(tmp_path: Path) -> None:
 def test_req_hw_046_validation_rejects_incomplete_or_dishonest_packets() -> None:
     """REQ-HW-046: validator rejects missing fields and hardware-claim drift."""
     artifact = exp1320.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         fpga_environment=exp1320.detect_fpga_environment(which=lambda _name: None, env={}),
     )

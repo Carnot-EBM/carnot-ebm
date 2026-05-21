@@ -1,7 +1,7 @@
 # PRM Missing Label Ledger V2
 
 - Spec: REQ-VERIFY-1434 / SCENARIO-VERIFY-1434
-- Project root: `/home/ianblenke/github.com/ianblenke/carnot`
+- Project root: `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm`
 - Run date: `20260506`
 - Missing labels before replay: 478
 - Missing labels filled: 478

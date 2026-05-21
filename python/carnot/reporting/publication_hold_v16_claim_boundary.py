@@ -11,7 +11,7 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 DEFAULT_RUN_DATE = "20260505"
 EXPERIMENT = "1378_publication_hold_v16_claim_boundary"
 SCHEMA = "publication_hold_v16_claim_boundary_v1"

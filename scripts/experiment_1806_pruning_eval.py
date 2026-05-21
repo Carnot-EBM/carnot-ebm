@@ -40,7 +40,7 @@ def run_evaluation():
         "description": "2000-trace verified buffer evaluation"
     }
     
-    out_file = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1806_pruning.json"
+    out_file = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1806_pruning.json"
     with open(out_file, "w") as f:
         json.dump(results, f, indent=2)
         

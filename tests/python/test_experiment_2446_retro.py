@@ -2,7 +2,7 @@ import os
 import json
 
 def test_retro_json_schema():
-    RESULTS_DIR = '/home/ianblenke/github.com/ianblenke/carnot/results'
+    RESULTS_DIR = '/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results'
     path = os.path.join(RESULTS_DIR, 'experiment_2446_retro_v236.json')
     
     assert os.path.exists(path), "Deliverable JSON must exist."

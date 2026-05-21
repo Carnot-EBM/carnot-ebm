@@ -35,7 +35,7 @@ def main():
     equation_match_accuracy = 1.0 if found_correct else 0.0
     
     # 3. Log equation_match_accuracy
-    output_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1808_symbolic.json"
+    output_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1808_symbolic.json"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     with open(output_path, "w") as f:
         json.dump({

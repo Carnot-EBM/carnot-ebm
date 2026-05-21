@@ -5,7 +5,7 @@ import traceback
 from carnot.pipeline.fr11_integration import FR11IntegrationPipeline
 
 def main():
-    manifest_path = "/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+    manifest_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
     examples = []
     
     with open(manifest_path, "r") as f:
@@ -52,7 +52,7 @@ def main():
     print(json.dumps(output, indent=2))
     
     # Save the deliverable
-    deliverable_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2500_fr11_integration_demo.json"
+    deliverable_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2500_fr11_integration_demo.json"
     with open(deliverable_path, "w") as f:
         json.dump(output, f, indent=2)
         

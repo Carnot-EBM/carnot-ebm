@@ -48,7 +48,7 @@ def test_hiled_simulator_integration_and_experiment():
     assert result.best_response == "this response is safe and correct"
     
     # Generate the requested experiment JSON
-    output_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1869_hiled.json"
+    output_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1869_hiled.json"
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     
     results = {

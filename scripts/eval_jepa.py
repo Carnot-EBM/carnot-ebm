@@ -14,7 +14,7 @@ def main():
     preconditions_checked = True
     
     # Load manifest
-    manifest_path = '/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl'
+    manifest_path = '/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl'
     
     data = []
     with open(manifest_path, 'r') as f:
@@ -84,7 +84,7 @@ def main():
         "preconditions_checked": preconditions_checked
     }
     
-    out_path = '/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2475_fr11_tier3_jepa.json'
+    out_path = '/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2475_fr11_tier3_jepa.json'
     with open(out_path, 'w') as f:
         json.dump(deliverable, f, indent=2)
         

@@ -92,7 +92,7 @@ def test_req_learn_1344_writes_in_progress_artifact_first(tmp_path: Path) -> Non
 
     artifact = mod.write_in_progress_artifact(
         out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -112,7 +112,7 @@ def test_scenario_learn_1344_maps_failure_types_and_allows_replay_dvi() -> None:
         exp1324_artifact=_exp1324(),
         exp1341_artifact=_exp1341(),
         unavailable_inputs=["results/experiment_1303_online_memory_policy_v2.json"],
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     mod.validate_artifact(artifact)
@@ -186,7 +186,7 @@ def test_req_learn_1344_run_records_requested_alias_fallbacks(tmp_path: Path) ->
     artifact = mod.run(
         results_dir=results,
         out_path=out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))

@@ -6,7 +6,7 @@ Upload URL: https://arxiv.org/submit
 
 Ready bundle:
 - Relative path: `results/arxiv_bundle_v11.tar.gz`
-- Absolute path: `/home/ianblenke/github.com/ianblenke/carnot/results/arxiv_bundle_v11.tar.gz`
+- Absolute path: `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/arxiv_bundle_v11.tar.gz`
 - Verified non-empty source archive: yes
 
 ## Pre-Filled Metadata
@@ -58,7 +58,7 @@ cs.AI, cs.NE, quant-ph
 
 1. Screen: Start. Open `https://arxiv.org/submit` and sign in to the operator arXiv account.
 2. Screen: New submission. Choose to start a new submission and select the compressed TeX/source upload path.
-3. Screen: Upload source. Upload `/home/ianblenke/github.com/ianblenke/carnot/results/arxiv_bundle_v11.tar.gz`.
+3. Screen: Upload source. Upload `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/arxiv_bundle_v11.tar.gz`.
 4. Screen: Process source. Wait for AutoTeX to process the archive. If arXiv reports a fatal TeX error, stop and fix the local source before submitting.
 5. Screen: Preview. Open the generated PDF preview and compare it with `docs/arxiv-paper/main.pdf`.
 6. Screen: Classification. Set the primary category to `cs.LG`.

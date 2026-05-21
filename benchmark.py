@@ -11,7 +11,7 @@ def run_benchmark():
     
     # Load exactly 20 telemetry entries
     entries = []
-    with open('/home/ianblenke/github.com/ianblenke/carnot/data/llm_failure_exemplars.jsonl', 'r') as f:
+    with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/data/llm_failure_exemplars.jsonl', 'r') as f:
         for line in f:
             if not line.strip(): continue
             entries.append(json.loads(line))
@@ -77,7 +77,7 @@ def run_benchmark():
     
     print(results_by_ratio)
 
-    with open('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2464_crane_balanced_constraint.json', 'w') as f:
+    with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2464_crane_balanced_constraint.json', 'w') as f:
         json.dump(deliverable, f, indent=2)
 
     print("Output JSON written")

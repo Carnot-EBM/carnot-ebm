@@ -14,7 +14,7 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 EXPERIMENT = "1877_artifact_contract_normalization"
 TITLE = "ROCE/HILED Artifact Contract Normalization"
 SCHEMA = "carnot.artifact_contract_normalization.v1"

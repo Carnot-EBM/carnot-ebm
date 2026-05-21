@@ -32,7 +32,7 @@ def test_normalize_label():
     assert normalize_label("1") == 1
 
 def test_experiment_runs():
-    results_dir = Path("/home/ianblenke/github.com/ianblenke/carnot/results")
+    results_dir = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results")
     if not results_dir.exists():
         pytest.skip("Test requires the actual results directory to run.")
     

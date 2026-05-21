@@ -12,7 +12,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 RUN_DATE = "20260507"
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 SCHEMA = "wopr_puzzle_cartridge_retirement_v1"
 EXPERIMENT = "1457_wopr_puzzle_cartridge_retirement"
 EXCLUSION_MARKER = "wopr_puzzle_cartridge_research_scope_closed"

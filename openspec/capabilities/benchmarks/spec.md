@@ -416,7 +416,7 @@ records baseline and verify-repair outcomes for each selected instance.
 
 Carnot MUST provide a benchmark script to evaluate the continuous latent constraint modeling.
 The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
-Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1773_latent_benchmark.json`.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1773_latent_benchmark.json`.
 
 **Acceptance criteria:**
 - Script `scripts/experiment_1773_latent_benchmark.py` exists.
@@ -436,7 +436,7 @@ Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/
 
 Carnot MUST provide an E2E benchmark script to evaluate the flagship MoE model, integrating all Phase 1-3 improvements.
 The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF` in MODEL_SPECS.
-Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1782_e2e_qwen.json`.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1782_e2e_qwen.json`.
 
 **Acceptance criteria:**
 - Script `scripts/experiment_1782_e2e_qwen.py` exists.
@@ -456,7 +456,7 @@ Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/
 
 Carnot MUST provide an E2E benchmark script to evaluate the flagship dense model.
 The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` in MODEL_SPECS.
-Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1783_e2e_gemma31.json`.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1783_e2e_gemma31.json`.
 
 **Acceptance criteria:**
 - Script `scripts/experiment_1783_e2e_gemma31.py` exists.
@@ -604,7 +604,7 @@ It MUST record repair success rate.
 
 Carnot MUST provide an E2E benchmark script to enforce ROCE, HILED, and continuous learning updates across all mandated SOTA models.
 The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
-Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1874_e2e.json`.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1874_e2e.json`.
 It MUST ensure cross-language equivalences, serialization, and sampling pipelines complete without error.
 
 **Acceptance criteria:**
@@ -625,7 +625,7 @@ It MUST ensure cross-language equivalences, serialization, and sampling pipeline
 
 Carnot MUST provide an E2E benchmark script to evaluate verifiable reasoning dataset across the continuous latent optimization and multi-agent Ising tiers.
 The implementation MUST use `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
-Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1954_tri_sota_e2e_v6.json`.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1954_tri_sota_e2e_v6.json`.
 It MUST evaluate complete end-to-end trace validity rates against the prior v5 baselines.
 
 **Acceptance criteria:**

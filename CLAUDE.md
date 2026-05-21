@@ -15,6 +15,118 @@ Spawn an adversarial sub-agent to review non-trivial changes before reporting co
 - **Never remove existing content** from ops/spec docs when updating. Add new sections, move completed items to "Completed" — do not delete historical records.
 - **All headline results must have live GPU provenance.** Simulated and unverified results are preserved in the repo but labeled explicitly and excluded from headline claims.
 
+## Canonical Repository URL Discipline (MANDATORY)
+
+**Origin:** 2026-05-20 operator directive (second sweep, this time
+with structural enforcement):
+
+> "please make sure that any references to ianblenke/carnot are
+>  replaced by Carnot-EBM/carnot-ebm and make sure to keep it that
+>  way"
+
+The previous sweep (commit `b5740abb`, before this rule existed)
+fixed 164 files but had no enforcement. References crept back in
+across milestones as the conductor and contributors used the
+operator's local-filesystem path (`/home/ianblenke/github.com/
+ianblenke/carnot/`) as a reflexive shorthand for the project,
+substituting the on-disk dir name into URL contexts.
+
+**The rule.** The project's canonical GitHub URL is
+**`https://github.com/Carnot-EBM/carnot-ebm`**. References to
+`github.com/ianblenke/carnot` are forbidden in tracked source files,
+docs, configs, tests, and specs. The local-filesystem path
+`/home/ianblenke/github.com/ianblenke/carnot/` is the operator's
+on-disk dir and is NOT a canonical-URL violation — it describes
+where the repo lives on this specific machine, not where the
+project is hosted.
+
+**Why this matters.**
+
+- Public docs / README / model cards / paper-v6 / bibtex entries
+  citing the wrong URL break for everyone who isn't the operator
+  on this specific box.
+- HuggingFace mirror references, PyPI metadata, and CI workflow
+  URLs that point at the operator's mirror name silently degrade
+  the sovereignty / decentralization story (per CLAUDE.md
+  "Decentralization-Respecting Design Constraints" rule 3 — the
+  canonical URL is the one users mirror from).
+- Cross-repo CI / Pages deploy / external integrators have no way
+  to know that `github.com/ianblenke/carnot` is a 404 / private
+  mirror; they hit it and bounce.
+
+**Forbidden (in any tracked source/docs/config/test/spec file):**
+
+```
+https://github.com/ianblenke/carnot
+github.com/ianblenke/carnot
+@github.com:ianblenke/carnot.git
+git@github.com:ianblenke/carnot.git
+```
+
+**Permitted (these are NOT canonical-URL violations — leave alone):**
+
+```
+/home/ianblenke/github.com/ianblenke/carnot/...   # local-disk path
+~/github.com/ianblenke/carnot/...                  # local-disk path
+ssh://git@gitea.noblehunt.org:2222/ianblenke/carnot.git  # gitea mirror
+```
+
+The gitea mirror at `gitea.noblehunt.org` legitimately uses
+`ianblenke/carnot` because that's the operator's username on the
+gitea instance — it's a sovereignty-mirror channel, not the
+canonical URL. The gitea remote is paired with the canonical
+github.com/Carnot-EBM/carnot-ebm remote in a multi-URL push setup
+(see `feedback_canonical_github_url.md` memory).
+
+**How to apply (planner-side discipline).** When generating
+documentation, model cards, bibtex entries, or any task prompt that
+references the project's GitHub URL: ALWAYS use
+`github.com/Carnot-EBM/carnot-ebm`. If you're unsure whether a URL
+refers to the project, default to the canonical name.
+
+**How to apply (agent-side discipline).** When editing tracked
+files, if you find yourself typing `github.com/ianblenke/carnot`,
+STOP and replace with `github.com/Carnot-EBM/carnot-ebm`. The
+pre-commit hook will refuse the commit otherwise.
+
+**Mechanical enforcement (defense in depth):**
+
+1. **Pre-commit hook:** `scripts/canonical_url_lint.py` runs on
+   every commit (configured in `.pre-commit-config.yaml` as
+   `canonical-url-lint`). Scans all tracked files for the forbidden
+   URL pattern. Distinguishes URL form from local-filesystem-path
+   form via context-aware regex (`URL_PATTERN` + `LOCAL_PATH_CONTEXT`
+   post-filter). Exits non-zero on any URL-form hit. Build-artifact
+   directories (`.Xil/`, `sim_work/`, `output/`, `logs/`, `results/`,
+   `ops/lineage-retirements/`) and historical-sweep prose files
+   (`ops/changelog.md`, `ops/status.md`) are exempted.
+
+2. **CI / automated sweep:** the linter is designed to run in CI
+   on PRs targeting `main` against `Carnot-EBM/carnot-ebm`. Any
+   reintroduction blocks merge.
+
+3. **Memory record:** `feedback_canonical_github_url.md` documents
+   the rule for future Claude sessions reading user-memory.
+
+**Exempt files (where the old URL appears as quoted prose
+describing the rule or sweep itself — NOT as a canonical-URL
+reference):**
+
+- `CLAUDE.md` (this file — names the forbidden pattern in the rule)
+- `scripts/canonical_url_lint.py` (the linter — pattern is the regex)
+- `ops/changelog.md` (historical sweep entries)
+- `ops/status.md` (historical sweep entries)
+
+**Cross-references:**
+- 2026-05-20 operator directive — origin
+- `feedback_canonical_github_url.md` (memory)
+- `scripts/canonical_url_lint.py` — the linter
+- `.pre-commit-config.yaml:canonical-url-lint` — hook wiring
+- CLAUDE.md "Decentralization-Respecting Design Constraints" rule 3
+  (mandatory mirroring) — the canonical-URL is the one users
+  mirror from, so consistency matters at the distribution level
+- Commit `b5740abb` (previous sweep, pre-enforcement)
+
 ## Public Documentation Discipline (MANDATORY)
 
 **Origin:** 2026-05-20 operator directive ("once again, the carnot-

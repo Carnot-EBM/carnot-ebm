@@ -17,7 +17,7 @@ def _exp1323() -> dict[str, Any]:
     return {
         "status": "complete",
         "artifact_metadata": {
-            "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+            "project_root": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
             "run_date": "20260505",
         },
         "empty_or_one_token_rate": 0.4,
@@ -64,7 +64,7 @@ def test_exp1341_builds_required_split_from_existing_failure_taxonomy() -> None:
         exp1340_artifact=None,
         exp1340_limitation="exp1340_absent_or_unreadable_fallback_to_exp1324",
         run_date="20260505",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)

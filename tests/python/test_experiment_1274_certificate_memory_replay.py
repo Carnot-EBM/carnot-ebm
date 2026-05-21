@@ -169,7 +169,7 @@ def test_run_experiment_writes_complete_artifact_for_req1274(tmp_path: Path) -> 
         fover_path=fover_path,
         output_path=output_path,
         run_date="20260504",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert json.loads(output_path.read_text(encoding="utf-8")) == artifact

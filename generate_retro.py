@@ -3,7 +3,7 @@ import os
 import glob
 from datetime import datetime
 
-RESULTS_DIR = '/home/ianblenke/github.com/ianblenke/carnot/results'
+RESULTS_DIR = '/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results'
 
 def load_json(path):
     if not os.path.exists(path):

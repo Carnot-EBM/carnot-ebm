@@ -78,7 +78,7 @@ def test_req1369_parse_cleared_rows_run_z3_and_logitext_constraints() -> None:
     artifact = mod.build_semantic_validator_v2_artifact(
         exp1366_artifact=_exp1366_all_pass(),
         run_date="20260505",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)

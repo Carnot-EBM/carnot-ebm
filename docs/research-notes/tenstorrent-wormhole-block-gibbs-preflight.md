@@ -15,7 +15,7 @@ hardware execution result. The current artifact verdict is:
 - `tt_metalium_available`: `False`
 - `wormhole_preflight_ready`: `False`
 - `blocked_reason`: `TT-Metalium was not detected; Wormhole hardware or cloud access was not detected.`
-- `hardware_transcript_path`: `/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_1584_tenstorrent_wormhole_preflight_transcript.txt`
+- `hardware_transcript_path`: `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/logs/experiment_1584_tenstorrent_wormhole_preflight_transcript.txt`
 
 ## Acquisition Or Cloud Next Steps
 

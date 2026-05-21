@@ -5,7 +5,7 @@ SPEC = """
 
 Carnot MUST provide an E2E benchmark script to enforce ROCE, HILED, and continuous learning updates across all mandated SOTA models.
 The implementation MUST use `unsloth/gemma-4-31B-it-GGUF` and `unsloth/gemma-4-26B-A4B-it-GGUF` in MODEL_SPECS.
-Results MUST be written to `/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1874_e2e.json`.
+Results MUST be written to `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1874_e2e.json`.
 It MUST ensure cross-language equivalences, serialization, and sampling pipelines complete without error.
 
 **Acceptance criteria:**

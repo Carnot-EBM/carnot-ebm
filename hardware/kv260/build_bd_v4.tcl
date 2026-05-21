@@ -37,7 +37,7 @@
 #
 # **Usage:**
 #     source /tools/Xilinx/2025.2.1/Vivado/settings64.sh
-#     cd /home/ianblenke/github.com/ianblenke/carnot
+#     cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
 #     vivado -mode batch -source hardware/kv260/build_bd_v4.tcl \
 #            -log output/carnot_ising_v4_bd/vivado.log \
 #            -journal output/carnot_ising_v4_bd/vivado.jou

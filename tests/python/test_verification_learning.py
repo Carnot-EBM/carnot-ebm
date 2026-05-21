@@ -134,7 +134,7 @@ def test_rust_equivalence_1861(tmp_path):
         "rs_loss": rs_loss,
         "scores_match": True
     }
-    output_path = Path("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1861_equivalence.json")
+    output_path = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1861_equivalence.json")
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with open(output_path, "w") as f:
         json.dump(result, f, indent=2)

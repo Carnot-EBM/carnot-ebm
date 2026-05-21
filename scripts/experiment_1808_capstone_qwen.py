@@ -24,7 +24,7 @@ ARTIFACT_SCHEMA = "carnot.experiment_1808_capstone_qwen.v1"
 MODEL_SPECS = ["unsloth/Qwen3.6-35B-A3B-GGUF"]
 RUN_DATE = "20260511"
 
-DEFAULT_ARTIFACT_PATH = Path("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1808_qwen.json")
+DEFAULT_ARTIFACT_PATH = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1808_qwen.json")
 
 
 def _timestamp() -> str:
@@ -59,7 +59,7 @@ def execute_pipeline() -> JsonDict:
 
 def build_artifact(
     *,
-    project_root: str = "/home/ianblenke/github.com/ianblenke/carnot",
+    project_root: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     run_date: str = RUN_DATE,
     started_at: str | None = None,
     duration_s: float = 0.0,

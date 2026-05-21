@@ -210,7 +210,7 @@ def validate_artifact(artifact: Mapping[str, Any]) -> None:
     assert artifact["status"] == "complete"
     assert artifact["energy_bridge_completed"] is True
     assert artifact["metadata"]["run_date"] == RUN_DATE
-    assert artifact["metadata"]["project_root"] == "/home/ianblenke/github.com/ianblenke/carnot"
+    assert artifact["metadata"]["project_root"] == "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
     assert artifact["honest_verdict"] == HONEST_VERDICT
 
 

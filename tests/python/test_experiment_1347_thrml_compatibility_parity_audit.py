@@ -98,7 +98,7 @@ def test_req_sample_041_missing_thrml_writes_mapping_notes_only() -> None:
     """REQ-SAMPLE-041: missing THRML leaves parity unset and blocks hardware claims."""
     artifact = build_artifact(
         probe=_missing_probe(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
 
@@ -118,7 +118,7 @@ def test_req_sample_041_fake_thrml_measures_tiny_ising_energy_parity() -> None:
     """REQ-SAMPLE-041: importable THRML-like API measures exact tiny Ising parity."""
     artifact = build_artifact(
         probe=_available_probe(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
 
@@ -143,7 +143,7 @@ def test_scenario_sample_069_run_experiment_writes_requested_artifact(tmp_path: 
 
     artifact = run_experiment(
         deliverable_path=deliverable,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         probe_func=lambda: _available_probe(),
     )
@@ -316,7 +316,7 @@ def test_req_sample_041_importable_thrml_with_missing_api_is_blocked() -> None:
 
     artifact = build_artifact(
         probe=probe,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
 
@@ -339,7 +339,7 @@ def test_req_sample_041_missing_thrml_without_local_checkout_uses_import_path_no
             local_package_path=None,
             missing_api_or_dependency="missing Python module while importing THRML: thrml",
         ),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
 
@@ -350,7 +350,7 @@ def test_req_sample_041_validation_rejects_dishonest_or_incomplete_artifacts() -
     """REQ-SAMPLE-041: validator rejects missing fields and unsupported claims."""
     artifact = build_artifact(
         probe=_missing_probe(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
 
@@ -400,7 +400,7 @@ def test_req_sample_041_validation_rejects_dishonest_or_incomplete_artifacts() -
 
     negative_parity = build_artifact(
         probe=_available_probe(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
     negative_parity["energy_parity_max_abs_error"] = -1.0

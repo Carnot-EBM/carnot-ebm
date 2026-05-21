@@ -14,7 +14,7 @@ from typing import Any
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 RUN_DATE = "20260509"
 PREDECESSOR_MILESTONE = "2026.05.123"
 TARGET_MILESTONE = "2026.05.124"

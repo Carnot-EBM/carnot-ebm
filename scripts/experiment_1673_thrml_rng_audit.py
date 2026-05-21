@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 import numpy as np
 
-DELIVERABLE_PATH = Path("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1673_rng_audit.json")
+DELIVERABLE_PATH = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1673_rng_audit.json")
 
 def run_audit():
     # Setup disjoint root seeds

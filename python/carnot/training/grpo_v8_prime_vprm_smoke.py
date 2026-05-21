@@ -383,7 +383,7 @@ def run_experiment(
     live_response_provider: ResponseProvider | None = None,
     run_date: str = RUN_DATE,
     wall_budget_s: float = DEFAULT_WALL_BUDGET_S,
-    project_root: str = "/home/ianblenke/github.com/ianblenke/carnot",
+    project_root: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
 ) -> dict[str, Any]:
     """Run Exp 1273 and persist the final smoke artifact."""
 

@@ -133,7 +133,7 @@ def test_req_learn_1303_writes_in_progress_artifact_first(tmp_path: Path) -> Non
 
     artifact = exp.write_in_progress_artifact(
         out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -152,7 +152,7 @@ def test_scenario_learn_1303_simulates_four_policy_actions() -> None:
     artifact = exp.build_artifact(
         _exp1302_fixture(),
         _exp1288_fixture(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     exp.validate_artifact(artifact)
@@ -189,7 +189,7 @@ def test_req_learn_1303_run_loads_exp1302_and_exp1288_results(tmp_path: Path) ->
     artifact = exp.run(
         results_dir=results_dir,
         out_path=out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -241,7 +241,7 @@ def test_req_learn_1303_validation_and_verdict_edges() -> None:
     artifact = exp.build_artifact(
         _exp1302_fixture(),
         _exp1288_fixture(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
     for key, message in [
         ("status", "status must be complete"),

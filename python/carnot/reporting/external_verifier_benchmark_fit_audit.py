@@ -19,7 +19,7 @@ from typing import Any, Mapping
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 RUN_DATE = "20260507"
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 SCHEMA = "external_verifier_benchmark_fit_audit_v1"
 EXPERIMENT = "1465_external_verifier_benchmark_fit_audit"
 

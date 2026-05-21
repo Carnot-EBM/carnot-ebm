@@ -149,3 +149,18 @@ repos:
         language: system
         files: '^docs/technical-report\.md$'
         pass_filenames: false
+
+      # Canonical-URL discipline: fail the commit if any tracked source/
+      # docs/config file contains `github.com/ianblenke/carnot` (the
+      # operator's local-filesystem-mirror name). The canonical URL is
+      # `github.com/Carnot-EBM/carnot-ebm`. Per CLAUDE.md "Canonical
+      # Repository URL Discipline" (2026-05-20) — this is the second
+      # sweep / first structural fix. Local filesystem paths like
+      # `/home/.../github.com/ianblenke/carnot/...` are NOT flagged
+      # because they describe on-disk locations, not URL references.
+      - id: canonical-url-lint
+        name: Canonical GitHub URL discipline (no ianblenke/carnot URLs)
+        entry: python3 scripts/canonical_url_lint.py
+        language: system
+        pass_filenames: false
+        always_run: true

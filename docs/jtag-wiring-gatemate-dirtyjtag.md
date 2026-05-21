@@ -207,7 +207,7 @@ The Carnot repo ships a pre-synthesized n=16 Ising tile at
 `.cfg` bitstream — see the OSS CAD Suite workflow below):
 
 ```bash
-cd /home/ianblenke/github.com/ianblenke/carnot
+cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm
 nextpnr-himbaechel \
   --device CCGM1A1 \
   --vopt ccf=rtl/gatemate_ising_n16.ccf \

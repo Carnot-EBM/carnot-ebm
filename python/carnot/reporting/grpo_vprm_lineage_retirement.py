@@ -12,7 +12,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 RUN_DATE = "20260507"
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 LINEAGE_NAME = "GRPO/VPRM"
 SCHEMA = "grpo_vprm_lineage_retirement_v1"
 EXPERIMENT = "1456_grpo_vprm_lineage_consolidation_retirement"

@@ -38,4 +38,4 @@ def run_experiment(output_path="results/experiment_1823_final_eval.json"):
     return deliverable
 
 if __name__ == "__main__":  # pragma: no cover
-    run_experiment("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1823_final_eval.json")
+    run_experiment("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1823_final_eval.json")

@@ -42,7 +42,7 @@ def normalize_label(lbl):
     return int(lbl)
 
 def run_experiment():
-    results_dir = Path("/home/ianblenke/github.com/ianblenke/carnot/results")
+    results_dir = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results")
     score_files = list(results_dir.glob("experiment_*_scores*.json"))
     
     # Sort files to ensure determinism

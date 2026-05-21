@@ -70,7 +70,7 @@ def test_exp1338_builds_terminal_carry_forward_for_stale_exp1325() -> None:
         retro_artifact=_retro(),
         conductor_log=CONDUCTOR_LOG,
         run_date="20260505",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)

@@ -4,7 +4,7 @@ from sklearn.metrics import roc_auc_score
 import numpy as np
 
 def run_evaluation():
-    manifest_path = "/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+    manifest_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
     
     entries = []
     with open(manifest_path, "r") as f:
@@ -58,7 +58,7 @@ def run_evaluation():
         "n_examples": len(labels)
     }
     
-    out_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2486_phase4_arm_ebm_bijection.json"
+    out_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2486_phase4_arm_ebm_bijection.json"
     with open(out_path, "w") as f:
         json.dump(deliverable, f, indent=2)
         

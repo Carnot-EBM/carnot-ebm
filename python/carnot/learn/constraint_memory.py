@@ -9,7 +9,7 @@ class ConstraintMemoryCache:
     Persists verified facts across sessions to a SQLite database.
     """
 
-    def __init__(self, db_path: str = "/home/ianblenke/github.com/ianblenke/carnot/data/constraint_memory.db"):
+    def __init__(self, db_path: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/data/constraint_memory.db"):
         self.db_path = db_path
         os.makedirs(os.path.dirname(self.db_path), exist_ok=True)
         self._init_db()

@@ -3,7 +3,7 @@ import json
 from carnot.experiment_2458_retro import generate_retro, write_retro
 
 def test_retro_json_schema():
-    RESULTS_DIR = '/home/ianblenke/github.com/ianblenke/carnot/results'
+    RESULTS_DIR = '/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results'
     
     # Generate the retro using the module
     path = write_retro(RESULTS_DIR, 'experiment_2458_retro_v237.json')

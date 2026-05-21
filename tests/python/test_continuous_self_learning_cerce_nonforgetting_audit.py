@@ -155,7 +155,7 @@ def test_req_learn_1315_writes_in_progress_artifact_first(tmp_path: Path) -> Non
 
     artifact = exp.write_in_progress_artifact(
         out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -184,7 +184,7 @@ def test_req_learn_1315_missing_inputs_write_terminal_blocker(tmp_path: Path) ->
     artifact = exp.run(
         results_dir=results_dir,
         out_path=out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert artifact["status"] == "blocked"
@@ -200,7 +200,7 @@ def test_scenario_learn_1315_audits_nonforgetting_and_policy_decisions() -> None
         _exp1302_fixture(),
         _exp1303_fixture(),
         _exp1288_fixture(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     exp.validate_artifact(artifact)
@@ -251,7 +251,7 @@ def test_req_learn_1315_run_loads_sources_and_writes_final_schema(tmp_path: Path
     artifact = exp.run(
         results_dir=results_dir,
         out_path=out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -312,7 +312,7 @@ def test_req_learn_1315_validation_and_verdict_edges() -> None:
         _exp1302_fixture(),
         _exp1303_fixture(),
         _exp1288_fixture(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
     for key, message in [
         ("status", "status must be complete or blocked"),

@@ -24,7 +24,7 @@ MODEL_ID = "unsloth/gemma-4-31B-it-GGUF"
 RUN_DATE = "20260511"
 
 # The output path requested by the task
-DEFAULT_ARTIFACT_PATH = Path("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1777_ltlzinc_scaleup.json")
+DEFAULT_ARTIFACT_PATH = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1777_ltlzinc_scaleup.json")
 
 
 def _timestamp() -> str:
@@ -60,7 +60,7 @@ def execute_continuous_loop() -> JsonDict:
 
 def build_artifact(
     *,
-    project_root: str = "/home/ianblenke/github.com/ianblenke/carnot",
+    project_root: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     run_date: str = RUN_DATE,
     started_at: str | None = None,
     duration_s: float = 0.0,

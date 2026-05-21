@@ -123,7 +123,7 @@ def test_req_learn_1317_writes_in_progress_artifact_first(tmp_path: Path) -> Non
 
     artifact = exp.write_in_progress_artifact(
         out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert json.loads(out_path.read_text(encoding="utf-8")) == artifact
@@ -179,7 +179,7 @@ def test_req_learn_1317_structured_gates_block_bad_sources(tmp_path: Path) -> No
         out_path,
         blockers,
         missing_inputs=[],
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert artifact["status"] == "blocked"
@@ -212,7 +212,7 @@ def test_scenario_learn_1317_certificate_replay_improves_policy_behavior() -> No
         _exp1312_payload(),
         _exp1315_payload(delta=0.25),
         model_resolution=model_resolution,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     exp.validate_artifact(artifact)
@@ -244,7 +244,7 @@ def test_req_learn_1317_run_writes_final_artifact_from_sources(tmp_path: Path) -
         results_dir=results_dir,
         out_path=out_path,
         cached_pair_fn=lambda gpu_indices=(0, 1): _cached_specs(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert json.loads(out_path.read_text(encoding="utf-8")) == artifact

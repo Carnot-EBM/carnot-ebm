@@ -13,7 +13,7 @@ from pathlib import Path
 from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 RUN_DATE = "20260508"
 PREDECESSOR_MILESTONE = "2026.04.119"
 TARGET_MILESTONE = "2026.05.120"

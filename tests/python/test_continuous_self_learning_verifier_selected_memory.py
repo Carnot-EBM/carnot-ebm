@@ -79,14 +79,14 @@ def test_req_learn_1358_writes_in_progress_artifact_first(tmp_path: Path) -> Non
 
     artifact = mod.write_in_progress_artifact(
         out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
     assert written == artifact
     assert written["status"] == "in_progress"
     assert written["artifact_metadata"] == {
-        "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+        "project_root": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         "run_date": "20260505",
     }
     assert written["fresh_verified_sample_count"] == 0
@@ -104,7 +104,7 @@ def test_scenario_learn_1358_replay_fallback_is_dvi_ready_but_non_headline() -> 
         source_artifacts=[
             "results/experiment_1344_continuous_self_learning_failure_type_memory_policy.json"
         ],
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     mod.validate_artifact(artifact)
@@ -199,7 +199,7 @@ def test_req_learn_1358_run_records_exp1344_alias_fallback(tmp_path: Path) -> No
     artifact = mod.run(
         results_dir=results,
         out_path=out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))

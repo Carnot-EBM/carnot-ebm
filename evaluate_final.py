@@ -9,7 +9,7 @@ meta_applied_count = 0
 
 output_scores = []
 
-with open("/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl") as f:
+with open("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl") as f:
     for i, line in enumerate(f):
         entry = json.loads(line)
         score, applied, self_judg = compute_laab_score(entry)

@@ -4,12 +4,12 @@ import sys
 import time
 from pathlib import Path
 
-sys.path.append("/home/ianblenke/github.com/ianblenke/carnot/python")
+sys.path.append("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/python")
 from carnot.extraction.nsvif_extractor import NsvifExtractor
 
-MANIFEST_PATH = "/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
-PATTERNS_PATH = "/home/ianblenke/github.com/ianblenke/carnot/results/constraint_patterns_v4.json"
-DELIVERABLE_PATH = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2425_fr11_nsvif_online_v4.json"
+MANIFEST_PATH = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+PATTERNS_PATH = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/constraint_patterns_v4.json"
+DELIVERABLE_PATH = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2425_fr11_nsvif_online_v4.json"
 
 def load_entries(n=20):
     entries = []

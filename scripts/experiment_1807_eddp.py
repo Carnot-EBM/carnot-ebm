@@ -96,5 +96,5 @@ def run_benchmark(out_path: str):
         json.dump(result, f, indent=2)
 
 if __name__ == "__main__":  # pragma: no cover
-    out_file = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1807_eddp.json"
+    out_file = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1807_eddp.json"
     run_benchmark(out_file)

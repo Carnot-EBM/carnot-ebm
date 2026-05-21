@@ -58,7 +58,7 @@ One limitation of this approach is that it relies on hidden-state projection, wh
   author = {The Carnot Authors},
   title = {Carnot: Energy-Based Verification},
   year = {2026},
-  url = {https://github.com/ianblenke/carnot}
+  url = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```
 """

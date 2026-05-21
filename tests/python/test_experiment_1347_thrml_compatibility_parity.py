@@ -65,7 +65,7 @@ def _fake_thrml_without_models_import(name: str) -> Any:
 def test_scenario_sample_069_missing_thrml_records_mapping_notes_only() -> None:
     """SCENARIO-SAMPLE-069: unavailable THRML produces an honest blocked audit."""
     artifact = exp1347.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         import_module=_missing_thrml_import,
     )
@@ -102,7 +102,7 @@ def test_scenario_sample_069_partial_thrml_api_blocks_parity() -> None:
 def test_req_sample_041_fake_thrml_measures_tiny_ising_parity() -> None:
     """REQ-SAMPLE-041: available local THRML energy API records parity metrics."""
     artifact = exp1347.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         import_module=_fake_thrml_import,
     )

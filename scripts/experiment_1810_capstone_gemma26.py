@@ -23,7 +23,7 @@ ARTIFACT_SCHEMA = "carnot.experiment_1810_capstone_gemma26.v1"
 MODEL_SPECS = ["unsloth/gemma-4-26B-A4B-it-GGUF"]
 RUN_DATE = "20260511"
 
-DEFAULT_ARTIFACT_PATH = Path("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1810_gemma26.json")
+DEFAULT_ARTIFACT_PATH = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1810_gemma26.json")
 
 
 def _timestamp() -> str:
@@ -57,7 +57,7 @@ def execute_pipeline() -> JsonDict:
 
 def build_artifact(
     *,
-    project_root: str = "/home/ianblenke/github.com/ianblenke/carnot",
+    project_root: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     run_date: str = RUN_DATE,
     started_at: str | None = None,
     duration_s: float = 0.0,

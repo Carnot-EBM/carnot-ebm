@@ -38,7 +38,7 @@ def compute_laab_score(entry):
 
 scores = []
 labels = []
-with open("/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl") as f:
+with open("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl") as f:
     for line in f:
         entry = json.loads(line)
         score, applied, _ = compute_laab_score(entry)

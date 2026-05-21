@@ -23,7 +23,7 @@ OUTPUT_FILENAME = "experiment_1462_paper_v6_anchored_claims_narrowing.json"
 DEFAULT_OUT_PATH = REPO_ROOT / "results" / OUTPUT_FILENAME
 CLAIM_MATRIX_REL = Path("docs/research-notes/paper_v6_anchored_claim_matrix.md")
 DEFAULT_CLAIM_MATRIX_PATH = REPO_ROOT / CLAIM_MATRIX_REL
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 SCHEMA = "paper_v6_anchored_claims_narrowing_v1"
 EXPERIMENT = "1462_paper_v6_anchored_claims_narrowing"
 

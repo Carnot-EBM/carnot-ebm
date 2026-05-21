@@ -60,6 +60,6 @@ path = hf_hub_download(repo_id="Carnot-EBM/ThinkPRM-v3", filename="checkpoint.sa
   author = {The Carnot Authors (ian@blenke.com)},
   title = {Carnot: Energy-Based Verification},
   year = {2026},
-  url = {https://github.com/ianblenke/carnot}
+  url = {https://github.com/Carnot-EBM/carnot-ebm}
 }
 ```

@@ -65,7 +65,7 @@ def test_req1354_missing_exp1353_tags_become_symbolization_gap() -> None:
     artifact = mod.build_logicskills_certificate_skill_split_artifact(
         exp1353_artifact=_exp1353_missing_tags(),
         run_date="20260505",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)

@@ -79,7 +79,7 @@ def test_req_report_026_writes_in_progress_artifact_first(tmp_path: Path) -> Non
 
     artifact = exp.write_in_progress_artifact(
         out_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))
@@ -87,7 +87,7 @@ def test_req_report_026_writes_in_progress_artifact_first(tmp_path: Path) -> Non
     assert written["status"] == "in_progress"
     assert written["energy_bridge_completed"] is False
     assert written["metadata"]["run_date"] == "20260505"
-    assert written["metadata"]["project_root"] == "/home/ianblenke/github.com/ianblenke/carnot"
+    assert written["metadata"]["project_root"] == "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
     assert written["honest_verdict"] == "in_progress"
 
 
@@ -100,7 +100,7 @@ def test_scenario_report_026_builds_complete_local_bridge_audit() -> None:
         references_text=_references_text(),
         architecture_text=_architecture_text(),
         research_program_text=_research_program_text(),
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     exp.validate_artifact(artifact)
@@ -144,7 +144,7 @@ def test_req_report_026_run_loads_sources_and_writes_artifact(tmp_path: Path) ->
         references_path=references_path,
         architecture_path=architecture_path,
         research_program_path=research_program_path,
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     written = json.loads(out_path.read_text(encoding="utf-8"))

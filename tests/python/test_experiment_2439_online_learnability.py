@@ -2,8 +2,8 @@ import json
 import pytest
 from pathlib import Path
 
-DELIVERABLE_PATH = Path("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2439_fr11_online_learnability.json")
-PATTERNS_PATH = Path("/home/ianblenke/github.com/ianblenke/carnot/results/constraint_patterns_v4.json")
+DELIVERABLE_PATH = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2439_fr11_online_learnability.json")
+PATTERNS_PATH = Path("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/constraint_patterns_v4.json")
 
 def test_experiment_2439_deliverable_schema():
     assert DELIVERABLE_PATH.exists(), "Deliverable JSON was not generated."

@@ -114,7 +114,7 @@ def test_req_ising_023_validation_rejects_incomplete_or_dishonest_artifacts() ->
     """REQ-ISING-023: validator rejects missing fields and unsupported hardware claims."""
 
     artifact = exp1422.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260506",
         exp1399=_minimal_exp1399(),
     )

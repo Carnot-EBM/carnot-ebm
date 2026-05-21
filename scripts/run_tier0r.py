@@ -4,7 +4,7 @@ import time
 import sys
 
 # Add python dir to path
-sys.path.insert(0, '/home/ianblenke/github.com/ianblenke/carnot/python')
+sys.path.insert(0, '/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/python')
 
 from carnot.verify.semantic_energy import binary_auroc
 
@@ -110,14 +110,14 @@ result = {
     "honest_verdict": f"complete: with tier0r_auroc={auroc:.4f} and tier0r_implemented={tier0r_implemented}",
     "tier0r_implemented": tier0r_implemented,
     "tier0r_auroc": auroc,
-    "tier0r_implementation_path": "/home/ianblenke/github.com/ianblenke/carnot/python/carnot/verify/tier0r_curry_howard.py",
+    "tier0r_implementation_path": "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/python/carnot/verify/tier0r_curry_howard.py",
     "methodology_note": "Approximated Curry-Howard mapping by checking semantic consistency of numeric types (count, rate, mass) across sentences. Also applied structural checks for premature answers and heuristic checks for inconsistent reasoning patterns.",
     "preconditions_checked": preconditions_checked,
     "duration_s": duration_s,
     "random_seed": 42
 }
 
-with open('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2520_tier0r_implementation.json', 'w') as f:
+with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2520_tier0r_implementation.json', 'w') as f:
     json.dump(result, f, indent=2)
 
 print(json.dumps(result, indent=2))

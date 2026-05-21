@@ -9,7 +9,7 @@ def run_evaluation():
     labels = []
     scores = []
     
-    manifest_path = '/home/ianblenke/github.com/ianblenke/carnot/results/live_sota_balanced_telemetry_manifest_1480.jsonl'
+    manifest_path = '/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/live_sota_balanced_telemetry_manifest_1480.jsonl'
     
     with open(manifest_path, 'r') as f:
         for line in f:
@@ -37,7 +37,7 @@ def run_evaluation():
         
     # Write scores array
     scores_dict = {"scores": scores}
-    with open('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2504_tier0r_scores.json', 'w') as f:
+    with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2504_tier0r_scores.json', 'w') as f:
         json.dump(scores_dict, f, indent=2)
         
     # Write artifact
@@ -48,7 +48,7 @@ def run_evaluation():
         "honest_verdict": f"complete: with tier0r_auroc={tier0r_auroc:.4f} and tier0r_viable={tier0r_viable}"
     }
     
-    with open('/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2504_curry_howard_tier0r.json', 'w') as f:
+    with open('/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2504_curry_howard_tier0r.json', 'w') as f:
         json.dump(artifact, f, indent=2)
         
     print(json.dumps(artifact, indent=2))

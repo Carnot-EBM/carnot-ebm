@@ -16,16 +16,16 @@ def run_synthesis():
     except Exception:
         return write_blocked("blocked_yosys_not_installed")
 
-    rtl_files = glob.glob("/home/ianblenke/github.com/ianblenke/carnot/hardware/kv260/*.v")
+    rtl_files = glob.glob("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/hardware/kv260/*.v")
     if not rtl_files:
         return write_blocked("blocked_rtl_not_found")
     preconditions.append(f"RTL source present: {len(rtl_files)} files found")
     
     # Run Yosys
-    cmd = """cd /home/ianblenke/github.com/ianblenke/carnot/hardware/kv260 && yosys -p "
+    cmd = """cd /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/hardware/kv260 && yosys -p "
        read_verilog *.v;
        synth -top carnot_ising_top;
-       write_json /home/ianblenke/github.com/ianblenke/carnot/results/kv260_synthesis_v4.json
+       write_json /home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/kv260_synthesis_v4.json
      " 2>&1"""
     
     process = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -75,6 +75,6 @@ def write_blocked(verdict):
 
 if __name__ == "__main__":
     result = run_synthesis()
-    with open("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2427_kv260_yosys_v4.json", "w") as f:
+    with open("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_2427_kv260_yosys_v4.json", "w") as f:
         json.dump(result, f, indent=2)
     print("Done")

@@ -7,7 +7,7 @@ This guide explains how to install and integrate Carnot's code verification pipe
 You can clone the repository, install the dependencies, and run your first verification command in five simple steps.
 
 ```bash
-git clone https://github.com/ianblenke/carnot.git
+git clone https://github.com/Carnot-EBM/carnot-ebm.git
 cd carnot
 python3 -m venv .venv
 source .venv/bin/activate

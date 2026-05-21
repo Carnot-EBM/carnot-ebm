@@ -58,4 +58,4 @@ def run_distillation_experiment(output_path: str) -> None:
     return results
 
 if __name__ == "__main__":  # pragma: no cover
-    run_distillation_experiment("/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1820_moe_distill.json")
+    run_distillation_experiment("/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1820_moe_distill.json")

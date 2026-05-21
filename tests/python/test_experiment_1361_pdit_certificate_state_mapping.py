@@ -31,7 +31,7 @@ def _prior_exp1348_packet() -> dict[str, object]:
 def test_req_hw_048_artifact_schema_and_claim_gates() -> None:
     """REQ-HW-048: artifact has all fields and refuses hardware claims."""
     artifact = exp1361.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         prior_pbit_packet=_prior_exp1348_packet(),
     )
@@ -112,7 +112,7 @@ def test_scenario_hw_048_write_packet_json(tmp_path: Path) -> None:
     """SCENARIO-HW-048: writer persists a complete honest mapping artifact."""
     out_path = tmp_path / "experiment_1361_pdit_certificate_state_hardware_mapping.json"
     artifact = exp1361.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         prior_pbit_packet=_prior_exp1348_packet(),
     )

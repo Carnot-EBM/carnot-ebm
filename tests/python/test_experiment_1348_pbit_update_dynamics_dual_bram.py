@@ -16,7 +16,7 @@ from carnot.analysis import pbit_update_dynamics_dual_bram as exp1348
 def test_req_hw_047_artifact_schema_and_claim_gates() -> None:
     """REQ-HW-047: packet has the required fields and disallows hardware claims."""
     artifact = exp1348.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
         synthesis_performed=False,
         board_executed=False,
@@ -109,7 +109,7 @@ def test_scenario_hw_047_write_packet_json(tmp_path: Path) -> None:
     """SCENARIO-HW-047: writer persists the complete honest packet."""
     out_path = tmp_path / "experiment_1348_pbit_update_dynamics_dual_bram_packet_v2.json"
     artifact = exp1348.build_artifact(
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         run_date="20260505",
     )
 

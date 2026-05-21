@@ -530,7 +530,7 @@ and prior milestone artifacts without requiring network access, then write
 - `honest_verdict`
 
 The artifact shall use run date `20260505`, record project root
-`/home/ianblenke/github.com/ianblenke/carnot`, carry the Exp 1293 blocked
+`/home/ianblenke/github.com/Carnot-EBM/carnot-ebm`, carry the Exp 1293 blocked
 prior-failure context, and explicitly distinguish verifier-energy work already
 implemented locally from EBT, ARM-EBM, EBM-CoT, Extropic TSU, p-bit, and Kona
 items that remain strategic or future sampler context.
@@ -640,7 +640,7 @@ shall be reported explicitly rather than inferred away. Gated DVI/GRPO tasks
 shall count as met only when they run or when their planned criterion is exactly
 that they remain closed behind structured gates. The retrospective artifact
 shall include run metadata using run date `20260505` and project root
-`/home/ianblenke/github.com/ianblenke/carnot`.
+`/home/ianblenke/github.com/Carnot-EBM/carnot-ebm`.
 
 ### REQ-REPORT-030: Milestone .104 Carry-Forward Artifact Integrity Audit
 
@@ -665,7 +665,7 @@ The workflow shall mark `terminal_certificate_required == true` and keep
 semantic-validator, scheduler, DVI, and GRPO gates closed unless a terminal
 Exp 1340 replacement artifact and the relevant semantic-validator upstream
 evidence are present. It shall include run metadata using run date `20260505`
-and project root `/home/ianblenke/github.com/ianblenke/carnot`.
+and project root `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm`.
 
 ### REQ-REPORT-031: Milestone .105 Retrospective and .106 Carry-Forward Plan
 
@@ -696,7 +696,7 @@ Missing gated artifacts shall be reported explicitly. Self-learning verdicts
 shall separate replay-only evidence from headline evidence, and hardware and
 publication verdicts shall preserve no-hardware-claim and publication-hold
 boundaries. The artifact shall include run metadata using run date `20260505`
-and project root `/home/ianblenke/github.com/ianblenke/carnot`.
+and project root `/home/ianblenke/github.com/Carnot-EBM/carnot-ebm`.
 
 ### REQ-REPORT-032: Milestone .109 Retrospective and Carry-Forward Plan
 

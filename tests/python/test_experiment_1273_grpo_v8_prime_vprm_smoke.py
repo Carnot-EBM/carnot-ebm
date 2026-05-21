@@ -81,7 +81,7 @@ def test_missing_sota_cache_writes_smoke_only_artifact_for_scenario1273(
         output_path=output_path,
         cached_pair_fn=lambda: None,
         run_date="20260504",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
         wall_budget_s=90.0,
     )
     written = json.loads(output_path.read_text(encoding="utf-8"))

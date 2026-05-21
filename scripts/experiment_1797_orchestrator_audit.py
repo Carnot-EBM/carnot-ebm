@@ -15,7 +15,7 @@ import z3
 from carnot.pipeline.formal_orchestrator import FormalOrchestrator
 
 def main() -> None:
-    output_path = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1797_orchestrator_audit.json"
+    output_path = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1797_orchestrator_audit.json"
 
     print("Running Formal Orchestrator adversarial audit...")
     orchestrator = FormalOrchestrator(max_iterations=3)

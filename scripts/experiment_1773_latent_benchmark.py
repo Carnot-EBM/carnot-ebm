@@ -15,7 +15,7 @@ def dummy_energy_fn(z):
     # A simple quadratic energy well: sum(z^2)
     return jnp.sum(z**2)
 
-def main(output_path: str = "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1773_latent_benchmark.json"):
+def main(output_path: str = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1773_latent_benchmark.json"):
     """
     Run the latent constraint benchmark and write results.
     """

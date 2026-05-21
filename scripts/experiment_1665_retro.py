@@ -22,7 +22,7 @@ RETRO_TYPE = "operational_final"
 DEFAULT_OUTPUT_PATH = REPO_ROOT / "results" / "operational_retro_2026_05_127.json"
 CONDUCTOR_LOG_PATH = Path("ops/conductor-log.md")
 ROADMAP_PATH = Path("research-roadmap.yaml")
-PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/ianblenke/carnot"
+PROJECT_ROOT_FOR_METADATA = "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm"
 
 REQUIRED_ARTIFACT_FIELDS = {
     "status",

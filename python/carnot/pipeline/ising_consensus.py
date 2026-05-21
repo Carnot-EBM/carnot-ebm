@@ -87,7 +87,7 @@ class IsingConsensusProtocol:
         with open(output_path, "w") as f:
             json.dump(data, f, indent=2)
 
-def run_ising_consensus(output_path="/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1872_ising_consensus.json"):
+def run_ising_consensus(output_path="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1872_ising_consensus.json"):
     protocol = IsingConsensusProtocol()
     answers = protocol.generate_answers()
     J, b = protocol.encode_conflicts(answers)

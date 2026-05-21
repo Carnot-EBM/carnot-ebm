@@ -97,7 +97,7 @@ def test_req1371_conservative_policy_reduces_full_calls_only_at_zero_false_accep
         exp1369_artifact=_exp1369_semantic_artifact(),
         exp1370_artifact=_exp1370_repair_artifact(),
         run_date="20260505",
-        project_root="/home/ianblenke/github.com/ianblenke/carnot",
+        project_root="/home/ianblenke/github.com/Carnot-EBM/carnot-ebm",
     )
 
     assert set(mod.REQUIRED_ARTIFACT_FIELDS) <= set(artifact)

@@ -31,7 +31,7 @@ def test_energy_driven_steerer():
 
 def test_run_eds_evaluation(tmp_path):
     # Override the results path for testing
-    original_path = run_eds_evaluation.__defaults__[0] if run_eds_evaluation.__defaults__ else "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_1677_eds.json"
+    original_path = run_eds_evaluation.__defaults__[0] if run_eds_evaluation.__defaults__ else "/home/ianblenke/github.com/Carnot-EBM/carnot-ebm/results/experiment_1677_eds.json"
     test_path = str(tmp_path / "experiment_1677_eds.json")
     
     # We pass the custom path to the function
