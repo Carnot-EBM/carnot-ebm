@@ -5667,3 +5667,4 @@ Ripgrep i |
 | 2026-05-21 06:26 UTC | Weak-Strong Policy Fix v2: Diagnose Inverted Thres | OK | 81 passed in 2.26s |
 | 2026-05-21 06:34 UTC | Differentiable Conformal Training Tier 0y (arXiv:2 | OK | 100 passed in 3.68s |
 | 2026-05-21 06:39 UTC | Phase 1 Ship Status Check v7: Confirm Checklist Cu | OK | 81 passed in 2.17s |
+| 2026-05-21 06:51 UTC | Paper v6 Theory Update v4: FEP Redesign + Ensemble | OK | cache hit: 81 passed in 2.17s |
