@@ -5884,3 +5884,5 @@ Ripgrep i |
 | 2026-05-21 18:46 UTC | Paper v6 §5: Multi-Corpus Dual-Condition Results T | OK | Deliverable already exists in repo |
 | 2026-05-21 18:46 UTC | Capstone v267: Multi-Corpus Headline Synthesis + F | SKIP | Pre-tests failing, self-heal failed:  |
 | 2026-05-21 18:48 UTC | Capstone v267: Multi-Corpus Headline Synthesis + F | SKIP | Pre-tests failing, self-heal failed:  |
+| 2026-05-21 19:04 UTC | Capstone v267: Multi-Corpus Headline Synthesis + F | OK | 81 passed in 3.94s |
+| 2026-05-21 19:06 UTC | Milestone 2026.05.268 activated | OK | 8 tasks queued |
