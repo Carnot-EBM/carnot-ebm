@@ -1,0 +1,30 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.265",
+  "generated_at": "2026-05-21T14:46:23Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.265 produced 0 experiments completed in 0 wall-time minutes; no experiment commits were found since activation. Both RTX 3090 GPUs remained idle at 0% utilization (5 MB allocated each, 43C / 47C), consistent with no compute-bound work dispatched. This is the fortieth consecutive empty-timing-window retro, indicating the timing-script look-back anchor remains unresolved.",
+  "bottlenecks_identified": [
+    "Timing-script look-back window is not anchored to conductor-state.json activated_at: experiments that completed after activation are not captured, producing a persistent 0-experiment phantom across 40+ consecutive milestones.",
+    "No milestone-activation sentinel commit is written at task-dispatch start, so the timing boundary is structurally ambiguous and cannot be recovered post-hoc.",
+    "No health-check warning fires when experiments_completed == 0 and milestone_age_minutes > 60, so the empty-window condition goes undetected until retro time."
+  ],
+  "improvements_suggested": [
+    "Fix timing-script look-back to use conductor-state.json activated_at as the lower bound instead of a fixed lookback window; this single change would make all 40 retros accurate.",
+    "Write a milestone-activation sentinel commit (e.g. '[conductor] activate milestone 2026.05.265 — task dispatch start') at the moment the first task is dispatched, providing a deterministic timing boundary.",
+    "Add a pre-retro health check: if experiments_completed == 0 and milestone_age_minutes > 60, emit a conductor WARNING to ops/conductor-log.md so the operator can diagnose before the retro runs.",
+    "Consider a lightweight post-activation smoke test that confirms at least one experiment artifact has been written within 30 minutes, emitting an alert if not."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fix timing-script activated_at anchor (scripts/research_conductor.py or the timing helper): resolves the persistent 40-milestone empty-window pattern in one change; no experiment data is lost, it is simply not being counted.",
+    "Add milestone-activation health check: conductor emits WARNING to ops/conductor-log.md if experiments_completed == 0 and milestone_age_minutes > 60, enabling early human intervention before wall-time is wasted.",
+    "Confirm research-roadmap-next.yaml for milestone 2026.05.266 is staged and structurally valid before this retro session ends, so the next activation cycle does not repeat the zero-experiment pattern."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "Zero-experiment milestones have now recurred across 40 consecutive retros; this is a systemic instrumentation gap, not an isolated anomaly. The root cause (timing-script look-back not anchored to activated_at) has been identified and documented in each prior retro but remains unimplemented — it qualifies as an overdue-priority item under the CLAUDE.md Overdue-Priority Forcing Function rule. Resolving this single issue would make every subsequent retro actionable."
+}
