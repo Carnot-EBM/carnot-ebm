@@ -454,6 +454,8 @@ class VerifyRepairPipeline:
         balance_ratio: float = 1.0,
         jepa_fast_path_predictor: Any | None = None,
         jepa_fast_path_threshold: float = 0.2,
+        learning_mode: bool = False,
+        n_learning_cycles: int = 3,
     ) -> None:
         """Initialize the verify-repair pipeline.
 
@@ -511,12 +513,26 @@ class VerifyRepairPipeline:
             odar_router: Optional custom FreeEnergyRouter-compatible object
                 with ``evaluate(probe_outputs)``. When omitted, the pipeline
                 builds one lazily from ``odar_risk_threshold``.
+            learning_mode: When True, enables FR-11 Tier 4 ORCA-NEXUS learning loop.
+                Each successful repair is recorded in NEXUS constraint memory, enabling
+                the system to generalize from observed repair patterns to new violations.
+                Based on exp2755 validation: 3-cycle loop achieves AUROC=0.9275 with
+                genuine generalization.
+            n_learning_cycles: Number of learning cycles for ORCA-NEXUS loop (default 3).
 
         Raises:
             ModelLoadError: If model is specified but cannot be loaded.
 
         Spec: REQ-VERIFY-001, REQ-LEARN-003, REQ-LEARN-021-2, REQ-ODAR-2243
         """
+        self.learning_mode = learning_mode
+        self.n_learning_cycles = n_learning_cycles
+        if learning_mode:
+            from carnot.verify.nexus_constraint_memory import NexusConstraintMemory
+            from carnot.pipeline.ttt_loop import TTTLoop
+            self.nexus_memory = NexusConstraintMemory()
+            self.ttt_loop = TTTLoop(self.nexus_memory)
+
         self._domains = domains
         self._max_repairs = max_repairs
         self._timeout_seconds = timeout_seconds or 0.0
@@ -2284,8 +2300,18 @@ class VerifyRepairPipeline:
                 f"Question: {question}\n\n"
                 f"Your previous answer:\n{response}\n\n"
                 f"The following issues were found:\n{feedback}\n\n"
-                f"Please provide a corrected answer that fixes these issues."
             )
+            satisfied_constraints = [c for c in vr.constraints if c not in vr.violations]
+            if satisfied_constraints:
+                satisfied_feedback = self._format_violations(satisfied_constraints)
+                repair_prompt += (
+                    f"Crucially, your previous answer correctly satisfied these constraints:\n"
+                    f"{satisfied_feedback}\n\n"
+                    f"Please provide a corrected answer that fixes the issues while strictly "
+                    f"maintaining the correct constraints."
+                )
+            else:
+                repair_prompt += "Please provide a corrected answer that fixes these issues."
             if fst_trainer is not None:
                 repair_prompt = fst_trainer.next_repair_prompt(
                     verification_result=vr,
@@ -2294,6 +2320,7 @@ class VerifyRepairPipeline:
                 )
                 vr.certificate["fst"] = fst_trainer.certificate()
 
+            previous_response = response
             # Generate a repaired response.
             try:
                 response = self._generate(repair_prompt)
@@ -2323,6 +2350,12 @@ class VerifyRepairPipeline:
             history.append(vr)
 
             if vr.verified:
+                delta_post_repair = history[-2].energy - vr.energy
+                if self.learning_mode and delta_post_repair > 0:
+                    # Record successful repair in NEXUS — the constraint memory learns from
+                    # each successful repair, improving rule quality across cycles (FR-11 Tier 4).
+                    self.nexus_memory.record_successful_repair(question, previous_response, response, delta_post_repair)
+
                 return RepairResult(
                     initial_response=initial_response,
                     final_response=response,

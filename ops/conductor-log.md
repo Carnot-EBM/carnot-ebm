@@ -5675,3 +5675,6 @@ Ripgrep i |
 | 2026-05-21 07:34 UTC | Archive .261 + Activate .262 | OK | cache hit: 81 passed in 2.17s |
 | 2026-05-21 07:41 UTC | Verifier Live-GPU v4: Stub-First Protocol, N=5, ge | OK | cache hit: 81 passed in 2.17s |
 | 2026-05-21 07:54 UTC | Phase 4 FEP Adversarial Recheck: LOO Cross-Validat | OK | cache hit: 81 passed in 2.17s |
+| 2026-05-21 08:10 UTC | Empirical Delta H2 Regression Fix: Git Bisect + Pi | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
+| 2026-05-21 08:26 UTC | Empirical Delta H2 Regression Fix: Git Bisect + Pi | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |
+| 2026-05-21 08:42 UTC | Empirical Delta H2 Regression Fix: Git Bisect + Pi | FAIL | Gemini CLI error: Stalled after 600s silence. Last output: t: 'Too Many Reques |

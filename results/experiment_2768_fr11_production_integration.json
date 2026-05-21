@@ -1,0 +1,26 @@
+{
+  "honest_verdict": "complete: smoke test passed",
+  "fr11_production_integration": true,
+  "learning_mode_parameter_added": true,
+  "nexus_integration_functional": true,
+  "n_test_examples": 3,
+  "integration_notes": "Added learning_mode to VerifyRepairPipeline.__init__ and wired NexusConstraintMemory.record_successful_repair to delta_post_repair > 0 in verify_and_repair().",
+  "duration_s": 8.0,
+  "preconditions_checked": [
+    {
+      "resource": "pipeline",
+      "available": true,
+      "check": "importable"
+    },
+    {
+      "resource": "ttt_loop",
+      "available": true,
+      "check": "exists"
+    },
+    {
+      "resource": "nexus",
+      "available": true,
+      "check": "exists"
+    }
+  ]
+}

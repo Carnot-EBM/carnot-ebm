@@ -29,6 +29,14 @@ class NexusConstraintMemory:
         pattern = f"Repair needed for Q: {question[:30]}... due to {wrong_answer[:30]}..."
         self.record_violation(pattern, domain, energy_score)
 
+    def record_successful_repair(self, prompt: str, original_response: str, repaired_response: str, delta_post_repair: float) -> None:
+        """
+        Record a successful repair where the verified energy improved by delta > 0.
+        """
+        domain = "ORCA_NEXUS"
+        pattern = f"Repair Q: {prompt[:30]}... delta={delta_post_repair:.4f}"
+        self.record_violation(pattern, domain, delta_post_repair)
+
     def synthesize_rules(self, min_support: int = 3) -> List[str]:
         """
         Synthesize rules from patterns seen >= min_support times.

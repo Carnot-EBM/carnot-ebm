@@ -111,3 +111,8 @@ def run_with_dual_stopping(examples: list[dict], k_max=10, alpha=0.1) -> dict:
         "coverage_achieved": coverage_achieved,
         "total_examples": len(examples)
     }
+
+class TTTLoop:
+    def __init__(self, nexus_memory):
+        self.nexus_memory = nexus_memory
+
