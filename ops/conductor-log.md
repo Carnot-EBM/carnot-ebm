@@ -5899,3 +5899,4 @@ Ripgrep i |
 | 2026-05-21 21:41 UTC | TruthfulQA Corpus — Both Memory Conditions (CODEX, | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2831_truthfu |
 | 2026-05-21 23:04 UTC | TruthfulQA Corpus — Both Memory Conditions (CODEX, | FAIL | Codex CLI error: Hard wall-clock cap after 4801s. Last output: utes, so this  |
 | 2026-05-21 23:29 UTC | TruthfulQA Corpus — Both Memory Conditions (CODEX, | FAIL | Codex CLI error: Wall-clock+idle timeout after 1285s (300s silence). Last out |
+| 2026-05-21 23:40 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | OK | 81 passed in 3.09s |

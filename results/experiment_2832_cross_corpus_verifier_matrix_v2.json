@@ -50,5 +50,18 @@
     "diversity_gap_on_non_fover": "True if fewer than 3 architecture-transfer verifiers cover each non-FoVer corpus.",
     "duration_s": "Pure artifact analysis wall time; never padded."
   },
-  "methodology_note": "No synthetic verifier rows were inferred. The upstream artifacts contained empty per-verifier AUROC maps, so the real-data matrix is empty and the diversity gap remains open."
+  "methodology_note": "No synthetic verifier rows were inferred. The upstream artifacts contained empty per-verifier AUROC maps, so the real-data matrix is empty and the diversity gap remains open.",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.0003612041473388672 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
