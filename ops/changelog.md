@@ -6965,3 +6965,4 @@ Operational retrospective completed. 2 synthesis-only experiments ran in 4.0 min
 - 2026-05-21: Archive .261 + Activate .262 (✅ Complete) — honest_verdict=complete_already_activated; results/experiment_2764_archive_v261.json
 - 2026-05-21: Verifier Live-GPU v4: Stub-First Protocol, N=5, gemma-4-26B Primary, Hard Duration Gate (✅ Complete) — honest_verdict=complete:verifier_live_gpu_v4; results/experiment_2765_verifier_live_gpu_v4.json
 - 2026-05-21: Phase 4 FEP Adversarial Recheck: LOO Cross-Validation + Held-Out Corpus (TAUTOLOGY Resolution) (✅ Complete) — honest_verdict=complete: LOO-CV and held-out validation finished; results/experiment_2766_phase4_fep_adversarial_recheck.json
+- 2026-05-21: FR-11 Tier 4 Production Integration: Wire ORCA-NEXUS Learning Loop into VerifyRepairPipeline (✅ Complete) — honest_verdict=complete: smoke test passed; results/experiment_2768_fr11_production_integration.json
