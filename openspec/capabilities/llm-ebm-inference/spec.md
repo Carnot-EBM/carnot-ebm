@@ -870,6 +870,51 @@ telemetry
 evidence, keeps `prompt_rows` diagnostic-only, sets `micro_panel_clean=false`,
 and makes no benchmark claim.
 
+### REQ-INFER-SOTA-017: Exp 2886 SOTA Micro-Panel Clean Telemetry V3
+
+The system SHALL provide an Exp 2886 corrigendum that clears the .272 capstone's
+adversarial flag on the Exp 2875 micro-panel.  The artifact SHALL be written to
+`results/experiment_2886_sota_micro_panel_clean_telemetry_v3.json`; SHALL reuse
+the REQ-INFER-SOTA-016 preconditions; and SHALL additionally expose a
+`reproducibility_checksum`, an `selected_model_fingerprint`, a
+`cached_sota_pair_returned_two_loadable_specs` flag read from Exp 2874, a
+`gpu_memory_evidence` object with nvidia-smi snapshots taken before and after the
+panel runs, a `micro_panel_downgraded_to_non_benchmark` boolean, and an
+`adversarial_verify_invoked` boolean.  The artifact SHALL re-load itself through
+`scripts.adversarial_verify.verify_artifact` and embed the result under
+`adversarial_verify_result`.  The artifact's wall-clock `duration_s` SHALL be the
+genuine measured duration of the panel run, not a sleep-padded value.
+`micro_panel_clean` SHALL be true only when every row has non-empty text and real
+token-logprob or documented substitute telemetry; otherwise the artifact SHALL
+set `micro_panel_downgraded_to_non_benchmark=true` and `benchmark_claim_made=false`.
+
+### SCENARIO-INFER-SOTA-017-001: Clean Telemetry Survives Adversarial Verify
+
+**Given** Exp 2874 reports `sota_runtime_clean=true`, llama.cpp exposes token
+logprobs, and the panel runner returns non-empty rows with finite logprobs
+**When** Exp 2886 v3 builds the artifact
+**Then** the artifact records `micro_panel_clean=true`,
+`micro_panel_downgraded_to_non_benchmark=false`, a non-null
+`reproducibility_checksum`, a populated `gpu_memory_evidence`, and an embedded
+`adversarial_verify_result`.
+
+### SCENARIO-INFER-SOTA-017-002: Missing Telemetry Triggers Downgrade
+
+**Given** the panel rows lack token logprobs and lack documented substitute
+telemetry
+**When** Exp 2886 v3 runs
+**Then** the artifact records `micro_panel_clean=false`,
+`micro_panel_downgraded_to_non_benchmark=true`, an honest_verdict starting with
+`complete:`, and makes no benchmark claim.
+
+### SCENARIO-INFER-SOTA-017-003: Precondition Failure Blocks Before Panel
+
+**Given** Exp 2874 reports `sota_runtime_clean=false`
+**When** Exp 2886 v3 runs
+**Then** the artifact records a precondition-derived `blocked_reason`, leaves
+the panel rows empty, populates the reproducibility checksum from the empty
+panel inputs, and still embeds the adversarial verify result.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -952,7 +997,8 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-012 | Implemented (`python/carnot/reporting/sota_runtime_preflight.py`) | Implemented (`tests/python/test_experiment_2836_sota_runtime_preflight.py`) |
 | REQ-INFER-SOTA-013 | Implemented (`python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py`) | Implemented (`tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py`) |
 | REQ-INFER-SOTA-014 | Planned | Planned |
-| REQ-INFER-SOTA-016 | Planned | Planned |
+| REQ-INFER-SOTA-016 | Implemented (`python/carnot/reporting/sota_energy_micro_panel_logprob_corrigendum_v2.py`) | Implemented (`tests/python/test_experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.py`) |
+| REQ-INFER-SOTA-017 | Implemented (`python/carnot/reporting/sota_micro_panel_clean_telemetry_v3.py`) | Implemented (`tests/python/test_experiment_2886_sota_micro_panel_clean_telemetry_v3.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 

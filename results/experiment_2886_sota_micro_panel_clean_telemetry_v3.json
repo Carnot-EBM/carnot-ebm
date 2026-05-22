@@ -1,0 +1,3168 @@
+{
+  "adversarial_verify_invoked": true,
+  "adversarial_verify_result": {
+    "artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2886_sota_micro_panel_clean_telemetry_v3.json",
+    "exp_id": null,
+    "flag_count": 0,
+    "flags": [],
+    "honest_verdict": "complete: micro_panel_clean_no_benchmark_claim_v3",
+    "loaded": true,
+    "max_severity": -1,
+    "title": ""
+  },
+  "artifact": "experiment_2886_sota_micro_panel_clean_telemetry_v3",
+  "auroc_if_computable": null,
+  "benchmark_claim_made": false,
+  "blocked_reason": "",
+  "cached_sota_pair_returned_two_loadable_specs": false,
+  "duration_s": 142.720608,
+  "field_principles": {
+    "adversarial_verify_invoked": "Set true after the artifact is re-loaded and verified in-process; the result is stored under adversarial_verify_result.",
+    "auroc_if_computable": "Tie-aware AUROC over (label, telemetry_score) pairs; null when one class is absent.",
+    "benchmark_claim_made": "Always false; the panel is a diagnostic telemetry note, not a benchmark.",
+    "blocked_reason": "Exact precondition-, telemetry-, or downgrade-tag; empty when clean.",
+    "cached_sota_pair_returned_two_loadable_specs": "Read from Exp 2874; recorded separately because single-model readiness is sufficient for this diagnostic panel.",
+    "duration_s": "Measured wall-clock duration; never sleep-padded.  Larger max_tokens and the live llama.cpp panel are what carry duration past the 60s compute-bound floor.",
+    "gpu_memory_evidence": "nvidia-smi snapshots taken before and after the panel run.  Missing nvidia-smi is recorded as a typed error, not as zero data.",
+    "honest_verdict": "Terminal-prefix verdict: starts with 'complete:' so the reconciler classifies it correctly even when the body contains 'blocked' or 'downgraded' tokens.",
+    "micro_panel_clean": "True only when every row has non-empty text plus token logprobs or a documented substitute score; downgrade and clean are mutually exclusive.",
+    "micro_panel_downgraded_to_non_benchmark": "Set when the panel ran but at least one row lacked telemetry; the artifact is a complete telemetry note, not a benchmark.",
+    "reproducibility_checksum": "SHA-256 over seed, model identifiers, file fingerprint, prompt texts, and module bytes; clears the adversarial METHODOLOGY_MISSING flag.",
+    "selected_model_fingerprint": "Same shape as Exp 2874 v4: LFS-blob SHA-256 when visible, otherwise size + mtime + resolved-path tag."
+  },
+  "gpu_memory_evidence": {
+    "after_panel": {
+      "available": true,
+      "gpus": [
+        {
+          "index": 0,
+          "memory_free_mib": 23817,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 310
+        },
+        {
+          "index": 1,
+          "memory_free_mib": 23817,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 310
+        }
+      ]
+    },
+    "before_panel": {
+      "available": true,
+      "gpus": [
+        {
+          "index": 0,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5
+        },
+        {
+          "index": 1,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5
+        }
+      ]
+    }
+  },
+  "honest_verdict": "complete: micro_panel_clean_no_benchmark_claim_v3",
+  "logprobs_available": true,
+  "micro_panel_clean": true,
+  "micro_panel_downgraded_to_non_benchmark": false,
+  "model_specs": [
+    {
+      "headline_candidate": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_smoke_only": false,
+      "model_path": "",
+      "name": "Qwen3.6-35B-A3B",
+      "selected": false
+    },
+    {
+      "headline_candidate": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_smoke_only": false,
+      "model_path": "",
+      "name": "Gemma4-31B-it",
+      "selected": false
+    },
+    {
+      "headline_candidate": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_smoke_only": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "selected": true
+    }
+  ],
+  "n_nonempty_responses": 6,
+  "n_prompts": 6,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "sota_runtime_clean=true",
+      "resource": "exp2874_sota_runtime_clean"
+    },
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "resource": "selected_mandated_sota_model"
+    },
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "selected_model_path_exists"
+    },
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "llama_cpp_gpu_offload_verified=true",
+      "resource": "llama_cpp_gpu_offload"
+    },
+    {
+      "available": true,
+      "detail": "llama_cpp_token_logprobs",
+      "resource": "llama_cpp_logprob_or_substitute_telemetry",
+      "response_nonempty": true
+    },
+    {
+      "available": true,
+      "detail": "selected=6 requested=6",
+      "resource": "fixed_labeled_micro_panel"
+    }
+  ],
+  "prompt_rows": [
+    {
+      "dataset": "FEVER",
+      "duration_s": 5.668776,
+      "example_id": "fever-156721",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": 0.8382753533761133,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Imagine Dragons is an American rock band from Las Vegas , Nevada , consisting of lead vocalist Dan Reynolds , lead guitarist Wayne Sermon , bassist Ben McKee , and drummer Daniel Platzman . The band first gained exposure in 2012 with the releases of their debut studio album Night Visions and its first single `` It 's Time '' . Billboard placed them at the top of their `` Year In Rock '' rankings for 2013 , and named them their `` Breakthrough Band of 2013 '' . Rolling Stone named their single `` Radioactive '' from Night Visions the `` biggest rock hit of the year '' , and MTV called them `` the year 's biggest breakout band '' . Night Visions peaked at number two on the weekly US Billboard \nClaim: Imagine Dragons released their debut studio album in September of 2012.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "One-word answer: \n\nOne-word answer: UNKNOWN",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.1086741031114582,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.1086741031114582,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.17640864849090576,
+        -0.0007767044007778168,
+        -3.6954195820726454e-05,
+        -6.842378934379667e-05,
+        -0.0007208370952866971,
+        -1.0325227975845337,
+        -1.009627342224121,
+        -0.01610039360821247,
+        -0.0001541257370263338,
+        -1.77620277099777e-05,
+        -1.7881378653328284e-06,
+        -1.585470999998506e-05,
+        -0.06444323807954788,
+        -9.536738616588991e-07
+      ],
+      "tokens": [
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " ",
+        "\n\n",
+        "One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " UN",
+        "KNOWN"
+      ],
+      "tokens_generated": 14,
+      "top_logprobs": [
+        {
+          "\n": -3.430082321166992,
+          "\n\n": -3.13623046875,
+          " ": -2.794679641723633,
+          " One": -0.17640864849090576,
+          " UN": -3.967794418334961
+        },
+        {
+          " hundred": -10.871395111083984,
+          " of": -9.284534454345703,
+          " or": -9.796640396118164,
+          " such": -10.69363784790039,
+          "-": -0.0007767044007778168
+        },
+        {
+          "way": -13.295536994934082,
+          "width": -13.33466625213623,
+          "wood": -13.322245597839355,
+          "word": -3.6954195820726454e-05,
+          "world": -10.53361701965332
+        },
+        {
+          "\n": -11.445113182067871,
+          "\n\n": -11.930156707763672,
+          " answer": -6.842378934379667e-05,
+          " answers": -11.324783325195312,
+          "_": -11.744202613830566
+        },
+        {
+          "\n": -9.714855194091797,
+          "\n\n": -8.673917770385742,
+          " ": -10.035772323608398,
+          " (": -8.417030334472656,
+          ":": -0.0007208370952866971
+        },
+        {
+          "\n": -2.6354470252990723,
+          "\n\n": -1.4525686502456665,
+          " ": -1.0325227975845337,
+          " One": -1.1243654489517212,
+          " [": -5.188882350921631
+        },
+        {
+          "": -3.678569793701172,
+          "\n": -2.2477598190307617,
+          "\n\n": -1.009627342224121,
+          "\n\n\n\n\n\n": -3.5879578590393066,
+          " ": -3.180889129638672
+        },
+        {
+          "<|channel>": -6.0040764808654785,
+          "Claim": -5.0261149406433105,
+          "One": -0.01610039360821247,
+          "SUP": -6.207858085632324,
+          "```": -6.413951396942139
+        },
+        {
+          " of": -10.828557968139648,
+          " or": -12.099419593811035,
+          " possible": -12.302169799804688,
+          " word": -10.19662094116211,
+          "-": -0.0001541257370263338
+        },
+        {
+          "```": -15.427867889404297,
+          "w": -15.428645133972168,
+          "wood": -15.130167961120605,
+          "word": -1.77620277099777e-05,
+          "world": -11.149529457092285
+        },
+        {
+          "\n": -15.553277969360352,
+          "\n\n": -14.264461517333984,
+          " answer": -1.7881378653328284e-06,
+          " answers": -15.47972297668457,
+          ":": -15.56088924407959
+        },
+        {
+          " ": -13.68693733215332,
+          " (": -13.514199256896973,
+          ":": -1.585470999998506e-05,
+          ":**": -13.639118194580078,
+          "_": -13.123435020446777
+        },
+        {
+          "": -6.145902156829834,
+          "\n\n": -9.382514953613281,
+          " ": -2.815101385116577,
+          " UN": -0.06444323807954788,
+          " _": -9.231950759887695
+        },
+        {
+          " de": -20.362079620361328,
+          "K": -13.92014217376709,
+          "KNOWN": -9.536738616588991e-07,
+          "KW": -21.95346450805664,
+          "known": -21.33948516845703
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 36.300441,
+      "example_id": "fever-18534",
+      "expected_answer": "REFUTES",
+      "first_token_confidence": 0.4117722495157929,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": "SUPPORTS",
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Zendaya Maree Stoermer Coleman -LRB- born September 1 , 1996 -RRB- , known mononymously as Zendaya -LRB- -LSB- z\u025bn\u02c8de\u026a.\u0259 -RSB- -RRB- , is an American actress , singer , and dancer . From 2010 to 2013 , she starred in the Disney Channel sitcom Shake It Up as Rocky Blue . She has starred in two films and played one of the lead roles in the film Frenemies as Halley Brandon . She voiced Fern in the Pixie Hollow Games . She appeared in Good Luck Charlie as Rocky Blue and in a Good Luck Charlie and Shake It Up crossover title Charlie Shakes It Up . She appeared on PrankStars as herself in the episode `` Walk The Prank '' and on A.N.T. Farm as Sequoia Jones in the episode `` Creative ConsultANT . '\nClaim: Zendaya is an African.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "SUPPORTS\nREFUTES\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFUTATION\nREFREFUTATION\nREFUTATION\nREFUTATION\nREF|REFUTATION\nREFUTATION\nREFUT",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.052376450421230125,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.052376450421230125,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.4765335023403168,
+        -0.8872848749160767,
+        0.0,
+        -0.0036554199177771807,
+        -6.27021145191975e-05,
+        -0.00020990552729927003,
+        -1.0967194612021558e-05,
+        -1.6689162293914706e-05,
+        -0.1576976329088211,
+        -1.170918345451355,
+        -0.25560325384140015,
+        -0.03140689432621002,
+        -0.0006484074401669204,
+        -7.152555099310121e-07,
+        -0.5351659059524536,
+        -0.0002755738969426602,
+        -0.5060033798217773,
+        0.0,
+        -0.008969491347670555,
+        -9.166775271296501e-05,
+        -1.6927575416048057e-05,
+        -1.1920922133867862e-06,
+        -0.0027094101533293724,
+        -0.004271194338798523,
+        -0.62761390209198,
+        0.0,
+        -0.0008212531683966517,
+        -3.123234637314454e-05,
+        -0.001370563288219273,
+        0.0,
+        -0.00046945520443841815,
+        -5.8412383623362985e-06,
+        0.0,
+        0.0,
+        -3.4689302992774174e-05,
+        -2.3841855067985307e-07,
+        -2.7418100216891617e-06,
+        0.0,
+        -0.0005616755806840956,
+        -1.2159273865108844e-05,
+        0.0,
+        0.0,
+        -0.00014506718434859067,
+        -2.980227918669698e-06,
+        0.0,
+        0.0,
+        -0.00022051288397051394,
+        -1.5497195136049413e-06,
+        0.0,
+        0.0,
+        -7.474143785657361e-05,
+        -7.152555099310121e-07,
+        -1.4305105651146732e-06,
+        0.0,
+        -5.924525612499565e-05,
+        -2.3841855067985307e-07,
+        0.0,
+        0.0,
+        -4.136476854910143e-05,
+        0.0,
+        0.0,
+        0.0,
+        -2.2649508537142538e-05,
+        -2.3841855067985307e-07,
+        0.0,
+        0.0,
+        -1.1324818842695095e-05,
+        0.0,
+        -3.5762778338721546e-07,
+        0.0,
+        -7.510156592616113e-06,
+        -1.1920927533992653e-07,
+        -5.75764242967125e-05,
+        -0.2888253927230835,
+        -0.018998440355062485,
+        -0.003815158735960722,
+        -1.9073468138230965e-06,
+        -0.001053850632160902,
+        -0.00011264644126640633,
+        -2.7536965717445128e-05,
+        -6.6756979322235566e-06,
+        -4.529942543740617e-06,
+        -0.00016962045629043132,
+        -5.912605774938129e-05,
+        -1.0132738680113107e-05,
+        -1.3900070190429688,
+        -0.9772668480873108,
+        -0.001608269871212542,
+        -0.0005398723296821117,
+        -0.010258092544972897,
+        -2.6344907382735983e-05,
+        -0.003085497533902526,
+        -0.0006706849671900272,
+        -0.00029714463744312525,
+        -2.13382354559144e-05,
+        -9.83428253675811e-05
+      ],
+      "tokens": [
+        "\n\n",
+        "SUP",
+        "PORTS",
+        "\n",
+        "REF",
+        "UTES",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "|",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT",
+        "ATION",
+        "\n",
+        "REF",
+        "UT"
+      ],
+      "tokens_generated": 96,
+      "top_logprobs": [
+        {
+          "": -3.4697928428649902,
+          "\n": -2.3469157218933105,
+          "\n\n": -0.4765335023403168,
+          " ": -2.377255916595459,
+          " One": -2.0131373405456543
+        },
+        {
+          "*": -2.880133628845215,
+          "**": -1.0721805095672607,
+          "<|channel>": -3.7213377952575684,
+          "One": -2.6557717323303223,
+          "SUP": -0.8872848749160767
+        },
+        {
+          "POR": -19.5213623046875,
+          "PORTS": 0.0,
+          "POS": -19.27688980102539,
+          "POSED": -20.52875328063965,
+          "PR": -21.30987548828125
+        },
+        {
+          "": -8.3434476852417,
+          "\n": -0.0036554199177771807,
+          "\n\n": -11.168230056762695,
+          " ": -5.6881866455078125,
+          " UN": -11.81224250793457
+        },
+        {
+          "    ": -11.619499206542969,
+          "REF": -6.27021145191975e-05,
+          "Ref": -12.863784790039062,
+          "UNKNOWN": -11.664586067199707,
+          "or": -10.947135925292969
+        },
+        {
+          "U": -15.749259948730469,
+          "UT": -8.653440475463867,
+          "UTE": -10.264510154724121,
+          "UTES": -0.00020990552729927003,
+          "UTILS": -15.741979598999023
+        },
+        {
+          "\n": -1.0967194612021558e-05,
+          "\n\n": -13.592291831970215,
+          " ": -11.71904182434082,
+          " \\": -15.887463569641113,
+          "_": -14.055168151855469
+        },
+        {
+          "--": -13.093473434448242,
+          "//": -13.5740327835083,
+          "REF": -1.6689162293914706e-05,
+          "or": -11.745464324951172,
+          "|": -14.291582107543945
+        },
+        {
+          "UB": -3.9512524604797363,
+          "UT": -0.1576976329088211,
+          "UTE": -3.813612461090088,
+          "UTILS": -3.581202983856201,
+          "UTION": -2.5934314727783203
+        },
+        {
+          "ATION": -1.170918345451355,
+          "Es": -1.5707488059997559,
+          "UES": -2.3349714279174805,
+          "_": -2.815471649169922,
+          "\u00c9S": -2.6991629600524902
+        },
+        {
+          "\n": -0.25560325384140015,
+          "\n\n": -1.6542296409606934,
+          " ": -4.493987560272217,
+          " (": -3.841956615447998,
+          "/": -7.622281551361084
+        },
+        {
+          "<|channel>": -6.136573791503906,
+          "REF": -0.03140689432621002,
+          "```": -5.97101354598999,
+          "al": -6.611496925354004,
+          "ly": -4.504187107086182
+        },
+        {
+          "U": -12.838294982910156,
+          "UT": -0.0006484074401669204,
+          "UTA": -12.221665382385254,
+          "UTE": -11.62302017211914,
+          "UTION": -7.370606422424316
+        },
+        {
+          "ATION": -7.152555099310121e-07,
+          "ATIONS": -14.849861145019531,
+          "EMENT": -20.685537338256836,
+          "ES": -14.966659545898438,
+          "ICATION": -18.57695770263672
+        },
+        {
+          "\n": -0.5351659059524536,
+          "\n\n": -1.6586495637893677,
+          " (": -3.0470352172851562,
+          " OF": -3.6156349182128906,
+          "'": -2.960205078125
+        },
+        {
+          "(": -10.72377872467041,
+          "--": -11.235777854919434,
+          "REF": -0.0002755738969426602,
+          "SUP": -10.61454963684082,
+          "UNKNOWN": -9.558948516845703
+        },
+        {
+          "U": -1.9751718044281006,
+          "UMENT": -3.5436947345733643,
+          "UT": -0.5060033798217773,
+          "UTES": -3.309462070465088,
+          "UTILS": -2.381615161895752
+        },
+        {
+          "ATES": -22.891637802124023,
+          "ATION": 0.0,
+          "ATIONS": -18.618144989013672,
+          "ES": -18.47405433654785,
+          "\u0947\u0936\u0928": -22.750221252441406
+        },
+        {
+          "": -9.104426383972168,
+          "\n": -0.008969491347670555,
+          "\n\n": -4.908501625061035,
+          "\n\n\n": -9.03581714630127,
+          " ": -6.794510841369629
+        },
+        {
+          "---": -11.519521713256836,
+          "REF": -9.166775271296501e-05,
+          "SUP": -10.73884391784668,
+          "UNKNOWN": -11.442438125610352,
+          "```": -12.361490249633789
+        },
+        {
+          "U": -11.056449890136719,
+          "UIT": -13.756346702575684,
+          "UT": -1.6927575416048057e-05,
+          "UTILS": -17.242664337158203,
+          "\u300c": -17.893529891967773
+        },
+        {
+          "ATION": -1.1920922133867862e-06,
+          "ATIONS": -13.720427513122559,
+          "ES": -16.636152267456055,
+          "ICATION": -21.354461669921875,
+          "OGRAPHY": -21.22735023498535
+        },
+        {
+          "\n": -0.0027094101533293724,
+          "\n\n": -6.173277854919434,
+          "\n\n\n": -9.932087898254395,
+          " ": -7.799555778503418,
+          " (": -9.876557350158691
+        },
+        {
+          "        ": -7.524816989898682,
+          "                               ": -8.507906913757324,
+          "---": -7.316229343414307,
+          "...": -8.416460037231445,
+          "REF": -0.004271194338798523
+        },
+        {
+          "IT": -7.788650989532471,
+          "OT": -10.992606163024902,
+          "U": -9.718155860900879,
+          "UB": -0.7644758224487305,
+          "UT": -0.62761390209198
+        },
+        {
+          "ABLE": -23.050601959228516,
+          "ATION": 0.0,
+          "ATIONS": -18.28102684020996,
+          "ES": -23.661230087280273,
+          "\u0947\u0936\u0928": -21.03612518310547
+        },
+        {
+          "\n": -0.0008212531683966517,
+          "\n\n": -7.4725236892700195,
+          "\n\n\n": -11.115291595458984,
+          " ": -8.615799903869629,
+          " (": -10.731749534606934
+        },
+        {
+          "***": -13.994765281677246,
+          "--": -13.774129867553711,
+          "---": -13.184831619262695,
+          "...": -10.981038093566895,
+          "REF": -3.123234637314454e-05
+        },
+        {
+          "REF": -6.971049785614014,
+          "UST": -15.396883964538574,
+          "UT": -0.001370563288219273,
+          "UTE": -7.775413513183594,
+          "UTION": -11.487441062927246
+        },
+        {
+          "ATION": 0.0,
+          "ATIONS": -21.51980972290039,
+          "ES": -26.40456771850586,
+          "UTION": -27.60083770751953,
+          "\u0947\u0936\u0928": -25.365320205688477
+        },
+        {
+          "": -11.917669296264648,
+          "\n": -0.00046945520443841815,
+          "\n\n": -7.948523044586182,
+          " ": -9.505210876464844,
+          " (": -11.238898277282715
+        },
+        {
+          "                               ": -15.453059196472168,
+          "---": -14.596692085266113,
+          "----------------": -15.207781791687012,
+          "...": -12.923553466796875,
+          "REF": -5.8412383623362985e-06
+        },
+        {
+          "U": -21.087921142578125,
+          "UT": 0.0,
+          "UTA": -22.546844482421875,
+          "UTE": -19.431474685668945,
+          "UTILS": -22.745302200317383
+        },
+        {
+          "ABLE": -23.024797439575195,
+          "AGE": -23.230445861816406,
+          "ATION": 0.0,
+          "ATIONS": -19.670982360839844,
+          "ES": -21.00695037841797
+        },
+        {
+          "": -12.789958953857422,
+          "\n": -3.4689302992774174e-05,
+          "\n\n": -10.677019119262695,
+          "\n\n\n": -14.920243263244629,
+          " ": -11.794041633605957
+        },
+        {
+          "    ": -18.267799377441406,
+          "---": -18.073421478271484,
+          "...": -16.734764099121094,
+          "REF": -2.3841855067985307e-07,
+          "RET": -18.27455711364746
+        },
+        {
+          "U": -15.202567100524902,
+          "UT": -2.7418100216891617e-06,
+          "UTA": -14.02820110321045,
+          "UTE": -14.158787727355957,
+          "UTION": -13.906493186950684
+        },
+        {
+          "ABLE": -18.783262252807617,
+          "ATION": 0.0,
+          "ATIONS": -18.077817916870117,
+          "ICATION": -23.630416870117188,
+          "\u0947\u0936\u0928": -21.261802673339844
+        },
+        {
+          "\n": -0.0005616755806840956,
+          "\n\n": -7.642657279968262,
+          "\n\n\n": -11.686851501464844,
+          " ": -10.123274803161621,
+          " (": -11.466135025024414
+        },
+        {
+          "(": -14.829261779785156,
+          "---": -14.072925567626953,
+          "...": -12.4569091796875,
+          "REF": -1.2159273865108844e-05,
+          "________________": -14.637232780456543
+        },
+        {
+          "U": -17.602245330810547,
+          "UT": 0.0,
+          "UTA": -18.58340072631836,
+          "UTE": -18.602521896362305,
+          "UTION": -17.298126220703125
+        },
+        {
+          "ATION": 0.0,
+          "ATIONAL": -26.25600814819336,
+          "ATIONS": -17.016040802001953,
+          "UTION": -25.34595489501953,
+          "\u0947\u0936\u0928": -23.685319900512695
+        },
+        {
+          "": -13.010734558105469,
+          "\n": -0.00014506718434859067,
+          "\n\n": -9.151006698608398,
+          " ": -10.74405288696289,
+          " (": -12.238993644714355
+        },
+        {
+          "(": -16.652782440185547,
+          "---": -16.180173873901367,
+          "...": -13.304055213928223,
+          "REF": -2.980227918669698e-06,
+          "________________": -16.46200942993164
+        },
+        {
+          "U": -22.20881462097168,
+          "UI": -24.844100952148438,
+          "UT": 0.0,
+          "UTION": -22.73798179626465,
+          "ut": -21.766157150268555
+        },
+        {
+          "ATION": 0.0,
+          "ATIONS": -19.45245933532715,
+          "ES": -21.997303009033203,
+          "ICATION": -19.411048889160156,
+          "ITY": -23.79570770263672
+        },
+        {
+          "": -13.164264678955078,
+          "\n": -0.00022051288397051394,
+          "\n\n": -8.578816413879395,
+          " ": -10.843719482421875,
+          " (": -12.900153160095215
+        },
+        {
+          "\n\n": -16.942493438720703,
+          "---": -16.832292556762695,
+          "----------------": -16.954256057739258,
+          "...": -13.966718673706055,
+          "REF": -1.5497195136049413e-06
+        },
+        {
+          "U": -24.40364646911621,
+          "UT": 0.0,
+          "UTA": -22.339675903320312,
+          "UTER": -27.7645263671875,
+          "UTF": -26.28523063659668
+        },
+        {
+          "ATION": 0.0,
+          "ATIONS": -22.609405517578125,
+          "ES": -24.954002380371094,
+          "ICATION": -21.526796340942383,
+          "\u0947\u0936\u0928": -23.49285125732422
+        },
+        {
+          "": -13.757064819335938,
+          "\n": -7.474143785657361e-05,
+          "\n\n": -9.717049598693848,
+          " ": -11.885425567626953,
+          " (": -13.136397361755371
+        },
+        {
+          "    ": -17.114490509033203,
+          " REF": -17.33675765991211,
+          "(": -17.937471389770508,
+          "...": -14.727849006652832,
+          "REF": -7.152555099310121e-07
+        },
+        {
+          "AUT": -18.217792510986328,
+          "PUT": -18.39024543762207,
+          "U": -16.49739646911621,
+          "UT": -1.4305105651146732e-06,
+          "UTF": -13.552781105041504
+        },
+        {
+          "ATION": 0.0,
+          "ATIONS": -18.5322322845459,
+          "ICATION": -18.214157104492188,
+          "ation": -22.223785400390625,
+          "\u0947\u0936\u0928": -18.83188819885254
+        },
+        {
+          "": -13.636576652526855,
+          "\n": -5.924525612499565e-05,
+          "\n\n": -10.018519401550293,
+          " ": -11.805931091308594,
+          " (": -13.240482330322266
+        },
+        {
+          "    ": -19.169614791870117,
+          "----------------": -19.206514358520508,
+          "...": -15.928266525268555,
+          "REF": -2.3841855067985307e-07,
+          "________________": -18.3909969329834
+        },
+        {
+          "OT": -20.88187026977539,
+          "U": -18.783668518066406,
+          "UR": -21.56513786315918,
+          "UT": 0.0,
+          "UTION": -21.691856384277344
+        },
+        {
+          "ABLE": -26.87764549255371,
+          "ATION": 0.0,
+          "ATIONS": -20.313709259033203,
+          "ation": -28.86611557006836,
+          "\u0947\u0936\u0928": -22.289676666259766
+        },
+        {
+          "": -14.594666481018066,
+          "\n": -4.136476854910143e-05,
+          "\n\n": -10.24575424194336,
+          " ": -12.682690620422363,
+          " (": -14.313399314880371
+        },
+        {
+          "    ": -18.626388549804688,
+          "        ": -18.466888427734375,
+          " REF": -18.62529754638672,
+          "REF": 0.0,
+          "ref": -19.332183837890625
+        },
+        {
+          "UT": 0.0,
+          "UTION": -20.278030395507812,
+          "UTO": -22.515548706054688,
+          "\u0443\u0442": -22.43875503540039,
+          "\u7a81": -20.99972152709961
+        },
+        {
+          "ATION": 0.0,
+          "ATIONS": -20.86651039123535,
+          "ICATION": -19.781583786010742,
+          "\u0947\u0936\u0928": -21.04039764404297,
+          "\u2550\u2550\u2550\u2550": -21.700016021728516
+        },
+        {
+          "": -13.970502853393555,
+          "\n": -2.2649508537142538e-05,
+          "\n\n": -11.112958908081055,
+          " ": -12.766590118408203,
+          " (": -14.056954383850098
+        },
+        {
+          "    ": -18.733850479125977,
+          "----------------": -18.865802764892578,
+          "...": -15.815606117248535,
+          "REF": -2.3841855067985307e-07,
+          "________________": -18.663379669189453
+        },
+        {
+          "U": -23.647052764892578,
+          "URATION": -26.273456573486328,
+          "UT": 0.0,
+          "UTE": -23.329566955566406,
+          "UTION": -20.85809326171875
+        },
+        {
+          "ATION": 0.0,
+          "ATIONS": -22.9387149810791,
+          "ET": -27.540695190429688,
+          "ICATION": -25.08919334411621,
+          "\u0947\u0936\u0928": -24.647802352905273
+        },
+        {
+          "": -14.575087547302246,
+          "\n": -1.1324818842695095e-05,
+          "\n\n": -11.943765640258789,
+          "\n\n\n": -14.659470558166504,
+          " ": -13.255227088928223
+        },
+        {
+          "    ": -19.013032913208008,
+          " REF": -20.190357208251953,
+          "...": -18.685352325439453,
+          "REF": 0.0,
+          "ref": -20.264575958251953
+        },
+        {
+          "F": -19.473316192626953,
+          "U": -15.05778694152832,
+          "UR": -18.906131744384766,
+          "UT": -3.5762778338721546e-07,
+          "UTION": -15.674930572509766
+        },
+        {
+          "ATION": 0.0,
+          "ATIONS": -19.62525177001953,
+          "ES": -20.403026580810547,
+          "ICATION": -21.576934814453125,
+          "\u0947\u0936\u0928": -23.333492279052734
+        },
+        {
+          "": -15.009450912475586,
+          "\n": -7.510156592616113e-06,
+          "\n\n": -12.284253120422363,
+          "\n\n\n": -14.972562789916992,
+          " ": -14.064770698547363
+        },
+        {
+          "        ": -19.359718322753906,
+          " REF": -18.03277587890625,
+          "OF": -18.339588165283203,
+          "REF": -1.1920927533992653e-07,
+          "```": -18.903348922729492
+        },
+        {
+          " REF": -9.833109855651855,
+          "REF": -5.75764242967125e-05,
+          "UT": -12.953470230102539,
+          "UTE": -13.9290189743042,
+          "UTION": -15.242538452148438
+        },
+        {
+          "U": -6.66577672958374,
+          "UT": -0.2888253927230835,
+          "UTE": -6.988449573516846,
+          "UTES": -1.395215392112732,
+          "UTS": -7.736792087554932
+        },
+        {
+          "ATES": -8.000981330871582,
+          "ATION": -0.018998440355062485,
+          "ATIONAL": -8.805691719055176,
+          "ATIONS": -4.0424323081970215,
+          "ERS": -8.265583038330078
+        },
+        {
+          "\n": -0.003815158735960722,
+          "\n\n": -6.247147083282471,
+          " ": -6.440399646759033,
+          " (": -9.535290718078613,
+          "/": -9.642288208007812
+        },
+        {
+          "\t\t": -16.279800415039062,
+          "------": -16.121238708496094,
+          "<|\"|>": -16.441972732543945,
+          "REF": -1.9073468138230965e-06,
+          "Wait": -15.301226615905762
+        },
+        {
+          "\n\n": -8.946300506591797,
+          "REF": -7.896054267883301,
+          "UT": -0.001053850632160902,
+          "UTE": -8.914886474609375,
+          "UTION": -8.965471267700195
+        },
+        {
+          "ATION": -0.00011264644126640633,
+          "ATIONS": -9.12701416015625,
+          "ED": -18.387374877929688,
+          "ES": -12.482261657714844,
+          "ICATION": -15.778581619262695
+        },
+        {
+          "\n": -2.7536965717445128e-05,
+          "\n\n": -10.739307403564453,
+          "\n\n\n": -14.503231048583984,
+          " ": -12.803780555725098,
+          " //": -14.279557228088379
+        },
+        {
+          "(": -15.162612915039062,
+          "...": -12.648421287536621,
+          "REF": -6.6756979322235566e-06,
+          "RET": -14.903304100036621,
+          "________________": -15.239998817443848
+        },
+        {
+          "\n\n": -13.590147018432617,
+          "REF": -14.184107780456543,
+          "U": -14.426464080810547,
+          "UT": -4.529942543740617e-06,
+          "UTION": -13.682536125183105
+        },
+        {
+          "ATION": -0.00016962045629043132,
+          "ATIONS": -8.682353019714355,
+          "ES": -19.195600509643555,
+          "ICATION": -16.695749282836914,
+          "ING": -18.899381637573242
+        },
+        {
+          "\n": -5.912605774938129e-05,
+          "\n\n": -10.395715713500977,
+          "\n\n\n": -13.171876907348633,
+          " ": -11.09019660949707,
+          "  ": -13.021647453308105
+        },
+        {
+          "\n": -14.140176773071289,
+          "    ": -12.633572578430176,
+          "        ": -14.41140079498291,
+          "REF": -1.0132738680113107e-05,
+          "ref": -14.446295738220215
+        },
+        {
+          "<tr>": -1.4446830749511719,
+          "================": -2.657212257385254,
+          "[": -3.2585582733154297,
+          "\\": -3.1781234741210938,
+          "|": -1.3900070190429688
+        },
+        {
+          "\n": -2.625927448272705,
+          "\n\n": -1.2626776695251465,
+          "F": -3.727572441101074,
+          "REF": -0.9772668480873108,
+          "TE": -2.223738670349121
+        },
+        {
+          "\n": -7.867156505584717,
+          "\n\n": -9.111430168151855,
+          "-": -8.864810943603516,
+          "UT": -0.001608269871212542,
+          "UTE": -9.034777641296387
+        },
+        {
+          "ATE": -11.43852424621582,
+          "ATION": -0.0005398723296821117,
+          "ATIONS": -7.63557243347168,
+          "ED": -11.28953742980957,
+          "|": -11.934099197387695
+        },
+        {
+          "\n": -0.010258092544972897,
+          "\n\n": -5.572540760040283,
+          " ": -7.545715808868408,
+          " |": -5.322678089141846,
+          "|": -7.577293872833252
+        },
+        {
+          "#": -12.991569519042969,
+          "OF": -14.383272171020508,
+          "REF": -2.6344907382735983e-05,
+          "TYPE": -13.783013343811035,
+          "|": -11.47037410736084
+        },
+        {
+          "\n": -7.613519191741943,
+          "\n\n": -8.863564491271973,
+          " |": -7.639806270599365,
+          "UT": -0.003085497533902526,
+          "|": -6.463180065155029
+        },
+        {
+          "AT": -14.177994728088379,
+          "ATION": -0.0006706849671900272,
+          "ATIONS": -7.3150248527526855,
+          "ERS": -13.192411422729492,
+          "|": -15.218209266662598
+        },
+        {
+          "\n": -0.00029714463744312525,
+          "\n\n": -9.05992317199707,
+          " ": -9.07377815246582,
+          " (": -11.018937110900879,
+          " |": -11.09169864654541
+        },
+        {
+          "(": -13.971691131591797,
+          "...": -11.715893745422363,
+          "REF": -2.13382354559144e-05,
+          "________________": -13.826532363891602,
+          "|": -13.120491027832031
+        },
+        {
+          "'": -11.445145606994629,
+          "-": -11.949311256408691,
+          "UT": -9.83428253675811e-05,
+          "_": -11.481809616088867,
+          "|": -10.291278839111328
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 2.772955,
+      "example_id": "fever-61991",
+      "expected_answer": "UNKNOWN",
+      "first_token_confidence": 0.6299867335968762,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Camp Sierra -LRB- formerly , Sierra Chautauqua -RRB- is an unincorporated community in Fresno County , California . It is located 7 mi north-northeast of Shaver Lake Heights , at an elevation of 4534 feet -LRB- 1382 m -RRB- . The Sierra Chautauqua post office opened in 1918 , the name was changed to Camp Sierra in 1924 , and was closed in 1935 . The name Chautauqua is transplanted from New York State . www.campsierra.org\nClaim: Jake Gyllenhaal is in La La Land.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "<|channel>thought\n<channel|>UNKNOWN",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.19621680142087486,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.19621680142087486,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.4613591730594635,
+        -0.4620565176010132,
+        -0.17388974130153656,
+        -0.29265379905700684,
+        -0.024685842916369438,
+        -1.1920927533992653e-07
+      ],
+      "tokens": [
+        "\n\n",
+        "<|channel>",
+        "thought",
+        "\n",
+        "<channel|>",
+        "UNKNOWN"
+      ],
+      "tokens_generated": 6,
+      "top_logprobs": [
+        {
+          "\n": -1.6459742784500122,
+          "\n\n": -0.4613591730594635,
+          " ": -3.0015289783477783,
+          " One": -2.804130792617798,
+          " [": -3.435159921646118
+        },
+        {
+          "*": -2.1698670387268066,
+          "**": -1.8017510175704956,
+          "<|channel>": -0.4620565176010132,
+          "[": -3.370182514190674,
+          "\uac00": -3.864304542541504
+        },
+        {
+          "//": -2.824272871017456,
+          "3": -3.7187490463256836,
+          "D": -3.897885322570801,
+          "day": -4.966782093048096,
+          "thought": -0.17388974130153656
+        },
+        {
+          "\n": -0.29265379905700684,
+          "---": -5.0641069412231445,
+          "://": -1.457671880722046,
+          "='": -6.9600067138671875,
+          "================": -5.662929534912109
+        },
+        {
+          "    ": -7.0475544929504395,
+          "        ": -7.184720516204834,
+          "<channel|>": -0.024685842916369438,
+          "Example": -7.545968532562256,
+          "```": -5.479057788848877
+        },
+        {
+          "UNK": -16.6112117767334,
+          "UNKNOWN": -1.1920927533992653e-07,
+          "UNLOCK": -23.246803283691406,
+          "Unknown": -22.545421600341797,
+          "_": -23.010305404663086
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 37.144216,
+      "example_id": "fever-84514",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": 0.2913904276847696,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Water is a transparent and nearly colorless chemical substance that is the main constituent of Earth 's streams , lakes , and oceans , and the fluids of most living organisms . Its chemical formula is H2O , meaning that its molecule contains one oxygen and two hydrogen atoms , that are connected by covalent bonds . Water strictly refers to the liquid state of that substance , that prevails at standard ambient temperature and pressure ; but it often refers also to its solid state -LRB- ice -RRB- or its gaseous state -LRB- steam or water vapor -RRB- . It also occurs in nature as snow , glaciers , ice packs and icebergs , clouds , fog , dew , aquifers , and atmospheric humidity . Water covers 7\nClaim: Steam is the gaseous state of water, also known as water vapor.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "- H2O isable-\n- H2O isable-\n- H2Fast-H2O isable-\n own-\n- H2O isable-\n- H2O isable-\n- H2O isable-\n- H2O isable-\n- H2O isable-\n- H2O isable-\n- H2O isis-\n- H2O isable-",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.061225253280470765,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.061225253280470765,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.20687472820281982,
+        -1.2330912351608276,
+        -2.2445757389068604,
+        -3.8742269680369645e-05,
+        -1.311301275563892e-06,
+        -0.6185929179191589,
+        -1.1139307022094727,
+        -0.17099298536777496,
+        -0.3037073314189911,
+        -0.00644521601498127,
+        -4.3510441173566505e-05,
+        -3.5762778338721546e-07,
+        0.0,
+        -0.0011023165425285697,
+        -0.18067404627799988,
+        -0.00019095506286248565,
+        -0.00909743458032608,
+        -0.24436089396476746,
+        -3.814689989667386e-06,
+        -7.414542778860778e-05,
+        -1.7117233276367188,
+        -0.0005828826688230038,
+        -0.5894086956977844,
+        -3.933898824470816e-06,
+        -2.3841855067985307e-07,
+        -0.00507957860827446,
+        -0.08072937279939651,
+        -8.117823745124042e-05,
+        -0.00010549466242082417,
+        -0.9072741270065308,
+        -0.0009832315845414996,
+        -0.030377859249711037,
+        -0.00014065708091948181,
+        -2.264974000354414e-06,
+        -1.3589766240329482e-05,
+        -4.768370445162873e-07,
+        -0.00010811697575263679,
+        -0.05225785821676254,
+        -2.47952248173533e-05,
+        -2.8013790142722428e-05,
+        -1.1920927533992653e-07,
+        -1.0132738680113107e-05,
+        -3.099436753473128e-06,
+        0.0,
+        -1.072882923836005e-06,
+        -0.00044610086479224265,
+        -2.861018856492592e-06,
+        -3.0636318115284666e-05,
+        -0.0002852271718438715,
+        -1.5258672647178173e-05,
+        -8.284702198579907e-05,
+        0.0,
+        -2.264974000354414e-06,
+        -2.0622992451535538e-05,
+        -3.576272320060525e-06,
+        -0.04143929108977318,
+        -0.0005994430393911898,
+        -6.198863957251888e-06,
+        -3.576272320060525e-06,
+        0.0,
+        -3.5762778338721546e-07,
+        -2.5748875486897305e-05,
+        -2.0265558760002023e-06,
+        -1.060956947185332e-05,
+        -0.001016934053041041,
+        -7.629365427419543e-06,
+        -4.291525328881107e-06,
+        0.0,
+        -4.172316494077677e-06,
+        -0.003716111881658435,
+        -1.0132738680113107e-05,
+        -0.00012730741582345217,
+        -0.0005525015876628458,
+        -1.060956947185332e-05,
+        -1.07287787614041e-05,
+        0.0,
+        -1.1920927533992653e-07,
+        -6.186771497596055e-05,
+        -8.344647426383744e-07,
+        -1.5497195136049413e-06,
+        -9.298280929215252e-06,
+        -8.22540732769994e-06,
+        -0.00027462051366455853,
+        0.0,
+        0.0,
+        -0.0007117836503311992,
+        -0.012933770194649696,
+        -0.0049187373369932175,
+        -0.0018856616225093603,
+        -1.6689285757820471e-06,
+        -1.6808369764476083e-05,
+        -3.242440288886428e-05,
+        -8.08206241345033e-05,
+        -0.04257936775684357,
+        -2.6464111215318553e-05,
+        -0.00010656742233550176
+      ],
+      "tokens": [
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "Fast",
+        "-",
+        "H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        " own",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "is",
+        "-",
+        "\n",
+        "-",
+        " H",
+        "2",
+        "O",
+        " is",
+        "able",
+        "-",
+        "\n"
+      ],
+      "tokens_generated": 96,
+      "top_logprobs": [
+        {
+          "": -6.579596519470215,
+          "\n": -0.20687472820281982,
+          "\n\n": -3.6424999237060547,
+          " ": -1.8471640348434448,
+          " [": -7.761613845825195
+        },
+        {
+          "-": -1.2330912351608276,
+          "<|channel>": -2.615838050842285,
+          "```": -2.8142833709716797,
+          "sudo": -2.756521224975586,
+          "|": -1.6097363233566284
+        },
+        {
+          " Beam": -2.9877426624298096,
+          " H": -2.2445757389068604,
+          " L": -2.5263588428497314,
+          " O": -2.4167168140411377,
+          " One": -2.5988943576812744
+        },
+        {
+          "\n": -13.296194076538086,
+          " ": -11.962384223937988,
+          "2": -3.8742269680369645e-05,
+          "_": -13.113158226013184,
+          "\u2082": -10.825963020324707
+        },
+        {
+          "0": -13.544086456298828,
+          "1": -18.71173095703125,
+          "O": -1.311301275563892e-06,
+          "OH": -18.93636131286621,
+          "_": -18.03986358642578
+        },
+        {
+          "\n": -0.8771492838859558,
+          " ": -4.368189334869385,
+          " (": -4.264280796051025,
+          " and": -5.022160053253174,
+          " is": -0.6185929179191589
+        },
+        {
+          "\n\n\n\n\n\n": -3.8166728019714355,
+          " H": -1.144975185394287,
+          " de": -4.192717552185059,
+          "able": -1.1139307022094727,
+          "ally": -1.598604679107666
+        },
+        {
+          " (": -3.5924370288848877,
+          " able": -4.438604354858398,
+          ",": -4.814734935760498,
+          "-": -0.17099298536777496,
+          "able": -3.1761972904205322
+        },
+        {
+          "\n": -0.3037073314189911,
+          " ": -2.903012990951538,
+          " (": -3.482367515563965,
+          " de": -3.3161027431488037,
+          " l": -2.5216569900512695
+        },
+        {
+          " is": -8.373470306396484,
+          " sense": -5.320943355560303,
+          "-": -0.00644521601498127,
+          "_": -8.767510414123535,
+          "text": -9.177690505981445
+        },
+        {
+          "  ": -12.898850440979004,
+          " COR": -13.960482597351074,
+          " Co": -14.106588363647461,
+          " Di": -13.507633209228516,
+          " H": -4.3510441173566505e-05
+        },
+        {
+          " ": -19.08359718322754,
+          "1": -14.859415054321289,
+          "2": -3.5762778338721546e-07,
+          "_": -18.415855407714844,
+          "\u2082": -16.745676040649414
+        },
+        {
+          " O": -23.878042221069336,
+          "0": -21.01126480102539,
+          "HO": -24.501148223876953,
+          "O": 0.0,
+          "_": -25.055706024169922
+        },
+        {
+          " H": -7.095020294189453,
+          " Wis": -10.448168754577637,
+          " h": -10.157086372375488,
+          " is": -0.0011023165425285697,
+          " way": -10.736438751220703
+        },
+        {
+          " ": -4.127369403839111,
+          " H": -3.148991107940674,
+          " a": -4.289318561553955,
+          " the": -4.532120227813721,
+          "able": -0.18067404627799988
+        },
+        {
+          "\n": -10.894184112548828,
+          "\n\n": -11.704231262207031,
+          "-": -0.00019095506286248565,
+          "/": -12.085501670837402,
+          "ble": -11.920044898986816
+        },
+        {
+          "": -12.518270492553711,
+          "\n": -0.00909743458032608,
+          "\n\n": -4.721715450286865,
+          "\n\n\n": -11.72490406036377,
+          " ": -8.871586799621582
+        },
+        {
+          "    ": -4.719194412231445,
+          "-": -0.24436089396476746,
+          "ened": -4.0160932540893555,
+          "ly": -2.0562171936035156,
+          "ness": -4.800067901611328
+        },
+        {
+          "  ": -13.593292236328125,
+          " H": -3.814689989667386e-06,
+          " H\u00fc": -15.101129531860352,
+          " L": -15.789491653442383,
+          " [": -15.175202369689941
+        },
+        {
+          "//": -11.409188270568848,
+          "1": -11.115981101989746,
+          "2": -7.414542778860778e-05,
+          "3": -12.087688446044922,
+          "LO": -11.281377792358398
+        },
+        {
+          "<|channel>": -3.216212272644043,
+          "Fast": -1.7117233276367188,
+          "Man": -3.1401901245117188,
+          "O": -2.7021560668945312,
+          "\\\\": -2.385202407836914
+        },
+        {
+          " -": -10.406850814819336,
+          "-": -0.0005828826688230038,
+          "ener": -8.909501075744629,
+          "ress": -10.482478141784668,
+          "\u2013": -10.326764106750488
+        },
+        {
+          "\n": -0.9425981640815735,
+          "\n\n": -3.407677412033081,
+          " ": -5.189014911651611,
+          " H": -4.778056621551514,
+          "H": -0.5894086956977844
+        },
+        {
+          "\n": -16.542236328125,
+          " much": -13.2493257522583,
+          "1": -14.815262794494629,
+          "2": -3.933898824470816e-06,
+          "_": -13.84345817565918
+        },
+        {
+          "\n": -20.788625717163086,
+          "\n\n": -19.37482261657715,
+          "0": -15.044278144836426,
+          "H": -20.256603240966797,
+          "O": -2.3841855067985307e-07
+        },
+        {
+          "\n": -5.6307148933410645,
+          "\n\n": -8.61738395690918,
+          " ": -7.364870548248291,
+          " (": -8.139352798461914,
+          " is": -0.00507957860827446
+        },
+        {
+          "\n": -4.294873237609863,
+          " ": -4.90363883972168,
+          "-": -5.630743980407715,
+          "_": -4.748501777648926,
+          "able": -0.08072937279939651
+        },
+        {
+          "\n": -12.441194534301758,
+          "-": -8.117823745124042e-05,
+          "-*": -12.087347984313965,
+          "/": -12.42370891571045,
+          "w": -12.564903259277344
+        },
+        {
+          "\n": -0.00010549466242082417,
+          "\n\n": -9.160600662231445,
+          " fast": -16.38970947265625,
+          " much": -17.45860481262207,
+          " own": -15.631661415100098
+        },
+        {
+          " much": -1.842467188835144,
+          " own": -0.9072741270065308,
+          " way": -3.6385111808776855,
+          "-": -1.199555516242981,
+          "<tr>": -3.8698630332946777
+        },
+        {
+          "-": -0.0009832315845414996,
+          "ces": -8.522361755371094,
+          "ings": -9.0460844039917,
+          "ley": -9.396047592163086,
+          "ters": -10.33335018157959
+        },
+        {
+          "\n": -0.030377859249711037,
+          "\n\n": -4.374135494232178,
+          "\n\n\n": -6.133131504058838,
+          " ": -4.976965427398682,
+          "H": -6.12100076675415
+        },
+        {
+          "-": -0.00014065708091948181,
+          "G": -10.67017936706543,
+          "ly": -11.0009183883667,
+          "man": -12.2312593460083,
+          "post": -12.106667518615723
+        },
+        {
+          "\n\n": -15.240264892578125,
+          "  ": -15.930221557617188,
+          " H": -2.264974000354414e-06,
+          " Own": -16.377273559570312,
+          " [": -15.735292434692383
+        },
+        {
+          " ": -12.287312507629395,
+          "1": -11.794881820678711,
+          "2": -1.3589766240329482e-05,
+          "_": -14.013508796691895,
+          "\u2082": -15.393058776855469
+        },
+        {
+          "\n": -17.533658981323242,
+          "0": -15.093786239624023,
+          "Fast": -17.344026565551758,
+          "O": -4.768370445162873e-07,
+          "_": -17.64917755126953
+        },
+        {
+          "\n": -11.359206199645996,
+          " ": -11.821852684020996,
+          " H": -12.207291603088379,
+          " are": -10.253626823425293,
+          " is": -0.00010811697575263679
+        },
+        {
+          "\n": -5.3511176109313965,
+          " ": -5.045944690704346,
+          " able": -5.68662691116333,
+          "_": -4.159317493438721,
+          "able": -0.05225785821676254
+        },
+        {
+          "\n": -13.480908393859863,
+          "-": -2.47952248173533e-05,
+          "-$": -13.761034965515137,
+          "--": -13.728558540344238,
+          "able": -12.69406795501709
+        },
+        {
+          "": -16.447708129882812,
+          "\n": -2.8013790142722428e-05,
+          "\n\n": -11.294951438903809,
+          " ": -11.090226173400879,
+          "  ": -17.504331588745117
+        },
+        {
+          "    ": -18.57097816467285,
+          "-": -1.1920927533992653e-07,
+          "order": -18.4857177734375,
+          "right": -18.78037452697754,
+          "weight": -18.334197998046875
+        },
+        {
+          "\n\n": -14.664175987243652,
+          "  ": -12.43234920501709,
+          " H": -1.0132738680113107e-05,
+          " Let": -14.717713356018066,
+          " [": -13.20858097076416
+        },
+        {
+          " ": -14.966054916381836,
+          "(": -15.921141624450684,
+          ".": -16.181795120239258,
+          "1": -12.985489845275879,
+          "2": -3.099436753473128e-06
+        },
+        {
+          "0": -23.580718994140625,
+          "H": -19.068927764892578,
+          "O": 0.0,
+          "On": -23.926410675048828,
+          "_": -23.748727798461914
+        },
+        {
+          " ": -17.248201370239258,
+          " is": -1.072882923836005e-06,
+          " isn": -13.878100395202637,
+          "'": -18.099853515625,
+          "/": -17.105857849121094
+        },
+        {
+          "-": -10.197885513305664,
+          "_": -9.769877433776855,
+          "ab": -10.501884460449219,
+          "able": -0.00044610086479224265,
+          "|": -10.515054702758789
+        },
+        {
+          " -": -14.56373119354248,
+          "-": -2.861018856492592e-06,
+          "--": -16.0633602142334,
+          "/": -15.845599174499512,
+          "er": -15.429129600524902
+        },
+        {
+          "\n": -3.0636318115284666e-05,
+          "\n\n": -10.41365909576416,
+          "\n\n\n": -14.89091682434082,
+          " ": -16.438440322875977,
+          "night": -16.894367218017578
+        },
+        {
+          "\n": -11.70882511138916,
+          "    ": -8.297881126403809,
+          " -": -13.095696449279785,
+          "-": -0.0002852271718438715,
+          "|": -10.8699369430542
+        },
+        {
+          "\n": -14.74057674407959,
+          "\n\n": -12.646550178527832,
+          "  ": -13.588324546813965,
+          " H": -1.5258672647178173e-05,
+          " [": -12.447065353393555
+        },
+        {
+          " ": -14.397080421447754,
+          "0": -14.041682243347168,
+          "1": -9.491724967956543,
+          "2": -8.284702198579907e-05,
+          "3": -12.330755233764648
+        },
+        {
+          "H": -21.469165802001953,
+          "O": 0.0,
+          "Q": -26.1257266998291,
+          "[": -28.5908203125,
+          "_": -24.635936737060547
+        },
+        {
+          " \\": -16.306373596191406,
+          " is": -2.264974000354414e-06,
+          " isn": -14.681679725646973,
+          " l": -16.279558181762695,
+          "(": -15.209726333618164
+        },
+        {
+          "\n\n": -12.76639461517334,
+          "able": -2.0622992451535538e-05,
+          "ale": -13.155405044555664,
+          "are": -12.450566291809082,
+          "ole": -12.845330238342285
+        },
+        {
+          "\n": -13.804049491882324,
+          "\n\n": -14.544917106628418,
+          " -": -14.746959686279297,
+          "-": -3.576272320060525e-06,
+          "er": -14.876761436462402
+        },
+        {
+          "\n": -0.04143929108977318,
+          "\n\n": -3.2668569087982178,
+          "\n\n\n": -7.451030731201172,
+          " ": -8.529108047485352,
+          "H": -6.52799129486084
+        },
+        {
+          "    ": -7.900279521942139,
+          " much": -10.99123477935791,
+          "-": -0.0005994430393911898,
+          "thought": -9.775666236877441,
+          "|": -9.707300186157227
+        },
+        {
+          "\n\n": -14.400964736938477,
+          "  ": -13.038619041442871,
+          " ...": -15.287080764770508,
+          " H": -6.198863957251888e-06,
+          " [": -13.641958236694336
+        },
+        {
+          " ": -14.801318168640137,
+          ".": -17.403676986694336,
+          "1": -12.674033164978027,
+          "2": -3.576272320060525e-06,
+          "_": -15.705421447753906
+        },
+        {
+          "-": -23.206933975219727,
+          "0": -22.575345993041992,
+          "O": 0.0,
+          "Os": -22.832294464111328,
+          "_": -20.218013763427734
+        },
+        {
+          "\n": -17.39557647705078,
+          " ": -15.715688705444336,
+          " is": -3.5762778338721546e-07,
+          "/": -16.6395263671875,
+          "_": -16.199296951293945
+        },
+        {
+          "\n\n": -12.817914009094238,
+          "\n\n\n": -13.046053886413574,
+          "able": -2.5748875486897305e-05,
+          "above": -12.915772438049316,
+          "ible": -13.165316581726074
+        },
+        {
+          " -": -15.847440719604492,
+          " el": -16.318666458129883,
+          " l": -14.770652770996094,
+          "-": -2.0265558760002023e-06,
+          "/": -16.096166610717773
+        },
+        {
+          "": -15.952115058898926,
+          "\n": -1.060956947185332e-05,
+          "\n\n": -11.485651969909668,
+          "\n\n\n": -17.237070083618164,
+          " ": -15.161137580871582
+        },
+        {
+          "    ": -10.587796211242676,
+          " -": -8.229461669921875,
+          " l": -10.611809730529785,
+          "-": -0.001016934053041041,
+          "...": -8.688437461853027
+        },
+        {
+          "\n\n": -14.428415298461914,
+          "  ": -13.007312774658203,
+          " ...": -14.49315071105957,
+          " H": -7.629365427419543e-06,
+          " [": -13.04737663269043
+        },
+        {
+          " ": -15.336285591125488,
+          "-": -16.639892578125,
+          "1": -12.58257007598877,
+          "2": -4.291525328881107e-06,
+          "_": -15.162742614746094
+        },
+        {
+          "-": -19.892580032348633,
+          "0": -18.989349365234375,
+          "H": -21.010643005371094,
+          "O": 0.0,
+          "_": -19.394750595092773
+        },
+        {
+          " ": -14.407377243041992,
+          " is": -4.172316494077677e-06,
+          " l": -14.239618301391602,
+          " us": -15.492271423339844,
+          "/": -14.43045425415039
+        },
+        {
+          "\n": -10.208638191223145,
+          "-": -9.920027732849121,
+          "able": -0.003716111881658435,
+          "iable": -10.38140869140625,
+          "is": -5.674924373626709
+        },
+        {
+          "\n": -11.714561462402344,
+          "\n\n": -14.26193904876709,
+          " is": -14.682143211364746,
+          "-": -1.0132738680113107e-05,
+          "able": -15.188838958740234
+        },
+        {
+          "\n": -0.00012730741582345217,
+          "\n\n": -9.584832191467285,
+          " la": -12.370185852050781,
+          "0": -11.660411834716797,
+          "H": -10.954120635986328
+        },
+        {
+          "    ": -8.227279663085938,
+          " much": -8.713604927062988,
+          "-": -0.0005525015876628458,
+          "ing": -11.827357292175293,
+          "|": -9.720511436462402
+        },
+        {
+          "\n\n": -14.35697078704834,
+          "  ": -12.872082710266113,
+          " ...": -14.191156387329102,
+          " H": -1.060956947185332e-05,
+          " [": -12.658730506896973
+        },
+        {
+          " ": -16.872371673583984,
+          "-": -16.551572799682617,
+          "1": -11.463231086730957,
+          "2": -1.07287787614041e-05,
+          "3": -16.61367416381836
+        },
+        {
+          "0": -20.766578674316406,
+          "H": -19.118759155273438,
+          "O": 0.0,
+          "[": -22.05490493774414,
+          "_": -20.82114028930664
+        },
+        {
+          " (": -18.458049774169922,
+          " is": -1.1920927533992653e-07,
+          " la": -16.967397689819336,
+          " us": -18.24703025817871,
+          "is": -16.65907096862793
+        },
+        {
+          "able": -6.186771497596055e-05,
+          "ale": -13.521930694580078,
+          "and": -13.866716384887695,
+          "ible": -12.399334907531738,
+          "is": -9.961633682250977
+        },
+        {
+          " -": -16.92307472229004,
+          " l": -15.15425968170166,
+          "-": -8.344647426383744e-07,
+          "/": -16.486787796020508,
+          "er": -16.987335205078125
+        },
+        {
+          "\n": -1.5497195136049413e-06,
+          "\n\n": -14.048929214477539,
+          " ": -14.587091445922852,
+          "0": -16.022260665893555,
+          "1": -16.728580474853516
+        },
+        {
+          "    ": -13.803206443786621,
+          "(": -12.8191499710083,
+          "-": -9.298280929215252e-06,
+          "...": -13.234280586242676,
+          "er": -14.417648315429688
+        },
+        {
+          "\n\n": -15.007542610168457,
+          "  ": -13.243098258972168,
+          " ...": -14.420368194580078,
+          " H": -8.22540732769994e-06,
+          " [": -12.872469902038574
+        },
+        {
+          "1": -8.579158782958984,
+          "2": -0.00027462051366455853,
+          "3": -10.612439155578613,
+          "_": -10.738958358764648,
+          "{": -12.163835525512695
+        },
+        {
+          "0": -22.07870101928711,
+          "H": -17.424585342407227,
+          "O": 0.0,
+          "[": -21.456653594970703,
+          "_": -20.32215118408203
+        },
+        {
+          " ...": -20.113243103027344,
+          " Is": -20.20293426513672,
+          " is": 0.0,
+          " us": -21.005813598632812,
+          "is": -18.62712860107422
+        },
+        {
+          "able": -7.747352600097656,
+          "is": -0.0007117836503311992,
+          "isal": -10.294124603271484,
+          "\u7d20\u6750": -10.97604751586914,
+          "\uc0c1": -11.613554000854492
+        },
+        {
+          " -": -9.147527694702148,
+          "-": -0.012933770194649696,
+          "_": -4.44647216796875,
+          "ness": -9.05578327178955,
+          "nt": -8.625638008117676
+        },
+        {
+          "\n": -0.0049187373369932175,
+          "\n\n": -7.381332874298096,
+          " ": -6.444952487945557,
+          " is": -6.806010723114014,
+          "is": -6.827662944793701
+        },
+        {
+          "    ": -7.454637050628662,
+          " is": -9.801170349121094,
+          "-": -0.0018856616225093603,
+          "...": -9.746864318847656,
+          "und": -9.977519989013672
+        },
+        {
+          "  ": -15.046846389770508,
+          " ...": -15.58282470703125,
+          " H": -1.6689285757820471e-06,
+          " [": -14.478461265563965,
+          " _": -16.101842880249023
+        },
+        {
+          "-": -14.222439765930176,
+          ".": -14.094669342041016,
+          "1": -11.336267471313477,
+          "2": -1.6808369764476083e-05,
+          "_": -14.024015426635742
+        },
+        {
+          "...": -21.592180252075195,
+          "H": -10.33632755279541,
+          "O": -3.242440288886428e-05,
+          "XO": -21.042274475097656,
+          "_": -20.7399845123291
+        },
+        {
+          "\n": -13.177291870117188,
+          " ": -9.786890029907227,
+          " di": -13.828185081481934,
+          " is": -8.08206241345033e-05,
+          " l": -12.042298316955566
+        },
+        {
+          "\n": -5.871964931488037,
+          " is": -5.579679012298584,
+          "-": -3.8428609371185303,
+          "able": -0.04257936775684357,
+          "is": -5.4004435539245605
+        },
+        {
+          "\n": -13.478219032287598,
+          " is": -13.310479164123535,
+          "-": -2.6464111215318553e-05,
+          "--": -12.618040084838867,
+          "/": -11.234281539916992
+        },
+        {
+          "\n": -0.00010656742233550176,
+          "\n\n": -9.338850021362305,
+          "\n\n\n": -13.085896492004395,
+          " ": -11.071135520935059,
+          "  ": -15.458645820617676
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 36.782226,
+      "example_id": "fever-144383",
+      "expected_answer": "REFUTES",
+      "first_token_confidence": 0.8694302386797872,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Arnold Alois Schwarzenegger -LRB- -LSB- \u02c8\u0283w\u0254\u02d0rts\u0259n\u02cc\u025b\u0261\u0259r -RSB- -LSB- \u02c8a\u0250\u032fn\u0254lt \u02c8al\u0254\u028fs \u02c8\u0283va\u0250\u032ftsn\u0329\u02cc\u025b\u0261\u0250 -RSB- ; born July 30 , 1947 -RRB- is an Austrian-American actor , producer , businessman , investor , author , philanthropist , activist , politician and former professional bodybuilder . He served two terms as the 38th Governor of California from 2003 to 2011 . Schwarzenegger began weight training at the age of 15 . He won the Mr. Universe title at age 20 and went on to win the Mr. Olympia contest seven times . Schwarzenegger has remained a prominent presence in bodybuilding and has written many books and articles on the sport . He is widely considered to be among the greatest bodybuilders of \nClaim: Arnold Schwarzenegger was a movie.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word answer: One-word-answer: One-word answer: One-word answer: One-word answer: One-word answer:",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.012931724413821113,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.012931724413821113,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.13991717994213104,
+        -0.0006773561472073197,
+        -0.000847814604640007,
+        -9.893881360767409e-05,
+        -0.0005428509321063757,
+        -0.20035794377326965,
+        -2.50339189733495e-06,
+        -0.0012075759004801512,
+        -1.0847986231965479e-05,
+        -0.00022110878489911556,
+        -0.023741019889712334,
+        -4.31528314948082e-05,
+        -1.5497195136049413e-06,
+        -8.344647426383744e-07,
+        -4.3748848838731647e-05,
+        -0.0012098380830138922,
+        -8.344647426383744e-07,
+        -2.3841855067985307e-07,
+        -2.980227918669698e-06,
+        -1.4424221262743231e-05,
+        -1.311301275563892e-06,
+        0.0,
+        -0.00024875884992070496,
+        0.0,
+        -2.7418100216891617e-06,
+        -1.4305105651146732e-06,
+        0.0,
+        -0.43347522616386414,
+        0.0,
+        -2.0265558760002023e-06,
+        -9.059865078597795e-06,
+        -3.5762778338721546e-07,
+        -1.1920927533992653e-07,
+        0.0,
+        -1.5497195136049413e-06,
+        -1.1920922133867862e-06,
+        0.0,
+        -1.919251008075662e-05,
+        -1.072882923836005e-06,
+        0.0,
+        -0.0002507849130779505,
+        -1.1920927533992653e-07,
+        -4.172316494077677e-06,
+        -0.010663080029189587,
+        0.0,
+        -4.768370445162873e-07,
+        0.0,
+        -7.510156592616113e-06,
+        -0.0004637358069885522,
+        -3.5762778338721546e-07,
+        -3.5762778338721546e-07,
+        0.0,
+        0.0,
+        -1.1920927533992653e-07,
+        -4.768370445162873e-07,
+        -3.5762778338721546e-07,
+        -2.3841855067985307e-07,
+        -1.1920927533992653e-07,
+        -8.702239938429557e-06,
+        0.0,
+        -0.28084900975227356,
+        -2.3841855067985307e-07,
+        -3.5762778338721546e-07,
+        -1.311301275563892e-06,
+        -1.1920927533992653e-07,
+        -1.1920927533992653e-07,
+        0.0,
+        0.0,
+        -5.960463340670685e-07,
+        -1.1920927533992653e-07,
+        -7.152555099310121e-07,
+        0.0,
+        0.0,
+        -0.0948559045791626,
+        -0.002214124659076333,
+        -0.002477911300957203,
+        -0.016965029761195183,
+        -7.652943168068305e-05,
+        -5.125986717757769e-06,
+        -0.19659332931041718,
+        -0.00018988235387951136,
+        -3.218598794774152e-05,
+        -1.072882923836005e-06,
+        -5.960463340670685e-07,
+        -0.00011538793478393927,
+        -1.0132738680113107e-05,
+        -1.4901049325999338e-05,
+        -3.5762778338721546e-07,
+        -4.768370445162873e-07,
+        -8.380061626667157e-05,
+        -8.702239938429557e-06,
+        -0.0004897111211903393,
+        -5.960463340670685e-07,
+        -4.053107204526896e-06,
+        -0.0011695933062583208,
+        -4.172316494077677e-06
+      ],
+      "tokens": [
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        "-",
+        "answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":"
+      ],
+      "tokens_generated": 96,
+      "top_logprobs": [
+        {
+          "": -5.569192886352539,
+          "\n": -3.395200490951538,
+          "\n\n": -3.083892583847046,
+          " ": -3.3458478450775146,
+          " One": -0.13991717994213104
+        },
+        {
+          " of": -9.228412628173828,
+          " or": -9.956626892089844,
+          " own": -9.636878967285156,
+          " way": -10.928171157836914,
+          "-": -0.0006773561472073197
+        },
+        {
+          "way": -10.061467170715332,
+          "weight": -9.67580795288086,
+          "word": -0.000847814604640007,
+          "work": -9.927559852600098,
+          "world": -8.174285888671875
+        },
+        {
+          "\n": -10.40428352355957,
+          "\n\n": -10.968219757080078,
+          " answer": -9.893881360767409e-05,
+          " answers": -12.199634552001953,
+          ":": -11.665943145751953
+        },
+        {
+          "\n": -9.750138282775879,
+          "\n\n": -8.296067237854004,
+          " (": -9.819391250610352,
+          ".": -9.996962547302246,
+          ":": -0.0005428509321063757
+        },
+        {
+          "\n\n": -2.4464573860168457,
+          " ": -3.098137378692627,
+          " Arnold": -4.378387928009033,
+          " One": -0.20035794377326965,
+          " [": -4.358936786651611
+        },
+        {
+          "\n\n": -15.201025009155273,
+          "\"\"\"": -13.88722038269043,
+          "-": -2.50339189733495e-06,
+          "</div>": -14.20790958404541,
+          "}": -16.111452102661133
+        },
+        {
+          "of": -9.537637710571289,
+          "w": -10.258993148803711,
+          "word": -0.0012075759004801512,
+          "words": -9.475067138671875,
+          "wound": -10.392953872680664
+        },
+        {
+          "\n\n": -12.035828590393066,
+          " ...": -14.716683387756348,
+          " answer": -1.0847986231965479e-05,
+          " is": -14.601428031921387,
+          " one": -13.71817398071289
+        },
+        {
+          "\n": -10.85223388671875,
+          "\n\n": -9.89582633972168,
+          " ": -11.12761116027832,
+          " (": -9.40221118927002,
+          ":": -0.00022110878489911556
+        },
+        {
+          "\n\n": -4.363850116729736,
+          " ": -5.4908528327941895,
+          " Arnold": -5.3060479164123535,
+          " One": -0.023741019889712334,
+          " [": -7.816357135772705
+        },
+        {
+          "\n": -13.321161270141602,
+          "\n\n": -12.972366333007812,
+          " word": -12.01211929321289,
+          "-": -4.31528314948082e-05,
+          "</div>": -12.823887825012207
+        },
+        {
+          "\n\n": -16.07647705078125,
+          "card": -17.163820266723633,
+          "word": -1.5497195136049413e-06,
+          "words": -16.270414352416992,
+          "world": -15.13379955291748
+        },
+        {
+          " ***": -16.410398483276367,
+          " answer": -8.344647426383744e-07,
+          " own": -15.931634902954102,
+          "(": -16.37163543701172,
+          "_": -15.869346618652344
+        },
+        {
+          "\n": -12.426280975341797,
+          "\n\n": -11.397254943847656,
+          " ": -12.346616744995117,
+          " (": -11.520281791687012,
+          ":": -4.3748848838731647e-05
+        },
+        {
+          "\n": -9.34854507446289,
+          "\n\n": -7.927145481109619,
+          " ": -7.468621730804443,
+          " Arnold": -9.275131225585938,
+          " One": -0.0012098380830138922
+        },
+        {
+          "\n": -18.623126983642578,
+          "\n\n": -18.257600784301758,
+          "        ": -18.19525909423828,
+          "'": -14.208475112915039,
+          "-": -8.344647426383744e-07
+        },
+        {
+          "ord": -17.919401168823242,
+          "wind": -17.573001861572266,
+          "word": -2.3841855067985307e-07,
+          "words": -16.899913787841797,
+          "world": -15.516721725463867
+        },
+        {
+          "\n\n": -16.65144157409668,
+          " answer": -2.980227918669698e-06,
+          " way": -12.756864547729492,
+          " word": -18.100915908813477,
+          "[]": -17.641630172729492
+        },
+        {
+          "\n": -13.137316703796387,
+          "\n\n": -12.118806838989258,
+          " ": -13.296612739562988,
+          " :": -13.687463760375977,
+          ":": -1.4424221262743231e-05
+        },
+        {
+          " ": -14.351151466369629,
+          " ONE": -15.898146629333496,
+          " One": -1.311301275563892e-06,
+          " one": -14.716700553894043,
+          "One": -15.808887481689453
+        },
+        {
+          "\n\n": -23.48872184753418,
+          "'": -20.695192337036133,
+          "-": 0.0,
+          ":": -19.52627944946289,
+          "=": -21.61935043334961
+        },
+        {
+          "ward": -9.10482120513916,
+          "word": -0.00024875884992070496,
+          "work": -12.751423835754395,
+          "world": -8.947426795959473,
+          "\u30ef\u30fc\u30c9": -13.929411888122559
+        },
+        {
+          " an": -21.477529525756836,
+          " another": -21.6276798248291,
+          " answer": 0.0,
+          " any": -18.710411071777344,
+          "\\_": -22.155349731445312
+        },
+        {
+          "\n": -15.13807201385498,
+          "\n\n": -13.749223709106445,
+          " ": -14.803448677062988,
+          " :": -14.915115356445312,
+          ":": -2.7418100216891617e-06
+        },
+        {
+          " ": -17.81746482849121,
+          " ONE": -13.580933570861816,
+          " One": -1.4305105651146732e-06,
+          " one": -17.13979721069336,
+          "One": -16.536876678466797
+        },
+        {
+          "\n\n": -21.457704544067383,
+          "'": -17.51502799987793,
+          "-": 0.0,
+          ":": -19.871549606323242,
+          "=": -21.534339904785156
+        },
+        {
+          "of": -7.991123676300049,
+          "void": -8.867876052856445,
+          "word": -0.43347522616386414,
+          "work": -8.404448509216309,
+          "world": -1.047998070716858
+        },
+        {
+          "\n\n": -20.928558349609375,
+          " answer": 0.0,
+          " any": -18.766149520874023,
+          "_": -22.111995697021484,
+          "answer": -21.401901245117188
+        },
+        {
+          "\n\n": -14.158581733703613,
+          " ": -15.272550582885742,
+          " :": -15.08166217803955,
+          ":": -2.0265558760002023e-06,
+          "_": -15.541400909423828
+        },
+        {
+          " ": -14.186001777648926,
+          " ONE": -11.733699798583984,
+          " One": -9.059865078597795e-06,
+          " one": -16.481077194213867,
+          "One": -15.394484519958496
+        },
+        {
+          "\n\n": -17.111602783203125,
+          " any": -16.517658233642578,
+          " el": -16.518749237060547,
+          "-": -3.5762778338721546e-07,
+          "s": -17.090290069580078
+        },
+        {
+          "ward": -18.656925201416016,
+          "word": -1.1920927533992653e-07,
+          "words": -18.89720916748047,
+          "world": -16.06496238708496,
+          "\u30ef\u30fc\u30c9": -19.117048263549805
+        },
+        {
+          " answer": 0.0,
+          " any": -20.366188049316406,
+          " arrow": -20.418132781982422,
+          "-": -19.04842185974121,
+          "_": -18.470420837402344
+        },
+        {
+          "\n": -15.8048677444458,
+          "\n\n": -14.076495170593262,
+          " ": -15.185235977172852,
+          " :": -15.655219078063965,
+          ":": -1.5497195136049413e-06
+        },
+        {
+          " ": -17.56516456604004,
+          " ONE": -13.629374504089355,
+          " One": -1.1920922133867862e-06,
+          " UN": -18.280616760253906,
+          " one": -17.743959426879883
+        },
+        {
+          "\n\n": -20.832042694091797,
+          " de": -20.65755844116211,
+          "'": -19.94432830810547,
+          "-": 0.0,
+          ":": -18.100971221923828
+        },
+        {
+          "ord": -13.989389419555664,
+          "w": -12.203482627868652,
+          "word": -1.919251008075662e-05,
+          "work": -11.874601364135742,
+          "wound": -12.743895530700684
+        },
+        {
+          " a": -16.35077476501465,
+          " answer": -1.072882923836005e-06,
+          " one": -15.448712348937988,
+          " only": -16.053232192993164,
+          " word": -14.310949325561523
+        },
+        {
+          "\n": -19.63982582092285,
+          "\n\n": -20.45331573486328,
+          " (": -21.01933479309082,
+          ".": -20.107280731201172,
+          ":": 0.0
+        },
+        {
+          "\n": -20.45975685119629,
+          " ONE": -19.780643463134766,
+          " One": -0.0002507849130779505,
+          " one": -21.165475845336914,
+          "One": -8.291035652160645
+        },
+        {
+          "\n": -17.181854248046875,
+          "'": -18.23932647705078,
+          "-": -1.1920927533992653e-07,
+          ":": -16.166105270385742,
+          "_": -17.722158432006836
+        },
+        {
+          "wind": -14.851606369018555,
+          "word": -4.172316494077677e-06,
+          "words": -15.544073104858398,
+          "work": -15.644643783569336,
+          "world": -12.744906425476074
+        },
+        {
+          "\n\n": -5.361571788787842,
+          " answer": -0.010663080029189587,
+          " any": -7.46005916595459,
+          "[]": -6.318467140197754,
+          "ance": -7.040548324584961
+        },
+        {
+          " ": -18.443708419799805,
+          " :": -18.811603546142578,
+          ".": -18.694236755371094,
+          ":": 0.0,
+          "_": -17.55240821838379
+        },
+        {
+          " ": -18.75998306274414,
+          " ONE": -15.451725006103516,
+          " One": -4.768370445162873e-07,
+          " one": -15.060922622680664,
+          "One": -18.80002212524414
+        },
+        {
+          " {": -23.529720306396484,
+          "'": -21.676820755004883,
+          "-": 0.0,
+          ":": -19.97378158569336,
+          "=": -23.490049362182617
+        },
+        {
+          "d": -14.45187759399414,
+          "sword": -15.415053367614746,
+          "word": -7.510156592616113e-06,
+          "words": -15.01669692993164,
+          "wound": -12.030186653137207
+        },
+        {
+          " answer": -0.0004637358069885522,
+          " one": -7.874838352203369,
+          " water": -12.458372116088867,
+          " way": -9.458883285522461,
+          " word": -14.638741493225098
+        },
+        {
+          "\n\n": -16.812755584716797,
+          " ": -16.18062400817871,
+          " :": -16.80364227294922,
+          ":": -3.5762778338721546e-07,
+          "_": -16.02306365966797
+        },
+        {
+          " ": -17.395078659057617,
+          " ONE": -14.872966766357422,
+          " One": -3.5762778338721546e-07,
+          " one": -16.953195571899414,
+          "One": -18.80866813659668
+        },
+        {
+          "\n\n": -21.861263275146484,
+          " el": -22.93593406677246,
+          "'": -22.083513259887695,
+          "-": 0.0,
+          ":": -22.36239242553711
+        },
+        {
+          "w": -19.735483169555664,
+          "wd": -19.305383682250977,
+          "wing": -19.169166564941406,
+          "word": 0.0,
+          "world": -17.188613891601562
+        },
+        {
+          " answer": -1.1920927533992653e-07,
+          " one": -17.107421875,
+          " only": -17.67245864868164,
+          "(": -17.57415008544922,
+          "-": -18.82872772216797
+        },
+        {
+          "\n\n": -15.887887954711914,
+          " ": -16.1876220703125,
+          " :": -16.452199935913086,
+          ":": -4.768370445162873e-07,
+          "_": -16.446828842163086
+        },
+        {
+          "\n": -19.696914672851562,
+          "\n\n": -19.24262809753418,
+          " ": -16.690200805664062,
+          " ONE": -14.979805946350098,
+          " One": -3.5762778338721546e-07
+        },
+        {
+          "\n\n": -17.96769142150879,
+          " any": -17.227336883544922,
+          " el": -17.672616958618164,
+          "-": -2.3841855067985307e-07,
+          ":": -18.291900634765625
+        },
+        {
+          "d": -20.35702133178711,
+          "word": -1.1920927533992653e-07,
+          "words": -17.730396270751953,
+          "work": -19.839275360107422,
+          "world": -16.201622009277344
+        },
+        {
+          " a": -13.865236282348633,
+          " answer": -8.702239938429557e-06,
+          " word": -12.653491973876953,
+          "[": -14.156739234924316,
+          "_": -13.172014236450195
+        },
+        {
+          "\n": -21.874900817871094,
+          "(": -24.734712600708008,
+          "-": -24.12251091003418,
+          ":": 0.0,
+          "\uc758": -23.844425201416016
+        },
+        {
+          "\n": -2.5810091495513916,
+          " ": -2.8346991539001465,
+          " ONE": -4.344430446624756,
+          " One": -0.28084900975227356,
+          " one": -2.354417324066162
+        },
+        {
+          "\n": -17.518775939941406,
+          "\n\n": -17.635190963745117,
+          " l": -16.675268173217773,
+          "'": -18.511322021484375,
+          "-": -2.3841855067985307e-07
+        },
+        {
+          "d": -15.894372940063477,
+          "w": -16.47937774658203,
+          "wd": -17.33549690246582,
+          "word": -3.5762778338721546e-07,
+          "world": -15.902860641479492
+        },
+        {
+          "\n\n": -17.174039840698242,
+          " a": -16.624662399291992,
+          " answer": -1.311301275563892e-06,
+          " one": -14.904215812683105,
+          "[]": -14.059189796447754
+        },
+        {
+          "\n\n": -18.78055191040039,
+          " ": -18.52089500427246,
+          " :": -16.94098663330078,
+          ":": -1.1920927533992653e-07,
+          "_": -18.08428192138672
+        },
+        {
+          "\n\n": -19.034788131713867,
+          " ": -19.971004486083984,
+          " ONE": -16.142620086669922,
+          " One": -1.1920927533992653e-07,
+          " one": -20.75774574279785
+        },
+        {
+          "\n\n": -25.126476287841797,
+          "-": 0.0,
+          ":": -22.803661346435547,
+          "^": -25.411605834960938,
+          "th": -25.50847053527832
+        },
+        {
+          "wand": -21.186941146850586,
+          "ward": -21.334003448486328,
+          "word": 0.0,
+          "words": -21.507280349731445,
+          "\u30ef\u30fc\u30c9": -17.634965896606445
+        },
+        {
+          " Answer": -14.465387344360352,
+          " another": -18.41680145263672,
+          " answer": -5.960463340670685e-07,
+          " one": -16.283857345581055,
+          " \u0906\u0902\u0938\u0930": -18.2251033782959
+        },
+        {
+          "\n\n": -17.246585845947266,
+          " ": -17.556259155273438,
+          " :": -16.920673370361328,
+          ":": -1.1920927533992653e-07,
+          "_": -17.681442260742188
+        },
+        {
+          "\n": -19.276168823242188,
+          "\n\n": -18.72019386291504,
+          " ONE": -14.11889934539795,
+          " One": -7.152555099310121e-07,
+          " one": -19.1742000579834
+        },
+        {
+          "\n\n": -22.669095993041992,
+          " word": -23.69327735900879,
+          "'": -23.720382690429688,
+          "-": 0.0,
+          ":": -23.051342010498047
+        },
+        {
+          "Word": -21.417768478393555,
+          "word": 0.0,
+          "words": -21.254430770874023,
+          "work": -20.45346450805664,
+          "world": -18.65789794921875
+        },
+        {
+          " a": -8.485762596130371,
+          " word": -2.4160146713256836,
+          "(": -7.540992736816406,
+          "-": -0.0948559045791626,
+          "_": -8.822474479675293
+        },
+        {
+          "\n": -8.375967979431152,
+          "\n\n": -7.704704761505127,
+          "answer": -0.002214124659076333,
+          "one": -7.8114495277404785,
+          "word": -8.5401611328125
+        },
+        {
+          "\n": -8.63589859008789,
+          "\n\n": -6.57236909866333,
+          " ": -8.364059448242188,
+          ".": -8.609922409057617,
+          ":": -0.002477911300957203
+        },
+        {
+          "\n": -8.35167407989502,
+          "\n\n": -4.284520149230957,
+          " ": -6.208189964294434,
+          " One": -0.016965029761195183,
+          " REF": -7.844489097595215
+        },
+        {
+          "\n": -11.387231826782227,
+          "\n\n": -11.505596160888672,
+          "                               ": -12.874293327331543,
+          " el": -12.527406692504883,
+          "-": -7.652943168068305e-05
+        },
+        {
+          "\n\n": -14.985633850097656,
+          "w": -15.067550659179688,
+          "word": -5.125986717757769e-06,
+          "words": -14.94357967376709,
+          "world": -12.56149959564209
+        },
+        {
+          "\n": -8.233466148376465,
+          "\n\n": -8.887740135192871,
+          " answer": -0.19659332931041718,
+          "'": -9.249667167663574,
+          "-": -1.727616310119629
+        },
+        {
+          "\n": -11.546502113342285,
+          "\n\n": -10.179155349731445,
+          ".": -9.325678825378418,
+          ":": -0.00018988235387951136,
+          "_": -10.593772888183594
+        },
+        {
+          "\n": -11.668642044067383,
+          "\n\n": -11.060873031616211,
+          " ": -12.093050003051758,
+          " ONE": -13.549064636230469,
+          " One": -3.218598794774152e-05
+        },
+        {
+          "\n": -16.051877975463867,
+          "\n\n": -15.708047866821289,
+          " de": -16.786468505859375,
+          " word": -16.424104690551758,
+          "-": -1.072882923836005e-06
+        },
+        {
+          "w": -17.481056213378906,
+          "word": -5.960463340670685e-07,
+          "words": -15.175015449523926,
+          "work": -17.263105392456055,
+          "world": -15.131429672241211
+        },
+        {
+          "\n\n": -12.221040725708008,
+          " answer": -0.00011538793478393927,
+          "'": -11.502412796020508,
+          "-": -9.55683708190918,
+          "_": -11.651028633117676
+        },
+        {
+          "\n": -13.492380142211914,
+          "\n\n": -12.56808853149414,
+          " ": -14.115741729736328,
+          ".": -13.83987808227539,
+          ":": -1.0132738680113107e-05
+        },
+        {
+          "\n\n": -16.842445373535156,
+          " ": -16.22829246520996,
+          " ONE": -11.13535213470459,
+          " One": -1.4901049325999338e-05,
+          "One": -16.053691864013672
+        },
+        {
+          "\n": -17.0921630859375,
+          "\n\n": -16.83358383178711,
+          " de": -17.361948013305664,
+          "-": -3.5762778338721546e-07,
+          ":": -17.436336517333984
+        },
+        {
+          "w": -18.099353790283203,
+          "word": -4.768370445162873e-07,
+          "words": -17.964515686035156,
+          "work": -17.681594848632812,
+          "world": -14.539626121520996
+        },
+        {
+          " answer": -8.380061626667157e-05,
+          "'": -13.174473762512207,
+          "-": -9.52547550201416,
+          ":": -13.916424751281738,
+          "_": -12.647212028503418
+        },
+        {
+          "\n": -13.413877487182617,
+          "\n\n": -12.48476505279541,
+          " ": -14.231159210205078,
+          ".": -14.212124824523926,
+          ":": -8.702239938429557e-06
+        },
+        {
+          "\n": -9.580849647521973,
+          "\n\n": -8.205646514892578,
+          " ": -9.002276420593262,
+          " ONE": -11.05932331085205,
+          " One": -0.0004897111211903393
+        },
+        {
+          "\n": -16.306781768798828,
+          "\n\n": -15.680859565734863,
+          "                               ": -16.929046630859375,
+          "-": -5.960463340670685e-07,
+          ":": -16.888835906982422
+        },
+        {
+          "w": -14.95880126953125,
+          "word": -4.053107204526896e-06,
+          "words": -13.027143478393555,
+          "work": -15.613527297973633,
+          "world": -13.913225173950195
+        },
+        {
+          "\n": -9.158346176147461,
+          "\n\n": -10.898037910461426,
+          " answer": -0.0011695933062583208,
+          "'": -11.947927474975586,
+          "-": -6.893273830413818
+        },
+        {
+          "\n": -14.455068588256836,
+          "\n\n": -13.065642356872559,
+          " ": -14.847847938537598,
+          " :": -14.790205955505371,
+          ":": -4.172316494077677e-06
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 2.993201,
+      "example_id": "fever-54940",
+      "expected_answer": "UNKNOWN",
+      "first_token_confidence": 0.6080012973111661,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: History of Hindu-Christian Encounters -LRB- AD 304 to 1996 -RRB- is a book by Sita Ram Goel which he published in 1986 under his Voice of India imprint . Described as Goel 's `` path-breaking work '' , the book opens with a discussion of the belief common to many Christians in South India that St. Thomas the apostle travelled to India . The book mentions the Syrian Christians of the Malabar coast and the Italian traveller Ludovico di Varthema , author of the Itineratio . An important Hindu-Christian encounter was the arrival of the Portuguese with Vasco da Gama in 1498 CE and with Francis Xavier in 1542 CE , an encounter which Goel points out led to the Inquisition reaching India . Koenraad \nClaim: Seattle is in the same region as Microsoft's headquarters.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "One-word answer:",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.11565338242778693,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.11565338242778693,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.3593639135360718,
+        -0.4975782632827759,
+        -1.1920927533992653e-07,
+        -2.312633478140924e-05,
+        -2.3841855067985307e-07,
+        -1.8358061424805783e-05
+      ],
+      "tokens": [
+        "\n\n",
+        "One",
+        "-",
+        "word",
+        " answer",
+        ":"
+      ],
+      "tokens_generated": 6,
+      "top_logprobs": [
+        {
+          "": -3.5414071083068848,
+          "\n": -3.243396282196045,
+          "\n\n": -0.3593639135360718,
+          " ": -2.9146533012390137,
+          " [": -1.8886760473251343
+        },
+        {
+          "    ": -6.812196254730225,
+          "**": -5.406466484069824,
+          "One": -0.4975782632827759,
+          "SUP": -0.9589630365371704,
+          "```": -6.664599895477295
+        },
+        {
+          " de": -18.597681045532227,
+          " l": -18.569982528686523,
+          " word": -18.816360473632812,
+          "$-$": -19.90682029724121,
+          "-": -1.1920927533992653e-07
+        },
+        {
+          "one": -13.017989158630371,
+          "part": -12.871040344238281,
+          "wood": -12.987936019897461,
+          "word": -2.312633478140924e-05,
+          "world": -11.58569622039795
+        },
+        {
+          " Cl": -18.142629623413086,
+          " answer": -2.3841855067985307e-07,
+          " answers": -17.018606185913086,
+          " response": -15.619953155517578,
+          "_": -17.95513153076172
+        },
+        {
+          " (": -12.505611419677734,
+          ".": -13.229877471923828,
+          ":": -1.8358061424805783e-05,
+          ":'": -13.696518898010254,
+          "_": -13.50351619720459
+        }
+      ]
+    }
+  ],
+  "random_seed": 2886,
+  "reproducibility_checksum": "2c0c5988d05596cf7943061b3949bc3ca3d14f20a08689beb20667392c47ecc7",
+  "run_date": "20260522",
+  "schema_version": 1,
+  "selected_model_fingerprint": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35;size_bytes=16947539744;mtime_ns=1778129415691941084;resolved_path=/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+  "selected_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_2886_sota_micro_panel_clean_telemetry_v3.py -q --no-cov"
+  ]
+}
