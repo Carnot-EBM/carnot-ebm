@@ -1,0 +1,77 @@
+{
+  "activated_milestone": "2026.05.271",
+  "activation": {
+    "expected_milestone": "2026.05.271",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "observed_milestone": "2026.05.271",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "roadmap_exists": true,
+    "roadmap_source": "research-roadmap.yaml",
+    "used_active_roadmap_fallback": true
+  },
+  "archive": {
+    "ready_after_run": true,
+    "research_complete_path": "research-complete.yaml"
+  },
+  "archive_already_present": true,
+  "archive_appended_this_run": false,
+  "archived_milestone": "2026.05.270",
+  "blocked_artifacts_from_capstone": [
+    "exp2848",
+    "exp2854",
+    "exp2857",
+    "exp2859"
+  ],
+  "blocked_reasons": [],
+  "capstone_loaded": true,
+  "capstone_source": "results/experiment_2860_capstone_v270.json",
+  "clean_artifacts_from_capstone": [
+    "exp2847",
+    "exp2849",
+    "exp2850",
+    "exp2855",
+    "exp2858"
+  ],
+  "dataset_naming_mismatch_detected_from_capstone": true,
+  "duration_s": 0.038365,
+  "field_principles": {
+    "activated_milestone": "The next milestone confirmed from the next or active roadmap.",
+    "archive_already_present": "True when no research-complete.yaml append was needed.",
+    "archived_milestone": "The completed milestone whose research-complete row is verified.",
+    "blocked_artifacts_from_capstone": "Blocked .270 artifacts copied without reclassification.",
+    "capstone_source": "The terminal capstone artifact used as archive evidence.",
+    "duration_s": "Real wall-clock duration for the admin run; no sleep padding.",
+    "field_principles": "Plain-English field provenance for downstream reconciliation.",
+    "honest_verdict": "Terminal prefix records complete or blocked archive activation state.",
+    "missing_artifacts_from_capstone": "Missing .270 artifacts copied without imputation.",
+    "paper_ready_from_capstone": "Copied directly from the .270 capstone paper_ready field.",
+    "run_date": "Calendar date for this archive activation task.",
+    "sota_runtime_ready_v2_from_capstone": "Copied directly from the .270 capstone sota_runtime_ready_v2 field.",
+    "top_3_next_actions": "The first three capstone next actions, preserving order."
+  },
+  "honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.270; activated_milestone=2026.05.271; paper_ready=false; sota_runtime_ready_v2=false; clean_artifacts=5; blocked_artifacts=4; missing_artifacts=4",
+  "id": "exp2861-archive-v270-activate-v271",
+  "missing_artifacts_from_capstone": [
+    "exp2851",
+    "exp2852",
+    "exp2853",
+    "exp2856"
+  ],
+  "notes": [
+    "research-roadmap.yaml was read only when research-roadmap-next.yaml was absent.",
+    "scripts/research_conductor.py was not modified.",
+    "No push was performed.",
+    "Ops status/changelog/traceability docs were left for the conductor reconciler."
+  ],
+  "paper_ready_from_capstone": false,
+  "run_date": "20260522",
+  "schema": "carnot.archive_activation.v1",
+  "sota_runtime_ready_v2_from_capstone": false,
+  "top_3_next_actions": [
+    "Restore live SOTA GPU runtime: fix the llama_cpp_gpu_offload precondition (Exp 2848) and ship a working cached_sota_pair so FoVer and other corpus rows can carry live GPU provenance.",
+    "Resolve the Exp 2849 vs Exp 2854 manifest naming mismatch (date-suffixed vs plain .jsonl paths) and rerun the HaluEval/FEVER full calibration against the materialized manifests.",
+    "Implement the LoopUS recurrence backend adapter (Exp 2856) so FR-11 self-learning (Exp 2857) and the drift/MUS prioritizer (Exp 2859) can unblock."
+  ]
+}

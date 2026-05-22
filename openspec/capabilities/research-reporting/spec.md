@@ -4507,6 +4507,57 @@ copied from `results/experiment_2846_capstone_v269.json`, exactly three next
 actions, and no modification to `research-roadmap.yaml` or
 `scripts/research_conductor.py`.
 
+### REQ-REPORT-2861: Archive Milestone 2026.05.270 and Confirm 2026.05.271 Activation
+
+The repository shall provide an Exp 2861 archive/activation generator that
+writes `results/experiment_2861_archive_v270_activate_v271.json`.
+
+The generator must read `research-complete.yaml` and determine whether
+milestone `2026.05.270` already has a completed archive block. If the block is
+present, the generator must set `archive_already_present=true` and avoid
+modifying `research-complete.yaml`. If the block is absent, the generator may
+append a minimal completed archive row for milestone `2026.05.270` from
+`results/experiment_2860_capstone_v270.json` without modifying
+`research-roadmap.yaml`.
+
+The generator must confirm milestone `2026.05.271` and milestone doc
+`openspec/change-proposals/research-roadmap-vNEXT.md` from
+`research-roadmap-next.yaml` when that file exists. If
+`research-roadmap-next.yaml` has already been activated and removed, it must
+read the active `research-roadmap.yaml` as a fallback while still leaving that
+roadmap unmodified.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:` or `blocked:`
+- `archived_milestone`, equal to `2026.05.270`
+- `activated_milestone`, equal to `2026.05.271`
+- `archive_already_present`
+- `capstone_source`, equal to `results/experiment_2860_capstone_v270.json`
+- `paper_ready_from_capstone`
+- `sota_runtime_ready_v2_from_capstone`
+- `blocked_artifacts_from_capstone`
+- `missing_artifacts_from_capstone`
+- `top_3_next_actions`
+- `field_principles`
+- `run_date`, equal to `20260522`
+- `duration_s`, a real wall-clock duration for the archive generator run
+
+#### SCENARIO-REPORT-2861: Existing .270 Archive Confirms Active .271 Roadmap
+
+**Given** `research-complete.yaml` already contains a completed
+`2026.05.270` archive row
+**And** `research-roadmap-next.yaml` may already have been activated into
+`research-roadmap.yaml`
+**When** the Exp 2861 archive generator runs
+**Then** it writes `results/experiment_2861_archive_v270_activate_v271.json`
+with `archive_already_present=true`, `archived_milestone=2026.05.270`,
+`activated_milestone=2026.05.271`, capstone paper and SOTA-runtime readiness
+booleans copied from `results/experiment_2860_capstone_v270.json`, blocked and
+missing artifact lists copied from that capstone, exactly three next actions,
+field principles describing the archive fields, and no modification to
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
+
 ### REQ-REPORT-2855: Clean .270 Cross-Corpus Matrix Without Imputation
 
 The repository shall provide an Exp 2855 matrix generator that writes
