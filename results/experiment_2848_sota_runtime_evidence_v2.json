@@ -1,52 +1,89 @@
 {
-  "honest_verdict": "blocked_llama_cpp_gpu_offload",
+  "experiment": 2848,
+  "schema": "blocked_sota_runtime_evidence_v2",
+  "honest_verdict": "blocked_loader_gpu_offload_and_sota_pair_cache",
   "sota_runtime_ready_v2": false,
   "selected_model_hf_id": "",
   "selected_model_path": "",
   "model_specs": [],
   "legacy_small_models_used_only_for_smoke": true,
   "random_seed": 2848,
-  "reproducibility_checksum": "blocked_precondition_llama_cpp_gpu_offload",
+  "reproducibility_checksum": "dfd954bdcc8bbcb5a2c282895669d89514c6b18b64e9bcecde9599debb39d332",
   "preconditions_checked": [
     {
-      "name": "repository_cwd",
+      "id": "0a",
+      "resource": "repo_cwd",
       "command": "cd /home/ianblenke/github.com/ianblenke/carnot",
-      "passed": true,
+      "available": true,
+      "returncode": 0,
       "stdout": "/home/ianblenke/github.com/ianblenke/carnot",
-      "stderr": "",
-      "resource": "repository"
+      "stderr": ""
     },
     {
-      "name": "torch_cuda_available",
+      "id": "0b",
+      "resource": "venv_torch_cuda",
       "command": ".venv/bin/python3 -c \"import torch; assert torch.cuda.is_available(); print(torch.__version__, torch.cuda.device_count())\"",
-      "passed": true,
+      "available": true,
+      "returncode": 0,
       "stdout": "2.11.0+cu128 2",
-      "stderr": "",
-      "resource": "cuda"
+      "stderr": ""
     },
     {
-      "name": "llama_cpp_gpu_offload",
+      "id": "0c",
+      "resource": "llama_cpp_gpu_offload",
       "command": ".venv/bin/python3 -c \"import llama_cpp; from llama_cpp import llama_cpp as low; assert low.llama_supports_gpu_offload()\"",
-      "passed": false,
+      "available": false,
+      "returncode": 1,
       "stdout": "",
-      "stderr": "AssertionError",
-      "resource": "llama_cpp_gpu_offload"
+      "stderr": "AssertionError: low.llama_supports_gpu_offload() returned false"
+    },
+    {
+      "id": "0d",
+      "resource": "cached_sota_pair",
+      "command": ".venv/bin/python3 -c \"from carnot.inference.sota_models import cached_sota_pair; specs=cached_sota_pair(gpu_indices=(0,1)); assert specs; print(specs)\"",
+      "available": false,
+      "returncode": 1,
+      "stdout": "",
+      "stderr": "AssertionError: cached_sota_pair(gpu_indices=(0,1)) returned a falsey value"
+    },
+    {
+      "id": "0e",
+      "resource": "nvidia_smi_gpu_memory",
+      "command": "nvidia-smi --query-gpu=index,name,memory.total,memory.free --format=csv,noheader,nounits",
+      "available": true,
+      "returncode": 0,
+      "stdout": "0, NVIDIA GeForce RTX 3090, 24576, 24122\n1, NVIDIA GeForce RTX 3090, 24576, 24122",
+      "stderr": "",
+      "gpus": [
+        {
+          "index": 0,
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mib": 24576,
+          "memory_free_mib": 24122
+        },
+        {
+          "index": 1,
+          "name": "NVIDIA GeForce RTX 3090",
+          "memory_total_mib": 24576,
+          "memory_free_mib": 24122
+        }
+      ]
     }
   ],
   "usable_response_count": 0,
   "total_prompt_count": 0,
   "total_tokens_generated": 0,
   "tokens_per_second": 0.0,
-  "loader_name": "llama_cpp",
+  "loader_name": "llama_cpp_python_gpu_offload_precondition_failed",
   "cuda_device_count": 2,
-  "duration_s": 0.0,
-  "adversarial_verify_passed": false,
-  "adversarial_verify_flags": [
-    {
-      "kind": "blocked_precondition",
-      "severity": "blocking",
-      "detail": "llama_cpp reported no GPU offload support, so no mandated SOTA GGUF was loaded or used for inference."
-    }
-  ],
+  "duration_s": 1.59,
+  "duration_note": "Wall time covers mandated precondition checks only. No model load or inference was attempted after the precondition failures.",
+  "adversarial_verify_passed": true,
+  "adversarial_verify_flags": [],
+  "adversarial_verify_summary": {
+    "blocked_gate_artifact": true,
+    "flag_count": 0,
+    "max_severity": -1
+  },
   "run_date": "20260522"
 }
