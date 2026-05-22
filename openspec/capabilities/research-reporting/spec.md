@@ -4634,3 +4634,60 @@ FoVer and HaluEval/FEVER marked `clean`, the absent corpora marked `missing`,
 `cross_corpus_matrix_built=true`, `paper_eligible_rows` containing exactly the
 two clean rows, `verifier_corpus_dual_matrix` containing only clean rows, and
 `excluded_from_headline` explaining why every non-clean corpus is excluded.
+
+### REQ-REPORT-2872: Milestone 2026.05.271 Capstone Claim Boundary
+
+The repository shall provide an Exp 2872 capstone generator that writes
+`results/experiment_2872_capstone_v271.json` with schema
+`carnot.milestone_capstone.v271`.
+
+The generator must read every expected Exp 2861 through Exp 2871 result
+artifact, classify each artifact as `clean`, `blocked`, `missing`, or
+`adversarially_flagged`, and decide paper readiness only from clean evidence.
+It must not infer missing metrics, must not count adversarially flagged runtime,
+micro-panel, or verifier artifacts as headline evidence, must not modify
+`research-roadmap.yaml`, and must not modify `scripts/research_conductor.py`.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:`
+- `milestone`, equal to `2026.05.271`
+- `paper_ready`, true only when Exp 2865 built a cross-corpus matrix from clean
+  FoVer plus at least one clean non-FoVer row and the headline rows themselves
+  are not adversarially flagged
+- `sota_runtime_ready_v3`, preserving the Exp 2862 readiness boundary while
+  separately marking Exp 2862 as adversarially flagged when its artifact is
+  flagged
+- `manifest_contract_ready`
+- `cross_corpus_matrix_built`
+- `fr11_self_learning_ready`
+- `continuous_self_learning_completed`
+- `headline_eligible_rows`
+- clean, blocked, missing, and adversarially flagged artifact lists
+- `primary_corpus_results`, copied from clean source matrix/calibration fields
+  without imputation
+- `self_learning_summary`, including energy delta, correctness delta, memory
+  hashes, and no-model-weight-mutation status from Exp 2869
+- `runtime_summary`, including whether Exp 2870 invoked a mandated SOTA model
+  and whether any runtime or micro-panel source was adversarially flagged
+- `claim_boundary_notes`
+- exactly three `top_3_next_actions`
+- `pushed=false`
+- `scripts_research_conductor_modified=false`
+- `field_principles`
+- `run_date`, equal to `20260522`
+- a real `duration_s`
+
+#### SCENARIO-REPORT-2872: Capstone Preserves Clean, Missing, and Flagged Boundaries
+
+**Given** Exp 2864 and Exp 2865 provide clean HaluEval/FEVER and matrix rows
+**And** Exp 2862, Exp 2870, or Exp 2871 may be adversarially flagged
+**And** MBPP, HumanEval, and TruthfulQA rows may remain missing from the matrix
+**When** the Exp 2872 capstone generator runs
+**Then** it writes `results/experiment_2872_capstone_v271.json` with
+`paper_ready=true` only from the clean Exp 2865 headline rows, flagged runtime
+or formal-verifier artifacts listed in `adversarially_flagged_artifacts`, missing
+non-clean corpus rows retained in `primary_corpus_results`, Exp 2869's
+energy/correctness and mutation boundary preserved in `self_learning_summary`,
+exactly three next actions, and no modification to `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
