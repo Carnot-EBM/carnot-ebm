@@ -8,7 +8,7 @@
   "condition_b_architecture_only_auroc_mean": null,
   "condition_b_architecture_only_auroc_std": null,
   "corpus": "MBPP-sanitized-test",
-  "duration_s": 2.5644726753234863,
+  "duration_s": 2.5701661109924316,
   "field_principles": {
     "condition_a_production_auroc_mean": "Production FR-11 headline AUROC.",
     "condition_a_production_auroc_std": "Production AUROC replication noise.",
@@ -30,6 +30,88 @@
     "reproducibility_checksum": "Content-addressed guard against drift.",
     "state_files_restored_sha_match": "Proves non-destructive state restore.",
     "vanilla_qwen36_pass_at_1": "Generator baseline before verifier ranking."
+  },
+  "field_provenance": {
+    "condition_a_production_auroc_mean": {
+      "principle": "Production FR-11 headline AUROC.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "condition_a_production_auroc_std": {
+      "principle": "Production AUROC replication noise.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "condition_b_architecture_only_auroc_mean": {
+      "principle": "Architecture-only baseline AUROC.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "condition_b_architecture_only_auroc_std": {
+      "principle": "Architecture-only replication noise.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "corpus": {
+      "principle": "Identifies corpus.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "duration_s": {
+      "principle": "Real wall-clock measurement; sleep-padding forbidden.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "fr11_state_files": {
+      "principle": "Names the state isolated for Condition B.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "honest_verdict": {
+      "principle": "Terminal prefix.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "learning_contribution": {
+      "principle": "Condition A minus Condition B memory contribution.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "methodology_note": {
+      "principle": "Explains how to interpret measured or blocked output.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "model_specs": {
+      "principle": "Names the mandated Qwen3.6 GGUF compute target.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "n_problems": {
+      "principle": "Sample size and exact MBPP subset size.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "n_seeds": {
+      "principle": "Replication count across adversarial seeds.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "per_verifier_condition_a_auroc": {
+      "principle": "Per-verifier production attribution.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "per_verifier_condition_b_auroc": {
+      "principle": "Per-verifier architecture-only attribution.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "preconditions_checked": {
+      "principle": "Records resources checked before inference.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "random_seeds_used": {
+      "principle": "Deterministic replay of the five-seed protocol.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "reproducibility_checksum": {
+      "principle": "Content-addressed guard against drift.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "state_files_restored_sha_match": {
+      "principle": "Proves non-destructive state restore.",
+      "satisfied_by": "blocked before measurement"
+    },
+    "vanilla_qwen36_pass_at_1": {
+      "principle": "Generator baseline before verifier ranking.",
+      "satisfied_by": "blocked before measurement"
+    }
   },
   "fr11_state_files": [
     {

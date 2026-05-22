@@ -76,6 +76,13 @@ def _default_value_for_missing_field(field: str) -> object:
     return None
 
 
+def _field_satisfied_by(artifact: dict[str, object]) -> str:
+    verdict = str(artifact.get("honest_verdict", ""))
+    if verdict.startswith(("complete:", "success:")):
+        return "measured output"
+    return "blocked before measurement"
+
+
 def _apply_exp2837_contract(artifact: dict[str, object]) -> dict[str, object]:
     contracted = dict(artifact)
     contracted["artifact"] = "experiment_2837_mbpp_ensemble_eval"
@@ -83,6 +90,14 @@ def _apply_exp2837_contract(artifact: dict[str, object]) -> dict[str, object]:
     contracted["field_principles"] = FIELD_PRINCIPLES
     for field in REQUIRED_ARTIFACT_FIELDS:
         contracted.setdefault(field, _default_value_for_missing_field(field))
+    satisfied_by = _field_satisfied_by(contracted)
+    contracted["field_provenance"] = {
+        field: {
+            "principle": FIELD_PRINCIPLES[field],
+            "satisfied_by": satisfied_by,
+        }
+        for field in REQUIRED_ARTIFACT_FIELDS
+    }
     return contracted
 
 

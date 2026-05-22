@@ -98,6 +98,11 @@ def test_scenario_verify_mbpp_2837_blocked_qwen_cache_writes_schema(tmp_path: Pa
     assert artifact["artifact"] == "experiment_2837_mbpp_ensemble_eval"
     assert artifact["schema"] == "carnot.mbpp_ensemble_v7b.exp2837"
     assert artifact["honest_verdict"] == "blocked_model_not_cached_qwen36_35b_a3b_gguf"
+    assert artifact["field_provenance"]["honest_verdict"] == {
+        "principle": "Terminal prefix.",
+        "satisfied_by": "blocked before measurement",
+    }
+    assert set(mod.REQUIRED_ARTIFACT_FIELDS).issubset(artifact["field_provenance"])
     assert artifact["condition_a_production_auroc_mean"] is None
     assert artifact["condition_a_production_auroc_std"] is None
     assert artifact["condition_b_architecture_only_auroc_mean"] is None
@@ -144,6 +149,28 @@ def test_req_verify_mbpp_2837_success_uses_exp2837_filename(tmp_path: Path) -> N
     }
     assert artifact["vanilla_qwen36_pass_at_1"] == pytest.approx(0.51)
     assert artifact["field_principles"] == mod.FIELD_PRINCIPLES
+    assert artifact["field_provenance"]["condition_a_production_auroc_mean"] == {
+        "principle": "Production FR-11 headline AUROC.",
+        "satisfied_by": "measured output",
+    }
+
+
+def test_req_verify_mbpp_2837_write_false_leaves_filesystem_unchanged(tmp_path: Path) -> None:
+    """REQ-VERIFY-MBPP-2837: tests can inspect artifacts without writing files."""
+
+    results_dir = tmp_path / "results"
+    results_dir.mkdir()
+    (results_dir / "fr11_policy_cache_events_1512.jsonl").write_text("{}", encoding="utf-8")
+
+    artifact = mod.run_experiment(
+        ExperimentConfig(repo_root=tmp_path, results_dir=results_dir),
+        precondition_probe=lambda _config, _state_files: _all_preconditions(),
+        measurement_runner=lambda _config, _state_files: _measurements(),
+        write=False,
+    )
+
+    assert artifact["honest_verdict"].startswith("complete:")
+    assert not (results_dir / mod.OUTPUT_FILENAME).exists()
 
 
 def test_req_verify_mbpp_2837_cli_builds_config(
