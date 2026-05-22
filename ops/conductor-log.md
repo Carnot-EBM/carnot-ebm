@@ -5999,3 +5999,4 @@ Ripgrep i |
 | 2026-05-22 19:06 UTC | Exact Frontier Expansion v2 for HaluEval/FEVER | OK | 81 passed in 3.40s |
 | 2026-05-22 19:20 UTC | HaluEval/FEVER Error-Verifiability + Label-Consist | OK | 81 passed in 3.46s |
 | 2026-05-22 19:33 UTC | MBPP/HumanEval Manifest-Only Execution Pilot | OK | 81 passed in 3.93s |
+| 2026-05-22 19:44 UTC | Cross-Corpus Matrix v6 from Clean Expanded Rows | OK | 81 passed in 3.31s |
