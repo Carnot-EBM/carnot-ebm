@@ -7090,3 +7090,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: Local Dataset and Split Materialization v1 (✅ Complete) — honest_verdict=complete: local benchmark manifests materialized; results/experiment_2849_local_dataset_materialization_v1.json
 - 2026-05-22: FoVer Dual-Condition Integrity Rerun v4 (✅ Complete) — honest_verdict=complete: FoVer dual-condition integrity rerun measured dataset-only production-vs-architecture contribution; results/experiment_2850_fover_dual_condition_integrity_v4.json
 - 2026-05-22: HaluEval + FEVER Full Calibration v2 (gated on exp2849 datasets) (⚠️ Blocked) — honest_verdict=blocked_missing_required_manifest_files; results/experiment_2854_halueval_fever_full_calibration_v2.json
+- 2026-05-22: HaluEval + FEVER Full Calibration v2 (gated on exp2849 datasets) (⚠️ Blocked) — honest_verdict=blocked_missing_eval_manifests; results/experiment_2854_halueval_fever_full_calibration_v2.json
