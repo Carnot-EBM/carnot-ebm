@@ -1,0 +1,85 @@
+{
+  "artifact": "experiment_2871_kan_pwa_milp_tiny_verifier_v1",
+  "blocked_reason": null,
+  "certified_upper_bound": 0.25,
+  "checker_method": "exact_enumerated_pwa_vertices",
+  "duration_s": 0.000105,
+  "experiment": 2871,
+  "field_principles": {
+    "abstraction_scope": "local/global error bounds are analytic for x^2 chord envelopes",
+    "proof_scope": "exact only for the deterministic one-unit quadratic fixture",
+    "solver_boundary": "solver_used is null unless a MILP backend actually solves the property"
+  },
+  "global_error_bound": 0.0625,
+  "honest_verdict": "complete_with_exact_enumerated_fallback_no_general_milp_or_network_claim",
+  "kan_pwa_milp_verifier_ready": true,
+  "local_error_bound": 0.0625,
+  "milp_backend_available": false,
+  "milp_backend_detected": null,
+  "milp_or_exact_property_checked": true,
+  "n_pwa_pieces": 4,
+  "property_statement": "For all x in [-0.5, 0.5], phi(x)=x^2 <= 0.25.",
+  "property_verified": true,
+  "pwa_abstraction": {
+    "domain": [
+      -1.0,
+      1.0
+    ],
+    "global_error_bound": 0.0625,
+    "local_error_bound": 0.0625,
+    "n_pieces": 4,
+    "segments": [
+      {
+        "intercept": -0.5,
+        "local_error_bound": 0.0625,
+        "residual_lower": -0.0625,
+        "residual_upper": 0.0,
+        "slope": -1.5,
+        "x_max": -0.5,
+        "x_min": -1.0
+      },
+      {
+        "intercept": 0.0,
+        "local_error_bound": 0.0625,
+        "residual_lower": -0.0625,
+        "residual_upper": 0.0,
+        "slope": -0.5,
+        "x_max": 0.0,
+        "x_min": -0.5
+      },
+      {
+        "intercept": 0.0,
+        "local_error_bound": 0.0625,
+        "residual_lower": -0.0625,
+        "residual_upper": 0.0,
+        "slope": 0.5,
+        "x_max": 0.5,
+        "x_min": 0.0
+      },
+      {
+        "intercept": -0.5,
+        "local_error_bound": 0.0625,
+        "residual_lower": -0.0625,
+        "residual_upper": 0.0,
+        "slope": 1.5,
+        "x_max": 1.0,
+        "x_min": 0.5
+      }
+    ],
+    "unit": "phi(x)=x^2"
+  },
+  "pwa_abstraction_built": true,
+  "random_seed": 0,
+  "reproducibility_checksum": "62329dcd23b9de4d7ec929ae5a79e229478b143f905b028d850df05964bc18bd",
+  "run_date": "20260522",
+  "schema": "carnot.kan_pwa_milp_tiny_verifier.v1",
+  "solver_boundary": "PuLP is not installed in this environment, so no MILP backend is claimed. The property is checked by exact finite enumeration of the one-dimensional PWA upper-envelope vertices.",
+  "solver_used": null,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/verify/test_kan_pwa_milp_tiny.py -q --no-cov",
+    ".venv/bin/coverage run --source=python/carnot/verify -m pytest tests/python/verify/test_kan_pwa_milp_tiny.py -q --no-cov -n0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/verify/kan_pwa_milp_tiny.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "witness_x": -0.5
+}

@@ -98,6 +98,30 @@ Then flat and monotone layers are verified, non-monotone or inverted layers
 report violations, and every result exposes deterministic keys suitable for a
 terminal experiment artifact.
 
+## REQ-KAN-2871: Tiny KAN PWA/MILP Verifier Prototype With Honest Solver Boundary
+
+The KAN verification tier SHALL provide a tiny CPU-only prototype that replaces
+one bounded KAN-style univariate unit with an explicit piecewise-affine
+abstraction, records local and global abstraction error bounds, and checks one
+output property through either a local MILP solver or an exact finite
+enumeration fallback when no MILP solver is available.
+
+The prototype MUST write `results/experiment_2871_kan_pwa_milp_tiny_verifier_v1.json`
+with explicit solver/proof boundaries. It MUST NOT claim a general KAN verifier,
+trained-network soundness, or MILP readiness when the run used only the exact
+fallback.
+
+### SCENARIO-KAN-2871: Tiny PWA Property Artifact
+
+Given the deterministic fixture `phi(x) = x^2` on `x in [-1, 1]` with a bounded
+property domain `x in [-0.5, 0.5]`,
+When the verifier builds knot-aligned PWA chord envelopes and checks
+`phi(x) <= 0.25`,
+Then the artifact reports the exact local/global error bounds, records whether
+a MILP solver or exact fallback was used, verifies the property only when the
+certified upper bound is within the threshold, and includes all required Exp
+2871 schema fields.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
