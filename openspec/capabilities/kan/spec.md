@@ -122,6 +122,33 @@ a MILP solver or exact fallback was used, verifies the property only when the
 certified upper bound is within the threshold, and includes all required Exp
 2871 schema fields.
 
+## REQ-KAN-2876: KAN PWA/MILP Corrigendum With Non-Tautological Bounds
+
+The KAN verification tier SHALL provide a narrow Exp 2876 corrigendum for the
+Exp 2871 tiny PWA/MILP prototype. The corrigendum MUST compute the local
+abstraction error bound and the global output error bound through distinct
+procedures, and the result artifact MUST record whether the two bounds are
+distinct by construction.
+
+The corrigendum MUST attempt a real local mixed integer linear backend before
+using exact PWA vertex enumeration. If no supported solver dependency is
+available, the artifact MUST report `blocked_solver_dependency` and may include
+exact enumeration only as fallback evidence. The artifact MUST NOT claim MILP
+readiness when solver dependencies are absent.
+
+### SCENARIO-KAN-2876: Corrigendum Clears Exp 2871 Tautology Flag
+
+Given a deterministic two-unit KAN-style PWA fixture with positive output
+weights,
+When the verifier computes per-segment local residual bounds, propagates a
+global output error bound through the weighted output graph, and maximizes the
+PWA upper envelope through a local solver when available,
+Then `local_error_bound` and `global_error_bound` are not mechanically equal,
+`bounds_distinct_by_construction` is true, solver availability and status are
+reported, exact enumeration is marked fallback-only, and
+`results/experiment_2876_kan_pwa_milp_corrigendum_v2.json` includes every
+required schema field.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
@@ -235,6 +262,7 @@ Then it outputs the token-per-second (TPS) for both baseline and CIKAN, and `res
 | REQ-KAN-1723 | Implemented | Exp 1723: FourierCSP constraints compile into fixed CIKAN architectural boundaries with toy artifact evidence. |
 | REQ-KAN-1749 | Implemented | Exp 1749: Symbolic-KAN routing layer embeds discrete primitive choices as tensor gates over learned scalar projections. |
 | REQ-KAN-2005 | Proposed | Exp 2005 target: adaptive KAEM/KAN spline mesh refinement emits structural-change metrics and a completed artifact. |
+| REQ-KAN-2876 | Implemented | Exp 2876 corrigendum separates local/global bounds and reports the local Z3 solver path or blocked-solver fallback. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 

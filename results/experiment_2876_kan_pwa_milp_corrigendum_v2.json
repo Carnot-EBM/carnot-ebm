@@ -1,0 +1,206 @@
+{
+  "artifact": "experiment_2876_kan_pwa_milp_corrigendum_v2",
+  "bounds_distinct_by_construction": true,
+  "certified_upper_bound": 0.53125,
+  "counterexample_or_certificate": {
+    "certified_upper_bound": 0.53125,
+    "kind": "certificate",
+    "method": "z3_mixed_integer_linear_pwa",
+    "property_threshold": 0.625,
+    "selected_segment": 3,
+    "witness_maximizer_x": 0.5
+  },
+  "duration_s": 0.064674,
+  "exact_enumeration_used_only_as_fallback": false,
+  "experiment": 2876,
+  "field_principles": {
+    "exp_2871_flag_fields": "Exp 2871 was flagged because local_error_bound and global_error_bound were both exactly 0.0625.",
+    "fallback_boundary": "exact enumeration is reported only as blocked-solver fallback evidence",
+    "global_bound_procedure": "sum of absolute output weights times each unit's local bound",
+    "local_bound_procedure": "max per-segment midpoint residual over unweighted PWA units",
+    "proof_scope": "deterministic two-unit quadratic PWA fixture only",
+    "solver_boundary": "MILP readiness is claimed only when a local solver returns optimal"
+  },
+  "global_error_bound": 0.09375,
+  "honest_verdict": "complete_corrigendum_z3_milp_bounds_distinct_no_general_kan_claim",
+  "kan_corrigendum_ready": true,
+  "local_error_bound": 0.0625,
+  "milp_backend_available": true,
+  "milp_backend_name": "z3",
+  "previous_artifact_flag": {
+    "experiment": 2871,
+    "flag_kind": "TAUTOLOGY",
+    "flagged_fields": [
+      "local_error_bound",
+      "global_error_bound"
+    ],
+    "flagged_values": [
+      0.0625,
+      0.0625
+    ]
+  },
+  "property_statement": "For all x in [-0.5, 0.5], u0(x) + 2*u1(x) <= 0.625 under the PWA upper envelope.",
+  "property_verified": true,
+  "pwa_fixture": {
+    "bound_procedures": {
+      "global_error_bound": "weighted_output_error_propagation",
+      "local_error_bound": "max_per_segment_midpoint_residual"
+    },
+    "global_error_bound": 0.09375,
+    "local_error_bound": 0.0625,
+    "output_segments": [
+      {
+        "intercept": -0.71875,
+        "slope": -2.0,
+        "x_max": -0.5,
+        "x_min": -1.0
+      },
+      {
+        "intercept": 0.03125,
+        "slope": -0.5,
+        "x_max": 0.0,
+        "x_min": -0.5
+      },
+      {
+        "intercept": 0.03125,
+        "slope": 1.0,
+        "x_max": 0.5,
+        "x_min": 0.0
+      },
+      {
+        "intercept": -0.71875,
+        "slope": 2.5,
+        "x_max": 1.0,
+        "x_min": 0.5
+      }
+    ],
+    "property_domain": [
+      -0.5,
+      0.5
+    ],
+    "property_threshold": 0.625,
+    "units": [
+      {
+        "coefficient": 1.0,
+        "local_error_bound": 0.0625,
+        "name": "u0_x_squared",
+        "output_weight": 1.0,
+        "segments": [
+          {
+            "intercept": -0.5,
+            "local_error_bound": 0.0625,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "slope": -1.5,
+            "x_max": -0.5,
+            "x_min": -1.0
+          },
+          {
+            "intercept": 0.0,
+            "local_error_bound": 0.0625,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "slope": -0.5,
+            "x_max": 0.0,
+            "x_min": -0.5
+          },
+          {
+            "intercept": 0.0,
+            "local_error_bound": 0.0625,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "slope": 0.5,
+            "x_max": 0.5,
+            "x_min": 0.0
+          },
+          {
+            "intercept": -0.5,
+            "local_error_bound": 0.0625,
+            "residual_lower": -0.0625,
+            "residual_upper": 0.0,
+            "slope": 1.5,
+            "x_max": 1.0,
+            "x_min": 0.5
+          }
+        ],
+        "shift": 0.0,
+        "weighted_global_error_contribution": 0.0625
+      },
+      {
+        "coefficient": 0.25,
+        "local_error_bound": 0.015625,
+        "name": "u1_shifted_scaled_quadratic",
+        "output_weight": 2.0,
+        "segments": [
+          {
+            "intercept": -0.109375,
+            "local_error_bound": 0.015625,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "slope": -0.25,
+            "x_max": -0.5,
+            "x_min": -1.0
+          },
+          {
+            "intercept": 0.015625,
+            "local_error_bound": 0.015625,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "slope": 0.0,
+            "x_max": 0.0,
+            "x_min": -0.5
+          },
+          {
+            "intercept": 0.015625,
+            "local_error_bound": 0.015625,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "slope": 0.25,
+            "x_max": 0.5,
+            "x_min": 0.0
+          },
+          {
+            "intercept": -0.109375,
+            "local_error_bound": 0.015625,
+            "residual_lower": -0.015625,
+            "residual_upper": 0.0,
+            "slope": 0.5,
+            "x_max": 1.0,
+            "x_min": 0.5
+          }
+        ],
+        "shift": 0.25,
+        "weighted_global_error_contribution": 0.03125
+      }
+    ]
+  },
+  "random_seed": 0,
+  "reproducibility_checksum": "f47f2253037b7e31ae93e3fd76d97c7d278fa647301305cc7407cfd2207fa1ca",
+  "run_date": "20260522",
+  "schema": "carnot.kan_pwa_milp_corrigendum.v2",
+  "solver_preconditions_checked": [
+    {
+      "available": true,
+      "backend": "z3",
+      "check": "importlib.util.find_spec('z3')",
+      "forced_absent_for_blocked_solver_artifact": false,
+      "importable": true
+    }
+  ],
+  "solver_status": "optimal",
+  "tautology_flag_cleared": true,
+  "test_outcomes": {
+    "focused_pytest": "passed: 6 passed",
+    "full_pytest": "failed: 11 failed, 7138 passed, 35 skipped, 1 error; xdist worker crashed in tests/python/test_experiment_295_apple_verify_repair.py::test_partial_artifact_has_stall_at with tokenizer prewarm MemoryError",
+    "new_code_coverage": "passed: 100% line coverage for python/carnot/verify/kan_pwa_milp_corrigendum.py",
+    "spec_coverage": "failed: 444 pre-existing tests missing spec traceability"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/verify/test_kan_pwa_milp_corrigendum.py -q --no-cov",
+    ".venv/bin/coverage run --source=python/carnot/verify -m pytest tests/python/verify/test_kan_pwa_milp_corrigendum.py -q --no-cov -n0",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/verify/kan_pwa_milp_corrigendum.py",
+    ".venv/bin/pytest tests/python -q",
+    ".venv/bin/python scripts/check_spec_coverage.py"
+  ],
+  "witness_x": 0.5
+}
