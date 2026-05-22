@@ -5972,3 +5972,4 @@ Ripgrep i |
 | 2026-05-22 10:10 UTC | LoopUS Recurrence Backend Adapter v1 (gated on exp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
 | 2026-05-22 10:30 UTC | LoopUS FR-11 Continuous Self-Learning Pilot v2 (ga | FAIL | No file changes produced |
 | 2026-05-22 10:44 UTC | BEAVER/EPR Clean Bounded Proxy v2 | OK | 81 passed in 3.73s |
+| 2026-05-22 10:47 UTC | Residual Drift + MUS Conflict Prioritizer (gated o | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2859_drift_m |
