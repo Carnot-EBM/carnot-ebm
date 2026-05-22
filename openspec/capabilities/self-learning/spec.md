@@ -6123,3 +6123,51 @@ success rate, memory hashes, model specs, and reproducibility checksum.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2857 | Implemented (`python/carnot/eval/loopus_fr11_self_learning_v2.py`, `scripts/experiment_2857_loopus_fr11_self_learning_v2.py`) | Implemented (`tests/python/test_experiment_2857_loopus_fr11_self_learning_v2.py`) |
+
+## REQ-LEARN-2868: Offline Recurrence Backend Adapter for Verifier Trace Replay
+
+**Given** FR-11 LoopUS live recurrence is blocked by the missing backend artifact
+**When** Exp 2868 selects an offline recurrence backend
+**Then** the backend SHALL accept existing verifier trace rows without invoking a
+live LLM
+**And** it SHALL emit deterministic revised energy summaries from the supplied
+trace rows
+**And** it SHALL expose a stable `backend_module_path` for downstream Exp 2869
+gating
+**And** it SHALL report `live_recurrence_backend_ready=false`,
+`live_model_invoked=false`, and `no_model_weight_mutation=true`.
+
+### REQ-LEARN-2868 Sub-requirements
+
+- REQ-LEARN-2868-1: `OfflineRecurrenceReplayBackend.replay(rows)` SHALL accept
+  an iterable of mapping-like verifier trace rows and return a mapping with
+  `backend_module_path`, `backend_api`, `n_rows`, `per_example_trace`,
+  `per_loop_energy_summary`, `energy_delta_mean`, `replay_smoke_passed`,
+  `live_model_invoked=false`, and `no_model_weight_mutation=true`.
+- REQ-LEARN-2868-2: Each replay trace row SHALL include `example_id`,
+  `energy_before`, `energy_after_each_loop`, `correctness_before`,
+  `correctness_after`, and `early_exit_reason`. Missing optional source fields
+  SHALL default to `"verifier_trace"`.
+- REQ-LEARN-2868-3: `run_experiment()` SHALL write
+  `results/experiment_2868_offline_recurrence_backend_adapter_v2.json` with the
+  required Exp 2868 artifact fields, including `honest_verdict`,
+  `offline_recurrence_backend_ready`, `live_recurrence_backend_ready`,
+  `backend_module_path`, `backend_api`, `replay_smoke_passed`,
+  `live_model_invoked`, `no_model_weight_mutation`, `preconditions_checked`,
+  `tests_run`, `random_seed`, `reproducibility_checksum`, `field_principles`,
+  `run_date`, and `duration_s`.
+
+### SCENARIO-LEARN-2868: Offline Replay Backend Emits Stable Energy Summary
+
+**Given** two deterministic verifier trace rows with initial verifier energy and
+revised verifier energy
+**When** `OfflineRecurrenceReplayBackend.replay()` is called
+**Then** the backend returns a stable import path, a positive energy delta for
+improved rows, loop-level energy means, and mutation flags proving no live model
+or model weights were touched.
+
+## Implementation Status (REQ-LEARN-2868)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2868 | Implemented (`python/carnot/eval/offline_recurrence_backend_adapter_v2.py`) | Implemented (`tests/python/test_experiment_2868_offline_recurrence_backend_adapter_v2.py`) |

@@ -1,0 +1,155 @@
+{
+  "artifact": "experiment_2868_offline_recurrence_backend_adapter_v2",
+  "backend_api": {
+    "callable": "OfflineRecurrenceReplayBackend.replay",
+    "input": {
+      "optional_fields": [
+        "example_id",
+        "case_id",
+        "question_id",
+        "source",
+        "corpus",
+        "correctness_before",
+        "correctness_after",
+        "localized_violations"
+      ],
+      "required_one_of": [
+        "energy_before + revised_energy",
+        "energy_before + energy_after_each_loop",
+        "verifier_scores"
+      ],
+      "type": "iterable[Mapping[str, object]]"
+    },
+    "live_model_invoked": false,
+    "module": "carnot.eval.offline_recurrence_backend_adapter_v2",
+    "mutates_model_weights": false,
+    "output": {
+      "fields": [
+        "backend_module_path",
+        "backend_api",
+        "n_rows",
+        "per_example_trace",
+        "per_loop_energy_summary",
+        "energy_delta_mean",
+        "replay_smoke_passed",
+        "live_model_invoked",
+        "no_model_weight_mutation"
+      ]
+    }
+  },
+  "backend_module_path": "carnot.eval.offline_recurrence_backend_adapter_v2",
+  "duration_s": 0.070360183716,
+  "energy_delta_mean": 0.125,
+  "field_principles": {
+    "backend_api": "Documents the replay-only callable and required row/output fields.",
+    "backend_module_path": "Stable import path downstream experiments can gate on.",
+    "duration_s": "Real wall-clock duration; no sleep padding.",
+    "honest_verdict": "Terminal complete:/blocked_ verdict; no inferred live success.",
+    "live_model_invoked": "False because the adapter consumes verifier traces only.",
+    "live_recurrence_backend_ready": "Always false; live repair remains a separate runtime task.",
+    "no_model_weight_mutation": "True because no model object or weight tensor is accepted.",
+    "offline_recurrence_backend_ready": "True only when trace replay normalizes at least one row.",
+    "replay_smoke_passed": "True only when the deterministic smoke replay completed.",
+    "reproducibility_checksum": "Hashes stable inputs, replay summaries, and API metadata."
+  },
+  "honest_verdict": "complete: offline recurrence replay backend ready",
+  "live_model_invoked": false,
+  "live_recurrence_backend_ready": false,
+  "methodology_note": "Offline replay over existing verifier traces only. Revised energies are deterministic summary values, not live LLM repair outputs.",
+  "n_rows": 4,
+  "no_model_weight_mutation": true,
+  "offline_recurrence_backend_ready": true,
+  "per_example_trace": [
+    {
+      "correctness_after": false,
+      "correctness_before": false,
+      "early_exit_reason": "offline_energy_replayed",
+      "energy_after_each_loop": [
+        0.75
+      ],
+      "energy_before": 1.0,
+      "example_id": "HumanEval_99",
+      "localized_violations": [
+        "fover_verifier"
+      ],
+      "source": "humaneval"
+    },
+    {
+      "correctness_after": true,
+      "correctness_before": true,
+      "early_exit_reason": "offline_no_energy_improvement",
+      "energy_after_each_loop": [
+        0.0
+      ],
+      "energy_before": 0.0,
+      "example_id": "gsm8k_873_1_0",
+      "localized_violations": [],
+      "source": "fover_v4"
+    },
+    {
+      "correctness_after": false,
+      "correctness_before": false,
+      "early_exit_reason": "offline_energy_replayed",
+      "energy_after_each_loop": [
+        0.75
+      ],
+      "energy_before": 1.0,
+      "example_id": "arc_challenge_0001",
+      "localized_violations": [
+        "fover_verifier"
+      ],
+      "source": "arc_challenge"
+    },
+    {
+      "correctness_after": true,
+      "correctness_before": true,
+      "early_exit_reason": "offline_no_energy_improvement",
+      "energy_after_each_loop": [
+        0.0
+      ],
+      "energy_before": 0.0,
+      "example_id": "gsm8k_874_0_0",
+      "localized_violations": [],
+      "source": "fover_v4"
+    }
+  ],
+  "per_loop_energy_summary": {
+    "loop_1": {
+      "mean_delta_from_initial": 0.125,
+      "mean_energy": 0.375,
+      "n": 4
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot",
+      "resource": "repo_root"
+    },
+    {
+      "available": true,
+      "detail": "carnot.eval.offline_recurrence_backend_adapter_v2",
+      "resource": "offline_backend_module_path"
+    },
+    {
+      "available": true,
+      "detail": "rows=4",
+      "resource": "verifier_trace_rows"
+    }
+  ],
+  "random_seed": 2868,
+  "replay_smoke_passed": true,
+  "reproducibility_checksum": "cad200e31c5312794bf7f6b3641046f4029dd335cc1482cc1ed59e2effc8695c",
+  "run_date": "20260522",
+  "schema": "carnot.offline_recurrence_backend_adapter.v2",
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_2868_offline_recurrence_backend_adapter_v2.py -q --no-cov (passed: 6 passed)",
+    ".venv/bin/coverage run -m pytest tests/python/test_experiment_2868_offline_recurrence_backend_adapter_v2.py -q -n 0 --no-cov (passed: 6 passed)",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/eval/offline_recurrence_backend_adapter_v2.py (passed: 100% new-code coverage)",
+    "ruff check python/carnot/eval/offline_recurrence_backend_adapter_v2.py tests/python/test_experiment_2868_offline_recurrence_backend_adapter_v2.py (passed)",
+    "ruff format --check python/carnot/eval/offline_recurrence_backend_adapter_v2.py tests/python/test_experiment_2868_offline_recurrence_backend_adapter_v2.py (passed)",
+    "offline FoVer smoke replay via run_experiment(write=False) (passed: n_rows=4, energy_delta_mean=0.125)",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: 444 pre-existing tests missing spec traceability)",
+    ".venv/bin/pytest tests/python -q (failed/crashed: many pre-existing failures and xdist worker crashes; examples include JAX abort in test_verify_landscape.py, tokenizers abort in test_experiment_295_apple_verify_repair.py, Z3 segfault in test_pipeline_errors.py)"
+  ]
+}

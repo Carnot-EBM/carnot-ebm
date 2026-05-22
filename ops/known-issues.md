@@ -5824,3 +5824,7 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 **Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
 
 **Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
+
+
+### NEW Phase 4 Canonical Metric MANDATORY
+Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
