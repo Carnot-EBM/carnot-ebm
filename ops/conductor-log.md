@@ -6006,3 +6006,4 @@ Ripgrep i |
 | 2026-05-22 21:23 UTC | Capstone .272: Clean Corrigenda + RecMem + Expande | OK | 81 passed in 3.63s |
 | 2026-05-22 22:01 UTC | Plan milestone 2026.05.273 | OK | 12 tasks proposed |
 | 2026-05-22 22:04 UTC | Milestone 2026.05.273 activated | OK | 12 tasks queued |
+| 2026-05-22 22:14 UTC | Archive .272 + Activate .273 | OK | 81 passed in 3.91s |

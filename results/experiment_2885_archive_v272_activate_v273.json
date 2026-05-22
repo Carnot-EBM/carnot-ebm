@@ -104,5 +104,18 @@
     "Re-run Exp 2875 with adversarial-clean duration and reproducibility checksum, or downgrade it permanently to a non-benchmark telemetry note.",
     "Repair Exp 2882 with non-tautological eager-vs-RecMem metrics before claiming FR-11 scale-up correctness, AUROC, energy, drift, or non-forgetting.",
     "Promote MBPP/HumanEval from pilot-only and materialize TruthfulQA only when clean generated-code or label evidence exists."
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.02265 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
