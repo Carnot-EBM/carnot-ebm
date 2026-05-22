@@ -5929,3 +5929,4 @@ Ripgrep i |
 | 2026-05-22 04:56 UTC | Paper v6 Section 5 Table v3 (gated on exp2842 matr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2842-cross-corpus-matrix-v3) |
 | 2026-05-22 04:56 UTC | Milestone 2026.05.269 activated | OK | 8 tasks queued |
 | 2026-05-22 04:58 UTC | Archive .268 + Activate .269 | OK | Deliverable already exists in repo |
+| 2026-05-22 05:12 UTC | FoVer Memory-Leakage Isolation v3 (CODEX, post-tor | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2836_fover_m |
