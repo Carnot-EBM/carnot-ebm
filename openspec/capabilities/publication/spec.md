@@ -1070,6 +1070,58 @@ AND the Exp 2833 artifact sets `submission_package_ready == false` and
 AND no placeholder values such as `<peer>` or synthetic AUROC defaults are
 inserted.
 
+### REQ-PUBLISH-034: Exp 2841 Paper-v6 Multi-Corpus Table v3
+
+The Exp 2841 paper-v6 table integrator MUST read the post-.268 dual-condition
+corpus artifacts and the Exp 2840 verifier matrix, then update
+`docs/arxiv-paper/main.tex` Section 5 with the authoritative v3
+dual-condition table. The table MUST contain exactly the FoVer, MBPP,
+HumanEval, and TruthfulQA rows with columns for `N`, architecture-only AUROC,
+production AUROC, learning delta, and peer baseline. Numeric AUROC and
+learning-delta cells MUST be derived from the loaded source artifacts; blocked,
+missing, or null source measurements MUST remain visibly unmeasured and MUST
+NOT be replaced by Exp 2825, Exp 2833, placeholders, or synthetic defaults.
+
+The runner MUST update Section 5.1 from the FoVer source artifact's actual
+`learning_contribution` and `per_verifier_learning_contribution` fields, and
+MUST update Section 5.2 from the Exp 2840 verifier matrix categories and
+matrix status. The runner MUST compile `docs/arxiv-paper/main.tex` with
+`pdflatex`, MUST NOT submit or upload to any external publication venue, and
+MUST write `results/experiment_2841_paper_v6_multicorpus_table_v3.json` with
+`honest_verdict`, `paper_v6_compile_success`, `corpora_in_table`,
+`submission_package_ready`, `arxiv_ready_v8`, and `duration_s`.
+
+`submission_package_ready` and `arxiv_ready_v8` MUST be true only when the
+paper compiles and every corpus row has both production and architecture-only
+AUROC measured. The terminal artifact MUST record the source artifact paths and
+operator-only publication guard fields.
+
+### SCENARIO-PUBLISH-034: v3 Integrates Measured Post-.268 Rows
+
+**Given** the post-.268 source artifacts contain numeric production and
+architecture-only AUROC means for all four corpora and Exp 2840 contains a
+verifier matrix
+**When** the Exp 2841 paper-v6 table integrator runs
+**Then** it replaces the existing Section 5 multi-corpus block with source
+derived values
+AND writes an Exp 2841 artifact whose `honest_verdict` starts with `complete:`
+AND whose `corpora_in_table` is exactly `["FoVer", "MBPP", "HumanEval",
+"TruthfulQA"]`
+AND whose operator-only guard fields record that no external submission was
+attempted.
+
+### SCENARIO-PUBLISH-034B: v3 Blocks Readiness For Missing Real AUROCs
+
+**Given** one or more post-.268 source artifacts have blocked verdicts or null
+AUROC values
+**When** the Exp 2841 paper-v6 table integrator runs
+**Then** the corresponding paper table cells say the measurements are
+unmeasured
+AND the Exp 2841 artifact sets `submission_package_ready == false` and
+`arxiv_ready_v8 == false`
+AND no placeholder values such as `<peer>` or carry-forward Exp 2825/2833
+values are inserted.
+
 
 ## Implementation Status
 
@@ -1104,6 +1156,7 @@ inserted.
 | REQ-PUBLISH-031 | Implemented | Exp 2554 milestone .245 capstone synthesis artifact |
 | REQ-PUBLISH-032 | Implemented | Exp 2826 milestone .267 multi-corpus capstone synthesis artifact |
 | REQ-PUBLISH-033 | Planned | Exp 2833 paper-v6 multi-corpus table v2 |
+| REQ-PUBLISH-034 | Planned | Exp 2841 paper-v6 multi-corpus table v3 |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".

@@ -1,0 +1,128 @@
+{
+  "honest_verdict": "complete: exp2836-2840 artifacts integrated honestly; at least one dual-condition AUROC remains unmeasured, so arxiv_ready_v8=false",
+  "paper_v6_compile_success": true,
+  "corpora_in_table": [
+    "FoVer",
+    "MBPP",
+    "HumanEval",
+    "TruthfulQA"
+  ],
+  "submission_package_ready": false,
+  "arxiv_ready_v8": false,
+  "duration_s": 0.42961883544921875,
+  "all_dual_condition_auroc_measured": false,
+  "table_rows": [
+    {
+      "corpus": "FoVer",
+      "n": 1000,
+      "architecture_only": 0.8946624,
+      "architecture_only_std": 0.007538577096508351,
+      "production": 0.9131335999999999,
+      "production_std": 0.007494212209432014,
+      "learning_delta": 0.01847119999999991,
+      "peer": "HIVE 0.924",
+      "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architecture-only reset conditions",
+      "measured": true
+    },
+    {
+      "corpus": "MBPP",
+      "n": 100,
+      "architecture_only": null,
+      "architecture_only_std": null,
+      "production": null,
+      "production_std": null,
+      "learning_delta": null,
+      "peer": "peer baseline not established",
+      "honest_verdict": "blocked_mbpp_dataset",
+      "measured": false
+    },
+    {
+      "corpus": "HumanEval",
+      "n": 164,
+      "architecture_only": null,
+      "architecture_only_std": null,
+      "production": null,
+      "production_std": null,
+      "learning_delta": null,
+      "peer": "peer baseline not established",
+      "honest_verdict": "blocked_humaneval_dataset",
+      "measured": false
+    },
+    {
+      "corpus": "TruthfulQA",
+      "n": 200,
+      "architecture_only": null,
+      "architecture_only_std": null,
+      "production": null,
+      "production_std": null,
+      "learning_delta": null,
+      "peer": "GPT-3 MC1 $\\sim$28\\%",
+      "honest_verdict": "blocked_truthfulqa_generation_split",
+      "measured": false
+    }
+  ],
+  "source_artifacts": {
+    "Runtime": {
+      "path": "results/experiment_2836_sota_runtime_preflight.json",
+      "honest_verdict": "success: .venv CUDA torch available and at least one mandated SOTA GGUF load-smoked",
+      "sota_runtime_ready": true,
+      "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python"
+    },
+    "FoVer": {
+      "path": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architecture-only reset conditions",
+      "production_auroc": 0.9131335999999999,
+      "architecture_only_auroc": 0.8946624,
+      "learning_contribution": 0.01847119999999991
+    },
+    "MBPP": {
+      "path": "results/experiment_2838_mbpp_dual_condition_v3.json",
+      "honest_verdict": "blocked_mbpp_dataset",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    },
+    "HumanEval": {
+      "path": "results/experiment_2839_humaneval_dual_condition_v3.json",
+      "honest_verdict": "blocked_humaneval_dataset",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    },
+    "TruthfulQA": {
+      "path": "results/experiment_2840_truthfulqa_dual_condition_v4.json",
+      "honest_verdict": "blocked_truthfulqa_generation_split",
+      "production_auroc": null,
+      "architecture_only_auroc": null,
+      "learning_contribution": null
+    },
+    "Matrix": {
+      "path": "results/experiment_2840_cross_corpus_verifier_matrix_v3.json",
+      "honest_verdict": "complete: real upstream per-verifier AUROC matrix v3 built"
+    }
+  },
+  "compile_result": {
+    "success": true,
+    "engine": "pdflatex",
+    "command": [
+      "pdflatex",
+      "-interaction=nonstopmode",
+      "main.tex"
+    ],
+    "returncode": 0,
+    "stdout_tail": "0.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.p\nfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/\ntexmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/share/texmf-dist/fonts\n/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texmf-dist/fonts/type1/public/am\nsfonts/cm/cmr8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.p\nfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share\n/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/share/texmf-dist/fon\nts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texmf-dist/fonts/type1/public\n/amsfonts/cm/cmsy8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cm\nsy9.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/\nshare/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texmf-di\nst/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/share/texmf-dist/fonts/type1\n/public/amsfonts/cm/cmtt8.pfb></usr/share/texmf-dist/fonts/type1/public/amsfont\ns/symbols/msbm10.pfb></usr/share/texmf-dist/fonts/type1/public/cm-super/sfrm100\n0.pfb>\nOutput written on main.pdf (27 pages, 648947 bytes).\nTranscript written on main.log.\n",
+    "stderr_tail": ""
+  },
+  "paper_path": "docs/arxiv-paper/main.tex",
+  "submission_attempted": false,
+  "credentialed_submission_attempted": false,
+  "operator_only_external_publication": true,
+  "field_principles": {
+    "honest_verdict": "Terminal prefix.",
+    "paper_v6_compile_success": "Did pdflatex succeed.",
+    "corpora_in_table": "Names corpora present in the dual-condition results table.",
+    "submission_package_ready": "True if operator-ready; task NEVER submits per Operator-Only rule.",
+    "arxiv_ready_v8": "True only when every corpus row is measured and pdflatex passes.",
+    "duration_s": "Real wall time for source integration and pdflatex."
+  }
+}
