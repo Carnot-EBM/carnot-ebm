@@ -3265,6 +3265,67 @@ per-seed results, per-verifier AUROC lists for both conditions, restored FR-11
 state hashes, peer-baseline comparisons, and an `honest_verdict` prefixed
 `complete:`.
 
+### REQ-VERIFY-2839: HumanEval Full Dual-Condition v3 Gated By Exp 2836 SOTA Runtime
+
+The repository shall provide an Exp 2839 HumanEval dual-condition runner that
+writes `results/experiment_2839_humaneval_dual_condition_v3.json` for all 164
+`openai_humaneval` test tasks and the five replication seeds `[42, 137, 271,
+314, 1729]`.
+
+Before any candidate generation, candidate execution, or verifier scoring, the
+runner MUST load `results/experiment_2836_sota_runtime_preflight.json`, assert
+`sota_runtime_ready=true`, use the artifact's `selected_python`, record a usable
+model path for at least one mandated SOTA GGUF
+(`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`), confirm CUDA is available from the selected
+Python, confirm the full HumanEval dataset and official tests are available,
+confirm sandboxed unit-test execution is available, and confirm
+FR-11/NEXUS/session state files are present. If any precondition fails, it MUST
+write a terminal `blocked_<resource>` artifact with populated
+`preconditions_checked` and no inferred AUROC, pass@1, ranking-lift, candidate,
+or per-verifier scores.
+
+For successful runs, the runner MUST generate or load deterministic HumanEval
+candidate sets for the same 164 tasks under all five seeds, execute the
+candidate code against the official HumanEval `check()` harness in the safe
+harness to obtain pass/fail labels, and score the same candidates under
+Condition A (production FR-11 state visible) and Condition B (architecture-only
+after FR-11/NEXUS/session state is non-destructively moved aside and Python is
+restarted). At least one mandated SOTA local GGUF recorded by Exp 2836 MUST be
+part of the generator or scorer path, and legacy tiny models MUST NOT be
+reported as headline models.
+
+The artifact MUST include `honest_verdict`, `n_tasks`,
+`condition_a_production_auroc_mean`,
+`condition_b_architecture_only_auroc_mean`, `learning_contribution`,
+`per_verifier_condition_b_auroc`, `model_specs`, `preconditions_checked`,
+`duration_s`, per-verifier Condition A AUROC, pass@1 and ranking-lift
+summaries, per-seed results, FR-11 state-file hashes, restored-state proof, and
+an honest methodology note.
+
+### SCENARIO-VERIFY-2839-BLOCKED: Missing HumanEval Resources Block Without Metrics
+
+Given Exp 2836 reports a ready SOTA runtime but the `openai_humaneval` dataset
+package, full 164 rows, official tests, CUDA runtime, SOTA GGUF path, sandbox
+execution, or FR-11 state files are unavailable,
+When the Exp 2839 runner executes,
+Then it writes `results/experiment_2839_humaneval_dual_condition_v3.json` with
+`honest_verdict` prefixed `blocked_`, `n_tasks=164`, populated
+`preconditions_checked`, null AUROC and ranking metrics, empty per-verifier
+AUROC maps, and no inferred candidate labels.
+
+### SCENARIO-VERIFY-2839-LIVE: Successful HumanEval Run Reports Dual Conditions
+
+Given Exp 2836 reports a ready SOTA runtime, a mandated SOTA GGUF is available,
+the full HumanEval test split and sandboxed unit-test execution are available,
+and FR-11 state files exist,
+When the Exp 2839 runner evaluates all five seeds,
+Then the artifact reports complete production and architecture-only AUROC
+summaries from measured pass/fail labels, per-verifier AUROC values for both
+conditions, pass@1/ranking-lift summaries, `learning_contribution = A - B`,
+the mandated SOTA model path used by the scorer or generator path, and
+`state_files_restored_sha_match=true`.
+
 ### REQ-VERIFY-2831: TruthfulQA-Generation Dual-Memory Ensemble Evaluation
 
 The repository shall provide an Exp 2831 TruthfulQA-generation dual-memory
