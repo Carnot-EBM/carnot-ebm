@@ -7062,3 +7062,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: Terminal Milestone Summary v269 (⚠️ Blocked) — honest_verdict=complete: .269 capstone synthesized; sota_runtime_ready=true; paper_ready=false; missing_artifacts=2; blocked_artifacts=4; adversarially_flagged_artifacts=5; no new multi-corpus headline claim; results/experiment_2846_capstone_v269.json
 - 2026-05-22: FoVer Memory-Leakage Isolation v3 (CODEX, post-torch-fix) (⚠️ Blocked) — honest_verdict=blocked_model_cache: missing; results/experiment_2836_fover_memory_leakage_isolation.json
 - 2026-05-22: FoVer Memory-Leakage Isolation v3 (CODEX, post-torch-fix) (⚠️ Blocked) — honest_verdict=blocked_model_cache: missing; results/experiment_2836_fover_memory_leakage_isolation.json
+- 2026-05-22: FoVer Memory-Leakage Isolation v3 (CODEX, post-torch-fix) (⚠️ Blocked) — honest_verdict=blocked_model_cache: missing; results/experiment_2836_fover_memory_leakage_isolation.json
