@@ -6008,3 +6008,4 @@ Ripgrep i |
 | 2026-05-22 22:04 UTC | Milestone 2026.05.273 activated | OK | 12 tasks queued |
 | 2026-05-22 22:14 UTC | Archive .272 + Activate .273 | OK | 81 passed in 3.91s |
 | 2026-05-22 22:25 UTC | SOTA Micro-Panel Clean Telemetry v3 | OK | 81 passed in 2.96s |
+| 2026-05-22 23:16 UTC | FR-11 Fast/Slow Memory Corrigendum v2 | OK | 81 passed in 3.42s |
