@@ -153,5 +153,18 @@
     }
   },
   "runtime_root_cause": ".268 live corpus evaluations did not run because the conductor/runtime preconditions were mismatched: system python3 lacked torch or CUDA, while .venv/bin/python had the CUDA-capable torch environment, and the mandated SOTA GGUF cache for Qwen3.6-35B-A3B was not available. MBPP, HumanEval, and TruthfulQA also recorded missing dataset/scorer prerequisites.",
-  "schema": "carnot.archive_activation.v1"
+  "schema": "carnot.archive_activation.v1",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.064147 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
