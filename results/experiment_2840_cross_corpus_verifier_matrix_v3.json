@@ -1,0 +1,186 @@
+{
+  "honest_verdict": "complete: real upstream per-verifier AUROC matrix v3 built",
+  "verifier_corpus_dual_matrix": {
+    "fr11_session_memory": {
+      "FoVer": {
+        "production": 0.8699464000000001,
+        "architecture_only": null,
+        "delta": null
+      },
+      "MBPP": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "HumanEval": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "TruthfulQA": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      }
+    },
+    "tier0r_curry_howard": {
+      "FoVer": {
+        "production": 0.8947407999999999,
+        "architecture_only": 0.8947407999999999,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "HumanEval": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "TruthfulQA": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      }
+    },
+    "tier0s_arithmetic_gap": {
+      "FoVer": {
+        "production": 0.29477159999999997,
+        "architecture_only": 0.29477159999999997,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "HumanEval": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "TruthfulQA": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      }
+    },
+    "tier0u_logical_consistency": {
+      "FoVer": {
+        "production": 0.5105464,
+        "architecture_only": 0.5105464,
+        "delta": 0.0
+      },
+      "MBPP": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "HumanEval": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      },
+      "TruthfulQA": {
+        "production": null,
+        "architecture_only": null,
+        "delta": null
+      }
+    }
+  },
+  "architecture_transfer_verifiers": [],
+  "memory_augmented_verifiers": [
+    "fr11_session_memory"
+  ],
+  "corpus_specific_verifiers": [
+    "tier0r_curry_howard"
+  ],
+  "low_signal_verifiers": [
+    "tier0s_arithmetic_gap",
+    "tier0u_logical_consistency"
+  ],
+  "diversity_gap_on_non_fover": true,
+  "duration_s": 0.0007495880126953125,
+  "source_artifacts": {
+    "FoVer": {
+      "candidate_paths": [
+        "results/experiment_2836_fover_memory_leakage_isolation.json",
+        "results/experiment_2837_fover_memory_leakage_v3.json"
+      ],
+      "candidate_measured_verifier_counts": {
+        "results/experiment_2836_fover_memory_leakage_isolation.json": 0,
+        "results/experiment_2837_fover_memory_leakage_v3.json": 4
+      },
+      "selected_path": "results/experiment_2837_fover_memory_leakage_v3.json",
+      "honest_verdict": "complete: FoVer memory-leakage v3 measured with production state and architecture-only reset conditions",
+      "n_condition_a_verifiers": 4,
+      "n_condition_b_verifiers": 3,
+      "n_measured_verifiers": 4
+    },
+    "MBPP": {
+      "candidate_paths": [
+        "results/experiment_2837_mbpp_ensemble_eval.json",
+        "results/experiment_2838_mbpp_dual_condition_v3.json"
+      ],
+      "candidate_measured_verifier_counts": {
+        "results/experiment_2837_mbpp_ensemble_eval.json": 0,
+        "results/experiment_2838_mbpp_dual_condition_v3.json": 0
+      },
+      "selected_path": "results/experiment_2837_mbpp_ensemble_eval.json",
+      "honest_verdict": "blocked_model_not_cached_qwen36_35b_a3b_gguf",
+      "n_condition_a_verifiers": 0,
+      "n_condition_b_verifiers": 0,
+      "n_measured_verifiers": 0
+    },
+    "HumanEval": {
+      "candidate_paths": [
+        "results/experiment_2838_humaneval_full_ensemble_eval.json",
+        "results/experiment_2839_humaneval_dual_condition_v3.json"
+      ],
+      "candidate_measured_verifier_counts": {
+        "results/experiment_2838_humaneval_full_ensemble_eval.json": 0,
+        "results/experiment_2839_humaneval_dual_condition_v3.json": 0
+      },
+      "selected_path": "results/experiment_2838_humaneval_full_ensemble_eval.json",
+      "honest_verdict": "blocked_qwen36_gguf_cache",
+      "n_condition_a_verifiers": 0,
+      "n_condition_b_verifiers": 0,
+      "n_measured_verifiers": 0
+    },
+    "TruthfulQA": {
+      "candidate_paths": [
+        "results/experiment_2839_truthfulqa_ensemble_eval.json",
+        "results/experiment_2840_truthfulqa_dual_condition_v4.json"
+      ],
+      "candidate_measured_verifier_counts": {
+        "results/experiment_2839_truthfulqa_ensemble_eval.json": 0,
+        "results/experiment_2840_truthfulqa_dual_condition_v4.json": 0
+      },
+      "selected_path": "results/experiment_2839_truthfulqa_ensemble_eval.json",
+      "honest_verdict": "blocked_model_not_cached_qwen36_35b_a3b_gguf",
+      "n_condition_a_verifiers": 0,
+      "n_condition_b_verifiers": 0,
+      "n_measured_verifiers": 0
+    }
+  },
+  "classification_thresholds": {
+    "architecture_transfer_floor": 0.75,
+    "high_signal_floor": 0.75,
+    "low_signal_ceiling": 0.65,
+    "memory_delta_floor": 0.1,
+    "required_architecture_transfer_per_non_fover": 3
+  },
+  "field_principles": {
+    "honest_verdict": "Terminal prefix.",
+    "verifier_corpus_dual_matrix": "Full verifier x corpus x condition matrix from measured upstream AUROC only.",
+    "architecture_transfer_verifiers": "Architecture-only high signal on every measured corpus, including non-FoVer.",
+    "memory_augmented_verifiers": "Production high signal whose architecture-only counterpart is absent or weak.",
+    "corpus_specific_verifiers": "High-signal measured verifiers without enough architecture-only transfer evidence.",
+    "low_signal_verifiers": "Verifiers below useful AUROC on every measured cell.",
+    "diversity_gap_on_non_fover": "True if fewer than 3 architecture-transfer verifiers cover any non-FoVer corpus.",
+    "duration_s": "Pure artifact analysis wall time; never padded."
+  },
+  "methodology_note": "Exp 2840 loaded measured per-verifier AUROC rows from the selected post-torch-fix/post-codex-flip artifacts. Missing verifier/corpus cells remain null; no fallback AUROC values were imputed."
+}

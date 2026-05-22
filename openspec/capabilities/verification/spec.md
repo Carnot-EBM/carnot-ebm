@@ -3748,3 +3748,55 @@ Then it writes a terminal `complete:` artifact with an empty
 `verifier_corpus_dual_matrix`, all four classification lists empty,
 `diversity_gap_on_non_fover=true`, and methodology text explaining that no
 synthetic verifier rows were inferred.
+
+### REQ-VERIFY-MATRIX-2840: Cross-Corpus Verifier Matrix v3 From Real Dual-Condition Artifacts
+
+The repository shall provide an Exp 2840 cross-corpus verifier-matrix analyzer
+that writes `results/experiment_2840_cross_corpus_verifier_matrix_v3.json`.
+The analyzer MUST read the post-torch-fix/post-codex-flip dual-condition
+artifacts for FoVer, MBPP, HumanEval, and TruthfulQA. Because the .269
+roadmap and completion log used two nearby filename families, the analyzer
+MUST consider the canonical exp2836-2839 roadmap paths and the completed
+suffixed artifact paths, select the available artifact with the most measured
+per-verifier AUROC rows for each corpus, and record the selected path.
+
+The analyzer MUST construct a verifier-by-corpus-by-condition matrix from
+real upstream `per_verifier_condition_a_auroc` and
+`per_verifier_condition_b_auroc` values only. Scalar AUROC values and per-seed
+AUROC lists MUST be normalized to means. Missing, blocked, null, or empty
+upstream measurements MUST remain null and MUST NOT be replaced with fallback
+verifiers, chance AUROC values, or prior-milestone placeholders.
+
+The artifact MUST include `honest_verdict` prefixed `complete:` or `success:`,
+`verifier_corpus_dual_matrix`, `architecture_transfer_verifiers`,
+`memory_augmented_verifiers`, `corpus_specific_verifiers`,
+`low_signal_verifiers`, `diversity_gap_on_non_fover`, and real `duration_s`.
+Architecture-transfer verifiers have architecture-only AUROC at least 0.75 on
+every corpus where that verifier has any measured cell and include at least
+one measured non-FoVer corpus. Memory-augmented verifiers have production
+AUROC at least 0.75 in any corpus while the corresponding architecture-only
+cell is missing, below 0.65, or lower by at least 0.10. Low-signal verifiers
+have every measured production and architecture-only AUROC below 0.65.
+Remaining high-signal verifiers are corpus-specific. The diversity-gap flag is
+true when fewer than three architecture-transfer verifiers cover any non-FoVer
+corpus.
+
+### SCENARIO-VERIFY-MATRIX-2840-REAL: Matrix Uses Measured Rows Without Imputation
+
+Given the candidate .269 upstream artifacts contain measured FoVer
+per-verifier rows plus blocked or empty rows for some other corpora,
+When the Exp 2840 matrix analyzer runs,
+Then the emitted matrix includes every measured verifier, records null cells
+for corpora where that verifier was not measured, classifies each verifier in
+exactly one of the four verifier classes, records selected upstream artifact
+paths, and marks the non-FoVer diversity gap open rather than inferring
+missing transfer evidence.
+
+### SCENARIO-VERIFY-MATRIX-2840-BLOCKED: Empty Upstream Rows Stay Empty
+
+Given all available upstream artifacts have empty per-verifier AUROC maps,
+When the Exp 2840 matrix analyzer runs,
+Then it writes a terminal `complete:` artifact with an empty
+`verifier_corpus_dual_matrix`, all four classification lists empty,
+`diversity_gap_on_non_fover=true`, and methodology text explaining that no
+synthetic verifier rows were inferred.
