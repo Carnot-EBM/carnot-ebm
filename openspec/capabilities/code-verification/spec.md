@@ -873,6 +873,33 @@ schema-valid DSL pack, the pack compiles to a local validator and PySAT-compatib
 CNF, no arbitrary code execution path is introduced, and the terminal artifact
 records valid extraction and compiled validator rates for both model specs.
 
+### REQ-CODE-2879: Manifest-Only MBPP/HumanEval Execution Pilot
+
+The repository shall provide a deterministic manifest-only MBPP/HumanEval code
+execution pilot that does not generate code with an LLM. The pilot MUST:
+
+- resolve MBPP and HumanEval manifest paths and checksums through the checked-in
+  evaluation manifest contract artifact;
+- select a tiny deterministic sample whose rows contain canonical/reference code
+  plus local test data, and record the selection rule and checksums;
+- execute only the canonical/reference code against the local tests through the
+  existing sandboxed Python execution path;
+- write `blocked_sandbox` and no pilot rows when gVisor/runsc sandbox isolation
+  is unavailable or the execution wrapper would fall back to in-process exec;
+- report per-row pass/fail/test metadata and verifier feature coverage; and
+- set `headline_metric_claim_made=false` because the pilot does not contain
+  generated-code labels for AUROC or headline pass@k claims.
+
+### SCENARIO-CODE-2879: Canonical Code Rows Run Through The Manifest Contract
+
+Given the eval manifest contract resolves MBPP and HumanEval manifests with
+verified checksums,
+When the manifest-only pilot runs with gVisor sandbox execution available,
+Then one deterministic MBPP row and one deterministic HumanEval row are selected
+from rows with canonical/reference code and tests, both rows are executed through
+the sandbox wrapper, per-row pass/fail metadata is recorded, and no headline
+metric is claimed.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -914,6 +941,7 @@ records valid extraction and compiled validator rates for both model specs.
 | REQ-CODE-032 | Implemented |
 | REQ-CODE-033 | Implemented |
 | REQ-CODE-034 | Implemented (`python/carnot/verifiers/dsl.py`) |
+| REQ-CODE-2879 | Implemented |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
 | REQ-REPAIR-022 | Implemented |

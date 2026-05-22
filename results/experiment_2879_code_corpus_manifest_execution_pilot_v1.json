@@ -1,0 +1,119 @@
+{
+  "artifact": "experiment_2879_code_corpus_manifest_execution_pilot_v1",
+  "code_manifest_pilot_ready": true,
+  "deterministic_execution_used": true,
+  "duration_s": 0.0017580986022949219,
+  "field_principles": {
+    "code_manifest_pilot_ready": "True only when selected MBPP and HumanEval rows pass.",
+    "deterministic_execution_used": "True only after sandbox execution is attempted.",
+    "duration_s": "Measured wall-clock runtime; no padding.",
+    "headline_metric_claim_made": "Always false; no generated-code labels or AUROC.",
+    "honest_verdict": "Terminal-prefix verdict; complete only for sandboxed deterministic rows.",
+    "manifest_paths": "MBPP/HumanEval paths resolved from the manifest contract.",
+    "n_humaneval_rows": "Number of HumanEval rows actually executed in the pilot.",
+    "n_mbpp_rows": "Number of MBPP rows actually executed in the pilot.",
+    "pilot_rows": "Per-row pass/fail/test metadata and verifier feature coverage.",
+    "sandbox_status": "Blocks when runsc/gVisor isolation is unavailable.",
+    "selection_rule": "Human-readable deterministic sample selection policy.",
+    "source_artifacts": "Contract, matrix, and manifest files used as local evidence.",
+    "tests_run": "Commands used to validate the pilot code and artifact."
+  },
+  "headline_metric_claim_made": false,
+  "honest_verdict": "complete: MBPP/HumanEval manifest-only execution pilot ready",
+  "manifest_actual_sha256": {
+    "humaneval": "87c76105e14d3da1aad57da30243e6ee8b84907fb363e27efd08e8e0b454f2f9",
+    "mbpp": "bf81548da561f22580c66c98c7a18e5b94d872910d130da4e7e96aeeb50573f0"
+  },
+  "manifest_checksum_verified": {
+    "humaneval": true,
+    "mbpp": true
+  },
+  "manifest_contract_ready": true,
+  "manifest_counts": {
+    "humaneval": 164,
+    "mbpp": 100
+  },
+  "manifest_declared_sha256": {
+    "humaneval": "87c76105e14d3da1aad57da30243e6ee8b84907fb363e27efd08e8e0b454f2f9",
+    "mbpp": "bf81548da561f22580c66c98c7a18e5b94d872910d130da4e7e96aeeb50573f0"
+  },
+  "manifest_paths": {
+    "humaneval": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/humaneval_20260522.jsonl",
+    "mbpp": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/mbpp_20260522.jsonl"
+  },
+  "n_humaneval_rows": 1,
+  "n_mbpp_rows": 1,
+  "pilot_rows": [
+    {
+      "corpus": "MBPP",
+      "error_message": "",
+      "error_type": null,
+      "execution_payload_sha256": "d64a2df5858a423e90954b5e9b93553a29325a7e3953f15545304989e88977ac",
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/mbpp_20260522.jsonl",
+      "manifest_sha256": "bf81548da561f22580c66c98c7a18e5b94d872910d130da4e7e96aeeb50573f0",
+      "n_tests": 3,
+      "passed": true,
+      "reference_source": "canonical_code",
+      "row_sha256": "52978a43d3dd5adadabe505d762288ab4a40b33a40cdbbeb402f08f368262486",
+      "stable_id": "mbpp-11",
+      "tests_source": "MBPP assert tests",
+      "timed_out": false,
+      "verifier_feature_coverage": {
+        "canonical_reference_solution": true,
+        "gvisor_runsc_sandbox": true,
+        "manifest_contract_checksum": true,
+        "mbpp_assert_tests": true,
+        "no_llm_generation": true,
+        "official_check": false,
+        "timeout_enforced": true
+      }
+    },
+    {
+      "corpus": "HumanEval",
+      "error_message": "",
+      "error_type": null,
+      "execution_payload_sha256": "858fa0263a22458621ce6575bb3f65c87337e36e1b8e476bfca978d898c695c0",
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/humaneval_20260522.jsonl",
+      "manifest_sha256": "87c76105e14d3da1aad57da30243e6ee8b84907fb363e27efd08e8e0b454f2f9",
+      "n_tests": 7,
+      "passed": true,
+      "reference_source": "prompt+canonical_solution",
+      "row_sha256": "09c45d5c0f49de5dc6462064fe4847c27d4b45522ec69800ba27c9e0fde2b3b8",
+      "stable_id": "HumanEval/0",
+      "tests_source": "HumanEval check(candidate)",
+      "timed_out": false,
+      "verifier_feature_coverage": {
+        "canonical_reference_solution": true,
+        "gvisor_runsc_sandbox": true,
+        "manifest_contract_checksum": true,
+        "mbpp_assert_tests": false,
+        "no_llm_generation": true,
+        "official_check": true,
+        "timeout_enforced": true
+      }
+    }
+  ],
+  "run_date": "20260522",
+  "sandbox_status": "available: runsc",
+  "schema": "carnot.code_corpus_manifest_execution_pilot.v1",
+  "selection_checksums": {
+    "HumanEval/0": "09c45d5c0f49de5dc6462064fe4847c27d4b45522ec69800ba27c9e0fde2b3b8",
+    "mbpp-11": "52978a43d3dd5adadabe505d762288ab4a40b33a40cdbbeb402f08f368262486"
+  },
+  "selection_rule": "Select the first eligible row in manifest order for each of MBPP and HumanEval. Eligibility requires canonical/reference code plus local tests; no LLM generation.",
+  "source_artifact_sha256": {
+    "data/eval_manifests/humaneval_20260522.jsonl": "87c76105e14d3da1aad57da30243e6ee8b84907fb363e27efd08e8e0b454f2f9",
+    "data/eval_manifests/mbpp_20260522.jsonl": "bf81548da561f22580c66c98c7a18e5b94d872910d130da4e7e96aeeb50573f0",
+    "results/experiment_2863_eval_manifest_contract_v2.json": "f2888e57e55e058df69ca179138966e1f4f5a7e8ff7f59e335afb1e121250df3",
+    "results/experiment_2865_cross_corpus_matrix_v5.json": "6046e447fc028b29068e5b9375b30b57a7b44211f1e5ccdac011388cbdb2d49d"
+  },
+  "source_artifacts": [
+    "results/experiment_2863_eval_manifest_contract_v2.json",
+    "results/experiment_2865_cross_corpus_matrix_v5.json",
+    "data/eval_manifests/mbpp_20260522.jsonl",
+    "data/eval_manifests/humaneval_20260522.jsonl"
+  ],
+  "tests_run": [
+    "dry-run real sandbox before final validation"
+  ]
+}
