@@ -3050,6 +3050,61 @@ per-verifier learning contribution map, the FR-11 state-file hashes, and
 `state_files_restored_sha_match=true` because no destructive reset was
 attempted.
 
+### REQ-VERIFY-2836: FoVer Dual-Condition FR-11 Isolation With Venv CUDA Gate
+
+The repository shall provide an Exp 2836 FoVer memory-leakage isolation runner
+that writes `results/experiment_2836_fover_memory_leakage_isolation.json` for
+the operator-mandated 1000-example FoVer subset and five replication seeds
+`[42, 137, 271, 314, 1729]`.
+
+Before any AUROC measurement, the runner MUST check the exact CUDA command
+`.venv/bin/python3 -c "import torch; assert torch.cuda.is_available() and
+torch.cuda.device_count() >= 1"`, `data/fover_corpus.jsonl`,
+`results/nexus_constraint_memory_v2.json`, and a real cached
+Qwen3.6-35B-A3B GGUF file. A HuggingFace `.no_exist` marker is not a cached
+model. If the CUDA assertion fails after the 2026-05-21 torch+cu128 fix, the
+artifact MUST use `blocked_cuda_post_fix_regression` and include the full torch
+version probe. If any other precondition is unavailable, the artifact MUST use
+the corresponding terminal `blocked_<resource>` prefix and MUST NOT infer,
+replay, cap, or synthesize AUROC values.
+
+For a successful measurement, the runner MUST use the production verifier
+ensemble v7b under two memory conditions: Condition A with all FR-11/NEXUS/
+constraint-template/session-memory state visible, and Condition B after all
+identified FR-11 state files are moved non-destructively under
+`/tmp/fr11_state_backup_<seed>/`, Python is restarted, and logs or structured
+checks confirm no NEXUS, constraint-template, or session-memory state loaded.
+The same FoVer subset must be scored for both conditions for each seed, every
+state file must be restored, and the restored SHA256 values must match the
+initial state manifest.
+
+The artifact MUST include `honest_verdict`, both condition AUROC means and
+standard deviations, `learning_contribution = A - B`,
+`per_verifier_learning_contribution`, `fr11_state_files`,
+`state_files_restored_sha_match`, `n_examples`, `n_seeds`,
+`random_seeds_used`, `reproducibility_checksum`, `model_specs`, real
+`duration_s`, `preconditions_checked`, and an honest `methodology_note`.
+
+### SCENARIO-VERIFY-2836: Missing Qwen Cache Blocks Without Metrics
+
+Given `.venv/bin/python3` reports CUDA availability and the FoVer/NEXUS files
+exist, but no real Qwen3.6-35B-A3B GGUF file is cached,
+When the Exp 2836 FoVer isolation runner executes,
+Then it writes `results/experiment_2836_fover_memory_leakage_isolation.json`
+with `honest_verdict` prefixed `blocked_model_cache`, null AUROC metrics, empty
+per-verifier contribution maps, populated precondition evidence, the FR-11
+state-file manifest, and `state_files_restored_sha_match=true`.
+
+### SCENARIO-VERIFY-2836-LIVE: Successful Dual-Condition Run Is Fully Auditable
+
+Given CUDA, FoVer, NEXUS, a real Qwen3.6-35B-A3B GGUF cache, FR-11 state files,
+and a live production ensemble-v7b measurement backend are available,
+When the runner completes all five seeds under both memory conditions,
+Then the artifact reports complete production and architecture-only AUROC
+summaries, per-verifier learning contributions, per-seed condition details,
+restored FR-11 state hashes, a real duration, and an `honest_verdict` prefixed
+`complete:`.
+
 ### REQ-VERIFY-2837: FoVer Memory Leakage Isolation v3 Gated By Exp 2836
 
 The repository shall provide an Exp 2837 FoVer memory-leakage runner that
