@@ -5989,3 +5989,4 @@ Ripgrep i |
 | 2026-05-22 15:27 UTC | FR-11 Continuous Self-Learning Replay v3 (gated on | OK | 81 passed in 3.26s |
 | 2026-05-22 15:42 UTC | Runtime-Gated SOTA Energy Baseline Micro-Panel v1 | OK | 81 passed in 2.85s |
 | 2026-05-22 15:56 UTC | KAN PWA/MILP Tiny Verifier v1 | OK | 81 passed in 3.33s |
+| 2026-05-22 16:14 UTC | Milestone 2026.05.271 Capstone + Claim Boundary | OK | 81 passed in 2.89s |
