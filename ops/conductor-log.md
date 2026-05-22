@@ -5912,3 +5912,4 @@ Ripgrep i |
 | 2026-05-22 02:40 UTC | MBPP Dual-Condition Evaluation v3 (gated on exp283 | FAIL | Codex CLI error: Wall-clock+idle timeout after 1538s (300s silence). Last out |
 | 2026-05-22 02:53 UTC | HumanEval Full Dual-Condition Evaluation v3 (gated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_humanev |
 | 2026-05-22 02:59 UTC | HumanEval Full Dual-Condition Evaluation v3 (gated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_humanev |
+| 2026-05-22 03:06 UTC | HumanEval Full Dual-Condition Evaluation v3 (gated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_humanev |
