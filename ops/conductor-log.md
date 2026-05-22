@@ -5950,3 +5950,4 @@ Ripgrep i |
 | 2026-05-22 08:48 UTC | SOTA Runtime Evidence v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2848_sota_ru |
 | 2026-05-22 08:53 UTC | SOTA Runtime Evidence v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2848_sota_ru |
 | 2026-05-22 08:59 UTC | SOTA Runtime Evidence v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2848_sota_ru |
+| 2026-05-22 09:14 UTC | Local Dataset and Split Materialization v1 | OK | 81 passed in 3.63s |
