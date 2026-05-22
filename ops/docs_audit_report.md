@@ -4,46 +4,43 @@
 # docs_audit_report — 2026-05-21
 
 ## TL;DR (stranger's 30-second take)
-I'd bounce the second I scrolled past the "How it works" section. The page starts with a clear, compelling hook, but immediately nosedives into an unreadable, hundred-card wall of internal JIRA tickets, raw experiment logs, and impenetrable acronyms. I came here to see what this tool does, not to read your personal lab notebook. 
+I would bounce when I hit the "Preprint" section. The hero is great, but the page quickly devolves into a bloated wall of 26+ cards filled with internal jargon, contradicting performance numbers, and Jira-style status updates that mean nothing to an outsider.
 
 ## TOP 3 PROBLEMS
-1. **Uncurated Dump of Internal Logs** (Bloat/Per-milestone narrative) — The "Evidence" section has over 100 cards listing raw "Exps" and "Milestones".
-2. **Absurd/Red-Flag Metrics** (Fabrication signals) — Repeated claims of "1.0 AUROC" on tiny datasets, "76,130x faster", and "2,408,333x estimate" scream "overfit/bug" to any ML practitioner. 
-3. **Alienating Jargon** (Internal jargon) — Acronym soup (EBFT, CASAL, WOPR, THRML, PREM, CIKAN) with zero external context.
+1. Violently inconsistent HumanEval performance claims (+3pp vs +36pp vs +72pp) spread across different cards.
+2. The "Preprint" section is pure internal project-management noise, full of unreadable milestone flags and experiment IDs.
+3. Extreme visual bloat from 26 separate bento/result cards, causing immediate cognitive overload.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- `#results` (Evidence Grid) — ~100+ result cards — Cap at 6-8. Nobody is reading your 100+ micro-updates. Even the quickstart code is buried beneath miles of scrolling.
-- `Stats-bar` (Hero) — 5 items — The "2,281 Experiment runs" and "382 Completed milestones" mean literally nothing to me. Cap to just the AUROC or remove entirely.
+- Entire Page — 26 total cards across the grids — Cap to 6-8 essential cards so people actually read them.
+- Results grid — 12 result cards — Cap to top 4 most credible metrics.
 
 ### Internal jargon
-- `#results` cards — "WOPR gallery", "Hashi + Slitherlink cartridges", "Phase 4 substrate", "EBFT & CASAL", "V-JEPA Tier 3 discriminator". — I do not work at your company. I don't know what "WOPR" or "Phase 4" or "Tier 0h" means.
-- `#results` cards — "Exp 1688–1698", "Milestone .120". — Raw ticketing metadata does not belong on a marketing landing page.
+- Preprint section — `Exp 1400`, `Exp 1412`, `submission_ready_for_operator=true`, `ICLR-26 OT verification framework`, `six-item conflict ledger` — A stranger does not have access to your internal tracking or know what these project-specific acronyms and boolean flags mean.
+- Stats Bar / Hero — `HIVE peer 0.924`, `FoVer step-error corpus` — Undefined benchmarks and corpora that mean nothing to the broader community.
+- Features / Results — `PREM`, `CCTU`, `VeriCoT equation-style CoT fix`, `HumanEval-50` — Highly specific internal variants without context.
 
 ### Per-milestone narrative
-- `#results` — "Milestone .99 — operational closeout: 10 min for 2 items; no GPU zombies". — Why is your GPU cleanup status on your public landing page?
-- `#results` — "Milestone .137 — Phase 4 operations: Retrospective complete". — This is a project management update, not evidence of a working framework.
-- `#results` — "Infrastructure — pre-test suite rescue: 26,182 Python test items collected, not passed". — You are advertising your broken test suite to the public.
+- Preprint section — `.99 paper-v6 critical fixes`, `Paper audit status from 2026-05-09: paper-v6 remains narrowed...`, `the Section 3 sampler draft has been resumed...`, `v11 arXiv bundle` — Reads like a copy-pasted weekly team standup or commit message, completely inappropriate for a public landing page.
 
 ### Inconsistencies
-- Claiming perfection vs admitting uselessness: The page boasts "SpectralAttentionProbe... AUC=1.0" and "SpilledEnergy AUROC=1.0", but later cards literally say "Semantic Energy — headline audit... Signal did not beat superficial baselines; telemetry lineage retired." Why are you bragging about a 1.0 AUROC signal on the same page you admit it was a superficial failure?
-- The "Honest-record note" admits to "A 64-point verify-and-repair gain turned out to be the regex matching a forced output format", yet right above it, you still claim "+4.9 points on compliance" and "Code repair... +72pp". Which numbers am I supposed to believe aren't regex bugs?
+- HumanEval performance: "repair pushes pass-rate up by 3 points" (Feature: Code) vs "+72pp" (Results: Code repair) vs "+36pp" (Results: Live benchmark). 
 
 ### Missing essentials
-- **Trust / Authority:** Who is "Ian Blenke" (in the footer) or the "Carnot Project"? Is this an academic lab? A solo dev? A startup? There's no credibility anchor for these wild claims.
-- **Buried Quickstart:** I want to see the code immediately to understand the developer experience. The Quickstart is trapped at the very bottom of the page beneath 100+ internal status updates.
+- Why should I trust the numbers? No links to reproducibility scripts, methodology, or the promised "checked-in experiment artifacts" to verify the claims.
 
 ### Fabrication signals
-- `#results` — "AUC=1.0 on 57 real violation pairs" / "AUROC=1.0 via logit-spill separation". Perfect 1.0 metrics on tiny samples immediately signal data leakage to anyone in ML.
-- `#results` — "100% arithmetic repair at 117 us (~76,130x faster than prompt repair)". 76,130x is suspiciously precise and sounds like you are comparing apples to oranges (e.g., local C++ execution vs network HTTP overhead).
-- `#results` — "2,408,333x estimate vs CPU baseline". Seven digits of precision for an "estimate" ruins your credibility.
+- `1.0` TP rate — Results "Math extraction"
+- `60/60` attacks caught — Results "Adversarial audit"
 
 ## WHAT'S WORKING
-- The Hero heading ("Catch the mistakes your LLM confidently makes up") and the "Extract -> Check -> Repair" 3-step bento box. These sections are excellent, punchy, and instantly communicate the value proposition without getting bogged down in math.
+- The Hero section is excellent: you explain what Carnot does in one clear sentence, provide a pip install command, and state the open-source license immediately.
+- The "Extract -> Check -> Repair" mental model is highly effective and easy to grasp.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Nuke 90% of the `#results` grid. Select your best 6 to 8 *defensible*, jargon-free outcome cards (e.g., HumanEval +3.0 points). Move the rest of this raw lab-notebook dump to a `/changelog.md` or `/experiments` page.
-2. Strip out all references to internal project management (Milestones, Exps, Phase numbers, operational retrospectives, broken tests).
-3. Move the `#quickstart` section directly below `#how` (Extract -> Check -> Repair). Let developers see the 5-line integration before their eyes glaze over.
-4. Remove or heavily caveat any claim of "1.0 AUROC", "76,130x", or "2,408,333x". If it's a proxy estimate or apples-to-oranges comparison, explicitly say so, or it will be read as a lie.
+1. Rewrite or delete the "Preprint" section entirely to remove all internal status updates, ticket numbers, and milestone flags.
+2. Consolidate all code generation / HumanEval claims into a single, honest, clearly-caveated metric.
+3. Prune the Results grid down from 12 cards to the 4 most robust and credible claims.
+4. Replace perfect 1.0 and 60/60 metrics with larger-scale evaluations, or explicitly anchor them with methodology links.
+5. Scrub internal acronyms like PREM, CCTU, and FoVer unless accompanied by a brief explanation.

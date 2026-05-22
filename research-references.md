@@ -1,3 +1,78 @@
+## 2026-05-22 Post-.268 Planning Sweep (Milestone 2026.05.269)
+
+This sweep was run after milestone `.268` completed with honest blocked artifacts for the
+multi-corpus SOTA evaluations. The local root cause was operational rather than conceptual:
+system `python3` lacked `torch`, `.venv/bin/python` had CUDA-capable torch, and the mandated
+SOTA GGUF files were not cached. The next milestone should therefore add a hard SOTA runtime
+preflight/cache gate before any live model experiment, then resume the corpus measurements.
+
+### Distributional EBMs for Structured LLM Reasoning
+
+- **Paper:** "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM
+  Reasoning" (arXiv:2605.18871, May 2026).
+- **What:** Decomposes energy into learned quality scoring plus deterministic constraint
+  penalties, and uses ensemble uncertainty to trigger targeted regeneration or abstention.
+  Reports cross-task transfer for a small verifier coordinating open 7B-26B generators.
+- **Relevance to Carnot:** Closest recent peer framing for Carnot's verifier ensemble:
+  deterministic penalties plus learned/distributional uncertainty, with explicit analysis of
+  model-identity shortcuts on code. Use as the design anchor for the .269 cross-corpus matrix
+  and paper table: report per-corpus transfer and confounding, not only aggregate AUROC.
+- **Sources:** https://arxiv.org/abs/2605.18871
+
+### BEAVER v2: Deterministic Bounds for LLM Constraint Satisfaction
+
+- **Paper:** "BEAVER: An Efficient Deterministic LLM Verifier" (arXiv:2512.05439v2,
+  revised May 2026).
+- **What:** Maintains sound probability bounds over prefix-closed semantic constraints using
+  token-trie/frontier exploration, surfacing tail-risk instances under lower compute budgets
+  than sampling baselines.
+- **Relevance to Carnot:** Useful contrast to Carnot's score-and-repair loop. A BEAVER-inspired
+  pilot should not claim soundness unless it implements the full frontier proof; the honest
+  next step is a bounded-prefix feasibility probe for small deterministic constraints and a
+  design note for where exact bounds could replace sampling.
+- **Sources:** https://arxiv.org/abs/2512.05439 and https://huggingface.co/papers/2512.05439
+
+### LoopUS and Retrofitted Latent Recurrence
+
+- **Paper:** "LoopUS: Recasting Pretrained LLMs into Looped Latent Refinement Models"
+  (arXiv:2605.11011, May 2026).
+- **What:** Converts a pretrained LLM into encoder / looped reasoning block / decoder form,
+  with selective gates, deep supervision, and adaptive early exit to improve reasoning through
+  stable latent looping without training recurrent models from scratch.
+- **Relevance to Carnot:** Provides a concrete research analogue for FR-11 continuous
+  self-learning and repair: iterate candidate states under an energy signal, stop early when
+  confidence/energy converges, and measure whether each loop lowers constraint energy without
+  lengthening visible traces. .269 should run a small LoopUS-style external-loop pilot without
+  modifying model weights.
+- **Sources:** https://arxiv.org/abs/2605.11011
+
+### Causal Energy Minimization for Transformer Layers
+
+- **Paper:** "Revisiting Transformer Layer Parameterization Through Causal Energy
+  Minimization" (arXiv:2605.07588, May 2026).
+- **What:** Recasts Transformer layers as optimization steps on conditional energy functions,
+  deriving weight-tied attention and gated MLP variants from interaction/element-wise energies.
+- **Relevance to Carnot:** Supports the long-term Kona/EBT argument that reasoning can be framed
+  as energy descent, while staying below the threshold for immediate implementation. Use as a
+  theory citation in roadmap/paper planning; do not create a layer-training task until the
+  current SOTA GGUF runtime and corpus measurement gates are reliable.
+- **Sources:** https://arxiv.org/abs/2605.07588
+
+### Extropic TSU / THRML Hardware Path
+
+- **Source:** Extropic hardware/software updates (XTR-0, Z1 early access, THRML).
+- **What:** Extropic positions thermodynamic sampling units as hardware for EBMs/PGMs, with
+  Gibbs-style sampling over probabilistic circuits and THRML as the simulation library for
+  TSU-oriented probabilistic graphical models.
+- **Relevance to Carnot:** Confirms the hardware research direction but does not create an
+  immediate local-board task: Carnot's FPGA boards are terminal and no TSU hardware is attached.
+  The next hardware-relevant work should stay at the simulator/interface level only after the
+  blocked local SOTA runtime is fixed.
+- **Sources:** https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://extropic.ai/hardware, https://extropic.ai/software
+
+---
+
 ## 2026-05-21 Post-.266 Planning Sweep (Milestone 2026.05.267)
 
 This sweep was run after milestone `.266` completed with 0 research artifacts (capstone only), due to

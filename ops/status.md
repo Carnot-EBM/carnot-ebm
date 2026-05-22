@@ -1,6 +1,25 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-22 (milestone 2026.05.268 operational retrospective complete)
+**Last Updated:** 2026-05-22 (milestone 2026.05.269 research planning complete)
+
+## Session 2026-05-22 - Milestone 2026.05.269 Research Planning Complete
+
+Planned milestone `2026.05.269` as "SOTA Runtime Gate + Multi-Corpus Evidence + LoopUS Self-Learning".
+The plan treats `.268` as an honest blocked milestone: FoVer, MBPP, HumanEval, and TruthfulQA live
+evaluations did not produce AUROC rows because system `python3` lacked `torch` and the mandated SOTA
+GGUF cache was unavailable, while `.venv/bin/python` had CUDA-capable torch.
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2835`-`exp2846`)
+- Critical path: `exp2836-sota-runtime-preflight` writes `sota_runtime_ready`; all expensive live-model
+  tasks are structurally `gated_on` that field.
+- Research references updated with the 2026-05-22 Post-.268 sweep: Distributional EBMs
+  (arXiv:2605.18871), BEAVER v2 (arXiv:2512.05439v2), LoopUS (arXiv:2605.11011), Causal Energy
+  Minimization (arXiv:2605.07588), and Extropic TSU/THRML hardware-path notes.
+- FR-11 mandate: `exp2844-loopus-fr11-self-learning-pilot` is the primary continuous self-learning
+  experiment; `exp2837` also measures FR-11 contribution via FoVer memory reset.
+- Validation: YAML parse OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml` OK;
+  `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` OK with 16 gate checks and 0 failures.
 
 ## Session 2026-05-22 - Milestone 2026.05.268 Operational Retrospective Complete
 

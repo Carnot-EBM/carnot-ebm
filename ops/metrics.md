@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-22 Milestone 2026.05.269 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-22T00:32:48Z | 2026-05-22T00:53:02Z | Planned milestone 2026.05.269 after reading required project context and `.268` artifacts. Added Post-.268 research sweep to `research-references.md` (Distributional EBMs, BEAVER v2, LoopUS, Causal Energy Minimization, Extropic TSU/THRML). Created `openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml` with 12 tasks exp2835-exp2846, SOTA runtime preflight gate, multi-corpus dual-condition reruns, BEAVER/EPR probe, and LoopUS-style FR-11 self-learning pilot. Validation: YAML parse OK; prior-failure validator OK; roadmap gate audit OK with 16 gate checks and 0 failures. | ~120k |
+
+---
+
 ## Session: 2026-05-21 Pre-Planning Doc Update (fourth pass, pre-.264)
 
 ### Turn Log
