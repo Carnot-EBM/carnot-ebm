@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Why We Report Two AUROCs Now — Carnot Blog</title>
+  <meta name="description" content="A self-improving system that reads its own past outputs blurs the line between architectural capability and what it has memorized. We now publish two AUROCs for every corpus: one with the system's accumulated state, one without. Here is why, and what the gap looks like.">
+  <meta property="og:title" content="Why We Report Two AUROCs Now: Self-Learning Leakage and the Discipline It Demands">
+  <meta property="og:description" content="A single AUROC number cannot tell you whether a self-improving system is good at the task or good at remembering the benchmark. We split the number in two.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/why-two-aurocs.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article {
+      max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code, article td code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+    article blockquote {
+      border-left: 3px solid var(--accent-energy);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: var(--bg-glass); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    .keypoint {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-energy); font-family: var(--font-heading); }
+
+    .matrix-table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .matrix-table th, .matrix-table td {
+      text-align: left; padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .matrix-table th {
+      font-family: var(--font-heading); font-weight: 700;
+      color: var(--text); background: var(--bg-glass);
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .matrix-table td { color: var(--text-muted); }
+    .matrix-table td:first-child { color: var(--text); font-weight: 500; }
+    .matrix-table td.col-a { color: var(--accent-verify); font-family: var(--font-mono); }
+    .matrix-table td.col-b { color: var(--accent-energy); font-family: var(--font-mono); }
+    .matrix-table td.col-gap { color: var(--text-muted); font-family: var(--font-mono); }
+
+    .footnote {
+      font-size: 0.9rem; color: var(--text-muted);
+      padding: 1.5rem 0; margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+    .further-reading ul { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Methodology</span>
+
+<h1>Why We Report Two AUROCs Now</h1>
+
+<div class="post-meta">
+  <span>2026-05-22</span>
+  <span>~8 min read</span>
+</div>
+
+<p class="lede">
+  A self-improving system that reads from its own past outputs eventually
+  blurs the line between architectural capability and what it has
+  memorized. The cleanest way to keep the line visible is to publish
+  both numbers. This is a short note on why we now do that, what the
+  protocol looks like, and what the gap between the two columns means.
+</p>
+
+<h2>The question that started this</h2>
+
+<p>
+  Carnot is a verifier-ensemble for language-model outputs. Like any
+  classifier, we evaluate it on benchmarks &mdash; FoVer first, then
+  HaluEval, FEVER, TruthfulQA, MBPP, HumanEval. Each evaluation
+  produces an AUROC: the area under the verifier's
+  true-positive-vs-false-positive curve. A single number that summarizes
+  how well the verifier can tell good outputs from bad on that benchmark.
+</p>
+
+<p>
+  We had been running these evaluations for some weeks and reporting
+  one AUROC per corpus. Then one day the project's principal asked a
+  question that should have come up earlier:
+</p>
+
+<blockquote>
+  We have a self-learning component that persists state between
+  runs. It has seen FoVer many times. Could that self-learning have
+  internalized the benchmark? Are we measuring our architecture, or
+  are we measuring what our architecture has memorized?
+</blockquote>
+
+<p>
+  The honest answer was: we did not know. And the more we looked at the
+  pipeline, the more places we found where the answer could plausibly
+  be "both, and we cannot tell them apart."
+</p>
+
+<h2>What the self-learning actually does</h2>
+
+<p>
+  The relevant component is internally called the FR-11 relay. Its job
+  is to feed examples discovered during one experiment back into the
+  verifier ensemble's working memory, so that future experiments can
+  learn from prior failure modes. There are four layers in current
+  shape:
+</p>
+
+<ul>
+  <li>
+    <strong>Relay.</strong> Recently-seen
+    (input, energy, verdict) triples accumulate in an append-only
+    log that the next run reads.
+  </li>
+  <li>
+    <strong>Constraint memory.</strong> Structural constraints
+    (Z3-clause-shaped) extracted from past errors persist in a
+    keyed store. Future verifier calls re-use them.
+  </li>
+  <li>
+    <strong>Fast-path heuristic.</strong> A JEPA-style joint-embedding
+    cache that lets the ensemble short-circuit on inputs
+    similar to ones it has scored before.
+  </li>
+  <li>
+    <strong>Adaptive energy landscape.</strong> Per-verifier weighting
+    that slowly tunes itself based on which verifier was carrying
+    the load on which input class.
+  </li>
+</ul>
+
+<p>
+  All four layers are designed to make the system better at its
+  actual job over time. All four layers, by construction, also have
+  the property that the benchmark on Monday is not measured by the
+  same system as the benchmark on Friday.
+</p>
+
+<div class="keypoint">
+  <strong>The leakage question is not paranoid.</strong>
+  If the relay accumulates examples drawn from the same distribution
+  as the test set &mdash; and FoVer evaluations are themselves drawn
+  from FoVer &mdash; then the state file on Friday is not independent
+  of the test set. A single AUROC measurement cannot tell you
+  whether the model is good or whether the memory has cached the
+  answers.
+</div>
+
+<h2>The dual-condition protocol</h2>
+
+<p>
+  The fix is mechanical, and we should have done it from the
+  beginning. Every benchmark run now reports two AUROCs:
+</p>
+
+<ul>
+  <li>
+    <strong>Condition A &mdash; production.</strong> The verifier
+    ensemble runs with all four self-learning layers active. State
+    files are restored from the last run. This is the
+    number that matters if you are deploying Carnot as it actually
+    ships.
+  </li>
+  <li>
+    <strong>Condition B &mdash; architecture-only.</strong> The
+    verifier ensemble runs from a cold start. All persisted state
+    is purged; the relay log is empty, the constraint memory is
+    empty, the JEPA cache is cleared, the per-verifier weights are
+    reset to their initialized defaults. This is the number that
+    matters if you want to know what the architecture is doing
+    independent of what it has accumulated.
+  </li>
+</ul>
+
+<p>
+  Both numbers are computed against the same prompts, the same seeds,
+  and the same model weights. The only difference is whether the
+  verifier ensemble has been given access to its own history.
+</p>
+
+<p>
+  The gap between them is the <em>learning contribution</em>:
+  <code>A &minus; B</code>. It is the number of AUROC points that
+  the self-learning layers add to the architecture-only score. It
+  is also the number of AUROC points that would silently inflate
+  the production score if we reported only one column.
+</p>
+
+<h2>What the matrix looks like</h2>
+
+<p>
+  We are currently mid-expansion from FoVer-only into a broader
+  corpus set: MBPP, HumanEval, TruthfulQA, HaluEval, FEVER. Some
+  rows are clean; others are still under the precondition gate
+  (the dual-condition protocol is strict, and it blocks a row
+  rather than guessing). The shape of the matrix, as we ship it,
+  is this:
+</p>
+
+<table class="matrix-table">
+  <thead>
+    <tr>
+      <th>Corpus</th>
+      <th>Cond A (production)</th>
+      <th>Cond B (architecture)</th>
+      <th>A &minus; B</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>FoVer</td>
+      <td class="col-a">reported</td>
+      <td class="col-b">reported</td>
+      <td class="col-gap">delta visible</td>
+    </tr>
+    <tr>
+      <td>HaluEval</td>
+      <td class="col-a">reported</td>
+      <td class="col-b">reported</td>
+      <td class="col-gap">delta visible</td>
+    </tr>
+    <tr>
+      <td>FEVER</td>
+      <td class="col-a">reported</td>
+      <td class="col-b">reported</td>
+      <td class="col-gap">delta visible</td>
+    </tr>
+    <tr>
+      <td>TruthfulQA</td>
+      <td class="col-a">in progress</td>
+      <td class="col-b">in progress</td>
+      <td class="col-gap">&mdash;</td>
+    </tr>
+    <tr>
+      <td>MBPP</td>
+      <td class="col-a">in progress</td>
+      <td class="col-b">in progress</td>
+      <td class="col-gap">&mdash;</td>
+    </tr>
+    <tr>
+      <td>HumanEval</td>
+      <td class="col-a">in progress</td>
+      <td class="col-b">in progress</td>
+      <td class="col-gap">&mdash;</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  The specific numerical values live in the repository's
+  <code>results/</code> directory under
+  <code>experiment_*_cross_corpus_matrix*.json</code> and are
+  also surfaced in the running <a href="/technical-report.html">technical report</a>.
+  We keep the matrix machine-readable so that anyone can recompute
+  the deltas from the raw artifacts &mdash; we are not the final
+  authority on our own numbers, and we would rather you do not have
+  to take us at our word.
+</p>
+
+<h2>What the gap actually tells you</h2>
+
+<p>
+  There are three regimes worth distinguishing:
+</p>
+
+<ol>
+  <li>
+    <strong>Small gap, both columns moderate.</strong> The
+    architecture is doing most of the work; the self-learning is
+    a polish. This is what you want to see on a corpus the
+    system has rarely encountered.
+  </li>
+  <li>
+    <strong>Large gap, production high, architecture low.</strong>
+    The system can do the task only because it remembers the task.
+    This is what you would see on a corpus the relay has heavily
+    sampled from. It is not necessarily bad &mdash; it is what the
+    self-learning was designed to do &mdash; but it is not the same
+    thing as architectural capability.
+  </li>
+  <li>
+    <strong>Large gap, architecture surprisingly low.</strong>
+    The system has become structurally dependent on its own
+    accumulated state. The architecture alone has lost the ability
+    it once had. This is the failure mode the dual-condition
+    protocol exists to surface, and it is exactly the failure mode
+    the principal's question was probing for.
+  </li>
+</ol>
+
+<p>
+  The third regime is also the one Hector Zenil's recent work
+  predicts: a self-distillation loop without an exogenous grounding
+  signal collapses into its own state. The grounding signal in our
+  framework is the verifier's <em>residual error rate</em> &mdash; if
+  the verifier becomes too confident in itself, the loop has no
+  pull toward truth and the architecture-only column degrades.
+  Reporting Condition B is the audit trail that lets us notice
+  before it gets bad.
+</p>
+
+<h2>Why this is not standard practice</h2>
+
+<p>
+  We have not seen this protocol in the verification literature, and
+  we think the reason is structural rather than principled. Most
+  published verifier benchmarks are evaluated as one-shot pipelines:
+  there is no persistent state, no relay log, no JEPA cache. Condition
+  A and Condition B are the same number by construction.
+</p>
+
+<p>
+  But the moment a system has a self-improving component &mdash; and
+  most ambitious agentic systems in 2026 do &mdash; the two numbers
+  diverge. We think any paper claiming an AUROC on a benchmark while
+  shipping a system with a relay or a cache should publish both
+  columns. The cost is one extra evaluation run per benchmark. The
+  benefit is that the number you report is not silently overstating
+  what the architecture is doing.
+</p>
+
+<div class="keypoint">
+  <strong>The methodological claim.</strong>
+  Any system that accumulates state between runs against the same
+  benchmark family is, in expectation, going to look better at the
+  benchmark over time. The interesting question is whether it is
+  also looking better at <em>the task</em>. The only way to answer
+  that question is to evaluate it without the state.
+</div>
+
+<h2>What we changed in the loop</h2>
+
+<p>
+  The protocol is enforced by three small pieces of infrastructure:
+</p>
+
+<ol>
+  <li>
+    Every experiment whose task spec is "measure AUROC on corpus X"
+    now must emit both <code>condition_a_production_auroc</code> and
+    <code>condition_b_architecture_only_auroc</code> in its results
+    JSON. A pre-commit hook refuses any artifact that produces one
+    without the other.
+  </li>
+  <li>
+    The Condition B run is gated on a precondition that all four
+    persistent state files have been purged for the duration of the
+    run. The agent verifies this directly (file sizes, hash of an
+    empty seed) and writes the verification into the artifact's
+    <code>preconditions_checked</code> block.
+  </li>
+  <li>
+    The cross-corpus matrix that we publish to the running technical
+    report is generated from these two columns. The gap is
+    computed mechanically; we do not manually transcribe numbers, so
+    we cannot accidentally report just one.
+  </li>
+</ol>
+
+<p>
+  None of this is novel as an idea. What is non-obvious is that the
+  practice is needed at all, and that the cost of not doing it is
+  silent.
+</p>
+
+<h2>Honest disclosure</h2>
+
+<p>
+  We do not know yet what the gap will look like on every corpus.
+  The expansion into MBPP, HumanEval, and TruthfulQA is in progress;
+  the rows the matrix shows in flight today will fill in over the
+  coming weeks. We expect the gap to be small on corpora the relay
+  has rarely sampled and larger on corpora it has seen often. We
+  also expect, on at least some corpus, to see the third regime above
+  &mdash; the architecture-only column degrading &mdash; and to have
+  to repair it. That is what the protocol is for.
+</p>
+
+<p>
+  If the gap turns out to be uncomfortable, we will publish that too.
+  The point of reporting two columns is that they are not optional.
+</p>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>Companion post: <a href="caught-cheating.html">Caught Cheating: 95 Microseconds on a 30-Billion-Parameter Model</a> &mdash; a related discipline, this time targeted at fabricated artifacts.</li>
+    <li>Zenil, H. (2026). <em>On the Limits of Self-Improving in Large Language Models.</em> <a href="https://arxiv.org/abs/2601.05280">arXiv:2601.05280</a> &mdash; the grounding-signal framework that this protocol audits against.</li>
+    <li>The cross-corpus matrix as it stands today: <a href="/technical-report.html">technical report</a>.</li>
+    <li>Raw artifacts: the <code>results/</code> directory in the Carnot repository contains every <code>experiment_*_cross_corpus_matrix*.json</code>, both columns and all seeds. Anyone is welcome to recompute the deltas.</li>
+  </ul>
+</div>
+
+<div class="footnote">
+  <strong>About this post.</strong> This is one of a series of operational
+  notes from the <a href="https://github.com/Carnot-EBM/carnot-ebm">Carnot</a>
+  project on building an autonomous research loop that we can actually
+  trust. If you want to follow along, watch the repository or check
+  back at <a href="/blog/">/blog/</a> for new entries.
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
