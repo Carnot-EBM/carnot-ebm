@@ -1,0 +1,114 @@
+{
+  "artifact": "experiment_2869_fr11_continuous_self_learning_replay_v3",
+  "continuous_self_learning_task": true,
+  "correctness_delta": 0.0,
+  "duration_s": 0.102314949036,
+  "energy_delta_mean": 0.081481481482,
+  "field_principles": {
+    "continuous_self_learning_task": "True because this is the FR-11 replay task.",
+    "correctness_delta": "Final label-correct rate minus initial label-correct rate; no live repair is inferred.",
+    "duration_s": "Real wall-clock duration; no sleep padding.",
+    "energy_delta_mean": "Mean initial energy minus final replay energy.",
+    "forgetting_regression_count": "Rows whose final energy increased or whose correctness regressed.",
+    "fr11_self_learning_ready": "True only when offline replay, memory update, and regression checks pass.",
+    "honest_verdict": "Terminal complete:/blocked_ verdict; no inferred live success.",
+    "live_model_invoked": "False because all rows are existing verifier-label replay rows.",
+    "max_loops": "Upper bound on verifier-feedback loops per example.",
+    "memory_hash_after": "Hash of relevant constraint/session memory manifests after replay.",
+    "memory_hash_before": "Hash of relevant constraint/session memory manifests before replay.",
+    "n_examples": "The deterministic bounded replay corpus size actually evaluated.",
+    "no_model_weight_mutation": "True because no model object or weight tensor is loaded or updated.",
+    "offline_recurrence_backend_used": "Imported from Exp 2868 backend_module_path.",
+    "per_loop_energy_summary": "Backend-normalized loop energy means and initial-delta means.",
+    "preconditions_checked": "Explicit artifact, import, corpus, and permitted-memory-change checks.",
+    "random_seed": "Controls deterministic corpus selection.",
+    "recurrence_success_rate": "Fraction of rows with lower final energy or improved correctness.",
+    "reproducibility_checksum": "Hashes stable artifact fields and replay memory provenance.",
+    "source_counts": "Replay examples grouped by clean corpus source."
+  },
+  "forgetting_regression_count": 0,
+  "fr11_self_learning_ready": true,
+  "honest_verdict": "complete: offline verifier-feedback replay lowered energy with no forgetting",
+  "live_model_invoked": false,
+  "max_loops": 3,
+  "memory_hash_after": "f5f5476d824a799a5387750e66f5cb421440847b0422217af3eb8277381a10d0",
+  "memory_hash_before": "c3995ecc43d5be747999a6c9e7d730aa01914c55f91b325b46cf1498435faf6f",
+  "methodology_note": "Offline verifier-feedback replay only. The run updates a dedicated constraint-memory replay file and does not generate or repair model outputs.",
+  "n_examples": 9,
+  "no_model_weight_mutation": true,
+  "offline_recurrence_backend_used": "carnot.eval.offline_recurrence_backend_adapter_v2",
+  "per_loop_energy_summary": {
+    "loop_1": {
+      "mean_delta_from_initial": 0.044444444444,
+      "mean_energy": 0.211111111111,
+      "n": 9
+    },
+    "loop_2": {
+      "mean_delta_from_initial": 0.3,
+      "mean_energy": 0.55,
+      "n": 2
+    },
+    "loop_3": {
+      "mean_delta_from_initial": 0.366666666667,
+      "mean_energy": 0.483333333333,
+      "n": 2
+    }
+  },
+  "preconditions_checked": [
+    {
+      "check": "repo_root",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot",
+      "passed": true
+    },
+    {
+      "check": "exp2868_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2868_offline_recurrence_backend_adapter_v2.json",
+      "passed": true
+    },
+    {
+      "check": "exp2868_backend_module_path",
+      "observed": "carnot.eval.offline_recurrence_backend_adapter_v2",
+      "passed": true
+    },
+    {
+      "check": "offline_backend_imported",
+      "observed": "carnot.eval.offline_recurrence_backend_adapter_v2",
+      "passed": true
+    },
+    {
+      "check": "exp2865_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2865_cross_corpus_matrix_v5.json",
+      "passed": true
+    },
+    {
+      "check": "exp2865_clean_corpora",
+      "observed": [
+        "FoVer",
+        "HaluEval/FEVER"
+      ],
+      "passed": true
+    },
+    {
+      "check": "clean_replay_corpus",
+      "observed": 9,
+      "passed": true
+    },
+    {
+      "check": "permitted_memory_changes",
+      "observed": [
+        "results/fr11_continuous_self_learning_replay_2869_memory.json"
+      ],
+      "passed": true
+    }
+  ],
+  "random_seed": 2869,
+  "recurrence_success_rate": 0.222222222222,
+  "reproducibility_checksum": "8d1a694e8a751f761d73e65e97f30c34038336c8a1c8091ca9ffa4221ebbbe29",
+  "run_date": "20260522",
+  "schema": "carnot.fr11_continuous_self_learning_replay.v3",
+  "source_counts": {
+    "FEVER": 3,
+    "FoVer": 3,
+    "HaluEval": 3
+  }
+}

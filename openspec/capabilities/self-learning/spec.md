@@ -6171,3 +6171,74 @@ or model weights were touched.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2868 | Implemented (`python/carnot/eval/offline_recurrence_backend_adapter_v2.py`) | Implemented (`tests/python/test_experiment_2868_offline_recurrence_backend_adapter_v2.py`) |
+
+## REQ-LEARN-2869: FR-11 Continuous Self-Learning Offline Replay
+
+**Given** Exp 2868 exposes an offline recurrence backend and Exp 2865 marks
+FoVer plus HaluEval/FEVER as clean corpus rows
+**When** Exp 2869 runs the bounded FR-11 continuous self-learning replay
+**Then** it SHALL import the Exp 2868 `backend_module_path`, select a
+deterministic small replay corpus from the clean Exp 2865 rows, hash relevant
+constraint memory/session state before the run, replay at most three verifier
+feedback loops with early exit on no improvement, write only permitted
+constraint-memory replay state, hash memory/session state after the run, and
+write `results/experiment_2869_fr11_continuous_self_learning_replay_v3.json`.
+**And** it SHALL report energy, correctness, recurrence-success, forgetting,
+memory-hash, source-count, provenance, and no-mutation fields without invoking a
+live LLM or mutating model weights.
+
+### REQ-LEARN-2869 Sub-requirements
+
+- REQ-LEARN-2869-1: The runner SHALL load
+  `results/experiment_2868_offline_recurrence_backend_adapter_v2.json`, import
+  its `backend_module_path`, and record the imported path in
+  `offline_recurrence_backend_used`.
+- REQ-LEARN-2869-2: The runner SHALL load
+  `results/experiment_2865_cross_corpus_matrix_v5.json`, use only corpus rows
+  whose status is `"clean"`, and select a deterministic bounded replay corpus
+  controlled by `random_seed`.
+- REQ-LEARN-2869-3: The runner SHALL hash relevant constraint memory/session
+  files before and after replay and SHALL verify that changed memory files are a
+  subset of the Exp 2869 permitted memory-state path.
+- REQ-LEARN-2869-4: The runner SHALL replay at most three loops, stop each
+  example when no energy improvement occurs, and compute
+  `energy_delta_mean`, `correctness_delta`, `recurrence_success_rate`,
+  `per_loop_energy_summary`, and `forgetting_regression_count` from the
+  backend-normalized traces.
+- REQ-LEARN-2869-5: The artifact SHALL include `honest_verdict`,
+  `continuous_self_learning_task=true`, `fr11_self_learning_ready`,
+  `offline_recurrence_backend_used`, `live_model_invoked=false`,
+  `no_model_weight_mutation=true`, `n_examples`, `max_loops`,
+  `recurrence_success_rate`, `energy_delta_mean`, `correctness_delta`,
+  `forgetting_regression_count`, `memory_hash_before`, `memory_hash_after`,
+  `per_loop_energy_summary`, `source_counts`, `preconditions_checked`,
+  `random_seed`, `reproducibility_checksum`, `field_principles`, `run_date`, and
+  `duration_s`.
+
+### SCENARIO-LEARN-2869: Offline Verifier-Feedback Replay Updates Constraint Memory
+
+**Given** Exp 2868 is importable and Exp 2865 lists clean FoVer and
+HaluEval/FEVER rows
+**When** the Exp 2869 runner replays the deterministic small corpus through the
+offline backend
+**Then** the artifact starts with `complete:`
+**And** energy decreases on replayed verifier-feedback rows while correctness is
+not inferred from live repair
+**And** memory hashes are recorded before and after the permitted memory update
+**And** `live_model_invoked=false`, `no_model_weight_mutation=true`, and
+`forgetting_regression_count=0`.
+
+### SCENARIO-LEARN-2869-BLOCKED: Missing Offline Backend Blocks Without Fake Metrics
+
+**Given** the Exp 2868 backend artifact is missing or cannot be imported
+**When** the Exp 2869 runner executes
+**Then** `honest_verdict` starts with `blocked_`
+**And** `fr11_self_learning_ready=false`, `n_examples=0`,
+`recurrence_success_rate=0.0`, `energy_delta_mean=0.0`,
+`correctness_delta=0.0`, and memory hashes are explicit blocked sentinels.
+
+## Implementation Status (REQ-LEARN-2869)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2869 | Implemented (`python/carnot/eval/fr11_continuous_self_learning_replay_v3.py`) | Implemented (`tests/python/test_experiment_2869_fr11_continuous_self_learning_replay_v3.py`) |
