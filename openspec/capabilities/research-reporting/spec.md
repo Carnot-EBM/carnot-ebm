@@ -4416,3 +4416,46 @@ terminal-prefixed `honest_verdict`, `archived_milestone=2026.05.268`,
 `activated_milestone=2026.05.269`, honest blocked counts and source links in
 `archived_task_summary`, no duplicate archive entry, and no modification to
 `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+### REQ-REPORT-2846: Milestone 2026.05.269 Capstone Claim-Boundary Artifact
+
+The repository shall provide an Exp 2846 capstone generator that writes
+`results/experiment_2846_capstone_v269.json` with schema
+`carnot.milestone_capstone.v269`.
+
+The generator must read all expected `.269` upstream result artifacts, classify
+missing artifacts separately from `blocked_*` artifacts, exclude adversarially
+flagged source metrics from headline claims, and synthesize the precise claim
+boundary for milestone `2026.05.269`. It must not run external model inference,
+must not submit or upload publication artifacts, and must not modify
+`scripts/research_conductor.py`.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:`, `success:`, or `blocked_`
+- `milestone`, equal to `2026.05.269`
+- `sota_runtime_ready`, copied from Exp 2836 while preserving any adversarial
+  warning context
+- `primary_corpus_results`, containing only real upstream fields for FoVer,
+  MBPP, HumanEval, and TruthfulQA, with flagged FoVer metrics labeled
+  non-headline and blocked corpus measurements left null
+- `self_learning_result`, derived from Exp 2844 and reporting blocks without
+  converting zero sentinel fields into measured improvement
+- `paper_ready`, true only when Exp 2845 exists, is not adversarially flagged,
+  and reports a ready paper gate
+- `top_3_next_actions`
+- `docs_updated`, with honest reconciliation status
+- `duration_s`, a wall-clock duration for the synthesis run
+
+#### SCENARIO-REPORT-2846: Ungated .269 Capstone Preserves Blocked and Flagged Boundaries
+
+**Given** Exp 2836 through Exp 2844 artifacts may include blocked verdicts or
+adversarial flags
+**And** Exp 2842 and Exp 2845 may be absent from `results/`
+**When** the Exp 2846 capstone generator runs
+**Then** it writes `results/experiment_2846_capstone_v269.json` with a
+terminal-prefixed `honest_verdict`, `milestone=2026.05.269`,
+`sota_runtime_ready` copied from Exp 2836, `paper_ready=false` unless the
+paper artifact is present and ready, missing Exp 2842/2845 recorded as missing,
+blocked Exp 2838/2839/2840/2844 recorded as blocked, and no modification to
+`scripts/research_conductor.py`.
