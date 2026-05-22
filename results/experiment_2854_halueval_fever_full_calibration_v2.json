@@ -1,0 +1,51 @@
+{
+  "schema": "blocked_halueval_fever_full_calibration_v2",
+  "experiment_id": 2854,
+  "honest_verdict": "blocked_missing_required_manifest_files",
+  "full_benchmark_ready": false,
+  "live_model_invoked": false,
+  "halueval_auroc": 0.0,
+  "fever_auroc": 0.0,
+  "halueval_n_examples": 0,
+  "fever_n_examples": 0,
+  "auroc_ci95_by_dataset": {},
+  "label_counts_by_dataset": {},
+  "per_verifier_energy_summary": {},
+  "random_seed": 2854,
+  "reproducibility_checksum": "b59d0da7b967d75eb6f5d605e2a1caf0e2208ab552e542e3d23c4a6731197fbf",
+  "preconditions_checked": [
+    {
+      "name": "cwd",
+      "expected": "/home/ianblenke/github.com/ianblenke/carnot",
+      "actual": "/home/ianblenke/github.com/ianblenke/carnot",
+      "passed": true
+    },
+    {
+      "name": "halueval_ready",
+      "command": "jq -e '.halueval_ready == true' results/experiment_2849_local_dataset_materialization_v1.json",
+      "passed": true
+    },
+    {
+      "name": "fever_ready",
+      "command": "jq -e '.fever_ready == true' results/experiment_2849_local_dataset_materialization_v1.json",
+      "passed": true
+    },
+    {
+      "name": "halueval_manifest_exists",
+      "path": "data/eval_manifests/halueval.jsonl",
+      "passed": false,
+      "observed_alternate": "data/eval_manifests/halueval_20260522.jsonl"
+    },
+    {
+      "name": "fever_manifest_exists",
+      "path": "data/eval_manifests/fever.jsonl",
+      "passed": false,
+      "observed_alternate": "data/eval_manifests/fever_20260522.jsonl"
+    }
+  ],
+  "duration_s": 0.0,
+  "adversarial_verify_passed": true,
+  "adversarial_verify_flags": [],
+  "run_date": "20260522",
+  "methodology_note": "Calibration was not run. The task explicitly required exiting when the exact undated HaluEval or FEVER manifest paths were missing, so the dated 20260522 manifests were not substituted."
+}
