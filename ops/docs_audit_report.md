@@ -4,46 +4,45 @@
 # docs_audit_report — 2026-05-22
 
 ## TL;DR (stranger's 30-second take)
-A stranger would bounce at the "Capabilities" or "Preprint" sections because the page abruptly shifts from a clear product pitch to a leaked internal status board. The excessive use of internal experiment IDs, unlinked jargon, and literal commit-message text destroys credibility and readability.
+I'd bounce in 15 seconds. While the hero copy is clear, the page immediately descends into a wall of internal project metrics, suspiciously perfect numbers, and impenetrable acronyms that make it feel like a leaked internal Jira dashboard rather than a usable open-source product.
 
 ## TOP 3 PROBLEMS
-1. Absurd per-milestone narrative masquerading as marketing copy in the "Preprint" section.
-2. Extreme internal jargon (FoVer, CCTU, SWORD, paper-v6, Exp 1412) throughout the Capabilities and Results sections.
-3. Massive inconsistency between the HumanEval code repair claims (+3.0 points vs +72pp) that makes the numbers look made up.
+1. **Jargon Overload**: The page assumes the reader knows what HIVE, FoVer, CCTU, PREM, VeriCoT, and HalluGuard v3 are. 
+2. **Internal Navel-Gazing**: Highlighting "382 Completed milestones", "2,337 Experiment runs", and a "Research operations" feature card tells the user about your internal team workflow, not their solution.
+3. **Suspiciously Perfect Numbers**: Claims like "2.0x speedup", "1.0 TP rate", and "60/60 attacks" look completely fabricated or cherry-picked without context or links to the actual artifacts.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Preprint section (italicized paragraph) — 67 words — Suggested cap: 0 words (delete internal status entirely).
-- Stats bar ("Recent progress" card) — 63 words — Suggested cap: 40 words.
+- **Results grid** — 12 cards — Cap at 3-4 headline results. 12 cards of hyper-specific metrics is a wall of noise that a stranger will completely skip.
 
 ### Internal jargon
-- Preprint section — `paper-v6`, `v11`, `Exp 1400`, `SWORD credentials`, `Exp 1412`, `submission_ready_for_operator=true`, `ICLR-26 OT verification framework` — A stranger does not have access to your issue tracker, codebase history, or internal credential systems.
-- Capabilities (Multi-step reasoning / Stats bar) — `FoVer step-error corpus` — Meaningless dataset acronym to anyone outside the project.
-- Capabilities (Typed constraints) — `CCTU constrained tool-use micro-benchmark` — Unexplained internal benchmark.
-- Results (Code repair) — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)` — Leaked internal flag syntax and runner configurations.
+- **Hero Stats & Recent Progress** — `HIVE peer`, `FoVer step-error corpus` — No stranger knows what HIVE or FoVer is.
+- **Features** — `Test-Time Compute (TTC) & PREM` — "Process-Reward Energy Model" is deeply specific architecture terminology thrown in without defining what it solves for the user.
+- **Results Grid** — `EstimationVerifier`, `SVAMP`, `VeriCoT`, `PRM-BiasBench-style`, `HalluGuard v3`, `CCTU` — These read like internal experiment labels, not public-facing benchmarks. 
 
 ### Per-milestone narrative
-- Preprint section — `Paper audit status from 2026-05-09: paper-v6 remains narrowed to four anchored artifact-backed claims; the Section 3 sampler draft has been resumed... Exp 1400 records missing SWORD credentials, and Exp 1412 confirms submission_ready_for_operator=true.` 
+- **Hero Stats Bar** — `2,337 Experiment runs`, `382 Completed milestones` — Internal project tracking metrics are irrelevant to someone deciding if they should `pip install` your tool.
+- **Research operations (Feature Card)** — Explaining the "autonomous research loop" and "adversarial-verify pass" is internal methodology/status reporting, not a framework capability for the user.
 
 ### Inconsistencies
-- Capabilities card "Code" claims repair pushes pass-rate up by 3 points vs Results card "Code repair" claims +72pp (8% → 80%). A stranger will immediately spot this 69-point delta and assume the numbers are manipulated.
-- Hero bar claims "0.9857 Verifier AUROC" vs Results cards claim "0.90 AUC" and "0.91 AUROC" for different tasks without clarifying which one represents the headline number.
+- **HumanEval impact** vs **HumanEval impact** — The page makes three wildly different claims for HumanEval: "+3.0 points" (first result card) vs "8% → 80% (+72pp)" (IterativeSelfRepair card) vs "0% → 36%" (Qwen3.6-35B-A3B card). A stranger has no idea what the actual performance is.
+- **Model Versions** — The Quickstart uses a real-world model (`Qwen/Qwen3.5-0.8B`), but the Results cite a non-existent or highly specific `Qwen3.6-35B-A3B`.
 
 ### Missing essentials
-- The reason to trust the numbers is missing. The page claims "Every number below is backed by a checked-in experiment artifact", but the paper link states "Upload is still pending operator action", leaving the stranger with no way to actually verify the highly specific, perfect-looking claims.
+- **Trust / Proof** — You claim "Every number below is backed by a checked-in experiment artifact" but provide absolutely no links, citations, or methodology to those artifacts. To a stranger, these are just numbers typed into HTML.
 
 ### Fabrication signals
-- Results (Math extraction): `1.0` TP rate — A perfect 100% extraction rate on LLM outputs is highly suspicious without a credibility anchor.
-- Results (Adversarial audit): `60/60 attacks` — A 100% catch rate looks hand-picked or overfitted.
-- Results (Training): `2.0× speedup` — Exactly 2.0x is practically impossible in real GPU distributed training due to IPC overhead; it looks fabricated or rounded up.
+- **Adversarial audit card** — `60/60 attacks` — A perfect 100% success rate on a tiny sample size looks like overfit cherry-picking.
+- **Math extraction card** — `0.5 → 1.0` TP rate — A perfect 1.0 true positive rate is an immediate red flag for evaluation errors.
+- **Training card** — `2.0x speedup, identical losses` — Perfect 2.0x linear scaling with zero overhead is practically impossible in real multi-GPU training.
 
 ## WHAT'S WORKING
-- The hero section is excellent: "Catch the mistakes your LLM confidently makes up" is a perfect, instantly understandable 1-sentence hook.
-- The "Extract → Check → Repair" mental model in the "How it works" bento grid is clean, logical, and effectively communicates the framework's value proposition.
+- The hero copy ("Catch the mistakes your LLM confidently makes up.") is punchy, clear, and immediately understandable.
+- The Quickstart tabs (Python/Rust) show real, readable code that makes the tool look concrete and approachable.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Delete the entire italicized internal status update from the "Preprint" section and replace it with a standard "Draft coming soon."
-2. Standardize the HumanEval code repair claims. If +72pp is a specific subset (HumanEval-50), clearly distinguish it from the +3.0pp macro-benchmark, or drop the subset claim entirely.
-3. Strip all internal experiment IDs (Exp 1400, Exp 1412) and raw flag syntax (`submission_ready_for_operator=true`) from the public page.
-4. Ground the suspiciously perfect numbers (1.0 TP, 60/60, 2.0x) by citing the specific constraints that make them possible, or replace them with more representative, realistic macro-benchmarks.
-5. Replace internal acronyms like CCTU, FoVer, and SWORD with generic, understandable descriptions (e.g., "an internal tool-use benchmark").
+1. Delete the "Experiment runs" and "Completed milestones" from the hero stats; replace with metrics a user cares about (e.g., supported models, latency overhead).
+2. Purge all internal acronyms (FoVer, HIVE, CCTU, PREM, VeriCoT) or rewrite them as plain-English descriptions (e.g., "Industry tool-use benchmarks").
+3. Drop the "Research operations" bento card entirely; replace it with an actual user-facing capability, or drop to 6 cards.
+4. Cut the 12 Results cards down to 3-4 believable, properly caveated headline metrics, and unify the conflicting HumanEval claims into a single defensible number.
+5. Add explicit caveats or links to the suspiciously perfect "1.0", "60/60", and "2.0x" claims to prove they aren't fabricated.

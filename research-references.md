@@ -15094,3 +15094,39 @@ This sweep was run during .248 planning. Targeted searches on: hallucination det
 - **arXiv:2605.07209 — "Hallucination Detection via Activations of Open-Weight Proxy Analyzers"**: Proposes a stacking ensemble of seven analyzer architectures trained on 72,135 samples across five hallucination datasets (RAGTruth benchmark). Achieves strong cross-dataset generalization via diverse feature sources. Relevance to Carnot: The stacking ensemble over diverse detector types mirrors Carnot's group-conditional Fisher ensemble (k=15 verifiers). The activation-based proxy analyzers are a candidate orthogonal signal for tier0s/tier0u repair — activation features from an open-weight proxy model may be more robust on real FoVer corpus than NTK-proxy or self-consistency scores on natural text.
 
 - **arXiv:2605.00323 — "Online Self-Calibration Against Hallucination in Vision-Language Models" (OSCAR)**: Introduces OSCAR, an online learning approach using Monte Carlo Tree Search with dual-granularity rewards (token-level + sequence-level) to iteratively refine model calibration against hallucination without offline retraining. Relevance to Carnot: Directly relevant to FR-11 Tier 3 (JEPA online update) — OSCAR's online MCTS refinement is a strong comparator for exp2589's session-level online_update() mechanism. The dual-granularity reward signal could inform JEPA's loss function design for online adaptation.
+
+## 2026-05-22 Post-.271 Planning Sweep (Milestone 2026.05.272)
+
+This sweep was run after `.271` completed with `paper_ready=true` but three
+adversarially flagged artifacts: SOTA runtime evidence, SOTA energy micro-panel,
+and KAN PWA/MILP. Searches covered arXiv, OpenReview, Extropic/THRML, Hugging
+Face papers, Semantic Scholar pages for EBT/ARM-EBM, GitHub discovery pages, and
+Logical Intelligence Kona updates.
+
+- **arXiv:2605.18871 — "Distributional Energy-Based Models for Uncertainty-Aware Structured LLM Reasoning"**: Uses a decomposed energy function with learned quality score, deterministic constraint penalties, and uncertainty-driven regeneration/abstention for structured LLM outputs. Relevance to Carnot: validates the `.272` focus on separating structural verifiers from learned priors and on treating code rows carefully because the paper identifies model-identity shortcut risk on code.
+
+- **arXiv:2605.16045 — "RecMem: Recurrence-based Memory Consolidation for Efficient and Effective Long-Running LLM Agents"**: Delays expensive LLM memory extraction until sustained semantic recurrence appears, using a lightweight subconscious memory layer first. Reports token-cost reductions up to 87% while maintaining or improving accuracy. Relevance to Carnot: direct implementation target for FR-11 continuous self-learning; `.272` should add recurrence-triggered memory consolidation instead of eager replay writes.
+
+- **arXiv:2605.12978 — "Useful Memories Become Faulty When Continuously Updated by LLMs"**: Shows consolidated memories can become faulty as updates accumulate, with utility rising and then degrading below no-memory baselines even from useful experiences. Relevance to Carnot: FR-11 acceptance must include non-forgetting, memory drift, and utility safeguards; token reduction alone is not enough.
+
+- **arXiv:2605.03971 — "Logical Consistency as a Bridge" (LaaB)**: Couples neural uncertainty features with symbolic self-judgment labels through logical consistency constraints for hallucination detection. Relevance to Carnot: supports adding a label-consistency audit on HaluEval/FEVER rather than relying only on scalar AUROC.
+
+- **arXiv:2601.20055 — "VERGE: Formal Refinement and Guidance Engine for Verifiable LLM Reasoning"**: Combines SMT/theorem proving, semantic routing, and Minimal Correction Subsets for actionable localization and iterative refinement. Relevance to Carnot: reinforces the residual-drift/MUS prioritizer path and suggests that exact frontier experiments should report localization quality, not only pass/fail.
+
+- **OpenReview/TMLR 2026 — "Energy-Based Constraint Networks: Learning Structural Coherence Across Modalities"**: Learns scalar and per-position energy scores over frozen embeddings with independently composable violation branches. Relevance to Carnot: useful architecture precedent for branch-composed verifier signals and for `.272` error-verifiability audits.
+
+- **Hugging Face Papers / ICLR 2026 — HalluGuard (arXiv:2601.18753)**: Decomposes hallucination risk into data-driven and reasoning-driven components and proposes an NTK-based hallucination score. Relevance to Carnot: motivates reporting separate data-vs-reasoning error buckets for HaluEval/FEVER and avoiding a single blended "hallucination" metric.
+
+- **arXiv:2603.28248 — "Reasoning as Energy Minimization over Structured Latent Trajectories"**: Frames reasoning as gradient-based optimization over latent trajectories under a learned energy function. Relevance to Carnot: aligns with the Kona/EBRM direction, but `.272` should remain at observable verifier/localization artifacts because no local latent-trajectory model exists.
+
+- **arXiv:2507.07731 — "Energy-Guided Decoding for Object Hallucination Mitigation"**: Dynamically chooses hidden states from the layer with minimum energy score to reduce VLM object hallucination and yes-ratio bias. Relevance to Carnot: supports a small logprob/energy micro-panel only after the local GGUF runtime is clean; no VLM scope is implied.
+
+- **arXiv:2602.06737 — KAN PWA/MILP verification**: Already central to `.271`; the sweep confirms it remains the right formal abstraction target. Relevance to Carnot: `.272` should fix the flagged tautological error-bound artifact by requiring a real MILP-or-blocked solver path and non-identical local/global bounds.
+
+- **Extropic THRML / TSU updates**: Extropic describes TSUs as probabilistic computers that sample from programmable distributions, and THRML as a JAX library for block Gibbs sampling over sparse heterogeneous PGMs. Relevance to Carnot: hardware acceleration should continue as software-compatible THRML parity/smoke work; the local hardware wishlist still does not require TSU/Z1/XTR-0 access.
+
+- **Semantic Scholar / EBT and ARM-EBM watch**: Semantic Scholar indexes EBT (arXiv:2507.02092, Corpus ID 280148632); web search found ARM-EBM (arXiv:2512.15605) indexed through arXiv/Cool Papers but no new planning-grade citation cluster beyond existing EBT/ARM references. Relevance to Carnot: keep citing EBT/ARM as theoretical context, but do not schedule a new citation-chase task until a concrete follow-on appears.
+
+- **GitHub discovery**: `extropic-ai/thrml` is the actionable hardware-sampler repository. `aiming-lab/SimpleMem` is a heavily used 2026 memory repo but relies on broader agent-memory infrastructure than Carnot needs. Relevance to Carnot: use RecMem's recurrence trigger as the narrow FR-11 implementation target, not a wholesale SimpleMem import.
+
+- **Logical Intelligence Kona updates**: Logical Intelligence continues to frame Kona as a globally scored, non-autoregressive, continuous-trace EBRM with partial-trace scoring and solver/orchestrator separation. Relevance to Carnot: useful architecture north star for partial-trace energy localization, but `.272` must avoid Kona performance claims because Carnot has no Kona access.
