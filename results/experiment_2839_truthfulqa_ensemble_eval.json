@@ -24,7 +24,7 @@
     "scoring_model": "BLEURT-base-128",
     "cuda_precondition_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python3"
   },
-  "duration_s": 3.441746950149536,
+  "duration_s": 3.8884453773498535,
   "preconditions_checked": [
     {
       "resource": "cuda",
@@ -48,8 +48,8 @@
     },
     {
       "resource": "bleurt_base_128",
-      "available": false,
-      "detail": "bleurt package missing and models/bleurt-base-128 was not found"
+      "available": true,
+      "detail": "HF model hub reachable for Elron/bleurt-base-128; sha=3dabe1a4ba7ca2041f5455262780ab797f0f7d0b"
     }
   ],
   "fr11_state_files": [
@@ -136,8 +136,7 @@
   },
   "honest_verdict": "blocked_model_not_cached_qwen36_35b_a3b_gguf",
   "blocked_resources": [
-    "qwen36_gguf_cache",
-    "bleurt_base_128"
+    "qwen36_gguf_cache"
   ],
   "condition_a_production_auroc_mean": null,
   "condition_a_production_auroc_std": null,
@@ -155,7 +154,7 @@
     "production_minus_bleurt_comparator_best": null,
     "comparison_note": "No production AUROC was measured, so baseline deltas are intentionally null."
   },
-  "methodology_note": "Blocked before live TruthfulQA inference, BLEURT scoring, or ensemble measurement because required resources were missing: qwen36_gguf_cache, bleurt_base_128. No AUROC, threshold, candidate, label, or per-verifier metrics were inferred.",
+  "methodology_note": "Blocked before live TruthfulQA inference, BLEURT scoring, or ensemble measurement because required resources were missing: qwen36_gguf_cache. No AUROC, threshold, candidate, label, or per-verifier metrics were inferred.",
   "field_provenance": {
     "honest_verdict": {
       "principle": "Terminal prefix separates complete, blocked, and failed runs.",

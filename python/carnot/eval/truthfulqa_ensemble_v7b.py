@@ -19,6 +19,8 @@ import importlib.util
 import json
 import math
 import random
+import subprocess
+import sys
 import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -37,6 +39,7 @@ MODEL_NAME = "Qwen3.6-35B-A3B-GGUF"
 MODEL_HF_ID = "unsloth/Qwen3.6-35B-A3B-GGUF"
 MODEL_QUANT = "Q4_K_M"
 BLEURT_MODEL_NAME = "BLEURT-base-128"
+BLEURT_HF_ID = "Elron/bleurt-base-128"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 FIELD_PRINCIPLES = {
@@ -344,6 +347,43 @@ def probe_preconditions(
 
 
 def _cuda_check() -> PreconditionCheck:
+    if "torch" not in sys.modules:
+        script = """
+import json
+try:
+    import torch
+    available = bool(torch.cuda.is_available() and torch.cuda.device_count() > 0)
+    detail = f"torch import ok; cuda_available={available}; device_count={torch.cuda.device_count()}"
+except Exception as exc:
+    available = False
+    detail = f"torch import failed: {exc!r}"
+print(json.dumps({"available": available, "detail": detail}))
+"""
+        try:
+            proc = subprocess.run(
+                [sys.executable, "-c", script],
+                capture_output=True,
+                text=True,
+                timeout=30,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return PreconditionCheck("cuda", False, f"{type(exc).__name__}: {exc}")
+        if proc.returncode != 0:
+            return PreconditionCheck(
+                "cuda",
+                False,
+                (proc.stderr or proc.stdout or f"returncode={proc.returncode}").strip(),
+            )
+        try:
+            payload = json.loads(proc.stdout)
+        except json.JSONDecodeError:
+            return PreconditionCheck("cuda", False, f"invalid JSON probe output: {proc.stdout[:200]}")
+        return PreconditionCheck(
+            "cuda",
+            bool(payload.get("available")),
+            str(payload.get("detail", "")),
+        )
     try:
         import torch  # type: ignore[import-not-found]
 
@@ -361,6 +401,52 @@ def _hf_truthfulqa_check() -> PreconditionCheck:
     if importlib.util.find_spec("datasets") is None:
         return PreconditionCheck(
             "hf_truthfulqa_generation", False, "datasets package is not installed"
+        )
+    if "datasets" not in sys.modules:
+        script = """
+import json
+try:
+    from datasets import load_dataset
+    rows = load_dataset("truthful_qa", "generation", split="validation[:1]")
+    available = len(rows) > 0
+    detail = f"loaded truthful_qa generation validation[:1], n={len(rows)}"
+except Exception as exc:
+    available = False
+    detail = f"TruthfulQA load failed: {exc!r}"
+print(json.dumps({"available": available, "detail": detail}))
+"""
+        try:
+            proc = subprocess.run(
+                [sys.executable, "-c", script],
+                capture_output=True,
+                text=True,
+                timeout=60,
+                check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            return PreconditionCheck(
+                "hf_truthfulqa_generation",
+                False,
+                f"{type(exc).__name__}: {exc}",
+            )
+        if proc.returncode != 0:
+            return PreconditionCheck(
+                "hf_truthfulqa_generation",
+                False,
+                (proc.stderr or proc.stdout or f"returncode={proc.returncode}").strip(),
+            )
+        try:
+            payload = json.loads(proc.stdout)
+        except json.JSONDecodeError:
+            return PreconditionCheck(
+                "hf_truthfulqa_generation",
+                False,
+                f"invalid JSON probe output: {proc.stdout[:200]}",
+            )
+        return PreconditionCheck(
+            "hf_truthfulqa_generation",
+            bool(payload.get("available")),
+            str(payload.get("detail", "")),
         )
     try:
         from datasets import load_dataset  # type: ignore[import-not-found]
@@ -391,10 +477,26 @@ def _bleurt_check(repo_root: Path) -> PreconditionCheck:
     local_cache = repo_root / "models" / "bleurt-base-128"
     if local_cache.exists():
         return PreconditionCheck("bleurt_base_128", True, f"resolved {local_cache}")
+    if importlib.util.find_spec("huggingface_hub") is not None:
+        try:
+            from huggingface_hub import HfApi  # type: ignore[import-not-found]
+
+            info = HfApi().model_info(BLEURT_HF_ID, files_metadata=False)
+        except Exception as exc:
+            return PreconditionCheck(
+                "bleurt_base_128",
+                False,
+                f"BLEURT-base-128 HF cacheability check failed: {exc!r}",
+            )
+        return PreconditionCheck(
+            "bleurt_base_128",
+            True,
+            f"HF model hub reachable for {BLEURT_HF_ID}; sha={getattr(info, 'sha', 'unknown')}",
+        )
     return PreconditionCheck(
         "bleurt_base_128",
         False,
-        "bleurt package missing and models/bleurt-base-128 was not found",
+        "bleurt package missing, models/bleurt-base-128 was not found, and huggingface_hub is unavailable",
     )
 
 

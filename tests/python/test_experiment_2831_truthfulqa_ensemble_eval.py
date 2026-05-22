@@ -1,5 +1,5 @@
-import builtins
 import json
+import subprocess
 import sys
 import types
 from pathlib import Path
@@ -275,10 +275,84 @@ def test_req_verify_2831_resource_probe_branches(
     assert failed.available is False
     assert "offline" in failed.detail
 
+    monkeypatch.delitem(sys.modules, "datasets", raising=False)
+
+    def successful_dataset_runner(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        assert command[:2] == [sys.executable, "-c"]
+        assert kwargs["capture_output"] is True
+        assert kwargs["text"] is True
+        assert kwargs["check"] is False
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            json.dumps({"available": True, "detail": "loaded validation[:1], n=1"}),
+            "",
+        )
+
+    monkeypatch.setattr(mod.importlib.util, "find_spec", lambda name: object() if name == "datasets" else None)
+    monkeypatch.setattr(mod.subprocess, "run", successful_dataset_runner)
+    assert mod._hf_truthfulqa_check() == PreconditionCheck(
+        "hf_truthfulqa_generation", True, "loaded validation[:1], n=1"
+    )
+
+    def failed_dataset_runner(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(command, 9, "", "dataset stderr")
+
+    monkeypatch.setattr(mod.subprocess, "run", failed_dataset_runner)
+    assert mod._hf_truthfulqa_check() == PreconditionCheck(
+        "hf_truthfulqa_generation", False, "dataset stderr"
+    )
+
+    def invalid_dataset_runner(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(command, 0, "not-json", "")
+
+    monkeypatch.setattr(mod.subprocess, "run", invalid_dataset_runner)
+    invalid_dataset = mod._hf_truthfulqa_check()
+    assert invalid_dataset.available is False
+    assert "invalid JSON" in invalid_dataset.detail
+
+    def raising_dataset_runner(_command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise OSError("dataset subprocess failed")
+
+    monkeypatch.setattr(mod.subprocess, "run", raising_dataset_runner)
+    raised_dataset = mod._hf_truthfulqa_check()
+    assert raised_dataset.available is False
+    assert "dataset subprocess failed" in raised_dataset.detail
+
     monkeypatch.setattr(mod.importlib.util, "find_spec", lambda _name: None)
     assert mod._hf_truthfulqa_check().available is False
     assert mod._bleurt_check(tmp_path).available is False
 
+    fake_hub = types.ModuleType("huggingface_hub")
+
+    class FakeHfApi:
+        def model_info(self, model_id: str, files_metadata: bool = False) -> object:
+            assert model_id == "Elron/bleurt-base-128"
+            assert files_metadata is False
+            return types.SimpleNamespace(sha="bleurt-sha", private=False)
+
+    fake_hub.HfApi = FakeHfApi  # type: ignore[attr-defined]
+    monkeypatch.setitem(sys.modules, "huggingface_hub", fake_hub)
+    monkeypatch.setattr(
+        mod.importlib.util,
+        "find_spec",
+        lambda name: object() if name == "huggingface_hub" else None,
+    )
+    bleurt_hf = mod._bleurt_check(tmp_path)
+    assert bleurt_hf.available is True
+    assert "Elron/bleurt-base-128" in bleurt_hf.detail
+    assert "bleurt-sha" in bleurt_hf.detail
+
+    class FailingHfApi:
+        def model_info(self, _model_id: str, files_metadata: bool = False) -> object:
+            raise RuntimeError("hf offline")
+
+    fake_hub.HfApi = FailingHfApi  # type: ignore[attr-defined]
+    bleurt_hf_failed = mod._bleurt_check(tmp_path)
+    assert bleurt_hf_failed.available is False
+    assert "hf offline" in bleurt_hf_failed.detail
+
+    monkeypatch.setattr(mod.importlib.util, "find_spec", lambda _name: None)
     bleurt_dir = tmp_path / "models" / "bleurt-base-128"
     bleurt_dir.mkdir(parents=True)
     assert mod._bleurt_check(tmp_path).available is True
@@ -290,6 +364,44 @@ def test_req_verify_2831_resource_probe_branches(
     assert qwen.available is True
     assert mod.model_specs(tmp_path)["cache_complete"] is True
 
+    def successful_cuda_runner(command: list[str], **kwargs: object) -> subprocess.CompletedProcess[str]:
+        assert command[:2] == [sys.executable, "-c"]
+        assert kwargs["capture_output"] is True
+        assert kwargs["text"] is True
+        assert kwargs["check"] is False
+        return subprocess.CompletedProcess(
+            command,
+            0,
+            json.dumps({"available": True, "detail": "torch=cuda; device_count=2"}),
+            "",
+        )
+
+    monkeypatch.delitem(sys.modules, "torch", raising=False)
+    monkeypatch.setattr(mod.subprocess, "run", successful_cuda_runner)
+    assert mod._cuda_check() == PreconditionCheck("cuda", True, "torch=cuda; device_count=2")
+
+    def failed_cuda_runner(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(command, 7, "", "cuda stderr")
+
+    monkeypatch.setattr(mod.subprocess, "run", failed_cuda_runner)
+    assert mod._cuda_check() == PreconditionCheck("cuda", False, "cuda stderr")
+
+    def invalid_cuda_runner(command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(command, 0, "not-json", "")
+
+    monkeypatch.setattr(mod.subprocess, "run", invalid_cuda_runner)
+    invalid_cuda = mod._cuda_check()
+    assert invalid_cuda.available is False
+    assert "invalid JSON" in invalid_cuda.detail
+
+    def raising_cuda_runner(_command: list[str], **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise OSError("cuda subprocess failed")
+
+    monkeypatch.setattr(mod.subprocess, "run", raising_cuda_runner)
+    raised_cuda = mod._cuda_check()
+    assert raised_cuda.available is False
+    assert "cuda subprocess failed" in raised_cuda.detail
+
     fake_torch = types.ModuleType("torch")
     fake_torch.cuda = types.SimpleNamespace(  # type: ignore[attr-defined]
         is_available=lambda: True,
@@ -297,16 +409,7 @@ def test_req_verify_2831_resource_probe_branches(
     )
     monkeypatch.setitem(sys.modules, "torch", fake_torch)
     assert mod._cuda_check().available is True
-    monkeypatch.delitem(sys.modules, "torch", raising=False)
-
-    real_import = builtins.__import__
-
-    def failing_torch_import(name: str, *args: object, **kwargs: object) -> object:
-        if name == "torch":
-            raise ImportError("torch missing")
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(builtins, "__import__", failing_torch_import)
+    monkeypatch.setitem(sys.modules, "torch", None)
     cuda = mod._cuda_check()
     assert cuda.available is False
-    assert "torch missing" in cuda.detail
+    assert "torch import failed" in cuda.detail
