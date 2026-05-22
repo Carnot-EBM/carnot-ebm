@@ -6303,3 +6303,70 @@ metadata for the same motif or regresses prior replay energy
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2881 | Implemented (`python/carnot/eval/fr11_recmem_recurrence_trigger_v1.py`) | Implemented (`tests/python/test_experiment_2881_fr11_recmem_recurrence_trigger_v1.py`) |
+
+## REQ-LEARN-2882: FR-11 RecMem Replay Scale-Up Comparison
+
+**Given** Exp 2869 provides the prior FR-11 offline replay result and Exp 2881
+provides a RecMem-style recurrence trigger
+**When** Exp 2882 runs a bounded offline FR-11 replay scale-up
+**Then** it SHALL select a deterministic local labeled replay set using the same
+seed and examples for eager replay and recurrence-triggered replay
+**And** it SHALL compare energy, correctness, AUROC where both label classes
+exist, token cost, memory drift, and forgetting without calling a live LLM or
+mutating model weights.
+
+### REQ-LEARN-2882 Sub-requirements
+
+- REQ-LEARN-2882-1: The runner SHALL load
+  `results/experiment_2869_fr11_continuous_self_learning_replay_v3.json` and
+  `results/experiment_2881_fr11_recmem_recurrence_trigger_v1.json`, require
+  their ready flags before claiming a complete run, and list them in
+  `source_artifacts`.
+- REQ-LEARN-2882-2: The runner SHALL select the largest deterministic local
+  labeled replay set allowed by its bounded example budget, target at least 50
+  examples, and report `n_examples` plus `target_examples_met`.
+- REQ-LEARN-2882-3: The eager and RecMem-triggered replay paths SHALL use
+  identical selected examples, `random_seed`, and offline recurrence backend
+  rows; the RecMem path SHALL apply replay effects only to examples in
+  recurrence-ready clusters.
+- REQ-LEARN-2882-4: The artifact SHALL compute `energy_delta_mean`,
+  `correctness_delta`, `auroc_delta`, `token_reduction_pct`,
+  `memory_drift_score`, and `forgetting_regression_count` from the eager versus
+  RecMem-triggered comparison, and SHALL include enough auxiliary eager/RecMem
+  metrics to audit the comparison.
+- REQ-LEARN-2882-5: The terminal artifact
+  `results/experiment_2882_fr11_recmem_replay_scaleup_v1.json` SHALL include
+  `honest_verdict`, `continuous_self_learning_task=true`,
+  `recmem_replay_scaleup_ready`, `source_artifacts`, `n_examples`,
+  `target_examples_met`, `energy_delta_mean`, `correctness_delta`,
+  `auroc_delta`, `token_reduction_pct`, `memory_drift_score`,
+  `forgetting_regression_count`, `model_weights_mutated=false`,
+  `live_llm_called=false`, `random_seed`, `field_principles`,
+  `run_date="20260522"`, and `duration_s`.
+
+### SCENARIO-LEARN-2882: RecMem Trigger Matches Eager Replay at Lower Token Cost
+
+**Given** at least 50 local clean labeled FoVer/HaluEval/FEVER replay rows
+**When** Exp 2882 runs eager replay and RecMem-triggered replay over the same
+selected rows
+**Then** the artifact starts with `complete:`
+**And** RecMem-triggered replay reports the same non-forgetting result as eager
+replay while reducing token cost
+**And** `model_weights_mutated=false`, `live_llm_called=false`, and
+`forgetting_regression_count=0`.
+
+### SCENARIO-LEARN-2882-BLOCKED: Missing Source Artifacts Block Without Fake Metrics
+
+**Given** Exp 2869 or Exp 2881 is missing or not ready
+**When** Exp 2882 runs
+**Then** `honest_verdict` starts with `blocked_`
+**And** `recmem_replay_scaleup_ready=false`, `n_examples=0`,
+`energy_delta_mean=0.0`, `correctness_delta=0.0`, `auroc_delta=0.0`,
+`token_reduction_pct=0.0`, `memory_drift_score=0.0`, and
+`forgetting_regression_count=0`.
+
+## Implementation Status (REQ-LEARN-2882)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2882 | Planned (`python/carnot/eval/fr11_recmem_replay_scaleup_v1.py`) | Planned (`tests/python/test_experiment_2882_fr11_recmem_replay_scaleup_v1.py`) |
