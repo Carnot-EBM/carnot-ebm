@@ -6370,3 +6370,68 @@ replay while reducing token cost
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2882 | Planned (`python/carnot/eval/fr11_recmem_replay_scaleup_v1.py`) | Planned (`tests/python/test_experiment_2882_fr11_recmem_replay_scaleup_v1.py`) |
+
+## REQ-LEARN-2887: FR-11 Fast-Slow Memory Corrigendum For RecMem Scale-Up
+
+**Given** Exp 2869 provides offline FR-11 replay rows, Exp 2881 provides a
+clean RecMem recurrence trigger, and Exp 2882 was adversarially flagged for
+retroactive eager-vs-RecMem metric parity
+**When** Exp 2887 runs the bounded corrigendum
+**Then** it SHALL load Exp 2869, Exp 2881, and Exp 2882, explain the exact
+Exp 2882 flag cause, select the same deterministic local labeled replay set
+for every compared policy, and compare eager replay, causal
+recurrence-triggered replay, and a Memini-style fast/slow external-memory
+baseline without mutating model weights or calling a live LLM.
+**And** it SHALL write
+`results/experiment_2887_fr11_fast_slow_memory_corrigendum_v2.json` with
+per-policy energy, correctness, AUROC, token, duplicate, contradiction, memory
+drift, and forgetting metrics.
+
+### REQ-LEARN-2887 Sub-requirements
+
+- REQ-LEARN-2887-1: The runner SHALL require
+  `results/experiment_2869_fr11_continuous_self_learning_replay_v3.json`,
+  `results/experiment_2881_fr11_recmem_recurrence_trigger_v1.json`, and
+  `results/experiment_2882_fr11_recmem_replay_scaleup_v1.json` before claiming
+  a complete corrigendum, and SHALL list them in `source_artifacts`.
+- REQ-LEARN-2887-2: The runner SHALL select a deterministic local labeled
+  replay set with target >= 50 examples, record selected-example and source-file
+  checksums, and report why if fewer examples are available.
+- REQ-LEARN-2887-3: The eager, causal RecMem, and fast/slow-memory policies
+  SHALL consume identical selected examples and seeds. The causal RecMem policy
+  SHALL apply replay only after recurrence support already exists, never
+  retroactively to examples that created the trigger.
+- REQ-LEARN-2887-4: The fast/slow-memory baseline SHALL maintain fast episodic
+  association strength, slow consolidated edge strength, and selective
+  forgetting for contradictory or regressive evidence using external memory
+  state only.
+- REQ-LEARN-2887-5: `fr11_scaleup_clean` SHALL be true only when the target
+  example count is met, no live LLM or model-weight mutation occurs, the
+  current per-policy metrics are non-tautological, and drift/forgetting guards
+  pass.
+
+### SCENARIO-LEARN-2887: Corrigendum Separates Replay Policies Causally
+
+**Given** at least 50 local clean labeled FoVer/HaluEval/FEVER replay rows
+**When** Exp 2887 compares eager replay, causal RecMem replay, and fast/slow
+memory over the same selected examples
+**Then** eager replay can apply every offline replay effect immediately
+**And** causal RecMem waits for prior recurrence support
+**And** fast/slow memory can apply fast episodic associations before slow
+consolidation while retaining selective forgetting guards
+**And** the artifact records per-policy metric dictionaries instead of a single
+eager-vs-RecMem scalar.
+
+### SCENARIO-LEARN-2887-GUARD: Fast-Slow Memory Forgets Unsafe Edges
+
+**Given** a fast/slow memory edge has accumulated recurring positive evidence
+**When** contradictory or regressive evidence for the same motif arrives
+**Then** the fast association and slow consolidated edge are weakened
+**And** the policy reports non-zero drift or forgetting instead of preserving an
+unsafe memory update.
+
+## Implementation Status (REQ-LEARN-2887)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2887 | Implemented (`python/carnot/eval/fr11_fast_slow_memory_corrigendum_v2.py`) | Implemented (`tests/python/test_experiment_2887_fr11_fast_slow_memory_corrigendum_v2.py`) |

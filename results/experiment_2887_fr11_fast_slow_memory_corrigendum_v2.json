@@ -1,0 +1,377 @@
+{
+  "adversarial_clean_checks": {
+    "causal_recmem_not_retroactive_eager": true,
+    "fast_slow_separates_from_recmem": true,
+    "live_llm_called_false": true,
+    "model_weights_mutated_false": true,
+    "non_tautological_policy_energy": true,
+    "target_examples_met": true,
+    "zero_forgetting_regressions": true,
+    "zero_memory_drift": true
+  },
+  "artifact": "experiment_2887_fr11_fast_slow_memory_corrigendum_v2",
+  "auroc_delta_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "best_policy": "fast_slow_memory",
+  "continuous_self_learning_task": true,
+  "contradiction_rate_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "correctness_delta_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "duplicate_rate_by_policy": {
+    "eager_replay": 0.96,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "duration_s": 0.096235752106,
+  "energy_delta_by_policy": {
+    "eager_replay": 0.139333333333,
+    "fast_slow_memory": 0.132,
+    "recmem_causal_triggered": 0.124666666667
+  },
+  "exp2882_flag_diagnosis": {
+    "evidence": [
+      {
+        "detail": "eager_correctness_rate=0.6 and recmem_correctness_rate=0.6 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      },
+      {
+        "detail": "eager_energy_delta_mean=0.146666666667 and energy_delta_mean=0.146666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+        "kind": "TAUTOLOGY",
+        "severity": "critical"
+      }
+    ],
+    "explanation": "Exp 2882 formed recurrence clusters over the full selected set and then credited replay to all event_ids in a ready cluster. On the local corpus, all rows with energy improvement belonged to the recurring failure motif, so RecMem energy/correctness/AUROC matched eager replay exactly.",
+    "flagged_adversarial": true,
+    "root_cause": "retroactive_cluster_application"
+  },
+  "field_principles": {
+    "auroc_delta_by_policy": "Policy final-energy AUROC minus initial-energy AUROC where valid.",
+    "best_policy": "Highest deterministic utility over energy, token cost, duplicate, and drift terms.",
+    "continuous_self_learning_task": "True because this is the milestone FR-11 memory task.",
+    "contradiction_rate_by_policy": "Fraction of non-clean motifs with conflicting final labels.",
+    "correctness_delta_by_policy": "Policy final correctness rate minus initial correctness rate; no live repair is inferred.",
+    "duplicate_rate_by_policy": "Duplicate output-memory motif rate for the policy.",
+    "duration_s": "Real wall-clock duration; no sleep padding.",
+    "energy_delta_by_policy": "Mean initial energy minus policy final energy.",
+    "field_principles": "Per-field accounting rules for auditability.",
+    "forgetting_regression_count_by_policy": "Rows or memory updates that regress energy/correctness.",
+    "fr11_scaleup_clean": "True only when target size, no-mutation, no-live-LLM, drift, forgetting, and non-tautological policy separation checks all pass.",
+    "honest_verdict": "Terminal complete:/blocked_ verdict; prior Exp 2882 flags are disclosed.",
+    "live_llm_called": "False because all rows are local verifier-label replay metadata.",
+    "memory_drift_by_policy": "Contradiction rate plus normalized forgetting, clipped to [0, 1].",
+    "model_weights_mutated": "False because only external memory state is updated.",
+    "n_examples": "The deterministic local labeled replay rows evaluated by every policy.",
+    "policies_compared": "The three policies run on identical examples and seed.",
+    "random_seed": "Controls deterministic corpus selection for every policy.",
+    "reproducibility_checksum": "Hashes stable artifact fields, selected rows, and source checksums.",
+    "run_date": "Pinned conductor run date.",
+    "source_artifacts": "Exp 2869, Exp 2881, and the flagged Exp 2882 artifact loaded first.",
+    "target_examples_met": "Whether the selected local replay set reached at least 50 rows.",
+    "tests_run": "Commands run by the operator/agent for this artifact.",
+    "token_reduction_by_policy": "Policy memory token proxy reduction versus eager per-row writes."
+  },
+  "forgetting_regression_count_by_policy": {
+    "eager_replay": 0,
+    "fast_slow_memory": 0,
+    "recmem_causal_triggered": 0
+  },
+  "fr11_scaleup_clean": true,
+  "honest_verdict": "complete: causal RecMem and fast/slow memory separated replay metrics cleanly",
+  "live_llm_called": false,
+  "memory_drift_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 0.0,
+    "recmem_causal_triggered": 0.0
+  },
+  "model_weights_mutated": false,
+  "n_examples": 50,
+  "policies_compared": [
+    "eager_replay",
+    "recmem_causal_triggered",
+    "fast_slow_memory"
+  ],
+  "policy_metrics": {
+    "eager_replay": {
+      "applied_event_count": 50,
+      "applied_event_ids": [
+        "exp2887::FEVER::fever-54371",
+        "exp2887::FoVer::gsm8k_1499_4_0",
+        "exp2887::HaluEval::halueval-48-right",
+        "exp2887::FEVER::fever-54585",
+        "exp2887::FoVer::gsm8k_149_0_0",
+        "exp2887::HaluEval::halueval-49-hallucinated",
+        "exp2887::FEVER::fever-54925",
+        "exp2887::FoVer::gsm8k_149_1_0",
+        "exp2887::HaluEval::halueval-49-right",
+        "exp2887::FEVER::fever-54940",
+        "exp2887::FoVer::gsm8k_149_2_0",
+        "exp2887::HaluEval::halueval-5-hallucinated",
+        "exp2887::FEVER::fever-55308",
+        "exp2887::FoVer::gsm8k_14_0_0",
+        "exp2887::HaluEval::halueval-5-right",
+        "exp2887::FEVER::fever-55386",
+        "exp2887::FoVer::gsm8k_14_1_0",
+        "exp2887::HaluEval::halueval-50-hallucinated",
+        "exp2887::FEVER::fever-55602",
+        "exp2887::FoVer::gsm8k_14_2_0",
+        "exp2887::HaluEval::halueval-50-right",
+        "exp2887::FEVER::fever-56998",
+        "exp2887::FoVer::gsm8k_1500_0_0",
+        "exp2887::HaluEval::halueval-51-hallucinated",
+        "exp2887::FEVER::fever-57274",
+        "exp2887::FoVer::gsm8k_1500_1_0",
+        "exp2887::HaluEval::halueval-51-right",
+        "exp2887::FEVER::fever-57513",
+        "exp2887::FoVer::gsm8k_1500_2_0",
+        "exp2887::HaluEval::halueval-52-hallucinated",
+        "exp2887::FEVER::fever-57744",
+        "exp2887::FoVer::gsm8k_1500_3_0",
+        "exp2887::HaluEval::halueval-52-right",
+        "exp2887::FEVER::fever-57751",
+        "exp2887::FoVer::gsm8k_1501_0_0",
+        "exp2887::HaluEval::halueval-53-hallucinated",
+        "exp2887::FEVER::fever-58943",
+        "exp2887::FoVer::gsm8k_1501_1_0",
+        "exp2887::HaluEval::halueval-53-right",
+        "exp2887::FEVER::fever-59353",
+        "exp2887::FoVer::gsm8k_1501_2_0",
+        "exp2887::HaluEval::halueval-54-hallucinated",
+        "exp2887::FEVER::fever-59449",
+        "exp2887::FoVer::gsm8k_1501_3_0",
+        "exp2887::HaluEval::halueval-54-right",
+        "exp2887::FEVER::fever-6053",
+        "exp2887::FoVer::gsm8k_1501_4_0",
+        "exp2887::HaluEval::halueval-55-hallucinated",
+        "exp2887::FEVER::fever-6101",
+        "exp2887::FoVer::gsm8k_1502_0_0"
+      ],
+      "auroc": 1.0,
+      "auroc_delta": 0.0,
+      "contradiction_rate": 0.0,
+      "correctness_delta": 0.0,
+      "duplicate_rate": 0.96,
+      "energy_delta_mean": 0.139333333333,
+      "forgetting_regression_count": 0,
+      "memory_drift_score": 0.0,
+      "token_proxy_after": 16645,
+      "token_proxy_before": 16645,
+      "token_reduction_pct": 0.0
+    },
+    "fast_slow_memory": {
+      "applied_event_count": 18,
+      "applied_event_ids": [
+        "exp2887::HaluEval::halueval-49-hallucinated",
+        "exp2887::FEVER::fever-54925",
+        "exp2887::FEVER::fever-54940",
+        "exp2887::HaluEval::halueval-5-hallucinated",
+        "exp2887::FEVER::fever-55308",
+        "exp2887::FEVER::fever-55386",
+        "exp2887::HaluEval::halueval-50-hallucinated",
+        "exp2887::FEVER::fever-56998",
+        "exp2887::HaluEval::halueval-51-hallucinated",
+        "exp2887::FEVER::fever-57274",
+        "exp2887::FEVER::fever-57513",
+        "exp2887::HaluEval::halueval-52-hallucinated",
+        "exp2887::FEVER::fever-57744",
+        "exp2887::HaluEval::halueval-53-hallucinated",
+        "exp2887::FEVER::fever-59353",
+        "exp2887::HaluEval::halueval-54-hallucinated",
+        "exp2887::FEVER::fever-59449",
+        "exp2887::HaluEval::halueval-55-hallucinated"
+      ],
+      "auroc": 1.0,
+      "auroc_delta": 0.0,
+      "contradiction_rate": 0.0,
+      "correctness_delta": 0.0,
+      "duplicate_rate": 0.0,
+      "energy_delta_mean": 0.132,
+      "fast_strength_by_motif": {
+        "factuality_mismatch": 0.655508249091
+      },
+      "forgetting_regression_count": 0,
+      "memory_drift_score": 0.0,
+      "slow_strength_by_motif": {
+        "factuality_mismatch": 6.472896802588
+      },
+      "token_proxy_after": 236,
+      "token_proxy_before": 16645,
+      "token_reduction_pct": 98.582156803845
+    },
+    "recmem_causal_triggered": {
+      "applied_event_count": 17,
+      "applied_event_ids": [
+        "exp2887::FEVER::fever-54925",
+        "exp2887::FEVER::fever-54940",
+        "exp2887::HaluEval::halueval-5-hallucinated",
+        "exp2887::FEVER::fever-55308",
+        "exp2887::FEVER::fever-55386",
+        "exp2887::HaluEval::halueval-50-hallucinated",
+        "exp2887::FEVER::fever-56998",
+        "exp2887::HaluEval::halueval-51-hallucinated",
+        "exp2887::FEVER::fever-57274",
+        "exp2887::FEVER::fever-57513",
+        "exp2887::HaluEval::halueval-52-hallucinated",
+        "exp2887::FEVER::fever-57744",
+        "exp2887::HaluEval::halueval-53-hallucinated",
+        "exp2887::FEVER::fever-59353",
+        "exp2887::HaluEval::halueval-54-hallucinated",
+        "exp2887::FEVER::fever-59449",
+        "exp2887::HaluEval::halueval-55-hallucinated"
+      ],
+      "auroc": 1.0,
+      "auroc_delta": 0.0,
+      "contradiction_rate": 0.0,
+      "correctness_delta": 0.0,
+      "duplicate_rate": 0.0,
+      "energy_delta_mean": 0.124666666667,
+      "forgetting_regression_count": 0,
+      "memory_drift_score": 0.0,
+      "token_proxy_after": 115,
+      "token_proxy_before": 16645,
+      "token_reduction_pct": 99.309101832382
+    }
+  },
+  "preconditions_checked": [
+    {
+      "check": "exp2869_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2869_fr11_continuous_self_learning_replay_v3.json",
+      "passed": true
+    },
+    {
+      "check": "exp2869_replay_ready",
+      "observed": "complete: offline verifier-feedback replay lowered energy with no forgetting",
+      "passed": true
+    },
+    {
+      "check": "exp2881_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2881_fr11_recmem_recurrence_trigger_v1.json",
+      "passed": true
+    },
+    {
+      "check": "exp2881_recmem_ready",
+      "observed": "complete: recurrence-triggered consolidation ready without live LLM",
+      "passed": true
+    },
+    {
+      "check": "exp2882_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2882_fr11_recmem_replay_scaleup_v1.json",
+      "passed": true
+    },
+    {
+      "check": "exp2882_loaded_for_corrigendum",
+      "observed": "complete: RecMem-triggered replay matched eager replay with lower token cost and no forgetting",
+      "passed": true
+    },
+    {
+      "check": "exp2865_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2865_cross_corpus_matrix_v5.json",
+      "passed": true
+    },
+    {
+      "check": "exp2865_clean_corpora",
+      "observed": [
+        "FoVer",
+        "HaluEval/FEVER"
+      ],
+      "passed": true
+    },
+    {
+      "check": "clean_replay_corpus",
+      "observed": 50,
+      "passed": true
+    }
+  ],
+  "random_seed": 2887,
+  "reproducibility_checksum": "2190bef94a0b4717c895a943727e7b04d932b301d5a94620eeb55f0d869b6705",
+  "run_date": "20260522",
+  "schema": "carnot.fr11.fast_slow_memory_corrigendum.v2",
+  "selected_example_ids": [
+    "FEVER::fever-54371",
+    "FoVer::gsm8k_1499_4_0",
+    "HaluEval::halueval-48-right",
+    "FEVER::fever-54585",
+    "FoVer::gsm8k_149_0_0",
+    "HaluEval::halueval-49-hallucinated",
+    "FEVER::fever-54925",
+    "FoVer::gsm8k_149_1_0",
+    "HaluEval::halueval-49-right",
+    "FEVER::fever-54940",
+    "FoVer::gsm8k_149_2_0",
+    "HaluEval::halueval-5-hallucinated",
+    "FEVER::fever-55308",
+    "FoVer::gsm8k_14_0_0",
+    "HaluEval::halueval-5-right",
+    "FEVER::fever-55386",
+    "FoVer::gsm8k_14_1_0",
+    "HaluEval::halueval-50-hallucinated",
+    "FEVER::fever-55602",
+    "FoVer::gsm8k_14_2_0",
+    "HaluEval::halueval-50-right",
+    "FEVER::fever-56998",
+    "FoVer::gsm8k_1500_0_0",
+    "HaluEval::halueval-51-hallucinated",
+    "FEVER::fever-57274",
+    "FoVer::gsm8k_1500_1_0",
+    "HaluEval::halueval-51-right",
+    "FEVER::fever-57513",
+    "FoVer::gsm8k_1500_2_0",
+    "HaluEval::halueval-52-hallucinated",
+    "FEVER::fever-57744",
+    "FoVer::gsm8k_1500_3_0",
+    "HaluEval::halueval-52-right",
+    "FEVER::fever-57751",
+    "FoVer::gsm8k_1501_0_0",
+    "HaluEval::halueval-53-hallucinated",
+    "FEVER::fever-58943",
+    "FoVer::gsm8k_1501_1_0",
+    "HaluEval::halueval-53-right",
+    "FEVER::fever-59353",
+    "FoVer::gsm8k_1501_2_0",
+    "HaluEval::halueval-54-hallucinated",
+    "FEVER::fever-59449",
+    "FoVer::gsm8k_1501_3_0",
+    "HaluEval::halueval-54-right",
+    "FEVER::fever-6053",
+    "FoVer::gsm8k_1501_4_0",
+    "HaluEval::halueval-55-hallucinated",
+    "FEVER::fever-6101",
+    "FoVer::gsm8k_1502_0_0"
+  ],
+  "selected_examples_checksum": "2abd6ee21cb7e6c8ed16cb628990fcfdb6d4e86f03b19abdd0776299363bccd0",
+  "source_artifacts": [
+    "results/experiment_2869_fr11_continuous_self_learning_replay_v3.json",
+    "results/experiment_2881_fr11_recmem_recurrence_trigger_v1.json",
+    "results/experiment_2882_fr11_recmem_replay_scaleup_v1.json"
+  ],
+  "source_file_checksums": {
+    "data/eval_manifests/fever_20260522.jsonl": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2",
+    "data/eval_manifests/halueval_20260522.jsonl": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6",
+    "data/fover_corpus.jsonl": "585a4b8099fae140b850e10d36f121e0a25e645c8d0d264936d5efa0a62b330f",
+    "results/experiment_2865_cross_corpus_matrix_v5.json": "6046e447fc028b29068e5b9375b30b57a7b44211f1e5ccdac011388cbdb2d49d"
+  },
+  "target_examples_met": true,
+  "target_examples_note": "selected 50 local labeled examples",
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_2887_fr11_fast_slow_memory_corrigendum_v2.py -q (passed: 4 passed)",
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_2887_fr11_fast_slow_memory_corrigendum_v2.py --cov=python/carnot --cov-report= --cov-fail-under=0 -q && .venv/bin/coverage report --include='python/carnot/eval/fr11_fast_slow_memory_corrigendum_v2.py' --fail-under=100 --show-missing (passed: new module 100%)",
+    "ruff check python/carnot/eval/fr11_fast_slow_memory_corrigendum_v2.py tests/python/test_experiment_2887_fr11_fast_slow_memory_corrigendum_v2.py (passed)",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: 444 pre-existing tests lack REQ/SCENARIO references)",
+    ".venv/bin/pytest tests/python -q (failed/incomplete: many pre-existing failures, xdist worker crashes, Z3 segfault, tokenizers abort; hung after 92% and was terminated)"
+  ],
+  "token_reduction_by_policy": {
+    "eager_replay": 0.0,
+    "fast_slow_memory": 98.582156803845,
+    "recmem_causal_triggered": 99.309101832382
+  }
+}
