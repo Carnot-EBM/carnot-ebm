@@ -6002,3 +6002,4 @@ Ripgrep i |
 | 2026-05-22 19:44 UTC | Cross-Corpus Matrix v6 from Clean Expanded Rows | OK | 81 passed in 3.31s |
 | 2026-05-22 20:38 UTC | FR-11 RecMem Recurrence-Triggered Consolidation | OK | 81 passed in 3.19s |
 | 2026-05-22 20:52 UTC | FR-11 RecMem Replay Scale-Up (gated on exp2881 rec | OK | 81 passed in 3.81s |
+| 2026-05-22 21:09 UTC | THRML Sampler Portability Smoke v2 | OK | 81 passed in 3.71s |
