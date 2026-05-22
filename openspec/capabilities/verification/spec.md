@@ -3207,6 +3207,41 @@ results, per-verifier AUROC lists for both conditions, restored FR-11 state
 hashes, `vanilla_qwen36_pass_at_1`, and an `honest_verdict` prefixed
 `complete:`.
 
+### REQ-VERIFY-MBPP-2837: MBPP Ensemble v7b Retry Artifact
+
+The repository shall provide an Exp 2837 MBPP ensemble-v7b runner that writes
+`results/experiment_2837_mbpp_ensemble_eval.json` using the same live-resource
+discipline as Exp 2829: check CUDA, HuggingFace MBPP sanitized test access, a
+real cached Qwen3.6-35B-A3B-GGUF file, and FR-11 state files before candidate
+generation or verifier scoring. If any precondition is absent, the runner MUST
+write a `blocked_<resource>` artifact with all required schema keys present,
+unmeasured metric values left null, and no inferred AUROC, pass@1, candidate,
+or per-verifier values.
+
+For successful runs, the runner MUST use exactly 100 MBPP sanitized test
+problems, the five seeds `[42, 137, 271, 314, 1729]`, live-GPU Qwen3.6
+candidate generation, MBPP test execution for pass/fail labels, Condition A
+production ensemble-v7b scoring with FR-11 state visible, and Condition B
+architecture-only scoring after FR-11 state is moved aside and Python is
+restarted. It MUST restore every FR-11 state file and verify SHA256 equality.
+
+The artifact MUST include principle annotations for the required fields:
+`honest_verdict`, `corpus`, `n_problems`, `n_seeds`, Condition A/B AUROC mean
+and standard deviation, `learning_contribution`, per-verifier AUROC lists for
+both conditions, `vanilla_qwen36_pass_at_1`, `random_seeds_used`,
+`reproducibility_checksum`, `model_specs`, `duration_s`,
+`preconditions_checked`, `fr11_state_files`, `state_files_restored_sha_match`,
+and `methodology_note`.
+
+### SCENARIO-VERIFY-MBPP-2837: Missing Live Resource Blocks MBPP Retry
+
+Given the Exp 2837 MBPP runner checks all live-resource preconditions before
+inference,
+When the Qwen3.6 GGUF cache or another required resource is unavailable,
+Then it writes `results/experiment_2837_mbpp_ensemble_eval.json` with a
+specific `blocked_<resource>` verdict, populated precondition evidence,
+state-file SHA metadata gathered so far, and null unmeasured MBPP metrics.
+
 ### REQ-VERIFY-2838: MBPP Dual-Condition v3 Gated By Exp 2836 SOTA Runtime
 
 The repository shall provide an Exp 2838 MBPP dual-condition runner that writes
