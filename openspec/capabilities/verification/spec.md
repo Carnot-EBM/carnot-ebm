@@ -3267,6 +3267,40 @@ Then it writes `results/experiment_2867_drift_mus_prioritizer_v2.json` with
 zero failure rows, zero hypergraph nodes and hyperedges, populated
 precondition evidence, and no inferred repair-prioritization metrics.
 
+### REQ-VERIFY-2877: HaluEval/FEVER Tiny Exact Frontier Expansion
+
+The repository shall provide an Exp 2877 exact-frontier expansion runner that
+reads the clean Exp 2866 exact arithmetic frontier evidence and the clean Exp
+2864 HaluEval/FEVER local calibration artifact, then scans only the resolved
+HaluEval and FEVER manifests declared by Exp 2864.
+
+The runner MUST include HaluEval/FEVER rows in the exact frontier only when a
+manually encoded, deterministic local constraint exists for the row and the
+row's text anchors still match the manifest bytes. Supported constraints MAY
+cover safe-prefix exact answers, direct contradiction, anchored entailment, or
+arithmetic-like date/year comparisons. The runner MUST NOT use LLM
+autoformalization and MUST keep every row without such a manual exact
+constraint outside the exact frontier with an unsupported-row reason.
+
+The terminal artifact MUST be written to
+`results/experiment_2877_exact_frontier_expansion_halueval_fever_v2.json` and
+include `honest_verdict`, `frontier_expansion_ready`, `source_artifacts`,
+`selection_rule`, `n_candidate_rows`, `n_exact_supported_rows`,
+`n_unsupported_rows`, `unsupported_reasons`, `exact_solver_backend`,
+`certificates`, `tests_run`, `field_principles`, `run_date="20260522"`, and a
+measured `duration_s`.
+
+### SCENARIO-VERIFY-2877: Manual Exact Constraints Touch Non-FoVer Rows
+
+Given Exp 2864 resolves local HaluEval and FEVER manifests and Exp 2866
+contains clean exact Z3 arithmetic frontier evidence,
+When the Exp 2877 runner scans the manifests,
+Then it writes the required artifact with at least one supported HaluEval row
+and at least one supported FEVER row, includes per-row certificates with solver
+status, records the deterministic selection rule, and reports all remaining
+manifest rows under unsupported reasons rather than inferring natural-language
+coverage.
+
 ### REQ-VERIFY-2829: MBPP Dual-Memory Ensemble Evaluation
 
 The repository shall provide an Exp 2829 MBPP dual-memory runner that writes

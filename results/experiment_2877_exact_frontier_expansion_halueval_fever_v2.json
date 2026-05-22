@@ -1,0 +1,310 @@
+{
+  "certificates": [
+    {
+      "certificate_sha256": "720a352f396caa260158fb0d8a9fdd2a8cdcd6b1dbd5734815ff378622622524",
+      "constraint_type": "safe_prefix_year_answer",
+      "constraints": {
+        "candidate_year": 2006,
+        "expected_year": 2006
+      },
+      "dataset": "HaluEval",
+      "evidence": {
+        "candidate_anchors": [
+          "2006"
+        ],
+        "candidate_or_claim": "2006",
+        "prompt_anchors": [
+          "first aired in September 2006"
+        ]
+      },
+      "exact_verdict": "safe_prefix_supported",
+      "expected_solver_status": "sat",
+      "label": 0,
+      "safe_prefix_end": 4,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "sat",
+      "stable_id": "halueval-8-right"
+    },
+    {
+      "certificate_sha256": "aed05e7d61f4294d53876c25228b076f841b51740cd31ac273df0130a0ca1002",
+      "constraint_type": "year_contradiction",
+      "constraints": {
+        "candidate_year": 2003,
+        "expected_year": 2006
+      },
+      "dataset": "HaluEval",
+      "evidence": {
+        "candidate_anchors": [
+          "2003"
+        ],
+        "candidate_or_claim": "The inspiration for \"House of Anubis\" first aired in 2003.",
+        "prompt_anchors": [
+          "first aired in September 2006"
+        ]
+      },
+      "exact_verdict": "contradiction_verified",
+      "expected_solver_status": "unsat",
+      "label": 1,
+      "safe_prefix_end": 57,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "unsat",
+      "stable_id": "halueval-8-hallucinated"
+    },
+    {
+      "certificate_sha256": "c6b6047cdd6a846300538e8c2e95af907d26afa0d83b2c34e18338402591ee55",
+      "constraint_type": "arithmetic_like_date_order",
+      "constraints": {
+        "claimed_first": "The Wolfhounds",
+        "claimed_year": 1985,
+        "compare_against": "Hole",
+        "comparison_year": 1989,
+        "relation": "claimed_year < comparison_year"
+      },
+      "dataset": "HaluEval",
+      "evidence": {
+        "candidate_anchors": [
+          "The Wolfhounds"
+        ],
+        "candidate_or_claim": "The Wolfhounds",
+        "prompt_anchors": [
+          "formed in 1989",
+          "formed in Romford, UK in 1985"
+        ]
+      },
+      "exact_verdict": "safe_prefix_supported",
+      "expected_solver_status": "sat",
+      "label": 0,
+      "safe_prefix_end": 14,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "sat",
+      "stable_id": "halueval-22-right"
+    },
+    {
+      "certificate_sha256": "a84e4a3efc9d6bef44ecfb31e631b47a8184779b870ebd78b25b7d8036a82b06",
+      "constraint_type": "arithmetic_like_date_order",
+      "constraints": {
+        "claimed_first": "Hole",
+        "claimed_year": 1989,
+        "compare_against": "The Wolfhounds",
+        "comparison_year": 1985,
+        "relation": "claimed_year < comparison_year"
+      },
+      "dataset": "HaluEval",
+      "evidence": {
+        "candidate_anchors": [
+          "Hole",
+          "founded first"
+        ],
+        "candidate_or_claim": "Hole, the rock band that Courtney Love was a frontwoman of was founded first.",
+        "prompt_anchors": [
+          "formed in 1989",
+          "formed in Romford, UK in 1985"
+        ]
+      },
+      "exact_verdict": "contradiction_verified",
+      "expected_solver_status": "unsat",
+      "label": 1,
+      "safe_prefix_end": 76,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "unsat",
+      "stable_id": "halueval-22-hallucinated"
+    },
+    {
+      "certificate_sha256": "ac802f8dc923ddf31addb333c99aa8dc6d9f4a08a68273e89e3c24cbe5d18383",
+      "constraint_type": "arithmetic_like_date_order",
+      "constraints": {
+        "claimed_first": "Aleksander Ford",
+        "claimed_year": 1908,
+        "compare_against": "Pablo Trapero",
+        "comparison_year": 1971,
+        "relation": "claimed_year < comparison_year"
+      },
+      "dataset": "HaluEval",
+      "evidence": {
+        "candidate_anchors": [
+          "Aleksander Ford"
+        ],
+        "candidate_or_claim": "Aleksander Ford",
+        "prompt_anchors": [
+          "Born 4 October 1971",
+          "24 November 1908"
+        ]
+      },
+      "exact_verdict": "safe_prefix_supported",
+      "expected_solver_status": "sat",
+      "label": 0,
+      "safe_prefix_end": 15,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "sat",
+      "stable_id": "halueval-31-right"
+    },
+    {
+      "certificate_sha256": "2ceab8cc4cf81579e7ca91982466d25f2589e91b9243699569c309e082d48452",
+      "constraint_type": "arithmetic_like_date_order",
+      "constraints": {
+        "claimed_first": "Pablo Trapero",
+        "claimed_year": 1971,
+        "compare_against": "Aleksander Ford",
+        "comparison_year": 1908,
+        "relation": "claimed_year < comparison_year"
+      },
+      "dataset": "HaluEval",
+      "evidence": {
+        "candidate_anchors": [
+          "Pablo Trapero",
+          "born first"
+        ],
+        "candidate_or_claim": "Pablo Trapero was born first.",
+        "prompt_anchors": [
+          "Born 4 October 1971",
+          "24 November 1908"
+        ]
+      },
+      "exact_verdict": "contradiction_verified",
+      "expected_solver_status": "unsat",
+      "label": 1,
+      "safe_prefix_end": 28,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "unsat",
+      "stable_id": "halueval-31-hallucinated"
+    },
+    {
+      "certificate_sha256": "a00e8680946added00129590ed5cc6f676aeda7d2940b57c022247b3a9c5c260",
+      "constraint_type": "anchored_entailment",
+      "constraints": {
+        "anchor_scope": "constant prompt and candidate/claim substring containment",
+        "candidate_anchors": [
+          "Steam",
+          "gaseous state",
+          "water vapor"
+        ],
+        "prompt_anchors": [
+          "gaseous state",
+          "steam or water vapor"
+        ]
+      },
+      "dataset": "FEVER",
+      "evidence": {
+        "candidate_anchors": [
+          "Steam",
+          "gaseous state",
+          "water vapor"
+        ],
+        "candidate_or_claim": "Steam is the gaseous state of water, also known as water vapor.",
+        "prompt_anchors": [
+          "gaseous state",
+          "steam or water vapor"
+        ]
+      },
+      "exact_verdict": "entailment_anchor_verified",
+      "expected_solver_status": "sat",
+      "label": 0,
+      "safe_prefix_end": 62,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "sat",
+      "stable_id": "fever-84514"
+    },
+    {
+      "certificate_sha256": "c9fbeb2331ae968f7abdde53cb99cb7adb2290f6bf96704746408590e22ebbf5",
+      "constraint_type": "existential_entailment",
+      "constraints": {
+        "anchor_scope": "constant prompt and candidate/claim substring containment",
+        "candidate_anchors": [
+          "stars at least one actor"
+        ],
+        "prompt_anchors": [
+          "The film stars",
+          "Al Pacino"
+        ]
+      },
+      "dataset": "FEVER",
+      "evidence": {
+        "candidate_anchors": [
+          "stars at least one actor"
+        ],
+        "candidate_or_claim": "Dog Day Afternoon stars at least one actor.",
+        "prompt_anchors": [
+          "The film stars",
+          "Al Pacino"
+        ]
+      },
+      "exact_verdict": "entailment_anchor_verified",
+      "expected_solver_status": "sat",
+      "label": 0,
+      "safe_prefix_end": 42,
+      "solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+      "solver_status": "sat",
+      "stable_id": "fever-182889"
+    }
+  ],
+  "duration_s": 0.015025433036498725,
+  "exact_solver_backend": "z3-solver 4.16.0 + deterministic manifest anchors",
+  "field_principles": {
+    "certificates": "Per-supported-row evidence, solver status, and checksum.",
+    "duration_s": "Measured wall-clock runtime; no sleep padding.",
+    "exact_solver_backend": "Identifies the local solver used for exact constant checks.",
+    "frontier_expansion_ready": "True only when clean source artifacts exist and both HaluEval and FEVER contribute at least one exact manual certificate.",
+    "honest_verdict": "Terminal-prefix verdict for conductor classification.",
+    "n_candidate_rows": "All rows scanned from the Exp 2864-resolved manifests.",
+    "n_exact_supported_rows": "Rows admitted to the exact frontier by local checks only.",
+    "n_unsupported_rows": "Rows deliberately kept outside the exact frontier.",
+    "selection_rule": "Manual deterministic selection prevents accidental promotion of broad natural-language coverage.",
+    "source_artifacts": "Records the prior exact-frontier and calibration evidence used.",
+    "tests_run": "Commands used to validate this module and artifact builder.",
+    "unsupported_reasons": "Explains why unsupported rows were not promoted."
+  },
+  "frontier_expansion_ready": true,
+  "honest_verdict": "complete: exact frontier touches bounded HaluEval/FEVER rows without natural-language overclaim",
+  "n_candidate_rows": 1000,
+  "n_exact_supported_rows": 8,
+  "n_unsupported_rows": 992,
+  "run_date": "20260522",
+  "selection_rule": "Scan the Exp 2864-resolved HaluEval and FEVER manifests in file order; include only rows whose stable_id appears in the static manual exact-constraint registry and whose prompt/candidate/claim anchors match the manifest bytes. No LLM autoformalization is used; every other row is reported unsupported.",
+  "source_artifact_details": {
+    "data/eval_manifests/fever_20260522.jsonl": {
+      "present": true,
+      "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/fever_20260522.jsonl"
+    },
+    "data/eval_manifests/halueval_20260522.jsonl": {
+      "present": true,
+      "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/halueval_20260522.jsonl"
+    },
+    "results/experiment_2864_halueval_fever_full_calibration_v3.json": {
+      "present": true,
+      "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2864_halueval_fever_full_calibration_v3.json"
+    },
+    "results/experiment_2866_beaver_exact_tiny_frontier_v1.json": {
+      "present": true,
+      "resolved_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2866_beaver_exact_tiny_frontier_v1.json"
+    }
+  },
+  "source_artifact_notes": {
+    "results/experiment_2866_exact_z3_arithmetic_frontier_v1.json": {
+      "note": "The task prompt named this alias, but the canonical clean Exp 2866 artifact in this checkout is experiment_2866_beaver_exact_tiny_frontier_v1.json.",
+      "present": false
+    }
+  },
+  "source_artifact_sha256": {
+    "data/eval_manifests/fever_20260522.jsonl": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2",
+    "data/eval_manifests/halueval_20260522.jsonl": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6",
+    "results/experiment_2864_halueval_fever_full_calibration_v3.json": "51784e7d36f4bcbf1de761041c2d2524f2366d7fb05fb4d13c8d5e72268b9fed",
+    "results/experiment_2866_beaver_exact_tiny_frontier_v1.json": "ed843c3a01ab4a188109408d944d9dcbd293e78e3be3cd3094e9cf9c76b2c2ff"
+  },
+  "source_artifacts": [
+    "results/experiment_2866_beaver_exact_tiny_frontier_v1.json",
+    "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+    "data/eval_manifests/halueval_20260522.jsonl",
+    "data/eval_manifests/fever_20260522.jsonl"
+  ],
+  "tests_run": [
+    ".venv/bin/python -m coverage erase && .venv/bin/python -m coverage run -m pytest tests/python/test_experiment_2877_halueval_fever_exact_frontier.py -q -o addopts='' && .venv/bin/python -m coverage report --include='*/halueval_fever_exact_frontier_expansion.py' -m --fail-under=100 -> passed; 3 passed; new module 100% coverage",
+    ".venv/bin/pytest tests/python -q -> attempted; failed/hung with broad pre-existing failures, xdist worker crashes in z3_math_verifier.py/test_pipeline_errors.py and transformers model-loading/test_verge_refiner.py, plus ExperimentTimeoutWatchdog exp561; terminated launched pytest tree after non-terminal hang",
+    ".venv/bin/python scripts/check_spec_coverage.py -> failed; 444 pre-existing tests lack REQ/SCENARIO traceability",
+    ".venv/bin/python scripts/adversarial_verify.py --json results/experiment_2877_exact_frontier_expansion_halueval_fever_v2.json -> passed; 0 flags",
+    ".venv/bin/python -m py_compile python/carnot/verify/halueval_fever_exact_frontier_expansion.py tests/python/test_experiment_2877_halueval_fever_exact_frontier.py -> passed",
+    ".venv/bin/python -m ruff check ... -> not run; ruff module not installed in .venv"
+  ],
+  "unsupported_reasons": {
+    "unsupported_no_manual_exact_constraint": 992
+  }
+}
