@@ -2664,6 +2664,53 @@ curves, and the selected deployment beta is one of the swept beta values.
 
 **Implementation Status:** Planned (Exp 1570)
 
+## REQ-SAMPLE-067: Exp 2883 THRML Sampler Portability Smoke V2
+
+Carnot SHALL provide a tiny THRML sampler portability smoke that checks the
+active Python/JAX/THRML/fallback-sampler preconditions, runs a THRML sampler
+lane only when `thrml` is already importable, runs the local Carnot fallback
+sampler when possible, compares sample shapes and energy-histogram sanity, and
+writes a terminal JSON artifact without installing THRML or claiming Extropic
+TSU/hardware access.
+
+Acceptance criteria:
+- The experiment SHALL write
+  `results/experiment_2883_thrml_sampler_portability_smoke_v2.json`.
+- The terminal artifact SHALL include `honest_verdict`,
+  `thrml_portability_ready`, `blocked_reason`, `preconditions_checked`,
+  `thrml_import_available`, `jax_devices`, `local_fallback_ran`,
+  `problem_spec`, `sample_count`, `parity_metrics`,
+  `hardware_claim_made`, `tests_run`, `field_principles`, `run_date`, and
+  `duration_s`.
+- The precondition probe SHALL record the Python version, JAX availability and
+  device inventory, THRML import availability, and local fallback sampler
+  availability without installing packages.
+- If THRML is unavailable, the artifact SHALL set
+  `blocked_reason="blocked_thrml_unavailable"`, SHALL NOT attempt a THRML
+  sampler run, and SHALL still run the local Carnot fallback sampler for the
+  same tiny Ising/PGM problem when possible.
+- If THRML is available, the smoke SHALL run the THRML and local fallback
+  lanes with fixed seeds on the same tiny Ising problem, compare sample shape,
+  mean-energy delta, energy histogram non-emptiness, available update-count
+  metadata, and runtime.
+- `hardware_claim_made=false` SHALL remain set for every terminal outcome, and
+  the artifact SHALL NOT claim TSU, Z1, XTR-0, FPGA, board, synthesis,
+  bitstream, latency, or hardware acceleration.
+
+**Implementation Status:** Implemented (Exp 2883)
+
+### SCENARIO-SAMPLE-095: Exp 2883 Writes Tiny THRML Portability Smoke
+
+Given: the active project environment may or may not have importable THRML.
+When: the Exp 2883 sampler portability smoke runs from the Carnot project root
+for run date 20260522.
+Then: it writes the required terminal artifact fields, records
+`blocked_thrml_unavailable` if THRML is absent, runs the local fallback sampler
+when available, runs and compares the THRML lane only when already importable,
+and preserves a software-only no-hardware-claim boundary.
+
+**Implementation Status:** Implemented (Exp 2883)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
