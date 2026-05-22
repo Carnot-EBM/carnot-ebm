@@ -732,3 +732,40 @@ locations
 synthetic rows.
 
 **Spec traces:** REQ-BENCH-2849
+
+### REQ-BENCH-2863: Stable Evaluation Manifest Resolver Contract
+
+Carnot MUST expose a reusable resolver that treats
+`results/experiment_2849_local_dataset_materialization_v1.json` as the source
+of truth for local evaluation manifest filenames.  The resolver MUST map the
+canonical corpus keys `halueval`, `fever`, `mbpp`, `humaneval`, and
+`truthfulqa` to the actual dated JSONL manifest paths and SHA256 checksums
+recorded by Exp 2849, rather than assuming plain filenames such as
+`halueval.jsonl` or `fever.jsonl`.
+
+The resolver contract artifact MUST be written to
+`results/experiment_2863_eval_manifest_contract_v2.json` and include:
+`honest_verdict`, `manifest_contract_ready`,
+`manifest_source_artifact="results/experiment_2849_local_dataset_materialization_v1.json"`,
+`resolved_manifest_paths`, `resolved_manifest_sha256`, one readiness boolean
+per canonical corpus, `synthetic_rows_created=false`, `tests_run`,
+`field_principles`, `duration_s`, and `run_date="20260522"`.
+
+**Acceptance criteria:**
+- HaluEval and FEVER consumers can resolve the dated Exp 2849 paths
+  deterministically from the source artifact.
+- Readiness is true for a corpus only when Exp 2849 marked the corpus ready,
+  the resolved manifest file exists, and the file SHA256 matches Exp 2849.
+- The resolver MUST NOT create synthetic rows, infer metrics, or silently
+  replace dated manifest paths with plain aliases.
+
+### SCENARIO-BENCH-2863: HaluEval and FEVER Resolve Dated Manifests
+
+**Given** Exp 2849 records dated local manifest paths and SHA256 checksums for
+HaluEval and FEVER
+**When** the stable evaluation manifest resolver is called for those corpora
+**Then** it returns the dated paths from Exp 2849
+**And** it verifies the recorded checksums
+**And** it reports both corpus readiness booleans without fabricating rows.
+
+**Spec traces:** REQ-BENCH-2863, SCENARIO-BENCH-2863

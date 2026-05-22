@@ -1,0 +1,116 @@
+{
+  "artifact": "experiment_2863_eval_manifest_contract_v2",
+  "checksum_verified": {
+    "fever": true,
+    "halueval": true,
+    "humaneval": true,
+    "mbpp": true,
+    "truthfulqa": true
+  },
+  "duration_s": 0.0016720294952392578,
+  "fever_ready": true,
+  "field_principles": {
+    "duration_s": "Measured wall-clock runtime; no sleep padding.",
+    "honest_verdict": "Terminal-prefix verdict for conductor classification.",
+    "manifest_contract_ready": "True only when every requested corpus resolves and verifies.",
+    "manifest_source_artifact": "Exp 2849 is the naming and checksum authority.",
+    "readiness_booleans": "Per-corpus readiness combines Exp 2849 readiness and checksum proof.",
+    "resolved_manifest_paths": "Dated JSONL paths are echoed exactly from Exp 2849.",
+    "resolved_manifest_sha256": "Checksums are copied from Exp 2849 and verified on disk.",
+    "run_date": "Fixed experiment date for milestone .270 artifacts.",
+    "synthetic_rows_created": "Always false; the resolver never builds benchmark rows.",
+    "tests_run": "Commands used to validate the resolver contract."
+  },
+  "halueval_ready": true,
+  "honest_verdict": "complete: eval manifest contract ready",
+  "humaneval_ready": true,
+  "manifest_contract_ready": true,
+  "manifest_source_artifact": "results/experiment_2849_local_dataset_materialization_v1.json",
+  "mbpp_ready": true,
+  "resolved_manifest_counts": {
+    "fever": 500,
+    "halueval": 500,
+    "humaneval": 164,
+    "mbpp": 100,
+    "truthfulqa": 200
+  },
+  "resolved_manifest_paths": {
+    "fever": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/fever_20260522.jsonl",
+    "halueval": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/halueval_20260522.jsonl",
+    "humaneval": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/humaneval_20260522.jsonl",
+    "mbpp": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/mbpp_20260522.jsonl",
+    "truthfulqa": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/truthfulqa_20260522.jsonl"
+  },
+  "resolved_manifest_sha256": {
+    "fever": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2",
+    "halueval": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6",
+    "humaneval": "87c76105e14d3da1aad57da30243e6ee8b84907fb363e27efd08e8e0b454f2f9",
+    "mbpp": "bf81548da561f22580c66c98c7a18e5b94d872910d130da4e7e96aeeb50573f0",
+    "truthfulqa": "862b69afc612f167d16c7e15dd21c78bc1defe2584c9468287ddbfc8b85f4827"
+  },
+  "resolved_manifests": {
+    "fever": {
+      "checksum_verified": true,
+      "contract_ready": true,
+      "corpus": "fever",
+      "count": 500,
+      "detail": "ready: 500 rows from maxzoech/fever:train",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/fever_20260522.jsonl",
+      "sha256": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2",
+      "source_ready": true
+    },
+    "halueval": {
+      "checksum_verified": true,
+      "contract_ready": true,
+      "corpus": "halueval",
+      "count": 500,
+      "detail": "ready: 500 rows from pminervini/HaluEval:qa:data",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/halueval_20260522.jsonl",
+      "sha256": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6",
+      "source_ready": true
+    },
+    "humaneval": {
+      "checksum_verified": true,
+      "contract_ready": true,
+      "corpus": "humaneval",
+      "count": 164,
+      "detail": "ready: 164 rows from openai_humaneval:test",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/humaneval_20260522.jsonl",
+      "sha256": "87c76105e14d3da1aad57da30243e6ee8b84907fb363e27efd08e8e0b454f2f9",
+      "source_ready": true
+    },
+    "mbpp": {
+      "checksum_verified": true,
+      "contract_ready": true,
+      "corpus": "mbpp",
+      "count": 100,
+      "detail": "ready: 100 rows from google-research-datasets/mbpp:sanitized:test",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/mbpp_20260522.jsonl",
+      "sha256": "bf81548da561f22580c66c98c7a18e5b94d872910d130da4e7e96aeeb50573f0",
+      "source_ready": true
+    },
+    "truthfulqa": {
+      "checksum_verified": true,
+      "contract_ready": true,
+      "corpus": "truthfulqa",
+      "count": 200,
+      "detail": "ready: 200 rows from truthful_qa:generation:validation",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/truthfulqa_20260522.jsonl",
+      "sha256": "862b69afc612f167d16c7e15dd21c78bc1defe2584c9468287ddbfc8b85f4827",
+      "source_ready": true
+    }
+  },
+  "run_date": "20260522",
+  "schema": "carnot.eval_manifest_contract.v2",
+  "synthetic_rows_created": false,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_eval_manifest_resolver.py -q --no-cov -> passed",
+    ".venv/bin/coverage run --source=python/carnot/eval -m pytest tests/python/test_eval_manifest_resolver.py -q --no-cov -n 0 -> passed",
+    ".venv/bin/coverage report --include=python/carnot/eval/manifest_resolver.py --fail-under=100 --show-missing -> passed, manifest_resolver.py 100%",
+    ".venv/bin/ruff check python/carnot/eval/manifest_resolver.py tests/python/test_eval_manifest_resolver.py -> failed, .venv/bin/ruff missing",
+    ".venv/bin/ruff format --check python/carnot/eval/manifest_resolver.py tests/python/test_eval_manifest_resolver.py -> failed, .venv/bin/ruff missing",
+    ".venv/bin/pytest tests/python -q -> failed, 132 failed, 19962 passed, 75 skipped, 10 errors; xdist worker crashes in JAX/Z3 and MemoryError",
+    ".venv/bin/python scripts/check_spec_coverage.py -> failed, 444 pre-existing tests missing spec traceability"
+  ],
+  "truthfulqa_ready": true
+}
