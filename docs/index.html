@@ -271,7 +271,7 @@
       <li><a href="#quickstart">Quick Start</a></li>
       <li><a href="technical-report.html">Report</a></li>
       <li><a href="arxiv-paper/main.pdf">Paper</a></li>
-      <li><a href="blog/">Blog</a></li>
+      <li><a href="#writing">Writing</a></li>
       <li><a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/roadmap.md">Roadmap</a></li>
     </ul>
     <div class="nav-buttons">
@@ -657,6 +657,43 @@ fixed = pipeline.<span class="fn">verify_and_repair</span>(
   </div>
 </section>
 
+<section id="writing">
+  <div class="container">
+    <span class="section-label">Writing</span>
+    <h2 class="section-title">From the blog</h2>
+    <p class="section-desc">
+      Longer-form notes from the Carnot project on energy-based verification,
+      self-distillation theory, and what it has been like running the verifier
+      stack on its own development.
+    </p>
+    <div class="results-grid">
+      <a href="blog/verifier-accuracy-paradox.html" class="r-card" style="text-decoration: none; color: inherit; display: block;">
+        <span class="r-tag">Theory &middot; 2026-04-29 &middot; ~10 min</span>
+        <h3 class="r-title">The Verifier Accuracy Paradox</h3>
+        <p style="color: var(--text-muted); margin: 0.75rem 0 0; font-size: 0.95rem;">
+          A counterintuitive result from verifier-filtered self-distillation:
+          the better your verifier, the less information it gives you. To
+          sculpt a model toward truth, your verifier must make mistakes.
+        </p>
+      </a>
+      <a href="blog/dogfooding-by-the-numbers.html" class="r-card" style="text-decoration: none; color: inherit; display: block;">
+        <span class="r-tag">Operations &middot; 2026-04-29 &middot; ~7 min</span>
+        <h3 class="r-title">Carnot Dogfooding by the Numbers</h3>
+        <p style="color: var(--text-muted); margin: 0.75rem 0 0; font-size: 0.95rem;">
+          639 experiments self-verified. 65 brace bugs auto-fixed. Zero false
+          positives. What 26 days of running Carnot on its own development
+          tells us about constraint-based code analysis in production.
+        </p>
+      </a>
+    </div>
+    <p style="text-align: center; margin-top: 2rem;">
+      <a href="blog/" style="color: var(--accent-energy); text-decoration: none; font-weight: 600;">
+        See all posts &rarr;
+      </a>
+    </p>
+  </div>
+</section>
+
 <footer>
   <div class="container">
     <div class="f-links">
@@ -665,6 +702,7 @@ fixed = pipeline.<span class="fn">verify_and_repair</span>(
       <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/api-reference.md">API Reference</a>
       <a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a>
       <a href="technical-report.html">Technical Report</a>
+      <a href="blog/">Blog</a>
       <a href="https://huggingface.co/Carnot-EBM">HuggingFace</a>
     </div>
     <p class="f-copy">&copy; 2026 Ian Blenke &middot; Carnot Project &middot; Apache 2.0 License</p>
