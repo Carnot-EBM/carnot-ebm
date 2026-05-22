@@ -5984,3 +5984,4 @@ Ripgrep i |
 | 2026-05-22 13:24 UTC | HaluEval + FEVER Full Calibration v3 (gated on exp | OK | 81 passed in 2.91s |
 | 2026-05-22 13:37 UTC | Cross-Corpus Matrix v5 (gated on exp2864 clean non | OK | 81 passed in 3.92s |
 | 2026-05-22 14:07 UTC | BEAVER Exact Tiny Frontier Feasibility v1 | OK | 81 passed in 3.03s |
+| 2026-05-22 14:23 UTC | Residual Drift + MUS Prioritizer v2 (gated on exp2 | OK | 81 passed in 3.11s |
