@@ -1,0 +1,790 @@
+{
+  "artifact": "experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2",
+  "auroc_if_computable": null,
+  "benchmark_claim_made": false,
+  "blocked_reason": "",
+  "duration_s": 46.428007,
+  "field_principles": {
+    "blocked_behavior": "Missing telemetry produces blocked_logprobs_unavailable instead of fabricated scores.",
+    "claim_boundary": "Tiny diagnostic micro-panel only; benchmark_claim_made is always false.",
+    "label_boundary": "Scores compare only against existing local FEVER/FoVer/HaluEval-style labels.",
+    "model_selection": "Headline rows must use only the three mandated SOTA GGUF IDs.",
+    "runtime_gate": "Exp 2874 clean runtime, selected GGUF path, and llama.cpp GPU offload are preconditions.",
+    "telemetry_gate": "micro_panel_clean requires non-empty rows plus token logprobs or a documented substitute score on every row."
+  },
+  "honest_verdict": "micro_panel_clean_no_benchmark_claim",
+  "logprobs_available": true,
+  "micro_panel_clean": true,
+  "model_specs": [
+    {
+      "headline_candidate": true,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_smoke_only": false,
+      "model_path": "",
+      "name": "Qwen3.6-35B-A3B",
+      "selected": false
+    },
+    {
+      "headline_candidate": true,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_smoke_only": false,
+      "model_path": "",
+      "name": "Gemma4-31B-it",
+      "selected": false
+    },
+    {
+      "headline_candidate": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_smoke_only": false,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "selected": true
+    }
+  ],
+  "n_nonempty_responses": 6,
+  "n_prompts": 6,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "sota_runtime_clean=true",
+      "resource": "exp2874_sota_runtime_clean"
+    },
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "resource": "selected_mandated_sota_model"
+    },
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "selected_model_path_exists"
+    },
+    {
+      "available": true,
+      "blocked_reason": "",
+      "detail": "llama_cpp_gpu_offload_verified=true",
+      "resource": "llama_cpp_gpu_offload"
+    },
+    {
+      "available": true,
+      "detail": "llama_cpp_token_logprobs",
+      "resource": "llama_cpp_logprob_or_substitute_telemetry",
+      "response_nonempty": true
+    },
+    {
+      "available": true,
+      "detail": "selected=6 requested=6",
+      "resource": "fixed_labeled_micro_panel"
+    }
+  ],
+  "prompt_rows": [
+    {
+      "dataset": "FEVER",
+      "duration_s": 5.0773,
+      "example_id": "fever-156721",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": 0.4453002999981323,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Imagine Dragons is an American rock band from Las Vegas , Nevada , consisting of lead vocalist Dan Reynolds , lead guitarist Wayne Sermon , bassist Ben McKee , and drummer Daniel Platzman . The band first gained exposure in 2012 with the releases of their debut studio album Night Visions and its first single `` It 's Time '' . Billboard placed them at the top of their `` Year In Rock '' rankings for 2013 , and named them their `` Breakthrough Band of 2013 '' . Rolling Stone named their single `` Radioactive '' from Night Visions the `` biggest rock hit of the year '' , and MTV called them `` the year 's biggest breakout band '' . Night Visions peaked at number two on the weekly US Billboard \nClaim: Imagine Dragons released their debut studio album in September of 2012.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "One-word answer: One-word answer:",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.15930976253681797,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.15930976253681797,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.80900639295578,
+        -0.0006766413571313024,
+        -6.4490144723095e-05,
+        -0.0001224204315803945,
+        -0.0006034936523064971,
+        -0.8624318838119507,
+        -2.5510462364763953e-05,
+        -2.622600959512056e-06,
+        -1.1920927533992653e-07,
+        -0.00013124081306159496,
+        -0.4171135425567627,
+        -0.5735377073287964
+      ],
+      "tokens": [
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " ",
+        "\n\n"
+      ],
+      "tokens_generated": 12,
+      "top_logprobs": [
+        {
+          "": -4.474520206451416,
+          "\n": -2.2384326457977295,
+          "\n\n": -2.07877516746521,
+          " ": -1.197136640548706,
+          " One": -0.80900639295578
+        },
+        {
+          " hundred": -10.651588439941406,
+          " of": -9.5821533203125,
+          " or": -9.967351913452148,
+          " such": -10.669782638549805,
+          "-": -0.0006766413571313024
+        },
+        {
+          "of": -12.452703475952148,
+          "way": -12.118332862854004,
+          "width": -12.086034774780273,
+          "word": -6.4490144723095e-05,
+          "world": -10.703594207763672
+        },
+        {
+          "\n": -10.540085792541504,
+          "\n\n": -11.094654083251953,
+          " answer": -0.0001224204315803945,
+          " answers": -11.192569732666016,
+          "_": -11.229676246643066
+        },
+        {
+          "\n": -10.115300178527832,
+          "\n\n": -9.107258796691895,
+          " ": -10.224756240844727,
+          " (": -8.435914039611816,
+          ":": -0.0006034936523064971
+        },
+        {
+          "\n": -3.0484061241149902,
+          "\n\n": -1.649060606956482,
+          " ": -1.126120924949646,
+          " One": -0.8624318838119507,
+          " [": -5.240823268890381
+        },
+        {
+          "\n": -13.578720092773438,
+          "\n\n": -13.262253761291504,
+          " |": -12.754538536071777,
+          "'": -13.49854564666748,
+          "-": -2.5510462364763953e-05
+        },
+        {
+          "value": -16.044466018676758,
+          "width": -15.424809455871582,
+          "word": -2.622600959512056e-06,
+          "world": -13.583390235900879,
+          "worth": -15.276291847229004
+        },
+        {
+          "\n\n": -16.043790817260742,
+          " answer": -1.1920927533992653e-07,
+          " better": -19.09514617919922,
+          " error": -17.50687599182129,
+          "_": -17.65993881225586
+        },
+        {
+          "\n": -11.836699485778809,
+          "\n\n": -11.17764663696289,
+          " ": -11.324921607971191,
+          " (": -9.549160957336426,
+          ":": -0.00013124081306159496
+        },
+        {
+          "\n": -5.623955726623535,
+          "\n\n": -1.3522312641143799,
+          " ": -0.4171135425567627,
+          " One": -2.7108891010284424,
+          " SUP": -5.237448692321777
+        },
+        {
+          "\n": -0.9095877408981323,
+          "\n\n": -0.5735377073287964,
+          "***": -7.946252822875977,
+          "<|\"|>": -8.09758472442627,
+          "thought": -3.442385196685791
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 5.382055,
+      "example_id": "fever-18534",
+      "expected_answer": "REFUTES",
+      "first_token_confidence": 0.4883127779713215,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Zendaya Maree Stoermer Coleman -LRB- born September 1 , 1996 -RRB- , known mononymously as Zendaya -LRB- -LSB- z\u025bn\u02c8de\u026a.\u0259 -RSB- -RRB- , is an American actress , singer , and dancer . From 2010 to 2013 , she starred in the Disney Channel sitcom Shake It Up as Rocky Blue . She has starred in two films and played one of the lead roles in the film Frenemies as Halley Brandon . She voiced Fern in the Pixie Hollow Games . She appeared in Good Luck Charlie as Rocky Blue and in a Good Luck Charlie and Shake It Up crossover title Charlie Shakes It Up . She appeared on PrankStars as herself in the episode `` Walk The Prank '' and on A.N.T. Farm as Sequoia Jones in the episode `` Creative ConsultANT . '\nClaim: Zendaya is an African.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "One-```\n```\nthought\n<channel|>UNKNOWN",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.22950041189027398,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.22950041189027398,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.2913530766963959,
+        -0.7167991399765015,
+        0.0,
+        -0.7533829808235168,
+        -0.033673662692308426,
+        -0.6845886707305908,
+        -0.18631407618522644,
+        -0.7005963921546936,
+        -0.001248652464710176,
+        -0.026905687525868416,
+        -0.0005323661607690156
+      ],
+      "tokens": [
+        "\n\n",
+        "One",
+        "-",
+        "```",
+        "\n",
+        "```",
+        "\n",
+        "thought",
+        "\n",
+        "<channel|>",
+        "UNKNOWN"
+      ],
+      "tokens_generated": 11,
+      "top_logprobs": [
+        {
+          "": -4.614739418029785,
+          "\n": -3.4862382411956787,
+          "\n\n": -0.2913530766963959,
+          " ": -2.384071111679077,
+          " One": -2.2605340480804443
+        },
+        {
+          "*": -2.8202919960021973,
+          "**": -2.029653787612915,
+          "One": -0.7167991399765015,
+          "SUP": -1.5152204036712646,
+          "[": -4.155824661254883
+        },
+        {
+          " \\": -22.775632858276367,
+          " de": -21.769350051879883,
+          " of": -22.75833511352539,
+          "'": -22.139066696166992,
+          "-": 0.0
+        },
+        {
+          "1": -1.260784387588501,
+          "```": -0.7533829808235168,
+          "day": -3.1642401218414307,
+          "wide": -4.490991115570068,
+          "word": -4.148217678070068
+        },
+        {
+          "\n": -0.033673662692308426,
+          "\n\n": -7.477707386016846,
+          "<|channel>": -7.1597795486450195,
+          "```": -6.2140984535217285,
+          "thought": -3.6670174598693848
+        },
+        {
+          "<channel|>": -6.608783721923828,
+          "<|channel>": -0.7415802478790283,
+          "```": -0.6845886707305908,
+          "thought": -4.601880073547363,
+          "}": -6.021193504333496
+        },
+        {
+          "\n": -0.18631407618522644,
+          "\n\n": -3.003800868988037,
+          "json": -4.538175106048584,
+          "python": -2.784034252166748,
+          "text": -3.847115993499756
+        },
+        {
+          "": -4.206088542938232,
+          "<|channel>": -0.9254279732704163,
+          "```": -2.6643776893615723,
+          "python": -4.982810020446777,
+          "thought": -0.7005963921546936
+        },
+        {
+          "\n": -0.001248652464710176,
+          "\n\n": -9.570320129394531,
+          ":": -9.262334823608398,
+          "ful": -7.357112407684326,
+          "fully": -9.120464324951172
+        },
+        {
+          "<channel|>": -0.026905687525868416,
+          "<|channel>": -3.8826072216033936,
+          "Thinking": -9.08755111694336,
+          "```": -5.373929500579834,
+          "\u63a2": -9.45656681060791
+        },
+        {
+          "<|channel>": -9.169536590576172,
+          "REF": -9.770029067993164,
+          "UNK": -8.212305068969727,
+          "UNKNOWN": -0.0005323661607690156,
+          "```": -10.86503791809082
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 2.860394,
+      "example_id": "fever-61991",
+      "expected_answer": "UNKNOWN",
+      "first_token_confidence": 0.7506787613966606,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Camp Sierra -LRB- formerly , Sierra Chautauqua -RRB- is an unincorporated community in Fresno County , California . It is located 7 mi north-northeast of Shaver Lake Heights , at an elevation of 4534 feet -LRB- 1382 m -RRB- . The Sierra Chautauqua post office opened in 1918 , the name was changed to Camp Sierra in 1924 , and was closed in 1935 . The name Chautauqua is transplanted from New York State . www.campsierra.org\nClaim: Jake Gyllenhaal is in La La Land.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "One-word answer:",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.171342368801491,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.171342368801491,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.3564091622829437,
+        -0.28677746653556824,
+        -4.768370445162873e-07,
+        -0.6518244743347168,
+        -1.1920927533992653e-07,
+        -1.2636104656849056e-05
+      ],
+      "tokens": [
+        "\n\n",
+        "One",
+        "-",
+        "word",
+        " answer",
+        ":"
+      ],
+      "tokens_generated": 6,
+      "top_logprobs": [
+        {
+          "\n": -2.9555139541625977,
+          "\n\n": -0.3564091622829437,
+          " ": -4.145759582519531,
+          " One": -1.6262770891189575,
+          " UN": -4.065443992614746
+        },
+        {
+          "**": -3.025583028793335,
+          "<|channel>": -2.5952696800231934,
+          "One": -0.28677746653556824,
+          "[": -3.5282132625579834,
+          "```": -3.5445504188537598
+        },
+        {
+          " de": -20.52813720703125,
+          " man": -22.168228149414062,
+          " of": -16.10338592529297,
+          " word": -14.953323364257812,
+          "-": -4.768370445162873e-07
+        },
+        {
+          "card": -4.458099842071533,
+          "of": -1.3210177421569824,
+          "ord": -4.663942813873291,
+          "standing": -3.863217830657959,
+          "word": -0.6518244743347168
+        },
+        {
+          " ability": -18.077028274536133,
+          " answer": -1.1920927533992653e-07,
+          " answers": -16.98509979248047,
+          " response": -16.898677825927734,
+          " word": -18.142765045166016
+        },
+        {
+          " (": -12.76688003540039,
+          ".": -14.016436576843262,
+          ":": -1.2636104656849056e-05,
+          ":'": -14.418461799621582,
+          "_": -12.916627883911133
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 3.278885,
+      "example_id": "fever-84514",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": 0.144830145014752,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Water is a transparent and nearly colorless chemical substance that is the main constituent of Earth 's streams , lakes , and oceans , and the fluids of most living organisms . Its chemical formula is H2O , meaning that its molecule contains one oxygen and two hydrogen atoms , that are connected by covalent bonds . Water strictly refers to the liquid state of that substance , that prevails at standard ambient temperature and pressure ; but it often refers also to its solid state -LRB- ice -RRB- or its gaseous state -LRB- steam or water vapor -RRB- . It also occurs in nature as snow , glaciers , ice packs and icebergs , clouds , fog , dew , aquifers , and atmospheric humidity . Water covers 7\nClaim: Steam is the gaseous state of water, also known as water vapor.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "```\n\nSUPPORTS\n```",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.1978121769765515,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.1978121769765515,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.2578430771827698,
+        -1.932193636894226,
+        -0.19466060400009155,
+        -0.10022836923599243,
+        0.0,
+        -0.030432667583227158,
+        -2.3841828351578442e-06
+      ],
+      "tokens": [
+        "\n",
+        "```",
+        "\n\n",
+        "SUP",
+        "PORTS",
+        "\n",
+        "```"
+      ],
+      "tokens_generated": 7,
+      "top_logprobs": [
+        {
+          "": -6.7957000732421875,
+          "\n": -0.2578430771827698,
+          "\n\n": -3.6169795989990234,
+          " ": -1.6198644638061523,
+          " Post": -7.8828444480896
+        },
+        {
+          "-": -1.963699221611023,
+          "<|channel>": -2.4031057357788086,
+          "```": -1.932193636894226,
+          "possible": -2.788754463195801,
+          "|": -1.9588125944137573
+        },
+        {
+          "\n": -1.8879389762878418,
+          "\n\n": -0.19466060400009155,
+          "\n\n\n": -5.246561527252197,
+          "python": -4.83789587020874,
+          "thought": -5.743533611297607
+        },
+        {
+          "**": -4.55359411239624,
+          "<|channel>": -4.8247222900390625,
+          "SUP": -0.10022836923599243,
+          "The": -3.471898078918457,
+          "[": -4.864560127258301
+        },
+        {
+          "\n\n": -22.269617080688477,
+          "ORTS": -21.812694549560547,
+          "POR": -21.56165313720703,
+          "PORTS": 0.0,
+          "POS": -20.508968353271484
+        },
+        {
+          "": -9.301322937011719,
+          "\n": -0.030432667583227158,
+          "\n\n": -3.5171308517456055,
+          "\n\n\n": -12.633946418762207,
+          " ": -8.601036071777344
+        },
+        {
+          "": -15.820208549499512,
+          "The": -15.267637252807617,
+          "```": -2.3841828351578442e-06,
+          "|": -15.55695629119873,
+          "\u200b": -16.02419090270996
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 5.345999,
+      "example_id": "fever-144383",
+      "expected_answer": "REFUTES",
+      "first_token_confidence": 0.9155296288186754,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": null,
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: Arnold Alois Schwarzenegger -LRB- -LSB- \u02c8\u0283w\u0254\u02d0rts\u0259n\u02cc\u025b\u0261\u0259r -RSB- -LSB- \u02c8a\u0250\u032fn\u0254lt \u02c8al\u0254\u028fs \u02c8\u0283va\u0250\u032ftsn\u0329\u02cc\u025b\u0261\u0250 -RSB- ; born July 30 , 1947 -RRB- is an Austrian-American actor , producer , businessman , investor , author , philanthropist , activist , politician and former professional bodybuilder . He served two terms as the 38th Governor of California from 2003 to 2011 . Schwarzenegger began weight training at the age of 15 . He won the Mr. Universe title at age 20 and went on to win the Mr. Olympia contest seven times . Schwarzenegger has remained a prominent presence in bodybuilding and has written many books and articles on the sport . He is widely considered to be among the greatest bodybuilders of \nClaim: Arnold Schwarzenegger was a movie.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "One-word answer: One-word answer: One-",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.014347567483750759,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.014347567483750759,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.08825255185365677,
+        -0.000846266164444387,
+        -0.0003841377329081297,
+        -7.843663479434326e-05,
+        -0.0007040405762381852,
+        -0.07495978474617004,
+        -3.4570632578834193e-06,
+        -0.0010246747406199574,
+        -2.7536965717445128e-05,
+        -0.0002340996579732746,
+        -0.01219837088137865,
+        -5.5549986427649856e-05
+      ],
+      "tokens": [
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-",
+        "word",
+        " answer",
+        ":",
+        " One",
+        "-"
+      ],
+      "tokens_generated": 12,
+      "top_logprobs": [
+        {
+          "\n": -3.5302367210388184,
+          "\n\n": -3.4313225746154785,
+          " ": -4.5026774406433105,
+          " One": -0.08825255185365677,
+          " UN": -5.617745876312256
+        },
+        {
+          " hundred": -11.033888816833496,
+          " of": -8.861308097839355,
+          " or": -9.677155494689941,
+          " own": -9.321002006530762,
+          "-": -0.000846266164444387
+        },
+        {
+          "one": -10.104523658752441,
+          "way": -10.360039710998535,
+          "weight": -10.163463592529297,
+          "word": -0.0003841377329081297,
+          "world": -9.423639297485352
+        },
+        {
+          "\n": -10.655882835388184,
+          "\n\n": -10.946311950683594,
+          " answer": -7.843663479434326e-05,
+          " answers": -12.358139991760254,
+          ":": -12.219097137451172
+        },
+        {
+          "\n": -9.560379028320312,
+          "\n\n": -7.947668075561523,
+          " (": -9.61732292175293,
+          ".": -9.710393905639648,
+          ":": -0.0007040405762381852
+        },
+        {
+          "\n\n": -3.1643762588500977,
+          " ": -4.616915702819824,
+          " Arnold": -5.31932258605957,
+          " One": -0.07495978474617004,
+          " [": -5.383589744567871
+        },
+        {
+          "\n\n": -15.057513236999512,
+          "\"\"\"": -13.432947158813477,
+          "-": -3.4570632578834193e-06,
+          "</div>": -14.017986297607422,
+          "}": -15.700231552124023
+        },
+        {
+          "of": -9.470131874084473,
+          "ord": -10.488322257995605,
+          "word": -0.0010246747406199574,
+          "words": -9.026408195495605,
+          "working": -10.743263244628906
+        },
+        {
+          "\n\n": -10.899779319763184,
+          " ...": -13.6781587600708,
+          " answer": -2.7536965717445128e-05,
+          " is": -13.548321723937988,
+          " one": -13.93807315826416
+        },
+        {
+          "\n": -10.631515502929688,
+          "\n\n": -9.73336410522461,
+          " ": -11.019944190979004,
+          " (": -9.44402027130127,
+          ":": -0.0002340996579732746
+        },
+        {
+          "\n\n": -4.972777366638184,
+          " ": -6.33553409576416,
+          " Arnold": -5.997679710388184,
+          " One": -0.01219837088137865,
+          " [": -8.398985862731934
+        },
+        {
+          "\n": -12.933451652526855,
+          "\n\n": -12.676755905151367,
+          " word": -11.842414855957031,
+          "-": -5.5549986427649856e-05,
+          "</div>": -12.69170093536377
+        }
+      ]
+    },
+    {
+      "dataset": "FEVER",
+      "duration_s": 3.698457,
+      "example_id": "fever-54940",
+      "expected_answer": "UNKNOWN",
+      "first_token_confidence": 0.6209689701083765,
+      "generation_error": null,
+      "hallucination_label": 1,
+      "headline_mandated_model": true,
+      "is_correct": false,
+      "logprobs_available": true,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "predicted_answer": "SUPPORTS",
+      "prompt_text": "Use the evidence to classify the claim.\nReply with exactly one word: SUPPORTS, REFUTES, or UNKNOWN.\n\nEvidence: History of Hindu-Christian Encounters -LRB- AD 304 to 1996 -RRB- is a book by Sita Ram Goel which he published in 1986 under his Voice of India imprint . Described as Goel 's `` path-breaking work '' , the book opens with a discussion of the belief common to many Christians in South India that St. Thomas the apostle travelled to India . The book mentions the Syrian Christians of the Malabar coast and the Italian traveller Ludovico di Varthema , author of the Itineratio . An important Hindu-Christian encounter was the arrival of the Portuguese with Vasco da Gama in 1498 CE and with Francis Xavier in 1542 CE , an encounter which Goel points out led to the Inquisition reaching India . Koenraad \nClaim: Seattle is in the same region as Microsoft's headquarters.\nOne-word answer:",
+      "response_nonempty": true,
+      "response_text": "SUPPORTS\nREFUTES\nUNKNOWN",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy_score": 0.14589339837787121,
+      "substitute_score": null,
+      "substitute_telemetry_source": null,
+      "substitute_telemetry_used": false,
+      "telemetry_score": 0.14589339837787121,
+      "telemetry_sufficient": true,
+      "token_logprobs": [
+        -0.383960485458374,
+        -0.47647416591644287,
+        0.0,
+        -0.020091358572244644,
+        -2.837140709743835e-05,
+        -0.5966429114341736,
+        -3.218645360902883e-06,
+        -9.179073458653875e-06
+      ],
+      "tokens": [
+        "\n\n",
+        "SUP",
+        "PORTS",
+        "\n",
+        "REF",
+        "UTES",
+        "\n",
+        "UNKNOWN"
+      ],
+      "tokens_generated": 8,
+      "top_logprobs": [
+        {
+          "\n": -2.0551774501800537,
+          "\n\n": -0.383960485458374,
+          " ": -2.544184446334839,
+          " One": -5.750811576843262,
+          " [": -2.295072317123413
+        },
+        {
+          "    ": -6.123542785644531,
+          "**": -5.532805442810059,
+          "One": -0.9925941228866577,
+          "SUP": -0.47647416591644287,
+          "```": -6.837180137634277
+        },
+        {
+          "POR": -20.513805389404297,
+          "PORTS": 0.0,
+          "POS": -19.469141006469727,
+          "POSED": -20.34774398803711,
+          "PR": -22.325359344482422
+        },
+        {
+          "": -4.189346790313721,
+          "\n": -0.020091358572244644,
+          "\n\n": -8.825387001037598,
+          " ": -5.510499477386475,
+          "<channel|>": -8.461922645568848
+        },
+        {
+          "    ": -13.023433685302734,
+          "REF": -2.837140709743835e-05,
+          "UNKNOWN": -11.438461303710938,
+          "```": -13.523538589477539,
+          "or": -12.4487886428833
+        },
+        {
+          "UT": -1.521043300628662,
+          "UTE": -1.4906558990478516,
+          "UTES": -0.5966429114341736,
+          "UTILS": -5.243911266326904,
+          "UTS": -8.4814453125
+        },
+        {
+          "\n": -3.218645360902883e-06,
+          " ": -12.804550170898438,
+          "/": -16.681068420410156,
+          "_": -15.749167442321777,
+          "ly": -15.947365760803223
+        },
+        {
+          "//": -16.99822235107422,
+          "REF": -11.693181037902832,
+          "UNK": -14.763717651367188,
+          "UNKNOWN": -9.179073458653875e-06,
+          "\ub85c": -17.08414649963379
+        }
+      ]
+    }
+  ],
+  "random_seed": 2875,
+  "run_date": "20260522",
+  "schema_version": 1,
+  "selected_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "substitute_telemetry_used": false,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.py -q --cov=python/carnot/reporting/sota_energy_micro_panel_logprob_corrigendum_v2.py --cov-report=term-missing --cov-fail-under=0"
+  ]
+}

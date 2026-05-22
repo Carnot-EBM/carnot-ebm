@@ -815,6 +815,61 @@ legacy small-model promotion.
 **Then** `cached_sota_pair_returned_two_loadable_specs` remains false while
 `sota_runtime_clean` may be true.
 
+### REQ-INFER-SOTA-016: Exp 2875 SOTA Energy/Logprob Micro-Panel Corrigendum V2
+
+The system SHALL provide an Exp 2875 corrigendum artifact for the Exp 2870
+SOTA energy micro-panel telemetry gap.  The artifact SHALL be written to
+`results/experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.json`;
+SHALL first confirm that Exp 2874 reports `sota_runtime_clean=true`, the
+selected model is one of the mandated headline GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`, the selected GGUF path exists, and
+llama.cpp GPU offload is visible; and SHALL then verify that the live llama.cpp
+path exposes token logprobs or a documented substitute telemetry path before
+running the tiny prompt panel.
+
+The runner SHALL use only mandated headline GGUFs in headline prompt rows.
+Legacy Qwen3.5-0.8B and Gemma4-E4B models MAY appear only as CPU-smoke context
+and SHALL never set `micro_panel_clean=true`.  The prompt panel SHALL use fixed
+seeded, bounded prompts with existing FEVER/FoVer/HaluEval-style labels only;
+it SHALL record raw outputs, non-empty response status, first-token confidence
+when token logprobs are present, spilled-energy-style score from token
+logprobs, or a documented substitute score when substitute telemetry is used.
+
+The artifact SHALL expose `honest_verdict`, `micro_panel_clean`,
+`blocked_reason`, `model_specs`, `selected_model_hf_id`,
+`selected_model_path`, `preconditions_checked`, `n_prompts`,
+`n_nonempty_responses`, `logprobs_available`, `substitute_telemetry_used`,
+`prompt_rows`, `auroc_if_computable`, `benchmark_claim_made`, `random_seed`,
+`tests_run`, `field_principles`, `run_date`, and `duration_s`.
+`micro_panel_clean` SHALL be true only when every prompt row has a non-empty
+response and every prompt row has sufficient real token-logprob or documented
+substitute telemetry for the stated diagnostic analysis.  If telemetry is
+unavailable, the artifact SHALL set `blocked_reason` to
+`blocked_logprobs_unavailable` or the exact `blocked_*` precondition verdict and
+SHALL make no benchmark claim.
+
+### SCENARIO-INFER-SOTA-016-001: Clean Telemetry Allows Diagnostic Panel
+
+**Given** Exp 2874 is clean, the selected mandated GGUF path exists, GPU offload
+is visible, and llama.cpp exposes token logprobs or documented substitute
+telemetry
+**When** Exp 2875 runs the fixed tiny micro-panel
+**Then** the artifact records all prompt rows with non-empty responses, model
+provenance, telemetry-derived scores, AUROC only when label variance makes it
+computable, `micro_panel_clean=true`, and `benchmark_claim_made=false`.
+
+### SCENARIO-INFER-SOTA-016-002: Missing Telemetry Blocks Corrigendum
+
+**Given** Exp 2874 is clean and the selected mandated GGUF can generate text
+**But** llama.cpp exposes neither token logprobs nor documented substitute
+telemetry
+**When** Exp 2875 runs
+**Then** it writes a complete blocked artifact with
+`blocked_reason=blocked_logprobs_unavailable`, preserves the exact precondition
+evidence, keeps `prompt_rows` diagnostic-only, sets `micro_panel_clean=false`,
+and makes no benchmark claim.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -897,6 +952,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-012 | Implemented (`python/carnot/reporting/sota_runtime_preflight.py`) | Implemented (`tests/python/test_experiment_2836_sota_runtime_preflight.py`) |
 | REQ-INFER-SOTA-013 | Implemented (`python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py`) | Implemented (`tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py`) |
 | REQ-INFER-SOTA-014 | Planned | Planned |
+| REQ-INFER-SOTA-016 | Planned | Planned |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
