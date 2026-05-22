@@ -750,6 +750,71 @@ rows, response correctness labels, first-token confidence availability, spilled
 energy availability, AUROC values when both labels and telemetry are usable,
 and explicit blocked metrics for unsupported telemetry or undefined AUROC.
 
+### REQ-INFER-SOTA-015: Exp 2874 SOTA Runtime Clean Corrigendum V4
+
+The system SHALL provide an Exp 2874 clean runtime corrigendum artifact that
+records citation-grade local SOTA GGUF runtime state before downstream live
+model tasks resume.  The artifact SHALL be written to
+`results/experiment_2874_sota_runtime_clean_corrigendum_v4.json`; SHALL inspect
+`.venv/bin/python` torch/CUDA availability, NVIDIA GPU inventory,
+`llama_cpp` import/version/origin, `llama_cpp.llama_cpp.llama_supports_gpu_offload()`,
+local cache resolution for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`, and
+`cached_sota_pair(gpu_indices=(0, 1))`; SHALL run a bounded fixed-seed prompt
+suite only when at least one mandated local GGUF, CUDA, and llama.cpp GPU
+offload are all available; and SHALL NOT modify `scripts/research_conductor.py`
+or `research-roadmap.yaml`.
+
+The artifact SHALL expose `honest_verdict`, `sota_runtime_clean`,
+`sota_runtime_ready_v4`, `model_specs`, `selected_model_hf_id`,
+`selected_model_path`, `selected_model_checksum_or_fingerprint`,
+`cached_sota_pair_returned_two_loadable_specs`,
+`llama_cpp_gpu_offload_verified`, `preconditions_checked`, `prompt_suite`,
+`usable_response_count`, `nonempty_response_count`, `total_tokens_generated`,
+`tokens_per_second`, `gpu_memory_evidence`,
+`legacy_small_models_used_only_for_smoke`, `random_seed`,
+`reproducibility_checksum`, `tests_run`, `field_principles`, `run_date`, and
+`duration_s`.  `sota_runtime_clean` and `sota_runtime_ready_v4` SHALL be true
+only when at least one mandated SOTA GGUF generated a non-empty usable response
+through GPU-backed llama.cpp with complete model fingerprint, prompt text,
+timing, token, and GPU-memory provenance.  Legacy Qwen3.5-0.8B and Gemma4-E4B
+models MAY appear only as CPU-smoke context and SHALL never set
+`sota_runtime_clean=true`.
+
+Pair readiness SHALL remain separate from single-model runtime readiness:
+`cached_sota_pair_returned_two_loadable_specs` SHALL be true only when two
+mandated local GGUF specs are actually loadable, but it SHALL NOT be required
+for `sota_runtime_clean=true` when one mandated model has clean GPU-backed
+runtime provenance.
+
+### SCENARIO-INFER-SOTA-015-001: One Mandated Clean GPU Response Opens V4
+
+**Given** CUDA-capable torch, NVIDIA GPUs, and llama.cpp GPU offload are
+available
+**And** exactly one mandated local SOTA GGUF resolves from cache
+**When** Exp 2874 runs its fixed-seed prompt suite on that model
+**Then** `sota_runtime_clean` and `sota_runtime_ready_v4` are true only if the
+artifact records non-empty usable output text, generated-token count,
+wall-clock timing, model fingerprint, GPU memory before/after evidence, and the
+exact prompt text for at least one suite row.
+
+### SCENARIO-INFER-SOTA-015-002: Missing Runtime Preconditions Block V4
+
+**Given** any required single-model runtime precondition is unavailable
+**When** Exp 2874 runs
+**Then** it writes a blocked artifact with `sota_runtime_clean=false`,
+`sota_runtime_ready_v4=false`, a populated `preconditions_checked` list, and no
+legacy small-model promotion.
+
+### SCENARIO-INFER-SOTA-015-003: Pair Readiness Is Not Single-Model Readiness
+
+**Given** exactly one mandated local SOTA GGUF is cached and
+`cached_sota_pair(gpu_indices=(0, 1))` returns `None`
+**When** Exp 2874 records a clean single-model GPU runtime
+**Then** `cached_sota_pair_returned_two_loadable_specs` remains false while
+`sota_runtime_clean` may be true.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
