@@ -5994,3 +5994,4 @@ Ripgrep i |
 | 2026-05-22 16:54 UTC | Milestone 2026.05.272 activated | OK | 12 tasks queued |
 | 2026-05-22 17:05 UTC | Archive .271 + Activate .272 | OK | 81 passed in 4.23s |
 | 2026-05-22 17:42 UTC | SOTA Runtime Clean Corrigendum v4 | OK | 81 passed in 3.25s |
+| 2026-05-22 18:02 UTC | SOTA Energy Micro-Panel Logprob Corrigendum v2 (ga | OK | 81 passed in 3.09s |

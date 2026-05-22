@@ -786,5 +786,18 @@
   "substitute_telemetry_used": false,
   "tests_run": [
     ".venv/bin/pytest tests/python/test_experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.py -q --cov=python/carnot/reporting/sota_energy_micro_panel_logprob_corrigendum_v2.py --cov-report=term-missing --cov-fail-under=0"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=46.428007 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
