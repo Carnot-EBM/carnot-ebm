@@ -5913,3 +5913,4 @@ Ripgrep i |
 | 2026-05-22 02:53 UTC | HumanEval Full Dual-Condition Evaluation v3 (gated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_humanev |
 | 2026-05-22 02:59 UTC | HumanEval Full Dual-Condition Evaluation v3 (gated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_humanev |
 | 2026-05-22 03:06 UTC | HumanEval Full Dual-Condition Evaluation v3 (gated | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_humanev |
+| 2026-05-22 03:22 UTC | TruthfulQA Honest Dual-Condition Evaluation v4 (ga | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2840_truthfu |
