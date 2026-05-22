@@ -5922,3 +5922,4 @@ Ripgrep i |
 | 2026-05-22 04:15 UTC | Cross-Corpus Per-Verifier Dual-Condition Matrix v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2838-mbpp-dual-condition-v3, exp2838-mbpp |
 | 2026-05-22 04:27 UTC | LoopUS-Style FR-11 External Recurrence Pilot (gate | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2844_loopus_ |
 | 2026-05-22 04:29 UTC | Cross-Corpus Per-Verifier Dual-Condition Matrix v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2838-mbpp-dual-condition-v3, exp2838-mbpp |
+| 2026-05-22 04:33 UTC | LoopUS-Style FR-11 External Recurrence Pilot (gate | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2844_loopus_ |
