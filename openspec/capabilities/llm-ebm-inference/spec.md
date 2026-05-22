@@ -586,6 +586,70 @@ completes a bounded local smoke through the selected runtime backend
 **And** fallback runtime candidates are not counted as fulfilled mandated-model
 evidence.
 
+### REQ-INFER-SOTA-012: Exp 2836 SOTA Runtime And Cache Manifest
+
+The system SHALL provide a fail-fast Exp 2836 runtime/cache manifest for the
+mandated SOTA GGUF path before downstream corpus evaluations run.  The manifest
+SHALL be written to `results/experiment_2836_sota_runtime_preflight.json` and
+SHALL NOT run corpus evaluation.  It SHALL measure `.venv/bin/python` torch/CUDA
+availability and system `python3` torch/CUDA availability separately; record
+disk space, GPU memory, HuggingFace cache location, local `models/` location,
+and local llama.cpp loader availability; import `scripts/experiment_template.py`
+when safe and exercise `cached_sota_pair()`; inspect the mandated primary model
+IDs `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; and record legacy CPU smoke-only model IDs
+only as non-headline context.
+
+For every locally available mandated SOTA GGUF selected for inspection, the
+manifest SHALL record the exact path, resolved path, size in bytes, SHA256,
+model family, expected quantization, observed quantization, and load-smoke
+result.  If no mandated model is cached, the manifest SHALL make only a
+controlled metadata-only or resumable cache attempt when local HuggingFace
+tooling and credentials are already configured; otherwise it SHALL write a
+`blocked_model_cache` verdict without starting a blind large download.
+
+The artifact SHALL expose `honest_verdict`, `sota_runtime_ready`,
+`selected_python`, `venv_torch_cuda_available`,
+`system_python_torch_cuda_available`, `sota_models_cached`,
+`cached_sota_pair_result`, `model_specs`, `preconditions_checked`, and
+`duration_s`.  `sota_runtime_ready` SHALL be true only when the selected
+`.venv/bin/python` reports CUDA-capable torch and at least one mandated primary
+SOTA GGUF completes the bounded loader smoke as a headline model.
+
+### SCENARIO-INFER-SOTA-012-001: Cached Mandated Model Opens Runtime Gate
+
+**Given** `.venv/bin/python` reports `torch.cuda.is_available() == true`
+**And** at least one mandated primary SOTA GGUF exists in local cache
+**And** the bounded loader smoke succeeds for that file
+**When** Exp 2836 builds the runtime/cache manifest
+**Then** `sota_runtime_ready` is true
+**And** `honest_verdict` starts with `success:`
+**And** the manifest records the selected Python, model cache provenance,
+`cached_sota_pair()` result, and all required precondition checks.
+
+### SCENARIO-INFER-SOTA-012-002: Missing Cache Blocks Without Blind Download
+
+**Given** `.venv/bin/python` reports CUDA-capable torch
+**And** no mandated primary SOTA GGUF exists in local cache
+**And** local HuggingFace credentials are not configured
+**When** Exp 2836 builds the runtime/cache manifest
+**Then** `sota_runtime_ready` is false
+**And** `honest_verdict` starts with `blocked_model_cache`
+**And** the manifest records the skipped cache-fill reason without attempting a
+large blind download.
+
+### SCENARIO-INFER-SOTA-012-003: System Python Mismatch Is Preserved
+
+**Given** `.venv/bin/python` reports CUDA-capable torch
+**And** system `python3` cannot import torch or reports no CUDA
+**When** Exp 2836 builds the runtime/cache manifest
+**Then** `venv_torch_cuda_available` and
+`system_python_torch_cuda_available` preserve the mismatch as separate
+booleans
+**And** the manifest still gates readiness on the selected `.venv/bin/python`
+rather than system `python3`.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.

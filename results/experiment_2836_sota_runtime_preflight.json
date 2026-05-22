@@ -1,0 +1,253 @@
+{
+  "artifact": "experiment_2836_sota_runtime_preflight",
+  "blocked_model_cache": {
+    "attempted": false,
+    "missing_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "status": "not_required_cache_present"
+  },
+  "cache_locations": {
+    "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
+    "huggingface_hub_cache_exists": true,
+    "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
+    "local_models_exists": true
+  },
+  "cached_sota_pair_result": {
+    "called": true,
+    "error": null,
+    "experiment_template_import_ok": true,
+    "result": null
+  },
+  "disk_probe": {
+    "available_kb": 1800198912,
+    "command": [
+      "df",
+      "-k",
+      "/home/ianblenke/github.com/ianblenke/carnot"
+    ],
+    "filesystem": "/dev/mapper/vg-root",
+    "returncode": 0,
+    "size_kb": 3860633812,
+    "stderr_summary": "",
+    "stdout_summary": "Filesystem           1K-blocks       Used  Available Use% Mounted on\n/dev/mapper/vg-root 3860633812 2060434900 1800198912  54% /\n",
+    "use_pct": "54%",
+    "used_kb": 2060434900
+  },
+  "duration_s": 21.005025,
+  "field_principles": {
+    "cached_sota_pair_result": "Verifies the mandated template pattern.",
+    "duration_s": "Real preflight duration; no sleep padding.",
+    "honest_verdict": "Must start with \"complete:\" / \"success:\" or \"blocked_\".",
+    "model_specs": "Records SOTA GGUF mandate and legacy smoke-test limitation.",
+    "preconditions_checked": "Every expensive downstream task gates on these checks.",
+    "selected_python": "Exact interpreter path downstream tasks must use.",
+    "sota_models_cached": "Mandated GGUF cache evidence for headline use.",
+    "sota_runtime_ready": "Structured gate for downstream live-model tasks.",
+    "system_python_torch_cuda_available": "Documents the .268 system-python mismatch.",
+    "venv_torch_cuda_available": "CUDA torch readiness measured in the selected venv."
+  },
+  "gpu_memory_probe": {
+    "available": true,
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=index,name,memory.total,memory.used,memory.free",
+      "--format=csv,noheader,nounits"
+    ],
+    "gpus": [
+      {
+        "index": 0,
+        "memory_free_mib": 24122,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 5,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "index": 1,
+        "memory_free_mib": 24122,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 5,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "returncode": 0,
+    "stderr_summary": "",
+    "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 5, 24122\n1, NVIDIA GeForce RTX 3090, 24576, 5, 24122\n"
+  },
+  "honest_verdict": "success: .venv CUDA torch available and at least one mandated SOTA GGUF load-smoked",
+  "loader_probe": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "import importlib.util, json\npayload = {'llama_cpp_import_ok': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n        'llama_cpp_supports_mmap': bool(low.llama_supports_mmap()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "llama_cpp_import_ok": true,
+    "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/llama_cpp/__init__.py",
+    "llama_cpp_supports_gpu_offload": false,
+    "llama_cpp_supports_mmap": true,
+    "llama_cpp_version": "0.3.23",
+    "returncode": 0,
+    "stderr_summary": ""
+  },
+  "model_specs": {
+    "legacy_cpu_smoke_only": [
+      "Qwen3.5-0.8B",
+      "gemma-4-E4B-it"
+    ],
+    "primary": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ]
+  },
+  "models_missing_from_cache": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import torch; print(torch.__version__, torch.cuda.is_available())"
+      ],
+      "detail": "2.11.0+cu128 True\n",
+      "resource": "venv_torch_cuda"
+    },
+    {
+      "available": false,
+      "command": [
+        "python3",
+        "-c",
+        "import torch; print(torch.__version__, torch.cuda.is_available())"
+      ],
+      "detail": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; print(torch.__version__, torch.cuda.is_available())\n    ^^^^^^^^^^^^\nModuleNotFoundError: No module named 'torch'\n",
+      "resource": "system_python_torch_cuda"
+    },
+    {
+      "available": true,
+      "command": [
+        "df",
+        "-k",
+        "/home/ianblenke/github.com/ianblenke/carnot"
+      ],
+      "detail": "available_kb=1800198912",
+      "resource": "disk_free"
+    },
+    {
+      "available": true,
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=index,name,memory.total,memory.used,memory.free",
+        "--format=csv,noheader,nounits"
+      ],
+      "detail": [
+        {
+          "index": 0,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "index": 1,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "resource": "gpu_memory"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub",
+      "resource": "huggingface_cache"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/models",
+      "resource": "local_models_dir"
+    },
+    {
+      "available": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib.util, json\npayload = {'llama_cpp_import_ok': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n        'llama_cpp_supports_mmap': bool(low.llama_supports_mmap()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/llama_cpp/__init__.py",
+      "resource": "llama_cpp_loader"
+    },
+    {
+      "available": true,
+      "detail": "cached_count=1",
+      "resource": "mandated_sota_gguf_cache"
+    }
+  ],
+  "run_date": "20260522",
+  "schema_version": 1,
+  "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+  "smoke_load_results": [
+    {
+      "blocker": null,
+      "elapsed_s": 2.738696,
+      "headline_usable": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "llama_cpp_supports_gpu_offload": false,
+      "load_attempted": true,
+      "load_mode": "llama_cpp_full_context_load",
+      "load_success": true,
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "n_ctx": 256,
+      "n_gpu_layers": 0,
+      "stderr_summary": "llama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
+      "stdout_summary": "{\"elapsed_s\": 2.738696, \"headline_usable\": true, \"llama_cpp_supports_gpu_offload\": false, \"load_mode\": \"llama_cpp_full_context_load\", \"load_success\": true, \"n_ctx\": 256, \"n_gpu_layers\": 0}\n"
+    }
+  ],
+  "sota_models_cached": [
+    {
+      "candidate_count": 24,
+      "expected_quantization": "Q4_K_M",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "min_vram_gb": 16,
+      "model_family": "gemma",
+      "name": "Gemma4-26B-A4B-it",
+      "observed_quantization": "UD-Q4_K_M",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "role": "moe",
+      "sha256": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "size_bytes": 16947539744
+    }
+  ],
+  "sota_runtime_ready": true,
+  "system_python_torch_cuda_available": false,
+  "system_python_torch_probe": {
+    "command": [
+      "python3",
+      "-c",
+      "import torch; print(torch.__version__, torch.cuda.is_available())"
+    ],
+    "cuda_available": false,
+    "returncode": 1,
+    "stderr_summary": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; print(torch.__version__, torch.cuda.is_available())\n    ^^^^^^^^^^^^\nModuleNotFoundError: No module named 'torch'\n",
+    "stdout_summary": "",
+    "torch_version": null
+  },
+  "venv_torch_cuda_available": true,
+  "venv_torch_probe": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "import torch; print(torch.__version__, torch.cuda.is_available())"
+    ],
+    "cuda_available": true,
+    "returncode": 0,
+    "stderr_summary": "",
+    "stdout_summary": "2.11.0+cu128 True\n",
+    "torch_version": "2.11.0+cu128"
+  }
+}
