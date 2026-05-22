@@ -6052,3 +6052,74 @@ sentinels with a methodology note explaining that no recurrence was measured.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2844 | Implemented (`python/carnot/eval/loopus_fr11_self_learning_pilot.py`, `scripts/experiment_2844_loopus_fr11_self_learning_pilot.py`) | Implemented (`tests/python/test_experiment_2844_loopus_fr11_self_learning_pilot.py`) |
+
+## REQ-LEARN-2857: LoopUS FR-11 Self-Learning Pilot v2 Gated By Exp 2856
+
+**Given** Exp 2856 has written
+`results/experiment_2856_loopus_recurrence_backend_adapter.json` with
+`live_recurrence_backend_ready=true`
+**When** the Exp 2857 continuous self-learning pilot runs
+**Then** it SHALL use the selected Exp 2856 recurrence backend to evaluate at
+least 50 mixed FoVer, code, and factual examples
+**And** it SHALL run initial answer generation, Carnot energy feedback,
+bounded external recurrence refinement, and adaptive early exit for at most
+three loops without mutating model weights
+**And** it SHALL write
+`results/experiment_2857_loopus_fr11_self_learning_v2.json` with
+`honest_verdict`, `continuous_self_learning_task`, `fr11_self_learning_ready`,
+`n_examples`, `source_counts`, `max_loops`, `recurrence_success_rate`,
+`energy_delta_mean`, `correctness_delta`, `per_loop_energy_summary`,
+`early_exit_summary`, `memory_hash_before`, `memory_hash_after`,
+`no_model_weight_mutation`, `model_specs`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `duration_s`,
+`adversarial_verify_passed`, `adversarial_verify_flags`, and `run_date`.
+
+### REQ-LEARN-2857 Sub-requirements
+
+- REQ-LEARN-2857-1: Before selecting examples or running recurrence, the runner
+  SHALL record the repository directory precondition, execute
+  `jq -e '.live_recurrence_backend_ready == true'
+  results/experiment_2856_loopus_recurrence_backend_adapter.json`, and execute
+  `.venv/bin/python3 -c "import json;
+  p='results/experiment_2856_loopus_recurrence_backend_adapter.json';
+  print(json.load(open(p))['backend_module_path'])"`.
+- REQ-LEARN-2857-2: If any Exp 2856 precondition fails, the runner SHALL write a
+  terminal `blocked_<resource>` artifact with `n_examples=0`, empty source and
+  per-loop summaries, zero delta sentinels, precondition evidence, and no
+  inferred recurrence metrics.
+- REQ-LEARN-2857-3: For a successful gated run, aggregate energy and correctness
+  deltas SHALL be computed from measured per-example traces, and
+  `recurrence_success_rate` SHALL be the fraction of examples whose final
+  energy is lower than initial energy or whose correctness improved.
+- REQ-LEARN-2857-4: The artifact SHALL record memory/session hashes before and
+  after any permitted FR-11 counter or memory update and SHALL keep
+  `no_model_weight_mutation=true`.
+
+### SCENARIO-LEARN-2857-BLOCKED: Missing Exp 2856 Blocks Without Pilot Metrics
+
+**Given** `results/experiment_2856_loopus_recurrence_backend_adapter.json` is
+missing or does not report `live_recurrence_backend_ready=true`
+**When** the Exp 2857 runner executes
+**Then** `honest_verdict` starts with `blocked_`
+**And** `fr11_self_learning_ready=false`, `n_examples=0`,
+`recurrence_success_rate=0.0`, `energy_delta_mean=0.0`, and
+`correctness_delta=0.0`
+**And** the artifact records the failed Exp 2856 command evidence and an
+adversarial verification flag describing the failed precondition.
+
+### SCENARIO-LEARN-2857: Successful Gated Run Reports Recurrence Effects
+
+**Given** Exp 2856 reports a ready mandated SOTA recurrence backend and the
+measurement layer returns per-example traces with energy and correctness before
+and after recurrence
+**When** the Exp 2857 runner completes
+**Then** the artifact starts with `complete:`
+**And** it reports the measured source counts, per-loop energy summary,
+early-exit summary, final energy delta mean, correctness delta, recurrence
+success rate, memory hashes, model specs, and reproducibility checksum.
+
+## Implementation Status (REQ-LEARN-2857)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2857 | Implemented (`python/carnot/eval/loopus_fr11_self_learning_v2.py`, `scripts/experiment_2857_loopus_fr11_self_learning_v2.py`) | Implemented (`tests/python/test_experiment_2857_loopus_fr11_self_learning_v2.py`) |

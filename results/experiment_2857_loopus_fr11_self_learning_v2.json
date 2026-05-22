@@ -1,52 +1,52 @@
 {
-  "honest_verdict": "blocked_missing_exp2856_artifact",
-  "continuous_self_learning_task": true,
-  "fr11_self_learning_ready": false,
-  "n_examples": 0,
-  "source_counts": {},
-  "max_loops": 3,
-  "recurrence_success_rate": 0.0,
-  "energy_delta_mean": 0.0,
-  "correctness_delta": 0.0,
-  "per_loop_energy_summary": {},
-  "early_exit_summary": {
-    "blocked_missing_exp2856_artifact": 1
-  },
-  "memory_hash_before": "not_checked_precondition_failed",
-  "memory_hash_after": "not_checked_precondition_failed",
-  "no_model_weight_mutation": true,
-  "model_specs": [
-    {
-      "source": "Exp 2856 selected backend",
-      "status": "unavailable",
-      "required_backend_artifact": "results/experiment_2856_loopus_recurrence_backend_adapter.json"
-    }
-  ],
-  "random_seed": 2857,
-  "reproducibility_checksum": "2f962fa9db10ed5bdfaaccd34282239d1fb18178ad2205022fd17b9b2f91a882",
-  "preconditions_checked": [
-    {
-      "step": "cd /home/ianblenke/github.com/ianblenke/carnot",
-      "passed": true,
-      "observed": "/home/ianblenke/github.com/ianblenke/carnot"
-    },
-    {
-      "step": "jq -e '.live_recurrence_backend_ready == true' results/experiment_2856_loopus_recurrence_backend_adapter.json",
-      "passed": false,
-      "returncode": 2,
-      "stderr": "jq: error: Could not open file results/experiment_2856_loopus_recurrence_backend_adapter.json: No such file or directory"
-    },
-    {
-      "step": ".venv/bin/python3 -c \"import json; p='results/experiment_2856_loopus_recurrence_backend_adapter.json'; print(json.load(open(p))['backend_module_path'])\"",
-      "passed": false,
-      "skipped": true,
-      "reason": "previous precondition failed"
-    }
-  ],
-  "duration_s": 0.0,
-  "adversarial_verify_passed": false,
   "adversarial_verify_flags": [
     "precondition_failed_missing_results/experiment_2856_loopus_recurrence_backend_adapter.json"
   ],
-  "run_date": "20260522"
+  "adversarial_verify_passed": false,
+  "continuous_self_learning_task": true,
+  "correctness_delta": 0.0,
+  "duration_s": 0.04981255531311035,
+  "early_exit_summary": {
+    "blocked_missing_exp2856_artifact": 1
+  },
+  "energy_delta_mean": 0.0,
+  "fr11_self_learning_ready": false,
+  "honest_verdict": "blocked_missing_exp2856_artifact",
+  "max_loops": 3,
+  "memory_hash_after": "not_checked_precondition_failed",
+  "memory_hash_before": "not_checked_precondition_failed",
+  "model_specs": [
+    {
+      "required_backend_artifact": "results/experiment_2856_loopus_recurrence_backend_adapter.json",
+      "source": "Exp 2856 selected backend",
+      "status": "unavailable"
+    }
+  ],
+  "n_examples": 0,
+  "no_model_weight_mutation": true,
+  "per_loop_energy_summary": {},
+  "preconditions_checked": [
+    {
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot",
+      "passed": true,
+      "step": "cd /home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "passed": false,
+      "returncode": 2,
+      "stderr": "jq: error: Could not open file results/experiment_2856_loopus_recurrence_backend_adapter.json: No such file or directory",
+      "step": "jq -e '.live_recurrence_backend_ready == true' results/experiment_2856_loopus_recurrence_backend_adapter.json"
+    },
+    {
+      "passed": false,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import json; p='results/experiment_2856_loopus_recurrence_backend_adapter.json'; print(json.load(open(p))['backend_module_path'])\n                                                                                                     ~~~~^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'results/experiment_2856_loopus_recurrence_backend_adapter.json'",
+      "step": ".venv/bin/python3 -c \"import json; p='results/experiment_2856_loopus_recurrence_backend_adapter.json'; print(json.load(open(p))['backend_module_path'])\""
+    }
+  ],
+  "random_seed": 2857,
+  "recurrence_success_rate": 0.0,
+  "reproducibility_checksum": "6148c1f7647dc8caf246b257edacee489086e120a631788503a70abe09e5b56a",
+  "run_date": "20260522",
+  "source_counts": {}
 }
