@@ -6004,3 +6004,5 @@ Ripgrep i |
 | 2026-05-22 20:52 UTC | FR-11 RecMem Replay Scale-Up (gated on exp2881 rec | OK | 81 passed in 3.81s |
 | 2026-05-22 21:09 UTC | THRML Sampler Portability Smoke v2 | OK | 81 passed in 3.71s |
 | 2026-05-22 21:23 UTC | Capstone .272: Clean Corrigenda + RecMem + Expande | OK | 81 passed in 3.63s |
+| 2026-05-22 22:01 UTC | Plan milestone 2026.05.273 | OK | 12 tasks proposed |
+| 2026-05-22 22:04 UTC | Milestone 2026.05.273 activated | OK | 12 tasks queued |
