@@ -1,0 +1,111 @@
+{
+  "artifact": "experiment_2855_cross_corpus_matrix_v4",
+  "blocked_corpus_count": 1,
+  "claim_boundary_notes": [
+    "Paper-eligible rows: FoVer.",
+    "Cross-corpus matrix not built: requires clean FoVer plus at least one clean non-FoVer row; observed clean non-FoVer rows: none.",
+    "MBPP is missing; no metric values were inferred.",
+    "HumanEval is missing; no metric values were inferred.",
+    "TruthfulQA is missing; no metric values were inferred.",
+    "HaluEval/FEVER is blocked; no metric values were inferred."
+  ],
+  "clean_corpus_count": 1,
+  "cross_corpus_matrix_built": false,
+  "duration_s": 0.000419,
+  "expected_source_artifacts": {
+    "FoVer": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "HaluEval/FEVER": "results/experiment_2854_halueval_fever_full_calibration_v2.json",
+    "HumanEval": "results/experiment_2852_humaneval_dual_condition_v4.json",
+    "MBPP": "results/experiment_2851_mbpp_dual_condition_v4.json",
+    "TruthfulQA": "results/experiment_2853_truthfulqa_dual_condition_v5.json"
+  },
+  "field_principles": {
+    "cross_corpus_matrix_built": "True only when FoVer and at least one non-FoVer row are clean.",
+    "duration_s": "Real synthesis wall time; never padded.",
+    "honest_verdict": "Terminal synthesis verdict; no implied external evaluation.",
+    "paper_eligible_rows": "Exactly the clean rows that can be cited as row-level evidence.",
+    "row_status": "One of clean, blocked, flagged, or missing.",
+    "verifier_corpus_dual_matrix": "Corpus rows copied from clean source artifacts only; non-clean metrics stay null."
+  },
+  "flagged_corpus_count": 0,
+  "honest_verdict": "complete: cross-corpus matrix not built; clean_corpus_count=1; blocked_corpus_count=1; flagged_corpus_count=0; missing_corpus_count=3",
+  "missing_corpus_count": 3,
+  "paper_eligible_rows": [
+    "FoVer"
+  ],
+  "row_status_by_corpus": {
+    "FoVer": "clean",
+    "HaluEval/FEVER": "blocked",
+    "HumanEval": "missing",
+    "MBPP": "missing",
+    "TruthfulQA": "missing"
+  },
+  "run_date": "20260522",
+  "schema": "carnot.cross_corpus_matrix.v4",
+  "source_artifacts": [
+    "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "results/experiment_2854_halueval_fever_full_calibration_v2.json"
+  ],
+  "verifier_corpus_dual_matrix": {
+    "FoVer": {
+      "architecture_only_auroc": 0.8946624,
+      "corpus": "FoVer",
+      "excluded_from_paper_reason": null,
+      "honest_verdict": "complete: FoVer dual-condition integrity rerun measured dataset-only production-vs-architecture contribution",
+      "learning_contribution": 0.01847119999999991,
+      "n_examples": 1000,
+      "n_seeds": 5,
+      "production_auroc": 0.9131335999999999,
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "HaluEval/FEVER": {
+      "architecture_only_auroc": null,
+      "corpus": "HaluEval/FEVER",
+      "excluded_from_paper_reason": "blocked_missing_eval_manifests",
+      "honest_verdict": "blocked_missing_eval_manifests",
+      "learning_contribution": null,
+      "n_examples": null,
+      "n_seeds": null,
+      "production_auroc": null,
+      "row_status": "blocked",
+      "source_artifact": "results/experiment_2854_halueval_fever_full_calibration_v2.json"
+    },
+    "HumanEval": {
+      "architecture_only_auroc": null,
+      "corpus": "HumanEval",
+      "excluded_from_paper_reason": "source_artifact_missing",
+      "honest_verdict": "missing_artifact",
+      "learning_contribution": null,
+      "n_examples": null,
+      "n_seeds": null,
+      "production_auroc": null,
+      "row_status": "missing",
+      "source_artifact": null
+    },
+    "MBPP": {
+      "architecture_only_auroc": null,
+      "corpus": "MBPP",
+      "excluded_from_paper_reason": "source_artifact_missing",
+      "honest_verdict": "missing_artifact",
+      "learning_contribution": null,
+      "n_examples": null,
+      "n_seeds": null,
+      "production_auroc": null,
+      "row_status": "missing",
+      "source_artifact": null
+    },
+    "TruthfulQA": {
+      "architecture_only_auroc": null,
+      "corpus": "TruthfulQA",
+      "excluded_from_paper_reason": "source_artifact_missing",
+      "honest_verdict": "missing_artifact",
+      "learning_contribution": null,
+      "n_examples": null,
+      "n_seeds": null,
+      "production_auroc": null,
+      "row_status": "missing",
+      "source_artifact": null
+    }
+  }
+}

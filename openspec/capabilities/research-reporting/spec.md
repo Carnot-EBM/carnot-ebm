@@ -4506,3 +4506,45 @@ with `archive_already_present=true`, `archived_milestone=2026.05.269`,
 copied from `results/experiment_2846_capstone_v269.json`, exactly three next
 actions, and no modification to `research-roadmap.yaml` or
 `scripts/research_conductor.py`.
+
+### REQ-REPORT-2855: Clean .270 Cross-Corpus Matrix Without Imputation
+
+The repository shall provide an Exp 2855 matrix generator that writes
+`results/experiment_2855_cross_corpus_matrix_v4.json`.
+
+The generator must read the available Exp 2850 through Exp 2854 `.270` corpus
+artifacts, classify every expected corpus row as `clean`, `blocked`,
+`flagged`, or `missing`, and build `verifier_corpus_dual_matrix` from source
+fields only. It must not fabricate missing AUROC, learning-contribution,
+sample-count, or seed-count values. Blocked and flagged corpora must remain
+visible in the matrix with their row status rather than disappearing from the
+artifact.
+
+The terminal artifact must include:
+
+- `honest_verdict`
+- `cross_corpus_matrix_built`, true only when FoVer and at least one non-FoVer
+  corpus have clean rows
+- `verifier_corpus_dual_matrix`, with production AUROC, architecture-only
+  AUROC, learning contribution, `n_examples`, `n_seeds`, and `row_status`
+- `row_status_by_corpus`
+- clean, blocked, flagged, and missing corpus counts
+- `paper_eligible_rows`
+- `claim_boundary_notes`
+- `source_artifacts`
+- `duration_s`
+- `run_date`, equal to `20260522`
+
+The generator must not modify `scripts/research_conductor.py`.
+
+#### SCENARIO-REPORT-2855: Blocked and Missing .270 Rows Stay Visible
+
+**Given** Exp 2850 is a clean FoVer dual-condition artifact
+**And** one non-FoVer artifact is blocked
+**And** other expected non-FoVer artifacts may be absent
+**When** the Exp 2855 matrix generator runs
+**Then** it writes `results/experiment_2855_cross_corpus_matrix_v4.json` with
+FoVer marked `clean`, blocked corpora marked `blocked`, absent corpora marked
+`missing`, null metric fields for non-clean rows, `cross_corpus_matrix_built`
+set to false until a clean non-FoVer row exists, and no modification to
+`scripts/research_conductor.py`.
