@@ -4785,3 +4785,48 @@ row, and next-action fields copied from
 `results/experiment_2872_capstone_v271.json`, exactly three next actions, field
 principles describing the archive fields, and no modification to
 `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+### REQ-REPORT-2884: Milestone 2026.05.272 Capstone Claim Boundary
+
+The repository shall provide an Exp 2884 capstone generator that writes
+`results/experiment_2884_capstone_v272.json` with schema
+`carnot.milestone_capstone.v272`.
+
+The generator MUST read every expected `.272` deliverable from Exp 2873 through
+Exp 2883 when present, list missing deliverables explicitly, and classify each
+source artifact as `clean`, `flagged`, `blocked`, `missing`, or `pilot-only`.
+Flagged artifacts MUST remain excluded from paper readiness even when they also
+report success booleans. Pilot-only artifacts MAY support operational follow-up
+claims but MUST NOT become headline rows.
+
+The terminal artifact MUST compare the `.272` outputs against the `.271`
+flagged runtime, SOTA micro-panel, and KAN PWA/MILP artifacts; decide whether
+matrix v6 contains more clean evidence than matrix v5; evaluate FR-11 recurrence
+trigger, token reduction, energy, correctness/AUROC, drift, and
+non-forgetting; and evaluate the THRML sampler branch without making hardware
+claims. It MUST NOT modify `research-roadmap.yaml` or
+`scripts/research_conductor.py`.
+
+The terminal artifact MUST include `honest_verdict`, `milestone`,
+`paper_ready`, `clean_artifacts`, `flagged_artifacts`, `blocked_artifacts`,
+`missing_artifacts`, `pilot_only_artifacts`, `corrected_271_flags`,
+`sota_runtime_clean`, `micro_panel_clean`, `kan_tautology_cleared`,
+`cross_corpus_matrix_built`, `headline_eligible_rows`,
+`continuous_self_learning_result`, `thrml_sampler_status`,
+`paper_v6_safe_claims`, `paper_v6_forbidden_claims`, `top_3_next_actions`,
+`field_principles`, `run_date="20260522"`, and a measured `duration_s`.
+
+#### SCENARIO-REPORT-2884: Flagged Branches Stay Out of Paper-Ready Claims
+
+**Given** Exp 2874 clears the `.271` runtime flag
+**And** Exp 2875 or Exp 2882 may still contain adversarial/corrigendum flags
+**And** Exp 2879 contributes only MBPP/HumanEval pilot rows
+**And** Exp 2883 may be a clean dependency block with local fallback but no THRML
+or hardware result
+**When** the Exp 2884 capstone generator runs
+**Then** it writes `results/experiment_2884_capstone_v272.json` with paper
+readiness derived only from clean matrix evidence, flagged artifacts excluded
+from safe claims, pilot-only rows excluded from `headline_eligible_rows`,
+FR-11 scale-up claims forbidden when the source is flagged, no hardware claim
+for THRML fallback-only evidence, exactly three next actions, and no
+modification to `research-roadmap.yaml` or `scripts/research_conductor.py`.
