@@ -7116,3 +7116,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: Offline Recurrence Backend Adapter v2 (✅ Complete) — honest_verdict=complete: offline recurrence replay backend ready; results/experiment_2868_offline_recurrence_backend_adapter_v2.json
 - 2026-05-22: FR-11 Continuous Self-Learning Replay v3 (gated on exp2868 backend + exp2865 matrix) (✅ Complete) — honest_verdict=complete: offline verifier-feedback replay lowered energy with no forgetting; results/experiment_2869_fr11_continuous_self_learning_replay_v3.json
 - 2026-05-22: Runtime-Gated SOTA Energy Baseline Micro-Panel v1 (✅ Complete) — honest_verdict=micro_panel_complete_no_full_benchmark_claim; results/experiment_2870_sota_energy_baseline_micro_panel_v1.json
+- 2026-05-22: KAN PWA/MILP Tiny Verifier v1 (✅ Complete) — honest_verdict=complete_with_exact_enumerated_fallback_no_general_milp_or_network_claim; results/experiment_2871_kan_pwa_milp_tiny_verifier_v1.json
