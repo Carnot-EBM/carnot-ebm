@@ -208,5 +208,33 @@
   "target_examples_met": true,
   "token_proxy_after": 197,
   "token_proxy_before": 20324,
-  "token_reduction_pct": 99.030702617595
+  "token_reduction_pct": 99.030702617595,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "eager_correctness_rate=0.6 and recmem_correctness_rate=0.6 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "eager_energy_delta_mean=0.146666666667 and energy_delta_mean=0.146666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "auroc_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "correctness_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "energy_delta_vs_eager=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
