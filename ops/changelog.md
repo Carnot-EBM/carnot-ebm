@@ -7095,3 +7095,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: LoopUS FR-11 Continuous Self-Learning Pilot v2 (gated on exp2856 backend) (⚠️ Blocked) — honest_verdict=blocked_missing_exp2856_artifact; results/experiment_2857_loopus_fr11_self_learning_v2.json
 - 2026-05-22: LoopUS FR-11 Continuous Self-Learning Pilot v2 (gated on exp2856 backend) (⚠️ Blocked) — honest_verdict=blocked_missing_exp2856_artifact; results/experiment_2857_loopus_fr11_self_learning_v2.json
 - 2026-05-22: BEAVER/EPR Clean Bounded Proxy v2 (✅ Complete) — honest_verdict=complete: clean bounded-prefix/EPR proxy evaluated on local FoVer labels; results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json
+- 2026-05-22: Residual Drift + MUS Conflict Prioritizer (gated on exp2855 matrix) (⚠️ Blocked) — honest_verdict=blocked_cross_corpus_matrix_not_built; results/experiment_2859_drift_mus_conflict_prioritizer.json
