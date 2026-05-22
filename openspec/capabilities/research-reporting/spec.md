@@ -4367,3 +4367,52 @@ terminal-prefixed `honest_verdict`, `archived_milestone=2026.05.267`,
 `archived_milestone_experiments_completed=3`,
 `activated_milestone=2026.05.268`, no duplicate archive entry, and no
 modification to `scripts/research_conductor.py`.
+
+### REQ-REPORT-2835: Archive Milestone 2026.05.268 and Confirm 2026.05.269 Activation
+
+The repository shall provide an Exp 2835 archive generator that writes
+`results/experiment_2835_archive_v268.json` with schema
+`carnot.archive_activation.v1`.
+
+The generator must read `research-roadmap.yaml` before making archive
+decisions and must report the observed milestone without modifying the
+roadmap. It must read `research-complete.yaml`, avoid duplicate
+`2026.05.268` archive entries, and ensure the archive row honestly records
+the .268 outcomes:
+
+- Exp 2827 completed the .267 archive and .268 activation.
+- Exp 2828 was blocked by missing system `torch`/CUDA and an uncached
+  mandated SOTA GGUF.
+- Exp 2829, Exp 2830, and Exp 2831 were blocked by unavailable CUDA and
+  uncached/missing corpus prerequisites.
+- Exp 2832 completed with an empty verifier matrix because upstream corpora
+  produced no measured per-verifier AUROC rows.
+- Exp 2833 completed the paper table integration but was not cite-ready.
+- Exp 2834 completed the capstone while leaving the FoVer-overfit thesis and
+  FR-11 learning delta unconfirmed.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:` or `success:`
+- `archived_milestone`, equal to `2026.05.268`
+- `activated_milestone`, equal to `2026.05.269`
+- `archived_task_summary`, a dictionary that preserves each Exp 2827 through
+  Exp 2834 status without converting blocked artifacts into successes
+- `runtime_root_cause`, documenting why .268 live evaluations did not run
+- `duration_s`, a wall-clock duration for the archive generator run
+
+The generator must not modify `research-roadmap.yaml` or
+`scripts/research_conductor.py`. Ops status, changelog, and traceability
+reconciliation remain the conductor's follow-up step for this archive task.
+
+#### SCENARIO-REPORT-2835: Idempotent .268 Blocked Archive and .269 Activation
+
+**Given** `research-roadmap.yaml` is active on `2026.05.269`
+**And** `research-complete.yaml` may already contain a generic
+`2026.05.268` archive row
+**When** the Exp 2835 archive generator runs
+**Then** it writes `results/experiment_2835_archive_v268.json` with a
+terminal-prefixed `honest_verdict`, `archived_milestone=2026.05.268`,
+`activated_milestone=2026.05.269`, honest blocked counts and source links in
+`archived_task_summary`, no duplicate archive entry, and no modification to
+`research-roadmap.yaml` or `scripts/research_conductor.py`.

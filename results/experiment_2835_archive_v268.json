@@ -1,0 +1,157 @@
+{
+  "activated_milestone": "2026.05.269",
+  "activation": {
+    "confirmed": true,
+    "expected_active_milestone": "2026.05.269",
+    "observed_active_milestone_after": "2026.05.269",
+    "observed_active_milestone_before": "2026.05.269",
+    "research_roadmap_path": "/home/ianblenke/github.com/ianblenke/carnot/research-roadmap.yaml"
+  },
+  "archive": {
+    "appended_this_run": false,
+    "decision": "Corrected the existing .268 archive row.",
+    "duplicate_count_after": 1,
+    "existing_entry_after_run": true,
+    "existing_entry_before_run": true,
+    "existing_entry_corrected": true,
+    "research_complete_path": "/home/ianblenke/github.com/ianblenke/carnot/research-complete.yaml"
+  },
+  "archive_ready": true,
+  "archived_milestone": "2026.05.268",
+  "archived_task_summary": {
+    "exp2827": {
+      "blocked": false,
+      "deliverable": "results/experiment_2827_archive_v267.json",
+      "note": "Milestone .267 archive row was corrected and .268 activation confirmed.",
+      "result": "OK (archive .267 + activate .268)",
+      "source_honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.267; active_milestone=2026.05.268; completed_non_fabricated=3_of_8",
+      "status": "ok"
+    },
+    "exp2828": {
+      "blocked": true,
+      "deliverable": "results/experiment_2828_fover_memory_leakage_isolation.json",
+      "note": "FoVer-overfit and FR-11 learning-contribution measurements stayed null.",
+      "result": "blocked_cuda (system python3 missing torch/CUDA; mandated Qwen3.6 GGUF not cached)",
+      "source_honest_verdict": "blocked_cuda: Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n    import torch; assert torch.cuda.is_available()\n    ^^^^^^^^^^^^\nModuleNotFoundError: No module named 'torch'",
+      "status": "blocked_cuda"
+    },
+    "exp2829": {
+      "blocked": true,
+      "blocked_resources": [
+        "cuda",
+        "hf_mbpp",
+        "qwen36_gguf_cache"
+      ],
+      "deliverable": "results/experiment_2829_mbpp_ensemble_eval.json",
+      "note": "No MBPP AUROC, pass@1, candidate, or ensemble metrics were inferred.",
+      "result": "blocked_cuda_unavailable (cuda, hf_mbpp, qwen36_gguf_cache missing)",
+      "source_honest_verdict": "blocked_cuda_unavailable",
+      "status": "blocked_cuda_unavailable"
+    },
+    "exp2830": {
+      "blocked": true,
+      "blocked_resources": [
+        "cuda",
+        "hf_openai_humaneval",
+        "qwen36_gguf_cache"
+      ],
+      "deliverable": "results/experiment_2830_humaneval_full_ensemble_eval.json",
+      "note": "No HumanEval AUROC, pass@1, execution, repair, or ensemble metrics were inferred.",
+      "result": "blocked_cuda_unavailable (cuda, hf_openai_humaneval, qwen36_gguf_cache missing)",
+      "source_honest_verdict": "blocked_cuda_unavailable",
+      "status": "blocked_cuda_unavailable"
+    },
+    "exp2831": {
+      "blocked": true,
+      "blocked_resources": [
+        "cuda",
+        "hf_truthfulqa_generation",
+        "qwen36_gguf_cache",
+        "bleurt_base_128"
+      ],
+      "deliverable": "results/experiment_2831_truthfulqa_ensemble_eval.json",
+      "note": "No TruthfulQA AUROC, BLEURT threshold, labels, or per-verifier metrics were inferred.",
+      "result": "blocked_cuda_unavailable (cuda, hf_truthfulqa_generation, qwen36_gguf_cache, bleurt_base_128 missing)",
+      "source_honest_verdict": "blocked_cuda_unavailable",
+      "status": "blocked_cuda_unavailable"
+    },
+    "exp2832": {
+      "blocked": false,
+      "deliverable": "results/experiment_2832_cross_corpus_verifier_matrix_v2.json",
+      "matrix_empty": true,
+      "note": "Matrix is intentionally empty because upstream corpus artifacts were blocked.",
+      "result": "complete (empty matrix; no measured upstream per-verifier AUROC rows)",
+      "source_honest_verdict": "complete: upstream artifacts loaded but no measured per-verifier AUROC rows were present",
+      "status": "complete_empty_matrix"
+    },
+    "exp2833": {
+      "arxiv_ready_v7": false,
+      "blocked": false,
+      "deliverable": "results/experiment_2833_paper_v6_multicorpus_table_v2.json",
+      "note": "Table compiled, but unmeasured dual-condition AUROCs prevent citation readiness.",
+      "result": "complete (compiled table; arxiv_ready_v7=false, not cite-ready)",
+      "source_honest_verdict": "complete: exp2828-2832 artifacts integrated honestly; at least one dual-condition AUROC remains unmeasured, so arxiv_ready_v7=false",
+      "status": "complete_not_cite_ready"
+    },
+    "exp2834": {
+      "acceptance_criteria_met": 5,
+      "blocked": false,
+      "deliverable": "results/experiment_2834_capstone_v268.json",
+      "fover_shape_overfit_confirmed": false,
+      "note": "Capstone preserves carry-forward FoVer AUROC and files .269 runtime/cache gaps.",
+      "result": "complete capstone (FoVer-overfit unconfirmed; FR-11 delta unconfirmed; 5/10 criteria met)",
+      "self_learning_contribution_confirmed": false,
+      "source_honest_verdict": "complete: .268 capstone synthesised \u2014 all 4 corpus evaluation tasks blocked (missing torch/CUDA and GGUF cache); FoVer-overfit thesis UNCONFIRMED (exp2828 blocked); FR-11 hypothesis UNCONFIRMED (exp2828 blocked); 5/10 acceptance criteria met; carry-forward AUROC 0.9857 maintained; supersedes .267 deadlock-narrative",
+      "status": "complete_capstone"
+    }
+  },
+  "blocked_task_count": 4,
+  "completed": "2026-05-22",
+  "completed_or_admin_task_count": 4,
+  "duration_s": 0.064147,
+  "field_principles": {
+    "activated_milestone": "Records the next milestone prepared for execution.",
+    "archived_milestone": "Records the milestone archived by this task.",
+    "archived_task_summary": "Honest per-task result summary; blocked artifacts stay blocked.",
+    "duration_s": "Admin task wall-time; no sleep padding.",
+    "honest_verdict": "Terminal prefix per Verdict Terminal-Prefix Discipline.",
+    "runtime_root_cause": "Documents why .268 live evaluations did not run."
+  },
+  "honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.268; activated_milestone=2026.05.269; blocked_tasks=4_of_8; fover_overfit_unconfirmed; fr11_delta_unconfirmed",
+  "id": "exp2835-archive-v268-activate-v269",
+  "notes": [
+    "research-roadmap.yaml was read and left unmodified.",
+    "scripts/research_conductor.py was not modified.",
+    "No push was performed.",
+    "Ops status/changelog/traceability docs were left for the conductor reconciler."
+  ],
+  "preconditions_checked": {
+    "research_complete_archive": {
+      "command": "search research-complete.yaml for 2026.05.268",
+      "observed_after_count": 1,
+      "observed_before_count": 1,
+      "passed": true
+    },
+    "roadmap_milestone": {
+      "command": "yaml.safe_load(research-roadmap.yaml).milestone",
+      "expected": "2026.05.269",
+      "observed": "2026.05.269",
+      "passed": true
+    },
+    "source_artifacts": {
+      "expected": [
+        "results/experiment_2827_archive_v267.json",
+        "results/experiment_2828_fover_memory_leakage_isolation.json",
+        "results/experiment_2829_mbpp_ensemble_eval.json",
+        "results/experiment_2830_humaneval_full_ensemble_eval.json",
+        "results/experiment_2831_truthfulqa_ensemble_eval.json",
+        "results/experiment_2832_cross_corpus_verifier_matrix_v2.json",
+        "results/experiment_2833_paper_v6_multicorpus_table_v2.json",
+        "results/experiment_2834_capstone_v268.json"
+      ],
+      "present_count": 8
+    }
+  },
+  "runtime_root_cause": ".268 live corpus evaluations did not run because the conductor/runtime preconditions were mismatched: system python3 lacked torch or CUDA, while .venv/bin/python had the CUDA-capable torch environment, and the mandated SOTA GGUF cache for Qwen3.6-35B-A3B was not available. MBPP, HumanEval, and TruthfulQA also recorded missing dataset/scorer prerequisites.",
+  "schema": "carnot.archive_activation.v1"
+}

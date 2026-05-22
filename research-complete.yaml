@@ -21924,40 +21924,46 @@ milestones:
     deliverable: results/experiment_2826_capstone_v267.json
     result: OK (non-fabricated capstone artifact)
 - id: 2026.05.268
-  title: ''
+  title: Blocked live corpus evaluations; runtime/cache prerequisites carried to .269
   doc: ''
   completed: '2026-05-22'
-  finding: See conductor log for per-experiment results.
+  finding: Milestone .268 completed administratively with honest blocked corpus-evaluation artifacts. Live evaluations did
+    not run because torch/CUDA and mandated SOTA GGUF cache prerequisites were unavailable in the conductor runtime.
+  runtime_root_cause: '.268 live corpus evaluations did not run because the conductor/runtime preconditions were mismatched:
+    system python3 lacked torch or CUDA, while .venv/bin/python had the CUDA-capable torch environment, and the mandated SOTA
+    GGUF cache for Qwen3.6-35B-A3B was not available. MBPP, HumanEval, and TruthfulQA also recorded missing dataset/scorer
+    prerequisites.'
+  blocked_task_count: 4
   tasks:
   - id: exp2827
     title: Archive .267 + Activate .268
     deliverable: results/experiment_2827_archive_v267.json
-    result: OK (conductor)
+    result: OK (archive .267 + activate .268)
   - id: exp2828
-    title: 'FoVer Memory-Leakage Isolation: AUROC With vs Without FR-11 Self-Learning State (CODEX)'
+    title: FoVer Memory-Leakage Isolation
     deliverable: results/experiment_2828_fover_memory_leakage_isolation.json
-    result: OK (conductor)
+    result: blocked_cuda (system python3 missing torch/CUDA; mandated Qwen3.6 GGUF not cached)
   - id: exp2829
-    title: "MBPP Corpus \u2014 Both Memory Conditions (CODEX, N=100, 5 seeds each)"
+    title: MBPP Corpus Dual-Condition Evaluation
     deliverable: results/experiment_2829_mbpp_ensemble_eval.json
-    result: OK (conductor)
+    result: blocked_cuda_unavailable (cuda, hf_mbpp, qwen36_gguf_cache missing)
   - id: exp2830
-    title: "HumanEval Full (164) \u2014 Both Memory Conditions (CODEX, 5 seeds each)"
+    title: HumanEval Full Dual-Condition Evaluation
     deliverable: results/experiment_2830_humaneval_full_ensemble_eval.json
-    result: OK (conductor)
+    result: blocked_cuda_unavailable (cuda, hf_openai_humaneval, qwen36_gguf_cache missing)
   - id: exp2831
-    title: "TruthfulQA Corpus \u2014 Both Memory Conditions (CODEX, N=200, 5 seeds each, HONEST RE-RUN)"
+    title: TruthfulQA Corpus Dual-Condition Evaluation
     deliverable: results/experiment_2831_truthfulqa_ensemble_eval.json
-    result: OK (conductor)
+    result: blocked_cuda_unavailable (cuda, hf_truthfulqa_generation, qwen36_gguf_cache, bleurt_base_128 missing)
   - id: exp2832
-    title: Cross-Corpus Per-Verifier Dual-Condition Discriminative Matrix v2 (CODEX, real data)
+    title: Cross-Corpus Per-Verifier Dual-Condition Matrix v2
     deliverable: results/experiment_2832_cross_corpus_verifier_matrix_v2.json
-    result: OK (conductor)
+    result: complete (empty matrix; no measured upstream per-verifier AUROC rows)
   - id: exp2833
-    title: "Paper v6 \xA75 v2: Multi-Corpus Dual-Condition Table + Self-Learning Disclosure (CODEX, real data)"
+    title: Paper v6 Section 5 Multi-Corpus Table v2
     deliverable: results/experiment_2833_paper_v6_multicorpus_table_v2.json
-    result: OK (conductor)
+    result: complete (compiled table; arxiv_ready_v7=false, not cite-ready)
   - id: exp2834
-    title: 'Capstone v268: Multi-Corpus Dual-Condition Headline (REAL DATA) + Gap Analysis'
+    title: Capstone v268
     deliverable: results/experiment_2834_capstone_v268.json
-    result: OK (conductor)
+    result: complete capstone (FoVer-overfit unconfirmed; FR-11 delta unconfirmed; 5/10 criteria met)
