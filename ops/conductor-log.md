@@ -5932,3 +5932,4 @@ Ripgrep i |
 | 2026-05-22 05:12 UTC | FoVer Memory-Leakage Isolation v3 (CODEX, post-tor | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2836_fover_m |
 | 2026-05-22 05:18 UTC | FoVer Memory-Leakage Isolation v3 (CODEX, post-tor | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2836_fover_m |
 | 2026-05-22 05:25 UTC | FoVer Memory-Leakage Isolation v3 (CODEX, post-tor | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2836_fover_m |
+| 2026-05-22 05:35 UTC | MBPP Dual-Condition v3 (CODEX, post-torch-fix, N=1 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2837_mbpp_en |
