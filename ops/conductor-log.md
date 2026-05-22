@@ -5981,3 +5981,4 @@ Ripgrep i |
 | 2026-05-22 12:00 UTC | Archive .270 + Activate .271 | OK | 81 passed in 2.89s |
 | 2026-05-22 12:39 UTC | SOTA Runtime Cache + GPU Offload Resolver v3 | OK | 81 passed in 3.16s |
 | 2026-05-22 13:12 UTC | Eval Manifest Contract + Alias Resolver v2 | OK | 81 passed in 3.12s |
+| 2026-05-22 13:24 UTC | HaluEval + FEVER Full Calibration v3 (gated on exp | OK | 81 passed in 2.91s |
