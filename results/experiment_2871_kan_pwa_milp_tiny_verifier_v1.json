@@ -81,5 +81,13 @@
     ".venv/bin/coverage report --fail-under=100 -m python/carnot/verify/kan_pwa_milp_tiny.py",
     ".venv/bin/pytest tests/python -q"
   ],
-  "witness_x": -0.5
+  "witness_x": -0.5,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "global_error_bound=0.0625 and local_error_bound=0.0625 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }
