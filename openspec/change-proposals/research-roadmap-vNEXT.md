@@ -1,236 +1,244 @@
-# Research Roadmap vNEXT: Milestone 2026.05.269
+# Research Roadmap vNEXT: Milestone 2026.05.270
 
-**Title:** SOTA Runtime Gate + Multi-Corpus Evidence + LoopUS Self-Learning
+**Title:** Evidence Integrity + Dataset Materialization + Continuous Recurrence
 
 **Planned:** 2026-05-22
 
-**Previous milestone:** 2026.05.268
+**Previous milestone:** 2026.05.269
 
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.268 Proved
+## What 2026.05.269 Proved
 
-Milestone `.268` did not prove the multi-corpus hypothesis. It proved a more operationally useful fact:
-the conductor can now produce honest blocked artifacts rather than fabricated headline numbers when
-SOTA runtime preconditions are missing.
+Milestone `.269` completed all scheduled tasks, but it did not produce a new paper-ready
+multi-corpus headline. Its main contribution was an honest boundary around what is currently
+credible.
 
-Observed `.268` outcome:
+The authoritative capstone is `results/experiment_2846_capstone_v269.json`:
 
-- `exp2827` archived `.267` and activated `.268`.
-- `exp2828` FoVer leakage, `exp2829` MBPP, `exp2830` HumanEval, and `exp2831` TruthfulQA did not
-  produce live AUROC measurements. They blocked on runtime/model preconditions.
-- `exp2832` correctly produced an empty matrix instead of inferring missing per-verifier rows.
-- `exp2833` correctly refused to make the multi-corpus paper table cite-ready.
-- `exp2834` capstone identified the load-bearing root cause: system `python3` had no `torch`, the
-  `.venv/bin/python` interpreter had CUDA-capable torch, and the mandated SOTA GGUFs were not cached.
+- `sota_runtime_ready=true`, but the runtime artifact was adversarially flagged because the
+  GGUF/CUDA evidence completed in 21 seconds and lacked complete methodology fields.
+- FoVer dual-condition scoring produced `production_auroc_mean=0.9131`,
+  `architecture_only_auroc_mean=0.8947`, and `learning_contribution=+0.0185`, but the artifact
+  was flagged for duration and missing `random_seed`, so it is not headline-eligible.
+- MBPP, HumanEval, and TruthfulQA all emitted honest `blocked_*` verdicts because the local
+  datasets/splits were not materialized.
+- HaluEval/FEVER reached a 50-example pilot only; the result is useful readiness evidence but not a
+  full benchmark.
+- BEAVER/EPR produced a bounded-prefix proxy only, not exact BEAVER soundness, and the artifact was
+  flagged by the same compute-bound provenance issue.
+- LoopUS/FR-11 self-learning blocked on a missing `live_recurrence_backend`.
+- Cross-corpus matrix and paper table artifacts were missing or gate-blocked in the authoritative
+  capstone, so `paper_ready=false`.
 
-The current cite-safe result remains the FoVer-only headline carried forward from prior milestones:
-production FoVer AUROC 0.9857 on the validated N=1000 / 5-seed setting. The FR-11 memory-leakage
-delta and non-FoVer generalization claims remain unconfirmed.
+The lesson is specific: the next milestone should not add another speculative verifier before the
+evidence chain is clean. It should first clear provenance flags, materialize local data, rerun the
+blocked corpus rows, and then run one bounded continuous self-learning loop.
 
 ## Three Biggest Gaps
 
-### Gap 1: SOTA Runtime Is Not a First-Class Gate
+### Gap 1: Evidence Integrity Is Blocking Every Headline Claim
 
-The PRD vision requires reliable local verification with contemporary open models, but `.268` spent
-multiple agent attempts on tasks that were impossible under the selected interpreter/model cache.
-The next milestone must first establish:
+The runtime and FoVer artifacts contain useful signals, but they are currently excluded by
+adversarial verification. `.270` must separate genuine live-model evidence from fast dataset-only
+scoring, avoid GGUF/CUDA claims in non-live artifacts, and include seed/checksum/methodology fields.
 
-- `.venv/bin/python` is the canonical runtime for CUDA torch.
-- At least one mandated SOTA GGUF is cached and loadable:
-  - `unsloth/Qwen3.6-35B-A3B-GGUF`
-  - `unsloth/gemma-4-31B-it-GGUF`
-  - `unsloth/gemma-4-26B-A4B-it-GGUF`
-- `scripts/experiment_template.py::cached_sota_pair()` resolves to usable local files.
-- Downstream expensive experiments are skipped by structured `gated_on` fields if the preflight fails.
+### Gap 2: Local Benchmark Manifests Are Missing
 
-### Gap 2: Cross-Corpus Evidence Is Still Missing
+The PRD vision requires verifiable reasoning beyond FoVer. `.269` showed that MBPP, HumanEval, and
+TruthfulQA cannot even start until local manifests exist with counts, checksums, and split metadata.
+Materialization is therefore a first-class Phase A task, not something buried inside each corpus
+runner.
 
-Carnot's PRD vision is not a FoVer-only system. The current strongest result is excellent but narrow.
-The next milestone must measure architecture-only versus production self-learning conditions on:
+### Gap 3: Continuous Self-Learning Still Has No Live Recurrence Backend
 
-- FoVer: isolate whether persistent FR-11 state is responsible for the headline.
-- MBPP: code generation correctness.
-- HumanEval: full code benchmark transfer.
-- TruthfulQA: factuality transfer with an honest local scorer, not a closed-weight judge.
-- HaluEval / FEVER pilot: next-tier factuality readiness, explicitly non-headline unless clean.
-
-### Gap 3: FR-11 Repair and Continuous Self-Learning Are Not Yet Quantified
-
-The PRD centers autonomous directed self-learning, but repair deltas have repeatedly collapsed to zero
-or been blocked. The next milestone must include a smaller, externally measurable self-learning loop:
-candidate generation, energy scoring, targeted feedback, bounded recurrence, and early exit. It should
-not require model-weight edits, and it must report whether each loop lowers constraint energy and improves
-final correctness.
+FR-11 is the center of the PRD, but `.269` blocked before running a single recurrence example. The
+next milestone splits this into a backend adapter and then a LoopUS-style pilot. That keeps the
+failure mode diagnosable: backend unavailable, recurrence energy not improving, or self-learning
+helping/hurting.
 
 ## New Research Integrated
 
-The 2026-05-22 sweep added or promoted the following actionable findings in `research-references.md`:
+The 2026-05-22 post-`.269` sweep added the following planning signals to `research-references.md`:
 
-- **Distributional EBMs for Structured LLM Reasoning** (arXiv:2605.18871): use decomposed deterministic
-  penalties plus uncertainty analysis as the framing for the cross-corpus verifier matrix.
-- **BEAVER v2** (arXiv:2512.05439v2): deterministic frontier bounds for prefix-closed constraints; this
-  milestone includes a bounded-prefix feasibility probe but does not claim BEAVER soundness.
-- **LoopUS** (arXiv:2605.11011): latent recurrence and adaptive early exit motivate an external-loop
-  FR-11 self-learning pilot.
-- **Causal Energy Minimization** (arXiv:2605.07588): theory support for energy-descent transformer
-  interpretations; citation-level only for this milestone.
-- **Extropic TSU / THRML**: confirms the hardware path for EBM sampling, but no attached TSU hardware
-  exists, and all local FPGA boards are terminal. Hardware work stays simulator/interface-only.
+- **ConstraintBench** (arXiv:2602.22465): feasibility is the main bottleneck in direct constrained
+  optimization. `.270` therefore reports per-constraint readiness and dataset checksums before
+  aggregate accuracy.
+- **Residual Drift / DriftBench** (OpenReview ICLR 2026 Workshop; arXiv:2604.28031): models can keep
+  a satisfiable ledger while violating prior commitments in their assignment. `.270` adds a
+  residual-drift/MUS conflict diagnostic after the matrix is rebuilt.
+- **HGNN-MUSE** (arXiv:2604.09001; AISTATS 2026): hypergraph structure can reduce MUS enumeration
+  cost. `.270` starts with a cheap HGNN-inspired prioritizer, not a full RL agent.
+- **LoopUS** (arXiv:2605.11011): latent recurrence and adaptive early exit motivate an external
+  recurrence loop for FR-11, split into adapter and pilot.
+- **EBT / ARM-as-EBM / CEM** (arXiv:2507.02092, 2512.15605v3, 2605.07588): theory anchors only for
+  `.270`; clean local evidence remains the bottleneck.
+- **Extropic TSU and Logical Intelligence Kona**: support the long-term hardware thesis, but no
+  `.270` task claims TSU/Kona hardware access or latency.
 
 ## Architecture Snapshot
 
 ```text
-                         +-------------------------------+
-                         |  Mandated local SOTA GGUFs     |
-                         |  Qwen3.6 / Gemma4 dense/MoE    |
-                         +---------------+---------------+
-                                         |
-                                         v
-                         +-------------------------------+
-                         | exp2836 SOTA runtime preflight |
-                         | .venv CUDA torch + GGUF cache  |
-                         +---------------+---------------+
-                                         |
-                         gated_on: sota_runtime_ready == true
-                                         |
-       +---------------------------------+---------------------------------+
-       |                                 |                                 |
-       v                                 v                                 v
-+--------------+                 +--------------+                 +--------------+
-| FoVer dual   |                 | Code corpora |                 | Factuality   |
-| conditions   |                 | MBPP/HumanEval                 | TruthfulQA   |
-+------+-------+                 +------+-------+                 +------+-------+
-       |                                |                                |
-       +----------------+---------------+---------------+----------------+
-                        |                               |
-                        v                               v
-              +------------------+             +------------------+
-              | Cross-corpus     |             | BEAVER/EPR       |
-              | verifier matrix  |             | bounded probes   |
-              +--------+---------+             +---------+--------+
-                       |                                 |
-                       +----------------+----------------+
-                                        |
-                                        v
-                         +-------------------------------+
-                         | LoopUS-style FR-11 external   |
-                         | recurrence + early exit       |
-                         +---------------+---------------+
-                                         |
-                                         v
-                         +-------------------------------+
-                         | Paper table + capstone        |
-                         | honest claim boundary         |
-                         +-------------------------------+
+                         +------------------------------------+
+                         |  Phase A: evidence and data gates  |
+                         |                                    |
+                         |  exp2848 SOTA runtime evidence v2  |
+                         |  exp2849 local dataset manifests   |
+                         +-----------------+------------------+
+                                           |
+                 +-------------------------+-------------------------+
+                 |                                                   |
+                 v                                                   v
+     +---------------------------+                       +---------------------------+
+     | Phase B: clean corpora    |                       | Phase C: recurrence       |
+     |                           |                       |                           |
+     | exp2850 FoVer integrity   |                       | exp2856 LoopUS backend    |
+     | exp2851 MBPP              |                       | exp2857 FR-11 pilot       |
+     | exp2852 HumanEval         |                       +-------------+-------------+
+     | exp2853 TruthfulQA        |                                     |
+     | exp2854 HaluEval/FEVER    |                                     |
+     +-------------+-------------+                                     |
+                   |                                                   |
+                   v                                                   v
+        +-----------------------+                         +-------------------------+
+        | exp2855 matrix v4     |                         | exp2858 BEAVER proxy    |
+        | clean rows only       |                         | exp2859 Drift/MUS       |
+        +-----------+-----------+                         +------------+------------+
+                    |                                                  |
+                    +--------------------------+-----------------------+
+                                               |
+                                               v
+                              +--------------------------------+
+                              | exp2860 capstone v270          |
+                              | claim boundary + next actions  |
+                              +--------------------------------+
 ```
 
 ## Phase Structure
 
-### Phase A: Archive and Runtime Gate
+### Phase A: Archive, Runtime Evidence, and Dataset Materialization
 
-- `exp2835` archives `.268` and activates `.269`.
-- `exp2836` establishes the SOTA runtime contract and cache manifest.
+- `exp2847` archives `.269` and activates `.270`.
+- `exp2848` reruns SOTA runtime evidence with real wall-clock inference or an honest blocked verdict.
+- `exp2849` creates local manifests for MBPP, HumanEval, TruthfulQA, HaluEval, and FEVER.
 
-This phase is intentionally first. All expensive live-model tasks are structurally gated on `exp2836`.
+This phase fixes the two root causes behind most `.269` failures: provenance flags and missing local
+datasets.
 
-### Phase B: Multi-Corpus Dual-Condition Measurements
+### Phase B: Clean Corpus Measurements
 
-- `exp2837` FoVer memory-leakage isolation v3.
-- `exp2838` MBPP dual-condition v3.
-- `exp2839` HumanEval full dual-condition v3.
-- `exp2840` TruthfulQA honest dual-condition v4.
-- `exp2841` HaluEval / FEVER 50-example pilot.
+- `exp2850` reruns FoVer dual-condition scoring without live-model overclaiming.
+- `exp2851` reruns MBPP dual-condition generation and verification, gated on runtime and dataset
+  readiness.
+- `exp2852` reruns HumanEval full dual-condition generation and verification, gated the same way.
+- `exp2853` reruns TruthfulQA generation-split dual-condition scoring, gated the same way.
+- `exp2854` scales HaluEval/FEVER from pilot to full dataset-only calibration.
+- `exp2855` rebuilds the cross-corpus matrix from available clean rows only.
 
-The first four tasks are headline candidates only if they pass sample-size, runtime, and methodology
-gates. The HaluEval/FEVER pilot is deliberately scoped as readiness evidence.
+Headline eligibility requires no adversarial flags, non-null corpus rows, meaningful sample sizes,
+and explicit SOTA GGUF model specs for LLM-bearing tasks.
 
-### Phase C: New Verifier and Self-Learning Probes
+### Phase C: Continuous Recurrence and New Diagnostics
 
-- `exp2842` builds the verifier x corpus x condition matrix from real upstream rows.
-- `exp2843` implements a BEAVER/EPR bounded-prefix feasibility probe without overstating soundness.
-- `exp2844` runs a LoopUS-style external recurrence pilot for FR-11 continuous self-learning.
+- `exp2856` implements or selects a live recurrence backend adapter.
+- `exp2857` runs the mandatory continuous self-learning task: a LoopUS-style external recurrence
+  pilot with energy/correctness deltas and no model-weight mutation.
+- `exp2858` reruns the BEAVER/EPR bounded-prefix proxy with honest labeling and no live-model
+  provenance overclaim.
+- `exp2859` builds a residual-drift plus MUS conflict-prioritization diagnostic from the `.270`
+  matrix and ledger rows.
 
-### Phase D: Synthesis and Claim Boundary
+This phase connects the literature sweep to concrete artifacts while preserving the claim boundary:
+BEAVER remains a proxy unless exact frontier bounds are implemented, and HGNN-MUSE remains a
+prioritization heuristic unless a trained HGNN policy is actually added.
 
-- `exp2845` prepares the paper-v6 Section 5 table and self-learning disclosure.
-- `exp2846` capstone reconciles artifacts, gaps, and the next action list.
+### Phase D: Capstone and Claim Boundary
+
+- `exp2860` synthesizes `.270`, classifies clean/blocked/flagged artifacts, decides whether paper-v6
+  Section 5 can be regenerated, and writes the next action list.
+
+The capstone is ungated so the milestone always produces an honest terminal summary even when Phase A
+or B blocks.
 
 ## Dependency Graph
 
 ```text
-exp2835
-  -> exp2836
-       -> exp2837
-       -> exp2838
-       -> exp2839
-       -> exp2840
-       -> exp2841
-       -> exp2843
-       -> exp2844
+exp2847
+  -> exp2848
+       -> exp2851
+       -> exp2852
+       -> exp2853
+       -> exp2856
+            -> exp2857
 
-exp2837 + exp2838 + exp2839 + exp2840
-  -> exp2842
-       -> exp2845
+exp2847
+  -> exp2849
+       -> exp2851
+       -> exp2852
+       -> exp2853
+       -> exp2854
+
+exp2850 + exp2851 + exp2852 + exp2853 + exp2854
+  -> exp2855
+       -> exp2859
+
+exp2858 is independent after exp2847.
 
 all artifacts, including blocked states
-  -> exp2846
+  -> exp2860
 ```
 
-Structured gates:
+Structured gates in `research-roadmap-next.yaml`:
 
-- `exp2837`-`exp2841`, `exp2843`, and `exp2844` gate on `exp2836.sota_runtime_ready == true`.
-- `exp2842` gates on non-null AUROC fields from `exp2837`-`exp2840`.
-- `exp2845` gates on `exp2842.cross_corpus_matrix_built == true`.
-- `exp2846` is intentionally ungated so it can write an honest capstone even if upstream tasks are
-  blocked by environment or cache constraints.
+- `exp2851` gates on `exp2848.sota_runtime_ready_v2 == true` and `exp2849.mbpp_ready == true`.
+- `exp2852` gates on `exp2848.sota_runtime_ready_v2 == true` and `exp2849.humaneval_ready == true`.
+- `exp2853` gates on `exp2848.sota_runtime_ready_v2 == true` and `exp2849.truthfulqa_ready == true`.
+- `exp2854` gates on `exp2849.halueval_ready == true` and `exp2849.fever_ready == true`.
+- `exp2856` gates on `exp2848.sota_runtime_ready_v2 == true`.
+- `exp2857` gates on `exp2856.live_recurrence_backend_ready == true`.
+- `exp2859` gates on `exp2855.cross_corpus_matrix_built == true`.
+- `exp2860` is intentionally ungated.
 
 ## Hardware Requirements
 
 Required:
 
-- Dual RTX 3090 CUDA host, accessed through `.venv/bin/python`.
-- Enough local storage for at least one mandated SOTA GGUF. Prefer Qwen3.6; accept Gemma 4 dense or
-  Gemma 4 MoE if Qwen is unavailable.
-- Existing Carnot datasets and FR-11 state files.
+- Dual RTX 3090 CUDA host through `.venv/bin/python`.
+- `llama_cpp` loader with GPU offload evidence.
+- At least one mandated local SOTA GGUF cached and loadable:
+  - `unsloth/Qwen3.6-35B-A3B-GGUF`
+  - `unsloth/gemma-4-31B-it-GGUF`
+  - `unsloth/gemma-4-26B-A4B-it-GGUF`
+- Local storage for MBPP, HumanEval, TruthfulQA, HaluEval, and FEVER manifests plus generated rows.
 
 Not required:
 
-- KV260, GateMate, PolarFire. All three local FPGA boards are terminal and do not impose mandatory
-  continuity tasks in `.269`.
-- Extropic TSU hardware. THRML/TSU work remains a future simulator-track item, not a blocker for the
-  SOTA runtime and corpus evidence milestone.
+- KV260 board execution, Vivado synthesis, GateMate, PolarFire, AMD NPU, D-Wave, photonic hardware,
+  or Extropic TSU/Z1/XTR-0 access.
+- Any TSU/Kona latency claim. Hardware references in `.270` remain strategic context only.
 
 ## Agent Routing
 
-- `codex/gpt-5.5`: formulaic preflight, dataset/evaluation wiring, verifier probes.
-- `gemini/gemini-3.1-pro-preview`: long-context matrix/literature synthesis when it does not need
-  Claude-specific escalation.
-- `claude/opus`: capstone-level synthesis only.
+- `codex/gpt-5.5`: formulaic code, dataset materialization, SOTA preflight, benchmark runners, and
+  diagnostics.
+- `claude/opus`: capstone synthesis only.
+- `gemini` is not used in this roadmap because the local audit rejects `agent_type: gemini`.
 
 ## Acceptance Criteria
 
-1. `exp2836` writes a preflight artifact before any expensive work and records the selected Python
-   interpreter, CUDA torch status, SOTA GGUF cache state, and `cached_sota_pair()` result.
-2. Expensive live-model tasks are preemptively skipped if `sota_runtime_ready` is false.
-3. Every LLM experiment lists at least one mandated SOTA GGUF in `MODEL_SPECS`.
+1. `exp2848` records real runtime evidence for at least one mandated SOTA GGUF, or emits an honest
+   `blocked_*` verdict before any downstream live-model task runs.
+2. `exp2849` writes local manifest paths, counts, and checksums for every target corpus, with explicit
+   booleans consumed by gates.
+3. Every LLM-bearing task includes at least one mandated SOTA GGUF in `MODEL_SPECS`.
 4. Legacy small models appear only as CPU smoke-test fallbacks and never as headline models.
-5. FoVer, MBPP, HumanEval, and TruthfulQA tasks either produce dual-condition AUROC rows or honest
-   `blocked_*` verdicts with precondition evidence.
-6. `prior_failures` are present on every scope-matched retry and include `retire_if_same_verdict: true`.
-7. The cross-corpus matrix refuses to infer missing rows.
-8. The BEAVER/EPR probe clearly labels whether it is exact BEAVER, an EPR probe, or a bounded proxy.
-9. At least one continuous self-learning task runs or blocks honestly; `exp2844` is the primary FR-11
-   continuous self-learning experiment.
-10. The paper table remains `arxiv_ready=false` unless non-FoVer rows are clean and sample-size gates pass.
-11. `ops/status.md`, `ops/changelog.md`, and `ops/metrics.md` are updated by the planning session.
-12. No task modifies `scripts/research_conductor.py`; no task pushes.
-
-## CLAUDE.md Compliance Notes
-
-- SOTA GGUF mandate is enforced through `exp2836` and repeated `MODEL_SPECS` instructions.
-- Failed-experiment rerun discipline is explicit for `.268` blocked corpus tasks and `.267` fabricated
-  TruthfulQA.
-- Verifier authenticity discipline is enforced by requiring blocked artifacts rather than inferred metrics.
-- Operator-only publication discipline applies to `exp2845`: table preparation only, no submission.
-- Hardware continuity has no mandatory local-board tasks because all known boards are terminal.
+5. No artifact claims GGUF/CUDA/live-model provenance unless it actually invokes the model and records
+   seed/checksum/methodology evidence.
+6. FoVer, MBPP, HumanEval, TruthfulQA, and HaluEval/FEVER either produce clean rows or honest
+   `blocked_*` verdicts with `preconditions_checked`.
+7. `exp2857` satisfies the milestone self-learning mandate by setting
+   `continuous_self_learning_task=true`.
+8. `prior_failures` are present on every scope-matched retry and every entry includes
+   `retire_if_same_verdict: true`.
+9. `exp2860` explicitly states whether any `.270` row is paper-ready; absent or flagged rows remain
+   excluded.

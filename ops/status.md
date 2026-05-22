@@ -1,6 +1,26 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-22 (milestone 2026.05.269 operational retrospective complete)
+**Last Updated:** 2026-05-22 (milestone 2026.05.270 research planning complete)
+
+## Session 2026-05-22 - Milestone 2026.05.270 Research Planning Complete
+
+Planned milestone `2026.05.270` as "Evidence Integrity + Dataset Materialization + Continuous
+Recurrence" after the operator confirmed all `.269` tasks completed. The plan treats
+`results/experiment_2846_capstone_v269.json` as authoritative: `.269` reached terminal artifacts but
+paper readiness remained false because MBPP/HumanEval/TruthfulQA and LoopUS blocked, the matrix/table
+chain was missing or gate-blocked, and several potentially useful rows were adversarially flagged.
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (14 tasks, `exp2847`-`exp2860`)
+- Critical path: `exp2848` must produce clean SOTA runtime evidence; `exp2849` must materialize
+  local dataset manifests; MBPP/HumanEval/TruthfulQA tasks are structurally gated on both.
+- FR-11 mandate: `exp2857-loopus-fr11-self-learning-v2` is the continuous self-learning task and is
+  gated on `exp2856.live_recurrence_backend_ready`.
+- Research references updated with the post-`.269` sweep: ConstraintBench, Residual Drift/DriftBench,
+  HGNN-MUSE, LoopUS follow-up, EBT/ARM/CEM theory anchors, and Extropic/Kona hardware boundaries.
+- Validation: roadmap schema parse OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml`
+  OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` OK with 11 gate checks and 0
+  failures; diff whitespace check clean for the files changed in this planning pass.
 
 ## Session 2026-05-22 - Milestone 2026.05.269 Operational Retrospective Complete
 

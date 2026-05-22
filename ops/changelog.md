@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-05-22 (Milestone 2026.05.270 Research Planning)
+
+- [outer-loop] Planned milestone 2026.05.270 as "Evidence Integrity + Dataset Materialization + Continuous Recurrence" after the operator confirmed all `.269` tasks completed. Used `results/experiment_2846_capstone_v269.json` as the authoritative closeout: `.269` produced terminal artifacts but no new paper-ready multi-corpus headline because several tasks were blocked, missing, or adversarially flagged.
+- [outer-loop] Updated `research-references.md` before experiment design with a post-`.269` sweep covering ConstraintBench, Residual Drift/DriftBench, HGNN-MUSE, LoopUS follow-up, EBT/ARM/CEM theory anchors, and Extropic/Kona hardware-status boundaries.
+- [outer-loop] Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` for milestone `.270` with the `.269` findings, three biggest PRD gaps, architecture diagram, four-phase plan, dependency graph, hardware requirements, agent routing, and acceptance criteria.
+- [outer-loop] Created `research-roadmap-next.yaml` with 14 conductor tasks (`exp2847`-`exp2860`): archive/activate, SOTA runtime evidence v2, local dataset materialization, clean FoVer/MBPP/HumanEval/TruthfulQA/HaluEval-FEVER reruns, cross-corpus matrix v4, LoopUS backend adapter, mandatory FR-11 continuous self-learning pilot, BEAVER/EPR clean proxy, residual-drift/MUS prioritizer, and capstone.
+- [outer-loop] Validation passed: roadmap schema parse OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml` OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` returned `all_checks_pass` with 11 gate checks and 0 failures; diff whitespace check clean for `research-roadmap-next.yaml`, `research-references.md`, and `openspec/change-proposals/research-roadmap-vNEXT.md`. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-22 (Milestone 2026.05.269 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.269 as "SOTA Runtime Gate + Multi-Corpus Evidence + LoopUS Self-Learning". Created `openspec/change-proposals/research-roadmap-vNEXT.md` with the `.268` blocked-outcome summary, three PRD gaps, architecture diagram, four-phase plan, dependency graph, hardware requirements, and acceptance criteria.

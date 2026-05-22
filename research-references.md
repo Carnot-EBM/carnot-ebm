@@ -1,3 +1,97 @@
+## 2026-05-22 Post-.269 Planning Sweep (Milestone 2026.05.270)
+
+This sweep was run after milestone `.269` completed. `.269` proved that the conductor can reach
+terminal artifacts under the mandated SOTA-GGUF regime, but it did not create a new cite-safe
+headline: MBPP, HumanEval, TruthfulQA, and LoopUS remained blocked, while the SOTA runtime,
+FoVer, HaluEval/FEVER pilot, and BEAVER/EPR proxy artifacts were marked adversarially flagged or
+pilot-only. The next milestone should prioritize evidence integrity, local dataset materialization,
+clean corpus reruns, and one continuous self-learning loop that uses an explicit recurrence backend.
+
+### ConstraintBench: Solver-Verified Direct Constraint Reasoning
+
+- **Paper:** "ConstraintBench: Benchmarking LLM Constraint Reasoning on Direct Optimization"
+  (arXiv:2602.22465v2, February 2026).
+- **What:** Evaluates whether LLMs can directly output feasible solutions for 200 constrained
+  optimization tasks across 10 operations-research domains, with deterministic verification against
+  Gurobi-verified references. The key finding is that feasibility, not objective quality, is the main
+  failure mode: even strong models satisfy all constraints only part of the time.
+- **Relevance to Carnot:** Reinforces the PRD thesis that deterministic constraint verification is
+  the load-bearing layer. For `.270`, use it as justification for materializing local benchmark
+  manifests before any SOTA generation claim, and for reporting per-constraint feasibility rather than
+  only aggregate answer accuracy.
+- **Sources:** https://arxiv.org/abs/2602.22465
+
+### Residual Drift and Knows-But-Violates Constraint Failures
+
+- **Papers:** "Residual Drift Dominates Contradiction in Multi-Turn Constraint Reasoning"
+  (OpenReview, ICLR 2026 Workshop LLM Reasoning) and "Models Recall What They Violate: Constraint
+  Adherence in Multi-Turn LLM Ideation" (arXiv:2604.28031v2, May 2026).
+- **What:** Residual Drift separates unsatisfiable contradiction from satisfiable drift: after
+  MUS-style repair, residual errors are mostly assignments that violate an otherwise satisfiable
+  ledger. The ideation DriftBench paper independently finds a "knows-but-violates" pattern where
+  models can restate constraints they still fail to obey.
+- **Relevance to Carnot:** Carnot should not stop at "ledger is satisfiable." The verifier matrix
+  should include assignment-vs-ledger checks, and `.270` should add a conflict-prioritization
+  diagnostic that distinguishes contradiction, satisfiable drift, and missing dataset/runtime
+  evidence.
+- **Sources:** https://openreview.net/forum?id=B9gtT1hhEm and https://arxiv.org/abs/2604.28031
+
+### HGNN-MUSE for Minimal Unsatisfiable Subset Prioritization
+
+- **Paper:** "Hypergraph Neural Networks Accelerate MUS Enumeration" (arXiv:2604.09001; AISTATS
+  2026 OpenReview).
+- **What:** Represents constraints as hypergraph vertices and already-enumerated MUSes as hyperedges,
+  then trains an HGNN policy to reduce expensive satisfiability checks during MUS/MSS enumeration.
+  The OpenReview page lists code availability at `https://github.com/hitachi-ais/HGNN-MUSE`.
+- **Relevance to Carnot:** Direct fit for verifier failure triage. Carnot can start with a cheap
+  HGNN-inspired heuristic over its existing constraint/failure ledger rather than training a full RL
+  agent, then compare against random and degree-based MUS prioritization.
+- **Sources:** https://arxiv.org/abs/2604.09001 and https://openreview.net/forum?id=gCHIAqnoip
+
+### LoopUS Follow-Up: External Recurrence Before Weight Mutation
+
+- **Paper:** "LoopUS: Recasting Pretrained LLMs into Looped Latent Refinement Models"
+  (arXiv:2605.11011, May 2026; Hugging Face paper/model cards now list Qwen LoopUS variants).
+- **What:** Retrofitting looped latent refinement into pretrained LLMs uses block decomposition,
+  selective gates, deep supervision, and adaptive early exit to increase reasoning compute without
+  simply lengthening traces.
+- **Relevance to Carnot:** `.269` blocked on `live_recurrence_backend`, so `.270` should split
+  LoopUS work into two tasks: first implement/select a recurrence backend adapter with real SOTA GGUF
+  smoke evidence, then run an FR-11 continuous self-learning pilot. No model-weight mutation is
+  required for this step.
+- **Sources:** https://arxiv.org/abs/2605.11011 and https://huggingface.co/papers/2605.11011
+
+### EBT/ARM-as-EBM Citation Watch and Causal Energy Minimization
+
+- **Papers:** "Energy-Based Transformers are Scalable Learners and Thinkers" (arXiv:2507.02092),
+  "Autoregressive Language Models are Secretly Energy-Based Models" (arXiv:2512.15605v3), and
+  "Revisiting Transformer Layer Parameterization Through Causal Energy Minimization"
+  (arXiv:2605.07588).
+- **What:** The EBT paper frames prediction as energy minimization over input/candidate pairs; the
+  ARM-as-EBM paper gives a function-space bridge between locally normalized next-token models and
+  globally normalized EBMs; CEM derives transformer-layer parameterizations from conditional energy
+  objectives.
+- **Relevance to Carnot:** These are theory/context anchors for the long-term PRD vision, not the
+  immediate `.270` bottleneck. The practical next step remains clean local evidence: runtime,
+  datasets, corpus rows, and self-learning recurrence.
+- **Sources:** https://arxiv.org/abs/2507.02092, https://arxiv.org/abs/2512.15605, and
+  https://arxiv.org/abs/2605.07588
+
+### Hardware and Kona Status Boundaries
+
+- **Sources:** Extropic public XTR-0/TSU/THRML materials and the January 2026 Logical Intelligence
+  Kona 1.0 press release.
+- **What:** Extropic publicly describes TSUs as hardware for sampling from EBMs/PGMs and releases
+  THRML for simulation. Logical Intelligence announced Kona 1.0 pilots and frames reasoning as
+  energy minimization.
+- **Relevance to Carnot:** These signals support the hardware/software thesis but do not justify a
+  local hardware-execution task in `.270`. Keep hardware requirements to the dual RTX 3090 SOTA
+  runtime and avoid TSU/Kona latency or access claims without authenticated local evidence.
+- **Sources:** https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one and
+  https://via.tt.se/pressmeddelande/4220683/logical-intelligence-introduces-first-energy-based-reasoning-ai-model-signals-early-steps-toward-agi-adds-yann-lecun-and-patrick-hillmann-to-leadership?lang=en&publisherId=259167
+
+---
+
 ## 2026-05-22 Post-.268 Planning Sweep (Milestone 2026.05.269)
 
 This sweep was run after milestone `.268` completed with honest blocked artifacts for the
