@@ -770,6 +770,55 @@ HaluEval and FEVER
 
 **Spec traces:** REQ-BENCH-2863, SCENARIO-BENCH-2863
 
+### REQ-BENCH-2888: TruthfulQA InFi-Check-Style Taxonomy Manifest
+
+Carnot MUST provide an Exp 2888 TruthfulQA taxonomy manifest builder that uses
+only the local TruthfulQA manifest rows and existing Carnot artifacts. The
+builder MUST NOT call a remote LLM, MUST NOT synthesize truth labels, and MUST
+NOT cite or depend on the retired fabricated Exp 2823 artifact.
+
+The terminal artifact MUST be written to
+`results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json` and
+include `honest_verdict`, `truthfulqa_taxonomy_ready`, `source_artifacts`,
+`excluded_artifacts`, `manifest_paths`, `manifest_checksums`,
+`n_rows_available`, `n_rows_materialized`, `taxonomy_fields`,
+`error_type_counts`, `generated_answer_metrics_available`,
+`headline_metric_claim_made=false`, `remote_llm_called=false`,
+`synthetic_labels_created=false`, `tests_run`, `field_principles`,
+`run_date="20260522"`, and a real `duration_s`.
+
+**Acceptance criteria:**
+- The builder resolves the dated TruthfulQA JSONL manifest from the Exp 2863
+  resolver contract and verifies the recorded SHA256 digest before reading
+  rows.
+- The builder records every local TruthfulQA source path present in the
+  materialized rows, including a checksum when the local source file exists.
+- The bounded sample materializes at least 100 local rows when that many rows
+  are available and records deterministic fields
+  `factual_error_type`, `evidence_available`, `justification_available`,
+  `correction_available`, `unsupported_reason`, and `metric_eligibility`.
+- Generated-answer metrics remain null and
+  `generated_answer_metrics_available=false` unless an existing clean
+  generated-answer artifact supplies real generated answers and measured
+  metrics.
+- The retired Exp 2823 artifact is recorded only in `excluded_artifacts` with
+  its checksum and exclusion reason; it is not used as source evidence.
+
+### SCENARIO-BENCH-2888: TruthfulQA Local Labels Become Taxonomy Rows
+
+**Given** the Exp 2863 manifest contract resolves a checksum-verified local
+TruthfulQA JSONL manifest
+**And** Exp 2831 and Exp 2840 do not contain clean generated-answer metrics
+**When** the Exp 2888 taxonomy builder runs
+**Then** it writes the required artifact with at least 100 materialized local
+TruthfulQA rows when available
+**And** every materialized row contains deterministic taxonomy fields derived
+from existing TruthfulQA labels and source metadata
+**And** headline metrics, remote-LLM usage, and synthetic-label creation remain
+explicitly false or null.
+
+**Spec traces:** REQ-BENCH-2888, SCENARIO-BENCH-2888
+
 ### REQ-BENCH-2864: HaluEval/FEVER Local Manifest Calibration
 
 Carnot MUST provide an Exp 2864 HaluEval/FEVER full calibration runner that
