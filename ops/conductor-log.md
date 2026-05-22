@@ -5955,3 +5955,7 @@ Ripgrep i |
 | 2026-05-22 09:31 UTC | MBPP Dual-Condition Evaluation v4 (gated on exp284 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
 | 2026-05-22 09:31 UTC | HumanEval Dual-Condition Evaluation v4 (gated on e | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
 | 2026-05-22 09:31 UTC | TruthfulQA Dual-Condition Evaluation v5 (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
+| 2026-05-22 09:33 UTC | HaluEval + FEVER Full Calibration v2 (gated on exp | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2854_halueva |
+| 2026-05-22 09:35 UTC | MBPP Dual-Condition Evaluation v4 (gated on exp284 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
+| 2026-05-22 09:35 UTC | HumanEval Dual-Condition Evaluation v4 (gated on e | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
+| 2026-05-22 09:35 UTC | TruthfulQA Dual-Condition Evaluation v5 (gated on | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
