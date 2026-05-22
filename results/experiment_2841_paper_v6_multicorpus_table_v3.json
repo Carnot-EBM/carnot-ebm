@@ -124,5 +124,18 @@
     "submission_package_ready": "True if operator-ready; task NEVER submits per Operator-Only rule.",
     "arxiv_ready_v8": "True only when every corpus row is measured and pdflatex passes.",
     "duration_s": "Real wall time for source integration and pdflatex."
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.42961883544921875 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }

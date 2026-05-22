@@ -5942,3 +5942,4 @@ Ripgrep i |
 | 2026-05-22 07:05 UTC | TruthfulQA Dual-Condition v3 (CODEX, post-torch-fi | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_truthfu |
 | 2026-05-22 07:11 UTC | TruthfulQA Dual-Condition v3 (CODEX, post-torch-fi | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2839_truthfu |
 | 2026-05-22 07:24 UTC | Cross-Corpus Per-Verifier Dual-Condition Matrix v3 | OK | 81 passed in 3.42s |
+| 2026-05-22 07:37 UTC | Paper v6 §5 v3: Multi-Corpus Dual-Condition Table  | OK | 81 passed in 2.99s |
