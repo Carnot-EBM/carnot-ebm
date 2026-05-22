@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.269",
+  "generated_at": "2026-05-22T07:56:27Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.269 has 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments in the locked timing data. No slowest-experiment or compute-bound GPU-efficiency ranking can be produced from 0 bounded entries.",
+  "bottlenecks_identified": [
+    "No experiment commits were found since milestone activation, leaving no completed runs to rank or diagnose.",
+    "The timing window contains 0 compute-bound experiments, so GPU idle state cannot be attributed to compute-bound execution."
+  ],
+  "improvements_suggested": [
+    "Add an activation-to-first-experiment-commit sentinel that alerts before retrospective close when no milestone-scoped commits are present.",
+    "Make the retrospective generator emit an explicit no-data section when experiments_completed is 0.",
+    "Keep GPU-idle diagnostics gated on compute_bound tags so empty or synthesis-only milestones do not create false utilization findings."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Alert before closeout when no experiment commit has landed after activation.",
+    "Render a no-data operational-retro template for empty timing windows.",
+    "Preserve compute_bound gating for GPU utilization findings."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The useful finding is the absence of bounded operational data, not an inferred performance regression. With 0 compute-bound experiments, DualGPURunner and GPU utilization efficiency cannot be evaluated for this milestone."
+}
