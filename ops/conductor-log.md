@@ -5992,3 +5992,4 @@ Ripgrep i |
 | 2026-05-22 16:14 UTC | Milestone 2026.05.271 Capstone + Claim Boundary | OK | 81 passed in 2.89s |
 | 2026-05-22 16:52 UTC | Plan milestone 2026.05.272 | OK | 12 tasks proposed |
 | 2026-05-22 16:54 UTC | Milestone 2026.05.272 activated | OK | 12 tasks queued |
+| 2026-05-22 17:05 UTC | Archive .271 + Activate .272 | OK | 81 passed in 4.23s |
