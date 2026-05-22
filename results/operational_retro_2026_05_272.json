@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.272",
+  "generated_at": "2026-05-22T21:29:23Z",
+  "retro_type": "operational_in_progress",
+  "summary": "TIMING DATA contains no experiment commits after activation for 2026.05.272, so the locked counters remain 0 wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. The GPU monitor reports idle devices, but without any compute-bound timing rows this is no data available this milestone rather than a compute bottleneck.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "Slowest compute-bound experiments: no data available this milestone because TIMING DATA has 0 completed experiments.",
+    "GPU efficiency on compute-bound tasks: no data available this milestone because TIMING DATA has 0 compute-bound experiments.",
+    "DualGPURunner engagement for parallel multi-model compute-bound tasks: no data available this milestone because no such timing row exists."
+  ],
+  "improvements_suggested": [
+    "Add a pre-retro timing-window guard that emits a hard empty-window finding before any duration, GPU-efficiency, or DualGPURunner analysis runs.",
+    "Persist an activation-to-first-experiment marker so the conductor can distinguish a genuinely idle milestone from missing timing ingestion.",
+    "Make the retrospective generator render explicit no-data sections when experiments_completed is 0 instead of carrying forward prior milestone rankings."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Block closeout on an empty timing window until the operator confirms that no experiment execution was expected.",
+    "Write the first experiment-start event immediately after milestone activation and verify it before retrospective generation.",
+    "Gate GPU monitor recommendations behind compute-bound timing rows before adding them to bottleneck findings."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The only defensible operational result is that the milestone-scoped timing window has no completed entries. GPU idle is contextual only: without a compute-bound row, it cannot support CUDA-utilization or dual-runner claims."
+}
