@@ -4599,3 +4599,38 @@ FoVer marked `clean`, blocked corpora marked `blocked`, absent corpora marked
 `missing`, null metric fields for non-clean rows, `cross_corpus_matrix_built`
 set to false until a clean non-FoVer row exists, and no modification to
 `scripts/research_conductor.py`.
+
+### REQ-REPORT-2865: Clean .271 Cross-Corpus Matrix From FoVer Plus Non-FoVer Evidence
+
+The repository shall provide an Exp 2865 matrix generator that writes
+`results/experiment_2865_cross_corpus_matrix_v5.json`.
+
+The generator must read the clean FoVer artifact
+`results/experiment_2850_fover_dual_condition_integrity_v4.json` and the
+HaluEval/FEVER artifact
+`results/experiment_2864_halueval_fever_full_calibration_v3.json`, classify
+FoVer, HaluEval/FEVER, MBPP, HumanEval, and TruthfulQA rows as `clean`,
+`blocked`, `flagged`, or `missing`, and build `verifier_corpus_dual_matrix`
+only from rows classified `clean`. Missing MBPP, HumanEval, and TruthfulQA
+metrics must not be inferred from prior artifacts, placeholder values, or
+neighboring corpora.
+
+`cross_corpus_matrix_built` must be true only when FoVer is clean and at least
+one non-FoVer row is clean. The terminal artifact must include
+`honest_verdict`, `cross_corpus_matrix_built`, `verifier_corpus_dual_matrix`,
+`row_status_by_corpus`, `paper_eligible_rows`, clean/blocked/flagged/missing
+corpus counts, `source_artifacts`, `excluded_from_headline`,
+`claim_boundary_notes`, `field_principles`, `run_date="20260522"`, and a real
+`duration_s`.
+
+#### SCENARIO-REPORT-2865: HaluEval/FEVER Creates The First Clean Non-FoVer Row
+
+**Given** Exp 2850 is a clean FoVer dual-condition artifact
+**And** Exp 2864 is a clean HaluEval/FEVER calibration artifact
+**And** MBPP, HumanEval, and TruthfulQA source artifacts are absent
+**When** the Exp 2865 matrix generator runs
+**Then** it writes `results/experiment_2865_cross_corpus_matrix_v5.json` with
+FoVer and HaluEval/FEVER marked `clean`, the absent corpora marked `missing`,
+`cross_corpus_matrix_built=true`, `paper_eligible_rows` containing exactly the
+two clean rows, `verifier_corpus_dual_matrix` containing only clean rows, and
+`excluded_from_headline` explaining why every non-clean corpus is excluded.

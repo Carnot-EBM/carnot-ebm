@@ -1,0 +1,103 @@
+{
+  "artifact": "experiment_2865_cross_corpus_matrix_v5",
+  "blocked_corpus_count": 0,
+  "claim_boundary_notes": [
+    "Paper-eligible rows: FoVer, HaluEval/FEVER.",
+    "Cross-corpus matrix built from clean rows: FoVer, HaluEval/FEVER.",
+    "MBPP is missing; no metric values were inferred.",
+    "HumanEval is missing; no metric values were inferred.",
+    "TruthfulQA is missing; no metric values were inferred."
+  ],
+  "clean_corpus_count": 2,
+  "cross_corpus_matrix_built": true,
+  "duration_s": 0.000445,
+  "excluded_from_headline": {
+    "HumanEval": "source_artifact_missing",
+    "MBPP": "source_artifact_missing",
+    "TruthfulQA": "source_artifact_missing"
+  },
+  "expected_source_artifacts": {
+    "FoVer": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "HaluEval/FEVER": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+    "HumanEval": "results/experiment_2852_humaneval_dual_condition_v4.json",
+    "MBPP": "results/experiment_2851_mbpp_dual_condition_v4.json",
+    "TruthfulQA": "results/experiment_2853_truthfulqa_dual_condition_v5.json"
+  },
+  "field_principles": {
+    "cross_corpus_matrix_built": "True only when FoVer and at least one non-FoVer row are clean.",
+    "duration_s": "Real synthesis wall time; never padded.",
+    "excluded_from_headline": "Every non-clean corpus records why it is excluded from headline claims.",
+    "honest_verdict": "Terminal synthesis verdict; no implied external evaluation.",
+    "paper_eligible_rows": "Exactly the clean rows that can be cited as row-level evidence.",
+    "row_status_by_corpus": "Each expected corpus is classified as clean, blocked, flagged, or missing.",
+    "verifier_corpus_dual_matrix": "Contains clean source rows only; non-clean corpora are excluded."
+  },
+  "flagged_corpus_count": 0,
+  "honest_verdict": "complete: cross-corpus matrix built from 2 clean corpus rows; clean_corpus_count=2; blocked_corpus_count=0; flagged_corpus_count=0; missing_corpus_count=3",
+  "missing_corpus_count": 3,
+  "paper_eligible_rows": [
+    "FoVer",
+    "HaluEval/FEVER"
+  ],
+  "row_status_by_corpus": {
+    "FoVer": "clean",
+    "HaluEval/FEVER": "clean",
+    "HumanEval": "missing",
+    "MBPP": "missing",
+    "TruthfulQA": "missing"
+  },
+  "run_date": "20260522",
+  "schema": "carnot.cross_corpus_matrix.v5",
+  "source_artifacts": [
+    "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+    "results/experiment_2864_halueval_fever_full_calibration_v3.json"
+  ],
+  "verifier_corpus_dual_matrix": {
+    "FoVer": {
+      "architecture_only_auroc": 0.8946624,
+      "corpus": "FoVer",
+      "honest_verdict": "complete: FoVer dual-condition integrity rerun measured dataset-only production-vs-architecture contribution",
+      "learning_contribution": 0.01847119999999991,
+      "n_examples": 1000,
+      "n_seeds": 5,
+      "production_auroc": 0.9131335999999999,
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json"
+    },
+    "HaluEval/FEVER": {
+      "auroc_ci95_by_dataset": {
+        "fever": [
+          0.28651047154899895,
+          0.3805551966927201
+        ],
+        "halueval": [
+          0.5022596153846154,
+          0.6010529019003595
+        ]
+      },
+      "corpus": "HaluEval/FEVER",
+      "honest_verdict": "complete: HaluEval/FEVER local calibration ready",
+      "label_counts_by_dataset": {
+        "fever": {
+          "0": 270,
+          "1": 230
+        },
+        "halueval": {
+          "0": 250,
+          "1": 250
+        }
+      },
+      "measured_auroc_by_dataset": {
+        "fever": 0.33114331723027374,
+        "halueval": 0.553072
+      },
+      "n_examples": 1000,
+      "n_examples_by_dataset": {
+        "fever": 500,
+        "halueval": 500
+      },
+      "row_status": "clean",
+      "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json"
+    }
+  }
+}
