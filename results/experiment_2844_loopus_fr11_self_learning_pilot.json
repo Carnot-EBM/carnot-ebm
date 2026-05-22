@@ -1,0 +1,93 @@
+{
+  "artifact": "experiment_2844_loopus_fr11_self_learning_pilot",
+  "blocked_resources": [
+    "live_recurrence_backend"
+  ],
+  "continuous_self_learning_task": true,
+  "convergence_threshold": 0.01,
+  "correctness_delta": 0.0,
+  "duration_s": 2.059104204178,
+  "early_exit_rate": 0.0,
+  "field_principles": {
+    "continuous_self_learning_task": "Satisfies research-program FR-11 milestone mandate.",
+    "correctness_delta": "Measures whether recurrence improves outcomes; 0.0 sentinel when blocked.",
+    "duration_s": "Real compute wall-time; no sleep padding.",
+    "early_exit_rate": "LoopUS-style adaptive stopping signal.",
+    "honest_verdict": "MUST start with \"complete:\" / \"success:\" or \"blocked_\".",
+    "mean_energy_delta_loop0_to_final": "Measures energy descent; blocked runs use 0.0 sentinel.",
+    "model_specs": "Mandated SOTA GGUF recorded.",
+    "n_examples": "Pilot sample-size transparency; blocked runs report 0 measured examples.",
+    "per_example_trace": "Audit trail for self-learning behavior.",
+    "preconditions_checked": "Explains blocks honestly."
+  },
+  "honest_verdict": "blocked_live_recurrence_backend",
+  "max_loops": 3,
+  "mean_energy_delta_loop0_to_final": 0.0,
+  "methodology_note": "Blocked before recurrence measurement. Delta fields are zero sentinels with n_examples=0, not measured improvements.",
+  "model_specs": {
+    "headline_required_any_of": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "legacy_cpu_smoke_only": [
+      "Qwen3.5-0.8B",
+      "gemma-4-E4B-it"
+    ],
+    "no_model_weight_mutation": true,
+    "selected_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "sota_runtime_ready": true
+  },
+  "n_examples": 0,
+  "per_example_trace": [],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2836_sota_runtime_preflight.json",
+      "resource": "exp2836_artifact"
+    },
+    {
+      "available": true,
+      "detail": "sota_runtime_ready=True",
+      "resource": "exp2836_sota_runtime_ready"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "resource": "exp2836_selected_python"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "mandated_sota_model_path"
+    },
+    {
+      "available": true,
+      "detail": "rows=6548; required=25",
+      "resource": "fover_dataset"
+    },
+    {
+      "available": true,
+      "detail": "rows=25; required=25",
+      "resource": "mbpp_dataset"
+    },
+    {
+      "available": true,
+      "detail": "SCEnergyVerifier",
+      "resource": "carnot_energy_feedback"
+    },
+    {
+      "available": false,
+      "detail": "live SOTA GGUF recurrence backend is not configured in this process",
+      "resource": "live_recurrence_backend"
+    }
+  ],
+  "random_seed": 20260522,
+  "reproducibility_checksum": "d05e55d4f14561d803584a1606c4d06e744c1be304f7a8aba78a68f76ed6512f",
+  "requested_n_examples": 50,
+  "run_date": "20260522",
+  "schema": "carnot.loopus_fr11_self_learning_pilot.v1",
+  "total_token_cost": 0
+}

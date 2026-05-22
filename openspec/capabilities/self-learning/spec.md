@@ -5986,3 +5986,69 @@ summaries as fast weights
 **Then** action-token energy variance is positively correlated with useful
 fast-weight updates
 **And** the artifact reports whether the retention gate reached 0.85.
+
+## REQ-LEARN-2844: LoopUS-Style External FR-11 Recurrence Pilot
+
+**Given** Exp 2836 reports `sota_runtime_ready=true` and a mandated SOTA GGUF
+path
+**When** the Exp 2844 continuous self-learning pilot runs
+**Then** it SHALL select exactly 25 FoVer and 25 MBPP examples with a
+deterministic seed
+**And** it SHALL run at most three external recurrence loops per example without
+modifying model weights
+**And** each later loop SHALL receive localized Carnot energy-violation feedback
+from the previous attempt
+**And** it SHALL stop early when the answer passes or energy improvement is
+below the configured convergence threshold
+**And** it SHALL write
+`results/experiment_2844_loopus_fr11_self_learning_pilot.json` with
+`honest_verdict`, `continuous_self_learning_task`, `n_examples`,
+`mean_energy_delta_loop0_to_final`, `correctness_delta`, `early_exit_rate`,
+`per_example_trace`, `model_specs`, `preconditions_checked`, and `duration_s`.
+
+### REQ-LEARN-2844 Sub-requirements
+
+- REQ-LEARN-2844-1: The runner SHALL load Exp 2836, require
+  `sota_runtime_ready=true`, and record `selected_python` plus the selected
+  mandated GGUF path in `model_specs`.
+- REQ-LEARN-2844-2: If FoVer, MBPP, verifier, SOTA model-path, or live
+  recurrence backend preconditions fail, the runner SHALL write a blocked
+  artifact whose `honest_verdict` starts with `blocked_`, whose
+  `n_examples=0`, and whose delta fields are explicit zero sentinels rather
+  than inferred measurements.
+- REQ-LEARN-2844-3: `run_recurrence_pilot()` SHALL compute
+  `mean_energy_delta_loop0_to_final` as mean loop0 energy minus final-loop
+  energy, `correctness_delta` as final correctness rate minus loop0
+  correctness rate, and `early_exit_rate` as the fraction of examples using
+  fewer than three loops.
+- REQ-LEARN-2844-4: Every `per_example_trace` row SHALL include corpus,
+  example id, per-loop energy, localized feedback, final correctness, early
+  exit reason, and token cost.
+
+### SCENARIO-LEARN-2844: Recurrence Lowers Energy and Reports Correctness Delta
+
+**Given** a deterministic mixed FoVer/MBPP sample and an attached generation
+backend that improves after localized energy feedback
+**When** the Exp 2844 pilot runs
+**Then** the success artifact starts with `complete:`
+**And** `mean_energy_delta_loop0_to_final` is positive when final energy is lower
+than loop0 energy
+**And** `correctness_delta` is positive when recurrence repairs initially wrong
+answers
+**And** at least one trace exits before loop2 when energy converges or the answer
+passes.
+
+### SCENARIO-LEARN-2844-BLOCKED: Missing Recurrence Backend Blocks Without Deltas
+
+**Given** Exp 2836, FoVer, MBPP, and verifier preconditions are available
+**But** no live recurrence backend is attached
+**When** the Exp 2844 pilot runs
+**Then** `honest_verdict` is `blocked_live_recurrence_backend`
+**And** `n_examples=0`, `per_example_trace=[]`, and the delta fields are zero
+sentinels with a methodology note explaining that no recurrence was measured.
+
+## Implementation Status (REQ-LEARN-2844)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2844 | Implemented (`python/carnot/eval/loopus_fr11_self_learning_pilot.py`, `scripts/experiment_2844_loopus_fr11_self_learning_pilot.py`) | Implemented (`tests/python/test_experiment_2844_loopus_fr11_self_learning_pilot.py`) |
