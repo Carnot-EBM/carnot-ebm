@@ -3157,6 +3157,63 @@ Then it writes `results/experiment_2837_fover_memory_leakage_v3.json` with
 `per_seed_results` list, populated `preconditions_checked`, and no inferred
 learning contribution.
 
+### REQ-VERIFY-2850: FoVer Dual-Condition Integrity Rerun
+
+The repository shall provide an Exp 2850 FoVer dual-condition integrity runner
+that writes `results/experiment_2850_fover_dual_condition_integrity_v4.json`
+for the same 1000-example FoVer subset protocol and replication seeds
+`[42, 137, 271, 314, 1729]` without claiming live-model provenance unless a
+local LLM is actually invoked.
+
+Before scoring, the runner MUST check `data/fover_corpus.jsonl`,
+`results/nexus_constraint_memory_v2.json` when present, and the local
+`sklearn`/`numpy` metric dependencies. If the FoVer corpus is missing or has
+fewer than 1000 labeled rows, the runner MUST write
+`honest_verdict="blocked_fover_dataset"` with populated
+`preconditions_checked` and null AUROC fields.
+
+For successful dataset-only scoring, the runner MUST score Condition A with
+production FR-11 state visible, score Condition B after FR-11/NEXUS/session
+state files are non-destructively moved aside, restore every state file, and
+record whether restored SHA256 values match the initial manifest. The artifact
+MUST set `live_model_invoked=false`, `compute_bound_claim=false`, omit
+GGUF/CUDA/model-spec claims, include a top-level `random_seed`, compute
+`reproducibility_checksum` from input hashes, FR-11 state hashes, seeds, and
+score rows, and include the `scripts/adversarial_verify.py` result summary
+when the script is available.
+
+The artifact MUST include `honest_verdict`,
+`condition_a_production_auroc_mean`,
+`condition_a_production_auroc_std`,
+`condition_b_architecture_only_auroc_mean`,
+`condition_b_architecture_only_auroc_std`, `learning_contribution`,
+`per_verifier_learning_contribution`, `n_examples`, `n_seeds`,
+`random_seed`, `random_seeds_used`, `reproducibility_checksum`,
+`fr11_state_files`, `state_files_restored_sha_match`,
+`live_model_invoked`, `compute_bound_claim`, `preconditions_checked`,
+`duration_s`, `adversarial_verify_passed`, `adversarial_verify_flags`, and
+`run_date`.
+
+### SCENARIO-VERIFY-2850: Dataset-Only Rerun Does Not Overclaim Runtime
+
+Given the FoVer corpus has at least 1000 labeled rows and FR-11 state files are
+present,
+When the Exp 2850 runner completes all five seeds,
+Then it writes `results/experiment_2850_fover_dual_condition_integrity_v4.json`
+with complete dual-condition AUROC summaries, restored state hashes, a
+score-row-derived reproducibility checksum, `live_model_invoked=false`,
+`compute_bound_claim=false`, no GGUF/CUDA/model-spec claims, and adversarial
+verification flags included.
+
+### SCENARIO-VERIFY-2850-BLOCKED: Missing FoVer Dataset Blocks Without Metrics
+
+Given `data/fover_corpus.jsonl` is missing or has fewer than 1000 labeled rows,
+When the Exp 2850 runner executes,
+Then it writes `results/experiment_2850_fover_dual_condition_integrity_v4.json`
+with `honest_verdict="blocked_fover_dataset"`, null condition AUROC metrics,
+empty per-verifier learning contributions, populated precondition evidence,
+`live_model_invoked=false`, and `compute_bound_claim=false`.
+
 ### REQ-VERIFY-2829: MBPP Dual-Memory Ensemble Evaluation
 
 The repository shall provide an Exp 2829 MBPP dual-memory runner that writes
