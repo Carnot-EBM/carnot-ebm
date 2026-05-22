@@ -1,0 +1,72 @@
+{
+  "artifact": "fr11_recmem_recurrence_trigger_2881_memory",
+  "consolidations": [
+    {
+      "cluster_id": "cluster-dd5724c744ba",
+      "deterministic_summary": "Recurring fover_verifier motif across 2 source(s); support=2; mean_energy_delta=0.25.",
+      "event_ids": [
+        "exp2868::HumanEval_99",
+        "exp2868::arc_challenge_0001"
+      ],
+      "localized_violations": [
+        "fover_verifier"
+      ],
+      "mean_energy_delta": 0.25,
+      "motif_key": "fover_verifier",
+      "similarity_floor": 0.777777777778,
+      "sources": [
+        "arc_challenge",
+        "humaneval"
+      ],
+      "support": 2
+    },
+    {
+      "cluster_id": "cluster-ebe5782f9a53",
+      "deterministic_summary": "Recurring factuality_mismatch motif across 2 source(s); support=3; mean_energy_delta=0.366666666667.",
+      "event_ids": [
+        "exp2869::fever-51125",
+        "exp2869::halueval-46-hallucinated",
+        "exp2869::fever-51477"
+      ],
+      "localized_violations": [
+        "factuality_mismatch"
+      ],
+      "mean_energy_delta": 0.366666666667,
+      "motif_key": "factuality_mismatch",
+      "similarity_floor": 0.777777777778,
+      "sources": [
+        "FEVER",
+        "HaluEval"
+      ],
+      "support": 3
+    }
+  ],
+  "event_motif_counts": {
+    "clean": 8,
+    "factuality_mismatch": 3,
+    "fover_verifier": 2
+  },
+  "live_llm_called": false,
+  "n_events_ingested": 13,
+  "random_seed": 2881,
+  "recurrence_threshold": 0.6,
+  "run_date": "20260522",
+  "schema": "carnot.fr11.recmem_recurrence_memory.v1",
+  "threshold_sensitivity": [
+    {
+      "n_consolidations_if_guards_pass": 2,
+      "n_recurrence_clusters": 2,
+      "threshold": 0.5
+    },
+    {
+      "n_consolidations_if_guards_pass": 2,
+      "n_recurrence_clusters": 2,
+      "threshold": 0.6
+    },
+    {
+      "n_consolidations_if_guards_pass": 2,
+      "n_recurrence_clusters": 2,
+      "threshold": 0.7
+    }
+  ]
+}

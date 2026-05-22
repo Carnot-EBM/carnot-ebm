@@ -6242,3 +6242,64 @@ not inferred from live repair
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2869 | Implemented (`python/carnot/eval/fr11_continuous_self_learning_replay_v3.py`) | Implemented (`tests/python/test_experiment_2869_fr11_continuous_self_learning_replay_v3.py`) |
+
+## REQ-LEARN-2881: FR-11 RecMem-Style Recurrence-Triggered Consolidation
+
+**Given** Exp 2868 exposes the offline recurrence backend and Exp 2869 provides
+the prior FR-11 replay artifact
+**When** Exp 2881 ingests deterministic offline verifier-feedback events
+**Then** it SHALL store each event in a subconscious buffer using only
+deterministic verifier metadata and lightweight local text features
+**And** it SHALL trigger consolidation only for sustained recurrence clusters of
+semantically similar verifier failures or constraint motifs
+**And** it SHALL avoid live LLM calls while reporting memory drift, duplicate,
+contradiction, non-forgetting, and token-cost proxy metrics.
+
+### REQ-LEARN-2881 Sub-requirements
+
+- REQ-LEARN-2881-1: `SubconsciousRecurrenceBuffer` SHALL ingest replay events
+  without consolidating them eagerly and SHALL derive deterministic motif
+  features from source, verifier failure, localized violation, and
+  early-exit metadata.
+- REQ-LEARN-2881-2: `RecurrenceDetector` SHALL form recurrence clusters when
+  event-feature similarity is at least `recurrence_threshold` and SHALL require
+  sustained support before a cluster is consolidation-ready.
+- REQ-LEARN-2881-3: The consolidation workflow SHALL write only a dedicated
+  Exp 2881 memory artifact, hash memory state before and after the write, and
+  report duplicate rate, contradiction rate, and non-forgetting regressions
+  over the prior replay rows.
+- REQ-LEARN-2881-4: The token-cost proxy SHALL count eager consolidation calls
+  avoided, bytes or token-like units before and after consolidation, and
+  threshold sensitivity without using a live LLM.
+- REQ-LEARN-2881-5: The terminal artifact
+  `results/experiment_2881_fr11_recmem_recurrence_trigger_v1.json` SHALL
+  include `honest_verdict`, `continuous_self_learning_task=true`,
+  `recmem_trigger_ready`, `source_artifacts`, `recurrence_threshold`,
+  `n_events_ingested`, `n_recurrence_clusters`, `n_consolidations_triggered`,
+  `eager_consolidations_avoided`, `token_reduction_proxy_pct`,
+  `memory_hash_before`, `memory_hash_after`, `contradiction_rate`,
+  `duplicate_rate`, `forgetting_regression_count`, `live_llm_called=false`,
+  `tests_run`, `field_principles`, `run_date`, and `duration_s`.
+
+### SCENARIO-LEARN-2881: Recurring Failure Motifs Trigger Consolidation
+
+**Given** offline replay events contain repeated factuality-mismatch verifier
+failures plus non-recurring clean rows
+**When** the recurrence detector runs at the configured threshold
+**Then** only the recurring failure motif cluster is consolidated
+**And** eager consolidation calls are avoided for the remaining buffered events
+**And** memory hashes differ after the dedicated consolidation memory write.
+
+### SCENARIO-LEARN-2881-GUARD: Drift Guards Block Unsafe Consolidation
+
+**Given** a candidate cluster contains contradictory before/after correctness
+metadata for the same motif or regresses prior replay energy
+**When** Exp 2881 evaluates drift guards
+**Then** the artifact reports a non-zero contradiction or forgetting metric and
+`recmem_trigger_ready=false`.
+
+## Implementation Status (REQ-LEARN-2881)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2881 | Implemented (`python/carnot/eval/fr11_recmem_recurrence_trigger_v1.py`) | Implemented (`tests/python/test_experiment_2881_fr11_recmem_recurrence_trigger_v1.py`) |

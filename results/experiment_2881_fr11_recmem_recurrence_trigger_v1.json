@@ -1,0 +1,143 @@
+{
+  "artifact": "experiment_2881_fr11_recmem_recurrence_trigger_v1",
+  "consolidated_memory_path": "results/fr11_recmem_recurrence_trigger_2881_memory.json",
+  "continuous_self_learning_task": true,
+  "contradiction_rate": 0.0,
+  "duplicate_rate": 0.769230769231,
+  "duration_s": 0.099412441254,
+  "eager_consolidations_avoided": 11,
+  "field_principles": {
+    "continuous_self_learning_task": "True because this is the FR-11 memory task.",
+    "contradiction_rate": "Fraction of motif groups with conflicting final correctness labels.",
+    "duplicate_rate": "Fraction of buffered events repeating an already-seen motif key.",
+    "duration_s": "Real wall-clock duration; no sleep padding.",
+    "eager_consolidations_avoided": "Per-event eager consolidation calls not made.",
+    "forgetting_regression_count": "Rows whose final energy or correctness regressed.",
+    "honest_verdict": "Terminal complete:/blocked_ verdict; no inferred live success.",
+    "live_llm_called": "False because summaries are deterministic metadata strings.",
+    "memory_hash_after": "Hash of prior replay memory plus the Exp 2881 memory file after write.",
+    "memory_hash_before": "Hash of prior replay memory plus the Exp 2881 memory file before write.",
+    "n_consolidations_triggered": "Clusters actually written into the consolidated memory state.",
+    "n_events_ingested": "Events accepted into the subconscious buffer before any consolidation.",
+    "n_recurrence_clusters": "Sustained failure-motif clusters detected before drift gating.",
+    "recmem_trigger_ready": "True only when recurrence support exists and drift guards report no contradiction or forgetting regression.",
+    "recurrence_threshold": "Feature-similarity threshold used by the recurrence detector.",
+    "source_artifacts": "Existing offline replay artifacts loaded before consolidation.",
+    "token_reduction_proxy_pct": "Deterministic byte/token-like proxy reduction vs eager writes."
+  },
+  "forgetting_regression_count": 0,
+  "honest_verdict": "complete: recurrence-triggered consolidation ready without live LLM",
+  "live_llm_called": false,
+  "memory_hash_after": "04d4a12bf682972e52dfa129b0eebcde1103e03f66832c72bde014fcdc25ef9c",
+  "memory_hash_before": "58ce27a631d799b99f4bb6f2193e75dcf5282ac681643dd0ad8767acabc5dc63",
+  "methodology_note": "Offline RecMem timing prototype over deterministic verifier metadata. No live LLM, generator, model weights, or eager replay writes are used.",
+  "n_consolidations_triggered": 2,
+  "n_events_ingested": 13,
+  "n_recurrence_clusters": 2,
+  "preconditions_checked": [
+    {
+      "check": "repo_root",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot",
+      "passed": true
+    },
+    {
+      "check": "exp2868_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2868_offline_recurrence_backend_adapter_v2.json",
+      "passed": true
+    },
+    {
+      "check": "exp2868_backend_module_path",
+      "observed": "carnot.eval.offline_recurrence_backend_adapter_v2",
+      "passed": true
+    },
+    {
+      "check": "offline_backend_imported",
+      "observed": "carnot.eval.offline_recurrence_backend_adapter_v2",
+      "passed": true
+    },
+    {
+      "check": "exp2869_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2869_fr11_continuous_self_learning_replay_v3.json",
+      "passed": true
+    },
+    {
+      "check": "exp2869_replay_ready",
+      "observed": "complete: offline verifier-feedback replay lowered energy with no forgetting",
+      "passed": true
+    },
+    {
+      "check": "exp2869_memory_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/fr11_continuous_self_learning_replay_2869_memory.json",
+      "passed": true
+    },
+    {
+      "check": "exp2865_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2865_cross_corpus_matrix_v5.json",
+      "passed": true
+    },
+    {
+      "check": "exp2865_clean_corpora",
+      "observed": [
+        "FoVer",
+        "HaluEval/FEVER"
+      ],
+      "passed": true
+    },
+    {
+      "check": "clean_replay_corpus",
+      "observed": 9,
+      "passed": true
+    },
+    {
+      "check": "offline_events_loaded",
+      "observed": 13,
+      "passed": true
+    },
+    {
+      "check": "permitted_memory_changes",
+      "observed": [
+        "results/fr11_recmem_recurrence_trigger_2881_memory.json"
+      ],
+      "passed": true
+    }
+  ],
+  "recmem_trigger_ready": true,
+  "recurrence_threshold": 0.6,
+  "reproducibility_checksum": "2f6fcddf7994a05697769af94ad056168ee0ded906dcb776da7ab9c15e980820",
+  "run_date": "20260522",
+  "schema": "carnot.fr11.recmem_recurrence_trigger.v1",
+  "source_artifacts": [
+    "results/experiment_2868_offline_recurrence_backend_adapter_v2.json",
+    "results/experiment_2869_fr11_continuous_self_learning_replay_v3.json",
+    "results/fr11_continuous_self_learning_replay_2869_memory.json"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_2881_fr11_recmem_recurrence_trigger_v1.py -q --no-cov (passed: 6 passed)",
+    ".venv/bin/coverage run -m pytest tests/python/test_experiment_2881_fr11_recmem_recurrence_trigger_v1.py -q -n 0 --no-cov (passed: 6 passed)",
+    ".venv/bin/coverage report --fail-under=100 -m python/carnot/eval/fr11_recmem_recurrence_trigger_v1.py (passed: 100% new-code coverage)",
+    "ruff check python/carnot/eval/fr11_recmem_recurrence_trigger_v1.py tests/python/test_experiment_2881_fr11_recmem_recurrence_trigger_v1.py (passed)",
+    "ruff format --check python/carnot/eval/fr11_recmem_recurrence_trigger_v1.py tests/python/test_experiment_2881_fr11_recmem_recurrence_trigger_v1.py (passed)",
+    ".venv/bin/python scripts/check_spec_coverage.py (failed: 444 pre-existing tests missing spec traceability; new Exp 2881 tests include REQ/SCENARIO refs)",
+    ".venv/bin/pytest tests/python -q (failed/interrupted after 38:26: 163 failed, 23950 passed, 111 skipped, 10 errors; observed Z3 segfault/xdist worker crashes/missing onnx)"
+  ],
+  "threshold_sensitivity": [
+    {
+      "n_consolidations_if_guards_pass": 2,
+      "n_recurrence_clusters": 2,
+      "threshold": 0.5
+    },
+    {
+      "n_consolidations_if_guards_pass": 2,
+      "n_recurrence_clusters": 2,
+      "threshold": 0.6
+    },
+    {
+      "n_consolidations_if_guards_pass": 2,
+      "n_recurrence_clusters": 2,
+      "threshold": 0.7
+    }
+  ],
+  "token_proxy_after": 377,
+  "token_proxy_before": 5131,
+  "token_reduction_proxy_pct": 92.65250438511
+}
