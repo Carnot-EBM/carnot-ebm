@@ -321,5 +321,13 @@
     "torch_version": "2.11.0+cu128"
   },
   "total_tokens_generated": 2,
-  "usable_response_count": 1
+  "usable_response_count": 1,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=11.530778 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
