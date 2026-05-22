@@ -19327,3 +19327,58 @@ real wall-clock duration.
 **Implementation Status:** Implemented (Exp 2843)
 
 **Spec traces:** REQ-VERIFY-2843, SCENARIO-VERIFY-2843, Exp 2843
+
+## REQ-VERIFY-2858: Clean Bounded-Prefix/EPR Proxy Artifact
+
+**Capability:** verifiable-reasoning / honest proxy artifact reporting
+
+Carnot SHALL provide an Exp 2858 clean rerun of the bounded-prefix/EPR proxy
+that evaluates local FoVer-style labels without inheriting live SOTA model
+provenance from earlier artifacts and without claiming exact BEAVER soundness.
+
+**Requirements:**
+
+- REQ-VERIFY-2858-1: The runner SHALL check the explicit preconditions
+  `cd /home/ianblenke/github.com/ianblenke/carnot`,
+  `test -f data/fover_corpus.jsonl`, and
+  `.venv/bin/python3 -c "import sklearn, numpy; print('metrics ok')"` before
+  scoring. If the FoVer corpus is missing or insufficient for the requested
+  sample size, it SHALL write `honest_verdict="blocked_fover_dataset"` with
+  `preconditions_checked` and SHALL NOT infer metrics.
+- REQ-VERIFY-2858-2: When preconditions pass, the runner SHALL evaluate at
+  least 100 local FoVer-style labeled examples with a fixed `random_seed`,
+  compute a bounded-prefix proxy AUROC, and record the actual wall-clock
+  duration.
+- REQ-VERIFY-2858-3: The artifact SHALL set `beaver_exact=false`,
+  `exact_beaver_implemented=false`, and `live_model_invoked=false`; it SHALL
+  exclude `model_specs`, GGUF paths, CUDA fields, and other live-inference
+  provenance unless live inference is actually performed.
+- REQ-VERIFY-2858-4: The artifact
+  `results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json` SHALL
+  include `honest_verdict`, `beaver_exact`, `exact_beaver_implemented`,
+  `bounded_prefix_proxy_auc`, `entropy_production_auc`, `n_examples`,
+  `random_seed`, `reproducibility_checksum`, `live_model_invoked`,
+  `claim_boundary`, `preconditions_checked`, `duration_s`,
+  `adversarial_verify_passed`, `adversarial_verify_flags`, and
+  `run_date="20260522"`.
+- REQ-VERIFY-2858-5: If `scripts/adversarial_verify.py` is available, the
+  runner SHALL run it on the written artifact and persist its pass/fail status
+  and flags back into the artifact.
+
+### SCENARIO-VERIFY-2858: Clean Proxy Artifact Avoids Live-Provenance Claims
+
+**Given** `data/fover_corpus.jsonl` exists and sklearn/numpy metrics imports
+successfully
+**When** the Exp 2858 runner evaluates the local bounded-prefix proxy
+**Then** it writes
+`results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json`
+**And** the artifact records the proxy AUROC, entropy-production AUROC field,
+fixed seed, checksum, preconditions, adversarial-verification fields, and real
+duration
+**And** it explicitly records `beaver_exact=false`,
+`exact_beaver_implemented=false`, and `live_model_invoked=false`
+**And** it contains no live SOTA model provenance fields.
+
+**Implementation Status:** Planned (Exp 2858)
+
+**Spec traces:** REQ-VERIFY-2858, SCENARIO-VERIFY-2858, Exp 2858

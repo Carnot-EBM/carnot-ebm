@@ -1,0 +1,79 @@
+{
+  "adversarial_verify_flags": [],
+  "adversarial_verify_passed": true,
+  "artifact": "experiment_2858_beaver_epr_clean_bounded_proxy_v2",
+  "beaver_exact": false,
+  "bounded_prefix_proxy_auc": 0.74,
+  "claim_boundary": "Proxy only: local bounded-prefix FoVer scoring; no exact BEAVER frontier proof and no live model inference.",
+  "duration_s": 0.2215613559819758,
+  "entropy_production_auc": 0.5811688311688312,
+  "entropy_production_measured": true,
+  "exact_beaver_implemented": false,
+  "honest_verdict": "complete: clean bounded-prefix/EPR proxy evaluated on local FoVer labels",
+  "live_model_invoked": false,
+  "n_examples": 100,
+  "preconditions_checked": [
+    {
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot",
+      "passed": true,
+      "step": "cd /home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+      "passed": true,
+      "step": "test -f data/fover_corpus.jsonl"
+    },
+    {
+      "observed": "metrics ok",
+      "passed": true,
+      "step": ".venv/bin/python3 -c \"import sklearn, numpy; print('metrics ok')\""
+    }
+  ],
+  "random_seed": 42,
+  "reproducibility_checksum": "5ddf7d92a78e6486417bcf9bf3e66b9922022a98db2540f83683d5b05b37d2e0",
+  "run_date": "20260522",
+  "sample_row_count": 5,
+  "sample_rows": [
+    {
+      "bounded_prefix_proxy_score": 1.0,
+      "checked_claim_count": 1,
+      "example_id": "HumanEval_14",
+      "false_claim_count": 1,
+      "first_violation_prefix_length": 458,
+      "label": 1
+    },
+    {
+      "bounded_prefix_proxy_score": 1.0,
+      "checked_claim_count": 1,
+      "example_id": "arc_challenge_0107",
+      "false_claim_count": 1,
+      "first_violation_prefix_length": 472,
+      "label": 1
+    },
+    {
+      "bounded_prefix_proxy_score": 0.0,
+      "checked_claim_count": 1,
+      "example_id": "gsm8k_17_2_0",
+      "false_claim_count": 0,
+      "first_violation_prefix_length": null,
+      "label": 0
+    },
+    {
+      "bounded_prefix_proxy_score": 1.0,
+      "checked_claim_count": 1,
+      "example_id": "gsm8k_3269",
+      "false_claim_count": 1,
+      "first_violation_prefix_length": 320,
+      "label": 1
+    },
+    {
+      "bounded_prefix_proxy_score": 0.0,
+      "checked_claim_count": 1,
+      "example_id": "gsm8k_809_3_0",
+      "false_claim_count": 0,
+      "first_violation_prefix_length": null,
+      "label": 0
+    }
+  ],
+  "schema": "carnot.clean_bounded_prefix_proxy_v2"
+}
