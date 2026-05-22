@@ -3385,6 +3385,70 @@ results, per-verifier AUROC lists for both conditions, a non-null calibrated
 BLEURT threshold, restored FR-11 state hashes, baseline comparisons, and an
 `honest_verdict` prefixed `complete:`.
 
+### REQ-VERIFY-2840: TruthfulQA Dual-Condition v4 Local-Scorer Retry
+
+The repository shall provide an Exp 2840 TruthfulQA dual-condition v4 runner
+that writes `results/experiment_2840_truthfulqa_dual_condition_v4.json` for
+exactly 200 questions from the TruthfulQA generation split and the replication
+seeds `[42, 137, 271, 314, 1729]`.
+
+Before any candidate generation, local semantic scoring, or verifier scoring,
+the runner MUST load `results/experiment_2836_sota_runtime_preflight.json`,
+assert `sota_runtime_ready=true`, use the artifact's `selected_python`, record
+a usable model path for at least one mandated SOTA GGUF
+(`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`), confirm CUDA is available from the selected
+Python, confirm the TruthfulQA generation split is available, confirm a
+reproducible local scorer is available (BLEURT-base-128 or an explicitly
+documented local semantic scorer), confirm FR-11/NEXUS/session state files are
+present, and confirm Exp 2823 is retired/fabricated rather than a usable data
+source. If any precondition fails, it MUST write a terminal
+`blocked_<resource>` artifact with populated `preconditions_checked` and no
+inferred AUROC, calibration, candidate, label, duration, or per-verifier scores.
+
+For successful runs, the runner MUST generate or load deterministic
+TruthfulQA candidate answers under the fixed seeds, score each candidate
+against `best_answer` or a recorded reference using the local scorer, record
+the scorer name, version, and reproducibility metadata, and score the same
+question/candidate/label rows under Condition A (production FR-11 state) and
+Condition B (architecture-only after FR-11/NEXUS/session state is
+non-destructively moved aside and Python is restarted). The runner MUST NOT
+use a closed-weight LLM judge and MUST NOT read metrics from the retired
+Exp 2823 artifact as evidence.
+
+The artifact MUST include `honest_verdict`, `n_questions=200`, `local_scorer`,
+`condition_a_production_auroc_mean`,
+`condition_b_architecture_only_auroc_mean`, `learning_contribution`,
+`retired_exp2823_not_used=true`, `model_specs`, `preconditions_checked`, real
+`duration_s`, per-verifier AUROC for both conditions, calibration summary,
+per-seed results, FR-11 state-file hashes, restored-state proof, field
+principle annotations, and an honest methodology note.
+
+### SCENARIO-VERIFY-2840-BLOCKED: Missing TruthfulQA v4 Resources Block Honestly
+
+Given Exp 2836 may report a ready SOTA runtime but the TruthfulQA generation
+split, CUDA runtime, mandated SOTA GGUF path, local scorer, FR-11 state files,
+or Exp 2823 retirement evidence are unavailable,
+When the Exp 2840 runner executes,
+Then it writes `results/experiment_2840_truthfulqa_dual_condition_v4.json`
+with `honest_verdict` prefixed `blocked_`, `n_questions=200`, populated
+`preconditions_checked`, `retired_exp2823_not_used=true`, null AUROC and
+calibration metrics, empty per-verifier AUROC maps, and no inferred candidate
+labels.
+
+### SCENARIO-VERIFY-2840-LIVE: Successful TruthfulQA v4 Run Reports Dual Conditions
+
+Given Exp 2836 reports a ready SOTA runtime, a mandated SOTA GGUF is available,
+the TruthfulQA generation split and a reproducible local scorer are available,
+FR-11 state files exist, and the retired Exp 2823 artifact is confirmed unused,
+When the Exp 2840 runner evaluates all five seeds over 200 questions,
+Then the artifact reports complete production and architecture-only AUROC
+summaries from locally scored labels, per-verifier AUROC values for both
+conditions, calibration and local-scorer metadata,
+`learning_contribution = A - B`, the mandated SOTA model path used by the
+scorer or generator path, `retired_exp2823_not_used=true`, and
+`state_files_restored_sha_match=true`.
+
 ### REQ-VERIFY-2832: Cross-Corpus Verifier Dual-Condition Matrix
 
 The repository shall provide an Exp 2832 analyzer that reads only the real
