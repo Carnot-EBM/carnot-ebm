@@ -4691,3 +4691,57 @@ non-clean corpus rows retained in `primary_corpus_results`, Exp 2869's
 energy/correctness and mutation boundary preserved in `self_learning_summary`,
 exactly three next actions, and no modification to `research-roadmap.yaml` or
 `scripts/research_conductor.py`.
+
+### REQ-REPORT-2873: Archive Milestone 2026.05.271 and Confirm 2026.05.272 Activation
+
+The repository shall provide an Exp 2873 archive/activation generator that
+writes `results/experiment_2873_archive_v271_activate_v272.json`.
+
+The generator must read `research-complete.yaml` and determine whether
+milestone `2026.05.271` already has a completed archive block. If the block is
+present, the generator must set `archive_already_present=true` and avoid
+modifying `research-complete.yaml`. If the block is absent, the generator may
+append a minimal completed archive row for milestone `2026.05.271` from
+`results/experiment_2872_capstone_v271.json` without modifying
+`research-roadmap.yaml`.
+
+The generator must confirm milestone `2026.05.272` and milestone doc
+`openspec/change-proposals/research-roadmap-vNEXT.md` from
+`research-roadmap-next.yaml` when that file exists. If
+`research-roadmap-next.yaml` has already been activated and removed, it must
+read the active `research-roadmap.yaml` as a fallback while still leaving that
+roadmap unmodified.
+
+The terminal artifact must include:
+
+- `honest_verdict`, prefixed with `complete:` or `blocked:`
+- `archived_milestone`, equal to `2026.05.271`
+- `activated_milestone`, equal to `2026.05.272`
+- `archive_already_present`
+- `capstone_source`, equal to `results/experiment_2872_capstone_v271.json`
+- `paper_ready_from_capstone`
+- `clean_artifacts_from_capstone`
+- `blocked_artifacts_from_capstone`
+- `missing_artifacts_from_capstone`
+- `adversarially_flagged_artifacts_from_capstone`
+- `headline_eligible_rows_from_capstone`
+- `top_3_next_actions`
+- `field_principles`
+- `run_date`, equal to `20260522`
+- `duration_s`, a real wall-clock duration for the archive generator run
+
+#### SCENARIO-REPORT-2873: Existing .271 Archive Confirms Active .272 Roadmap
+
+**Given** `research-complete.yaml` already contains a completed
+`2026.05.271` archive row
+**And** `research-roadmap-next.yaml` may already have been activated into
+`research-roadmap.yaml`
+**When** the Exp 2873 archive generator runs
+**Then** it writes `results/experiment_2873_archive_v271_activate_v272.json`
+with `archive_already_present=true`, `archived_milestone=2026.05.271`,
+`activated_milestone=2026.05.272`, paper readiness, clean artifact, blocked
+artifact, missing artifact, adversarially flagged artifact, headline-eligible
+row, and next-action fields copied from
+`results/experiment_2872_capstone_v271.json`, exactly three next actions, field
+principles describing the archive fields, and no modification to
+`research-roadmap.yaml` or `scripts/research_conductor.py`.
