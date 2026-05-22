@@ -711,6 +711,45 @@ CPU-only load as headline runtime evidence.
 **And** the artifact still records the exact missing mandated model IDs and
 does not use legacy small models to satisfy the pair or runtime gate.
 
+### REQ-INFER-SOTA-014: Exp 2870 SOTA Energy Baseline Micro-Panel
+
+The system SHALL provide an Exp 2870 live SOTA GGUF micro-panel artifact that
+runs only after
+`results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json` reports
+`sota_runtime_ready_v3=true`.  The runner SHALL call
+`cached_sota_pair(gpu_indices=(0, 1))` first, SHALL use no legacy small model
+for headline evidence, SHALL include at least one mandated SOTA GGUF from
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` in the live `model_specs`, and SHALL select a
+deterministic 10-20 row local micro-panel from `data/eval_manifests/` or FoVer
+data.  It SHALL generate bounded greedy responses, capture first-token
+logprob/top-k telemetry when the runtime exposes it, compute first-token
+confidence and spilled/marginalized-energy-style logit baselines only from real
+telemetry, and SHALL record `blocked_logprobs_unavailable` instead of
+fabricating metrics when logits/logprobs are unavailable.
+
+The artifact SHALL be written to
+`results/experiment_2870_sota_energy_baseline_micro_panel_v1.json`; SHALL make
+no full-benchmark claim; and SHALL expose `honest_verdict`,
+`micro_panel_ready`, `live_model_invoked`, `model_specs`, `models_used`,
+`n_examples`, `first_token_confidence_available`, `spilled_energy_available`,
+`first_token_confidence_auroc`, `spilled_energy_auroc`,
+`usable_response_count`, `blocked_metrics`, `sample_rows`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`, `field_principles`,
+`run_date`, and `duration_s`.
+
+### SCENARIO-INFER-SOTA-014-001: Live Micro-Panel Reports Cheap Logit Signals
+
+**Given** Exp 2862 reports `sota_runtime_ready_v3=true`
+**And** a mandated local SOTA GGUF model is resolved from `cached_sota_pair()`
+or from the Exp 2862 selected model evidence
+**When** Exp 2870 runs a deterministic 10-20 example micro-panel with bounded
+greedy decoding
+**Then** the artifact records live model invocation, model provenance, sample
+rows, response correctness labels, first-token confidence availability, spilled
+energy availability, AUROC values when both labels and telemetry are usable,
+and explicit blocked metrics for unsupported telemetry or undefined AUROC.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -792,6 +831,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-011 | Proposed | Proposed |
 | REQ-INFER-SOTA-012 | Implemented (`python/carnot/reporting/sota_runtime_preflight.py`) | Implemented (`tests/python/test_experiment_2836_sota_runtime_preflight.py`) |
 | REQ-INFER-SOTA-013 | Implemented (`python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py`) | Implemented (`tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py`) |
+| REQ-INFER-SOTA-014 | Planned | Planned |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 

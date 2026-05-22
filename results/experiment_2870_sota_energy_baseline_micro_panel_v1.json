@@ -1,0 +1,231 @@
+{
+  "artifact": "experiment_2870_sota_energy_baseline_micro_panel_v1",
+  "blocked_metrics": [
+    "blocked_logprobs_unavailable"
+  ],
+  "duration_s": 8.652873,
+  "field_principles": {
+    "blocked_metrics": "Missing logprobs produce blocked_logprobs_unavailable instead of proxy metric fabrication.",
+    "claim_boundary": "Tiny live micro-panel only; no full-benchmark or headline AUROC claim.",
+    "duration_s": "Measured wall-clock duration; no sleep padding.",
+    "first_token_confidence_auroc": "Computed as AUROC of 1 - first-token confidence against hallucination_label=1.",
+    "model_selection": "cached_sota_pair() is attempted first; Exp 2862 selected mandated GGUF is fallback evidence when only one model is cached.",
+    "spilled_energy_auroc": "Computed from real token logprobs only; higher spilled energy predicts hallucination_label=1."
+  },
+  "first_token_confidence_auroc": null,
+  "first_token_confidence_available": false,
+  "honest_verdict": "micro_panel_complete_no_full_benchmark_claim",
+  "live_model_invoked": true,
+  "micro_panel_ready": true,
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "source": "exp2862_selected_model_fallback"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "n_examples": 10,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json",
+      "resource": "exp2862_sota_runtime_ready_v3"
+    },
+    {
+      "available": false,
+      "detail": null,
+      "resource": "cached_sota_pair"
+    },
+    {
+      "available": true,
+      "detail": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "resource": "mandated_sota_model_specs"
+    },
+    {
+      "available": true,
+      "detail": "selected=10 requested=10",
+      "resource": "deterministic_micro_panel"
+    },
+    {
+      "available": false,
+      "detail": "rows_with_logprobs=0",
+      "resource": "generation_logprobs"
+    }
+  ],
+  "random_seed": 2870,
+  "reproducibility_checksum": "8762b3f0a9ad0c98c33de5968a259df173ff934f37f4f714d73bf9173397f2b3",
+  "run_date": "20260522",
+  "sample_rows": [
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-156721",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-18534",
+      "expected_answer": "REFUTES",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-61991",
+      "expected_answer": "UNKNOWN",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-84514",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-144383",
+      "expected_answer": "REFUTES",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-54940",
+      "expected_answer": "UNKNOWN",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-182889",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-204793",
+      "expected_answer": "REFUTES",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-175281",
+      "expected_answer": "UNKNOWN",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    },
+    {
+      "dataset": "FEVER",
+      "example_id": "fever-32579",
+      "expected_answer": "SUPPORTS",
+      "first_token_confidence": null,
+      "hallucination_label": 1,
+      "is_correct": false,
+      "logprobs_available": false,
+      "marginalized_energy": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "predicted_answer": null,
+      "response_text": "",
+      "source_path": "data/eval_manifests/fever_20260522.jsonl",
+      "spilled_energy": null,
+      "tokens_generated": 0
+    }
+  ],
+  "schema_version": 1,
+  "spilled_energy_auroc": null,
+  "spilled_energy_available": false,
+  "usable_response_count": 0
+}
