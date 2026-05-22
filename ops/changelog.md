@@ -7058,3 +7058,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: BEAVER/EPR Bounded-Prefix Verifier Probe (gated on exp2836 SOTA runtime) (✅ Complete) — honest_verdict=complete: bounded-prefix/EPR proxy evaluated on local FoVer-style labels; results/experiment_2843_beaver_epr_bounded_probe.json
 - 2026-05-22: LoopUS-Style FR-11 External Recurrence Pilot (gated on exp2836 SOTA runtime) (⚠️ Blocked) — honest_verdict=blocked_live_recurrence_backend; results/experiment_2844_loopus_fr11_self_learning_pilot.json
 - 2026-05-22: LoopUS-Style FR-11 External Recurrence Pilot (gated on exp2836 SOTA runtime) (⚠️ Blocked) — honest_verdict=blocked_live_recurrence_backend; results/experiment_2844_loopus_fr11_self_learning_pilot.json
+- 2026-05-22: LoopUS-Style FR-11 External Recurrence Pilot (gated on exp2836 SOTA runtime) (⚠️ Blocked) — honest_verdict=blocked_live_recurrence_backend; results/experiment_2844_loopus_fr11_self_learning_pilot.json
