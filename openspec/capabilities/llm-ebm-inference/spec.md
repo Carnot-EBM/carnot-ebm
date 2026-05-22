@@ -650,6 +650,67 @@ booleans
 **And** the manifest still gates readiness on the selected `.venv/bin/python`
 rather than system `python3`.
 
+### REQ-INFER-SOTA-013: Exp 2862 SOTA Runtime Cache/Offload Resolver V3
+
+The system SHALL provide an Exp 2862 replacement runtime resolver artifact that
+gates downstream live-model work through `sota_runtime_ready_v3`.  The artifact
+SHALL be written to
+`results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json`; SHALL
+measure `.venv/bin/python` torch/CUDA availability, NVIDIA GPU inventory,
+`llama_cpp` import/version/origin, `llama_cpp.llama_cpp.llama_supports_gpu_offload()`,
+and `cached_sota_pair(gpu_indices=(0, 1))`; SHALL inspect both the local
+HuggingFace cache and project `models/` layout for the mandated GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`; and SHALL NOT modify
+`scripts/research_conductor.py`.
+
+The artifact SHALL expose `honest_verdict`, `sota_runtime_ready_v3`,
+`model_specs`, `selected_model_hf_id`, `selected_model_path`,
+`cached_sota_pair_returned_two_loadable_specs`,
+`llama_cpp_gpu_offload_verified`, `preconditions_checked`,
+`usable_response_count`, `total_tokens_generated`, `tokens_per_second`,
+`legacy_small_models_used_only_for_smoke`, `random_seed`,
+`reproducibility_checksum`, `tests_run`, `field_principles`, `run_date`, and
+`duration_s`.  `sota_runtime_ready_v3` SHALL be true only when the selected
+`.venv/bin/python` sees CUDA, `llama_cpp` reports GPU offload support, and at
+least one mandated local SOTA GGUF emits a non-empty bounded prompt response
+with one or more generated tokens.  Legacy small models MAY be named only as
+CPU-smoke context and SHALL never set `sota_runtime_ready_v3=true`.
+
+When `llama_cpp` imports but lacks GPU offload support, the artifact SHALL keep
+`llama_cpp_gpu_offload_verified=false`, SHALL NOT fake readiness, and SHALL
+record the exact reinstall command/environment needed to rebuild
+`llama-cpp-python` with CUDA support.  When fewer than two mandated models are
+cached, `cached_sota_pair_returned_two_loadable_specs` SHALL remain false even
+if a single mandated model is sufficient for the v3 runtime gate.
+
+### SCENARIO-INFER-SOTA-013-001: Single Mandated GPU Response Opens V3 Gate
+
+**Given** `.venv/bin/python` reports CUDA-capable torch
+**And** `llama_cpp` reports GPU offload support
+**And** at least one mandated SOTA GGUF exists locally
+**When** Exp 2862 runs one bounded prompt on that GGUF
+**Then** `sota_runtime_ready_v3` is true only if the response is non-empty and
+the artifact records the selected model path, generated token count,
+tokens-per-second, GPU memory evidence, and real wall-clock duration.
+
+### SCENARIO-INFER-SOTA-013-002: CPU-Only llama.cpp Blocks V3 Gate
+
+**Given** CUDA-capable torch and a mandated GGUF are available
+**But** `llama_cpp.llama_cpp.llama_supports_gpu_offload()` is false
+**When** Exp 2862 runs
+**Then** `sota_runtime_ready_v3` is false
+**And** the artifact documents the CUDA rebuild command instead of treating a
+CPU-only load as headline runtime evidence.
+
+### SCENARIO-INFER-SOTA-013-003: Missing Pair Is Recorded Separately
+
+**Given** exactly one mandated SOTA GGUF exists locally
+**When** `cached_sota_pair(gpu_indices=(0, 1))` returns `None`
+**Then** `cached_sota_pair_returned_two_loadable_specs` is false
+**And** the artifact still records the exact missing mandated model IDs and
+does not use legacy small models to satisfy the pair or runtime gate.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -729,6 +790,8 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-009 | Implemented | 7 Python |
 | REQ-INFER-SOTA-010 | Implemented (`python/carnot/reporting/live_sota_balanced_telemetry_v2.py`) | Implemented (`tests/python/test_experiment_1480_live_sota_balanced_telemetry_v2.py`) |
 | REQ-INFER-SOTA-011 | Proposed | Proposed |
+| REQ-INFER-SOTA-012 | Implemented (`python/carnot/reporting/sota_runtime_preflight.py`) | Implemented (`tests/python/test_experiment_2836_sota_runtime_preflight.py`) |
+| REQ-INFER-SOTA-013 | Implemented (`python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py`) | Implemented (`tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 

@@ -1,0 +1,325 @@
+{
+  "artifact": "experiment_2862_sota_runtime_cache_offload_resolver_v3",
+  "bounded_prompt_results": [
+    {
+      "attempted": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import json, subprocess, sys, time\nfrom llama_cpp import Llama, llama_cpp\ndef mem():\n    try:\n        out = subprocess.check_output([\n            'nvidia-smi', '--query-gpu=index,memory.used,memory.free',\n            '--format=csv,noheader,nounits'], text=True, timeout=5)\n        rows = []\n        for line in out.splitlines():\n            parts = [p.strip() for p in line.split(',')]\n            if len(parts) == 3:\n                rows.append({'index': int(parts[0]), 'memory_used_mib': int(parts[1]), 'memory_free_mib': int(parts[2])})\n        return rows\n    except Exception as exc:\n        return [{'error': f'{type(exc).__name__}: {exc}'}]\npath, hf_id = sys.argv[1], sys.argv[2]\ngpu = int(sys.argv[3])\nsupports_gpu = bool(llama_cpp.llama_supports_gpu_offload())\nbefore = mem()\nstarted = time.monotonic()\nllm = Llama(model_path=path, n_ctx=256, n_batch=64, n_ubatch=64, n_gpu_layers=-1, main_gpu=gpu, verbose=False)\nduring = mem()\nout = llm('Answer with only the number: what is 2+2?', max_tokens=16, temperature=0.0, seed=2862)\nduration = time.monotonic() - started\ntext = out.get('choices', [{}])[0].get('text', '')\ntokens = int(out.get('usage', {}).get('completion_tokens') or len(text.split()))\nllm.close()\nprint(json.dumps({\n    'attempted': True,\n    'usable': bool(text.strip()) and tokens > 0 and supports_gpu,\n    'gpu_backed': supports_gpu,\n    'hf_id': hf_id,\n    'model_path': path,\n    'response_text': text.strip(),\n    'tokens_generated': tokens,\n    'tokens_per_second': round(tokens / duration, 6) if duration > 0 else 0.0,\n    'duration_s': round(duration, 6),\n    'gpu_memory': {'before': before, 'during': during},\n}, sort_keys=True))\n",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "0"
+      ],
+      "duration_s": 8.588871,
+      "gpu_backed": true,
+      "gpu_memory": {
+        "before": [
+          {
+            "index": 0,
+            "memory_free_mib": 24122,
+            "memory_used_mib": 5
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 24122,
+            "memory_used_mib": 5
+          }
+        ],
+        "during": [
+          {
+            "index": 0,
+            "memory_free_mib": 15641,
+            "memory_used_mib": 8486
+          },
+          {
+            "index": 1,
+            "memory_free_mib": 15769,
+            "memory_used_mib": 8358
+          }
+        ]
+      },
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "response_text": "4",
+      "returncode": 0,
+      "stderr_summary": "ggml_cuda_init: found 2 CUDA devices (Total VRAM: 48252 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\n  Device 1: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\nllama_context: n_ctx_seq (256) < n_ctx_train (262144) -- the full capacity of the model will not be utilized\nllama_kv_cache_iswa: using full-size SWA cache (ref: https://github.com/ggml-org/llama.cpp/pull/13194#issuecomment-2868343055)\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\nllama_kv_cache: the V embeddings have different sizes across layers and FA is not enabled - padding V cache to 2048\n",
+      "stdout_summary": "{\"attempted\": true, \"duration_s\": 8.588871, \"gpu_backed\": true, \"gpu_memory\": {\"before\": [{\"index\": 0, \"memory_free_mib\": 24122, \"memory_used_mib\": 5}, {\"index\": 1, \"memory_free_mib\": 24122, \"memory_used_mib\": 5}], \"during\": [{\"index\": 0, \"memory_free_mib\": 15641, \"memory_used_mib\": 8486}, {\"index\": 1, \"memory_free_mib\": 15769, \"memory_used_mib\": 8358}]}, \"hf_id\": \"unsloth/gemma-4-26B-A4B-it-GGUF\", \"model_path\": \"/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf\", \"response_text\": \"4\", \"tokens_generated\": 2, \"tokens_per_second\": 0.232859, \"usable\": true}\n",
+      "tokens_generated": 2,
+      "tokens_per_second": 0.232859,
+      "usable": true
+    }
+  ],
+  "cache_inventory": [
+    {
+      "cache_status": "missing",
+      "candidate_count": 1,
+      "candidate_paths": [
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--Qwen3.6-35B-A3B-GGUF/.no_exist/a483e9e6cbd595906af30beda3187c2663a1118c/Qwen3.6-35B-A3B-Q4_K_M.gguf"
+      ],
+      "expected_quantization": "Q4_K_M",
+      "hf_candidate_count": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "missing_status": "missing_or_zero_byte_only",
+      "name": "Qwen3.6-35B-A3B",
+      "observed_quantization": null,
+      "path": null,
+      "project_candidate_count": 0,
+      "resolved_path": null,
+      "resolver_path": null,
+      "role": "moe",
+      "zero_byte_marker_count": 1
+    },
+    {
+      "cache_status": "missing",
+      "candidate_count": 0,
+      "candidate_paths": [],
+      "expected_quantization": "Q4_K_M",
+      "hf_candidate_count": 0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "missing_status": "missing_or_zero_byte_only",
+      "name": "Gemma4-31B-it",
+      "observed_quantization": null,
+      "path": null,
+      "project_candidate_count": 0,
+      "resolved_path": null,
+      "resolver_path": null,
+      "role": "dense",
+      "zero_byte_marker_count": 0
+    },
+    {
+      "cache_status": "resolved",
+      "candidate_count": 27,
+      "candidate_paths": [
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_M.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ2_XXS.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ4_NL.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-MXFP4_MOE.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ4_XS.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q2_K_XL.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q3_K_M.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q3_K_S.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ3_S.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-IQ3_XXS.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q3_K_XL.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q5_K_S.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q5_K_M.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_S.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/mmproj-F16.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/mmproj-BF16.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q5_K_XL.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/mmproj-F32.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q4_K_XL.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-Q8_0.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q6_K.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q8_K_XL.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-UD-Q6_K_XL.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/BF16/gemma-4-26B-A4B-it-BF16-00002-of-00002.gguf",
+        "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/BF16/gemma-4-26B-A4B-it-BF16-00001-of-00002.gguf"
+      ],
+      "expected_quantization": "Q4_K_M",
+      "hf_candidate_count": 24,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "missing_status": null,
+      "name": "Gemma4-26B-A4B-it",
+      "observed_quantization": "UD-Q4_K_M",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "project_candidate_count": 0,
+      "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "resolver_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "role": "moe",
+      "zero_byte_marker_count": 0
+    }
+  ],
+  "cache_locations": {
+    "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
+    "huggingface_hub_cache_exists": true,
+    "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
+    "local_models_exists": true
+  },
+  "cached_sota_pair_result": {
+    "called": true,
+    "error": null,
+    "result": null,
+    "returned_two_loadable_specs": false
+  },
+  "cached_sota_pair_returned_two_loadable_specs": false,
+  "duration_s": 11.530778,
+  "field_principles": {
+    "cached_sota_pair_returned_two_loadable_specs": "Records pair readiness separately from single-model v3 runtime readiness.",
+    "duration_s": "Measured wall-clock duration; no sleep padding.",
+    "legacy_small_models_used_only_for_smoke": "Legacy Qwen/Gemma IDs cannot satisfy headline readiness.",
+    "llama_cpp_gpu_offload_verified": "Mirrors llama_cpp.llama_cpp.llama_supports_gpu_offload(); never inferred.",
+    "sota_runtime_ready_v3": "True only for usable GPU-backed output from a mandated local SOTA GGUF."
+  },
+  "gpu_inventory": {
+    "available": true,
+    "command": [
+      "nvidia-smi",
+      "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+      "--format=csv,noheader,nounits"
+    ],
+    "gpus": [
+      {
+        "driver_version": "595.71.05",
+        "index": 0,
+        "memory_free_mib": 24122,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 5,
+        "name": "NVIDIA GeForce RTX 3090"
+      },
+      {
+        "driver_version": "595.71.05",
+        "index": 1,
+        "memory_free_mib": 24122,
+        "memory_total_mib": 24576,
+        "memory_used_mib": 5,
+        "name": "NVIDIA GeForce RTX 3090"
+      }
+    ],
+    "returncode": 0,
+    "stderr_summary": "",
+    "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 5, 24122, 595.71.05\n1, NVIDIA GeForce RTX 3090, 24576, 5, 24122, 595.71.05\n"
+  },
+  "honest_verdict": "success: mandated SOTA GGUF produced usable GPU-backed output",
+  "legacy_cpu_smoke_only_model_ids": [
+    "Qwen3.5-0.8B",
+    "gemma-4-E4B-it"
+  ],
+  "legacy_small_models_used_only_for_smoke": true,
+  "llama_cpp_cuda_reinstall_command": "CMAKE_ARGS=\"-DGGML_CUDA=on\" FORCE_CMAKE=1 .venv/bin/pip install --force-reinstall --no-cache-dir llama-cpp-python==0.3.23",
+  "llama_cpp_gpu_offload_verified": true,
+  "llama_cpp_probe": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "import importlib.util, json\npayload = {'llama_cpp_import_ok': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+    ],
+    "llama_cpp_import_ok": true,
+    "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/llama_cpp/__init__.py",
+    "llama_cpp_supports_gpu_offload": true,
+    "llama_cpp_version": "0.3.23",
+    "returncode": 0,
+    "stderr_summary": "ggml_cuda_init: found 2 CUDA devices (Total VRAM: 48252 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\n  Device 1: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\n"
+  },
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_smoke_only": false,
+      "name": "Qwen3.6-35B-A3B",
+      "priority": 1,
+      "required_role": "primary_candidate"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_smoke_only": false,
+      "name": "Gemma4-31B-it",
+      "priority": 2,
+      "required_role": "primary_candidate"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_smoke_only": false,
+      "name": "Gemma4-26B-A4B-it",
+      "priority": 3,
+      "required_role": "primary_candidate"
+    }
+  ],
+  "models_missing_from_cache": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+      ],
+      "detail": "2.11.0+cu128 True 2\n",
+      "resource": "venv_torch_cuda"
+    },
+    {
+      "available": true,
+      "command": [
+        "nvidia-smi",
+        "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+        "--format=csv,noheader,nounits"
+      ],
+      "detail": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ],
+      "resource": "nvidia_smi_inventory"
+    },
+    {
+      "available": true,
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib.util, json\npayload = {'llama_cpp_import_ok': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+      ],
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/llama_cpp/__init__.py",
+      "resource": "llama_cpp_gpu_offload"
+    },
+    {
+      "available": false,
+      "detail": null,
+      "resource": "cached_sota_pair"
+    },
+    {
+      "available": true,
+      "detail": "cached_count=1",
+      "resource": "mandated_sota_gguf_cache"
+    }
+  ],
+  "random_seed": 2862,
+  "reproducibility_checksum": "d73f162a02b8262da4aab9a34f3b951f0dde549f0a104e7a9b3554b18ecc5b36",
+  "run_date": "20260522",
+  "schema_version": 1,
+  "selected_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+  "sota_runtime_ready_v3": true,
+  "tests_run": [
+    "focused unit: .venv/bin/pytest tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py -q --no-cov => passed, 6 passed",
+    "coverage: .venv/bin/coverage run --source=python/carnot/reporting -m pytest tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py -q -o addopts='' && .venv/bin/coverage report -m --include=python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py --fail-under=100 => passed, 100%",
+    "lint: ruff check python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py => passed",
+    "format: ruff format --check python/carnot/reporting/sota_runtime_cache_offload_resolver_v3.py tests/python/test_experiment_2862_sota_runtime_cache_offload_resolver_v3.py => passed",
+    "spec coverage: .venv/bin/python scripts/check_spec_coverage.py => failed on 444 pre-existing untraced tests outside Exp 2862",
+    "full suite: .venv/bin/pytest tests/python -q => failed, 130 failed, 19889 passed, 75 skipped, 10 errors; xdist workers crashed in JAX/Z3 unrelated to Exp 2862"
+  ],
+  "tokens_per_second": 0.232859,
+  "torch_cuda_probe": {
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "-c",
+      "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+    ],
+    "cuda_available": true,
+    "cuda_device_count": 2,
+    "returncode": 0,
+    "stderr_summary": "",
+    "stdout_summary": "2.11.0+cu128 True 2\n",
+    "torch_version": "2.11.0+cu128"
+  },
+  "total_tokens_generated": 2,
+  "usable_response_count": 1
+}
