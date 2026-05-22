@@ -5944,3 +5944,5 @@ Ripgrep i |
 | 2026-05-22 07:24 UTC | Cross-Corpus Per-Verifier Dual-Condition Matrix v3 | OK | 81 passed in 3.42s |
 | 2026-05-22 07:37 UTC | Paper v6 §5 v3: Multi-Corpus Dual-Condition Table  | OK | 81 passed in 2.99s |
 | 2026-05-22 07:50 UTC | Capstone v269: Multi-Corpus Dual-Condition Headlin | OK | 81 passed in 3.07s |
+| 2026-05-22 08:33 UTC | Plan milestone 2026.05.270 | OK | 14 tasks proposed |
+| 2026-05-22 08:35 UTC | Milestone 2026.05.270 activated | OK | 14 tasks queued |
