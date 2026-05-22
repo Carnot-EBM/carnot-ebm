@@ -5925,3 +5925,7 @@ Ripgrep i |
 | 2026-05-22 04:33 UTC | LoopUS-Style FR-11 External Recurrence Pilot (gate | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2844_loopus_ |
 | 2026-05-22 04:40 UTC | LoopUS-Style FR-11 External Recurrence Pilot (gate | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2844_loopus_ |
 | 2026-05-22 04:42 UTC | Paper v6 Section 5 Table v3 (gated on exp2842 matr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2842-cross-corpus-matrix-v3) |
+| 2026-05-22 04:54 UTC | Terminal Milestone Summary v269 | OK | 81 passed in 3.61s |
+| 2026-05-22 04:56 UTC | Paper v6 Section 5 Table v3 (gated on exp2842 matr | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2842-cross-corpus-matrix-v3) |
+| 2026-05-22 04:56 UTC | Milestone 2026.05.269 activated | OK | 8 tasks queued |
+| 2026-05-22 04:58 UTC | Archive .268 + Activate .269 | OK | Deliverable already exists in repo |
