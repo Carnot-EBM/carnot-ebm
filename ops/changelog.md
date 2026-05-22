@@ -7050,3 +7050,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: MBPP Dual-Condition Evaluation v3 (gated on exp2836 SOTA runtime) (⚠️ Blocked) — honest_verdict=blocked_mbpp_dataset; results/experiment_2838_mbpp_dual_condition_v3.json
 - 2026-05-22: HumanEval Full Dual-Condition Evaluation v3 (gated on exp2836 SOTA runtime) (⚠️ Blocked) — honest_verdict=blocked_humaneval_dataset; results/experiment_2839_humaneval_dual_condition_v3.json
 - 2026-05-22: HumanEval Full Dual-Condition Evaluation v3 (gated on exp2836 SOTA runtime) (⚠️ Blocked) — honest_verdict=blocked_humaneval_dataset; results/experiment_2839_humaneval_dual_condition_v3.json
+- 2026-05-22: HumanEval Full Dual-Condition Evaluation v3 (gated on exp2836 SOTA runtime) (⚠️ Blocked) — honest_verdict=blocked_humaneval_dataset; results/experiment_2839_humaneval_dual_condition_v3.json
