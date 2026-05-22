@@ -4635,6 +4635,46 @@ FoVer and HaluEval/FEVER marked `clean`, the absent corpora marked `missing`,
 two clean rows, `verifier_corpus_dual_matrix` containing only clean rows, and
 `excluded_from_headline` explaining why every non-clean corpus is excluded.
 
+### REQ-REPORT-2880: Clean .272 Cross-Corpus Matrix V6 With Pilot Boundaries
+
+The repository shall provide an Exp 2880 matrix generator that writes
+`results/experiment_2880_cross_corpus_matrix_v6.json`.
+
+The generator MUST read the clean Exp 2865 cross-corpus matrix and the three
+gated `.272` artifacts:
+
+- `results/experiment_2877_exact_frontier_expansion_halueval_fever_v2.json`
+- `results/experiment_2878_halueval_fever_error_verifiability_v1.json`
+- `results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json`
+
+Rows are eligible only when their source artifact is clean, no synthetic row is
+created, the row has valid label evidence or an explicit pilot status, and no
+source artifact has an unresolved `blocked_*` verdict. The generator MUST NOT
+infer unavailable metrics, MUST keep missing TruthfulQA and unsupported metrics
+as `null` with reasons, and MUST keep MBPP/HumanEval execution-pilot rows out of
+headline claims.
+
+The terminal artifact MUST include `honest_verdict`,
+`cross_corpus_matrix_built`, `source_artifacts`, `clean_row_count`,
+`headline_eligible_rows`, `pilot_only_rows`, `missing_rows`, `matrix_rows`,
+`markdown_table`, `synthetic_rows_created=false`, `field_principles`,
+`run_date="20260522"`, and a measured `duration_s`. Each matrix row MUST expose
+expanded columns for `exact_frontier_support`, `error_verifiability`,
+`label_consistency`, `code_execution_pilot`, and `residual_gap`.
+
+#### SCENARIO-REPORT-2880: Pilot Rows Stay Outside Headline Claims
+
+**Given** Exp 2865 contains clean FoVer and HaluEval/FEVER rows
+**And** Exp 2877 and Exp 2878 provide clean HaluEval/FEVER exact-frontier and
+error-verifiability evidence
+**And** Exp 2879 provides a clean MBPP/HumanEval manifest-only execution pilot
+**When** the Exp 2880 matrix generator runs
+**Then** it writes `results/experiment_2880_cross_corpus_matrix_v6.json` with
+FoVer and HaluEval/FEVER in `headline_eligible_rows`, MBPP and HumanEval in
+`pilot_only_rows`, TruthfulQA in `missing_rows`, no synthetic rows, null fields
+with reasons for unsupported metrics, and a compact markdown table matching the
+machine-readable rows.
+
 ### REQ-REPORT-2872: Milestone 2026.05.271 Capstone Claim Boundary
 
 The repository shall provide an Exp 2872 capstone generator that writes
