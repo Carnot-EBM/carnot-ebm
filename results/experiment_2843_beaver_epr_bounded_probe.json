@@ -155,5 +155,13 @@
     }
   ],
   "schema_version": 1,
-  "topk_logprob_source": "results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+  "topk_logprob_source": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.23095767997438088 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }
