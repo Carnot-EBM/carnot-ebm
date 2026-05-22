@@ -695,3 +695,40 @@ The artifact MUST be saved to `results/experiment_2008_rocm_probe.json`.
 
 **Spec traces:** REQ-HARDWARE-2008
 
+### REQ-BENCH-2849: Local Evaluation Dataset Manifests
+
+Carnot MUST materialize explicit local JSONL manifests for MBPP, HumanEval,
+TruthfulQA generation, HaluEval, and FEVER before downstream corpus agents spend
+model calls on those benchmarks.  The manifest builder MUST prefer already
+available local `data/` or HuggingFace cache assets, MUST NOT synthesize
+benchmark rows, and MUST mark a dataset readiness boolean false when the local
+asset cannot meet the conservative count gate.
+
+The terminal artifact MUST be written to
+`results/experiment_2849_local_dataset_materialization_v1.json` and include:
+`honest_verdict`, one readiness boolean per dataset, `dataset_status`,
+`manifest_paths`, `manifest_counts`, `manifest_sha256`,
+`preconditions_checked`, `synthetic_rows_created=false`, `duration_s`, and
+`run_date="20260522"`.
+
+**Acceptance criteria:**
+- MBPP, HumanEval, and TruthfulQA manifests preserve stable IDs plus prompts,
+  labels or executable tests, split names, and source paths.
+- HaluEval and FEVER manifests preserve stable IDs plus prompt/input text,
+  candidate or claim text, labels, split names, and source paths.
+- Readiness is true only when the manifest reaches the configured count gate:
+  MBPP >= 100, HumanEval >= 164, TruthfulQA generation >= 200, HaluEval >= 500,
+  and FEVER >= 500.
+- Every non-empty manifest has a recorded SHA256 digest computed from the JSONL
+  bytes on disk.
+
+### SCENARIO-BENCH-2849: Missing Local Corpus Blocks Honestly
+
+**Given** a required dataset is absent from local `data/` and HuggingFace cache
+locations
+**When** the local manifest builder runs without a successful network download
+**Then** the artifact records that dataset readiness as false
+**And** `dataset_status` explains the exact missing resource without creating
+synthetic rows.
+
+**Spec traces:** REQ-BENCH-2849

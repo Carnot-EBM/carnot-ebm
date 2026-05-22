@@ -1,0 +1,108 @@
+{
+  "artifact": "experiment_2849_local_dataset_materialization_v1",
+  "dataset_status": {
+    "fever": {
+      "count": 500,
+      "detail": "ready: 500 rows from maxzoech/fever:train",
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/fever_20260522.jsonl",
+      "ready": true,
+      "source_name": "maxzoech/fever:train",
+      "source_path": "/home/ianblenke/.cache/huggingface/datasets/maxzoech___fever/default/0.0.0/1bab8767a3f6028c0aa4be2259d75608081fe5e5/fever-train.arrow",
+      "split_name": "train",
+      "target": 500
+    },
+    "halueval": {
+      "count": 500,
+      "detail": "ready: 500 rows from pminervini/HaluEval:qa:data",
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/halueval_20260522.jsonl",
+      "ready": true,
+      "source_name": "pminervini/HaluEval:qa:data",
+      "source_path": "/home/ianblenke/.cache/huggingface/datasets/pminervini___halu_eval/qa/0.0.0/12a856119f03975a94509091e8cada3e6be6ead7/halu_eval-data.arrow",
+      "split_name": "data",
+      "target": 500
+    },
+    "humaneval": {
+      "count": 164,
+      "detail": "ready: 164 rows from openai_humaneval:test",
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/humaneval_20260522.jsonl",
+      "ready": true,
+      "source_name": "openai_humaneval:test",
+      "source_path": "/home/ianblenke/.cache/huggingface/datasets/openai___openai_humaneval/openai_humaneval/0.0.0/7dce6050a7d6d172f3cc5c32aa97f52fa1a2e544/openai_humaneval-test.arrow",
+      "split_name": "test",
+      "target": 164
+    },
+    "mbpp": {
+      "count": 100,
+      "detail": "ready: 100 rows from google-research-datasets/mbpp:sanitized:test",
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/mbpp_20260522.jsonl",
+      "ready": true,
+      "source_name": "google-research-datasets/mbpp:sanitized:test",
+      "source_path": "/home/ianblenke/.cache/huggingface/datasets/google-research-datasets___mbpp/sanitized/0.0.0/4bb6404fdc6cacfda99d4ac4205087b89d32030c/mbpp-test.arrow",
+      "split_name": "test",
+      "target": 100
+    },
+    "truthfulqa": {
+      "count": 200,
+      "detail": "ready: 200 rows from truthful_qa:generation:validation",
+      "manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/truthfulqa_20260522.jsonl",
+      "ready": true,
+      "source_name": "truthful_qa:generation:validation",
+      "source_path": "/home/ianblenke/.cache/huggingface/datasets/truthful_qa/generation/0.0.0/741b8276f2d1982aa3d5b832d3ee81ed3b896490/truthful_qa-validation.arrow",
+      "split_name": "validation",
+      "target": 200
+    }
+  },
+  "duration_s": 0.6000280380249023,
+  "fever_ready": true,
+  "halueval_ready": true,
+  "honest_verdict": "complete: local benchmark manifests materialized",
+  "humaneval_ready": true,
+  "manifest_counts": {
+    "fever": 500,
+    "halueval": 500,
+    "humaneval": 164,
+    "mbpp": 100,
+    "truthfulqa": 200
+  },
+  "manifest_paths": {
+    "fever": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/fever_20260522.jsonl",
+    "halueval": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/halueval_20260522.jsonl",
+    "humaneval": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/humaneval_20260522.jsonl",
+    "mbpp": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/mbpp_20260522.jsonl",
+    "truthfulqa": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/truthfulqa_20260522.jsonl"
+  },
+  "manifest_sha256": {
+    "fever": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2",
+    "halueval": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6",
+    "humaneval": "87c76105e14d3da1aad57da30243e6ee8b84907fb363e27efd08e8e0b454f2f9",
+    "mbpp": "bf81548da561f22580c66c98c7a18e5b94d872910d130da4e7e96aeeb50573f0",
+    "truthfulqa": "862b69afc612f167d16c7e15dd21c78bc1defe2584c9468287ddbfc8b85f4827"
+  },
+  "mbpp_ready": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "python ok",
+      "resource": "python_json_pathlib"
+    },
+    {
+      "available": true,
+      "detail": "4.8.5",
+      "resource": "datasets_package"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests",
+      "resource": "data_directory"
+    },
+    {
+      "available": true,
+      "detail": "not required before local cache search; no synthetic fallback is allowed",
+      "resource": "network_download"
+    }
+  ],
+  "run_date": "20260522",
+  "schema": "carnot.local_dataset_materialization.v1",
+  "synthetic_rows_created": false,
+  "truthfulqa_ready": true
+}
