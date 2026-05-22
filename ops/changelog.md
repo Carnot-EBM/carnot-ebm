@@ -7064,3 +7064,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: FoVer Memory-Leakage Isolation v3 (CODEX, post-torch-fix) (⚠️ Blocked) — honest_verdict=blocked_model_cache: missing; results/experiment_2836_fover_memory_leakage_isolation.json
 - 2026-05-22: FoVer Memory-Leakage Isolation v3 (CODEX, post-torch-fix) (⚠️ Blocked) — honest_verdict=blocked_model_cache: missing; results/experiment_2836_fover_memory_leakage_isolation.json
 - 2026-05-22: MBPP Dual-Condition v3 (CODEX, post-torch-fix, N=100, 5 seeds) (⚠️ Blocked) — honest_verdict=blocked_model_not_cached_qwen36_35b_a3b_gguf; results/experiment_2837_mbpp_ensemble_eval.json
+- 2026-05-22: MBPP Dual-Condition v3 (CODEX, post-torch-fix, N=100, 5 seeds) (⚠️ Blocked) — honest_verdict=blocked_model_not_cached_qwen36_35b_a3b_gguf; results/experiment_2837_mbpp_ensemble_eval.json
