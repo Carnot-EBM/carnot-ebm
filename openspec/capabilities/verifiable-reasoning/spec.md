@@ -19382,3 +19382,56 @@ duration
 **Implementation Status:** Planned (Exp 2858)
 
 **Spec traces:** REQ-VERIFY-2858, SCENARIO-VERIFY-2858, Exp 2858
+
+## REQ-VERIFY-2866: Tiny Exact BEAVER Frontier Feasibility Check
+
+**Capability:** verifiable-reasoning / exact local arithmetic frontier
+
+Carnot SHALL provide an Exp 2866 feasibility check that attempts the smallest
+honest exact-frontier step after the Exp 2858 proxy: a bounded, deterministic
+FoVer subset whose completed arithmetic equalities are decided by a local exact
+solver. This check SHALL NOT claim full exact BEAVER unless a token-trie/model
+probability frontier proof is implemented.
+
+**Requirements:**
+
+- REQ-VERIFY-2866-1: The runner SHALL check that `data/fover_corpus.jsonl`,
+  `results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json`, and a local
+  exact arithmetic solver are available before scoring. If the solver or a
+  required artifact is unavailable, it SHALL write a terminal artifact with
+  `honest_verdict` beginning with `blocked_solver` or `blocked_dependency`.
+- REQ-VERIFY-2866-2: When preconditions pass, the runner SHALL select a tiny
+  deterministic, labeled FoVer subset with both correct and incorrect rows and
+  only rows whose completed arithmetic equalities are exactly decidable by the
+  local solver.
+- REQ-VERIFY-2866-3: The exact-frontier check SHALL compute, for each selected
+  row, the first prefix ending at a completed solver-proved false arithmetic
+  equality, the exact false-claim rate, and the Exp 2858 bounded-prefix proxy
+  score over the same text.
+- REQ-VERIFY-2866-4: The artifact SHALL set
+  `exact_beaver_implemented=false` unless a full BEAVER token-frontier proof is
+  implemented, and SHALL set `exact_frontier_available=true` only for the local
+  solver-decidable subset.
+- REQ-VERIFY-2866-5: The artifact
+  `results/experiment_2866_beaver_exact_tiny_frontier_v1.json` SHALL include
+  `honest_verdict`, `exact_beaver_implemented`, `exact_frontier_available`,
+  `n_examples`, `solver_used`, `blocked_reason`, `exact_vs_proxy_comparison`,
+  `sample_rows`, `random_seed`, `reproducibility_checksum`,
+  `preconditions_checked`, `tests_run`, `field_principles`,
+  `run_date="20260522"`, and `duration_s`.
+
+### SCENARIO-VERIFY-2866: Tiny Exact Frontier Is Compared With Exp 2858 Proxy
+
+**Given** the local FoVer corpus, the Exp 2858 proxy artifact, and an available
+exact arithmetic solver
+**When** the Exp 2866 runner evaluates the deterministic tiny subset
+**Then** it writes
+`results/experiment_2866_beaver_exact_tiny_frontier_v1.json`
+**And** each sample row records exact solver frontier fields and the matching
+bounded-prefix proxy score
+**And** the artifact explicitly keeps `exact_beaver_implemented=false` while
+reporting whether the local exact frontier was available.
+
+**Implementation Status:** Implemented (Exp 2866)
+
+**Spec traces:** REQ-VERIFY-2866, SCENARIO-VERIFY-2866, Exp 2866

@@ -1,0 +1,206 @@
+{
+  "artifact": "experiment_2866_beaver_exact_tiny_frontier_v1",
+  "blocked_reason": null,
+  "duration_s": 3.0134553349926136,
+  "exact_beaver_implemented": false,
+  "exact_frontier_available": true,
+  "exact_vs_proxy_comparison": {
+    "boundary": "Exp 2858 bounded-prefix scores are comparison baselines, not exact evidence.",
+    "comparison_status": "complete",
+    "comparison_subset_n": 6,
+    "decision_agreement_rate": 1.0,
+    "disagreements": [],
+    "exact_frontier_available_on_subset": true,
+    "exact_positive_rate": 0.5,
+    "exp2858_exact_beaver_implemented": false,
+    "exp2858_n_examples": 100,
+    "exp2858_proxy_auc": 0.74,
+    "proxy_artifact": "results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json",
+    "proxy_positive_rate": 0.5,
+    "score_mean_absolute_delta": 0.0
+  },
+  "field_principles": {
+    "exact_beaver_implemented": "false: no token-trie or model probability frontier proof is implemented.",
+    "exact_frontier_available": "true only for the bounded FoVer subset whose completed arithmetic equalities are all Z3-decidable.",
+    "proxy_boundary": "Exp 2858 bounded-prefix scores are comparison baselines, not exact evidence.",
+    "solver_boundary": "Z3 checks ground arithmetic equalities in observed text prefixes only."
+  },
+  "honest_verdict": "complete: tiny exact Z3 arithmetic frontier available on a bounded FoVer subset; full exact BEAVER remains unimplemented",
+  "n_examples": 6,
+  "preconditions_checked": [
+    {
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/data/fover_corpus.jsonl",
+      "passed": true,
+      "step": "test -f data/fover_corpus.jsonl"
+    },
+    {
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json",
+      "passed": true,
+      "step": "test -f results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json"
+    },
+    {
+      "observed": "z3-solver 4.16.0",
+      "passed": true,
+      "step": ".venv/bin/python -c \"import z3; print(z3.get_version_string())\""
+    }
+  ],
+  "random_seed": 2866,
+  "reproducibility_checksum": "bdfb42f22294dec2e67f4e1d358e4e2073c806ef5d39f42bd4721b13c541db74",
+  "run_date": "20260522",
+  "sample_rows": [
+    {
+      "bounded_prefix_proxy_score": 1.0,
+      "exact_false_claim_count": 1,
+      "exact_frontier_available": true,
+      "exact_matches_proxy_decision": true,
+      "exact_score": 1.0,
+      "example_id": "math_v3_1482",
+      "first_exact_frontier_prefix_length": 102,
+      "label": 1,
+      "proxy_checked_claim_count": 1,
+      "proxy_false_claim_count": 1,
+      "proxy_first_violation_prefix_length": 160,
+      "solver_claim_count": 1,
+      "solver_claims": [
+        {
+          "claimed": "15",
+          "expression": "+37+9",
+          "prefix_length": 102,
+          "satisfied": false
+        }
+      ],
+      "source": "data/fover_corpus.jsonl",
+      "unsupported_claim_count": 0
+    },
+    {
+      "bounded_prefix_proxy_score": 0.0,
+      "exact_false_claim_count": 0,
+      "exact_frontier_available": true,
+      "exact_matches_proxy_decision": true,
+      "exact_score": 0.0,
+      "example_id": "gsm8k_1622_0_0",
+      "first_exact_frontier_prefix_length": null,
+      "label": 0,
+      "proxy_checked_claim_count": 1,
+      "proxy_false_claim_count": 0,
+      "proxy_first_violation_prefix_length": null,
+      "solver_claim_count": 1,
+      "solver_claims": [
+        {
+          "claimed": "4",
+          "expression": "2*2",
+          "prefix_length": 43,
+          "satisfied": true
+        }
+      ],
+      "source": "data/fover_corpus.jsonl",
+      "unsupported_claim_count": 0
+    },
+    {
+      "bounded_prefix_proxy_score": 0.0,
+      "exact_false_claim_count": 0,
+      "exact_frontier_available": true,
+      "exact_matches_proxy_decision": true,
+      "exact_score": 0.0,
+      "example_id": "gsm8k_1167_2_0",
+      "first_exact_frontier_prefix_length": null,
+      "label": 0,
+      "proxy_checked_claim_count": 1,
+      "proxy_false_claim_count": 0,
+      "proxy_first_violation_prefix_length": null,
+      "solver_claim_count": 1,
+      "solver_claims": [
+        {
+          "claimed": "34",
+          "expression": "70-21-15",
+          "prefix_length": 32,
+          "satisfied": true
+        }
+      ],
+      "source": "data/fover_corpus.jsonl",
+      "unsupported_claim_count": 0
+    },
+    {
+      "bounded_prefix_proxy_score": 0.0,
+      "exact_false_claim_count": 0,
+      "exact_frontier_available": true,
+      "exact_matches_proxy_decision": true,
+      "exact_score": 0.0,
+      "example_id": "gsm8k_1705_0_0",
+      "first_exact_frontier_prefix_length": null,
+      "label": 0,
+      "proxy_checked_claim_count": 1,
+      "proxy_false_claim_count": 0,
+      "proxy_first_violation_prefix_length": null,
+      "solver_claim_count": 1,
+      "solver_claims": [
+        {
+          "claimed": "6",
+          "expression": "3*2",
+          "prefix_length": 53,
+          "satisfied": true
+        }
+      ],
+      "source": "data/fover_corpus.jsonl",
+      "unsupported_claim_count": 0
+    },
+    {
+      "bounded_prefix_proxy_score": 1.0,
+      "exact_false_claim_count": 1,
+      "exact_frontier_available": true,
+      "exact_matches_proxy_decision": true,
+      "exact_score": 1.0,
+      "example_id": "arc_challenge_0015",
+      "first_exact_frontier_prefix_length": 429,
+      "label": 1,
+      "proxy_checked_claim_count": 1,
+      "proxy_false_claim_count": 1,
+      "proxy_first_violation_prefix_length": 480,
+      "solver_claim_count": 1,
+      "solver_claims": [
+        {
+          "claimed": "5",
+          "expression": "2 + 2",
+          "prefix_length": 429,
+          "satisfied": false
+        }
+      ],
+      "source": "data/fover_corpus.jsonl",
+      "unsupported_claim_count": 0
+    },
+    {
+      "bounded_prefix_proxy_score": 1.0,
+      "exact_false_claim_count": 1,
+      "exact_frontier_available": true,
+      "exact_matches_proxy_decision": true,
+      "exact_score": 1.0,
+      "example_id": "arc_challenge_0054",
+      "first_exact_frontier_prefix_length": 378,
+      "label": 1,
+      "proxy_checked_claim_count": 1,
+      "proxy_false_claim_count": 1,
+      "proxy_first_violation_prefix_length": 400,
+      "solver_claim_count": 1,
+      "solver_claims": [
+        {
+          "claimed": "5",
+          "expression": "2 + 2",
+          "prefix_length": 378,
+          "satisfied": false
+        }
+      ],
+      "source": "data/fover_corpus.jsonl",
+      "unsupported_claim_count": 0
+    }
+  ],
+  "schema": "carnot.beaver_exact_tiny_frontier.v1",
+  "solver_used": "z3-solver 4.16.0",
+  "tests_run": [
+    ".venv/bin/pytest -o addopts='' tests/python/test_experiment_2866_beaver_exact_tiny_frontier.py -q -> passed (4 passed)",
+    ".venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_2866_beaver_exact_tiny_frontier.py -q -> passed (4 passed)",
+    ".venv/bin/coverage report --include='python/carnot/verify/beaver_exact_tiny_frontier.py' --fail-under=100 -m -> passed (100% new-module coverage)",
+    "ruff check python/carnot/verify/beaver_exact_tiny_frontier.py tests/python/test_experiment_2866_beaver_exact_tiny_frontier.py scripts/experiment_2866_beaver_exact_tiny_frontier_v1.py -> passed",
+    ".venv/bin/python scripts/check_spec_coverage.py -> failed: 444 pre-existing tests lack spec references",
+    ".venv/bin/pytest tests/python -q -> failed/interrupted after hang: 48 failed, 14664 passed, 47 skipped, 10 errors in 740.42s"
+  ]
+}
