@@ -1,0 +1,40 @@
+{
+  "honest_verdict": "blocked_cross_corpus_matrix_not_built",
+  "drift_mus_diagnostic_ready": false,
+  "n_failure_rows": 0,
+  "failure_class_counts": {},
+  "hypergraph_nodes": 0,
+  "hypergraph_hyperedges": 0,
+  "hgnn_inspired_heuristic_name": "blocked_precondition_not_run",
+  "baseline_random_checks_to_conflict": 0.0,
+  "baseline_degree_checks_to_conflict": 0.0,
+  "heuristic_checks_to_conflict": 0.0,
+  "heuristic_improvement_vs_best_baseline": 0.0,
+  "recommended_repairs": [
+    "Rebuild results/experiment_2855_cross_corpus_matrix_v4.json so cross_corpus_matrix_built is true, then rerun the residual-drift and MUS prioritization diagnostic."
+  ],
+  "preconditions_checked": [
+    {
+      "name": "working_directory",
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot",
+      "ok": true,
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot"
+    },
+    {
+      "name": "cross_corpus_matrix_built",
+      "command": "jq -e '.cross_corpus_matrix_built == true' results/experiment_2855_cross_corpus_matrix_v4.json",
+      "ok": false,
+      "observed": false
+    },
+    {
+      "name": "graph_dependencies",
+      "command": ".venv/bin/python3 -c \"import numpy, networkx; print('graph ok')\" || .venv/bin/python3 -c \"import numpy; print('graph fallback ok')\"",
+      "ok": true,
+      "observed": "graph ok"
+    }
+  ],
+  "random_seed": 0,
+  "reproducibility_checksum": "ee3b3842944808e34efd7d0cbbc59c5636c712cff7d22fd78f2af48e7ce08427",
+  "duration_s": 0.28,
+  "run_date": "20260522"
+}
