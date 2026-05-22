@@ -1,0 +1,255 @@
+{
+  "artifact": "experiment_2867_drift_mus_prioritizer_v2",
+  "baseline_degree_checks_to_conflict": 4.0,
+  "baseline_random_checks_to_conflict": 5.615234,
+  "drift_mus_diagnostic_ready": true,
+  "duration_s": 0.000229,
+  "failure_class_counts": {
+    "below_random_auroc": 2,
+    "near_random_auroc": 2
+  },
+  "failure_rows": [
+    {
+      "auroc": 0.29477159999999997,
+      "constraint_family": "arithmetic_consistency",
+      "corpus": "FoVer",
+      "failure_class": "below_random_auroc",
+      "residual_drift": 0.6183619999999999,
+      "row_id": "FoVer:tier0s_arithmetic_gap",
+      "severity": 0.20522840000000003,
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "source_metric": "tier0s_arithmetic_gap",
+      "verifier_failure": "tier0s_arithmetic_gap"
+    },
+    {
+      "auroc": 0.5105464,
+      "constraint_family": "logical_self_consistency",
+      "corpus": "FoVer",
+      "failure_class": "near_random_auroc",
+      "residual_drift": 0.4025871999999999,
+      "row_id": "FoVer:tier0u_logical_consistency",
+      "severity": 0.0494536000000001,
+      "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+      "source_metric": "tier0u_logical_consistency",
+      "verifier_failure": "tier0u_logical_consistency"
+    },
+    {
+      "auroc": 0.33114331723027374,
+      "constraint_family": "factual_support",
+      "corpus": "HaluEval/FEVER",
+      "failure_class": "below_random_auroc",
+      "residual_drift": 0.5819902827697261,
+      "row_id": "HaluEval/FEVER:fever",
+      "severity": 0.16885668276972626,
+      "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+      "source_metric": "fever",
+      "verifier_failure": "fever_local_calibration"
+    },
+    {
+      "auroc": 0.553072,
+      "constraint_family": "factual_support",
+      "corpus": "HaluEval/FEVER",
+      "failure_class": "near_random_auroc",
+      "residual_drift": 0.36006159999999987,
+      "row_id": "HaluEval/FEVER:halueval",
+      "severity": 0.006928000000000045,
+      "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+      "source_metric": "halueval",
+      "verifier_failure": "halueval_local_calibration"
+    }
+  ],
+  "field_principles": {
+    "drift_mus_diagnostic_ready": "True only after Exp 2865 matrix preconditions pass.",
+    "duration_s": "Real wall-clock synthesis time; never padded.",
+    "heuristic_improvement_vs_best_baseline": "Positive means fewer checks-to-conflict than the best baseline; negative is allowed.",
+    "hgnn_inspired_heuristic_name": "Descriptive only: deterministic message passing, not a trained HGNN policy.",
+    "honest_verdict": "Terminal complete:/blocked_ verdict; no inferred blocked-row metrics.",
+    "hypergraph_hyperedges": "Co-failure and residual-drift proxy edges; not certified MUS edges.",
+    "hypergraph_nodes": "Constraint, verifier-failure, and failure-class nodes only.",
+    "n_failure_rows": "Counts weak or below-random AUROC evidence from clean rows only.",
+    "reproducibility_checksum": "Hashes matrix, clean source evidence, failures, graph, and metrics."
+  },
+  "heuristic_checks_to_conflict": 4.0,
+  "heuristic_improvement_vs_best_baseline": 0.0,
+  "hgnn_inspired_heuristic_name": "residual_weighted_two_pass_hypergraph_heuristic_not_trained_hgnn",
+  "honest_verdict": "complete: residual-drift MUS-proxy prioritizer built from Exp 2865 clean rows; n_failure_rows=4; heuristic_checks_to_conflict=4.0",
+  "hypergraph_edges": [
+    {
+      "edge_id": "co_failure:FoVer:tier0s_arithmetic_gap",
+      "kind": "co_failure",
+      "nodes": [
+        "constraint:arithmetic_consistency",
+        "failure_class:below_random_auroc",
+        "verifier_failure:tier0s_arithmetic_gap"
+      ],
+      "row_ids": [
+        "FoVer:tier0s_arithmetic_gap"
+      ],
+      "weight": 1.82359
+    },
+    {
+      "edge_id": "co_failure:FoVer:tier0u_logical_consistency",
+      "kind": "co_failure",
+      "nodes": [
+        "constraint:logical_self_consistency",
+        "failure_class:near_random_auroc",
+        "verifier_failure:tier0u_logical_consistency"
+      ],
+      "row_ids": [
+        "FoVer:tier0u_logical_consistency"
+      ],
+      "weight": 1.452041
+    },
+    {
+      "edge_id": "co_failure:HaluEval/FEVER:fever",
+      "kind": "co_failure",
+      "nodes": [
+        "constraint:factual_support",
+        "failure_class:below_random_auroc",
+        "verifier_failure:fever_local_calibration"
+      ],
+      "row_ids": [
+        "HaluEval/FEVER:fever"
+      ],
+      "weight": 1.750847
+    },
+    {
+      "edge_id": "co_failure:HaluEval/FEVER:halueval",
+      "kind": "co_failure",
+      "nodes": [
+        "constraint:factual_support",
+        "failure_class:near_random_auroc",
+        "verifier_failure:halueval_local_calibration"
+      ],
+      "row_ids": [
+        "HaluEval/FEVER:halueval"
+      ],
+      "weight": 1.36699
+    },
+    {
+      "edge_id": "corpus_co_failure:FoVer",
+      "kind": "corpus_co_failure",
+      "nodes": [
+        "constraint:arithmetic_consistency",
+        "constraint:logical_self_consistency",
+        "failure_class:below_random_auroc",
+        "failure_class:near_random_auroc",
+        "verifier_failure:tier0s_arithmetic_gap",
+        "verifier_failure:tier0u_logical_consistency"
+      ],
+      "row_ids": [
+        "FoVer:tier0s_arithmetic_gap",
+        "FoVer:tier0u_logical_consistency"
+      ],
+      "weight": 0.627341
+    },
+    {
+      "edge_id": "corpus_co_failure:HaluEval/FEVER",
+      "kind": "corpus_co_failure",
+      "nodes": [
+        "constraint:factual_support",
+        "failure_class:below_random_auroc",
+        "failure_class:near_random_auroc",
+        "verifier_failure:fever_local_calibration",
+        "verifier_failure:halueval_local_calibration"
+      ],
+      "row_ids": [
+        "HaluEval/FEVER:fever",
+        "HaluEval/FEVER:halueval"
+      ],
+      "weight": 0.587892
+    },
+    {
+      "edge_id": "residual_drift_mus_proxy:factual_support",
+      "kind": "residual_drift_mus_proxy",
+      "nodes": [
+        "constraint:factual_support",
+        "failure_class:below_random_auroc",
+        "failure_class:near_random_auroc",
+        "verifier_failure:fever_local_calibration",
+        "verifier_failure:halueval_local_calibration"
+      ],
+      "row_ids": [
+        "HaluEval/FEVER:fever",
+        "HaluEval/FEVER:halueval"
+      ],
+      "weight": 1.558918
+    }
+  ],
+  "hypergraph_hyperedges": 7,
+  "hypergraph_nodes": 9,
+  "methodology_note": "No exact MUS certificates were present in Exp 2865 or its clean source artifacts. Hyperedges are co-failure and residual-drift proxies, and the heuristic is not a trained HGNN policy.",
+  "n_failure_rows": 4,
+  "node_rankings": {
+    "degree": [
+      "failure_class:below_random_auroc",
+      "failure_class:near_random_auroc",
+      "constraint:factual_support",
+      "verifier_failure:fever_local_calibration",
+      "verifier_failure:halueval_local_calibration",
+      "constraint:arithmetic_consistency",
+      "constraint:logical_self_consistency",
+      "verifier_failure:tier0s_arithmetic_gap",
+      "verifier_failure:tier0u_logical_consistency"
+    ],
+    "residual_message_passing": [
+      "failure_class:below_random_auroc",
+      "constraint:factual_support",
+      "failure_class:near_random_auroc",
+      "verifier_failure:fever_local_calibration",
+      "verifier_failure:halueval_local_calibration",
+      "constraint:arithmetic_consistency",
+      "verifier_failure:tier0s_arithmetic_gap",
+      "constraint:logical_self_consistency",
+      "verifier_failure:tier0u_logical_consistency"
+    ]
+  },
+  "preconditions_checked": [
+    {
+      "command": "cd /home/ianblenke/github.com/ianblenke/carnot",
+      "name": "working_directory",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot",
+      "ok": true
+    },
+    {
+      "command": "test -f /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2865_cross_corpus_matrix_v5.json",
+      "name": "exp2865_matrix_file",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2865_cross_corpus_matrix_v5.json",
+      "ok": true
+    },
+    {
+      "command": "jq -e '.cross_corpus_matrix_built == true' results/experiment_2865_cross_corpus_matrix_v5.json",
+      "name": "cross_corpus_matrix_built",
+      "observed": true,
+      "ok": true
+    },
+    {
+      "command": "inspect verifier_corpus_dual_matrix clean rows",
+      "name": "clean_rows_present",
+      "observed": [
+        "FoVer",
+        "HaluEval/FEVER"
+      ],
+      "ok": true
+    },
+    {
+      "command": "test declared clean source artifacts",
+      "name": "clean_source_artifacts_available",
+      "observed": [
+        "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+        "results/experiment_2864_halueval_fever_full_calibration_v3.json"
+      ],
+      "ok": true
+    }
+  ],
+  "random_seed": 2867,
+  "recommended_repairs": [
+    "Calibrate, invert, or down-weight tier0s_arithmetic_gap before using it as an arithmetic repair signal; the clean FoVer source shows below-random AUROC.",
+    "Prioritize FEVER factual-support calibration next; it is the strongest non-FoVer residual-drift conflict in the clean matrix evidence.",
+    "Keep near-random logical and factual signals separate from below-random failures so future repair tasks can decide whether to abstain, recalibrate, or collect labels.",
+    "Treat this as a deterministic residual-drift diagnostic, not a trained HGNN policy; collect per-example co-failure and exact MUS certificates before training one."
+  ],
+  "reproducibility_checksum": "02115555b26f30f8125807e74159fe48825ed3a5993154bf1fd3c619f4ac88ac",
+  "run_date": "20260522",
+  "schema": "carnot.drift_mus_prioritizer.v2"
+}

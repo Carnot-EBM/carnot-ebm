@@ -3214,6 +3214,59 @@ with `honest_verdict="blocked_fover_dataset"`, null condition AUROC metrics,
 empty per-verifier learning contributions, populated precondition evidence,
 `live_model_invoked=false`, and `compute_bound_claim=false`.
 
+### REQ-VERIFY-2867: Residual-Drift MUS Conflict Prioritizer Diagnostic
+
+The repository shall provide an Exp 2867 residual-drift plus MUS conflict
+prioritization diagnostic that reads
+`results/experiment_2865_cross_corpus_matrix_v5.json` and writes
+`results/experiment_2867_drift_mus_prioritizer_v2.json`.
+
+Before extracting evidence, the diagnostic MUST confirm that the Exp 2865
+matrix exists and has `cross_corpus_matrix_built=true`. If the matrix is not
+built, the artifact MUST set `drift_mus_diagnostic_ready=false`, report zero
+failure rows, and avoid inferring missing or blocked corpus metrics.
+
+When the matrix is built, the diagnostic MUST use only rows classified `clean`
+inside `verifier_corpus_dual_matrix` and MAY load the clean rows' declared
+source artifacts for verifier-level evidence. It MUST identify weak or
+below-random AUROC evidence as failure rows, build a small hypergraph whose
+nodes are constraint families, verifier-failure signals, and failure classes,
+and whose hyperedges represent available co-failure or residual-drift/MUS-proxy
+relationships. If exact MUS certificates are not present, the artifact MUST say
+that the edges are diagnostic proxies rather than certified MUSes.
+
+The diagnostic MUST compare a deterministic residual-drift hypergraph
+message-passing heuristic against deterministic random and degree baselines
+using the same conflict-discovery metric. It MUST NOT claim a trained HGNN
+policy. The artifact MUST include `honest_verdict`,
+`drift_mus_diagnostic_ready`, `n_failure_rows`, `failure_class_counts`,
+`hypergraph_nodes`, `hypergraph_hyperedges`,
+`hgnn_inspired_heuristic_name`, `baseline_random_checks_to_conflict`,
+`baseline_degree_checks_to_conflict`, `heuristic_checks_to_conflict`,
+`heuristic_improvement_vs_best_baseline`, `recommended_repairs`,
+`preconditions_checked`, `random_seed`, `reproducibility_checksum`,
+`field_principles`, `run_date="20260522"`, and `duration_s`.
+
+### SCENARIO-VERIFY-2867: Clean Matrix Produces Honest Drift/MUS Diagnostic
+
+Given Exp 2865 contains clean FoVer and HaluEval/FEVER rows and declares the
+cross-corpus matrix built,
+When the Exp 2867 diagnostic runs,
+Then it extracts failure evidence only from those clean rows and their declared
+clean source artifacts, writes the required schema fields, reports a non-empty
+hypergraph and baseline comparison, recommends repairs without claiming a
+trained HGNN policy, and records a reproducibility checksum over the matrix,
+source evidence, failure rows, hypergraph, and metric payload.
+
+### SCENARIO-VERIFY-2867-BLOCKED: Missing Built Matrix Blocks Without Inference
+
+Given the Exp 2865 matrix is missing or has `cross_corpus_matrix_built=false`,
+When the Exp 2867 diagnostic runs,
+Then it writes `results/experiment_2867_drift_mus_prioritizer_v2.json` with
+`honest_verdict` prefixed `blocked_`, `drift_mus_diagnostic_ready=false`,
+zero failure rows, zero hypergraph nodes and hyperedges, populated
+precondition evidence, and no inferred repair-prioritization metrics.
+
 ### REQ-VERIFY-2829: MBPP Dual-Memory Ensemble Evaluation
 
 The repository shall provide an Exp 2829 MBPP dual-memory runner that writes
