@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Five FATAL Findings Three Deep Think Rounds Missed — Carnot Blog</title>
+  <meta name="description" content="We ran three rounds of rigorous theoretical review on an architecture. All three approved it. Then we built the prototype and asked one more question — and got five fatal findings, one of them entirely outside the eight problem categories the review had been told to look for. A note on why empirical instrumentation is not a luxury.">
+  <meta property="og:title" content="Five FATAL Findings Three Deep Think Rounds Missed">
+  <meta property="og:description" content="Three rigorous theory rounds approved the architecture. A single empirical audit pass found five fatal flaws — including one outside the question the theory rounds had been asked. Why instrumentation is the audit theory cannot be.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/five-fatal-findings.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <script>
+    MathJax = {
+      tex: { inlineMath: [['$', '$'], ['\\(', '\\)']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --accent-danger: #ef4444;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article {
+      max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code, article td code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+    article blockquote {
+      border-left: 3px solid var(--accent-energy);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: var(--bg-glass); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    .equation {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 1.5rem 0;
+      overflow-x: auto;
+    }
+    .keypoint {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-energy); font-family: var(--font-heading); }
+
+    .alert {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(249, 115, 22, 0.04));
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .alert strong { color: var(--accent-danger); font-family: var(--font-heading); }
+
+    .finding {
+      border-left: 3px solid var(--accent-danger);
+      padding: 0.5rem 0 0.5rem 1.5rem;
+      margin: 2rem 0;
+    }
+    .finding h3 {
+      margin-top: 0; font-size: 1.15rem;
+      color: var(--text); font-family: var(--font-heading);
+    }
+    .finding .severity {
+      display: inline-block; font-family: var(--font-mono);
+      font-size: 0.75rem; padding: 0.15em 0.6em;
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--accent-danger);
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 4px; margin-bottom: 0.5rem;
+      text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .finding .severity.bonus {
+      background: rgba(249, 115, 22, 0.15);
+      color: var(--accent-energy);
+      border-color: rgba(249, 115, 22, 0.35);
+    }
+
+    .footnote {
+      font-size: 0.9rem; color: var(--text-muted);
+      padding: 1.5rem 0; margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+    .further-reading ul { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Lessons</span>
+
+<h1>Five FATAL Findings Three Deep Think Rounds Missed</h1>
+
+<div class="post-meta">
+  <span>2026-05-22</span>
+  <span>~11 min read</span>
+</div>
+
+<p class="lede">
+  We ran three rounds of rigorous theoretical review on a piece of
+  our architecture. All three approved it. We then asked a fourth,
+  blind-spot-focused review the obvious question &mdash; "what are
+  we missing?" &mdash; and got five fatal findings, one of them
+  entirely outside the eight problem categories the review had been
+  told to look for. This is a note on what those five findings were,
+  what the unprompted one in particular tells us about the limits of
+  theoretical review, and why we now treat empirical instrumentation
+  as a load-bearing part of every architecture decision.
+</p>
+
+<h2>The setup</h2>
+
+<p>
+  The architecture under review was Phase 3 of the Carnot roadmap:
+  a deterministic bounded autoencoder feeding a latent energy-based
+  model, with the energy distilled down to a quadratic Ising form so
+  the inner sampling loop could run on an FPGA. The motivation was
+  speed. A discrete Ising sampler on dedicated silicon is several
+  orders of magnitude faster than continuous Langevin dynamics on a
+  GPU, and the Phase 3 deployment goal had a per-token latency budget
+  that GPUs couldn't make.
+</p>
+
+<p>
+  The architecture had been through three Deep Think rounds. Each
+  round was a multi-prompt synthesis pass against a frontier
+  reasoning model, focused on a different layer of the design:
+  encoder geometry, EBM training stability, FPGA primitive choice.
+  Each round produced a long, careful, well-cited document. Each
+  document concluded that the design was sound subject to specific
+  empirical questions, which we planned to answer in the prototype.
+</p>
+
+<p>
+  At which point we noticed something uncomfortable. <em>The questions
+  the rounds had asked were the questions a designer of this kind of
+  architecture would think to ask.</em> The rounds had not been asked
+  to find unknown unknowns. They had been asked to evaluate
+  candidate concerns. We didn't have an answer to the question we
+  hadn't thought of.
+</p>
+
+<p>
+  So we ran a fourth round, with a different prompt: tell us what the
+  first three rounds missed. We enumerated eight categories of
+  potential blind spot we had identified in advance and asked the
+  model to attack each one, plus a final open-ended "anything outside
+  these eight." The result is what this post is about.
+</p>
+
+<h2>The five findings</h2>
+
+<p>
+  Five separate problems, any one of which would have invalidated
+  the architecture at deployment time. We list them in the order they
+  were reported; their dependencies are tangled enough that any
+  ordering misleads.
+</p>
+
+<div class="finding">
+  <span class="severity">Fatal #1</span>
+  <h3>Dimensionality and sparsity guillotine</h3>
+  <p>
+    The FPGA hardware available to us supports an Ising graph with
+    <code>N = 128</code> spins and <code>MAX_DEGREE = 32</code>. The
+    Deep Think rounds had specified a continuous EBM with latent
+    dimension <code>d ∈ {256, 512}</code>. Distilling that EBM to a
+    quadratic surrogate produces a dense <code>d &times; d</code>
+    Hessian. Forcing a dense Hessian into a graph with maximum
+    degree 32 throws away over 93% of the energy topology for
+    <code>d = 512</code>. The verifier manifold catastrophically
+    distorts.
+  </p>
+  <p>
+    The first three rounds had reasoned about the EBM and the FPGA
+    independently. Nothing in any of them put the two side by side
+    and asked whether the EBM's natural dimensionality fit the
+    FPGA's natural graph.
+  </p>
+</div>
+
+<div class="finding">
+  <span class="severity bonus">Fatal #2 &mdash; BONUS</span>
+  <h3>Synchronous Glauber limit-cycle collapse</h3>
+  <p>
+    This is the finding the eight-category prompt did not enumerate.
+    It was returned under the "anything outside these eight" slot.
+    It is the highest-impact finding because of where it came from.
+  </p>
+  <p>
+    The FPGA's Ising sampler uses synchronous parallel Glauber
+    updates on a bipartite checkerboard schedule &mdash; standard
+    practice for parallelizing Markov-chain Monte Carlo on a fixed
+    graph. Synchronous parallel updates on an Ising lattice with
+    frustrated or antiferromagnetic couplings <em>mathematically
+    violate detailed balance</em> and do not converge to the
+    Boltzmann distribution they're meant to sample. Instead, the
+    chain deterministically collapses into infinite period-2
+    oscillations between two complementary spin patterns. The
+    hardware sampler is not sampling. It is blinking.
+  </p>
+  <p>
+    The implication for already-published Carnot work is sharp. An
+    earlier experiment that reported a 12,788&times; speedup of the
+    FPGA Ising sampler over a CPU reference was comparing a correct
+    sampler (CPU, sequential, detailed-balance-preserving) against a
+    non-equilibrium one (FPGA, synchronous, not actually sampling
+    the target distribution). The speedup number is real; the
+    comparison is not. We have since labeled that result as
+    preliminary, pending rework with a verified sampler.
+  </p>
+</div>
+
+<div class="finding">
+  <span class="severity">Fatal #3</span>
+  <h3>Hopfield capacity mode collapse</h3>
+  <p>
+    A pairwise Ising model <code>E = z^T J z</code> is, up to a sign
+    convention, a Hopfield network. Hopfield's classic result puts
+    the storage capacity at roughly <code>0.14 N</code> independent
+    patterns for a fully-connected graph; with maximum degree
+    capped, the bound is tighter still. For our hardware that is
+    fewer than 20 independent local minima. The continuous EBM
+    aims to express thousands of semantically distinct linguistic
+    basins. Distilling thousands of modes into a structure that can
+    hold fewer than 20 is exactly the catastrophic repetitive-text
+    failure mode this architecture was designed to avoid.
+  </p>
+</div>
+
+<div class="finding">
+  <span class="severity">Fatal #4</span>
+  <h3>Taylor-induced spurious black holes</h3>
+  <p>
+    Deep EBMs are non-convex. Their Hessians contain negative
+    eigenvalues. The distillation step sets <code>J</code> to the
+    Hessian of the deep EBM at a chosen anchor point, inheriting
+    those negative eigenvalues directly. On unbounded
+    <code>ℝ^d</code> the quadratic surrogate goes to negative
+    infinity along negative-eigenvalue eigenvectors &mdash; an
+    unphysical pathology that the original deep EBM doesn't have
+    because the original wasn't quadratic in the first place.
+  </p>
+  <p>
+    On the FPGA's bounded <code>{-1, +1}^d</code> hypercube the
+    pathology takes a physically realized form. The global minima
+    of the surrogate manifest at extreme corners aligned with the
+    negative-eigenvalue axes &mdash; corners the original EBM
+    correctly evaluates as <em>high</em>-energy junk. The Glauber
+    sampler plunges into these corners and stays there. The
+    hardware confidently outputs configurations the original
+    model would have rejected as gibberish.
+  </p>
+</div>
+
+<div class="finding">
+  <span class="severity">Fatal #5</span>
+  <h3>Higher-order logic eradication</h3>
+  <p>
+    The verifier ensemble that drives Carnot's signal is fifteen
+    base verifiers composed under AND. Several of those verifiers
+    impose non-linear logical syntaxes &mdash; XOR, parity,
+    tree-depth, mutual exclusion. A purely-observable quadratic
+    Ising is mathematically restricted to pairwise (2-SAT)
+    interactions. Pairwise graphs are physically incapable of
+    representing XOR without auxiliary hidden variables. This is
+    a textbook computational complexity result, not a subtlety.
+  </p>
+  <p>
+    Distillation strips all <code>&gt;2</code>-order logical
+    composition. The deployed FPGA surrogate optimizes an
+    ungrounded energy landscape structurally incapable of
+    enforcing the exact logical constraints the verifier was
+    trained to respect. The hardware can be confident; it cannot
+    be correct.
+  </p>
+</div>
+
+<h2>Why the unprompted finding matters most</h2>
+
+<p>
+  Four of the five findings can in principle be derived from the
+  architecture's stated structure. Once you see them, you can trace
+  back through the original design documents and identify where the
+  question should have been asked. The Hopfield capacity result is in
+  any neural-networks textbook. The Taylor expansion's negative-
+  eigenvalue pathology is a standard result. The XOR-vs-pairwise
+  bound is a textbook computational complexity result. The Hessian-
+  vs-FPGA-graph dimensionality mismatch is arithmetic.
+</p>
+
+<p>
+  Finding #2 is different. It does not come from the architecture's
+  structure. It comes from the <em>implementation choice for the
+  sampler</em>, which the first three rounds had taken as a black
+  box. A reviewer would have to know that synchronous parallel
+  Glauber on bipartite-but-frustrated graphs violates detailed
+  balance, and would also have to think to ask whether the FPGA's
+  scheduler was producing such a graph in practice. The first three
+  rounds had no reason to ask this. They had been reasoning about
+  the EBM, not about the sampler's stochastic dynamics.
+</p>
+
+<div class="keypoint">
+  <strong>The structural lesson.</strong>
+  Theoretical review is bounded by the questions the reviewer can
+  think to ask. A blind-spot prompt with an explicit "outside these
+  eight" slot is one way to break out of that bound. An empirical
+  prototype that <em>actually runs the sampler</em> and measures the
+  KL divergence between its output distribution and the target
+  Boltzmann distribution is another. Both are necessary. Neither, on
+  its own, is sufficient.
+</div>
+
+<h2>What we did about it</h2>
+
+<p>
+  Concretely, the response was twofold. First, we re-scoped the
+  hardware track. The deep-EBM-on-FPGA goal was retired as a near-
+  term Phase 3 deliverable; the KV260 board stays in service as a
+  proof-of-concept of "energy evaluable in dedicated hardware on
+  simple quadratic constraints," and future production hardware
+  targets shift to substrates that can express higher-order
+  interactions natively (Extropic Z1 or equivalent). The architecture
+  is honest about this in the public roadmap.
+</p>
+
+<p>
+  Second, we codified the procedure that found the five findings.
+  Every architecture phase in Carnot now ships under a single
+  three-part discipline before any scaling decision is committed:
+</p>
+
+<ol>
+  <li>
+    <strong>A software prototype.</strong> Concrete code in the
+    repository, runnable end-to-end at small scale, not just an
+    architecture document.
+  </li>
+  <li>
+    <strong>Empirical validation criteria.</strong> A documented
+    list of measurable pass/fail tests with explicit thresholds.
+    For Phase 3 that meant, among others: track the per-iteration
+    grounding signal <code>$\alpha_t$</code> across MLD steps;
+    measure <code>$\inf_t \alpha_t &gt; 0$</code>; measure the
+    decoder's joint-constraint pass rate; measure the KL divergence
+    between the FPGA sampler's empirical distribution and a Gibbs
+    reference. The Glauber limit-cycle pathology would have been
+    instantly visible to the KL check the first time it ran.
+  </li>
+  <li>
+    <strong>An adversarial check.</strong> A hostile-reviewer round
+    explicitly commissioned to find ways the prototype could pass
+    its acceptance gates without actually working. Required
+    <em>before</em> scaling, not after. The five findings above
+    came from exactly this kind of round.
+  </li>
+</ol>
+
+<p>
+  Empirical instrumentation IS the adversarial check at scale. A
+  prototype that emits the right diagnostics surfaces architecture-
+  level flaws automatically. A prototype that does not will let
+  flaws ship. We therefore now require every phase prototype to
+  include the diagnostic instrumentation for <em>every</em>
+  theoretical concern the phase rests on. <code>$\alpha_t$</code>
+  tracking. Joint null-space estimation. KL-to-target measurement.
+  Decoded-text diversity. None of these are optional.
+</p>
+
+<h2>The cost of doing this versus the cost of not</h2>
+
+<p>
+  We want to be honest about the trade. The three Deep Think rounds
+  took roughly a week of human time and a meaningful amount of model
+  compute. The blind-spot audit took half a day. The replacement
+  empirical instrumentation runs on every milestone and adds about
+  two percent to the cost of each prototype run.
+</p>
+
+<p>
+  Counterfactually, the cost of shipping the architecture without
+  the blind-spot round was on the order of a full FPGA bitstream
+  bring-up plus a downstream paper draft that would have asserted
+  measurements which the sampler does not actually support. We do
+  not know exactly how much real-world wall-clock that would have
+  been; we know it would have been more than half a day. We also
+  know that the wrong measurements, once published, are
+  approximately impossible to retract cleanly.
+</p>
+
+<div class="alert">
+  <strong>Theory that hasn't been instrumented is a guess.</strong>
+  It is often a careful, well-cited, internally consistent guess.
+  It is also a guess. A theory round can rule a thing out; it
+  cannot rule it in. Only the prototype can do that, and only if
+  the prototype is wearing the instruments.
+</div>
+
+<h2>What generalizes</h2>
+
+<p>
+  Three operational takeaways from the exercise that apply beyond
+  Carnot:
+</p>
+
+<ol>
+  <li>
+    <strong>Add an explicit "anything outside these N categories"
+    slot to every blind-spot review.</strong> Finding #2 lived in
+    that slot. A review prompt that does not invite the reviewer to
+    notice the unknown unknown is a review that will not find it.
+  </li>
+  <li>
+    <strong>Wire instrumentation for every theoretical concern, not
+    just the ones you think you'll need.</strong> Each of the four
+    "derivable" findings above has an instrument that would catch
+    it on the first prototype run. We did not have any of those
+    instruments before the audit, because nobody had thought to
+    look for the failure they would catch. After the audit, all
+    four exist.
+  </li>
+  <li>
+    <strong>Treat the speedup numbers from any non-instrumented
+    sampler as preliminary.</strong> A Markov chain that violates
+    detailed balance can be arbitrarily fast and arbitrarily wrong.
+    A KL-to-reference measurement, taken once at small scale, is
+    cheap insurance against the speedup-by-cheating failure mode.
+  </li>
+</ol>
+
+<p>
+  Carnot is a project about verifying language-model outputs with
+  energy-based methods. It would be embarrassing if our own
+  architecture review failed to verify itself with the same rigor.
+  This is the procedure we adopted so that it does.
+</p>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>The full audit document, including the four DEGRADING and
+    one COSMETIC findings we elided here: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/research-notes/phase3-architecture-blindspot-audit-results.md">phase3-architecture-blindspot-audit-results.md</a></li>
+    <li>The discipline rule, codified in the project's
+    <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/CLAUDE.md">CLAUDE.md</a>
+    &mdash; search for "Phase Prototype + Empirical Validation +
+    Adversarial Check Discipline."</li>
+    <li>The retire-and-rescope decision document: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/research-notes/phase3-dae-debm-pivot-decision.md">phase3-dae-debm-pivot-decision.md</a></li>
+    <li>Companion posts: <a href="caught-cheating.html">Caught
+    Cheating</a> (fabricated artifacts) and <a href="regex-in-an-ntk-costume.html">Regex
+    in an NTK Costume</a> (disguised verifiers). The three posts
+    describe the three independent failure modes our discipline
+    catches.</li>
+  </ul>
+</div>
+
+<div class="footnote">
+  <strong>About this post.</strong> This is one of a series of
+  operational notes from the
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">Carnot</a>
+  project on building an autonomous research loop that we can
+  actually trust. If you want to follow along, watch the
+  repository or check back at <a href="/blog/">/blog/</a> for new
+  entries.
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
