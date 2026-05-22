@@ -5996,3 +5996,4 @@ Ripgrep i |
 | 2026-05-22 17:42 UTC | SOTA Runtime Clean Corrigendum v4 | OK | 81 passed in 3.25s |
 | 2026-05-22 18:02 UTC | SOTA Energy Micro-Panel Logprob Corrigendum v2 (ga | OK | 81 passed in 3.09s |
 | 2026-05-22 18:19 UTC | KAN PWA/MILP Corrigendum v2 | OK | 81 passed in 3.13s |
+| 2026-05-22 19:06 UTC | Exact Frontier Expansion v2 for HaluEval/FEVER | OK | 81 passed in 3.40s |
