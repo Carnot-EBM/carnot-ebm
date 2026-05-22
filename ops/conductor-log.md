@@ -5968,3 +5968,5 @@ Ripgrep i |
 | 2026-05-22 09:54 UTC | LoopUS Recurrence Backend Adapter v1 (gated on exp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
 | 2026-05-22 09:55 UTC | LoopUS FR-11 Continuous Self-Learning Pilot v2 (ga | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2857_loopus_ |
 | 2026-05-22 09:57 UTC | LoopUS Recurrence Backend Adapter v1 (gated on exp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
+| 2026-05-22 10:08 UTC | LoopUS FR-11 Continuous Self-Learning Pilot v2 (ga | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2857_loopus_ |
+| 2026-05-22 10:10 UTC | LoopUS Recurrence Backend Adapter v1 (gated on exp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
