@@ -1,0 +1,607 @@
+{
+  "artifact": "experiment_2841_halueval_fever_pilot",
+  "candidate_generation": {
+    "caveat": "This readiness pilot uses corpus-provided candidate answers/claims. Exp2836 supplies the mandated local GGUF runtime provenance; a future full generator benchmark should run fresh autoregressive candidates.",
+    "fresh_generation_count": 0,
+    "loaded_candidate_count": 50,
+    "mandated_sota_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "mandated_sota_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "mode": "loaded_dataset_candidate_answers"
+  },
+  "dataset_sample_manifest": [
+    {
+      "candidate_len": 71,
+      "dataset": "FEVER",
+      "example_id": "fever-156721",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 33,
+      "dataset": "FEVER",
+      "example_id": "fever-61991",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 63,
+      "dataset": "FEVER",
+      "example_id": "fever-84514",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 22,
+      "dataset": "FEVER",
+      "example_id": "fever-18534",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 43,
+      "dataset": "FEVER",
+      "example_id": "fever-182889",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 34,
+      "dataset": "FEVER",
+      "example_id": "fever-144383",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 37,
+      "dataset": "FEVER",
+      "example_id": "fever-32579",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 58,
+      "dataset": "FEVER",
+      "example_id": "fever-54940",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 96,
+      "dataset": "FEVER",
+      "example_id": "fever-92978",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 54,
+      "dataset": "FEVER",
+      "example_id": "fever-175281",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 30,
+      "dataset": "FEVER",
+      "example_id": "fever-26306",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 56,
+      "dataset": "FEVER",
+      "example_id": "fever-204793",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 54,
+      "dataset": "FEVER",
+      "example_id": "fever-45507",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 63,
+      "dataset": "FEVER",
+      "example_id": "fever-74885",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 45,
+      "dataset": "FEVER",
+      "example_id": "fever-40498",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 64,
+      "dataset": "FEVER",
+      "example_id": "fever-33349",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 36,
+      "dataset": "FEVER",
+      "example_id": "fever-19568",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 54,
+      "dataset": "FEVER",
+      "example_id": "fever-216704",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 55,
+      "dataset": "FEVER",
+      "example_id": "fever-32793",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 27,
+      "dataset": "FEVER",
+      "example_id": "fever-160767",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 39,
+      "dataset": "FEVER",
+      "example_id": "fever-23683",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 74,
+      "dataset": "FEVER",
+      "example_id": "fever-164626",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 71,
+      "dataset": "FEVER",
+      "example_id": "fever-146292",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 39,
+      "dataset": "FEVER",
+      "example_id": "fever-87051",
+      "has_reference": true,
+      "label": 1,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 53,
+      "dataset": "FEVER",
+      "example_id": "fever-145765",
+      "has_reference": true,
+      "label": 0,
+      "source": "maxzoech/fever:train"
+    },
+    {
+      "candidate_len": 17,
+      "dataset": "HaluEval",
+      "example_id": "halueval-0-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 34,
+      "dataset": "HaluEval",
+      "example_id": "halueval-0-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 5,
+      "dataset": "HaluEval",
+      "example_id": "halueval-1-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 53,
+      "dataset": "HaluEval",
+      "example_id": "halueval-1-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 23,
+      "dataset": "HaluEval",
+      "example_id": "halueval-2-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 110,
+      "dataset": "HaluEval",
+      "example_id": "halueval-2-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 8,
+      "dataset": "HaluEval",
+      "example_id": "halueval-3-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 38,
+      "dataset": "HaluEval",
+      "example_id": "halueval-3-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 7,
+      "dataset": "HaluEval",
+      "example_id": "halueval-4-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 28,
+      "dataset": "HaluEval",
+      "example_id": "halueval-4-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 14,
+      "dataset": "HaluEval",
+      "example_id": "halueval-5-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 41,
+      "dataset": "HaluEval",
+      "example_id": "halueval-5-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 9,
+      "dataset": "HaluEval",
+      "example_id": "halueval-6-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 69,
+      "dataset": "HaluEval",
+      "example_id": "halueval-6-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 9,
+      "dataset": "HaluEval",
+      "example_id": "halueval-7-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 35,
+      "dataset": "HaluEval",
+      "example_id": "halueval-7-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 4,
+      "dataset": "HaluEval",
+      "example_id": "halueval-8-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 58,
+      "dataset": "HaluEval",
+      "example_id": "halueval-8-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 13,
+      "dataset": "HaluEval",
+      "example_id": "halueval-9-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 53,
+      "dataset": "HaluEval",
+      "example_id": "halueval-9-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 12,
+      "dataset": "HaluEval",
+      "example_id": "halueval-10-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 83,
+      "dataset": "HaluEval",
+      "example_id": "halueval-10-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 17,
+      "dataset": "HaluEval",
+      "example_id": "halueval-11-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 103,
+      "dataset": "HaluEval",
+      "example_id": "halueval-11-hallucinated",
+      "has_reference": true,
+      "label": 1,
+      "source": "pminervini/HaluEval:qa:data"
+    },
+    {
+      "candidate_len": 13,
+      "dataset": "HaluEval",
+      "example_id": "halueval-12-right",
+      "has_reference": true,
+      "label": 0,
+      "source": "pminervini/HaluEval:qa:data"
+    }
+  ],
+  "datasets_loaded": [
+    "FEVER",
+    "HaluEval"
+  ],
+  "duration_s": 2.0778887271881104,
+  "field_principles": {
+    "datasets_loaded": "Readiness depends on real datasets.",
+    "duration_s": "Real compute wall-time; no sleep padding.",
+    "honest_verdict": "MUST start with \"complete:\" / \"success:\" or \"blocked_\".",
+    "model_specs": "Mandated SOTA GGUF recorded.",
+    "n_examples": "Pilot sample size transparency.",
+    "pilot_auroc_by_dataset": "Exploratory only; not headline.",
+    "pilot_only": "Prevents accidental headline use.",
+    "preconditions_checked": "Explains blocks honestly.",
+    "recommendation": "States whether to scale HaluEval/FEVER later."
+  },
+  "honest_verdict": "complete: HaluEval/FEVER readiness pilot measured with dataset labels and mandated SOTA GGUF provenance",
+  "methodology_note": "AUROC is pilot/readiness only. Label orientation is hallucinated, refuted, or unsupported = 1 and grounded/supports = 0. The pilot checks label balance, finite verifier energies, and corpus loading before recommending any future N>=500 benchmark.",
+  "model_specs": {
+    "cached_sota_pair_model_paths": [],
+    "cached_sota_pair_result": {
+      "called": true,
+      "error": null,
+      "experiment_template_import_ok": true,
+      "result": null
+    },
+    "headline_required_any_of": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "legacy_cpu_smoke_only": [
+      "Qwen3.5-0.8B",
+      "gemma-4-E4B-it"
+    ],
+    "scorer_or_generator_model_paths_used": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "selected_model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "smoke_model_paths": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "sota_models_cached": [
+      {
+        "candidate_count": 24,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "min_vram_gb": 16,
+        "model_family": "gemma",
+        "name": "Gemma4-26B-A4B-it",
+        "observed_quantization": "UD-Q4_K_M",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "role": "moe",
+        "sha256": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "size_bytes": 16947539744
+      }
+    ],
+    "sota_runtime_ready": true
+  },
+  "n_examples": 50,
+  "pilot_auroc_by_dataset": {
+    "FEVER": {
+      "auroc": 0.4326923076923077,
+      "auroc_ci95": [
+        0.22115384615384615,
+        0.6538461538461539
+      ],
+      "ci_method": "bootstrap_percentile",
+      "energy_stability": {
+        "all_finite": true,
+        "score_max": 0.6755555555555556,
+        "score_mean": 0.534183492063492,
+        "score_min": 0.22499999999999998,
+        "unique_score_count": 16
+      },
+      "label_counts": {
+        "0": 13,
+        "1": 12
+      },
+      "n_examples": 25,
+      "n_scored": 25,
+      "per_verifier_energy_summary": {
+        "tier0r_curry_howard": {
+          "max": 1.0,
+          "mean": 0.95836,
+          "min": 0.6,
+          "n": 25
+        },
+        "tier0s_arithmetic_gap": {
+          "max": 1.0,
+          "mean": 0.6416,
+          "min": 0.0,
+          "n": 25
+        },
+        "tier0u_logical_consistency": {
+          "max": 0.02666666666666667,
+          "mean": 0.002590476190476191,
+          "min": 0.0,
+          "n": 25
+        }
+      },
+      "ready_for_full_benchmark": true,
+      "score_failures": 0
+    },
+    "HaluEval": {
+      "auroc": 0.5769230769230769,
+      "auroc_ci95": [
+        0.3412698412698413,
+        0.782051282051282
+      ],
+      "ci_method": "bootstrap_percentile",
+      "energy_stability": {
+        "all_finite": true,
+        "score_max": 0.6263333333333333,
+        "score_mean": 0.29888,
+        "score_min": 0.10566666666666667,
+        "unique_score_count": 25
+      },
+      "label_counts": {
+        "0": 13,
+        "1": 12
+      },
+      "n_examples": 25,
+      "n_scored": 25,
+      "per_verifier_energy_summary": {
+        "tier0r_curry_howard": {
+          "max": 0.936,
+          "mean": 0.56264,
+          "min": 0.317,
+          "n": 25
+        },
+        "tier0s_arithmetic_gap": {
+          "max": 1.0,
+          "mean": 0.33,
+          "min": 0.0,
+          "n": 25
+        },
+        "tier0u_logical_consistency": {
+          "max": 0.1,
+          "mean": 0.004,
+          "min": 0.0,
+          "n": 25
+        }
+      },
+      "ready_for_full_benchmark": true,
+      "score_failures": 0
+    }
+  },
+  "pilot_only": true,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2836_sota_runtime_preflight.json",
+      "resource": "exp2836_artifact"
+    },
+    {
+      "available": true,
+      "detail": "sota_runtime_ready=True",
+      "resource": "exp2836_sota_runtime_ready"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "resource": "exp2836_selected_python"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "resource": "mandated_sota_model_path"
+    },
+    {
+      "available": true,
+      "detail": "loaded_examples=25",
+      "resource": "halueval_dataset"
+    },
+    {
+      "available": true,
+      "detail": "loaded_examples=25",
+      "resource": "fever_dataset"
+    },
+    {
+      "available": true,
+      "detail": "datasets=['FEVER', 'HaluEval']; n_examples=50",
+      "resource": "labeled_pilot_datasets"
+    }
+  ],
+  "random_seed": 42,
+  "recommendation": "Scale FEVER, HaluEval to a future N>=500 milestone, keeping pilot_only=true results out of headline tables.",
+  "run_date": "20260522",
+  "sample_per_dataset": 25,
+  "schema": "carnot.halueval_fever_pilot"
+}

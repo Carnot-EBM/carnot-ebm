@@ -3449,6 +3449,54 @@ conditions, calibration and local-scorer metadata,
 scorer or generator path, `retired_exp2823_not_used=true`, and
 `state_files_restored_sha_match=true`.
 
+### REQ-VERIFY-2841: HaluEval And FEVER Readiness Pilot
+
+The repository shall provide an Exp 2841 factuality-readiness pilot that writes
+`results/experiment_2841_halueval_fever_pilot.json` for at most 50 total
+examples, sampling 25 HaluEval examples and 25 FEVER examples when both corpora
+are locally available or fetchable. The pilot MUST be marked `pilot_only=true`
+and MUST NOT be presented as a headline benchmark result.
+
+Before candidate generation or verifier scoring, the runner MUST load
+`results/experiment_2836_sota_runtime_preflight.json`, assert
+`sota_runtime_ready=true`, use the artifact's `selected_python`, and record a
+usable model path for at least one mandated SOTA GGUF
+(`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`). It MUST confirm whether HaluEval and/or
+FEVER rows are locally available or fetchable and write a terminal
+`blocked_<resource>` artifact when no labeled corpus can be loaded or no
+mandated model path is available.
+
+For each loaded corpus, the pilot MUST generate or load candidate answers using
+the mandated SOTA model provenance, score candidates with the existing verifier
+ensemble against dataset labels, compute AUROC only as a pilot/readiness metric
+with confidence intervals, and record caveats about sample size and label
+semantics. The artifact MUST include `honest_verdict`, `pilot_only`,
+`datasets_loaded`, `n_examples`, `pilot_auroc_by_dataset`, `recommendation`,
+`model_specs`, `preconditions_checked`, real `duration_s`, and field principle
+annotations.
+
+### SCENARIO-VERIFY-2841-BLOCKED: Missing Pilot Resources Block Honestly
+
+Given Exp 2836 is missing or not ready, no mandated SOTA GGUF path is available,
+or neither HaluEval nor FEVER can provide labeled pilot rows,
+When the Exp 2841 runner executes,
+Then it writes `results/experiment_2841_halueval_fever_pilot.json` with
+`honest_verdict` prefixed `blocked_`, `pilot_only=true`, populated
+`preconditions_checked`, empty `datasets_loaded`, `n_examples=0`, and no
+inferred AUROC values.
+
+### SCENARIO-VERIFY-2841-PILOT: Loaded Corpora Report Readiness Metrics Only
+
+Given Exp 2836 reports a ready SOTA runtime with at least one mandated GGUF and
+HaluEval and/or FEVER labeled rows can be loaded,
+When the Exp 2841 runner evaluates the pilot sample,
+Then it records loaded dataset names, candidate-generation provenance,
+verifier-energy summaries, AUROC confidence intervals for each measured corpus,
+`pilot_only=true`, and a recommendation that scales a corpus to a future
+N>=500 milestone only when the sample has both label classes, stable finite
+energies, and a finite confidence interval.
+
 ### REQ-VERIFY-2832: Cross-Corpus Verifier Dual-Condition Matrix
 
 The repository shall provide an Exp 2832 analyzer that reads only the real
