@@ -4567,3 +4567,9 @@ The critical path for milestone .250:
 4. exp2617 (JEPA real-data eval on 50 FoVer examples with `online_update()` active).
 5. exp2618 (KV260 hardware continuity: Branch A flash if SD card present; Branch B update prep script).
 6. exp2619 (capstone, claude+opus — cross-artifact synthesis of sklearn fix + verifier recovery + Tier 0z + Safety Tier B results).
+
+### Milestone 2026.05.268
+- exp_range: no data available this milestone
+- theme: Operational retrospective for an empty milestone-scoped timing window
+- key result: No experiment commits were found since activation, so compute-bound and slowest-experiment analysis is unavailable.
+- acceptance: no data available this milestone

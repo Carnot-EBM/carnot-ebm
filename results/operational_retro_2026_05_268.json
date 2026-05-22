@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.268",
+  "generated_at": "2026-05-22T00:10:38Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The authoritative timing window contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. No slowest-experiment ranking or compute-bound GPU-efficiency conclusion is available for this milestone.",
+  "bottlenecks_identified": [
+    "No experiment commits were found since activation, so execution efficiency cannot be measured from milestone-scoped timing data.",
+    "no data available this milestone for compute-bound bottleneck attribution"
+  ],
+  "improvements_suggested": [
+    "Add a milestone-open timing sentinel and report the activation timestamp/query used whenever no experiment commits are found.",
+    "Add an activation-to-first-dispatch check that raises an operational alert before the retrospective closes with no experiment commits.",
+    "Keep DualGPURunner recommendations gated on timing data showing a compute-bound task with 2+ models in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Write a deterministic milestone-open timing sentinel at activation.",
+    "Warn before retrospective closure when the milestone has no captured experiment commits.",
+    "Require the GPU efficiency check to emit 'no data available this milestone' unless a compute-bound timing entry exists."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This artifact intentionally does not infer experiment IDs, durations, or metrics from surrounding logs. The GPU report showed idle devices, but the timing data contains no compute-bound tasks, so idle utilization is not an efficiency bug for this milestone."
+}
