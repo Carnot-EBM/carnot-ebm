@@ -5804,3 +5804,23 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 - Added `"datasets>=3.0"` to `[project.dependencies]` in `pyproject.toml` so this dependency is now tracked
 
 **Recurrence pattern:** for the third time in 4 days, a Python package the corpus tasks need has been missing from the venv. First incident was `pytest-xdist`; second was `python-sat`; third was `datasets`. Suggests the venv has drifted from `pyproject.toml`'s declared deps. Operator may want to run `.venv/bin/pip install -e ".[dev,llm]"` once to sync.
+
+### 2026-05-22 morning: llama-cpp-python CPU-only wheel + missing CUDA toolkit
+
+**Symptom:** `.270 exp2848 SOTA Runtime Evidence v2 emitted `blocked_llama_cpp_gpu_offload`. Inspection found `llama_cpp 0.3.23` installed with `libggml-base.so` + `libggml-cpu.so` only — no `libggml-cuda.so`. Same CPU-only-wheel pattern as the 2026-05-21 torch+cpu regression.
+
+**Compounding root cause:** the system didn't have a CUDA TOOLKIT (just CUDA RUNTIME via torch's bundled `nvidia-cuda-runtime-cu12`). No `nvcc` on PATH. Source rebuilds of llama-cpp-python (or any CUDA C++ extension) failed CMake config: `Could not find 'nvcc' executable in any searched paths`.
+
+**Fix 2026-05-22:**
+1. `sudo pacman -S --noconfirm cuda` (CachyOS package, 4.73 GiB install). Provides nvcc at `/opt/cuda/bin/nvcc`, CUDA 13.2.78.
+2. Rebuild llama-cpp-python from source with explicit gcc-15 as the CUDA host compiler (GCC 16 default has `char8_t`/concepts features that nvcc 13.2 can't preprocess):
+   ```
+   CUDA_HOME=/opt/cuda PATH="/opt/cuda/bin:$PATH" \
+     CMAKE_ARGS="-DGGML_CUDA=on -DCUDAToolkit_ROOT=/opt/cuda -DCMAKE_CUDA_COMPILER=/opt/cuda/bin/nvcc -DCMAKE_CUDA_HOST_COMPILER=/usr/bin/gcc-15 -DCMAKE_C_COMPILER=/usr/bin/gcc-15 -DCMAKE_CXX_COMPILER=/usr/bin/g++-15" \
+     .venv/bin/pip install --upgrade --force-reinstall --no-cache-dir llama-cpp-python
+   ```
+3. Smoke test: gemma-4-26B-A4B-it-GGUF loads in 8.4s with `n_gpu_layers=-1`, produces real generation. `libggml-cuda.so` present.
+
+**Recurrence prevention TODO:** pin llama-cpp-python build flags in pyproject.toml under `[tool.uv.sources]` or document the CUDA build recipe in CONTRIBUTING.md. The pre-built wheel from `https://abetlen.github.io/llama-cpp-python/whl/cu128/` only covers stable Python 3.x — Python 3.14 wheels not available there, hence the source build.
+
+**Recurrence pattern (cumulative):** 4 missing-or-CPU-only Python packages in 5 days — `pytest-xdist`, `python-sat`, `datasets`, llama-cpp-python (CPU wheel). The venv has drifted from declared deps; recommend `.venv/bin/pip install -e ".[dev,llm,mcp,rust,dwave]"` to re-sync. Or move to `uv sync` workflow which respects the `[tool.uv.sources]` index pins.
