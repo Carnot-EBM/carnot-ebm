@@ -5937,3 +5937,4 @@ Ripgrep i |
 | 2026-05-22 06:12 UTC | MBPP Dual-Condition v3 (CODEX, post-torch-fix, N=1 | FAIL | No file changes produced |
 | 2026-05-22 06:29 UTC | HumanEval Full Dual-Condition v3 (CODEX, post-torc | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2838_humanev |
 | 2026-05-22 06:36 UTC | HumanEval Full Dual-Condition v3 (CODEX, post-torc | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2838_humanev |
+| 2026-05-22 06:43 UTC | HumanEval Full Dual-Condition v3 (CODEX, post-torc | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2838_humanev |
