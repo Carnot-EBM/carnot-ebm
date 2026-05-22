@@ -5980,3 +5980,4 @@ Ripgrep i |
 | 2026-05-22 11:50 UTC | Milestone 2026.05.271 activated | OK | 12 tasks queued |
 | 2026-05-22 12:00 UTC | Archive .270 + Activate .271 | OK | 81 passed in 2.89s |
 | 2026-05-22 12:39 UTC | SOTA Runtime Cache + GPU Offload Resolver v3 | OK | 81 passed in 3.16s |
+| 2026-05-22 13:12 UTC | Eval Manifest Contract + Alias Resolver v2 | OK | 81 passed in 3.12s |
