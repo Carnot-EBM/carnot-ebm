@@ -5986,3 +5986,4 @@ Ripgrep i |
 | 2026-05-22 14:07 UTC | BEAVER Exact Tiny Frontier Feasibility v1 | OK | 81 passed in 3.03s |
 | 2026-05-22 14:23 UTC | Residual Drift + MUS Prioritizer v2 (gated on exp2 | OK | 81 passed in 3.11s |
 | 2026-05-22 15:12 UTC | Offline Recurrence Backend Adapter v2 | OK | 81 passed in 3.12s |
+| 2026-05-22 15:27 UTC | FR-11 Continuous Self-Learning Replay v3 (gated on | OK | 81 passed in 3.26s |
