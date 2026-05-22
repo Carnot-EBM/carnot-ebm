@@ -170,7 +170,7 @@ tasks:
           principle: "= A - B. Direct measurement of FR-11 self-learning contribution."
         - per_verifier_learning_contribution: dict[str, float]
           principle: "Which specific verifiers degrade most without FR-11 memory."
-        - fr11_state_files: list[{path, sha256, n_bytes}]
+        - fr11_state_files: list[{{path, sha256, n_bytes}}]
           principle: "Names the persisted state that was reset."
         - state_files_restored_sha_match: true
           principle: "Proves FR-11 state was restored to original SHAs (non-destructive)."
@@ -182,7 +182,7 @@ tasks:
           principle: "Determinism."
         - reproducibility_checksum: str
           principle: "Catches drift."
-        - model_specs: {name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}
+        - model_specs: {{name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}}
           principle: "Names compute target."
         - duration_s: float
           principle: "Expected >= 3600s. Sleep-padding forbidden."
@@ -259,7 +259,7 @@ tasks:
         - vanilla_qwen36_pass_at_1: float
         - random_seeds_used: [42, 137, 271, 314, 1729]
         - reproducibility_checksum: str
-        - model_specs: {name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}
+        - model_specs: {{name: "Qwen3.6-35B-A3B-GGUF", quant: "...", revision_sha: "..."}}
         - duration_s: float
           principle: "Expected >= 1800s. Sleep-padding forbidden."
         - preconditions_checked: list
@@ -458,7 +458,7 @@ tasks:
 
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:' / 'success:'
-        - verifier_corpus_dual_matrix: dict[verifier_id, dict[corpus, {production, architecture_only, delta}]]
+        - verifier_corpus_dual_matrix: dict[verifier_id, dict[corpus, {{production, architecture_only, delta}}]]
         - architecture_transfer_verifiers: list[str]
         - memory_augmented_verifiers: list[str]
         - corpus_specific_verifiers: list[str]
@@ -559,7 +559,7 @@ tasks:
 
       REQUIRED ARTIFACT FIELDS:
         - honest_verdict: MUST start with 'complete:'
-        - corpora_headline_table: dict[corpus, {n, architecture_only_mean_std, production_mean_std, learning_delta, peer}]
+        - corpora_headline_table: dict[corpus, {{n, architecture_only_mean_std, production_mean_std, learning_delta, peer}}]
         - fover_shape_overfit_confirmed: bool
           principle: "Operationalized: true if non-FoVer architecture-only AUROC < FoVer architecture-only AUROC by >0.10."
         - self_learning_contribution_confirmed: bool
@@ -571,7 +571,7 @@ tasks:
         - corpus_specific_verifiers: list[str]
         - low_signal_verifiers: list[str]
         - recommended_headline_repin: bool
-        - gaps_for_270: list[{title, rationale}]
+        - gaps_for_270: list[{{title, rationale}}]
         - acceptance_criteria_met: int
         - duration_s: float
 

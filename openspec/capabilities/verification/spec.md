@@ -3050,6 +3050,58 @@ per-verifier learning contribution map, the FR-11 state-file hashes, and
 `state_files_restored_sha_match=true` because no destructive reset was
 attempted.
 
+### REQ-VERIFY-2837: FoVer Memory Leakage Isolation v3 Gated By Exp 2836
+
+The repository shall provide an Exp 2837 FoVer memory-leakage runner that
+writes `results/experiment_2837_fover_memory_leakage_v3.json` for a
+1000-example FoVer subset and the five replication seeds
+`[42, 137, 271, 314, 1729]`.
+
+Before scoring, the runner MUST load
+`results/experiment_2836_sota_runtime_preflight.json`, assert
+`sota_runtime_ready=true`, use the artifact's `selected_python` for condition
+scoring subprocesses, and record the usable mandated SOTA GGUF model path
+reported by Exp 2836. It MUST also confirm the FoVer corpus has at least 1000
+labeled rows and that FR-11/NEXUS/session memory files are present. If any
+precondition fails, it MUST write a terminal `blocked_<resource>` artifact with
+populated `preconditions_checked` and null AUROC metrics.
+
+For successful runs, the runner MUST compare Condition A (production verifier
+with FR-11 state visible) against Condition B (architecture-only verifier after
+FR-11/NEXUS/session state files are non-destructively moved aside). Condition
+A and B MUST be scored in separate Python subprocesses for each seed, Condition
+B MUST verify no FR-11 state files are visible to its subprocess, and the
+runner MUST restore every state file afterward with SHA256 equality to the
+initial state manifest.
+
+The artifact MUST include `honest_verdict`, `condition_a_production_auroc_mean`,
+`condition_b_architecture_only_auroc_mean`, `learning_contribution`,
+`per_seed_results`, `fr11_state_files`, `state_files_restored_sha_match`,
+`model_specs`, `preconditions_checked`, `duration_s`, confidence intervals for
+both condition means, and an honest methodology note describing the
+non-destructive reset.
+
+### SCENARIO-VERIFY-2837: Architecture-Only Condition Runs With State Absent
+
+Given Exp 2836 reports a ready SOTA runtime, FoVer data has at least 1000
+labeled rows, and FR-11 state files exist,
+When the Exp 2837 runner scores the five seeds,
+Then each per-seed result records a production AUROC from a state-visible
+subprocess and an architecture-only AUROC from a separate subprocess where
+`condition_b_state_visible_count=0`, computes `learning_contribution` as
+Condition A minus Condition B, and reports
+`state_files_restored_sha_match=true`.
+
+### SCENARIO-VERIFY-2837-BLOCKED: Runtime Gate Blocks Without Metrics
+
+Given the Exp 2836 preflight artifact is missing, not ready, or has no usable
+mandated SOTA model path,
+When the Exp 2837 runner executes,
+Then it writes `results/experiment_2837_fover_memory_leakage_v3.json` with
+`honest_verdict` prefixed `blocked_`, null condition AUROC metrics, an empty
+`per_seed_results` list, populated `preconditions_checked`, and no inferred
+learning contribution.
+
 ### REQ-VERIFY-2829: MBPP Dual-Memory Ensemble Evaluation
 
 The repository shall provide an Exp 2829 MBPP dual-memory runner that writes
