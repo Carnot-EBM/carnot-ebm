@@ -5901,3 +5901,4 @@ Ripgrep i |
 | 2026-05-21 23:29 UTC | TruthfulQA Corpus — Both Memory Conditions (CODEX, | FAIL | Codex CLI error: Wall-clock+idle timeout after 1285s (300s silence). Last out |
 | 2026-05-21 23:40 UTC | Cross-Corpus Per-Verifier Dual-Condition Discrimin | OK | 81 passed in 3.09s |
 | 2026-05-21 23:54 UTC | Paper v6 §5 v2: Multi-Corpus Dual-Condition Table  | OK | 81 passed in 2.91s |
+| 2026-05-22 00:05 UTC | Capstone v268: Multi-Corpus Dual-Condition Headlin | OK | 81 passed in 2.89s |

@@ -158,5 +158,18 @@
     "results/experiment_2833_paper_v6_multicorpus_table_v2.json"
   ],
   "synthesis_is_compute_free": true,
-  "duration_s": 0.0006349086761474609
+  "duration_s": 0.0006349086761474609,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.0006349086761474609 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
