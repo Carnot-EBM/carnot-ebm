@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-22 Milestone 2026.05.271 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-22T11:29:29Z | 2026-05-22T11:45:26Z | Planned milestone 2026.05.271 after reading required project context, `.270` artifacts, and failed-run evidence. Added Post-.270 research sweep to `research-references.md` (Spilled Energy, First Token Knows, Error Verifiability, ChopChop, RWOPD, KAN PWA/MILP, Ising/FPGA decomposition, REASON, Extropic THRML/TSU, Kona/EBRM, EBT/ARM citation watch). Created `openspec/change-proposals/research-roadmap-vNEXT.md` and `research-roadmap-next.yaml` with 12 tasks exp2861-exp2872, SOTA runtime repair, manifest reconciliation, non-FoVer matrix recovery, BEAVER exact frontier, offline FR-11 replay, runtime-gated SOTA micro-panel, and KAN formal verifier. Validation: YAML parse OK; prior-failure validator OK; roadmap gate audit OK with 6 gate checks and 0 failures; prompt checks OK; diff whitespace check clean. | ~150k |
+
+---
+
 ## Session: 2026-05-22 Milestone 2026.05.269 Research Planning
 
 ### Turn Log

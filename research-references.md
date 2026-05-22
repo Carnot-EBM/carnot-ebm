@@ -1,3 +1,116 @@
+## 2026-05-22 Post-.270 Planning Sweep (Milestone 2026.05.271)
+
+This sweep was run after milestone `.270` completed. `.270` fixed part of the local evidence chain
+by materializing dated dataset manifests and rerunning a clean FoVer dual-condition row, but it left
+four blockers: `llama_cpp` was installed without GPU offload support, `cached_sota_pair()` returned
+no mandated local pair, HaluEval/FEVER looked for plain manifest filenames while the materializer
+wrote dated paths, and the LoopUS FR-11 recurrence backend artifact never existed. The next
+milestone should therefore prioritize runtime/cache repair, manifest-path reconciliation,
+non-FoVer clean rows that do not require live generation, and one offline continuous self-learning
+loop before retrying expensive SOTA generation.
+
+### Training-Free Energy Signals for Hallucination Detection
+
+- **Papers:** "Spilled Energy in Large Language Models" (arXiv:2602.18671; ICLR 2026) and
+  "The First Token Knows: Single-Decode Confidence for Hallucination Detection" (arXiv:2605.05166).
+- **What:** Spilled Energy reinterprets the final LLM softmax classifier as an EBM and derives
+  training-free logit/energy metrics that localize hallucination risk without probes or activation
+  ablations. First-token confidence reports that normalized entropy of the first content-bearing
+  token reaches mean AUROC 0.820 on short-answer factual QA, ahead of multi-sample agreement
+  baselines in the reported setting.
+- **Relevance to Carnot:** These are directly compatible with a low-cost SOTA micro-panel once the
+  GGUF runtime works. They also suggest that `.271` should not spend tokens on multi-sample
+  self-consistency until it has reported first-token and energy baselines.
+- **Sources:** https://arxiv.org/abs/2602.18671, https://openreview.net/forum?id=EXFKk4Y3yc, and
+  https://arxiv.org/abs/2605.05166
+
+### Verifiability as a Metric, Not Just Accuracy
+
+- **Paper:** "Justified or Just Convincing? Error Verifiability as a Dimension of LLM Quality"
+  (arXiv:2604.04418).
+- **What:** Formalizes `v_bal`, a balanced metric for whether generated justifications help users
+  distinguish correct from incorrect answers. The paper argues that higher answer accuracy and common
+  post-training interventions do not automatically improve verifiability; domain-aware
+  rephrasing/external-information methods are needed.
+- **Relevance to Carnot:** Fits the PRD's verification-first claim boundary. `.271` should report
+  whether verifier outputs improve error localization and auditability, not only AUROC.
+- **Sources:** https://arxiv.org/abs/2604.04418
+
+### Semantic Constrained Decoding and Verifier-Rewarded Distillation
+
+- **Papers:** "ChopChop: a Programmable Framework for Semantically Constraining the Output of
+  Language Models" (arXiv:2509.00360; NeurIPS 2025 DL4C) and "Reward-Weighted On-Policy
+  Distillation with an Open Property-Equivalence Verifier for NL-to-SVA Generation"
+  (arXiv:2605.13501).
+- **What:** ChopChop connects token-level generation to structural program reasoning through a
+  realizability/coinduction formulation, enforcing semantic properties such as reference
+  equivalence and type safety during decoding. RWOPD samples student rollouts and weights
+  distillation by an open SymbiYosys+Z3 property-equivalence checker, improving NL-to-SVA accuracy
+  by grounding selection and loss in verifier-passable behavior.
+- **Relevance to Carnot:** These are strong design precedents for verifier-in-the-loop code and
+  hardware-property experiments. `.271` should keep any live constrained-generation retry tiny and
+  runtime-gated, but can add a CPU-only semantic-constraint audit over MBPP/HumanEval manifests.
+- **Sources:** https://arxiv.org/abs/2509.00360, https://openreview.net/forum?id=B8UIezv3BS, and
+  https://arxiv.org/abs/2605.13501
+
+### KAN Verification Is Now a Concrete MILP Target
+
+- **Paper:** "Optimal Abstractions for Verifying Properties of Kolmogorov-Arnold Networks (KANs)"
+  (arXiv:2602.06737).
+- **What:** Replaces KAN units with piecewise-affine abstractions, computes local/global error
+  estimates, and encodes property verification as MILP. The key algorithmic contribution is a
+  dynamic-programming plus knapsack strategy for allocating PWA pieces under an error budget.
+- **Relevance to Carnot:** Converts prior KAN curiosity into an executable verification task:
+  implement a tiny PWA/MILP abstraction check with honest bounds rather than training another KAN
+  classifier.
+- **Sources:** https://arxiv.org/abs/2602.06737
+
+### Hardware-Accelerated Probabilistic Reasoning Signals
+
+- **Papers/sites:** "Decomposing Large-Scale Ising Problems on FPGAs: A Hybrid Hardware Approach"
+  (arXiv:2602.15985), "REASON: Accelerating Probabilistic Logical Reasoning for Scalable
+  Neuro-Symbolic Intelligence" (arXiv:2601.20784; HPCA 2026), and Extropic's TSU/THRML materials.
+- **What:** The Ising/FPGA paper uses an FPGA to offload decomposition around a 28nm Ising solver,
+  reporting nearly 2x speedup and over two orders of magnitude energy-efficiency improvement versus
+  optimized CPU baselines. REASON reports 12-50x speedup and 310-681x energy efficiency for
+  probabilistic logical reasoning kernels in a reconfigurable fabric. Extropic's THRML remains the
+  accessible path for TSU-style EBM/PGM simulation.
+- **Relevance to Carnot:** Supports the long-term substrate thesis, but local board tracks are
+  terminal and `.271` should not propose mandatory FPGA execution. The useful next step is a
+  software-only decomposition/energy-kernel simulator or a doc-only hardware boundary, not board
+  bring-up.
+- **Sources:** https://arxiv.org/abs/2602.15985, https://arxiv.org/abs/2601.20784,
+  https://extropic.ai/software, and https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+
+### Citation Watch: EBT and ARM-as-EBM Follow-Ons
+
+- **Source:** Semantic Scholar citation API checks for arXiv:2507.02092 and arXiv:2512.15605 on
+  2026-05-22.
+- **What:** EBT citations now include LoopUS (arXiv:2605.11011), Causal Energy Minimization
+  (arXiv:2605.07588), NRGPT (arXiv:2512.16762), EBT-Policy (arXiv:2510.27545), and planning-as-
+  descent work. ARM-as-EBM citations include LoopUS plus ontology-constrained neural reasoning
+  (arXiv:2604.00555), graph energy matching, and a false-first-step inference-time planning paper.
+- **Relevance to Carnot:** The field is converging on three motifs Carnot already needs:
+  recurrence/latent refinement, output-side constraint validation, and energy-scored trajectory
+  repair. `.271` should implement offline recurrence and manifest-verified output validation before
+  it attempts larger live-model runs.
+- **Sources:** https://api.semanticscholar.org/graph/v1/paper/DOI:10.48550/arXiv.2507.02092/citations,
+  https://api.semanticscholar.org/graph/v1/paper/DOI:10.48550/arXiv.2512.15605/citations,
+  https://arxiv.org/abs/2604.00555, and https://arxiv.org/abs/2602.02991
+
+### Public Kona/EBRM Positioning
+
+- **Source:** Logical Intelligence Kona/EBRM blog and Kona 1.0 page.
+- **What:** Logical Intelligence frames EBRMs as globally scored, non-autoregressive, continuous
+  trace optimizers where energy can be evaluated on partial traces to localize constraint failures.
+- **Relevance to Carnot:** This is directionally aligned with Carnot's PRD but still external
+  product positioning. Use it as architecture context only; do not claim local Kona access,
+  interoperability, or latency.
+- **Sources:** https://logicalintelligence.com/blog/energy-based-models-for-reasoning and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
+
+---
+
 ## 2026-05-22 Post-.269 Planning Sweep (Milestone 2026.05.270)
 
 This sweep was run after milestone `.269` completed. `.269` proved that the conductor can reach

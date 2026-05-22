@@ -4,48 +4,46 @@
 # docs_audit_report — 2026-05-22
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab. The page starts out promising, but quickly devolves into an unintelligible wall of internal research logs, unexplained acronyms, and suspiciously perfect benchmark scores (100% accuracy?) that destroy the project's credibility.
+A stranger would bounce at the "Capabilities" or "Preprint" sections because the page abruptly shifts from a clear product pitch to a leaked internal status board. The excessive use of internal experiment IDs, unlinked jargon, and literal commit-message text destroys credibility and readability.
 
 ## TOP 3 PROBLEMS
-1. **Unfiltered internal dev logs published as copy** — The "Preprint" section reads like someone accidentally pasted a Jira ticket directly onto the live website.
-2. **Absurdly perfect numbers** — Claiming a 1.0 True Positive rate and 60/60 adversarial catch rate makes the project look like snake oil or horribly overfit. 
-3. **Alienating jargon** — A stranger has zero idea what "FoVer," "PREM variance," "HIVE peer," or "CCTU" mean, making the features section completely unreadable.
+1. Absurd per-milestone narrative masquerading as marketing copy in the "Preprint" section.
+2. Extreme internal jargon (FoVer, CCTU, SWORD, paper-v6, Exp 1412) throughout the Capabilities and Results sections.
+3. Massive inconsistency between the HumanEval code repair claims (+3.0 points vs +72pp) that makes the numbers look made up.
 
 ## DETAILED FINDINGS
-
 ### Bloat
-- **Preprint section text** — 80+ words — **Suggested cap: 20 words**. This entire block is purely internal status updates that nobody outside the team cares about. 
-- **Results section intro** — 49 words — **Suggested cap: 15 words**. Stop over-explaining the provenance labeling. Just show the results.
-- **Hero Stats Bar** — 4 cards — **Suggested cap: 2 cards**. "Experiment runs" and "Completed milestones" are internal vanity metrics. Strangers don't care how much work you did; they care if the tool works.
+- Preprint section (italicized paragraph) — 67 words — Suggested cap: 0 words (delete internal status entirely).
+- Stats bar ("Recent progress" card) — 63 words — Suggested cap: 40 words.
 
 ### Internal jargon
-- **Hero Section** — "HIVE peer", "FoVer step-error corpus" — Strangers don't know your internal dataset names or who/what HIVE is. 
-- **Features Section** — "PREM variance", "CCTU constrained tool-use micro-benchmark", "VerdictRecord", "SessionMemory" — This is codebase/paper terminology leaking onto a marketing page. It looks like word salad.
-- **Preprint Section** — "SWORD credentials", "paper-v6", "Exp 1400", "Exp 1412" — This is completely meaningless outside of your specific repository. 
+- Preprint section — `paper-v6`, `v11`, `Exp 1400`, `SWORD credentials`, `Exp 1412`, `submission_ready_for_operator=true`, `ICLR-26 OT verification framework` — A stranger does not have access to your issue tracker, codebase history, or internal credential systems.
+- Capabilities (Multi-step reasoning / Stats bar) — `FoVer step-error corpus` — Meaningless dataset acronym to anyone outside the project.
+- Capabilities (Typed constraints) — `CCTU constrained tool-use micro-benchmark` — Unexplained internal benchmark.
+- Results (Code repair) — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)` — Leaked internal flag syntax and runner configurations.
 
 ### Per-milestone narrative
-- **Preprint section** — The entire paragraph is a commit log. "Paper audit status from 2026-05-09: paper-v6 remains narrowed to four anchored artifact-backed claims... ICLR-26 OT verification framework was adopted with a six-item conflict ledger... Exp 1400 records missing... Exp 1412 confirms submission_ready_for_operator=true." This is not landing page copy.
-- **Hero stats** — "382 Completed milestones" is project management trivia.
+- Preprint section — `Paper audit status from 2026-05-09: paper-v6 remains narrowed to four anchored artifact-backed claims; the Section 3 sampler draft has been resumed... Exp 1400 records missing SWORD credentials, and Exp 1412 confirms submission_ready_for_operator=true.` 
 
 ### Inconsistencies
-- **The product identity crisis** — The Hero section sells a high-level LLM tool ("pip install carnot-ebm"). The Python Quickstart shows a simple `pipeline.verify()` command. But the Rust Quickstart shows low-level physics simulation (`IsingModel::new(1024)`), and the hardware results mention a "KV260 FPGA prototype". Is this an easy-to-use PyPI package, or a hardware-accelerated physics framework? A stranger will be totally confused by the disconnect between the two code snippets.
+- Capabilities card "Code" claims repair pushes pass-rate up by 3 points vs Results card "Code repair" claims +72pp (8% → 80%). A stranger will immediately spot this 69-point delta and assume the numbers are manipulated.
+- Hero bar claims "0.9857 Verifier AUROC" vs Results cards claim "0.90 AUC" and "0.91 AUROC" for different tasks without clarifying which one represents the headline number.
 
 ### Missing essentials
-- **Hardware constraints** — You mention single GPU inference for a small Qwen model in the Quickstart, but what does Carnot actually require to run in production? Does it require the FPGA mentioned in the results? 
-- **Trust anchors for the data** — You claim "Every number below is backed by a checked-in experiment artifact", but there are no links to these artifacts for a stranger to actually verify them.
+- The reason to trust the numbers is missing. The page claims "Every number below is backed by a checked-in experiment artifact", but the paper link states "Upload is still pending operator action", leaving the stranger with no way to actually verify the highly specific, perfect-looking claims.
 
 ### Fabrication signals
-- **Math extraction** — "GSM8K extraction TP rate: 0.5 -> 1.0" — A perfect 1.0 True Positive rate is an immediate red flag for overfitting or a broken test harness.
-- **Adversarial audit** — "k=5 ensemble catches 60/60 attacks" — 100% success rate on adversarial attacks looks highly suspect on a landing page.
-- **Code capability** — "99.3% of wrong code flagged" — 99.3% recall is absurdly high without mentioning the False Positive Rate (FPR). A stranger will assume it just flags everything as wrong.
+- Results (Math extraction): `1.0` TP rate — A perfect 100% extraction rate on LLM outputs is highly suspicious without a credibility anchor.
+- Results (Adversarial audit): `60/60 attacks` — A 100% catch rate looks hand-picked or overfitted.
+- Results (Training): `2.0× speedup` — Exactly 2.0x is practically impossible in real GPU distributed training due to IPC overhead; it looks fabricated or rounded up.
 
 ## WHAT'S WORKING
-- **The "Problem" Section** — The "47 + 28 = 7" vs "47 + 28 = 76" example is excellent. It immediately and viscerally explains the exact LLM failure mode Carnot solves.
-- **The Python Quickstart** — The 5-line code snippet clearly communicates the API's simplicity and value proposition (`verify_and_repair()`). 
+- The hero section is excellent: "Catch the mistakes your LLM confidently makes up" is a perfect, instantly understandable 1-sentence hook.
+- The "Extract → Check → Repair" mental model in the "How it works" bento grid is clean, logical, and effectively communicates the framework's value proposition.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. **Nuke the "Preprint" section text.** Replace the internal status report with a single, jargon-free sentence describing what the paper covers, leaving only the buttons.
-2. **Scrub all internal identifiers.** Remove every instance of `Exp ####`, `paper-v6`, `SWORD`, and dataset acronyms (`FoVer`, `CCTU`) that aren't industry standard.
-3. **Fix the Rust Quickstart.** Change the Rust code to show how to verify an LLM output (matching the Python example), or add a comment bridging the gap between an Ising model and LLM verification. 
-4. **Anchor the perfect numbers.** Add the sample size or FPR to the 1.0 TP rate, 60/60 attacks, and 99.3% recall claims so they don't look like fabricated marketing fluff. 
-5. **Drop the vanity metrics.** Remove "Experiment runs" and "Completed milestones" from the top stats bar. Replace them with metrics a user cares about (e.g., supported models, latency overhead).
+1. Delete the entire italicized internal status update from the "Preprint" section and replace it with a standard "Draft coming soon."
+2. Standardize the HumanEval code repair claims. If +72pp is a specific subset (HumanEval-50), clearly distinguish it from the +3.0pp macro-benchmark, or drop the subset claim entirely.
+3. Strip all internal experiment IDs (Exp 1400, Exp 1412) and raw flag syntax (`submission_ready_for_operator=true`) from the public page.
+4. Ground the suspiciously perfect numbers (1.0 TP, 60/60, 2.0x) by citing the specific constraints that make them possible, or replace them with more representative, realistic macro-benchmarks.
+5. Replace internal acronyms like CCTU, FoVer, and SWORD with generic, understandable descriptions (e.g., "an internal tool-use benchmark").

@@ -1,6 +1,29 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-22 (milestone 2026.05.270 research planning complete)
+**Last Updated:** 2026-05-22 (milestone 2026.05.271 research planning complete)
+
+## Session 2026-05-22 - Milestone 2026.05.271 Research Planning Complete
+
+Planned milestone `2026.05.271` as "Runtime Repair + Manifest Reconciliation + Offline
+Self-Learning" after the operator confirmed all `.270` tasks completed. The plan treats
+`results/experiment_2860_capstone_v270.json` as authoritative: `.270` produced clean FoVer evidence
+and dated local manifests, but paper readiness remained false because SOTA GGUF runtime support,
+non-FoVer manifest consumers, FR-11 recurrence backend work, and the final matrix chain were blocked
+or missing.
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2861`-`exp2872`)
+- Critical path: `exp2862` must resolve local SOTA cache/GPU offload; `exp2863` must reconcile dated
+  manifest aliases; `exp2864` and `exp2865` must turn HaluEval/FEVER into clean non-FoVer matrix rows.
+- FR-11 mandate: `exp2869-fr11-continuous-self-learning-replay-v3` is the continuous self-learning
+  task, gated on `exp2868.offline_recurrence_backend_ready` and `exp2865.cross_corpus_matrix_built`.
+- Research references updated with the post-`.270` sweep: Spilled Energy, First Token Knows, Error
+  Verifiability, ChopChop, RWOPD, KAN PWA/MILP verification, Ising/FPGA decomposition, REASON,
+  Extropic THRML/TSU, Kona/EBRM, and EBT/ARM citation-watch items.
+- Validation: roadmap schema parse OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml`
+  OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` OK with 6 gate checks and 0
+  failures; prompt-section/end-line checks OK; diff whitespace check clean for the planning files.
+  Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
 
 ## Session 2026-05-22 - Milestone 2026.05.270 Research Planning Complete
 

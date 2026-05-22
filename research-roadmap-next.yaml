@@ -1,0 +1,913 @@
+milestone: "2026.05.271"
+milestone_title: "Runtime Repair + Manifest Reconciliation + Offline Self-Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp2861
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2861_archive_v270_activate_v271.json"
+    title: "Archive .270 + Activate .271"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 20
+    estimated_wall_time_min: 10
+    track: admin
+    prior_failures:
+      - experiment_id: exp2847
+        verdict: "complete: archive_ready=true; archived_milestone=2026.05.269; activated_milestone=2026.05.270"
+        addressed_by: "Recurring archive/activation task with a new source milestone (.270) and target milestone (.271)."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Milestone 2026.05.270 has completed. Its terminal capstone is
+        results/experiment_2860_capstone_v270.json. This task performs the
+        standard archive/activation bookkeeping for 2026.05.271.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-complete.yaml
+        - research-roadmap-next.yaml
+        - results/experiment_2860_capstone_v270.json
+
+      TASK:
+        Archive milestone 2026.05.270 into research-complete.yaml if it is not
+        already archived, confirm the next active milestone is 2026.05.271, and
+        write the deliverable artifact. Do not edit research-roadmap.yaml.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Load research-complete.yaml and check whether 2026.05.270 is already
+           archived.
+        3. Load research-roadmap-next.yaml and confirm milestone is 2026.05.271.
+        4. Read results/experiment_2860_capstone_v270.json and summarize
+           paper_ready, sota_runtime_ready_v2, clean_artifacts, blocked_artifacts,
+           missing_artifacts, dataset_naming_mismatch_detected, and top_3_next_actions.
+        5. Write the deliverable JSON with the required fields and real duration_s.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - archived_milestone: "2026.05.270"
+        - activated_milestone: "2026.05.271"
+        - archive_already_present: bool
+        - capstone_source: "results/experiment_2860_capstone_v270.json"
+        - paper_ready_from_capstone: bool
+        - sota_runtime_ready_v2_from_capstone: bool
+        - blocked_artifacts_from_capstone: list
+        - missing_artifacts_from_capstone: list
+        - top_3_next_actions: list[str]
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2862
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json"
+    title: "SOTA Runtime Cache + GPU Offload Resolver v3"
+    priority: critical
+    agent_type: claude
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 120
+    requires_gpu: true
+    track: infrastructure
+    prior_failures:
+      - experiment_id: exp2848
+        verdict: "blocked_llama_cpp_gpu_offload: precondition c failed before model selection or inference; cached_sota_pair also failed to return the required two-model local SOTA pair"
+        addressed_by: "This attempt changes scope from evidence-only rerun to resolver: diagnose/fix or document the llama_cpp GPU-offload build and cached_sota_pair path before any downstream live task runs."
+        retire_if_same_verdict: true
+      - experiment_id: exp2836-sota-runtime-preflight
+        verdict: "success: .venv CUDA torch available and at least one mandated SOTA GGUF load-smoked; adversarially flagged for too-short duration and missing methodology fields"
+        addressed_by: "This attempt requires usable_response=true, seed/checksum/methodology fields, and no live claim unless the mandated GGUF actually generates output."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Exp 2848 blocked because .venv CUDA torch sees two RTX 3090s but
+        llama_cpp reports no GPU offload support and cached_sota_pair() returns
+        None. This task is the replacement resolver, not another blind runtime
+        evidence rerun.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - scripts/experiment_template.py
+        - python/carnot/inference/sota_models.py
+        - python/carnot/reporting/sota_gguf_preflight.py
+        - results/experiment_2848_sota_runtime_evidence_v2.json
+        - results/experiment_2836_sota_runtime_preflight.json
+        - tests/python/test_inference_sota_models.py
+
+      TASK:
+        Diagnose and resolve the local SOTA GGUF runtime path as far as possible
+        without modifying scripts/research_conductor.py. If code changes are
+        needed, follow CODEX.md: verify the relevant openspec capability spec
+        exists before implementation, update tests, and keep the change scoped.
+        Write an artifact that gates all downstream live-model work through
+        sota_runtime_ready_v3.
+
+      MODEL_SPECS:
+        Mandated headline candidates:
+          - unsloth/Qwen3.6-35B-A3B-GGUF
+          - unsloth/gemma-4-31B-it-GGUF
+          - unsloth/gemma-4-26B-A4B-it-GGUF
+        Legacy Qwen3.5-0.8B and gemma-4-E4B-it may be used only for CPU smoke
+        tests and must never set sota_runtime_ready_v3=true.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Run preconditions: CUDA torch availability, nvidia-smi inventory,
+           llama_cpp import/version/origin, llama_supports_gpu_offload(), and
+           cached_sota_pair(gpu_indices=(0,1)).
+        3. Inspect local HF cache and project models/ layout for all three
+           mandated GGUF IDs; record exact resolved paths or missing status.
+        4. If llama_cpp lacks GPU offload because of local build flags, repair or
+           document the exact reinstall command/environment needed; do not fake
+           the boolean.
+        5. If cached_sota_pair() fails because resolver search paths are stale,
+           fix the resolver with tests.
+        6. If a mandated GGUF can be loaded, run one bounded prompt and record
+           usable_response_count, tokens_per_second, model_path, GPU memory, and
+           wall-clock duration. Do not sleep-pad.
+        7. Run relevant unit tests for modified code and a focused runtime smoke.
+        8. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - sota_runtime_ready_v3: bool
+        - model_specs: list
+        - selected_model_hf_id: str
+        - selected_model_path: str
+        - cached_sota_pair_returned_two_loadable_specs: bool
+        - llama_cpp_gpu_offload_verified: bool
+        - preconditions_checked: list
+        - usable_response_count: int
+        - total_tokens_generated: int
+        - tokens_per_second: float
+        - legacy_small_models_used_only_for_smoke: bool
+        - random_seed: int
+        - reproducibility_checksum: str
+        - tests_run: list
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2863
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2863_eval_manifest_contract_v2.json"
+    title: "Eval Manifest Contract + Alias Resolver v2"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: data
+    prior_failures:
+      - experiment_id: exp2849
+        verdict: "complete: local benchmark manifests materialized"
+        addressed_by: "Exp 2849 produced dated manifests; this task adds the missing consumer contract so downstream tasks use those actual paths."
+        retire_if_same_verdict: true
+      - experiment_id: exp2854
+        verdict: "blocked_missing_eval_manifests"
+        addressed_by: "The prior failure was plain-vs-dated path drift; this task resolves manifest paths from the materializer artifact instead of hardcoding plain filenames."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Exp 2849 wrote dated manifests, but Exp 2854 looked for plain filenames
+        and blocked. This task creates a stable manifest contract consumed by
+        HaluEval/FEVER and future corpus tasks.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - results/experiment_2849_local_dataset_materialization_v1.json
+        - results/experiment_2854_halueval_fever_full_calibration_v2.json
+        - python/carnot/eval/halueval_fever_pilot.py
+        - python/carnot/eval/mbpp_dual_condition_v3.py
+        - python/carnot/eval/humaneval_dual_condition_v3.py
+        - python/carnot/eval/truthfulqa_dual_condition_v4.py
+
+      TASK:
+        Implement or document a reusable manifest resolver contract that maps
+        corpus names to the actual dated local manifest paths and checksums from
+        Exp 2849. If implementation code changes, verify the relevant openspec
+        capability spec before editing and add focused tests.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Read Exp 2849 manifest_paths and manifest_sha256.
+        3. Inspect corpus evaluators for hardcoded plain filenames.
+        4. Add or update a narrow resolver so consumers can resolve dated
+           manifests deterministically from the materialization artifact.
+        5. Add tests for HaluEval and FEVER resolving the dated paths.
+        6. Do not create synthetic rows and do not infer metrics.
+        7. Write the deliverable JSON with per-corpus readiness booleans.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - manifest_contract_ready: bool
+        - manifest_source_artifact: "results/experiment_2849_local_dataset_materialization_v1.json"
+        - resolved_manifest_paths: dict
+        - resolved_manifest_sha256: dict
+        - halueval_ready: bool
+        - fever_ready: bool
+        - mbpp_ready: bool
+        - humaneval_ready: bool
+        - truthfulqa_ready: bool
+        - synthetic_rows_created: false
+        - tests_run: list
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2864
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2864_halueval_fever_full_calibration_v3.json"
+    title: "HaluEval + FEVER Full Calibration v3 (gated on exp2863 manifest contract)"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: evaluation
+    gated_on:
+      - upstream: exp2863
+        artifact_field: manifest_contract_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2854
+        verdict: "blocked_missing_eval_manifests"
+        addressed_by: "Now gated on the manifest contract and required to consume resolved dated paths from Exp 2863."
+        retire_if_same_verdict: true
+      - experiment_id: exp2842-halueval-fever-pilot
+        verdict: "complete: HaluEval/FEVER pilot only; not a full benchmark row"
+        addressed_by: "This task scales to the materialized local full calibration manifests with checksums and no pilot-only claim."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        HaluEval/FEVER is the fastest route to a clean non-FoVer row because
+        local manifests already exist and this calibration can run without live
+        LLM generation. The task is gated on Exp 2863's manifest contract.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - results/experiment_2863_eval_manifest_contract_v2.json
+        - results/experiment_2854_halueval_fever_full_calibration_v2.json
+        - python/carnot/eval/halueval_fever_pilot.py
+        - scripts/adversarial_verify.py
+
+      TASK:
+        Rerun HaluEval/FEVER full calibration against the resolved local
+        manifests. This is dataset/verifier calibration only: do not invoke a
+        live LLM and do not claim live-model provenance.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Load Exp 2863 and verify halueval_ready and fever_ready are true.
+        3. Resolve manifest paths from Exp 2863; do not use hardcoded plain
+           filenames.
+        4. Run the local HaluEval/FEVER calibration with deterministic seeds.
+        5. Compute AUROC and confidence intervals where labels are valid.
+        6. Run adversarial verification if available.
+        7. Write the deliverable JSON with honest nulls for unavailable metrics.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - halueval_fever_ready: bool
+        - full_benchmark_ready: bool
+        - live_model_invoked: false
+        - manifest_paths_used: dict
+        - manifest_sha256_used: dict
+        - halueval_auroc: float|null
+        - fever_auroc: float|null
+        - halueval_n_examples: int
+        - fever_n_examples: int
+        - auroc_ci95_by_dataset: dict
+        - label_counts_by_dataset: dict
+        - random_seed: int
+        - reproducibility_checksum: str
+        - preconditions_checked: list
+        - adversarial_verify_passed: bool
+        - adversarial_verify_flags: list
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2865
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2865_cross_corpus_matrix_v5.json"
+    title: "Cross-Corpus Matrix v5 (gated on exp2864 clean non-FoVer row)"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 30
+    estimated_wall_time_min: 30
+    track: reporting
+    gated_on:
+      - upstream: exp2864
+        artifact_field: halueval_fever_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2855
+        verdict: "complete: cross-corpus matrix not built; clean_corpus_count=1; blocked_corpus_count=1; flagged_corpus_count=0; missing_corpus_count=3"
+        addressed_by: "This run is gated on a clean non-FoVer HaluEval/FEVER row and must leave all missing corpus metrics null."
+        retire_if_same_verdict: true
+      - experiment_id: exp2841
+        verdict: "complete: paper table integrated artifacts honestly but arxiv_ready=false because at least one dual-condition AUROC remained unmeasured"
+        addressed_by: "This task is matrix-only and does not publish a paper table unless FoVer plus a non-FoVer clean row exists."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Exp 2855 could not build a cross-corpus matrix because only FoVer was
+        clean. Exp 2864 should provide the first clean non-FoVer row.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - results/experiment_2855_cross_corpus_matrix_v4.json
+        - results/experiment_2850_fover_dual_condition_integrity_v4.json
+        - results/experiment_2864_halueval_fever_full_calibration_v3.json
+        - ops/status.md
+
+      TASK:
+        Build a cross-corpus matrix from clean source artifacts only. Do not
+        infer missing MBPP, HumanEval, or TruthfulQA metrics. The matrix is
+        built only if FoVer plus at least one non-FoVer row is clean.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Load the FoVer and HaluEval/FEVER artifacts.
+        3. Classify each expected corpus row as clean, blocked, flagged, or
+           missing based only on real source artifacts.
+        4. Build verifier_corpus_dual_matrix only from clean rows.
+        5. Record paper_eligible_rows and excluded_from_headline reasons.
+        6. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - cross_corpus_matrix_built: bool
+        - verifier_corpus_dual_matrix: dict
+        - row_status_by_corpus: dict
+        - paper_eligible_rows: list
+        - clean_corpus_count: int
+        - blocked_corpus_count: int
+        - flagged_corpus_count: int
+        - missing_corpus_count: int
+        - source_artifacts: list
+        - excluded_from_headline: dict
+        - claim_boundary_notes: list
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2866
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2866_beaver_exact_tiny_frontier_v1.json"
+    title: "BEAVER Exact Tiny Frontier Feasibility v1"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: verification
+    prior_failures:
+      - experiment_id: exp2858
+        verdict: "complete: clean bounded-prefix/EPR proxy evaluated on local FoVer labels"
+        addressed_by: "This task changes from proxy scoring to a tiny exact frontier feasibility check with explicit solver/dependency boundaries."
+        retire_if_same_verdict: true
+      - experiment_id: exp2843
+        verdict: "complete: bounded-prefix/EPR proxy evaluated; not exact BEAVER and not headline-eligible"
+        addressed_by: "This run attempts an exact tiny frontier or emits blocked_solver instead of repeating the proxy."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Exp 2858 produced a clean BEAVER/EPR bounded-prefix proxy, but
+        exact_beaver_implemented=false. This task tries the smallest honest
+        exact-frontier feasibility step.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - results/experiment_2858_beaver_epr_clean_bounded_proxy_v2.json
+        - data/fover_corpus.jsonl
+        - python/carnot/verify
+        - openspec/capabilities
+
+      TASK:
+        Implement or prototype a tiny exact BEAVER frontier check on a bounded
+        local subset. If a required solver/dependency is unavailable, write an
+        honest blocked_solver or blocked_dependency artifact. Do not repeat the
+        proxy and call it exact.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Inspect existing BEAVER/proxy code and relevant verifier specs.
+        3. Select a tiny deterministic subset of FoVer rows with known labels.
+        4. Attempt an exact prefix/frontier bound using available local solvers.
+        5. Compare exact_frontier_available against the Exp 2858 proxy scores.
+        6. Add focused tests for any new helper code.
+        7. Write the deliverable JSON with exact/proxy boundaries explicit.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - exact_beaver_implemented: bool
+        - exact_frontier_available: bool
+        - n_examples: int
+        - solver_used: str|null
+        - blocked_reason: str|null
+        - exact_vs_proxy_comparison: dict
+        - sample_rows: list
+        - random_seed: int
+        - reproducibility_checksum: str
+        - preconditions_checked: list
+        - tests_run: list
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2867
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2867_drift_mus_prioritizer_v2.json"
+    title: "Residual Drift + MUS Prioritizer v2 (gated on exp2865 matrix)"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: diagnostics
+    gated_on:
+      - upstream: exp2865
+        artifact_field: cross_corpus_matrix_built
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2859
+        verdict: "blocked_cross_corpus_matrix_not_built"
+        addressed_by: "Now structurally gated on Exp 2865.cross_corpus_matrix_built so the agent call is skipped unless the matrix exists."
+        retire_if_same_verdict: true
+      - experiment_id: exp2855
+        verdict: "complete: cross-corpus matrix not built; clean_corpus_count=1; blocked_corpus_count=1; flagged_corpus_count=0; missing_corpus_count=3"
+        addressed_by: "This diagnostic now requires a built matrix and will not run on FoVer-only evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Residual drift diagnostics require a built matrix. Exp 2859 blocked
+        correctly because Exp 2855 had no clean non-FoVer row.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - results/experiment_2865_cross_corpus_matrix_v5.json
+        - results/experiment_2859_drift_mus_conflict_prioritizer.json
+        - research-references.md
+        - python/carnot/verify
+
+      TASK:
+        Build a residual-drift plus MUS conflict prioritization diagnostic from
+        the clean rows in the cross-corpus matrix. Compare the heuristic against
+        random and degree baselines.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Load Exp 2865 and verify cross_corpus_matrix_built is true.
+        3. Extract clean row failure/constraint evidence only.
+        4. Build a small hypergraph where constraints/verifier failures are
+           nodes and co-failure/MUS relationships are hyperedges when available.
+        5. Compare a residual-drift/HGNN-inspired prioritizer to random and
+           degree baselines.
+        6. Write recommended repairs without claiming a trained HGNN policy.
+        7. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - drift_mus_diagnostic_ready: bool
+        - n_failure_rows: int
+        - failure_class_counts: dict
+        - hypergraph_nodes: int
+        - hypergraph_hyperedges: int
+        - hgnn_inspired_heuristic_name: str
+        - baseline_random_checks_to_conflict: float
+        - baseline_degree_checks_to_conflict: float
+        - heuristic_checks_to_conflict: float
+        - heuristic_improvement_vs_best_baseline: float
+        - recommended_repairs: list
+        - preconditions_checked: list
+        - random_seed: int
+        - reproducibility_checksum: str
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2868
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2868_offline_recurrence_backend_adapter_v2.json"
+    title: "Offline Recurrence Backend Adapter v2"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: self-learning
+    prior_failures:
+      - experiment_id: exp2856
+        verdict: "missing_artifact: LoopUS recurrence backend adapter did not produce results/experiment_2856_loopus_recurrence_backend_adapter.json"
+        addressed_by: "This attempt removes the live-SOTA dependency and implements an offline replay backend over existing verifier traces."
+        retire_if_same_verdict: true
+      - experiment_id: exp2844-loopus-fr11-self-learning-pilot
+        verdict: "blocked_live_recurrence_backend"
+        addressed_by: "This task ships the missing backend first, using replay traces instead of live latent recurrence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        FR-11 blocked because the recurrence backend artifact never existed.
+        Live LoopUS recurrence should wait for runtime repair; the immediate
+        need is an offline replay backend over existing verifier traces.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-program.md
+        - results/experiment_2857_loopus_fr11_self_learning_v2.json
+        - results/experiment_2844_loopus_fr11_self_learning_pilot.json
+        - results/experiment_2850_fover_dual_condition_integrity_v4.json
+        - python/carnot
+
+      TASK:
+        Implement or select a small offline recurrence backend that accepts
+        verifier trace rows, emits revised energy summaries, and writes a
+        stable backend_module_path for Exp 2869. Do not invoke a live LLM and
+        do not mutate model weights.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Inspect existing FR-11/session-memory and verifier trace utilities.
+        3. Design the smallest replay backend API needed by Exp 2869.
+        4. Implement the backend or, if an equivalent exists, wrap it without
+           broad refactors.
+        5. Run a smoke replay on a tiny deterministic subset.
+        6. Add focused tests for API shape and no-weight-mutation behavior.
+        7. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - offline_recurrence_backend_ready: bool
+        - live_recurrence_backend_ready: false
+        - backend_module_path: str|null
+        - backend_api: dict
+        - replay_smoke_passed: bool
+        - live_model_invoked: false
+        - no_model_weight_mutation: true
+        - preconditions_checked: list
+        - tests_run: list
+        - random_seed: int
+        - reproducibility_checksum: str
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2869
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2869_fr11_continuous_self_learning_replay_v3.json"
+    title: "FR-11 Continuous Self-Learning Replay v3 (gated on exp2868 backend + exp2865 matrix)"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 90
+    track: self-learning
+    continuous_self_learning_task: true
+    gated_on:
+      - upstream: exp2868
+        artifact_field: offline_recurrence_backend_ready
+        op: "=="
+        value: true
+      - upstream: exp2865
+        artifact_field: cross_corpus_matrix_built
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2857
+        verdict: "blocked_missing_exp2856_artifact"
+        addressed_by: "Now gated on Exp 2868.offline_recurrence_backend_ready and uses an offline replay backend rather than missing live recurrence."
+        retire_if_same_verdict: true
+      - experiment_id: exp2844-loopus-fr11-self-learning-pilot
+        verdict: "blocked_live_recurrence_backend"
+        addressed_by: "This run is bounded offline replay with existing verifier traces, not a live latent LoopUS backend."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        This is the mandatory continuous self-learning task for the milestone.
+        It should prove whether Carnot's constraint memory improves under a
+        replayed verifier-feedback loop without mutating LLM weights.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-program.md
+        - results/experiment_2868_offline_recurrence_backend_adapter_v2.json
+        - results/experiment_2865_cross_corpus_matrix_v5.json
+        - results/experiment_2857_loopus_fr11_self_learning_v2.json
+        - results/experiment_2850_fover_dual_condition_integrity_v4.json
+
+      TASK:
+        Run a bounded FR-11 continuous self-learning replay using the offline
+        recurrence backend. Measure energy/correctness deltas, memory hashes,
+        and forgetting/regression. No live LLM calls and no model-weight
+        mutation are allowed.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Load Exp 2868 and import/use backend_module_path.
+        3. Load Exp 2865 and select clean rows plus a deterministic small replay
+           corpus.
+        4. Hash relevant constraint memory/session state before the run.
+        5. Run up to three replay loops with early exit on no improvement.
+        6. Hash state after the run and verify only permitted memory files changed.
+        7. Measure energy_delta_mean, correctness_delta, recurrence_success_rate,
+           and any forgetting/regression signals.
+        8. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - continuous_self_learning_task: true
+        - fr11_self_learning_ready: bool
+        - offline_recurrence_backend_used: str
+        - live_model_invoked: false
+        - no_model_weight_mutation: true
+        - n_examples: int
+        - max_loops: int
+        - recurrence_success_rate: float
+        - energy_delta_mean: float
+        - correctness_delta: float
+        - forgetting_regression_count: int
+        - memory_hash_before: str
+        - memory_hash_after: str
+        - per_loop_energy_summary: dict
+        - source_counts: dict
+        - preconditions_checked: list
+        - random_seed: int
+        - reproducibility_checksum: str
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2870
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2870_sota_energy_baseline_micro_panel_v1.json"
+    title: "Runtime-Gated SOTA Energy Baseline Micro-Panel v1"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 90
+    requires_gpu: true
+    track: evaluation
+    gated_on:
+      - upstream: exp2862
+        artifact_field: sota_runtime_ready_v3
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2848
+        verdict: "blocked_llama_cpp_gpu_offload: precondition c failed before model selection or inference; cached_sota_pair also failed to return the required two-model local SOTA pair"
+        addressed_by: "This task is structurally gated on Exp 2862.sota_runtime_ready_v3 and runs only a tiny micro-panel after runtime repair."
+        retire_if_same_verdict: true
+      - experiment_id: exp2851
+        verdict: "GATE_BLOCK: upstream retired exp2848"
+        addressed_by: "This is not another full MBPP rerun; it is a small energy-baseline panel gated on the new runtime resolver."
+        retire_if_same_verdict: true
+      - experiment_id: exp2853
+        verdict: "GATE_BLOCK: upstream retired exp2848"
+        addressed_by: "TruthfulQA-like examples may appear only as a tiny logit/energy baseline slice after runtime readiness."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Recent work suggests cheap logit/energy signals may capture much of the
+        hallucination-detection value before expensive multi-sample decoding.
+        This task runs only if Exp 2862 proves the local SOTA GGUF runtime.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - scripts/experiment_template.py
+        - python/carnot/inference/sota_models.py
+        - results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json
+        - research-references.md
+        - data/eval_manifests
+
+      TASK:
+        Run a tiny live SOTA GGUF micro-panel and compute first-token confidence
+        plus spilled-energy-style logit baselines where logits are exposed. Do
+        not scale to a full benchmark in this task.
+
+      MODEL_SPECS:
+        Use cached_sota_pair() first. The live model_specs must include at least
+        one of:
+          - unsloth/Qwen3.6-35B-A3B-GGUF
+          - unsloth/gemma-4-31B-it-GGUF
+          - unsloth/gemma-4-26B-A4B-it-GGUF
+        Legacy small models are CPU smoke-test only and are not headline models.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Load Exp 2862 and verify sota_runtime_ready_v3 is true.
+        3. Resolve MODEL_SPECS via cached_sota_pair().
+        4. Select a deterministic micro-panel of 10-20 examples from available
+           local manifests or FoVer rows.
+        5. Generate bounded greedy responses and capture logits if available.
+        6. Compute first-token confidence and spilled/marginalized-energy-style
+           signals where supported; otherwise record blocked_logprobs_unavailable
+           for those metrics while keeping generation evidence.
+        7. Write the deliverable JSON with no full-benchmark claim.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - micro_panel_ready: bool
+        - live_model_invoked: bool
+        - model_specs: list
+        - models_used: list
+        - n_examples: int
+        - first_token_confidence_available: bool
+        - spilled_energy_available: bool
+        - first_token_confidence_auroc: float|null
+        - spilled_energy_auroc: float|null
+        - usable_response_count: int
+        - blocked_metrics: list
+        - sample_rows: list
+        - random_seed: int
+        - reproducibility_checksum: str
+        - preconditions_checked: list
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2871
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2871_kan_pwa_milp_tiny_verifier_v1.json"
+    title: "KAN PWA/MILP Tiny Verifier v1"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: verification
+    prior_failures:
+      - experiment_id: exp586-symbolic-kan-energy
+        verdict: "complete: Symbolic-KAN energy interpretability produced interpretable constraint-rule artifact"
+        addressed_by: "This task changes from interpretability/prototype KAN work to a tiny formal PWA/MILP property-verification check."
+        retire_if_same_verdict: true
+      - experiment_id: exp1047-sos-kan-v1
+        verdict: "complete or archived KAN formal/prototype lineage; not a PWA/MILP abstraction of KAN units"
+        addressed_by: "The new attempt is anchored to arXiv:2602.06737 PWA abstractions with solver-bound honesty."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        The 2026 KAN verification paper provides a concrete route: replace KAN
+        units with piecewise-affine abstractions and encode a tiny property
+        check as MILP. This task should stay tiny and honest about solver limits.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-references.md
+        - python/carnot/models
+        - python/carnot/verify
+        - tests/python
+
+      TASK:
+        Implement a tiny KAN PWA/MILP verifier prototype or write an honest
+        blocked_solver artifact if no local solver is available. If code changes
+        are needed, ensure the relevant openspec spec exists and add tests.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Inspect existing KAN model/prototype code and verifier specs.
+        3. Choose a tiny one- or two-unit KAN-style function with bounded input.
+        4. Build a PWA abstraction with explicit local/global error bounds.
+        5. Encode a simple output property using an available solver or an
+           exact enumerated fallback when justified.
+        6. Add focused tests for the abstraction and property result.
+        7. Write the deliverable JSON with solver/proof boundaries explicit.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - kan_pwa_milp_verifier_ready: bool
+        - pwa_abstraction_built: bool
+        - milp_or_exact_property_checked: bool
+        - solver_used: str|null
+        - property_statement: str
+        - property_verified: bool|null
+        - local_error_bound: float|null
+        - global_error_bound: float|null
+        - n_pwa_pieces: int
+        - blocked_reason: str|null
+        - tests_run: list
+        - random_seed: int
+        - reproducibility_checksum: str
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2872
+    milestone: "2026.05.271"
+    deliverable: "results/experiment_2872_capstone_v271.json"
+    title: "Milestone 2026.05.271 Capstone + Claim Boundary"
+    priority: critical
+    agent_type: claude
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 60
+    track: synthesis
+    prior_failures:
+      - experiment_id: exp2860
+        verdict: "complete: .270 capstone synthesized; paper_ready=false; sota_runtime_ready_v2=false; clean_artifacts=5; blocked_artifacts=4; missing_artifacts=4; adversarially_flagged_artifacts=0; headline_eligible_rows=FoVer_only"
+        addressed_by: "Recurring capstone for the new milestone; it synthesizes .271 artifacts and decides whether runtime, non-FoVer rows, and FR-11 replay are clean."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        This task closes milestone 2026.05.271. It must synthesize clean,
+        blocked, missing, and adversarially flagged artifacts without inferring
+        metrics or paper readiness.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-roadmap.yaml
+        - research-roadmap-next.yaml
+        - openspec/change-proposals/research-roadmap-vNEXT.md
+        - results/experiment_2861_archive_v270_activate_v271.json
+        - results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json
+        - results/experiment_2863_eval_manifest_contract_v2.json
+        - results/experiment_2864_halueval_fever_full_calibration_v3.json
+        - results/experiment_2865_cross_corpus_matrix_v5.json
+        - results/experiment_2868_offline_recurrence_backend_adapter_v2.json
+        - results/experiment_2869_fr11_continuous_self_learning_replay_v3.json
+
+      TASK:
+        Produce the milestone capstone. Classify every expected artifact,
+        summarize what was actually measured, decide paper_ready from clean
+        evidence only, and list the next three actions. Do not modify
+        research-roadmap.yaml.
+
+      CONCRETE STEPS:
+        1. cd {project_root}
+        2. Load every expected Exp 2861-2871 artifact if present.
+        3. Classify each as clean, blocked, missing, or adversarially flagged
+           using honest_verdict, required booleans, and adversarial fields.
+        4. Determine whether there is a clean non-FoVer row and whether the
+           cross-corpus matrix is built.
+        5. Determine whether SOTA runtime is ready and whether Exp 2870 invoked
+           a mandated SOTA model.
+        6. Determine whether FR-11 continuous self-learning replay ran and
+           whether it improved energy/correctness without forbidden mutation.
+        7. Write claim_boundary_notes and top_3_next_actions.
+        8. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        - honest_verdict: str
+        - milestone: "2026.05.271"
+        - paper_ready: bool
+        - sota_runtime_ready_v3: bool
+        - manifest_contract_ready: bool
+        - cross_corpus_matrix_built: bool
+        - fr11_self_learning_ready: bool
+        - continuous_self_learning_completed: bool
+        - headline_eligible_rows: list
+        - clean_artifacts: list
+        - blocked_artifacts: list
+        - missing_artifacts: list
+        - adversarially_flagged_artifacts: list
+        - primary_corpus_results: dict
+        - self_learning_summary: dict
+        - runtime_summary: dict
+        - claim_boundary_notes: list
+        - top_3_next_actions: list
+        - pushed: false
+        - scripts_research_conductor_modified: false
+        - field_principles: dict
+        - run_date: "{date}"
+        - duration_s: float
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-05-22 (Milestone 2026.05.271 Research Planning)
+
+- [outer-loop] Planned milestone 2026.05.271 as "Runtime Repair + Manifest Reconciliation + Offline Self-Learning" after the operator confirmed all `.270` tasks completed. Used `results/experiment_2860_capstone_v270.json` as the authoritative closeout: `.270` produced clean FoVer evidence and dated local manifests, but no paper-ready multi-corpus headline because SOTA runtime, manifest consumer, FR-11 backend, and matrix-chain tasks remained blocked or missing.
+- [outer-loop] Updated `research-references.md` before experiment design with a post-`.270` sweep covering training-free energy signals for hallucination detection, verifiability metrics, semantic constrained decoding and verifier-rewarded distillation, KAN PWA/MILP verification, hardware-accelerated probabilistic reasoning, EBT/ARM citation-watch follow-ons, and public Kona/EBRM positioning.
+- [outer-loop] Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` for milestone `.271` with the `.270` findings, three biggest PRD gaps, architecture diagram, four-phase plan, dependency graph, hardware requirements, agent routing, and acceptance criteria.
+- [outer-loop] Created `research-roadmap-next.yaml` with 12 conductor tasks (`exp2861`-`exp2872`): archive/activate, SOTA runtime/cache/offload resolver, eval-manifest alias contract, HaluEval/FEVER full calibration, cross-corpus matrix v5, BEAVER exact tiny frontier, drift/MUS prioritizer, offline recurrence backend, FR-11 continuous self-learning replay, runtime-gated SOTA micro-panel, KAN PWA/MILP tiny verifier, and capstone.
+- [outer-loop] Validation passed: roadmap schema parse OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml` OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` returned `all_checks_pass` with 6 gate checks and 0 failures; prompt section/end-line checks OK; diff whitespace check clean for the planning files. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-22 (Milestone 2026.05.270 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.270 as "Evidence Integrity + Dataset Materialization + Continuous Recurrence" after the operator confirmed all `.269` tasks completed. Used `results/experiment_2846_capstone_v269.json` as the authoritative closeout: `.269` produced terminal artifacts but no new paper-ready multi-corpus headline because several tasks were blocked, missing, or adversarially flagged.
