@@ -5931,3 +5931,4 @@ Ripgrep i |
 | 2026-05-22 04:58 UTC | Archive .268 + Activate .269 | OK | Deliverable already exists in repo |
 | 2026-05-22 05:12 UTC | FoVer Memory-Leakage Isolation v3 (CODEX, post-tor | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2836_fover_m |
 | 2026-05-22 05:18 UTC | FoVer Memory-Leakage Isolation v3 (CODEX, post-tor | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2836_fover_m |
+| 2026-05-22 05:25 UTC | FoVer Memory-Leakage Isolation v3 (CODEX, post-tor | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2836_fover_m |
