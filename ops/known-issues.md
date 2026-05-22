@@ -5791,3 +5791,16 @@ Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated 
 
 ### NEW Phase 4 Canonical Metric MANDATORY
 Phase 4 canonical metric = Fast-Slow Variant sample-efficiency-ratio (validated via exp1811; confirmation status: <confirmed per exp1909>).
+
+### 2026-05-21 23:50 EDT: HuggingFace `datasets` package missing from .venv
+
+**Symptom:** `.269 corpus tasks exp2838 MBPP, exp2839 HumanEval, exp2840 TruthfulQA all emitted `blocked_<corpus>_dataset` despite the datasets being publicly accessible. Same surface symptom as the `.268 `blocked_cuda_unavailable` cascade — different root cause.
+
+**Root cause:** The `datasets` Python package wasn't installed in `.venv`. `from datasets import load_dataset` raised `ModuleNotFoundError`. Codex agents correctly emitted `blocked_<resource>` honest verdicts per CLAUDE.md Verifier Authenticity Discipline.
+
+**Fix 2026-05-21 23:50 EDT:**
+- `.venv/bin/pip install datasets` (resolved to `datasets-4.4.1`)
+- Pre-cached the three corpora: MBPP/sanitized/test (257), OpenAI HumanEval test (164), TruthfulQA generation/validation (817)
+- Added `"datasets>=3.0"` to `[project.dependencies]` in `pyproject.toml` so this dependency is now tracked
+
+**Recurrence pattern:** for the third time in 4 days, a Python package the corpus tasks need has been missing from the venv. First incident was `pytest-xdist`; second was `python-sat`; third was `datasets`. Suggests the venv has drifted from `pyproject.toml`'s declared deps. Operator may want to run `.venv/bin/pip install -e ".[dev,llm]"` once to sync.

@@ -46,6 +46,12 @@ dependencies = [
     "numpy>=1.26",
     "safetensors>=0.4",
     "z3-solver>=4.16",
+    # datasets — required by multi-corpus eval tasks (MBPP, HumanEval,
+    # TruthfulQA via huggingface load_dataset). 2026-05-21 incident:
+    # .venv lost this dep, codex emitted blocked_<corpus>_dataset for
+    # three .269 corpus tasks because preconditions check failed with
+    # ModuleNotFoundError. Pinning so the same regression can't recur.
+    "datasets>=3.0",
 ]
 
 [project.scripts]
