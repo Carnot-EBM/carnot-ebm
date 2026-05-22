@@ -3301,6 +3301,44 @@ status, records the deterministic selection rule, and reports all remaining
 manifest rows under unsupported reasons rather than inferring natural-language
 coverage.
 
+### REQ-VERIFY-2878: HaluEval/FEVER Error-Verifiability And Label-Consistency Audit
+
+The repository shall provide an Exp 2878 audit runner that reads the clean Exp
+2864 HaluEval/FEVER calibration artifact, its resolved local manifests, the Exp
+2865 cross-corpus matrix, and any available `.271` HaluEval/FEVER verifier
+traces such as Exp 2867 failure rows and Exp 2877 exact-frontier certificates.
+
+The runner MUST avoid remote LLM calls and MUST NOT synthesize examples. It
+MUST replay only existing manifest rows and labels, score rows with existing
+local verifier outputs or deterministic injected test scorers, assign each row
+to exactly one deterministic bucket from `data-grounding`, `reasoning-chain`,
+`extraction/format`, `unsupported`, and `unknown`, and compute:
+
+- the fraction of labeled error rows with an actionable violated constraint;
+- agreement between dataset labels and local verifier direction;
+- bucket-level AUROC where both labels and finite scores are available; and
+- an honest explanation of whether weak scalar AUROC is driven by data-driven
+  errors, reasoning-driven errors, or missing verifier coverage.
+
+The terminal artifact MUST be written to
+`results/experiment_2878_halueval_fever_error_verifiability_v1.json` and
+include `honest_verdict`, `error_verifiability_ready`, `source_artifacts`,
+`n_rows_audited`, `error_buckets`, `actionable_localization_rate`,
+`label_consistency_rate`, `bucket_level_metrics`, `weak_auroc_explanation`,
+`remote_llm_called=false`, `tests_run`, `field_principles`,
+`run_date="20260522"`, and measured `duration_s`.
+
+### SCENARIO-VERIFY-2878: Local Audit Separates Coverage And Direction Failures
+
+Given Exp 2864 resolves local HaluEval and FEVER manifests and Exp 2865 marks
+the HaluEval/FEVER row clean,
+When the Exp 2878 audit runner executes,
+Then it writes the required artifact without calling a remote LLM, reports
+bucket counts that reconcile with the audited manifest row count, computes
+label-consistency and actionable-localization rates from manifest labels and
+local verifier directions, includes bucket AUROC values only where computable,
+and explains the weak scalar AUROC without inventing missing verifier traces.
+
 ### REQ-VERIFY-2829: MBPP Dual-Memory Ensemble Evaluation
 
 The repository shall provide an Exp 2829 MBPP dual-memory runner that writes

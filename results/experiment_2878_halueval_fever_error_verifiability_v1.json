@@ -1,0 +1,142 @@
+{
+  "actionable_localization_rate": 0.929167,
+  "bucket_level_metrics": {
+    "data-grounding": {
+      "actionable_localization_rate": 1.0,
+      "auroc": 0.446017,
+      "label_consistency_rate": 0.425532,
+      "label_counts": {
+        "0": 270,
+        "1": 106
+      },
+      "mean_score": 0.513287,
+      "n_rows": 376,
+      "n_scored": 376
+    },
+    "extraction/format": {
+      "actionable_localization_rate": 0.840376,
+      "auroc": 0.555993,
+      "label_consistency_rate": 0.524362,
+      "label_counts": {
+        "0": 218,
+        "1": 213
+      },
+      "mean_score": 0.33462,
+      "n_rows": 431,
+      "n_scored": 431
+    },
+    "reasoning-chain": {
+      "actionable_localization_rate": 1.0,
+      "auroc": 0.529561,
+      "label_consistency_rate": 0.507246,
+      "label_counts": {
+        "0": 32,
+        "1": 37
+      },
+      "mean_score": 0.395787,
+      "n_rows": 69,
+      "n_scored": 69
+    },
+    "unknown": {
+      "actionable_localization_rate": 0.0,
+      "auroc": null,
+      "label_consistency_rate": 0.0,
+      "label_counts": {
+        "0": 0,
+        "1": 0
+      },
+      "mean_score": null,
+      "n_rows": 0,
+      "n_scored": 0
+    },
+    "unsupported": {
+      "actionable_localization_rate": 1.0,
+      "auroc": null,
+      "label_consistency_rate": 0.209677,
+      "label_counts": {
+        "0": 0,
+        "1": 124
+      },
+      "mean_score": 0.314549,
+      "n_rows": 124,
+      "n_scored": 124
+    }
+  },
+  "duration_s": 1.2142249830067158,
+  "error_buckets": {
+    "data-grounding": {
+      "actionable_violated_constraints": 106,
+      "label_counts": {
+        "0": 270,
+        "1": 106
+      },
+      "n_rows": 376,
+      "scored_rows": 376
+    },
+    "extraction/format": {
+      "actionable_violated_constraints": 179,
+      "label_counts": {
+        "0": 218,
+        "1": 213
+      },
+      "n_rows": 431,
+      "scored_rows": 431
+    },
+    "reasoning-chain": {
+      "actionable_violated_constraints": 37,
+      "label_counts": {
+        "0": 32,
+        "1": 37
+      },
+      "n_rows": 69,
+      "scored_rows": 69
+    },
+    "unknown": {
+      "actionable_violated_constraints": 0,
+      "label_counts": {
+        "0": 0,
+        "1": 0
+      },
+      "n_rows": 0,
+      "scored_rows": 0
+    },
+    "unsupported": {
+      "actionable_violated_constraints": 124,
+      "label_counts": {
+        "0": 0,
+        "1": 124
+      },
+      "n_rows": 124,
+      "scored_rows": 124
+    }
+  },
+  "error_verifiability_ready": true,
+  "field_principles": {
+    "actionable_localization_rate": "Fraction of label=1 rows whose error has an actionable violated constraint.",
+    "bucket_level_metrics": "Per-bucket AUROC is null unless both labels and finite scores exist.",
+    "duration_s": "Measured wall-clock runtime; no sleep padding.",
+    "error_buckets": "Every audited row is assigned to exactly one deterministic bucket.",
+    "error_verifiability_ready": "True when clean source rows are replayed, finite local verifier scores exist, and at least one labeled error has an actionable local constraint.",
+    "honest_verdict": "Terminal-prefix verdict from explicit source checks and audit coverage.",
+    "label_consistency_rate": "Fraction of finite scored rows where verifier direction matches label.",
+    "n_rows_audited": "Count of local manifest rows with binary labels and candidate text.",
+    "remote_llm_called": "Always false; this audit only replays local artifacts and heuristics.",
+    "source_artifacts": "Only existing .271/.272 artifacts and resolved local manifests are used.",
+    "weak_auroc_explanation": "Separates data-driven, reasoning-driven, and coverage explanations."
+  },
+  "honest_verdict": "complete: HaluEval/FEVER local error-verifiability audit ready",
+  "label_consistency_rate": 0.447,
+  "n_rows_audited": 1000,
+  "remote_llm_called": false,
+  "run_date": "20260522",
+  "source_artifacts": [
+    "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+    "results/experiment_2865_cross_corpus_matrix_v5.json",
+    "results/experiment_2867_drift_mus_prioritizer_v2.json",
+    "results/experiment_2877_exact_frontier_expansion_halueval_fever_v2.json",
+    "data/eval_manifests/halueval_20260522.jsonl",
+    "data/eval_manifests/fever_20260522.jsonl"
+  ],
+  "tests_run": [],
+  "weak_auroc_explanation": "Weak scalar AUROC is best explained by data-driven factual-support and extraction/unsupported errors plus missing verifier coverage, not by a single reasoning-chain failure mode. Exp2864 AUROC halueval=0.553072, fever=0.33114331723027374; data-driven rows=931, reasoning-chain rows=69, unknown rows=0; label consistency data-driven=0.442535, reasoning-chain=0.507246; exact-trace coverage=0.008000; .271 failure rows=4."
+}
