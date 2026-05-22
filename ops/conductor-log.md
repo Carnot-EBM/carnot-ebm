@@ -5909,3 +5909,4 @@ Ripgrep i |
 | 2026-05-22 01:49 UTC | FoVer Memory-Leakage Isolation v3 (gated on exp283 | OK | 81 passed in 3.18s |
 | 2026-05-22 02:05 UTC | MBPP Dual-Condition Evaluation v3 (gated on exp283 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2838_mbpp_du |
 | 2026-05-22 02:11 UTC | MBPP Dual-Condition Evaluation v3 (gated on exp283 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2838_mbpp_du |
+| 2026-05-22 02:40 UTC | MBPP Dual-Condition Evaluation v3 (gated on exp283 | FAIL | Codex CLI error: Wall-clock+idle timeout after 1538s (300s silence). Last out |
