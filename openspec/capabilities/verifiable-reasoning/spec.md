@@ -19272,3 +19272,58 @@ reproducibility checksum, and an honest terminal-prefix verdict.
 
 **Spec traces:** REQ-VERIFY-2829, SCENARIO-VERIFY-2829,
 SCENARIO-VERIFY-2829-LIVE, Exp 2829
+
+## REQ-VERIFY-2843: BEAVER/EPR Bounded-Prefix Feasibility Probe
+
+**Capability:** verifiable-reasoning / bounded prefix semantic feasibility
+
+Carnot SHALL provide an Exp 2843 bounded-prefix feasibility probe for a small
+prefix-closed arithmetic semantic constraint and, when top-k logprobs are
+available from local telemetry, SHALL compute entropy-production features
+without claiming exact BEAVER unless a full token-trie/frontier soundness proof
+is implemented.
+
+**Requirements:**
+
+- REQ-VERIFY-2843-1: The probe SHALL load
+  `results/experiment_2836_sota_runtime_preflight.json` before evaluation and
+  SHALL block with `honest_verdict="blocked_exp2836_sota_runtime_not_ready"`
+  unless `sota_runtime_ready` is true.
+- REQ-VERIFY-2843-2: The probe SHALL define one prefix-closed arithmetic
+  semantic constraint: once a completed arithmetic equality of the form
+  `a OP b = c` is observed and evaluates false, later tokens cannot make that
+  prefix valid under the "no false arithmetic claims" trace discipline.
+- REQ-VERIFY-2843-3: The probe SHALL evaluate exactly 100 labeled examples
+  from local FoVer-style data when available, compute one bounded-prefix
+  violation score per example, and report AUROC against the existing
+  correct/incorrect labels.
+- REQ-VERIFY-2843-4: The probe SHALL set `beaver_exact=false` unless it
+  implements the full token-trie/frontier proof required for exact BEAVER
+  bounds; the bounded-prefix score SHALL be labeled as a proxy.
+- REQ-VERIFY-2843-5: If a local telemetry manifest provides top-k logprobs, the
+  probe SHALL compute entropy-production features from those top-k
+  distributions and record the telemetry source. If no top-k logprobs are
+  available, it SHALL set `entropy_production_features_available=false` and
+  SHALL NOT fabricate entropy features.
+- REQ-VERIFY-2843-6: The artifact
+  `results/experiment_2843_beaver_epr_bounded_probe.json` SHALL include
+  `honest_verdict`, `beaver_exact`, `bounded_prefix_probe_auc`,
+  `entropy_production_features_available`, `topk_logprob_source`,
+  `n_examples`, `model_specs`, `preconditions_checked`, and `duration_s`.
+
+### SCENARIO-VERIFY-2843: Bounded Prefix Proxy Reports AUROC And Provenance
+
+**Given** Exp 2836 reports `sota_runtime_ready=true`
+**And** local FoVer-style rows contain correct/incorrect labels
+**When** `scripts/experiment_2843_beaver_epr_bounded_probe.py` runs
+**Then** it evaluates 100 examples with the prefix-closed arithmetic false-claim
+constraint
+**And** it writes a terminal artifact whose `honest_verdict` starts with
+`complete:`, `success:`, or `blocked_`
+**And** the artifact records `beaver_exact=false`, the bounded-prefix AUROC,
+model-spec provenance, top-k logprob source status, checked preconditions, and
+real wall-clock duration.
+
+**Implementation Status:** Implemented (Exp 2843)
+
+**Spec traces:** REQ-VERIFY-2843, SCENARIO-VERIFY-2843, Exp 2843

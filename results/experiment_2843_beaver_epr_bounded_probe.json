@@ -1,0 +1,159 @@
+{
+  "artifact": "experiment_2843_beaver_epr_bounded_probe",
+  "beaver_exact": false,
+  "beaver_method_label": "bounded-prefix/EPR proxy, not exact BEAVER",
+  "bounded_prefix_constraint": {
+    "already_expressible_in_carnot": "arithmetic equality constraint energy",
+    "name": "no_false_completed_arithmetic_equalities",
+    "prefix_closed": true
+  },
+  "bounded_prefix_probe_auc": 0.7756,
+  "bounded_prefix_summary": {
+    "false_claim_rows": 29,
+    "mean_score": 0.2783333333333333,
+    "no_arithmetic_claim_rows": 0,
+    "scored_examples": 100
+  },
+  "duration_s": 0.23095767997438088,
+  "entropy_production_features_available": true,
+  "entropy_production_summary": {
+    "available": true,
+    "entropy_production_auc": 0.5811688311688312,
+    "mean_total_positive_entropy_delta": 1.4823874725956163,
+    "n_examples": 36,
+    "source": "results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+  },
+  "example_source": "data/fover_corpus.jsonl",
+  "failure_modes": {
+    "frontier_proof_missing": true,
+    "proxy_not_exact_beaver": true,
+    "topk_entropy_only_when_available": true
+  },
+  "field_principles": {
+    "beaver_exact": "Prevents overstating a proxy as sound BEAVER.",
+    "bounded_prefix_probe_auc": "Measured only if labels and scores exist.",
+    "duration_s": "Real compute wall-time; no sleep padding.",
+    "entropy_production_features_available": "Depends on loader logprob support.",
+    "honest_verdict": "Terminal/blocked prefix discipline.",
+    "model_specs": "Mandated SOTA GGUF recorded.",
+    "n_examples": "Sample-size transparency.",
+    "preconditions_checked": "Explains blocks honestly.",
+    "topk_logprob_source": "Reproducibility for EPR-style features."
+  },
+  "honest_verdict": "complete: bounded-prefix/EPR proxy evaluated on local FoVer-style labels",
+  "model_specs": {
+    "exp2836_model_specs": {
+      "legacy_cpu_smoke_only": [
+        "Qwen3.5-0.8B",
+        "gemma-4-E4B-it"
+      ],
+      "primary": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "exp2836_selected_python": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "exp2836_sota_runtime_ready": true,
+    "headline_required_any_of": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "legacy_cpu_smoke_only": [
+      "Qwen3.5-0.8B",
+      "gemma-4-E4B-it"
+    ],
+    "sota_models_cached": [
+      {
+        "candidate_count": 24,
+        "expected_quantization": "Q4_K_M",
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "min_vram_gb": 16,
+        "model_family": "gemma",
+        "name": "Gemma4-26B-A4B-it",
+        "observed_quantization": "UD-Q4_K_M",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "resolved_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/blobs/34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "role": "moe",
+        "sha256": "34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+        "size_bytes": 16947539744
+      }
+    ]
+  },
+  "n_examples": 100,
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "results/experiment_2836_sota_runtime_preflight.json",
+      "resource": "exp2836_artifact"
+    },
+    {
+      "available": true,
+      "detail": "True",
+      "resource": "exp2836_sota_runtime_ready"
+    },
+    {
+      "available": true,
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/llama_cpp/__init__.py",
+      "resource": "selected_loader_token_probabilities"
+    },
+    {
+      "available": true,
+      "detail": "data/fover_corpus.jsonl count=100",
+      "resource": "fover_style_labeled_examples"
+    },
+    {
+      "available": true,
+      "detail": "results/live_sota_balanced_telemetry_manifest_1480.jsonl",
+      "resource": "topk_logprob_telemetry"
+    }
+  ],
+  "random_seed": 42,
+  "reproducibility_checksum": "9368460d87fa4cda",
+  "run_date": "20260522",
+  "sample_rows": [
+    {
+      "checked_claim_count": 3,
+      "example_id": "159",
+      "false_claim_count": 1,
+      "first_violation_prefix_length": 535,
+      "label": 0,
+      "score": 0.3333333333333333
+    },
+    {
+      "checked_claim_count": 2,
+      "example_id": "164",
+      "false_claim_count": 0,
+      "first_violation_prefix_length": null,
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "checked_claim_count": 3,
+      "example_id": "165",
+      "false_claim_count": 0,
+      "first_violation_prefix_length": null,
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "checked_claim_count": 3,
+      "example_id": "165",
+      "false_claim_count": 0,
+      "first_violation_prefix_length": null,
+      "label": 0,
+      "score": 0.0
+    },
+    {
+      "checked_claim_count": 1,
+      "example_id": "166",
+      "false_claim_count": 0,
+      "first_violation_prefix_length": null,
+      "label": 0,
+      "score": 0.0
+    }
+  ],
+  "schema_version": 1,
+  "topk_logprob_source": "results/live_sota_balanced_telemetry_manifest_1480.jsonl"
+}
