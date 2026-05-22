@@ -7087,3 +7087,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-22: SOTA Runtime Evidence v2 (⚠️ Blocked) — honest_verdict=blocked_llama_cpp_gpu_offload; results/experiment_2848_sota_runtime_evidence_v2.json
 - 2026-05-22: SOTA Runtime Evidence v2 (⚠️ Blocked) — honest_verdict=blocked_loader_gpu_offload_and_sota_pair_cache; results/experiment_2848_sota_runtime_evidence_v2.json
 - 2026-05-22: SOTA Runtime Evidence v2 (⚠️ Blocked) — honest_verdict=blocked_llama_cpp_gpu_offload: precondition c failed before model selection or inference; cached_sota_pair also failed to return the required two-model local SOTA pair; results/experiment_2848_sota_runtime_evidence_v2.json
+- 2026-05-22: Local Dataset and Split Materialization v1 (✅ Complete) — honest_verdict=complete: local benchmark manifests materialized; results/experiment_2849_local_dataset_materialization_v1.json
