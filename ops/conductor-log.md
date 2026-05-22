@@ -5966,3 +5966,5 @@ Ripgrep i |
 | 2026-05-22 09:39 UTC | HaluEval + FEVER Full Calibration v2 (gated on exp | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2854_halueva |
 | 2026-05-22 09:52 UTC | Cross-Corpus Matrix v4 from Available Clean Rows | OK | 81 passed in 3.64s |
 | 2026-05-22 09:54 UTC | LoopUS Recurrence Backend Adapter v1 (gated on exp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
+| 2026-05-22 09:55 UTC | LoopUS FR-11 Continuous Self-Learning Pilot v2 (ga | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2857_loopus_ |
+| 2026-05-22 09:57 UTC | LoopUS Recurrence Backend Adapter v1 (gated on exp | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2848) |
