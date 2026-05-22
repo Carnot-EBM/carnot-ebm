@@ -3355,6 +3355,65 @@ per-seed results, per-verifier AUROC lists for both conditions, restored FR-11
 state hashes, peer-baseline comparisons, and an `honest_verdict` prefixed
 `complete:`.
 
+### REQ-VERIFY-HUMANEVAL-2838: HumanEval Full Ensemble v7b Retry Artifact
+
+The repository shall provide an Exp 2838 HumanEval-full ensemble-v7b runner
+that writes `results/experiment_2838_humaneval_full_ensemble_eval.json` for
+the full 164-problem `openai_humaneval` test split and five replication seeds
+`[42, 137, 271, 314, 1729]`.
+
+Before any live HumanEval candidate generation, execution, FR-11 reset, or
+verifier scoring, the runner MUST record the explicit
+`.venv/bin/python3 -c "import torch; assert torch.cuda.is_available()"` CUDA
+precondition, HuggingFace `openai_humaneval` dataset access, a mandated SOTA
+GGUF model path, sandboxed HumanEval execution support, and present FR-11 state
+files. If any precondition or live backend is unavailable, the runner MUST
+write a terminal `blocked_<resource>` artifact with the complete requested
+schema, populated precondition evidence, preserved FR-11 state-file metadata,
+and null unmeasured AUROC, pass@1, candidate, ranking, and per-verifier values.
+
+For successful runs, the runner MUST use clean HumanEval `check()` execution
+ground truth for the same problem/candidate pairs under Condition A
+(production FR-11 state visible) and Condition B (architecture-only after a
+non-destructive FR-11 state reset and Python restart). It MUST restore every
+FR-11 state file and verify SHA256 equality before reporting completion.
+
+The artifact MUST include `honest_verdict`, `corpus="HumanEval-full"`,
+`n_problems=164`, `n_seeds`, `condition_a_production_auroc_mean`,
+`condition_a_production_auroc_std`,
+`condition_b_architecture_only_auroc_mean`,
+`condition_b_architecture_only_auroc_std`, `learning_contribution`,
+per-verifier AUROC lists for both conditions, `pass_at_1_vanilla`,
+`pass_at_1_after_carnot_correct_production`,
+`pass_at_1_after_carnot_correct_architecture_only`, peer HumanEval verifier
+baseline comparison fields, `random_seeds_used`, `reproducibility_checksum`,
+`model_specs`, real `duration_s`, `preconditions_checked`, `fr11_state_files`,
+`state_files_restored_sha_match`, and an honest `methodology_note`.
+
+### SCENARIO-VERIFY-HUMANEVAL-2838-BLOCKED: Missing HumanEval Resource Blocks Metrics
+
+Given the Exp 2838 HumanEval retry checks all live-resource preconditions
+before inference, execution, FR-11 reset, or scoring,
+When CUDA, HuggingFace `openai_humaneval`, a mandated SOTA GGUF path,
+sandboxed execution, FR-11 state files, or the live HumanEval backend is
+unavailable,
+Then it writes `results/experiment_2838_humaneval_full_ensemble_eval.json`
+with `honest_verdict` prefixed `blocked_`, `corpus="HumanEval-full"`,
+`n_problems=164`, populated precondition evidence, null unmeasured metrics,
+empty per-verifier AUROC maps, and no inferred candidate labels.
+
+### SCENARIO-VERIFY-HUMANEVAL-2838-LIVE: Successful HumanEval Retry Reports Dual Conditions
+
+Given all Exp 2838 HumanEval live resources are available and a real
+Qwen3.6-compatible HumanEval generation, execution, and ensemble-v7b scoring
+backend is configured,
+When the runner evaluates all 164 HumanEval problems for all five seeds under
+production and architecture-only memory conditions,
+Then the artifact reports complete dual-condition pass@1 and AUROC summaries,
+per-seed results, per-verifier AUROC lists for both conditions, restored FR-11
+state hashes, peer-baseline comparisons, and an `honest_verdict` prefixed
+`complete:`.
+
 ### REQ-VERIFY-2839: HumanEval Full Dual-Condition v3 Gated By Exp 2836 SOTA Runtime
 
 The repository shall provide an Exp 2839 HumanEval dual-condition runner that
