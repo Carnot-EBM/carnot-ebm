@@ -603,5 +603,18 @@
   "recommendation": "Scale FEVER, HaluEval to a future N>=500 milestone, keeping pilot_only=true results out of headline tables.",
   "run_date": "20260522",
   "sample_per_dataset": 25,
-  "schema": "carnot.halueval_fever_pilot"
+  "schema": "carnot.halueval_fever_pilot",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=2.0778887271881104 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }

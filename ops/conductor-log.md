@@ -5916,3 +5916,5 @@ Ripgrep i |
 | 2026-05-22 03:22 UTC | TruthfulQA Honest Dual-Condition Evaluation v4 (ga | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2840_truthfu |
 | 2026-05-22 03:28 UTC | TruthfulQA Honest Dual-Condition Evaluation v4 (ga | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2840_truthfu |
 | 2026-05-22 03:35 UTC | TruthfulQA Honest Dual-Condition Evaluation v4 (ga | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2840_truthfu |
+| 2026-05-22 03:55 UTC | HaluEval + FEVER 50-Example Factuality Pilot | OK | 81 passed in 3.93s |
+| 2026-05-22 03:57 UTC | Cross-Corpus Per-Verifier Dual-Condition Matrix v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2838-mbpp-dual-condition-v3, exp2838-mbpp |
