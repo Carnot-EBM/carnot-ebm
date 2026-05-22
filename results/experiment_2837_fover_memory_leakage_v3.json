@@ -416,5 +416,18 @@
   ],
   "reproducibility_checksum": "47872d20f08391e72ecc698f1abf2ca6823ffd66cdf2da475b9caf321ce2291d",
   "schema": "carnot.fover_memory_leakage_v3",
-  "state_files_restored_sha_match": true
+  "state_files_restored_sha_match": true,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=16.265714645385742 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }

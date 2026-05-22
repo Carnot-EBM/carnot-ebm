@@ -5906,3 +5906,4 @@ Ripgrep i |
 | 2026-05-22 00:56 UTC | Milestone 2026.05.269 activated | OK | 12 tasks queued |
 | 2026-05-22 01:08 UTC | Milestone .268 Record Transfer to .269 | OK | 81 passed in 3.42s |
 | 2026-05-22 01:26 UTC | SOTA GGUF Runtime Preflight + Cache Manifest | OK | 81 passed in 3.51s |
+| 2026-05-22 01:49 UTC | FoVer Memory-Leakage Isolation v3 (gated on exp283 | OK | 81 passed in 3.18s |
