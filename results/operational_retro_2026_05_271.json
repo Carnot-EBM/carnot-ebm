@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.271",
+  "generated_at": "2026-05-22T16:20:42Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The milestone-scoped timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. Compute-bound duration, GPU efficiency, and DualGPURunner coverage are all no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No experiment commits were present in the milestone-scoped timing window, so operational analysis cannot rank slow work or attribute runtime causes.",
+    "GPU idle is not classified as a bottleneck because the timing data contains no compute-bound task."
+  ],
+  "improvements_suggested": [
+    "Add a pre-retro timing-window coverage check that emits an explicit empty-window finding before attempting duration analysis.",
+    "Write a first-experiment-start marker immediately after milestone activation so an empty closeout can be separated from missing log ingestion.",
+    "Keep GPU-state recommendations gated behind compute-bound timing rows, with synthesis-only retros reporting GPU data as contextual only."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Implement a milestone activation-to-first-commit guard that alerts before closeout when no experiment row has landed.",
+    "Have the retrospective generator print 'no data available this milestone' for compute-bound duration, GPU efficiency, and DualGPURunner sections when timing rows are absent.",
+    "Add a timing-ingestion smoke check to confirm the conductor is reading the current milestone rather than a stale or future window."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "No runtime metric is justified from idle GPUs or prior milestone records when the timing window has 0 entries. The useful operational conclusion is instrumentation: make empty timing windows visible before retrospective closeout."
+}
