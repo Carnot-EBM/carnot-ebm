@@ -1,0 +1,99 @@
+{
+  "adversarial_verify_flags": [],
+  "adversarial_verify_passed": true,
+  "auroc_ci95_by_dataset": {
+    "fever": [
+      0.28651047154899895,
+      0.3805551966927201
+    ],
+    "halueval": [
+      0.5022596153846154,
+      0.6010529019003595
+    ]
+  },
+  "duration_s": 3.4648706912994385,
+  "fever_auroc": 0.33114331723027374,
+  "fever_n_examples": 500,
+  "field_principles": {
+    "auroc_fields": "Null when a dataset lacks both binary labels or finite scores.",
+    "duration_s": "Measured wall-clock runtime; no sleep padding.",
+    "full_benchmark_ready": "True only when both datasets produce AUROC and verification passes.",
+    "halueval_fever_ready": "True only when Exp 2863 readiness and manifest checksums pass.",
+    "honest_verdict": "Terminal-prefix verdict based on explicit preconditions and metrics.",
+    "live_model_invoked": "Always false for this dataset/verifier calibration.",
+    "manifest_paths_used": "Copied from Exp 2863; plain filename aliases are never guessed.",
+    "manifest_sha256_used": "Copied from Exp 2863 and verified against bytes on disk.",
+    "random_seed": "Controls deterministic bootstrap confidence intervals.",
+    "reproducibility_checksum": "Hashes inputs and computed metric payload, excluding wall time."
+  },
+  "full_benchmark_ready": true,
+  "halueval_auroc": 0.553072,
+  "halueval_fever_ready": true,
+  "halueval_n_examples": 500,
+  "honest_verdict": "complete: HaluEval/FEVER local calibration ready",
+  "label_counts_by_dataset": {
+    "fever": {
+      "0": 270,
+      "1": 230
+    },
+    "halueval": {
+      "0": 250,
+      "1": 250
+    }
+  },
+  "live_model_invoked": false,
+  "manifest_paths_used": {
+    "fever": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/fever_20260522.jsonl",
+    "halueval": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/halueval_20260522.jsonl"
+  },
+  "manifest_sha256_used": {
+    "fever": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2",
+    "halueval": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6"
+  },
+  "preconditions_checked": [
+    {
+      "check": "exp2863_artifact",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2863_eval_manifest_contract_v2.json",
+      "passed": true
+    },
+    {
+      "check": "exp2863_halueval_ready",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "manifest_file_halueval",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/halueval_20260522.jsonl",
+      "passed": true
+    },
+    {
+      "check": "manifest_checksum_halueval",
+      "observed": {
+        "actual": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6",
+        "declared": "a4418a1118b64b5fe2acdfe412d4daa978119430cce07bfb5b840e79e2bb6ec6"
+      },
+      "passed": true
+    },
+    {
+      "check": "exp2863_fever_ready",
+      "observed": true,
+      "passed": true
+    },
+    {
+      "check": "manifest_file_fever",
+      "observed": "/home/ianblenke/github.com/ianblenke/carnot/data/eval_manifests/fever_20260522.jsonl",
+      "passed": true
+    },
+    {
+      "check": "manifest_checksum_fever",
+      "observed": {
+        "actual": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2",
+        "declared": "56d3293cdb0e8b23a6ecf824fe3c72be24e67346e20724f23a9975d024bbc5b2"
+      },
+      "passed": true
+    }
+  ],
+  "random_seed": 2864,
+  "reproducibility_checksum": "0361c98b1f5eb625a88652a9a1a584278b12027762a5efb86edd4ccdc157269d",
+  "run_date": "20260522"
+}

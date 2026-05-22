@@ -769,3 +769,48 @@ HaluEval and FEVER
 **And** it reports both corpus readiness booleans without fabricating rows.
 
 **Spec traces:** REQ-BENCH-2863, SCENARIO-BENCH-2863
+
+### REQ-BENCH-2864: HaluEval/FEVER Local Manifest Calibration
+
+Carnot MUST provide an Exp 2864 HaluEval/FEVER full calibration runner that
+depends on the Exp 2863 manifest-contract artifact rather than plain manifest
+filenames. The runner MUST verify `halueval_ready=true` and `fever_ready=true`
+from Exp 2863, load the resolved local JSONL manifests, recompute each manifest
+SHA256 before scoring, and avoid any live LLM invocation.
+
+The runner MUST score only dataset-provided labeled rows with deterministic
+verifier-energy logic, compute AUROC and deterministic bootstrap 95% confidence
+intervals when both binary labels are present, and write honest `null` values
+when a metric is unavailable. The terminal artifact MUST be written to
+`results/experiment_2864_halueval_fever_full_calibration_v3.json` and include:
+`honest_verdict`, `halueval_fever_ready`, `full_benchmark_ready`,
+`live_model_invoked=false`, `manifest_paths_used`, `manifest_sha256_used`,
+`halueval_auroc`, `fever_auroc`, `halueval_n_examples`, `fever_n_examples`,
+`auroc_ci95_by_dataset`, `label_counts_by_dataset`, `random_seed`,
+`reproducibility_checksum`, `preconditions_checked`,
+`adversarial_verify_passed`, `adversarial_verify_flags`, `field_principles`,
+`run_date="20260522"`, and measured `duration_s`.
+
+**Acceptance criteria:**
+- The runner reads manifest paths and SHA256 values from Exp 2863 fields and
+  never substitutes `halueval.jsonl` or `fever.jsonl` aliases.
+- `halueval_fever_ready` is true only when both Exp 2863 readiness booleans are
+  true and both manifest checksums verify on disk.
+- `live_model_invoked` remains false, and the artifact contains no live-model
+  provenance fields because this calibration uses dataset candidates only.
+- If `scripts/adversarial_verify.py` is present, the runner verifies the
+  written artifact and persists pass/fail plus flag details back into it.
+
+### SCENARIO-BENCH-2864: Full Calibration Uses Resolved Local Manifests
+
+**Given** Exp 2863 resolves dated HaluEval and FEVER manifests with valid
+checksums
+**When** the Exp 2864 calibration runner executes with a fixed random seed
+**Then** it writes the required v3 artifact with the dated manifest paths and
+checksums echoed from Exp 2863
+**And** it reports AUROC and confidence intervals for every dataset that has
+both labels
+**And** it records `live_model_invoked=false` and adversarial-verification
+results without claiming live-model provenance.
+
+**Spec traces:** REQ-BENCH-2864, SCENARIO-BENCH-2864
