@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.270",
+  "generated_at": "2026-05-22T11:10:24Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.270 has locked totals of 0 wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. Because the timing window has no completed entries, slowest-experiment ranking, compute-bound duration analysis, and DualGPURunner evaluation have no data available this milestone.",
+  "bottlenecks_identified": [
+    "No experiment-level wall-time bottleneck can be identified; no data available this milestone.",
+    "The operational closeout has an empty milestone-scoped timing window, so the next bottleneck to address is dispatch and accounting visibility rather than runtime speed."
+  ],
+  "improvements_suggested": [
+    "Add a milestone-open watchdog that checks for at least one post-activation experiment commit before retrospective generation.",
+    "Have the retrospective generator render no-data placeholders for slowest experiments, compute-bound analysis, GPU efficiency, and DualGPURunner checks whenever experiments_completed is 0.",
+    "Route GPU monitor suggestions through compute_bound evidence checks so idle hardware reports stay informational in empty windows."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Block closeout on an empty activation-scoped timing window unless the operator explicitly overrides.",
+    "Publish an early no-data alert when the milestone has no post-activation experiment commits.",
+    "Require compute_bound evidence before GPU or DualGPURunner recommendations become bottleneck findings."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The GPU report shows idle hardware, but with 0 compute-bound experiments the idle state cannot be labeled inefficient. The retrospective is therefore an accounting and dispatch finding, not a runtime-performance finding."
+}
