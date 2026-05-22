@@ -1,6 +1,17 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-22 (milestone 2026.05.272 operational retrospective complete)
+**Last Updated:** 2026-05-22 (milestone 2026.05.273 research planning complete)
+
+## Session 2026-05-22 - Milestone 2026.05.273 Research Planning Complete
+
+Planned milestone `2026.05.273` as "Clean Telemetry + Fast/Slow Memory + Constraint Benchmark Expansion" after the operator confirmed all `.272` tasks completed. The plan treats `results/experiment_2884_capstone_v272.json` as the authoritative closeout: `.272` reached `paper_ready=true`, but the SOTA micro-panel and FR-11 RecMem scale-up remain flagged, THRML remains locally blocked, and MBPP/HumanEval plus TruthfulQA still need clean promotion paths.
+
+- Roadmap doc: `openspec/change-proposals/research-roadmap-vNEXT.md`
+- Execution queue: `research-roadmap-next.yaml` (12 tasks, `exp2885`-`exp2896`)
+- Critical path: `exp2886` must either clear or downgrade the SOTA micro-panel; `exp2887` must repair FR-11 continuous self-learning evidence with non-tautological RecMem-vs-fast/slow-vs-eager metrics; `exp2888`-`exp2892` expand corpus/formal evidence before matrix v7.
+- FR-11 mandate: `exp2887-fr11-fast-slow-memory-corrigendum-v2` is the continuous self-learning task.
+- Research references updated with the post-`.272` sweep: ICLR 2026 EBT/NRGPT, CCTU, structural code verification, VeriCoT, InFi-Check, Memini, KAN hardware complexity, analog KAN hardware, THRML, llguidance, and Logical Intelligence Aleph/Kona context.
+- Validation: roadmap schema parse OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml` OK; `scripts/exclusion_manifest_lint.py research-roadmap-next.yaml` OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` OK with 5 gate checks and 0 failures; prompt-section/end-line checks OK; diff whitespace check clean for the planning files. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
 
 ## Session 2026-05-22 - Milestone 2026.05.272 Operational Retrospective Complete
 

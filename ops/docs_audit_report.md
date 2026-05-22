@@ -4,45 +4,50 @@
 # docs_audit_report — 2026-05-22
 
 ## TL;DR (stranger's 30-second take)
-I'd bounce in 15 seconds. While the hero copy is clear, the page immediately descends into a wall of internal project metrics, suspiciously perfect numbers, and impenetrable acronyms that make it feel like a leaked internal Jira dashboard rather than a usable open-source product.
+I would bounce off this page right after the hero section. While the initial pitch is excellent, the page immediately devolves into an overwhelming, unreadable wall of 29+ cards packed with internal acronyms (PREM, FoVer, CCTU) and suspiciously perfect numbers that make it look like an internal research dashboard rather than a trustworthy open-source tool.
 
 ## TOP 3 PROBLEMS
-1. **Jargon Overload**: The page assumes the reader knows what HIVE, FoVer, CCTU, PREM, VeriCoT, and HalluGuard v3 are. 
-2. **Internal Navel-Gazing**: Highlighting "382 Completed milestones", "2,337 Experiment runs", and a "Research operations" feature card tells the user about your internal team workflow, not their solution.
-3. **Suspiciously Perfect Numbers**: Claims like "2.0x speedup", "1.0 TP rate", and "60/60 attacks" look completely fabricated or cherry-picked without context or links to the actual artifacts.
+1. Jargon Overload — Results Grid & Capabilities: An alphabet soup of internal benchmarks and acronyms (IterativeSelfRepair, VeriCoT, CCTU, PREM) that alienates outsiders.
+2. Fabrication Signals — Results Grid & Blog: Claims like "1.0 TP rate", "60/60 attacks", and "Zero false positives" trigger immediate skepticism without prominent caveats.
+3. Card Bloat — Entire Page: 12 result cards, 7 capability cards, and 6 blog cards create severe cognitive overload. No one is reading 25+ disjointed boxes.
 
 ## DETAILED FINDINGS
 ### Bloat
-- **Results grid** — 12 cards — Cap at 3-4 headline results. 12 cards of hyper-specific metrics is a wall of noise that a stranger will completely skip.
+- `Evidence (Results)` section — 12 cards — Cap at 4 to 6 universally understood metrics.
+- `Features (Capabilities)` section — 7 bento cards — Trim to 3 to 4 core capabilities. 
+- `Writing` section — 6 cards — Cap at 3 recent/relevant posts.
+- Overall layout — 29 total informational cards across the page — A stranger will skim none of them.
 
 ### Internal jargon
-- **Hero Stats & Recent Progress** — `HIVE peer`, `FoVer step-error corpus` — No stranger knows what HIVE or FoVer is.
-- **Features** — `Test-Time Compute (TTC) & PREM` — "Process-Reward Energy Model" is deeply specific architecture terminology thrown in without defining what it solves for the user.
-- **Results Grid** — `EstimationVerifier`, `SVAMP`, `VeriCoT`, `PRM-BiasBench-style`, `HalluGuard v3`, `CCTU` — These read like internal experiment labels, not public-facing benchmarks. 
+- Stats bar — "HIVE peer 0.924" — A stranger does not know what HIVE is or why 0.924 is a good baseline.
+- Hero/Recent progress — "FoVer step-error corpus" — Unknown internal benchmark.
+- Features section — "TTC & PREM" card — "Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance" is dense academic/internal jargon.
+- Features section — "CCTU constrained micro-benchmark" — Meaningless outside the project team.
+- Results section — "Qwen3.6-35B-A3B", "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)", "EstimationVerifier SVAMP AUC", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3" — Completely impenetrable to a casual visitor.
 
 ### Per-milestone narrative
-- **Hero Stats Bar** — `2,337 Experiment runs`, `382 Completed milestones` — Internal project tracking metrics are irrelevant to someone deciding if they should `pip install` your tool.
-- **Research operations (Feature Card)** — Explaining the "autonomous research loop" and "adversarial-verify pass" is internal methodology/status reporting, not a framework capability for the user.
+- Stats bar — "382 Completed milestones" — Internal ops trivia, not a selling point.
+- Writing section — "639 experiments self-verified. 65 brace bugs auto-fixed... The three-layer defense we shipped... the seven-rule detector we shipped to stop it." — Reads exactly like copy-pasted sprint retrospectives or PR descriptions, not value-driven marketing copy.
 
 ### Inconsistencies
-- **HumanEval impact** vs **HumanEval impact** — The page makes three wildly different claims for HumanEval: "+3.0 points" (first result card) vs "8% → 80% (+72pp)" (IterativeSelfRepair card) vs "0% → 36%" (Qwen3.6-35B-A3B card). A stranger has no idea what the actual performance is.
-- **Model Versions** — The Quickstart uses a real-world model (`Qwen/Qwen3.5-0.8B`), but the Results cite a non-existent or highly specific `Qwen3.6-35B-A3B`.
+- "No model fine-tuning required" (How it works section) vs. "Training — Two-GPU parallel retrain: 2.0x speedup, identical losses" (Results section). A stranger will immediately wonder why there is a training performance card if the tool requires no training.
 
 ### Missing essentials
-- **Trust / Proof** — You claim "Every number below is backed by a checked-in experiment artifact" but provide absolutely no links, citations, or methodology to those artifacts. To a stranger, these are just numbers typed into HTML.
+- Rust Installation — The hero mentions "Dual Rust + Python/JAX implementation", and the quickstart has a Rust tab, but there is no `cargo add` or `crates.io` equivalent provided, only `pip install carnot-ebm`.
 
 ### Fabrication signals
-- **Adversarial audit card** — `60/60 attacks` — A perfect 100% success rate on a tiny sample size looks like overfit cherry-picking.
-- **Math extraction card** — `0.5 → 1.0` TP rate — A perfect 1.0 true positive rate is an immediate red flag for evaluation errors.
-- **Training card** — `2.0x speedup, identical losses` — Perfect 2.0x linear scaling with zero overhead is practically impossible in real multi-GPU training.
+- Results section — Math extraction: "GSM8K extraction TP rate: 0.5 -> 1.0" (A perfect 1.0 on an LLM extraction task looks faked without context).
+- Results section — Adversarial audit: "k=5 ensemble catches 60/60 attacks" (100% success rate sets off alarm bells).
+- Writing section — Dogfooding blog post claims "Zero false positives" over 26 days.
 
 ## WHAT'S WORKING
-- The hero copy ("Catch the mistakes your LLM confidently makes up.") is punchy, clear, and immediately understandable.
-- The Quickstart tabs (Python/Rust) show real, readable code that makes the tool look concrete and approachable.
+- The hero section's H1 and subtitle are excellent: "Catch the mistakes your LLM confidently makes up" perfectly explains what the tool does in one sentence without jargon.
+- The "Quick Start" code block effectively proves the Python API is actually simple to use (3 lines to verify, 1 line to repair).
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Delete the "Experiment runs" and "Completed milestones" from the hero stats; replace with metrics a user cares about (e.g., supported models, latency overhead).
-2. Purge all internal acronyms (FoVer, HIVE, CCTU, PREM, VeriCoT) or rewrite them as plain-English descriptions (e.g., "Industry tool-use benchmarks").
-3. Drop the "Research operations" bento card entirely; replace it with an actual user-facing capability, or drop to 6 cards.
-4. Cut the 12 Results cards down to 3-4 believable, properly caveated headline metrics, and unify the conflicting HumanEval claims into a single defensible number.
-5. Add explicit caveats or links to the suspiciously perfect "1.0", "60/60", and "2.0x" claims to prove they aren't fabricated.
+1. Slash the "Evidence" results grid from 12 cards down to 4-6 impressive, general-audience metrics (e.g., HumanEval, general tool-use compliance).
+2. Eradicate internal acronyms (PREM, CCTU, FoVer, VeriCoT) from headlines and replace them with what they actually measure (e.g., "Complex JSON Generation", "Math Step-by-Step").
+3. Add prominent asterisks or caveats to the 1.0 / 60/60 / 100% claims, or replace them with more realistic, large-N benchmark numbers.
+4. Consolidate the 7 capabilities bento cards into 3 or 4 distinct use cases.
+5. Clarify the "No fine-tuning required" claim by removing the "Training" results card, or explaining that Carnot *can* be retrained but works out-of-the-box.
+6. Add `cargo` installation instructions to accompany the `pip install` claims if Rust is a primary selling point.

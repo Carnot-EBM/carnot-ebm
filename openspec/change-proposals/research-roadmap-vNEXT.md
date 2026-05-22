@@ -1,262 +1,284 @@
-# Research Roadmap vNEXT: Milestone 2026.05.272
+# Research Roadmap vNEXT: Milestone 2026.05.273
 
-**Title:** Clean SOTA Corrigenda + RecMem Self-Learning + Evidence Expansion
+**Title:** Clean Telemetry + Fast/Slow Memory + Constraint Benchmark Expansion
 
 **Planned:** 2026-05-22
 
-**Previous milestone:** 2026.05.271
+**Previous milestone:** 2026.05.272
 
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.271 Proved
+## What 2026.05.272 Proved
 
-Milestone `.271` got Carnot back to a paper-ready state, but only by being
-honest about the remaining weak links. The authoritative terminal artifact is
-`results/experiment_2872_capstone_v271.json`.
+Milestone `.272` strengthened the paper-ready state but left two important
+claims fenced off. The authoritative terminal artifact is
+`results/experiment_2884_capstone_v272.json`.
 
-- `paper_ready=true`, with 8 clean artifacts, 0 blocked artifacts, and 0 missing
-  artifacts.
-- FoVer and HaluEval/FEVER are headline-eligible clean rows. The HaluEval/FEVER
-  row is real but weak: AUROC is low enough that it should be treated as a
-  calibration/data point, not a win.
-- The dated local eval manifest contract works. `.270`'s plain-vs-dated path
-  drift is no longer the main blocker.
-- Exact tiny Z3 arithmetic frontier, residual-drift/MUS prioritization, and
-  offline recurrence backend are present as clean building blocks.
-- FR-11 replay now has an offline result: energy decreased without forgetting on
-  a tiny replay set, but there was no correctness lift and the sample size was
-  too small for a durable self-learning claim.
-- The SOTA runtime path is no longer totally blocked: one mandated GGUF
-  (`unsloth/gemma-4-26B-A4B-it-GGUF`) produced usable GPU-backed output.
-  However, the artifact was adversarially flagged because the two-model
-  `cached_sota_pair()` contract was not satisfied and the clean provenance bar
-  was not high enough for citation.
-- The SOTA energy micro-panel invoked the live model, but empty responses and
-  unavailable logprob fields prevented a full benchmark claim.
-- The KAN PWA/MILP tiny verifier produced a useful prototype, but was flagged
-  because the local and global error bounds were identical and the MILP path fell
-  back to exact enumeration.
-
-The next milestone should not open a new frontier before it cleans these three
-flagged artifacts. It should turn `.271`'s paper-ready but fragile state into a
-stronger multi-corpus, self-learning, and formal-verifier evidence base.
+- `paper_ready=true`, with 7 clean artifacts, 2 flagged artifacts, 1 blocked
+  artifact, 1 pilot-only artifact, and 0 missing artifacts.
+- The SOTA runtime corrigendum is clean for a single mandated local GGUF:
+  `unsloth/gemma-4-26B-A4B-it-GGUF` generated 8 usable GPU-backed responses
+  with complete provenance. Two-model `cached_sota_pair()` readiness remains
+  false.
+- The SOTA micro-panel produced 6 non-empty responses with logprobs, but the
+  artifact is still flagged because duration/provenance were not citation-grade
+  and no reproducibility checksum was recorded.
+- The KAN PWA/MILP corrigendum cleared the `.271` tautology: local and global
+  error bounds are distinct, Z3 returned `optimal`, and exact enumeration was not
+  used as a fallback. The claim remains a tiny formal example, not a general KAN
+  verifier.
+- Exact frontier checking touched HaluEval/FEVER without overclaiming, but only
+  8 of 1000 rows were exactly supported. HaluEval/FEVER remains a headline row
+  only as a weak calibration/data point.
+- MBPP and HumanEval now have deterministic manifest-only execution pilots, but
+  they are explicitly pilot-only. TruthfulQA is still missing from matrix v6.
+- FR-11 RecMem recurrence-triggered consolidation is clean as a trigger
+  prototype. The scale-up artifact is flagged: it reports zero forgetting,
+  zero correctness/AUROC delta, and very short runtime, so it cannot support a
+  clean FR-11 scale-up claim.
+- THRML sampler portability is blocked locally because THRML is unavailable; the
+  fallback ran and made no hardware claim.
 
 ## Three Biggest Gaps
 
-### Gap 1: SOTA Runtime Provenance Is Usable But Not Clean
+### Gap 1: Telemetry Claims Still Fail the Citation Bar
 
-The PRD requires local, open, decentralized evaluation. `.271` showed the host
-can run a mandated SOTA GGUF on GPU, but the result is not clean enough to cite:
-only one mandated model is cached, `cached_sota_pair()` still fails the two-model
-contract, and token/logprob telemetry is incomplete. Live-model work must stay
-gated on a clean runtime corrigendum.
+The local SOTA runtime is finally usable, but the micro-panel remains flagged.
+The next milestone must either produce adversarial-clean telemetry with fixed
+seeds, checksum, duration, raw responses, and token/logprob evidence, or
+permanently downgrade the micro-panel to a non-benchmark note.
 
-### Gap 2: Cross-Corpus Evidence Is Still Too Narrow
+### Gap 2: Cross-Corpus Evidence Has Not Escaped Pilot Status
 
-The matrix is no longer empty, but it has only FoVer and HaluEval/FEVER. Code
-rows, TruthfulQA, and more exact-verification evidence remain absent or weak. The
-next milestone should add verifier-localization metrics, a small exact frontier
-extension, and a manifest-only code row before any larger benchmark claim.
+FoVer and HaluEval/FEVER are still the only headline rows. MBPP/HumanEval are
+pilot-only, and TruthfulQA is absent. The next step is not a giant benchmark; it
+is a bounded clean promotion path: materialize TruthfulQA as an error-taxonomy
+manifest, run a small generated-code row only under clean local GGUF runtime, and
+add structural-dependency verification before expanding matrix v7.
 
-### Gap 3: FR-11 Self-Learning Needs Recurrence Control and Drift Guards
+### Gap 3: FR-11 Needs Non-Tautological Fast/Slow Memory Evidence
 
-The PRD's autonomous self-learning loop is not satisfied by a tiny replay that
-only lowers energy. The new RecMem result suggests the right next step:
-consolidate only after sustained recurrence, measure token savings, and add
-memory-drift/non-forgetting checks. The cautionary memory-corruption result makes
-those drift guards mandatory.
+RecMem's trigger is promising, but `.272` did not prove that recurrence-triggered
+memory improves correctness or energy relative to eager replay. Recent
+multi-timescale-memory work suggests a better comparator: fast episodic edges
+plus slow consolidated edges. `.273` should test RecMem against an explicit
+fast/slow baseline with real drift, duplicate, contradiction, energy, AUROC, and
+forgetting checks.
 
 ## New Research Integrated
 
-The 2026-05-22 post-`.271` sweep appended these items to
+The 2026-05-22 post-`.272` sweep appended these items to
 `research-references.md`:
 
-- **Distributional EBMs for structured LLM reasoning** (arXiv:2605.18871):
-  separates deterministic constraints, learned quality scores, and uncertainty.
-  This supports `.272`'s claim boundary between structural verifiers and learned
-  model priors.
-- **RecMem** (arXiv:2605.16045): recurrence-triggered memory consolidation is
-  the direct FR-11 implementation target.
-- **Useful Memories Become Faulty When Continuously Updated by LLMs**
-  (arXiv:2605.12978): self-learning must report drift and non-forgetting, not
-  just token savings.
-- **LaaB logical consistency bridge** (arXiv:2605.03971), **VERGE**
-  (arXiv:2601.20055), **Energy-Based Constraint Networks** (OpenReview/TMLR
-  2026), and **HalluGuard** (HF/arXiv:2601.18753): all point toward error
-  localization and decomposed hallucination diagnostics.
-- **Energy-guided decoding** (arXiv:2507.07731) and **ARM-as-EBM**
-  (arXiv:2512.15605): useful theory for the SOTA energy micro-panel, but only
-  after clean local telemetry exists.
-- **KAN PWA/MILP verification** (arXiv:2602.06737): remains the formal KAN target,
-  now with a stricter non-tautological artifact requirement.
-- **Extropic THRML / TSU** and **Logical Intelligence Kona** updates: maintain the
-  hardware and global-energy north stars, but `.272` should stay software-local
-  unless THRML is already installed.
+- **EBT accepted as an ICLR 2026 oral** (OpenReview `ZBj3Qp1bYg`): strengthens
+  Carnot's theory citation for energy-minimization as System-2 thinking.
+- **NRGPT** (OpenReview `B3Muyi2zgo`): useful theory context for energy descent
+  in language modeling, but not evidence for Carnot until local telemetry is
+  clean.
+- **CCTU** (arXiv:2603.15309): executable constraint validation for multi-turn
+  tool use; a natural next benchmark pilot for Carnot's constraint verifier.
+- **Structural Verification for EDA Code Generation** (arXiv:2604.18834):
+  dependency-graph contracts before execution, directly relevant to
+  MBPP/HumanEval promotion.
+- **VeriCoT** (arXiv:2511.04662 / ICLR 2026): neuro-symbolic CoT validation with
+  solver-backed logical consistency; useful for exact-frontier expansion.
+- **InFi-Check** (arXiv:2601.06666): fine-grained fact-checking labels,
+  evidence, justifications, and corrections; useful for TruthfulQA taxonomy
+  materialization.
+- **Memini** (arXiv:2605.05097): multi-timescale fast/slow external memory
+  dynamics; direct comparator for the flagged RecMem scale-up.
+- **KAN hardware complexity metrics** (arXiv:2604.03345) and **analog KAN
+  hardware** (arXiv:2602.07518): next KAN step should be cost accounting, not
+  hardware overclaim.
+- **Extropic THRML / TSU status**: THRML remains the public software bridge, but
+  `.273` should not rerun THRML parity unless the dependency is materialized.
+- **llguidance**: optional local constrained-decoding engine for structured
+  extractor outputs; keep it outside the core unless a local integration proves
+  useful.
+- **Logical Intelligence Aleph/Kona updates**: supports the formal verification
+  direction, but Carnot must cite only local reproducible artifacts as evidence.
 
 ## Architecture Snapshot
 
 ```text
-             +-----------------------------------------------+
-             | Phase A: clean flagged .271 artifacts          |
-             |                                               |
-             | exp2873 archive/activate                      |
-             | exp2874 SOTA runtime clean corrigendum        |
-             | exp2875 SOTA micro-panel logprob corrigendum  |
-             | exp2876 KAN PWA/MILP corrigendum              |
-             +---------------------+-------------------------+
-                                   |
-             +---------------------+-------------------------+
-             |                                               |
-             v                                               v
-  +-----------------------------+              +-----------------------------+
-  | Phase B: evidence expansion |              | Phase C: FR-11 RecMem       |
-  |                             |              |                             |
-  | exp2877 exact frontier v2   |              | exp2881 recurrence trigger  |
-  | exp2878 label consistency   |              | exp2882 replay scale-up     |
-  | exp2879 code corpus pilot   |              +--------------+--------------+
-  | exp2880 matrix v6           |                             |
-  +-------------+---------------+                             |
-                |                                             |
-                +---------------------+-----------------------+
-                                      |
-                                      v
-                  +-------------------------------------------+
-                  | Phase D: sampler portability + capstone   |
-                  |                                           |
-                  | exp2883 THRML sampler portability smoke   |
-                  | exp2884 capstone                          |
-                  +-------------------------------------------+
+             +--------------------------------------------------+
+             | Phase A: close flagged .272 evidence             |
+             |                                                  |
+             | exp2885 archive/activate                         |
+             | exp2886 SOTA micro-panel clean telemetry v3      |
+             | exp2887 FR-11 fast/slow memory corrigendum       |
+             +----------------------+---------------------------+
+                                    |
+             +----------------------+---------------------------+
+             |                                                  |
+             v                                                  v
+  +------------------------------+              +------------------------------+
+  | Phase B: corpus promotion    |              | Phase C: formal constraints  |
+  |                              |              |                              |
+  | exp2888 TruthfulQA taxonomy  |              | exp2891 CCTU validator pilot |
+  | exp2889 generated code row   |              | exp2892 VeriCoT frontier     |
+  | exp2890 structural verifier  |              | exp2893 KAN cost accounting  |
+  +---------------+--------------+              +---------------+--------------+
+                  |                                             |
+                  +---------------------+-----------------------+
+                                        |
+                                        v
+                    +-------------------------------------------+
+                    | Phase D: matrix + paper boundary + close  |
+                    |                                           |
+                    | exp2894 cross-corpus matrix v7            |
+                    | exp2895 paper-v6 evidence table v4        |
+                    | exp2896 capstone                          |
+                    +-------------------------------------------+
 ```
 
 ## Phase Structure
 
-### Phase A: Clean Flagged `.271` Artifacts
+### Phase A: Close Flagged `.272` Evidence
 
-- `exp2873` archives `.271` and activates `.272`.
-- `exp2874` reruns the SOTA runtime path as an adversarially clean corrigendum.
-  It must prove GPU-backed mandated GGUF inference and record whether the two-model
-  cache contract is satisfied.
-- `exp2875` runs the SOTA energy micro-panel only if `exp2874` is clean. It fixes
-  the empty-response/logprob gap or writes a clean `blocked_logprobs_unavailable`
-  verdict without pretending it is a benchmark.
-- `exp2876` repairs the KAN PWA/MILP artifact. Success requires distinct
-  local/global error bounds and either a real MILP backend or an explicit blocked
-  solver verdict.
+- `exp2885` archives `.272` and activates `.273`.
+- `exp2886` reruns the SOTA energy/logprob micro-panel with an adversarial-clean
+  checksum/duration/provenance requirement. It remains bounded and cannot claim a
+  full benchmark.
+- `exp2887` is the mandatory continuous self-learning task. It compares RecMem
+  recurrence-triggered consolidation with a fast/slow Memini-style baseline and
+  eager replay, requiring non-tautological metrics before any FR-11 scale-up
+  claim.
 
-### Phase B: Evidence Expansion
+### Phase B: Corpus Promotion
 
-- `exp2877` extends exact frontier checking from FoVer-only arithmetic into a tiny
-  HaluEval/FEVER safe-prefix or contradiction subset.
-- `exp2878` adds a label-consistency/error-verifiability audit over HaluEval/FEVER,
-  separating data-driven and reasoning-driven failure buckets where possible.
-- `exp2879` creates a manifest-only MBPP/HumanEval pilot row using deterministic
-  local tests and verifier metadata. It does not require SOTA generation.
-- `exp2880` rebuilds the cross-corpus matrix v6 from clean rows only. Missing rows
-  remain null and are named as residual gaps.
+- `exp2888` materializes a TruthfulQA InFi-Check-style error taxonomy manifest
+  from local labels/artifacts without remote LLM calls.
+- `exp2889` attempts a small generated-code MBPP/HumanEval row using the clean
+  local SOTA runtime and mandated GGUF model specs. If generation or sandboxing
+  is not clean, it writes a blocked artifact rather than upgrading the pilot.
+- `exp2890` builds a structural-dependency graph verifier for code tasks,
+  inspired by the EDA structural-verification paper. It is a deterministic
+  verifier layer, not another generated-code benchmark.
 
-### Phase C: Continuous Self-Learning with RecMem
+### Phase C: Formal Constraints and Hardware-Cost Accounting
 
-- `exp2881` implements a recurrence-triggered memory consolidation prototype for
-  FR-11 using the offline recurrence backend from `.271`. This is the mandatory
-  continuous self-learning experiment for the milestone.
-- `exp2882` scales the replay evaluation only if `exp2881` proves the trigger is
-  ready. It measures token reduction, AUROC/correctness deltas, energy deltas,
-  memory-drift score, and forgetting regressions.
+- `exp2891` runs a tiny CCTU-style executable constraint validator pilot with
+  no new LLM generation.
+- `exp2892` expands exact frontier checking with a VeriCoT-style logical-step
+  parser/prover on a bounded set of locally supported rows.
+- `exp2893` adds KAN hardware-oriented complexity accounting (RM/BOP/NABS-style)
+  to the clean tiny KAN PWA/MILP example, keeping analog/FPGA claims out of
+  scope.
 
-### Phase D: Hardware-Compatible Sampler Path and Capstone
+### Phase D: Matrix, Paper Boundary, and Capstone
 
-- `exp2883` runs a software-local THRML or fallback sampler portability smoke for
-  Carnot's Ising/PGM abstraction. It keeps the hardware path warm without claiming
-  access to Extropic TSU hardware.
-- `exp2884` synthesizes `.272`, classifies clean/flagged/blocked artifacts, and
-  decides what can safely enter paper-v6 or the next milestone.
+- `exp2894` rebuilds cross-corpus matrix v7 from clean artifacts only, preserving
+  pilot-only and missing-row boundaries.
+- `exp2895` writes a paper-v6 evidence table / claim-boundary artifact gated on
+  matrix v7.
+- `exp2896` synthesizes `.273`, classifies clean/flagged/blocked artifacts, and
+  decides whether the next milestone should scale evidence or keep correcting
+  artifacts.
 
 ## Dependency Graph
 
 ```text
-exp2873
-  -> exp2874
-       -> exp2875
-  -> exp2876
-  -> exp2877
-       -> exp2880
-  -> exp2878
-       -> exp2880
-  -> exp2879
-       -> exp2880
-  -> exp2881
-       -> exp2882
-  -> exp2883
+exp2885
+  -> exp2886
+  -> exp2887
+  -> exp2888
+       -> exp2894
+  -> exp2889
+       -> exp2894 (consumed opportunistically if clean)
+  -> exp2890
+       -> exp2894
+  -> exp2891
+       -> exp2894
+  -> exp2892
+       -> exp2894
+  -> exp2893
 
-exp2880 and exp2882, plus all clean/blocked side artifacts
-  -> exp2884
+exp2894
+  -> exp2895
+
+all clean/flagged/blocked side artifacts
+  -> exp2896
 ```
 
 Structured gates in `research-roadmap-next.yaml`:
 
-- `exp2875` gates on `exp2874.sota_runtime_clean == true`.
-- `exp2880` gates on:
-  - `exp2877.frontier_expansion_ready == true`
-  - `exp2878.error_verifiability_ready == true`
-  - `exp2879.code_manifest_pilot_ready == true`
-- `exp2882` gates on `exp2881.recmem_trigger_ready == true`.
-- `exp2884` is intentionally ungated so the milestone can close honestly even if
+- `exp2894` gates on:
+  - `exp2888.truthfulqa_taxonomy_ready == true`
+  - `exp2890.structural_dependency_verifier_ready == true`
+  - `exp2891.cctu_validator_ready == true`
+  - `exp2892.vericot_frontier_ready == true`
+- `exp2895` gates on `exp2894.cross_corpus_matrix_built == true`.
+- `exp2896` is intentionally ungated so the milestone can close honestly even if
   one branch is blocked.
 
 ## Hardware Requirements
 
-Required for runtime-gated live tasks:
+Required for live-model tasks:
 
 - Dual RTX 3090 CUDA host through `.venv/bin/python`.
 - `llama_cpp` with GPU offload support.
-- At least one loadable mandated SOTA GGUF for clean single-model evidence, and
-  two loadable mandated SOTA GGUFs for a clean `cached_sota_pair()` claim:
+- At least one loadable mandated SOTA GGUF, with the `.272` clean single-model
+  runtime artifact as the starting point:
   - `unsloth/Qwen3.6-35B-A3B-GGUF`
   - `unsloth/gemma-4-31B-it-GGUF`
   - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
 Required for non-live tasks:
 
-- Local Python environment, existing `.271` result artifacts, local eval manifests,
-  Z3 where already used by Carnot, and repository test tooling.
+- Local Python environment, existing `.272` result artifacts, local eval
+  manifests, Z3 where already used by Carnot, and repository test tooling.
 
 Optional:
 
-- `thrml` and JAX for `exp2883`. If unavailable, `exp2883` must write a clean
-  blocked dependency artifact and a fallback Ising/PGM parity result if possible.
+- `llguidance` for local schema/grammar constrained extraction experiments. If
+  absent, tasks must use deterministic local fallbacks.
 
 Not required:
 
-- KV260 board execution, Vivado synthesis, GateMate, PolarFire, AMD NPU, D-Wave,
-  photonic hardware, Extropic TSU/Z1/XTR-0 access, or Logical Intelligence Kona
-  access.
+- THRML installation, Extropic TSU/Z1/XTR-0 access, KV260 board execution,
+  Vivado synthesis, GateMate, PolarFire, AMD NPU, D-Wave, photonic hardware, or
+  Logical Intelligence Kona/Aleph access.
 
 ## Agent Routing
 
-- `codex/gpt-5.5`: formulaic code, verifier implementations, dataset pilots,
-  KAN/MILP scaffolding, matrix synthesis, RecMem implementation, and THRML smoke
-  code.
-- `claude/opus`: GPU runtime corrigenda and capstone synthesis, where environment
-  evidence and artifact discipline dominate.
-- `gemini` is not used because `ops/known-issues.md` still records Gemini routing
-  as paused due upstream 429/rate-limit failures.
+- `codex/gpt-5.5`: formulaic code, deterministic validators, manifest work,
+  structural graph verifier, VeriCoT-style parser/prover scaffolding, KAN cost
+  accounting, matrix/table synthesis, and archive bookkeeping.
+- `claude/opus`: live local-GGUF telemetry and capstone synthesis, where
+  environment evidence and artifact discipline dominate.
+- `gemini` is not used because `ops/known-issues.md` still records Gemini
+  routing as paused due upstream 429/rate-limit failures.
+
+## Decentralization Implications
+
+The milestone preserves local-first execution. Closed-weight providers are not
+required for any experiment. Live-generation tasks use local mandated GGUFs;
+benchmark and memory tasks use local artifacts/manifests; hardware work stays at
+software cost-accounting and blocked-dependency reporting rather than remote
+hardware claims.
 
 ## Acceptance Criteria
 
-1. `exp2874` either emits a clean SOTA runtime artifact with real mandated GGUF
-   GPU-backed output or a specific blocked verdict with every precondition
-   checked.
-2. `exp2875` does not claim a SOTA energy benchmark unless non-empty responses and
-   token/logprob or explicit substitute telemetry are present.
-3. `exp2876` clears the `.271` KAN tautology by proving non-identical error bounds
-   and reporting the MILP backend status honestly.
-4. `exp2880` builds only from clean upstream rows and leaves missing metrics null.
-5. `exp2881` sets `continuous_self_learning_task=true` and implements
-   recurrence-triggered consolidation with memory hashes and token-cost metrics.
-6. `exp2882` reports non-forgetting and memory drift, not just energy improvement.
-7. Every LLM-bearing task includes at least one mandated SOTA GGUF in
-   `MODEL_SPECS`.
-8. Legacy small GGUFs are allowed only for CPU smoke tests and cannot become
-   headline models.
-9. `exp2884` reports `paper_ready` only from clean artifacts and names any residual
-   flagged or blocked evidence explicitly.
+1. `exp2886` either clears the `.272` SOTA micro-panel flag with reproducibility
+   checksum, duration, raw rows, token/logprob evidence, and no benchmark
+   overclaim, or permanently downgrades it to a non-benchmark telemetry note.
+2. `exp2887` sets `continuous_self_learning_task=true` and reports
+   non-tautological eager-vs-RecMem-vs-fast/slow memory metrics.
+3. `exp2888` creates a TruthfulQA taxonomy manifest without citing fabricated
+   `exp2823` or synthesizing labels.
+4. `exp2889` promotes MBPP/HumanEval only if local generated-code evidence,
+   sandbox status, and labels/tests are clean; otherwise it remains blocked or
+   pilot-only.
+5. `exp2890` produces a deterministic structural-dependency verifier for code
+   rows.
+6. `exp2891` produces a CCTU-style executable constraint-validation pilot.
+7. `exp2892` expands exact-frontier support without autoformalization overclaim.
+8. `exp2893` reports KAN complexity metrics without analog/FPGA execution claims.
+9. `exp2894` leaves unsupported rows null and preserves pilot-only boundaries.
+10. Every LLM-bearing task includes at least one mandated SOTA GGUF in
+    `MODEL_SPECS`.
+11. Legacy small models are allowed only for CPU smoke tests and cannot become
+    headline models.
+12. `exp2896` reports `paper_ready` only from clean artifacts and names residual
+    flagged or blocked evidence explicitly.

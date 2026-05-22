@@ -15130,3 +15130,39 @@ Logical Intelligence Kona updates.
 - **GitHub discovery**: `extropic-ai/thrml` is the actionable hardware-sampler repository. `aiming-lab/SimpleMem` is a heavily used 2026 memory repo but relies on broader agent-memory infrastructure than Carnot needs. Relevance to Carnot: use RecMem's recurrence trigger as the narrow FR-11 implementation target, not a wholesale SimpleMem import.
 
 - **Logical Intelligence Kona updates**: Logical Intelligence continues to frame Kona as a globally scored, non-autoregressive, continuous-trace EBRM with partial-trace scoring and solver/orchestrator separation. Relevance to Carnot: useful architecture north star for partial-trace energy localization, but `.272` must avoid Kona performance claims because Carnot has no Kona access.
+
+## 2026-05-22 Post-.272 Planning Sweep (Milestone 2026.05.273)
+
+This sweep was run after `.272` completed with `paper_ready=true`, two
+flagged artifacts (`exp2875` SOTA micro-panel and `exp2882` RecMem scale-up),
+one blocked sampler artifact (`exp2883` THRML unavailable), two headline rows
+(FoVer and HaluEval/FEVER), and MBPP/HumanEval still pilot-only. Searches
+covered arXiv, OpenReview, Hugging Face papers, Extropic/THRML, GitHub
+discovery pages, Semantic Scholar/EBT citation pages, and Logical Intelligence
+Kona/Aleph updates.
+
+- **OpenReview / ICLR 2026 Oral - Energy-Based Transformers are Scalable Learners and Thinkers** (OpenReview `ZBj3Qp1bYg`, arXiv:2507.02092): EBT is now an ICLR 2026 oral entry on OpenReview, strengthening the citation status of Carnot's System-2 energy-minimization framing. Relevance to Carnot: cite as architectural context, but do not propose an EBT training task until local clean data rows exceed the current FoVer + HaluEval/FEVER pair.
+
+- **OpenReview / ICLR 2026 Poster - NRGPT: An Energy-based Alternative for GPT** (OpenReview `B3Muyi2zgo`): reframes GPT-like language modeling as an energy landscape where inference can be interpreted as gradient descent under some conditions. Relevance to Carnot: supports a future theory note comparing local GGUF token-level telemetry to energy descent, but it does not rescue the flagged `.272` micro-panel without clean duration/checksum evidence.
+
+- **arXiv:2603.15309 - CCTU: A Benchmark for Tool Use under Complex Constraints**: introduces 200 multi-turn tool-use cases with executable constraint validation across resource, behavior, toolset, and response dimensions; no evaluated model exceeds 20% strict completion. Relevance to Carnot: strong next benchmark for constraint-system verification that avoids overclaiming natural-language factuality; use a tiny no-new-LLM manifest/validator pilot first.
+
+- **arXiv:2604.18834 - Structural Verification for Reliable EDA Code Generation without Tool-in-the-Loop Debugging**: represents tasks as structural dependency graphs and enforces graph-conditioned retrieval, constrained generation, and staged verification before execution, improving multi-step EDA pass rates while reducing tool calls. Relevance to Carnot: direct pattern for promoting MBPP/HumanEval from pilot-only to structural-dependency code verification without repeated tool-in-loop repair.
+
+- **arXiv:2511.04662 / OpenReview ICLR 2026 - VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical Consistency Checks**: extracts formal logical arguments from CoT, grounds premises, verifies with automated solvers, and uses the signal for reflection and preference tuning. Relevance to Carnot: concrete upgrade path for exact-frontier expansion beyond eight HaluEval/FEVER rows; schedule only a bounded extractor/prover pilot, not a broad new verifier claim.
+
+- **arXiv:2601.06666 / Hugging Face Papers - InFi-Check: Interpretable and Fine-Grained Fact-Checking of LLMs**: provides fine-grained error-type labels, evidence, justifications, and corrections instead of binary factuality. Relevance to Carnot: aligns with `.272`'s weak HaluEval/FEVER scalar AUROC and motivates a TruthfulQA/InFi-style error-taxonomy manifest before a headline TruthfulQA row.
+
+- **arXiv:2605.05097 - Continual Knowledge Updating in LLM Systems: Learning Through Multi-Timescale Memory Dynamics**: proposes Memini, an associative external-memory graph with coupled fast/slow variables inspired by Benna-Fusi consolidation. Relevance to Carnot: direct fix direction for flagged `exp2882`; compare RecMem's recurrence trigger to a fast/slow memory baseline with non-tautological eager-vs-triggered metrics.
+
+- **arXiv:2604.03345 - Hardware-Oriented Inference Complexity of Kolmogorov-Arnold Networks**: derives platform-independent KAN inference complexity metrics (RM, BOP, NABS) for early hardware decisions without full synthesis. Relevance to Carnot: next KAN task should move from tiny Z3/PWA correctness to hardware-cost accounting before any FPGA/KAN claim.
+
+- **arXiv:2602.07518 - Physical Analog Kolmogorov-Arnold Networks based on Reconfigurable Nonlinear-Processing Units**: demonstrates an analog KAN path with experimentally calibrated nonlinear processing units and system estimates around pJ/ns-class inference. Relevance to Carnot: long-horizon hardware context only; keep `.273` software-local with cost accounting rather than analog hardware tasks.
+
+- **Extropic THRML / TSU public status**: Extropic's official software page still positions THRML as the JAX library for constructing thermodynamic hypergraphical models and simulating PGMs/EBMs intended for TSUs; the GitHub README remains the actionable local interface. Relevance to Carnot: because `.272` found THRML unavailable locally, `.273` should not rerun THRML parity unless the task is a dependency/materialization check or an offline adapter that writes a clean blocked artifact.
+
+- **GitHub discovery - guidance-ai/llguidance**: production constrained-decoding engine supporting JSON schemas, regexes, and CFGs, with integrations into llama.cpp, vLLM, and SGLang. Relevance to Carnot: useful for schema-constrained extractor output on local GGUF tasks, especially CCTU/TruthfulQA structured claim manifests; keep it optional and local-first.
+
+- **GitHub discovery - llm-as-a-verifier/llm-as-a-verifier**: a new repository for trajectory-level verification and reward modeling on Terminal-Bench/SWE-Bench style tasks. Relevance to Carnot: compare at the artifact-schema level only; do not import closed-model scoring paths into core verifier code.
+
+- **Logical Intelligence update (2026-05-21 press coverage) - Aleph formal reasoning benchmarks**: reports Aleph leading several formal reasoning / verified-code benchmarks while Kona remains the EBRM north star. Relevance to Carnot: supports a formal-code verification direction, but Carnot must stick to local reproducible artifacts and avoid citing Logical/Kona performance as Carnot evidence.

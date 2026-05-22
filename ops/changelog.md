@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-05-22 (Milestone 2026.05.273 Research Planning)
+
+- [outer-loop] Planned milestone 2026.05.273 as "Clean Telemetry + Fast/Slow Memory + Constraint Benchmark Expansion" after the operator confirmed all `.272` tasks completed. Used `results/experiment_2884_capstone_v272.json` as the authoritative closeout: `.272` is paper-ready but still fences off the SOTA micro-panel, FR-11 RecMem scale-up, THRML sampler portability, MBPP/HumanEval pilot rows, and missing TruthfulQA evidence.
+- [outer-loop] Updated `research-references.md` before experiment design with a post-`.272` sweep covering ICLR 2026 EBT/NRGPT, CCTU executable constraint validation, structural verification for generated code, VeriCoT, InFi-Check, Memini fast/slow memory, KAN hardware-complexity metrics, analog KAN hardware context, THRML, llguidance, and Logical Intelligence Aleph/Kona updates.
+- [outer-loop] Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` for milestone `.273` with the `.272` findings, three biggest PRD gaps, architecture diagram, four-phase plan, dependency graph, hardware requirements, agent routing, decentralization implications, and acceptance criteria.
+- [outer-loop] Created `research-roadmap-next.yaml` with 12 conductor tasks (`exp2885`-`exp2896`): archive/activate, clean SOTA micro-panel telemetry, FR-11 fast/slow memory corrigendum, TruthfulQA taxonomy manifest, MBPP/HumanEval generated-code clean row, structural dependency verifier, CCTU validator pilot, VeriCoT frontier expansion, KAN cost accounting, cross-corpus matrix v7, paper-v6 claim-boundary table, and capstone.
+- [outer-loop] Validation passed: roadmap schema parse OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml` OK; `scripts/exclusion_manifest_lint.py research-roadmap-next.yaml` OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` returned `all_checks_pass` with 5 gate checks and 0 failures; prompt section/end-line checks OK; diff whitespace check clean for the planning files. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-22 (Milestone 2026.05.271 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.271 as "Runtime Repair + Manifest Reconciliation + Offline Self-Learning" after the operator confirmed all `.270` tasks completed. Used `results/experiment_2860_capstone_v270.json` as the authoritative closeout: `.270` produced clean FoVer evidence and dated local manifests, but no paper-ready multi-corpus headline because SOTA runtime, manifest consumer, FR-11 backend, and matrix-chain tasks remained blocked or missing.
