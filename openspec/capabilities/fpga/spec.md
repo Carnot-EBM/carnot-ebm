@@ -1312,3 +1312,58 @@ versions, `missing_toolchain=["nextpnr-gatemate"]`,
 `no_flash_attempted=true`.
 
 **Implementation status:** Implemented (Exp 2914)
+
+---
+
+### REQ-HW-067
+
+**Title:** Exp 2916 THRML/KV260 sampler parity MUST compare simulator samples against same-basis evidence without hardware claims
+
+**Description:**
+Experiment 2916 MUST read the Exp 2912 same-basis CPU Gibbs baseline before
+doing simulator work. If `same_basis_cpu_baseline_ready` is not true, it MUST
+write `honest_verdict="blocked_cpu_baseline_not_ready"` and stop. When the CPU
+baseline is ready, the experiment MUST import the installed THRML package,
+record version/provenance, reconstruct the Exp 2898 n=64 sparse Ising basis
+where the THRML software API can represent it, run bounded THRML simulator
+sampling with the same random seeds where possible, and compare energy mean,
+variance, minimum energy, and histogram distance against the CPU Gibbs and
+KV260 final-energy evidence. If the installed THRML API cannot represent the
+full n=64 sparse upload, the experiment MUST write the largest explicitly
+justified bounded fallback subset artifact, capped at n=16, and state the
+limitation.
+
+**Acceptance criteria:**
+- The artifact is written to
+  `results/experiment_2916_thrml_kv260_sampler_parity_v1.json` with
+  `inference_substrate="simulator_parity"` and `run_date="20260523"`.
+- Required fields include `honest_verdict`, `thrml_kv260_parity_ready`,
+  `thrml_import_ok`, `thrml_version`, `matched_full_n64_basis`,
+  `fallback_subset_used`, `random_seeds_used`,
+  `energy_distribution_summary`, `cpu_vs_thrml_distance`,
+  `kv260_vs_thrml_summary`, `no_tsu_hardware_claim`, `inference_substrate`,
+  `duration_s`, and `run_date`.
+- The ready path records THRML sample energy mean, variance, minimum, and
+  histogram counts, plus CPU-vs-THRML and KV260-vs-THRML histogram distances.
+- `no_tsu_hardware_claim` is true in every terminal artifact, and no TSU,
+  Z1, Extropic hardware, KV260 board, synthesis, bitstream, or new hardware
+  latency claim is made.
+
+**Implementation status:** Planned (Exp 2916)
+
+---
+
+### SCENARIO-HW-067
+
+**Scenario:** THRML simulator samples are compared against matched CPU/KV260 energy evidence.
+
+**Given:** Exp 2912 reports a ready same-basis CPU Gibbs baseline for the Exp
+2898 n=64 sparse KV260 upload, and the installed THRML package is importable.
+**When:** Exp 2916 runs bounded THRML simulator sampling on the matched basis
+or a justified n=16 fallback subset.
+**Then:** The artifact records the THRML import provenance, the basis match or
+fallback decision, distributional energy summaries, CPU/KV260 histogram
+distances, `inference_substrate="simulator_parity"`, and
+`no_tsu_hardware_claim=true`.
+
+**Implementation status:** Planned (Exp 2916)

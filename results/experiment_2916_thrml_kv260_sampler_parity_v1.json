@@ -1,0 +1,205 @@
+{
+  "basis_limitation": "",
+  "cpu_vs_thrml_distance": 0.493055555556,
+  "duration_s": 24.763049,
+  "energy_distribution_summary": {
+    "cpu_final_energy": {
+      "histogram": {
+        "bin_count": 8,
+        "bin_edges": [
+          -38.91015625,
+          -35.85107421875,
+          -32.7919921875,
+          -29.73291015625,
+          -26.673828125,
+          -23.61474609375,
+          -20.5556640625,
+          -17.49658203125,
+          -14.4375
+        ],
+        "counts": [
+          1,
+          0,
+          1,
+          0,
+          1,
+          2,
+          1,
+          3
+        ]
+      },
+      "max": -14.4375,
+      "mean": -22.822482638889,
+      "min": -38.91015625,
+      "sample_count": 9,
+      "variance": 59.61865272051
+    },
+    "kv260_final_energy": {
+      "histogram": {
+        "bin_count": 8,
+        "bin_edges": [
+          -6.065647502743,
+          -5.156079462544,
+          -4.246511422346,
+          -3.336943382147,
+          -2.427375341949,
+          -1.51780730175,
+          -0.608239261552,
+          0.301328778647,
+          1.210896818845
+        ],
+        "counts": [
+          1,
+          1,
+          0,
+          2,
+          0,
+          0,
+          1,
+          4
+        ]
+      },
+      "max": 1.210896818845,
+      "mean": -1.467095838294,
+      "min": -6.065647502743,
+      "sample_count": 9,
+      "variance": 6.628128538091
+    },
+    "thrml": {
+      "histogram": {
+        "bin_count": 8,
+        "bin_edges": [
+          -33.6875,
+          -30.19580078125,
+          -26.7041015625,
+          -23.21240234375,
+          -19.720703125,
+          -16.22900390625,
+          -12.7373046875,
+          -9.24560546875,
+          -5.75390625
+        ],
+        "counts": [
+          4,
+          7,
+          12,
+          15,
+          5,
+          3,
+          1,
+          1
+        ]
+      },
+      "max": -5.75390625,
+      "mean": -22.905843098958,
+      "min": -33.6875,
+      "n_spins": 64,
+      "sample_count": 48,
+      "sample_count_per_seed": 16,
+      "variance": 28.231596145365
+    }
+  },
+  "fallback_subset_used": false,
+  "hardware_claims_made": {
+    "bitstream": false,
+    "extropic_hardware": false,
+    "kv260_board": false,
+    "new_latency": false,
+    "synthesis": false,
+    "tsu": false,
+    "z1": false
+  },
+  "honest_verdict": "complete: thrml_kv260_n64_simulator_parity_ready_no_hardware_claim",
+  "inference_substrate": "simulator_parity",
+  "kv260_vs_thrml_summary": {
+    "evidence_source": "sample_count_sweep_results.final_energy",
+    "final_energy_summary": {
+      "histogram": {
+        "bin_count": 8,
+        "bin_edges": [
+          -6.065647502743,
+          -5.156079462544,
+          -4.246511422346,
+          -3.336943382147,
+          -2.427375341949,
+          -1.51780730175,
+          -0.608239261552,
+          0.301328778647,
+          1.210896818845
+        ],
+        "counts": [
+          1,
+          1,
+          0,
+          2,
+          0,
+          0,
+          1,
+          4
+        ]
+      },
+      "max": 1.210896818845,
+      "mean": -1.467095838294,
+      "min": -6.065647502743,
+      "sample_count": 9,
+      "variance": 6.628128538091
+    },
+    "histogram_distance": 0.979166666667,
+    "mean_energy_delta_abs": 21.438747260664,
+    "min_energy_delta_abs": 27.621852497257
+  },
+  "matched_full_n64_basis": true,
+  "no_tsu_hardware_claim": true,
+  "per_seed_thrml_results": [
+    {
+      "edge_count": 1024,
+      "max_energy": -12.93359375,
+      "mean_energy": -22.837890625,
+      "min_energy": -29.5078125,
+      "n_spins": 64,
+      "sample_count": 16,
+      "seed": 42,
+      "variance_energy": 16.557508468628
+    },
+    {
+      "edge_count": 1024,
+      "max_energy": -5.75390625,
+      "mean_energy": -19.641845703125,
+      "min_energy": -29.64453125,
+      "n_spins": 64,
+      "sample_count": 16,
+      "seed": 137,
+      "variance_energy": 32.358930051327
+    },
+    {
+      "edge_count": 1024,
+      "max_energy": -21.87109375,
+      "mean_energy": -26.23779296875,
+      "min_energy": -33.6875,
+      "n_spins": 64,
+      "sample_count": 16,
+      "seed": 271,
+      "variance_energy": 14.018163442612
+    }
+  ],
+  "random_seeds_used": [
+    42,
+    137,
+    271
+  ],
+  "run_date": "20260523",
+  "sample_count_per_seed": 16,
+  "thrml_import_ok": true,
+  "thrml_import_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/thrml/__init__.py",
+  "thrml_kv260_parity_ready": true,
+  "thrml_schedule": {
+    "beta_source": "problem.beta_final_q88 / 256",
+    "n_warmup": 4,
+    "steps_per_sample": 1
+  },
+  "thrml_version": "0.1.3",
+  "upstream_artifacts": {
+    "cpu": "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json",
+    "kv260": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json"
+  }
+}
