@@ -6616,3 +6616,53 @@ predeclared threshold
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2933 | Implemented (`python/carnot/eval/fr11_kan_cl_per_knot_self_learning_v1.py`) | Implemented (`tests/python/test_experiment_2933_kan_cl_per_knot_self_learning_v1.py`) |
+
+## REQ-LEARN-2947: FR-11 Continuation Replay Curriculum Scheduler
+
+**Given** Exp 2918 provides verifier process-reward replay evidence, Exp 2933
+provides structural-memory self-learning evidence, and Exp 2942 provides the
+current continuation hardware boundary
+**When** Exp 2947 pilots the FR-11 continuation replay scheduler
+**Then** it SHALL aggregate only upstream artifact fields, not invoke a live
+model or mutate model weights.
+**And** it SHALL allocate replay counts through a named non-uniform curriculum
+instead of flat-uniform sampling.
+**And** it SHALL write
+`results/experiment_2947_fr11_continuation_replay_curriculum_v1.json` with
+`honest_verdict`, `inference_substrate="aggregation_from_upstream_artifacts"`,
+`curriculum_schedule_used`, `replay_count_distribution`,
+`cited_upstream_artifacts`, and `duration_s`.
+
+### REQ-LEARN-2947 Sub-requirements
+
+- REQ-LEARN-2947-1: The scheduler SHALL cite every upstream artifact it imports
+  with path, SHA256, and imported field names.
+- REQ-LEARN-2947-2: The replay allocation SHALL be deterministic for the same
+  upstream artifacts and replay budget.
+- REQ-LEARN-2947-3: The replay allocation SHALL fail closed when required
+  upstream artifacts are missing, malformed, or not ready.
+- REQ-LEARN-2947-4: The replay count distribution SHALL contain at least three
+  curriculum buckets and SHALL not assign the same replay count to every bucket
+  when the upstream evidence has non-uniform signal.
+
+### SCENARIO-LEARN-2947: Curriculum Replaces Flat-Uniform Replay
+
+**Given** ready Exp 2918, Exp 2933, and Exp 2942 artifacts
+**When** Exp 2947 computes the continuation replay schedule
+**Then** structural-memory, process-reward, continuation-boundary, and
+retention buckets receive deterministic non-uniform replay counts
+**And** the artifact reports that the schedule was built by upstream-artifact
+aggregation.
+
+### SCENARIO-LEARN-2947-BLOCKED: Dirty Upstream Blocks The Curriculum
+
+**Given** a required upstream artifact is missing, malformed, or not ready
+**When** Exp 2947 runs
+**Then** it writes the required artifact schema with an `honest_verdict`
+beginning with `blocked_` and an empty `replay_count_distribution`.
+
+## Implementation Status (REQ-LEARN-2947)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2947 | Implemented (`python/carnot/eval/fr11_continuation_replay_curriculum_v1.py`) | Implemented (`tests/python/test_experiment_2947_fr11_continuation_replay_curriculum_v1.py`) |
