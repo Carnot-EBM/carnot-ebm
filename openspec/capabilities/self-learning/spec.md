@@ -6493,3 +6493,70 @@ and no hardware performance comparison fields.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2906 | Implemented (`python/carnot/eval/fr11_hardware_accelerated_replay_pilot_v1.py`) | Implemented (`tests/python/test_experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.py`) |
+
+## REQ-LEARN-2918: FR-11 Verifiable Process Rewards Replay Update
+
+**Given** Exp 2911 has labeled code-generation candidates with deterministic
+syntax/static/runtime verifier outcomes and Exp 2912 has produced a ready
+same-basis CPU Gibbs baseline for the KV260 problem basis
+**When** Exp 2918 runs a bounded FR-11 replay experiment
+**Then** it SHALL construct a deterministic replay corpus from verified code
+candidates, failed code-hallucination labels, matched sampler measurements, and
+prior FR-11 memory examples.
+**And** it SHALL derive process-reward weights from verifier evidence rather
+than imitation likelihood.
+**And** it SHALL perform an online external-memory replay update when no
+trainable model component is available, measuring before/after correctness,
+energy proxy, replay priority, duplicate or contradiction rate, and forgetting
+on held-out prior rows.
+
+### REQ-LEARN-2918 Sub-requirements
+
+- REQ-LEARN-2918-1: The runner SHALL require
+  `results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json` with
+  `code_hallucination_verifier_ready=true` and
+  `results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json` with
+  `same_basis_cpu_baseline_ready=true`; if either gate fails it SHALL write a
+  blocked artifact and exit without claiming an online update.
+- REQ-LEARN-2918-2: Code process rewards SHALL be deterministic functions of
+  syntax success, static hallucination labels, runtime/test pass status, and
+  failed hallucination labels.
+- REQ-LEARN-2918-3: Hardware process rewards SHALL be deterministic functions
+  of same-basis checks, final-energy proxy, latency proxy, and matched
+  sampler-trajectory metadata.
+- REQ-LEARN-2918-4: The online update SHALL mutate only an explicit replay
+  scheduler or priority table unless a real trainable component is provided,
+  and the artifact SHALL report that scope honestly via
+  `online_update_performed` and `replay_scheduler_updated`.
+- REQ-LEARN-2918-5: The deliverable artifact SHALL include
+  `honest_verdict`, `online_self_learning_ready`, `fr11_requirement_targeted`,
+  `process_reward_definition`, `replay_corpus_summary`,
+  `online_update_performed`, `replay_scheduler_updated`, `delta_overall`,
+  `delta_energy_proxy`, `forgetting_rate`, `contradiction_rate_before`,
+  `contradiction_rate_after`, `pdi_proxy`, `hardware_replay_used`,
+  `inference_substrate`, `duration_s`, and `run_date`.
+
+### SCENARIO-LEARN-2918: Verified Replay Evidence Updates Scheduler Priorities
+
+**Given** ready Exp 2911 and Exp 2912 artifacts and prior FR-11 memory rows
+**When** Exp 2918 builds the replay corpus and applies verifier-derived process
+reward weights
+**Then** verified code and same-basis sampler trajectories receive higher
+replay priority than failed hallucination or high-energy/latency rows
+**And** the artifact reports non-negative overall and energy-proxy deltas
+without mutating model weights.
+
+### SCENARIO-LEARN-2918-BLOCKED: Missing Prerequisite Fails Closed
+
+**Given** either the Exp 2911 code-hallucination verifier or Exp 2912
+same-basis CPU baseline artifact is missing or not ready
+**When** Exp 2918 runs
+**Then** it writes the required artifact schema with
+`online_self_learning_ready=false`, `online_update_performed=false`, and an
+`honest_verdict` beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-2918)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2918 | Implemented (`python/carnot/eval/fr11_verifiable_process_rewards_self_learning_v1.py`) | Implemented (`tests/python/test_experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.py`) |
