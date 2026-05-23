@@ -4,47 +4,49 @@
 # docs_audit_report — 2026-05-23
 
 ## TL;DR (stranger's 30-second take)
-A stranger would likely bounce because the page is drowning in internal acronyms and contradictory metrics. While the hero section clearly explains what the tool does, the sheer volume of cards and perfect scores (1.0 TP, 60/60) screams "academic vaporware" rather than a usable open-source tool.
+I would close the tab halfway down the page. While the hero section and code examples are compelling, the results section drowns the reader in unexplained internal acronyms and highly suspect "perfect" numbers that make the project feel like academic vaporware rather than a reliable, production-ready tool.
 
 ## TOP 3 PROBLEMS
-1. Contradictory HumanEval Claims (Code bento / Result cards) — Three wildly different HumanEval improvement numbers are presented side-by-side.
-2. Alphabet Soup Jargon (Results Grid / Stats Bar) — The page assumes the reader knows internal benchmarks/tools like FoVer, CCTU, PREM, VeriCoT.
-3. Card Overload (Page overall) — There are 31 informational cards on the page, ensuring a stranger will skim none of them.
+1. Fabrication signals — Claims of "1.0 TP rate" and "Zero false positives" instantly destroy credibility without strong, visible context.
+2. Internal jargon — The results and features grids are packed with unexplained, niche acronyms (PREM, VeriCoT, CCTU, FoVer) that a stranger cannot decode.
+3. Per-milestone narrative — Sections like the Preprint block read like an internal Jira status update ("pending operator-initiated upload") instead of marketing copy.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Page overall — 31 total cards (11 Bento, 12 Results, 2 Problem, 6 Blog) — Cap at 15 maximum
-- Results Grid — 12 result cards — Cap at 6 maximum
+- Results grid — 12 cards — 6-8 max (Visually overwhelming; dilutes the strongest, most relatable claims).
+- Blog grid — 6 cards — 3-4 max (Keep only the best hooks).
 
 ### Internal jargon
-- Stats bar / Recent progress — `HIVE peer`, `FoVer step-error corpus` — Stranger has no context for what HIVE or FoVer are; they sound like internal dataset names.
-- Features > Test-Time Compute — `Process-Reward Energy Model (PREM)` — Obscure academic acronym thrown in without explanation.
-- Results Grid — `VeriCoT equation-style CoT fix`, `PRM-BiasBench-style attacks`, `HalluGuard v3`, `SVAMP AUC` — Highly specific methods and benchmarks that read like internal experiment labels.
-- Blog section — `NTK Costume`, `brace bugs` — Inside baseball terminology that assumes prior domain or project knowledge.
+- Stats bar / Hero — `HIVE peer`, `FoVer step-error corpus` — A stranger has no context for what these benchmarks or peers are.
+- Features (TTC) — `Process-Reward Energy Model (PREM)` — Unexplained technical acronym.
+- Results (Code repair) — `HumanEval-50, execute-feedback-retry` — Sounds like internal experiment flags/syntax.
+- Results (Math extraction) — `VeriCoT equation-style CoT fix` — Undefined method name.
+- Results (Adversarial audit) — `PRM-BiasBench-style attacks` — Niche academic jargon without context.
 
 ### Per-milestone narrative
-- Stats bar — "382 Completed milestones"
-- Recent progress card — "adversarially verified across five random seeds" and "canonical source repository"
-- Evidence section description — "infrastructure, hardware, ensemble, synthetic-pilot, and adversarial-audit rows are labeled by provenance"
+- Preprint section — "pending operator-initiated upload" — Internal task-closeout language.
+- Blog (Regex) — "The three-layer defense we shipped" — Reads like an internal changelog.
+- Blog (Caught Cheating) — "the seven-rule detector we shipped to stop it" — Reads like an internal retrospective.
 
 ### Inconsistencies
-- "+3.0 points on pass-rate" (Code bento / HumanEval card) vs "8% -> 80% pass rate (+72pp)" (Code repair IterativeSelfRepair card) vs "0% -> 36% after Carnot correction" (Live benchmark SOTA 35B card)
+- HumanEval claims — The "Live benchmark" card claims a `0% -> 36%` pass rate, while the "Code repair" card claims `8% -> 80%`. Without reading the fine print, these appear to wildly contradict each other.
+- Perfect accuracy vs 0.9857 AUROC — Claiming "Zero false positives" in the blog summary contradicts the non-perfect `0.9857 AUROC` and `0.91 AUROC` claims presented in the hero and results sections.
 
 ### Missing essentials
-- None of the core 5 essentials are missing (hero explains what it does, quickstart shows install, footer has license/maintainer), but clear definitions for comparators on claims like "+4.9 points on compliance" and "0.0pp accuracy delta" are missing.
+- Direct trust anchors — The page claims "Every number below is backed by a checked-in experiment artifact," but provides zero clickable links to these artifacts for a stranger to actually verify them.
 
 ### Fabrication signals
-- 1.0 True Positive rate — Results Grid > Math extraction
-- 60/60 attacks caught — Results Grid > Adversarial audit
-- Zero false positives — Blog > Dogfooding by the numbers
+- 1.0 TP rate — Results / Math extraction (`GSM8K extraction TP rate: 0.5 -> 1.0`)
+- 60/60 attacks — Results / Adversarial audit (`k=5 ensemble catches 60/60 attacks`)
+- Zero false positives — Blog / Dogfooding by the numbers (`Zero false positives` on 639 experiments)
 
 ## WHAT'S WORKING
-- The hero section is excellent: "Catch the mistakes your LLM confidently makes up." is a clear, instantly understandable value proposition.
-- The Quick Start tabbed code block (Python vs Rust) grounds the project as real software that can actually be installed and run.
+- The hero section is excellent. "Catch the mistakes your LLM confidently makes up" is a direct, jargon-free hook that clearly states the tool's value.
+- The Quickstart section with Python/Rust code tabs cleanly demonstrates how easy the API is to integrate.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Consolidate HumanEval claims: Pick the single most representative, defensible HumanEval metric and drop the other two to avoid confusion.
-2. Purge the acronyms: Replace internal names (FoVer, VeriCoT, CCTU) with descriptive phrases (e.g., "internal step-error dataset", "math extraction task").
-3. Cull the Result Cards: Drop the perfect-score cards (60/60 attacks, 1.0 TP rate) as they harm credibility. Reduce the results grid from 12 cards to a maximum of 6.
-4. Rewrite the Evidence preamble: Change the defensive, meta-commentary into a simple sentence like "All benchmarks are reproducible and backed by open experiment artifacts."
-5. Reduce total card count: Consolidate the 7 capability bento cards into 3 or 4 core features.
+1. Scrub the suspiciously perfect numbers (1.0 TP rate, 60/60, zero false positives) or provide immediate, prominent caveats.
+2. Translate internal acronyms (PREM, VeriCoT, CCTU, FoVer) into descriptive plain English.
+3. Prune the Results grid down to the 6 strongest, most relatable benchmarks to reduce visual bloat.
+4. Rewrite the Preprint section to read like an invitation ("Read our framework paper"), removing the internal "operator-initiated upload" closeout language.
+5. Clarify or separate the two HumanEval claims so they don't look like contradicting statistics at a glance.
