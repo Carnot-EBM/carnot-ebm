@@ -9,19 +9,22 @@ The active hardware portfolio is narrowed to three tracks. "Active" here
 means Carnot may spend near-term research effort on the track without
 expanding scope; it is not a hardware-execution claim.
 
-### Active hardware tracks (Exp 1460)
+### Active hardware tracks (Exp 1460 + 2026-05-22 update)
 
 | Track | Why active now | Boundary |
 |---|---|---|
-| Dual RTX 3090 CUDA local SOTA runtime repair | Exp 1442 saw two RTX 3090s and cached flagship GGUF models; the blocker is the local llama.cpp CUDA runtime. | No live SOTA inference claim until a smoke run records `usable_response=true`. |
-| KV260/FPGA Discrete SB RTL lint and simulation | Exp 1451 completed source-level lint and simulation for `hardware/kv260/discrete_sb_256.v`; local HDL tools are usable. | Source-level RTL lint/sim work is preserved as educational/supporting only. KV260 board claims requiring Vivado are retired. |
-| THRML/Extropic TSU compatibility simulation | Public THRML/JAX compatibility remains useful for sampler portability and future TSU integration. | No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim without authenticated hardware evidence. |
+| Dual RTX 3090 CUDA local SOTA runtime repair | Exp 1442 saw two RTX 3090s and cached flagship GGUF models; the blocker is the local llama.cpp CUDA runtime. **2026-05-22 update:** exp2862 (`.270 SOTA Runtime Cache Offload Resolver v3) recorded `usable_response=true`. CUDA runtime is now operational. | No live SOTA inference claim until a smoke run records `usable_response=true`. **Closed by exp2862.** |
+| KV260/FPGA Discrete SB RTL lint and simulation | Exp 1451 completed source-level lint and simulation for `hardware/kv260/discrete_sb_256.v`; local HDL tools are usable. | Source-level RTL lint/sim work is preserved as educational/supporting only. |
+| **KV260 board execution (REOPENED 2026-05-22)** | Board booted Ubuntu Xilinx 2026-05-20; reachable via `ssh kria`; `xmutil loadapp` workflow established. `carnot_ising_v4` XDC-constrained bitstream is flashed to `/lib/firmware/xilinx/carnot_ising_v4/` and aliased as the `carnot_ising_v2_n64` overlay slot. `/dev/uio0` through `/dev/uio4` exposed. Two consecutive paper-ready capstones (`.271, `.272) have not yet used the board, so production-tier sampling latency remains unmeasured. | No KV260 latency or speedup claim until a board-command transcript records real wall-clock per-sample time via `/dev/uio*` register access AND the artifact's `inference_substrate` is `hardware_smoke`. |
+| **GateMate A1-EVB-2M (USB-attached 2026-05-22)** | DirtyJTAG MCU enumerated at `1209:c0ca` on bus 3, confirmed by `openFPGALoader --scan-usb`. n=16 Ising tile bitstream pending yosys/nextpnr-gatemate LUT mapping workaround. | No GateMate latency or speedup claim until a bitstream is flashed via `openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bit>` AND a smoke-test records sample-level timing. |
+| **PolarFire SoC Discovery Kit (SSH-attached 2026-05-22)** | FlashPro5 enumerated at `1514:2008`. Linux on board, `ssh polarfire` reachable (uptime 8d 7h verified 2026-05-23 01:24Z, kernel `6.18.17-linux4microchip-2026.04.1` riscv64). No end-to-end Carnot dispatch yet. | No PolarFire latency or speedup claim until a Carnot dispatch run records a hash-verified workload completion. |
+| THRML/Extropic TSU compatibility simulation | Public THRML/JAX compatibility remains useful for sampler portability and future TSU integration. **2026-05-22 update:** exp2883 (`.272 portability smoke v2) showed THRML import failed locally; ran local fallback sampler, no hardware claim. | No Extropic hardware access, Z1/XTR-0 execution, or TSU latency claim without authenticated hardware evidence. THRML import path needs repair in `.274. |
 
 ### Deferred hardware tracks (Exp 1460)
 
 | Track | Deferred because | Reopen condition |
 |---|---|---|
-| KV260 board execution and latency claims | Board-level evidence is still blocked by missing Vivado bitfile and missing board-command transcript. | Reopen when Vivado produces a bitfile, `CARNOT_KV260_BITFILE` is set to it, and a KV260/PYNQ command records real latency. |
+| ~~KV260 board execution and latency claims~~ **Moved to active tracks 2026-05-22** | ~~Board-level evidence is still blocked by missing Vivado bitfile and missing board-command transcript.~~ The reopen condition was met: `carnot_ising_v4` XDC-constrained bitstream now flashed to the board, board boots Ubuntu Xilinx, SSH workflow established. | ~~Reopen when Vivado produces a bitfile, `CARNOT_KV260_BITFILE` is set to it, and a KV260/PYNQ command records real latency.~~ See "KV260 board execution (REOPENED)" row in Active tracks above. |
 | AMD Strix/XDNA NPU acceleration | VitisAI and IRON paths remain blocked; no NPU acceleration result exists. | Reopen when `mlir-aie` or AMD VitisAI onnxruntime is installed and a local benchmark reports real NPU speedup. |
 | Extropic Z1/XTR-0 hardware execution | Strategic target only; no local hardware access or authenticated run exists. | Reopen when early-access credentials or hardware allow a THRML/SDK run with device, latency, and sample-quality evidence. |
 | Photonic or optical Ising-machine substrates | No local photonic hardware, API, or collaborator run exists. | Reopen when a concrete photonic provider/API/collaborator can run Carnot Ising cases. |

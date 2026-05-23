@@ -1,0 +1,746 @@
+milestone: "2026.05.274"
+milestone_title: "Hardware Portfolio Reactivation + Cross-Corpus Matrix v8"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+# Pre-staged 2026-05-22 by outer-loop per Pre-Staged Roadmap Convention.
+# Theme: the KV260 / GateMate / PolarFire boards are all physically
+# attached and operational (KV260 booted Ubuntu Xilinx, GateMate USB
+# DirtyJTAG, PolarFire SSH-reachable with 8d uptime), but the prior
+# wishlist retirement language kept the planner from proposing tasks
+# against them. Wishlist updated 2026-05-22 to reflect actual board
+# state; .274 reactivates the hardware portfolio with one task per
+# attached board per Hardware-Task Continuity Discipline, plus carry-
+# forward tasks for cross-corpus matrix, paper-v6 evidence table, and
+# capstone closure.
+
+tasks:
+  - id: exp2897
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2897_archive_v273_activate_v274.json"
+    title: "Archive .273 + Activate .274"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 20
+    estimated_wall_time_min: 10
+    track: admin
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2885
+        verdict: "complete: archive_ready=true; archived_milestone=2026.05.272; activated_milestone=2026.05.273"
+        addressed_by: "Recurring archive/activation task with new source milestone .273 and target milestone .274."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Milestone 2026.05.273 has completed. Its terminal capstone is
+        results/experiment_2896_capstone_v273.json. This task performs the
+        standard archive/activation bookkeeping for 2026.05.274.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - research-complete.yaml
+        - research-roadmap-next.yaml
+        - results/experiment_2896_capstone_v273.json
+
+      TASK:
+        Archive milestone 2026.05.273 into research-complete.yaml, confirm
+        the next active milestone is 2026.05.274, write the deliverable.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. test -f results/experiment_2896_capstone_v273.json (the
+              .273 capstone landed). If absent, write
+              honest_verdict: blocked_capstone_missing and exit.
+        1. Load research-complete.yaml and check whether 2026.05.273 is
+           already archived.
+        2. Confirm research-roadmap-next.yaml milestone is 2026.05.274.
+        3. Summarize the .273 capstone's paper_ready, clean_artifacts,
+           flagged_artifacts, blocked_artifacts, missing_artifacts,
+           pilot_only_artifacts.
+        4. Write deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Self-declared terminal state lets the reconciler
+                      classify the verdict without re-running. Must start
+                      with complete:/success:/passed:/shipped: prefix."
+        archived_milestone:
+          principle: "Audit trail for milestone-state transitions."
+          value: "2026.05.273"
+        activated_milestone:
+          value: "2026.05.274"
+        capstone_source: "results/experiment_2896_capstone_v273.json"
+        paper_ready_from_capstone: bool
+        clean_artifacts_from_capstone: list
+        flagged_artifacts_from_capstone: list
+        blocked_artifacts_from_capstone: list
+        missing_artifacts_from_capstone: list
+        pilot_only_artifacts_from_capstone: list
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        duration_s: float
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py.
+
+  - id: exp2898
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json"
+    title: "KV260 Ising Sampler Hardware Latency Benchmark v1"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 60
+    estimated_wall_time_min: 90
+    track: hardware
+    inference_substrate: hardware_smoke
+    prior_failures:
+      - experiment_id: exp2477
+        verdict: "kv260_bitstream_flashed: carnot_ising_v4 written to /lib/firmware/xilinx/"
+        addressed_by: "exp2477 produced and flashed the bitstream but did not measure board-level latency. This task closes that gap: SSH to kria, load the overlay, map /dev/uio*, write spins/biases, read energy, time the per-sample loop on real hardware."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT:
+        The KV260 board is alive: booted Ubuntu Xilinx 2026-05-20, reachable
+        via `ssh kria`, and has the carnot_ising_v4 XDC-constrained bitstream
+        flashed to /lib/firmware/xilinx/carnot_ising_v4/ (also exposed under
+        the carnot_ising_v2_n64 overlay alias). /dev/uio0 through /dev/uio4
+        are exposed when the overlay is loaded. The wishlist retirement
+        language that previously kept this work blocked has been lifted as
+        of 2026-05-22; the reopen condition is now "produce a board-command
+        transcript that records real wall-clock per-sample time."
+
+        This task closes that reopen condition. It must NOT modify the
+        bitstream, MUST NOT redo synthesis, MUST NOT touch host-side SD
+        card devices (per KV260 SSH-Not-SD-Card Discipline in CLAUDE.md).
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (search for KV260 SSH-Not-SD-Card Discipline,
+          Inference-Substrate Declaration Discipline, Pre-Launch
+          Preconditions Discipline, Hardware-Task Continuity Discipline)
+        - hardware/kv260/discrete_sb_256.v
+        - research-hardware-wishlist.md (the 2026-05-22 KV260
+          reactivation entry)
+        - results/experiment_2477_kv260_bitstream_flash.json (prior
+          flash artifact)
+        - python/carnot/pipeline/verify_stream.py (for how /dev/uio
+          register access is wrapped elsewhere if applicable)
+
+      TASK:
+        Produce a board-command transcript on the KV260 that:
+        (a) loads the carnot_ising_v4 / carnot_ising_v2_n64 overlay,
+        (b) writes a small Ising problem (n=64 spins, random J, h=0) into
+            the fabric via /dev/uio* register-mapped memory,
+        (c) triggers the sampler, reads energy back, and times the
+            per-sample wall-clock,
+        (d) repeats for n_samples in {100, 1000, 10000} with three
+            independent random seeds,
+        (e) writes results with full provenance.
+
+        DO NOT claim a speedup over CPU. This task is establishing the
+        first honest board-level latency number. Comparison-to-CPU is
+        downstream work for a later milestone once the board-side
+        measurement is anchored.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS (check BEFORE any subsequent step):
+           a. `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'`
+              returns 0. If non-zero, write
+              honest_verdict: blocked_kv260_ssh_unreachable and exit.
+           b. `ssh kria 'sudo xmutil listapps 2>&1 | head'` returns
+              entries including 'carnot_ising_v4' OR
+              'carnot_ising_v2_n64'. If absent, write
+              honest_verdict: blocked_kv260_overlay_missing and exit.
+           c. `ssh kria 'ls /dev/uio0 2>/dev/null && echo ok'` echoes
+              'ok' AFTER the overlay loads. If still absent after
+              loadapp, write
+              honest_verdict: blocked_kv260_uio_devices_absent and exit.
+           If ANY precondition fails, do NOT proceed to step 1.
+        1. Load the overlay if not already loaded:
+           `ssh kria 'sudo xmutil unloadapp 2>/dev/null;
+                       sudo xmutil loadapp carnot_ising_v2_n64'`
+        2. Generate the n=64 Ising problem locally (Python, scripts/
+           experiment_2898_kv260_latency.py). Random J ~ N(0, 1/sqrt(n)),
+           h = 0. Three independent seeds: 42, 137, 271.
+        3. SCP the problem JSON to the board.
+        4. Run a Python harness on the board (over SSH) that:
+           - opens /dev/uio0 with mmap,
+           - writes J and h into the register-mapped memory at offsets
+             defined by the bitstream's address map,
+           - writes the trigger register,
+           - polls the done bit (with a sane timeout),
+           - reads back the final spin vector and energy,
+           - records wall-clock time per sample.
+        5. Repeat for n_samples in {100, 1000, 10000} per seed.
+        6. Pull the transcript back to the host. Compute median + p95
+           per-sample wall-clock time. Record per-seed reproducibility
+           checksum (SHA256 of inputs).
+        7. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict:
+          principle: "Must start with complete:/success: prefix. If a
+                      precondition fails, prefix with blocked_<resource>
+                      and exit without measuring."
+        inference_substrate:
+          principle: "Distinguishes hardware_smoke from live_llm_inference
+                      so the linter applies the right duration floor."
+          value: "hardware_smoke"
+        preconditions_checked:
+          principle: "Records WHICH board resources were verified before
+                      launching. Pre-empts fabrication."
+          shape: "list of {resource: str, available: bool, detail: str}"
+        kv260_ssh_uptime_at_run: str
+        kv260_overlay_loaded: str
+        kv260_overlay_load_command: str
+        kv260_uio_devices_present: list[str]
+        bitstream_sha256:
+          principle: "Anchors which bitstream produced these numbers."
+        ising_problem_spec:
+          principle: "Reproducibility — the J matrix, h vector, and
+                      seed must be recorded so a third party can
+                      regenerate the same input."
+          shape: "{n_spins: int, j_matrix_sha256: str, h_vector_sha256: str, random_seed: int}"
+        per_seed_results:
+          principle: "Per-seed measurement is what makes the median + p95
+                      meaningful; single-run timings on real hardware are
+                      noise."
+          shape: "list of {seed: int, n_samples: int, per_sample_wall_clock_us_median: float, per_sample_wall_clock_us_p95: float, final_energy: float}"
+        random_seeds_used:
+          principle: "Recognized by adversarial_verify's plural-form check."
+          value: [42, 137, 271]
+        reproducibility_checksum:
+          principle: "SHA256 over (J, h, seeds, board overlay name,
+                      bitstream sha256). Lets a third party verify the
+                      run was actually executed on this specific
+                      configuration."
+        board_transcript_path:
+          principle: "Captures the literal SSH stdout for human audit."
+          value: "results/experiment_2898_kv260_transcript.log"
+        duration_s:
+          principle: "Real wall-clock of the host-side task. Hardware
+                      runs are slow because of SSH + register-mmap +
+                      polling; expect at least 30s. DURATION_TOO_SHORT
+                      will fire if below floor."
+        run_date: "{date}"
+
+      ACCEPTANCE GATES:
+        - condition: "kv260_overlay_loaded is one of carnot_ising_v4 /
+                      carnot_ising_v2_n64"
+          principle: "Verifies the right bitstream was active. Prevents
+                      claiming KV260 results from an unrelated overlay."
+        - condition: "len(per_seed_results) == 3 AND all per_seed_results
+                      entries have positive per_sample_wall_clock_us_median"
+          principle: "Three seeds are the floor for 'this happened more
+                      than once'. Single-seed hardware timings are not
+                      defensible."
+        - condition: "duration_s >= 30"
+          principle: "Real SSH + overlay + per-sample loop on n=64 Ising
+                      cannot finish in less than 30s. A shorter duration
+                      signals fabrication or skip."
+        - condition: "bitstream_sha256 matches the sha256 of the file at
+                      /lib/firmware/xilinx/carnot_ising_v4/*.bit on the
+                      board"
+          principle: "Anchors the measurement to a specific bitstream
+                      version. Prevents accidental drift across future
+                      bitstream updates."
+
+      Do NOT push. Do NOT modify scripts/research_conductor.py. Do NOT
+      modify the bitstream. Do NOT claim a speedup vs CPU in this task.
+
+  - id: exp2899
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json"
+    title: "GateMate A1 yosys/nextpnr LUT Mapping Workaround + n=16 Ising Tile Bitstream Build v1"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 40
+    estimated_wall_time_min: 60
+    track: hardware
+    inference_substrate: hardware_smoke
+    prior_failures:
+      - experiment_id: exp1460
+        verdict: "GateMate added to portfolio; no bitstream attempt"
+        addressed_by: "First actual build attempt for the GateMate A1-EVB-2M now that the board is USB-attached (DirtyJTAG 1209:c0ca confirmed via openFPGALoader --scan-usb 2026-05-22)."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT:
+        The Cologne Chip GateMate A1-EVB-2M is USB-attached as of
+        2026-05-22 (DirtyJTAG MCU enumerated at 1209:c0ca on bus 3).
+        openFPGALoader recognizes it. This task attempts the n=16 Ising
+        tile bitstream build using yosys + nextpnr-gatemate. Known
+        blocker per the hardware portfolio: yosys/nextpnr LUT mapping
+        for the GateMate's 8-input cell behaves differently from the
+        4-input mapping used in the KV260 Verilog source. A workaround
+        or constraint adjustment is expected.
+
+        This task may succeed or fail honestly; if it fails, the
+        artifact must record the specific LUT mapping error so the
+        next iteration has a clear root-cause.
+
+      EXISTING CODE TO READ FIRST:
+        - hardware/kv260/discrete_sb_256.v (source we are adapting)
+        - docs/jtag-wiring-gatemate-dirtyjtag.md (external-DirtyJTAG
+          reference; the on-board DirtyJTAG MCU is the canonical path)
+        - research-hardware-wishlist.md (the GateMate row in Active
+          tracks)
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `command -v yosys && command -v nextpnr-gatemate` both
+              succeed. If not, write
+              honest_verdict: blocked_gatemate_toolchain_missing.
+           b. `openFPGALoader --scan-usb 2>&1 | grep 1209:0xc0ca`
+              returns a hit. If not,
+              honest_verdict: blocked_gatemate_usb_not_attached.
+        1. Adapt hardware/kv260/discrete_sb_256.v to n=16 spins (the
+           full-scale n=64 doesn't fit). Save as
+           hardware/gatemate/ising_n16_gatemate.v.
+        2. Run yosys with -p "synth_gatemate -top ising_n16_gatemate
+           -json out.json".
+        3. Run nextpnr-gatemate --device CCGM1A1 --json out.json
+           --bit out.cfg.bit.
+        4. If either step errors, capture the FULL stderr to the
+           artifact's lut_mapping_error_log field.
+        5. If both succeed: do NOT auto-flash. Record the bitstream
+           sha256 and stage flashing for operator review in a follow-on
+           task.
+        6. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "hardware_smoke"
+        preconditions_checked: list
+        yosys_version: str
+        nextpnr_gatemate_version: str
+        synth_succeeded: bool
+        place_and_route_succeeded: bool
+        lut_mapping_error_log: str
+        bitstream_path: str | null
+        bitstream_sha256: str | null
+        duration_s: float
+
+      Do NOT flash the bitstream. Do NOT push.
+
+  - id: exp2900
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json"
+    title: "PolarFire SoC Carnot Dispatch Smoke v1"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 30
+    estimated_wall_time_min: 45
+    track: hardware
+    inference_substrate: hardware_smoke
+    prior_failures:
+      - experiment_id: exp1680
+        verdict: "fabricated PolarFire smoke v2 (duration_s=0.0, retired)"
+        addressed_by: "Precondition-gated SSH-first approach: verify ssh polarfire alive (uptime 8d 7h confirmed 2026-05-23 01:24Z), run a hash-verified workload, capture the full transcript."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        The Microchip PolarFire SoC Discovery Kit is SSH-attached via
+        FlashPro5 (1514:2008). The board runs Linux on the riscv64 hart
+        cluster (kernel 6.18.17-linux4microchip-2026.04.1 confirmed via
+        ssh polarfire on 2026-05-23 01:24Z, uptime 8d 7h). Prior smoke
+        attempt (exp1680) fabricated a duration_s=0.0 result and was
+        retired. This task closes that gap with a precondition-gated,
+        transcript-verified workload dispatch.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire 'true'`
+              returns 0. If not, blocked_polarfire_ssh_unreachable.
+           b. `ssh polarfire 'uname -m'` returns 'riscv64'. If not,
+              blocked_polarfire_wrong_architecture.
+           c. `ssh polarfire 'python3 --version'` returns Python >= 3.10.
+              If not, blocked_polarfire_python_missing.
+        1. SCP a small Carnot constraint-evaluation harness to the board:
+           a 50-clause SAT instance + a constraint scorer that runs on
+           CPU (riscv64). DO NOT attempt FPGA fabric access on this
+           board this milestone — fabric work is downstream.
+        2. Run the scorer on the board. Record per-clause evaluation
+           time, total wall-clock, and a SHA256 of the scorer's output.
+        3. Pull the transcript back. Verify the scorer's output hash
+           against an expected value computed locally.
+        4. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "hardware_smoke"
+        preconditions_checked: list
+        polarfire_ssh_uptime_at_run: str
+        polarfire_kernel: str
+        polarfire_arch: "riscv64"
+        sat_instance_sha256: str
+        scorer_output_sha256: str
+        scorer_output_hash_verified: bool
+        per_clause_wall_clock_us: list[float]
+        total_wall_clock_s: float
+        duration_s: float
+
+      ACCEPTANCE GATES:
+        - condition: "scorer_output_hash_verified is True"
+          principle: "Hash match is what distinguishes a real run from
+                      a fabricated one. If the hash doesn't match, the
+                      run did not happen as claimed."
+        - condition: "duration_s >= 10"
+          principle: "SCP + remote python invocation + hash verification
+                      cannot finish faster than this. Below threshold
+                      signals fabrication (exp1680 reported 0.0)."
+
+      Do NOT push.
+
+  - id: exp2901
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2901_thrml_local_import_repair_v1.json"
+    title: "THRML Local Import Repair + Reattempt Smoke v3"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 25
+    estimated_wall_time_min: 30
+    track: infrastructure
+    inference_substrate: live_llm_inference
+    prior_failures:
+      - experiment_id: exp2883
+        verdict: "complete: blocked_thrml_unavailable_local_fallback_ran_no_hardware_claim"
+        addressed_by: "Investigate the actual import failure (likely a JAX/THRML version mismatch or a missing optional dependency), repair, re-run the parity smoke."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        exp2883 (.272) reported THRML import failed locally; the smoke
+        fell back to a non-hardware sampler. Repair the THRML import
+        path so future portability claims can run against the real
+        package.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `.venv/bin/python -c "import jax; print(jax.__version__)"`
+              succeeds.
+        1. Reproduce the exp2883 import error: capture full traceback.
+        2. Diagnose: typically a JAX version mismatch (THRML pins
+           specific JAX/jaxlib pairs).
+        3. Repair via `pip install -U thrml` or a version pin.
+        4. Re-run the n=16 THRML/Carnot parity smoke. Compare energies.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "live_llm_inference"
+        thrml_import_succeeded: bool
+        thrml_version_installed: str
+        jax_version: str
+        parity_energy_delta: float
+        random_seed: int
+        reproducibility_checksum: str
+        duration_s: float
+
+      Do NOT push.
+
+  - id: exp2902
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2902_cross_corpus_matrix_v8.json"
+    title: "Cross-Corpus Matrix v8 — Incorporate .273 Code-Verifier Rows"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 25
+    estimated_wall_time_min: 25
+    track: evidence
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2894
+        verdict: "(pending — .273 task)"
+        addressed_by: "If exp2894 cross_corpus_matrix_v7 landed clean, this v8 incorporates rows added by exp2890-2892 (Code Structural Dependency Verifier, CCTU, VeriCoT) plus exp2898 KV260 row if available."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT:
+        Build cross-corpus matrix v8 incorporating rows produced by
+        .273's code-verifier expansion (exp2890 Code Structural
+        Dependency, exp2891 CCTU, exp2892 VeriCoT) and the .274 KV260
+        hardware row (exp2898) if it landed clean.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. `test -f results/experiment_2894_cross_corpus_matrix_v7.json`
+              (v7 from .273). If absent, blocked_v7_missing.
+        1. Load v7. Identify which rows are clean, flagged, blocked,
+           or pilot-only.
+        2. Add new rows from exp2890-2892 and exp2898 where artifacts
+           exist and are clean.
+        3. Write v8 with explicit row provenance: each row cites the
+           upstream artifact + sha256.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        rows_clean: list
+        rows_flagged: list
+        rows_blocked: list
+        rows_pilot_only: list
+        cited_upstream_artifacts:
+          principle: "Forward-only provenance discipline per the new
+                      Inference-Substrate Declaration rule. Lets a
+                      third party verify the aggregation is not
+                      synthesizing numbers from nothing."
+          shape: "list of {experiment_id, fields_imported, sha256}"
+        duration_s: float
+
+      Do NOT push.
+
+  - id: exp2903
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2903_paper_v6_hardware_validation_section_v1.json"
+    title: "Paper v6 Hardware Validation Section v1"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 30
+    estimated_wall_time_min: 30
+    track: paper
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp1576
+        verdict: "complete: paper v6 section 3 sampler draft resumed"
+        addressed_by: "Different scope: this task drafts a Hardware Validation section anchored to a fresh KV260 measurement (exp2898), not a sampler section. Section is staged as a separate file; operator does the main.tex integration per Operator-Only External Publication."
+        retire_if_same_verdict: false
+      - experiment_id: exp2492
+        verdict: "complete: paper v6 Phase 4 AUROC update"
+        addressed_by: "Different scope: hardware validation, not Phase 4 AUROC."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT:
+        Now that the KV260 board is reactivated and exp2898 produced
+        a first board-level latency number, paper v6 needs a Hardware
+        Validation section that anchors the FPGA claim to a real
+        artifact.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS:
+           a. test -f results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json
+              AND its honest_verdict starts with complete:/success:
+              AND no acceptance gate failed.
+        1. Read the artifact.
+        2. Draft a new "Hardware Validation" subsection for the paper's
+           Methods or Results section (whichever lives at
+           docs/arxiv-paper/main.tex). Include: board, bitstream sha256,
+           overlay name, n_spins, per-seed median + p95 latencies, and
+           an explicit "no CPU comparison yet" disclosure.
+        3. Save the LaTeX snippet to docs/arxiv-paper/sections/hardware-validation-v1.tex
+           but do NOT yet \input it into main.tex; the operator does
+           the integration (per Operator-Only External Publication).
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        latex_snippet_path: str
+        kv260_latency_cited_p50_us: float
+        kv260_latency_cited_p95_us: float
+        bitstream_sha256_cited: str
+        cited_upstream_artifacts: list
+        duration_s: float
+
+      Do NOT integrate into main.tex. Do NOT push.
+
+  - id: exp2904
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2904_kan_hardware_complexity_accounting_v2.json"
+    title: "KAN Hardware Complexity Accounting v2"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 25
+    estimated_wall_time_min: 25
+    track: evidence
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2893
+        verdict: "(pending — .273 task)"
+        addressed_by: "Follow-on iteration once .273 lands the v1 accounting; this v2 incorporates KV260 LUT/BRAM usage data from exp2898."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Refine KAN hardware complexity numbers using KV260 utilization
+        data from exp2898 (LUT, BRAM, DSP counts available from the
+        bitstream metadata).
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        kan_node_count: int
+        kv260_lut_used: int
+        kv260_bram_used: int
+        kv260_dsp_used: int
+        scaling_estimate_to_next_size: dict
+        cited_upstream_artifacts: list
+        duration_s: float
+
+      Do NOT push.
+
+  - id: exp2905
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2905_sota_code_generation_bounded_budget_expansion_v1.json"
+    title: "SOTA Code Generation Bounded-Budget Expansion v1"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 40
+    estimated_wall_time_min: 60
+    requires_gpu: true
+    track: live-evaluation
+    inference_substrate: live_llm_inference
+    prior_failures:
+      - experiment_id: exp2889
+        verdict: "complete: bounded SOTA GGUF generation executed cleanly but no candidate passed tests"
+        addressed_by: "exp2889 used a bounded budget that was too small. This v1 expansion increases per-prompt token budget and adds k=8 candidate sampling per task to give the verifier ensemble meaningful options."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        exp2889 generated clean SOTA-model code on MBPP/HumanEval but
+        ZERO candidates passed unit tests. The honest read is that
+        the per-prompt token budget was too constrained. This task
+        expands the budget and samples k=8 candidates per task to
+        give the verifier ensemble something to discriminate.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "live_llm_inference"
+        model_specs:
+          principle: "Forward-only declaration that this task actually
+                      invokes the live SOTA model (60s duration floor
+                      applies)."
+        n_tasks_per_corpus: int
+        k_candidates_per_task: int
+        per_task_pass_at_1: list[float]
+        per_task_pass_at_k: list[float]
+        random_seeds_used: list[int]
+        reproducibility_checksum: str
+        duration_s: float
+
+  - id: exp2906
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.json"
+    title: "FR-11 Hardware-Accelerated Replay Pilot v1"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 25
+    estimated_wall_time_min: 30
+    track: self-learning
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2882
+        verdict: "complete: RecMem-triggered replay matched eager replay with lower token cost and no forgetting"
+        addressed_by: "exp2882 ran replay on CPU. This pilot proposes the route from CPU-replay to KV260-replay using the now-live hardware. Pilot only; just the dispatch path, no full benchmark."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Pilot the path from CPU-replay (exp2882, proven this milestone)
+        to KV260-accelerated replay using the live board. Pilot only:
+        the goal is to show the dispatch path works, not to claim
+        speedup. Speedup measurement is downstream.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        dispatch_path_validated: bool
+        cited_upstream_artifacts: list
+        duration_s: float
+
+      Do NOT claim hardware speedup. Do NOT push.
+
+  - id: exp2907
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2907_operator_hardware_portfolio_status_v1.json"
+    title: "Operator Hardware Portfolio Status Card v1"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 15
+    estimated_wall_time_min: 15
+    track: ops
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp1460
+        verdict: "complete: hardware-portfolio scope reduction landed (.140 era)"
+        addressed_by: "Different scope: this task is a per-board status card derived from .274 hardware artifacts (exp2898-2901), not a scope-reduction proposal. Card is operator-facing not autonomous-loop input."
+        retire_if_same_verdict: false
+      - experiment_id: exp1988
+        verdict: "complete: Phase 1 ship-track dashboard"
+        addressed_by: "Different scope: hardware portfolio, not Phase 1 ship dashboard."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT:
+        Surface a single concise per-board status card the operator
+        can read at a glance. Aggregates from exp2898 (KV260),
+        exp2899 (GateMate), exp2900 (PolarFire), exp2901 (THRML).
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        per_board_status:
+          shape: "{kv260: {state, last_artifact, next_step},
+                   gatemate: {state, last_artifact, next_step},
+                   polarfire: {state, last_artifact, next_step},
+                   thrml: {state, last_artifact, next_step}}"
+        cited_upstream_artifacts: list
+        duration_s: float
+
+  - id: exp2908
+    milestone: "2026.05.274"
+    deliverable: "results/experiment_2908_capstone_v274.json"
+    title: "Capstone .274: Hardware Portfolio Reactivation + Cross-Corpus Matrix v8"
+    priority: critical
+    agent_type: claude
+    model: opus
+    requires_claude: true
+    max_turns: 60
+    estimated_wall_time_min: 30
+    track: admin
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2896
+        verdict: "(pending — .273 capstone)"
+        addressed_by: "Each milestone has a unique capstone; this one synthesizes the .274 hardware reactivation + matrix v8 + paper-v6 hardware section."
+        retire_if_same_verdict: false
+    prompt: |
+      CONTEXT:
+        Close milestone .274. Synthesize hardware reactivation outcomes
+        (KV260 latency, GateMate build, PolarFire smoke, THRML import),
+        cross-corpus matrix v8, paper-v6 hardware section, FR-11
+        hardware-replay pilot, and any flagged/blocked artifacts.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        milestone: "2026.05.274"
+        clean_artifacts: list
+        flagged_artifacts: list
+        blocked_artifacts: list
+        missing_artifacts: list
+        paper_ready: bool
+        hardware_portfolio_reactivated: bool
+        kv260_first_latency_recorded: bool
+        gatemate_bitstream_built: bool
+        polarfire_smoke_verified: bool
+        thrml_import_repaired: bool
+        cross_corpus_matrix_v8_built: bool
+        top_3_next_actions: list[str]
+        gaps_for_275: list
+        cited_upstream_artifacts: list
+        duration_s: float
+
+      Do NOT push.
+
+scope_reduction_compliance: "Not applicable — .274 is a hardware-portfolio reactivation milestone authorized by operator 2026-05-22, not a scope-reduction milestone."
