@@ -1,27 +1,29 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.275",
-  "generated_at": "2026-05-23T12:59:51Z",
-  "retro_type": "operational_in_progress",
-  "summary": "Milestone 2026.05.275 has no milestone-scoped experiment commits in the authoritative timing data, so the operational record remains 0 wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. Compute-bound duration, GPU efficiency, and DualGPURunner analysis are no data available this milestone.",
+  "generated_at": "2026-05-23T13:23:25Z",
+  "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "TIMING DATA reports no experiment commits found since activation, so the locked counters remain 0 wall-time minutes, 0 experiments completed, and 0 compute-bound experiments. Slowest-experiment ranking, compute-bound GPU utilization, and DualGPURunner coverage have no data available this milestone.",
   "bottlenecks_identified": [
-    "no data available this milestone"
+    "no data available this milestone for slowest compute-bound experiments because TIMING DATA contains 0 completed experiments",
+    "no data available this milestone for GPU efficiency on compute-bound tasks because TIMING DATA contains 0 compute-bound experiments",
+    "no data available this milestone for DualGPURunner engagement because TIMING DATA contains no compute-bound task with 2+ models in parallel"
   ],
   "improvements_suggested": [
-    "Add a pre-closeout timing-window sentinel that emits an explicit no-data operational retrospective when no milestone-scoped experiment commit exists.",
-    "Record compute_bound and multi-model-parallel markers in the timing ledger before retrospective generation so GPU-idle and DualGPURunner checks are data-gated.",
-    "Surface an activation-window heartbeat after milestone activation so operators can detect an empty execution window before closeout."
+    "Add a pre-closeout empty-window sentinel that reports the activation marker and milestone-scoped experiment commit count before generating the operational retrospective.",
+    "Have retrospective generation emit explicit no-data sections when experiments_completed is 0 instead of relying on prior milestone context.",
+    "Record whether each planned task is synthesis-only, single-model compute-bound, or parallel-model compute-bound before launch so GPU-idle interpretation can be gated mechanically."
   ],
   "top_3_highest_leverage_actions": [
-    "Block runtime-ranking analysis when the milestone timing window is empty unless an explicit no-data override is present.",
-    "Make the timing collector write a compact preflight summary containing experiment count, compute-bound count, and slowest-run eligibility.",
-    "Keep GPU monitor observations contextual until compute-bound timing rows exist."
+    "Gate milestone closeout on an empty-window check that either blocks accidental closeout or explicitly records a no-data retrospective.",
+    "Print the activation timestamp, commit range, and experiment count in the closeout prompt so operators can catch timing-scope mismatches early.",
+    "Add a task-classification field for GPU relevance so DualGPURunner recommendations only appear for parallel-model compute-bound work."
   ],
-  "compute_bound_experiments_count": 0,
-  "gpu_idle_on_compute_bound_tasks": null,
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The GPU monitor showed idle devices, but the timing data contains no compute-bound task, so GPU idle is not an operational bottleneck for this milestone. No savings percentage is derivable from an empty timing window; 0 is recorded as the conservative value."
+  "meta_reflection": "The GPU monitor shows idle devices, but the GPU idle interpretation rule prevents treating that as a bottleneck when TIMING DATA contains 0 compute-bound tasks. Estimated time savings are left at 0 rather than guessed from an empty timing window."
 }
