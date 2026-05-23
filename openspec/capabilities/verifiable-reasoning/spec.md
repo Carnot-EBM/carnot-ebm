@@ -19523,3 +19523,66 @@ state-task count, pass/reject rates, and `llm_judge_used=false`.
 **Implementation Status:** Proposed (Exp 2920)
 
 **Spec traces:** REQ-VERIFY-2920, SCENARIO-VERIFY-2920, Exp 2920
+
+## REQ-VERIFY-2934: AquaForte/BEAVER ConstraintBench Reformulation Pipeline
+
+**Capability:** verifiable-reasoning / proposal reformulation with exact verifier authority
+
+Carnot SHALL provide an Exp 2934 bounded local reformulation pipeline over the
+Exp 2926 ConstraintBench constrained-output corrigendum data. The pipeline
+SHALL treat local GGUF model outputs as proposals, reformulate each proposal
+into the task's solver schema, accept only candidates that pass the exact
+verifier, and use deterministic cheap retries only after recording the rejected
+proposal.
+
+**Requirements:**
+
+- REQ-VERIFY-2934-1: The runner SHALL first check
+  `results/experiment_2926_constraintbench_constrained_output_rerun_v2.json`
+  and SHALL write a terminal artifact with
+  `honest_verdict="blocked_constraintbench_corrigendum_missing"` if the file is
+  absent or `constraintbench_corrigendum_ready` is not true.
+- REQ-VERIFY-2934-2: The runner SHALL call
+  `cached_sota_pair(gpu_indices=(0, 1))` before selecting model provenance. The
+  headline model provenance SHALL include at least one mandated GGUF model:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- REQ-VERIFY-2934-3: When the Exp 2926 precondition passes, the runner SHALL
+  select 12-20 tasks that have raw GGUF outputs and exact verifier metadata,
+  then record the selected task IDs deterministically with `random_seed=2934`.
+- REQ-VERIFY-2934-4: For each selected task, the runner SHALL record the
+  initial local-GGUF proposal, constrained reformulation result, exact verifier
+  acceptance or rejection, and, for rejected proposals where the bounded exact
+  solver is cheap, an exclusion/retry prompt plus deterministic retry verdict.
+- REQ-VERIFY-2934-5: If token logprob or frontier access is locally available,
+  the runner SHALL record a small BEAVER-style prefix audit over a
+  prefix-closed syntax/field constraint. If unavailable, it SHALL set
+  `prefix_bound_available=false` and explain the unavailable evidence.
+- REQ-VERIFY-2934-6: The artifact
+  `results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json`
+  SHALL include `honest_verdict`, `reformulation_pipeline_ready`,
+  `random_seed=2934`, `reproducibility_checksum`, `model_specs`,
+  `models_used`, `selected_task_ids`, `proposal_count`,
+  `verifier_acceptance_rate`, `feasibility_delta_vs_exp2926`,
+  `optimality_delta_vs_exp2926`, `prefix_bound_available`,
+  `prefix_bound_summary`, `per_task_results`, `raw_response_dir`,
+  `inference_substrate="live_llm_inference_plus_exact_verifier"`, measured
+  `duration_s`, and `run_date="20260523"`.
+
+### SCENARIO-VERIFY-2934: Exp 2926 Proposals Are Reformulated And Verified Exactly
+
+**Given** the Exp 2926 ConstraintBench corrigendum artifact is present and
+ready
+**When** the Exp 2934 runner processes the bounded selected task subset
+**Then** it writes the required JSON deliverable fields
+**And** every per-task result preserves the initial proposal provenance,
+records schema reformulation, exact verifier acceptance or rejection, and any
+cheap retry prompt
+**And** aggregate feasibility and optimality deltas are computed against Exp
+2926 direct outputs on the same selected task IDs
+**And** no BEAVER prefix-bound claim is made unless local logprob/frontier
+evidence is present.
+
+**Implementation Status:** Proposed (Exp 2934)
+
+**Spec traces:** REQ-VERIFY-2934, SCENARIO-VERIFY-2934, Exp 2934
