@@ -1424,3 +1424,62 @@ Ising RTL exists, but no explicit GateMate constraints file exists.
 command plan, and `no_flash_attempted=true`.
 
 **Implementation status:** Planned (Exp 2927)
+
+---
+
+### REQ-HW-069
+
+**Title:** Exp 2929 GateMate flash smoke MUST stop at the hashed-bitstream gate and preserve physical-board evidence
+
+**Description:**
+Experiment 2929 MUST perform a bounded GateMate A1-EVB-2M physical-board smoke
+only after `results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json`
+exists, reports `gatemate_bitstream_built=true`, and identifies a bitstream whose
+SHA256 matches the artifact. If that precondition is absent or false, Exp 2929
+MUST write `honest_verdict="blocked_gatemate_bitstream_missing"` and MUST NOT
+probe, reset, flash, or otherwise contact the board. When the gate is satisfied,
+the run MUST capture exact command transcripts for initial GateMate/DirtyJTAG
+detection, the flash command, and post-flash board contact. It MAY use
+`openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream>` only because the
+adapter/board path is documented in `research-hardware-wishlist.md`; otherwise
+it MUST write `honest_verdict="blocked_flash_path_undocumented"`. The artifact
+MUST never claim speedup, and it MUST report `timing_boundary_ready=false` unless
+an existing timing counter, UART, or status-register path is already available.
+
+**Acceptance criteria:**
+- `results/experiment_2929_gatemate_flash_timing_boundary_v1.json` is generated
+  with `inference_substrate="physical_board_smoke"` and `run_date="20260523"`.
+- The artifact includes `honest_verdict`, `gatemate_flash_smoke_ready`,
+  `board_detected`, `bitstream_sha256_verified`, `flash_attempted`,
+  `flash_transcript_path`, `board_contact_transcript_path`,
+  `timing_boundary_ready`, `timing_claim_allowed=false`,
+  `speedup_claim_allowed=false`, `blocker`, `inference_substrate`,
+  `duration_s`, and `run_date`.
+- Missing or false Exp 2928 bitstream evidence yields
+  `honest_verdict="blocked_gatemate_bitstream_missing"`,
+  `gatemate_flash_smoke_ready=false`, `board_detected=false`,
+  `bitstream_sha256_verified=false`, `flash_attempted=false`, and empty
+  transcript paths.
+- When physical-board commands run, their stdout/stderr are written verbatim to
+  transcript files; board contact evidence is not summarized in place of the raw
+  transcript.
+- `timing_claim_allowed=false` and `speedup_claim_allowed=false` are invariant
+  for every verdict.
+
+**Implementation status:** Planned (Exp 2929)
+
+---
+
+### SCENARIO-HW-069
+
+**Scenario:** Missing hashed Exp 2928 bitstream blocks the GateMate flash smoke before board contact.
+
+**Given:** The expected Exp 2928 artifact is absent, or it exists with
+`gatemate_bitstream_built=false`.
+**When:** Exp 2929 runs.
+**Then:** It writes the v1 flash-timing-boundary JSON with
+`honest_verdict="blocked_gatemate_bitstream_missing"`, records the blocker,
+sets both claim-allowed fields to false, leaves both transcript-path fields as
+strings, and performs no board-detection or flash command.
+
+**Implementation status:** Planned (Exp 2929)
