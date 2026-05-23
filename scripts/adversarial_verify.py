@@ -155,6 +155,16 @@ AGGREGATION_SCHEMA_PREFIXES = (
 )
 AGGREGATION_MIN_DURATION_S = 0.0001  # 100us floor catches truly-zero/missing
 
+# Deterministic verifier artifacts replay or aggregate checked-in candidate
+# evidence. They can honestly cite upstream GGUF model names while making no
+# new LLM call of their own, so they need a JSON-work duration floor rather
+# than the live-model floor.
+DETERMINISTIC_VERIFIER_SUBSTRATES = (
+    "deterministic_verifier",
+    "deterministic_verifier_plus_replay",
+)
+DETERMINISTIC_VERIFIER_MIN_DURATION_S = 0.0001
+
 
 class Flag:
     """A single detected concern on an artifact."""
@@ -432,6 +442,11 @@ def _is_aggregation_only(d: dict[str, Any]) -> bool:
     return any(schema.startswith(p) for p in AGGREGATION_SCHEMA_PREFIXES)
 
 
+def _is_deterministic_verifier(d: dict[str, Any]) -> bool:
+    """True when the artifact declares replay over checked-in verifier evidence."""
+    return d.get("inference_substrate") in DETERMINISTIC_VERIFIER_SUBSTRATES
+
+
 def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact with implausibly short duration."""
     duration = d.get("duration_s")
@@ -475,6 +490,22 @@ def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
                         f"JSON takes microseconds; a value below "
                         f"{AGGREGATION_MIN_DURATION_S}s suggests the "
                         f"duration was not measured at all."
+                    ),
+                )
+            )
+        return
+    if _is_deterministic_verifier(d):
+        if float(duration) < DETERMINISTIC_VERIFIER_MIN_DURATION_S:
+            flags.append(
+                Flag(
+                    kind="DURATION_TOO_SHORT",
+                    severity="critical",
+                    detail=(
+                        f"duration_s={duration} but artifact declares "
+                        f"deterministic-verifier substrate. Even loading "
+                        f"checked-in JSON takes microseconds; a value below "
+                        f"{DETERMINISTIC_VERIFIER_MIN_DURATION_S}s suggests "
+                        f"the duration was not measured at all."
                     ),
                 )
             )

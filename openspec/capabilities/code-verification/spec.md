@@ -1042,6 +1042,39 @@ Then one candidate may carry multiple independent labels such as
 `true_test_failure`, and the terminal artifact reports rates and grouped
 summaries without fabricating missing upstream evidence.
 
+### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
+
+The repository shall provide an Exp 2925 deterministic provenance corrigendum
+for the Exp 2911 code-hallucination taxonomy artifact. The corrigendum MUST:
+
+- block with `honest_verdict="blocked_upstream_artifact_missing"` when either
+  `results/experiment_2910_sota_code_generation_corrigendum_v2.json` or
+  `results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json` is
+  absent or malformed;
+- verify that Exp 2911 candidate counts, per-candidate label rows, taxonomy
+  rate denominators, and Exp 2910 per-task candidate totals all match the Exp
+  2910 raw candidate inventory;
+- preserve Exp 2911 taxonomy rates and per-category counts without rerunning
+  local GGUF inference;
+- compute source checksums for Exp 2910, Exp 2911, and any raw-response
+  manifest explicitly referenced by Exp 2911;
+- add top-level deterministic-verifier provenance fields including
+  `random_seed=2925`, `reproducibility_checksum`, `upstream_model_specs`,
+  `upstream_models_used`, `no_new_llm_call=true`, and
+  `deterministic_verifier_no_new_llm_call=true`; and
+- rerun the local adversarial artifact audit when available and record the
+  exact command outcome in `adversarial_audit_rerun`.
+
+### SCENARIO-CODE-2925: Provenance Corrigendum Re-Emits The Taxonomy Row
+
+Given Exp 2910 and Exp 2911 artifacts are present,
+When the Exp 2925 corrigendum builds
+`results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json`,
+Then the artifact contains the required provenance fields, source checksums,
+candidate-count validation, original taxonomy rates and counts, audit rerun
+metadata, `inference_substrate="deterministic_verifier"`, run date `20260523`,
+and no claim that new local GGUF inference was performed.
+
 ### REQ-CODE-2890: MBPP/HumanEval Structural Dependency Verifier
 
 The repository shall provide a deterministic structural-dependency verifier for
@@ -1123,6 +1156,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2905 | Implemented (`python/carnot/eval/sota_code_generation_bounded_budget_expansion.py`) |
 | REQ-CODE-2910 | Implemented (`python/carnot/eval/sota_code_generation_corrigendum.py`) |
 | REQ-CODE-2911 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_verifier.py`) |
+| REQ-CODE-2925 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_provenance_corrigendum.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

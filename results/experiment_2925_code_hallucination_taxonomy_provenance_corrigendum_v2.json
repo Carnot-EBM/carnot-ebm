@@ -1,0 +1,91 @@
+{
+  "adversarial_audit_rerun": {
+    "audit_available": true,
+    "audit_tool": "scripts/adversarial_verify.py",
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json",
+      "--json"
+    ],
+    "findings": [],
+    "flagged": false,
+    "returncode": 0,
+    "stderr": ""
+  },
+  "artifact": "experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2",
+  "candidate_count": 320,
+  "candidate_inventory_validation": {
+    "exp2910_candidate_results_count": 320,
+    "exp2910_per_task_candidate_total": 320,
+    "exp2911_per_candidate_label_count": 320,
+    "exp2911_upstream_candidate_count": 320,
+    "mismatched_fields": [],
+    "taxonomy_rate_denominator": 320,
+    "valid": true
+  },
+  "code_hallucination_verifier_ready": true,
+  "deterministic_verifier_no_new_llm_call": true,
+  "duration_s": 0.047406,
+  "honest_verdict": "complete: Exp 2911 taxonomy provenance corrigendum re-emitted deterministically",
+  "inference_substrate": "deterministic_verifier",
+  "invalid_argument_rate": 0.0,
+  "invented_attribute_or_method_rate": 0.0,
+  "invented_import_rate": 0.0,
+  "methodology_note": "Exp 2925 re-emits Exp 2911 taxonomy metadata from checked-in JSON and source checksums only; it performs no new local GGUF inference.",
+  "model_specs": [
+    {
+      "llm_invoked": false,
+      "name": "Exp2925DeterministicTaxonomyProvenanceVerifier",
+      "substrate": "json_checksum_and_count_validation"
+    }
+  ],
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "random_seed": 2925,
+  "reproducibility_checksum": "1e38ad400d6b560adc0e83880fc1309c631c5df602eb77e4f5a169d1718729b8",
+  "run_date": "20260523",
+  "runtime_error_rate": 0.01875,
+  "schema": "carnot.code_hallucination_taxonomy_provenance_corrigendum.v2",
+  "source_artifact_checksums": {
+    "results/experiment_2910_sota_code_generation_corrigendum_v2.json": "2fe735b58ff1e27f26fe44d62aa7ad6fd662ef8350241bbbe125db84dbd96d2a",
+    "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json": "6aa2c9d9721ec415c2a9de48c1e3d38aa23f304e858eaf28e1c26eb365a9b46b"
+  },
+  "syntax_error_rate": 0.38125,
+  "taxonomy_corrigendum_clean": true,
+  "taxonomy_counts": {
+    "invalid_argument": 0,
+    "invented_attribute_or_method": 0,
+    "invented_import": 0,
+    "runtime_error": 6,
+    "syntax_error": 122,
+    "true_test_failure": 3,
+    "undefined_name": 10
+  },
+  "taxonomy_rates": {
+    "invalid_argument": 0.0,
+    "invented_attribute_or_method": 0.0,
+    "invented_import": 0.0,
+    "runtime_error": 0.01875,
+    "syntax_error": 0.38125,
+    "true_test_failure": 0.009375,
+    "undefined_name": 0.03125
+  },
+  "true_test_failure_rate": 0.009375,
+  "undefined_name_rate": 0.03125,
+  "upstream_artifacts": [
+    "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+    "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json"
+  ],
+  "upstream_model_specs": [
+    {
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "upstream_models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ]
+}
