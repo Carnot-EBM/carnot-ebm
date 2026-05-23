@@ -5755,3 +5755,41 @@ committing the proposed pre-commit hook.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2944 | Implemented (`python/carnot/reporting/paper_v6_narrowing_audit_2944.py`) | Implemented (`tests/python/test_experiment_2944_paper_v6_narrowing_audit.py`) |
+
+### REQ-REPORT-2945: Phase-4 VFE Firewall Verification
+
+The repository shall provide an Exp 2945 Phase-4 VFE firewall verifier that
+scans the paper-v6 LaTeX source and the ten most recent capstone JSON artifacts
+for Phase-4 citations that are used in a hardware, FPGA, KV260, or Glauber
+context. The verifier MUST build explicit regular expressions for these
+Phase-4 citations: `exp2550`, `exp2748`, `exp2753`, `exp2766`,
+`Phase-4 active inference`, `variational free energy`, `FEP factor graph`, and
+`FEP aggregator`.
+
+For every Phase-4 citation hit, the verifier MUST inspect a bounded surrounding
+context window for hardware references. Any co-occurrence is a firewall
+violation because Phase-4 VFE bounds apply only to the RTX 3090
+continuous-sampler deployment and MUST NOT defend KV260 synchronous-Glauber or
+other FPGA-deployment claims. The terminal artifact
+`results/experiment_2945_phase4_vfe_firewall_verification_v1.json` MUST include
+`honest_verdict`, `inference_substrate="aggregation_from_upstream_artifacts"`,
+`files_scanned`, `firewall_violations`, `n_violations`,
+`firewall_paragraph_draft`, `cited_upstream_artifacts`, and measured
+`duration_s`.
+
+#### SCENARIO-REPORT-2945: Hardware Co-occurrences Produce Firewall Violations
+
+**Given** paper-v6 LaTeX and recent capstone inputs contain Phase-4 citations
+**When** the Exp 2945 verifier scans each citation context
+**Then** it records each hardware-context co-occurrence with `file`, `line`,
+`phase_4_citation`, and `hardware_context_snippet`
+**And** writes an operator-integrable LaTeX firewall paragraph draft stating
+that Phase-4 VFE bounds apply only to RTX 3090 continuous-sampler deployment
+and cannot support KV260 synchronous-Glauber, FPGA, or hardware deployment
+claims.
+
+## Implementation Status (REQ-REPORT-2945)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2945 | Implemented (`python/carnot/reporting/phase4_vfe_firewall_verification_2945.py`) | Implemented (`tests/python/test_experiment_2945_phase4_vfe_firewall_verification.py`) |

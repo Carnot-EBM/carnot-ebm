@@ -1,0 +1,126 @@
+{
+  "artifact": "experiment_2945_phase4_vfe_firewall_verification_v1",
+  "cited_upstream_artifacts": [
+    {
+      "path": "docs/arxiv-paper/main.tex",
+      "role": "scanned_input",
+      "sha256": "baf07c9dc79ff54b8a0650e58d974e1c8dbd0bf8efe15845cb5e0ddd42e8dc5b"
+    },
+    {
+      "path": "docs/arxiv-paper/sections/hardware-validation-v1.tex",
+      "role": "scanned_input",
+      "sha256": "9e0a8d4869850f5f0df85b92dd8834942469686964037dc1f43fdcfbb6baf25f"
+    },
+    {
+      "path": "results/experiment_2936_capstone_v276.json",
+      "role": "scanned_input",
+      "sha256": "638bb6094799a4babb7d73acee168b2d5767ce32c10680bdd6ee7f07da46b247"
+    },
+    {
+      "path": "results/experiment_2922_capstone_v275.json",
+      "role": "scanned_input",
+      "sha256": "ddd9a50cd9823fa7a18393b1a555e2d228faa1553579d2a5d4151362f328376c"
+    },
+    {
+      "path": "results/experiment_2908_capstone_v274.json",
+      "role": "scanned_input",
+      "sha256": "089bd18cdef3023b36f6c5d70b61c94ba48e39bd8d1b752f68b08c4203b2ddff"
+    },
+    {
+      "path": "results/experiment_2896_capstone_v273.json",
+      "role": "scanned_input",
+      "sha256": "81f7a4ff2e83f861827af532d89c97483934b96e2dfb1678ebcb916118a16beb"
+    },
+    {
+      "path": "results/experiment_2884_capstone_v272.json",
+      "role": "scanned_input",
+      "sha256": "44a213e5ae6cfe8a85af7961de32d20d7bc1efbc767bd5646ad1c2eee9e1f52f"
+    },
+    {
+      "path": "results/experiment_2872_capstone_v271.json",
+      "role": "scanned_input",
+      "sha256": "52b8e1b260fce1362fa0f6c0b596d2d35e8918c01e904857942f28f80b725673"
+    },
+    {
+      "path": "results/experiment_2860_capstone_v270.json",
+      "role": "scanned_input",
+      "sha256": "e17ca788f64ca29b6679c8fa6a235b7a73cac9225d3c378ec3414c5182e7dc22"
+    },
+    {
+      "path": "results/experiment_2846_capstone_v269.json",
+      "role": "scanned_input",
+      "sha256": "c5f02cd2974f225afe54adf4087982efb37fb8dfc4944a78aa6cc25d88c1c23c"
+    },
+    {
+      "path": "results/experiment_2842_capstone_v269.json",
+      "role": "scanned_input",
+      "sha256": "f2d0d3239b3651f4c36588b33c1d9546a856cded6b76f7c5e935466290625d61"
+    },
+    {
+      "path": "results/experiment_2834_capstone_v268.json",
+      "role": "scanned_input",
+      "sha256": "22686f91d14b8306ff50d8a206d291f5fd5d8ac89c2e1409f5ff690b4cfe381d"
+    }
+  ],
+  "context_radius_lines": 2,
+  "duration_s": 0.0608,
+  "files_scanned": [
+    "docs/arxiv-paper/main.tex",
+    "docs/arxiv-paper/sections/hardware-validation-v1.tex",
+    "results/experiment_2936_capstone_v276.json",
+    "results/experiment_2922_capstone_v275.json",
+    "results/experiment_2908_capstone_v274.json",
+    "results/experiment_2896_capstone_v273.json",
+    "results/experiment_2884_capstone_v272.json",
+    "results/experiment_2872_capstone_v271.json",
+    "results/experiment_2860_capstone_v270.json",
+    "results/experiment_2846_capstone_v269.json",
+    "results/experiment_2842_capstone_v269.json",
+    "results/experiment_2834_capstone_v268.json"
+  ],
+  "firewall_paragraph_draft": {
+    "latex": "\\paragraph{Phase-4 VFE scope firewall.} The Phase-4 variational-free-energy bounds reported in exp2550, exp2748, exp2753, and exp2766 apply only to the RTX 3090 continuous-sampler deployment used in those upstream artifacts. They do not establish a partition function, entropy guarantee, or deployment claim for KV260 synchronous Glauber execution, FPGA implementations, or any other hardware substrate whose dynamics can collapse into limit cycles. Accordingly, Phase-4 VFE evidence must not be used to defend KV260 or FPGA-deployment claims in this paper.",
+    "principle": "Operator-integrable LaTeX snippet stating that Phase-4 VFE bounds apply only to RTX 3090 continuous-sampler deployment."
+  },
+  "firewall_violations": [],
+  "hardware_context_regex": "\\b(?:hardware|FPGA|KV260|Glauber)\\b",
+  "honest_verdict": "complete: phase4_vfe_firewall_no_violations",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_violations": 0,
+  "phase_4_regexes": [
+    {
+      "label": "exp2550",
+      "regex": "\\bexp2550\\b"
+    },
+    {
+      "label": "exp2748",
+      "regex": "\\bexp2748\\b"
+    },
+    {
+      "label": "exp2753",
+      "regex": "\\bexp2753\\b"
+    },
+    {
+      "label": "exp2766",
+      "regex": "\\bexp2766\\b"
+    },
+    {
+      "label": "Phase-4 active inference",
+      "regex": "\\bPhase[- ]4 active inference\\b"
+    },
+    {
+      "label": "variational free energy",
+      "regex": "\\bvariational free energy\\b"
+    },
+    {
+      "label": "FEP factor graph",
+      "regex": "\\bFEP factor graph\\b"
+    },
+    {
+      "label": "FEP aggregator",
+      "regex": "\\bFEP aggregator\\b"
+    }
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.phase4_vfe_firewall_verification.v1"
+}
