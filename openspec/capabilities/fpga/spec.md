@@ -997,6 +997,56 @@ claim.
 
 ---
 
+### REQ-HW-061
+
+**Title:** GateMate A1-EVB-2M n=16 Discrete SB bitstream build MUST capture LUT mapping blockers honestly
+
+**Description:**
+Experiment 2899 MUST adapt the KV260 row-serial Discrete SB RTL into a fixed
+n=16 GateMate top module at `hardware/gatemate/ising_n16_gatemate.v`, then
+attempt the yosys `synth_gatemate` and `nextpnr-gatemate --device CCGM1A1`
+bitstream flow without flashing the board. The experiment MUST first check
+`yosys`, `nextpnr-gatemate`, and DirtyJTAG USB enumeration for the on-board
+GateMate A1-EVB-2M MCU (`1209:0xc0ca`). If any precondition is missing, the
+artifact MUST stop with the specific blocked verdict. If synthesis or
+place-and-route fails, the artifact MUST preserve the full stderr in
+`lut_mapping_error_log` so the next run can diagnose the GateMate LUT mapping
+root cause. If a bitstream is generated, the artifact MUST record its SHA256 and
+stage flashing for operator review rather than invoking openFPGALoader.
+
+**Acceptance criteria:**
+- `hardware/gatemate/ising_n16_gatemate.v` exists and declares top module
+  `ising_n16_gatemate` for exactly 16 spins.
+- `results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json`
+  is generated with `inference_substrate="hardware_smoke"` and all task-required
+  schema fields.
+- Missing `yosys` or `nextpnr-gatemate` yields
+  `honest_verdict="blocked_gatemate_toolchain_missing"` before synthesis.
+- Missing DirtyJTAG USB enumeration yields
+  `honest_verdict="blocked_gatemate_usb_not_attached"` before synthesis.
+- Any yosys or nextpnr failure records the full stderr in
+  `lut_mapping_error_log`; successful PnR records `bitstream_sha256` and does
+  not flash the bitstream.
+
+**Implementation status:** Implemented (Exp 2899; current host blocked by missing `nextpnr-gatemate`)
+
+---
+
+### SCENARIO-HW-061
+
+**Scenario:** GateMate n=16 Discrete SB build records bitstream or actionable LUT mapping failure.
+
+**Given:** The GateMate A1-EVB-2M is attached through the on-board DirtyJTAG MCU
+and the yosys plus nextpnr-gatemate tools are available.
+**When:** Experiment 2899 runs the n=16 GateMate Discrete SB build flow.
+**Then:** The artifact records preconditions, tool versions, synthesis and PnR
+success booleans, either the bitstream path plus SHA256 or the full synthesis/PnR
+stderr, and never flashes the board.
+
+**Implementation status:** Implemented (Exp 2899)
+
+---
+
 ### SCENARIO-HW-059
 
 **Scenario:** E-MVL K=16 RTL accounting verifies budget compliance without synthesis.

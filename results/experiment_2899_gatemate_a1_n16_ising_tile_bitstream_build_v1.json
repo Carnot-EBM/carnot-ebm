@@ -1,0 +1,43 @@
+{
+  "honest_verdict": "blocked_gatemate_toolchain_missing",
+  "inference_substrate": "hardware_smoke",
+  "preconditions_checked": [
+    {
+      "resource": "yosys",
+      "command": "command -v yosys && yosys -V",
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/yosys",
+      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+    },
+    {
+      "resource": "nextpnr-gatemate",
+      "command": "command -v nextpnr-gatemate && nextpnr-gatemate --version",
+      "available": false,
+      "path": null,
+      "version": "",
+      "stderr": "/bin/bash: line 1: nextpnr-gatemate: command not found"
+    },
+    {
+      "resource": "openFPGALoader",
+      "command": "command -v openFPGALoader",
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "version": ""
+    },
+    {
+      "resource": "dirtyjtag_usb_1209_0xc0ca",
+      "command": "openFPGALoader --scan-usb 2>&1 | grep 1209:0xc0ca",
+      "available": true,
+      "version": "",
+      "stdout": "003 006    0x1209:0xc0ca dirtyJtag  Jean THOMAS  1861832311111616 DirtyJTAG"
+    }
+  ],
+  "yosys_version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+  "nextpnr_gatemate_version": "",
+  "synth_succeeded": false,
+  "place_and_route_succeeded": false,
+  "lut_mapping_error_log": "",
+  "bitstream_path": null,
+  "bitstream_sha256": null,
+  "duration_s": 0.14
+}
