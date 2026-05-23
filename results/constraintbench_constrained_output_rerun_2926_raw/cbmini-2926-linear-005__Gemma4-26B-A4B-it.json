@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2938,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-linear-005\nTask type: linear_integer\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"variables\":{\"properties\":{\"u\":{\"type\":\"integer\"},\"v\":{\"type\":\"integer\"}},\"required\":[\"u\",\"v\"],\"type\":\"object\"}},\"required\":[\"variables\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"constraints\":[{\"coefficients\":{\"u\":1,\"v\":1},\"op\":\"<=\",\"rhs\":6},{\"coefficients\":{\"u\":1,\"v\":-1},\"op\":\">=\",\"rhs\":1}],\"objective\":{\"u\":1,\"v\":6},\"variables\":{\"u\":[0,5],\"v\":[0,3]}}\n",
+  "prompt_hash": "5575cc6bd0787a71576c5eaf51fec73869d8e67e10277a4df65fcdcca2d0c3f2",
+  "raw_response": "coefficients: {\"u\":1, \"v\":6}\ncoefficients: {\"u\":1, \"v\":1}\ncoefficients:1: {\"u\":1, \"v\":1}\ncoefficients:1: {\"u\":1, \"v\":1}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1,0}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"v\":6}\ncoefficients:1: {\"u\":1, \"",
+  "raw_response_sha256": "c80f1a2b68d30230403ff3c367fd0d6c36bda5505b58ade7030f5beb7cf9012c",
+  "task_id": "cbmini-2926-linear-005"
+}

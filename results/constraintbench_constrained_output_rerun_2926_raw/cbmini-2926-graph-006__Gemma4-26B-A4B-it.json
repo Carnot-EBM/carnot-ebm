@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2943,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-graph-006\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"colors\":{\"properties\":{\"0\":{\"type\":\"integer\"},\"1\":{\"type\":\"integer\"},\"2\":{\"type\":\"integer\"},\"3\":{\"type\":\"integer\"},\"4\":{\"type\":\"integer\"},\"5\":{\"type\":\"integer\"}},\"required\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\"],\"type\":\"object\"}},\"required\":[\"colors\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"edges\":[[0,1],[1,2],[3,4],[4,5],[2,5]],\"n_colors\":3,\"n_nodes\":6}\n",
+  "prompt_hash": "82528cd804c7973e349f83c209c51f1f08a3540ccac0fda993c304a527f520dc",
+  "raw_response": "edges: [[0, 1], [1, 2], [3, 4], [4, 5], [2, 5]]\nnodes: 6\nn_colors: 3\n```\n\n<|channel>thought\n<channel|>{\"solution\": {\"colors\": {\"0\": 0, \"1\": 1, \"2\": 0, \"3\": 0, \"4\": 1, \"5\": 2}}}",
+  "raw_response_sha256": "17329711c79fd5ea35709391a82931f9135a96f60303cb2229b65ea4624d37a3",
+  "task_id": "cbmini-2926-graph-006"
+}

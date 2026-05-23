@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2936,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-knapsack-004\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"selected_items\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"required\":[\"selected_items\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"capacity\":10,\"excludes\":[[\"atlas\",\"guide\"]],\"items\":[{\"name\":\"atlas\",\"value\":8,\"weight\":4},{\"name\":\"guide\",\"value\":3,\"weight\":2},{\"name\":\"water\",\"value\":6,\"weight\":3},{\"name\":\"med\",\"value\":5,\"weight\":2}],\"required_items\":[\"water\"]}\n",
+  "prompt_hash": "cf89580c8d287a07f506c90fa7dd62338a53ebd34301de176a9759a07063689e",
+  "raw_response": "```json\n{\"solution\":{\"selected_items\":[\"water\",\"med\",\"atlas\"]}}\n```\nWait, I's check the capacity. 4+2+3+2 = 11. 11 > 10.\nLet's re-evaluate.\nItems:\natlas: v8, w4\nguide: v3, w2\nwater: v6, w3 (Required)\nwater: v6, w3\nmed: v5, w2\n\nConstraints:\n1. Capacity <= 10\n2. Excludes: [atlas, guide] (Cannot have both atlas and guide)\n3. Required: water\n\nLet's try combinations including 'water' (w3, v6):\nRemaining capacity: 10 - 3 = 7.\nRemaining items:\natlas (w4, v8)\nguide (w2, v3)\nmed (w2, v5)\n\nPossible sets:\n- {water, atlas, med}: w = 3+4+2 = 9. v = 6+8+5 = 19.\n- {water, atlas, guide}: Excluded by [atlas, guide",
+  "raw_response_sha256": "af598a14d20797c64bbebffae4abb0c59d402029a5bb2b16272953514f1ebd6a",
+  "task_id": "cbmini-2926-knapsack-004"
+}

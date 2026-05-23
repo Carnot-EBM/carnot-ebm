@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2954,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-knapsack-010\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"selected_items\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"required\":[\"selected_items\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"capacity\":10,\"excludes\":[[\"atlas\",\"guide\"]],\"items\":[{\"name\":\"atlas\",\"value\":8,\"weight\":4},{\"name\":\"guide\",\"value\":3,\"weight\":2},{\"name\":\"water\",\"value\":6,\"weight\":3},{\"name\":\"med\",\"value\":5,\"weight\":2}],\"required_items\":[\"water\"]}\n",
+  "prompt_hash": "f3bebc568bf2c3c04f6f837fc46144036805caa407a048f9721e34d48bfa41d0",
+  "raw_response": "```\n\n\n```json\n{\"solution\":{\"selected_items\":[\"atlas\",\"water\",\"med\"]}}\n```\n\nWait, the's a weight check.\nAtlas (4) + Water (3) + Med (2) = 9. 9 <= 10.\nValue: 8 + 6 + 5 = 19.\nCheck constraints:\n- Capacity 10: 9 <= 10 (OK)\n- Excludes: [\"atlas\", \"guide\"] (OK, guide is not selected)\n- Required: [\"water\"] (OK, water is selected)\n\nWait, let's check if there's a better combination.\nItems:\n- atlas: v8, w4\n- guide: v3, w2\n- water: v6, w3\n- med: v5, w2\n\nRequired: water (v6, w3)\nRemaining capacity: 10 - 3 = 7.\nAvailable items (excluding guide if atlas is picked, but atlas and guide are mutually exclusive):\n1. atlas (v8, w4) + med (v5, w2) = v13, w6. Total v:",
+  "raw_response_sha256": "b26a21821fcd35ef1fc2412484ae020362a4d20760cd7a0588a2e4347222547f",
+  "task_id": "cbmini-2926-knapsack-010"
+}

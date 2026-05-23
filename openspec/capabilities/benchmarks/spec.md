@@ -911,3 +911,54 @@ and records feasible-but-suboptimal answers separately from infeasible and
 syntax-invalid answers.
 
 **Spec traces:** REQ-BENCH-2919, SCENARIO-BENCH-2919
+
+### REQ-BENCH-2926: ConstraintBench Constrained-Output Rerun
+
+Carnot MUST provide a bounded rerun of the Exp 2919 ConstraintBench mini direct
+optimization row that repairs the prior methodology flags without weakening
+the exact-verifier contract.  The rerun MUST use `random_seed=2926`, build at
+least 30 deterministic tasks, call `cached_sota_pair(gpu_indices=(0, 1))`
+before model selection, and use only mandated local SOTA GGUFs for live
+headline rows.  Legacy tiny models MAY be used only for CPU smoke tests; if no
+mandated GGUF is available, the runner MUST write
+`honest_verdict="blocked_sota_gguf_cache_missing"`.
+
+The runner MUST prefer an installed local constrained decoder such as
+`llguidance`, and otherwise MUST record `constrained_decoder_available=false`
+while using prompt-level JSON schema instructions plus deterministic parser
+repair.  Each task result MUST capture raw model response provenance including
+model path, GPU index, prompt hash, per-task seed, and raw-response file path.
+The exact verifier MUST report syntax validity, feasibility, and optimality as
+separate outcomes.  The terminal artifact MUST compute
+`syntax_valid_rate` over all outputs, `feasibility_rate_overall` over all
+outputs, `feasibility_rate_given_syntax` over syntax-valid outputs, and
+`optimality_rate_given_feasible` over feasible outputs; it MUST NOT treat
+syntax validity as feasibility.
+
+The terminal artifact MUST be written to
+`results/experiment_2926_constraintbench_constrained_output_rerun_v2.json` and
+include: `honest_verdict`, `constraintbench_corrigendum_ready`,
+`flagged_adversarial`, `random_seed=2926`, `reproducibility_checksum`,
+`model_specs`, `models_used`, `cached_sota_pair_used`,
+`constrained_decoder_available`, `n_tasks`, `syntax_valid_rate`,
+`feasibility_rate_overall`, `feasibility_rate_given_syntax`,
+`optimality_rate_given_feasible`, `syntax_feasibility_not_tautological`,
+`per_task_results`, `raw_response_dir`, `live_inference_duration_s`,
+`inference_substrate="live_llm_inference"`, `duration_s`, and
+`run_date="20260523"`.  A live headline row MUST have
+`live_inference_duration_s >= 60`; otherwise the artifact MUST honestly record
+`honest_verdict="blocked_duration_gate_failed"`.
+
+### SCENARIO-BENCH-2926: Rerun Metrics Are Non-Tautological
+
+**Given** a ConstraintBench mini rerun task and a local SOTA GGUF raw response
+**When** Carnot parses the structured answer and runs the exact verifier
+**Then** the artifact records syntax-valid, feasible, and optimal rows as
+separate sets
+**And** feasible-but-suboptimal answers contribute to
+`optimality_rate_given_feasible` but not to syntax invalidity
+**And** syntax-valid but infeasible answers make
+`feasibility_rate_overall` differ from `syntax_valid_rate` in the corrected
+row unless the run is honestly blocked.
+
+**Spec traces:** REQ-BENCH-2926, SCENARIO-BENCH-2926

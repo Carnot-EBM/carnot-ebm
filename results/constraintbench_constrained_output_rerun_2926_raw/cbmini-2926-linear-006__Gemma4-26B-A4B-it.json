@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2941,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-linear-006\nTask type: linear_integer\nObjective sense: min\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"variables\":{\"properties\":{\"r\":{\"type\":\"integer\"},\"s\":{\"type\":\"integer\"},\"t\":{\"type\":\"integer\"}},\"required\":[\"r\",\"s\",\"t\"],\"type\":\"object\"}},\"required\":[\"variables\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"constraints\":[{\"coefficients\":{\"r\":1,\"s\":1,\"t\":1},\"op\":\">=\",\"rhs\":5},{\"coefficients\":{\"r\":1,\"s\":-1},\"op\":\"<=\",\"rhs\":1}],\"objective\":{\"r\":2,\"s\":2,\"t\":4},\"variables\":{\"r\":[0,4],\"s\":[0,4],\"t\":[0,3]}}\n",
+  "prompt_hash": "f0b88781ad34768fe5edb3fb64e74c455d527116bc0a54aef581425e50968c3d",
+  "raw_response": "coefficients: {\"r\":1, \"s\":1, \"t\":1}\ncoefficients: {\"r\":1, \"s\":-1, \"t\":0}\nop: \">=\"\nrhs: 5\nrhs: 1\nrhs\nop: \"<=\"\ncoefficients: {\"r\":1, \"s\":-1, \"t\":0}\nobjective: {\"r\":2, \"s\":2, \"t\":4}\nvariables: {\"r\":[0,4], \"s\":[0,4], \"t\":[0,3]}\ncoefficients: {\"r\":1, \"s\":1, \"t\":1}\nop: \">=\"\nrhs: 5\ncoefficients: {\"r\":1, \"s\":-1, \"t\":0}\nop: \"<=\"\nrhs: 1\nobjective: {\"r\":2, \"s\":-1, \"t\":0}\ncoefficients: {\"r\":1, \"s\":1, \"t\":1}\nop: \">=\"\nrhs: 5\ncoefficients: {\"r\":1, \"s\":-1, \"t\":0}\nop: \"<=\"\nrhs:1\nobjective: {\"r",
+  "raw_response_sha256": "fc0957c22ba0962a1d7026c717ba091b4ca58a4d6d465d65785c651838402010",
+  "task_id": "cbmini-2926-linear-006"
+}

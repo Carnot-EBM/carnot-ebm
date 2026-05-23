@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2950,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-linear-009\nTask type: linear_integer\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"variables\":{\"properties\":{\"a\":{\"type\":\"integer\"},\"b\":{\"type\":\"integer\"},\"c\":{\"type\":\"integer\"}},\"required\":[\"a\",\"b\",\"c\"],\"type\":\"object\"}},\"required\":[\"variables\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"constraints\":[{\"coefficients\":{\"a\":2,\"b\":1,\"c\":2},\"op\":\"<=\",\"rhs\":8},{\"coefficients\":{\"a\":1,\"b\":-1},\"op\":\">=\",\"rhs\":0}],\"objective\":{\"a\":4,\"b\":3,\"c\":5},\"variables\":{\"a\":[0,3],\"b\":[0,3],\"c\":[0,2]}}\n",
+  "prompt_hash": "59ececf20adef219605ca81d3218a3a8c9dc7535e4bbaa03a735db63ae7d533c",
+  "raw_response": "const: 2a + b + 2c <= 8; 1a - 1b >= 0; a, b, c are integers; a in [0, 3], b in [0, 3], c in [0, 2].\n\n 1. a >= b\n 2. 2a + b + 2c <= 8\n 3. a in [0, 3], b in [0, 3], c in [0, 2]\n 4. Maximize 4a + 3b + 5c\n\nLet's test combinations of (a, b, c):\n- If c = 2:\n  2a + b + 4 <= 8 => 2a + b <= 4\n  Since a >= b:\n  - a=2, b=0: 2(2)+0 = 4 <= 4. Obj: 4(2)+3(0)+5(2) = 8+10 = 18.\n  - a=2, b=1: 2(2)+1 = 5 > 4 (Invalid)\n  - a",
+  "raw_response_sha256": "1acc737412e2997c62a1b302e81d73e3191cb00953933cbcd62b2d56aff8c64d",
+  "task_id": "cbmini-2926-linear-009"
+}

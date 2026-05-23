@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2945,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-knapsack-007\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"selected_items\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"required\":[\"selected_items\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"capacity\":7,\"excludes\":[[\"lamp\",\"rope\"]],\"items\":[{\"name\":\"map\",\"value\":5,\"weight\":2},{\"name\":\"rope\",\"value\":6,\"weight\":3},{\"name\":\"lamp\",\"value\":7,\"weight\":4},{\"name\":\"kit\",\"value\":3,\"weight\":1}],\"required_items\":[\"kit\"]}\n",
+  "prompt_hash": "6803b155dae45fc63cc4a21af70b22b1fc7a9e918e24f5591a6bf9168dfc03b1",
+  "raw_response": "```json\n{\"solution\":{\"selected_items\":[\"map\",\"kit\"]}}\n```\nWait, I's check the calculation.\nMap: weight 2, value 5.\nKit: weight 1, value 3.\nTotal weight: 3.\nTotal value: 0.\nWait, I'm checking the values.\nMap: 5.\nKit: 3.\nTotal value: 5+3 = 8.\nTotal weight: 2+1 = 3.\nCapacity is 7.\nIs there any other combination?\nItems: map(5,2), rope(6,3), lamp(7,4), kit(3,1).\nExcludes: [lamp, rope]. This means we cannot have both lamp and rope.\nRequired: kit.\nPossible combinations including kit:\n1. kit(3,1) + map(5,2) = value 8, weight 3.\n2. kit(3,1) + rope(6,3) = value 9, weight 4.\n3. kit(3,1) + lamp(7,4) = value 10, weight 5.\n",
+  "raw_response_sha256": "00a001ec6a345e2e6af22c31dcfdc8d3452a39df5a197174d01442d41ca4785b",
+  "task_id": "cbmini-2926-knapsack-007"
+}

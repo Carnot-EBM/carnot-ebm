@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2942,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-knapsack-006\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"selected_items\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"required\":[\"selected_items\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"capacity\":11,\"excludes\":[[\"forge\",\"drill\"]],\"items\":[{\"name\":\"forge\",\"value\":9,\"weight\":5},{\"name\":\"drill\",\"value\":8,\"weight\":4},{\"name\":\"meter\",\"value\":4,\"weight\":2},{\"name\":\"guard\",\"value\":6,\"weight\":3}],\"required_items\":[\"meter\"]}\n",
+  "prompt_hash": "a20a8e3e23385f08330fd8d1358276171dbcc8eadd975a9112e94b77925b66fb",
+  "raw_response": "import pulpyle\npulpyle.LpProblem(\"Knapsack_Binary\", sense=pulpyle.LpMaximize)\npization-LpProblem(\"ization-LpProblem\", sense=pulp1.LpMaximize)\n-pulpyle.LpProblem(\"Knapsack_Binary\", sense=LpMaximize)\n\n    # Define the problem\n    prob = pulpyle.LpProblem(\"Knapsack_Binary\", sense=pulpyle.LpMaximize)\n    \n    #    Define the variables\n    # variables = pulpyle.LpVariable.dicts(\"item\", item_names, item_names, cat=\"Binary\")\n    #    variables = pulpIL.LpVariable.dicts(\"import_item\", import_item_names, import_items, cat=\"Binary\")\n    -pulpyle.LpVariable.dicts(\"item\", item_names, item_names, cat=\"Binary\")\n    \n    #    Define the variables\n    # variables = excludes-LpVariable.dicts(\"name\", excludes, cat=\"Binary\")\n    #    name\";\n    # capacity constraint\n\n    # capacity constraint\n    # weight_sum = lp",
+  "raw_response_sha256": "16431e13abbafecf18090e4d22cf8af0b76d0af9cd03effe086035ad19237723",
+  "task_id": "cbmini-2926-knapsack-006"
+}

@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2930,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-knapsack-002\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"selected_items\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"required\":[\"selected_items\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"capacity\":9,\"excludes\":[[\"gpu\",\"wifi\"]],\"items\":[{\"name\":\"cpu\",\"value\":8,\"weight\":3},{\"name\":\"gpu\",\"value\":11,\"weight\":5},{\"name\":\"ssd\",\"value\":5,\"weight\":2},{\"name\":\"wifi\",\"value\":2,\"weight\":1}],\"required_items\":[]}\n",
+  "prompt_hash": "d066280e9eaa975a09552dad9b39f8955c4b586e871baf468b05c47463871d40",
+  "raw_response": "```\n\n\n<|channel>Args:\n<channel|>{\"solution\":{\"selected_items\":[\"cpu\",\"gpu\"]}}",
+  "raw_response_sha256": "6d2028d778fee55dfba4a3edd3a917fee1680a33c148f08bad7d6e5a14cdff15",
+  "task_id": "cbmini-2926-knapsack-002"
+}

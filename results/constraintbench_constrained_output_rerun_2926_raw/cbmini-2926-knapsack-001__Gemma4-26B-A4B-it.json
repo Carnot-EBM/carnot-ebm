@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2927,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-knapsack-001\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"selected_items\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"required\":[\"selected_items\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"capacity\":7,\"excludes\":[[\"lamp\",\"rope\"]],\"items\":[{\"name\":\"map\",\"value\":5,\"weight\":2},{\"name\":\"rope\",\"value\":6,\"weight\":3},{\"name\":\"lamp\",\"value\":7,\"weight\":4},{\"name\":\"kit\",\"value\":3,\"weight\":1}],\"required_items\":[\"kit\"]}\n",
+  "prompt_hash": "af09044bbe625b8e384b96b32221d8ef3497d313dd80d9a7907216acd6b541b3",
+  "raw_response": "import json\n\n# Data\ncapacity = 7\nitems = [\n    {\"name\": \"map\", \"value\": 5, \"value_weight_ratio\": 5/2,  way: 2}, # Wait, the schema says weight is 'weight'\n    {\"name\": \"map\", \"value\": 5, \"weight\": 2},\n    {\"name\": \"name\": \"rope\", \"value\": 6, \"weight\": 3},\n    {\"name\": \"name\": \"lamp\", \"value\": 7, \"weight\": weight: 4}, # This is messy, I's just use the raw data\n]\n# Corrected Data from JSON\ncapacity = 7\nitems = [\n    {\"name\": \"map\", \"value\": 5, \"weight\": 2},\n    {\"name\": \"name\": \"rope\", \"value\": 6, \"weight\": 3},\n    {\"name\": \"name\": \"lamp\", \"value\":7, \"weight\": 4}, # Wait, the's just use the raw data\n]\n```\n\n<|channel>```json\n{\n  \"solution\": {\n    \"selected_items\":",
+  "raw_response_sha256": "29beedb0f62250e5311233b71b291b225ae8527be4f1f36956f4c61f407cae34",
+  "task_id": "cbmini-2926-knapsack-001"
+}

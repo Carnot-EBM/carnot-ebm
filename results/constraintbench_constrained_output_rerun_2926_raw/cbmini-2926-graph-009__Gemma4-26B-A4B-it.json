@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2952,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-graph-009\nTask type: graph_coloring\nObjective sense: min\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"colors\":{\"properties\":{\"0\":{\"type\":\"integer\"},\"1\":{\"type\":\"integer\"},\"2\":{\"type\":\"integer\"},\"3\":{\"type\":\"integer\"},\"4\":{\"type\":\"integer\"}},\"required\":[\"0\",\"1\",\"2\",\"3\",\"4\"],\"type\":\"object\"}},\"required\":[\"colors\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"edges\":[[0,1],[0,2],[0,3],[0,4]],\"n_colors\":3,\"n_nodes\":5}\n",
+  "prompt_hash": "7c934517bbe4b9fb1fd80964d6594d4d8766f8d0a50cb5652e50daf6abf1bc8d",
+  "raw_response": "n_colors: 3, n_colors_max: 3\n\n\n\n10. **Final Check**:\n    - Nodes: 0, 1, 2, 3, 4.\n    - Edges: (0,1), (0,2), (0,3), (0,4).\n    - Colors: 0, 1, 1, 1, 1.\n    - (0,1): 0 vs 1 (OK)\n    - (0,2): 0 vs 1 (OK)\n    - (0,3): 0 vs 1 (OK)\n    - (0,4): 0 vs 1 (OK)\n    - All constraints satisfied.\n\n    Wait, the prompt says `n_colors: 3`. This means I can use up to 3 colors. My solution uses 2. That is fine.\n\n    Wait, the prompt says `n_colors_max: 3`. This is the same thing.\n\n    Let's double check the edges again.\n    `[[0,1],[0,2],[0,3],[0,4]]`\n    Node ",
+  "raw_response_sha256": "c9243d28bc1bb57b4fa45eeaa76af63ca88b50f9279482d14f1e94142e1b22ee",
+  "task_id": "cbmini-2926-graph-009"
+}

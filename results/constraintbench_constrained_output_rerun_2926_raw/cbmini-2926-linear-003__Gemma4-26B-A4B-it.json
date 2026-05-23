@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2932,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-linear-003\nTask type: linear_integer\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"variables\":{\"properties\":{\"a\":{\"type\":\"integer\"},\"b\":{\"type\":\"integer\"},\"c\":{\"type\":\"integer\"}},\"required\":[\"a\",\"b\",\"c\"],\"type\":\"object\"}},\"required\":[\"variables\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"constraints\":[{\"coefficients\":{\"a\":2,\"b\":1,\"c\":2},\"op\":\"<=\",\"rhs\":8},{\"coefficients\":{\"a\":1,\"b\":-1},\"op\":\">=\",\"rhs\":0}],\"objective\":{\"a\":4,\"b\":3,\"c\":5},\"variables\":{\"a\":[0,3],\"b\":[0,3],\"c\":[0,2]}}\n",
+  "prompt_hash": "7bb9f21bedd782242a9deb33035480cb22af4ceca00cd7191a5d2f8dd24ade49",
+  "raw_response": "coefficients_a: 2, coefficients_b: 1, coefficients_c: 2, rhs: 8\ncoefficients_a: 1, coefficients_b: -1, rhs: 0\ncoefficients_a: 4, coefficients_b: 3, coefficients_c: 5, coefficients_c: 5\ncoefficients_a: 4, coefficients_b: 3, coefficients_c: 5\ncoefficients_a: 4, coefficients_b: 3, coefficients_c: 5\ncoefficients_a: 2, coefficients_b: 1, coefficients_c: 2, rhs: 8\ncoefficients_a: 1, coefficients_b: -1, rhs: 0\ncoefficients_a: 4, coefficients_b: 3, coefficients_c: 5\ncoefficients_a: 2, coefficients_b: 1, coefficients_c: 2, rhs: 8\ncoefficients_a: 1, coefficients_b: -1, rhs: 0\ncoefficients_a: 4, coefficients_b: 3, coefficients_c: 5\ncoefficients_a: 2, coefficients_",
+  "raw_response_sha256": "2d331f509fc05787037c8207bd4085f8d52e1bb2234988c2f8da0fbc69e2a1e5",
+  "task_id": "cbmini-2926-linear-003"
+}

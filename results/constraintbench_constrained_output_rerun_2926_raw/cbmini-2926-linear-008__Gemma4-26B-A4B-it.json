@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2947,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-linear-008\nTask type: linear_integer\nObjective sense: min\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"variables\":{\"properties\":{\"x\":{\"type\":\"integer\"},\"y\":{\"type\":\"integer\"}},\"required\":[\"x\",\"y\"],\"type\":\"object\"}},\"required\":[\"variables\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"constraints\":[{\"coefficients\":{\"x\":1,\"y\":1},\"op\":\">=\",\"rhs\":4},{\"coefficients\":{\"x\":1},\"op\":\">=\",\"rhs\":1}],\"objective\":{\"x\":2,\"y\":3},\"variables\":{\"x\":[0,5],\"y\":[0,5]}}\n",
+  "prompt_hash": "39b4c1a0ce24ef016a7cc66b5a9c465a7f3c50ae16a84f848eebecd3395bdb6e",
+  "raw_response": "constraints_list:\nconstraints_list:\nconstraints_list:\nconstraints_list:\nconstraints_list:\n_constraints_list:\nconstraints_list:\nconstraints_list:\n_constraints_list:\nconstraints_id: cbmini-2926-linear-008\n\nANALYTICS-BAX-001:\n- Objective: min 2x + 3y\n- Constraints:\n  1. x + y >= 4\n  2. x >= 1\n  3. 0 <= x <= 5\n  4. 0 <= y <= 5\n- Vertices of the feasible region:\n  - Intersection of x=1 and x+y=4: (1, 3)\n  - Intersection of x=1 and y=0: (1, 0) -> Not feasible (1+0 < 4)\n  - Intersection of x=4 and y=0: (4, 0) -> Not feasible (x+y >= 4 is satisfied, but let's check thes)\n  - Intersection of x+y=4 and y=0: (4, 0)\n  ",
+  "raw_response_sha256": "a2ebe6b1e57e1dd347f4e4937db39bda505c07953452175f9d9361a3caf792ea",
+  "task_id": "cbmini-2926-linear-008"
+}

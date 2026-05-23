@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2933,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-knapsack-003\nTask type: knapsack_binary\nObjective sense: max\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"selected_items\":{\"items\":{\"type\":\"string\"},\"type\":\"array\"}},\"required\":[\"selected_items\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"capacity\":8,\"excludes\":[[\"radio\",\"battery\"]],\"items\":[{\"name\":\"sensor\",\"value\":4,\"weight\":2},{\"name\":\"radio\",\"value\":7,\"weight\":3},{\"name\":\"battery\",\"value\":8,\"weight\":4},{\"name\":\"case\",\"value\":1,\"weight\":1}],\"required_items\":[\"case\"]}\n",
+  "prompt_hash": "b600bf4b7c5b7afea5b08a912ce7d1dc0de4f26e0ff87dc8776592b420fa1a0e",
+  "raw_response": "```\n\n\n```json\n{\"solution\":{\"selected_items\":[\"case\",\"radio\",\"sensor\"]}}\n```\n\nWait, I'm\nI'm checking the weight:\ncase (1) + radio (3) + sensor (2) = 6.\n6 <= 8.\nCheck constraints:\n- \"case\" is required. (Yes)\n- \"radio\" and \"battery\" cannot both be selected. (Yes)\n- \"sensor\" is not part of the exclusion.\n- \"battery\" is not selected.\n- \"radio\" is not selected. (Wait, I selected radio).\n- \"radio\" and \"battery\" exclusion: \"excludes\": [[\"radio\", \"battery\"]]. This means you cannot have both.\n- \"radio\" is selected, \"battery\" is not. This is allowed.\n\nLet's check if we can do better.\nItems:\nsensor: v4, w2\nradio: v7, w3\nbattery: v8, w4\ncase: v1, w1 (Required)\n\nCapacity: 8.\nRequired: case (w1, v1). Remaining capacity: 7.\n\nOption 1: radio (",
+  "raw_response_sha256": "6aeb6320efca954c6ab75ca46cf633177fffaabaf8d74145ebb00bcc0e07138c",
+  "task_id": "cbmini-2926-knapsack-003"
+}

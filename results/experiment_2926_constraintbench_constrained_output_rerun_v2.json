@@ -1,0 +1,2207 @@
+{
+  "artifact": "experiment_2926_constraintbench_constrained_output_rerun_v2",
+  "cached_sota_pair_error": null,
+  "cached_sota_pair_used": false,
+  "constrained_decoder_available": false,
+  "constrained_decoder_backend": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "constraintbench_corrigendum_ready": true,
+  "duration_s": 68.10820770263672,
+  "feasibility_rate_given_syntax": 0.9,
+  "feasibility_rate_overall": 0.3,
+  "flagged_adversarial": false,
+  "honest_verdict": "complete: constraintbench constrained-output rerun measured with live local SOTA GGUF",
+  "inference_substrate": "live_llm_inference",
+  "live_inference_duration_s": 67.985625,
+  "model_attempts": [
+    {
+      "blocker": null,
+      "gpu_index": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "live_inference_duration_s": 67.985625,
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_used": true
+    }
+  ],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "n_tasks": 30,
+  "optimality_rate_given_feasible": 0.444444,
+  "per_task_results": [
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 2
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "x": 2,
+              "y": 1
+            },
+            "op": "<=",
+            "rhs": 7
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            4
+          ],
+          "y": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 2.69127,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 3,
+          "y": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 11,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2926,
+      "prompt_hash": "4789b2b9a0588ddfc315a4ec0221dc4d2f174bebccdef7c744c39b973032534c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-001__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "fa04373e44e1c3c3e92051ca13563c54226db8482274202d98d6c1cd498b5ca1",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-001",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 11,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 7,
+        "excludes": [
+          [
+            "lamp",
+            "rope"
+          ]
+        ],
+        "item_weights": {
+          "kit": 1,
+          "lamp": 4,
+          "map": 2,
+          "rope": 3
+        },
+        "required_items": [
+          "kit"
+        ]
+      },
+      "elapsed_seconds": 2.205685,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "kit": 3,
+          "lamp": 7,
+          "map": 5,
+          "rope": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 15,
+      "parse_error": "selected_items_not_list",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2927,
+      "prompt_hash": "af09044bbe625b8e384b96b32221d8ef3497d313dd80d9a7907216acd6b541b3",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-001__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "29beedb0f62250e5311233b71b291b225ae8527be4f1f36956f4c61f407cae34",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-knapsack-001",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 15,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "selected_items_not_list"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "selected_items_not_list"
+      ]
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 2.200653,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 2,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2928,
+      "prompt_hash": "7ddf38d7a73c1ab366aef01b1c66c21949f2095312f3e4ba68728daabe120fd9",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-001__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "8a54c679e342265e27c59e4d614bdac467bdbcd63f1b7c2eb619e3f501a3317a",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-001",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 2,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 1
+            },
+            "op": ">=",
+            "rhs": 4
+          },
+          {
+            "coefficients": {
+              "x": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            5
+          ],
+          "y": [
+            0,
+            5
+          ]
+        }
+      },
+      "elapsed_seconds": 2.209925,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 2,
+          "y": 3
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2929,
+      "prompt_hash": "bf540cae252485f12219983ff54f8cdae8a77be6599d50b72e83c98abc87b2eb",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-002__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "7a447869d7e1654493251a13cde89cfbc854480b6cdbe099a54b12ef45749601",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-002",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 9,
+        "excludes": [
+          [
+            "gpu",
+            "wifi"
+          ]
+        ],
+        "item_weights": {
+          "cpu": 3,
+          "gpu": 5,
+          "ssd": 2,
+          "wifi": 1
+        },
+        "required_items": []
+      },
+      "elapsed_seconds": 0.225003,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "cpu": 8,
+          "gpu": 11,
+          "ssd": 5,
+          "wifi": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "cpu",
+          "gpu"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2930,
+      "prompt_hash": "d066280e9eaa975a09552dad9b39f8955c4b586e871baf468b05c47463871d40",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-002__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "6d2028d778fee55dfba4a3edd3a917fee1680a33c148f08bad7d6e5a14cdff15",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-002",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 2.20089,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 3,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2931,
+      "prompt_hash": "0c934dfdcd528182152a670878e15f42e15187f43fd7e5bab3d6f2b39524c0a4",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-002__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "a77a03b80104bff92122c9afa2d71d661b41185d092b37fb6d7a4739662e286c",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-002",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 3,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "a": 2,
+              "b": 1,
+              "c": 2
+            },
+            "op": "<=",
+            "rhs": 8
+          },
+          {
+            "coefficients": {
+              "a": 1,
+              "b": -1
+            },
+            "op": ">=",
+            "rhs": 0
+          }
+        ],
+        "variable_bounds": {
+          "a": [
+            0,
+            3
+          ],
+          "b": [
+            0,
+            3
+          ],
+          "c": [
+            0,
+            2
+          ]
+        }
+      },
+      "elapsed_seconds": 2.226283,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "a": 4,
+          "b": 3,
+          "c": 5
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 19,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2932,
+      "prompt_hash": "7bb9f21bedd782242a9deb33035480cb22af4ceca00cd7191a5d2f8dd24ade49",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-003__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "2d331f509fc05787037c8207bd4085f8d52e1bb2234988c2f8da0fbc69e2a1e5",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-003",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 8,
+        "excludes": [
+          [
+            "radio",
+            "battery"
+          ]
+        ],
+        "item_weights": {
+          "battery": 4,
+          "case": 1,
+          "radio": 3,
+          "sensor": 2
+        },
+        "required_items": [
+          "case"
+        ]
+      },
+      "elapsed_seconds": 2.205845,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "battery": 8,
+          "case": 1,
+          "radio": 7,
+          "sensor": 4
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 12,
+      "optimal": false,
+      "optimum_value": 13,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "case",
+          "radio",
+          "sensor"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2933,
+      "prompt_hash": "b600bf4b7c5b7afea5b08a912ce7d1dc0de4f26e0ff87dc8776592b420fa1a0e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-003__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "6aeb6320efca954c6ab75ca46cf633177fffaabaf8d74145ebb00bcc0e07138c",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-003",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 12,
+        "optimal": false,
+        "optimum_value": 13,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 2.210118,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 4,
+      "optimal": false,
+      "optimum_value": 1,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 1,
+          "3": 1,
+          "4": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2934,
+      "prompt_hash": "2f700fc01e53654ae70930c141b27fa5e991dc314fc5ce98c7c6919922b48b7c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-003__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "5955d7798bdc873bb1f99f4d18fa19bf9f6c78c4003e23d46163086d8b6052fc",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-003",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 4,
+        "optimal": false,
+        "optimum_value": 1,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "p": 2,
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "p": [
+            0,
+            4
+          ],
+          "q": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 2.207509,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "p": 5,
+          "q": 1
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2935,
+      "prompt_hash": "90f7d759f5a6f97ebeca896b9d023d85e3a5cdf6ff47c160785b7277d28f06d5",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-004__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "c7f4629f4a06d0356017241ea0fde337883afa55f807a50c80c2b1662b708ec5",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-004",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 10,
+        "excludes": [
+          [
+            "atlas",
+            "guide"
+          ]
+        ],
+        "item_weights": {
+          "atlas": 4,
+          "guide": 2,
+          "med": 2,
+          "water": 3
+        },
+        "required_items": [
+          "water"
+        ]
+      },
+      "elapsed_seconds": 2.204734,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "atlas": 8,
+          "guide": 3,
+          "med": 5,
+          "water": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "water",
+          "med",
+          "atlas"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2936,
+      "prompt_hash": "cf89580c8d287a07f506c90fa7dd62338a53ebd34301de176a9759a07063689e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-004__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "af598a14d20797c64bbebffae4abb0c59d402029a5bb2b16272953514f1ebd6a",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-004",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 2.222198,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 4,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2937,
+      "prompt_hash": "e6419498786da2a4389b1d3615db1a09f63d7dca4d06524a33b481c6538a6920",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-004__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "85bc6ab9acd428976d9318ea0bce0f13a8325e9eb017b479913f837f6b65b900",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-004",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 4,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "u": 1,
+              "v": 1
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "u": 1,
+              "v": -1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "u": [
+            0,
+            5
+          ],
+          "v": [
+            0,
+            3
+          ]
+        }
+      },
+      "elapsed_seconds": 2.216603,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "u": 1,
+          "v": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 16,
+      "parse_error": "variables_not_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2938,
+      "prompt_hash": "5575cc6bd0787a71576c5eaf51fec73869d8e67e10277a4df65fcdcca2d0c3f2",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-005__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "c80f1a2b68d30230403ff3c367fd0d6c36bda5505b58ade7030f5beb7cf9012c",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-005",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 16,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "variables_not_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "variables_not_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 6,
+        "excludes": [
+          [
+            "red",
+            "green"
+          ]
+        ],
+        "item_weights": {
+          "blue": 2,
+          "green": 3,
+          "red": 2,
+          "white": 1
+        },
+        "required_items": []
+      },
+      "elapsed_seconds": 2.214983,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "blue": 4,
+          "green": 7,
+          "red": 5,
+          "white": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 13,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2939,
+      "prompt_hash": "aad727b28bb2894880475884a5aec0187113f42c77cd352f969f5ab3ecca39bd",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-005__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "0c78dbf2fe46319e237a6d5c0526bffc499202635f386c7b297f8303b7cb579e",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-knapsack-005",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 13,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 2.202579,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 3,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2940,
+      "prompt_hash": "275d1845864b7b46926f72782b1dde5557cf84f7806a59f4e7c6082aff5e83be",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-005__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "d2ab9d3915921f844ae639168c5420815676ab9e355d0ad3717680dd4f9511f8",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-005",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 3,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "r": 1,
+              "s": 1,
+              "t": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "r": 1,
+              "s": -1
+            },
+            "op": "<=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "r": [
+            0,
+            4
+          ],
+          "s": [
+            0,
+            4
+          ],
+          "t": [
+            0,
+            3
+          ]
+        }
+      },
+      "elapsed_seconds": 2.229861,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "r": 2,
+          "s": 2,
+          "t": 4
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 10,
+      "parse_error": "variables_not_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2941,
+      "prompt_hash": "f0b88781ad34768fe5edb3fb64e74c455d527116bc0a54aef581425e50968c3d",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-006__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "fc0957c22ba0962a1d7026c717ba091b4ca58a4d6d465d65785c651838402010",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-006",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 10,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "variables_not_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "variables_not_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 11,
+        "excludes": [
+          [
+            "forge",
+            "drill"
+          ]
+        ],
+        "item_weights": {
+          "drill": 4,
+          "forge": 5,
+          "guard": 3,
+          "meter": 2
+        },
+        "required_items": [
+          "meter"
+        ]
+      },
+      "elapsed_seconds": 2.219133,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "drill": 8,
+          "forge": 9,
+          "guard": 6,
+          "meter": 4
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 19,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2942,
+      "prompt_hash": "a20a8e3e23385f08330fd8d1358276171dbcc8eadd975a9112e94b77925b66fb",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-006__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "16431e13abbafecf18090e4d22cf8af0b76d0af9cd03effe086035ad19237723",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-knapsack-006",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            5
+          ],
+          [
+            2,
+            5
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 6
+      },
+      "elapsed_seconds": 0.828716,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 4,
+      "optimal": false,
+      "optimum_value": 3,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 0,
+          "4": 1,
+          "5": 2
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2943,
+      "prompt_hash": "82528cd804c7973e349f83c209c51f1f08a3540ccac0fda993c304a527f520dc",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-006__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "17329711c79fd5ea35709391a82931f9135a96f60303cb2229b65ea4624d37a3",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-006",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 4,
+        "optimal": false,
+        "optimum_value": 3,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 2
+            },
+            "op": "<=",
+            "rhs": 6
+          },
+          {
+            "coefficients": {
+              "x": 2,
+              "y": 1
+            },
+            "op": "<=",
+            "rhs": 7
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            4
+          ],
+          "y": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 2.224047,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 3,
+          "y": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 11,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2944,
+      "prompt_hash": "1b5682b36271e566227fed525ff5c6934a0db6f98e26ab9d663f66a221098329",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-007__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "77361e9eed60ce9cf0814aee517a58ced949f3d8c7f7e43860a292ffe39c040e",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-007",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 11,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 7,
+        "excludes": [
+          [
+            "lamp",
+            "rope"
+          ]
+        ],
+        "item_weights": {
+          "kit": 1,
+          "lamp": 4,
+          "map": 2,
+          "rope": 3
+        },
+        "required_items": [
+          "kit"
+        ]
+      },
+      "elapsed_seconds": 2.216461,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "kit": 3,
+          "lamp": 7,
+          "map": 5,
+          "rope": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 8,
+      "optimal": false,
+      "optimum_value": 15,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "map",
+          "kit"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2945,
+      "prompt_hash": "6803b155dae45fc63cc4a21af70b22b1fc7a9e918e24f5591a6bf9168dfc03b1",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-007__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "00a001ec6a345e2e6af22c31dcfdc8d3452a39df5a197174d01442d41ca4785b",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-007",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 8,
+        "optimal": false,
+        "optimum_value": 15,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 2.207201,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": 2,
+      "optimal": true,
+      "optimum_value": 2,
+      "parse_error": null,
+      "parsed_output": {
+        "colors": {
+          "0": 0,
+          "1": 1,
+          "2": 0,
+          "3": 1
+        }
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2946,
+      "prompt_hash": "0abe05e375c7dc72233696db32794d98565933479afdf18f8a5951f2ab4db626",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-007__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "b1c857ebe734cfb9e6f8f8bd259fa2e0b8878b771cf9af68154b1efe56ac337f",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-graph-007",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 2,
+        "optimal": true,
+        "optimum_value": 2,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "x": 1,
+              "y": 1
+            },
+            "op": ">=",
+            "rhs": 4
+          },
+          {
+            "coefficients": {
+              "x": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "x": [
+            0,
+            5
+          ],
+          "y": [
+            0,
+            5
+          ]
+        }
+      },
+      "elapsed_seconds": 2.212366,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "x": 2,
+          "y": 3
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2947,
+      "prompt_hash": "39b4c1a0ce24ef016a7cc66b5a9c465a7f3c50ae16a84f848eebecd3395bdb6e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-008__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "a2ebe6b1e57e1dd347f4e4937db39bda505c07953452175f9d9361a3caf792ea",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-008",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 9,
+        "excludes": [
+          [
+            "gpu",
+            "wifi"
+          ]
+        ],
+        "item_weights": {
+          "cpu": 3,
+          "gpu": 5,
+          "ssd": 2,
+          "wifi": 1
+        },
+        "required_items": []
+      },
+      "elapsed_seconds": 0.231872,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "cpu": 8,
+          "gpu": 11,
+          "ssd": 5,
+          "wifi": 2
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "cpu",
+          "gpu",
+          "ssd"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2948,
+      "prompt_hash": "dd5f1f2ba0676293e68756676505ad8db5230159bca5e833b752bfa2003accc8",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-008__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "d2356995b27d401e2d7c5971a778c67890f9883650fc6c788be4518f80b6e404",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-008",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": [
+          "capacity_exceeded"
+        ]
+      },
+      "violation_class": "infeasible",
+      "violation_reasons": [
+        "capacity_exceeded"
+      ]
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            0
+          ],
+          [
+            2,
+            3
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 4
+      },
+      "elapsed_seconds": 2.202175,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 3,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2949,
+      "prompt_hash": "3b39449a2519c0ddaf638bb8f2790f4f704ec041c10c908870cdbb56edaa6a3e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-008__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "73fe75ac903ac2e223a7a0d72b98593d2efabc7d2169085aaf48d4a1cff3dd2a",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-008",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 3,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "a": 2,
+              "b": 1,
+              "c": 2
+            },
+            "op": "<=",
+            "rhs": 8
+          },
+          {
+            "coefficients": {
+              "a": 1,
+              "b": -1
+            },
+            "op": ">=",
+            "rhs": 0
+          }
+        ],
+        "variable_bounds": {
+          "a": [
+            0,
+            3
+          ],
+          "b": [
+            0,
+            3
+          ],
+          "c": [
+            0,
+            2
+          ]
+        }
+      },
+      "elapsed_seconds": 2.238504,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "a": 4,
+          "b": 3,
+          "c": 5
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 19,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2950,
+      "prompt_hash": "59ececf20adef219605ca81d3218a3a8c9dc7535e4bbaa03a735db63ae7d533c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-009__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "1acc737412e2997c62a1b302e81d73e3191cb00953933cbcd62b2d56aff8c64d",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-009",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 19,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 8,
+        "excludes": [
+          [
+            "radio",
+            "battery"
+          ]
+        ],
+        "item_weights": {
+          "battery": 4,
+          "case": 1,
+          "radio": 3,
+          "sensor": 2
+        },
+        "required_items": [
+          "case"
+        ]
+      },
+      "elapsed_seconds": 0.217185,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "battery": 8,
+          "case": 1,
+          "radio": 7,
+          "sensor": 4
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 12,
+      "optimal": false,
+      "optimum_value": 13,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "sensor",
+          "radio",
+          "case"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2951,
+      "prompt_hash": "739540c361984fc6b33d179a5cd71883d544e4573e1ca832e2e7a137105bb129",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-009__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "bb2b876440a59f53fb3a41a84b0b15ad4b70e184e3fb3359c338c90789ae2fff",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-009",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 12,
+        "optimal": false,
+        "optimum_value": 13,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            0,
+            2
+          ],
+          [
+            0,
+            3
+          ],
+          [
+            0,
+            4
+          ]
+        ],
+        "n_colors": 3,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 2.21845,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 1,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2952,
+      "prompt_hash": "7c934517bbe4b9fb1fd80964d6594d4d8766f8d0a50cb5652e50daf6abf1bc8d",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-009__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "c9243d28bc1bb57b4fa45eeaa76af63ca88b50f9279482d14f1e94142e1b22ee",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-009",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 1,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "linear_constraints": [
+          {
+            "coefficients": {
+              "p": 2,
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 5
+          },
+          {
+            "coefficients": {
+              "q": 1
+            },
+            "op": ">=",
+            "rhs": 1
+          }
+        ],
+        "variable_bounds": {
+          "p": [
+            0,
+            4
+          ],
+          "q": [
+            0,
+            4
+          ]
+        }
+      },
+      "elapsed_seconds": 2.229774,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "coefficients": {
+          "p": 5,
+          "q": 1
+        },
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2953,
+      "prompt_hash": "c1dff90f2acabf8ffda9cde49c941040552b46554565fcf9bf7a57ed1f945697",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-linear-010__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "46f5b8c94fc41b4e46d5cc388ffff22400b03ead7ff18873bc480ba9e85db8d6",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-linear-010",
+      "task_type": "linear_integer",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 8,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "constraints": {
+        "capacity": 10,
+        "excludes": [
+          [
+            "atlas",
+            "guide"
+          ]
+        ],
+        "item_weights": {
+          "atlas": 4,
+          "guide": 2,
+          "med": 2,
+          "water": 3
+        },
+        "required_items": [
+          "water"
+        ]
+      },
+      "elapsed_seconds": 2.22872,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "item_values": {
+          "atlas": 8,
+          "guide": 3,
+          "med": 5,
+          "water": 6
+        },
+        "sense": "max"
+      },
+      "objective_sense": "max",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "parse_error": null,
+      "parsed_output": {
+        "selected_items": [
+          "atlas",
+          "water",
+          "med"
+        ]
+      },
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2954,
+      "prompt_hash": "f3bebc568bf2c3c04f6f837fc46144036805caa407a048f9721e34d48bfa41d0",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-knapsack-010__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "b26a21821fcd35ef1fc2412484ae020362a4d20760cd7a0588a2e4347222547f",
+      "syntax_valid": true,
+      "task_id": "cbmini-2926-knapsack-010",
+      "task_type": "knapsack_binary",
+      "verifier_result": {
+        "feasible": true,
+        "objective_value": 19,
+        "optimal": true,
+        "optimum_value": 19,
+        "syntax_valid": true,
+        "violation_reasons": []
+      },
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "constraints": {
+        "edges": [
+          [
+            0,
+            1
+          ],
+          [
+            1,
+            2
+          ],
+          [
+            2,
+            3
+          ],
+          [
+            3,
+            4
+          ],
+          [
+            4,
+            0
+          ]
+        ],
+        "n_colors": 4,
+        "n_nodes": 5
+      },
+      "elapsed_seconds": 2.219021,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp_prompt_schema",
+      "gpu_index": 0,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "objective_function": {
+        "expression": "sum(color_id for each node)",
+        "sense": "min"
+      },
+      "objective_sense": "min",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 4,
+      "parse_error": "no_json_object",
+      "parsed_output": null,
+      "parser_repair_applied": false,
+      "parser_repair_note": null,
+      "per_task_seed": 2955,
+      "prompt_hash": "beea91befdd61e0f2b8706f93601bd5a1d3cc6c2eb61234f87df2ab19ce284e7",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw/cbmini-2926-graph-010__Gemma4-26B-A4B-it.json",
+      "raw_response_sha256": "396e2f7bffa4175c1c6911e66477b005ee1be83b7ea4d20159fd43cc69529b81",
+      "syntax_valid": false,
+      "task_id": "cbmini-2926-graph-010",
+      "task_type": "graph_coloring",
+      "verifier_result": {
+        "feasible": false,
+        "objective_value": null,
+        "optimal": false,
+        "optimum_value": 4,
+        "syntax_valid": false,
+        "violation_reasons": [
+          "no_json_object"
+        ]
+      },
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    }
+  ],
+  "random_seed": 2926,
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw",
+  "reproducibility_checksum": "25f84846b8338c05909ef8d136201fa2b210290448e5255d93cefa92bff0286a",
+  "run_date": "20260523",
+  "schema": "carnot.constraintbench_constrained_output_rerun.v2",
+  "syntax_feasibility_not_tautological": true,
+  "syntax_valid_rate": 0.333333,
+  "task_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_manifest.json",
+  "tests_run": [],
+  "violation_classes": {
+    "infeasible": 1,
+    "none": 4,
+    "suboptimal": 5,
+    "syntax_invalid": 20
+  }
+}

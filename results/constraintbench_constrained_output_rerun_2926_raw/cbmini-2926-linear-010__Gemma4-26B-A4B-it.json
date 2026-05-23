@@ -1,0 +1,20 @@
+{
+  "decoder_status": {
+    "backend_name": "prompt_schema_with_deterministic_parser_repair",
+    "constrained_decoder_available": false,
+    "decoder_error": "llguidance not installed",
+    "fallback_backend_available": true,
+    "grammar": null,
+    "llguidance_version": null
+  },
+  "gpu_index": 0,
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "model_name": "Gemma4-26B-A4B-it",
+  "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+  "per_task_seed": 2953,
+  "prompt": "Solve this ConstraintBench-style direct constrained optimization task.\nTask id: cbmini-2926-linear-010\nTask type: linear_integer\nObjective sense: min\nReturn exactly one JSON object and no prose or Markdown.\nJSON schema: {\"properties\":{\"solution\":{\"properties\":{\"variables\":{\"properties\":{\"p\":{\"type\":\"integer\"},\"q\":{\"type\":\"integer\"}},\"required\":[\"p\",\"q\"],\"type\":\"object\"}},\"required\":[\"variables\"],\"type\":\"object\"}},\"required\":[\"solution\"],\"type\":\"object\"}\nTask data: {\"constraints\":[{\"coefficients\":{\"p\":2,\"q\":1},\"op\":\">=\",\"rhs\":5},{\"coefficients\":{\"q\":1},\"op\":\">=\",\"rhs\":1}],\"objective\":{\"p\":5,\"q\":1},\"variables\":{\"p\":[0,4],\"q\":[0,4]}}\n",
+  "prompt_hash": "c1dff90f2acabf8ffda9cde49c941040552b46554565fcf9bf7a57ed1f945697",
+  "raw_response": "coefficients: p:2, q:1, rhs:5\ncoefficients: q:1, rhs:1\n- p:2, q:1, rhs:5\n- q:1, rhs:1\n- p:5, q:1\n- p: [0,4], q: [0,4]\n\nWait, the's a constraint on the variables' ranges.\np is in [0, 4], q is in [0, 4].\np and q must be integers.\n\nConstraints:\n1) 2p + q >= 5\n2) q >= 1\n\nObjective:\nMinimize 5p + q\n\nPossible integer values for p and q in [0, 4]:\np: 0, 1, 2, 3, 4\nq: 0, 1, 2, 3, 4\n\nCheck constraints:\nq >= 1 means q can be 1, 2, 3, 4.\n\nIf q = 1:\n2p + 1 >= 5 => 2p >= 4 => p >= 2.\nPossible p: 2, 3, ",
+  "raw_response_sha256": "46f5b8c94fc41b4e46d5cc388ffff22400b03ead7ff18873bc480ba9e85db8d6",
+  "task_id": "cbmini-2926-linear-010"
+}
