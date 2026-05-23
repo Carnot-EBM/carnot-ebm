@@ -6088,3 +6088,4 @@ web search:
 | 2026-05-23 19:30 UTC | CPU Synchronous-Parallel Same-Schedule Baseline (D | OK | 81 passed in 3.90s |
 | 2026-05-23 19:44 UTC | Verifier Ensemble AUPRC on Code Corpora at 92.5% N | OK | 81 passed in 3.14s |
 | 2026-05-23 19:56 UTC | PolarFire SoC Continuation: Constraint Scorer Expa | OK | 81 passed in 3.60s |
+| 2026-05-23 20:13 UTC | KV260 Continuation: n-Scaling Latency Profile (anc | OK | 81 passed in 3.29s |
