@@ -1,0 +1,12 @@
+import re
+
+def text_lowercase_underscore(s: str) -> bool:
+    # Check if the entire string consists of lowercase letters and underscores
+    # Check if there presence of an underscore
+    # Check if there is at least one underscore
+    # Check if the if the string contains sequences of lowercase letters joined by an underscore
+    # The task asks if the string contains sequences of lowercase letters joined with an underscore.
+    # Looking at the pattern: "aab_cbbbc" is True. "aab_Abbbc" is False. "aab_cbbbc" is True.
+    # The pattern seems to be: the string must consist ONLY of lowercase letters and underscores, and there must be an underscore.
+    # The pattern seems to [a-z]+_[a-z]+
+    # Let's test the pattern [a-z]+_[a-z]+

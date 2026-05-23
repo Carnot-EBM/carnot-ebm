@@ -1,0 +1,23 @@
+def count_Substrings(s):
+    n = len(s)
+    count = 0
+thought
+<channel|>```python
+def count_Substrings(s):
+    n = len(s)
+    count = 0
+    # Convert string to list of integers for easier calculation
+    digits = [int(d) for d in s]
+    
+    # Iterate through all possible starting positions of substrings
+    for i in range(n):
+        current_sum = 0
+        # Iterate through all possible ending positions
+        for j in range(i, n):
+            current_sum += digits[j]
+            length = j - i + 1
+            # Check if the sum of digits equals the length of the substring
+            if current_sum == length:
+                count += 1
+    return count
+```

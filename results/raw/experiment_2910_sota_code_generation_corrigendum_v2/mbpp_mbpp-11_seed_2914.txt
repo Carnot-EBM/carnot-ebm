@@ -1,0 +1,17 @@
+def remove_Occ(s, char):
+    # Find the first occurrence of the character
+    first_idx = s.find(char)
+    # Find the last occurrence of the first character
+    last_idx = s.rfind(char)
+    
+    # If the character is not found, return the original string
+    if first_idx == -1:
+                return s
+    
+    # If the first and last occurrence are the same index, it is the only occurrence
+    # If we remove it, we only remove one character.
+    # However, the' task' says "remove first and last occurrence".
+    # If the only occurrence is at index 1, and we are 
+    # removing the first and last, the first and last are the same.
+    # If we remove it once, we have removed the "first and last".
+    #

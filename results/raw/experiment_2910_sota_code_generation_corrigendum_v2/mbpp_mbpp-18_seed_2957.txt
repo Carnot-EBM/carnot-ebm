@@ -1,0 +1,16 @@
+def remove_dirty_chars(s1, s2):
+    """
+    Remitor de caracteres da primeira string que estão presentes na segunda string.
+    Remitor de caracteres da primeira string que estão presentes na segunda string.
+    """
+    # Convert s2 to a set for O(1) lookup
+    dirty_chars = set(s2)
+    # Filter s1, keeping only characters not in dirty_chars
+    return "".join(char for char in s1 if char not in dirty_chars)
+list(map(lambda x: x[0], "abc")) # returns [a, b, c]
+list(map(lambda x: x[1], "abc")) # returns [a, b, c]
+thought
+<channel|>```python
+def remove_dirty_chars(s1, s2):
+    """
+    Removes characters from the first string

@@ -975,6 +975,39 @@ pass@1/pass@k from sandbox execution results, identifies whether pass@k exceeds
 pass@1 on at least one task, and preserves live-inference provenance in
 `model_specs` and `inference_substrate`.
 
+### REQ-CODE-2910: SOTA Code-Generation Corrigendum v2
+
+The repository shall provide an Exp 2910 corrigendum runner for the
+adversarially flagged Exp 2905 SOTA code-generation row. The runner MUST:
+
+- call `cached_sota_pair(gpu_indices=(0, 1))` before selecting any model and
+  record whether that pair was usable;
+- use only mandated SOTA GGUF model paths for headline generation, with legacy
+  tiny models allowed only for CPU smoke tests; when no mandated SOTA GGUF is
+  cached, write `blocked_sota_gguf_cache_missing` and leave headline pass-rate
+  metrics unreported;
+- set top-level `random_seed=2910`, sample at least 20 MBPP and 20
+  HumanEval-style local manifest rows for non-blocked runs, and sample exactly
+  `k_candidates_per_task=8` bounded candidates per task;
+- capture every raw response to a raw-response directory and record per-candidate
+  seed, model path, GPU index, prompt hash, extraction status, syntax success,
+  runtime success, timeout, and pass/fail outcome;
+- compute aggregate and per-task pass@1/pass@k only from sandbox execution
+  outcomes, never from generated text inspection; and
+- include a methodology note explaining why pass@1 and pass@k are distinct
+  metrics, failing the row when aggregate pass@1 and pass@k match exactly
+  without per-task explanations.
+
+### SCENARIO-CODE-2910: Corrigendum Writes Clean Or Honest Blocked Artifact
+
+Given local MBPP and HumanEval-style manifests are available,
+When the Exp 2910 runner resolves SOTA GGUF cache state, samples rows, generates
+k=8 candidates, extracts code, and executes candidates through the sandbox,
+Then it writes `results/experiment_2910_sota_code_generation_corrigendum_v2.json`
+with the required corrigendum schema, top-level seed provenance, raw-response
+paths, model provenance, per-task pass vectors, and either a clean corrected row
+or an honest blocked verdict without fabricated headline pass rates.
+
 ### REQ-CODE-2890: MBPP/HumanEval Structural Dependency Verifier
 
 The repository shall provide a deterministic structural-dependency verifier for
@@ -1054,6 +1087,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2879 | Implemented |
 | REQ-CODE-2889 | Implemented |
 | REQ-CODE-2905 | Implemented (`python/carnot/eval/sota_code_generation_bounded_budget_expansion.py`) |
+| REQ-CODE-2910 | Implemented (`python/carnot/eval/sota_code_generation_corrigendum.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

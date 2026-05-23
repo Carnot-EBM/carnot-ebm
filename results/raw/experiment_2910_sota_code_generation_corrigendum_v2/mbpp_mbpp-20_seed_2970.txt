@@ -1,0 +1,24 @@
+def is_woodall(n):
+thought
+<channel|>```python
+def is_woodall(n):
+    """
+    A Woodall number is a natural number of the form n * 2^n - 1.
+    """
+    if n < 1:
+        return False
+    
+    # We need to find if there exists a positive integer k such that k * 2^k - 1 = n
+    # k * 2^k = n + 1
+    target = n + 1
+    
+    # Since k * 2^k grows very fast, we can iterate through k
+    k = 1
+    while True:
+        val = k * (2**k)
+        if val == target:
+            return True
+        if val > target:
+            return False
+        k += 1
+```

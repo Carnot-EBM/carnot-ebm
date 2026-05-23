@@ -1,0 +1,19 @@
+def remove_dirty_chars(s1, s2):
+    """
+    Removes characters from s1 that are present in s2.
+    """
+    # Create a set of characters in s2 for efficient lookup
+    dirty_chars = set(s2)
+    # Build the result string by including only characters not in s2
+    return "".join(char for char in s1 if char not in dirty_chars)
+```
+
+```python
+def remove_dirty_chars(s1, s2):
+    """
+    Removes characters from s1 that are present in s2.
+    """
+    # Create a set of characters in s2 for efficient lookup
+    dirty_chars = set(s2)
+    # Build the result string by including only characters not in s2
+    return "".join(char for char in s1 if char not in dirty_

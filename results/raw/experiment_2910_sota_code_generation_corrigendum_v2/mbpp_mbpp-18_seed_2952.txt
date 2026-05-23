@@ -1,0 +1,17 @@
+def remove_dirty_chars(s1, s2):
+    """
+    Removes characters from the first string which are present in the second string.
+    """
+    # Convert s2 to a set for O(1) average lookup time
+    dirty_chars = set(s2)
+    # Use a list comprehension to build the new string
+    return "".join([char for char in s1 if char not in dirty_chars])
+list(map(lambda x: x[0], "abc")) # Output: ['a', 'b', 'c']
+```val
+```python
+def remove_dirty_chars(s1, s2):
+    """
+    # Removes characters from the first string which are present in the second string.
+    """
+    dirty_chars = set(s2)
+    return "".join([char for char in s1 if char not

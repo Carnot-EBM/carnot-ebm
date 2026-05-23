@@ -1,0 +1,25 @@
+def is_Monotonic(nums: list[int]) -> bool:
+    increasing = True
+_
+```import Data.List (sort)
+import Data.List (sort)
+
+def is_Monotonic(nums: list[int]) -> bool:
+    increasing = True
+    decreasing = True
+
+    for i in range(len(nums) - 1):
+        if nums[i] > nums[i + 1]:
+            increasing = False
+        if nums[i] < nums[i + 1]:
+            if not increasing:
+                return False
+            # This is not quite right, logic is a bit messy.
+            # Let's simplify.
+```
+
+Wait, the logic above is was messy. Let's rewrite it cleanly.
+
+```python
+def is_Monotonic(nums: list[int]) -> bool:
+    increasing = True

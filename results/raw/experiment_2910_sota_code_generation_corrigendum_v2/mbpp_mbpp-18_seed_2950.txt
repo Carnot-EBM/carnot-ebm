@@ -1,0 +1,9 @@
+def remove_dirty_chars(s1, s2):
+    """
+    Removes characters from the first string which are present in the second string.
+    """
+    # Create a set of characters to remove for faster lookup
+    chars_to_remove = set(s2)
+    # Build the new string by including only characters not in the set
+    return "".join(char for char in s1 if char not in chars_to_remove)
+list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-inside-join-list-comp-

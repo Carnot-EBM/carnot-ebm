@@ -1,0 +1,20 @@
+def bell_number(n):
+    ```
+
+<|channel>thought
+<channel|>```python
+def bell_number(n):
+    if n == 0:
+        return 1
+    # Using the Bell Triangle method to compute Bell numbers
+    # bell[i][j] represents the j-th element in the i-th row
+    bell = [[0 for _ in range(n + 1)] for _ in range(n + 1)]
+    bell[0][0] = 1
+    
+    for i in range(1, n + 1):
+        # The first element of the current row is the last element of the previous row
+        bell[i][0] = bell[i-1][i-1]
+        
+        # Fill the rest of the row
+        for j in range(1, i + 1):
+            bell[i][

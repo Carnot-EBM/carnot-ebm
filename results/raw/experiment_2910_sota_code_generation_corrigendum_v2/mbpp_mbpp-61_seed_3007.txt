@@ -1,0 +1,18 @@
+def count_Substrings(s):
+    count = 0
+    n = len(s)
+    for i in range(n):
+        current_sum = 0
+        for j in range(i, n):
+            current_sum += int(s[j])
+            length = j - i + 1
+            if current_sum == length:
+            	count += 1
+            
+            # Optimization: if current_sum > length, 
+           	# it's possible for future j to make it equal, 
+           # it's possible for future j to make it g impossible, 
+           # it's possible for future j to make it equal again.
+           	# However, since digits are 0-9, 
+           	# adding a digit can increase sum by up to 9, 
+           	# while length

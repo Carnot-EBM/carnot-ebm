@@ -1,0 +1,15 @@
+def max_difference(pairs):
+```python
+def max_difference(pairs):
+    max_diff = 0
+    for a, b in pairs:
+            diff = abs(a - b)
+            if diff > max_diff:
+                max_diff = diff
+            
+    return max_diff
+```
+
+Wait,, the's a task description says "maximum difference between available pairs". This could mean the difference between the values within each pair, or the difference between the values across different pairs. Looking at the *examples* provided:
+Example 1: `[(3, 5), (1, 7), (10, 3), (1, 2)]`
+Differences within pairs: `|3-5|=2`, `|1-7|=6`, `|10-3|=7`, `|1-2|=1`. Max is 

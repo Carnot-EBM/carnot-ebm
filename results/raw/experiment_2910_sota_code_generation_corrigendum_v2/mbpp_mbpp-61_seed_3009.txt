@@ -1,0 +1,26 @@
+def count_Substrings(s):
+    count = 0
+    n = len(s)
+    for i in range(n):
+        current_sum = 0
+        for j in range(i, n):
+            current_sum += int(s[j])
+            length = j - i + 1
+            if current_sum == length:
+                count += 1
+    ```
+```
+
+```python
+def count_Substrings(s):
+    count = 0
+    n = len(s)
+    for i in range(n):
+        for j in range(i, n):
+            substring = s[i:j+1]
+            digit_sum = sum(int(d) for d in substring)
+                
+            if digit_sum == len(substring):
+                count += 1
+            
+        
