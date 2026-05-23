@@ -1,19 +1,19 @@
-milestone: "2026.05.275"
-milestone_title: "Hardware Baselines + Code Hallucination Repair + Verifier-Grounded Self-Learning"
+milestone: "2026.05.276"
+milestone_title: "Evidence Boundary Repair + GateMate Bring-Up + Solver-Grounded Self-Learning"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 # Pre-staged 2026-05-23 by outer-loop per Pre-Staged Roadmap Convention.
-# Theme: .274 reactivated physical hardware and produced the first KV260
-# latency transcript, but left three hard gaps: no matched CPU baseline for
-# hardware speedup claims, GateMate blocked by missing nextpnr-gatemate, and
-# flagged SOTA code-generation methodology. .275 closes those gaps while adding
-# verifier-grounded continuous self-learning.
+# Theme: .275 proved KV260 speedup eligibility, repaired the main SOTA code
+# row, and produced a clean FR-11 replay scheduler artifact. .276 repairs the
+# remaining evidence-boundary flags, switches GateMate to the current
+# himbaechel/gmpack flow, and adds solver-grounded local-SOTA generation plus
+# KAN-style continuous self-learning.
 
 tasks:
-  - id: exp2909
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2909_archive_v274_activate_v275.json"
-    title: "Archive .274 + Activate .275"
+  - id: exp2923
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2923_archive_v275_activate_v276.json"
+    title: "Archive .275 + Activate .276"
     priority: critical
     agent_type: codex
     model: gpt-5.5
@@ -23,96 +23,244 @@ tasks:
     track: admin
     inference_substrate: aggregation_from_upstream_artifacts
     prior_failures:
-      - experiment_id: exp2897
-        verdict: "complete: archive_ready=true; archived_milestone=2026.05.273; activated_milestone=2026.05.274; paper_ready=true; clean_artifacts=7; flagged_artifacts=2; blocked_artifacts=0; missing_artifacts=0; pilot_only_artifacts=1"
-        addressed_by: "Recurring archive/activation task with new source milestone .274 and target milestone .275."
+      - experiment_id: exp2909
+        verdict: "complete: archive_ready=true; archived_milestone=2026.05.274; activated_milestone=2026.05.275"
+        addressed_by: "Recurring archive/activation task with new source milestone .275 and target milestone .276."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        Milestone 2026.05.274 has completed. Its terminal capstone is
-        results/experiment_2908_capstone_v274.json. This task performs the
-        standard archive/activation bookkeeping for 2026.05.275.
+        Milestone 2026.05.275 has completed. Its terminal capstone is
+        results/experiment_2922_capstone_v275.json. This task performs the
+        standard archive/activation bookkeeping for 2026.05.276.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md
         - research-complete.yaml
         - research-roadmap-next.yaml
-        - results/experiment_2908_capstone_v274.json
+        - results/experiment_2922_capstone_v275.json
 
       TASK:
-        Archive milestone 2026.05.274 into research-complete.yaml, confirm the
-        next active milestone is 2026.05.275, and write the deliverable.
+        Archive milestone 2026.05.275 into research-complete.yaml, confirm the
+        next active milestone is 2026.05.276, and write the deliverable.
 
       CONCRETE STEPS:
         0. PRECONDITIONS:
-           a. test -f results/experiment_2908_capstone_v274.json. If absent,
+           a. test -f results/experiment_2922_capstone_v275.json. If absent,
               write honest_verdict: blocked_capstone_missing and exit.
-        1. Load research-complete.yaml and check whether 2026.05.274 is already
+        1. Load research-complete.yaml and check whether 2026.05.275 is already
            archived.
-        2. Confirm research-roadmap-next.yaml milestone is 2026.05.275.
-        3. Summarize the .274 capstone's paper_ready, clean_artifacts,
-           flagged_artifacts, blocked_artifacts, missing_artifacts,
-           pilot_only_artifacts, and gaps_for_275.
+        2. Confirm research-roadmap-next.yaml milestone is 2026.05.276.
+        3. Summarize the .275 capstone's paper_ready,
+           hardware_speedup_claim_eligible, clean_artifacts, flagged_artifacts,
+           blocked_artifacts, missing_artifacts, diagnostic_artifacts, and
+           recommended_next_actions.
         4. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict: "complete: archive_ready=true; archived_milestone=2026.05.274; activated_milestone=2026.05.275"
+        honest_verdict: "complete: archive_ready=true; archived_milestone=2026.05.275; activated_milestone=2026.05.276"
         archive_ready: bool
-        archived_milestone: "2026.05.274"
-        activated_milestone: "2026.05.275"
-        capstone_source: "results/experiment_2908_capstone_v274.json"
+        archived_milestone: "2026.05.275"
+        activated_milestone: "2026.05.276"
+        capstone_source: "results/experiment_2922_capstone_v275.json"
         paper_ready_from_capstone: bool
+        hardware_speedup_claim_eligible_from_capstone: bool
         clean_artifacts_from_capstone: list
         flagged_artifacts_from_capstone: list
         blocked_artifacts_from_capstone: list
         missing_artifacts_from_capstone: list
-        pilot_only_artifacts_from_capstone: list
-        gaps_for_275: list
+        diagnostic_artifacts_from_capstone: list
+        recommended_next_actions: list
         inference_substrate: "aggregation_from_upstream_artifacts"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2910
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2910_sota_code_generation_corrigendum_v2.json"
-    title: "SOTA Code Generation Corrigendum v2: Fixed Seeds + n>=20"
+  - id: exp2924
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    title: "Aggregation Metadata Corrigendum: Matrix v9 + Capstone Provenance"
+    priority: critical
+    max_turns: 30
+    estimated_wall_time_min: 30
+    track: evidence_boundary
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2921
+        verdict: "complete: matrix_v9_ready=true; matrix_v9_paper_boundary_ready=true; headline_eligible_rows=6; flagged_rows=4; hardware_speedup_claim_eligible=true; paper_ready=true; flagged_adversarial=true"
+        addressed_by: "This task does no live inference and adds explicit aggregation-only provenance, upstream artifact checksums, and adversarial-audit metadata before matrix v10 consumes the row."
+        retire_if_same_verdict: true
+      - experiment_id: exp2922
+        verdict: "complete: milestone=2026.05.275; paper_ready=true; hardware_speedup_claim_eligible=true; sota_code_row_repaired=true; fr11_self_learning_clean=true; clean=6; flagged=3; blocked=1; missing=1; diagnostic=2; flagged_adversarial=true"
+        addressed_by: "This task separates capstone aggregation metadata from compute-bound live-model metadata so capstone synthesis does not inherit false live-inference duration flags."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Project root: {project_root}. Run date: {date}.
+        .275 produced matrix v9 and a capstone with useful paper boundaries, but
+        both were adversarially flagged because aggregation-only artifacts
+        inherited compute-bound markers from upstream live-model rows. This task
+        repairs metadata and provenance only; it must not rerun any LLM or
+        hardware experiment.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Verifier Authenticity; Failed-Experiment Rerun Discipline)
+        - results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json
+        - results/experiment_2922_capstone_v275.json
+        - scripts/adversarial_artifact_audit.py
+        - research-references.md (2026-05-23 Post-.275 Planning Sweep)
+
+      TASK:
+        Write a corrigendum artifact that makes the aggregation-only nature of
+        matrix v9 and the .275 capstone explicit, computes source checksums,
+        and states exactly which upstream rows remain flagged versus which flags
+        were metadata false positives.
+
+      CONCRETE STEPS:
+        0. PRECONDITION: if either exp2921 or exp2922 artifact is missing,
+           write blocked_upstream_artifact_missing and exit.
+        1. Load both upstream JSON artifacts.
+        2. Compute SHA256 checksums for all source artifacts directly consumed
+           by exp2921 and exp2922.
+        3. Build an aggregation_provenance table with:
+           artifact_path, checksum, row_role, source_inference_substrate, and
+           whether the current task reran any compute. The answer must be false.
+        4. Separate upstream row flags from current-artifact flags. Do not erase
+           the fact that exp2911, exp2919, and exp2921 were flagged in .275.
+        5. Run the local adversarial artifact audit if available. If it still
+           flags the corrigendum, record the exact audit findings and write
+           aggregation_metadata_clean: false.
+        6. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        aggregation_metadata_clean: bool
+        no_new_llm_call: true
+        no_new_hardware_run: true
+        aggregation_from_upstream_artifacts: true
+        source_artifact_checksums: dict
+        aggregation_provenance: list
+        upstream_flagged_rows_preserved: list
+        metadata_false_positive_findings: list
+        adversarial_audit_rerun: dict
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        duration_s: float
+        run_date: "{date}"
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2925
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json"
+    title: "Code Hallucination Taxonomy Provenance Corrigendum v2"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 40
+    estimated_wall_time_min: 45
+    track: code_verification
+    inference_substrate: deterministic_verifier
+    prior_failures:
+      - experiment_id: exp2911
+        verdict: "complete: taxonomy_verifier_ready=true; flagged_adversarial=true; syntax_error_rate=0.38125; undefined_name_rate=0.03125; true_test_failure_rate=0.009375"
+        addressed_by: "This retry keeps the deterministic taxonomy but adds upstream live-model provenance, source checksums, random seed, reproducibility checksum, and explicit no-new-LLM methodology."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Project root: {project_root}. Run date: {date}.
+        exp2911 classified 320 local-GGUF code candidates into useful
+        hallucination categories, but the artifact was flagged because a
+        deterministic aggregation looked like a too-fast live-model experiment
+        and lacked reproducibility metadata. This task repairs provenance only.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - scripts/adversarial_artifact_audit.py
+        - results/experiment_2910_sota_code_generation_corrigendum_v2.json
+        - results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json
+        - python/carnot/pipeline/verify_stream.py
+
+      TASK:
+        Re-emit the code hallucination taxonomy artifact with complete
+        deterministic-verifier provenance. Do not run new local GGUF inference.
+
+      CONCRETE STEPS:
+        0. PRECONDITION: if exp2910 or exp2911 artifacts are absent, write
+           blocked_upstream_artifact_missing and exit.
+        1. Load exp2910 and exp2911.
+        2. Verify that exp2911 candidate counts and taxonomy totals match the
+           exp2910 raw candidate inventory.
+        3. Compute source checksums for exp2910, exp2911, and any raw-response
+           manifest referenced by exp2911.
+        4. Add top-level random_seed, reproducibility_checksum, upstream
+           model_specs, upstream_models_used, and no_new_llm_call fields.
+        5. Preserve the original taxonomy rates and per-category counts.
+        6. Run the local adversarial artifact audit if available and record the
+           exact outcome.
+        7. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        taxonomy_corrigendum_clean: bool
+        code_hallucination_verifier_ready: bool
+        deterministic_verifier_no_new_llm_call: true
+        source_artifact_checksums: dict
+        upstream_model_specs: list
+        upstream_models_used: list
+        random_seed: 2925
+        reproducibility_checksum: str
+        candidate_count: int
+        taxonomy_counts: dict
+        taxonomy_rates: dict
+        syntax_error_rate: float
+        undefined_name_rate: float
+        true_test_failure_rate: float
+        adversarial_audit_rerun: dict
+        inference_substrate: "deterministic_verifier"
+        duration_s: float
+        run_date: "{date}"
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2926
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json"
+    title: "ConstraintBench Constrained-Output Rerun v2: Non-Tautological Feasibility"
     priority: critical
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
     requires_gpu: true
     max_turns: 50
-    estimated_wall_time_min: 120
+    estimated_wall_time_min: 150
     track: local_sota
     inference_substrate: live_llm_inference
     prior_failures:
-      - experiment_id: exp2905
-        verdict: "complete: bounded-budget k=8 live SOTA code generation executed with pass@1=0.5000 and pass@k=0.5000"
-        addressed_by: "This retry fixes the flagged methodology: top-level random_seed required, n_tasks_per_corpus >= 20, pass@1/pass@k implementation audited, and headline rows forbidden if the tautology persists."
+      - experiment_id: exp2919
+        verdict: "complete: constraintbench_mini_ready=true; flagged_adversarial=true; feasibility_rate=0.277778; optimality_rate=0.111111; syntax_valid_rate=0.277778"
+        addressed_by: "This retry uses constrained output, n_tasks>=30, separate syntax/feasibility denominators, a minimum live-inference duration gate, and a reproducibility checksum."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        The .274 code-generation expansion (exp2905) is adversarial-flagged:
-        pass@1 and pass@k are identical on only two tasks per corpus and the
-        artifact lacks a top-level random_seed. This task reruns the row with a
-        defensible bounded sample size and explicit methodology checks.
+        exp2919 proved ConstraintBench-style direct optimization is feasible to
+        run locally, but the artifact is flagged because syntax_valid_rate and
+        feasibility_rate were identical, duration was too short for a live-model
+        headline row, and reproducibility_checksum was missing.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md (SOTA Local Models; Failed-Experiment Rerun Discipline)
         - scripts/experiment_template.py (cached_sota_pair() docstring)
         - python/carnot/inference/sota_models.py
-        - results/experiment_2905_sota_code_generation_bounded_budget_expansion_v1.json
-        - research-references.md (Delulu and llguidance entries from 2026-05-23)
+        - results/experiment_2919_constraintbench_mini_direct_optimization_v1.json
+        - research-references.md (ConstraintBench, llguidance, BEAVER entries)
 
       TASK:
-        Produce a corrected SOTA code-generation artifact using the mandated
-        local GGUF path. Use MBPP and HumanEval-style tasks already available
-        locally; do not fetch private data. The output must be either a clean
-        corrected row or an honest blocked artifact.
+        Rerun a bounded ConstraintBench mini experiment with constrained
+        structured output and exact verifiers. Produce either a clean corrected
+        row or an honest blocked artifact.
 
       CONCRETE STEPS:
         0. MODEL_SPECS:
@@ -122,490 +270,430 @@ tasks:
               - unsloth/gemma-4-31B-it-GGUF
               - unsloth/gemma-4-26B-A4B-it-GGUF
            c. Legacy tiny models are allowed only for CPU smoke-tests. If only
-              legacy models are available, write blocked_sota_gguf_cache_missing
-              and do not produce headline pass rates.
-        1. Set top-level random_seed = 2910 and record all per-task candidate
-           seeds.
-        2. Select n_tasks_per_corpus >= 20 for MBPP and HumanEval-style tasks.
-        3. Generate k_candidates_per_task = 8 bounded candidates with timeouts,
-           raw response capture, model path, GPU index, and prompt hash.
-        4. Extract code robustly. If extraction fails, classify the failure and
-           keep the raw response.
-        5. Execute candidates in the existing local sandbox/test harness. Record
-           pass@1, pass@k, extraction success, syntax success, runtime success,
-           and per-task pass vectors.
-        6. Add a methodology_note explaining why pass@1 and pass@k are distinct
-           metrics and fail the task if they still match exactly without a
-           per-task explanation.
-        7. Write the deliverable JSON.
+              legacy models are available, write blocked_sota_gguf_cache_missing.
+        1. Set random_seed = 2926.
+        2. Use n_tasks >= 30 and record task ids, objective functions,
+           constraints, and exact solver/reference answers where available.
+        3. Prefer llguidance or another local JSON-schema/CFG path if already
+           installed. If not installed, use prompt-level schema plus deterministic
+           parser repair, and record constrained_decoder_available: false.
+        4. Generate local GGUF answers with raw response capture, model path,
+           prompt hash, GPU index, and per-task seed.
+        5. Compute syntax_valid_rate over all outputs.
+        6. Compute feasibility_rate_overall over all outputs and
+           feasibility_rate_given_syntax over only syntax-valid outputs.
+        7. Compute optimality_rate_given_feasible over feasible outputs and do
+           not use feasibility as a synonym for syntax validity.
+        8. Ensure live_inference_duration_s >= 60 unless the task honestly
+           writes blocked_duration_gate_failed.
+        9. Compute reproducibility_checksum over task manifest, prompts, model
+           specs, raw outputs, parsed outputs, and verifier results.
+        10. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
-        codegen_corrigendum_ready: bool
+        constraintbench_corrigendum_ready: bool
         flagged_adversarial: bool
-        methodology_note: str
-        random_seed: 2910
-        random_seeds_used: list
+        random_seed: 2926
+        reproducibility_checksum: str
         model_specs: list
         models_used: list
         cached_sota_pair_used: bool
-        legacy_smoke_only: bool
-        n_tasks_per_corpus: int
-        k_candidates_per_task: 8
-        aggregate_pass_at_1: float
-        aggregate_pass_at_k: float
-        pass_at_k_exceeds_pass_at_1: bool
+        constrained_decoder_available: bool
+        n_tasks: int
+        syntax_valid_rate: float
+        feasibility_rate_overall: float
+        feasibility_rate_given_syntax: float
+        optimality_rate_given_feasible: float
+        syntax_feasibility_not_tautological: bool
         per_task_results: list
         raw_response_dir: str
+        live_inference_duration_s: float
         inference_substrate: "live_llm_inference"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2911
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json"
-    title: "Delulu-Style Code Hallucination Taxonomy Verifier v1 (gated on Exp2910)"
+  - id: exp2927
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json"
+    title: "GateMate Himbaechel Toolchain + Constraint Materialization v3"
     priority: high
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
-    max_turns: 40
-    estimated_wall_time_min: 60
-    track: code_verification
-    inference_substrate: deterministic_verifier
-    gated_on:
-      - upstream: exp2910
-        artifact_field: codegen_corrigendum_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp2905
-        verdict: "complete: bounded-budget k=8 live SOTA code generation executed with pass@1=0.5000 and pass@k=0.5000"
-        addressed_by: "Instead of reusing pass@k as the only signal, this task classifies generated-code hallucinations with deterministic static/runtime checks over exp2910 outputs."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Project root: {project_root}. Run date: {date}.
-        The corrected code-generation row needs more than pass/fail. Recent
-        Delulu code-hallucination work separates invented imports, undefined
-        names, invented methods/attributes, and invalid arguments. This task
-        applies those categories to local generated-code outputs.
-
-      EXISTING CODE TO READ FIRST:
-        - CLAUDE.md
-        - results/experiment_2910_sota_code_generation_corrigendum_v2.json
-        - results/experiment_2905_sota_code_generation_bounded_budget_expansion_v1.json
-        - python/carnot/pipeline/verify_stream.py
-        - tests/python (search for existing code-generation/sandbox tests)
-
-      TASK:
-        Build a deterministic taxonomy verifier for exp2910 code candidates and
-        report which failures are true test failures versus code hallucination
-        categories.
-
-      CONCRETE STEPS:
-        0. PRECONDITION: if exp2910 artifact is absent or codegen_corrigendum_ready
-           is false, write blocked_codegen_corrigendum_missing and exit.
-        1. Load exp2910 per_task_results and raw responses.
-        2. Implement or reuse static AST checks for:
-           - invented or unavailable imports,
-           - undefined names,
-           - invented attributes or methods,
-           - invalid argument count or incompatible call signatures.
-        3. Run candidates through syntax parse, static checks, and existing task
-           tests. Keep all categories orthogonal; a candidate can have multiple
-           failure labels.
-        4. Summarize failure rates by model, corpus, task, and pass/fail status.
-        5. Write the deliverable JSON and any small helper script or test needed
-           for the verifier.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        code_hallucination_verifier_ready: bool
-        upstream_codegen_artifact: "results/experiment_2910_sota_code_generation_corrigendum_v2.json"
-        taxonomy_categories: list
-        per_candidate_labels: list
-        invented_import_rate: float
-        undefined_name_rate: float
-        invented_attribute_or_method_rate: float
-        invalid_argument_rate: float
-        syntax_error_rate: float
-        runtime_error_rate: float
-        pass_rate_after_taxonomy_filter: float
-        verifier_source_paths: list
-        inference_substrate: "deterministic_verifier"
-        duration_s: float
-        run_date: "{date}"
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2912
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json"
-    title: "KV260 Same-Basis CPU Gibbs Baseline v1"
-    priority: critical
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 40
+    max_turns: 50
     estimated_wall_time_min: 75
     track: hardware
-    inference_substrate: cpu_sampler
+    inference_substrate: hardware_toolchain_preflight
     prior_failures:
-      - experiment_id: exp2898
-        verdict: "complete: kv260_hardware_latency_transcript_recorded"
-        addressed_by: "exp2898 measured KV260 board latency only. This task uses the same tensors, sparse topology, seeds, and sample counts to create the missing CPU Gibbs baseline required before any speedup claim."
+      - experiment_id: exp2914
+        verdict: "blocked_gatemate_toolchain_missing: nextpnr-gatemate absent; alternatives nextpnr-himbaechel and gmpack detected; constraints_present=false"
+        addressed_by: "This retry uses the discovered current GateMate flow: nextpnr-himbaechel --device CCGM1A1 plus gmpack, and explicitly materializes or locates constraints before build."
+        retire_if_same_verdict: true
+      - experiment_id: exp2899
+        verdict: "blocked_gatemate_toolchain_missing: no GateMate bitstream built and no flash attempt allowed"
+        addressed_by: "This retry changes the technique from obsolete nextpnr-gatemate lookup to current himbaechel/gmpack discovery and constraint readiness checks."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        exp2898 recorded a real KV260 Ising sampler latency transcript but made
-        no speedup claim. The next required artifact is a same-basis CPU Gibbs
-        baseline using the exact n=64 problem basis from exp2898.
-
-      EXISTING CODE TO READ FIRST:
-        - CLAUDE.md (Hardware-Task Continuity Discipline)
-        - results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json
-        - results/experiment_2898_kv260_transcript.log
-        - hardware/kv260/discrete_sb_256.v
-        - python/carnot/pipeline/verify_stream.py
-        - scripts (search for Ising/Gibbs sampler helpers)
-
-      TASK:
-        Reconstruct the exact exp2898 n=64 sparse Ising problem basis and run a
-        CPU Gibbs sampler with matched seeds and sample counts. This is a CPU
-        baseline only; do not claim hardware speedup in this task.
-
-      CONCRETE STEPS:
-        0. PRECONDITION: if exp2898 artifact is absent, write
-           blocked_kv260_latency_artifact_missing and exit.
-        1. Load exp2898. Extract n_spins, uploaded sparse topology, coupling
-           checksum(s), field checksum(s), random_seeds_used, and sample_count_sweep.
-        2. If exact tensors are not recoverable from exp2898 artifacts, write
-           blocked_kv260_problem_basis_unrecoverable and explain which field is
-           missing. Do not synthesize a different problem silently.
-        3. Implement or reuse a CPU Gibbs sampler with the same update schedule
-           and sample counts: 100, 1000, and 10000 per seed.
-        4. Record median and p95 per-sample CPU wall-clock latency, final energy,
-           energy trace checksum, and reproducibility checksum per seed.
-        5. Write the deliverable JSON.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        same_basis_cpu_baseline_ready: bool
-        upstream_kv260_artifact: "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json"
-        n_spins: 64
-        matched_sparse_topology: bool
-        matched_coupling_tensor: bool
-        matched_field_tensor: bool
-        random_seeds_used: list
-        sample_count_sweep: list
-        cpu_per_seed_results: list
-        cpu_latency_us_median_by_sample_count: dict
-        cpu_latency_us_p95_by_sample_count: dict
-        reproducibility_checksum: str
-        speedup_claim_made: false
-        inference_substrate: "cpu_sampler"
-        duration_s: float
-        run_date: "{date}"
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2913
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json"
-    title: "KV260 Hardware-vs-CPU Claim Boundary v1 (gated on Exp2912)"
-    priority: critical
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 30
-    estimated_wall_time_min: 30
-    track: hardware
-    inference_substrate: aggregation_from_upstream_artifacts
-    gated_on:
-      - upstream: exp2912
-        artifact_field: same_basis_cpu_baseline_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp2898
-        verdict: "complete: kv260_hardware_latency_transcript_recorded"
-        addressed_by: "exp2898 intentionally made no speedup claim. This task only computes claim eligibility after the same-basis CPU baseline exists."
-        retire_if_same_verdict: true
-      - experiment_id: exp2906
-        verdict: "complete: kv260_replay_dispatch_path_validated_pilot_only"
-        addressed_by: "exp2906 was pilot-only dispatch evidence. This task separates hardware latency comparison from FR-11 replay claims."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Project root: {project_root}. Run date: {date}.
-        exp2898 measured KV260 board latency. exp2912 supplies the matched CPU
-        baseline. This task decides exactly what hardware claim, if any, is
-        eligible for matrix v9 and paper-v6.
+        exp2914 blocked because it searched for obsolete nextpnr-gatemate even
+        though the machine has nextpnr-himbaechel and gmpack. This task is the
+        corrected GateMate preflight. Do not reference exp2914 as a runtime gate;
+        use it only as prior evidence.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md
-        - results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json
-        - results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json
-        - results/experiment_2908_capstone_v274.json
         - research-hardware-wishlist.md
+        - results/experiment_2914_gatemate_toolchain_preflight_v2.json
+        - hardware/ (search for GateMate, CCGM1A1, constraints, Ising RTL)
+        - ops/conductor-log.md (GateMate .275 entries)
 
       TASK:
-        Compare matched KV260 and CPU measurements and write a claim-boundary
-        artifact. A numeric speedup may be reported only if the problem basis,
-        seeds, sample counts, and timing units are all matched.
+        Prove whether the current GateMate himbaechel/gmpack toolchain and a
+        minimal n=16 Ising constraints path are ready for a build attempt.
 
       CONCRETE STEPS:
-        0. PRECONDITION: if exp2912 same_basis_cpu_baseline_ready is false,
-           write blocked_cpu_baseline_not_ready and exit.
-        1. Load KV260 and CPU artifacts.
-        2. Verify matching n_spins, sparse topology, seeds, and sample counts.
-        3. Compute per-sample latency ratios by sample count and seed.
-        4. Decide hardware_speedup_claim_eligible. If false, explain exactly
-           which condition failed.
-        5. Write matrix_row_candidate and paper_claim_boundary text suitable for
-           downstream aggregation.
+        0. Inspect PATH and known OSS CAD Suite locations for:
+           - nextpnr-himbaechel
+           - gmpack
+           - yosys
+           - openFPGALoader
+        1. Record tool versions and absolute paths.
+        2. Verify that nextpnr-himbaechel supports `--device CCGM1A1`.
+        3. Locate existing GateMate constraint files. If none exist, create a
+           minimal candidate constraints file in the appropriate hardware
+           directory using current project pin placeholders only if the repo has
+           an established generated-constraints pattern. Otherwise write a
+           blocked_constraints_missing artifact and do not invent pin claims.
+        4. Locate the n=16 Ising RTL/top module and identify the exact top name.
+        5. Build a dry-run command plan for yosys -> nextpnr-himbaechel ->
+           gmpack without flashing.
         6. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
-        kv260_claim_boundary_ready: bool
-        same_basis_verified: bool
-        hardware_speedup_claim_eligible: bool
-        speedup_ratio_median_by_sample_count: dict
-        speedup_ratio_p95_by_sample_count: dict
-        comparison_notes: list
-        matrix_row_candidate: dict
-        paper_claim_boundary: str
-        speedup_claim_made: bool
-        inference_substrate: "aggregation_from_upstream_artifacts"
-        duration_s: float
-        run_date: "{date}"
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2914
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2914_gatemate_toolchain_preflight_v2.json"
-    title: "GateMate Toolchain Provisioning Preflight v2"
-    priority: high
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 30
-    estimated_wall_time_min: 30
-    track: hardware
-    inference_substrate: hardware_preflight
-    prior_failures:
-      - experiment_id: exp2899
-        verdict: "blocked_gatemate_toolchain_missing"
-        addressed_by: "This task moves the toolchain check into a cheap preflight, searches existing OSS CAD Suite/source-build locations, and records a clean ready/blocked field before any build attempt."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Project root: {project_root}. Run date: {date}.
-        GateMate build work in .274 blocked because nextpnr-gatemate was not on
-        PATH. This task is a preflight only: prove the toolchain is ready or
-        write a blocked artifact quickly.
-
-      EXISTING CODE TO READ FIRST:
-        - CLAUDE.md (Hardware-Task Continuity Discipline)
-        - results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json
-        - research-hardware-wishlist.md
-        - hardware/gatemate (if present)
-        - scripts (search for gatemate build helpers)
-
-      TASK:
-        Detect GateMate synthesis/place-and-route tooling without flashing any
-        board. Record exact versions and executable paths if ready.
-
-      CONCRETE STEPS:
-        0. Check command -v yosys, command -v nextpnr-gatemate,
-           command -v openFPGALoader, and common oss-cad-suite locations under
-           the project and home directories.
-        1. Run version commands for every detected executable.
-        2. Confirm the GateMate source RTL and constraints for the n=16 tile are
-           present. Do not synthesize in this task.
-        3. If nextpnr-gatemate is absent, write honest_verdict:
-           blocked_gatemate_toolchain_missing with a concrete missing_toolchain
-           list and exit successfully as a diagnostic.
-        4. Write the deliverable JSON.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        gatemate_toolchain_ready: bool
-        yosys_path: str
-        yosys_version: str
-        nextpnr_gatemate_path: str
-        nextpnr_gatemate_version: str
-        openfpgaloader_path: str
-        openfpgaloader_version: str
-        missing_toolchain: list
-        rtl_sources_present: bool
-        constraints_present: bool
+        gatemate_himbaechel_ready: bool
+        constraints_ready: bool
+        tool_paths: dict
+        tool_versions: dict
+        device: "CCGM1A1"
+        nextpnr_command_template: str
+        gmpack_command_template: str
+        rtl_top: str
+        constraints_path: str
         no_flash_attempted: true
-        inference_substrate: "hardware_preflight"
+        inference_substrate: "hardware_toolchain_preflight"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2915
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json"
-    title: "GateMate n=16 Ising Tile Bitstream Build v2 (gated on Exp2914)"
+  - id: exp2928
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json"
+    title: "GateMate n=16 Bitstream Build via Himbaechel v3"
     priority: high
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
-    max_turns: 40
-    estimated_wall_time_min: 60
+    max_turns: 50
+    estimated_wall_time_min: 120
     track: hardware
-    inference_substrate: fpga_build
+    inference_substrate: hardware_bitstream_build
     gated_on:
-      - upstream: exp2914
-        artifact_field: gatemate_toolchain_ready
+      - upstream: exp2927
+        artifact_field: gatemate_himbaechel_ready
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: exp2915
+        verdict: "gate_blocked_or_missing: GateMate n=16 bitstream build skipped because exp2914 did not satisfy the toolchain gate"
+        addressed_by: "This retry depends on new exp2927 corrected himbaechel/gmpack readiness rather than the retired exp2914 preflight."
+        retire_if_same_verdict: true
       - experiment_id: exp2899
-        verdict: "blocked_gatemate_toolchain_missing"
-        addressed_by: "The build now runs only after exp2914 proves nextpnr-gatemate is available; if the same blocker recurs, retire this build scope."
+        verdict: "blocked_gatemate_toolchain_missing: no GateMate bitstream built and no flash attempt allowed"
+        addressed_by: "This retry uses corrected current tool commands and a constraints-ready gate before attempting synthesis/place/pack."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        GateMate bitstream work is allowed only after exp2914 proves the
-        toolchain is ready. This task builds an n=16 Ising tile and records
-        provenance. It must not flash the board.
+        exp2927 should have established whether GateMate's current
+        himbaechel/gmpack flow and constraints are ready. This task attempts only
+        the n=16 bitstream build. Flashing remains out of scope.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md
-        - results/experiment_2914_gatemate_toolchain_preflight_v2.json
-        - results/experiment_2899_gatemate_a1_n16_ising_tile_bitstream_build_v1.json
-        - hardware/gatemate (if present)
+        - results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json
+        - hardware/ (GateMate n=16 RTL and constraints from exp2927)
         - research-hardware-wishlist.md
 
       TASK:
-        Run the GateMate n=16 Ising tile synthesis, place-and-route, and
-        bitstream generation with complete logs and hashes.
+        Build a GateMate n=16 Ising bitstream with current toolchain provenance,
+        or write an honest blocked artifact with exact failing command and logs.
 
       CONCRETE STEPS:
-        0. PRECONDITION: if exp2914 gatemate_toolchain_ready is false, write
-           blocked_gatemate_toolchain_missing and exit.
-        1. Identify RTL/top module, constraints, yosys command, nextpnr command,
-           and bitstream/pack command from existing build scripts where possible.
-        2. Run synthesis. Capture stdout/stderr logs under results/.
-        3. Run place-and-route. Capture utilization, timing, and stdout/stderr.
-        4. Generate the bitstream or configuration artifact if the local
-           toolchain supports it.
-        5. Record SHA256 of every produced netlist, PNR, and bitstream/config
-           file.
-        6. Write the deliverable JSON. Do not flash.
+        0. PRECONDITION: if exp2927 is absent or gatemate_himbaechel_ready is
+           false, write blocked_gatemate_himbaechel_not_ready and exit.
+        1. Run lint/syntax checks for the RTL top identified by exp2927.
+        2. Run yosys synthesis and capture command, stdout/stderr path, return
+           code, resource summary, and netlist hash.
+        3. Run nextpnr-himbaechel with `--device CCGM1A1` and the exp2927
+           constraints path. Capture logs and return code.
+        4. Run gmpack only if place-and-route succeeds. Capture bitstream path
+           and SHA256.
+        5. Do not flash the board.
+        6. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
         gatemate_bitstream_built: bool
-        synth_succeeded: bool
-        place_and_route_succeeded: bool
+        gatemate_himbaechel_ready_from_exp2927: bool
+        synthesis: dict
+        place_and_route: dict
+        pack: dict
+        bitstream_path: str
         bitstream_sha256: str
-        top_module: str
-        rtl_sources: list
-        constraint_files: list
-        yosys_command: str
-        nextpnr_command: str
-        build_log_paths: list
-        utilization_summary: dict
-        timing_summary: dict
+        resource_summary: dict
+        logs: dict
         no_flash_attempted: true
-        inference_substrate: "fpga_build"
+        inference_substrate: "hardware_bitstream_build"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2916
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2916_thrml_kv260_sampler_parity_v1.json"
-    title: "THRML-KV260 Sampler Parity Audit v1 (gated on Exp2912)"
+  - id: exp2929
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2929_gatemate_flash_timing_boundary_v1.json"
+    title: "GateMate Flash Smoke + Timing Boundary v1"
     priority: medium
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 40
-    estimated_wall_time_min: 60
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 120
     track: hardware
-    inference_substrate: simulator_parity
+    inference_substrate: physical_board_smoke
     gated_on:
-      - upstream: exp2912
-        artifact_field: same_basis_cpu_baseline_ready
+      - upstream: exp2928
+        artifact_field: gatemate_bitstream_built
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2901
-        verdict: "complete: thrml_import_repaired_n16_parity_passed_no_hardware_claim"
-        addressed_by: "exp2901 repaired import and n=16 parity. This task consumes the matched KV260/CPU basis and stays simulator-only with explicit no-TSU claim."
-        retire_if_same_verdict: true
-      - experiment_id: exp2898
-        verdict: "complete: kv260_hardware_latency_transcript_recorded"
-        addressed_by: "This task compares sampler output distributions on the existing KV260 problem basis rather than rerunning board latency."
+      - experiment_id: exp2915
+        verdict: "gate_blocked_or_missing: GateMate downstream build/flash path did not run because corrected bitstream evidence was unavailable"
+        addressed_by: "This attempt is gated on a new hashed exp2928 bitstream and only performs a bounded flash/timing smoke without speedup claims."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        THRML import was repaired in exp2901, and exp2912 supplies the CPU
-        matched basis. This task checks simulator portability against the same
-        Ising problem family without making any Extropic hardware claim.
+        This is a bounded GateMate physical-board smoke. It is allowed only
+        after exp2928 produces a hashed n=16 bitstream. It must not claim speedup
+        and must preserve board-contact evidence exactly.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md
-        - results/experiment_2901_thrml_local_import_repair_v1.json
-        - results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json
-        - results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json
-        - python/carnot (search for THRML or Ising helpers)
+        - research-hardware-wishlist.md
+        - results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json
+        - hardware/ (GateMate flash scripts or docs, if present)
+        - ops/e2e-test-plan.md
 
       TASK:
-        Run THRML simulator sampling on the matched Ising basis where supported
-        and compare distributional summaries against CPU Gibbs and KV260 output
-        evidence. If THRML cannot represent the n=64 sparse basis, write a
-        bounded n=16 parity artifact and state the limitation.
+        Attempt a minimal GateMate flash/contact/timing-boundary smoke using the
+        exp2928 bitstream, or write an honest blocked artifact if the board or
+        flashing path is unavailable.
 
       CONCRETE STEPS:
-        0. PRECONDITION: if exp2912 same_basis_cpu_baseline_ready is false,
-           write blocked_cpu_baseline_not_ready and exit.
-        1. Import THRML and record version/provenance.
-        2. Build the matched Ising problem or the largest explicitly justified
-           subset if THRML cannot represent the full sparse basis.
-        3. Run sampling with the same seeds where possible.
-        4. Compare energy mean, variance, min, and histogram distance against
-           CPU Gibbs and available KV260 final-energy evidence.
-        5. Write the deliverable with no_tsu_hardware_claim=true.
+        0. PRECONDITION: if exp2928 is absent or gatemate_bitstream_built is
+           false, write blocked_gatemate_bitstream_missing and exit.
+        1. Identify the attached GateMate/DirtyJTAG device without resetting or
+           flashing yet. Capture command and transcript.
+        2. Confirm the bitstream SHA256 matches exp2928.
+        3. Use the repo's existing flash script if present; otherwise use
+           openFPGALoader only if research-hardware-wishlist.md documents the
+           expected adapter/board path. If not documented, write blocked_flash_path_undocumented.
+        4. Capture flash transcript and any post-flash board contact signal.
+        5. If a timing counter or UART/status register already exists, capture a
+           bounded smoke transcript. If not, report timing_boundary_ready: false
+           rather than inventing a benchmark.
+        6. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
-        thrml_kv260_parity_ready: bool
-        thrml_import_ok: bool
-        thrml_version: str
-        matched_full_n64_basis: bool
-        fallback_subset_used: bool
-        random_seeds_used: list
-        energy_distribution_summary: dict
-        cpu_vs_thrml_distance: float
-        kv260_vs_thrml_summary: dict
-        no_tsu_hardware_claim: true
-        inference_substrate: "simulator_parity"
+        gatemate_flash_smoke_ready: bool
+        board_detected: bool
+        bitstream_sha256_verified: bool
+        flash_attempted: bool
+        flash_transcript_path: str
+        board_contact_transcript_path: str
+        timing_boundary_ready: bool
+        timing_claim_allowed: false
+        speedup_claim_allowed: false
+        blocker: str
+        inference_substrate: "physical_board_smoke"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2917
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json"
-    title: "Spilled-Energy Logit Detector Micro-Panel v1"
+  - id: exp2930
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json"
+    title: "KV260 p-bit/SSQA Scaling Projection from Real n=64 Evidence"
+    priority: medium
+    max_turns: 40
+    estimated_wall_time_min: 45
+    track: hardware
+    inference_substrate: aggregation_plus_simulation
+    prior_failures:
+      - experiment_id: exp568-kv260-fpga-bringup-v2
+        verdict: "synthesis_required"
+        addressed_by: "This is not a bring-up rerun; it uses clean .275 n=64 KV260 evidence and produces projection-only p-bit/SSQA scaling accounting with no hardware-speedup claim."
+        retire_if_same_verdict: true
+      - experiment_id: exp661-kv260-n64-benchmark
+        verdict: "blocked_on_dfx_mgr_load_failure"
+        addressed_by: "This task does not attempt overlay loading; it consumes already-clean n=64 evidence and marks n=128/n=256 results as projection-only."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Project root: {project_root}. Run date: {date}.
+        .275 produced a clean KV260 n=64 hardware-vs-CPU claim boundary.
+        Recent p-bit/SSQA FPGA work suggests memory and fan-out accounting are
+        the next honest scaling question. This task is projection-only: no new
+        hardware speedup claim is allowed.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - results/experiment_2913_kv260_hardware_vs_cpu_speedup_claim_boundary_v1.json
+        - research-hardware-wishlist.md
+        - research-references.md (p-bit SSQA and hardware-aware SSA entries)
+        - hardware/ (KV260 Ising RTL/resource summaries if present)
+
+      TASK:
+        Produce a resource and memory scaling projection for KV260 n=128/n=256
+        Ising-style samplers using real n=64 evidence plus literature-inspired
+        p-bit/SSQA accounting. Keep the result projection-only.
+
+      CONCRETE STEPS:
+        0. PRECONDITION: if exp2913 is absent or hardware_speedup_claim_eligible
+           is false, write blocked_clean_kv260_basis_missing and exit.
+        1. Extract real n=64 latency, sample count, topology, and resource
+           fields from exp2913 and its upstream artifacts.
+        2. Define a simple projection model for dense, sparse, and dual-BRAM
+           inspired memory layouts. State assumptions explicitly.
+        3. Estimate n=128 and n=256 memory, LUT/FF/BRAM pressure where enough
+           data exists. Mark unknowns rather than filling fake numbers.
+        4. Run any local resource-estimation script if present. If absent, use a
+           deterministic spreadsheet-style calculation and record formulae.
+        5. Write projection-only findings and the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        kv260_scaling_projection_ready: bool
+        projection_only: true
+        no_new_hardware_run: true
+        source_artifacts: list
+        n64_real_evidence_summary: dict
+        projection_models: dict
+        n128_projection: dict
+        n256_projection: dict
+        assumptions: list
+        not_a_speedup_claim: true
+        inference_substrate: "aggregation_plus_simulation"
+        duration_s: float
+        run_date: "{date}"
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2931
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2931_llmeval_logic_z3_mini_v1.json"
+    title: "LLMEval-Logic Z3 Mini: Local GGUF Natural-Language-to-Formal Check"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 120
+    track: solver_grounded_generation
+    inference_substrate: live_llm_inference_plus_z3
+    prior_failures:
+      - experiment_id: exp204-z3-smt-extractor
+        verdict: "OK (conductor)"
+        addressed_by: "This task is not another extractor implementation; it evaluates mandated local GGUF natural-language-to-formal outputs against Z3 on a bounded LLMEval-Logic-style fixture."
+        retire_if_same_verdict: true
+      - experiment_id: exp606-interleaved-formal-logic
+        verdict: "OK (conductor)"
+        addressed_by: "This retry changes scope to a 2026 LLMEval-Logic-style local SOTA benchmark with parseability, Z3 execution, and faithfulness separated."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Project root: {project_root}. Run date: {date}.
+        LLMEval-Logic shows that natural-language logical reasoning remains hard
+        even when solver-verified formalizations are available. Carnot needs a
+        bounded local-GGUF version that reports parseability, Z3 execution, and
+        answer correctness separately.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (SOTA Local Models)
+        - scripts/experiment_template.py (cached_sota_pair() docstring)
+        - python/carnot/inference/sota_models.py
+        - python/carnot/pipeline/verify_stream.py
+        - research-references.md (LLMEval-Logic, AquaForte, LogicReward entries)
+
+      TASK:
+        Run a small LLMEval-Logic-style local experiment where mandated GGUF
+        models translate bounded natural-language logic problems into a formal
+        representation that Z3 can check.
+
+      CONCRETE STEPS:
+        0. MODEL_SPECS:
+           a. Use cached_sota_pair(gpu_indices=(0, 1)) first.
+           b. The live headline path must include at least one of:
+              - unsloth/Qwen3.6-35B-A3B-GGUF
+              - unsloth/gemma-4-31B-it-GGUF
+              - unsloth/gemma-4-26B-A4B-it-GGUF
+           c. Legacy tiny models are allowed only for CPU smoke-tests.
+        1. Build or load 12-20 public/local logic items with gold answers and
+           Z3-checkable formalizations. Prefer a local LLMEval-Logic dataset
+           cache if present; otherwise create a small forward-authored fixture
+           and clearly mark it as LLMEval-Logic-style, not the full benchmark.
+        2. Prompt the local GGUF to produce structured formalization JSON.
+        3. Parse the output, convert to Z3 where possible, and execute solver
+           checks for possible/necessary/answer correctness.
+        4. Score answer accuracy, formalization parseability, Z3 execution
+           rate, and rubric-like semantic faithfulness separately.
+        5. Compute reproducibility_checksum over items, prompts, model specs,
+           raw outputs, parsed formulas, and Z3 results.
+        6. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        logic_verifier_mini_ready: bool
+        benchmark_scope: str
+        random_seed: 2931
+        reproducibility_checksum: str
+        model_specs: list
+        models_used: list
+        n_items: int
+        parseability_rate: float
+        z3_execution_rate: float
+        answer_accuracy: float
+        formalization_faithfulness_rate: float
+        per_item_results: list
+        raw_response_dir: str
+        inference_substrate: "live_llm_inference_plus_z3"
+        duration_s: float
+        run_date: "{date}"
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2932
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2932_citation_hallucination_field_verifier_v1.json"
+    title: "Citation Hallucination Field Verifier v1: CiteTracer-Style Local Probe"
     priority: high
     agent_type: codex
     model: gpt-5.5
@@ -613,495 +701,421 @@ tasks:
     requires_gpu: true
     max_turns: 50
     estimated_wall_time_min: 90
-    track: local_sota
-    inference_substrate: live_llm_inference
+    track: hallucination_verification
+    inference_substrate: live_llm_inference_plus_deterministic_verifier
     prior_failures:
-      - experiment_id: exp2875
-        verdict: "micro_panel_clean_no_benchmark_claim"
-        addressed_by: "This is a new training-free spilled-energy diagnostic over code/hallucination outputs, not a rerun of the old energy/logprob panel; it still forbids benchmark claims."
+      - experiment_id: exp444-carnot-think-probe
+        verdict: "timed_out"
+        addressed_by: "This is a field-verifiable citation hallucination probe, not a ThinkPRM/CoT verifier; it uses deterministic citation-field matching and bounded local GGUF outputs."
+        retire_if_same_verdict: true
+      - experiment_id: exp484-nup-probe
+        verdict: "OK (conductor)"
+        addressed_by: "This task changes the verifier surface to controlled citation field mutations with fixture truth, not generic probe scoring."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        Recent spilled-energy work treats final-token logits as an EBM-style
-        signal for hallucination risk. Carnot should test this only as a small
-        diagnostic micro-panel with clean local-GGUF provenance.
+        Citation hallucinations are compact, field-verifiable objects. Recent
+        CiteTracer work uses structured citation extraction, deterministic field
+        matching, and taxonomy-aligned categories before any judgment model.
 
       EXISTING CODE TO READ FIRST:
-        - CLAUDE.md (SOTA Local Models)
+        - CLAUDE.md (SOTA Local Models; verifier authenticity)
         - scripts/experiment_template.py (cached_sota_pair() docstring)
-        - results/experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.json
-        - results/experiment_2910_sota_code_generation_corrigendum_v2.json (if present)
-        - research-references.md (Spilled Energy entry)
+        - python/carnot/inference/sota_models.py
+        - research-references.md (CiteTracer and non-existent citation entries)
+        - research-references.md (use existing real Carnot references as seeds)
 
       TASK:
-        Run a bounded micro-panel that records logprob/logit-derived
-        spilled-energy scores for verified and hallucination-like outputs. This
-        is not a benchmark and cannot upgrade any matrix row alone.
+        Build a local citation hallucination probe using mandated GGUF outputs
+        and deterministic field-level verification over real and mutated
+        citation seeds.
 
       CONCRETE STEPS:
         0. MODEL_SPECS:
            a. Use cached_sota_pair(gpu_indices=(0, 1)) first.
-           b. The live path must include at least one of:
+           b. The live headline path must include at least one of:
               - unsloth/Qwen3.6-35B-A3B-GGUF
               - unsloth/gemma-4-31B-it-GGUF
               - unsloth/gemma-4-26B-A4B-it-GGUF
-           c. If logits/logprobs are unavailable from the runtime, write
-              blocked_logprob_runtime_unavailable and exit.
-        1. Build a tiny panel from locally available verified/failing code
-           outputs and factuality examples; target 24-40 examples total.
-        2. Record raw response, logprob/logit availability, token count, model
-           id, prompt hash, and verification label for each example.
-        3. Compute spilled/marginal energy features and simple separation
-           metrics. Do not train a detector.
-        4. Write claim_boundary: diagnostic_only_no_benchmark_claim.
-        5. Write the deliverable JSON.
+           c. Legacy tiny models are allowed only for CPU smoke-tests.
+        1. Build a fixture of at least 30 citation cases: real references from
+           research-references.md and controlled mutations for title, author,
+           year, venue, DOI/arXiv id, and URL fields.
+        2. Ask the local GGUF model to produce short answers requiring citations
+           from the fixture context. Capture raw outputs.
+        3. Extract citations into structured fields with deterministic parsing.
+        4. Verify fields against the fixture. Do not use web search as the
+           source of truth inside the experiment unless the repo already has an
+           allowed citation resolver path; fixture truth is sufficient.
+        5. Classify citations as real, potential/ambiguous, hallucinated-field,
+           or nonexistent-seed.
+        6. Compute reproducibility_checksum and write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
-        spilled_energy_micro_panel_ready: bool
-        benchmark_claim_made: false
-        claim_boundary: "diagnostic_only_no_benchmark_claim"
+        citation_verifier_ready: bool
+        random_seed: 2932
+        reproducibility_checksum: str
         model_specs: list
         models_used: list
-        cached_sota_pair_used: bool
-        examples: list
-        random_seed: 2917
-        logprob_or_logits_available: bool
-        spilled_energy_features: dict
-        separation_summary: dict
-        inference_substrate: "live_llm_inference"
+        fixture_path: str
+        n_citation_cases: int
+        extraction_success_rate: float
+        field_match_accuracy: float
+        hallucination_detection_accuracy: float
+        taxonomy_counts: dict
+        per_case_results: list
+        raw_response_dir: str
+        inference_substrate: "live_llm_inference_plus_deterministic_verifier"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2918
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json"
-    title: "FR-11 Verifiable Process Rewards Self-Learning v1 (gated on Exp2911 + Exp2912)"
+  - id: exp2933
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json"
+    title: "KAN Continual Self-Learning: Per-Knot Constraint Memory v1"
     priority: critical
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
     max_turns: 50
-    estimated_wall_time_min: 90
+    estimated_wall_time_min: 120
     track: continuous_self_learning
-    inference_substrate: deterministic_verifier_plus_replay
-    gated_on:
-      - upstream: exp2911
-        artifact_field: code_hallucination_verifier_ready
-        op: "=="
-        value: true
-      - upstream: exp2912
-        artifact_field: same_basis_cpu_baseline_ready
-        op: "=="
-        value: true
+    inference_substrate: local_training_simulation
     prior_failures:
-      - experiment_id: exp2906
-        verdict: "complete: kv260_replay_dispatch_path_validated_pilot_only"
-        addressed_by: "exp2906 validated dispatch only. This task adds verifier-grounded dense process rewards, an online replay update, and forgetting checks."
+      - experiment_id: exp152-continual-learning
+        verdict: "OK (conductor)"
+        addressed_by: "This task updates the technique to a KAN/KAC-inspired per-knot/RBF structural memory probe with explicit verifier-energy and forgetting guards."
         retire_if_same_verdict: true
-      - experiment_id: exp2887
-        verdict: "complete: causal RecMem and fast/slow memory separated replay metrics cleanly"
-        addressed_by: "This extends clean fast/slow memory evidence with process-reward-weighted updates over verified code and hardware trajectories."
+      - experiment_id: exp175-tier4-adaptive-kan-loop
+        verdict: "OK (conductor)"
+        addressed_by: "This task is a bounded FR-11 continuous self-learning experiment over constraint streams, not a broad Tier-4 adaptive KAN loop."
+        retire_if_same_verdict: true
+      - experiment_id: exp302-self-learning-benchmark-constraint-addition
+        verdict: "OK (conductor)"
+        addressed_by: "This retry adds KAN structural-memory updates and non-forgetting thresholds instead of only adding constraints to a self-learning benchmark."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        FR-11 requires continuous self-learning where verifier outcomes, not
-        imitation likelihood, drive updates. Recent Evidence Over Plans and
-        Verifiable Process Rewards work suggests using verified trajectories as
-        dense replay evidence.
+        .275 proved FR-11 replay scheduling and process-reward bookkeeping, but
+        it did not update model structure. KAC/COOL-style KAN continual learning
+        suggests a bounded local path: update spline/RBF importance under exact
+        verifier rewards while measuring forgetting.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md
         - research-program.md (Continuous Self-Learning section)
-        - _bmad/prd.md (FR-11)
-        - results/experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.json
-        - results/experiment_2887_fr11_fast_slow_memory_corrigendum_v2.json
-        - results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json
-        - results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json
-        - python/carnot (search for memory/replay/FR-11 helpers)
+        - results/experiment_2918_fr11_verifiable_process_rewards_online_replay_v1.json
+        - python/carnot/ (search for KAN, replay, online_update, self-learning)
+        - research-references.md (KAC and COOL entries)
 
       TASK:
-        Implement a bounded deterministic FR-11 replay experiment that turns
-        verified code and hardware trajectories into process-reward weights,
-        performs an online update, and measures improvement plus forgetting.
+        Implement and evaluate a bounded continuous self-learning probe where a
+        KAN/KAC-inspired structural memory updates per-knot or RBF importance
+        on a stream of verified constraint examples.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: require exp2911 code_hallucination_verifier_ready and
-           exp2912 same_basis_cpu_baseline_ready. If either is absent, write the
-           appropriate blocked artifact and exit.
-        1. Construct a replay corpus from verified code candidates, failed
-           hallucination labels, KV260/CPU matched measurements, and prior FR-11
-           memory examples.
-        2. Define deterministic process rewards from verifier evidence:
-           syntax/static/runtime labels for code, basis-match/energy/latency
-           labels for sampler trajectories.
-        3. Run a small online replay update using existing FR-11 memory/replay
-           code where possible. If no trainable component is available, update
-           the replay scheduler/priority table and report that scope honestly.
-        4. Evaluate before/after correctness, energy proxy, replay priority,
-           duplicate/contradiction rate, and forgetting on held-out prior rows.
-        5. Write the deliverable JSON.
+        0. Use a deterministic synthetic constraint stream with train/holdout
+           splits and random_seed = 2933.
+        1. Establish baselines:
+           - no-update baseline,
+           - .275 replay-scheduler-only style baseline,
+           - KAN per-knot/RBF importance update.
+        2. Use exact verifiers or deterministic energy proxies as rewards.
+        3. Measure pre-update and post-update utility on new constraints.
+        4. Measure forgetting on previous constraints and fail the headline if
+           forgetting exceeds the predeclared threshold.
+        5. Record energy_proxy_delta, utility_delta, forgetting_rate, and the
+           number of updated knots/RBF centers.
+        6. Add focused tests if new code is introduced.
+        7. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
-        online_self_learning_ready: bool
-        fr11_requirement_targeted: "FR-11"
-        process_reward_definition: dict
-        replay_corpus_summary: dict
-        online_update_performed: bool
-        replay_scheduler_updated: bool
-        delta_overall: float
-        delta_energy_proxy: float
+        kan_cl_self_learning_ready: bool
+        continuous_self_learning_targeted: true
+        random_seed: 2933
+        dataset_manifest: dict
+        baselines: dict
+        kan_update_config: dict
+        utility_delta_vs_replay_only: float
+        energy_proxy_delta: float
         forgetting_rate: float
-        contradiction_rate_before: float
-        contradiction_rate_after: float
-        pdi_proxy: float
-        hardware_replay_used: bool
-        inference_substrate: "deterministic_verifier_plus_replay"
+        forgetting_threshold: float
+        non_forgetting_passed: bool
+        updated_knot_or_rbf_count: int
+        tests_run: list
+        inference_substrate: "local_training_simulation"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2919
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json"
-    title: "ConstraintBench Mini Direct-Optimization Verifier v1"
+  - id: exp2934
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json"
+    title: "AquaForte/BEAVER-Style Reformulation Pipeline v1 (gated on Exp2926)"
     priority: high
     agent_type: codex
     model: gpt-5.5
     requires_codex: true
     requires_gpu: true
     max_turns: 50
-    estimated_wall_time_min: 90
-    track: benchmark_expansion
+    estimated_wall_time_min: 120
+    track: solver_grounded_generation
     inference_substrate: live_llm_inference_plus_exact_verifier
+    gated_on:
+      - upstream: exp2926
+        artifact_field: constraintbench_corrigendum_ready
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp2891
-        verdict: "complete: local CCTU-style executable constraint validator pilot ready"
-        addressed_by: "This is a new direct-optimization mini benchmark with exact feasibility/optimality separation, not another CCTU tool-use validator."
+      - experiment_id: exp2919
+        verdict: "complete: constraintbench_mini_ready=true; flagged_adversarial=true; feasibility_rate=0.277778; optimality_rate=0.111111; syntax_valid_rate=0.277778"
+        addressed_by: "This task changes technique from direct answer extraction to proposal -> constrained reformulation -> exact verifier acceptance/rejection with optional prefix-closed audit fields."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        ConstraintBench shows that LLMs often fail feasibility before objective
-        optimality on direct constrained optimization. Carnot needs a tiny local
-        mini-benchmark that separates feasibility and optimality under exact
-        verifiers.
+        AquaForte suggests LLMs can propose useful solver candidates while exact
+        solvers preserve soundness. BEAVER suggests prefix-closed constraints
+        can be audited with deterministic frontier bounds. This task builds a
+        bounded local reformulation pipeline over exp2926 ConstraintBench data.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md (SOTA Local Models)
         - scripts/experiment_template.py (cached_sota_pair() docstring)
-        - results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json
-        - python/carnot/pipeline/verify_stream.py
-        - tests/python (search for z3/or-tools/constraint tests)
-        - research-references.md (ConstraintBench entry)
+        - python/carnot/inference/sota_models.py
+        - results/experiment_2926_constraintbench_constrained_output_rerun_v2.json
+        - research-references.md (AquaForte, BEAVER, llguidance entries)
 
       TASK:
-        Materialize 15-30 small direct-optimization tasks with deterministic
-        exact verifiers, run at least one mandated local GGUF model on structured
-        solution prompts, and report feasibility separately from optimality.
+        Implement a small proposal -> reformulation -> exact verification loop
+        for structured constraint answers, using mandated local GGUF models and
+        deterministic acceptance checks.
 
       CONCRETE STEPS:
-        0. MODEL_SPECS:
+        0. PRECONDITION: if exp2926 is absent or
+           constraintbench_corrigendum_ready is false, write
+           blocked_constraintbench_corrigendum_missing and exit.
+        1. MODEL_SPECS:
            a. Use cached_sota_pair(gpu_indices=(0, 1)) first.
-           b. The live path must include at least one of:
+           b. The live headline path must include at least one of:
               - unsloth/Qwen3.6-35B-A3B-GGUF
               - unsloth/gemma-4-31B-it-GGUF
               - unsloth/gemma-4-26B-A4B-it-GGUF
-           c. If mandated GGUFs are unavailable, write
-              blocked_sota_gguf_cache_missing and do not report headline model
-              results.
-        1. Create a small manifest with linear constraints, knapsack-like
-           constraints, and graph/coloring constraints. Keep every instance
-           solvable by local exact solvers or brute force at tiny size.
-        2. Generate structured JSON solutions with the local GGUF runtime.
-        3. Verify syntax, feasibility, objective value, and exact optimality.
-        4. Report feasibility_rate and optimality_rate separately, plus common
-           violation classes.
-        5. Write the deliverable JSON and any manifest file under results/.
+           c. Legacy tiny models are allowed only for CPU smoke-tests.
+        2. Select 12-20 exp2926 tasks with raw outputs and exact verifiers.
+        3. For each task, run:
+           - initial proposal from local GGUF,
+           - constrained reformulation into schema/solver form,
+           - exact verifier acceptance or rejection,
+           - exclusion/retry prompt for rejected candidates when cheap.
+        4. If token logprobs/frontier access is locally available, add a small
+           BEAVER-style prefix audit over a prefix-closed syntax/field
+           constraint. If not available, record prefix_bound_available: false.
+        5. Compare feasibility/optimality to exp2926 direct outputs on the same
+           selected tasks.
+        6. Compute reproducibility_checksum and write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
-        constraintbench_mini_ready: bool
+        reformulation_pipeline_ready: bool
+        random_seed: 2934
+        reproducibility_checksum: str
         model_specs: list
         models_used: list
-        cached_sota_pair_used: bool
-        random_seed: 2919
-        task_manifest_path: str
-        n_tasks: int
-        exact_verifier_types: list
-        feasibility_rate: float
-        optimality_rate: float
-        syntax_valid_rate: float
-        violation_classes: dict
+        selected_task_ids: list
+        proposal_count: int
+        verifier_acceptance_rate: float
+        feasibility_delta_vs_exp2926: float
+        optimality_delta_vs_exp2926: float
+        prefix_bound_available: bool
+        prefix_bound_summary: dict
         per_task_results: list
+        raw_response_dir: str
         inference_substrate: "live_llm_inference_plus_exact_verifier"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2920
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json"
-    title: "OpenComputer-Style State-Verifier Harness v1"
-    priority: medium
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 40
-    estimated_wall_time_min: 60
-    track: agentic_verification
-    inference_substrate: deterministic_state_verifier
-    prior_failures:
-      - experiment_id: exp2891
-        verdict: "complete: local CCTU-style executable constraint validator pilot ready"
-        addressed_by: "This task changes the scope from tool-use constraint validation to stateful local software-world verification with partial-credit state checks."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Project root: {project_root}. Run date: {date}.
-        OpenComputer-style work suggests that agentic verification should use
-        app-specific state verifiers and auditable partial credit, not LLM judges.
-        Carnot needs a local harness for this pattern.
-
-      EXISTING CODE TO READ FIRST:
-        - CLAUDE.md
-        - research-program.md (agentic verification priorities)
-        - _bmad/prd.md (FR-12 and agentic verification context)
-        - results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json
-        - python/carnot/pipeline/verify_stream.py
-        - tests/python (search for verifier harness patterns)
-
-      TASK:
-        Build a lightweight local state-verifier harness with 3-5 synthetic
-        software-world tasks. The deliverable is a verified task manifest and
-        deterministic verifier outputs, not a live agent benchmark.
-
-      CONCRETE STEPS:
-        1. Define 3-5 tiny local software-world tasks with observable state, such
-           as JSON file transforms, SQLite row edits, or filesystem state.
-        2. Implement deterministic state verifiers that return partial-credit
-           fields and failure localization.
-        3. Run golden success states and negative states through the verifier.
-        4. Record a manifest schema that future agent tasks can consume.
-        5. Write the deliverable JSON.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        state_verifier_harness_ready: bool
-        task_manifest_path: str
-        n_state_tasks: int
-        verifier_source_paths: list
-        golden_state_pass_rate: float
-        negative_state_reject_rate: float
-        partial_credit_fields: list
-        failure_localization_examples: list
-        llm_judge_used: false
-        inference_substrate: "deterministic_state_verifier"
-        duration_s: float
-        run_date: "{date}"
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp2921
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json"
-    title: "Cross-Corpus Matrix v9 + Paper-v6 Claim Boundary"
-    priority: critical
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
+  - id: exp2935
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json"
+    title: "Cross-Corpus Matrix v10 + Paper Boundary Corrigendum"
+    priority: high
     max_turns: 40
     estimated_wall_time_min: 45
-    track: reporting
+    track: matrix
     inference_substrate: aggregation_from_upstream_artifacts
     gated_on:
-      - upstream: exp2911
-        artifact_field: code_hallucination_verifier_ready
+      - upstream: exp2924
+        artifact_field: aggregation_metadata_clean
         op: "=="
         value: true
-      - upstream: exp2913
-        artifact_field: kv260_claim_boundary_ready
+      - upstream: exp2925
+        artifact_field: taxonomy_corrigendum_clean
         op: "=="
         value: true
-      - upstream: exp2918
-        artifact_field: online_self_learning_ready
+      - upstream: exp2926
+        artifact_field: constraintbench_corrigendum_ready
         op: "=="
         value: true
-      - upstream: exp2919
-        artifact_field: constraintbench_mini_ready
-        op: "=="
-        value: true
-      - upstream: exp2920
-        artifact_field: state_verifier_harness_ready
+      - upstream: exp2933
+        artifact_field: kan_cl_self_learning_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2902
-        verdict: "complete: cross-corpus matrix v8 aggregated with forward-only provenance; clean=6; flagged=2; blocked=0; pilot_only=3"
-        addressed_by: "Matrix v9 consumes .275 code, hardware, FR-11, and benchmark artifacts while preserving blocked/flagged/pilot boundaries."
+      - experiment_id: exp2921
+        verdict: "complete: matrix_v9_ready=true; matrix_v9_paper_boundary_ready=true; headline_eligible_rows=6; flagged_rows=4; hardware_speedup_claim_eligible=true; paper_ready=true; flagged_adversarial=true"
+        addressed_by: "Matrix v10 is gated on corrected aggregation metadata and reclassifies rows with explicit clean/flagged/blocked/projection-only boundaries."
         retire_if_same_verdict: true
-      - experiment_id: exp2903
-        verdict: "complete: paper_v6_hardware_validation_section_staged_from_exp2898"
-        addressed_by: "This task updates the paper claim boundary after the matched CPU baseline and code-hallucination verifier exist."
+      - experiment_id: exp2922
+        verdict: "complete: milestone=2026.05.275; paper_ready=true; hardware_speedup_claim_eligible=true; clean=6; flagged=3; blocked=1; missing=1; diagnostic=2; flagged_adversarial=true"
+        addressed_by: "This aggregation consumes .276 corrigenda before paper-boundary synthesis instead of inheriting capstone metadata flags."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        Matrix v8 is paper-ready but carries flagged codegen, pilot FR-11
-        hardware replay, and no hardware speedup boundary. Matrix v9 must
-        aggregate only clean .275 evidence and preserve all blocked/flagged
-        boundaries.
+        Matrix v9 was useful but adversarially flagged as an aggregation artifact.
+        Matrix v10 must consume .276 corrigenda, preserve row boundaries, and
+        avoid upgrading pilot/projection/flagged rows by implication.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md
-        - results/experiment_2902_cross_corpus_matrix_v8.json
-        - results/experiment_2903_paper_v6_hardware_validation_section_v1.json
-        - results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json
-        - results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json
-        - results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json
-        - results/experiment_2919_constraintbench_mini_direct_optimization_v1.json
-        - results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json
-        - ops/status.md
-        - ops/changelog.md
+        - results/experiment_2924_aggregation_metadata_corrigendum_v1.json
+        - results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json
+        - results/experiment_2926_constraintbench_constrained_output_rerun_v2.json
+        - results/experiment_2933_kan_cl_per_knot_self_learning_v1.json
+        - results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json
+        - scripts/adversarial_artifact_audit.py
 
       TASK:
-        Build cross-corpus matrix v9 and a paper-v6 claim-boundary summary from
-        clean artifacts only. GateMate and THRML rows may be included as
-        blocked/simulator-only context but cannot become headline rows unless
-        their own artifacts are clean.
+        Build cross-corpus matrix v10 and a paper-boundary summary using only
+        upstream artifacts. Do not run new LLM or hardware experiments.
 
       CONCRETE STEPS:
-        0. PRECONDITION: verify all gated upstream artifacts are present and
-           ready. If a gate somehow failed open, write blocked_gate_inconsistent
-           and exit.
-        1. Load matrix v8 and all .275 upstream artifacts.
-        2. Classify each candidate row as clean, flagged, blocked, pilot_only,
-           diagnostic_only, or missing.
-        3. Add or update rows for SOTA codegen, code hallucination verifier,
-           KV260 claim boundary, GateMate if available, THRML parity, spilled
-           energy micro-panel, FR-11 process rewards, ConstraintBench mini, and
-           state-verifier harness.
-        4. Write a paper-v6 claim-boundary block that states exactly which rows
-           are headline eligible and which are not.
-        5. Update ops/status.md and ops/changelog.md only if the repo's local
-           instructions require the roadmap staging to be reflected there.
+        0. PRECONDITION: if any structured gate source is missing or false,
+           write blocked_required_corrigendum_missing and exit.
+        1. Load .276 artifacts exp2924-exp2934 when present.
+        2. Classify rows into clean, flagged, blocked, missing, projection_only,
+           diagnostic_only, and pilot_only.
+        3. Build a matrix with columns for corpus/task, verifier type,
+           inference substrate, hardware substrate, model specs if live LLM,
+           headline eligibility, and paper-claim eligibility.
+        4. Preserve all source checksums and upstream flags.
+        5. Run the adversarial artifact audit if available and record findings.
         6. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
-        cross_corpus_matrix_v9_built: bool
-        paper_claim_boundary_ready: bool
+        matrix_v10_ready: bool
+        matrix_v10_paper_boundary_ready: bool
+        no_new_llm_call: true
+        no_new_hardware_run: true
+        row_classification_counts: dict
         headline_eligible_rows: list
-        clean_rows: list
         flagged_rows: list
         blocked_rows: list
+        projection_only_rows: list
         pilot_only_rows: list
-        diagnostic_only_rows: list
-        missing_rows: list
-        matrix_v9_path: str
-        paper_v6_claim_boundary: dict
+        paper_claim_boundary: dict
+        source_artifact_checksums: dict
+        adversarial_audit_rerun: dict
         inference_substrate: "aggregation_from_upstream_artifacts"
         duration_s: float
         run_date: "{date}"
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp2922
-    milestone: "2026.05.275"
-    deliverable: "results/experiment_2922_capstone_v275.json"
-    title: "Capstone .275: Hardware Baselines + Code Hallucination Repair + FR-11 Self-Learning"
+  - id: exp2936
+    milestone: "2026.05.276"
+    deliverable: "results/experiment_2936_capstone_v276.json"
+    title: "Capstone .276: Evidence Boundary, GateMate, and Self-Learning Synthesis"
     priority: critical
-    agent_type: claude
     model: opus
     max_turns: 100
-    estimated_wall_time_min: 60
+    estimated_wall_time_min: 75
     track: capstone
     inference_substrate: aggregation_from_upstream_artifacts
     prior_failures:
-      - experiment_id: exp2908
-        verdict: "complete: .274 capstone synthesized; paper_ready=true; hardware_portfolio_reactivated=true; clean_artifacts=8; flagged_artifacts=1; blocked_artifacts=1; missing_artifacts=0; pilot_only_artifacts=1"
-        addressed_by: "Recurring capstone with new .275 evidence; routed directly to Opus because .274 capstone required rescue after max-turns."
+      - experiment_id: exp2922
+        verdict: "complete: milestone=2026.05.275; paper_ready=true; hardware_speedup_claim_eligible=true; sota_code_row_repaired=true; fr11_self_learning_clean=true; clean=6; flagged=3; blocked=1; missing=1; diagnostic=2; flagged_adversarial=true"
+        addressed_by: "This capstone consumes .276 corrigenda and writes explicit aggregation-only metadata so capstone synthesis is not mistaken for a live-model run."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Project root: {project_root}. Run date: {date}.
-        Milestone 2026.05.275 closes after the hardware-baseline, code
-        hallucination, verifier-grounded self-learning, benchmark, matrix, and
-        claim-boundary tasks have run. This capstone must close honestly even if
-        one branch is blocked.
+        This is the terminal synthesis for milestone 2026.05.276. It must close
+        honestly even if GateMate hardware or a local-SOTA branch is blocked.
 
       EXISTING CODE TO READ FIRST:
         - CLAUDE.md
-        - research-roadmap.yaml
         - research-roadmap-next.yaml
         - openspec/change-proposals/research-roadmap-vNEXT.md
-        - results/experiment_2908_capstone_v274.json
-        - results/experiment_2909_archive_v274_activate_v275.json
-        - results/experiment_2910_sota_code_generation_corrigendum_v2.json
-        - results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json
-        - results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json
-        - results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json
-        - results/experiment_2914_gatemate_toolchain_preflight_v2.json
-        - results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json
-        - results/experiment_2916_thrml_kv260_sampler_parity_v1.json
-        - results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json
-        - results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json
-        - results/experiment_2919_constraintbench_mini_direct_optimization_v1.json
-        - results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json
-        - results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json
-        - ops/status.md
-        - ops/changelog.md
-        - research-hardware-wishlist.md
+        - results/experiment_2923_archive_v275_activate_v276.json
+        - results/experiment_2924_aggregation_metadata_corrigendum_v1.json
+        - results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json
+        - results/experiment_2926_constraintbench_constrained_output_rerun_v2.json
+        - results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json
+        - results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json
+        - results/experiment_2929_gatemate_flash_timing_boundary_v1.json
+        - results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json
+        - results/experiment_2931_llmeval_logic_z3_mini_v1.json
+        - results/experiment_2932_citation_hallucination_field_verifier_v1.json
+        - results/experiment_2933_kan_cl_per_knot_self_learning_v1.json
+        - results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json
+        - results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json
 
       TASK:
-        Synthesize milestone .275. Classify every artifact as clean, flagged,
-        blocked, missing, pilot_only, or diagnostic_only. Decide whether
-        paper_ready remains true, whether any hardware speedup claim is eligible,
-        whether the SOTA code row is repaired, and whether FR-11 has a clean
-        continuous self-learning row.
+        Synthesize milestone 2026.05.276. Classify each artifact, decide paper
+        and hardware claim eligibility, preserve flagged/blocked/projection rows,
+        and recommend the next milestone.
 
       CONCRETE STEPS:
-        1. Load every .275 artifact that exists. Missing artifacts must be listed
-           explicitly; do not infer success.
-        2. Classify artifacts by honest_verdict and required fields.
-        3. Summarize:
-           - codegen_corrigendum_ready and remaining methodology risks,
-           - code_hallucination_verifier_ready,
-           - same_basis_cpu_baseline_ready and kv260_claim_boundary_ready,
-           - gatemate_toolchain_ready and gatemate_bitstream_built,
-           - thrml_kv260_parity_ready and no_tsu_hardware_claim,
-           - online_self_learning_ready and delta/forgetting metrics,
-           - constraintbench_mini_ready,
-           - state_verifier_harness_ready,
-           - cross_corpus_matrix_v9_built and paper_claim_boundary_ready.
-        4. Produce top_3_next_actions for milestone .276.
-        5. Write the deliverable JSON.
+        0. Load every existing .276 artifact. Missing artifacts must be counted,
+           not ignored.
+        1. Classify artifacts as clean, flagged, blocked, missing,
+           projection_only, diagnostic_only, or pilot_only.
+        2. Summarize whether .276 repaired the .275 evidence-boundary gaps:
+           aggregation metadata, code taxonomy provenance, and ConstraintBench
+           non-tautology.
+        3. Summarize GateMate status: corrected preflight, bitstream, flash
+           smoke, or exact blocker.
+        4. Summarize continuous self-learning status with special attention to
+           exp2933 utility and forgetting.
+        5. State paper_ready and hardware_speedup_claim_eligible under strict
+           claim boundaries. KV260 prior evidence may remain eligible; GateMate
+           is not speedup-eligible unless a matched basis exists.
+        6. Recommend the top three next actions for .277.
+        7. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
+        milestone: "2026.05.276"
         paper_ready: bool
-        hardware_baselines_ready: bool
         hardware_speedup_claim_eligible: bool
-        sota_code_row_repaired: bool
+        gate_mate_speedup_claim_eligible: false
+        evidence_boundary_repaired: bool
+        sota_structured_generation_clean: bool
         fr11_self_learning_clean: bool
         clean_artifacts: list
         flagged_artifacts: list
         blocked_artifacts: list
         missing_artifacts: list
-        pilot_only_artifacts: list
+        projection_only_artifacts: list
         diagnostic_only_artifacts: list
-        headline_eligible_rows: list
-        hardware_claim_boundary: dict
-        codegen_claim_boundary: dict
-        fr11_claim_boundary: dict
-        top_3_next_actions: list
+        pilot_only_artifacts: list
+        row_classification_counts: dict
+        top_three_next_actions: list
+        source_artifact_checksums: dict
+        no_new_llm_call: true
+        no_new_hardware_run: true
         inference_substrate: "aggregation_from_upstream_artifacts"
         duration_s: float
         run_date: "{date}"
