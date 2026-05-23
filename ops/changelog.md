@@ -7171,3 +7171,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-23: KV260 Same-Basis CPU Gibbs Baseline v1 (✅ Complete) — honest_verdict=complete: same_basis_cpu_gibbs_baseline_ready_no_speedup_claim; results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json
 - 2026-05-23: KV260 Hardware-vs-CPU Claim Boundary v1 (gated on Exp2912) (✅ Complete) — honest_verdict=complete: kv260_same_basis_hardware_cpu_speedup_claim_eligible; results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json
 - 2026-05-23: GateMate Toolchain Provisioning Preflight v2 (⚠️ Blocked) — honest_verdict=blocked_gatemate_toolchain_missing; results/experiment_2914_gatemate_toolchain_preflight_v2.json
+- 2026-05-23: GateMate Toolchain Provisioning Preflight v2 (⚠️ Blocked) — honest_verdict=blocked_gatemate_toolchain_missing; results/experiment_2914_gatemate_toolchain_preflight_v2.json
