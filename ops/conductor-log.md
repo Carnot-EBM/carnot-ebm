@@ -6013,3 +6013,4 @@ Ripgrep i |
 | 2026-05-23 00:15 UTC | MBPP/HumanEval Generated-Code Clean Row v1 | OK | 81 passed in 3.05s |
 | 2026-05-23 01:03 UTC | Code Structural Dependency Verifier v1 | OK | 81 passed in 3.45s |
 | 2026-05-23 01:44 UTC | CCTU Executable Constraint Validator Pilot v1 | OK | 81 passed in 3.26s |
+| 2026-05-23 02:01 UTC | VeriCoT Exact Frontier Expansion v1 | OK | 81 passed in 3.98s |
