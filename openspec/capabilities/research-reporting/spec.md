@@ -4835,6 +4835,44 @@ generated-code source flags preserved in `blocked_rows`, no synthetic rows,
 null unsupported metrics with reasons, and a compact markdown table matching
 the machine-readable rows.
 
+### REQ-REPORT-2895: Paper-v6 Evidence Table And Claim Boundary From Matrix V7
+
+The repository shall provide an Exp 2895 evidence-table generator that writes
+`results/experiment_2895_paper_v6_evidence_table_v4.json`.
+
+The generator MUST read `results/experiment_2894_cross_corpus_matrix_v7.json`
+and `results/experiment_2884_capstone_v272.json`, separate paper-v6 statements
+into safe headline claims, pilot-only statements, taxonomy-only statements,
+blocked claims, and forbidden claims, and produce a compact markdown table
+suitable for operator review. The generator MUST NOT modify the operator-
+curated landing page, submit externally, or infer metrics that matrix v7 marks
+as null, pilot-only, taxonomy-only, blocked, or missing.
+
+The terminal artifact MUST include `honest_verdict`,
+`paper_evidence_table_ready`, `source_artifacts`, `headline_claims`,
+`pilot_only_statements`, `taxonomy_only_statements`, `forbidden_claims`,
+`markdown_table`, `arxiv_submission_performed=false`,
+`landing_page_modified=false`, `field_principles`, `run_date="20260523"`, and
+a measured `duration_s`. The artifact MAY include additional internal fields,
+but any such fields MUST preserve the same claim-boundary discipline and MUST
+NOT create a publication action.
+
+#### SCENARIO-REPORT-2895: Evidence Table Preserves Claim Boundaries
+
+**Given** Exp 2894 has FoVer and HaluEval/FEVER headline rows, MBPP and
+HumanEval pilot-only rows with blocked generated-code support, and a
+TruthfulQA taxonomy-only row
+**And** Exp 2884 contains safe and forbidden paper-v6 claims from the prior
+capstone
+**When** the Exp 2895 evidence-table generator runs
+**Then** it writes `results/experiment_2895_paper_v6_evidence_table_v4.json`
+with headline claims only for clean headline rows, pilot-only statements only
+for MBPP/HumanEval pilot evidence, taxonomy-only statements only for
+TruthfulQA taxonomy evidence, blocked or forbidden claims for unresolved
+generated-code flags and prior capstone exclusions, a markdown table that
+labels every row boundary explicitly, and no arXiv submission or landing-page
+modification.
+
 ### REQ-REPORT-2884: Milestone 2026.05.272 Capstone Claim Boundary
 
 The repository shall provide an Exp 2884 capstone generator that writes
