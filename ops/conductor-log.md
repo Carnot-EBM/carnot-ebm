@@ -6080,3 +6080,4 @@ web search:
 | 2026-05-23 17:33 UTC | Citation Hallucination Field Verifier v1: CiteTrac | OK | 81 passed in 3.75s |
 | 2026-05-23 17:48 UTC | KAN Continual Self-Learning: Per-Knot Constraint M | OK | 81 passed in 2.90s |
 | 2026-05-23 18:04 UTC | AquaForte/BEAVER-Style Reformulation Pipeline v1 ( | OK | 81 passed in 3.69s |
+| 2026-05-23 18:21 UTC | Cross-Corpus Matrix v10 + Paper Boundary Corrigend | OK | 81 passed in 3.04s |
