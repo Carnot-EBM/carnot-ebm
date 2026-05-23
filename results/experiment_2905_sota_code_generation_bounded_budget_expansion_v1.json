@@ -946,5 +946,18 @@
   "tests_run": [
     ".venv/bin/pytest tests/python/test_experiment_2905_sota_code_generation_bounded_budget_expansion.py -q",
     ".venv/bin/pytest tests/python -q"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "aggregate_pass_at_1=0.5 and aggregate_pass_at_k=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
   ]
 }
