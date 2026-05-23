@@ -1655,3 +1655,55 @@ cross-check, and recommends retracting the paper-v6 speedup claim when the
 ratio is below 1.0.
 
 **Implementation status:** Implemented (Exp 2939)
+
+---
+
+### REQ-HW-073
+
+**Title:** Exp 2941 PolarFire SAT dispatch continuation MUST scale the hash-verified scorer to 500 clauses
+
+**Description:**
+Experiment 2941 MUST continue the Exp 2900 PolarFire riscv64 CPU dispatch path
+with a deterministic 500-clause SAT instance. Before dispatch it MUST verify
+that `ssh polarfire` is reachable and that `ssh polarfire 'uname -m'` reports
+`riscv64`; if either precondition fails it MUST write a blocked artifact and
+MUST NOT claim a successful hardware smoke. When preconditions pass, it MUST
+SCP the SAT instance and scorer to the board, run the scorer on the PolarFire
+Linux CPU substrate, pull the transcript back, and verify the remote scorer
+output SHA256 against the locally computed expected scorer output. The artifact
+MUST compare the 500-clause median per-clause wall-clock time against the
+Exp 2900 50-clause median and record that scaling ratio without claiming FPGA
+fabric execution.
+
+**Acceptance criteria:**
+- `results/experiment_2941_polarfire_continuation_v1.json` is generated with
+  `inference_substrate="hardware_smoke"` for successful runs.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `polarfire_ssh_uptime_at_run`, `n_clauses=500`,
+  `per_clause_wall_clock_us_median`, `per_clause_wall_clock_us_p95`,
+  `scaling_ratio_vs_exp2900`, `scorer_output_sha256`,
+  `scorer_output_hash_verified`, `random_seed`, `reproducibility_checksum`,
+  and `duration_s`.
+- Successful artifacts require `scorer_output_hash_verified=true` and
+  `duration_s >= 15`.
+- The reproducibility checksum covers the 500-clause instance hash, scorer
+  output hash, random seed, Exp 2900 median citation, and timing summary.
+
+**Implementation status:** Pending (Exp 2941)
+
+---
+
+### SCENARIO-HW-073
+
+**Scenario:** PolarFire riscv64 CPU evaluates the 500-clause continuation scorer without a per-clause timing cliff.
+
+**Given:** `ssh polarfire` is reachable, reports `riscv64`, and Exp 2900 has a
+hash-verified 50-clause timing artifact.
+**When:** Exp 2941 dispatches the deterministic 500-clause SAT scorer to the
+board and pulls back the transcript.
+**Then:** The local expected scorer output hash matches the remote transcript
+hash, the artifact records positive median and p95 per-clause wall-clock
+timings, `scaling_ratio_vs_exp2900` is computed from the Exp 2900 median, and
+the success duration is at least 15 seconds.
+
+**Implementation status:** Pending (Exp 2941)

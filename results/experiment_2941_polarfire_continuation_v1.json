@@ -1,0 +1,63 @@
+{
+  "duration_s": 24.022742,
+  "exp2900_per_clause_wall_clock_us_median": 51.2793553172738,
+  "expected_scorer_output_sha256": "3b91df6ed5a3fa14e4810994fb185e6869afe78a3827a2efd8d104e02004ad66",
+  "experiment": 2941,
+  "honest_verdict": "complete: polarfire_500_clause_constraint_scorer_hash_verified",
+  "inference_substrate": "hardware_smoke",
+  "n_clauses": 500,
+  "no_fpga_fabric_claim": true,
+  "per_clause_wall_clock_us_median": 45.03724354243542,
+  "per_clause_wall_clock_us_p95": 58.56133025830258,
+  "polarfire_arch": "riscv64",
+  "polarfire_kernel": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+  "polarfire_ssh_uptime_at_run": "19:54:01 up 9 days,  1:39,  0 user,  load average: 0.08, 0.02, 0.01",
+  "preconditions_checked": [
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "observed": "returncode=0",
+      "passed": true,
+      "resource": "polarfire_ssh"
+    },
+    {
+      "command": "ssh polarfire 'uname -m'",
+      "observed": "riscv64",
+      "passed": true,
+      "resource": "polarfire_arch"
+    },
+    {
+      "command": "ssh polarfire 'python3 --version'",
+      "observed": "Python 3.12.12",
+      "passed": true,
+      "resource": "polarfire_python"
+    },
+    {
+      "command": "ssh polarfire uptime",
+      "observed": "19:54:01 up 9 days,  1:39,  0 user,  load average: 0.08, 0.02, 0.01",
+      "passed": true,
+      "resource": "polarfire_uptime"
+    },
+    {
+      "command": "ssh polarfire 'uname -r'",
+      "observed": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+      "passed": true,
+      "resource": "polarfire_kernel"
+    }
+  ],
+  "random_seed": 2941,
+  "remote_arch": "riscv64",
+  "remote_evaluation_cycles_per_clause": 542,
+  "remote_python": "3.12.12",
+  "remote_transcript_schema": "carnot.polarfire_sat_scorer_transcript.v2",
+  "reproducibility_checksum": "8d45ae822ab2d3c6c7d2958593b9e6c12b81991a7a25a7f5ad3e7b5ce37572cf",
+  "sat_instance_sha256": "0fc2fb6c861f763a531ae966ae072ccb796d03f3492431a453c13bd7eb90b3fc",
+  "scaling_ratio_vs_exp2900": 0.8782724210119763,
+  "schema": "carnot.polarfire_continuation.v1",
+  "scorer_output_hash_verified": true,
+  "scorer_output_sha256": "3b91df6ed5a3fa14e4810994fb185e6869afe78a3827a2efd8d104e02004ad66",
+  "spec_refs": [
+    "REQ-HW-073",
+    "SCENARIO-HW-073"
+  ],
+  "total_wall_clock_s": 15.2638388419291
+}
