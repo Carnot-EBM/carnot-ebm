@@ -863,3 +863,51 @@ both labels
 results without claiming live-model provenance.
 
 **Spec traces:** REQ-BENCH-2864, SCENARIO-BENCH-2864
+
+### REQ-BENCH-2919: ConstraintBench Mini Direct Optimization
+
+Carnot MUST provide a tiny local direct-optimization benchmark inspired by
+ConstraintBench that materializes 15-30 deterministic tasks spanning linear
+integer constraints, knapsack-like binary constraints, and graph/coloring
+constraints.  Each task MUST be small enough for an exact local verifier
+implemented by exhaustive enumeration, and the verifier MUST report syntax,
+feasibility, objective value, and exact optimality as separate outcomes.
+
+The runner MUST call `cached_sota_pair(gpu_indices=(0, 1))` before selecting
+any model.  Headline rows MUST come only from at least one mandated local SOTA
+GGUF (`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`) through local llama.cpp inference.  When no
+mandated GGUF is available, the runner MUST write
+`honest_verdict="blocked_sota_gguf_cache_missing"` and MUST NOT report
+headline model results.
+
+The terminal artifact MUST be written to
+`results/experiment_2919_constraintbench_mini_direct_optimization_v1.json` and
+include: `honest_verdict`, `constraintbench_mini_ready`, `model_specs`,
+`models_used`, `cached_sota_pair_used`, `random_seed=2919`,
+`task_manifest_path`, `n_tasks`, `exact_verifier_types`,
+`feasibility_rate`, `optimality_rate`, `syntax_valid_rate`,
+`violation_classes`, `per_task_results`,
+`inference_substrate="live_llm_inference_plus_exact_verifier"`,
+`duration_s`, and `run_date="20260523"`.
+
+**Acceptance criteria:**
+- The manifest contains 15-30 tasks with at least one linear, knapsack, and
+  graph/coloring task, and every task has a deterministic optimum from the
+  local exact verifier.
+- Structured JSON answers are parsed without trusting model self-verification.
+- Feasibility and optimality are reported as independent rates, and violation
+  classes distinguish syntax failures, feasibility violations, and
+  feasible-but-suboptimal answers.
+
+### SCENARIO-BENCH-2919: Feasibility And Optimality Are Separated
+
+**Given** a manifest row from the ConstraintBench mini benchmark
+**When** a local SOTA GGUF emits a structured JSON answer
+**Then** Carnot parses the JSON answer, checks feasibility using the exact
+verifier, computes the objective value, compares against the enumerated optimum,
+and records feasible-but-suboptimal answers separately from infeasible and
+syntax-invalid answers.
+
+**Spec traces:** REQ-BENCH-2919, SCENARIO-BENCH-2919

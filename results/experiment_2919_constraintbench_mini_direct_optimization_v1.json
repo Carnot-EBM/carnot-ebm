@@ -1,0 +1,382 @@
+{
+  "artifact": "experiment_2919_constraintbench_mini_direct_optimization_v1",
+  "cached_sota_pair_error": null,
+  "cached_sota_pair_used": false,
+  "constraintbench_mini_ready": true,
+  "duration_s": 43.12619376182556,
+  "exact_verifier_types": [
+    "bounded_integer_exhaustive",
+    "binary_subset_exhaustive",
+    "color_assignment_exhaustive"
+  ],
+  "feasibility_rate": 0.277778,
+  "honest_verdict": "complete: constraintbench mini direct optimization measured with live local SOTA GGUF",
+  "inference_substrate": "live_llm_inference_plus_exact_verifier",
+  "model_attempts": [
+    {
+      "blocker": null,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_used": true
+    }
+  ],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "n_tasks": 18,
+  "optimality_rate": 0.111111,
+  "per_task_results": [
+    {
+      "elapsed_seconds": 2.565994,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 11,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-linear-001",
+      "task_type": "linear_integer",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.207453,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": 8,
+      "optimal": false,
+      "optimum_value": 15,
+      "syntax_valid": true,
+      "task_id": "cbmini-2919-knapsack-001",
+      "task_type": "knapsack_binary",
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "elapsed_seconds": 0.632255,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": 2,
+      "optimal": true,
+      "optimum_value": 2,
+      "syntax_valid": true,
+      "task_id": "cbmini-2919-graph-001",
+      "task_type": "graph_coloring",
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "elapsed_seconds": 0.298775,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-linear-002",
+      "task_type": "linear_integer",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "variable_not_integer:x"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.196098,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": 19,
+      "optimal": true,
+      "optimum_value": 19,
+      "syntax_valid": true,
+      "task_id": "cbmini-2919-knapsack-002",
+      "task_type": "knapsack_binary",
+      "violation_class": "none",
+      "violation_reasons": []
+    },
+    {
+      "elapsed_seconds": 2.190775,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 3,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-graph-002",
+      "task_type": "graph_coloring",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 0.073532,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 19,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-linear-003",
+      "task_type": "linear_integer",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.209734,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 13,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-knapsack-003",
+      "task_type": "knapsack_binary",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.195457,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 1,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-graph-003",
+      "task_type": "graph_coloring",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.229953,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 8,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-linear-004",
+      "task_type": "linear_integer",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.208113,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 19,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-knapsack-004",
+      "task_type": "knapsack_binary",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.189137,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 4,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-graph-004",
+      "task_type": "graph_coloring",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.194947,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 16,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-linear-005",
+      "task_type": "linear_integer",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.213756,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": 11,
+      "optimal": false,
+      "optimum_value": 13,
+      "syntax_valid": true,
+      "task_id": "cbmini-2919-knapsack-005",
+      "task_type": "knapsack_binary",
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "elapsed_seconds": 2.195178,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": true,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": 6,
+      "optimal": false,
+      "optimum_value": 3,
+      "syntax_valid": true,
+      "task_id": "cbmini-2919-graph-005",
+      "task_type": "graph_coloring",
+      "violation_class": "suboptimal",
+      "violation_reasons": []
+    },
+    {
+      "elapsed_seconds": 2.22781,
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 10,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-linear-006",
+      "task_type": "linear_integer",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "variables_not_object"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.254438,
+      "exact_verifier_type": "binary_subset_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 19,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-knapsack-006",
+      "task_type": "knapsack_binary",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "selected_items_not_list"
+      ]
+    },
+    {
+      "elapsed_seconds": 2.210261,
+      "exact_verifier_type": "color_assignment_exhaustive",
+      "feasible": false,
+      "generation_blocker": null,
+      "generation_source": "live_sota_llamacpp",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "objective_value": null,
+      "optimal": false,
+      "optimum_value": 3,
+      "syntax_valid": false,
+      "task_id": "cbmini-2919-graph-006",
+      "task_type": "graph_coloring",
+      "violation_class": "syntax_invalid",
+      "violation_reasons": [
+        "no_json_object"
+      ]
+    }
+  ],
+  "random_seed": 2919,
+  "run_date": "20260523",
+  "schema": "carnot.constraintbench_mini_direct_optimization.v1",
+  "syntax_valid_rate": 0.277778,
+  "task_manifest_path": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_mini_direct_optimization_2919_manifest.json",
+  "tests_run": [],
+  "violation_classes": {
+    "none": 2,
+    "suboptimal": 3,
+    "syntax_invalid": 13
+  }
+}
