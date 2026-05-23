@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Two Retractions and a Rescue: A Pre-Submission Adversarial Audit — Carnot Blog</title>
+  <meta name="description" content="We paid for a hostile adversarial audit of our paper draft two days before submission. The audit returned 7 FATAL findings. We ran three rescue measurements. Two of the findings retracted load-bearing claims; one rescued a claim we expected to lose. This is what happened and what the paper now says.">
+  <meta property="og:title" content="Two Retractions and a Rescue: A Pre-Submission Adversarial Audit">
+  <meta property="og:description" content="We paid for a hostile audit. 7 FATAL findings. Three rescue measurements. Two retractions, one rescue. The narrower paper we ended up with is one we can actually defend.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://carnot-ebm.org/blog/two-retractions-and-a-rescue.html">
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50' fill='none' stroke='%23f97316' stroke-width='8'/><circle cx='50' cy='50' r='10' fill='%23f97316'/></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-glass: rgba(15, 23, 42, 0.4);
+      --bg-glass-hover: rgba(30, 41, 59, 0.6);
+      --text: rgba(255, 255, 255, 0.95);
+      --text-muted: rgba(255, 255, 255, 0.6);
+      --accent-energy: #f97316;
+      --accent-verify: #0ea5e9;
+      --accent-reason: #a855f7;
+      --accent-danger: #ef4444;
+      --accent-good: #22c55e;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-hover: rgba(255, 255, 255, 0.15);
+      --font-heading: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font-body); background: var(--bg); color: var(--text);
+      line-height: 1.7; -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent-verify); text-decoration: none; border-bottom: 1px dotted var(--accent-verify); }
+    a:hover { color: var(--accent-energy); border-bottom-color: var(--accent-energy); }
+
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(3, 7, 18, 0.85); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto; padding: 1rem 2rem;
+      display: flex; align-items: center; justify-content: space-between; gap: 2rem;
+    }
+    .nav-logo {
+      font-family: var(--font-heading); font-size: 1.5rem; font-weight: 700;
+      color: var(--text); display: flex; align-items: center; gap: 0.5rem;
+      border: none;
+    }
+    .nav-logo svg { width: 28px; height: 28px; }
+    .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+    .nav-links a { color: var(--text-muted); font-size: 0.9rem; border: none; }
+    .nav-links a:hover { color: var(--text); }
+
+    article {
+      max-width: 760px; margin: 0 auto; padding: 4rem 2rem 2rem;
+    }
+
+    .post-meta {
+      font-family: var(--font-mono); font-size: 0.85rem;
+      color: var(--text-muted); margin-bottom: 1rem;
+      display: flex; gap: 1.5rem;
+    }
+    .post-tag {
+      font-family: var(--font-heading); font-size: 0.7rem; font-weight: 700;
+      color: var(--accent-energy); text-transform: uppercase;
+      letter-spacing: 0.05em; margin-bottom: 1rem; display: block;
+    }
+    h1 {
+      font-family: var(--font-heading); font-size: clamp(2rem, 5vw, 3.25rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 1.5rem;
+    }
+    .lede {
+      font-size: 1.2rem; color: var(--text-muted);
+      margin-bottom: 3rem; line-height: 1.6;
+    }
+    h2 {
+      font-family: var(--font-heading); font-size: 1.75rem;
+      font-weight: 700; margin: 3rem 0 1.25rem; line-height: 1.2;
+    }
+    h3 {
+      font-family: var(--font-heading); font-size: 1.25rem;
+      font-weight: 700; margin: 2.5rem 0 1rem;
+    }
+    article p { margin-bottom: 1.25rem; font-size: 1.05rem; }
+    article p code, article li code, article td code {
+      font-family: var(--font-mono); font-size: 0.92em;
+      background: var(--bg-glass); padding: 0.15em 0.4em;
+      border-radius: 4px; color: var(--accent-energy);
+      border: 1px solid var(--border);
+    }
+    article ul, article ol { margin: 0 0 1.5rem 1.5rem; }
+    article li { margin-bottom: 0.5rem; }
+    article blockquote {
+      border-left: 3px solid var(--accent-energy);
+      padding: 1rem 1.5rem; margin: 1.5rem 0;
+      background: var(--bg-glass); border-radius: 0 8px 8px 0;
+      color: var(--text-muted); font-style: italic;
+    }
+
+    .keypoint {
+      background: linear-gradient(135deg, rgba(249, 115, 22, 0.08), rgba(168, 85, 247, 0.04));
+      border: 1px solid var(--border-hover);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .keypoint strong { color: var(--accent-energy); font-family: var(--font-heading); }
+
+    .retract {
+      background: linear-gradient(135deg, rgba(239, 68, 68, 0.10), rgba(249, 115, 22, 0.04));
+      border: 1px solid rgba(239, 68, 68, 0.25);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .retract strong { color: var(--accent-danger); font-family: var(--font-heading); }
+
+    .rescue {
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.10), rgba(14, 165, 233, 0.04));
+      border: 1px solid rgba(34, 197, 94, 0.30);
+      border-radius: 12px; padding: 1.5rem 2rem; margin: 2rem 0;
+    }
+    .rescue strong { color: var(--accent-good); font-family: var(--font-heading); }
+
+    .data-table {
+      width: 100%; border-collapse: collapse; margin: 1.5rem 0;
+      font-size: 0.95rem;
+    }
+    .data-table th, .data-table td {
+      text-align: left; padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .data-table th {
+      font-family: var(--font-heading); font-weight: 700;
+      color: var(--text); background: var(--bg-glass);
+      font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.05em;
+    }
+    .data-table td { color: var(--text-muted); }
+    .data-table td.num { font-family: var(--font-mono); color: var(--text); }
+    .data-table td.bad { color: var(--accent-danger); }
+    .data-table td.good { color: var(--accent-good); }
+
+    .footnote {
+      font-size: 0.9rem; color: var(--text-muted);
+      padding: 1.5rem 0; margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    .further-reading {
+      background: var(--bg-glass); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem; margin: 3rem 0 2rem;
+    }
+    .further-reading h3 { margin-top: 0; }
+    .further-reading ul { margin-bottom: 0; }
+
+    .back-link {
+      display: inline-block; margin-bottom: 2rem;
+      font-family: var(--font-mono); font-size: 0.9rem;
+      color: var(--text-muted); border: none;
+    }
+    .back-link:hover { color: var(--accent-energy); }
+
+    footer {
+      max-width: 1280px; margin: 4rem auto 2rem; padding: 2rem;
+      text-align: center; color: var(--text-muted); font-size: 0.85rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="/" class="nav-logo">
+      <svg viewBox="0 0 100 100"><path d="M30,50 Q30,20 50,20 Q70,20 70,50 Q70,80 50,80 Q30,80 30,50" fill="none" stroke="#f97316" stroke-width="8"/><circle cx="50" cy="50" r="10" fill="#f97316"/></svg>
+      Carnot
+    </a>
+    <ul class="nav-links">
+      <li><a href="/">Home</a></li>
+      <li><a href="/blog/">Blog</a></li>
+      <li><a href="https://github.com/Carnot-EBM/carnot-ebm">GitHub</a></li>
+      <li><a href="https://huggingface.co/Carnot-EBM">HuggingFace</a></li>
+    </ul>
+  </div>
+</nav>
+
+<article>
+
+<a href="/blog/" class="back-link">&larr; Back to blog</a>
+
+<span class="post-tag">Lessons</span>
+
+<h1>Two Retractions and a Rescue: A Pre-Submission Adversarial Audit</h1>
+
+<div class="post-meta">
+  <span>2026-05-23</span>
+  <span>~11 min read</span>
+</div>
+
+<p class="lede">
+  We paid for a hostile adversarial audit of our paper draft two days
+  before we expected to submit. The audit returned seven fatal
+  findings against our own claims. We ran three rescue measurements
+  on the seams those findings exposed. Two of the findings retracted
+  load-bearing claims we had been preparing to publish. One rescued
+  a claim we had been preparing to walk back. This is what happened,
+  what the paper now says, and what we think the methodology
+  generalizes to.
+</p>
+
+<h2>The setup</h2>
+
+<p>
+  Carnot's paper-v6 draft had hit a comfortable spot. The autonomous
+  research loop had produced seven consecutive milestone capstones
+  that flagged themselves <code>paper_ready=true</code>. The
+  underlying claims had real artifacts behind them: a verified KV260
+  FPGA bitstream sampling at 24 microseconds per sample, a
+  five-seed dual-condition FoVer AUROC of 0.9131, a cross-corpus
+  matrix with eight headline-eligible rows, four landed Phase-4
+  active-inference artifacts.
+</p>
+
+<p>
+  We had also, three weeks earlier, run an adversarial Deep Think
+  round against the architecture before the prototype existed. That
+  round produced five fatal findings, one of which was
+  <a href="five-fatal-findings.html">entirely outside the eight
+  problem categories the audit had been told to look for</a>. The
+  experience taught us a discipline: pay for the hostile review
+  before reviewers run it for free, and reserve a slot in the audit
+  prompt for "anything outside the categories I enumerated."
+</p>
+
+<p>
+  When the autonomous loop hits seven consecutive
+  <code>paper_ready=true</code> capstones, the right move is not to
+  trust the streak. It is to run that hostile review again, against
+  the paper draft itself, with the empirical anchors the prior round
+  did not have. That is what we did.
+</p>
+
+<h2>The audit</h2>
+
+<p>
+  The audit prompt was structured to mirror the 2026-04-30 round.
+  Same hostile-reviewer framing &mdash; "you are a reviewer at
+  NeurIPS / ICML / ICLR trying to torch this paper, be ruthless." Same
+  eight enumerated attack surfaces, this time targeted at the
+  seams between our empirical anchors and the claims those anchors
+  were going to support. Same explicit "bonus points for findings
+  outside the eight" slot.
+</p>
+
+<p>
+  Eight attack surfaces, in shape:
+</p>
+
+<ol>
+  <li>Does the 24 microsecond / sample anchor on the FPGA actually
+  produce Boltzmann samples, or is it the time to enter a
+  non-equilibrium steady state?</li>
+  <li>Is the CPU comparator we used for the speedup claim running
+  the same algorithm as the FPGA, or are we measuring
+  apples-to-oranges?</li>
+  <li>Does the verifier ensemble's high AUROC on FoVer survive on
+  code corpora where the base model fails 92.5% of the time?</li>
+  <li>Does our k=15 verifier ensemble share a joint blind spot on
+  modalities outside the six we have measured on?</li>
+  <li>Are Phase-4 active-inference claims (validated on a continuous
+  sampler) being improperly cited in defense of FPGA-deployment
+  claims (a discrete sampler)?</li>
+  <li>Is the FPGA's 1.5%-p95-vs-median latency margin too tight to
+  represent real MCMC mixing time?</li>
+  <li>Is the "seven consecutive <code>paper_ready=true</code>"
+  streak load-bearing for reviewers, or self-Goodharting?</li>
+  <li>Does the paper's "hardware sovereignty" framing survive the
+  proprietary-toolchain dependency chain from <code>pip install</code>
+  to a running KV260 board?</li>
+</ol>
+
+<p>
+  Plus the ninth slot: "anything outside the eight."
+</p>
+
+<h2>The findings</h2>
+
+<p>
+  Ten findings returned. Seven fatal, two degrading, one cosmetic.
+  Two of the seven fatal findings were in the ninth slot, outside
+  the eight enumerated surfaces. The 2026-04-30 round had produced
+  one unprompted finding; this round produced two.
+</p>
+
+<p>
+  We are going to ignore the two degrading and the one cosmetic
+  finding in this post &mdash; they were textual, and they are now in
+  the paper. The interesting story is the seven fatal findings and
+  what we learned by trying to falsify them empirically.
+</p>
+
+<h3>The three measurements</h3>
+
+<p>
+  Four of the seven fatal findings could be rescued by textual
+  narrowing alone &mdash; replace one framing with another, add a
+  firewall paragraph, drop a deferred-hardware claim. Three
+  required actual measurements: an MMD test of the FPGA sampler
+  distribution, a same-schedule CPU comparator, and a base-rate-
+  corrected AUPRC analysis on code corpora.
+</p>
+
+<p>
+  We ran them. Here is what they showed.
+</p>
+
+<h2>Retraction #1: the FPGA sampler is not sampling</h2>
+
+<p>
+  The audit's first fatal finding extended a concern the 2026-04-30
+  round had raised about synchronous parallel Glauber on frustrated
+  bipartite Ising graphs. The earlier round had argued
+  theoretically that such samplers violate detailed balance and
+  converge to non-equilibrium steady states rather than the
+  Boltzmann distribution. The empirical question now: does our
+  actual 24 microseconds / sample anchor on the KV260 board produce
+  Boltzmann samples, or non-equilibrium states masquerading as them?
+</p>
+
+<p>
+  We ran a Maximum Mean Discrepancy test. Exact CPU sequential
+  Gibbs (detailed-balance preserving, the correct sampler) vs the
+  KV260's synchronous parallel Glauber, on the same three n=64
+  Ising problems the original anchor used, with the bitstream
+  SHA-256 cited and reproducibility checksum recorded. Three seeds,
+  10,000 samples each per condition.
+</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Seed</th>
+      <th>MMD&#178;</th>
+      <th>MMD p-value</th>
+      <th>KS statistic</th>
+      <th>KS p-value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>42</td>
+      <td class="num">1.385</td>
+      <td class="num">0.001</td>
+      <td class="num bad">0.998</td>
+      <td class="num">0.0</td>
+    </tr>
+    <tr>
+      <td>137</td>
+      <td class="num">1.432</td>
+      <td class="num">0.001</td>
+      <td class="num bad">0.999</td>
+      <td class="num">0.0</td>
+    </tr>
+    <tr>
+      <td>271</td>
+      <td class="num">1.370</td>
+      <td class="num">0.001</td>
+      <td class="num bad">0.996</td>
+      <td class="num">0.0</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  A Kolmogorov-Smirnov statistic of 0.998 means the two cumulative
+  distributions <em>barely overlap</em>. The MMD p-values sat at
+  the noise floor of the permutation test (1 / 1001 permutations) on
+  all three seeds: the test cannot get more significant than this.
+</p>
+
+<div class="retract">
+  <strong>The FPGA samples are statistically distinguishable from the
+  target Boltzmann distribution at every seed we tested.</strong>
+  We had been preparing to claim "approximately exact sampling on
+  silicon." We are not. The FPGA produces samples on a fixed-compute
+  schedule that does not converge to the target distribution. The
+  24 microseconds per sample anchor is real wall-clock; what it
+  measures is not what we had been representing it as.
+</div>
+
+<p>
+  Paper-v6 retracts the "exact sampling on FPGA" claim. The FPGA
+  outputs are re-framed as fixed-compute heuristic samples drawn
+  from a non-equilibrium steady state, useful as an
+  energy-evaluation oracle but not as a sampler from the Boltzmann.
+  This is a real narrowing of what the hardware section says.
+</p>
+
+<h2>Retraction #2: the FPGA is not faster than CPU at our scale</h2>
+
+<p>
+  The audit's fourth fatal finding observed that our earlier
+  speedup claim &mdash; KV260 was "speedup-claim-eligible" vs CPU
+  &mdash; had used a CPU baseline running exact sequential Gibbs
+  (the correct algorithm) while the FPGA ran synchronous parallel
+  Glauber (the structurally broken algorithm we had just retracted
+  above). The two were not measuring the same thing.
+</p>
+
+<p>
+  The honest comparison is apples-to-apples: CPU running the same
+  synchronous parallel schedule the FPGA runs.
+</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Substrate</th>
+      <th>Algorithm</th>
+      <th>Per-sample median</th>
+      <th>Per-sample p95</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KV260 FPGA</td>
+      <td>Synchronous parallel Glauber</td>
+      <td class="num">24.000 us</td>
+      <td class="num">24.380 us</td>
+    </tr>
+    <tr>
+      <td>CPU (single-threaded Python / NumPy)</td>
+      <td>Synchronous parallel Glauber (same schedule)</td>
+      <td class="num">23.574 us</td>
+      <td class="num">33.833 us</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  The apples-to-apples speedup at n=64 spins is therefore
+  <strong>0.982 &times;</strong>. The FPGA is approximately two
+  percent <em>slower</em> than the CPU running the same algorithm.
+</p>
+
+<p>
+  Cross-check: the same algorithm on both substrates should produce
+  statistically identical energy distributions, since they are both
+  sampling the same non-equilibrium steady state. They do. KS
+  p-value 1.0, MMD&#178; 0.0. The slowdown measurement is honest;
+  the FPGA is, at our current dimensionality, simply slower.
+</p>
+
+<div class="retract">
+  <strong>There is no FPGA speedup over CPU at our actual production
+  latent dimensions (d in {128, 256}).</strong> The KV260's
+  per-sample latency is roughly constant in n while CPU's scales
+  linearly; the crossover lives somewhere around n = 240 spins on
+  this particular CPU, well above where the architecture currently
+  operates. The "hardware speedup" framing was extrapolating across
+  that crossover.
+</div>
+
+<p>
+  Paper-v6 retracts the speedup claim at current d and reframes
+  the KV260 as a proof-of-concept functional simulator anchoring a
+  future high-N deployment trajectory. The 24 microseconds is still
+  a real measurement; what it is evidence <em>for</em> changes.
+</p>
+
+<h2>Rescue: the verifier on code corpora is real</h2>
+
+<p>
+  The audit's fifth fatal finding was the prediction we expected to
+  cost us the most. The verifier ensemble's headline AUROC on FoVer
+  is 0.9131. The base model's pass-rate on code corpora is 7.5%.
+  At a 92.5% negative base rate, an AUROC of 0.91 implies (under
+  reasonable operating-point assumptions) a positive predictive
+  value below 50 percent. Under the natural reading: when our
+  verifier approves generated code, it is more likely wrong than
+  right. The finding called this the <em>hallucination multiplier</em>
+  failure mode. We had been preparing to retract the code-corpus
+  active-inference claim.
+</p>
+
+<p>
+  We ran an AUPRC analysis at the empirical 92.5% negative base
+  rate. The right metric. The audit's PPV math was on AUROC and
+  was a legitimate worry from that side; the AUPRC tells a
+  different story.
+</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Corpus</th>
+      <th>AUPRC</th>
+      <th>Random baseline AUPRC</th>
+      <th>Max-F1 operating point</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Code corpora</td>
+      <td class="num good">0.889</td>
+      <td class="num">0.075</td>
+      <td class="num">F1 = 0.94, PPV = 0.89, recall = 1.00</td>
+    </tr>
+    <tr>
+      <td>FoVer (apples-to-apples comparison)</td>
+      <td class="num good">0.879</td>
+      <td class="num">&mdash;</td>
+      <td class="num">&mdash;</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Code-corpus AUPRC is 0.889 against a random baseline of 0.075.
+  That is roughly a 12-times lift over the base rate. Maximum-F1
+  operating point gives PPV = 0.89 and recall = 1.0; the verifier
+  reaches PPV = 0.5 (the "more likely right than wrong" threshold
+  the finding worried about) at a much lower threshold with recall
+  still saturated.
+</p>
+
+<p>
+  And the kicker: the verifier's code-corpus AUPRC (0.889) is
+  <em>higher</em> than its FoVer AUPRC (0.879) in the same
+  apples-to-apples computation. The ranking quality on code is at
+  least as good as the ranking quality on the corpus we trained
+  the verifier ensemble against. The Deep Think prediction had
+  been operating on the AUROC framing alone; the AUPRC framing
+  dissolves it.
+</p>
+
+<div class="rescue">
+  <strong>The verifier ensemble is not a hallucination multiplier
+  on code corpora.</strong> It is a strong ranking signal whose
+  utility was hidden by the wrong choice of summary metric. The
+  code-corpus active-inference claim survives; the paper now
+  reports AUPRC alongside AUROC, with explicit base-rate framing,
+  to defuse the same objection a reviewer would otherwise raise.
+</div>
+
+<h2>What the paper now says</h2>
+
+<p>
+  The capstone for the milestone where these measurements landed
+  contains two explicit lists: <code>paper_v6_safe_claims</code>
+  and <code>paper_v6_forbidden_claims</code>. We do not edit those
+  lists by hand; the autonomous loop generates them from the
+  artifacts. They look like this.
+</p>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>Defensible</th>
+      <th>Anchored by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>KV260 is a POC functional simulator anchoring future
+      high-N deployment.</td>
+      <td>exp2939 same-schedule speedup 0.982&times;</td>
+    </tr>
+    <tr>
+      <td>KV260 outputs are fixed-compute heuristic samples, not
+      Boltzmann-thermalized samples.</td>
+      <td>exp2938 MMD distinguishable at p &le; 0.001</td>
+    </tr>
+    <tr>
+      <td>Verifier-ensemble code-corpus active inference is
+      retainable: AUPRC = 0.889 vs base rate 0.075.</td>
+      <td>exp2940 (&gt;11&times; lift)</td>
+    </tr>
+    <tr>
+      <td>FoVer dual-condition AUROC = 0.9131 (5-seed).</td>
+      <td>exp2837 via exp2940</td>
+    </tr>
+    <tr>
+      <td>PolarFire SoC 500-clause constraint scorer hash-verified.</td>
+      <td>exp2941</td>
+    </tr>
+  </tbody>
+</table>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>No longer claimed</th>
+      <th>Retracted by</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="bad">KV260 samples reach Boltzmann thermalization.</td>
+      <td>exp2938</td>
+    </tr>
+    <tr>
+      <td class="bad">KV260 hardware speedup over CPU at d in {128, 256}.</td>
+      <td>exp2939</td>
+    </tr>
+    <tr>
+      <td class="bad">Phase-4 variational-free-energy bounds validate
+      KV260 deployment.</td>
+      <td>(textual firewall &mdash; Phase-4 applies only to the
+      continuous-sampler RTX 3090 deployment)</td>
+    </tr>
+    <tr>
+      <td class="bad">Extropic Z1 / photonic as the future production
+      target.</td>
+      <td>(post-pivot architecture is Boolean-coupled; analog
+      substrates cannot enforce discrete sign constraints. Future
+      production target is digital ASICs / spatial FPGAs / digital
+      Ising machines.)</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  The paper got narrower. The narrower paper is also one whose
+  every load-bearing claim cites a specific artifact with a
+  reproducibility checksum, an inference-substrate declaration, and
+  an explicit retire-condition. The narrower paper is the
+  defensible paper. The broader paper would have been the torched
+  paper.
+</p>
+
+<h2>What we think generalizes</h2>
+
+<p>
+  Three operational takeaways. None are about Carnot specifically.
+</p>
+
+<ol>
+  <li>
+    <strong>Pay for the hostile audit before reviewers do it for
+    free.</strong> A pre-submission adversarial round costs the
+    operator about thirty minutes of prompt-shepherding and a
+    short period of writing the prompt scaffolding. A reviewer-
+    surfaced version of any of the seven fatal findings would have
+    cost a desk reject or a major-revisions cycle. The math is not
+    close.
+  </li>
+  <li>
+    <strong>Reserve a slot for "anything outside my categories."
+    </strong> Two of the seven fatal findings here, and one of the
+    five in the 2026-04-30 round, came from that slot. The
+    auditor's enumerated categories are the questions the auditor
+    is good at asking. The unenumerated slot is the question the
+    auditor did not know to ask. Across two rounds in the same
+    project, three of the twelve fatal findings &mdash; one in
+    four &mdash; came from the unenumerated slot. That is too high
+    a rate to leave the slot unfilled.
+  </li>
+  <li>
+    <strong>Treat your own metrics as defendants, not witnesses.
+    </strong> The verifier-on-code-corpus rescue happened because
+    we re-asked the metric question (AUROC versus AUPRC) with the
+    base rate explicit. The retraction on FPGA speedup happened
+    because we re-asked the comparator question (CPU sequential
+    Gibbs versus CPU synchronous parallel). In both cases the
+    original framing was the natural one; the corrected framing
+    was what a hostile reviewer would have demanded. Get to the
+    corrected framing yourself, in private, before submission.
+  </li>
+</ol>
+
+<h2>The capstone field that did not exist a week ago</h2>
+
+<p>
+  The milestone capstone after this round had a new field that the
+  earlier capstones did not: <code>headline_outcome: narrow</code>.
+  The capstone, generated by the autonomous loop without operator
+  intervention, explicitly tagged the milestone's paper-readiness
+  as "narrower than before" &mdash; tracking the two retractions
+  the audit had just forced. The loop is now reporting what it
+  retracted, not just what it confirmed.
+</p>
+
+<p>
+  That field will not exist if the audit had never run. The audit
+  exists because we set up the structure to run it. The structure
+  exists because the 2026-04-30 round taught us what it cost not
+  to have it. The lesson compounds.
+</p>
+
+<div class="further-reading">
+  <h3>Further reading</h3>
+  <ul>
+    <li>The full Deep Think round results: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/research-notes/phase3-empirical-readiness-deep-think-results.md">phase3-empirical-readiness-deep-think-results.md</a></li>
+    <li>The audit prompt itself: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/docs/research-notes/phase3-empirical-readiness-deep-think-prompt.md">phase3-empirical-readiness-deep-think-prompt.md</a></li>
+    <li>The capstone with explicit safe / forbidden claim lists: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/results/experiment_2948_capstone_v277.json">experiment_2948_capstone_v277.json</a></li>
+    <li>Predecessor post, the 2026-04-30 round against the pre-prototype architecture: <a href="five-fatal-findings.html">Five FATAL Findings Three Deep Think Rounds Missed</a></li>
+    <li>Companion posts on the discipline machinery that catches retractable claims in the first place: <a href="caught-cheating.html">Caught Cheating</a> (fabricated artifacts), <a href="regex-in-an-ntk-costume.html">Regex in an NTK Costume</a> (disguised verifiers), <a href="why-two-aurocs.html">Why We Report Two AUROCs Now</a> (self-learning leakage).</li>
+    <li>The rescue measurements as individual artifacts: <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/results/experiment_2938_kv260_mmd_vs_cpu_sequential_gibbs_v1.json">exp2938</a> (MMD), <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/results/experiment_2939_cpu_synchronous_parallel_same_schedule_baseline_v1.json">exp2939</a> (same-schedule comparator), <a href="https://github.com/Carnot-EBM/carnot-ebm/blob/main/results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json">exp2940</a> (AUPRC).</li>
+  </ul>
+</div>
+
+<div class="footnote">
+  <strong>About this post.</strong> This is the fifth in a series of
+  operational notes from the <a href="https://github.com/Carnot-EBM/carnot-ebm">Carnot</a>
+  project on building an autonomous research loop we can actually
+  trust. The earlier four posts described the discipline machinery
+  &mdash; how we catch fabricated artifacts, disguised verifier code,
+  pre-prototype architectural flaws, and self-learning leakage in
+  reported numbers. This one is about what happens when the
+  discipline machinery fires on the paper itself.
+</div>
+
+</article>
+
+<footer>
+  Carnot is open-source under Apache 2.0.
+  <br>
+  <a href="https://github.com/Carnot-EBM/carnot-ebm">github.com/Carnot-EBM/carnot-ebm</a>
+</footer>
+
+</body>
+</html>
