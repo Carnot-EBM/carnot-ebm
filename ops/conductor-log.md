@@ -6062,3 +6062,4 @@ web search:
 | 2026-05-23 14:33 UTC | Milestone 2026.05.276 activated | OK | 14 tasks queued |
 | 2026-05-23 14:43 UTC | Archive .275 + Activate .276 | OK | 81 passed in 3.57s |
 | 2026-05-23 15:00 UTC | Aggregation Metadata Corrigendum: Matrix v9 + Caps | OK | 81 passed in 3.84s |
+| 2026-05-23 15:17 UTC | Code Hallucination Taxonomy Provenance Corrigendum | OK | 81 passed in 3.80s |
