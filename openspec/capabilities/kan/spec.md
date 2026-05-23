@@ -149,6 +149,32 @@ reported, exact enumeration is marked fallback-only, and
 `results/experiment_2876_kan_pwa_milp_corrigendum_v2.json` includes every
 required schema field.
 
+## REQ-KAN-2893: Tiny KAN PWA/MILP Hardware-Oriented Complexity Accounting
+
+The KAN verification tier SHALL provide a no-hardware-claim complexity
+accounting pass for the clean Exp 2876 tiny KAN PWA/MILP fixture. The accounting
+MUST load the Exp 2876 artifact, derive the two-unit PWA structure from the
+artifact or deterministic fixture, and report platform-independent operation and
+structural counts inspired by arXiv:2604.03345: real multiplications, bit
+operations, additions and bit-shifts, memory table entries, PWA regions, and
+MILP branch/constraint counts.
+
+The artifact MUST be written to
+`results/experiment_2893_kan_hardware_complexity_accounting_v1.json`, MUST
+compare against local KANELE/QuantKAN/KAEM accounting helper conventions where
+applicable, and MUST explicitly state that no FPGA, analog KAN, board, synthesis,
+or hardware execution claim is made.
+
+### SCENARIO-KAN-2893: Tiny PWA Complexity Artifact Is Deterministic
+
+Given the completed Exp 2876 two-unit KAN PWA/MILP corrigendum artifact,
+When the hardware-oriented accounting helper runs,
+Then the Exp 2893 artifact records deterministic RM/BOP/NABS, memory-table,
+PWA-region, MILP constraint, and branch counts; includes source artifacts,
+field-principle notes, local and global error bounds inherited from Exp 2876;
+sets `hardware_execution_claim_made=false` and `analog_kan_claim_made=false`;
+and contains every required schema field.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
@@ -263,6 +289,7 @@ Then it outputs the token-per-second (TPS) for both baseline and CIKAN, and `res
 | REQ-KAN-1749 | Implemented | Exp 1749: Symbolic-KAN routing layer embeds discrete primitive choices as tensor gates over learned scalar projections. |
 | REQ-KAN-2005 | Proposed | Exp 2005 target: adaptive KAEM/KAN spline mesh refinement emits structural-change metrics and a completed artifact. |
 | REQ-KAN-2876 | Implemented | Exp 2876 corrigendum separates local/global bounds and reports the local Z3 solver path or blocked-solver fallback. |
+| REQ-KAN-2893 | Proposed | Exp 2893 target: no-hardware-claim RM/BOP/NABS accounting for the clean Exp 2876 tiny PWA/MILP fixture. |
 
 ## REQ-KAN-020: KAEMEnergy FPGA LUT Budget Analyzability
 
