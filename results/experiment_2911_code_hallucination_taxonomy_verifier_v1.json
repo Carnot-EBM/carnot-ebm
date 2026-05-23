@@ -9379,5 +9379,18 @@
     "python/carnot/eval/code_hallucination_taxonomy_verifier.py",
     "scripts/experiment_2911_code_hallucination_taxonomy_verifier.py",
     "tests/python/test_experiment_2911_code_hallucination_taxonomy_verifier.py"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.027930021286010742 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
