@@ -1150,3 +1150,58 @@ PolarFire, and THRML, cites each upstream artifact, sets
 non-negative aggregation duration.
 
 **Implementation status:** Implemented (Exp 2907)
+
+---
+
+### REQ-HW-064
+
+**Title:** Exp 2912 KV260 same-basis CPU Gibbs baseline MUST reconstruct the exact Exp 2898 problem basis
+
+**Description:**
+Experiment 2912 MUST read
+`results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json`
+and reconstruct the exact n=64 Ising basis that was uploaded to the KV260 in
+Exp 2898. The run MUST extract the uploaded sparse topology, q8.8 coupling
+tensor, q8.8 field tensor, coupling and field checksums, random seeds, and
+sample-count sweep. If the upstream artifact is absent, the run MUST write
+`honest_verdict="blocked_kv260_latency_artifact_missing"`. If any exact tensor
+needed for the same-basis comparison is missing or malformed, the run MUST write
+`honest_verdict="blocked_kv260_problem_basis_unrecoverable"` and identify the
+missing field. When the basis is recoverable, the experiment MUST run a CPU
+sequential Gibbs sampler on the uploaded sparse basis for sample counts 100,
+1000, and 10000 for every Exp 2898 seed, recording median and p95 per-sample
+wall-clock latency, final energy, energy trace checksum, and reproducibility
+checksum. The artifact MUST set `speedup_claim_made=false` and MUST NOT claim
+hardware speedup.
+
+**Acceptance criteria:**
+- `results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json` is
+  generated with `inference_substrate="cpu_sampler"` and
+  `same_basis_cpu_baseline_ready=true` only when all Exp 2898 tensors are
+  recovered and all CPU runs complete.
+- The artifact records `upstream_kv260_artifact`, `n_spins=64`,
+  `matched_sparse_topology=true`, `matched_coupling_tensor=true`,
+  `matched_field_tensor=true`, `random_seeds_used`, `sample_count_sweep`,
+  `cpu_per_seed_results`, median and p95 latency dictionaries by sample count,
+  `reproducibility_checksum`, `duration_s`, and `run_date="20260523"`.
+- Missing Exp 2898 or unrecoverable tensor fields produce terminal blocked
+  artifacts rather than silently synthesizing a substitute problem.
+- `speedup_claim_made` remains false in every terminal artifact.
+
+**Implementation status:** Pending (Exp 2912)
+
+---
+
+### SCENARIO-HW-064
+
+**Scenario:** Same-basis CPU Gibbs baseline anchors the KV260 latency transcript.
+
+**Given:** Exp 2898 completed with a recoverable n=64 sparse AXI upload for
+seeds 42, 137, and 271.
+**When:** Exp 2912 runs the CPU sequential Gibbs baseline for sample counts
+100, 1000, and 10000 on those exact uploaded tensors.
+**Then:** The artifact reports per-seed CPU latency and energy provenance,
+marks all basis-match booleans true, records a reproducibility checksum, and
+does not make a hardware speedup claim.
+
+**Implementation status:** Pending (Exp 2912)
