@@ -320,6 +320,52 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 — Corrected Toolchain Invocation (.276+ MANDATORY)
+
+**Origin:** 2026-05-23 operator directive ("can we unblock gatemate?") after exp2899 (`.274) emitted `blocked_gatemate_toolchain_missing`. Investigation showed the toolchain is fully present — `nextpnr-gatemate` as a standalone binary was retired upstream; the GateMate flow now uses `nextpnr-himbaechel --device CCGM1A1` via the himbaechel backend, with `gmpack` producing the flashable bitstream. End-to-end smoke test on 2026-05-23 06:14Z produced a working bitstream from a minimal counter design. exp2899's PRECONDITIONS step looked for the wrong binary name; the task was structurally blocked at PRECONDITIONS, never reaching the actual build.
+
+**The task to queue.** Pre-stage in `research-roadmap-next.yaml` for `.276 (or whichever milestone follows the active one) a corrigendum task that:
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_gatemate_a1_n16_ising_tile_bitstream_build_v2.json"
+  title: "GateMate A1 n=16 Ising Tile Bitstream Build v2 (Corrected Toolchain)"
+  priority: high
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 40
+  estimated_wall_time_min: 60
+  track: hardware
+  inference_substrate: hardware_smoke
+  prior_failures:
+    - experiment_id: exp2899
+      verdict: "blocked_gatemate_toolchain_missing"
+      addressed_by: "exp2899's PRECONDITIONS looked for the obsolete `nextpnr-gatemate` binary. The 2026-era GateMate flow uses `nextpnr-himbaechel --device CCGM1A1`. This task uses the corrected invocation, confirmed end-to-end via smoke test on 2026-05-23."
+      retire_if_same_verdict: true
+```
+
+**Concrete steps the corrigendum must use (replace exp2899's invocation):**
+
+1. PRECONDITIONS:
+   - `command -v yosys && yosys -V` → "Yosys 0.64+" or newer
+   - `command -v nextpnr-himbaechel && nextpnr-himbaechel --help | head -1` → "nextpnr-himbaechel"
+   - `command -v gmpack` → present
+   - `openFPGALoader -c dirtyJtag --detect 2>&1 | grep -q "GateMate Series"` → IDCODE recognized
+2. Adapt hardware/kv260/discrete_sb_256.v to n=16 spins. Save as `hardware/gatemate/ising_n16_gatemate.v`.
+3. `yosys -p "read_verilog hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -json out.json"`
+4. Write a minimal CCF file `hardware/gatemate/ising_n16.ccf` declaring clock + reset + handful of LED/IO pins (the A1-EVB-2M has well-documented pin assignments for clock 10MHz, RESET button, LED0–3).
+5. `nextpnr-himbaechel --device CCGM1A1 --json out.json --vopt out=out.cfg.bit --vopt ccf=hardware/gatemate/ising_n16.ccf`
+6. `gmpack out.cfg.bit out.bit`
+7. DO NOT flash. Record the bitstream sha256 + place-and-route timing report.
+
+**Acceptance gates:** the artifact succeeds if (a) yosys synth_gatemate finishes without error, (b) nextpnr-himbaechel place-and-route finishes without error AND no `unconstrained pins` warning, (c) gmpack produces a non-empty .bit file, (d) bitstream sha256 recorded. Flashing is a follow-on task (separate adversarial check).
+
+**Why this stays in MANDATORY until landed:** the Hardware-Task Continuity Discipline requires one task per attached board per milestone. exp2899's false-block left GateMate without a real artifact for `.274; the corrigendum closes that gap.
+
+---
+
 ### NEW 2026-05-20 (19:30Z): RecMem Recurrence-Trigger for FR-11 Memory + Paper-v6 Cite (.257+ MANDATORY)
 
 **Origin:** 2026-05-20 operator-shared paper arXiv:2605.16045 "RecMem:

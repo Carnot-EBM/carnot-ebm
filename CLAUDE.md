@@ -1667,6 +1667,8 @@ verdict.
 | CUDA inference | `python -c "import torch; assert torch.cuda.is_available() and torch.cuda.device_count() > 0"` |
 | Vivado toolchain | `command -v vivado` AND `vivado -version` returns >=2024.1 |
 | yosys + openFPGALoader | both `command -v yosys` AND `command -v openFPGALoader` succeed |
+| nextpnr (GateMate, ECP5, ice40, etc.) | The 2026-era GateMate flow uses the himbaechel backend, NOT a standalone `nextpnr-gatemate` binary. Use `command -v nextpnr-himbaechel && nextpnr-himbaechel --help` for any GateMate task. The `nextpnr-gatemate` binary does NOT exist in current oss-cad-suite; tasks looking for it will incorrectly emit `blocked_gatemate_toolchain_missing` (cf. exp2899 `.274). Confirmed end-to-end 2026-05-23: yosys 0.64+149 `synth_gatemate` → `nextpnr-himbaechel --device CCGM1A1 --json X --vopt out=X.cfg.bit` → `gmpack X.cfg.bit X.bit` produces a flashable bitstream. |
+| GateMate board reachable | `openFPGALoader -c dirtyJtag --detect` returns the `colognechip / GateMate Series / GM1Ax` IDCODE. The `--scan` flag does NOT exist on openFPGALoader; use `--scan-usb` or `--detect`. |
 | PolarFire SSH | `ssh -o ConnectTimeout=5 polarfire 'true'` returns 0 |
 | KV260 hardware (board booted, reachable via SSH) | `ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'` returns 0. The board has run Ubuntu Xilinx since 2026-05-20 ~13:00 EDT; SD-card-flash workflows are obsolete (2026-05-20 operator directive — interact with the board via SSH, not by flashing a host SD card with PYNQ). |
 | THRML installed | `python -c "import thrml; print(thrml.__version__)"` succeeds |
