@@ -6047,3 +6047,5 @@ Ripgrep i |
 | 2026-05-23 11:08 UTC | GateMate n=16 Ising Tile Bitstream Build v2 (gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2914) |
 | 2026-05-23 11:23 UTC | THRML-KV260 Sampler Parity Audit v1 (gated on Exp2 | OK | 81 passed in 4.19s |
 | 2026-05-23 11:25 UTC | GateMate n=16 Ising Tile Bitstream Build v2 (gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2914) |
+| 2026-05-23 11:41 UTC | Spilled-Energy Logit Detector Micro-Panel v1 | OK | 81 passed in 3.56s |
+| 2026-05-23 11:43 UTC | GateMate n=16 Ising Tile Bitstream Build v2 (gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2914) |
