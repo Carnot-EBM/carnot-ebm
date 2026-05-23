@@ -248,7 +248,7 @@ tasks:
           principle: "The apples-to-apples speedup measurement. < 1.0 means KV260 is slower at this n; >= 1.0 means faster."
         energy_distribution_equivalence_test:
           principle: "Cross-check that the same broken sampler produces statistically-equivalent distributions on both substrates."
-          shape: "{ks_pvalue: float, mmd_squared: float}"
+          shape: "{{ks_pvalue: float, mmd_squared: float}}"
         random_seed: int
         random_seeds_used: list[int]
         reproducibility_checksum: str
@@ -337,16 +337,16 @@ tasks:
         fover_corpus_auprc:
           principle: "Recomputed from exp2837 for the apples-to-apples comparison the paper needs."
         max_f1_operating_point:
-          shape: "{threshold: float, ppv: float, recall: float, f1: float}"
+          shape: "{{threshold: float, ppv: float, recall: float, f1: float}}"
         ppv_50_operating_point:
-          shape: "{threshold: float, ppv: float, recall: float, f1: float}"
+          shape: "{{threshold: float, ppv: float, recall: float, f1: float}}"
           principle: "The threshold where verifier-approval has at least 50/50 odds of being correct. If unreachable, verifier is a hallucination multiplier on this corpus."
         recall_80_operating_point:
-          shape: "{threshold: float, ppv: float, recall: float, f1: float}"
+          shape: "{{threshold: float, ppv: float, recall: float, f1: float}}"
         paper_v6_recommendation:
           principle: "retain | narrow | retract for the code-corpus active-inference claim."
         cited_upstream_artifacts:
-          shape: "list of {experiment_id, fields_imported, sha256}"
+          shape: "list of {{experiment_id, fields_imported, sha256}}"
         methodology_note: str
         duration_s: float
 
@@ -433,19 +433,19 @@ tasks:
     prior_failures:
       - experiment_id: exp2898
         verdict: "complete: kv260_hardware_latency_transcript_recorded at n=64"
-        addressed_by: "exp2898 measured n=64 only. Deep Think FATAL #3 noted the CPU-FPGA crossover at n ≈ 240. This task profiles n ∈ {64, 128, 256, 512, 1024} so the paper can plot the actual measured crossover point (instead of extrapolating)."
+        addressed_by: "exp2898 measured n=64 only. Deep Think FATAL #3 noted the CPU-FPGA crossover at n ≈ 240. This task profiles n ∈ {{64, 128, 256, 512, 1024}} so the paper can plot the actual measured crossover point (instead of extrapolating)."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
         Deep Think FATAL #3 identified that the KV260-vs-CPU crossover
         falls at roughly n ≈ 240 spins, while the architecture scopes
-        d ∈ {128, 256}. This task replaces extrapolation with measurement:
-        run KV260 latency profiles at n ∈ {64, 128, 256, 512, 1024} so
+        d ∈ {{128, 256}}. This task replaces extrapolation with measurement:
+        run KV260 latency profiles at n ∈ {{64, 128, 256, 512, 1024}} so
         the paper can plot real crossover data.
 
       CONCRETE STEPS:
         0. PRECONDITIONS: ssh kria + carnot_ising_v4 bitstream.
-        1. For n in {64, 128, 256, 512, 1024}: generate Ising
+        1. For n in {{64, 128, 256, 512, 1024}}: generate Ising
            problem, run KV260 sampler, record per-sample latency
            (median + p95 over 1000 samples).
         2. Note: the carnot_ising_v4 bitstream may have a fixed n
@@ -458,7 +458,7 @@ tasks:
         preconditions_checked: list
         bitstream_supports_variable_n: bool
         per_n_results:
-          shape: "list of {n: int, per_sample_us_median: float, per_sample_us_p95: float}"
+          shape: "list of {{n: int, per_sample_us_median: float, per_sample_us_p95: float}}"
         bitstream_sha256: str
         random_seeds_used: list[int]
         reproducibility_checksum: str
@@ -545,7 +545,7 @@ tasks:
         inference_substrate: "aggregation_from_upstream_artifacts"
         files_scanned: list[str]
         per_file_hits:
-          shape: "list of {file, line, matched_phrase, retracted_claim_id, suggested_fix}"
+          shape: "list of {{file, line, matched_phrase, retracted_claim_id, suggested_fix}}"
         n_total_hits: int
         n_operator_curated_hits_left_for_operator: int
         n_autonomous_artifact_hits_auto_fixed: int
@@ -607,7 +607,7 @@ tasks:
         inference_substrate: "aggregation_from_upstream_artifacts"
         files_scanned: list
         firewall_violations:
-          shape: "list of {file, line, phase_4_citation, hardware_context_snippet}"
+          shape: "list of {{file, line, phase_4_citation, hardware_context_snippet}}"
         n_violations: int
         firewall_paragraph_draft:
           principle: "Operator-integrable LaTeX snippet stating that Phase-4 VFE bounds apply only to RTX 3090 continuous-sampler deployment."
@@ -727,13 +727,13 @@ tasks:
         missing_artifacts: list
         paper_ready: bool
         deep_think_corrigenda_outcomes:
-          shape: "{mmd_distinguishable: bool, same_schedule_speedup: float, code_auprc_recommendation: str}"
+          shape: "{{mmd_distinguishable: bool, same_schedule_speedup: float, code_auprc_recommendation: str}}"
         paper_v6_safe_claims:
           principle: "Explicit list of claims that survive both the Deep Think narrowings AND the corrigenda outcomes."
         paper_v6_forbidden_claims:
           principle: "Explicit list of claims that remain retracted per the Narrowing Discipline."
         narrowing_discipline_compliance_audit:
-          shape: "list of {file, hits, fixes_applied}"
+          shape: "list of {{file, hits, fixes_applied}}"
         top_3_next_actions: list[str]
         gaps_for_278: list
         cited_upstream_artifacts: list

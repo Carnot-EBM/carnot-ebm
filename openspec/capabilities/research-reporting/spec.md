@@ -5314,3 +5314,72 @@ to `research-roadmap.yaml` or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2923 | Implemented (`python/carnot/reporting/milestone_275_archive_276_activation.py`) | Implemented (`tests/python/test_experiment_2923_archive_v275.py`) |
+
+### REQ-REPORT-2924: Matrix V9 And .275 Capstone Aggregation Corrigendum
+
+The repository shall provide an Exp 2924 aggregation-metadata corrigendum
+workflow that writes
+`results/experiment_2924_aggregation_metadata_corrigendum_v1.json` by reading
+only the existing Exp 2921 matrix v9 artifact and Exp 2922 `.275` capstone
+artifact. The workflow MUST NOT call an LLM, rerun a verifier, rerun a sampler,
+or launch hardware.
+
+If either upstream artifact is absent or malformed, the workflow MUST write a
+terminal artifact with `honest_verdict="blocked_upstream_artifact_missing"`,
+`aggregation_metadata_clean=false`, `no_new_llm_call=true`,
+`no_new_hardware_run=true`, and the missing upstream paths listed explicitly.
+
+When both upstream artifacts are present, the workflow MUST compute SHA256
+checksums for every source artifact directly cited by Exp 2921 or Exp 2922,
+plus Exp 2921 and Exp 2922 themselves. Missing cited artifacts MUST remain
+listed with a null checksum rather than being inferred from downstream rows.
+
+The workflow MUST build `aggregation_provenance` rows containing
+`artifact_path`, `checksum`, `row_role`, `source_inference_substrate`, and
+`current_task_reran_compute=false`. The provenance MUST distinguish
+`corrigendum_subject` artifacts from matrix-row and capstone-source artifacts.
+
+The workflow MUST preserve upstream flagged-row facts separately from
+current-artifact audit findings. In particular, Exp 2911, Exp 2919, and Exp
+2921 MUST remain listed in `upstream_flagged_rows_preserved` when they are
+flagged by the `.275` artifacts. Exp 2921 and Exp 2922 DURATION_TOO_SHORT or
+METHODOLOGY_MISSING findings caused by inherited compute-bound metadata MUST be
+listed in `metadata_false_positive_findings` without laundering Exp 2911 or
+Exp 2919.
+
+The workflow MUST run the local adversarial artifact audit when available. If
+the audit still flags the corrigendum artifact, it MUST record the exact audit
+findings in `adversarial_audit_rerun` and set
+`aggregation_metadata_clean=false`; otherwise it MUST set
+`aggregation_metadata_clean=true`.
+
+The terminal artifact MUST include `honest_verdict`,
+`aggregation_metadata_clean`, `no_new_llm_call=true`,
+`no_new_hardware_run=true`, `aggregation_from_upstream_artifacts=true`,
+`source_artifact_checksums`, `aggregation_provenance`,
+`upstream_flagged_rows_preserved`, `metadata_false_positive_findings`,
+`adversarial_audit_rerun`, `inference_substrate` equal to
+`aggregation_from_upstream_artifacts`, measured `duration_s`, and
+`run_date="20260523"`.
+
+#### SCENARIO-REPORT-2924: Corrigendum Separates Upstream Flags From Metadata False Positives
+
+**Given** Exp 2921 and Exp 2922 artifacts exist
+**And** they cite upstream source artifacts with mixed clean, flagged, blocked,
+missing, and diagnostic roles
+**And** Exp 2911, Exp 2919, and Exp 2921 are flagged in the `.275` artifacts
+**When** the Exp 2924 corrigendum workflow runs
+**Then** it writes
+`results/experiment_2924_aggregation_metadata_corrigendum_v1.json` with all
+required fields, SHA256 checksums for present cited artifacts, null checksums
+for missing cited artifacts, `current_task_reran_compute=false` on every
+provenance row, Exp 2911/2919/2921 preserved as upstream flags, Exp 2921 and
+Exp 2922 aggregation-only audit findings classified as metadata false
+positives, and the local adversarial audit result recorded for the corrigendum
+itself.
+
+## Implementation Status (REQ-REPORT-2924)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2924 | Planned (`python/carnot/reporting/aggregation_metadata_corrigendum_2924.py`) | Planned (`tests/python/test_aggregation_metadata_corrigendum_2924.py`) |

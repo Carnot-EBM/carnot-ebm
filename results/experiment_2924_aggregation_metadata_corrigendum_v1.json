@@ -1,0 +1,582 @@
+{
+  "adversarial_audit_rerun": {
+    "audit_available": true,
+    "audit_tool": "scripts/adversarial_verify.py",
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2924_aggregation_metadata_corrigendum_v1.json",
+      "--json"
+    ],
+    "findings": [],
+    "flagged": false,
+    "returncode": 0,
+    "stderr": ""
+  },
+  "aggregation_from_upstream_artifacts": true,
+  "aggregation_metadata_clean": true,
+  "aggregation_provenance": [
+    {
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "checksum": "10785890a2e72a2893f6573f3baba0115e3a13e02e0bf5e858532ab9a01dcd08",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": null,
+      "declared_present": null,
+      "experiment_id": "exp2921",
+      "identifier": "exp2921",
+      "present": true,
+      "row_role": "corrigendum_subject",
+      "source_artifact": null,
+      "source_inference_substrate": "aggregation_from_upstream_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2922_capstone_v275.json",
+      "checksum": "ddd9a50cd9823fa7a18393b1a555e2d228faa1553579d2a5d4151362f328376c",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": null,
+      "declared_present": null,
+      "experiment_id": "exp2922",
+      "identifier": "exp2922",
+      "present": true,
+      "row_role": "corrigendum_subject",
+      "source_artifact": null,
+      "source_inference_substrate": "aggregation_from_upstream_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "declared_present": true,
+      "experiment_id": "exp2902",
+      "identifier": "exp2902_matrix_v8",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "aggregation_from_upstream_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+      "checksum": "2fe735b58ff1e27f26fe44d62aa7ad6fd662ef8350241bbbe125db84dbd96d2a",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "2fe735b58ff1e27f26fe44d62aa7ad6fd662ef8350241bbbe125db84dbd96d2a",
+      "declared_present": true,
+      "experiment_id": "exp2910",
+      "identifier": "exp2910_sota_codegen",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "live_llm_inference"
+    },
+    {
+      "artifact_path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "checksum": "6aa2c9d9721ec415c2a9de48c1e3d38aa23f304e858eaf28e1c26eb365a9b46b",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "6aa2c9d9721ec415c2a9de48c1e3d38aa23f304e858eaf28e1c26eb365a9b46b",
+      "declared_present": true,
+      "experiment_id": "exp2911",
+      "identifier": "exp2911_code_hallucination_verifier",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "deterministic_verifier"
+    },
+    {
+      "artifact_path": "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json",
+      "checksum": "2fce41c587ac4936e2d45c767fd96f8eda168ab7a0c54db778694167a780770e",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "2fce41c587ac4936e2d45c767fd96f8eda168ab7a0c54db778694167a780770e",
+      "declared_present": true,
+      "experiment_id": "exp2912",
+      "identifier": "exp2912_kv260_cpu_baseline",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "cpu_sampler"
+    },
+    {
+      "artifact_path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "checksum": "23c6808bf40b663ee437d2641d9abfa3478b188c9d38a87c80691abec29cbbff",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "23c6808bf40b663ee437d2641d9abfa3478b188c9d38a87c80691abec29cbbff",
+      "declared_present": true,
+      "experiment_id": "exp2913",
+      "identifier": "exp2913_kv260_claim_boundary",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "aggregation_from_upstream_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2914_gatemate_toolchain_preflight_v2.json",
+      "checksum": "60b0110d0050522ed973b85299ca3ef662c7e653d84fb659c0a011e87573c51d",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "60b0110d0050522ed973b85299ca3ef662c7e653d84fb659c0a011e87573c51d",
+      "declared_present": true,
+      "experiment_id": "exp2914",
+      "identifier": "exp2914_gatemate_toolchain",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "hardware_preflight"
+    },
+    {
+      "artifact_path": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json",
+      "checksum": null,
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": null,
+      "declared_present": false,
+      "experiment_id": "exp2915",
+      "identifier": "exp2915_gatemate_bitstream",
+      "present": false,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": null
+    },
+    {
+      "artifact_path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "checksum": "aff8275c9b45021f8b3b2dda300eb2ac9c3ae84ed020ff991f6e6fea89dc9fcd",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "aff8275c9b45021f8b3b2dda300eb2ac9c3ae84ed020ff991f6e6fea89dc9fcd",
+      "declared_present": true,
+      "experiment_id": "exp2916",
+      "identifier": "exp2916_thrml_parity",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "simulator_parity"
+    },
+    {
+      "artifact_path": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json",
+      "checksum": "b8936174a69fff5a8ca5e9b2c955b26d5950b333766ab494c45e6bdac3083f3c",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "b8936174a69fff5a8ca5e9b2c955b26d5950b333766ab494c45e6bdac3083f3c",
+      "declared_present": true,
+      "experiment_id": "exp2917",
+      "identifier": "exp2917_spilled_energy_micro_panel",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "live_llm_inference"
+    },
+    {
+      "artifact_path": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "checksum": "bfeb2a2e5361393a5ca0cd89de7b3fd248e7c14fa1665e72b8f41a4cf1dbd899",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "bfeb2a2e5361393a5ca0cd89de7b3fd248e7c14fa1665e72b8f41a4cf1dbd899",
+      "declared_present": true,
+      "experiment_id": "exp2918",
+      "identifier": "exp2918_fr11_process_rewards",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "deterministic_verifier_plus_replay"
+    },
+    {
+      "artifact_path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "checksum": "c31f05c2f114274cbaee2314e4b9358e38a75ca4a6f1ff2a8be122a96f7c32f6",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "c31f05c2f114274cbaee2314e4b9358e38a75ca4a6f1ff2a8be122a96f7c32f6",
+      "declared_present": true,
+      "experiment_id": "exp2919",
+      "identifier": "exp2919_constraintbench_mini",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "live_llm_inference_plus_exact_verifier"
+    },
+    {
+      "artifact_path": "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json",
+      "checksum": "3b201ae7768be78292fd965cd9f529231010d465508dd3828cb83fa4727738e8",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "3b201ae7768be78292fd965cd9f529231010d465508dd3828cb83fa4727738e8",
+      "declared_present": true,
+      "experiment_id": "exp2920",
+      "identifier": "exp2920_state_verifier_harness",
+      "present": true,
+      "row_role": "matrix_row_source",
+      "source_artifact": "exp2921",
+      "source_inference_substrate": "deterministic_state_verifier"
+    },
+    {
+      "artifact_path": "results/experiment_2909_archive_v274_activate_v275.json",
+      "checksum": "055fc8ed9c537de0075a0349488bbeb907985697b5d7dfe1ec214bc507ff1d71",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "055fc8ed9c537de0075a0349488bbeb907985697b5d7dfe1ec214bc507ff1d71",
+      "declared_present": true,
+      "experiment_id": "exp2909",
+      "identifier": "exp2909",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "aggregation_from_upstream_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+      "checksum": "2fe735b58ff1e27f26fe44d62aa7ad6fd662ef8350241bbbe125db84dbd96d2a",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "2fe735b58ff1e27f26fe44d62aa7ad6fd662ef8350241bbbe125db84dbd96d2a",
+      "declared_present": true,
+      "experiment_id": "exp2910",
+      "identifier": "exp2910",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "live_llm_inference"
+    },
+    {
+      "artifact_path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "checksum": "6aa2c9d9721ec415c2a9de48c1e3d38aa23f304e858eaf28e1c26eb365a9b46b",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "6aa2c9d9721ec415c2a9de48c1e3d38aa23f304e858eaf28e1c26eb365a9b46b",
+      "declared_present": true,
+      "experiment_id": "exp2911",
+      "identifier": "exp2911",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "deterministic_verifier"
+    },
+    {
+      "artifact_path": "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json",
+      "checksum": "2fce41c587ac4936e2d45c767fd96f8eda168ab7a0c54db778694167a780770e",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "2fce41c587ac4936e2d45c767fd96f8eda168ab7a0c54db778694167a780770e",
+      "declared_present": true,
+      "experiment_id": "exp2912",
+      "identifier": "exp2912",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "cpu_sampler"
+    },
+    {
+      "artifact_path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "checksum": "23c6808bf40b663ee437d2641d9abfa3478b188c9d38a87c80691abec29cbbff",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "23c6808bf40b663ee437d2641d9abfa3478b188c9d38a87c80691abec29cbbff",
+      "declared_present": true,
+      "experiment_id": "exp2913",
+      "identifier": "exp2913",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "aggregation_from_upstream_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2914_gatemate_toolchain_preflight_v2.json",
+      "checksum": "60b0110d0050522ed973b85299ca3ef662c7e653d84fb659c0a011e87573c51d",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "60b0110d0050522ed973b85299ca3ef662c7e653d84fb659c0a011e87573c51d",
+      "declared_present": true,
+      "experiment_id": "exp2914",
+      "identifier": "exp2914",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "hardware_preflight"
+    },
+    {
+      "artifact_path": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json",
+      "checksum": null,
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": null,
+      "declared_present": false,
+      "experiment_id": "exp2915",
+      "identifier": "exp2915",
+      "present": false,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": null
+    },
+    {
+      "artifact_path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "checksum": "aff8275c9b45021f8b3b2dda300eb2ac9c3ae84ed020ff991f6e6fea89dc9fcd",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "aff8275c9b45021f8b3b2dda300eb2ac9c3ae84ed020ff991f6e6fea89dc9fcd",
+      "declared_present": true,
+      "experiment_id": "exp2916",
+      "identifier": "exp2916",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "simulator_parity"
+    },
+    {
+      "artifact_path": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json",
+      "checksum": "b8936174a69fff5a8ca5e9b2c955b26d5950b333766ab494c45e6bdac3083f3c",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "b8936174a69fff5a8ca5e9b2c955b26d5950b333766ab494c45e6bdac3083f3c",
+      "declared_present": true,
+      "experiment_id": "exp2917",
+      "identifier": "exp2917",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "live_llm_inference"
+    },
+    {
+      "artifact_path": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "checksum": "bfeb2a2e5361393a5ca0cd89de7b3fd248e7c14fa1665e72b8f41a4cf1dbd899",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "bfeb2a2e5361393a5ca0cd89de7b3fd248e7c14fa1665e72b8f41a4cf1dbd899",
+      "declared_present": true,
+      "experiment_id": "exp2918",
+      "identifier": "exp2918",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "deterministic_verifier_plus_replay"
+    },
+    {
+      "artifact_path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "checksum": "c31f05c2f114274cbaee2314e4b9358e38a75ca4a6f1ff2a8be122a96f7c32f6",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "c31f05c2f114274cbaee2314e4b9358e38a75ca4a6f1ff2a8be122a96f7c32f6",
+      "declared_present": true,
+      "experiment_id": "exp2919",
+      "identifier": "exp2919",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "live_llm_inference_plus_exact_verifier"
+    },
+    {
+      "artifact_path": "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json",
+      "checksum": "3b201ae7768be78292fd965cd9f529231010d465508dd3828cb83fa4727738e8",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "3b201ae7768be78292fd965cd9f529231010d465508dd3828cb83fa4727738e8",
+      "declared_present": true,
+      "experiment_id": "exp2920",
+      "identifier": "exp2920",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "deterministic_state_verifier"
+    },
+    {
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "checksum": "10785890a2e72a2893f6573f3baba0115e3a13e02e0bf5e858532ab9a01dcd08",
+      "checksum_matches_declared": true,
+      "current_task_reran_compute": false,
+      "declared_checksum": "10785890a2e72a2893f6573f3baba0115e3a13e02e0bf5e858532ab9a01dcd08",
+      "declared_present": true,
+      "experiment_id": "exp2921",
+      "identifier": "exp2921",
+      "present": true,
+      "row_role": "capstone_source",
+      "source_artifact": "exp2922",
+      "source_inference_substrate": "aggregation_from_upstream_artifacts"
+    }
+  ],
+  "duration_s": 0.08162,
+  "honest_verdict": "complete: aggregation metadata corrigendum written; aggregation_metadata_clean=true; upstream_flags_preserved=7; metadata_false_positive_findings=4",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "metadata_false_positive_findings": [
+    {
+      "artifact_inference_substrate": "aggregation_from_upstream_artifacts",
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "detail": "duration_s=0.008404 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+      "experiment_id": "exp2921",
+      "false_positive_reason": "aggregation-only artifact inherited compute-bound metadata from upstream rows; this corrigendum reran no LLM, verifier, sampler, or hardware compute",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    },
+    {
+      "artifact_inference_substrate": "aggregation_from_upstream_artifacts",
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.",
+      "experiment_id": "exp2921",
+      "false_positive_reason": "aggregation-only artifact inherited compute-bound metadata from upstream rows; this corrigendum reran no LLM, verifier, sampler, or hardware compute",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn"
+    },
+    {
+      "artifact_inference_substrate": "aggregation_from_upstream_artifacts",
+      "artifact_path": "results/experiment_2922_capstone_v275.json",
+      "detail": "duration_s=0.007456 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+      "experiment_id": "exp2922",
+      "false_positive_reason": "aggregation-only artifact inherited compute-bound metadata from upstream rows; this corrigendum reran no LLM, verifier, sampler, or hardware compute",
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical"
+    },
+    {
+      "artifact_inference_substrate": "aggregation_from_upstream_artifacts",
+      "artifact_path": "results/experiment_2922_capstone_v275.json",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.",
+      "experiment_id": "exp2922",
+      "false_positive_reason": "aggregation-only artifact inherited compute-bound metadata from upstream rows; this corrigendum reran no LLM, verifier, sampler, or hardware compute",
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn"
+    }
+  ],
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "run_date": "20260523",
+  "source_artifact_checksums": {
+    "results/experiment_2902_cross_corpus_matrix_v8.json": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+    "results/experiment_2909_archive_v274_activate_v275.json": "055fc8ed9c537de0075a0349488bbeb907985697b5d7dfe1ec214bc507ff1d71",
+    "results/experiment_2910_sota_code_generation_corrigendum_v2.json": "2fe735b58ff1e27f26fe44d62aa7ad6fd662ef8350241bbbe125db84dbd96d2a",
+    "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json": "6aa2c9d9721ec415c2a9de48c1e3d38aa23f304e858eaf28e1c26eb365a9b46b",
+    "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json": "2fce41c587ac4936e2d45c767fd96f8eda168ab7a0c54db778694167a780770e",
+    "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json": "23c6808bf40b663ee437d2641d9abfa3478b188c9d38a87c80691abec29cbbff",
+    "results/experiment_2914_gatemate_toolchain_preflight_v2.json": "60b0110d0050522ed973b85299ca3ef662c7e653d84fb659c0a011e87573c51d",
+    "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json": null,
+    "results/experiment_2916_thrml_kv260_sampler_parity_v1.json": "aff8275c9b45021f8b3b2dda300eb2ac9c3ae84ed020ff991f6e6fea89dc9fcd",
+    "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json": "b8936174a69fff5a8ca5e9b2c955b26d5950b333766ab494c45e6bdac3083f3c",
+    "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json": "bfeb2a2e5361393a5ca0cd89de7b3fd248e7c14fa1665e72b8f41a4cf1dbd899",
+    "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json": "c31f05c2f114274cbaee2314e4b9358e38a75ca4a6f1ff2a8be122a96f7c32f6",
+    "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json": "3b201ae7768be78292fd965cd9f529231010d465508dd3828cb83fa4727738e8",
+    "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json": "10785890a2e72a2893f6573f3baba0115e3a13e02e0bf5e858532ab9a01dcd08",
+    "results/experiment_2922_capstone_v275.json": "ddd9a50cd9823fa7a18393b1a555e2d228faa1553579d2a5d4151362f328376c"
+  },
+  "upstream_flagged_rows_preserved": [
+    {
+      "artifact_path": null,
+      "experiment_id": null,
+      "flags": [],
+      "identifier": "corpus:MBPP",
+      "source_artifact": "exp2921",
+      "source_field": "flagged_rows"
+    },
+    {
+      "artifact_path": null,
+      "experiment_id": null,
+      "flags": [],
+      "identifier": "corpus:HumanEval",
+      "source_artifact": "exp2921",
+      "source_field": "flagged_rows"
+    },
+    {
+      "artifact_path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "experiment_id": "exp2911",
+      "flags": [
+        {
+          "detail": "duration_s=0.027930021286010742 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "identifier": "exp2911_code_hallucination_verifier",
+      "source_artifact": "exp2921",
+      "source_field": "flagged_rows"
+    },
+    {
+      "artifact_path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "experiment_id": "exp2919",
+      "flags": [
+        {
+          "detail": "feasibility_rate=0.277778 and syntax_valid_rate=0.277778 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "duration_s=43.12619376182556 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "identifier": "exp2919_constraintbench_mini",
+      "source_artifact": "exp2921",
+      "source_field": "flagged_rows"
+    },
+    {
+      "artifact_path": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "experiment_id": "exp2911",
+      "flags": [
+        {
+          "detail": "duration_s=0.027930021286010742 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "identifier": "exp2911",
+      "source_artifact": "exp2922",
+      "source_field": "flagged_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "experiment_id": "exp2919",
+      "flags": [
+        {
+          "detail": "feasibility_rate=0.277778 and syntax_valid_rate=0.277778 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "duration_s=43.12619376182556 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "identifier": "exp2919",
+      "source_artifact": "exp2922",
+      "source_field": "flagged_artifacts"
+    },
+    {
+      "artifact_path": "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json",
+      "experiment_id": "exp2921",
+      "flags": [
+        {
+          "detail": "duration_s=0.008404 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        },
+        {
+          "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "identifier": "exp2921",
+      "source_artifact": "exp2922",
+      "source_field": "flagged_artifacts"
+    }
+  ]
+}
