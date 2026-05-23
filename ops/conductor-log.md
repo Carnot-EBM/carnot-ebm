@@ -6072,3 +6072,4 @@ web search:
 | 2026-05-23 16:14 UTC | GateMate n=16 Bitstream Build via Himbaechel v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2927) |
 | 2026-05-23 16:19 UTC | GateMate Flash Smoke + Timing Boundary v1 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2929_gatemat |
 | 2026-05-23 16:21 UTC | GateMate n=16 Bitstream Build via Himbaechel v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2927) |
+| 2026-05-23 16:26 UTC | GateMate Flash Smoke + Timing Boundary v1 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2929_gatemat |
