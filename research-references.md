@@ -15195,3 +15195,102 @@ EBT/ARM-EBM, GitHub discovery, and Logical Intelligence/Kona updates.
 - **Extropic TSU / THRML public status**: Extropic positions TSUs as probabilistic sampling hardware and THRML as the public Python/JAX simulator for thermodynamic hypergraphical models. Relevance to Carnot: keep THRML work as simulator parity and portability only; no TSU/Z1 hardware claim is allowed without access to real Extropic hardware.
 
 - **arXiv:2602.06737 and arXiv:2604.03345 - KAN verification and hardware-complexity track**: KAN PWA/MILP verification and RM/BOP/NABS hardware complexity remain the right local KAN path. Relevance to Carnot: `.275` should consume the clean `.274` KAN complexity work only as supporting context; the more urgent gap is KV260/GateMate baseline evidence, not another KAN proof-of-concept.
+
+## 2026-05-23 Post-.275 Planning Sweep (Milestone 2026.05.276)
+
+This sweep was run after `.275` completed with `paper_ready=true`,
+`hardware_speedup_claim_eligible=true`, one blocked GateMate artifact
+(`exp2914`), one missing GateMate downstream artifact (`exp2915`), and three
+adversarially flagged artifacts (`exp2911`, `exp2919`, `exp2921`). Searches
+covered arXiv, OpenReview, Hugging Face papers, Extropic/THRML public writing,
+Semantic Scholar pages for EBT/ARM-EBM, GitHub discovery, and Logical
+Intelligence/Kona updates.
+
+- **arXiv:2512.05439 - "BEAVER: An Efficient Deterministic LLM Verifier"**:
+  Computes deterministic sound probability bounds for LLM constraint
+  satisfaction over prefix-closed semantic constraints using token tries and
+  frontier exploration. Relevance to Carnot: useful north star for turning
+  structured code/JSON constraints into probability-bound audits; `.276` should
+  begin with bounded local probes rather than claiming a full verifier.
+
+- **arXiv:2601.04675 / AAAI 2026 - "LLM-Guided Quantified SMT Solving over
+  Uninterpreted Functions" (AquaForte)**: Uses LLM semantic guidance to propose
+  quantified uninterpreted-function instantiations, while SMT validation
+  preserves soundness through SAT acceptance, UNSAT exclusion clauses, and
+  solver fallback. Relevance to Carnot: strong pattern for exact verifier loops:
+  the LLM may propose candidates, but Z3 remains the authority.
+
+- **arXiv:2602.16143 - "Energy-Efficient p-Bit-Based Fully-Connected
+  Quantum-Inspired Simulated Annealer with Dual BRAM Architecture"**:
+  Implements a p-bit SSQA annealer on FPGA with spin-serial/replica-parallel
+  updates and dual-BRAM delay lines for fully connected Ising models. Relevance
+  to Carnot: directly informs GateMate/KV260 scaling plans; use its memory and
+  fan-out accounting as a projection framework, not as Carnot hardware evidence.
+
+- **arXiv:2601.18007 - "Memory-Efficient FPGA Implementation of Stochastic
+  Simulated Annealing"**: Introduces hardware-aware SSA that preserves solution
+  quality while reducing memory pressure on FPGA. Relevance to Carnot: supports
+  testing sparse/dense sampler scaling with explicit memory-accounting fields
+  before claiming larger FPGA speedups.
+
+- **arXiv:2605.19597 / Hugging Face Papers - "LLMEval-Logic: A
+  Solver-Verified Chinese Benchmark for Logical Reasoning of LLMs with
+  Adversarial Hardening"**: Provides forward-authored natural-language logic
+  problems with Z3-verified formalizations, expert rubrics, and adversarially
+  hardened multi-step items; reported best hard-item accuracy remains 37.5%.
+  Relevance to Carnot: ideal bounded benchmark for testing local GGUF
+  natural-language-to-formal translation under exact solver checks.
+
+- **OpenReview / ICLR 2026 Poster - "NRGPT: An Energy-based Alternative for
+  GPT"**: Recasts token inference as exploration of an energy landscape and
+  reports language-modeling and ListOPS results. Relevance to Carnot: reinforces
+  the EBM framing, but `.276` should use it only as theory context; no Carnot
+  NRGPT training task is justified yet.
+
+- **OpenReview / ICLR 2026 Poster - "LogicReward: Incentivizing LLM Reasoning
+  via Step-Wise Logical Supervision"**: Uses theorem-prover-backed step-level
+  logical supervision to train reasoning models. Relevance to Carnot: supports
+  FR-11 verifier-grounded self-learning, especially dense process rewards
+  derived from exact solver outcomes.
+
+- **arXiv:2605.07723 - "LLM hallucinations in the wild: Large-scale evidence
+  from non-existent citations"** and **arXiv:2605.08583 - "Source or It Didn't
+  Happen" / CiteTracer**: Treat scientific citations as verifiable objects,
+  with field-level taxonomies and deterministic retrieval/matching before any
+  specialist judgment. Relevance to Carnot: citation hallucination is a compact
+  benchmark where exact string/field verification can replace LLM-as-judge.
+
+- **CVPR 2025 / arXiv:2503.21076 - "KAC: Kolmogorov-Arnold Classifier for
+  Continual Learning"**: Replaces linear classifier heads with KAN/RBF spline
+  heads to improve continual-learning stability. Relevance to Carnot: informs a
+  small FR-11 KAN structural-memory experiment where spline/knot updates are
+  measured for utility and forgetting.
+
+- **CCF Transactions 2026 - "COOL: continual online on-device learning for
+  human activity recognition enhanced by KANs"**: Uses KANs for online
+  on-device continual learning under concept drift and catastrophic-forgetting
+  constraints. Relevance to Carnot: useful local-first, hardware-aware analogue
+  for continuous self-learning without closed-model retraining.
+
+- **GitHub discovery - `guidance-ai/llguidance` and BEAVER-style prefix
+  constraints**: `llguidance` remains the practical local path for JSON schema,
+  regex, and CFG-constrained generation; BEAVER suggests how to add sound
+  prefix-bound audits later. Relevance to Carnot: `.276` should repair
+  ConstraintBench by making syntax feasibility non-tautological before adding
+  probability-bound claims.
+
+- **Extropic TSU / THRML public status**: Public Extropic material continues to
+  position TSUs as probabilistic sampling hardware and THRML as the accessible
+  simulator layer; no public source found in this sweep changes Carnot's local
+  hardware access. Relevance to Carnot: no TSU hardware experiment in `.276`.
+
+- **Semantic Scholar / EBT and ARM-EBM watch**: Search found no new
+  planning-grade citation cluster beyond existing EBT (arXiv:2507.02092) and
+  ARM-EBM (arXiv:2512.15605) references. Relevance to Carnot: continue treating
+  them as theoretical context, not an experiment trigger.
+
+- **Logical Intelligence Kona/Aleph updates**: Public pages and coverage remain
+  useful architecture context for non-autoregressive energy-based reasoning, but
+  no local API, artifact, or reproducible benchmark was found. Relevance to
+  Carnot: avoid Kona performance claims; keep Carnot evidence local and
+  verifier-grounded.
