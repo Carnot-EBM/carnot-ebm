@@ -5456,3 +5456,77 @@ paper-claim eligibility, and the adversarial audit rerun recorded.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2935 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v10_2935.py`) | Implemented (`tests/python/test_experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum.py`) |
+
+### REQ-REPORT-2936: Milestone 2026.05.276 Terminal Capstone
+
+The repository shall provide an Exp 2936 milestone capstone generator that
+writes `results/experiment_2936_capstone_v276.json` using only the existing
+`.276` upstream artifacts from Exp 2923 through Exp 2935. The generator MUST
+NOT call an LLM, run hardware, rerun a verifier, launch synthesis, or modify
+`scripts/research_conductor.py`.
+
+The generator MUST count every expected `.276` artifact, including missing
+artifacts, rather than deriving the source set only from files that exist on
+disk. It MUST classify each expected artifact as one of `clean`, `flagged`,
+`blocked`, `missing`, `projection_only`, `diagnostic_only`, or `pilot_only`.
+Clean corrigendum artifacts MAY preserve upstream flags, but unresolved
+current-artifact flags, blocked verdicts, missing artifacts, projections,
+diagnostics, and pilots MUST NOT become headline or paper claim evidence.
+
+The terminal artifact MUST summarize whether `.276` repaired the `.275`
+evidence-boundary gaps for aggregation metadata, code-taxonomy provenance, and
+ConstraintBench non-tautology. It MUST summarize GateMate status using the
+corrected himbaechel/gmpack preflight, bitstream, and flash-smoke artifacts,
+including the exact blocker when the branch is blocked. It MUST summarize
+continuous self-learning status from Exp 2933 with utility and forgetting
+fields.
+
+The terminal artifact MUST include `honest_verdict`, `milestone` equal to
+`2026.05.276`, `paper_ready`, `hardware_speedup_claim_eligible`,
+`gate_mate_speedup_claim_eligible=false`, `evidence_boundary_repaired`,
+`sota_structured_generation_clean`, `fr11_self_learning_clean`,
+`clean_artifacts`, `flagged_artifacts`, `blocked_artifacts`,
+`missing_artifacts`, `projection_only_artifacts`,
+`diagnostic_only_artifacts`, `pilot_only_artifacts`,
+`row_classification_counts`, `top_three_next_actions`,
+`source_artifact_checksums`, `no_new_llm_call=true`,
+`no_new_hardware_run=true`, `inference_substrate` equal to
+`aggregation_from_upstream_artifacts`, measured `duration_s`, and
+`run_date="20260523"`.
+
+`paper_ready` MUST be true only when matrix v10 is ready, the v10
+paper-boundary is ready, and all headline rows reported by matrix v10 are
+clean. `hardware_speedup_claim_eligible` MAY remain true only for the existing
+KV260 same-basis evidence boundary already preserved by matrix v10; GateMate
+MUST remain speedup-ineligible unless a matched GateMate hardware-vs-CPU basis
+exists. `evidence_boundary_repaired` MUST be true only when Exp 2924, Exp
+2925, and Exp 2926 pass their clean gate fields.
+
+#### SCENARIO-REPORT-2936: Capstone Closes .276 With Blocked GateMate Preserved
+
+**Given** expected `.276` artifacts Exp 2923 through Exp 2935
+**And** Exp 2928 is absent
+**And** Exp 2927 records a corrected GateMate himbaechel preflight but blocked
+constraints
+**And** Exp 2929 is blocked by the missing bitstream
+**And** Exp 2930 is projection-only
+**And** Exp 2931 is blocked
+**And** Exp 2932 and Exp 2934 remain flagged
+**And** Exp 2935 matrix v10 preserves flagged, blocked, missing,
+projection-only, diagnostic-only, and pilot-only rows
+**When** the Exp 2936 capstone generator runs
+**Then** it writes `results/experiment_2936_capstone_v276.json` with all
+required fields, Exp 2928 listed in `missing_artifacts`, Exp 2930 listed in
+`projection_only_artifacts`, blocked and flagged rows preserved in
+`row_classification_counts`, `paper_ready=true`, the existing KV260
+`hardware_speedup_claim_eligible=true`, `gate_mate_speedup_claim_eligible=false`,
+`evidence_boundary_repaired=true`, `sota_structured_generation_clean=false`,
+`fr11_self_learning_clean=true`, and a top-three `.277` action list that
+prioritizes KV260 claim revalidation, same-schedule CPU comparison, and code
+corpus AUPRC/base-rate validation.
+
+## Implementation Status (REQ-REPORT-2936)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2936 | Implemented (`python/carnot/reporting/capstone_v276_2936.py`) | Implemented (`tests/python/test_experiment_2936_capstone_v276.py`) |

@@ -1,0 +1,408 @@
+{
+  "artifact": "experiment_2936_capstone_v276",
+  "artifact_classification_counts": {
+    "blocked": 3,
+    "clean": 6,
+    "diagnostic_only": 0,
+    "flagged": 2,
+    "missing": 1,
+    "pilot_only": 0,
+    "projection_only": 1
+  },
+  "blocked_artifacts": [
+    "exp2927",
+    "exp2929",
+    "exp2931"
+  ],
+  "clean_artifacts": [
+    "exp2923",
+    "exp2924",
+    "exp2925",
+    "exp2926",
+    "exp2933",
+    "exp2935"
+  ],
+  "continuous_self_learning_status": {
+    "claim_boundary": "Exp 2933 supports a bounded local-training self-learning claim: positive utility versus replay-only and measured non-forgetting.",
+    "clean": true,
+    "continuous_self_learning_targeted": true,
+    "energy_proxy_delta": 0.495841562464,
+    "forgetting_rate": 0.0,
+    "forgetting_threshold": 0.05,
+    "kan_cl_self_learning_ready": true,
+    "non_forgetting_passed": true,
+    "updated_knot_or_rbf_count": 12,
+    "utility_delta_vs_replay_only": 0.5
+  },
+  "diagnostic_only_artifacts": [],
+  "duration_s": 0.002456,
+  "evidence_boundary_repaired": true,
+  "evidence_boundary_summary": {
+    "aggregation_metadata_clean": true,
+    "aggregation_metadata_false_positive_count": 4,
+    "aggregation_upstream_flags_preserved": true,
+    "code_hallucination_verifier_ready": true,
+    "constraintbench_corrigendum_ready": true,
+    "constraintbench_duration_s": 68.10820770263672,
+    "constraintbench_feasibility_rate_overall": 0.3,
+    "constraintbench_non_tautological": true,
+    "constraintbench_optimality_rate_given_feasible": 0.444444,
+    "constraintbench_syntax_valid_rate": 0.333333,
+    "repaired": true,
+    "taxonomy_corrigendum_clean": true
+  },
+  "flagged_artifacts": [
+    "exp2932",
+    "exp2934"
+  ],
+  "fr11_self_learning_clean": true,
+  "gate_mate_speedup_claim_eligible": false,
+  "gate_mate_status": {
+    "bitstream_artifact_present": false,
+    "bitstream_built": false,
+    "claim_boundary": "GateMate has corrected tool discovery only; it has no bitstream, no flash smoke, and no matched hardware-vs-CPU basis.",
+    "constraints_ready": false,
+    "corrected_preflight_ready": true,
+    "exact_blocker": "missing exp2928 artifact: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json",
+    "flash_attempted": false,
+    "flash_smoke_ready": false,
+    "preflight_blocker": "constraints_missing",
+    "speedup_claim_allowed": false,
+    "speedup_claim_eligible": false,
+    "timing_claim_allowed": false,
+    "tool_paths": {
+      "gmpack": "/opt/oss-cad-suite/bin/gmpack",
+      "nextpnr-himbaechel": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "openFPGALoader": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "yosys": "/opt/oss-cad-suite/bin/yosys"
+    }
+  },
+  "hardware_claim_boundary": {
+    "boundary": "KV260 prior same-basis evidence may remain eligible. GateMate is not eligible because no matched GateMate hardware-vs-CPU basis exists.",
+    "gate_mate_blocker": "missing exp2928 artifact: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json",
+    "gate_mate_speedup_claim_eligible": false,
+    "kv260_claim_source_row": "exp2913_kv260_claim_boundary",
+    "kv260_prior_evidence_eligible": true
+  },
+  "hardware_speedup_claim_eligible": true,
+  "honest_verdict": "complete: milestone=2026.05.276; paper_ready=true; hardware_speedup_claim_eligible=true; gate_mate_speedup_claim_eligible=false; evidence_boundary_repaired=true; sota_structured_generation_clean=false; fr11_self_learning_clean=true; clean=6; flagged=2; blocked=3; missing=1; projection_only=1",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.276",
+  "missing_artifacts": [
+    "exp2928"
+  ],
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "paper_claim_boundary": {
+    "boundary_rules": [
+      "Only clean rows with direct bounded support are headline eligible.",
+      "Flagged, blocked, missing, diagnostic-only, and pilot-only rows remain non-headline.",
+      "Projection-only rows are retained for planning context but are not paper-claim eligible.",
+      "A clean corrigendum can add a replacement/supporting row without laundering the older flagged row."
+    ],
+    "headline_claims": {
+      "corpus:FoVer": "Carry-forward clean matrix-v8 headline row for FoVer; no new metric inferred.",
+      "corpus:HaluEval_FEVER": "Carry-forward clean matrix-v8 headline row for HaluEval/FEVER; no new metric inferred.",
+      "exp2910_sota_codegen": "Bounded SOTA code-generation claim: aggregate pass@1=0.075, pass@k=0.175 over the recorded local GGUF run.",
+      "exp2913_kv260_claim_boundary": "A bounded numeric KV260/CPU latency claim is eligible for the matched n=64 sparse Ising workload: CPU/KV260 per-sample latency ratios are n_samples=100: median 19.13x, p95 25.64x, n_samples=1000: median 19.24x, p95 30.35x, n_samples=10000: median 18.65x, p95 20.11x. The claim is restricted to Exp 2898 hardware-smoke timing versus Exp 2912 same-basis CPU Gibbs timing; it is not a broad FPGA acceleration claim.",
+      "exp2918_fr11_process_rewards": "Bounded FR-11 self-learning claim: replay scheduler/process rewards updated with forgetting_rate=0.0 and no model-weight mutation.",
+      "exp2920_state_verifier_harness": "Bounded state-verifier harness claim: deterministic golden and negative-state checks pass without an LLM judge; no broad benchmark generalization is implied.",
+      "exp2926_constraintbench_corrigendum": "Bounded ConstraintBench claim: live local GGUF constrained-output rerun reports syntax_valid_rate=0.333333, feasibility_rate_overall=0.3, and optimality_rate_given_feasible=0.444444.",
+      "exp2933_kan_cl_self_learning": "Bounded self-learning claim: KAN per-knot structural-memory update reports utility_delta_vs_replay_only=0.5 with forgetting_rate=0.0."
+    },
+    "headline_eligible_rows": [
+      "corpus:FoVer",
+      "corpus:HaluEval_FEVER",
+      "exp2910_sota_codegen",
+      "exp2913_kv260_claim_boundary",
+      "exp2918_fr11_process_rewards",
+      "exp2920_state_verifier_harness",
+      "exp2926_constraintbench_corrigendum",
+      "exp2933_kan_cl_self_learning"
+    ],
+    "non_paper_claim_rows": {
+      "corpus:HumanEval": {
+        "reason": "excluded because pilot-only rows cannot support headline claims",
+        "row_class": "pilot_only",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "corpus:MBPP": {
+        "reason": "excluded because pilot-only rows cannot support headline claims",
+        "row_class": "pilot_only",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "corpus:TruthfulQA": {
+        "reason": "corpus:TruthfulQA is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2890_code_structural_dependency": {
+        "reason": "exp2890_code_structural_dependency is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2891_cctu": {
+        "reason": "excluded because pilot-only rows cannot support headline claims",
+        "row_class": "pilot_only",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2892_vericot": {
+        "reason": "exp2892_vericot is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2898_kv260_hardware": {
+        "reason": "exp2898_kv260_hardware is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2911_code_hallucination_verifier": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json"
+      },
+      "exp2914_gatemate_toolchain": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2914_gatemate_toolchain_preflight_v2.json"
+      },
+      "exp2915_gatemate_bitstream": {
+        "reason": "excluded because the expected source artifact is missing",
+        "row_class": "missing",
+        "source_artifact": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json"
+      },
+      "exp2916_thrml_parity": {
+        "reason": "excluded because diagnostic-only rows are context, not claims",
+        "row_class": "diagnostic_only",
+        "source_artifact": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json"
+      },
+      "exp2917_spilled_energy_micro_panel": {
+        "reason": "excluded because diagnostic-only rows are context, not claims",
+        "row_class": "diagnostic_only",
+        "source_artifact": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json"
+      },
+      "exp2919_constraintbench_mini": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json"
+      },
+      "exp2924_aggregation_metadata_corrigendum": {
+        "reason": "exp2924_aggregation_metadata_corrigendum is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+      },
+      "exp2927_gatemate_himbaechel_preflight": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json"
+      },
+      "exp2928_gatemate_bitstream": {
+        "reason": "excluded because the expected source artifact is missing",
+        "row_class": "missing",
+        "source_artifact": "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json"
+      },
+      "exp2929_gatemate_flash_timing_boundary": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2929_gatemate_flash_timing_boundary_v1.json"
+      },
+      "exp2930_kv260_scaling_projection": {
+        "reason": "excluded because projection-only rows cannot support paper claims",
+        "row_class": "projection_only",
+        "source_artifact": "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json"
+      },
+      "exp2931_llmeval_logic_z3_mini": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2931_llmeval_logic_z3_mini_v1.json"
+      },
+      "exp2932_citation_field_verifier": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2932_citation_hallucination_field_verifier_v1.json"
+      },
+      "exp2934_reformulation_pipeline": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json"
+      }
+    },
+    "ready": true,
+    "supporting_paper_claim_rows": [
+      "exp2925_taxonomy_corrigendum"
+    ]
+  },
+  "paper_ready": true,
+  "pilot_only_artifacts": [],
+  "projection_only_artifacts": [
+    "exp2930"
+  ],
+  "row_boundaries": {
+    "blocked_rows": [
+      "exp2914_gatemate_toolchain",
+      "exp2927_gatemate_himbaechel_preflight",
+      "exp2929_gatemate_flash_timing_boundary",
+      "exp2931_llmeval_logic_z3_mini"
+    ],
+    "clean_rows": [
+      "corpus:FoVer",
+      "corpus:HaluEval_FEVER",
+      "corpus:TruthfulQA",
+      "exp2890_code_structural_dependency",
+      "exp2892_vericot",
+      "exp2898_kv260_hardware",
+      "exp2910_sota_codegen",
+      "exp2913_kv260_claim_boundary",
+      "exp2918_fr11_process_rewards",
+      "exp2920_state_verifier_harness",
+      "exp2924_aggregation_metadata_corrigendum",
+      "exp2925_taxonomy_corrigendum",
+      "exp2926_constraintbench_corrigendum",
+      "exp2933_kan_cl_self_learning"
+    ],
+    "diagnostic_only_rows": [
+      "exp2916_thrml_parity",
+      "exp2917_spilled_energy_micro_panel"
+    ],
+    "flagged_rows": [
+      "exp2911_code_hallucination_verifier",
+      "exp2919_constraintbench_mini",
+      "exp2932_citation_field_verifier",
+      "exp2934_reformulation_pipeline"
+    ],
+    "headline_eligible_rows": [
+      "corpus:FoVer",
+      "corpus:HaluEval_FEVER",
+      "exp2910_sota_codegen",
+      "exp2913_kv260_claim_boundary",
+      "exp2918_fr11_process_rewards",
+      "exp2920_state_verifier_harness",
+      "exp2926_constraintbench_corrigendum",
+      "exp2933_kan_cl_self_learning"
+    ],
+    "missing_rows": [
+      "exp2915_gatemate_bitstream",
+      "exp2928_gatemate_bitstream"
+    ],
+    "pilot_only_rows": [
+      "corpus:MBPP",
+      "corpus:HumanEval",
+      "exp2891_cctu"
+    ],
+    "projection_only_rows": [
+      "exp2930_kv260_scaling_projection"
+    ]
+  },
+  "row_classification_counts": {
+    "blocked": 4,
+    "clean": 14,
+    "diagnostic_only": 2,
+    "flagged": 4,
+    "missing": 2,
+    "pilot_only": 3,
+    "projection_only": 1
+  },
+  "run_date": "20260523",
+  "schema": "carnot.milestone_capstone.v276",
+  "sota_structured_generation_clean": false,
+  "source_artifact_checksums": {
+    "results/experiment_2923_archive_v275_activate_v276.json": "9a76ce9d1ee96e8e18606643dea5936d60e56447ef3c7d41b7decf4b15a08242",
+    "results/experiment_2924_aggregation_metadata_corrigendum_v1.json": "1fcfc1ca2594e168955cda7b964cbbd9b4221a42ddec755ff748c2bbfebc2985",
+    "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json": "0e8aab0b0f0d29d6547229ade7c8456b08d8a91a12723c16c09266c21eba5e08",
+    "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json": "f3d0f2917210e3d9d5e0ba96034ffb7a4a2ee2337692d113298a5b45cc354e94",
+    "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json": "788e56e630aaa66b6759747cc2115122cfb7ee49c52adf23f3e45427fb8d6986",
+    "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json": null,
+    "results/experiment_2929_gatemate_flash_timing_boundary_v1.json": "c073e7915708ed92e4a2462f987672de157a875fbfe6615c3d332132b50d8ce0",
+    "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json": "f544e9a9a576fa388e44cbe99eb63f5bde9b81f53384c6cd486d73423122155f",
+    "results/experiment_2931_llmeval_logic_z3_mini_v1.json": "dbfff20d2d20e680989058b7906f819e3da96348e9ec12ff549c0219c6cc44bd",
+    "results/experiment_2932_citation_hallucination_field_verifier_v1.json": "0470909685ae925ddd861c09081213bfc0897c4fdf710d36bd86700b1473f1c1",
+    "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json": "b863133af27141847c2640a00eb3d07432049a95338992927d8293f1a4850a30",
+    "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json": "03e12d5e89a607ae4a3f32e8d8725d24fbc6a0cda123bfcf3259052b800a0fc9",
+    "results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json": "5db0f93e896c19a0de684d72ac818fcdf90b4b6a6afbe1fd35192e155aea8401"
+  },
+  "source_artifact_status": {
+    "exp2923": {
+      "classification": "clean",
+      "honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.275; activated_milestone=2026.05.276",
+      "path": "results/experiment_2923_archive_v275_activate_v276.json",
+      "present": true
+    },
+    "exp2924": {
+      "classification": "clean",
+      "honest_verdict": "complete: aggregation metadata corrigendum written; aggregation_metadata_clean=true; upstream_flags_preserved=7; metadata_false_positive_findings=4",
+      "path": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json",
+      "present": true
+    },
+    "exp2925": {
+      "classification": "clean",
+      "honest_verdict": "complete: Exp 2911 taxonomy provenance corrigendum re-emitted deterministically",
+      "path": "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json",
+      "present": true
+    },
+    "exp2926": {
+      "classification": "clean",
+      "honest_verdict": "complete: constraintbench constrained-output rerun measured with live local SOTA GGUF",
+      "path": "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json",
+      "present": true
+    },
+    "exp2927": {
+      "classification": "blocked",
+      "honest_verdict": "blocked_constraints_missing",
+      "path": "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json",
+      "present": true
+    },
+    "exp2928": {
+      "classification": "missing",
+      "honest_verdict": null,
+      "path": "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json",
+      "present": false
+    },
+    "exp2929": {
+      "classification": "blocked",
+      "honest_verdict": "blocked_gatemate_bitstream_missing",
+      "path": "results/experiment_2929_gatemate_flash_timing_boundary_v1.json",
+      "present": true
+    },
+    "exp2930": {
+      "classification": "projection_only",
+      "honest_verdict": "complete: kv260_pbit_ssqa_scaling_projection_ready_no_new_hardware_claim",
+      "path": "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json",
+      "present": true
+    },
+    "exp2931": {
+      "classification": "blocked",
+      "honest_verdict": "blocked_z3_execution_incomplete",
+      "path": "results/experiment_2931_llmeval_logic_z3_mini_v1.json",
+      "present": true
+    },
+    "exp2932": {
+      "classification": "flagged",
+      "honest_verdict": "complete:citation_field_verifier_ready",
+      "path": "results/experiment_2932_citation_hallucination_field_verifier_v1.json",
+      "present": true
+    },
+    "exp2933": {
+      "classification": "clean",
+      "honest_verdict": "complete: kan_rbf_importance_self_learning_passed",
+      "path": "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json",
+      "present": true
+    },
+    "exp2934": {
+      "classification": "flagged",
+      "honest_verdict": "complete: exp2926 live GGUF proposals reformulated and exact-verified",
+      "path": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json",
+      "present": true
+    },
+    "exp2935": {
+      "classification": "clean",
+      "honest_verdict": "complete: matrix_v10_ready=true; matrix_v10_paper_boundary_ready=true; headline_eligible_rows=8; clean=14; flagged=4; blocked=4; missing=2; projection_only=1; diagnostic_only=2; pilot_only=3",
+      "path": "results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json",
+      "present": true
+    }
+  },
+  "top_three_next_actions": [
+    "Run KV260 MMD versus CPU sequential Gibbs to decide whether the n=64 hardware row is sampling the intended Boltzmann target or only a fixed-schedule heuristic.",
+    "Add a CPU same-schedule synchronous-parallel comparator so the KV260 speedup claim has an apples-to-apples algorithmic basis.",
+    "Measure verifier-ensemble AUPRC on code corpora at the documented negative base rate before promoting code-corpus verifier claims."
+  ]
+}
