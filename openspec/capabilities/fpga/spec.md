@@ -1367,3 +1367,60 @@ distances, `inference_substrate="simulator_parity"`, and
 `no_tsu_hardware_claim=true`.
 
 **Implementation status:** Planned (Exp 2916)
+
+---
+
+### REQ-HW-068
+
+**Title:** Exp 2927 GateMate himbaechel/gmpack constraints preflight MUST replace the obsolete nextpnr-gatemate gate
+
+**Description:**
+Experiment 2927 MUST run a diagnostic-only GateMate A1-EVB-2M preflight for the
+current open toolchain path: `yosys` -> `nextpnr-himbaechel --device CCGM1A1` ->
+`gmpack`. The run MUST inspect PATH and known OSS-CAD-Suite locations for
+`nextpnr-himbaechel`, `gmpack`, `yosys`, and `openFPGALoader`, record absolute
+paths and versions, and verify that `nextpnr-himbaechel` accepts
+`--device CCGM1A1` without invoking synthesis, place-and-route, packing, board
+programming, or flashing. The run MUST locate the n=16 GateMate Ising RTL top,
+locate an explicit GateMate constraints file, and emit a dry-run command plan.
+If no current project constraints file exists and the repository has no
+established GateMate generated-constraints pattern, the artifact MUST report
+`honest_verdict="blocked_constraints_missing"` instead of inventing pin claims.
+
+**Acceptance criteria:**
+- `results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json`
+  is generated with `inference_substrate="hardware_toolchain_preflight"` and
+  `run_date="20260523"`.
+- The artifact includes `honest_verdict`, `gatemate_himbaechel_ready`,
+  `constraints_ready`, `tool_paths`, `tool_versions`, `device="CCGM1A1"`,
+  `nextpnr_command_template`, `gmpack_command_template`, `rtl_top`,
+  `constraints_path`, `no_flash_attempted=true`, `inference_substrate`,
+  `duration_s`, and `run_date`.
+- `gatemate_himbaechel_ready` is true only when `yosys`,
+  `nextpnr-himbaechel`, and `gmpack` are detected and the CCGM1A1 device probe
+  succeeds.
+- Missing constraints yield `honest_verdict="blocked_constraints_missing"`,
+  `constraints_ready=false`, and an empty `constraints_path`; no candidate pin
+  file is created unless the repository already provides a generated GateMate
+  constraints pattern.
+- The preflight records `openFPGALoader` path/version for operator context but
+  MUST NOT call it in a board-programming or flash mode.
+
+**Implementation status:** Planned (Exp 2927)
+
+---
+
+### SCENARIO-HW-068
+
+**Scenario:** Current GateMate himbaechel/gmpack tools are ready but constraints remain blocked.
+
+**Given:** `yosys`, `nextpnr-himbaechel`, and `gmpack` are present, the
+`nextpnr-himbaechel --device CCGM1A1` probe succeeds, and the n=16 GateMate
+Ising RTL exists, but no explicit GateMate constraints file exists.
+**When:** Exp 2927 runs the corrected diagnostic preflight.
+**Then:** It writes the v3 preflight JSON with exact tool paths and versions,
+`gatemate_himbaechel_ready=true`, `constraints_ready=false`,
+`honest_verdict="blocked_constraints_missing"`, a dry-run yosys/nextpnr/gmpack
+command plan, and `no_flash_attempted=true`.
+
+**Implementation status:** Planned (Exp 2927)

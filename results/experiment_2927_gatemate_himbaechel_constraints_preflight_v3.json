@@ -1,0 +1,216 @@
+{
+  "constraint_paths_checked": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf",
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.cst",
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.pcf",
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.xdc",
+    "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.ccf",
+    "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.cst",
+    "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.pcf",
+    "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.xdc"
+  ],
+  "constraint_paths_present": [],
+  "constraints_path": "",
+  "constraints_ready": false,
+  "device": "CCGM1A1",
+  "duration_s": 0.152332,
+  "gatemate_himbaechel_ready": true,
+  "gmpack_command_template": "/opt/oss-cad-suite/bin/gmpack build/gatemate/ising_n16_gatemate.cfg build/gatemate/ising_n16_gatemate.bit",
+  "honest_verdict": "blocked_constraints_missing",
+  "inference_substrate": "hardware_toolchain_preflight",
+  "missing_toolchain": [],
+  "nextpnr_command_template": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json build/gatemate/ising_n16_gatemate.json --write build/gatemate/ising_n16_gatemate.pnr.json --vopt ccf=<constraints_path> --vopt out=build/gatemate/ising_n16_gatemate.cfg",
+  "nextpnr_device_probe": {
+    "command": [
+      "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "--device",
+      "CCGM1A1"
+    ],
+    "output": "Info: Using uarch 'gatemate' for device 'CCGM1A1'\nInfo: Using timing mode 'WORST'.\nInfo: Using performance mode 'SPEED'.\n\nInfo: Program finished normally.",
+    "returncode": 0,
+    "supported": true
+  },
+  "nextpnr_device_supported": true,
+  "no_flash_attempted": true,
+  "path_env": "/opt/oss-cad-suite/bin:/home/ianblenke/.codex/tmp/arg0/codex-arg0yzq8H0:/opt/oss-cad-suite/bin:/opt/oss-cad-suite/bin:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl:/opt/rocm/bin:/opt/cuda/bin",
+  "rtl_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+  "rtl_paths_checked": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v"
+  ],
+  "rtl_top": "ising_n16_gatemate",
+  "run_date": "20260523",
+  "searched_oss_cad_suite_bin_dirs": [
+    "/opt/oss-cad-suite/bin",
+    "/home/ianblenke/github.com/ianblenke/carnot/oss-cad-suite/bin",
+    "/home/ianblenke/github.com/ianblenke/carnot/tools/oss-cad-suite/bin",
+    "/home/ianblenke/oss-cad-suite/bin",
+    "/home/ianblenke/tools/oss-cad-suite/bin"
+  ],
+  "tool_details": {
+    "gmpack": {
+      "available": true,
+      "candidate_paths": [
+        "/opt/oss-cad-suite/bin/gmpack",
+        "/home/ianblenke/tools/oss-cad-suite/bin/gmpack"
+      ],
+      "candidate_version_results": [
+        {
+          "path": "/opt/oss-cad-suite/bin/gmpack",
+          "version": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+          "version_command": [
+            "/opt/oss-cad-suite/bin/gmpack",
+            "--version"
+          ],
+          "version_output": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: /opt/oss-cad-suite/bin/gmpack input.config [output.bit] [options]\n\nAllowed options:\n  -h [ --help ]         show help\n  -v [ --verbose ]      verbose output\n  --reset               reset all configuration latches with CMD_CFGRST\n  --crcmode arg         CRC error behaviour (check, ignore, unused)\n  --spimode arg         SPI Mode to use (single, dual, quad)\n  --reconfig            enable reconfiguration in bitstream\n  --background          enable background reconfiguration in bitstream\n  --bootaddr arg        boot address for secondary bitstream\n  --input arg           input textual configuration\n  --bit arg             output bitstream file",
+          "version_returncode": 1
+        },
+        {
+          "path": "/home/ianblenke/tools/oss-cad-suite/bin/gmpack",
+          "version": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+          "version_command": [
+            "/home/ianblenke/tools/oss-cad-suite/bin/gmpack",
+            "--version"
+          ],
+          "version_output": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: /home/ianblenke/tools/oss-cad-suite/bin/gmpack input.config [output.bit] [options]\n\nAllowed options:\n  -h [ --help ]         show help\n  -v [ --verbose ]      verbose output\n  --reset               reset all configuration latches with CMD_CFGRST\n  --crcmode arg         CRC error behaviour (check, ignore, unused)\n  --spimode arg         SPI Mode to use (single, dual, quad)\n  --reconfig            enable reconfiguration in bitstream\n  --background          enable background reconfiguration in bitstream\n  --bootaddr arg        boot address for secondary bitstream\n  --input arg           input textual configuration\n  --bit arg             output bitstream file",
+          "version_returncode": 1
+        }
+      ],
+      "name": "gmpack",
+      "path": "/opt/oss-cad-suite/bin/gmpack",
+      "version": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+      "version_command": [
+        "/opt/oss-cad-suite/bin/gmpack",
+        "--version"
+      ],
+      "version_output": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: /opt/oss-cad-suite/bin/gmpack input.config [output.bit] [options]\n\nAllowed options:\n  -h [ --help ]         show help\n  -v [ --verbose ]      verbose output\n  --reset               reset all configuration latches with CMD_CFGRST\n  --crcmode arg         CRC error behaviour (check, ignore, unused)\n  --spimode arg         SPI Mode to use (single, dual, quad)\n  --reconfig            enable reconfiguration in bitstream\n  --background          enable background reconfiguration in bitstream\n  --bootaddr arg        boot address for secondary bitstream\n  --input arg           input textual configuration\n  --bit arg             output bitstream file",
+      "version_returncode": 1
+    },
+    "nextpnr-himbaechel": {
+      "available": true,
+      "candidate_paths": [
+        "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+        "/home/ianblenke/tools/oss-cad-suite/bin/nextpnr-himbaechel"
+      ],
+      "candidate_version_results": [
+        {
+          "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+          "version_command": [
+            "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+            "--version"
+          ],
+          "version_output": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+          "version_returncode": 0
+        },
+        {
+          "path": "/home/ianblenke/tools/oss-cad-suite/bin/nextpnr-himbaechel",
+          "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+          "version_command": [
+            "/home/ianblenke/tools/oss-cad-suite/bin/nextpnr-himbaechel",
+            "--version"
+          ],
+          "version_output": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+          "version_returncode": 0
+        }
+      ],
+      "name": "nextpnr-himbaechel",
+      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "version_command": [
+        "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+        "--version"
+      ],
+      "version_output": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "version_returncode": 0
+    },
+    "openFPGALoader": {
+      "available": true,
+      "candidate_paths": [
+        "/opt/oss-cad-suite/bin/openFPGALoader",
+        "/home/ianblenke/tools/oss-cad-suite/bin/openFPGALoader"
+      ],
+      "candidate_version_results": [
+        {
+          "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+          "version": "openFPGALoader v1.1.1",
+          "version_command": [
+            "/opt/oss-cad-suite/bin/openFPGALoader",
+            "-V"
+          ],
+          "version_output": "openFPGALoader v1.1.1",
+          "version_returncode": 0
+        },
+        {
+          "path": "/home/ianblenke/tools/oss-cad-suite/bin/openFPGALoader",
+          "version": "openFPGALoader v1.1.1",
+          "version_command": [
+            "/home/ianblenke/tools/oss-cad-suite/bin/openFPGALoader",
+            "-V"
+          ],
+          "version_output": "openFPGALoader v1.1.1",
+          "version_returncode": 0
+        }
+      ],
+      "name": "openFPGALoader",
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "version": "openFPGALoader v1.1.1",
+      "version_command": [
+        "/opt/oss-cad-suite/bin/openFPGALoader",
+        "-V"
+      ],
+      "version_output": "openFPGALoader v1.1.1",
+      "version_returncode": 0
+    },
+    "yosys": {
+      "available": true,
+      "candidate_paths": [
+        "/opt/oss-cad-suite/bin/yosys",
+        "/home/ianblenke/tools/oss-cad-suite/bin/yosys"
+      ],
+      "candidate_version_results": [
+        {
+          "path": "/opt/oss-cad-suite/bin/yosys",
+          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+          "version_command": [
+            "/opt/oss-cad-suite/bin/yosys",
+            "-V"
+          ],
+          "version_output": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+          "version_returncode": 0
+        },
+        {
+          "path": "/home/ianblenke/tools/oss-cad-suite/bin/yosys",
+          "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+          "version_command": [
+            "/home/ianblenke/tools/oss-cad-suite/bin/yosys",
+            "-V"
+          ],
+          "version_output": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+          "version_returncode": 0
+        }
+      ],
+      "name": "yosys",
+      "path": "/opt/oss-cad-suite/bin/yosys",
+      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_command": [
+        "/opt/oss-cad-suite/bin/yosys",
+        "-V"
+      ],
+      "version_output": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_returncode": 0
+    }
+  },
+  "tool_paths": {
+    "gmpack": "/opt/oss-cad-suite/bin/gmpack",
+    "nextpnr-himbaechel": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+    "openFPGALoader": "/opt/oss-cad-suite/bin/openFPGALoader",
+    "yosys": "/opt/oss-cad-suite/bin/yosys"
+  },
+  "tool_versions": {
+    "gmpack": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+    "nextpnr-himbaechel": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+    "openFPGALoader": "openFPGALoader v1.1.1",
+    "yosys": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+  },
+  "yosys_command_template": "/opt/oss-cad-suite/bin/yosys -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -json build/gatemate/ising_n16_gatemate.json'"
+}
