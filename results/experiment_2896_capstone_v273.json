@@ -307,5 +307,18 @@
     "Re-run Exp 2889 MBPP/HumanEval generated-code row under an adversarial-clean live SOTA GGUF budget (k>=8 candidates, duration_s>=60, reproducibility_checksum), or promote pilot-only rows to clean by another route.",
     "Add at least one new headline-eligible row to matrix v8 (TruthfulQA generated-answer with InFi-Check labels, or a clean MBPP/HumanEval generated-code row) before claiming new paper-v6 headline lift.",
     "Set inference_substrate=aggregation_from_upstream_artifacts on the .274 archive task so adversarial-verify stops false-positive flagging the admin step."
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.001677 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
