@@ -372,5 +372,13 @@
     ".venv/bin/pytest tests/python/test_experiment_2889_mbpp_humaneval_generated_code_clean_row.py -p no:xdist -o addopts=\"\"",
     "100% coverage on python/carnot/eval/mbpp_humaneval_generated_code_clean_row.py",
     "dry-run real sandbox before final validation"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=25.651073217391968 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
   ]
 }

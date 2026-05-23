@@ -6010,3 +6010,4 @@ Ripgrep i |
 | 2026-05-22 22:25 UTC | SOTA Micro-Panel Clean Telemetry v3 | OK | 81 passed in 2.96s |
 | 2026-05-22 23:16 UTC | FR-11 Fast/Slow Memory Corrigendum v2 | OK | 81 passed in 3.42s |
 | 2026-05-22 23:59 UTC | TruthfulQA InFi-Check Taxonomy Manifest v1 | OK | 81 passed in 3.41s |
+| 2026-05-23 00:15 UTC | MBPP/HumanEval Generated-Code Clean Row v1 | OK | 81 passed in 3.05s |
