@@ -5071,3 +5071,65 @@ forward-only aggregation provenance, clean rows for v7 headline/taxonomy
 evidence plus Exp 2890, Exp 2892, and Exp 2898, pilot-only rows for v7 code
 pilot rows and Exp 2891 CCTU, flagged rows for unresolved generated-code
 support, no synthesized metrics, and per-row artifact SHA256 citations.
+
+### REQ-REPORT-2909: Archive Milestone 2026.05.274 and Confirm 2026.05.275 Activation
+
+The repository shall provide an Exp 2909 archive/activation generator that
+writes `results/experiment_2909_archive_v274_activate_v275.json`.
+
+The generator must first require
+`results/experiment_2908_capstone_v274.json`. If that capstone is absent or
+malformed, it must write a terminal artifact with
+`honest_verdict="blocked_capstone_missing"` and must not modify
+`research-complete.yaml`, `research-roadmap.yaml`, or
+`scripts/research_conductor.py`.
+
+When the capstone is present, the generator must read
+`research-complete.yaml` and determine whether milestone `2026.05.274` already
+has a completed archive block. If the block is present, the generator must set
+`archive_ready=true` without modifying `research-complete.yaml`. If the block
+is absent, the generator may append a minimal completed archive row for
+milestone `2026.05.274` from `results/experiment_2908_capstone_v274.json`
+without modifying `research-roadmap.yaml`.
+
+The generator must confirm milestone `2026.05.275` from
+`research-roadmap-next.yaml` when that file exists. If
+`research-roadmap-next.yaml` has already been activated and removed, it must
+read the active `research-roadmap.yaml` as a fallback while still leaving that
+roadmap unmodified.
+
+The terminal artifact must include:
+
+- `honest_verdict`, equal to
+  `complete: archive_ready=true; archived_milestone=2026.05.274; activated_milestone=2026.05.275`
+  on successful archival
+- `archive_ready`
+- `archived_milestone`, equal to `2026.05.274`
+- `activated_milestone`, equal to `2026.05.275`
+- `capstone_source`, equal to `results/experiment_2908_capstone_v274.json`
+- `paper_ready_from_capstone`
+- `clean_artifacts_from_capstone`
+- `flagged_artifacts_from_capstone`
+- `blocked_artifacts_from_capstone`
+- `missing_artifacts_from_capstone`
+- `pilot_only_artifacts_from_capstone`
+- `gaps_for_275`
+- `inference_substrate`, equal to `aggregation_from_upstream_artifacts`
+- `duration_s`, a real wall-clock duration for the archive generator run
+- `run_date`, equal to `20260523`
+
+#### SCENARIO-REPORT-2909: Existing .274 Archive Confirms Active .275 Roadmap
+
+**Given** `research-complete.yaml` already contains a completed
+`2026.05.274` archive row
+**And** `research-roadmap-next.yaml` may already have been activated into
+`research-roadmap.yaml`
+**When** the Exp 2909 archive generator runs
+**Then** it writes `results/experiment_2909_archive_v274_activate_v275.json`
+with `archive_ready=true`, `archived_milestone=2026.05.274`,
+`activated_milestone=2026.05.275`, paper readiness, clean artifact, flagged
+artifact, blocked artifact, missing artifact, pilot-only artifact, and
+`gaps_for_275` fields copied from
+`results/experiment_2908_capstone_v274.json`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and no modification
+to `research-roadmap.yaml` or `scripts/research_conductor.py`.
