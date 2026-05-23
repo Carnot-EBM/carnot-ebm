@@ -6435,3 +6435,61 @@ unsafe memory update.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2887 | Implemented (`python/carnot/eval/fr11_fast_slow_memory_corrigendum_v2.py`) | Implemented (`tests/python/test_experiment_2887_fr11_fast_slow_memory_corrigendum_v2.py`) |
+
+## REQ-LEARN-2906: FR-11 KV260 Hardware-Accelerated Replay Pilot
+
+**Given** Exp 2882 provides the bounded CPU replay scale-up artifact, Exp 2887
+provides the clean fast/slow memory corrigendum for that replay path, and Exp
+2898 provides a live KV260 board dispatch artifact
+**When** Exp 2906 builds the hardware-accelerated replay pilot artifact
+**Then** it SHALL aggregate only those upstream artifacts, validate that the CPU
+replay path and live KV260 dispatch path both passed their required gates, and
+write `results/experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.json`.
+**And** it SHALL explicitly report that this is a pilot-only dispatch-path
+validation, not a hardware performance comparison.
+
+### REQ-LEARN-2906 Sub-requirements
+
+- REQ-LEARN-2906-1: The runner SHALL require
+  `results/experiment_2882_fr11_recmem_replay_scaleup_v1.json`,
+  `results/experiment_2887_fr11_fast_slow_memory_corrigendum_v2.json`, and
+  `results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json`
+  before setting `dispatch_path_validated=true`.
+- REQ-LEARN-2906-2: The runner SHALL validate the replay side by requiring
+  `recmem_replay_scaleup_ready=true`, `n_examples >= 50`,
+  `live_llm_called=false`, `model_weights_mutated=false`, and
+  `fr11_scaleup_clean=true` in the corrigendum artifact.
+- REQ-LEARN-2906-3: The runner SHALL validate the KV260 side by requiring a
+  terminal complete Exp 2898 verdict, `inference_substrate="hardware_smoke"`,
+  all listed preconditions available, a non-empty loaded Carnot overlay,
+  at least one `/dev/uio*` device, a board-selected UIO path, a bitstream
+  SHA256, and three positive per-seed board result rows.
+- REQ-LEARN-2906-4: The terminal artifact SHALL include `honest_verdict`,
+  `inference_substrate="aggregation_from_upstream_artifacts"`,
+  `dispatch_path_validated`, `cited_upstream_artifacts`, `duration_s`,
+  `pilot_only=true`, `no_hardware_performance_claim=true`, and enough imported
+  field summaries to audit the path without re-running the board.
+
+### SCENARIO-LEARN-2906: KV260 Replay Pilot Validates Dispatch Without Performance Claim
+
+**Given** the Exp 2882, Exp 2887, and Exp 2898 artifacts all exist and satisfy
+their replay and board-dispatch gates
+**When** Exp 2906 runs
+**Then** it writes the pilot artifact with `dispatch_path_validated=true`,
+`inference_substrate="aggregation_from_upstream_artifacts"`, upstream artifact
+SHA256 citations, `pilot_only=true`, and `no_hardware_performance_claim=true`.
+
+### SCENARIO-LEARN-2906-BLOCKED: Missing Or Failed Upstream Blocks The Pilot
+
+**Given** any required upstream artifact is missing or fails its replay or KV260
+dispatch gate
+**When** Exp 2906 runs
+**Then** it writes a blocked artifact with `dispatch_path_validated=false`,
+the failed gate names, `inference_substrate="aggregation_from_upstream_artifacts"`,
+and no hardware performance comparison fields.
+
+## Implementation Status (REQ-LEARN-2906)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2906 | Implemented (`python/carnot/eval/fr11_hardware_accelerated_replay_pilot_v1.py`) | Implemented (`tests/python/test_experiment_2906_fr11_hardware_accelerated_replay_pilot_v1.py`) |
