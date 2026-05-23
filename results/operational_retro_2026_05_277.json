@@ -1,0 +1,27 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.277",
+  "generated_at": "2026-05-23T21:40:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.277 has 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments in the authoritative timing window. Compute-bound duration ranking, GPU efficiency, and DualGPURunner assessment have no data available this milestone.",
+  "bottlenecks_identified": [
+    "no data available this milestone"
+  ],
+  "improvements_suggested": [
+    "Add a pre-closeout empty-window guard that requires either at least one milestone-scoped timing row or an explicit synthesis-only/no-run classification.",
+    "Emit an automatic no-data operational-retro template when experiments_completed is 0 so the closeout cannot imply GPU or DualGPURunner findings.",
+    "Record a first-experiment marker immediately after milestone activation to make empty timing windows visible before retrospective generation."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Gate retro generation on a non-empty timing window or an explicit no-run override.",
+    "Separate synthesis-only GPU-idle observations from compute-bound GPU diagnostics in the retro generator.",
+    "Surface missing milestone-scoped experiment commits in the operator status path before closeout."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The only authoritative timing signal for this milestone is absence of milestone-scoped experiment commits. The GPU monitor report is contextual only here: with 0 compute-bound tasks, idle GPUs are correct behavior for synthesis-only closeout work rather than an efficiency failure."
+}
