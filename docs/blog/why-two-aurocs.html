@@ -338,42 +338,58 @@
   <tbody>
     <tr>
       <td>FoVer</td>
-      <td class="col-a">reported</td>
-      <td class="col-b">reported</td>
-      <td class="col-gap">delta visible</td>
+      <td class="col-a">0.9131</td>
+      <td class="col-b">0.8947</td>
+      <td class="col-gap">+0.0185</td>
     </tr>
     <tr>
-      <td>HaluEval</td>
-      <td class="col-a">reported</td>
-      <td class="col-b">reported</td>
-      <td class="col-gap">delta visible</td>
-    </tr>
-    <tr>
-      <td>FEVER</td>
+      <td>HaluEval / FEVER</td>
       <td class="col-a">reported</td>
       <td class="col-b">reported</td>
       <td class="col-gap">delta visible</td>
     </tr>
     <tr>
       <td>TruthfulQA</td>
-      <td class="col-a">in progress</td>
-      <td class="col-b">in progress</td>
-      <td class="col-gap">&mdash;</td>
+      <td class="col-a">reported</td>
+      <td class="col-b">reported</td>
+      <td class="col-gap">delta visible</td>
     </tr>
     <tr>
       <td>MBPP</td>
-      <td class="col-a">in progress</td>
-      <td class="col-b">in progress</td>
+      <td class="col-a">pilot only</td>
+      <td class="col-b">pilot only</td>
       <td class="col-gap">&mdash;</td>
     </tr>
     <tr>
       <td>HumanEval</td>
-      <td class="col-a">in progress</td>
-      <td class="col-b">in progress</td>
+      <td class="col-a">pilot only</td>
+      <td class="col-b">pilot only</td>
       <td class="col-gap">&mdash;</td>
     </tr>
   </tbody>
 </table>
+
+<p>
+  <strong>Update, 2026-05-23 (one day after original posting).</strong>
+  The FoVer numbers are now anchored to a 5-seed dual-condition run
+  with explicit reproducibility checksums: production AUROC 0.9131
+  (std 0.0075), architecture-only AUROC 0.8947 (std 0.0075), delta
+  +0.0185. The original FoVer headline reported in v2 of the paper
+  draft was 0.9857; we repinned it downward to 0.9131 because the
+  5-seed dual-condition is what we can actually defend. The 7.3
+  percentage-point gap between the v2 number and the v3 number is
+  the kind of correction the dual-condition discipline exists to
+  surface, and we would rather report it than not. TruthfulQA has
+  moved from "in progress" to "reported" via the milestone
+  `.276 cross-corpus matrix v10 corrigendum. MBPP and HumanEval
+  remain pilot-only &mdash; the verifier ensemble produces meaningful
+  ranking signal on these corpora (AUPRC 0.889 on code corpora vs
+  0.879 on FoVer in apples-to-apples comparison), but the absolute
+  base-model pass-rate is too small to support a clean
+  dual-condition headline yet. The protocol the post describes is
+  what surfaced both findings; the gap to a clean MBPP / HumanEval
+  row is the next experiment, not a methodology change.
+</p>
 
 <p>
   The specific numerical values live in the repository's
@@ -495,19 +511,27 @@
 <h2>Honest disclosure</h2>
 
 <p>
-  We do not know yet what the gap will look like on every corpus.
-  The expansion into MBPP, HumanEval, and TruthfulQA is in progress;
-  the rows the matrix shows in flight today will fill in over the
-  coming weeks. We expect the gap to be small on corpora the relay
-  has rarely sampled and larger on corpora it has seen often. We
-  also expect, on at least some corpus, to see the third regime above
-  &mdash; the architecture-only column degrading &mdash; and to have
-  to repair it. That is what the protocol is for.
+  We did not know what the gap would look like on every corpus when
+  this post was first written. We now know, on the corpora the matrix
+  has filled in. The gap is small on FoVer (+0.0185 AUROC), consistent
+  with the self-learning relay providing a modest polish on top of the
+  architecture's underlying capability rather than carrying the work.
+  TruthfulQA filled in over the following milestone. MBPP and
+  HumanEval are still pilot-only &mdash; not because the dual-condition
+  protocol fails on them, but because the base model's absolute pass
+  rate on those corpora is too small (~7.5% pass@1 on code corpora)
+  to make either column meaningful as a standalone headline.
 </p>
 
 <p>
-  If the gap turns out to be uncomfortable, we will publish that too.
-  The point of reporting two columns is that they are not optional.
+  The protocol did what it was supposed to do: it caught a
+  load-bearing v2 headline number (FoVer AUROC 0.9857) that wasn't
+  defensible under the dual-condition framing, and it produced the
+  repinned v3 number (0.9131) that is. If the gap had turned out
+  uncomfortable in the other direction &mdash; production AUROC much
+  higher than architecture-only AUROC &mdash; we would have published
+  that too. The point of reporting two columns is that they are not
+  optional, regardless of which way the gap points.
 </p>
 
 <div class="further-reading">

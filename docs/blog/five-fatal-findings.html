@@ -326,6 +326,28 @@
     comparison is not. We have since labeled that result as
     preliminary, pending rework with a verified sampler.
   </p>
+  <p>
+    <strong>Update, 2026-05-23.</strong> The rework arrived. A
+    follow-up empirical audit (the
+    <a href="/docs/research-notes/phase3-empirical-readiness-deep-think-results.md">Phase-3
+    Empirical-Readiness round</a>) drove three measurements that
+    closed both halves of this finding. First, a Maximum Mean
+    Discrepancy test between CPU sequential Gibbs energies and KV260
+    synchronous-Glauber energies on identical n=64 Ising problems
+    over three seeds: MMD p-values at the noise floor (~10<sup>-3</sup>),
+    KS statistics of 0.998&ndash;0.999. The distributions are
+    statistically distinguishable; the FPGA is not sampling Boltzmann.
+    Second, a CPU baseline running the same synchronous-parallel
+    schedule the FPGA runs: 23.6 &mu;s per sample at n=64, which makes
+    the apples-to-apples FPGA-vs-CPU speedup at n=64 a factor of
+    <strong>0.98&times; &mdash; the FPGA is two percent slower than
+    the CPU</strong>. The 12,788&times; number was both
+    apples-to-oranges on the sampler comparison AND extrapolated past
+    a crossover point the architecture's actual latent dimensions
+    don't cross. The honest paper claim is no longer a speedup at all;
+    it is a proof-of-concept latency anchor for a substrate that
+    becomes interesting at scales we have not yet measured.
+  </p>
 </div>
 
 <div class="finding">
