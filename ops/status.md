@@ -1,6 +1,75 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-23 (milestone 2026.05.275 operational retrospective complete)
+**Last Updated:** 2026-05-23 (Phase-3 Empirical-Readiness Deep Think complete — 7 FATAL paper-v6 claim narrowings shipped)
+
+## Session 2026-05-23 - Phase-3 Empirical-Readiness Deep Think Complete (paper-v6 narrowing discipline shipped)
+
+Outer-loop ran the Phase-3 Empirical-Readiness adversarial Deep Think
+round against the paper-v6 draft (prompt:
+`docs/research-notes/phase3-empirical-readiness-deep-think-prompt.md`,
+results: `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`).
+The audit produced **10 findings: 7 FATAL, 2 DEGRADING, 1 COSMETIC**, with
+**2 FATAL findings unprompted** (outside the eight enumerated attack
+surfaces) — matching the 2026-04-30 round's "one unprompted finding"
+precedent and exceeding it.
+
+**The 7 FATAL findings, rescue type:**
+
+| # | Finding | Rescue |
+|---|---|---|
+| #1 | KV260 synchronous Glauber may converge to NESS / limit cycle, not Boltzmann | New measurement: MMD vs CPU sequential Gibbs |
+| #2 | 1.5% p95-vs-median margin proves fixed-sweep loop, not real MCMC mixing | **Textual**: declare 24 µs as "fixed-compute heuristic budget" |
+| #3 | KV260-vs-CPU crossover at n≈240 but architecture scopes d∈{128, 256} — KV260 is PROVABLY SLOWER than CPU at d=128 (UNPROMPTED) | **Textual**: retract speedup claim at current d; POC = slow functional simulator |
+| #4 | exp2913 speedup eligibility apples-to-oranges (CPU sequential Gibbs vs FPGA synchronous parallel) | New measurement: same-schedule CPU comparator |
+| #5 | Verifier AUROC 0.91 + base model pass@1 7.5% → PPV < 42% (hallucination multiplier) on code corpora | New measurement: AUPRC at 92.5% negative base rate |
+| #6 | Phase-4 VFE bounds conflated with KV260 broken discrete physics | **Textual**: firewall Phase-4 to RTX 3090 continuous-sampler only |
+| #7 | Post-pivot Boolean DAE-DEBM cannot deploy on Extropic Z1 / photonic analog substrates (UNPROMPTED) | **Textual**: re-scope future production to digital ASICs / digital Ising machines |
+
+**Actions shipped in this session (commits 76a55dfff, a8fafaede,
++ this commit):**
+
+1. **Phase-3 Empirical-Readiness Deep Think prompt drafted**
+   (commit `76a55dfff`).
+2. **Deep Think results captured** with full per-finding rescue paths
+   (commit `a8fafaede`).
+3. **Three measurement experiments queued in `ops/known-issues.md`
+   MANDATORY-NEXT-MILESTONE PRIORITIES**: KV260 MMD vs CPU sequential
+   Gibbs (FATAL #1), CPU same-schedule synchronous-parallel comparator
+   (FATAL #4), verifier ensemble AUPRC on code corpora (FATAL #5).
+   Independent — the planner can queue them in parallel.
+4. **CLAUDE.md "Paper-v6 Narrowing Discipline" MANDATORY rule added**.
+   Forbids autonomous-loop output (capstones, evidence tables,
+   in-process docs) from re-asserting any of the seven retracted
+   claims. Forward-only; retires when the three corrigenda land AND
+   the paper-v6 draft is operator-rewritten.
+
+**What survives unchanged:**
+
+- Phase 1 ship gate (PyPI, HF mirror, MCP, CLI) — all mechanical
+  criteria met except external reproducer.
+- Verifier ensemble's FoVer 0.9131 AUROC (5-seed dual-condition,
+  +0.0185 delta vs architecture-only) — defensible.
+- Post-pivot DAE-DEBM architecture on continuous-sampler (RTX 3090)
+  — verified live via exp2862.
+- Phase-4 active-inference track (exp2550, exp2748, exp2753, exp2766)
+  — firewalled from FPGA claims per #6, otherwise intact.
+- Dual-condition AUROC discipline — itself a paper contribution.
+- KV260 as POC functional simulator anchoring future high-N
+  deployment.
+- Hardware portfolio (KV260 SSH, GateMate USB-attached + toolchain
+  unblocked 2026-05-23, PolarFire SSH).
+
+**What the paper-v6 draft must NOT now claim** (until operator-
+rewritten + corrigenda land): KV260 hardware speedup at current d,
+Boltzmann thermalization on FPGA, Phase-4 VFE bounds at deployment,
+Extropic Z1 as future production target, universal cross-modality
+generalization of the verifier ensemble, "hardware sovereignty"
+framing, five-paper_ready-streak as scientific maturity.
+
+**Why this section exists:** the doc-sync path in
+`_update_docs_before_planning` reads `ops/status.md` as input. This
+section ensures future doc-sync runs do NOT re-emit the retracted
+framings into landing-page / technical-report / blog content.
 
 ## Session 2026-05-23 - Milestone 2026.05.275 Operational Retrospective Complete
 
