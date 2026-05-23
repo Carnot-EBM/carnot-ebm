@@ -114,6 +114,47 @@ COMPUTE_BOUND_MARKERS = (
 # inference on even a 0.5B GGUF takes at least this long.
 COMPUTE_BOUND_MIN_DURATION_S = 60.0
 
+# Verifier-scoring artifacts: experiments that score an ensemble of
+# verifiers against already-cached (input, candidate, label) triples
+# WITHOUT invoking a fresh LLM forward pass. The GGUF markers in their
+# model_specs are vestigial template declarations -- the task spec
+# mandated naming the SOTA model, but the actual run does not load it.
+# These experiments finish in seconds (verifier scoring of a few
+# hundred candidates), not minutes, so the standard
+# COMPUTE_BOUND_MIN_DURATION_S threshold produces false positives.
+#
+# Recognition is by either:
+#   (a) explicit `inference_substrate` field set to the canonical
+#       sentinel below (preferred -- forward-only), OR
+#   (b) one of the known verifier-scoring schema prefixes (legacy
+#       -- covers artifacts that pre-date the explicit field).
+VERIFIER_SCORING_SUBSTRATE = "verifier_ensemble_against_cached_candidates"
+VERIFIER_SCORING_SCHEMA_PREFIXES = (
+    "carnot.fover_memory_leakage_",
+    "carnot.cross_corpus_verifier_matrix",
+    "carnot.mbpp_dual_condition_v",
+    "carnot.halueval_fever_pilot",
+    "carnot.mbpp_humaneval_generated_code_clean_row",
+)
+VERIFIER_SCORING_MIN_DURATION_S = 1.0
+
+# Aggregation-only artifacts: milestone capstones, archive/activate
+# transitions, paper-table synthesizers, cross-corpus-matrix builders.
+# These don't invoke the model OR score verifiers -- they read existing
+# artifacts off disk, compute deltas / format tables / build manifests,
+# and write the result. Their wall-clock measures JSON-read + arithmetic,
+# legitimately a few milliseconds. The GGUF markers in their model_specs
+# (when present) are forwarded from the upstream artifacts they cite.
+AGGREGATION_SUBSTRATE = "aggregation_from_upstream_artifacts"
+AGGREGATION_SCHEMA_PREFIXES = (
+    "capstone_v",
+    "carnot.milestone_capstone",
+    "carnot.paper_v6_capstone",
+    "carnot.archive_activation",
+    "carnot.paper_v6_multicorpus_table",
+)
+AGGREGATION_MIN_DURATION_S = 0.0001  # 100us floor catches truly-zero/missing
+
 
 class Flag:
     """A single detected concern on an artifact."""
@@ -351,12 +392,92 @@ def _has_compute_bound_marker(d: dict[str, Any]) -> bool:
     return any(m in text for m in COMPUTE_BOUND_MARKERS)
 
 
+def _is_verifier_scoring_only(d: dict[str, Any]) -> bool:
+    """True if the artifact declares it scored verifiers against
+    cached candidate triples without invoking LLM inference.
+
+    The GGUF / CUDA markers in such artifacts are vestigial template
+    declarations -- the experiment's wall-clock should be measured
+    against the verifier-scoring loop, not against model loading +
+    inference. Two recognition modes (either is sufficient):
+
+    1. Explicit declaration -- `inference_substrate` field equals the
+       canonical sentinel `verifier_ensemble_against_cached_candidates`.
+       This is the forward-only path; planner-emitted task prompts
+       should require this declaration for verifier-scoring tasks.
+
+    2. Known verifier-only schema prefix. Covers historical artifacts
+       (exp2837 fover_memory_leakage_v3, cross_corpus_verifier_matrix
+       family, etc.) that were authored before the explicit-field
+       discipline shipped.
+    """
+    if d.get("inference_substrate") == VERIFIER_SCORING_SUBSTRATE:
+        return True
+    schema = str(d.get("schema") or d.get("schema_version") or "")
+    return any(schema.startswith(p) for p in VERIFIER_SCORING_SCHEMA_PREFIXES)
+
+
+def _is_aggregation_only(d: dict[str, Any]) -> bool:
+    """True if the artifact is a synthesis / aggregation over upstream
+    artifacts and not itself a compute-bound experiment.
+
+    Capstones, archive/activate transitions, and paper-table builders
+    legitimately finish in milliseconds. Their model_specs / GGUF
+    markers (when present) are inherited from upstream sources cited
+    in the artifact body, not invoked by the artifact itself.
+    """
+    if d.get("inference_substrate") == AGGREGATION_SUBSTRATE:
+        return True
+    schema = str(d.get("schema") or d.get("schema_version") or "")
+    return any(schema.startswith(p) for p in AGGREGATION_SCHEMA_PREFIXES)
+
+
 def check_duration_vs_claim(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact with implausibly short duration."""
     duration = d.get("duration_s")
     if not _is_finite_number(duration):
         return
     if not _has_compute_bound_marker(d):
+        return
+    # Verifier-scoring artifacts run in seconds because they score
+    # cached candidates -- their GGUF markers are vestigial. Apply
+    # the tighter verifier-scoring threshold instead of the full
+    # model-inference threshold.
+    if _is_verifier_scoring_only(d):
+        if float(duration) < VERIFIER_SCORING_MIN_DURATION_S:
+            flags.append(
+                Flag(
+                    kind="DURATION_TOO_SHORT",
+                    severity="critical",
+                    detail=(
+                        f"duration_s={duration} but artifact declares "
+                        f"verifier-scoring substrate. Even verifier "
+                        f"scoring of a few hundred candidates takes "
+                        f">={VERIFIER_SCORING_MIN_DURATION_S}s; this "
+                        f"completed too fast to have scored anything."
+                    ),
+                )
+            )
+        return
+    # Aggregation-only artifacts (capstones, archive/activate,
+    # paper-table builders) just read upstream JSON and arithmetic.
+    # Milliseconds are honest. The GGUF markers are inherited from
+    # the upstream artifacts they cite, not invoked here.
+    if _is_aggregation_only(d):
+        if float(duration) < AGGREGATION_MIN_DURATION_S:
+            flags.append(
+                Flag(
+                    kind="DURATION_TOO_SHORT",
+                    severity="critical",
+                    detail=(
+                        f"duration_s={duration} but artifact declares "
+                        f"aggregation substrate. Even loading upstream "
+                        f"JSON takes microseconds; a value below "
+                        f"{AGGREGATION_MIN_DURATION_S}s suggests the "
+                        f"duration was not measured at all."
+                    ),
+                )
+            )
         return
     if float(duration) < COMPUTE_BOUND_MIN_DURATION_S:
         flags.append(
@@ -446,10 +567,23 @@ def check_methodology_present(d: dict[str, Any], flags: list[Flag]) -> None:
     """Compute-bound artifact missing methodology evidence."""
     if not _has_compute_bound_marker(d):
         return
+    # Aggregation-only artifacts inherit methodology from the upstream
+    # sources they cite; they aren't themselves a measurement, so this
+    # check would be a category error.
+    if _is_aggregation_only(d):
+        return
     has_model_spec = (
         d.get("model_specs") or d.get("target_model") or d.get("models_tested")
     )
-    has_seed = d.get("random_seed") is not None or d.get("seed") is not None
+    # Recognize singular (`random_seed`, `seed`) and plural
+    # (`random_seeds_used`, `seeds`) forms. Multi-seed experiments
+    # legitimately use the plural list-of-seeds form.
+    has_seed = (
+        d.get("random_seed") is not None
+        or d.get("seed") is not None
+        or d.get("random_seeds_used")
+        or d.get("seeds")
+    )
     has_repro = d.get("reproducibility_checksum")
     missing = []
     if not has_model_spec:

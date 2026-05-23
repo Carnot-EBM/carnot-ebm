@@ -1496,6 +1496,113 @@ by fabricating numbers if no methodology check is in place.
 
 ---
 
+## Inference-Substrate Declaration Discipline (MANDATORY)
+
+**Origin:** 2026-05-22 operator-authorized fix after exp2842 / exp2837
+were flagged DURATION_TOO_SHORT as false positives. The artifacts were
+honest: exp2837 scored the verifier ensemble against cached FoVer
+candidate triples (16.3s wall-clock for 5-seed dual-condition,
+correct), and exp2842 was a capstone aggregating exp2837's numbers
+(1.3ms wall-clock for JSON-read + arithmetic, correct). The
+`adversarial_verify.py` DURATION_TOO_SHORT rule saw the GGUF markers
+in their `model_specs` (vestigial template requirements) and assumed
+LLM inference had been claimed. It hadn't been; the markers were
+declared because the task spec mandated naming the SOTA GGUF, even
+though the experiments didn't invoke it.
+
+**The rule.** Every experiment artifact MUST declare an
+`inference_substrate` field at the top level. The legal values are:
+
+| Value | Meaning | Duration floor |
+|---|---|---|
+| `live_llm_inference` | Loads + runs the declared GGUF / CUDA model. | 60s |
+| `verifier_ensemble_against_cached_candidates` | Scores the verifier ensemble against pre-existing (input, candidate, label) triples; does NOT load the LLM. | 1s |
+| `aggregation_from_upstream_artifacts` | Reads upstream JSON, computes deltas / formats tables / builds manifests. Capstones, archive/activate, paper-table builders. | 0.0001s |
+| `hardware_smoke` | SSH-attached board test, FPGA bring-up, etc. | (per-board, see Pre-Launch Preconditions table) |
+
+The `adversarial_verify.py` linter recognizes each value and applies
+the matching duration floor. The legacy schema-prefix recognition
+(`carnot.fover_memory_leakage_`,
+`carnot.cross_corpus_verifier_matrix`, `capstone_v`,
+`carnot.milestone_capstone`, etc.) is the historical fallback for
+artifacts authored before this discipline shipped, but new artifacts
+should set `inference_substrate` explicitly.
+
+**Why the declaration matters.** Without it, the linter has only the
+artifact's GGUF / CUDA marker fields as a signal. Those markers are
+sometimes vestigial (declared because the task template mandates
+naming the SOTA model even when the experiment doesn't invoke it),
+sometimes load-bearing (the experiment really does run the GGUF).
+The linter cannot tell them apart from string presence alone.
+`inference_substrate` is the explicit declaration that resolves the
+ambiguity.
+
+**How to apply (planner-side discipline).** When generating
+`research-roadmap-next.yaml` task prompts:
+
+1. Decide which substrate the task belongs to before writing the
+   prompt. Most experiments are `live_llm_inference`. Verifier-scoring
+   benchmarks (FoVer dual-condition, cross-corpus matrices) are
+   `verifier_ensemble_against_cached_candidates`. Capstones,
+   archive/activate transitions, and paper-table builders are
+   `aggregation_from_upstream_artifacts`.
+
+2. Add `inference_substrate` to the task's REQUIRED ARTIFACT FIELDS
+   with a `principle:` annotation explaining what failure mode the
+   declaration prevents.
+
+3. For verifier-scoring and aggregation tasks, do NOT mandate
+   `model_specs.headline_required_any_of: [GGUF list]` in the task
+   prompt. The mandate is what introduced the false-positive trigger
+   in the first place. The task may STILL record which upstream
+   sources it cites (e.g., `cited_upstream_artifacts: [exp2837, ...]`),
+   but the artifact's own `model_specs` should reflect what the
+   experiment actually invoked &mdash; nothing, in these cases.
+
+4. For aggregation tasks specifically, ensure the prompt also
+   captures the upstream provenance: `cited_upstream_artifacts:
+   list of {experiment_id, fields_imported, sha256}` so the
+   aggregation's numbers are traceable back to a real measurement.
+   This is the audit trail that lets a third party verify the
+   capstone is not synthesizing numbers from nothing.
+
+**How to apply (agent-side discipline).** When executing a task:
+
+1. Read the task prompt's REQUIRED ARTIFACT FIELDS. If
+   `inference_substrate` is listed, populate it with the value the
+   task prompt assigns. Do NOT default to `live_llm_inference` if
+   the experiment is verifier-scoring or aggregation &mdash; the
+   declaration must match what was actually done.
+
+2. If the task prompt does NOT list `inference_substrate` (e.g.,
+   legacy planner-emitted task), infer from the task's substantive
+   work and declare it explicitly. The discipline is forward-only;
+   silently omitting the field is treated as `live_llm_inference`
+   by the linter, which is the strict default.
+
+**Mechanical enforcement.** The
+`adversarial_verify.py` linter applies the substrate-specific
+duration floor and skips the methodology check for aggregation-only
+artifacts (since those inherit methodology from cited upstream
+sources). Verifier-scoring and live-inference artifacts still
+require full methodology (`random_seed` or `random_seeds_used`,
+`reproducibility_checksum`, `model_specs`).
+
+**Cross-references:**
+- `scripts/adversarial_verify.py:_is_verifier_scoring_only` and
+  `_is_aggregation_only` &mdash; the recognition logic
+- exp2837 (`results/experiment_2837_fover_memory_leakage_v3.json`)
+  &mdash; canonical verifier-scoring exemplar (5-seed dual-condition,
+  per-seed AUROC, SHA256 state-restoration verified)
+- exp2842 (`results/experiment_2842_capstone_v269.json`) &mdash;
+  canonical aggregation exemplar (1.3ms wall-clock, cites exp2837)
+- CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor"
+  &mdash; the parent rule this discipline tightens
+- CLAUDE.md "Pre-Launch Preconditions Discipline" &mdash; sibling
+  discipline that uses the same `preconditions_checked` pattern
+
+---
+
 ## Pre-Launch Preconditions Discipline (MANDATORY)
 
 **Origin:** 2026-05-15 operator-directed root-cause fix after 5 confirmed
