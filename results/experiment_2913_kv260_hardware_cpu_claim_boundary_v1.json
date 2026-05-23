@@ -1,0 +1,157 @@
+{
+  "comparison_notes": [
+    "matched_n_spins=64",
+    "matched_random_seeds",
+    "matched_sample_counts",
+    "matched_sparse_topology_and_tensors",
+    "matched_timing_units=per_sample_microseconds"
+  ],
+  "duration_s": 0.005587,
+  "hardware_speedup_claim_eligible": true,
+  "honest_verdict": "complete: kv260_same_basis_hardware_cpu_speedup_claim_eligible",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kv260_claim_boundary_ready": true,
+  "matrix_row_candidate": {
+    "blocked_conditions": [],
+    "claim_scope": "matched n=64 sparse Ising KV260 hardware-smoke versus CPU Gibbs baseline",
+    "eligible_for_matrix_v9": true,
+    "eligible_for_paper_v6": true,
+    "experiment_id": "exp2913",
+    "n_spins": 64,
+    "random_seeds_used": [
+      42,
+      137,
+      271
+    ],
+    "sample_count_sweep": [
+      100,
+      1000,
+      10000
+    ],
+    "speedup_ratio_definition": "CPU per-sample microsecond latency divided by KV260 per-sample wall-clock microsecond latency; values greater than 1 mean lower KV260 latency.",
+    "speedup_ratio_median_by_sample_count": {
+      "100": 19.134021,
+      "1000": 19.239757,
+      "10000": 18.652517
+    },
+    "speedup_ratio_p95_by_sample_count": {
+      "100": 25.638095,
+      "1000": 30.353281,
+      "10000": 20.108426
+    },
+    "upstream_artifacts": [
+      "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json"
+    ]
+  },
+  "paper_claim_boundary": "A bounded numeric KV260/CPU latency claim is eligible for the matched n=64 sparse Ising workload: CPU/KV260 per-sample latency ratios are n_samples=100: median 19.13x, p95 25.64x, n_samples=1000: median 19.24x, p95 30.35x, n_samples=10000: median 18.65x, p95 20.11x. The claim is restricted to Exp 2898 hardware-smoke timing versus Exp 2912 same-basis CPU Gibbs timing; it is not a broad FPGA acceleration claim.",
+  "per_seed_speedup_ratios": [
+    {
+      "cpu_median_us": 631.1795,
+      "cpu_p95_us": 635.312,
+      "kv260_median_us": 24.060499999999998,
+      "kv260_p95_us": 24.78,
+      "sample_count": 100,
+      "seed": 42,
+      "speedup_ratio_median": 26.233017,
+      "speedup_ratio_p95": 25.638095
+    },
+    {
+      "cpu_median_us": 454.3875,
+      "cpu_p95_us": 465.994,
+      "kv260_median_us": 24.1055,
+      "kv260_p95_us": 25.43,
+      "sample_count": 100,
+      "seed": 137,
+      "speedup_ratio_median": 18.849951,
+      "speedup_ratio_p95": 18.324577
+    },
+    {
+      "cpu_median_us": 459.2165,
+      "cpu_p95_us": 466.867,
+      "kv260_median_us": 24.0,
+      "kv260_p95_us": 24.301,
+      "sample_count": 100,
+      "seed": 271,
+      "speedup_ratio_median": 19.134021,
+      "speedup_ratio_p95": 19.211843
+    },
+    {
+      "cpu_median_us": 628.5295,
+      "cpu_p95_us": 741.561,
+      "kv260_median_us": 24.06,
+      "kv260_p95_us": 24.431,
+      "sample_count": 1000,
+      "seed": 42,
+      "speedup_ratio_median": 26.123421,
+      "speedup_ratio_p95": 30.353281
+    },
+    {
+      "cpu_median_us": 446.2175,
+      "cpu_p95_us": 460.554,
+      "kv260_median_us": 24.04,
+      "kv260_p95_us": 24.36,
+      "sample_count": 1000,
+      "seed": 137,
+      "speedup_ratio_median": 18.56146,
+      "speedup_ratio_p95": 18.906158
+    },
+    {
+      "cpu_median_us": 461.581,
+      "cpu_p95_us": 477.517,
+      "kv260_median_us": 23.991,
+      "kv260_p95_us": 24.33,
+      "sample_count": 1000,
+      "seed": 271,
+      "speedup_ratio_median": 19.239757,
+      "speedup_ratio_p95": 19.626675
+    },
+    {
+      "cpu_median_us": 447.8,
+      "cpu_p95_us": 479.459,
+      "kv260_median_us": 24.05,
+      "kv260_p95_us": 24.38,
+      "sample_count": 10000,
+      "seed": 42,
+      "speedup_ratio_median": 18.619543,
+      "speedup_ratio_p95": 19.666079
+    },
+    {
+      "cpu_median_us": 448.4065,
+      "cpu_p95_us": 468.99,
+      "kv260_median_us": 24.04,
+      "kv260_p95_us": 24.36,
+      "sample_count": 10000,
+      "seed": 137,
+      "speedup_ratio_median": 18.652517,
+      "speedup_ratio_p95": 19.252463
+    },
+    {
+      "cpu_median_us": 457.418,
+      "cpu_p95_us": 489.238,
+      "kv260_median_us": 24.01,
+      "kv260_p95_us": 24.33,
+      "sample_count": 10000,
+      "seed": 271,
+      "speedup_ratio_median": 19.051145,
+      "speedup_ratio_p95": 20.108426
+    }
+  ],
+  "run_date": "20260523",
+  "same_basis_verified": true,
+  "speedup_claim_made": true,
+  "speedup_ratio_median_by_sample_count": {
+    "100": 19.134021,
+    "1000": 19.239757,
+    "10000": 18.652517
+  },
+  "speedup_ratio_p95_by_sample_count": {
+    "100": 25.638095,
+    "1000": 30.353281,
+    "10000": 20.108426
+  },
+  "upstream_artifacts": [
+    "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+    "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json"
+  ]
+}

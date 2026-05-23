@@ -1205,3 +1205,56 @@ marks all basis-match booleans true, records a reproducibility checksum, and
 does not make a hardware speedup claim.
 
 **Implementation status:** Pending (Exp 2912)
+
+---
+
+### REQ-HW-065
+
+**Title:** Exp 2913 KV260 hardware/CPU claim boundary MUST gate speedup claims on matched evidence
+
+**Description:**
+Experiment 2913 MUST read the Exp 2898 KV260 hardware-smoke latency artifact and
+the Exp 2912 same-basis CPU Gibbs baseline artifact, compare only matched
+per-sample latency measurements, and write
+`results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json`. If the Exp
+2912 artifact is absent or `same_basis_cpu_baseline_ready` is false, the
+experiment MUST write `honest_verdict="blocked_cpu_baseline_not_ready"` and stop
+without making a speedup claim. When both upstream artifacts are available, the
+experiment MUST verify matching `n_spins`, sparse topology, random seeds, sample
+counts, and microsecond per-sample timing units before computing any CPU/KV260
+latency ratio. Numeric hardware speedup is eligible only when all match gates pass.
+
+**Acceptance criteria:**
+- The artifact includes `honest_verdict`, `kv260_claim_boundary_ready`,
+  `same_basis_verified`, `hardware_speedup_claim_eligible`,
+  `speedup_ratio_median_by_sample_count`, `speedup_ratio_p95_by_sample_count`,
+  `comparison_notes`, `matrix_row_candidate`, `paper_claim_boundary`,
+  `speedup_claim_made`, `inference_substrate`, `duration_s`, and
+  `run_date="20260523"`.
+- `inference_substrate` is
+  `aggregation_from_upstream_artifacts`, and no board command, sampler run, or
+  new timing measurement is performed.
+- `hardware_speedup_claim_eligible` and `speedup_claim_made` are true only when
+  problem basis, seeds, sample counts, and timing units all match.
+- If any match gate fails, the artifact names the failed condition in
+  `comparison_notes`, leaves all speedup-ratio dictionaries empty, and writes a
+  paper boundary that forbids numeric speedup claims.
+
+**Implementation status:** Implemented (Exp 2913)
+
+---
+
+### SCENARIO-HW-065
+
+**Scenario:** Matched KV260 and CPU artifacts produce a bounded speedup claim.
+
+**Given:** Exp 2898 has complete hardware-smoke per-sample microsecond latency
+rows, and Exp 2912 has a ready same-basis CPU baseline for the same n=64 sparse
+topology, seeds, and sample counts.
+**When:** Exp 2913 compares the two artifacts.
+**Then:** The artifact reports per-sample CPU/KV260 speedup ratios by sample
+count, marks the hardware speedup claim eligible, emits a matrix-row candidate
+for downstream aggregation, and writes paper text that scopes the claim to the
+matched n=64 sparse Ising workload only.
+
+**Implementation status:** Implemented (Exp 2913)
