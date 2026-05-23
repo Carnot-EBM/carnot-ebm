@@ -5031,3 +5031,43 @@ copied from `results/experiment_2896_capstone_v273.json`,
 `inference_substrate=aggregation_from_upstream_artifacts`, field principles
 describing the required artifact fields, and no modification to
 `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+### REQ-REPORT-2902: Cross-Corpus Matrix V8 With Forward-Only Provenance
+
+The repository shall provide an Exp 2902 cross-corpus matrix v8 generator that
+writes `results/experiment_2902_cross_corpus_matrix_v8.json`.
+
+The generator MUST first require
+`results/experiment_2894_cross_corpus_matrix_v7.json`. If matrix v7 is absent,
+it MUST write a terminal artifact with `honest_verdict="blocked_v7_missing"`
+and MUST NOT infer rows from later support artifacts alone.
+
+When matrix v7 is present, the generator MUST load it, identify v7 rows that
+are clean, flagged, blocked, and pilot-only, and then add explicit support rows
+from clean existing Exp 2890 Code Structural Dependency, Exp 2891 CCTU, Exp
+2892 VeriCoT, and Exp 2898 KV260 hardware artifacts. It MUST keep CCTU as
+pilot-only support, MUST keep unresolved generated-code flags visible, and MUST
+NOT promote pilot-only, taxonomy-only, or hardware-smoke evidence into
+cross-corpus AUROC or pass@k metrics.
+
+Every emitted row MUST cite the direct upstream artifact path, experiment id,
+fields imported, and SHA256 hash used to build that row. The terminal artifact
+MUST include `honest_verdict`, `inference_substrate` equal to
+`aggregation_from_upstream_artifacts`, `rows_clean`, `rows_flagged`,
+`rows_blocked`, `rows_pilot_only`, `cited_upstream_artifacts`, and measured
+`duration_s`. The `cited_upstream_artifacts` field MUST declare the
+forward-only provenance discipline and expose a list shaped as
+`{experiment_id, fields_imported, sha256}` so a third party can verify the
+aggregation did not synthesize values from missing sources.
+
+#### SCENARIO-REPORT-2902: V8 Adds Clean Code, CCTU, VeriCoT, And KV260 Rows
+
+**Given** Exp 2894 matrix v7 exists with clean headline, taxonomy-only, and
+pilot-only row boundaries
+**And** Exp 2890, Exp 2891, Exp 2892, and Exp 2898 artifacts exist cleanly
+**When** the Exp 2902 matrix v8 generator runs
+**Then** it writes `results/experiment_2902_cross_corpus_matrix_v8.json` with
+forward-only aggregation provenance, clean rows for v7 headline/taxonomy
+evidence plus Exp 2890, Exp 2892, and Exp 2898, pilot-only rows for v7 code
+pilot rows and Exp 2891 CCTU, flagged rows for unresolved generated-code
+support, no synthesized metrics, and per-row artifact SHA256 citations.

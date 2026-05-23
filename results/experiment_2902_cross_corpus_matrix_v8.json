@@ -1,0 +1,1159 @@
+{
+  "artifact": "experiment_2902_cross_corpus_matrix_v8",
+  "cited_upstream_artifacts": {
+    "artifacts": [
+      {
+        "artifact_path": "results/experiment_2894_cross_corpus_matrix_v7.json",
+        "experiment_id": "exp2894",
+        "fields_imported": [
+          "honest_verdict",
+          "cross_corpus_matrix_built",
+          "matrix_rows",
+          "headline_eligible_rows",
+          "pilot_only_rows",
+          "taxonomy_only_rows",
+          "blocked_rows",
+          "missing_rows",
+          "source_status_by_artifact"
+        ],
+        "sha256": "426ac7d70f8d539c4f3dc6e469c1ca3ddbea91fa6cecb18b3b153fcd794cce0f"
+      },
+      {
+        "artifact_path": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+        "experiment_id": "exp2890",
+        "fields_imported": [
+          "honest_verdict",
+          "structural_dependency_verifier_ready",
+          "headline_metric_claim_made",
+          "n_contracts_built",
+          "n_rows_verified",
+          "generated_outputs_consumed",
+          "violation_types"
+        ],
+        "sha256": "69c35e4cd79692d56d8b64c78e0b4073b6a97cf5608d34008d7d320f56f55789"
+      },
+      {
+        "artifact_path": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "experiment_id": "exp2891",
+        "fields_imported": [
+          "honest_verdict",
+          "cctu_validator_ready",
+          "headline_metric_claim_made",
+          "executable_validation_used",
+          "live_llm_called",
+          "n_cases",
+          "constraint_categories",
+          "category_coverage",
+          "unsupported_categories"
+        ],
+        "sha256": "bdfd83c14c7896c97fbfaaa228ceae85e75c7d615dde110b84334637413ba284"
+      },
+      {
+        "artifact_path": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+        "experiment_id": "exp2892",
+        "fields_imported": [
+          "honest_verdict",
+          "vericot_frontier_ready",
+          "n_candidate_rows",
+          "n_vericot_supported_rows",
+          "n_unsupported_rows",
+          "unsupported_reasons",
+          "solver_backend",
+          "autoformalization_llm_called"
+        ],
+        "sha256": "22309f9102ab4b505927c4b3a7eeec26a38b9588b50016da6d4dcc57cfa79f8d"
+      },
+      {
+        "artifact_path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+        "experiment_id": "exp2898",
+        "fields_imported": [
+          "honest_verdict",
+          "inference_substrate",
+          "kv260_overlay_loaded",
+          "kv260_uio_devices_present",
+          "bitstream_sha256",
+          "board_transcript_path",
+          "per_seed_results",
+          "sample_count_sweep_results"
+        ],
+        "sha256": "d4a29484b51331c07db25c9ffab5ca61406a022311c78006258e6b42acd60060"
+      }
+    ],
+    "principle": "Forward-only provenance discipline per the new Inference-Substrate Declaration rule. Lets a third party verify the aggregation is not synthesizing numbers from nothing.",
+    "shape": "list of {experiment_id, fields_imported, sha256}"
+  },
+  "duration_s": 0.003342,
+  "honest_verdict": "complete: cross-corpus matrix v8 aggregated with forward-only provenance; clean=6; flagged=2; blocked=0; pilot_only=3",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "matrix_rows": [
+    {
+      "flag_reasons": [],
+      "provenance": {
+        "artifact_path": "results/experiment_2894_cross_corpus_matrix_v7.json",
+        "experiment_id": "exp2894",
+        "fields_imported": [
+          "honest_verdict",
+          "cross_corpus_matrix_built",
+          "matrix_rows",
+          "headline_eligible_rows",
+          "pilot_only_rows",
+          "taxonomy_only_rows",
+          "blocked_rows",
+          "missing_rows",
+          "source_status_by_artifact"
+        ],
+        "sha256": "426ac7d70f8d539c4f3dc6e469c1ca3ddbea91fa6cecb18b3b153fcd794cce0f"
+      },
+      "row_id": "corpus:FoVer",
+      "row_kind": "v7_corpus_row",
+      "row_label": "FoVer",
+      "row_status": "clean",
+      "summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "FoVer",
+        "generated_code_status": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "headline_eligible": true,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_examples": 1000,
+          "n_seeds": 5,
+          "reason": "v5 clean dual-condition AUROC row with n_examples and n_seeds.",
+          "status": "valid_metric_panel"
+        },
+        "pilot_only": false,
+        "primary_metric": {
+          "architecture_only_auroc": 0.8946624,
+          "learning_contribution": 0.01847119999999991,
+          "production_auroc": 0.9131335999999999
+        },
+        "residual_gap": {
+          "reason": "no_new_dot273_residual_gap_metric",
+          "value": null
+        },
+        "row_status": "headline_eligible",
+        "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+        "source_honest_verdict": "complete: FoVer dual-condition integrity rerun measured dataset-only production-vs-architecture contribution",
+        "structural_dependency_verification": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "reason": "vericot_not_applicable_to_corpus",
+          "value": null
+        }
+      }
+    },
+    {
+      "flag_reasons": [],
+      "provenance": {
+        "artifact_path": "results/experiment_2894_cross_corpus_matrix_v7.json",
+        "experiment_id": "exp2894",
+        "fields_imported": [
+          "honest_verdict",
+          "cross_corpus_matrix_built",
+          "matrix_rows",
+          "headline_eligible_rows",
+          "pilot_only_rows",
+          "taxonomy_only_rows",
+          "blocked_rows",
+          "missing_rows",
+          "source_status_by_artifact"
+        ],
+        "sha256": "426ac7d70f8d539c4f3dc6e469c1ca3ddbea91fa6cecb18b3b153fcd794cce0f"
+      },
+      "row_id": "corpus:HaluEval_FEVER",
+      "row_kind": "v7_corpus_row",
+      "row_label": "HaluEval/FEVER",
+      "row_status": "clean",
+      "summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "HaluEval/FEVER",
+        "generated_code_status": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "headline_eligible": true,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "label_counts_by_dataset": {
+            "fever": {
+              "0": 270,
+              "1": 230
+            },
+            "halueval": {
+              "0": 250,
+              "1": 250
+            }
+          },
+          "n_rows_audited": 1000,
+          "status": "valid_labels"
+        },
+        "pilot_only": false,
+        "primary_metric": {
+          "measured_auroc_by_dataset": {
+            "fever": 0.33114331723027374,
+            "halueval": 0.553072
+          },
+          "n_examples_by_dataset": {
+            "fever": 500,
+            "halueval": 500
+          }
+        },
+        "residual_gap": {
+          "reason": "VeriCoT support remains partial",
+          "unsupported_rows": 975,
+          "value": "vericot_support_partial"
+        },
+        "row_status": "headline_eligible",
+        "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+        "source_honest_verdict": "complete: HaluEval/FEVER local calibration ready",
+        "structural_dependency_verification": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "candidate_rows": 1000,
+          "reason": "deterministic VeriCoT support for HaluEval/FEVER only",
+          "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+          "source_artifact": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+          "supported_rows": 25,
+          "unsupported_reasons": {
+            "unsupported_no_deterministic_vericot_template": 974,
+            "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100,
+            "unsupported_year_only_does_not_establish_entity_grounding": 1
+          },
+          "unsupported_rows": 975,
+          "value": 0.025
+        }
+      }
+    },
+    {
+      "flag_reasons": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "provenance": {
+        "artifact_path": "results/experiment_2894_cross_corpus_matrix_v7.json",
+        "experiment_id": "exp2894",
+        "fields_imported": [
+          "honest_verdict",
+          "cross_corpus_matrix_built",
+          "matrix_rows",
+          "headline_eligible_rows",
+          "pilot_only_rows",
+          "taxonomy_only_rows",
+          "blocked_rows",
+          "missing_rows",
+          "source_status_by_artifact"
+        ],
+        "sha256": "426ac7d70f8d539c4f3dc6e469c1ca3ddbea91fa6cecb18b3b153fcd794cce0f"
+      },
+      "row_id": "corpus:MBPP",
+      "row_kind": "v7_corpus_row",
+      "row_label": "MBPP",
+      "row_status": "pilot_only_flagged_support",
+      "summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "MBPP",
+        "generated_code_status": {
+          "flag_reasons": [
+            "flagged_adversarial=true",
+            "DURATION_TOO_SHORT:critical"
+          ],
+          "reason": "Exp 2889 has unresolved generated-code flags; no metric promoted.",
+          "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json",
+          "status": "blocked_unresolved_adversarial_flags",
+          "value": null
+        },
+        "headline_eligible": false,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_tests": 3,
+          "passed": true,
+          "stable_id": "mbpp-11",
+          "status": "explicit_pilot_status"
+        },
+        "pilot_only": true,
+        "primary_metric": {
+          "reason": "pilot_only_no_generated_code_metric",
+          "value": null
+        },
+        "residual_gap": {
+          "reason": "pilot only; generated-code flags unresolved",
+          "value": "pilot_only_generated_code_flags_unresolved"
+        },
+        "row_status": "pilot_only",
+        "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+        "source_honest_verdict": "complete: MBPP/HumanEval manifest-only execution pilot ready",
+        "structural_dependency_verification": {
+          "generated_candidate_passed": 0,
+          "generated_candidate_rows": 5,
+          "n_rows_verified": 10,
+          "reason": "static AST structural metadata only; no pass@k/AUROC headline metric",
+          "reference_passed": 5,
+          "reference_rows": 5,
+          "source_artifact": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+          "unsupported_reasons": {
+            "empty_candidate_source": 1
+          },
+          "value": "available",
+          "violation_types": {
+            "parse_error": 4
+          }
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "reason": "vericot_not_applicable_to_corpus",
+          "value": null
+        }
+      }
+    },
+    {
+      "flag_reasons": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "provenance": {
+        "artifact_path": "results/experiment_2894_cross_corpus_matrix_v7.json",
+        "experiment_id": "exp2894",
+        "fields_imported": [
+          "honest_verdict",
+          "cross_corpus_matrix_built",
+          "matrix_rows",
+          "headline_eligible_rows",
+          "pilot_only_rows",
+          "taxonomy_only_rows",
+          "blocked_rows",
+          "missing_rows",
+          "source_status_by_artifact"
+        ],
+        "sha256": "426ac7d70f8d539c4f3dc6e469c1ca3ddbea91fa6cecb18b3b153fcd794cce0f"
+      },
+      "row_id": "corpus:HumanEval",
+      "row_kind": "v7_corpus_row",
+      "row_label": "HumanEval",
+      "row_status": "pilot_only_flagged_support",
+      "summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "HumanEval",
+        "generated_code_status": {
+          "flag_reasons": [
+            "flagged_adversarial=true",
+            "DURATION_TOO_SHORT:critical"
+          ],
+          "reason": "Exp 2889 has unresolved generated-code flags; no metric promoted.",
+          "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json",
+          "status": "blocked_unresolved_adversarial_flags",
+          "value": null
+        },
+        "headline_eligible": false,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_tests": 7,
+          "passed": true,
+          "stable_id": "HumanEval/0",
+          "status": "explicit_pilot_status"
+        },
+        "pilot_only": true,
+        "primary_metric": {
+          "reason": "pilot_only_no_generated_code_metric",
+          "value": null
+        },
+        "residual_gap": {
+          "reason": "pilot only; generated-code flags unresolved",
+          "value": "pilot_only_generated_code_flags_unresolved"
+        },
+        "row_status": "pilot_only",
+        "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+        "source_honest_verdict": "complete: MBPP/HumanEval manifest-only execution pilot ready",
+        "structural_dependency_verification": {
+          "generated_candidate_passed": 0,
+          "generated_candidate_rows": 5,
+          "n_rows_verified": 10,
+          "reason": "static AST structural metadata only; no pass@k/AUROC headline metric",
+          "reference_passed": 5,
+          "reference_rows": 5,
+          "source_artifact": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+          "unsupported_reasons": {
+            "empty_candidate_source": 1
+          },
+          "value": "available",
+          "violation_types": {
+            "missing_function_definition": 4,
+            "parse_error": 1
+          }
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "reason": "vericot_not_applicable_to_corpus",
+          "value": null
+        }
+      }
+    },
+    {
+      "flag_reasons": [],
+      "provenance": {
+        "artifact_path": "results/experiment_2894_cross_corpus_matrix_v7.json",
+        "experiment_id": "exp2894",
+        "fields_imported": [
+          "honest_verdict",
+          "cross_corpus_matrix_built",
+          "matrix_rows",
+          "headline_eligible_rows",
+          "pilot_only_rows",
+          "taxonomy_only_rows",
+          "blocked_rows",
+          "missing_rows",
+          "source_status_by_artifact"
+        ],
+        "sha256": "426ac7d70f8d539c4f3dc6e469c1ca3ddbea91fa6cecb18b3b153fcd794cce0f"
+      },
+      "row_id": "corpus:TruthfulQA",
+      "row_kind": "v7_corpus_row",
+      "row_label": "TruthfulQA",
+      "row_status": "clean",
+      "summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "TruthfulQA",
+        "generated_code_status": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "headline_eligible": false,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_rows_available": 200,
+          "n_rows_materialized": 100,
+          "reason": "local taxonomy rows exist, but generated-answer metrics are unavailable.",
+          "status": "taxonomy_only"
+        },
+        "pilot_only": false,
+        "primary_metric": {
+          "reason": "taxonomy_only_no_generated_answer_metrics",
+          "value": null
+        },
+        "residual_gap": {
+          "reason": "taxonomy only; no generated-answer metrics",
+          "value": "taxonomy_only_no_generated_answer_metrics"
+        },
+        "row_status": "taxonomy_only",
+        "source_artifact": "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+        "source_honest_verdict": "complete: TruthfulQA local taxonomy manifest ready without generated-answer metrics",
+        "structural_dependency_verification": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "taxonomy_only": true,
+        "vericot_exact_support": {
+          "candidate_rows": 100,
+          "reason": "TruthfulQA taxonomy has no deterministic logical-step template yet",
+          "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+          "source_artifact": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+          "supported_rows": 0,
+          "unsupported_reasons": {
+            "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100
+          },
+          "unsupported_rows": 100,
+          "value": 0.0
+        }
+      }
+    },
+    {
+      "provenance": {
+        "artifact_path": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+        "experiment_id": "exp2890",
+        "fields_imported": [
+          "honest_verdict",
+          "structural_dependency_verifier_ready",
+          "headline_metric_claim_made",
+          "n_contracts_built",
+          "n_rows_verified",
+          "generated_outputs_consumed",
+          "violation_types"
+        ],
+        "sha256": "69c35e4cd79692d56d8b64c78e0b4073b6a97cf5608d34008d7d320f56f55789"
+      },
+      "row_id": "exp2890_code_structural_dependency",
+      "row_kind": "support_artifact_row",
+      "row_label": "Code Structural Dependency",
+      "row_status": "clean",
+      "summary": {
+        "generated_outputs_consumed": true,
+        "headline_metric_claim_made": false,
+        "honest_verdict": "complete: MBPP/HumanEval structural dependency verifier metadata ready",
+        "n_contracts_built": 10,
+        "n_rows_verified": 20,
+        "structural_dependency_verifier_ready": true,
+        "violation_types": {
+          "missing_function_definition": 4,
+          "parse_error": 5
+        }
+      }
+    },
+    {
+      "provenance": {
+        "artifact_path": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+        "experiment_id": "exp2891",
+        "fields_imported": [
+          "honest_verdict",
+          "cctu_validator_ready",
+          "headline_metric_claim_made",
+          "executable_validation_used",
+          "live_llm_called",
+          "n_cases",
+          "constraint_categories",
+          "category_coverage",
+          "unsupported_categories"
+        ],
+        "sha256": "bdfd83c14c7896c97fbfaaa228ceae85e75c7d615dde110b84334637413ba284"
+      },
+      "row_id": "exp2891_cctu",
+      "row_kind": "support_artifact_row",
+      "row_label": "CCTU executable constraint pilot",
+      "row_status": "pilot_only",
+      "summary": {
+        "category_coverage": {
+          "behavior": {
+            "passed": 0,
+            "total": 1
+          },
+          "resource": {
+            "passed": 0,
+            "total": 1
+          },
+          "response": {
+            "passed": 0,
+            "total": 1
+          },
+          "response_verifier": {
+            "passed": 0,
+            "total": 1
+          },
+          "toolset": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "cctu_validator_ready": true,
+        "constraint_categories": [
+          "behavior",
+          "resource",
+          "response",
+          "response_verifier",
+          "toolset"
+        ],
+        "executable_validation_used": true,
+        "headline_metric_claim_made": false,
+        "honest_verdict": "complete: local CCTU-style executable constraint validator pilot ready",
+        "live_llm_called": false,
+        "n_cases": 5,
+        "unsupported_categories": {
+          "external_api_side_effects": {
+            "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+            "supported": false
+          },
+          "long_context_budget": {
+            "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+            "supported": false
+          },
+          "multi_turn_state": {
+            "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+            "supported": false
+          }
+        }
+      }
+    },
+    {
+      "provenance": {
+        "artifact_path": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+        "experiment_id": "exp2892",
+        "fields_imported": [
+          "honest_verdict",
+          "vericot_frontier_ready",
+          "n_candidate_rows",
+          "n_vericot_supported_rows",
+          "n_unsupported_rows",
+          "unsupported_reasons",
+          "solver_backend",
+          "autoformalization_llm_called"
+        ],
+        "sha256": "22309f9102ab4b505927c4b3a7eeec26a38b9588b50016da6d4dcc57cfa79f8d"
+      },
+      "row_id": "exp2892_vericot",
+      "row_kind": "support_artifact_row",
+      "row_label": "VeriCoT exact frontier",
+      "row_status": "clean",
+      "summary": {
+        "autoformalization_llm_called": false,
+        "honest_verdict": "complete: deterministic VeriCoT frontier rows available",
+        "n_candidate_rows": 1100,
+        "n_unsupported_rows": 1075,
+        "n_vericot_supported_rows": 25,
+        "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+        "unsupported_reasons": {
+          "unsupported_no_deterministic_vericot_template": 974,
+          "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100,
+          "unsupported_year_only_does_not_establish_entity_grounding": 1
+        },
+        "vericot_frontier_ready": true
+      }
+    },
+    {
+      "provenance": {
+        "artifact_path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+        "experiment_id": "exp2898",
+        "fields_imported": [
+          "honest_verdict",
+          "inference_substrate",
+          "kv260_overlay_loaded",
+          "kv260_uio_devices_present",
+          "bitstream_sha256",
+          "board_transcript_path",
+          "per_seed_results",
+          "sample_count_sweep_results"
+        ],
+        "sha256": "d4a29484b51331c07db25c9ffab5ca61406a022311c78006258e6b42acd60060"
+      },
+      "row_id": "exp2898_kv260_hardware",
+      "row_kind": "support_artifact_row",
+      "row_label": "KV260 Ising hardware latency",
+      "row_status": "clean",
+      "summary": {
+        "bitstream_sha256": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
+        "board_transcript_path": "results/experiment_2898_kv260_transcript.log",
+        "honest_verdict": "complete: kv260_hardware_latency_transcript_recorded",
+        "inference_substrate": "hardware_smoke",
+        "kv260_overlay_loaded": "carnot_ising_v2_n64",
+        "kv260_uio_devices_present": [
+          "/dev/uio0",
+          "/dev/uio1",
+          "/dev/uio2",
+          "/dev/uio3",
+          "/dev/uio4"
+        ],
+        "per_seed_results": [
+          {
+            "final_energy": -2.8819393382892864,
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_median": 24.05,
+            "per_sample_wall_clock_us_p95": 24.38,
+            "seed": 42
+          },
+          {
+            "final_energy": -4.910430655902679,
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_median": 24.04,
+            "per_sample_wall_clock_us_p95": 24.36,
+            "seed": 137
+          },
+          {
+            "final_energy": -0.26513979011918554,
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_median": 24.01,
+            "per_sample_wall_clock_us_p95": 24.33,
+            "seed": 271
+          }
+        ],
+        "sample_count_sweep_results": [
+          {
+            "failed_samples": 0,
+            "final_energy": 0.5031745378434866,
+            "final_spin_words_hex": [
+              "0x9e4b34e0",
+              "0x9e4b34e0"
+            ],
+            "n_samples": 100,
+            "per_sample_wall_clock_us_max": 35.92,
+            "per_sample_wall_clock_us_median": 24.060499999999998,
+            "per_sample_wall_clock_us_min": 23.65,
+            "per_sample_wall_clock_us_p95": 24.78,
+            "seed": 42
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": 1.2108968188451046,
+            "final_spin_words_hex": [
+              "0x1e4b34e0",
+              "0x1e4b34e0"
+            ],
+            "n_samples": 1000,
+            "per_sample_wall_clock_us_max": 36.34,
+            "per_sample_wall_clock_us_median": 24.06,
+            "per_sample_wall_clock_us_min": 23.58,
+            "per_sample_wall_clock_us_p95": 24.431,
+            "seed": 42
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -2.8819393382892864,
+            "final_spin_words_hex": [
+              "0x2fd7d02",
+              "0x2fd7d02"
+            ],
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_max": 55.371,
+            "per_sample_wall_clock_us_median": 24.05,
+            "per_sample_wall_clock_us_min": 23.45,
+            "per_sample_wall_clock_us_p95": 24.38,
+            "seed": 42
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": 0.6046719537920814,
+            "final_spin_words_hex": [
+              "0xbbbbbbbb",
+              "0xbbbbbbbb"
+            ],
+            "n_samples": 100,
+            "per_sample_wall_clock_us_max": 35.111,
+            "per_sample_wall_clock_us_median": 24.1055,
+            "per_sample_wall_clock_us_min": 23.68,
+            "per_sample_wall_clock_us_p95": 25.43,
+            "seed": 137
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -6.065647502742803,
+            "final_spin_words_hex": [
+              "0xda258f70",
+              "0xda258f70"
+            ],
+            "n_samples": 1000,
+            "per_sample_wall_clock_us_max": 37.12,
+            "per_sample_wall_clock_us_median": 24.04,
+            "per_sample_wall_clock_us_min": 23.621,
+            "per_sample_wall_clock_us_p95": 24.36,
+            "seed": 137
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -4.910430655902679,
+            "final_spin_words_hex": [
+              "0x3b914c6e",
+              "0x3b914c6e"
+            ],
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_max": 72.82,
+            "per_sample_wall_clock_us_median": 24.04,
+            "per_sample_wall_clock_us_min": 23.35,
+            "per_sample_wall_clock_us_p95": 24.36,
+            "seed": 137
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": 1.1278279421888393,
+            "final_spin_words_hex": [
+              "0xeffbeaaf",
+              "0xeffbeaaf"
+            ],
+            "n_samples": 100,
+            "per_sample_wall_clock_us_max": 25.05,
+            "per_sample_wall_clock_us_median": 24.0,
+            "per_sample_wall_clock_us_min": 23.67,
+            "per_sample_wall_clock_us_p95": 24.301,
+            "seed": 271
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -2.5272765102645294,
+            "final_spin_words_hex": [
+              "0x7fffffff",
+              "0x7fffffff"
+            ],
+            "n_samples": 1000,
+            "per_sample_wall_clock_us_max": 35.77,
+            "per_sample_wall_clock_us_median": 23.991,
+            "per_sample_wall_clock_us_min": 23.57,
+            "per_sample_wall_clock_us_p95": 24.33,
+            "seed": 271
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -0.26513979011918554,
+            "final_spin_words_hex": [
+              "0x446e913b",
+              "0x446e913b"
+            ],
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_max": 49.89,
+            "per_sample_wall_clock_us_median": 24.01,
+            "per_sample_wall_clock_us_min": 23.42,
+            "per_sample_wall_clock_us_p95": 24.33,
+            "seed": 271
+          }
+        ]
+      }
+    }
+  ],
+  "rows_blocked": [],
+  "rows_clean": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "corpus:TruthfulQA",
+    "exp2890_code_structural_dependency",
+    "exp2892_vericot",
+    "exp2898_kv260_hardware"
+  ],
+  "rows_flagged": [
+    "corpus:MBPP",
+    "corpus:HumanEval"
+  ],
+  "rows_pilot_only": [
+    "corpus:MBPP",
+    "corpus:HumanEval",
+    "exp2891_cctu"
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.cross_corpus_matrix.v8",
+  "synthetic_rows_created": false
+}
