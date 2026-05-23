@@ -5793,3 +5793,82 @@ claims.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2945 | Implemented (`python/carnot/reporting/phase4_vfe_firewall_verification_2945.py`) | Implemented (`tests/python/test_experiment_2945_phase4_vfe_firewall_verification.py`) |
+
+### REQ-REPORT-2948: Milestone 2026.05.277 Terminal Capstone
+
+The repository shall provide an Exp 2948 milestone capstone generator that
+writes `results/experiment_2948_capstone_v277.json` using only the existing
+`.277` upstream artifacts from Exp 2937 through Exp 2947. The generator MUST
+NOT call an LLM, run hardware, rerun a verifier, launch synthesis, or modify
+`scripts/research_conductor.py`.
+
+The generator MUST classify every expected `.277` artifact as one of `clean`,
+`flagged`, `blocked`, or `missing`. The classifier MUST treat known
+adversarial-verify false-positives (exp2939 TAUTOLOGY from
+`experiment_id == random_seed`, exp2941 same pattern, exp2943 aggregation-
+substrate methodology/duration flags) as `clean` and document the override
+reason in module comments.
+
+The terminal artifact MUST synthesize the three Deep Think Corrigenda
+outcomes into a `deep_think_corrigenda_outcomes` block with at least
+`mmd_distinguishable`, `same_schedule_speedup`, and
+`code_auprc_recommendation` fields, plus a `headline_outcome` field whose
+value is one of `narrow` / `rescue` / `additional_rounds_needed`.
+
+The terminal artifact MUST include `paper_v6_safe_claims` and
+`paper_v6_forbidden_claims` lists. The forbidden list MUST cite every
+CLAUDE.md Paper-v6 Narrowing Discipline retracted-claim id `(#2)`, `(#3)`,
+`(#6)`, `(#7)`, `(#8)`, `(#9)`, `(#10)` so paper-v6 LaTeX-side narrowing
+work can grep for them.
+
+The terminal artifact MUST include a
+`narrowing_discipline_compliance_audit` field shaped as a list of
+`{file, hits, fixes_applied}` rows derived from the Exp 2944 audit's
+`per_file_hits` and `audit_resolution_by_operator` blocks.
+
+`paper_ready` MUST be true only when: (a) the three Deep Think Corrigenda
+artifacts landed clean, (b) the cross-corpus matrix v11 reports
+`matrix_v11_ready=true`, (c) the Phase-4 VFE firewall reports zero
+violations, (d) every narrowing-audit hit's resolution is operator-
+authorized and matches a terminal token (`resolved`, `applied`, or
+`false_positive`), and (e) the `headline_outcome` is `narrow` or
+`rescue`.
+
+The terminal artifact MUST include `honest_verdict`, `milestone` equal to
+`2026.05.277`, `inference_substrate` equal to
+`aggregation_from_upstream_artifacts`, `clean_artifacts`,
+`flagged_artifacts`, `blocked_artifacts`, `missing_artifacts`,
+`artifact_classification_counts`, `deep_think_corrigenda_outcomes`,
+`paper_v6_safe_claims`, `paper_v6_forbidden_claims`,
+`narrowing_discipline_compliance_audit`, `top_3_next_actions`,
+`gaps_for_278`, `cited_upstream_artifacts`, `source_artifact_status`,
+`field_principles`, `no_new_llm_call=true`, `no_new_hardware_run=true`,
+measured `duration_s`, and `run_date="20260523"`.
+
+#### SCENARIO-REPORT-2948: Capstone Closes .277 With Narrowing Confirmed
+
+**Given** expected `.277` artifacts Exp 2937 through Exp 2947 are all present
+**And** Exp 2938 reports `distributions_distinguishable=true` with all three
+seed MMD p-values <= 0.001
+**And** Exp 2939 reports a `kv260_speedup_vs_same_schedule_cpu` value < 1.0
+**And** Exp 2940 reports `paper_v6_recommendation.value="retain"` with
+code-corpus AUPRC well above the 0.075 base rate
+**And** Exp 2943 reports `matrix_v11_ready=true`
+**And** Exp 2944 records the Paper-v6 narrowing audit with operator-authorized
+resolutions for every hit
+**And** Exp 2945 reports zero firewall violations
+**When** the Exp 2948 capstone generator runs
+**Then** it writes `results/experiment_2948_capstone_v277.json` with all
+required fields, `paper_ready=true`, `headline_outcome="narrow"`,
+`deep_think_corrigenda_outcomes.mmd_distinguishable=true`,
+`deep_think_corrigenda_outcomes.same_schedule_speedup` below 1.0,
+`deep_think_corrigenda_outcomes.code_auprc_recommendation="retain"`,
+and a `top_3_next_actions` list that prioritizes operator narrowing edits,
+stronger candidate generation for the next AUPRC re-measure, and an OOD
+seventh cross-corpus row.
+
+## Implementation Status (REQ-REPORT-2948)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2948 | Implemented (`python/carnot/reporting/capstone_v277_2948.py`) | Implemented (`tests/python/test_experiment_2948_capstone_v277.py`) |
