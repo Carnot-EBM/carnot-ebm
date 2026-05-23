@@ -1,0 +1,29 @@
+def get_equal(tuples_list):
+    """
+    Checks if all tuples in the list have the same length.
+    """
+    if not tuples_list:
+        return True
+    
+    first_length = len(tuples_list[0])
+    for t in tuples_list[1:]:
+        if len(t) != first_length:
+            return False
+    return True
+```
+
+```python
+def get_equal(tuples_list):
+    """
+    Checks if all tuples in the list have the same length.
+    """
+    if not tuples_list:
+        return True
+    
+    first_length = len(tuples_list[0])
+    for t in tuples_list[1:]:
+        return all(len(t) == first_length for t in tuples_list)
+    return True
+```
+
+```python

@@ -1,0 +1,22 @@
+def get_equal(l):
+    for i in range(len(l)):
+
+<|channel>thought * (len(l) - 1)
+```
+
+Wait, the prompt asks for the function. Let's write it correctly.
+
+```python
+def get_equal(l):
+    if not l:
+        return True
+    first_length = len(l[0])
+    for t in l:
+        if len(t) != first_length:
+            return False
+    return True
+```
+
+Checking the examples:
+1. `[(11, 22, 33), (44, 55, 66)]`: `first_length` is 3. Both are 3. Returns `True`.
+2. `[(1, 2, 3), (4, 5, 6, 7)]`: `

@@ -1042,6 +1042,38 @@ Then one candidate may carry multiple independent labels such as
 `true_test_failure`, and the terminal artifact reports rates and grouped
 summaries without fabricating missing upstream evidence.
 
+### REQ-CODE-2946: AUPRC-Gated SOTA Code-Generation Continuation
+
+The repository shall provide an Exp 2946 continuation runner that reads Exp
+2940's `paper_v6_recommendation` before deciding whether any further
+code-generation pass-rate claim is allowed. The runner MUST:
+
+- require the checked-in Exp 2940 artifact and record the normalized
+  `exp2940_recommendation_used`;
+- verify local torch CUDA availability before live continuation protocols and
+  block honestly when CUDA is unavailable;
+- execute the Exp 2910 live GGUF, k=8, MBPP/HumanEval sandbox protocol with
+  `n_tasks=50` when Exp 2940 recommends `retain`;
+- execute the same protocol with `n_tasks=20` plus explicit limitation framing
+  when Exp 2940 recommends `narrow`;
+- execute only failure-mode analysis, with no pass-rate claim, when Exp 2940
+  recommends `retract`;
+- write `results/experiment_2946_sota_code_generation_continuation_v1.json`
+  with top-level `honest_verdict`, `inference_substrate`,
+  `exp2940_recommendation_used`, `protocol_executed`, `pass_at_1`,
+  `pass_at_k`, `failure_mode_analysis`, `random_seeds_used`,
+  `reproducibility_checksum`, and measured `duration_s`.
+
+### SCENARIO-CODE-2946: Retain Verdict Expands The Live Protocol To 50 Tasks
+
+Given Exp 2940 reports `paper_v6_recommendation.value="retain"` and torch CUDA
+is available,
+When the Exp 2946 runner builds the continuation artifact,
+Then it executes the Exp 2910-style live protocol on 50 total MBPP/HumanEval
+tasks with k=8 candidates per task, records pass@1/pass@k only from the nested
+sandbox outcomes, carries every candidate seed into `random_seeds_used`, and
+sets `failure_mode_analysis=null`.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
@@ -1157,6 +1189,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2910 | Implemented (`python/carnot/eval/sota_code_generation_corrigendum.py`) |
 | REQ-CODE-2911 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_verifier.py`) |
 | REQ-CODE-2925 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_provenance_corrigendum.py`) |
+| REQ-CODE-2946 | Implemented (`python/carnot/eval/sota_code_generation_continuation.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

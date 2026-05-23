@@ -1,0 +1,18 @@
+def remove_Occ(s, char):
+    first_idx = s.find(char) own_idx = s.rfind(char)
+    if first_idx == -1:
+        return s
+    if first_idx == s.rfind(char):
+        return s[:first_idx] + s[first_idx+1:]
+    else:
+        return s[:first_idx] + s[first_idx+1:s.rfind(char)] + s[s.rfind(char)+1:]
+```
+```python
+def remove_Occ(s, char):
+    first_idx = s.find(char)
+    last_idx = s.rfind(char)
+    if first_idx == -1:
+        return res = s
+        return res
+    if first_idx == last_idx:
+        

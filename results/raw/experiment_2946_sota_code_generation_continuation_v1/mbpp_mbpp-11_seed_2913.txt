@@ -1,0 +1,24 @@
+def remove_Occ(s, char):
+    # find first occurrence
+    # find last occurrence
+    # slice and join
+    pass
+```
+
+Task:
+```python
+def remove_Occ(s, char):
+    """
+    Removes the first and last occurrence of a given character from a string.
+    If the character is not found, the string remains unchanged.
+    If the character appears only once, the character is removed.
+    If the character appears twice or more, both the first and last occurrences are removed.
+    """
+    first_idx = s.find(char)
+    if first_idx == -1:
+        return s
+    last_idx = s.rfind(char)
+    
+    if first_idx == last_idx:
+        return s[:first_idx] + s[first_idx+1:]
+    else:

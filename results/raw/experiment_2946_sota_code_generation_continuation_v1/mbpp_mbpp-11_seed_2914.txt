@@ -1,0 +1,19 @@
+def remove_Occ(s, char):
+    # Find the first occurrence of the character
+    first_idx = s.find(char)
+    # Find the last occurrence of the character
+    last_idx = s.rfind(char)
+    
+    # If the character is not found, return the original string
+    if first_idx == -1:
+        return s
+    
+    # If the character is only found once, return the string without that single occurrence
+    if first_idx == last_idx:
+            return s[:first_idx] + s[first_idx+1:]
+    
+    # Remove both occurrences
+    return s[:first_idx] + s[first_idx+1:last_idx] + s[last_idx+1:]
+```python
+def remove_Occ(s, char):
+    first_idx = s

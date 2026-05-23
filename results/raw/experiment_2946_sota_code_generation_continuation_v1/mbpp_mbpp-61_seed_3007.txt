@@ -1,0 +1,19 @@
+def count_Substrings(s):
+    count = 0
+    n = len(s)
+    for i in range(n):
+        current_sum = 0
+                # Substrings starting at index i
+        for j in range(i, n):
+            # current_sum tracks the sum of digits in s[i:j+1]
+            current_sum += int(s[j])
+            # length of the substring is (j - i + 1)
+            length = j - i + 1
+            if current_sum == length:
+                count += 1
+        inner_loop_count = 0
+        # This part of the code is 
+        # is not used for the count, but 
+        # just to be 1
+        inner_loop_count += 1
+        inner_loop_count += 

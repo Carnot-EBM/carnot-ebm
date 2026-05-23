@@ -1,0 +1,17 @@
+def is_Monotonic(nums):
+    inc = True
+    inc_dec = True
+    for i in range(len(nums) - 1):
+        if nums[i] > nums[i+1]:
+            inc = False
+        if nums[i] < nums[i+1]:
+            inc_dec = False
+        # Wait, logic error in variable names
+        # Let's re-evaluate.
+```
+
+Correct logic:
+An array is monotonic if it is either non-increasing or non-decreasing.
+An array is monotonic if it all elements are non-decreasing OR all elements are non-increasing.
+An array is non-decreasing if for all i, nums[i] <= nums[i+1].
+Implication: If there is any i such that nums[i] > nums[i+1], it is NOT non-decreasing.

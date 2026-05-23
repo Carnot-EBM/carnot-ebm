@@ -1,0 +1,25 @@
+def is_Monotonic(nums):
+    inc = True
+    inc_dec = True
+    for i in range(len(nums) - 1):
+        if nums[i] > nums[i+1]:
+            inc = False
+        if nums[i] < nums[i+1]:
+            inc_dec = False
+        # Wait, the logic above is slightly flawed. Let's fix it.
+```
+
+```python
+def is_Monotonic(nums):
+    increasing = True
+    increasing_or_decreasing = True # This is not a good name
+    # Let's restart.
+    pass
+```
+
+```python
+def is_Monotonic(nums):
+    increasing = True
+    decreasing = True
+    for i in range(len(nums) - 1):
+        if nums[i] > nums[i+1]:

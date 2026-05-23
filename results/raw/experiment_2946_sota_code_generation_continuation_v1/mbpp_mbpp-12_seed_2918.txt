@@ -1,0 +1,20 @@
+def sort_matrix(matrix):
+    return sorted(matrix, key=lambda row: sum(row))
+```
+
+Function:
+```python littleborn
+def sort_matrix(matrix):
+    return sorted(matrix, key=lambda row: sum(row))
+```
+
+Function:
+```python
+def sort_matrix(matrix):
+    return sorted(matrix, key=lambda row: sum(row))
+```
+
+Wait, I need to check if the stability of `sorted()` is required. The problem asks to sort the matrix in ascending order according to the sum of its rows. Python's `sorted()` is stable, which is a single-row sorting doesn't affect other rows. The examples provided don't have rows with identical sums, but if they did, the original order would be preserved.
+
+Let's double check the examples:
+1. `[[1, 2,

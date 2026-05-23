@@ -1,0 +1,12 @@
+import re
+
+def text_lowercase_underscore(s: str) -> bool:
+    # Check if the entire string consists of lowercase letters and underscores
+    # Check if there presence of an underscore
+    # Check if there are sequences of lowercase letters separated by underscores
+    # The pattern matches a sequence of lowercase letters, followed by an underscore, followed by a sequence of lowercase letters.
+    # This pattern ensures that the entire string is composed of only lowercase letters and underscores.
+    # The pattern matches a sequence of lowercase letters[a-z]+ followed a single underscore [_] followed by a sequence of lowercase letters[a-z]+
+    # However, the^ and $ anchors are used to ensure the entire string is matches.
+    # pattern = r'^[a-z]+_[a-z]+$'
+    # But the examples show that "aab_cbbbc" is True, but "

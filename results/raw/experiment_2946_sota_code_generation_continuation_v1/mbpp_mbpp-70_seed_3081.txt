@@ -1,0 +1,30 @@
+def get_equal(l):
+    for i in range(len(l)):
+                if len(l[i]) != len(l[0]):
+                raise ValueError("All tuples must have equal length")
+            return True
+        except:
+            return False
+    return True
+```
+
+```python
+def get_equal(l):
+    if not l:
+        return True
+    first_length = len(l[0])
+    for t in l:
+        if len(t) != first_length:
+            return False
+        return True
+    return True
+``````python
+def get_equal(l):
+    if not l:
+        return True
+    first_length = len(l[0])
+    for t in l:
+        if len(t) != first_length:
+            return False
+    return True
+```

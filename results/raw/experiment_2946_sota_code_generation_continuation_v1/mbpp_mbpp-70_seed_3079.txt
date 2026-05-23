@@ -1,0 +1,31 @@
+def get_equal(l):
+    for i in range(len(l)):
+                if len(l[i]) != len(l[0]):
+                    return False
+            return True
+            
+```
+
+def get_equal(l):
+    if not l:
+        return True
+    first_length = len(l[0])
+的に
+的に
+的に
+的に
+    return all(len(t) for t in l if len(t) == first_length) # This is incorrect logic
+```
+
+```python
+def get_equal(l):
+    if not l:
+        return True
+    first_length = len(l[0])
+    for t in l:
+        if len(t) != first_length:
+            return False
+        return True # This is inside the loop, which is wrong
+    return True
+```
+

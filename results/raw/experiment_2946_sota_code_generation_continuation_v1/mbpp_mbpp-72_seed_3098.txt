@@ -1,0 +1,13 @@
+def dif_Square(n):
+
+    # A number can be represented as the difference of two squares if it is not of the form 4k + 2.
+    # This is because:
+    # 1. If n is odd, n = 2k + 1, then (k+1)^2 - k^2 = 2k + 1.
+    # 2. If n is a multiple of 4, n = 4k, then (k+1)^2 - (k-1)^2 = 4k.
+    # 3. If n is of the form 4k + 2, it cannot be represented as the difference of two squares.
+    return n % 4 != 2
+```<tool_call|>import math
+
+def dif_Square(n):
+    """
+    Checks whether the given number can be represented as the difference of

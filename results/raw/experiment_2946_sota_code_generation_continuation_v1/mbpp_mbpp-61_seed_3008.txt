@@ -1,0 +1,18 @@
+def count_Substrings(s):
+    # Implementation
+```
+```python
+python
+def count_Substrings(s):
+    import collections
+    n = len(s)
+    count = 0
+    # Precompute prefix sums of digits
+    prefix_sum = [0] * (n + 1)
+    # Precompute prefix counts of (digit - 1)
+    # We want sum(digits[i:j]) == j - i
+    # sum(digits[i:j]) = prefix_sum[j] - prefix_sum[i]
+    # sum(digits[i:j]) = j - i
+    # Rearrange: prefix_sum[j] - j = prefix_sum[i] - i
+    # Let val[k] = prefix_sum[k] - k
+    # We want to find pairs (i

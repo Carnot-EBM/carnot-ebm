@@ -1,0 +1,14 @@
+def is_sublist(lst, sub):
+```
+
+```python
+def is_sublist(lst, sub):
+    n = len(lst)
+    m = len(sub)
+    if m == 0:
+        return True
+    for i in range(n - m + 1):
+        if lst[i:i+m] == sub:
+            return True
+    return False
+```
