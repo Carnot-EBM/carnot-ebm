@@ -15166,3 +15166,32 @@ Kona/Aleph updates.
 - **GitHub discovery - llm-as-a-verifier/llm-as-a-verifier**: a new repository for trajectory-level verification and reward modeling on Terminal-Bench/SWE-Bench style tasks. Relevance to Carnot: compare at the artifact-schema level only; do not import closed-model scoring paths into core verifier code.
 
 - **Logical Intelligence update (2026-05-21 press coverage) - Aleph formal reasoning benchmarks**: reports Aleph leading several formal reasoning / verified-code benchmarks while Kona remains the EBRM north star. Relevance to Carnot: supports a formal-code verification direction, but Carnot must stick to local reproducible artifacts and avoid citing Logical/Kona performance as Carnot evidence.
+
+## 2026-05-23 Post-.274 Planning Sweep (Milestone 2026.05.275)
+
+This sweep was run after `.274` completed with `paper_ready=true`, the hardware
+portfolio reactivated, one blocked GateMate artifact (`exp2899`), one
+adversarially flagged SOTA code-generation artifact (`exp2905`), and one
+FR-11 hardware replay pilot-only artifact (`exp2906`). Searches covered arXiv,
+OpenReview, Hugging Face papers, Extropic/THRML, Semantic Scholar pages for
+EBT/ARM-EBM, GitHub discovery, and Logical Intelligence/Kona updates.
+
+- **arXiv:2602.18671 / ICLR 2026 - "Spilled Energy in Large Language Models"**: reinterprets the final LLM softmax as an EBM and uses training-free logit-derived spilled/marginalized energy to localize hallucination-prone tokens. Relevance to Carnot: direct local-GGUF diagnostic target for code-generation and hallucination rows; it avoids training a new probe but requires clean logprob/logit provenance.
+
+- **arXiv:2605.07024 - "Delulu: A Verified Multi-Lingual Benchmark for Code Hallucination Detection in Fill-in-the-Middle Tasks"**: provides a verified code-hallucination benchmark with container-checked golden and hallucinated completions across invented methods, invalid arguments, undefined names, and non-existent imports. Relevance to Carnot: better taxonomy for the flagged `exp2905` code row than pass@k alone; `.275` should add static/runtime hallucination categories before claiming generated-code improvement.
+
+- **arXiv:2605.13501 - "Reward-Weighted On-Policy Distillation with an Open Property-Equivalence Verifier for NL-to-SVA Generation"**: scores student rollouts with an open SymbiYosys+Z3 property-equivalence checker and weights token-level distillation by verifier-passing behavior. Relevance to Carnot: concrete FR-11 pattern for verifier-weighted self-learning where the verifier, not imitation likelihood, supplies the energy/reward signal.
+
+- **arXiv:2605.09192 - "Evidence Over Plans: Online Trajectory Verification for Skill Distillation"**: argues that agent skills should be distilled from environment-verified trajectories rather than prior plans, using a Posterior Distillation Index as an online diagnostic. Relevance to Carnot: supports treating experiment transcripts and verifier outcomes as replay evidence for continuous self-learning instead of writing eager memories after every run.
+
+- **Hugging Face Papers / arXiv:2605.10325 - "Verifiable Process Rewards for Agentic Reasoning"**: turns reliable symbolic or algorithmic oracles into dense turn-level process rewards for long-horizon agent reasoning. Relevance to Carnot: pairs naturally with FR-11 replay and Carnot's verifier cascade; `.275` should test dense verifier-grounded reward summaries, not only terminal pass/fail replay.
+
+- **arXiv:2602.22465 - "ConstraintBench: Benchmarking LLM Constraint Reasoning on Direct Optimization"**: finds feasibility, not objective optimality, is the primary bottleneck for LLMs solving constrained optimization directly, with deterministic verifier checks and solver references. Relevance to Carnot: useful small benchmark class for structured constraint outputs under local GGUF models; a mini pilot should report feasibility and optimality separately.
+
+- **arXiv:2605.19769 - "OpenComputer: Verifiable Software Worlds for Computer-Use Agents"**: builds app-specific state verifiers, a self-improving verification layer, task generation, and auditable partial-credit trajectories across desktop applications. Relevance to Carnot: supports a lightweight state-verifier harness for agentic verification; use structured local state checks rather than LLM-as-judge.
+
+- **GitHub discovery - `guidance-ai/llguidance`**: v1.0 constrained-decoding engine supporting JSON schema, regex, and CFG masks with llama.cpp/vLLM/SGLang integrations. Relevance to Carnot: practical local-first path for structured constraint/code outputs from mandated GGUF models, especially when avoiding malformed JSON or parser-unfriendly completions.
+
+- **Extropic TSU / THRML public status**: Extropic positions TSUs as probabilistic sampling hardware and THRML as the public Python/JAX simulator for thermodynamic hypergraphical models. Relevance to Carnot: keep THRML work as simulator parity and portability only; no TSU/Z1 hardware claim is allowed without access to real Extropic hardware.
+
+- **arXiv:2602.06737 and arXiv:2604.03345 - KAN verification and hardware-complexity track**: KAN PWA/MILP verification and RM/BOP/NABS hardware complexity remain the right local KAN path. Relevance to Carnot: `.275` should consume the clean `.274` KAN complexity work only as supporting context; the more urgent gap is KV260/GateMate baseline evidence, not another KAN proof-of-concept.

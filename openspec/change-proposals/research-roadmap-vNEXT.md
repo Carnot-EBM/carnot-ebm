@@ -1,216 +1,233 @@
-# Research Roadmap vNEXT: Milestone 2026.05.273
+# Research Roadmap vNEXT: Milestone 2026.05.275
 
-**Title:** Clean Telemetry + Fast/Slow Memory + Constraint Benchmark Expansion
+**Title:** Hardware Baselines + Code Hallucination Repair + Verifier-Grounded Self-Learning
 
-**Planned:** 2026-05-22
+**Planned:** 2026-05-23
 
-**Previous milestone:** 2026.05.272
+**Previous milestone:** 2026.05.274
 
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.272 Proved
+## What 2026.05.274 Proved
 
-Milestone `.272` strengthened the paper-ready state but left two important
-claims fenced off. The authoritative terminal artifact is
-`results/experiment_2884_capstone_v272.json`.
+Milestone `.274` reactivated the physical hardware portfolio while keeping
+claim boundaries explicit. The authoritative terminal artifact is
+`results/experiment_2908_capstone_v274.json`.
 
-- `paper_ready=true`, with 7 clean artifacts, 2 flagged artifacts, 1 blocked
-  artifact, 1 pilot-only artifact, and 0 missing artifacts.
-- The SOTA runtime corrigendum is clean for a single mandated local GGUF:
-  `unsloth/gemma-4-26B-A4B-it-GGUF` generated 8 usable GPU-backed responses
-  with complete provenance. Two-model `cached_sota_pair()` readiness remains
-  false.
-- The SOTA micro-panel produced 6 non-empty responses with logprobs, but the
-  artifact is still flagged because duration/provenance were not citation-grade
-  and no reproducibility checksum was recorded.
-- The KAN PWA/MILP corrigendum cleared the `.271` tautology: local and global
-  error bounds are distinct, Z3 returned `optimal`, and exact enumeration was not
-  used as a fallback. The claim remains a tiny formal example, not a general KAN
-  verifier.
-- Exact frontier checking touched HaluEval/FEVER without overclaiming, but only
-  8 of 1000 rows were exactly supported. HaluEval/FEVER remains a headline row
-  only as a weak calibration/data point.
-- MBPP and HumanEval now have deterministic manifest-only execution pilots, but
-  they are explicitly pilot-only. TruthfulQA is still missing from matrix v6.
-- FR-11 RecMem recurrence-triggered consolidation is clean as a trigger
-  prototype. The scale-up artifact is flagged: it reports zero forgetting,
-  zero correctness/AUROC delta, and very short runtime, so it cannot support a
-  clean FR-11 scale-up claim.
-- THRML sampler portability is blocked locally because THRML is unavailable; the
-  fallback ran and made no hardware claim.
+- `paper_ready=true`, with 8 clean artifacts, 1 flagged artifact, 1 blocked
+  artifact, 0 missing artifacts, and 1 pilot-only artifact.
+- KV260 produced the first real board-level n=64 Ising sampler latency
+  transcript. The clean row is `exp2898`: overlay `carnot_ising_v2_n64`,
+  `/dev/uio0-4`, three seeds, 10,000-sample p50 latency around 24 us, and a
+  bitstream hash. No speedup claim is allowed yet because there is no same-basis
+  CPU Gibbs baseline.
+- GateMate A1-EVB-2M remained blocked. `exp2899` honestly reported
+  `blocked_gatemate_toolchain_missing` because `nextpnr-gatemate` was absent.
+  No bitstream exists, and no flash attempt is allowed until build provenance is
+  clean.
+- PolarFire SoC produced a clean RISC-V dispatch smoke with hash-verified
+  constraint scoring. It is CPU-side dispatch evidence only, not fabric
+  acceleration.
+- THRML import was repaired locally and n=16 parity passed without making a
+  hardware claim.
+- Cross-corpus matrix v8 aggregated forward-only evidence and kept blocked,
+  flagged, and pilot-only rows separate.
+- The SOTA code-generation expansion is flagged. `exp2905` used the mandated
+  local GGUF path but reported `pass@1=0.5000` and `pass@k=0.5000` on only two
+  tasks per corpus, omitted a top-level `random_seed`, and is not headline
+  eligible.
+- FR-11 hardware replay is pilot-only. `exp2906` validated a KV260 replay
+  dispatch path but did not prove a repeated self-learning gain or hardware
+  replay speedup.
 
 ## Three Biggest Gaps
 
-### Gap 1: Telemetry Claims Still Fail the Citation Bar
+### Gap 1: Hardware Acceleration Still Lacks Matched Baselines
 
-The local SOTA runtime is finally usable, but the micro-panel remains flagged.
-The next milestone must either produce adversarial-clean telemetry with fixed
-seeds, checksum, duration, raw responses, and token/logprob evidence, or
-permanently downgrade the micro-panel to a non-benchmark note.
+KV260 now has real latency, but Carnot cannot say anything about speedup until a
+same-basis CPU Gibbs baseline uses the exact n=64 coupling/field tensors, sparse
+topology, seeds, and sample counts. GateMate is one step earlier: it still needs
+toolchain provenance and a built bitstream before any physical-board step.
 
-### Gap 2: Cross-Corpus Evidence Has Not Escaped Pilot Status
+### Gap 2: Generated-Code Evidence Is Methodologically Weak
 
-FoVer and HaluEval/FEVER are still the only headline rows. MBPP/HumanEval are
-pilot-only, and TruthfulQA is absent. The next step is not a giant benchmark; it
-is a bounded clean promotion path: materialize TruthfulQA as an error-taxonomy
-manifest, run a small generated-code row only under clean local GGUF runtime, and
-add structural-dependency verification before expanding matrix v7.
+The `exp2905` code row is flagged because the sample size is too small, pass@1
+and pass@k are tautologically equal, and the artifact lacks a top-level random
+seed. Recent code-hallucination work suggests Carnot should stop treating code
+generation as only pass/fail and instead classify invented imports, undefined
+names, invented methods, and invalid arguments under deterministic verifiers.
 
-### Gap 3: FR-11 Needs Non-Tautological Fast/Slow Memory Evidence
+### Gap 3: FR-11 Has Dispatch and Memory Pieces, Not Continuous Learning Proof
 
-RecMem's trigger is promising, but `.272` did not prove that recurrence-triggered
-memory improves correctness or energy relative to eager replay. Recent
-multi-timescale-memory work suggests a better comparator: fast episodic edges
-plus slow consolidated edges. `.273` should test RecMem against an explicit
-fast/slow baseline with real drift, duplicate, contradiction, energy, AUROC, and
-forgetting checks.
+FR-11 has RecMem-style memory, fast/slow replay evidence, and a KV260 dispatch
+pilot. It still lacks an end-to-end verifier-grounded online update that uses
+verified trajectories as dense process rewards, measures forgetting, and reports
+whether energy or correctness improves after replay.
 
 ## New Research Integrated
 
-The 2026-05-22 post-`.272` sweep appended these items to
+The 2026-05-23 post-`.274` sweep appended these items to
 `research-references.md`:
 
-- **EBT accepted as an ICLR 2026 oral** (OpenReview `ZBj3Qp1bYg`): strengthens
-  Carnot's theory citation for energy-minimization as System-2 thinking.
-- **NRGPT** (OpenReview `B3Muyi2zgo`): useful theory context for energy descent
-  in language modeling, but not evidence for Carnot until local telemetry is
-  clean.
-- **CCTU** (arXiv:2603.15309): executable constraint validation for multi-turn
-  tool use; a natural next benchmark pilot for Carnot's constraint verifier.
-- **Structural Verification for EDA Code Generation** (arXiv:2604.18834):
-  dependency-graph contracts before execution, directly relevant to
-  MBPP/HumanEval promotion.
-- **VeriCoT** (arXiv:2511.04662 / ICLR 2026): neuro-symbolic CoT validation with
-  solver-backed logical consistency; useful for exact-frontier expansion.
-- **InFi-Check** (arXiv:2601.06666): fine-grained fact-checking labels,
-  evidence, justifications, and corrections; useful for TruthfulQA taxonomy
-  materialization.
-- **Memini** (arXiv:2605.05097): multi-timescale fast/slow external memory
-  dynamics; direct comparator for the flagged RecMem scale-up.
-- **KAN hardware complexity metrics** (arXiv:2604.03345) and **analog KAN
-  hardware** (arXiv:2602.07518): next KAN step should be cost accounting, not
-  hardware overclaim.
-- **Extropic THRML / TSU status**: THRML remains the public software bridge, but
-  `.273` should not rerun THRML parity unless the dependency is materialized.
-- **llguidance**: optional local constrained-decoding engine for structured
-  extractor outputs; keep it outside the core unless a local integration proves
-  useful.
-- **Logical Intelligence Aleph/Kona updates**: supports the formal verification
-  direction, but Carnot must cite only local reproducible artifacts as evidence.
+- **Spilled Energy in Large Language Models** (arXiv:2602.18671 / ICLR 2026):
+  training-free logit energy for hallucination localization; use as a small
+  local-GGUF detector micro-panel only when logprob provenance is clean.
+- **Delulu** (arXiv:2605.07024): verified multi-language code hallucination
+  taxonomy and container-checked FIM samples; use its four hallucination
+  classes to repair `exp2905` methodology.
+- **RWOPD for NL-to-SVA** (arXiv:2605.13501): verifier-weighted on-policy
+  distillation with SymbiYosys+Z3 property-equivalence checks; use as the
+  FR-11 pattern for weighting self-learning by verified behavior.
+- **Evidence Over Plans** (arXiv:2605.09192) and **Verifiable Process Rewards**
+  (arXiv:2605.10325): verified trajectories should produce dense process
+  signals, not only terminal pass/fail memories.
+- **ConstraintBench** (arXiv:2602.22465): feasibility and optimality must be
+  separated for direct constrained optimization; use a small local mini-benchmark.
+- **OpenComputer** (arXiv:2605.19769): app-specific state verifiers outperform
+  LLM judges when task success depends on structured state; implement a local
+  state-verifier harness.
+- **llguidance**: local constrained decoding for JSON schema, regex, and CFGs;
+  use only as optional structured-output support for mandated GGUF models.
+- **Extropic TSU / THRML status**: continue simulator parity and portability,
+  but make no TSU hardware claim.
 
 ## Architecture Snapshot
 
 ```text
-             +--------------------------------------------------+
-             | Phase A: close flagged .272 evidence             |
-             |                                                  |
-             | exp2885 archive/activate                         |
-             | exp2886 SOTA micro-panel clean telemetry v3      |
-             | exp2887 FR-11 fast/slow memory corrigendum       |
-             +----------------------+---------------------------+
-                                    |
-             +----------------------+---------------------------+
-             |                                                  |
-             v                                                  v
-  +------------------------------+              +------------------------------+
-  | Phase B: corpus promotion    |              | Phase C: formal constraints  |
-  |                              |              |                              |
-  | exp2888 TruthfulQA taxonomy  |              | exp2891 CCTU validator pilot |
-  | exp2889 generated code row   |              | exp2892 VeriCoT frontier     |
-  | exp2890 structural verifier  |              | exp2893 KAN cost accounting  |
-  +---------------+--------------+              +---------------+--------------+
-                  |                                             |
-                  +---------------------+-----------------------+
-                                        |
-                                        v
-                    +-------------------------------------------+
-                    | Phase D: matrix + paper boundary + close  |
-                    |                                           |
-                    | exp2894 cross-corpus matrix v7            |
-                    | exp2895 paper-v6 evidence table v4        |
-                    | exp2896 capstone                          |
-                    +-------------------------------------------+
+        +-------------------------------------------------------+
+        | Phase A: evidence repair and code verification        |
+        |                                                       |
+        | exp2909 archive/activate                             |
+        | exp2910 SOTA codegen corrigendum v2                  |
+        | exp2911 Delulu-style code hallucination verifier     |
+        +-------------------------+-----------------------------+
+                                  |
+                                  v
+        +-------------------------------------------------------+
+        | Phase B: hardware baselines and sampler portability   |
+        |                                                       |
+        | exp2912 KV260 same-basis CPU Gibbs baseline          |
+        | exp2913 KV260 hardware-vs-CPU claim boundary         |
+        | exp2914 GateMate toolchain preflight                 |
+        | exp2915 GateMate n=16 bitstream build                |
+        | exp2916 THRML-KV260 sampler parity                   |
+        +-------------------------+-----------------------------+
+                                  |
+                                  v
+        +-------------------------------------------------------+
+        | Phase C: verifier-grounded learning and benchmarks    |
+        |                                                       |
+        | exp2917 spilled-energy logit detector micro-panel    |
+        | exp2918 FR-11 verifiable process rewards             |
+        | exp2919 ConstraintBench mini direct-optimization row  |
+        | exp2920 OpenComputer-style state-verifier harness    |
+        +-------------------------+-----------------------------+
+                                  |
+                                  v
+        +-------------------------------------------------------+
+        | Phase D: matrix, paper boundary, and closeout         |
+        |                                                       |
+        | exp2921 cross-corpus matrix v9 + paper boundary      |
+        | exp2922 capstone .275                                |
+        +-------------------------------------------------------+
 ```
 
 ## Phase Structure
 
-### Phase A: Close Flagged `.272` Evidence
+### Phase A: Evidence Repair and Code Verification
 
-- `exp2885` archives `.272` and activates `.273`.
-- `exp2886` reruns the SOTA energy/logprob micro-panel with an adversarial-clean
-  checksum/duration/provenance requirement. It remains bounded and cannot claim a
-  full benchmark.
-- `exp2887` is the mandatory continuous self-learning task. It compares RecMem
-  recurrence-triggered consolidation with a fast/slow Memini-style baseline and
-  eager replay, requiring non-tautological metrics before any FR-11 scale-up
-  claim.
+- `exp2909` archives `.274` and activates `.275`.
+- `exp2910` reruns the bounded SOTA code-generation row with the mandated local
+  GGUF models, a top-level random seed, `n_tasks_per_corpus >= 20`, and
+  methodology fields that explicitly address the pass@1/pass@k tautology.
+- `exp2911` consumes the corrected code-generation artifact and adds a
+  Delulu-style hallucination taxonomy plus static/runtime verifiers for invented
+  imports, undefined names, invented attributes/methods, and invalid arguments.
 
-### Phase B: Corpus Promotion
+### Phase B: Hardware Baselines and Sampler Portability
 
-- `exp2888` materializes a TruthfulQA InFi-Check-style error taxonomy manifest
-  from local labels/artifacts without remote LLM calls.
-- `exp2889` attempts a small generated-code MBPP/HumanEval row using the clean
-  local SOTA runtime and mandated GGUF model specs. If generation or sandboxing
-  is not clean, it writes a blocked artifact rather than upgrading the pilot.
-- `exp2890` builds a structural-dependency graph verifier for code tasks,
-  inspired by the EDA structural-verification paper. It is a deterministic
-  verifier layer, not another generated-code benchmark.
+- `exp2912` creates the same-basis CPU Gibbs baseline for the KV260 n=64 Ising
+  problem using the exact seeds and tensors from `exp2898`.
+- `exp2913` compares KV260 and CPU only after `exp2912` is ready. It may compute
+  speedup eligibility, but it must write a claim-boundary field even if no
+  speedup is defensible.
+- `exp2914` checks GateMate toolchain readiness and records how `nextpnr-gatemate`
+  is found or why it remains blocked.
+- `exp2915` builds the n=16 GateMate Ising tile only if `exp2914` reports the
+  toolchain ready. It records synthesis, place-and-route, and bitstream hash;
+  flashing remains out of scope.
+- `exp2916` compares THRML simulation, CPU Gibbs, and KV260 evidence on the
+  same problem basis after the CPU baseline is present. It remains a simulator
+  parity task, not a TSU hardware claim.
 
-### Phase C: Formal Constraints and Hardware-Cost Accounting
+### Phase C: Verifier-Grounded Learning and Benchmarks
 
-- `exp2891` runs a tiny CCTU-style executable constraint validator pilot with
-  no new LLM generation.
-- `exp2892` expands exact frontier checking with a VeriCoT-style logical-step
-  parser/prover on a bounded set of locally supported rows.
-- `exp2893` adds KAN hardware-oriented complexity accounting (RM/BOP/NABS-style)
-  to the clean tiny KAN PWA/MILP example, keeping analog/FPGA claims out of
-  scope.
+- `exp2917` runs a small spilled-energy logit detector micro-panel on mandated
+  local GGUF outputs and reports whether energy signals separate verified from
+  hallucination-like outputs. It cannot claim a benchmark.
+- `exp2918` is the mandatory continuous self-learning experiment. It converts
+  verified code and hardware trajectories into dense process rewards and tests a
+  bounded FR-11 online replay update with forgetting checks.
+- `exp2919` materializes a ConstraintBench-style mini benchmark for direct
+  constrained optimization under local GGUF models, reporting feasibility and
+  optimality separately.
+- `exp2920` creates a lightweight OpenComputer-style state-verifier harness for
+  local agentic tasks, using structured state checks and auditable partial
+  credit rather than LLM-as-judge.
 
-### Phase D: Matrix, Paper Boundary, and Capstone
+### Phase D: Matrix, Paper Boundary, and Closeout
 
-- `exp2894` rebuilds cross-corpus matrix v7 from clean artifacts only, preserving
-  pilot-only and missing-row boundaries.
-- `exp2895` writes a paper-v6 evidence table / claim-boundary artifact gated on
-  matrix v7.
-- `exp2896` synthesizes `.273`, classifies clean/flagged/blocked artifacts, and
-  decides whether the next milestone should scale evidence or keep correcting
-  artifacts.
+- `exp2921` rebuilds cross-corpus matrix v9 and stages the paper-v6 claim
+  boundary. It consumes clean rows only and carries blocked/flagged/pilot rows
+  forward explicitly.
+- `exp2922` synthesizes `.275`, classifies every artifact, records paper and
+  hardware claim eligibility, and recommends the next milestone direction.
 
 ## Dependency Graph
 
 ```text
-exp2885
-  -> exp2886
-  -> exp2887
-  -> exp2888
-       -> exp2894
-  -> exp2889
-       -> exp2894 (consumed opportunistically if clean)
-  -> exp2890
-       -> exp2894
-  -> exp2891
-       -> exp2894
-  -> exp2892
-       -> exp2894
-  -> exp2893
+exp2909
+  -> exp2910
+       -> exp2911
 
-exp2894
-  -> exp2895
+exp2912
+  -> exp2913
+  -> exp2916
 
-all clean/flagged/blocked side artifacts
-  -> exp2896
+exp2914
+  -> exp2915
+
+exp2911 + exp2912
+  -> exp2918
+
+exp2917
+exp2919
+exp2920
+
+exp2911 + exp2913 + exp2918 + exp2919 + exp2920
+  -> exp2921
+
+all clean/flagged/blocked/pilot artifacts
+  -> exp2922
 ```
 
 Structured gates in `research-roadmap-next.yaml`:
 
-- `exp2894` gates on:
-  - `exp2888.truthfulqa_taxonomy_ready == true`
-  - `exp2890.structural_dependency_verifier_ready == true`
-  - `exp2891.cctu_validator_ready == true`
-  - `exp2892.vericot_frontier_ready == true`
-- `exp2895` gates on `exp2894.cross_corpus_matrix_built == true`.
-- `exp2896` is intentionally ungated so the milestone can close honestly even if
-  one branch is blocked.
+- `exp2911` gates on `exp2910.codegen_corrigendum_ready == true`.
+- `exp2913` gates on `exp2912.same_basis_cpu_baseline_ready == true`.
+- `exp2915` gates on `exp2914.gatemate_toolchain_ready == true`.
+- `exp2916` gates on `exp2912.same_basis_cpu_baseline_ready == true`.
+- `exp2918` gates on:
+  - `exp2911.code_hallucination_verifier_ready == true`
+  - `exp2912.same_basis_cpu_baseline_ready == true`
+- `exp2921` gates on:
+  - `exp2911.code_hallucination_verifier_ready == true`
+  - `exp2913.kv260_claim_boundary_ready == true`
+  - `exp2918.online_self_learning_ready == true`
+  - `exp2919.constraintbench_mini_ready == true`
+  - `exp2920.state_verifier_harness_ready == true`
+- `exp2922` is intentionally ungated so the milestone can close honestly even
+  when a branch is blocked.
 
 ## Hardware Requirements
 
@@ -218,67 +235,49 @@ Required for live-model tasks:
 
 - Dual RTX 3090 CUDA host through `.venv/bin/python`.
 - `llama_cpp` with GPU offload support.
-- At least one loadable mandated SOTA GGUF, with the `.272` clean single-model
-  runtime artifact as the starting point:
+- Mandated headline GGUFs available through `cached_sota_pair()`:
   - `unsloth/Qwen3.6-35B-A3B-GGUF`
   - `unsloth/gemma-4-31B-it-GGUF`
   - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Required for non-live tasks:
+Required for hardware tasks:
 
-- Local Python environment, existing `.272` result artifacts, local eval
-  manifests, Z3 where already used by Carnot, and repository test tooling.
+- KV260 reachable through `ssh kria`, with the `.274` overlay evidence from
+  `results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json`.
+- GateMate A1-EVB-2M attached through DirtyJTAG, but `exp2914` must prove
+  `nextpnr-gatemate` before `exp2915` runs.
+- THRML import repaired locally per
+  `results/experiment_2901_thrml_local_import_repair_v1.json`.
 
-Optional:
+Out of scope:
 
-- `llguidance` for local schema/grammar constrained extraction experiments. If
-  absent, tasks must use deterministic local fallbacks.
-
-Not required:
-
-- THRML installation, Extropic TSU/Z1/XTR-0 access, KV260 board execution,
-  Vivado synthesis, GateMate, PolarFire, AMD NPU, D-Wave, photonic hardware, or
-  Logical Intelligence Kona/Aleph access.
+- Host-side KV260 SD-card manipulation.
+- GateMate flashing before a built bitstream hash exists.
+- Extropic TSU/Z1/XTR-0 hardware claims.
+- AMD XDNA/NPU tasks unless a later directive reopens them.
 
 ## Agent Routing
 
-- `codex/gpt-5.5`: formulaic code, deterministic validators, manifest work,
-  structural graph verifier, VeriCoT-style parser/prover scaffolding, KAN cost
-  accounting, matrix/table synthesis, and archive bookkeeping.
-- `claude/opus`: live local-GGUF telemetry and capstone synthesis, where
-  environment evidence and artifact discipline dominate.
-- `gemini` is not used because `ops/known-issues.md` still records Gemini
-  routing as paused due upstream 429/rate-limit failures.
-
-## Decentralization Implications
-
-The milestone preserves local-first execution. Closed-weight providers are not
-required for any experiment. Live-generation tasks use local mandated GGUFs;
-benchmark and memory tasks use local artifacts/manifests; hardware work stays at
-software cost-accounting and blocked-dependency reporting rather than remote
-hardware claims.
+- Codex/gpt-5.5 is assigned to formulaic code, verifier, sampler, and hardware
+  harness tasks.
+- Claude Opus is reserved for the capstone synthesis because `.274` already
+  needed a rescue on capstone-style work.
+- Live LLM experiments must use the mandated SOTA local GGUFs in `MODEL_SPECS`.
+  Legacy tiny models are allowed only as CPU smoke-tests and cannot produce
+  headline rows.
 
 ## Acceptance Criteria
 
-1. `exp2886` either clears the `.272` SOTA micro-panel flag with reproducibility
-   checksum, duration, raw rows, token/logprob evidence, and no benchmark
-   overclaim, or permanently downgrades it to a non-benchmark telemetry note.
-2. `exp2887` sets `continuous_self_learning_task=true` and reports
-   non-tautological eager-vs-RecMem-vs-fast/slow memory metrics.
-3. `exp2888` creates a TruthfulQA taxonomy manifest without citing fabricated
-   `exp2823` or synthesizing labels.
-4. `exp2889` promotes MBPP/HumanEval only if local generated-code evidence,
-   sandbox status, and labels/tests are clean; otherwise it remains blocked or
-   pilot-only.
-5. `exp2890` produces a deterministic structural-dependency verifier for code
-   rows.
-6. `exp2891` produces a CCTU-style executable constraint-validation pilot.
-7. `exp2892` expands exact-frontier support without autoformalization overclaim.
-8. `exp2893` reports KAN complexity metrics without analog/FPGA execution claims.
-9. `exp2894` leaves unsupported rows null and preserves pilot-only boundaries.
-10. Every LLM-bearing task includes at least one mandated SOTA GGUF in
-    `MODEL_SPECS`.
-11. Legacy small models are allowed only for CPU smoke tests and cannot become
-    headline models.
-12. `exp2896` reports `paper_ready` only from clean artifacts and names residual
-    flagged or blocked evidence explicitly.
+The milestone is successful if:
+
+- `.274` is archived and `.275` activates cleanly.
+- `exp2910` either produces a clean corrected code-generation artifact or writes
+  an honest blocked artifact with no headline claim.
+- `exp2912` produces a same-basis CPU baseline for KV260, and `exp2913` records
+  a hardware claim boundary.
+- GateMate either builds an n=16 bitstream with hash/provenance or remains
+  honestly blocked at the toolchain preflight gate.
+- At least one continuous self-learning artifact (`exp2918`) reports
+  verifier-grounded replay metrics and forgetting checks.
+- Matrix v9 and the `.275` capstone preserve clean/flagged/blocked/pilot-only
+  distinctions without upgrading a row by implication.
