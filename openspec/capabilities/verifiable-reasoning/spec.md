@@ -19435,3 +19435,44 @@ reporting whether the local exact frontier was available.
 **Implementation Status:** Implemented (Exp 2866)
 
 **Spec traces:** REQ-VERIFY-2866, SCENARIO-VERIFY-2866, Exp 2866
+
+## REQ-VERIFY-2891: CCTU Executable Constraint Validator Pilot
+
+**Capability:** verifiable-reasoning / executable tool-use constraints
+
+Carnot SHALL provide an Exp 2891 CCTU-style executable constraint validator
+pilot that reuses local deterministic benchmark cases and validates the
+benchmark shape before any broad CCTU benchmark-performance claim.
+
+**Requirements:**
+
+- REQ-VERIFY-2891-1: The pilot SHALL define a tiny deterministic local case
+  set covering resource, behavior, toolset, and response constraint categories
+  without calling a live LLM.
+- REQ-VERIFY-2891-2: The pilot SHALL replay every case through local
+  executable validation and record step-level pass/fail decisions, violation
+  localization, and stable checksums for the validated transcript surface.
+- REQ-VERIFY-2891-3: The pilot SHALL explicitly report unsupported categories
+  instead of implying full CCTU coverage.
+- REQ-VERIFY-2891-4: The artifact
+  `results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json`
+  SHALL include `honest_verdict`, `cctu_validator_ready`, `source_modules`,
+  `n_cases`, `constraint_categories`, `category_coverage`,
+  `executable_validation_used`, `validation_rows`, `unsupported_categories`,
+  `live_llm_called=false`, `headline_metric_claim_made=false`, `tests_run`,
+  `field_principles`, `run_date="20260523"`, and measured `duration_s`.
+
+### SCENARIO-VERIFY-2891: Local CCTU Validator Pilot Writes Category Rows
+
+**Given** the existing Exp 1486 executable CCTU validator and deterministic
+gold transcripts
+**When** the Exp 2891 pilot validates local resource, behavior, toolset, and
+response cases
+**Then** it writes the required artifact fields
+**And** every validation row records localized category checks and checksums
+**And** the artifact records unsupported categories and makes no live-LLM or
+headline benchmark-performance claim.
+
+**Implementation Status:** Implemented (Exp 2891)
+
+**Spec traces:** REQ-VERIFY-2891, SCENARIO-VERIFY-2891, Exp 2891

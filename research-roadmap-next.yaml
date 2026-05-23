@@ -133,7 +133,7 @@ tasks:
             the fabric via /dev/uio* register-mapped memory,
         (c) triggers the sampler, reads energy back, and times the
             per-sample wall-clock,
-        (d) repeats for n_samples in {100, 1000, 10000} with three
+        (d) repeats for n_samples in {{100, 1000, 10000}} with three
             independent random seeds,
         (e) writes results with full provenance.
 
@@ -171,7 +171,7 @@ tasks:
            - polls the done bit (with a sane timeout),
            - reads back the final spin vector and energy,
            - records wall-clock time per sample.
-        5. Repeat for n_samples in {100, 1000, 10000} per seed.
+        5. Repeat for n_samples in {{100, 1000, 10000}} per seed.
         6. Pull the transcript back to the host. Compute median + p95
            per-sample wall-clock time. Record per-seed reproducibility
            checksum (SHA256 of inputs).
@@ -189,7 +189,7 @@ tasks:
         preconditions_checked:
           principle: "Records WHICH board resources were verified before
                       launching. Pre-empts fabrication."
-          shape: "list of {resource: str, available: bool, detail: str}"
+          shape: "list of {{resource: str, available: bool, detail: str}}"
         kv260_ssh_uptime_at_run: str
         kv260_overlay_loaded: str
         kv260_overlay_load_command: str
@@ -200,12 +200,12 @@ tasks:
           principle: "Reproducibility — the J matrix, h vector, and
                       seed must be recorded so a third party can
                       regenerate the same input."
-          shape: "{n_spins: int, j_matrix_sha256: str, h_vector_sha256: str, random_seed: int}"
+          shape: "{{n_spins: int, j_matrix_sha256: str, h_vector_sha256: str, random_seed: int}}"
         per_seed_results:
           principle: "Per-seed measurement is what makes the median + p95
                       meaningful; single-run timings on real hardware are
                       noise."
-          shape: "list of {seed: int, n_samples: int, per_sample_wall_clock_us_median: float, per_sample_wall_clock_us_p95: float, final_energy: float}"
+          shape: "list of {{seed: int, n_samples: int, per_sample_wall_clock_us_median: float, per_sample_wall_clock_us_p95: float, final_energy: float}}"
         random_seeds_used:
           principle: "Recognized by adversarial_verify's plural-form check."
           value: [42, 137, 271]
@@ -489,7 +489,7 @@ tasks:
                       Inference-Substrate Declaration rule. Lets a
                       third party verify the aggregation is not
                       synthesizing numbers from nothing."
-          shape: "list of {experiment_id, fields_imported, sha256}"
+          shape: "list of {{experiment_id, fields_imported, sha256}}"
         duration_s: float
 
       Do NOT push.
@@ -690,9 +690,9 @@ tasks:
         honest_verdict: str
         inference_substrate: "aggregation_from_upstream_artifacts"
         per_board_status:
-          shape: "{kv260: {state, last_artifact, next_step},
-                   gatemate: {state, last_artifact, next_step},
-                   polarfire: {state, last_artifact, next_step},
+          shape: "{kv260: {{state, last_artifact, next_step}},
+                   gatemate: {{state, last_artifact, next_step}},
+                   polarfire: {{state, last_artifact, next_step}},
                    thrml: {state, last_artifact, next_step}}"
         cited_upstream_artifacts: list
         duration_s: float
