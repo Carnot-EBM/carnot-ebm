@@ -4,49 +4,48 @@
 # docs_audit_report — 2026-05-23
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab halfway down the page. While the hero section and code examples are compelling, the results section drowns the reader in unexplained internal acronyms and highly suspect "perfect" numbers that make the project feel like academic vaporware rather than a reliable, production-ready tool.
+I would close the tab immediately. The page reads like an internal status dashboard for a research team rather than a product landing page, overwhelming me with internal metrics, jargon-heavy claims, and suspiciously perfect numbers on confusing baselines.
 
 ## TOP 3 PROBLEMS
-1. Fabrication signals — Claims of "1.0 TP rate" and "Zero false positives" instantly destroy credibility without strong, visible context.
-2. Internal jargon — The results and features grids are packed with unexplained, niche acronyms (PREM, VeriCoT, CCTU, FoVer) that a stranger cannot decode.
-3. Per-milestone narrative — Sections like the Preprint block read like an internal Jira status update ("pending operator-initiated upload") instead of marketing copy.
+1. Unintelligible Audience Focus (Internal Jargon & Narrative): The Hero and Blog sections treat the reader like a project insider, dumping telemetry like "2,387 Experiment runs" and sprint-like retrospectives instead of selling the product.
+2. Result Grid Bloat & Inconsistencies: The "What we measured" section dumps 12 dense cards on the user, containing directly conflicting claims (e.g., HumanEval baselines of 0% vs 8%).
+3. Suspiciously Perfect Claims (Fabrication Signals): Claims like "1.0 TP rate," "60/60 attacks caught," and a SOTA 35B model scoring exactly "0%" scream fabricated or heavily cherry-picked data to an external reviewer.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — 6-8 max (Visually overwhelming; dilutes the strongest, most relatable claims).
-- Blog grid — 6 cards — 3-4 max (Keep only the best hooks).
+- "What we measured" (Results Grid) — 12 cards — Suggested cap: 3-4 maximum (focus only on standardized, recognizable benchmarks).
+- "From the blog" (Writing) — 6 dense cards summarizing daily operations — Suggested cap: 2-3 at most.
+- Hero Stats Bar — 4 stats plus a 70-word paragraph in the "Recent progress" card — Suggested cap: Remove the internal metrics entirely; keep the paragraph under 40 words.
 
 ### Internal jargon
-- Stats bar / Hero — `HIVE peer`, `FoVer step-error corpus` — A stranger has no context for what these benchmarks or peers are.
-- Features (TTC) — `Process-Reward Energy Model (PREM)` — Unexplained technical acronym.
-- Results (Code repair) — `HumanEval-50, execute-feedback-retry` — Sounds like internal experiment flags/syntax.
-- Results (Math extraction) — `VeriCoT equation-style CoT fix` — Undefined method name.
-- Results (Adversarial audit) — `PRM-BiasBench-style attacks` — Niche academic jargon without context.
+- Hero Stats & Recent Progress — "FoVer step-error corpus", "HIVE peer 0.924" — A stranger has no idea what these internal benchmarks or competitors are.
+- "What you can check" (Features) — "PREM variance" — Defining it once as Process-Reward Energy Model doesn't make it any less niche or confusing to a passerby.
+- "What we measured" (Results Grid) — "IterativeSelfRepair", "EstimationVerifier", "VeriCoT", "PRM-BiasBench-style attacks", "CCTU constrained micro-benchmark", "HalluGuard v3" — These sound like internal codenames and custom micro-benchmarks that carry zero weight outside the repository.
 
 ### Per-milestone narrative
-- Preprint section — "pending operator-initiated upload" — Internal task-closeout language.
-- Blog (Regex) — "The three-layer defense we shipped" — Reads like an internal changelog.
-- Blog (Caught Cheating) — "the seven-rule detector we shipped to stop it" — Reads like an internal retrospective.
+- Hero Stats Bar — "382 Completed milestones" and "2,387 Experiment runs" is pure internal status reporting.
+- "From the blog" (Writing) — "What 26 days of running Carnot on its own development tells us" and "The three-layer defense we shipped" reads like a copy-pasted agile sprint retrospective.
 
 ### Inconsistencies
-- HumanEval claims — The "Live benchmark" card claims a `0% -> 36%` pass rate, while the "Code repair" card claims `8% -> 80%`. Without reading the fine print, these appear to wildly contradict each other.
-- Perfect accuracy vs 0.9857 AUROC — Claiming "Zero false positives" in the blog summary contradicts the non-perfect `0.9857 AUROC` and `0.91 AUROC` claims presented in the hero and results sections.
+- HumanEval pass @1 baseline of 0% (in the "Live benchmark" card) vs 8% baseline (in the "Code repair" card).
+- The text claims "Ising sampler live on silicon" (KV260 FPGA prototype), but the Quickstart code snippet uses `carnot_samplers::langevin`, which implies local software simulation, muddying what the user is actually getting.
 
 ### Missing essentials
-- Direct trust anchors — The page claims "Every number below is backed by a checked-in experiment artifact," but provides zero clickable links to these artifacts for a stranger to actually verify them.
+- Why should I trust the numbers? — The page claims "Every number below is backed by a checked-in experiment artifact." This is meaningless to a stranger. There is no link to an independent leaderboard, reproducible public methodology, or recognized third-party validation. 
 
 ### Fabrication signals
-- 1.0 TP rate — Results / Math extraction (`GSM8K extraction TP rate: 0.5 -> 1.0`)
-- 60/60 attacks — Results / Adversarial audit (`k=5 ensemble catches 60/60 attacks`)
-- Zero false positives — Blog / Dogfooding by the numbers (`Zero false positives` on 639 experiments)
+- "HumanEval pass @1: 0%" — A SOTA 35B model (Qwen3.6-35B-A3B) scoring literally 0% on HumanEval is unbelievable and suggests a broken test harness, destroying credibility.
+- "GSM8K extraction TP rate: 0.5 -> 1.0" — A mathematically perfect 1.0 True Positive rate.
+- "k=5 ensemble catches 60/60 attacks" — A perfect 100% detection rate on adversarial attacks.
+- "2.0x speedup, identical losses" — A flawless 2.0x scaling factor on a two-GPU retrain with zero overhead loss.
 
 ## WHAT'S WORKING
-- The hero section is excellent. "Catch the mistakes your LLM confidently makes up" is a direct, jargon-free hook that clearly states the tool's value.
-- The Quickstart section with Python/Rust code tabs cleanly demonstrates how easy the API is to integrate.
+- The "Extract -> Check -> Repair" 3-step explanation in the Bento grid is clear, jargon-free, and effectively communicates the core loop of the framework.
+- The Python Quickstart code block is concise and clearly demonstrates how easily the API can be integrated.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Scrub the suspiciously perfect numbers (1.0 TP rate, 60/60, zero false positives) or provide immediate, prominent caveats.
-2. Translate internal acronyms (PREM, VeriCoT, CCTU, FoVer) into descriptive plain English.
-3. Prune the Results grid down to the 6 strongest, most relatable benchmarks to reduce visual bloat.
-4. Rewrite the Preprint section to read like an invitation ("Read our framework paper"), removing the internal "operator-initiated upload" closeout language.
-5. Clarify or separate the two HumanEval claims so they don't look like contradicting statistics at a glance.
+1. Delete the "Experiment runs", "Completed milestones", and "Automated tests" counters from the Hero section; they add no value for a stranger.
+2. Purge the 12-card "Results" grid down to 3-4 standardized, recognizable benchmarks (e.g., HumanEval, GSM8K), stripping out all internal codenames.
+3. Investigate the 0% HumanEval baseline claim immediately; if it was a harness failure, remove the card or correct the baseline.
+4. Add prominent caveats to the "perfect" numbers (1.0 TP, 60/60, 2.0x), or replace them with more representative large-scale results to avoid triggering fabrication alarms.
+5. Filter the blog section to remove operational retrospectives, leaving only high-level architectural or conceptual posts.
