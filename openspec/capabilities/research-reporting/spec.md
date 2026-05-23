@@ -5180,3 +5180,61 @@ hallucination verifier and ConstraintBench mini, a blocked GateMate row,
 diagnostic-only THRML and spilled-energy rows, no headline promotion from
 flagged or simulator-only evidence, and a paper-v6 claim-boundary block that
 lists exactly the headline-eligible and non-headline rows.
+
+### REQ-REPORT-2922: Milestone .275 Capstone Claim Boundary
+
+The repository shall provide an Exp 2922 milestone .275 capstone generator that
+writes `results/experiment_2922_capstone_v275.json` by aggregating only upstream
+artifact JSON files from the `.275` milestone. The generator MUST NOT rerun
+models, verifiers, hardware, or sampler measurements; its
+`inference_substrate` MUST be `aggregation_from_upstream_artifacts`.
+
+The generator MUST inspect every expected `.275` deliverable from Exp 2909
+through Exp 2921, including Exp 2915 even when its artifact is absent, and
+classify each artifact as exactly one of `clean`, `flagged`, `blocked`,
+`missing`, `pilot_only`, or `diagnostic_only`. Missing artifacts MUST be listed
+explicitly and MUST NOT be inferred as successful from downstream rows.
+
+The terminal artifact MUST include `honest_verdict`, `paper_ready`,
+`hardware_baselines_ready`, `hardware_speedup_claim_eligible`,
+`sota_code_row_repaired`, `fr11_self_learning_clean`, `clean_artifacts`,
+`flagged_artifacts`, `blocked_artifacts`, `missing_artifacts`,
+`pilot_only_artifacts`, `diagnostic_only_artifacts`, `headline_eligible_rows`,
+`hardware_claim_boundary`, `codegen_claim_boundary`, `fr11_claim_boundary`,
+`top_3_next_actions`, `inference_substrate` equal to
+`aggregation_from_upstream_artifacts`, measured `duration_s`, and
+`run_date="20260523"`.
+
+`paper_ready` MUST remain true only when Exp 2921 reports
+`paper_claim_boundary_ready=true` and no headline-eligible row depends on a
+flagged, blocked, missing, pilot-only, or diagnostic-only `.275` source.
+`hardware_speedup_claim_eligible` MUST mirror Exp 2913 only when Exp 2912 and
+Exp 2913 are both clean. `sota_code_row_repaired` MUST be true only when Exp
+2910 is clean, has `codegen_corrigendum_ready=true`, and does not have
+unresolved adversarial/corrigendum flags. `fr11_self_learning_clean` MUST be
+true only when Exp 2918 is clean, `online_self_learning_ready=true`, an online
+update or replay-scheduler update was performed, and forgetting metrics are
+reported.
+
+#### SCENARIO-REPORT-2922: Capstone Closes .275 With Missing GateMate Listed
+
+**Given** Exp 2909 through Exp 2921 source artifacts exist except the gated Exp
+2915 GateMate bitstream artifact
+**And** Exp 2911 and Exp 2919 carry adversarial/corrigendum flags
+**And** Exp 2916 and Exp 2917 are diagnostic-only rows
+**And** Exp 2912, Exp 2913, Exp 2918, Exp 2920, and Exp 2921 are clean
+**When** the Exp 2922 capstone generator runs
+**Then** it writes `results/experiment_2922_capstone_v275.json` with the
+GateMate bitstream artifact in `missing_artifacts`, Exp 2911 and Exp 2919 in
+`flagged_artifacts`, Exp 2916 and Exp 2917 in `diagnostic_only_artifacts`,
+`paper_ready=true`, `hardware_baselines_ready=true`,
+`hardware_speedup_claim_eligible=true`, `sota_code_row_repaired=true`,
+`fr11_self_learning_clean=true`, and a top-three `.276` action list that
+prioritizes resolving flagged code-taxonomy/ConstraintBench evidence and the
+missing GateMate bitstream.
+
+## Implementation Status (REQ-REPORT-2922)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2922 | Implemented (`python/carnot/reporting/capstone_v275_2922.py`) | Implemented (`tests/python/test_capstone_v275_2922.py`) |
