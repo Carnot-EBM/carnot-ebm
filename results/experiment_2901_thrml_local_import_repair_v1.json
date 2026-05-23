@@ -1,0 +1,132 @@
+{
+  "duration_s": 2.228651263053,
+  "honest_verdict": "complete: thrml_import_repaired_n16_parity_passed_no_hardware_claim",
+  "inference_substrate": "live_llm_inference",
+  "jax_version": "0.10.0",
+  "metadata": {
+    "experiment_id": 2901,
+    "field_principles": {
+      "no_hardware_acceleration_claim": true,
+      "no_tsu_access_claim": true,
+      "pre_repair_traceback_preserved": true,
+      "project_venv_repair_scope": true,
+      "software_only": true
+    },
+    "initial_thrml_import_command_result": {
+      "command": [
+        ".venv/bin/python",
+        "-",
+        "import thrml"
+      ],
+      "duration_s": 0.0,
+      "returncode": 1,
+      "stderr": "Traceback (most recent call last):\n  File \"<stdin>\", line 3, in <module>\nModuleNotFoundError: No module named 'thrml'\n",
+      "stdout": "",
+      "timed_out": false
+    },
+    "initial_thrml_import_succeeded": false,
+    "initial_thrml_import_traceback": "Traceback (most recent call last):\n  File \"<stdin>\", line 3, in <module>\nModuleNotFoundError: No module named 'thrml'\n",
+    "jax_command_result": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import jax\nprint(jax.__version__)\n"
+      ],
+      "duration_s": 0.713485,
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "0.10.0\n",
+      "timed_out": false
+    },
+    "parity_metrics": {
+      "carnot_mean_energy": 0.16,
+      "case_id": "exp2901:n16_signed_ring_chord:bounded_energy_smoke",
+      "max_energy_abs_delta": 2.47955e-07,
+      "mean_energy_delta": 2.47955e-07,
+      "n_spins": 16,
+      "no_tsu_hardware_claim": true,
+      "simulator_only": true,
+      "state_count": 4,
+      "states": [
+        {
+          "carnot_energy": 0.11,
+          "energy_delta": 1.33514e-07,
+          "label": "alternating",
+          "thrml_energy": 0.110000133514
+        },
+        {
+          "carnot_energy": 2.01,
+          "energy_delta": 2.47955e-07,
+          "label": "stride_three",
+          "thrml_energy": 2.009999752045
+        },
+        {
+          "carnot_energy": -1.47,
+          "energy_delta": 1.4782e-07,
+          "label": "first_half_positive",
+          "thrml_energy": -1.47000014782
+        },
+        {
+          "carnot_energy": -0.01,
+          "energy_delta": 1.3262e-08,
+          "label": "all_positive",
+          "thrml_energy": -0.009999986738
+        }
+      ],
+      "thrml_details": {
+        "thrml_import_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/thrml/__init__.py",
+        "thrml_version": "0.1.3"
+      },
+      "thrml_mean_energy": 0.15999993775,
+      "topology": "signed_ring_chord"
+    },
+    "project_root": "/home/ianblenke/github.com/ianblenke/carnot",
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "repair_actions": [
+      {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-m",
+          "pip",
+          "--disable-pip-version-check",
+          "install",
+          "-U",
+          "thrml"
+        ],
+        "duration_s": 0.9132,
+        "mutating_install_performed": true,
+        "returncode": 0,
+        "scope": "project_virtualenv",
+        "status": "repair_install_succeeded",
+        "stderr": "",
+        "stdout": "Successfully installed thrml-0.1.3\n",
+        "timed_out": false
+      }
+    ],
+    "run_date": "20260523",
+    "schema": "thrml_local_import_repair_v1",
+    "terminal_thrml_import_command_result": {
+      "command": [
+        "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+        "-c",
+        "import importlib.metadata as metadata\nimport json\nimport traceback\n\ntry:\n    import thrml\n    metadata_version = None\n    try:\n        metadata_version = metadata.version(\"thrml\")\n    except Exception:\n        metadata_version = None\n    version = getattr(thrml, \"__version__\", None) or metadata_version or \"unknown\"\n    print(json.dumps({\n        \"metadata_version\": metadata_version,\n        \"path\": getattr(thrml, \"__file__\", None),\n        \"version\": str(version),\n    }, sort_keys=True))\nexcept BaseException:\n    traceback.print_exc()\n    raise\n"
+      ],
+      "duration_s": 0.763892,
+      "parsed": {
+        "metadata_version": "0.1.3",
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/thrml/__init__.py",
+        "version": "0.1.3"
+      },
+      "returncode": 0,
+      "stderr": "",
+      "stdout": "{\"metadata_version\": \"0.1.3\", \"path\": \"/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/thrml/__init__.py\", \"version\": \"0.1.3\"}\n",
+      "timed_out": false
+    },
+    "terminal_thrml_import_path": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/thrml/__init__.py"
+  },
+  "parity_energy_delta": 2.47955e-07,
+  "random_seed": 202605232901,
+  "reproducibility_checksum": "14bf58d1512dff765f165866457a776a8d0fc2419f93da3c39456602be2e024f",
+  "thrml_import_succeeded": true,
+  "thrml_version_installed": "0.1.3"
+}

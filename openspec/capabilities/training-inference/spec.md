@@ -2711,6 +2711,46 @@ and preserves a software-only no-hardware-claim boundary.
 
 **Implementation Status:** Implemented (Exp 2883)
 
+## REQ-SAMPLE-096: Exp 2901 THRML Local Import Repair + N=16 Reattempt
+
+Carnot SHALL provide a local THRML import repair runner that reproduces the Exp
+2883 import failure with a full traceback, confirms the active JAX version,
+repairs a missing or stale THRML package inside the project virtualenv, and
+reattempts the n=16 THRML/Carnot software parity smoke against the real
+installed THRML package.
+
+Acceptance criteria:
+- The experiment SHALL write
+  `results/experiment_2901_thrml_local_import_repair_v1.json`.
+- The terminal artifact SHALL include `honest_verdict`,
+  `inference_substrate`, `thrml_import_succeeded`,
+  `thrml_version_installed`, `jax_version`, `parity_energy_delta`,
+  `random_seed`, `reproducibility_checksum`, and `duration_s`.
+- The runner SHALL execute `.venv/bin/python -c "import jax; print(jax.__version__)"`
+  or its command-equivalent and record the observed JAX version.
+- The runner SHALL reproduce the THRML import state before repair and preserve
+  the complete traceback text when import fails.
+- The repair command SHALL be scoped to the project virtualenv and SHALL use
+  `pip install -U thrml` unless a caller supplies an explicit THRML package
+  specifier.
+- The parity reattempt SHALL use the deterministic Exp 1527 n=16 signed
+  ring-chord case and SHALL report the absolute Carnot/THRML energy delta.
+- The artifact SHALL remain software-only and SHALL NOT claim TSU, Z1, XTR-0,
+  FPGA, board, synthesis, bitstream, latency, or hardware acceleration.
+
+**Implementation Status:** Planned (Exp 2901)
+
+### SCENARIO-SAMPLE-096: Exp 2901 Repairs Local THRML Import And Writes Artifact
+
+Given: Exp 2883 previously reported a local THRML import failure.
+When: the Exp 2901 import repair runner executes from the Carnot project root.
+Then: it records the pre-repair traceback, repairs THRML in the project
+virtualenv when safe, imports the installed THRML package, runs the deterministic
+n=16 Carnot/THRML parity comparison, and writes the required terminal JSON
+artifact with a stable reproducibility checksum.
+
+**Implementation Status:** Planned (Exp 2901)
+
 ## REQ-MODEL-031: SCEnergyModel — Set-Level Energy Function for Statement Consistency (Exp 944)
 
 SCEnergyModel SHALL implement a permutation-invariant set-level energy function that assigns
