@@ -281,6 +281,31 @@ def test_exp2914_records_modern_alternatives_without_satisfying_legacy_binary(
     )
 
 
+def test_exp2914_versions_every_detected_candidate_path(tmp_path: Path) -> None:
+    """REQ-HW-066: every detected executable path gets a version probe."""
+    _write_rtl(tmp_path)
+    home_bin = tmp_path / "home" / "tools" / "oss-cad-suite" / "bin"
+    home_bin.mkdir(parents=True)
+    (home_bin / "yosys").write_text("#!/bin/sh\n", encoding="utf-8")
+    runner, calls = _fake_runner({"yosys": CommandResult(0, "Yosys test\n", "")})
+
+    artifact = build_artifact(
+        repo_root=tmp_path,
+        home_dir=tmp_path / "home",
+        run_command=runner,
+        which_func=_which_from({"yosys": "/suite/bin/yosys"}),
+        monotonic=_clock([45.0, 46.0]),
+    )
+
+    yosys = next(entry for entry in artifact["required_toolchain"] if entry["name"] == "yosys")
+    assert yosys["candidate_paths"] == ["/suite/bin/yosys", str(home_bin / "yosys")]
+    assert [entry["path"] for entry in yosys["candidate_version_results"]] == (
+        yosys["candidate_paths"]
+    )
+    assert ("/suite/bin/yosys", "-V") in calls
+    assert (str(home_bin / "yosys"), "-V") in calls
+
+
 def test_exp2914_run_experiment_writes_required_json(tmp_path: Path) -> None:
     """SCENARIO-HW-066: run_experiment writes the deliverable JSON."""
     _write_rtl(tmp_path)

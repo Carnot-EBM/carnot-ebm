@@ -1294,7 +1294,7 @@ MUST emit `honest_verdict="blocked_gatemate_toolchain_missing"` with
   `nextpnr-himbaechel` or `gmpack` without treating them as the requested
   `nextpnr-gatemate` executable.
 
-**Implementation status:** Pending (Exp 2914)
+**Implementation status:** Implemented (Exp 2914)
 
 ---
 
@@ -1311,4 +1311,4 @@ versions, `missing_toolchain=["nextpnr-gatemate"]`,
 `honest_verdict="blocked_gatemate_toolchain_missing"`, and
 `no_flash_attempted=true`.
 
-**Implementation status:** Pending (Exp 2914)
+**Implementation status:** Implemented (Exp 2914)

@@ -122,13 +122,29 @@ def _read_tool(name: str, repo_root: Path, home_dir: Path, run_command: RunComma
     version_command: list[str] = []
     version_returncode: int | None = None
     version_output = ""
+    candidate_version_results = []
 
-    if path:
-        version_command = _version_command(path, name)
-        result = run_command(version_command, 10.0)
-        version = parse_version_text(result)
-        version_returncode = result.returncode
-        version_output = command_result_text(result)
+    for candidate in candidates:
+        candidate_version_command = _version_command(candidate, name)
+        result = run_command(candidate_version_command, 10.0)
+        candidate_version = parse_version_text(result)
+        candidate_version_output = command_result_text(result)
+        candidate_version_results.append(
+            {
+                "path": candidate,
+                "version": candidate_version,
+                "version_command": candidate_version_command,
+                "version_returncode": result.returncode,
+                "version_output": candidate_version_output,
+            }
+        )
+
+    if candidate_version_results:
+        first_result = candidate_version_results[0]
+        version_command = first_result["version_command"]
+        version = first_result["version"]
+        version_returncode = first_result["version_returncode"]
+        version_output = first_result["version_output"]
 
     return {
         "name": name,
@@ -139,6 +155,7 @@ def _read_tool(name: str, repo_root: Path, home_dir: Path, run_command: RunComma
         "version_command": version_command,
         "version_returncode": version_returncode,
         "version_output": version_output,
+        "candidate_version_results": candidate_version_results,
     }
 
 
