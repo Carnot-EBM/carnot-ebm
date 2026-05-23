@@ -1,0 +1,2078 @@
+{
+  "adversarial_audit_rerun": {
+    "audit_available": true,
+    "audit_tool": "scripts/adversarial_verify.py",
+    "command": [
+      "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "/home/ianblenke/github.com/ianblenke/carnot/scripts/adversarial_verify.py",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json",
+      "--json"
+    ],
+    "findings": [],
+    "flagged": false,
+    "returncode": 0,
+    "stderr": ""
+  },
+  "artifact": "experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1",
+  "blocked_rows": [
+    "exp2914_gatemate_toolchain",
+    "exp2927_gatemate_himbaechel_preflight",
+    "exp2929_gatemate_flash_timing_boundary",
+    "exp2931_llmeval_logic_z3_mini"
+  ],
+  "clean_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "corpus:TruthfulQA",
+    "exp2890_code_structural_dependency",
+    "exp2892_vericot",
+    "exp2898_kv260_hardware",
+    "exp2910_sota_codegen",
+    "exp2913_kv260_claim_boundary",
+    "exp2918_fr11_process_rewards",
+    "exp2920_state_verifier_harness",
+    "exp2924_aggregation_metadata_corrigendum",
+    "exp2925_taxonomy_corrigendum",
+    "exp2926_constraintbench_corrigendum",
+    "exp2933_kan_cl_self_learning"
+  ],
+  "diagnostic_only_rows": [
+    "exp2916_thrml_parity",
+    "exp2917_spilled_energy_micro_panel"
+  ],
+  "duration_s": 0.077516,
+  "flagged_rows": [
+    "exp2911_code_hallucination_verifier",
+    "exp2919_constraintbench_mini",
+    "exp2932_citation_field_verifier",
+    "exp2934_reformulation_pipeline"
+  ],
+  "headline_eligible_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "exp2910_sota_codegen",
+    "exp2913_kv260_claim_boundary",
+    "exp2918_fr11_process_rewards",
+    "exp2920_state_verifier_harness",
+    "exp2926_constraintbench_corrigendum",
+    "exp2933_kan_cl_self_learning"
+  ],
+  "honest_verdict": "complete: matrix_v10_ready=true; matrix_v10_paper_boundary_ready=true; headline_eligible_rows=8; clean=14; flagged=4; blocked=4; missing=2; projection_only=1; diagnostic_only=2; pilot_only=3",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "matrix_rows": [
+    {
+      "claim_boundary": "Carry-forward clean matrix-v8 headline row for FoVer; no new metric inferred.",
+      "corpus_or_task": "FoVer",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "corpus:FoVer",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "FoVer",
+        "generated_code_status": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "headline_eligible": true,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_examples": 1000,
+          "n_seeds": 5,
+          "reason": "v5 clean dual-condition AUROC row with n_examples and n_seeds.",
+          "status": "valid_metric_panel"
+        },
+        "pilot_only": false,
+        "primary_metric": {
+          "architecture_only_auroc": 0.8946624,
+          "learning_contribution": 0.01847119999999991,
+          "production_auroc": 0.9131335999999999
+        },
+        "residual_gap": {
+          "reason": "no_new_dot273_residual_gap_metric",
+          "value": null
+        },
+        "row_status": "headline_eligible",
+        "source_artifact": "results/experiment_2850_fover_dual_condition_integrity_v4.json",
+        "source_honest_verdict": "complete: FoVer dual-condition integrity rerun measured dataset-only production-vs-architecture contribution",
+        "structural_dependency_verification": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "reason": "vericot_not_applicable_to_corpus",
+          "value": null
+        }
+      },
+      "upstream_flags": [],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "Carry-forward clean matrix-v8 headline row for HaluEval/FEVER; no new metric inferred.",
+      "corpus_or_task": "HaluEval/FEVER",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "corpus:HaluEval_FEVER",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "HaluEval/FEVER",
+        "generated_code_status": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "headline_eligible": true,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "label_counts_by_dataset": {
+            "fever": {
+              "0": 270,
+              "1": 230
+            },
+            "halueval": {
+              "0": 250,
+              "1": 250
+            }
+          },
+          "n_rows_audited": 1000,
+          "status": "valid_labels"
+        },
+        "pilot_only": false,
+        "primary_metric": {
+          "measured_auroc_by_dataset": {
+            "fever": 0.33114331723027374,
+            "halueval": 0.553072
+          },
+          "n_examples_by_dataset": {
+            "fever": 500,
+            "halueval": 500
+          }
+        },
+        "residual_gap": {
+          "reason": "VeriCoT support remains partial",
+          "unsupported_rows": 975,
+          "value": "vericot_support_partial"
+        },
+        "row_status": "headline_eligible",
+        "source_artifact": "results/experiment_2864_halueval_fever_full_calibration_v3.json",
+        "source_honest_verdict": "complete: HaluEval/FEVER local calibration ready",
+        "structural_dependency_verification": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "candidate_rows": 1000,
+          "reason": "deterministic VeriCoT support for HaluEval/FEVER only",
+          "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+          "source_artifact": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+          "supported_rows": 25,
+          "unsupported_reasons": {
+            "unsupported_no_deterministic_vericot_template": 974,
+            "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100,
+            "unsupported_year_only_does_not_establish_entity_grounding": 1
+          },
+          "unsupported_rows": 975,
+          "value": 0.025
+        }
+      },
+      "upstream_flags": [],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "MBPP",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because pilot-only rows cannot support headline claims",
+      "paper_claim_eligible": false,
+      "row_class": "pilot_only",
+      "row_id": "corpus:MBPP",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "MBPP",
+        "generated_code_status": {
+          "flag_reasons": [
+            "flagged_adversarial=true",
+            "DURATION_TOO_SHORT:critical"
+          ],
+          "reason": "Exp 2889 has unresolved generated-code flags; no metric promoted.",
+          "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json",
+          "status": "blocked_unresolved_adversarial_flags",
+          "value": null
+        },
+        "headline_eligible": false,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_tests": 3,
+          "passed": true,
+          "stable_id": "mbpp-11",
+          "status": "explicit_pilot_status"
+        },
+        "pilot_only": true,
+        "primary_metric": {
+          "reason": "pilot_only_no_generated_code_metric",
+          "value": null
+        },
+        "residual_gap": {
+          "reason": "pilot only; generated-code flags unresolved",
+          "value": "pilot_only_generated_code_flags_unresolved"
+        },
+        "row_status": "pilot_only",
+        "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+        "source_honest_verdict": "complete: MBPP/HumanEval manifest-only execution pilot ready",
+        "structural_dependency_verification": {
+          "generated_candidate_passed": 0,
+          "generated_candidate_rows": 5,
+          "n_rows_verified": 10,
+          "reason": "static AST structural metadata only; no pass@k/AUROC headline metric",
+          "reference_passed": 5,
+          "reference_rows": 5,
+          "source_artifact": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+          "unsupported_reasons": {
+            "empty_candidate_source": 1
+          },
+          "value": "available",
+          "violation_types": {
+            "parse_error": 4
+          }
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "reason": "vericot_not_applicable_to_corpus",
+          "value": null
+        }
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "HumanEval",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because pilot-only rows cannot support headline claims",
+      "paper_claim_eligible": false,
+      "row_class": "pilot_only",
+      "row_id": "corpus:HumanEval",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "HumanEval",
+        "generated_code_status": {
+          "flag_reasons": [
+            "flagged_adversarial=true",
+            "DURATION_TOO_SHORT:critical"
+          ],
+          "reason": "Exp 2889 has unresolved generated-code flags; no metric promoted.",
+          "source_artifact": "results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json",
+          "status": "blocked_unresolved_adversarial_flags",
+          "value": null
+        },
+        "headline_eligible": false,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_tests": 7,
+          "passed": true,
+          "stable_id": "HumanEval/0",
+          "status": "explicit_pilot_status"
+        },
+        "pilot_only": true,
+        "primary_metric": {
+          "reason": "pilot_only_no_generated_code_metric",
+          "value": null
+        },
+        "residual_gap": {
+          "reason": "pilot only; generated-code flags unresolved",
+          "value": "pilot_only_generated_code_flags_unresolved"
+        },
+        "row_status": "pilot_only",
+        "source_artifact": "results/experiment_2879_code_corpus_manifest_execution_pilot_v1.json",
+        "source_honest_verdict": "complete: MBPP/HumanEval manifest-only execution pilot ready",
+        "structural_dependency_verification": {
+          "generated_candidate_passed": 0,
+          "generated_candidate_rows": 5,
+          "n_rows_verified": 10,
+          "reason": "static AST structural metadata only; no pass@k/AUROC headline metric",
+          "reference_passed": 5,
+          "reference_rows": 5,
+          "source_artifact": "results/experiment_2890_code_structural_dependency_verifier_v1.json",
+          "unsupported_reasons": {
+            "empty_candidate_source": 1
+          },
+          "value": "available",
+          "violation_types": {
+            "missing_function_definition": 4,
+            "parse_error": 1
+          }
+        },
+        "taxonomy_only": false,
+        "vericot_exact_support": {
+          "reason": "vericot_not_applicable_to_corpus",
+          "value": null
+        }
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "TruthfulQA",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "corpus:TruthfulQA is clean support/context but not claim-eligible",
+      "paper_claim_eligible": false,
+      "row_class": "clean",
+      "row_id": "corpus:TruthfulQA",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "cctu_constraint_category_coverage": {
+          "category_coverage": {
+            "behavior": {
+              "passed": 0,
+              "total": 1
+            },
+            "resource": {
+              "passed": 0,
+              "total": 1
+            },
+            "response": {
+              "passed": 0,
+              "total": 1
+            },
+            "response_verifier": {
+              "passed": 0,
+              "total": 1
+            },
+            "toolset": {
+              "passed": 0,
+              "total": 1
+            }
+          },
+          "constraint_categories": [
+            "behavior",
+            "resource",
+            "response",
+            "response_verifier",
+            "toolset"
+          ],
+          "headline_metric_claim_made": false,
+          "n_cases": 5,
+          "reason": "CCTU pilot coverage is global support metadata, not a corpus metric.",
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json",
+          "unsupported_categories": {
+            "external_api_side_effects": {
+              "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+              "supported": false
+            },
+            "long_context_budget": {
+              "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+              "supported": false
+            },
+            "multi_turn_state": {
+              "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+              "supported": false
+            }
+          },
+          "value": "available"
+        },
+        "corpus": "TruthfulQA",
+        "generated_code_status": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "headline_eligible": false,
+        "kan_complexity": {
+          "analog_kan_claim_made": false,
+          "bop_count": 96,
+          "hardware_claim_boundary": {
+            "analog_device_run": false,
+            "board_execution_run": false,
+            "fpga_synthesis_run": false,
+            "milp_solver_is_software_only": true
+          },
+          "hardware_execution_claim_made": false,
+          "memory_table_entries": 8,
+          "milp_constraints": 27,
+          "nabs_count": 4,
+          "pwa_regions": 4,
+          "reason": "KAN complexity is accounting metadata, not hardware execution.",
+          "rm_count": 2,
+          "scope": "global_support_artifact",
+          "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+          "value": "available"
+        },
+        "label_evidence": {
+          "n_rows_available": 200,
+          "n_rows_materialized": 100,
+          "reason": "local taxonomy rows exist, but generated-answer metrics are unavailable.",
+          "status": "taxonomy_only"
+        },
+        "pilot_only": false,
+        "primary_metric": {
+          "reason": "taxonomy_only_no_generated_answer_metrics",
+          "value": null
+        },
+        "residual_gap": {
+          "reason": "taxonomy only; no generated-answer metrics",
+          "value": "taxonomy_only_no_generated_answer_metrics"
+        },
+        "row_status": "taxonomy_only",
+        "source_artifact": "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+        "source_honest_verdict": "complete: TruthfulQA local taxonomy manifest ready without generated-answer metrics",
+        "structural_dependency_verification": {
+          "reason": "not_a_code_corpus",
+          "value": null
+        },
+        "taxonomy_only": true,
+        "vericot_exact_support": {
+          "candidate_rows": 100,
+          "reason": "TruthfulQA taxonomy has no deterministic logical-step template yet",
+          "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+          "source_artifact": "results/experiment_2892_vericot_exact_frontier_expansion_v1.json",
+          "supported_rows": 0,
+          "unsupported_reasons": {
+            "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100
+          },
+          "unsupported_rows": 100,
+          "value": 0.0
+        }
+      },
+      "upstream_flags": [],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "Code Structural Dependency",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "exp2890_code_structural_dependency is clean support/context but not claim-eligible",
+      "paper_claim_eligible": false,
+      "row_class": "clean",
+      "row_id": "exp2890_code_structural_dependency",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "generated_outputs_consumed": true,
+        "headline_metric_claim_made": false,
+        "honest_verdict": "complete: MBPP/HumanEval structural dependency verifier metadata ready",
+        "n_contracts_built": 10,
+        "n_rows_verified": 20,
+        "structural_dependency_verifier_ready": true,
+        "violation_types": {
+          "missing_function_definition": 4,
+          "parse_error": 5
+        }
+      },
+      "upstream_flags": [],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "CCTU executable constraint pilot",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because pilot-only rows cannot support headline claims",
+      "paper_claim_eligible": false,
+      "row_class": "pilot_only",
+      "row_id": "exp2891_cctu",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "category_coverage": {
+          "behavior": {
+            "passed": 0,
+            "total": 1
+          },
+          "resource": {
+            "passed": 0,
+            "total": 1
+          },
+          "response": {
+            "passed": 0,
+            "total": 1
+          },
+          "response_verifier": {
+            "passed": 0,
+            "total": 1
+          },
+          "toolset": {
+            "passed": 0,
+            "total": 1
+          }
+        },
+        "cctu_validator_ready": true,
+        "constraint_categories": [
+          "behavior",
+          "resource",
+          "response",
+          "response_verifier",
+          "toolset"
+        ],
+        "executable_validation_used": true,
+        "headline_metric_claim_made": false,
+        "honest_verdict": "complete: local CCTU-style executable constraint validator pilot ready",
+        "live_llm_called": false,
+        "n_cases": 5,
+        "unsupported_categories": {
+          "external_api_side_effects": {
+            "reason": "Only deterministic in-process tools are executed; network and external side effects are excluded.",
+            "supported": false
+          },
+          "long_context_budget": {
+            "reason": "The local cases are tiny and do not test the long-prompt budgets described by the full CCTU benchmark.",
+            "supported": false
+          },
+          "multi_turn_state": {
+            "reason": "The pilot validates one JSON transcript per case and does not model multi-turn state carryover.",
+            "supported": false
+          }
+        }
+      },
+      "upstream_flags": [],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "VeriCoT exact frontier",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "exp2892_vericot is clean support/context but not claim-eligible",
+      "paper_claim_eligible": false,
+      "row_class": "clean",
+      "row_id": "exp2892_vericot",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "autoformalization_llm_called": false,
+        "honest_verdict": "complete: deterministic VeriCoT frontier rows available",
+        "n_candidate_rows": 1100,
+        "n_unsupported_rows": 1075,
+        "n_vericot_supported_rows": 25,
+        "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+        "unsupported_reasons": {
+          "unsupported_no_deterministic_vericot_template": 974,
+          "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100,
+          "unsupported_year_only_does_not_establish_entity_grounding": 1
+        },
+        "vericot_frontier_ready": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "KV260 Ising hardware latency",
+      "hardware_substrate": "KV260",
+      "headline_eligible": false,
+      "inference_substrate": "hardware_smoke",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "exp2898_kv260_hardware is clean support/context but not claim-eligible",
+      "paper_claim_eligible": false,
+      "row_class": "clean",
+      "row_id": "exp2898_kv260_hardware",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json",
+      "source_checksum": "9f8f78306eaede2dc9a37133825aa0383d08df11100f8fab9746c927cbf4067f",
+      "source_experiment_id": "exp2902",
+      "source_summary": {
+        "bitstream_sha256": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
+        "board_transcript_path": "results/experiment_2898_kv260_transcript.log",
+        "honest_verdict": "complete: kv260_hardware_latency_transcript_recorded",
+        "inference_substrate": "hardware_smoke",
+        "kv260_overlay_loaded": "carnot_ising_v2_n64",
+        "kv260_uio_devices_present": [
+          "/dev/uio0",
+          "/dev/uio1",
+          "/dev/uio2",
+          "/dev/uio3",
+          "/dev/uio4"
+        ],
+        "per_seed_results": [
+          {
+            "final_energy": -2.8819393382892864,
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_median": 24.05,
+            "per_sample_wall_clock_us_p95": 24.38,
+            "seed": 42
+          },
+          {
+            "final_energy": -4.910430655902679,
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_median": 24.04,
+            "per_sample_wall_clock_us_p95": 24.36,
+            "seed": 137
+          },
+          {
+            "final_energy": -0.26513979011918554,
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_median": 24.01,
+            "per_sample_wall_clock_us_p95": 24.33,
+            "seed": 271
+          }
+        ],
+        "sample_count_sweep_results": [
+          {
+            "failed_samples": 0,
+            "final_energy": 0.5031745378434866,
+            "final_spin_words_hex": [
+              "0x9e4b34e0",
+              "0x9e4b34e0"
+            ],
+            "n_samples": 100,
+            "per_sample_wall_clock_us_max": 35.92,
+            "per_sample_wall_clock_us_median": 24.060499999999998,
+            "per_sample_wall_clock_us_min": 23.65,
+            "per_sample_wall_clock_us_p95": 24.78,
+            "seed": 42
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": 1.2108968188451046,
+            "final_spin_words_hex": [
+              "0x1e4b34e0",
+              "0x1e4b34e0"
+            ],
+            "n_samples": 1000,
+            "per_sample_wall_clock_us_max": 36.34,
+            "per_sample_wall_clock_us_median": 24.06,
+            "per_sample_wall_clock_us_min": 23.58,
+            "per_sample_wall_clock_us_p95": 24.431,
+            "seed": 42
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -2.8819393382892864,
+            "final_spin_words_hex": [
+              "0x2fd7d02",
+              "0x2fd7d02"
+            ],
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_max": 55.371,
+            "per_sample_wall_clock_us_median": 24.05,
+            "per_sample_wall_clock_us_min": 23.45,
+            "per_sample_wall_clock_us_p95": 24.38,
+            "seed": 42
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": 0.6046719537920814,
+            "final_spin_words_hex": [
+              "0xbbbbbbbb",
+              "0xbbbbbbbb"
+            ],
+            "n_samples": 100,
+            "per_sample_wall_clock_us_max": 35.111,
+            "per_sample_wall_clock_us_median": 24.1055,
+            "per_sample_wall_clock_us_min": 23.68,
+            "per_sample_wall_clock_us_p95": 25.43,
+            "seed": 137
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -6.065647502742803,
+            "final_spin_words_hex": [
+              "0xda258f70",
+              "0xda258f70"
+            ],
+            "n_samples": 1000,
+            "per_sample_wall_clock_us_max": 37.12,
+            "per_sample_wall_clock_us_median": 24.04,
+            "per_sample_wall_clock_us_min": 23.621,
+            "per_sample_wall_clock_us_p95": 24.36,
+            "seed": 137
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -4.910430655902679,
+            "final_spin_words_hex": [
+              "0x3b914c6e",
+              "0x3b914c6e"
+            ],
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_max": 72.82,
+            "per_sample_wall_clock_us_median": 24.04,
+            "per_sample_wall_clock_us_min": 23.35,
+            "per_sample_wall_clock_us_p95": 24.36,
+            "seed": 137
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": 1.1278279421888393,
+            "final_spin_words_hex": [
+              "0xeffbeaaf",
+              "0xeffbeaaf"
+            ],
+            "n_samples": 100,
+            "per_sample_wall_clock_us_max": 25.05,
+            "per_sample_wall_clock_us_median": 24.0,
+            "per_sample_wall_clock_us_min": 23.67,
+            "per_sample_wall_clock_us_p95": 24.301,
+            "seed": 271
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -2.5272765102645294,
+            "final_spin_words_hex": [
+              "0x7fffffff",
+              "0x7fffffff"
+            ],
+            "n_samples": 1000,
+            "per_sample_wall_clock_us_max": 35.77,
+            "per_sample_wall_clock_us_median": 23.991,
+            "per_sample_wall_clock_us_min": 23.57,
+            "per_sample_wall_clock_us_p95": 24.33,
+            "seed": 271
+          },
+          {
+            "failed_samples": 0,
+            "final_energy": -0.26513979011918554,
+            "final_spin_words_hex": [
+              "0x446e913b",
+              "0x446e913b"
+            ],
+            "n_samples": 10000,
+            "per_sample_wall_clock_us_max": 49.89,
+            "per_sample_wall_clock_us_median": 24.01,
+            "per_sample_wall_clock_us_min": 23.42,
+            "per_sample_wall_clock_us_p95": 24.33,
+            "seed": 271
+          }
+        ]
+      },
+      "upstream_flags": [],
+      "verifier_type": "v8_carry_forward"
+    },
+    {
+      "claim_boundary": "Bounded SOTA code-generation claim: aggregate pass@1=0.075, pass@k=0.175 over the recorded local GGUF run.",
+      "corpus_or_task": "SOTA code-generation corrigendum",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "live_llm_inference",
+      "model_specs_if_live_llm": [
+        {
+          "gpu": 1,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2910_sota_codegen",
+      "source_artifact": "results/experiment_2910_sota_code_generation_corrigendum_v2.json",
+      "source_checksum": "2fe735b58ff1e27f26fe44d62aa7ad6fd662ef8350241bbbe125db84dbd96d2a",
+      "source_experiment_id": "exp2910",
+      "source_summary": {
+        "aggregate_pass_at_1": 0.075,
+        "aggregate_pass_at_k": 0.175,
+        "candidate_generation_clean": true,
+        "codegen_corrigendum_ready": true,
+        "honest_verdict": "complete: SOTA code-generation corrigendum executed with pass@1=0.0750 and pass@k=0.1750",
+        "inference_substrate": "live_llm_inference",
+        "model_specs": [
+          {
+            "gpu": 1,
+            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "name": "Gemma4-26B-A4B-it"
+          }
+        ],
+        "pass_at_k_exceeds_pass_at_1": true,
+        "random_seed": 2910,
+        "reproducibility_checksum": "3499e9848a21ebe3"
+      },
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "Code hallucination taxonomy verifier",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_verifier",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2911_code_hallucination_verifier",
+      "source_artifact": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json",
+      "source_checksum": "6aa2c9d9721ec415c2a9de48c1e3d38aa23f304e858eaf28e1c26eb365a9b46b",
+      "source_experiment_id": "exp2911",
+      "source_summary": {
+        "code_hallucination_verifier_ready": true,
+        "corrigendum_pending": [
+          {
+            "detail": "duration_s=0.027930021286010742 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: Exp 2910 code candidates labeled with deterministic taxonomy",
+        "inference_substrate": "deterministic_verifier",
+        "pass_rate_after_taxonomy_filter": 0.0967741935483871,
+        "runtime_error_rate": 0.01875,
+        "syntax_error_rate": 0.38125,
+        "true_test_failure_rate": 0.009375,
+        "undefined_name_rate": 0.03125
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "A bounded numeric KV260/CPU latency claim is eligible for the matched n=64 sparse Ising workload: CPU/KV260 per-sample latency ratios are n_samples=100: median 19.13x, p95 25.64x, n_samples=1000: median 19.24x, p95 30.35x, n_samples=10000: median 18.65x, p95 20.11x. The claim is restricted to Exp 2898 hardware-smoke timing versus Exp 2912 same-basis CPU Gibbs timing; it is not a broad FPGA acceleration claim.",
+      "corpus_or_task": "KV260 CPU claim boundary",
+      "hardware_substrate": "KV260",
+      "headline_eligible": true,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2913_kv260_claim_boundary",
+      "source_artifact": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "source_checksum": "23c6808bf40b663ee437d2641d9abfa3478b188c9d38a87c80691abec29cbbff",
+      "source_experiment_id": "exp2913",
+      "source_summary": {
+        "hardware_speedup_claim_eligible": true,
+        "honest_verdict": "complete: kv260_same_basis_hardware_cpu_speedup_claim_eligible",
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "kv260_claim_boundary_ready": true,
+        "matrix_row_candidate": {
+          "blocked_conditions": [],
+          "claim_scope": "matched n=64 sparse Ising KV260 hardware-smoke versus CPU Gibbs baseline",
+          "eligible_for_matrix_v9": true,
+          "eligible_for_paper_v6": true,
+          "experiment_id": "exp2913",
+          "n_spins": 64,
+          "random_seeds_used": [
+            42,
+            137,
+            271
+          ],
+          "sample_count_sweep": [
+            100,
+            1000,
+            10000
+          ],
+          "speedup_ratio_definition": "CPU per-sample microsecond latency divided by KV260 per-sample wall-clock microsecond latency; values greater than 1 mean lower KV260 latency.",
+          "speedup_ratio_median_by_sample_count": {
+            "100": 19.134021,
+            "1000": 19.239757,
+            "10000": 18.652517
+          },
+          "speedup_ratio_p95_by_sample_count": {
+            "100": 25.638095,
+            "1000": 30.353281,
+            "10000": 20.108426
+          },
+          "upstream_artifacts": [
+            "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+            "results/experiment_2912_kv260_same_basis_cpu_gibbs_baseline_v1.json"
+          ]
+        },
+        "paper_claim_boundary": "A bounded numeric KV260/CPU latency claim is eligible for the matched n=64 sparse Ising workload: CPU/KV260 per-sample latency ratios are n_samples=100: median 19.13x, p95 25.64x, n_samples=1000: median 19.24x, p95 30.35x, n_samples=10000: median 18.65x, p95 20.11x. The claim is restricted to Exp 2898 hardware-smoke timing versus Exp 2912 same-basis CPU Gibbs timing; it is not a broad FPGA acceleration claim.",
+        "same_basis_verified": true,
+        "speedup_claim_made": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate toolchain preflight",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "hardware_preflight",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the source artifact is blocked",
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2914_gatemate_toolchain",
+      "source_artifact": "results/experiment_2914_gatemate_toolchain_preflight_v2.json",
+      "source_checksum": "60b0110d0050522ed973b85299ca3ef662c7e653d84fb659c0a011e87573c51d",
+      "source_experiment_id": "exp2914",
+      "source_summary": {
+        "constraints_present": false,
+        "gatemate_toolchain_ready": false,
+        "honest_verdict": "blocked_gatemate_toolchain_missing",
+        "inference_substrate": "hardware_preflight",
+        "missing_toolchain": [
+          "nextpnr-gatemate"
+        ],
+        "no_flash_attempted": true,
+        "rtl_sources_present": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate n16 bitstream build",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the expected source artifact is missing",
+      "paper_claim_eligible": false,
+      "row_class": "missing",
+      "row_id": "exp2915_gatemate_bitstream",
+      "source_artifact": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json",
+      "source_checksum": "10785890a2e72a2893f6573f3baba0115e3a13e02e0bf5e858532ab9a01dcd08",
+      "source_experiment_id": "exp2915",
+      "source_summary": {},
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "THRML KV260 simulator parity",
+      "hardware_substrate": "KV260",
+      "headline_eligible": false,
+      "inference_substrate": "simulator_parity",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because diagnostic-only rows are context, not claims",
+      "paper_claim_eligible": false,
+      "row_class": "diagnostic_only",
+      "row_id": "exp2916_thrml_parity",
+      "source_artifact": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "source_checksum": "aff8275c9b45021f8b3b2dda300eb2ac9c3ae84ed020ff991f6e6fea89dc9fcd",
+      "source_experiment_id": "exp2916",
+      "source_summary": {
+        "cpu_vs_thrml_distance": 0.493055555556,
+        "honest_verdict": "complete: thrml_kv260_n64_simulator_parity_ready_no_hardware_claim",
+        "inference_substrate": "simulator_parity",
+        "kv260_vs_thrml_summary": {
+          "evidence_source": "sample_count_sweep_results.final_energy",
+          "final_energy_summary": {
+            "histogram": {
+              "bin_count": 8,
+              "bin_edges": [
+                -6.065647502743,
+                -5.156079462544,
+                -4.246511422346,
+                -3.336943382147,
+                -2.427375341949,
+                -1.51780730175,
+                -0.608239261552,
+                0.301328778647,
+                1.210896818845
+              ],
+              "counts": [
+                1,
+                1,
+                0,
+                2,
+                0,
+                0,
+                1,
+                4
+              ]
+            },
+            "max": 1.210896818845,
+            "mean": -1.467095838294,
+            "min": -6.065647502743,
+            "sample_count": 9,
+            "variance": 6.628128538091
+          },
+          "histogram_distance": 0.979166666667,
+          "mean_energy_delta_abs": 21.438747260664,
+          "min_energy_delta_abs": 27.621852497257
+        },
+        "matched_full_n64_basis": true,
+        "no_tsu_hardware_claim": true,
+        "thrml_kv260_parity_ready": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "Spilled energy micro-panel",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because diagnostic-only rows are context, not claims",
+      "paper_claim_eligible": false,
+      "row_class": "diagnostic_only",
+      "row_id": "exp2917_spilled_energy_micro_panel",
+      "source_artifact": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json",
+      "source_checksum": "b8936174a69fff5a8ca5e9b2c955b26d5950b333766ab494c45e6bdac3083f3c",
+      "source_experiment_id": "exp2917",
+      "source_summary": {
+        "benchmark_claim_made": false,
+        "claim_boundary": "diagnostic_only_no_benchmark_claim",
+        "honest_verdict": "complete: spilled_energy_micro_panel_diagnostic_ready",
+        "inference_substrate": "live_llm_inference",
+        "separation_summary": {
+          "available": true,
+          "detector_trained": false,
+          "features": {
+            "final_token_marginal_energy": {
+              "auroc": 0.6388888888888888,
+              "delta_hallucination_like_minus_verified": 1.388142172684864,
+              "hallucination_like_mean": 6.664016517579287,
+              "n_with_feature": 24,
+              "verified_mean": 5.275874344894423
+            },
+            "final_token_spilled_energy": {
+              "auroc": 0.3611111111111111,
+              "delta_hallucination_like_minus_verified": -0.06992441109123038,
+              "hallucination_like_mean": 0.03515460819577826,
+              "n_with_feature": 24,
+              "verified_mean": 0.10507901928700863
+            },
+            "sequence_marginal_energy": {
+              "auroc": 0.20833333333333334,
+              "delta_hallucination_like_minus_verified": -0.12825417615895432,
+              "hallucination_like_mean": 0.1351888808836937,
+              "n_with_feature": 24,
+              "verified_mean": 0.26344305704264803
+            },
+            "sequence_spilled_energy": {
+              "auroc": 0.20833333333333334,
+              "delta_hallucination_like_minus_verified": -0.09264856553296656,
+              "hallucination_like_mean": 0.1012313432800651,
+              "n_with_feature": 24,
+              "verified_mean": 0.19387990881303166
+            }
+          },
+          "label_counts": {
+            "hallucination_like": 12,
+            "verified": 12
+          },
+          "n_examples": 24
+        },
+        "spilled_energy_micro_panel_ready": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "Bounded FR-11 self-learning claim: replay scheduler/process rewards updated with forgetting_rate=0.0 and no model-weight mutation.",
+      "corpus_or_task": "FR-11 process rewards self-learning",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "deterministic_verifier_plus_replay",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2918_fr11_process_rewards",
+      "source_artifact": "results/experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.json",
+      "source_checksum": "bfeb2a2e5361393a5ca0cd89de7b3fd248e7c14fa1665e72b8f41a4cf1dbd899",
+      "source_experiment_id": "exp2918",
+      "source_summary": {
+        "delta_overall": 0.85590778098,
+        "forgetting_rate": 0.0,
+        "hardware_replay_used": true,
+        "honest_verdict": "complete: verifier_process_rewards_updated_replay_scheduler",
+        "inference_substrate": "deterministic_verifier_plus_replay",
+        "model_weights_mutated": false,
+        "online_self_learning_ready": true,
+        "online_update_performed": true,
+        "replay_scheduler_updated": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "ConstraintBench mini direct optimization",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference_plus_exact_verifier",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2919_constraintbench_mini",
+      "source_artifact": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json",
+      "source_checksum": "c31f05c2f114274cbaee2314e4b9358e38a75ca4a6f1ff2a8be122a96f7c32f6",
+      "source_experiment_id": "exp2919",
+      "source_summary": {
+        "constraintbench_mini_ready": true,
+        "corrigendum_pending": [
+          {
+            "detail": "feasibility_rate=0.277778 and syntax_valid_rate=0.277778 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "duration_s=43.12619376182556 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "feasibility_rate": 0.277778,
+        "flagged_adversarial": true,
+        "honest_verdict": "complete: constraintbench mini direct optimization measured with live local SOTA GGUF",
+        "inference_substrate": "live_llm_inference_plus_exact_verifier",
+        "optimality_rate": 0.111111,
+        "syntax_valid_rate": 0.277778
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "Bounded state-verifier harness claim: deterministic golden and negative-state checks pass without an LLM judge; no broad benchmark generalization is implied.",
+      "corpus_or_task": "OpenComputer-style state verifier harness",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "deterministic_state_verifier",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2920_state_verifier_harness",
+      "source_artifact": "results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json",
+      "source_checksum": "3b201ae7768be78292fd965cd9f529231010d465508dd3828cb83fa4727738e8",
+      "source_experiment_id": "exp2920",
+      "source_summary": {
+        "golden_state_pass_rate": 1.0,
+        "honest_verdict": "complete: deterministic OpenComputer-style state verifier harness ready",
+        "inference_substrate": "deterministic_state_verifier",
+        "llm_judge_used": false,
+        "n_state_tasks": 4,
+        "negative_state_reject_rate": 1.0,
+        "state_verifier_harness_ready": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "dot275_artifact_row"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "Matrix v9 aggregation-metadata corrigendum",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "exp2924_aggregation_metadata_corrigendum is clean support/context but not claim-eligible",
+      "paper_claim_eligible": false,
+      "row_class": "clean",
+      "row_id": "exp2924_aggregation_metadata_corrigendum",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json",
+      "source_checksum": "1fcfc1ca2594e168955cda7b964cbbd9b4221a42ddec755ff748c2bbfebc2985",
+      "source_experiment_id": "exp2924",
+      "source_summary": {
+        "aggregation_metadata_clean": true,
+        "honest_verdict": "complete: aggregation metadata corrigendum written; aggregation_metadata_clean=true; upstream_flags_preserved=7; metadata_false_positive_findings=4"
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "verifier_type": "aggregation provenance audit"
+    },
+    {
+      "claim_boundary": "Supporting paper claim: deterministic code-taxonomy provenance is clean; no code-corpus metric is promoted.",
+      "corpus_or_task": "Code hallucination taxonomy provenance corrigendum",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "deterministic_verifier",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2925_taxonomy_corrigendum",
+      "source_artifact": "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json",
+      "source_checksum": "0e8aab0b0f0d29d6547229ade7c8456b08d8a91a12723c16c09266c21eba5e08",
+      "source_experiment_id": "exp2925",
+      "source_summary": {
+        "honest_verdict": "complete: Exp 2911 taxonomy provenance corrigendum re-emitted deterministically",
+        "taxonomy_corrigendum_clean": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "deterministic taxonomy/provenance verifier"
+    },
+    {
+      "claim_boundary": "Bounded ConstraintBench claim: live local GGUF constrained-output rerun reports syntax_valid_rate=0.333333, feasibility_rate_overall=0.3, and optimality_rate_given_feasible=0.444444.",
+      "corpus_or_task": "ConstraintBench constrained-output rerun",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "live_llm_inference",
+      "model_specs_if_live_llm": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2926_constraintbench_corrigendum",
+      "source_artifact": "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json",
+      "source_checksum": "f3d0f2917210e3d9d5e0ba96034ffb7a4a2ee2337692d113298a5b45cc354e94",
+      "source_experiment_id": "exp2926",
+      "source_summary": {
+        "constraintbench_corrigendum_ready": true,
+        "feasibility_rate_overall": 0.3,
+        "honest_verdict": "complete: constraintbench constrained-output rerun measured with live local SOTA GGUF",
+        "optimality_rate_given_feasible": 0.444444,
+        "syntax_valid_rate": 0.333333
+      },
+      "upstream_flags": [],
+      "verifier_type": "live LLM plus constrained-output verifier"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate himbaechel constraints preflight",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "hardware_toolchain_preflight",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the source artifact is blocked",
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2927_gatemate_himbaechel_preflight",
+      "source_artifact": "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json",
+      "source_checksum": "788e56e630aaa66b6759747cc2115122cfb7ee49c52adf23f3e45427fb8d6986",
+      "source_experiment_id": "exp2927",
+      "source_summary": {
+        "gatemate_himbaechel_ready": true,
+        "honest_verdict": "blocked_constraints_missing"
+      },
+      "upstream_flags": [],
+      "verifier_type": "hardware toolchain preflight"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate n=16 himbaechel bitstream build",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "unknown",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the expected source artifact is missing",
+      "paper_claim_eligible": false,
+      "row_class": "missing",
+      "row_id": "exp2928_gatemate_bitstream",
+      "source_artifact": "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json",
+      "source_checksum": null,
+      "source_experiment_id": "exp2928",
+      "source_summary": {},
+      "upstream_flags": [],
+      "verifier_type": "hardware bitstream build"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "GateMate flash smoke timing boundary",
+      "hardware_substrate": "GateMate CCGM1A1",
+      "headline_eligible": false,
+      "inference_substrate": "physical_board_smoke",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because the source artifact is blocked",
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2929_gatemate_flash_timing_boundary",
+      "source_artifact": "results/experiment_2929_gatemate_flash_timing_boundary_v1.json",
+      "source_checksum": "c073e7915708ed92e4a2462f987672de157a875fbfe6615c3d332132b50d8ce0",
+      "source_experiment_id": "exp2929",
+      "source_summary": {
+        "gatemate_flash_smoke_ready": false,
+        "honest_verdict": "blocked_gatemate_bitstream_missing"
+      },
+      "upstream_flags": [],
+      "verifier_type": "physical board smoke"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "KV260 p-bit/SSQA scaling projection",
+      "hardware_substrate": "KV260",
+      "headline_eligible": false,
+      "inference_substrate": "aggregation_plus_simulation",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "excluded because projection-only rows cannot support paper claims",
+      "paper_claim_eligible": false,
+      "row_class": "projection_only",
+      "row_id": "exp2930_kv260_scaling_projection",
+      "source_artifact": "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json",
+      "source_checksum": "f544e9a9a576fa388e44cbe99eb63f5bde9b81f53384c6cd486d73423122155f",
+      "source_experiment_id": "exp2930",
+      "source_summary": {
+        "honest_verdict": "complete: kv260_pbit_ssqa_scaling_projection_ready_no_new_hardware_claim",
+        "kv260_scaling_projection_ready": true,
+        "projection_only": true
+      },
+      "upstream_flags": [],
+      "verifier_type": "projection-only resource accounting"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "LLMEval-Logic-style Z3 mini benchmark",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference_plus_z3",
+      "model_specs_if_live_llm": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "excluded because the source artifact is blocked",
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2931_llmeval_logic_z3_mini",
+      "source_artifact": "results/experiment_2931_llmeval_logic_z3_mini_v1.json",
+      "source_checksum": "dbfff20d2d20e680989058b7906f819e3da96348e9ec12ff549c0219c6cc44bd",
+      "source_experiment_id": "exp2931",
+      "source_summary": {
+        "honest_verdict": "blocked_z3_execution_incomplete",
+        "logic_verifier_mini_ready": false
+      },
+      "upstream_flags": [],
+      "verifier_type": "live LLM plus Z3 verifier"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "Citation hallucination field verifier",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference_plus_deterministic_verifier",
+      "model_specs_if_live_llm": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2932_citation_field_verifier",
+      "source_artifact": "results/experiment_2932_citation_hallucination_field_verifier_v1.json",
+      "source_checksum": "0470909685ae925ddd861c09081213bfc0897c4fdf710d36bd86700b1473f1c1",
+      "source_experiment_id": "exp2932",
+      "source_summary": {
+        "citation_verifier_ready": true,
+        "honest_verdict": "complete:citation_field_verifier_ready"
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "live LLM plus deterministic citation-field verifier"
+    },
+    {
+      "claim_boundary": "Bounded self-learning claim: KAN per-knot structural-memory update reports utility_delta_vs_replay_only=0.5 with forgetting_rate=0.0.",
+      "corpus_or_task": "KAN per-knot continuous self-learning",
+      "hardware_substrate": "none",
+      "headline_eligible": true,
+      "inference_substrate": "local_training_simulation",
+      "model_specs_if_live_llm": [],
+      "non_eligible_reason": "",
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2933_kan_cl_self_learning",
+      "source_artifact": "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json",
+      "source_checksum": "b863133af27141847c2640a00eb3d07432049a95338992927d8293f1a4850a30",
+      "source_experiment_id": "exp2933",
+      "source_summary": {
+        "forgetting_rate": 0.0,
+        "honest_verdict": "complete: kan_rbf_importance_self_learning_passed",
+        "kan_cl_self_learning_ready": true,
+        "utility_delta_vs_replay_only": 0.5
+      },
+      "upstream_flags": [],
+      "verifier_type": "local training simulation with exact verifier rewards"
+    },
+    {
+      "claim_boundary": "",
+      "corpus_or_task": "AquaForte/BEAVER reformulation pipeline",
+      "hardware_substrate": "none",
+      "headline_eligible": false,
+      "inference_substrate": "live_llm_inference_plus_exact_verifier",
+      "model_specs_if_live_llm": [
+        {
+          "gpu": 0,
+          "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+          "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "name": "Gemma4-26B-A4B-it"
+        }
+      ],
+      "non_eligible_reason": "excluded because unresolved upstream/adversarial flags remain",
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2934_reformulation_pipeline",
+      "source_artifact": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json",
+      "source_checksum": "03e12d5e89a607ae4a3f32e8d8725d24fbc6a0cda123bfcf3259052b800a0fc9",
+      "source_experiment_id": "exp2934",
+      "source_summary": {
+        "honest_verdict": "complete: exp2926 live GGUF proposals reformulated and exact-verified",
+        "reformulation_pipeline_ready": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "verifier_type": "live LLM plus exact verifier"
+    }
+  ],
+  "matrix_v10_paper_boundary_ready": true,
+  "matrix_v10_ready": true,
+  "missing_rows": [
+    "exp2915_gatemate_bitstream",
+    "exp2928_gatemate_bitstream"
+  ],
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "paper_claim_boundary": {
+    "boundary_rules": [
+      "Only clean rows with direct bounded support are headline eligible.",
+      "Flagged, blocked, missing, diagnostic-only, and pilot-only rows remain non-headline.",
+      "Projection-only rows are retained for planning context but are not paper-claim eligible.",
+      "A clean corrigendum can add a replacement/supporting row without laundering the older flagged row."
+    ],
+    "headline_claims": {
+      "corpus:FoVer": "Carry-forward clean matrix-v8 headline row for FoVer; no new metric inferred.",
+      "corpus:HaluEval_FEVER": "Carry-forward clean matrix-v8 headline row for HaluEval/FEVER; no new metric inferred.",
+      "exp2910_sota_codegen": "Bounded SOTA code-generation claim: aggregate pass@1=0.075, pass@k=0.175 over the recorded local GGUF run.",
+      "exp2913_kv260_claim_boundary": "A bounded numeric KV260/CPU latency claim is eligible for the matched n=64 sparse Ising workload: CPU/KV260 per-sample latency ratios are n_samples=100: median 19.13x, p95 25.64x, n_samples=1000: median 19.24x, p95 30.35x, n_samples=10000: median 18.65x, p95 20.11x. The claim is restricted to Exp 2898 hardware-smoke timing versus Exp 2912 same-basis CPU Gibbs timing; it is not a broad FPGA acceleration claim.",
+      "exp2918_fr11_process_rewards": "Bounded FR-11 self-learning claim: replay scheduler/process rewards updated with forgetting_rate=0.0 and no model-weight mutation.",
+      "exp2920_state_verifier_harness": "Bounded state-verifier harness claim: deterministic golden and negative-state checks pass without an LLM judge; no broad benchmark generalization is implied.",
+      "exp2926_constraintbench_corrigendum": "Bounded ConstraintBench claim: live local GGUF constrained-output rerun reports syntax_valid_rate=0.333333, feasibility_rate_overall=0.3, and optimality_rate_given_feasible=0.444444.",
+      "exp2933_kan_cl_self_learning": "Bounded self-learning claim: KAN per-knot structural-memory update reports utility_delta_vs_replay_only=0.5 with forgetting_rate=0.0."
+    },
+    "headline_eligible_rows": [
+      "corpus:FoVer",
+      "corpus:HaluEval_FEVER",
+      "exp2910_sota_codegen",
+      "exp2913_kv260_claim_boundary",
+      "exp2918_fr11_process_rewards",
+      "exp2920_state_verifier_harness",
+      "exp2926_constraintbench_corrigendum",
+      "exp2933_kan_cl_self_learning"
+    ],
+    "non_paper_claim_rows": {
+      "corpus:HumanEval": {
+        "reason": "excluded because pilot-only rows cannot support headline claims",
+        "row_class": "pilot_only",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "corpus:MBPP": {
+        "reason": "excluded because pilot-only rows cannot support headline claims",
+        "row_class": "pilot_only",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "corpus:TruthfulQA": {
+        "reason": "corpus:TruthfulQA is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2890_code_structural_dependency": {
+        "reason": "exp2890_code_structural_dependency is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2891_cctu": {
+        "reason": "excluded because pilot-only rows cannot support headline claims",
+        "row_class": "pilot_only",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2892_vericot": {
+        "reason": "exp2892_vericot is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2898_kv260_hardware": {
+        "reason": "exp2898_kv260_hardware is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+      },
+      "exp2911_code_hallucination_verifier": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json"
+      },
+      "exp2914_gatemate_toolchain": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2914_gatemate_toolchain_preflight_v2.json"
+      },
+      "exp2915_gatemate_bitstream": {
+        "reason": "excluded because the expected source artifact is missing",
+        "row_class": "missing",
+        "source_artifact": "results/experiment_2915_gatemate_n16_ising_tile_bitstream_build_v2.json"
+      },
+      "exp2916_thrml_parity": {
+        "reason": "excluded because diagnostic-only rows are context, not claims",
+        "row_class": "diagnostic_only",
+        "source_artifact": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json"
+      },
+      "exp2917_spilled_energy_micro_panel": {
+        "reason": "excluded because diagnostic-only rows are context, not claims",
+        "row_class": "diagnostic_only",
+        "source_artifact": "results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json"
+      },
+      "exp2919_constraintbench_mini": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json"
+      },
+      "exp2924_aggregation_metadata_corrigendum": {
+        "reason": "exp2924_aggregation_metadata_corrigendum is clean support/context but not claim-eligible",
+        "row_class": "clean",
+        "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+      },
+      "exp2927_gatemate_himbaechel_preflight": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json"
+      },
+      "exp2928_gatemate_bitstream": {
+        "reason": "excluded because the expected source artifact is missing",
+        "row_class": "missing",
+        "source_artifact": "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json"
+      },
+      "exp2929_gatemate_flash_timing_boundary": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2929_gatemate_flash_timing_boundary_v1.json"
+      },
+      "exp2930_kv260_scaling_projection": {
+        "reason": "excluded because projection-only rows cannot support paper claims",
+        "row_class": "projection_only",
+        "source_artifact": "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json"
+      },
+      "exp2931_llmeval_logic_z3_mini": {
+        "reason": "excluded because the source artifact is blocked",
+        "row_class": "blocked",
+        "source_artifact": "results/experiment_2931_llmeval_logic_z3_mini_v1.json"
+      },
+      "exp2932_citation_field_verifier": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2932_citation_hallucination_field_verifier_v1.json"
+      },
+      "exp2934_reformulation_pipeline": {
+        "reason": "excluded because unresolved upstream/adversarial flags remain",
+        "row_class": "flagged",
+        "source_artifact": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json"
+      }
+    },
+    "ready": true,
+    "supporting_paper_claim_rows": [
+      "exp2925_taxonomy_corrigendum"
+    ]
+  },
+  "pilot_only_rows": [
+    "corpus:MBPP",
+    "corpus:HumanEval",
+    "exp2891_cctu"
+  ],
+  "projection_only_rows": [
+    "exp2930_kv260_scaling_projection"
+  ],
+  "row_classification_counts": {
+    "blocked": 4,
+    "clean": 14,
+    "diagnostic_only": 2,
+    "flagged": 4,
+    "missing": 2,
+    "pilot_only": 3,
+    "projection_only": 1
+  },
+  "run_date": "20260523",
+  "schema": "carnot.cross_corpus_matrix.v10_paper_boundary_corrigendum.v1",
+  "source_artifact_checksums": {
+    "results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json": "10785890a2e72a2893f6573f3baba0115e3a13e02e0bf5e858532ab9a01dcd08",
+    "results/experiment_2924_aggregation_metadata_corrigendum_v1.json": "1fcfc1ca2594e168955cda7b964cbbd9b4221a42ddec755ff748c2bbfebc2985",
+    "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json": "0e8aab0b0f0d29d6547229ade7c8456b08d8a91a12723c16c09266c21eba5e08",
+    "results/experiment_2926_constraintbench_constrained_output_rerun_v2.json": "f3d0f2917210e3d9d5e0ba96034ffb7a4a2ee2337692d113298a5b45cc354e94",
+    "results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json": "788e56e630aaa66b6759747cc2115122cfb7ee49c52adf23f3e45427fb8d6986",
+    "results/experiment_2928_gatemate_n16_himbaechel_bitstream_build_v3.json": null,
+    "results/experiment_2929_gatemate_flash_timing_boundary_v1.json": "c073e7915708ed92e4a2462f987672de157a875fbfe6615c3d332132b50d8ce0",
+    "results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json": "f544e9a9a576fa388e44cbe99eb63f5bde9b81f53384c6cd486d73423122155f",
+    "results/experiment_2931_llmeval_logic_z3_mini_v1.json": "dbfff20d2d20e680989058b7906f819e3da96348e9ec12ff549c0219c6cc44bd",
+    "results/experiment_2932_citation_fixture_v1.json": "20101e0c6bc86c12db2d3cfa9d37c27384ffd192e975ae7df63edec64f8f1f8d",
+    "results/experiment_2932_citation_hallucination_field_verifier_v1.json": "0470909685ae925ddd861c09081213bfc0897c4fdf710d36bd86700b1473f1c1",
+    "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json": "b863133af27141847c2640a00eb3d07432049a95338992927d8293f1a4850a30",
+    "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json": "03e12d5e89a607ae4a3f32e8d8725d24fbc6a0cda123bfcf3259052b800a0fc9"
+  },
+  "upstream_flags_preserved": [
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "corpus:MBPP",
+      "row_class": "pilot_only",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "corpus:HumanEval",
+      "row_class": "pilot_only",
+      "source_artifact": "results/experiment_2902_cross_corpus_matrix_v8.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "identifier": "exp2911_code_hallucination_verifier",
+      "row_class": "flagged",
+      "source_artifact": "results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "identifier": "exp2919_constraintbench_mini",
+      "row_class": "flagged",
+      "source_artifact": "results/experiment_2919_constraintbench_mini_direct_optimization_v1.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "identifier": "exp2924_aggregation_metadata_corrigendum",
+      "row_class": "clean",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "exp2925_taxonomy_corrigendum",
+      "row_class": "clean",
+      "source_artifact": "results/experiment_2925_code_hallucination_taxonomy_provenance_corrigendum_v2.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "exp2932_citation_field_verifier",
+      "row_class": "flagged",
+      "source_artifact": "results/experiment_2932_citation_hallucination_field_verifier_v1.json"
+    },
+    {
+      "flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical"
+      ],
+      "identifier": "exp2934_reformulation_pipeline",
+      "row_class": "flagged",
+      "source_artifact": "results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json"
+    },
+    {
+      "flags": [],
+      "identifier": "corpus:MBPP",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [],
+      "identifier": "corpus:HumanEval",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [
+        "{'detail': 'duration_s=0.027930021286010742 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.', 'kind': 'DURATION_TOO_SHORT', 'severity': 'critical'}",
+        "{'detail': 'Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.', 'kind': 'METHODOLOGY_MISSING', 'severity': 'warn'}"
+      ],
+      "identifier": "exp2911_code_hallucination_verifier",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [
+        "{'detail': 'feasibility_rate=0.277778 and syntax_valid_rate=0.277778 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.', 'kind': 'TAUTOLOGY', 'severity': 'critical'}",
+        "{'detail': 'duration_s=43.12619376182556 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.', 'kind': 'DURATION_TOO_SHORT', 'severity': 'critical'}",
+        "{'detail': 'Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable.', 'kind': 'METHODOLOGY_MISSING', 'severity': 'warn'}"
+      ],
+      "identifier": "exp2919_constraintbench_mini",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [
+        "{'detail': 'duration_s=0.027930021286010742 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.', 'kind': 'DURATION_TOO_SHORT', 'severity': 'critical'}",
+        "{'detail': 'Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.', 'kind': 'METHODOLOGY_MISSING', 'severity': 'warn'}"
+      ],
+      "identifier": "exp2911",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [
+        "{'detail': 'feasibility_rate=0.277778 and syntax_valid_rate=0.277778 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.', 'kind': 'TAUTOLOGY', 'severity': 'critical'}",
+        "{'detail': 'duration_s=43.12619376182556 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.', 'kind': 'DURATION_TOO_SHORT', 'severity': 'critical'}",
+        "{'detail': 'Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable.', 'kind': 'METHODOLOGY_MISSING', 'severity': 'warn'}"
+      ],
+      "identifier": "exp2919",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    },
+    {
+      "flags": [
+        "{'detail': 'duration_s=0.008404 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.', 'kind': 'DURATION_TOO_SHORT', 'severity': 'critical'}",
+        "{'detail': 'Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable.', 'kind': 'METHODOLOGY_MISSING', 'severity': 'warn'}"
+      ],
+      "identifier": "exp2921",
+      "row_class": "preserved_upstream_flag",
+      "source_artifact": "results/experiment_2924_aggregation_metadata_corrigendum_v1.json"
+    }
+  ]
+}

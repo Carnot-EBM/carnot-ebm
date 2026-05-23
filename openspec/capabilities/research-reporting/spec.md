@@ -5383,3 +5383,76 @@ itself.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2924 | Planned (`python/carnot/reporting/aggregation_metadata_corrigendum_2924.py`) | Planned (`tests/python/test_aggregation_metadata_corrigendum_2924.py`) |
+
+### REQ-REPORT-2935: Cross-Corpus Matrix V10 Paper-Boundary Corrigendum
+
+The repository shall provide an Exp 2935 cross-corpus matrix v10 generator that
+writes
+`results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json`
+using only upstream artifact JSON files. The generator MUST NOT call an LLM,
+rerun a verifier, run a sampler, launch hardware, or modify
+`scripts/research_conductor.py`.
+
+The generator MUST first require the structured `.276` gate sources: Exp 2924
+`aggregation_metadata_clean=true`, Exp 2925 `taxonomy_corrigendum_clean=true`,
+Exp 2926 `constraintbench_corrigendum_ready=true`, and Exp 2933
+`kan_cl_self_learning_ready=true`. If any required source artifact is absent,
+malformed, or has a false/missing gate field, it MUST write a terminal artifact
+with `honest_verdict="blocked_required_corrigendum_missing"`,
+`matrix_v10_ready=false`, `matrix_v10_paper_boundary_ready=false`, the exact
+gate errors, `no_new_llm_call=true`, and `no_new_hardware_run=true`.
+
+When the required gates pass, the generator MUST load the Exp 2921 matrix v9
+artifact and every expected `.276` artifact from Exp 2924 through Exp 2934 when
+present, with Exp 2928 counted as missing when its expected GateMate bitstream
+artifact is absent. It MUST classify rows as `clean`, `flagged`, `blocked`,
+`missing`, `projection_only`, `diagnostic_only`, or `pilot_only`; preserve the
+source checksum for every cited artifact; and preserve upstream flags from v9
+and `.276` artifacts without laundering them through later clean corrigenda.
+
+The v10 matrix rows MUST include columns for corpus or task, verifier type,
+inference substrate, hardware substrate, live-LLM model specs only when the row
+source declares live LLM inference, headline eligibility, and paper-claim
+eligibility. Flagged, blocked, missing, projection-only, diagnostic-only, and
+pilot-only rows MUST NOT become headline eligible by implication from a clean
+aggregate or corrigendum artifact. Projection-only rows MAY be retained for
+planning context but MUST remain outside paper-claim eligibility.
+
+The generator MUST run the local adversarial artifact audit when available and
+record the exact rerun result. If `scripts/adversarial_artifact_audit.py` is
+absent, the generator MAY use the existing `scripts/adversarial_verify.py`
+artifact audit fallback and MUST record which tool was used or why no audit ran.
+
+The terminal artifact MUST include `honest_verdict`, `matrix_v10_ready`,
+`matrix_v10_paper_boundary_ready`, `no_new_llm_call=true`,
+`no_new_hardware_run=true`, `row_classification_counts`,
+`headline_eligible_rows`, `flagged_rows`, `blocked_rows`,
+`projection_only_rows`, `pilot_only_rows`, `paper_claim_boundary`,
+`source_artifact_checksums`, `adversarial_audit_rerun`, `inference_substrate`
+equal to `aggregation_from_upstream_artifacts`, measured `duration_s`, and
+`run_date="20260523"`.
+
+#### SCENARIO-REPORT-2935: V10 Consumes Corrigenda Without Promoting Flagged Boundaries
+
+**Given** Exp 2924, Exp 2925, Exp 2926, and Exp 2933 gate artifacts are present
+with their required ready fields true
+**And** Exp 2921 matrix v9 contains flagged MBPP/HumanEval, flagged Exp 2911
+and Exp 2919 rows, pilot-only code rows, diagnostic-only hardware/probe rows,
+and a missing GateMate bitstream row
+**And** the `.276` artifacts include a clean taxonomy corrigendum, a clean
+ConstraintBench rerun, a projection-only KV260 scaling row, blocked GateMate and
+LLMEval-Logic rows, and flagged citation/reformulation rows
+**When** the Exp 2935 generator runs
+**Then** it writes
+`results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json`
+with all required fields, checksums for present sources, null checksums for
+missing sources, `matrix_v10_ready=true`,
+`matrix_v10_paper_boundary_ready=true`, no new LLM or hardware run, flagged
+rows preserved, projection-only and pilot-only rows excluded from headline and
+paper-claim eligibility, and the adversarial audit rerun recorded.
+
+## Implementation Status (REQ-REPORT-2935)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2935 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v10_2935.py`) | Implemented (`tests/python/test_experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum.py`) |
