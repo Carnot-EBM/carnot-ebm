@@ -7173,3 +7173,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-23: GateMate Toolchain Provisioning Preflight v2 (⚠️ Blocked) — honest_verdict=blocked_gatemate_toolchain_missing; results/experiment_2914_gatemate_toolchain_preflight_v2.json
 - 2026-05-23: GateMate Toolchain Provisioning Preflight v2 (⚠️ Blocked) — honest_verdict=blocked_gatemate_toolchain_missing; results/experiment_2914_gatemate_toolchain_preflight_v2.json
 - 2026-05-23: GateMate Toolchain Provisioning Preflight v2 (⚠️ Blocked) — honest_verdict=blocked_gatemate_toolchain_missing; results/experiment_2914_gatemate_toolchain_preflight_v2.json
+- 2026-05-23: THRML-KV260 Sampler Parity Audit v1 (gated on Exp2912) (✅ Complete) — honest_verdict=complete: thrml_kv260_n64_simulator_parity_ready_no_hardware_claim; results/experiment_2916_thrml_kv260_sampler_parity_v1.json
