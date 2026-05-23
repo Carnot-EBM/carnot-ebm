@@ -1690,5 +1690,18 @@
     "exp2891_cctu"
   ],
   "run_date": "20260523",
-  "schema": "carnot.cross_corpus_matrix.v9_paper_boundary.v1"
+  "schema": "carnot.cross_corpus_matrix.v9_paper_boundary.v1",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.008404 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }

@@ -6052,3 +6052,4 @@ Ripgrep i |
 | 2026-05-23 11:54 UTC | FR-11 Verifiable Process Rewards Self-Learning v1  | OK | 81 passed in 3.76s |
 | 2026-05-23 12:10 UTC | ConstraintBench Mini Direct-Optimization Verifier  | OK | 81 passed in 3.70s |
 | 2026-05-23 12:23 UTC | OpenComputer-Style State-Verifier Harness v1 | OK | 81 passed in 4.29s |
+| 2026-05-23 12:39 UTC | Cross-Corpus Matrix v9 + Paper-v6 Claim Boundary | OK | 81 passed in 3.66s |
