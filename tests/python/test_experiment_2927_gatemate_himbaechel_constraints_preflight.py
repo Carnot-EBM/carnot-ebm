@@ -196,6 +196,31 @@ def test_exp2927_ready_path_requires_tools_device_rtl_and_constraints(
     assert artifact["rtl_top"] == "ising_n16_gatemate"
 
 
+def test_exp2927_uses_first_non_ccf_constraint_when_no_ccf_exists(
+    tmp_path: Path,
+) -> None:
+    """REQ-HW-068: explicit non-CCF constraints are recorded without pin invention."""
+    _write_rtl(tmp_path)
+    constraint_dir = tmp_path / "hardware" / "gatemate"
+    constraint_dir.mkdir(parents=True, exist_ok=True)
+    constraint_path = constraint_dir / "ising_n16_gatemate.pcf"
+    constraint_path.write_text("# explicit test constraints\n", encoding="utf-8")
+    runner, _calls = _fake_runner(_successful_tool_results())
+
+    artifact = build_artifact(
+        repo_root=tmp_path,
+        home_dir=tmp_path / "home",
+        run_command=runner,
+        which_func=_which_from(_successful_paths()),
+        monotonic=_clock([22.0, 22.5]),
+    )
+
+    assert artifact["honest_verdict"] == "ready_gatemate_himbaechel_constraints_preflight"
+    assert artifact["constraints_ready"] is True
+    assert artifact["constraints_path"] == str(constraint_path)
+    assert artifact["constraint_paths_present"] == [str(constraint_path)]
+
+
 def test_exp2927_missing_build_tool_blocks_toolchain_readiness(tmp_path: Path) -> None:
     """REQ-HW-068: nextpnr-himbaechel must be present for toolchain readiness."""
     _write_rtl(tmp_path)
