@@ -900,6 +900,44 @@ from rows with canonical/reference code and tests, both rows are executed throug
 the sandbox wrapper, per-row pass/fail metadata is recorded, and no headline
 metric is claimed.
 
+### REQ-CODE-2889: Smallest Defensible MBPP/HumanEval Generated-Code Row
+
+The repository shall provide a bounded MBPP/HumanEval generated-code row that
+uses the local mandated SOTA GGUF runtime selected by Exp 2874 and the existing
+gVisor/runsc sandbox for deterministic local tests. The runner MUST:
+
+- gate on Exp 2874's `sota_runtime_clean=True` with a non-empty resolved model
+  path, on visible CUDA/GPU offload, on the eval manifest contract being ready,
+  and on a runsc sandbox being available, writing a `blocked_*` artifact and
+  stopping if any precondition is unmet;
+- select a tiny deterministic sample of MBPP and HumanEval rows (target five
+  each when manifests/tests support them, fewer when only fewer are safe),
+  record the selection rule, fingerprints, and stable IDs;
+- generate candidate code with the cached SOTA GGUF through a fixed
+  instruction prompt, deterministic seed, greedy decoding, and a bounded token
+  budget, capturing the raw generated text per row;
+- execute generated outputs only through the existing sandbox wrapper with
+  `allow_fallback=False`, capturing pass/fail, timeout, exception, and
+  unsupported reasons per row without any in-process fallback;
+- record `generated_code_row_clean=True` only when generation, sandbox
+  execution, manifests, and per-row outputs are all clean, and otherwise mark
+  the artifact as pilot-only or blocked with a row-level explanation; and
+- never claim a headline pass@k or AUROC metric — `headline_metric_claim_made`
+  MUST be `False` for this row.
+
+### SCENARIO-CODE-2889: Bounded SOTA GGUF Generation With Deterministic Local Tests
+
+Given Exp 2874 recorded `sota_runtime_clean=True` with a resolved cached SOTA
+GGUF, the eval manifest contract resolves both MBPP and HumanEval manifests
+with verified checksums, and the runsc sandbox is available,
+When the Exp 2889 generated-code row runs with the cached SOTA GGUF as the
+generator and the existing sandbox wrapper as the executor,
+Then candidate code is generated for each selected row from a fixed prompt and
+deterministic seed, the generated function is executed through the sandbox
+against the row's local tests, the artifact records the model fingerprint,
+selection rule, per-row pass/fail metadata, and a row status of `pilot_only` or
+`blocked_*` when any output is not clean, and no headline metric is claimed.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -942,6 +980,7 @@ metric is claimed.
 | REQ-CODE-033 | Implemented |
 | REQ-CODE-034 | Implemented (`python/carnot/verifiers/dsl.py`) |
 | REQ-CODE-2879 | Implemented |
+| REQ-CODE-2889 | Implemented |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
 | REQ-REPAIR-022 | Implemented |
