@@ -6040,3 +6040,4 @@ Ripgrep i |
 | 2026-05-23 09:13 UTC | SOTA Code Generation Corrigendum v2: Fixed Seeds + | OK | 81 passed in 4.72s |
 | 2026-05-23 10:04 UTC | Delulu-Style Code Hallucination Taxonomy Verifier  | OK | 81 passed in 2.91s |
 | 2026-05-23 10:20 UTC | KV260 Same-Basis CPU Gibbs Baseline v1 | OK | 81 passed in 3.22s |
+| 2026-05-23 10:33 UTC | KV260 Hardware-vs-CPU Claim Boundary v1 (gated on  | OK | 81 passed in 3.87s |
