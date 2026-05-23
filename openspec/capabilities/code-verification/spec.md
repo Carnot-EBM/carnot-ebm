@@ -1107,6 +1107,43 @@ a downstream live-evaluation plan while preserving
 `inference_substrate="aggregation_from_upstream_artifacts"` and making no
 claim that pass@1 or pass@k improved.
 
+### REQ-CODE-2951: Structured Candidate Manifest Adapter
+
+The repository shall provide an Exp 2951 local-first structured candidate
+manifest adapter for the .278 code-repair evaluation. The adapter MUST:
+
+- define a reusable candidate manifest schema with `task_id`, `prompt_id`,
+  `model_id`, `raw_completion_ref`, `repaired_code`, `failure_taxonomy`,
+  `parser_status`, `test_status`, `verifier_score`, and
+  `provenance_checksums`;
+- probe local JSON-schema validation support, `llguidance`, and llama.cpp
+  grammar support without installing packages and without calling a live LLM;
+- prefer locally available grammar metadata for downstream structured decoding
+  while retaining a deterministic schema-validation fallback when grammar
+  backends are absent;
+- validate at least three synthetic candidate records, including one valid
+  candidate, one syntax failure, and one unsupported import/API hallucination;
+- include downstream live-use model specs for
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`; and
+- write `results/experiment_2951_structured_candidate_manifest_adapter_v1.json`
+  with `honest_verdict`, `structured_decode_manifest_ready`,
+  `schema_version`, `schema_fields`, `local_backends_checked`,
+  `llguidance_available`, `llama_cpp_grammar_available`,
+  `validation_fixture_count`, `validation_fixture_passed`,
+  `model_specs_for_downstream_live_use`,
+  `inference_substrate="deterministic_wiring"`, and measured `duration_s`.
+
+### SCENARIO-CODE-2951: Synthetic Candidate Manifests Validate Locally
+
+Given no live model call is made,
+When the Exp 2951 adapter builds its schema, probes local structured-output
+backends, and validates the three synthetic candidate records,
+Then the result artifact records the required schema fields, local backend
+availability, deterministic validation results for all fixtures, downstream
+SOTA GGUF model specs, and readiness only when the deterministic fallback
+accepts the valid row and rejects no schema-compliant failure rows.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
@@ -1224,6 +1261,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2925 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_provenance_corrigendum.py`) |
 | REQ-CODE-2946 | Implemented (`python/carnot/eval/sota_code_generation_continuation.py`) |
 | REQ-CODE-2950 | Implemented (`python/carnot/eval/code_taxonomy_repair_prompt_manifest.py`) |
+| REQ-CODE-2951 | Implemented (`python/carnot/eval/structured_candidate_manifest_adapter.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
