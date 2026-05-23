@@ -6560,3 +6560,59 @@ same-basis CPU baseline artifact is missing or not ready
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2918 | Implemented (`python/carnot/eval/fr11_verifiable_process_rewards_self_learning_v1.py`) | Implemented (`tests/python/test_experiment_2918_fr11_verifiable_process_rewards_self_learning_v1.py`) |
+
+## REQ-LEARN-2933: KAN/KAC Per-Knot Structural Memory Self-Learning Probe
+
+**Given** a deterministic synthetic stream of verified constraint examples with
+train/holdout splits and `random_seed=2933`
+**When** Exp 2933 compares a no-update baseline, a replay-scheduler-only
+baseline, and a KAN/KAC-inspired per-knot or RBF-importance updater
+**Then** the probe SHALL update bounded local structural memory only, measure
+pre-update and post-update utility on new constraints, and measure forgetting on
+previous constraints under a predeclared threshold.
+**And** it SHALL write
+`results/experiment_2933_kan_cl_per_knot_self_learning_v1.json` with
+`honest_verdict`, `kan_cl_self_learning_ready`,
+`continuous_self_learning_targeted=true`, `random_seed=2933`,
+`dataset_manifest`, `baselines`, `kan_update_config`,
+`utility_delta_vs_replay_only`, `energy_proxy_delta`, `forgetting_rate`,
+`forgetting_threshold`, `non_forgetting_passed`,
+`updated_knot_or_rbf_count`, `tests_run`,
+`inference_substrate="local_training_simulation"`, `duration_s`, and
+`run_date="20260523"`.
+
+### REQ-LEARN-2933 Sub-requirements
+
+- REQ-LEARN-2933-1: The dataset generator SHALL be deterministic for seed 2933
+  and SHALL report train/holdout counts, constraint IDs, and RBF center count in
+  `dataset_manifest`.
+- REQ-LEARN-2933-2: The no-update and replay-scheduler-only baselines SHALL be
+  evaluated on the same holdout splits as the KAN/KAC update path.
+- REQ-LEARN-2933-3: The KAN/KAC path SHALL update per-knot or RBF-center
+  importance from exact verifier labels or deterministic energy proxies and
+  SHALL report the number of updated knots or centers.
+- REQ-LEARN-2933-4: The headline ready flag SHALL be false when forgetting on
+  previous constraints exceeds the predeclared threshold.
+
+### SCENARIO-LEARN-2933: RBF Importance Improves New Constraints Without Forgetting
+
+**Given** the seed-2933 synthetic constraint stream
+**When** the RBF-importance structural memory processes each verified training
+split and evaluates holdout utility before and after each update
+**Then** its final holdout utility and energy proxy improve over the
+replay-scheduler-only baseline
+**And** `non_forgetting_passed=true` when the measured forgetting rate stays at
+or below `forgetting_threshold`.
+
+### SCENARIO-LEARN-2933-GUARD: Forgetting Threshold Gates The Headline
+
+**Given** an Exp 2933 artifact payload with measured forgetting above the
+predeclared threshold
+**When** the artifact validator checks headline readiness
+**Then** `kan_cl_self_learning_ready=false` and `non_forgetting_passed=false`.
+
+## Implementation Status (REQ-LEARN-2933)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2933 | Implemented (`python/carnot/eval/fr11_kan_cl_per_knot_self_learning_v1.py`) | Implemented (`tests/python/test_experiment_2933_kan_cl_per_knot_self_learning_v1.py`) |
