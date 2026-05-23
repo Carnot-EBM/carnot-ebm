@@ -6077,3 +6077,4 @@ web search:
 | 2026-05-23 16:55 UTC | LLMEval-Logic Z3 Mini: Local GGUF Natural-Language | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2931_llmeval |
 | 2026-05-23 17:07 UTC | LLMEval-Logic Z3 Mini: Local GGUF Natural-Language | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2931_llmeval |
 | 2026-05-23 17:15 UTC | LLMEval-Logic Z3 Mini: Local GGUF Natural-Language | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2931_llmeval |
+| 2026-05-23 17:33 UTC | Citation Hallucination Field Verifier v1: CiteTrac | OK | 81 passed in 3.75s |
