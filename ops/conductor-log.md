@@ -6066,3 +6066,5 @@ web search:
 | 2026-05-23 15:34 UTC | ConstraintBench Constrained-Output Rerun v2: Non-T | OK | 81 passed in 3.92s |
 | 2026-05-23 15:46 UTC | GateMate Himbaechel Toolchain + Constraint Materia | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2927_gatemat |
 | 2026-05-23 15:52 UTC | GateMate Himbaechel Toolchain + Constraint Materia | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2927_gatemat |
+| 2026-05-23 16:00 UTC | GateMate Himbaechel Toolchain + Constraint Materia | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2927_gatemat |
+| 2026-05-23 16:02 UTC | GateMate n=16 Bitstream Build via Himbaechel v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2927) |
