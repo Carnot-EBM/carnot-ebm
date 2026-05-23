@@ -6090,3 +6090,4 @@ web search:
 | 2026-05-23 19:56 UTC | PolarFire SoC Continuation: Constraint Scorer Expa | OK | 81 passed in 3.60s |
 | 2026-05-23 20:13 UTC | KV260 Continuation: n-Scaling Latency Profile (anc | OK | 81 passed in 3.29s |
 | 2026-05-23 20:28 UTC | Cross-Corpus Matrix v11 — Incorporate Deep Think C | OK | 81 passed in 4.09s |
+| 2026-05-23 20:41 UTC | Paper-v6 Narrowing Discipline Mechanical Audit v1 | OK | 81 passed in 4.14s |
