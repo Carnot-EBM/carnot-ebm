@@ -7188,3 +7188,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-23: GateMate Himbaechel Toolchain + Constraint Materialization v3 (⚠️ Blocked) — honest_verdict=blocked_constraints_missing; results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json
 - 2026-05-23: GateMate Himbaechel Toolchain + Constraint Materialization v3 (⚠️ Blocked) — honest_verdict=blocked_constraints_missing; results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json
 - 2026-05-23: GateMate Himbaechel Toolchain + Constraint Materialization v3 (⚠️ Blocked) — honest_verdict=blocked_constraints_missing; results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json
+- 2026-05-23: GateMate Flash Smoke + Timing Boundary v1 (⚠️ Blocked) — honest_verdict=blocked_gatemate_bitstream_missing; results/experiment_2929_gatemate_flash_timing_boundary_v1.json
