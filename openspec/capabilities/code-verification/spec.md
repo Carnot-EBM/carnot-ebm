@@ -1008,6 +1008,40 @@ with the required corrigendum schema, top-level seed provenance, raw-response
 paths, model provenance, per-task pass vectors, and either a clean corrected row
 or an honest blocked verdict without fabricated headline pass rates.
 
+### REQ-CODE-2911: Deterministic Exp 2910 Code-Hallucination Taxonomy Verifier
+
+The repository shall provide a deterministic taxonomy verifier for the checked-in
+Exp 2910 code-generation corrigendum artifact. The verifier MUST:
+
+- block with `honest_verdict="blocked_codegen_corrigendum_missing"` when
+  `results/experiment_2910_sota_code_generation_corrigendum_v2.json` is absent
+  or does not set `codegen_corrigendum_ready=True`;
+- load Exp 2910 `per_task_results`, candidate rows, and raw-response files, then
+  re-parse every candidate with Python AST before assigning taxonomy labels;
+- statically and orthogonally label invented or unavailable imports, undefined
+  names, invented attributes or methods, and invalid argument counts or
+  incompatible call signatures;
+- preserve Exp 2910 sandbox task-test outcomes so failures can be separated into
+  true assertion-test failures, syntax errors, runtime errors, and code
+  hallucination categories without rerunning live generation; and
+- write
+  `results/experiment_2911_code_hallucination_taxonomy_verifier_v1.json` with
+  per-candidate labels, category rates, grouped summaries by model, corpus, task,
+  and pass/fail status, verifier source paths, deterministic substrate metadata,
+  run date `20260523`, and measured duration.
+
+### SCENARIO-CODE-2911: Taxonomy Keeps Hallucination Categories Orthogonal
+
+Given the checked-in Exp 2910 artifact contains generated MBPP/HumanEval
+candidates with raw-response paths and sandbox task-test outcomes,
+When the Exp 2911 verifier parses each candidate and runs its static taxonomy
+checks,
+Then one candidate may carry multiple independent labels such as
+`invented_import`, `undefined_name`, `invented_attribute_or_method`, and
+`invalid_argument`, while assertion-only failures remain labeled as
+`true_test_failure`, and the terminal artifact reports rates and grouped
+summaries without fabricating missing upstream evidence.
+
 ### REQ-CODE-2890: MBPP/HumanEval Structural Dependency Verifier
 
 The repository shall provide a deterministic structural-dependency verifier for
@@ -1088,6 +1122,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2889 | Implemented |
 | REQ-CODE-2905 | Implemented (`python/carnot/eval/sota_code_generation_bounded_budget_expansion.py`) |
 | REQ-CODE-2910 | Implemented (`python/carnot/eval/sota_code_generation_corrigendum.py`) |
+| REQ-CODE-2911 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_verifier.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
