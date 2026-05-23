@@ -1074,6 +1074,39 @@ tasks with k=8 candidates per task, records pass@1/pass@k only from the nested
 sandbox outcomes, carries every candidate seed into `random_seeds_used`, and
 sets `failure_mode_analysis=null`.
 
+### REQ-CODE-2950: Code Taxonomy Repair Prompt Manifest
+
+The repository shall provide an Exp 2950 deterministic repair-prompt manifest
+builder for the post-.277 SOTA code-generation failure modes. The builder MUST:
+
+- require checked-in Exp 2940, Exp 2943, and Exp 2946 artifacts before emitting
+  a ready manifest, and block honestly when any prerequisite is absent;
+- aggregate failed and low-scoring candidate evidence from Exp 2946 and
+  code-corpus verifier artifacts without running live generation and without
+  claiming a pass-rate improvement;
+- define taxonomy labels and repair prompt templates for syntax errors,
+  missing symbols, wrong return type, failed tests, unsafe imports, and
+  unsupported API hallucinations;
+- map every taxonomy label to deterministic post-repair checks including parser
+  checks, tests where present, static import/name checks, and the Exp 2940
+  verifier threshold; and
+- write `results/experiment_2950_code_taxonomy_repair_prompt_manifest_v1.json`
+  with `honest_verdict`, `repair_prompt_manifest_ready`, `source_artifacts`,
+  `model_specs`, `legacy_models_only_for_smoke`, `taxonomy_labels`,
+  `repair_prompt_templates`, `deterministic_checks`, `downstream_eval_plan`,
+  `inference_substrate="aggregation_from_upstream_artifacts"`, and measured
+  `duration_s`.
+
+### SCENARIO-CODE-2950: Repair Manifest Uses Upstream Failures Without New Pass-Rate Claim
+
+Given the checked-in Exp 2940, Exp 2943, and Exp 2946 artifacts are present,
+When the Exp 2950 builder aggregates candidate failures and verifier gates,
+Then the artifact records sample IDs, taxonomy labels, repair templates,
+deterministic checks, acceptance criteria, mandated SOTA GGUF model specs, and
+a downstream live-evaluation plan while preserving
+`inference_substrate="aggregation_from_upstream_artifacts"` and making no
+claim that pass@1 or pass@k improved.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
@@ -1190,6 +1223,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2911 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_verifier.py`) |
 | REQ-CODE-2925 | Implemented (`python/carnot/eval/code_hallucination_taxonomy_provenance_corrigendum.py`) |
 | REQ-CODE-2946 | Implemented (`python/carnot/eval/sota_code_generation_continuation.py`) |
+| REQ-CODE-2950 | Implemented (`python/carnot/eval/code_taxonomy_repair_prompt_manifest.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

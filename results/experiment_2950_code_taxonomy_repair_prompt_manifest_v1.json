@@ -1,0 +1,353 @@
+{
+  "acceptance_criteria": [
+    "Every repair candidate must pass parser_ast_parse.",
+    "Rows with local tests must pass tests_where_present before acceptance.",
+    "Static import, name, and API checks must be clean for the assigned label.",
+    "Verifier approval must meet the Exp 2940 threshold >= 1.0000.",
+    "Downstream reports baseline and repaired pass metrics separately from this manifest."
+  ],
+  "artifact": "experiment_2950_code_taxonomy_repair_prompt_manifest_v1",
+  "deterministic_checks": [
+    {
+      "applies_to": [
+        "syntax_error",
+        "missing_symbol",
+        "wrong_return_type",
+        "failed_tests",
+        "unsafe_import",
+        "unsupported_api_hallucination"
+      ],
+      "check_id": "parser_ast_parse",
+      "description": "The repaired candidate must parse with Python ast.parse.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "syntax_error"
+      ],
+      "check_id": "function_extraction",
+      "description": "The repaired output must contain the expected entry-point function.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "missing_symbol",
+        "unsafe_import"
+      ],
+      "check_id": "static_import_name_checks",
+      "description": "Static import and name checks must find no unsafe imports or missing names.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "wrong_return_type"
+      ],
+      "check_id": "return_type_contract_probe",
+      "description": "Where a signature or oracle states a type, probes must return that type.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "failed_tests"
+      ],
+      "check_id": "tests_where_present",
+      "description": "Official or manifest-local tests must pass when the row provides tests.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "unsupported_api_hallucination"
+      ],
+      "check_id": "unsupported_api_static_attr_check",
+      "description": "Imported module attributes must exist on the supported local API surface.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "syntax_error",
+        "missing_symbol",
+        "wrong_return_type",
+        "failed_tests",
+        "unsafe_import",
+        "unsupported_api_hallucination"
+      ],
+      "check_id": "exp2940_verifier_threshold",
+      "description": "The code-corpus verifier score must meet the retained Exp 2940 threshold.",
+      "required": true,
+      "source_artifact": "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json",
+      "threshold": 1.0
+    }
+  ],
+  "downstream_eval_plan": {
+    "acceptance_criteria": [
+      "Every repair candidate must pass parser_ast_parse.",
+      "Rows with local tests must pass tests_where_present before acceptance.",
+      "Static import, name, and API checks must be clean for the assigned label.",
+      "Verifier approval must meet the Exp 2940 threshold >= 1.0000.",
+      "Downstream reports baseline and repaired pass metrics separately from this manifest."
+    ],
+    "blocked_reason": null,
+    "legacy_model_policy": "Legacy tiny models are allowed only for CPU smoke tests.",
+    "may_claim_this_manifest_improves_pass_rate": false,
+    "model_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "substrate_required_for_next_step": "live_sota_gguf_repair_evaluation"
+  },
+  "duration_s": 0.019473,
+  "failure_evidence_summary": {
+    "failed_tests": {
+      "evidence_count": 0,
+      "sample_ids": []
+    },
+    "missing_symbol": {
+      "evidence_count": 2,
+      "sample_ids": [
+        "MBPP:mbpp-56:c2:s2976",
+        "MBPP:mbpp-56:c7:s2981"
+      ]
+    },
+    "syntax_error": {
+      "evidence_count": 373,
+      "sample_ids": [
+        "MBPP:mbpp-11:c0:s2910",
+        "MBPP:mbpp-11:c1:s2911",
+        "MBPP:mbpp-11:c2:s2912",
+        "MBPP:mbpp-11:c3:s2913",
+        "MBPP:mbpp-11:c4:s2914"
+      ]
+    },
+    "unsafe_import": {
+      "evidence_count": 0,
+      "sample_ids": []
+    },
+    "unsupported_api_hallucination": {
+      "evidence_count": 0,
+      "sample_ids": []
+    },
+    "wrong_return_type": {
+      "evidence_count": 0,
+      "sample_ids": []
+    }
+  },
+  "honest_verdict": "complete: repair prompt manifest ready; no pass-rate improvement claimed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "legacy_models_only_for_smoke": true,
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "name": "Qwen3.6-35B-A3B-GGUF",
+      "role": "downstream_live_repair_generation"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "name": "gemma-4-31B-it-GGUF",
+      "role": "downstream_live_repair_generation"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "name": "gemma-4-26B-A4B-it-GGUF",
+      "role": "downstream_live_repair_generation"
+    }
+  ],
+  "repair_prompt_manifest_ready": true,
+  "repair_prompt_templates": {
+    "failed_tests": {
+      "required_context_fields": [
+        "sample_id",
+        "task_prompt",
+        "candidate_code",
+        "failure_evidence",
+        "deterministic_checks"
+      ],
+      "template": "Taxonomy label: failed_tests\nSample: {sample_id}\nFailure evidence: {failure_evidence}\nTask context: {task_prompt}\nCandidate code:\n{candidate_code}\nRepair focus: Use the failing assertion evidence to correct behavior, not formatting.\nReturn only corrected Python code. Do not introduce new imports unless the task already permits them. Preserve the public function signature and satisfy the listed deterministic checks.",
+      "template_id": "failed_tests_repair_v1"
+    },
+    "missing_symbol": {
+      "required_context_fields": [
+        "sample_id",
+        "task_prompt",
+        "candidate_code",
+        "failure_evidence",
+        "deterministic_checks"
+      ],
+      "template": "Taxonomy label: missing_symbol\nSample: {sample_id}\nFailure evidence: {failure_evidence}\nTask context: {task_prompt}\nCandidate code:\n{candidate_code}\nRepair focus: Define the missing local symbol or replace it with an existing variable.\nReturn only corrected Python code. Do not introduce new imports unless the task already permits them. Preserve the public function signature and satisfy the listed deterministic checks.",
+      "template_id": "missing_symbol_repair_v1"
+    },
+    "syntax_error": {
+      "required_context_fields": [
+        "sample_id",
+        "task_prompt",
+        "candidate_code",
+        "failure_evidence",
+        "deterministic_checks"
+      ],
+      "template": "Taxonomy label: syntax_error\nSample: {sample_id}\nFailure evidence: {failure_evidence}\nTask context: {task_prompt}\nCandidate code:\n{candidate_code}\nRepair focus: Repair only malformed Python structure, indentation, fences, or truncation.\nReturn only corrected Python code. Do not introduce new imports unless the task already permits them. Preserve the public function signature and satisfy the listed deterministic checks.",
+      "template_id": "syntax_error_repair_v1"
+    },
+    "unsafe_import": {
+      "required_context_fields": [
+        "sample_id",
+        "task_prompt",
+        "candidate_code",
+        "failure_evidence",
+        "deterministic_checks"
+      ],
+      "template": "Taxonomy label: unsafe_import\nSample: {sample_id}\nFailure evidence: {failure_evidence}\nTask context: {task_prompt}\nCandidate code:\n{candidate_code}\nRepair focus: Remove unsafe imports and replace side effects with pure local logic.\nReturn only corrected Python code. Do not introduce new imports unless the task already permits them. Preserve the public function signature and satisfy the listed deterministic checks.",
+      "template_id": "unsafe_import_repair_v1"
+    },
+    "unsupported_api_hallucination": {
+      "required_context_fields": [
+        "sample_id",
+        "task_prompt",
+        "candidate_code",
+        "failure_evidence",
+        "deterministic_checks"
+      ],
+      "template": "Taxonomy label: unsupported_api_hallucination\nSample: {sample_id}\nFailure evidence: {failure_evidence}\nTask context: {task_prompt}\nCandidate code:\n{candidate_code}\nRepair focus: Replace invented APIs with supported standard-library calls.\nReturn only corrected Python code. Do not introduce new imports unless the task already permits them. Preserve the public function signature and satisfy the listed deterministic checks.",
+      "template_id": "unsupported_api_hallucination_repair_v1"
+    },
+    "wrong_return_type": {
+      "required_context_fields": [
+        "sample_id",
+        "task_prompt",
+        "candidate_code",
+        "failure_evidence",
+        "deterministic_checks"
+      ],
+      "template": "Taxonomy label: wrong_return_type\nSample: {sample_id}\nFailure evidence: {failure_evidence}\nTask context: {task_prompt}\nCandidate code:\n{candidate_code}\nRepair focus: Keep the original signature and return the expected type directly.\nReturn only corrected Python code. Do not introduce new imports unless the task already permits them. Preserve the public function signature and satisfy the listed deterministic checks.",
+      "template_id": "wrong_return_type_repair_v1"
+    }
+  },
+  "required_artifact_fields": [
+    "honest_verdict",
+    "repair_prompt_manifest_ready",
+    "source_artifacts",
+    "model_specs",
+    "legacy_models_only_for_smoke",
+    "taxonomy_labels",
+    "repair_prompt_templates",
+    "deterministic_checks",
+    "downstream_eval_plan",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.code_taxonomy_repair_prompt_manifest.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json",
+      "present": true,
+      "required": true,
+      "role": "code_corpus_verifier_threshold",
+      "sha256": "3edd2cdb8f6295670aba334081230d7f60d2c42d7046e65da9fbcb25b4b9181f"
+    },
+    {
+      "path": "results/experiment_2943_cross_corpus_matrix_v11.json",
+      "present": true,
+      "required": true,
+      "role": "cross_corpus_matrix_status",
+      "sha256": "be54eae8e45a7ff27e9a77ef668f39bfd5ba4410f2b94ce0a31091ed6b153d46"
+    },
+    {
+      "path": "results/experiment_2946_sota_code_generation_continuation_v1.json",
+      "present": true,
+      "required": true,
+      "role": "sota_codegen_continuation",
+      "sha256": "3b7a2b3fdf1200c26dc7b2e76a77542897eb24ff600f9bdebdc5c2a075b39a45"
+    },
+    {
+      "path": "results/experiment_2946_nested_exp2910_protocol.json",
+      "present": true,
+      "required": false,
+      "role": "exp2946_nested_candidate_rows",
+      "sha256": "8cb4d2fbfe1bf33d7aa496add339141380a54e373455cf9785830e9374b9bf13"
+    }
+  ],
+  "taxonomy_labels": [
+    {
+      "description": "Candidate cannot be parsed as Python after extraction.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "function_extraction"
+      ],
+      "evidence_count": 373,
+      "evidence_status": "observed_in_exp2946",
+      "label": "syntax_error",
+      "sample_ids": [
+        "MBPP:mbpp-11:c0:s2910",
+        "MBPP:mbpp-11:c1:s2911",
+        "MBPP:mbpp-11:c2:s2912",
+        "MBPP:mbpp-11:c3:s2913",
+        "MBPP:mbpp-11:c4:s2914"
+      ]
+    },
+    {
+      "description": "Candidate references a name that is not defined in scope.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "static_import_name_checks"
+      ],
+      "evidence_count": 2,
+      "evidence_status": "observed_in_exp2946",
+      "label": "missing_symbol",
+      "sample_ids": [
+        "MBPP:mbpp-56:c2:s2976",
+        "MBPP:mbpp-56:c7:s2981"
+      ]
+    },
+    {
+      "description": "Candidate returns a value incompatible with the task contract.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "return_type_contract_probe"
+      ],
+      "evidence_count": 0,
+      "evidence_status": "template_defined_no_upstream_sample",
+      "label": "wrong_return_type",
+      "sample_ids": []
+    },
+    {
+      "description": "Candidate parses and runs, but deterministic task tests fail.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "tests_where_present"
+      ],
+      "evidence_count": 0,
+      "evidence_status": "template_defined_no_upstream_sample",
+      "label": "failed_tests",
+      "sample_ids": []
+    },
+    {
+      "description": "Candidate imports or reaches unsafe local-system functionality.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "static_import_name_checks"
+      ],
+      "evidence_count": 0,
+      "evidence_status": "template_defined_no_upstream_sample",
+      "label": "unsafe_import",
+      "sample_ids": []
+    },
+    {
+      "description": "Candidate calls an invented or unsupported API surface.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "unsupported_api_static_attr_check"
+      ],
+      "evidence_count": 0,
+      "evidence_status": "template_defined_no_upstream_sample",
+      "label": "unsupported_api_hallucination",
+      "sample_ids": []
+    }
+  ],
+  "tests_run": [],
+  "upstream_metrics": {
+    "code_corpus_auprc": 0.8888888888888888,
+    "cross_corpus_code_auprc": 0.8888888888888888,
+    "pass_at_1": 0.06,
+    "pass_at_k": 0.16
+  }
+}
