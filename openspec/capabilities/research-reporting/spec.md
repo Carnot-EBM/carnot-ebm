@@ -5530,3 +5530,80 @@ corpus AUPRC/base-rate validation.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2936 | Implemented (`python/carnot/reporting/capstone_v276_2936.py`) | Implemented (`tests/python/test_experiment_2936_capstone_v276.py`) |
+
+### REQ-REPORT-2937: Archive Milestone 2026.05.276 and Confirm 2026.05.277 Activation
+
+The repository shall provide an Exp 2937 archive/activation generator that
+writes `results/experiment_2937_archive_v276_activate_v277.json`.
+
+The generator MUST first require
+`results/experiment_2936_capstone_v276.json`. If that capstone is absent or
+malformed, it MUST write a terminal artifact with
+`honest_verdict="blocked_capstone_missing"` and MUST NOT modify
+`research-complete.yaml`, `research-roadmap.yaml`, or
+`scripts/research_conductor.py`.
+
+When the capstone is present, the generator MUST read
+`research-complete.yaml` and determine whether milestone `2026.05.276` already
+has a completed archive block. If the block is present, the generator MUST set
+`archive_ready=true` without modifying `research-complete.yaml`. If the block
+is absent, the generator MAY append a minimal completed archive row for
+milestone `2026.05.276` from `results/experiment_2936_capstone_v276.json`
+without modifying `research-roadmap.yaml`.
+
+The generator MUST confirm milestone `2026.05.277` from
+`research-roadmap-next.yaml` when that file exists. If
+`research-roadmap-next.yaml` has already been activated and removed, it MUST
+read the active `research-roadmap.yaml` as a fallback while still leaving that
+roadmap unmodified.
+
+The terminal artifact MUST include:
+
+- `honest_verdict`, equal to
+  `complete: archive_ready=true; archived_milestone=2026.05.276; activated_milestone=2026.05.277`
+  on successful archival
+- `archive_ready`
+- `archived_milestone`, equal to `2026.05.276`
+- `activated_milestone`, equal to `2026.05.277`
+- `capstone_source`, equal to `results/experiment_2936_capstone_v276.json`
+- `paper_ready_from_capstone`
+- `clean_artifacts_from_capstone`
+- `flagged_artifacts_from_capstone`
+- `blocked_artifacts_from_capstone`
+- `missing_artifacts_from_capstone`
+- `pilot_only_artifacts_from_capstone`
+- `artifact_classification_counts_from_capstone`
+- `capstone_honest_verdict`
+- `field_principles.honest_verdict`, equal to
+  `Self-declared terminal state per Verdict Terminal-Prefix Discipline.`
+- `inference_substrate`, equal to `aggregation_from_upstream_artifacts`
+- `duration_s`, a real wall-clock duration for the archive generator run
+- `run_date`, equal to `20260523`
+
+The generator MUST copy required classification lists directly from the capstone
+without reclassification or imputation. It MAY include additional capstone
+summary fields, such as projection-only artifacts and headline readiness
+booleans, as long as they remain direct aggregation from the capstone.
+
+#### SCENARIO-REPORT-2937: Existing .276 Archive Confirms Active .277 Roadmap
+
+**Given** `research-complete.yaml` already contains a completed
+`2026.05.276` archive row
+**And** `research-roadmap-next.yaml` may already have been activated into
+`research-roadmap.yaml`
+**When** the Exp 2937 archive generator runs
+**Then** it writes
+`results/experiment_2937_archive_v276_activate_v277.json` with
+`archive_ready=true`, `archived_milestone=2026.05.276`,
+`activated_milestone=2026.05.277`, paper readiness, clean artifact, flagged
+artifact, blocked artifact, missing artifact, pilot-only artifact,
+classification-count, capstone-verdict, field-principle, and duration fields
+copied or derived from `results/experiment_2936_capstone_v276.json`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and no modification
+to `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-2937)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2937 | Implemented (`python/carnot/reporting/milestone_276_archive_277_activation.py`) | Implemented (`tests/python/test_experiment_2937_archive_v276.py`) |
