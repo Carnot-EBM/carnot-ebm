@@ -19476,3 +19476,50 @@ headline benchmark-performance claim.
 **Implementation Status:** Implemented (Exp 2891)
 
 **Spec traces:** REQ-VERIFY-2891, SCENARIO-VERIFY-2891, Exp 2891
+
+## REQ-VERIFY-2920: OpenComputer-Style Local State Verifier Harness
+
+**Capability:** verifiable-reasoning / deterministic agentic state verification
+
+Carnot SHALL provide an Exp 2920 local state-verifier harness that models the
+OpenComputer verification pattern with deterministic app-specific state
+verifiers, auditable partial credit, and failure localization instead of any
+LLM judge.
+
+**Requirements:**
+
+- REQ-VERIFY-2920-1: The harness SHALL define 3-5 tiny local software-world
+  tasks with observable state surfaces such as JSON files, SQLite rows, or
+  filesystem contents.
+- REQ-VERIFY-2920-2: Each task verifier SHALL return deterministic
+  partial-credit fields, including pass/fail, score, earned points, max points,
+  per-check outcomes, and localized failure details.
+- REQ-VERIFY-2920-3: The harness SHALL evaluate both golden success states and
+  negative states for every task, reporting golden pass rate and negative
+  reject rate without using an LLM judge.
+- REQ-VERIFY-2920-4: The harness SHALL write a future-consumable task manifest
+  schema that records task instructions, observable state contracts, verifier
+  entrypoints, and check-level partial-credit metadata.
+- REQ-VERIFY-2920-5: The artifact
+  `results/experiment_2920_opencomputer_style_state_verifier_harness_v1.json`
+  SHALL include `honest_verdict`, `state_verifier_harness_ready`,
+  `task_manifest_path`, `n_state_tasks`, `verifier_source_paths`,
+  `golden_state_pass_rate`, `negative_state_reject_rate`,
+  `partial_credit_fields`, `failure_localization_examples`,
+  `llm_judge_used=false`,
+  `inference_substrate="deterministic_state_verifier"`, measured `duration_s`,
+  and `run_date="20260523"`.
+
+### SCENARIO-VERIFY-2920: Golden And Negative States Are Verified Deterministically
+
+**Given** the Exp 2920 manifest of tiny local software-world tasks
+**When** the harness materializes golden and negative task states
+**Then** every golden state is accepted by its deterministic verifier
+**And** every negative state is rejected with check-level partial credit and
+localized failure details
+**And** the deliverable JSON records the manifest path, verifier source paths,
+state-task count, pass/reject rates, and `llm_judge_used=false`.
+
+**Implementation Status:** Proposed (Exp 2920)
+
+**Spec traces:** REQ-VERIFY-2920, SCENARIO-VERIFY-2920, Exp 2920
