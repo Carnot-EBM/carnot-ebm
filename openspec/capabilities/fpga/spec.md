@@ -1258,3 +1258,57 @@ for downstream aggregation, and writes paper text that scopes the claim to the
 matched n=64 sparse Ising workload only.
 
 **Implementation status:** Implemented (Exp 2913)
+
+---
+
+### REQ-HW-066
+
+**Title:** Exp 2914 GateMate toolchain preflight MUST record exact tool paths and stop before synthesis or flash
+
+**Description:**
+Experiment 2914 MUST run a diagnostic-only preflight for the GateMate A1-EVB-2M
+n=16 Ising tile. The preflight MUST check `command -v yosys`,
+`command -v nextpnr-gatemate`, and `command -v openFPGALoader`, search common
+OSS-CAD-Suite locations under the repository and the operator home directory,
+run version commands for detected executables, confirm whether the n=16 GateMate
+RTL source and explicit constraint files are present, and write
+`results/experiment_2914_gatemate_toolchain_preflight_v2.json`. The preflight
+MUST NOT run synthesis, place-and-route, gmpack packing, openFPGALoader board
+programming, or any flash command. If `nextpnr-gatemate` is absent, the artifact
+MUST emit `honest_verdict="blocked_gatemate_toolchain_missing"` with
+`missing_toolchain` naming the absent executable.
+
+**Acceptance criteria:**
+- The artifact includes `honest_verdict`, `gatemate_toolchain_ready`,
+  `yosys_path`, `yosys_version`, `nextpnr_gatemate_path`,
+  `nextpnr_gatemate_version`, `openfpgaloader_path`,
+  `openfpgaloader_version`, `missing_toolchain`, `rtl_sources_present`,
+  `constraints_present`, `no_flash_attempted=true`, `inference_substrate`,
+  `duration_s`, and `run_date="20260523"`.
+- `gatemate_toolchain_ready` is true only when `yosys`, `nextpnr-gatemate`,
+  and `openFPGALoader` are all detected.
+- Missing `nextpnr-gatemate` yields
+  `honest_verdict="blocked_gatemate_toolchain_missing"` and an otherwise
+  successful diagnostic exit.
+- The artifact records any detected modern GateMate alternatives such as
+  `nextpnr-himbaechel` or `gmpack` without treating them as the requested
+  `nextpnr-gatemate` executable.
+
+**Implementation status:** Pending (Exp 2914)
+
+---
+
+### SCENARIO-HW-066
+
+**Scenario:** GateMate preflight emits an honest blocked artifact when the legacy nextpnr binary is absent.
+
+**Given:** The n=16 GateMate RTL exists and `yosys` plus `openFPGALoader` are
+available, but `nextpnr-gatemate` is absent from PATH and common
+OSS-CAD-Suite locations.
+**When:** Exp 2914 runs the diagnostic preflight.
+**Then:** It writes the v2 preflight JSON with exact detected paths and
+versions, `missing_toolchain=["nextpnr-gatemate"]`,
+`honest_verdict="blocked_gatemate_toolchain_missing"`, and
+`no_flash_attempted=true`.
+
+**Implementation status:** Pending (Exp 2914)
