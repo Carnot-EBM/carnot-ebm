@@ -6027,3 +6027,4 @@ Ripgrep i |
 | 2026-05-23 05:40 UTC | PolarFire SoC Carnot Dispatch Smoke v1 | OK | 81 passed in 3.66s |
 | 2026-05-23 06:24 UTC | THRML Local Import Repair + Reattempt Smoke v3 | OK | 81 passed in 3.09s |
 | 2026-05-23 06:38 UTC | Cross-Corpus Matrix v8 — Incorporate .273 Code-Ver | OK | 81 passed in 3.45s |
+| 2026-05-23 06:49 UTC | Paper v6 Hardware Validation Section v1 | OK | 81 passed in 3.79s |
