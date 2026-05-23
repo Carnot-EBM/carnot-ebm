@@ -175,6 +175,33 @@ field-principle notes, local and global error bounds inherited from Exp 2876;
 sets `hardware_execution_claim_made=false` and `analog_kan_claim_made=false`;
 and contains every required schema field.
 
+## REQ-KAN-2904: KV260-Anchored KAN Hardware Complexity Accounting V2
+
+The KAN verification tier SHALL provide an Exp 2904 accounting pass that
+aggregates completed upstream artifacts instead of running new synthesis or
+board commands. The pass MUST read the tiny KAN node count from the Exp 2893 KAN
+PWA/MILP accounting artifact and the KV260 LUT, BRAM, and DSP utilization counts
+from the Exp 2898 bitstream/report evidence. It MUST write
+`results/experiment_2904_kan_hardware_complexity_accounting_v2.json` with:
+`honest_verdict`, `inference_substrate`, `kan_node_count`, `kv260_lut_used`,
+`kv260_bram_used`, `kv260_dsp_used`, `scaling_estimate_to_next_size`,
+`cited_upstream_artifacts`, and `duration_s`.
+
+The artifact MUST set
+`inference_substrate="aggregation_from_upstream_artifacts"` and MUST explicitly
+state that the scaling estimate is a conservative proxy derived from upstream
+KV260 bitstream utilization, not a KAN synthesis, timing-closure, or new board
+execution claim.
+
+### SCENARIO-KAN-2904: KV260 Utilization Refines KAN Scaling Estimate
+
+Given the completed Exp 2893 KAN accounting artifact and the Exp 2898 KV260
+bitstream/utilization evidence,
+When the Exp 2904 aggregation helper runs,
+Then the artifact records the Exp 2893 KAN node count, the Exp 2898 KV260 LUT,
+BRAM, and DSP counts, a deterministic next-size scaling estimate, the cited
+upstream artifact paths and checksums, and every required schema field.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
