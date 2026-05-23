@@ -218,6 +218,44 @@ an honest verdict prefix accepted by the conductor.
 
 **Spec traces:** REQ-BENCH-1540
 
+### REQ-BENCH-2931: LLMEval-Logic-Style Local GGUF Z3 Mini Benchmark
+
+Carnot MUST provide a bounded LLMEval-Logic-style mini benchmark that asks
+mandated local GGUF models to translate natural-language logic items into a
+structured formalization JSON, converts parseable formalizations into Z3, and
+reports parseability, Z3 execution, answer correctness, and semantic
+faithfulness as separate metrics.
+
+The benchmark MUST call `cached_sota_pair(gpu_indices=(0, 1))` before any
+fallback resolution and MUST only treat outputs from one of the mandated SOTA
+GGUF model IDs as headline live inference.  If no mandated GGUF is cached, the
+artifact MUST be honest and blocked rather than substituting legacy tiny
+models.
+
+**Acceptance criteria:**
+- The item pack contains 12-20 logic items with gold answers and Z3-checkable
+  gold formalizations, either loaded from a local LLMEval-Logic cache or
+  clearly marked as a forward-authored LLMEval-Logic-style fixture.
+- Each model prompt requests exactly one structured formalization JSON object.
+- The evaluator separately records parseability, Z3 execution, answer
+  accuracy, and rubric-like semantic faithfulness.
+- The artifact includes a reproducibility checksum over items, prompts,
+  model specs, raw outputs, parsed formulas, and Z3 results.
+- `logic_verifier_mini_ready=true` only when mandated live GGUF inference
+  produces at least one usable row and Z3 executes on every parsed row.
+
+### SCENARIO-BENCH-2931: Formalized Logic Answers Are Checked By Z3
+
+**Given** a bounded natural-language logic item with facts, Horn-style rules,
+mutual exclusions, a query, and a gold modal answer
+**When** a mandated local GGUF emits structured formalization JSON
+**Then** Carnot parses the JSON, checks whether the query is possible and
+necessary with Z3, derives the solver answer, compares it with the model answer
+and the gold answer, and records semantic faithfulness separately from syntax
+and Z3 execution.
+
+**Spec traces:** REQ-BENCH-2931
+
 ### REQ-BENCH-1536: SATQuest CNF Verifier Benchmark
 
 Carnot MUST provide a bounded SATQuest-style CNF verifier benchmark that
