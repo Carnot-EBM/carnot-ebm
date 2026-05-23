@@ -1122,6 +1122,47 @@ AND the Exp 2841 artifact sets `submission_package_ready == false` and
 AND no placeholder values such as `<peer>` or carry-forward Exp 2825/2833
 values are inserted.
 
+### REQ-PUBLISH-035: Exp 2903 Paper-v6 Hardware Validation Section v1
+
+The Exp 2903 paper-v6 hardware-validation section builder MUST read
+`results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json`
+and stage a standalone LaTeX subsection at
+`docs/arxiv-paper/sections/hardware-validation-v1.tex` without adding an
+`\input` to `docs/arxiv-paper/main.tex`. The subsection MUST include the KV260
+board identity, bitstream SHA256, loaded overlay name, `n_spins`, per-seed
+median and p95 latencies, and an explicit disclosure that no same-basis CPU
+comparison or FPGA speedup claim is available yet.
+
+The builder MUST fail closed unless the Exp 2898 artifact exists, its
+`honest_verdict` starts with `complete:` or `success:`, all checked
+preconditions are available, and no sample or acceptance gate reports failure.
+It MUST write
+`results/experiment_2903_paper_v6_hardware_validation_section_v1.json` with
+`honest_verdict`, `inference_substrate="aggregation_from_upstream_artifacts"`,
+`latex_snippet_path`, `kv260_latency_cited_p50_us`,
+`kv260_latency_cited_p95_us`, `bitstream_sha256_cited`,
+`cited_upstream_artifacts`, and `duration_s`.
+
+### SCENARIO-PUBLISH-035: KV260 Artifact Stages Hardware Validation Snippet
+
+**Given** Exp 2898 completed successfully with available board preconditions,
+zero failed samples, and three n=64 per-seed latency rows
+**When** the Exp 2903 builder runs
+**Then** it writes the standalone hardware-validation subsection with the
+source-derived KV260 board, overlay, bitstream, spin-count, median, and p95
+values
+AND writes the Exp 2903 JSON artifact with a `complete:` verdict and upstream
+artifact provenance
+AND leaves `docs/arxiv-paper/main.tex` unchanged.
+
+### SCENARIO-PUBLISH-035B: Failed Upstream Gate Blocks The Snippet
+
+**Given** Exp 2898 is missing, non-terminal, has unavailable preconditions, or
+contains failed samples or failed acceptance-gate status
+**When** the Exp 2903 builder runs
+**Then** it writes a blocked Exp 2903 JSON artifact
+AND does not create or update the LaTeX snippet.
+
 
 ## Implementation Status
 
@@ -1157,6 +1198,7 @@ values are inserted.
 | REQ-PUBLISH-032 | Implemented | Exp 2826 milestone .267 multi-corpus capstone synthesis artifact |
 | REQ-PUBLISH-033 | Planned | Exp 2833 paper-v6 multi-corpus table v2 |
 | REQ-PUBLISH-034 | Planned | Exp 2841 paper-v6 multi-corpus table v3 |
+| REQ-PUBLISH-035 | Planned | Exp 2903 paper-v6 hardware-validation snippet |
 
 ### REQ-PUBLISH-026: HuggingFace Publish Retry
 The experiment 1750 huggingface retry runner MUST attempt to upload the smallest model in models/ with a no-emoji model card. If credentials pass, it MUST upload and record hf_upload_succeeded = True. If blocked, it MUST emit an honest verdict of "blocked_credentials".
