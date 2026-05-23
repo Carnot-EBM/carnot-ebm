@@ -4,50 +4,49 @@
 # docs_audit_report — 2026-05-23
 
 ## TL;DR (stranger's 30-second take)
-A stranger would likely close the tab. While the hero clearly explains the tool's purpose, the page quickly devolves into an internal project dashboard flooded with unexplained acronyms, contradictory baseline claims, and suspiciously perfect numbers that trigger immediate skepticism.
+I'd close the tab. The page buries a great core premise under defensive internal project-management copy, obscure internal dataset acronyms, and raw file paths, making it feel like a leaked internal CI status board rather than a public tool.
 
 ## TOP 3 PROBLEMS
-1. Inconsistent HumanEval claims across the page (+3 points vs +36 points vs +72 points).
-2. Bleed-over of internal project ops/narrative into user-facing copy ("operator-initiated upload", "Research operations").
-3. Heavy internal jargon used as load-bearing nouns (PREM, TTC, FoVer, CCTU, VeriCoT).
+1. **Raw internal artifacts exposed as copy:** The Live Benchmark card dumps a raw file path (`@results/citation_hallucination...txt`) right into a headline result.
+2. **Defensive, internal narrative:** The intro to the Results section ("checked-in experiment artifact", "labeled by provenance") reads like a defensive retrospective rather than external marketing copy.
+3. **Massive metric inconsistency:** The `Code` feature card claims repair pushes pass-rate up by +3 points, but the `Code repair` result card claims a suspiciously perfect +72 points (8% -> 80%).
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — cap at 6 (a stranger won't read 12 dense benchmark cards).
-- Blog section — 6 cards — cap at 3 (takes up too much vertical space and attention for a landing page).
+- **Page-wide card density** — 25 total cards (7 features, 12 results, 6 blog) — Cap at ~15 total. The sheer volume guarantees a stranger will skim and absorb none of them.
+- **Results section grid** — 12 result cards — Cap at 6 of the most universally recognizable, high-impact metrics.
 
 ### Internal jargon
-- Hero card — "FoVer step-error corpus" — an outsider does not know what FoVer is.
-- Features grid — "PREM", "TTC", "CCTU constrained tool-use micro-benchmark" — unexplained niche acronyms.
-- Results grid — "SVAMP", "VeriCoT", "PRM-BiasBench-style", "HalluGuard v3" — insider benchmark soup.
+- **Live benchmark result card** — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — This is a raw internal filesystem path that means absolutely nothing to an external reader.
+- **Hero Stats & Recent progress** — "HIVE peer", "FoVer step-error corpus" — Undefined internal datasets and competitor aliases.
+- **Test-Time Compute feature card** — "PREM" — Acronym dropped with no explanation of what a Process-Reward Energy Model actually is or does for the user.
+- **Adversarial audit result card** — "PRM-BiasBench-style attacks" — Obscure benchmarking jargon.
 
 ### Per-milestone narrative
-- Features grid / Research operations card — Describes Carnot's internal CI loop ("an adversarial-verify pass catches fabricated... artifacts") in a section pitching what the *user* can check.
-- Preprint section — "pending operator-initiated upload" — robotic, internal status-reporting language.
-- Blog section — "639 experiments self-verified. 65 brace bugs auto-fixed... What 26 days of running Carnot on its own development tells us" — reads like an internal sprint retrospective.
+- **Results section intro** — "Every number below is backed by a checked-in experiment artifact... synthetic-pilot, and adversarial-audit rows are labeled by provenance." — Reads exactly like an internal audit checklist or defensive PR description.
+- **Blog section cards** — "The three-layer defense we shipped", "the seven-rule detector we shipped to stop it" — Reads like copy-pasted sprint retrospectives.
+- **Research operations feature card** — "Carnot is developed through an autonomous research loop..." — CI/CD internal process masquerading as a user-facing feature.
 
 ### Inconsistencies
-- HumanEval improvement claims: The "Code" feature card claims a **+3.0 points** increase. The Results grid claims **+72pp** (8% -> 80%) on "IterativeSelfRepair (HumanEval-50)", and another card claims **+36pp** (0% -> 36%) on a "Live benchmark". 
-- Hero AUROC vs Results AUROC: The Hero boasts a **0.9857 AUROC**, but the Results grid shows a **0.91 AUROC** (Safety) and **0.90 AUC** (Math reasoning). It's confusing why the headline number is so much higher than the specific component numbers.
+- **HumanEval repair pass-rate vs Code feature card** — The `Features > Code` card claims repair pushes pass-rate up by 3 points (HumanEval), but the `Results > Code repair` card claims an "8% -> 80% pass rate (+72pp)" on HumanEval-50. A stranger will immediately spot the massive contradiction between +3 and +72 points.
+- **Global AUROC vs Specific AUROCs** — The Hero claims a global "0.9857 Verifier AUROC", but the Results section lists "0.91 AUROC" for safety and "0.90 AUC" for math without clarifying what the 0.9857 actually applies to.
 
 ### Missing essentials
-- Why should I trust the numbers? The text claims everything is backed by artifacts, but there are no links to these artifacts or methodology details. The presence of suspiciously perfect numbers without these links undermines trust.
-- Who maintains it? The footer mentions "Ian Blenke", but there is no "About" section or team context to establish credibility for a stranger.
+- **Trust anchors / Why should I trust the numbers?** — The page defends its numbers by saying they are "backed by a checked-in experiment artifact" and "labeled by provenance", which is internal CI/CD trust ("we checked our homework into git"). There is no external third-party or clear standardized benchmarking trust established.
 
 ### Fabrication signals
-- Results grid: Math extraction TP rate goes from 0.5 -> **1.0** (Perfect score without a sample size).
-- Results grid: Adversarial audit ensemble catches **60/60** attacks (100% perfect catch rate on adversarial attacks).
-- Results grid: Training retrain achieves exactly **2.0x** speedup with "identical losses" (Perfect scaling is rarely seen in reality without overhead).
-- Blog section: "**Zero** false positives" out of 639 experiments.
+- **Math extraction result card** — "TP rate: 0.5 -> 1.0" — A perfect 1.0 (100%) extraction rate is highly suspicious for LLM parsing without caveats.
+- **Adversarial audit result card** — "catches 60/60 attacks" — A suspiciously perfect 100% score on a very small (n=60) sample size.
+- **Dogfooding blog card** — "Zero false positives" — Impossible-sounding perfection for code constraint analysis.
 
 ## WHAT'S WORKING
-- The hero section clearly and effectively states what the project does ("Catch the mistakes your LLM confidently makes up.") and provides the install command right away.
-- The Quickstart section with the Python/Rust tabs is excellent, showing concrete API usage in just a few lines without fluff.
+- The core hero messaging ("Catch the mistakes your LLM confidently makes up.") is excellent. It explains the exact value proposition in plain English in one sentence.
+- The Quickstart section effectively uses tabbed code blocks to prove the tool is real and easy to integrate in just a few lines of Python.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Unify the HumanEval claims into a single defensible metric, or clearly explain the difference between the +3.0, +36, and +72 claims so they don't look contradictory.
-2. Remove the "Research operations" card from the Features grid, as it describes internal project mechanics rather than a user-facing feature.
-3. Replace all internal jargon (FoVer, CCTU, PREM, TTC) with descriptive English, or drop the cards if they can't be simplified.
-4. Provide immediate sample sizes or context for the "1.0", "60/60", and "2.0x" claims to remove the fabrication smell.
-5. Trim the Results grid to the 6 most impactful cards.
-6. Rewrite "pending operator-initiated upload" to standard human copy (e.g., "Preprint draft available below").
+1. Remove the raw file path (`@results/...`) from the Live benchmark result card and replace it with a clean model name and metric.
+2. Reconcile the conflicting HumanEval claims to present a single, honest repair metric (is it +3 or +72?).
+3. Rewrite the Results section introduction to remove internal defensive language (provenance, checked-in artifacts) and simply state what was measured.
+4. Prune the 12 result cards down to the top 6 most universally understood metrics.
+5. Replace internal benchmark acronyms (FoVer, HIVE, PREM) with descriptive, generic terms.
+6. Remove the "Research operations" feature card entirely; your internal CI loop is not a capability for the user of the tool.

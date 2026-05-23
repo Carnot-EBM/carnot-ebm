@@ -15294,3 +15294,80 @@ Intelligence/Kona updates.
   no local API, artifact, or reproducible benchmark was found. Relevance to
   Carnot: avoid Kona performance claims; keep Carnot evidence local and
   verifier-grounded.
+
+## 2026-05-23 Post-.277 Planning Sweep (Milestone 2026.05.278)
+
+This sweep was run after `.277` completed with `paper_ready=true`,
+`headline_outcome=narrow`, KV260 MMD distinguishability confirmed,
+same-schedule KV260 speedup below 1.0 at n=64, code-corpus AUPRC retained at
+0.8889, SOTA code-generation pass@1 still low at 0.0600, FR-11 replay
+curriculum piloted, PolarFire 500-clause scoring hash-verified, and GateMate
+still lacking a flashed Carnot Ising tile. Searches covered arXiv, OpenReview,
+Hugging Face papers, GitHub discovery, Extropic/THRML public pages, Semantic
+Scholar/EBT and ARM-EBM discovery paths, and Logical Intelligence/Kona public
+coverage.
+
+- **arXiv:2605.13076 - "TruncProof: A Guardrail for LLM-based JSON Generation
+  under Token-Length Constraints"**: Uses LL(1)-parser completion budgeting so
+  JSON outputs remain syntactically valid under hard token limits. Relevance to
+  Carnot: directly supports bounded certificate and repair-manifest emission
+  from local GGUF models; `.278` should prefer grammar/token-budget structure
+  before asking for more samples.
+
+- **GitHub discovery - `guidance-ai/llguidance` v1 local structured decoding**:
+  Supports JSON schema, regex, and CFG masks with llama.cpp, vLLM, SGLang,
+  mistral.rs, and other local runtimes. Relevance to Carnot: practical
+  local-first constrained-output substrate for the mandated Qwen/Gemma GGUF
+  models; `.278` should test whether structured candidate manifests reduce
+  syntax and schema failures in the code-generation row.
+
+- **MAZE adaptive constrained code generation whitepaper/project**: Frames code
+  generation as a hierarchy of syntactic, type, semantic, and contextual
+  constraints before decoding, with validator feedback and persistent learning.
+  Relevance to Carnot: matches the `.277` gap exactly: verifier AUPRC is strong,
+  but generation pass@1 is poor. The next experiment should convert taxonomy
+  signals into repair/generation constraints rather than only measuring failures.
+
+- **arXiv:2507.07731 - "Energy-Guided Decoding for Object Hallucination
+  Mitigation"** and **OpenReview ICLR 2026 - "Spilled Energy in Large Language
+  Models"**: Recent energy telemetry methods keep converging on training-free
+  logit/hidden-state energy as a localization signal for hallucination-prone
+  outputs. Relevance to Carnot: useful as diagnostic/triage signals for failed
+  code candidates, but prior Carnot Spilled Energy rows were not headline-clean;
+  use these as supporting telemetry, not as paper-v6 headline evidence.
+
+- **arXiv:2602.03461 - "Soft-Radial Projection for Constrained End-to-End
+  Learning"**: Provides a differentiable feasible-set reparameterization that
+  preserves gradient signal better than hard boundary projection. Relevance to
+  Carnot: informs future KAEM/FR-11 continuous adaptation where constraint
+  satisfaction must remain strict without stalling learning; `.278` can include
+  this as a design note in utility-gated replay rather than a full neural-layer
+  build.
+
+- **"Lagrange oscillatory neural networks for constraint satisfaction and
+  optimization" (Neuromorphic Computing and Engineering 2025 / arXiv:2505.07179)**:
+  Adds Lagrange oscillators to guide Ising/oscillatory systems toward feasible
+  states on Max-3-SAT. Relevance to Carnot: useful design analogue for GateMate
+  and PolarFire constraint scorer follow-ups, especially feasibility-first
+  energy accounting; `.278` should keep hardware claims as hash/timing/smoke
+  evidence only.
+
+- **Extropic TSU / THRML public status**: Extropic continues to frame TSUs as
+  sampling units for programmable EBM/PGM distributions, with XTR-0 as the
+  research platform and Z1 as early-access 2026; THRML remains the public
+  simulator path. Relevance to Carnot: no direct hardware access was found, so
+  `.278` should avoid TSU/Z1 performance claims and keep local hardware work on
+  KV260, GateMate, and PolarFire.
+
+- **Logical Intelligence Kona public coverage**: Kona remains a useful north
+  star for non-autoregressive, globally scored, self-correcting energy-based
+  reasoning in certified domains, with public claims around Sudoku demos and
+  industrial pilots. Relevance to Carnot: architecture context only. `.278`
+  should emulate the solver/orchestrator separation locally with verifiers and
+  not cite Kona performance as Carnot evidence.
+
+- **Semantic Scholar / EBT and ARM-EBM watch**: Discovery searches did not find
+  a new planning-grade citation cluster beyond the already tracked EBT
+  (arXiv:2507.02092) and ARM-EBM (arXiv:2512.15605) items. Relevance to
+  Carnot: continue treating them as theory context for energy minimization and
+  ARM/EBM equivalence; do not trigger a new EBT training milestone yet.
