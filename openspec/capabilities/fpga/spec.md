@@ -1600,3 +1600,58 @@ approximately-Boltzmann claim only when all three seed-level MMD and KS p-values
 are at least 0.01.
 
 **Implementation status:** Implemented (Exp 2938)
+
+---
+
+### REQ-HW-072
+
+**Title:** Exp 2939 CPU synchronous-parallel same-schedule baseline MUST replace the invalid sequential-Gibbs speedup comparison
+
+**Description:**
+Experiment 2939 MUST read the completed Exp 2898 KV260 latency artifact and the
+Exp 2912 CPU sequential-Gibbs baseline artifact before computing any speedup
+verdict. It MUST regenerate and checksum-verify the same n=64 Exp 2898 Ising
+problems, run a CPU synchronous-parallel Glauber updater with the same
+even/odd checkerboard schedule used by the KV260 path, and collect 10,000
+fixed-budget energy samples for each Exp 2898 seed without early termination.
+The run MUST record high-precision per-sample CPU wall-clock timing, compare
+the CPU timing against the cited KV260 24.0 us/sample timing, and emit a
+paper-v6 recommendation that retracts the prior speedup claim whenever the
+same-schedule CPU is faster at n=64.
+
+**Acceptance criteria:**
+- `results/experiment_2939_cpu_synchronous_parallel_same_schedule_baseline_v1.json`
+  is generated with `inference_substrate="live_llm_inference"`.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `cpu_synchronous_parallel_per_sample_us_median`,
+  `cpu_synchronous_parallel_per_sample_us_p95`,
+  `kv260_per_sample_us_cited`, `kv260_speedup_vs_same_schedule_cpu`,
+  `energy_distribution_equivalence_test`, `random_seed`,
+  `random_seeds_used`, `reproducibility_checksum`,
+  `paper_v6_recommendation`, `methodology_note`, and `duration_s`.
+- `kv260_speedup_vs_same_schedule_cpu` records the numeric CPU/KV260 ratio and
+  the principle that values below 1.0 mean KV260 is slower at this n.
+- The energy-equivalence test records a KS p-value and MMD² value for the
+  synchronous-parallel same-schedule energy distributions and requires
+  `ks_pvalue >= 0.01`.
+- Successful artifacts require positive CPU timing and `duration_s >= 20`.
+
+**Implementation status:** Implemented (Exp 2939)
+
+---
+
+### SCENARIO-HW-072
+
+**Scenario:** Same-schedule CPU Glauber baseline produces the apples-to-apples KV260 speedup verdict.
+
+**Given:** Exp 2898 has recoverable n=64 KV260 problem provenance and Exp 2912
+exists so the invalid sequential-Gibbs comparison remains auditable.
+**When:** Exp 2939 runs 10,000 CPU synchronous checkerboard samples for seeds
+42, 137, and 271 and computes the same-schedule timing ratio against
+24.0 us/sample.
+**Then:** It writes the Exp 2939 result JSON, records the CPU median and p95
+per-sample timings, records the KS/MMD same-schedule energy equivalence
+cross-check, and recommends retracting the paper-v6 speedup claim when the
+ratio is below 1.0.
+
+**Implementation status:** Implemented (Exp 2939)
