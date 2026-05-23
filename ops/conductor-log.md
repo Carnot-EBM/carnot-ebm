@@ -6079,3 +6079,4 @@ web search:
 | 2026-05-23 17:15 UTC | LLMEval-Logic Z3 Mini: Local GGUF Natural-Language | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2931_llmeval |
 | 2026-05-23 17:33 UTC | Citation Hallucination Field Verifier v1: CiteTrac | OK | 81 passed in 3.75s |
 | 2026-05-23 17:48 UTC | KAN Continual Self-Learning: Per-Knot Constraint M | OK | 81 passed in 2.90s |
+| 2026-05-23 18:04 UTC | AquaForte/BEAVER-Style Reformulation Pipeline v1 ( | OK | 81 passed in 3.69s |
