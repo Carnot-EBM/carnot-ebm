@@ -1,0 +1,175 @@
+{
+  "artifact": "experiment_2944_paper_v6_narrowing_audit_v1",
+  "cited_upstream_artifacts": [
+    {
+      "path": "CLAUDE.md",
+      "role": "policy_source",
+      "sha256": "a40aea83acf83816c0791bc471a74e9d7570994115fe82f53c3fca8a0fe86bc2"
+    },
+    {
+      "path": "docs/arxiv-paper/main.tex",
+      "role": "scanned_input",
+      "sha256": "baf07c9dc79ff54b8a0650e58d974e1c8dbd0bf8efe15845cb5e0ddd42e8dc5b"
+    },
+    {
+      "path": "docs/technical-report.md",
+      "role": "scanned_input",
+      "sha256": "f135bcd30d6a0930d70ff69ca0c248e5286efb187e5a0f8e7126ce29212c2ac7"
+    },
+    {
+      "path": "docs/technical-report.html",
+      "role": "scanned_input",
+      "sha256": "6d8bdd02a3c94d667dfaba894a149c4c5a3c79cf7750c5d1072880df8ffb842a"
+    },
+    {
+      "path": "docs/index.html",
+      "role": "scanned_input",
+      "sha256": "debec4a0128be6ba3e8d5bd4a7f78e88d71bb081f3555abafbc34c2752802048"
+    },
+    {
+      "path": "results/experiment_2936_capstone_v276.json",
+      "role": "scanned_input",
+      "sha256": "638bb6094799a4babb7d73acee168b2d5767ce32c10680bdd6ee7f07da46b247"
+    },
+    {
+      "path": "results/experiment_2922_capstone_v275.json",
+      "role": "scanned_input",
+      "sha256": "ddd9a50cd9823fa7a18393b1a555e2d228faa1553579d2a5d4151362f328376c"
+    },
+    {
+      "path": "results/experiment_2908_capstone_v274.json",
+      "role": "scanned_input",
+      "sha256": "089bd18cdef3023b36f6c5d70b61c94ba48e39bd8d1b752f68b08c4203b2ddff"
+    },
+    {
+      "path": "results/experiment_2896_capstone_v273.json",
+      "role": "scanned_input",
+      "sha256": "81f7a4ff2e83f861827af532d89c97483934b96e2dfb1678ebcb916118a16beb"
+    },
+    {
+      "path": "results/experiment_2884_capstone_v272.json",
+      "role": "scanned_input",
+      "sha256": "44a213e5ae6cfe8a85af7961de32d20d7bc1efbc767bd5646ad1c2eee9e1f52f"
+    },
+    {
+      "path": "results/experiment_2872_capstone_v271.json",
+      "role": "scanned_input",
+      "sha256": "52b8e1b260fce1362fa0f6c0b596d2d35e8918c01e904857942f28f80b725673"
+    },
+    {
+      "path": "results/experiment_2860_capstone_v270.json",
+      "role": "scanned_input",
+      "sha256": "e17ca788f64ca29b6679c8fa6a235b7a73cac9225d3c378ec3414c5182e7dc22"
+    },
+    {
+      "path": "results/experiment_2846_capstone_v269.json",
+      "role": "scanned_input",
+      "sha256": "c5f02cd2974f225afe54adf4087982efb37fb8dfc4944a78aa6cc25d88c1c23c"
+    },
+    {
+      "path": "results/experiment_2842_capstone_v269.json",
+      "role": "scanned_input",
+      "sha256": "f2d0d3239b3651f4c36588b33c1d9546a856cded6b76f7c5e935466290625d61"
+    },
+    {
+      "path": "results/experiment_2834_capstone_v268.json",
+      "role": "scanned_input",
+      "sha256": "22686f91d14b8306ff50d8a206d291f5fd5d8ac89c2e1409f5ff690b4cfe381d"
+    }
+  ],
+  "duration_s": 0.097856,
+  "files_scanned": [
+    "docs/arxiv-paper/main.tex",
+    "docs/technical-report.md",
+    "docs/technical-report.html",
+    "docs/index.html",
+    "results/experiment_2936_capstone_v276.json",
+    "results/experiment_2922_capstone_v275.json",
+    "results/experiment_2908_capstone_v274.json",
+    "results/experiment_2896_capstone_v273.json",
+    "results/experiment_2884_capstone_v272.json",
+    "results/experiment_2872_capstone_v271.json",
+    "results/experiment_2860_capstone_v270.json",
+    "results/experiment_2846_capstone_v269.json",
+    "results/experiment_2842_capstone_v269.json",
+    "results/experiment_2834_capstone_v268.json"
+  ],
+  "forbidden_regexes": [
+    {
+      "regex": "\\b(?:thermalization|equilibrium samples|Boltzmann-distributed energies)\\b",
+      "retracted_claim": "KV260 samples reach Boltzmann thermalization",
+      "retracted_claim_id": "#2",
+      "suggested_fix": "Use \"fixed-compute heuristic budget\" instead."
+    },
+    {
+      "regex": "\\b(?:KV260 hardware speedup|FPGA acceleration over CPU|Carnot's verifier ensemble runs faster on KV260)\\b",
+      "retracted_claim": "KV260 hardware speedup over CPU at current d",
+      "retracted_claim_id": "#3",
+      "suggested_fix": "Replace with \"POC functional simulator anchoring future high-N deployment\"."
+    },
+    {
+      "regex": "\\b(?:(?:exp2550|exp2748|exp2753|exp2766)[^\\n]{0,120}(?:FPGA|KV260|hardware)[^\\n]{0,80}(?:deploy|deployment)|(?:FPGA|KV260|hardware)[^\\n]{0,120}(?:deploy|deployment)[^\\n]{0,120}(?:exp2550|exp2748|exp2753|exp2766))\\b",
+      "retracted_claim": "Phase-4 VFE bounds validate KV260 deployment",
+      "retracted_claim_id": "#6",
+      "suggested_fix": "State that Phase-4 VFE bounds apply only to continuous-sampler (RTX 3090) deployment, and add the paper firewall paragraph."
+    },
+    {
+      "regex": "\\b(?:(?:Extropic Z1|photonic)[^\\n]{0,100}(?:future production target|production target|future target|hardware target)|(?:future production target|production target|future target|hardware target)[^\\n]{0,100}(?:Extropic Z1|photonic))\\b",
+      "retracted_claim": "Extropic Z1 / photonic as future production target",
+      "retracted_claim_id": "#7",
+      "suggested_fix": "Replace with \"digital ASICs, spatial FPGAs, or bespoke digital Ising machines\" as the future production target."
+    },
+    {
+      "regex": "\\b(?:the verifier ensemble generalizes|verifier ensemble generalizes|the verifier ensemble works on novel corpora|verifier ensemble works on novel corpora)\\b",
+      "retracted_claim": "Verifier ensemble generalizes universally across modalities",
+      "retracted_claim_id": "#8",
+      "suggested_fix": "Scope the claim to the six corpora in cross-corpus matrix v9+."
+    },
+    {
+      "regex": "\\bhardware sovereignty\\b",
+      "retracted_claim": "Hardware sovereignty via commodity FPGA",
+      "retracted_claim_id": "#9",
+      "suggested_fix": "Replace with \"local edge deployability\"."
+    },
+    {
+      "regex": "(?:\\.271/\\.272/\\.273/\\.274/\\.275\\s+paper_ready=true|five[- ]paper_ready streak|paper_ready=true[^\\n]{0,80}streak|streak[^\\n]{0,80}paper_ready=true)",
+      "retracted_claim": "The five-paper_ready streak as scientific maturity",
+      "retracted_claim_id": "#10",
+      "suggested_fix": "Treat the streak as an infrastructure / MLOps signal only."
+    }
+  ],
+  "honest_verdict": "complete: paper_v6_narrowing_audit_recorded_matches; operator_curated_hits_left=3; autonomous_capstone_hits_fixed=0",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "n_autonomous_artifact_hits_auto_fixed": 0,
+  "n_operator_curated_hits_left_for_operator": 3,
+  "n_total_hits": 3,
+  "per_file_hits": [
+    {
+      "file": "docs/arxiv-paper/main.tex",
+      "line": 897,
+      "matched_phrase": "Extropic Z1 as a near-term Phase-2 production target",
+      "retracted_claim_id": "#7",
+      "suggested_fix": "Replace with \"digital ASICs, spatial FPGAs, or bespoke digital Ising machines\" as the future production target."
+    },
+    {
+      "file": "docs/technical-report.md",
+      "line": 69,
+      "matched_phrase": "Hardware sovereignty",
+      "retracted_claim_id": "#9",
+      "suggested_fix": "Replace with \"local edge deployability\"."
+    },
+    {
+      "file": "docs/technical-report.html",
+      "line": 65,
+      "matched_phrase": "Hardware sovereignty",
+      "retracted_claim_id": "#9",
+      "suggested_fix": "Replace with \"local edge deployability\"."
+    }
+  ],
+  "run_date": "20260523",
+  "schema": "carnot.paper_v6_narrowing_audit.v1",
+  "suggested_lint_script_path": {
+    "path": "scripts/paper_v6_narrowing_lint.py",
+    "principle": "Path to a proposed pre-commit hook that would catch future violations. Just suggest; do not commit the hook."
+  }
+}

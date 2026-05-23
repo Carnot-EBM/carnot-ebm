@@ -5716,3 +5716,42 @@ no new model, verifier, sampler, or hardware execution.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2943 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v11_2943.py`) | Implemented (`tests/python/test_experiment_2943_cross_corpus_matrix_v11.py`) |
+
+### REQ-REPORT-2944: Paper-v6 Narrowing Discipline Mechanical Audit
+
+The repository shall provide an Exp 2944 paper-v6 narrowing audit that reads
+the `CLAUDE.md` "Paper-v6 Narrowing Discipline" section, represents its seven
+retracted-claim forbidden phrasings as explicit regular expressions, and scans
+only these targets: `docs/arxiv-paper/main.tex`, `docs/technical-report.md`,
+`docs/technical-report.html`, `docs/index.html`, and the ten most recent
+`results/experiment_*capstone*.json` artifacts selected deterministically by
+experiment number.
+
+The audit MUST NOT modify operator-curated documentation. It MAY auto-rewrite
+autonomous capstone artifacts only by applying the post-narrowing replacement
+phrasing to matched string content. The terminal artifact
+`results/experiment_2944_paper_v6_narrowing_audit_v1.json` MUST include
+`honest_verdict`, `inference_substrate="aggregation_from_upstream_artifacts"`,
+`files_scanned`, `per_file_hits`, `n_total_hits`,
+`n_operator_curated_hits_left_for_operator`,
+`n_autonomous_artifact_hits_auto_fixed`, `suggested_lint_script_path`,
+`cited_upstream_artifacts`, and measured `duration_s`.
+
+#### SCENARIO-REPORT-2944: Audit Records Operator Hits And Fixes Capstone Hits
+
+**Given** a paper-v6 policy source, operator-curated docs, and capstone JSON
+artifacts containing forbidden phrases from the seven retracted claims
+**When** the Exp 2944 audit runs
+**Then** it records every hit with file, line, matched phrase, retracted claim
+ID, and suggested fix
+**And** leaves operator-curated docs unchanged
+**And** rewrites only matched autonomous capstone string content to the
+post-narrowing phrasing
+**And** writes the required JSON deliverable fields without creating or
+committing the proposed pre-commit hook.
+
+## Implementation Status (REQ-REPORT-2944)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2944 | Implemented (`python/carnot/reporting/paper_v6_narrowing_audit_2944.py`) | Implemented (`tests/python/test_experiment_2944_paper_v6_narrowing_audit.py`) |
