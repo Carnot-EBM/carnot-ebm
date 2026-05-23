@@ -7195,3 +7195,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-23: LLMEval-Logic Z3 Mini: Local GGUF Natural-Language-to-Formal Check (⚠️ Blocked) — honest_verdict=blocked_z3_execution_incomplete; results/experiment_2931_llmeval_logic_z3_mini_v1.json
 - 2026-05-23: LLMEval-Logic Z3 Mini: Local GGUF Natural-Language-to-Formal Check (⚠️ Blocked) — honest_verdict=blocked_z3_execution_incomplete; results/experiment_2931_llmeval_logic_z3_mini_v1.json
 - 2026-05-23: LLMEval-Logic Z3 Mini: Local GGUF Natural-Language-to-Formal Check (⚠️ Blocked) — honest_verdict=blocked_z3_execution_incomplete; results/experiment_2931_llmeval_logic_z3_mini_v1.json
+- 2026-05-23: Citation Hallucination Field Verifier v1: CiteTracer-Style Local Probe (✅ Complete) — honest_verdict=complete:citation_field_verifier_ready; results/experiment_2932_citation_hallucination_field_verifier_v1.json
