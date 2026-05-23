@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.274",
+  "generated_at": "2026-05-23T08:00:57Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The milestone timing window contains 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments. Slowest-experiment, compute-bound GPU-utilization, and DualGPURunner analyses therefore have no data available this milestone.",
+  "bottlenecks_identified": [
+    "No milestone-scoped experiment commits were available for operational timing analysis.",
+    "No compute-bound task appears in the timing data, so GPU idle state cannot be classified as a compute bottleneck."
+  ],
+  "improvements_suggested": [
+    "Add a closeout guard that blocks operational retrospectives when the milestone activation window has no experiment commits unless the operator explicitly marks the milestone timing window as intentionally empty.",
+    "Record a first-experiment-start marker at activation so empty windows are distinguished from missing timing ingestion.",
+    "Keep GPU-idle recommendations gated on compute-bound timing rows instead of raw monitor state."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Install an empty-window sentinel before retrospective generation.",
+    "Emit a structured no-data reason into the timing collector when no experiment commits are found.",
+    "Preserve the compute-bound gate for GPU-utilization findings."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The correct operational conclusion is a no-data retrospective, not a slow-run diagnosis. The GPU monitor showed idle devices, but the timing data contains no compute-bound task, so the idle state is not evidence of inefficient execution."
+}
