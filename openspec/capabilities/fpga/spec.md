@@ -1057,3 +1057,51 @@ stderr, and never flashes the board.
 and `honest_verdict` prefixed with `complete:`.
 
 **Implementation status:** Implemented (Exp 1774)
+
+---
+
+### REQ-HW-062
+
+**Title:** PolarFire SoC CPU constraint dispatch smoke MUST be precondition-gated and hash-verified
+
+**Description:**
+Experiment 2900 MUST run a CPU-only Carnot constraint-evaluation workload on the
+Microchip PolarFire SoC Discovery Kit through SSH. The experiment MUST NOT claim
+FPGA fabric access. Before dispatch it MUST verify SSH reachability to
+`polarfire`, `uname -m == riscv64`, and `python3 >= 3.10`; if any precondition
+fails it MUST write a blocked artifact with the specific PolarFire blocker and
+MUST NOT run the workload. When preconditions pass, it MUST SCP a deterministic
+50-clause SAT instance plus scorer to the board, run the scorer on the riscv64
+CPU cluster, pull the transcript back, and verify the transcript's deterministic
+scorer output SHA256 against the expected value computed locally.
+
+**Acceptance criteria:**
+- `results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json` is generated
+  with `inference_substrate="hardware_smoke"`.
+- The artifact records `preconditions_checked`, `polarfire_ssh_uptime_at_run`,
+  `polarfire_kernel`, `polarfire_arch="riscv64"`, `sat_instance_sha256`,
+  `scorer_output_sha256`, `scorer_output_hash_verified`,
+  `per_clause_wall_clock_us`, `total_wall_clock_s`, and `duration_s`.
+- Successful artifacts set `scorer_output_hash_verified=true` and
+  `duration_s >= 10`.
+- The workload uses only the PolarFire Linux CPU substrate for this milestone and
+  records no FPGA fabric execution claim.
+
+**Implementation status:** Pending (Exp 2900)
+
+---
+
+### SCENARIO-HW-062
+
+**Scenario:** PolarFire riscv64 CPU evaluates a transcript-backed SAT scorer.
+
+**Given:** `ssh polarfire` is reachable, reports `riscv64`, and provides
+Python 3.10 or newer.
+**When:** Experiment 2900 dispatches the deterministic 50-clause SAT scorer to
+the board and pulls back the transcript.
+**Then:** The local expected scorer output hash matches the remote transcript
+hash, all 50 per-clause wall-clock timings are positive floats, the artifact
+records `inference_substrate="hardware_smoke"`, and the run duration is at
+least 10 seconds without claiming FPGA fabric execution.
+
+**Implementation status:** Pending (Exp 2900)
