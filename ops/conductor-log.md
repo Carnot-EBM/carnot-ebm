@@ -6039,3 +6039,4 @@ Ripgrep i |
 | 2026-05-23 08:51 UTC | Archive .274 + Activate .275 | OK | 81 passed in 3.82s |
 | 2026-05-23 09:13 UTC | SOTA Code Generation Corrigendum v2: Fixed Seeds + | OK | 81 passed in 4.72s |
 | 2026-05-23 10:04 UTC | Delulu-Style Code Hallucination Taxonomy Verifier  | OK | 81 passed in 2.91s |
+| 2026-05-23 10:20 UTC | KV260 Same-Basis CPU Gibbs Baseline v1 | OK | 81 passed in 3.22s |
