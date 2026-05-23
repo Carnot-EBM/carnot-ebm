@@ -171,5 +171,42 @@
   "suggested_lint_script_path": {
     "path": "scripts/paper_v6_narrowing_lint.py",
     "principle": "Path to a proposed pre-commit hook that would catch future violations. Just suggest; do not commit the hook."
-  }
+  },
+  "audit_resolution_by_operator": [
+    {
+      "hit_index": 0,
+      "file": "docs/arxiv-paper/main.tex",
+      "line": 897,
+      "matched_phrase": "Extropic Z1 as a near-term Phase-2 production target",
+      "retracted_claim_id": "#7",
+      "resolution": "false_positive_already_retracted_in_context",
+      "resolved_at": "2026-05-23",
+      "operator_authorized": true,
+      "detail": "The audit's regex caught the literal phrase but the surrounding prose IS the v3 retraction narrative. Verbatim: 'v2 framed the Extropic Z1 as a near-term Phase-2 production target. v3 retracts that framing.' The subsection title is 'The Z1 and photonic deferral' and the paragraphs that follow re-classify Z1 + photonic as 'future research directions pending independent silicon benchmarking.' Applying the suggested_fix would destroy the retraction narrative. The paper-v6 text already complies with Paper-v6 Narrowing Discipline claim #7. NO EDIT APPLIED. The audit tool's regex doesn't distinguish quoted historical claims from live assertions; future audit iterations should context-detect 'retracts' / 'v3 retracts' / 'no longer claims' phrasings within a paragraph of the matched phrase to avoid this false-positive class."
+    },
+    {
+      "hit_index": 1,
+      "file": "docs/technical-report.md",
+      "line": 69,
+      "matched_phrase": "Hardware sovereignty",
+      "retracted_claim_id": "#9",
+      "resolution": "applied_by_operator_authorized_outer_loop",
+      "resolved_at": "2026-05-23",
+      "operator_authorized": true,
+      "edit_applied": "Section heading '### Hardware sovereignty' replaced with '### Local edge deployability' per the suggested_fix and Paper-v6 Narrowing Discipline claim #9 replacement framing."
+    },
+    {
+      "hit_index": 2,
+      "file": "docs/technical-report.html",
+      "line": 65,
+      "matched_phrase": "Hardware sovereignty",
+      "retracted_claim_id": "#9",
+      "resolution": "applied_by_operator_authorized_outer_loop",
+      "resolved_at": "2026-05-23",
+      "operator_authorized": true,
+      "edit_applied": "Heading element '<h3 id=\"hardware-sovereignty\">Hardware sovereignty</h3>' replaced with '<h3 id=\"local-edge-deployability\">Local edge deployability</h3>'. Anchor id updated to match the new title. Verified no other doc references this anchor (only parenthetical word use in the Deep Think prompt, not a link)."
+    }
+  ],
+  "n_operator_curated_hits_resolved": 2,
+  "n_operator_curated_hits_false_positive": 1
 }

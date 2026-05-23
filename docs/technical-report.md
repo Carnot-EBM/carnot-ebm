@@ -66,7 +66,7 @@ Each number below is backed by a checked-in experiment artifact. Model-generatio
 - **HalluGuard v3 cascade routing**: 0.0pp accuracy delta with 4.4% cost savings.
 - **Two-GPU parallel retrain**: 2.0× speedup with identical losses.
 
-### Hardware sovereignty
+### Local edge deployability
 
 - **KV260 FPGA prototype**: Ising sampler running on real silicon, with on-board execution verified over SSH.
 
