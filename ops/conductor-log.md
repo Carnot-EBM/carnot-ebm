@@ -6043,3 +6043,5 @@ Ripgrep i |
 | 2026-05-23 10:33 UTC | KV260 Hardware-vs-CPU Claim Boundary v1 (gated on  | OK | 81 passed in 3.87s |
 | 2026-05-23 10:49 UTC | GateMate Toolchain Provisioning Preflight v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2914_gatemat |
 | 2026-05-23 11:00 UTC | GateMate Toolchain Provisioning Preflight v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2914_gatemat |
+| 2026-05-23 11:06 UTC | GateMate Toolchain Provisioning Preflight v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2914_gatemat |
+| 2026-05-23 11:08 UTC | GateMate n=16 Ising Tile Bitstream Build v2 (gated | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2914) |
