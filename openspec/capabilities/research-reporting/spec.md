@@ -5657,3 +5657,62 @@ from the stated AUPRC/F1 gate.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2940 | Implemented (`python/carnot/reporting/verifier_ensemble_auprc_code_corpora_2940.py`) | Implemented (`tests/python/test_experiment_2940_verifier_ensemble_auprc_code_corpora.py`) |
+
+### REQ-REPORT-2943: Cross-Corpus Matrix V11 Corrigenda And AUPRC Columns
+
+The repository shall provide an Exp 2943 cross-corpus matrix v11 generator that
+writes `results/experiment_2943_cross_corpus_matrix_v11.json` using only
+checked-in upstream artifact JSON files. The generator MUST NOT call an LLM,
+rerun code generation, run a verifier, launch hardware, or modify conductor,
+ops, changelog, or traceability files.
+
+The generator MUST require the Exp 2935 matrix v10 artifact and the Deep Think
+corrigenda artifacts Exp 2938, Exp 2939, Exp 2940, and Exp 2942. If any required
+artifact is absent, malformed, or missing a required field, it MUST write a
+terminal artifact with `honest_verdict="blocked_required_upstream_missing"`,
+`inference_substrate="aggregation_from_upstream_artifacts"`, the available
+row buckets, `per_corpus_auprc` as an object, numeric
+`kv260_same_schedule_speedup_recorded`, integer `kv260_n_crossover_measured`,
+`cited_upstream_artifacts`, and measured `duration_s`.
+
+When all required upstream artifacts are available, the generator MUST carry
+forward the v10 clean, flagged, and blocked row lists, append clean corrigenda
+rows for Exp 2938, Exp 2939, Exp 2940, and Exp 2942, and preserve v10 flagged
+and blocked rows without promoting them. The generator MUST add per-corpus AUPRC
+columns from Exp 2940 for at least FoVer and code corpora, using the Exp 2940
+code-corpus AUPRC and FoVer AUPRC values without recomputation. It MUST record
+the Exp 2939 same-schedule KV260 speedup from
+`kv260_speedup_vs_same_schedule_cpu.value` and the Exp 2942 measured crossover
+as an integer, using `0` when the hardware artifact honestly reports that no
+crossover was measured.
+
+The terminal artifact MUST include `honest_verdict`,
+`inference_substrate="aggregation_from_upstream_artifacts"`, `rows_clean`,
+`rows_flagged`, `rows_blocked`, `per_corpus_auprc`,
+`kv260_same_schedule_speedup_recorded`, `kv260_n_crossover_measured`,
+`cited_upstream_artifacts`, and measured `duration_s`. It MAY include
+additional matrix rows, claim-boundary notes, checksums, run date, and schema
+fields, as long as they remain direct aggregation from the upstream artifacts.
+
+#### SCENARIO-REPORT-2943: V11 Adds AUPRC And Deep Think Corrigenda Outcomes
+
+**Given** Exp 2935 matrix v10 is present with clean, flagged, and blocked row
+lists
+**And** Exp 2938 reports the KV260 MMD/KS sampling corrigendum
+**And** Exp 2939 reports the same-schedule CPU/KV260 speedup value
+**And** Exp 2940 reports code-corpus and FoVer AUPRC values
+**And** Exp 2942 reports the measured n-scaling profile or a fixed-n
+limitation
+**When** the Exp 2943 generator runs
+**Then** it writes `results/experiment_2943_cross_corpus_matrix_v11.json` with
+all required fields, v10 row buckets preserved, clean rows added for the four
+corrigenda artifacts, `per_corpus_auprc` populated from Exp 2940, the exact
+same-schedule speedup recorded from Exp 2939, the measured crossover recorded
+from Exp 2942 with `0` representing not measured, upstream checksums cited, and
+no new model, verifier, sampler, or hardware execution.
+
+## Implementation Status (REQ-REPORT-2943)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2943 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v11_2943.py`) | Implemented (`tests/python/test_experiment_2943_cross_corpus_matrix_v11.py`) |
