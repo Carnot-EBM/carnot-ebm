@@ -7191,3 +7191,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-23: GateMate Flash Smoke + Timing Boundary v1 (⚠️ Blocked) — honest_verdict=blocked_gatemate_bitstream_missing; results/experiment_2929_gatemate_flash_timing_boundary_v1.json
 - 2026-05-23: GateMate Flash Smoke + Timing Boundary v1 (⚠️ Blocked) — honest_verdict=blocked_gatemate_bitstream_missing; results/experiment_2929_gatemate_flash_timing_boundary_v1.json
 - 2026-05-23: GateMate Flash Smoke + Timing Boundary v1 (⚠️ Blocked) — honest_verdict=blocked_gatemate_bitstream_missing; results/experiment_2929_gatemate_flash_timing_boundary_v1.json
+- 2026-05-23: KV260 p-bit/SSQA Scaling Projection from Real n=64 Evidence (✅ Complete) — honest_verdict=complete: kv260_pbit_ssqa_scaling_projection_ready_no_new_hardware_claim; results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json
