@@ -959,5 +959,16 @@
       "severity": "warn",
       "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
     }
+  ],
+  "corrigendum_resolution": [
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "resolution": "stale_false_positive_random_seeds_used_plural_now_recognized",
+      "resolved_at": "2026-05-23",
+      "resolved_by_commit": "edd6a2bd5",
+      "detail": "Stale false positive at original audit time. The artifact declares `random_seeds_used: [2905, ..., 2936]` (32 seeds, list form). The check_methodology_present() rule in scripts/adversarial_verify.py looked only for the singular `random_seed` / `seed` keys at original audit. Commit edd6a2bd5 (2026-05-22) taught the rule to recognize the plural `random_seeds_used` / `seeds` forms; re-running adversarial_verify.py on this artifact today produces no METHODOLOGY_MISSING flag. The TAUTOLOGY flag on this artifact remains valid -- it correctly caught that n=4 tasks with bit-identical pass@1 = pass@k = 0.5 indicates the k=8 candidate sampling produced no diversity advantage. The .275 SOTA Code Generation Corrigendum v2 (Fixed Seeds + n>=20) is the structurally-correct follow-up.",
+      "original_flag_detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
   ]
 }
