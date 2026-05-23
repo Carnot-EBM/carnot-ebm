@@ -915,6 +915,62 @@ telemetry
 the panel rows empty, populates the reproducibility checksum from the empty
 panel inputs, and still embeds the adversarial verify result.
 
+### REQ-INFER-SOTA-018: Exp 2917 Spilled-Energy Logit Detector Micro-Panel
+
+The system SHALL provide an Exp 2917 diagnostic micro-panel runner that writes
+`results/experiment_2917_spilled_energy_logit_detector_micro_panel_v1.json`.
+The runner SHALL call `cached_sota_pair(gpu_indices=(0, 1))` before any fallback
+model resolution, SHALL use only locally cached mandated SOTA GGUF model specs
+for live llama.cpp inference, and SHALL include at least one of
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF` in the live path.  If the runtime returns no
+token logprobs, top-k logprobs, or final-token logits, the runner SHALL write a
+complete artifact with `blocked_reason=blocked_logprob_runtime_unavailable`,
+`spilled_energy_micro_panel_ready=false`, `logprob_or_logits_available=false`,
+and no benchmark claim.
+
+When telemetry is available, the runner SHALL build a bounded 24-40 example
+panel from local verified/failing code-generation outputs and local factuality
+examples.  Every example row SHALL include source provenance, prompt hash, raw
+LLM response, model id, token count, logprob/logit availability, verification
+label, final-token spilled-energy score, final-token marginal-energy score, and
+sequence-level spilled/marginal energy summaries when token logprobs are
+present.  The runner SHALL compute only simple diagnostic separation summaries
+(for example group means, deltas, and tie-aware AUROC over fixed features) and
+SHALL NOT train a detector or promote any benchmark/matrix-row claim.
+
+The artifact SHALL expose `honest_verdict`,
+`spilled_energy_micro_panel_ready`, `benchmark_claim_made`, `claim_boundary`,
+`model_specs`, `models_used`, `cached_sota_pair_used`, `examples`,
+`random_seed`, `logprob_or_logits_available`, `spilled_energy_features`,
+`separation_summary`, `inference_substrate`, `duration_s`, and `run_date`.
+`claim_boundary` SHALL equal `diagnostic_only_no_benchmark_claim`;
+`benchmark_claim_made` SHALL always be false; `random_seed` SHALL equal 2917;
+`inference_substrate` SHALL equal `live_llm_inference`; and `run_date` SHALL
+equal `20260523`.
+
+### SCENARIO-INFER-SOTA-018-001: Logprob Runtime Writes Diagnostic Micro-Panel
+
+**Given** at least one mandated SOTA GGUF can be resolved after
+`cached_sota_pair(gpu_indices=(0, 1))` is attempted
+**And** the live inference runtime returns token logprobs, top-k logprobs, or
+final-token logits for panel prompts
+**When** Exp 2917 runs
+**Then** it writes a 24-40 row diagnostic artifact with raw responses,
+prompt hashes, model provenance, verification labels, spilled/marginal energy
+features, simple separation metrics, `claim_boundary` set to
+`diagnostic_only_no_benchmark_claim`, and `benchmark_claim_made=false`.
+
+### SCENARIO-INFER-SOTA-018-002: Missing Logprob Runtime Blocks Cleanly
+
+**Given** at least one mandated SOTA GGUF can generate text
+**But** the runtime returns neither token logprobs, top-k logprobs, nor
+final-token logits
+**When** Exp 2917 runs
+**Then** it writes `blocked_reason=blocked_logprob_runtime_unavailable`,
+`spilled_energy_micro_panel_ready=false`, `logprob_or_logits_available=false`,
+and exits without fabricating spilled-energy metrics or benchmark claims.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -999,6 +1055,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-014 | Planned | Planned |
 | REQ-INFER-SOTA-016 | Implemented (`python/carnot/reporting/sota_energy_micro_panel_logprob_corrigendum_v2.py`) | Implemented (`tests/python/test_experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.py`) |
 | REQ-INFER-SOTA-017 | Implemented (`python/carnot/reporting/sota_micro_panel_clean_telemetry_v3.py`) | Implemented (`tests/python/test_experiment_2886_sota_micro_panel_clean_telemetry_v3.py`) |
+| REQ-INFER-SOTA-018 | Implemented (`python/carnot/reporting/spilled_energy_logit_detector_micro_panel_v1.py`) | Implemented (`tests/python/test_experiment_2917_spilled_energy_logit_detector_micro_panel.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
