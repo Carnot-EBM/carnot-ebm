@@ -946,6 +946,57 @@ the 117,120-LUT XCK26 budget.
 
 ---
 
+### REQ-HW-060
+
+**Title:** KV260 Ising sampler latency benchmark MUST be precondition-gated and transcript-backed
+
+**Description:**
+Experiment 2898 MUST measure the live KV260 Ising sampler through the board's
+SSH-accessible UIO register window without modifying the bitstream or touching
+host-side SD-card devices. The experiment MUST first verify SSH reachability,
+overlay availability, and UIO device exposure; if any precondition fails it MUST
+write a blocked artifact and stop before attempting register access. When the
+board is available, the experiment MUST generate a deterministic n=64 Ising
+problem for seeds 42, 137, and 271, load the `carnot_ising_v2_n64`/`carnot_ising_v4`
+overlay, write the problem through the documented AXI-Lite memory windows, trigger
+the sampler, poll the DONE bit, read spins and energy, and record per-sample
+wall-clock latency for n_samples in {100, 1000, 10000}. The artifact MUST preserve
+the literal board command transcript and MUST NOT claim a CPU speedup.
+
+**Acceptance criteria:**
+- `results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json`
+  is generated with `inference_substrate="hardware_smoke"`.
+- The artifact records `preconditions_checked`, `kv260_overlay_loaded`,
+  `kv260_uio_devices_present`, `bitstream_sha256`, `random_seeds_used`, and
+  `board_transcript_path`.
+- Successful runs include three `per_seed_results` entries with positive
+  median and p95 per-sample wall-clock microseconds and a host task
+  `duration_s >= 30`.
+- Blocked runs start `honest_verdict` with the specific `blocked_kv260_*`
+  resource prefix and do not attempt measurement.
+- No artifact field claims speedup over CPU.
+
+**Implementation status:** Implemented (Exp 2898)
+
+---
+
+### SCENARIO-HW-060
+
+**Scenario:** KV260 board latency transcript anchors first honest hardware timing.
+
+**Given:** The KV260 responds to `ssh kria`, exposes the `carnot_ising_v4` or
+`carnot_ising_v2_n64` overlay through `xmutil listapps`, and creates `/dev/uio*`
+nodes after `xmutil loadapp`.
+**When:** Experiment 2898 runs the board harness for seeds 42, 137, and 271.
+**Then:** The artifact records successful hardware-smoke provenance, a transcript
+at `results/experiment_2898_kv260_transcript.log`, bitstream SHA256 from the board,
+and per-seed median and p95 per-sample wall-clock latency without a CPU-speedup
+claim.
+
+**Implementation status:** Implemented (Exp 2898)
+
+---
+
 ### SCENARIO-HW-059
 
 **Scenario:** E-MVL K=16 RTL accounting verifies budget compliance without synthesis.
