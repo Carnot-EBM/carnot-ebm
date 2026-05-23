@@ -6015,3 +6015,4 @@ Ripgrep i |
 | 2026-05-23 01:44 UTC | CCTU Executable Constraint Validator Pilot v1 | OK | 81 passed in 3.26s |
 | 2026-05-23 02:01 UTC | VeriCoT Exact Frontier Expansion v1 | OK | 81 passed in 3.98s |
 | 2026-05-23 02:43 UTC | KAN Hardware Complexity Accounting v1 | OK | 81 passed in 3.17s |
+| 2026-05-23 03:00 UTC | Cross-Corpus Matrix v7 from Constraint-Expanded Ro | OK | 81 passed in 3.22s |
