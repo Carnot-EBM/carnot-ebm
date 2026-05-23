@@ -404,5 +404,18 @@
     "Run KV260 MMD versus CPU sequential Gibbs to decide whether the n=64 hardware row is sampling the intended Boltzmann target or only a fixed-schedule heuristic.",
     "Add a CPU same-schedule synchronous-parallel comparator so the KV260 speedup claim has an apples-to-apples algorithmic basis.",
     "Measure verifier-ensemble AUPRC on code corpora at the documented negative base rate before promoting code-corpus verifier claims."
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.002456 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }

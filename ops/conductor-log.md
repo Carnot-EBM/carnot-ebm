@@ -6081,3 +6081,5 @@ web search:
 | 2026-05-23 17:48 UTC | KAN Continual Self-Learning: Per-Knot Constraint M | OK | 81 passed in 2.90s |
 | 2026-05-23 18:04 UTC | AquaForte/BEAVER-Style Reformulation Pipeline v1 ( | OK | 81 passed in 3.69s |
 | 2026-05-23 18:21 UTC | Cross-Corpus Matrix v10 + Paper Boundary Corrigend | OK | 81 passed in 3.04s |
+| 2026-05-23 18:36 UTC | Capstone .276: Evidence Boundary, GateMate, and Se | OK | 81 passed in 4.32s |
+| 2026-05-23 18:38 UTC | Milestone 2026.05.277 activated | OK | 12 tasks queued |
