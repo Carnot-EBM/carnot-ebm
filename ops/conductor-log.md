@@ -6020,3 +6020,4 @@ Ripgrep i |
 | 2026-05-23 03:26 UTC | Capstone .273: Telemetry, Fast/Slow Memory, and Co | OK | 81 passed in 3.07s |
 | 2026-05-23 03:28 UTC | Milestone 2026.05.274 activated | OK | 12 tasks queued |
 | 2026-05-23 03:39 UTC | Archive .273 + Activate .274 | OK | 81 passed in 3.39s |
+| 2026-05-23 04:00 UTC | KV260 Ising Sampler Hardware Latency Benchmark v1 | OK | 81 passed in 3.63s |
