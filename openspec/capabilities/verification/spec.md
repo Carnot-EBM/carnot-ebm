@@ -3339,6 +3339,35 @@ label-consistency and actionable-localization rates from manifest labels and
 local verifier directions, includes bucket AUROC values only where computable,
 and explains the weak scalar AUROC without inventing missing verifier traces.
 
+### REQ-VERIFY-2892: VeriCoT-Style Exact Frontier Expansion
+
+The repository shall provide an Exp 2892 VeriCoT-style exact-frontier runner
+that reads Exp 2877 exact HaluEval/FEVER certificates, Exp 2878
+error-verifiability evidence, and the Exp 2888 TruthfulQA taxonomy manifest
+when it exists. The runner MUST select only rows whose premise anchors and
+logical steps can be encoded deterministically as local formal checks. It MUST
+NOT call an LLM for autoformalization, and it MUST keep unsupported rows
+outside the exact frontier with explicit unsupported reasons.
+
+The terminal artifact MUST be written to
+`results/experiment_2892_vericot_exact_frontier_expansion_v1.json` and include
+`honest_verdict`, `vericot_frontier_ready`, `source_artifacts`,
+`selection_rule`, `n_candidate_rows`, `n_vericot_supported_rows`,
+`n_unsupported_rows`, `unsupported_reasons`, `solver_backend`,
+`formal_checks`, `autoformalization_llm_called=false`, `tests_run`,
+`field_principles`, `run_date="20260523"`, and measured `duration_s`.
+
+### SCENARIO-VERIFY-2892: Deterministic Logical Steps Expand The Frontier
+
+Given Exp 2877 contains bounded exact certificates, Exp 2878 contains local
+error-verifiability evidence, and Exp 2888 may contain TruthfulQA taxonomy rows,
+When the Exp 2892 runner executes,
+Then it writes the required artifact without calling an LLM, promotes only
+certificates that can be rendered as deterministic premise-grounded logical
+steps, records each Z3 or local deterministic formal check, reports every
+candidate row not promoted under unsupported reasons, and reconciles candidate,
+supported, and unsupported row counts.
+
 ### REQ-VERIFY-2829: MBPP Dual-Memory Ensemble Evaluation
 
 The repository shall provide an Exp 2829 MBPP dual-memory runner that writes

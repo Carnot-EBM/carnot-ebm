@@ -1,0 +1,799 @@
+{
+  "autoformalization_llm_called": false,
+  "duration_s": 0.02057356107980013,
+  "field_principles": {
+    "autoformalization_llm_called": "Always false; no live or remote LLM is used.",
+    "duration_s": "Measured wall-clock runtime with no artificial delay.",
+    "formal_checks": "Per-supported-row premises, logical steps, solver status, and checksum.",
+    "honest_verdict": "Terminal-prefix verdict grounded in source readiness and promoted checks.",
+    "n_candidate_rows": "All HaluEval/FEVER manifest rows plus optional TruthfulQA taxonomy rows.",
+    "n_unsupported_rows": "Rows deliberately kept outside the frontier.",
+    "n_vericot_supported_rows": "Rows admitted to the bounded VeriCoT frontier.",
+    "selection_rule": "Documents the deterministic row-selection boundary.",
+    "solver_backend": "Identifies Z3 plus local anchor checks used for formal checks.",
+    "source_artifacts": "Records Exp 2877/2878, optional Exp 2888, and the local manifests read.",
+    "tests_run": "Commands used to validate the module and artifact.",
+    "unsupported_reasons": "Counts the exact reason unsupported rows were not promoted.",
+    "vericot_frontier_ready": "True only when prior local evidence is ready and at least one premise-grounded formal check is replayed or built."
+  },
+  "formal_checks": [
+    {
+      "candidate_or_claim": "2006",
+      "check_type": "safe_prefix_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "4b3e27ad2c660c1b50af26943303ccdc121cacfbf5999ebba6dded404a0916f3",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "name": "prompt_grounded_expected_year",
+          "value": 2006
+        },
+        {
+          "name": "candidate_claimed_year",
+          "value": 2006
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "halueval-8-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "2006 == 2006"
+    },
+    {
+      "candidate_or_claim": "The inspiration for \"House of Anubis\" first aired in 2003.",
+      "check_type": "year_contradiction",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "258fd3d1b53ac3955edea76dcf4d244d89ff0a34be73835cca2a37169533b0e8",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "name": "prompt_grounded_expected_year",
+          "value": 2006
+        },
+        {
+          "name": "candidate_claimed_year",
+          "value": 2003
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "halueval-8-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "2003 == 2006"
+    },
+    {
+      "candidate_or_claim": "The Wolfhounds",
+      "check_type": "arithmetic_like_date_order",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "19678569e0034754f17c69e0481c2e856551c5e8fdc73146a24acfeb9b8ef43f",
+      "label": 0,
+      "logical_steps": [
+        "claimed_year < comparison_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "entity": "The Wolfhounds",
+          "name": "claimed_first_year",
+          "value": 1985
+        },
+        {
+          "entity": "Hole",
+          "name": "comparison_entity_year",
+          "value": 1989
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "halueval-22-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1985 < 1989"
+    },
+    {
+      "candidate_or_claim": "Hole, the rock band that Courtney Love was a frontwoman of was founded first.",
+      "check_type": "arithmetic_like_date_order",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "47e78ef2941bf34c07bc255c56f1019ba219319c259b182f6fe23489dcb30a83",
+      "label": 1,
+      "logical_steps": [
+        "claimed_year < comparison_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "entity": "Hole",
+          "name": "claimed_first_year",
+          "value": 1989
+        },
+        {
+          "entity": "The Wolfhounds",
+          "name": "comparison_entity_year",
+          "value": 1985
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "halueval-22-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "1989 < 1985"
+    },
+    {
+      "candidate_or_claim": "Aleksander Ford",
+      "check_type": "arithmetic_like_date_order",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "bd4b00087138b7eb1f2d6b9b0d2cb3840a330503ce90c1297fb6ad3441e165ae",
+      "label": 0,
+      "logical_steps": [
+        "claimed_year < comparison_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "entity": "Aleksander Ford",
+          "name": "claimed_first_year",
+          "value": 1908
+        },
+        {
+          "entity": "Pablo Trapero",
+          "name": "comparison_entity_year",
+          "value": 1971
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "halueval-31-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1908 < 1971"
+    },
+    {
+      "candidate_or_claim": "Pablo Trapero was born first.",
+      "check_type": "arithmetic_like_date_order",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "d3c9798d355f0dc144c0246fba498081bf54c554599baf2bd492c43ae2104268",
+      "label": 1,
+      "logical_steps": [
+        "claimed_year < comparison_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "entity": "Pablo Trapero",
+          "name": "claimed_first_year",
+          "value": 1971
+        },
+        {
+          "entity": "Aleksander Ford",
+          "name": "comparison_entity_year",
+          "value": 1908
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "halueval-31-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "1971 < 1908"
+    },
+    {
+      "candidate_or_claim": "Steam is the gaseous state of water, also known as water vapor.",
+      "check_type": "anchored_entailment",
+      "dataset": "FEVER",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "1340fc71e05db3e3ea2ed71586d650836a797ac85ff4f482852c5cb37eb50b19",
+      "label": 0,
+      "logical_steps": [
+        "all_prompt_and_candidate_anchors_present"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchors": [
+            "gaseous state",
+            "steam or water vapor"
+          ],
+          "name": "prompt_anchors"
+        },
+        {
+          "anchors": [
+            "Steam",
+            "gaseous state",
+            "water vapor"
+          ],
+          "name": "candidate_anchors"
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "fever-84514",
+      "vericot_verdict": "entailment_anchor_verified",
+      "z3_expression": "anchor_presence == true"
+    },
+    {
+      "candidate_or_claim": "Dog Day Afternoon stars at least one actor.",
+      "check_type": "existential_entailment",
+      "dataset": "FEVER",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "fe18104e010cc6ea14ae1a442e62fccf2696607d53fa55b9f39b399f44cd871f",
+      "label": 0,
+      "logical_steps": [
+        "all_prompt_and_candidate_anchors_present"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchors": [
+            "The film stars",
+            "Al Pacino"
+          ],
+          "name": "prompt_anchors"
+        },
+        {
+          "anchors": [
+            "stars at least one actor"
+          ],
+          "name": "candidate_anchors"
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "exp2877_certificate_replay",
+      "stable_id": "fever-182889",
+      "vericot_verdict": "entailment_anchor_verified",
+      "z3_expression": "anchor_presence == true"
+    },
+    {
+      "candidate_or_claim": "2006",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "04cfe83cdcbce592db1828dfc0c62f5feedbfd85fd982f781132903ade0bd7e7",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "2006",
+          "name": "prompt_grounded_expected_year",
+          "value": 2006
+        },
+        {
+          "anchor": "2006",
+          "name": "candidate_claimed_year",
+          "value": 2006
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-15-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "2006 == 2006"
+    },
+    {
+      "candidate_or_claim": "Annette Bening received her Hollywood star in 1988.",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "c67387f30c3c7620a463b9dd482cb86ae7991bab4bf2646c6f1a3db96df40166",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "2006",
+          "name": "prompt_grounded_expected_year",
+          "value": 2006
+        },
+        {
+          "anchor": "1988",
+          "name": "candidate_claimed_year",
+          "value": 1988
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-15-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "1988 == 2006"
+    },
+    {
+      "candidate_or_claim": "2017",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "daa78a890742ac01d61f113338db5284f0834edeae5aa496b97365f50c4214e9",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "2017",
+          "name": "prompt_grounded_expected_year",
+          "value": 2017
+        },
+        {
+          "anchor": "2017",
+          "name": "candidate_claimed_year",
+          "value": 2017
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-18-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "2017 == 2017"
+    },
+    {
+      "candidate_or_claim": "The album was released in 2018.",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "c04b6b28b3829f7b3d08514079031265ebffa7411371e9cf5de0b02ca75bc8fb",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "2017",
+          "name": "prompt_grounded_expected_year",
+          "value": 2017
+        },
+        {
+          "anchor": "2018",
+          "name": "candidate_claimed_year",
+          "value": 2018
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-18-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "2018 == 2017"
+    },
+    {
+      "candidate_or_claim": "1932",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "dd87b6074b3896f9b1a7af6864997133df406ceaa3b6d897e3b8f7d53fb60039",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1932",
+          "name": "prompt_grounded_expected_year",
+          "value": 1932
+        },
+        {
+          "anchor": "1932",
+          "name": "candidate_claimed_year",
+          "value": 1932
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-58-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1932 == 1932"
+    },
+    {
+      "candidate_or_claim": "The film was released in 1938.",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "027c1e22dd8562011b665984100bab1e156e0e6e7e36187202fd95f522307e34",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1932",
+          "name": "prompt_grounded_expected_year",
+          "value": 1932
+        },
+        {
+          "anchor": "1938",
+          "name": "candidate_claimed_year",
+          "value": 1938
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-58-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "1938 == 1932"
+    },
+    {
+      "candidate_or_claim": "1988",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "440a26ed7d8ce5805b62d4bf153f3882062f7013b30cbc6dcb69751fa2ca0a2e",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1988",
+          "name": "prompt_grounded_expected_year",
+          "value": 1988
+        },
+        {
+          "anchor": "1988",
+          "name": "candidate_claimed_year",
+          "value": 1988
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-82-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1988 == 1988"
+    },
+    {
+      "candidate_or_claim": "1979",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "ff05c9b29b21e7984892c798f7d3b0c7e800a8b756cef1cfebaa867050583a21",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1979",
+          "name": "prompt_grounded_expected_year",
+          "value": 1979
+        },
+        {
+          "anchor": "1979",
+          "name": "candidate_claimed_year",
+          "value": 1979
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-124-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1979 == 1979"
+    },
+    {
+      "candidate_or_claim": "1957",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "ce83603a8fd53f74b11844fbb0f441b3929056757ea892d636dd24e4ebaaa0fb",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1957",
+          "name": "prompt_grounded_expected_year",
+          "value": 1957
+        },
+        {
+          "anchor": "1957",
+          "name": "candidate_claimed_year",
+          "value": 1957
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-141-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1957 == 1957"
+    },
+    {
+      "candidate_or_claim": "1984",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "11089c9a8b10eee74099a2af602378a97488dbf4bc73a554e32a3f3f30b8086f",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1984",
+          "name": "prompt_grounded_expected_year",
+          "value": 1984
+        },
+        {
+          "anchor": "1984",
+          "name": "candidate_claimed_year",
+          "value": 1984
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-154-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1984 == 1984"
+    },
+    {
+      "candidate_or_claim": "2003",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "a0bead1e50403fa618da91e17c0a571b96cd803af7e9d1a5d69bb5e531aa81a9",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "2003",
+          "name": "prompt_grounded_expected_year",
+          "value": 2003
+        },
+        {
+          "anchor": "2003",
+          "name": "candidate_claimed_year",
+          "value": 2003
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-169-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "2003 == 2003"
+    },
+    {
+      "candidate_or_claim": "Roy Jenkins died in 2002.",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "3c477853cdefc83939e00af16b418431f9ed9a34e9b1759f51c3ce12155e2da8",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "2003",
+          "name": "prompt_grounded_expected_year",
+          "value": 2003
+        },
+        {
+          "anchor": "2002",
+          "name": "candidate_claimed_year",
+          "value": 2002
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-169-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "2002 == 2003"
+    },
+    {
+      "candidate_or_claim": "1969",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "3df9c06f6ca6146c66826a37f3f0d644967194550a261bc0c12ec818281382a9",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1969",
+          "name": "prompt_grounded_expected_year",
+          "value": 1969
+        },
+        {
+          "anchor": "1969",
+          "name": "candidate_claimed_year",
+          "value": 1969
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-209-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1969 == 1969"
+    },
+    {
+      "candidate_or_claim": "The Eddington Medal was awarded to Antony Hewish in 1968.",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "64a271f44086e930829d5645e359a6c38b4ec810d32953a54bc492f2e8f2829b",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1969",
+          "name": "prompt_grounded_expected_year",
+          "value": 1969
+        },
+        {
+          "anchor": "1968",
+          "name": "candidate_claimed_year",
+          "value": 1968
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-209-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "1968 == 1969"
+    },
+    {
+      "candidate_or_claim": "1948",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "85014f55883a6d47c12f4c273b1a7fa11758081db7e5035d64b527d2e5371cb6",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1948",
+          "name": "prompt_grounded_expected_year",
+          "value": 1948
+        },
+        {
+          "anchor": "1948",
+          "name": "candidate_claimed_year",
+          "value": 1948
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-216-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1948 == 1948"
+    },
+    {
+      "candidate_or_claim": "Peter F. Paul was born in 1950.",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "unsat",
+      "formal_check_sha256": "5e3836240f04b672b12fdbff21657277468d3d7828d145b5d0cf735947bd28c4",
+      "label": 1,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1948",
+          "name": "prompt_grounded_expected_year",
+          "value": 1948
+        },
+        {
+          "anchor": "1950",
+          "name": "candidate_claimed_year",
+          "value": 1950
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "unsat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-216-hallucinated",
+      "vericot_verdict": "contradiction_verified",
+      "z3_expression": "1950 == 1948"
+    },
+    {
+      "candidate_or_claim": "1928",
+      "check_type": "halueval_year_answer",
+      "dataset": "HaluEval",
+      "expected_solver_status": "sat",
+      "formal_check_sha256": "6da00e8fa7117ce7cfed85d2927d0ae3e7a1fe335174b08b5e4a6871e2ff50fa",
+      "label": 0,
+      "logical_steps": [
+        "candidate_year == expected_year"
+      ],
+      "premise_grounded": true,
+      "premises": [
+        {
+          "anchor": "1928",
+          "name": "prompt_grounded_expected_year",
+          "value": 1928
+        },
+        {
+          "anchor": "1928",
+          "name": "candidate_claimed_year",
+          "value": 1928
+        }
+      ],
+      "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+      "solver_status": "sat",
+      "source": "deterministic_manifest_year_parser",
+      "stable_id": "halueval-249-right",
+      "vericot_verdict": "safe_prefix_supported",
+      "z3_expression": "1928 == 1928"
+    }
+  ],
+  "honest_verdict": "complete: deterministic VeriCoT frontier rows available",
+  "n_candidate_rows": 1100,
+  "n_unsupported_rows": 1075,
+  "n_vericot_supported_rows": 25,
+  "run_date": "20260523",
+  "selection_rule": "Load Exp 2877/2878 and the optional Exp 2888 TruthfulQA taxonomy manifest. Candidate rows are the local HaluEval and FEVER manifests plus TruthfulQA taxonomy rows when present. Promote only rows whose premises can be encoded deterministically: replayable Exp 2877 exact certificates, or HaluEval year-answer rows where the prompt contains the reference year and the candidate contains exactly one year. Label=0 year rows must answer with the reference year alone; label=1 year rows are supported only when the claimed year differs from the grounded reference. All other rows remain unsupported.",
+  "solver_backend": "z3-solver 4.16.0 + deterministic premise anchors",
+  "source_artifacts": [
+    "results/experiment_2877_exact_frontier_expansion_halueval_fever_v2.json",
+    "results/experiment_2878_halueval_fever_error_verifiability_v1.json",
+    "results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json",
+    "data/eval_manifests/halueval_20260522.jsonl",
+    "data/eval_manifests/fever_20260522.jsonl"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_2892_vericot_exact_frontier.py -q --no-cov -> passed, 4 passed",
+    ".venv/bin/pytest tests/python/test_experiment_2892_vericot_exact_frontier.py -q -n 0 --cov=python/carnot --cov-report= --cov-fail-under=0 && .venv/bin/coverage report --include=python/carnot/verify/vericot_exact_frontier_expansion.py --fail-under=100 --show-missing -> passed, vericot_exact_frontier_expansion.py 100%"
+  ],
+  "unsupported_reasons": {
+    "unsupported_no_deterministic_vericot_template": 974,
+    "unsupported_truthfulqa_taxonomy_has_no_logical_steps": 100,
+    "unsupported_year_only_does_not_establish_entity_grounding": 1
+  },
+  "vericot_frontier_ready": true
+}
