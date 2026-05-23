@@ -6032,3 +6032,4 @@ Ripgrep i |
 | 2026-05-23 07:16 UTC | SOTA Code Generation Bounded-Budget Expansion v1 | OK | 81 passed in 3.73s |
 | 2026-05-23 07:30 UTC | FR-11 Hardware-Accelerated Replay Pilot v1 | OK | 81 passed in 3.45s |
 | 2026-05-23 07:41 UTC | Operator Hardware Portfolio Status Card v1 | OK | 81 passed in 3.57s |
+| 2026-05-23 07:52 UTC | Capstone .274: Hardware Portfolio Reactivation + C | FAIL | Claude Code error: Error: Reached max turns (60) |
