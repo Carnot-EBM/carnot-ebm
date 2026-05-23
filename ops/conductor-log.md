@@ -6036,3 +6036,4 @@ Ripgrep i |
 | 2026-05-23 07:56 UTC | Capstone .274: Hardware Portfolio Reactivation + C | OK | cache hit: 97 passed in 3.29s |
 | 2026-05-23 08:38 UTC | Plan milestone 2026.05.275 | OK | 14 tasks proposed |
 | 2026-05-23 08:40 UTC | Milestone 2026.05.275 activated | OK | 14 tasks queued |
+| 2026-05-23 08:51 UTC | Archive .274 + Activate .275 | OK | 81 passed in 3.82s |
