@@ -1,33 +1,20 @@
-milestone: "2026.05.277"
-milestone_title: "Phase-3 Deep Think Corrigenda + Paper-v6 Narrowing Verification"
+milestone: "2026.05.278"
+milestone_title: "Structured Code Repair + Utility-Gated Self-Learning + GateMate Materialization"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 # Pre-staged 2026-05-23 by outer-loop per Pre-Staged Roadmap Convention.
 #
-# Centerpiece: the three measurement experiments required to rescue
-# Phase-3 paper-v6 from the FATAL findings of the 2026-05-23 Deep Think
-# round (see docs/research-notes/phase3-empirical-readiness-deep-think-
-# results.md). The .276 planner ran before these corrigenda were queued
-# in ops/known-issues.md, so .277 picks them up explicitly.
-#
-# Three FATAL-rescue measurements:
-#   exp2938 — KV260 MMD vs CPU Sequential Gibbs (Deep Think FATAL #1)
-#   exp2939 — CPU Same-Schedule Synchronous-Parallel Comparator
-#             (Deep Think FATAL #4)
-#   exp2940 — Verifier Ensemble AUPRC on Code Corpora at 92.5%
-#             negative base rate (Deep Think FATAL #5)
-#
-# Plus: hardware-continuity tasks per Hardware-Task Continuity
-# Discipline (PolarFire, KV260 follow-up after .276 scaling
-# projection), Paper-v6 Narrowing Discipline mechanical verification
-# (exp2944), matrix v11 incorporating Deep Think findings (exp2943),
-# and the standard archive/activate + capstone.
+# Centerpiece: .277 proved the paper can proceed only with narrow claims:
+# KV260 is not currently a Boltzmann/speedup headline, while code-corpus AUPRC
+# is strong and SOTA code generation remains weak. .278 therefore turns verifier
+# signal into structured repair, tests a real FR-11 utility gate, and finishes
+# the most actionable open hardware materialization path: GateMate.
 
 tasks:
-  - id: exp2937
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2937_archive_v276_activate_v277.json"
-    title: "Archive .276 + Activate .277"
+  - id: exp2949
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2949_archive_v277_activate_v278.json"
+    title: "Archive .277 + Activate .278"
     priority: critical
     agent_type: codex
     model: gpt-5.5
@@ -37,708 +24,880 @@ tasks:
     track: admin
     inference_substrate: aggregation_from_upstream_artifacts
     prior_failures:
-      - experiment_id: exp2923
-        verdict: "complete: archive_ready=true; archived_milestone=2026.05.275; activated_milestone=2026.05.276"
-        addressed_by: "Recurring archive/activation task with new source milestone .276 and target milestone .277."
+      - experiment_id: exp2937
+        verdict: "complete: archive_ready=true; archived_milestone=2026.05.276; activated_milestone=2026.05.277"
+        addressed_by: "Recurring archive/activation task with new source milestone .277 and target milestone .278."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-        Milestone 2026.05.276 has completed. Its terminal capstone is
-        results/experiment_2936_capstone_v276.json. This task performs the
-        standard archive/activation bookkeeping for 2026.05.277.
+        Run from {project_root} on {date}. Milestone 2026.05.277 has completed.
+        Its terminal capstone is results/experiment_2948_capstone_v277.json.
+        This task performs the standard archive/activation bookkeeping for
+        2026.05.278 without modifying research-roadmap.yaml.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-roadmap.yaml
+        - research-roadmap-next.yaml
+        - results/experiment_2948_capstone_v277.json
+        - research-complete.yaml
+        - ops/status.md
+        - ops/changelog.md
+
+      TASK:
+        Archive .277 into research-complete.yaml if it is not already archived,
+        confirm the next-roadmap milestone is 2026.05.278, and write the
+        activation artifact.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS: results/experiment_2936_capstone_v276.json exists.
-        1. Archive .276 in research-complete.yaml.
-        2. Confirm research-roadmap-next.yaml milestone is 2026.05.277.
-        3. Summarize the .276 capstone fields.
-        4. Write deliverable JSON.
+        0. PRECONDITIONS: results/experiment_2948_capstone_v277.json exists and
+           research-roadmap-next.yaml milestone equals 2026.05.278.
+        1. Read the .277 capstone and summarize paper_ready, headline_outcome,
+           clean/flagged/blocked/missing counts, and next gaps.
+        2. Append .277 completion metadata to research-complete.yaml only if
+           missing; do not duplicate an existing .277 milestone entry.
+        3. Verify research-roadmap.yaml remains untouched and current.
+        4. Write the deliverable JSON.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Self-declared terminal state per Verdict Terminal-Prefix Discipline."
-        archived_milestone: "2026.05.276"
-        activated_milestone: "2026.05.277"
-        capstone_source: "results/experiment_2936_capstone_v276.json"
+        honest_verdict: str
+        archived_milestone: "2026.05.277"
+        activated_milestone: "2026.05.278"
+        capstone_source: "results/experiment_2948_capstone_v277.json"
         paper_ready_from_capstone: bool
+        headline_outcome_from_capstone: str
         clean_artifacts_from_capstone: list
         flagged_artifacts_from_capstone: list
         blocked_artifacts_from_capstone: list
         missing_artifacts_from_capstone: list
-        pilot_only_artifacts_from_capstone: list
+        archive_ready: bool
         inference_substrate: "aggregation_from_upstream_artifacts"
         duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-      Do NOT push. Do NOT modify scripts/research_conductor.py.
-
-  - id: exp2938
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2938_kv260_mmd_vs_cpu_sequential_gibbs_v1.json"
-    title: "KV260 MMD vs CPU Sequential Gibbs (Deep Think FATAL #1 Rescue)"
+  - id: exp2950
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2950_code_taxonomy_repair_prompt_manifest_v1.json"
+    title: "SOTA Code Failure Taxonomy Repair Prompt Manifest v1"
     priority: critical
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
+    requires_gpu: true
     max_turns: 40
-    estimated_wall_time_min: 60
-    track: hardware
-    inference_substrate: hardware_smoke
+    estimated_wall_time_min: 45
+    track: code_generation
+    inference_substrate: aggregation_from_upstream_artifacts
     prior_failures:
-      - experiment_id: exp2898
-        verdict: "complete: kv260_hardware_latency_transcript_recorded"
-        addressed_by: "exp2898 anchored 24 µs/sample but did not check whether the FPGA's synchronous Glauber produces Boltzmann samples or a Non-Equilibrium Steady State. Deep Think 2026-05-23 FATAL #1 flagged that the chain may converge to a NESS / limit cycle rather than the target distribution. This task closes that gap by computing Maximum Mean Discrepancy (MMD) between exact CPU sequential Gibbs energies and KV260 synchronous parallel Glauber energies on identical Ising problems."
+      - experiment_id: exp2946
+        verdict: "complete: retain continuation executed with n_tasks=50, pass@1=0.0600, pass@k=0.1600"
+        addressed_by: "This task does not rerun blind generation; it designs a taxonomy-guided repair manifest from the .277 failure set and mandates SOTA local GGUF models for the downstream repair evaluation."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-        The 2026-05-23 Phase-3 Empirical-Readiness Deep Think round
-        flagged a FATAL ambiguity in exp2898's 24 µs/sample anchor:
-        synchronous parallel Glauber on frustrated bipartite Ising
-        graphs violates detailed balance and converges to a Non-
-        Equilibrium Steady State (NESS) or 2-cycle, NOT the target
-        Boltzmann distribution. The audit cannot distinguish "anchored
-        to wall-clock" from "physically meaningful sample" without a
-        comparison against an exact Boltzmann sampler.
-
-        This task computes Maximum Mean Discrepancy (MMD) between the
-        exact CPU sequential Gibbs energy distribution and the KV260
-        synchronous parallel Glauber energy distribution on identical
-        n=64 Ising problems (the same problems used by exp2898).
-
-        Outcome determines whether the paper-v6 "exact sampling on
-        FPGA" claim survives or is retracted per the Paper-v6
-        Narrowing Discipline.
+        Run from {project_root} on {date}. .277 retained a strong code-corpus
+        verifier AUPRC row but exposed weak SOTA code generation:
+        pass@1=0.0600 and pass@k=0.1600. The next step is not another blind
+        generation run; it is a repair manifest that turns deterministic failure
+        categories into targeted repair prompts for local SOTA GGUFs.
 
       EXISTING CODE TO READ FIRST:
-        - CLAUDE.md (search for "Paper-v6 Narrowing Discipline" and
-          "KV260 SSH-Not-SD-Card Discipline")
-        - docs/research-notes/phase3-empirical-readiness-deep-think-results.md
-        - results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json
-        - results/experiment_2912_same_basis_cpu_gibbs_baseline_v1.json
-          (the existing sequential Gibbs baseline)
+        - CLAUDE.md (SOTA Local Models; Failed-Experiment Rerun Discipline)
+        - scripts/experiment_template.py (cached_sota_pair docstring)
+        - results/experiment_2946_sota_code_generation_continuation_v1.json
+        - results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json
+        - results/experiment_2943_cross_corpus_matrix_v11.json
+        - research-references.md (post-.277 TruncProof / llguidance / MAZE sweep)
+
+      TASK:
+        Build a repair-prompt manifest for failed code candidates, grouped by
+        failure taxonomy and mapped to deterministic checks. This task prepares
+        the downstream live evaluation and may not claim a pass-rate improvement.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS:
-           a. ssh kria reachable (precondition pattern from exp2898).
-           b. exp2898 artifact present + bitstream_sha256 readable.
-           c. exp2898's three seeds [42, 137, 271] reproducible
-              (J matrix sha256 + h vector sha256 recorded).
-        1. Regenerate the same n=64 Ising problems exp2898 used.
-        2. Run exact CPU sequential Gibbs to convergence on each
-           problem: random spin order, single-spin updates,
-           10,000 post-burn-in samples per seed.
-        3. Run KV260 synchronous parallel Glauber on each problem at
-           exp2898's exact fixed-sweep schedule. Capture 10,000
-           per-sample energies.
-        4. For each seed, compute MMD^2 with RBF kernel between the
-           CPU and KV260 energy distributions. Use bandwidth = median
-           pairwise distance (standard practice).
-        5. Compute a permutation-test p-value for MMD^2 significance
-           (n_permutations=1000).
-        6. As a second-opinion divergence measure, compute the
-           Kolmogorov-Smirnov statistic + p-value per seed.
-        7. Write the verdict:
-           - If all three seeds have mmd_pvalue >= 0.01 AND ks_pvalue
-             >= 0.01 → distributions indistinguishable; paper-v6 can
-             retain narrow "approximately Boltzmann" claim.
-           - If any seed has mmd_pvalue < 0.01 OR ks_pvalue < 0.01 →
-             distributions distinguishable; paper-v6 must retract the
-             "exact sampling on FPGA" claim and re-frame KV260
-             outputs as "fixed-schedule heuristic samples."
+        0. PRECONDITIONS: .277 artifacts for exp2940, exp2943, and exp2946 exist.
+        1. Extract the failed/low-scoring candidate categories available from
+           exp2946 and the code-corpus verifier artifacts.
+        2. Define repair prompt templates for syntax errors, missing symbols,
+           wrong return type, failed tests, unsafe imports, and unsupported API
+           hallucinations.
+        3. Define deterministic post-repair checks: parser, tests where present,
+           static import/name checks, and the exp2940 verifier threshold.
+        4. Include MODEL_SPECS for downstream live use:
+           - unsloth/Qwen3.6-35B-A3B-GGUF
+           - unsloth/gemma-4-31B-it-GGUF
+           - unsloth/gemma-4-26B-A4B-it-GGUF
+           Legacy small models may appear only as CPU smoke tests.
+        5. Write a manifest artifact with sample IDs, taxonomy labels, prompt
+           templates, deterministic checks, and acceptance criteria.
 
       REQUIRED ARTIFACT FIELDS:
-        honest_verdict:
-          principle: "Must start with complete:/success: per Verdict Terminal-Prefix Discipline. If a precondition fails, blocked_<resource>."
-        inference_substrate:
-          value: "hardware_smoke"
-          principle: "KV260 fabric is exercised; CPU baseline runs locally without LLM inference."
-        preconditions_checked: list
-        cpu_sequential_gibbs_energies_sha256: str
-        kv260_synchronous_glauber_energies_sha256: str
-        bitstream_sha256_cited: str
-        per_seed_mmd_squared: list[float]
-        per_seed_mmd_pvalue: list[float]
-        per_seed_ks_statistic: list[float]
-        per_seed_ks_pvalue: list[float]
-        distributions_distinguishable:
-          principle: "Single bit summarizing the three-seed comparison. True if any seed shows distinguishable distributions at p<0.01."
-        paper_v6_recommendation:
-          principle: "Concrete textual recommendation: retain | narrow | retract for the 'exact sampling on FPGA' claim."
-        random_seeds_used:
-          value: [42, 137, 271]
-          principle: "Same seeds as exp2898 anchor."
-        reproducibility_checksum: str
-        methodology_note: str
+        honest_verdict: str
+        repair_prompt_manifest_ready: bool
+        source_artifacts: list
+        model_specs: list
+        legacy_models_only_for_smoke: bool
+        taxonomy_labels: list
+        repair_prompt_templates: object
+        deterministic_checks: list
+        downstream_eval_plan: object
+        inference_substrate: "aggregation_from_upstream_artifacts"
         duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-      ACCEPTANCE GATES:
-        - condition: "len(per_seed_mmd_squared) == 3 AND len(per_seed_mmd_pvalue) == 3"
-          principle: "Three-seed replication is the floor for distinguishable / indistinguishable claim."
-        - condition: "duration_s >= 60"
-          principle: "Real CPU sequential Gibbs to convergence + KV260 retrieval + MMD + KS tests cannot finish in under a minute."
-        - condition: "bitstream_sha256_cited matches the sha256 of the active KV260 bitstream"
-          principle: "Anchors the comparison to the exact bitstream exp2898 used."
+  - id: exp2951
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2951_structured_candidate_manifest_adapter_v1.json"
+    title: "Structured Candidate Manifest Adapter v1"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 35
+    estimated_wall_time_min: 40
+    track: code_generation
+    inference_substrate: deterministic_wiring
+    prior_failures:
+      - experiment_id: exp2926
+        verdict: "complete: constraintbench_corrigendum_ready=true"
+        addressed_by: "This task generalizes the structured-output correction into a reusable code-candidate manifest adapter rather than rerunning ConstraintBench directly."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. TruncProof, llguidance, and MAZE all
+        point to the same implementation lesson: syntax and manifest structure
+        should be constrained before verification, not repaired after arbitrary
+        prose output. This task creates a local-first structured candidate
+        adapter for the .278 code-repair evaluation.
 
-      Do NOT push. Do NOT modify the KV260 bitstream.
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - scripts/experiment_template.py
+        - research-references.md (post-.277 structured decoding entries)
+        - results/experiment_2946_sota_code_generation_continuation_v1.json
+        - any existing code-generation result parsing utilities under scripts/
 
-  - id: exp2939
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2939_cpu_synchronous_parallel_same_schedule_baseline_v1.json"
-    title: "CPU Synchronous-Parallel Same-Schedule Baseline (Deep Think FATAL #4 Rescue)"
+      TASK:
+        Implement or document a reusable structured candidate manifest adapter.
+        Prefer an installed local grammar backend such as llguidance or
+        llama.cpp grammar support when available; otherwise provide a
+        deterministic schema-validation fallback. Do not require a live LLM call.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: check for Python JSON schema support and optional
+           local grammar backends without installing new packages.
+        1. Define the candidate manifest schema: task_id, prompt_id, model_id,
+           raw_completion_ref, repaired_code, failure_taxonomy, parser_status,
+           test_status, verifier_score, and provenance checksums.
+        2. Add a small deterministic fixture or script if a suitable local
+           utilities location exists; otherwise write the schema and fixture
+           into the result artifact.
+        3. Validate at least three synthetic candidate records against the
+           schema, including one valid, one syntax failure, and one unsupported
+           import/API hallucination.
+        4. Record which structured-output backends are available locally.
+        5. Include MODEL_SPECS that downstream live tasks must use if they call
+           an LLM: unsloth/Qwen3.6-35B-A3B-GGUF, unsloth/gemma-4-31B-it-GGUF,
+           and unsloth/gemma-4-26B-A4B-it-GGUF.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        structured_decode_manifest_ready: bool
+        schema_version: str
+        schema_fields: list
+        local_backends_checked: list
+        llguidance_available: bool
+        llama_cpp_grammar_available: bool
+        validation_fixture_count: int
+        validation_fixture_passed: bool
+        model_specs_for_downstream_live_use: list
+        inference_substrate: "deterministic_wiring"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2952
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json"
+    title: "Gated SOTA Taxonomy-Guided Code Repair Evaluation v1"
     priority: critical
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 30
-    estimated_wall_time_min: 30
-    track: hardware
-    inference_substrate: live_llm_inference
-    prior_failures:
-      - experiment_id: exp2912
-        verdict: "complete: same_basis_cpu_gibbs_baseline_ready_no_speedup_claim"
-        addressed_by: "exp2912 ran CPU sequential Gibbs (detailed-balance preserving). Deep Think 2026-05-23 FATAL #4 flagged that comparing this to KV260 synchronous parallel Glauber (NOT detailed-balance preserving) is apples-to-oranges — measuring CPU-correct-sampler against FPGA-non-equilibrium-blinker. This task adds the apples-to-apples comparator: CPU executing the SAME synchronous parallel update schedule as the FPGA, so the speedup measurement is valid."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Deep Think FATAL #4: the exp2913 KV260-vs-CPU speedup-claim
-        eligibility is invalid because the CPU baseline (exp2912) used
-        sequential Gibbs (detailed-balance preserving) while KV260 uses
-        synchronous parallel Glauber (NOT detailed-balance preserving).
-        For an honest speedup measurement, both substrates must execute
-        the same algorithm.
-
-        This task implements CPU synchronous parallel Glauber with the
-        same bipartite checkerboard schedule as KV260, runs it on the
-        same n=64 problems, and computes the apples-to-apples speedup
-        (which may show KV260 SLOWER than CPU at n=64 — per Deep Think
-        FATAL #3 sub-scale crossover, this is the expected result).
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS:
-           a. exp2898 artifact present + reproducible seeds.
-           b. exp2912 artifact present (the existing sequential-Gibbs
-              baseline) so the comparison can also show the
-              algorithm-shape difference.
-        1. Implement a CPU synchronous-parallel Glauber updater
-           (NOT sequential Gibbs) using the same bipartite checkerboard
-           schedule as KV260. Single-thread Python / NumPy is sufficient.
-        2. Run on the same n=64 Ising problems used by exp2898 with the
-           same fixed-sweep budget (no early termination).
-        3. Time per-sample wall-clock with high-precision timer.
-        4. Compute the speedup-or-slowdown vs KV260's 24.0 µs/sample.
-        5. As a cross-check, compare the CPU synchronous-parallel
-           energy distribution against the KV260 synchronous-parallel
-           energy distribution (they should be statistically identical
-           — both are sampling the same NESS, not the Boltzmann).
-        6. Write the verdict:
-           - kv260_speedup_vs_same_schedule_cpu = (cpu_us / kv260_us).
-           - If < 1.0: KV260 is SLOWER than CPU at n=64 (expected per
-             Deep Think FATAL #3 crossover analysis). Paper-v6 must
-             retract the speedup claim at current d.
-           - If >= 1.0: KV260 is faster; paper-v6 can keep a narrow
-             speedup claim with explicit "at n=64 only" scoping.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        inference_substrate: "live_llm_inference"
-        preconditions_checked: list
-        cpu_synchronous_parallel_per_sample_us_median: float
-        cpu_synchronous_parallel_per_sample_us_p95: float
-        kv260_per_sample_us_cited: float
-        kv260_speedup_vs_same_schedule_cpu:
-          principle: "The apples-to-apples speedup measurement. < 1.0 means KV260 is slower at this n; >= 1.0 means faster."
-        energy_distribution_equivalence_test:
-          principle: "Cross-check that the same broken sampler produces statistically-equivalent distributions on both substrates."
-          shape: "{{ks_pvalue: float, mmd_squared: float}}"
-        random_seed: int
-        random_seeds_used: list[int]
-        reproducibility_checksum: str
-        paper_v6_recommendation: str
-        methodology_note: str
-        duration_s: float
-
-      ACCEPTANCE GATES:
-        - condition: "cpu_synchronous_parallel_per_sample_us_median > 0"
-          principle: "Real timing was recorded."
-        - condition: "energy_distribution_equivalence_test.ks_pvalue >= 0.01"
-          principle: "Same algorithm on both substrates should give statistically-equivalent energies. Failure here suggests an implementation bug, not a hardware finding."
-        - condition: "duration_s >= 20"
-          principle: "Real n=64 synchronous Glauber on CPU for 10k samples × 3 seeds + KS test."
-
-      Do NOT push.
-
-  - id: exp2940
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json"
-    title: "Verifier Ensemble AUPRC on Code Corpora at 92.5% Negative Base Rate (Deep Think FATAL #5 Rescue)"
-    priority: critical
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 25
-    estimated_wall_time_min: 25
-    track: evidence
-    inference_substrate: aggregation_from_upstream_artifacts
-    prior_failures:
-      - experiment_id: exp2910
-        verdict: "complete: SOTA code-generation corrigendum executed with pass@1=0.0750 and pass@k=0.1750"
-        addressed_by: "exp2910 measured the base rate (7.5% correct, 92.5% errors) on code corpora. Deep Think 2026-05-23 FATAL #5 flagged that at this base rate, the verifier ensemble's 0.91 AUROC implies PPV < 42% — when the verifier approves code, it is more likely wrong than right (hallucination multiplier). This task computes AUPRC instead of AUROC at the empirical negative base rate, plus PPV / recall / F1 across thresholds."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Deep Think FATAL #5: AUROC is misleading at extreme class
-        imbalance. With base model pass@1 = 0.075 on code corpora and
-        verifier AUROC = 0.91, the verifier's positive predictive
-        value can be below 50% — i.e., when the verifier approves
-        generated code, it's more likely wrong than right. The paper-
-        v6 draft cites AUROC as evidence of code-corpus capability;
-        this is statistically misleading.
-
-        This task recomputes the operating characteristic at the
-        EMPIRICAL negative base rate using AUPRC (not AUROC) plus
-        per-threshold precision/recall/F1.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS:
-           a. exp2910 artifact present.
-           b. exp2837 artifact present (FoVer per-verifier energies +
-              labels) for comparison baseline.
-        1. Load the verifier ensemble's per-candidate energy scores
-           from exp2910's k=8 candidate generations across all tasks.
-        2. Load the per-candidate pass/fail labels.
-        3. Compute the precision-recall curve. Report AUPRC.
-        4. Compute PPV, recall, F1 at three operating points:
-           - Max-F1 threshold (the "balanced" operating point)
-           - PPV=0.5 threshold (where verifier-approval has at least
-             50/50 odds of being correct)
-           - Recall=0.8 threshold (where verifier accepts 80% of
-             correct candidates)
-        5. Compute the random-baseline AUPRC for context (= positive
-           base rate = 0.075). If observed AUPRC ≤ random_baseline,
-           the verifier provides NO information on this corpus.
-        6. Recompute AUPRC on FoVer (from exp2837) using the same
-           code so the corpus gap is visible.
-        7. Write the verdict:
-           - If code_corpus_auprc > 2 * baseline_random_auprc AND
-             max_f1_operating_point.f1 > 0.30: verifier provides
-             meaningful information on code corpora. Paper-v6 can
-             retain code-corpus active-inference claims with explicit
-             AUPRC + base-rate framing.
-           - Otherwise: retract code-corpus active-inference claims;
-             pin as Limitation per Paper-v6 Narrowing Discipline.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        inference_substrate: "aggregation_from_upstream_artifacts"
-        preconditions_checked: list
-        code_corpus_auprc: float
-        code_corpus_baseline_random_auprc:
-          value: 0.075
-          principle: "Equal to the positive base rate; any verifier with AUPRC at or below this value provides no information on this corpus."
-        fover_corpus_auprc:
-          principle: "Recomputed from exp2837 for the apples-to-apples comparison the paper needs."
-        max_f1_operating_point:
-          shape: "{{threshold: float, ppv: float, recall: float, f1: float}}"
-        ppv_50_operating_point:
-          shape: "{{threshold: float, ppv: float, recall: float, f1: float}}"
-          principle: "The threshold where verifier-approval has at least 50/50 odds of being correct. If unreachable, verifier is a hallucination multiplier on this corpus."
-        recall_80_operating_point:
-          shape: "{{threshold: float, ppv: float, recall: float, f1: float}}"
-        paper_v6_recommendation:
-          principle: "retain | narrow | retract for the code-corpus active-inference claim."
-        cited_upstream_artifacts:
-          shape: "list of {{experiment_id, fields_imported, sha256}}"
-        methodology_note: str
-        duration_s: float
-
-      ACCEPTANCE GATES:
-        - condition: "0 <= code_corpus_auprc <= 1"
-          principle: "AUPRC is a probability."
-        - condition: "code_corpus_auprc != 0.5"
-          principle: "Exact 0.5 is suspicious (TAUTOLOGY-shape); real AUPRC values rarely hit exactly 0.5."
-        - condition: "len(cited_upstream_artifacts) >= 2"
-          principle: "At minimum cites exp2910 (code candidates + labels) and exp2837 (FoVer comparison baseline)."
-
-      Do NOT push.
-
-  - id: exp2941
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2941_polarfire_continuation_v1.json"
-    title: "PolarFire SoC Continuation: Constraint Scorer Expansion v1"
-    priority: high
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 30
-    estimated_wall_time_min: 45
-    track: hardware
-    inference_substrate: hardware_smoke
-    prior_failures:
-      - experiment_id: exp2900
-        verdict: "complete: polarfire_riscv64_constraint_scorer_hash_verified"
-        addressed_by: "exp2900 verified the PolarFire dispatch path with a 50-clause SAT instance. This task expands the constraint-scorer scope to 500 clauses to validate that the dispatch path scales without performance cliff."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Per Hardware-Task Continuity Discipline, every milestone has
-        at least one task per attached board. exp2900 anchored the
-        PolarFire dispatch path with a 50-clause SAT instance. This
-        continuation expands to 500 clauses to validate the dispatch
-        path scales without performance cliff.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS:
-           a. ssh polarfire reachable.
-           b. ssh polarfire 'uname -m' returns riscv64.
-        1. SCP a 500-clause SAT instance + scorer to the board.
-        2. Run on the board. Record per-clause evaluation times.
-        3. Compare median per-clause time at n=50 (exp2900) vs n=500
-           (this task). Should scale ~linearly without cliff.
-        4. Hash-verify scorer output against locally-computed expected.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        inference_substrate: "hardware_smoke"
-        preconditions_checked: list
-        polarfire_ssh_uptime_at_run: str
-        n_clauses: 500
-        per_clause_wall_clock_us_median: float
-        per_clause_wall_clock_us_p95: float
-        scaling_ratio_vs_exp2900: float
-        scorer_output_sha256: str
-        scorer_output_hash_verified: bool
-        random_seed: int
-        reproducibility_checksum: str
-        duration_s: float
-
-      ACCEPTANCE GATES:
-        - condition: "scorer_output_hash_verified is True"
-          principle: "Hash match prevents fabrication (cf. exp1680 exemplar)."
-        - condition: "duration_s >= 15"
-          principle: "Real SCP + remote execution + hash verification on 500 clauses cannot finish faster."
-
-      Do NOT push.
-
-  - id: exp2942
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2942_kv260_continuation_n_scaling_v1.json"
-    title: "KV260 Continuation: n-Scaling Latency Profile (anchors Deep Think FATAL #3 verification)"
-    priority: high
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 30
-    estimated_wall_time_min: 60
-    track: hardware
-    inference_substrate: hardware_smoke
-    prior_failures:
-      - experiment_id: exp2898
-        verdict: "complete: kv260_hardware_latency_transcript_recorded at n=64"
-        addressed_by: "exp2898 measured n=64 only. Deep Think FATAL #3 noted the CPU-FPGA crossover at n ≈ 240. This task profiles n ∈ {{64, 128, 256, 512, 1024}} so the paper can plot the actual measured crossover point (instead of extrapolating)."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-        Deep Think FATAL #3 identified that the KV260-vs-CPU crossover
-        falls at roughly n ≈ 240 spins, while the architecture scopes
-        d ∈ {{128, 256}}. This task replaces extrapolation with measurement:
-        run KV260 latency profiles at n ∈ {{64, 128, 256, 512, 1024}} so
-        the paper can plot real crossover data.
-
-      CONCRETE STEPS:
-        0. PRECONDITIONS: ssh kria + carnot_ising_v4 bitstream.
-        1. For n in {{64, 128, 256, 512, 1024}}: generate Ising
-           problem, run KV260 sampler, record per-sample latency
-           (median + p95 over 1000 samples).
-        2. Note: the carnot_ising_v4 bitstream may have a fixed n
-           parameter; if so, use the largest supported n and document
-           the limitation. Do NOT modify the bitstream.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        inference_substrate: "hardware_smoke"
-        preconditions_checked: list
-        bitstream_supports_variable_n: bool
-        per_n_results:
-          shape: "list of {{n: int, per_sample_us_median: float, per_sample_us_p95: float}}"
-        bitstream_sha256: str
-        random_seeds_used: list[int]
-        reproducibility_checksum: str
-        duration_s: float
-
-      Do NOT push.
-
-  - id: exp2943
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2943_cross_corpus_matrix_v11.json"
-    title: "Cross-Corpus Matrix v11 — Incorporate Deep Think Corrigenda + AUPRC Columns"
-    priority: high
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 25
-    estimated_wall_time_min: 25
-    track: evidence
-    inference_substrate: aggregation_from_upstream_artifacts
-    prior_failures:
-      - experiment_id: exp2935
-        verdict: "(pending - .276 task)"
-        addressed_by: "v10 (.276) carries the existing matrix forward. v11 adds AUPRC columns from exp2940 and incorporates the Deep Think corrigenda outcomes."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT:
-        Build cross-corpus matrix v11 incorporating exp2940 AUPRC
-        columns and the Deep Think corrigenda outcomes (exp2938 MMD,
-        exp2939 same-schedule speedup, exp2942 n-scaling profile).
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        inference_substrate: "aggregation_from_upstream_artifacts"
-        rows_clean: list
-        rows_flagged: list
-        rows_blocked: list
-        per_corpus_auprc: dict
-        kv260_same_schedule_speedup_recorded: float
-        kv260_n_crossover_measured: int
-        cited_upstream_artifacts: list
-        duration_s: float
-
-      Do NOT push.
-
-  - id: exp2944
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2944_paper_v6_narrowing_audit_v1.json"
-    title: "Paper-v6 Narrowing Discipline Mechanical Audit v1"
-    priority: high
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 25
-    estimated_wall_time_min: 20
-    track: paper
-    inference_substrate: aggregation_from_upstream_artifacts
-    prior_failures:
-      - experiment_id: exp2935
-        verdict: "(pending - .276 task)"
-        addressed_by: "This is the first mechanical audit of whether autonomous-loop output respects CLAUDE.md 'Paper-v6 Narrowing Discipline'. Scans docs/arxiv-paper/main.tex, docs/technical-report.md, and recent capstone artifacts for the 7 retracted phrasings."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT:
-        CLAUDE.md "Paper-v6 Narrowing Discipline" (Deep Think 2026-05-23)
-        forbids autonomous-loop output from re-asserting 7 retracted
-        claims. This task is the first mechanical audit of compliance.
-
-      CONCRETE STEPS:
-        1. Read CLAUDE.md section "Paper-v6 Narrowing Discipline".
-        2. Extract the seven forbidden phrasings into a regex list.
-        3. Scan docs/arxiv-paper/main.tex, docs/technical-report.md,
-           docs/technical-report.html, docs/index.html, and the
-           ten most recent `results/experiment_*capstone*.json` files
-           for matches.
-        4. For each hit, record: file, line, matched phrase, the
-           retracted claim it corresponds to, and a suggested fix.
-        5. Do NOT auto-rewrite operator-curated docs (per Public
-           Documentation Discipline). Auto-rewrite is permitted for
-           the capstone artifacts ONLY where the retracted claim
-           was synthesized by an earlier autonomous task.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        inference_substrate: "aggregation_from_upstream_artifacts"
-        files_scanned: list[str]
-        per_file_hits:
-          shape: "list of {{file, line, matched_phrase, retracted_claim_id, suggested_fix}}"
-        n_total_hits: int
-        n_operator_curated_hits_left_for_operator: int
-        n_autonomous_artifact_hits_auto_fixed: int
-        suggested_lint_script_path:
-          principle: "Path to a proposed pre-commit hook that would catch future violations. Just suggest; do not commit the hook."
-        cited_upstream_artifacts: list
-        duration_s: float
-
-      Do NOT push. Do NOT modify operator-curated docs.
-
-  - id: exp2945
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2945_phase4_vfe_firewall_verification_v1.json"
-    title: "Phase-4 VFE Firewall Verification v1 (Deep Think FATAL #6)"
-    priority: high
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 25
-    estimated_wall_time_min: 20
-    track: paper
-    inference_substrate: aggregation_from_upstream_artifacts
-    prior_failures:
-      - experiment_id: exp1805
-        verdict: "complete: EBT system-2 verification"
-        addressed_by: "Different scope: this task audits Phase-4 VFE citations in the paper draft, not EBT system-2 verification."
-        retire_if_same_verdict: false
-      - experiment_id: exp2766
-        verdict: "complete: LOO-CV and held-out validation finished (Phase-4 FEP adversarial recheck)"
-        addressed_by: "Different scope: exp2766 produced the Phase-4 evidence; this task verifies that evidence is not improperly cited in defense of FPGA claims (Deep Think FATAL #6 firewall)."
-        retire_if_same_verdict: false
-    prompt: |
-      CONTEXT:
-        Deep Think FATAL #6 flagged that Phase-4 VFE bounds (exp2550,
-        exp2748, exp2753, exp2766) are valid only on continuous-sampler
-        deployment (RTX 3090). On the KV260's synchronous Glauber
-        (which collapses to limit cycles), entropy can drop to zero
-        and the partition function ceases to exist. The paper-v6 draft
-        must firewall the citations: Phase-4 results may NOT defend
-        FPGA-deployment claims.
-
-        This task scans recent capstones + the paper-v6 LaTeX for any
-        Phase-4 citation that's used in defense of a KV260 / hardware
-        claim. Each hit needs a firewall paragraph in the paper.
-
-      CONCRETE STEPS:
-        1. Build a regex list of Phase-4 citations: exp2550, exp2748,
-           exp2753, exp2766, "Phase-4 active inference", "variational
-           free energy", "FEP factor graph", "FEP aggregator".
-        2. Scan the paper-v6 LaTeX source + recent capstones for these
-           citations.
-        3. For each hit, check whether the surrounding context
-           ALSO contains hardware / FPGA / KV260 / Glauber references.
-           Each such co-occurrence is a firewall violation.
-        4. Draft the firewall paragraph for the operator to integrate.
-
-      REQUIRED ARTIFACT FIELDS:
-        honest_verdict: str
-        inference_substrate: "aggregation_from_upstream_artifacts"
-        files_scanned: list
-        firewall_violations:
-          shape: "list of {{file, line, phase_4_citation, hardware_context_snippet}}"
-        n_violations: int
-        firewall_paragraph_draft:
-          principle: "Operator-integrable LaTeX snippet stating that Phase-4 VFE bounds apply only to RTX 3090 continuous-sampler deployment."
-        cited_upstream_artifacts: list
-        duration_s: float
-
-      Do NOT push. Do NOT modify operator-curated docs.
-
-  - id: exp2946
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2946_sota_code_generation_continuation_v1.json"
-    title: "SOTA Code Generation Continuation v1 (gated on exp2940 AUPRC outcome)"
-    priority: medium
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 40
-    estimated_wall_time_min: 60
     requires_gpu: true
-    track: live-evaluation
+    max_turns: 60
+    estimated_wall_time_min: 180
+    track: code_generation
     inference_substrate: live_llm_inference
+    gated_on:
+      - upstream: exp2950
+        artifact_field: repair_prompt_manifest_ready
+        op: "=="
+        value: true
+      - upstream: exp2951
+        artifact_field: structured_decode_manifest_ready
+        op: "=="
+        value: true
     prior_failures:
-      - experiment_id: exp2910
-        verdict: "complete: pass@1=0.0750, pass@k=0.1750"
-        addressed_by: "If exp2940 (AUPRC analysis) shows the verifier ensemble provides meaningful information on code corpora, this task expands to n=50 tasks. If AUPRC collapses, this task instead investigates WHY the verifier fails on code (mode-collapse, OOD-modality blindspot, etc.) without claiming a pass-rate."
+      - experiment_id: exp2946
+        verdict: "complete: retain continuation executed with n_tasks=50, pass@1=0.0600, pass@k=0.1600"
+        addressed_by: "The evaluation now repairs known failed candidates using taxonomy prompts and structured manifests instead of repeating blind generation."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-        Outcome-gated on exp2940's AUPRC verdict.
+        Run from {project_root} on {date}. This is the headline live-model code
+        task for .278. It is gated on exp2950 and exp2951 so it only runs when
+        the repair manifest and structured candidate adapter exist. It must use
+        mandated local SOTA GGUF models for any headline result.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (SOTA Local Models; Inference Substrate)
+        - scripts/experiment_template.py (cached_sota_pair pattern)
+        - results/experiment_2950_code_taxonomy_repair_prompt_manifest_v1.json
+        - results/experiment_2951_structured_candidate_manifest_adapter_v1.json
+        - results/experiment_2946_sota_code_generation_continuation_v1.json
+        - results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json
+
+      TASK:
+        Run a bounded taxonomy-guided repair evaluation on failed .277 code
+        candidates and measure whether repair improves pass@1/pass@k or reduces
+        syntax/schema failures without increasing false verifier accepts.
 
       CONCRETE STEPS:
-        0. PRECONDITIONS:
-           a. exp2940 artifact present.
-           b. .venv torch CUDA available.
-        1. Read exp2940's paper_v6_recommendation field:
-           - "retain" → expand n_tasks to 50, same protocol as exp2910.
-           - "narrow" → expand n_tasks to 20 with explicit Limitation framing.
-           - "retract" → switch to failure-mode analysis (no pass-rate claim).
-        2. Execute the corresponding protocol.
+        0. PRECONDITIONS: dual RTX 3090 host available, local GGUF runtime works,
+           exp2950 and exp2951 artifacts are present, and cached_sota_pair()
+           resolves at least one mandated headline GGUF.
+        1. Select a bounded repair set from exp2946 failures, preserving task IDs
+           and original failure categories.
+        2. Run baseline no-taxonomy repair and taxonomy-guided repair under the
+           same sample budget.
+        3. MODEL_SPECS must include at least one headline model and should use:
+           - unsloth/Qwen3.6-35B-A3B-GGUF
+           - unsloth/gemma-4-31B-it-GGUF
+           - unsloth/gemma-4-26B-A4B-it-GGUF
+           Legacy small models are allowed only for CPU smoke-test plumbing.
+        4. Validate every candidate through the structured manifest schema,
+           parser/static checks, available tests, and the code verifier threshold.
+        5. Report pass@1, pass@k, syntax failure rate, schema failure rate,
+           verifier acceptance rate, and false-accept audit notes.
+        6. Set taxonomy_repair_delta_pass=true only if pass@1_delta > 0 or
+           syntax_failure_rate_delta < 0 while false_accept_delta <= 0.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
         inference_substrate: "live_llm_inference"
-        exp2940_recommendation_used: str
-        protocol_executed: str
-        pass_at_1: "float | null"
-        pass_at_k: "float | null"
-        failure_mode_analysis: "dict | null"
-        random_seeds_used: list[int]
+        preconditions_checked: list
+        model_specs: list
+        headline_models_used: list
+        legacy_models_only_for_smoke: bool
+        n_tasks: int
+        baseline_pass_at_1: float
+        repair_pass_at_1: float
+        pass_at_1_delta: float
+        baseline_pass_at_k: float
+        repair_pass_at_k: float
+        pass_at_k_delta: float
+        syntax_failure_rate_delta: float
+        schema_failure_rate_delta: float
+        false_accept_delta: float
+        taxonomy_repair_delta_pass: bool
+        candidate_manifest_sha256: str
         reproducibility_checksum: str
         duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-      Do NOT push.
-
-  - id: exp2947
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2947_fr11_continuation_replay_curriculum_v1.json"
-    title: "FR-11 Continuation: Replay Curriculum Scheduler v1"
-    priority: medium
-    agent_type: codex
-    model: gpt-5.5
-    requires_codex: true
-    max_turns: 25
+  - id: exp2953
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2953_code_verifier_threshold_policy_v1.json"
+    title: "Code Verifier Threshold Policy v1"
+    priority: high
+    max_turns: 30
     estimated_wall_time_min: 30
-    track: self-learning
+    track: verifier
     inference_substrate: aggregation_from_upstream_artifacts
     prior_failures:
-      - experiment_id: exp2918
-        verdict: "complete: verifier_process_rewards_updated_replay_scheduler"
-        addressed_by: "exp2918 set up the replay scheduler. This task adds a curriculum: easier examples replayed more often early, harder examples replayed more often late. Pilot only; no production claim."
+      - experiment_id: exp2940
+        verdict: "complete: verifier provides meaningful information on code corpora"
+        addressed_by: "This task consumes the successful AUPRC row to produce an operating threshold policy rather than rerunning the verifier measurement."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-        FR-11 self-learning needs a replay curriculum, not flat-uniform
-        sampling. Pilot the curriculum scheduler.
+        Run from {project_root} on {date}. exp2940 showed the code verifier
+        provides meaningful information with AUPRC 0.888889. AUPRC alone is not
+        an operating policy. This task chooses thresholds and deployment
+        boundaries for repair/generation filtering.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Verifier Authenticity Discipline)
+        - results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json
+        - results/experiment_2943_cross_corpus_matrix_v11.json
+        - ops/status.md
+        - research-program.md
+
+      TASK:
+        Convert exp2940 into a threshold policy with precision/recall tradeoffs,
+        false-accept limits, and clear scope boundaries for code repair.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2940 artifact exists and includes enough scores or
+           summary statistics to derive operating points.
+        1. Reconstruct or summarize threshold candidates from the available score
+           distribution.
+        2. Select conservative, balanced, and permissive operating points.
+        3. For each point, report expected PPV, recall, false accept rate, and
+           recommended use in candidate filtering or repair triage.
+        4. If raw score distributions are missing, write a blocked/partial
+           artifact that names the missing field and proposes the next command.
+        5. Do not invent scores or smooth over missing provenance.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
+        threshold_policy_ready: bool
+        source_artifacts: list
+        operating_points: list
+        selected_default_threshold: float
+        expected_ppv_at_default: float
+        expected_recall_at_default: float
+        expected_false_accept_rate_at_default: float
+        deployment_boundary: str
+        missing_score_distribution: bool
         inference_substrate: "aggregation_from_upstream_artifacts"
-        curriculum_schedule_used: str
-        replay_count_distribution: dict
-        cited_upstream_artifacts: list
         duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-      Do NOT push.
-
-  - id: exp2948
-    milestone: "2026.05.277"
-    deliverable: "results/experiment_2948_capstone_v277.json"
-    title: "Capstone .277: Deep Think Corrigenda + Paper-v6 Narrowing Verification"
+  - id: exp2954
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2954_fr11_utility_gated_replay_curriculum_v2.json"
+    title: "FR-11 Utility-Gated Replay Curriculum v2"
     priority: critical
-    agent_type: claude
-    model: opus
-    requires_claude: true
-    max_turns: 60
-    estimated_wall_time_min: 30
-    track: admin
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: self_learning
     inference_substrate: aggregation_from_upstream_artifacts
+    continuous_self_learning: true
     prior_failures:
-      - experiment_id: exp2936
-        verdict: "(pending - .276 capstone)"
-        addressed_by: "Each milestone has a unique capstone. This one synthesizes the three Deep Think Corrigenda outcomes (exp2938 MMD, exp2939 same-schedule speedup, exp2940 AUPRC), the Paper-v6 Narrowing Discipline audit (exp2944), the Phase-4 firewall verification (exp2945), and the hardware-continuity outcomes (exp2941 PolarFire, exp2942 KV260 n-scaling)."
-        retire_if_same_verdict: false
+      - experiment_id: exp2947
+        verdict: "complete: nonuniform_continuation_replay_curriculum_piloted"
+        addressed_by: "This continuation adds held-out utility, forgetting guard, and rollback semantics instead of only piloting nonuniform replay."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-        Close milestone .277. The headline question for the .277
-        capstone: "do the Deep Think Corrigenda outcomes rescue the
-        paper-v6 draft, narrow it, or require additional rounds?"
+        Run from {project_root} on {date}. research-program.md requires a
+        continuous self-learning experiment. exp2947 piloted nonuniform replay,
+        but did not prove held-out utility or rollback. This task tests whether
+        verifier-weighted replay improves a held-out repair/verification slice
+        without forgetting.
+
+      EXISTING CODE TO READ FIRST:
+        - research-program.md (Continuous Self-Learning section)
+        - _bmad/prd.md (FR-11)
+        - CLAUDE.md (FR-11 / inference substrate / authenticity rules)
+        - results/experiment_2947_fr11_continuation_replay_curriculum_v1.json
+        - results/experiment_2946_sota_code_generation_continuation_v1.json
+        - results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json
+
+      TASK:
+        Build an offline utility-gated replay policy that updates replay weights
+        only when verifier-grounded held-out utility improves and rolls back when
+        a forgetting guard fails. This is self-learning at the scheduler/memory
+        layer, not closed-model weight retraining.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2947, exp2946, and exp2940 artifacts exist.
+        1. Define train/replay and held-out slices from existing artifacts.
+        2. Compare flat replay, nonuniform replay, and utility-gated replay.
+        3. Use verifier outcomes and repair taxonomy as the reward/energy signal.
+        4. Add a forgetting guard on a stable held-out slice; rollback any policy
+           update that degrades it.
+        5. Record whether utility-gated replay improves held-out utility over
+           the .277 nonuniform pilot.
+        6. Include a note on Soft-Radial Projection only as future design context
+           for differentiable constraint-preserving adaptation.
 
       REQUIRED ARTIFACT FIELDS:
         honest_verdict: str
+        continuous_self_learning_task: true
+        self_learning_utility_artifact_ready: bool
+        source_artifacts: list
+        replay_policies_compared: list
+        heldout_utility_baseline: float
+        heldout_utility_after: float
+        heldout_utility_delta: float
+        self_learning_utility_positive: bool
+        forgetting_guard_metric_before: float
+        forgetting_guard_metric_after: float
+        forgetting_guard_passed: bool
+        rollback_triggered: bool
+        update_rule: object
         inference_substrate: "aggregation_from_upstream_artifacts"
-        milestone: "2026.05.277"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2955
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2955_gatemate_constraints_materialization_v4.json"
+    title: "GateMate Constraints Materialization v4"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 45
+    estimated_wall_time_min: 60
+    track: hardware
+    inference_substrate: deterministic_wiring
+    prior_failures:
+      - experiment_id: exp2927
+        verdict: "blocked_constraints_missing"
+        addressed_by: "This attempt starts from the corrected himbaechel toolchain and explicitly materializes the missing n=16 constraints/test vectors before any bitstream build."
+        retire_if_same_verdict: true
+      - experiment_id: exp2914
+        verdict: "blocked_gatemate_toolchain_missing"
+        addressed_by: "The obsolete nextpnr-gatemate assumption has been replaced by nextpnr-himbaechel --device CCGM1A1 plus gmpack."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. GateMate is no longer blocked on the
+        old obsolete nextpnr-gatemate assumption; the known active blocker is
+        missing constraints/bitstream materialization for a Carnot n=16 Ising
+        tile. This task prepares the minimum buildable constraint package.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Hardware Task Continuity; Failed-Experiment Rerun Discipline)
+        - research-hardware-wishlist.md (GateMate section)
+        - results/experiment_2927_gatemate_himbaechel_constraints_preflight_v3.json
+        - results/experiment_2929_gatemate_flash_timing_boundary_v1.json
+        - any RTL / FPGA files under hardware/, fpga/, rtl/, or experiments/
+
+      TASK:
+        Locate or create the minimum GateMate n=16 constraints/test-vector
+        package needed for a later bitstream build. This task may write small
+        source/config files if no suitable package exists, but it must not flash
+        hardware.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: check command -v yosys, nextpnr-himbaechel, gmpack,
+           and openFPGALoader; check openFPGALoader -c dirtyJtag --detect if
+           safe in the current environment.
+        1. Search the repo for existing GateMate, CCGM1A1, Ising tile, and
+           constraint files.
+        2. If missing, create a minimal n=16 GateMate constraints/test-vector
+           package using existing local RTL conventions.
+        3. Record pin/clock assumptions, top-module name, and test-vector hash.
+        4. Dry-run lint/synthesis-only if possible without requiring PnR.
+        5. Write the artifact with exact file paths changed or created.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        preconditions_checked: list
+        gatemate_constraints_ready: bool
+        constraints_file_paths: list
+        test_vector_paths: list
+        top_module: str
+        clock_assumption: str
+        dirtyjtag_detected: bool
+        toolchain_versions: object
+        files_changed: list
+        reproducibility_checksum: str
+        inference_substrate: "deterministic_wiring"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2956
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2956_gatemate_n16_bitstream_build_v4.json"
+    title: "Gated GateMate n=16 Bitstream Build v4"
+    priority: critical
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 90
+    track: hardware
+    inference_substrate: hardware_build
+    gated_on:
+      - upstream: exp2955
+        artifact_field: gatemate_constraints_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2928
+        verdict: "GATE_BLOCK: upstream retired (exp2927)"
+        addressed_by: "The upstream is now exp2955, a new constraints-materialization artifact, not the retired exp2927 chain."
+        retire_if_same_verdict: true
+      - experiment_id: exp2929
+        verdict: "blocked_gatemate_bitstream_missing"
+        addressed_by: "This task attempts to create the bitstream before any flash/timing smoke is attempted."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. This task is gated on exp2955 because
+        prior GateMate attempts failed before a valid constraints package and
+        bitstream existed. Build evidence is useful even if flash is deferred.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Hardware Task Continuity)
+        - research-hardware-wishlist.md
+        - results/experiment_2955_gatemate_constraints_materialization_v4.json
+        - constraints/test-vector files listed in exp2955
+
+      TASK:
+        Build a GateMate n=16 bitstream from the exp2955 constraints package
+        using the current OSS CAD Suite path. Do not flash the board in this
+        task.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2955.gatemate_constraints_ready is true; yosys,
+           nextpnr-himbaechel, gmpack, and openFPGALoader are available.
+        1. Run synthesis with yosys synth_gatemate for the exp2955 top module.
+        2. Run place-and-route with nextpnr-himbaechel --device CCGM1A1.
+        3. Pack with gmpack.
+        4. Capture logs, timing summary, utilization, and bitstream SHA256.
+        5. Write a blocked artifact if any tool fails, including the exact
+           failing command and first actionable error.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        preconditions_checked: list
+        gatemate_bitstream_built: bool
+        synthesis_command: str
+        pnr_command: str
+        pack_command: str
+        bitstream_path: str
+        bitstream_sha256: str
+        timing_summary: object
+        utilization_summary: object
+        build_log_paths: list
+        failure_command: str
+        failure_excerpt: str
+        inference_substrate: "hardware_build"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2957
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2957_gatemate_flash_timing_smoke_v2.json"
+    title: "Gated GateMate Flash + Timing Smoke v2"
+    priority: high
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 90
+    track: hardware
+    inference_substrate: hardware_smoke
+    gated_on:
+      - upstream: exp2956
+        artifact_field: gatemate_bitstream_built
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2929
+        verdict: "blocked_gatemate_bitstream_missing"
+        addressed_by: "This task is gated on a concrete exp2956 bitstream artifact and only runs after bitstream_path and bitstream_sha256 exist."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. This task is the first bounded
+        GateMate flash/timing smoke after a real n=16 bitstream exists. It may
+        report board contact and output/timing evidence only; no speedup,
+        Boltzmann, or thermodynamic sampling claim is allowed.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Hardware Task Continuity)
+        - research-hardware-wishlist.md (GateMate)
+        - results/experiment_2956_gatemate_n16_bitstream_build_v4.json
+        - bitstream and logs listed in exp2956
+
+      TASK:
+        Flash the GateMate n=16 bitstream if the board is detected, run the
+        smallest available smoke/timing check, and record transcripts and hashes.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2956.gatemate_bitstream_built is true,
+           openFPGALoader detects DirtyJTAG/GateMate, and the bitstream SHA256
+           matches exp2956.
+        1. Run openFPGALoader detection and record the transcript.
+        2. Flash using the board/tool command documented by the local GateMate
+           toolchain and exp2956 artifact.
+        3. Run a smoke vector or timing boundary check if the board interface
+           supports readback/output capture.
+        4. Record observed output hash, transcript paths, and any timing numbers.
+        5. If the board or readback path is unavailable, write a blocked artifact
+           with the exact failing command.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        preconditions_checked: list
+        board_detected: bool
+        bitstream_sha256_verified: bool
+        flash_attempted: bool
+        flash_succeeded: bool
+        smoke_vector_passed: bool
+        observed_output_sha256: str
+        timing_observation: object
+        transcript_paths: list
+        no_speedup_claim: true
+        no_boltzmann_claim: true
+        inference_substrate: "hardware_smoke"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2958
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2958_polarfire_1000_clause_scorer_v2.json"
+    title: "PolarFire 1000-Clause Scorer Hash v2"
+    priority: high
+    model: opus
+    max_turns: 80
+    estimated_wall_time_min: 90
+    track: hardware
+    inference_substrate: hardware_smoke
+    prior_failures:
+      - experiment_id: exp2941
+        verdict: "complete: polarfire_500_clause_constraint_scorer_hash_verified"
+        addressed_by: "This is a scaled continuation from 500 to 1000 clauses with explicit hash/transcript boundaries, not a rerun of the same 500-clause artifact."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. .277 produced a PolarFire 500-clause
+        constraint-scorer hash verification. This task tests whether the same
+        narrow scorer path can extend to 1000 clauses with reproducible hash and
+        transcript evidence.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Hardware Task Continuity; Verifier Authenticity Discipline)
+        - research-hardware-wishlist.md (PolarFire section)
+        - results/experiment_2941_polarfire_continuation_v1.json
+        - results/experiment_2941_polarfire_transcript_v1.json
+        - any PolarFire scripts or notebooks referenced by the .277 artifact
+
+      TASK:
+        Run or simulate the PolarFire 1000-clause scorer continuation using the
+        existing board path when reachable. Report only hash/transcript/scoring
+        evidence and keep performance claims out of scope.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: PolarFire host reachable through the documented path or
+           existing .277 transcript sufficient to construct a blocked artifact.
+        1. Reproduce the 500-clause baseline hash context from exp2941.
+        2. Generate or load a deterministic 1000-clause test instance.
+        3. Run the scorer path or document the exact block if hardware is not
+           reachable.
+        4. Record scorer output hash, input hash, transcript path, and elapsed
+           time if measured.
+        5. Mark no_speedup_claim=true and no_general_acceleration_claim=true.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        preconditions_checked: list
+        polarfire_1000_clause_hash_verified: bool
+        baseline_500_clause_artifact: str
+        clause_count: int
+        input_sha256: str
+        scorer_output_sha256: str
+        transcript_paths: list
+        elapsed_ms: float
+        board_reachable: bool
+        no_speedup_claim: true
+        no_general_acceleration_claim: true
+        inference_substrate: "hardware_smoke"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2959
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json"
+    title: "NL-to-Z3 Execution Repair Mini v2"
+    priority: high
+    requires_gpu: true
+    max_turns: 60
+    estimated_wall_time_min: 120
+    track: solver_verification
+    inference_substrate: live_llm_inference
+    prior_failures:
+      - experiment_id: exp2931
+        verdict: "blocked_z3_execution_incomplete"
+        addressed_by: "This attempt makes Z3 execution the first precondition, constrains the problem set, and separates parseability, solver execution, and answer accuracy."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. The LLMEval-Logic/Z3 mini path
+        previously blocked at Z3 execution. .278 needs a small exact-verifier
+        repair so local SOTA proposals can be accepted or rejected by Z3 rather
+        than by LLM self-judgment.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Verifier Authenticity; SOTA Local Models)
+        - scripts/experiment_template.py (cached_sota_pair pattern)
+        - results/experiment_2931_llmeval_logic_z3_mini_v1.json
+        - research-references.md (LLMEval-Logic and AquaForte entries)
+        - any Z3 or logic benchmark utilities under scripts/ or tests/
+
+      TASK:
+        Repair a bounded natural-language-to-Z3 execution mini benchmark. The
+        LLM may propose formalizations, but Z3 is the authority. Report
+        parseability, Z3 execution, satisfiability/validity correctness, and
+        answer accuracy separately.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: Python z3 package import succeeds, local GGUF runtime
+           is available for any live proposal, and cached_sota_pair() resolves a
+           mandated headline model.
+        1. Select 8-12 small logic items with known Z3-checkable labels.
+        2. MODEL_SPECS must include at least one of:
+           - unsloth/Qwen3.6-35B-A3B-GGUF
+           - unsloth/gemma-4-31B-it-GGUF
+           - unsloth/gemma-4-26B-A4B-it-GGUF
+        3. Generate or repair formalizations under a strict schema.
+        4. Execute Z3 on every parseable formalization; never treat model text as
+           a proof.
+        5. Report failure categories: unparseable, Z3 exception, wrong formula,
+           wrong answer, and solver-verified correct.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        inference_substrate: "live_llm_inference"
+        preconditions_checked: list
+        model_specs: list
+        headline_models_used: list
+        z3_import_ok: bool
+        z3_execution_repaired: bool
+        n_items: int
+        parseability_rate: float
+        z3_execution_rate: float
+        solver_verified_accuracy: float
+        answer_accuracy: float
+        failure_categories: object
+        formalization_manifest_sha256: str
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2960
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2960_cross_corpus_matrix_v12.json"
+    title: "Cross-Corpus Matrix v12"
+    priority: high
+    max_turns: 40
+    estimated_wall_time_min: 45
+    track: matrix
+    inference_substrate: aggregation_from_upstream_artifacts
+    gated_on:
+      - upstream: exp2954
+        artifact_field: self_learning_utility_artifact_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2943
+        verdict: "complete: matrix_v11_ready=true; code_corpus_auprc=0.888889; kv260_same_schedule_speedup_recorded=0.98225; kv260_n_crossover_measured=0"
+        addressed_by: "Matrix v12 incorporates .278 code-repair, self-learning, solver, GateMate, and PolarFire rows while preserving .277 narrowed claim boundaries."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. Cross-corpus matrix v12 should
+        aggregate .278 outcomes without rerunning live inference or hardware. It
+        must preserve .277's narrowed KV260 claims and separate clean, blocked,
+        gated, pilot-only, and projection-only rows.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Paper-v6 Narrowing Discipline; inference substrate rules)
+        - results/experiment_2943_cross_corpus_matrix_v11.json
+        - results/experiment_2948_capstone_v277.json
+        - all completed results/experiment_295*.json artifacts available so far
+        - ops/status.md
+
+      TASK:
+        Build matrix v12 from completed .278 artifacts and .277 carry-forward
+        facts. This is aggregation only.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2954 self_learning_utility_artifact_ready is true;
+           read all available .278 artifacts and tolerate missing/blocked
+           hardware branches honestly.
+        1. Start from matrix v11 and add rows for structured repair, threshold
+           policy, self-learning utility, GateMate, PolarFire, and NL-to-Z3.
+        2. Label each row clean, flagged, blocked, gated-skipped, pilot-only, or
+           aggregation-only.
+        3. Preserve forbidden-claim exclusions: no KV260 speedup, Boltzmann, or
+           thermalization claim; no TSU/Kona performance claim.
+        4. Record deltas relative to .277: repair delta, utility delta,
+           hardware-materialization state, and solver execution state.
+        5. Write a compact matrix artifact with upstream checksums.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        matrix_v12_ready: bool
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        upstream_artifacts_read: list
+        upstream_checksums: object
+        clean_rows: list
+        flagged_rows: list
+        blocked_rows: list
+        gated_skipped_rows: list
+        pilot_only_rows: list
+        forbidden_claims_absent: bool
+        code_repair_delta_summary: object
+        self_learning_delta_summary: object
+        hardware_state_summary: object
+        solver_state_summary: object
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2961
+    milestone: "2026.05.278"
+    deliverable: "results/experiment_2961_capstone_v278.json"
+    title: "Capstone .278"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: capstone
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2948
+        verdict: "complete: milestone=2026.05.277; paper_ready=true; headline=narrow; mmd_distinguishable=true; same_schedule_speedup=0.982; code_corpus_auprc=0.889; clean=11; flagged=0; blocked=0; missing=0"
+        addressed_by: "Recurring capstone task for a new milestone, aggregating .278 artifacts and preserving .277's narrowed boundary."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. This closes milestone 2026.05.278.
+        It must synthesize all available .278 artifacts, classify the outcome
+        honestly, and recommend the next milestone without pushing.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - openspec/change-proposals/research-roadmap-vNEXT.md
+        - research-roadmap-next.yaml
+        - results/experiment_2948_capstone_v277.json
+        - results/experiment_2960_cross_corpus_matrix_v12.json if present
+        - all results/experiment_295*.json and results/experiment_2960*.json
+          artifacts available at closeout
+        - ops/status.md
+        - ops/changelog.md
+
+      TASK:
+        Produce the milestone .278 capstone. Identify which of the three biggest
+        gaps closed, which remain open, and which claims are safe for paper/ops
+        docs.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: read all .278 artifacts that exist; do not fabricate
+           missing branch outcomes.
+        1. Classify every .278 task as clean, flagged, blocked, gated-skipped,
+           missing, pilot-only, or aggregation-only.
+        2. Summarize code repair, self-learning, solver, GateMate, and PolarFire
+           outcomes.
+        3. Re-state forbidden claims that remain forbidden.
+        4. Set paper_ready only if the milestone evidence improves or preserves
+           paper-v6's narrowed claim set without new unresolved flags.
+        5. Update ops/status.md and ops/changelog.md only if local convention
+           requires capstone closeout doc reconciliation.
+        6. Recommend 2-4 concrete next gaps for .279.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        milestone: "2026.05.278"
+        paper_ready: bool
+        headline_outcome: str
         clean_artifacts: list
         flagged_artifacts: list
         blocked_artifacts: list
+        gated_skipped_artifacts: list
         missing_artifacts: list
-        paper_ready: bool
-        deep_think_corrigenda_outcomes:
-          shape: "{{mmd_distinguishable: bool, same_schedule_speedup: float, code_auprc_recommendation: str}}"
-        paper_v6_safe_claims:
-          principle: "Explicit list of claims that survive both the Deep Think narrowings AND the corrigenda outcomes."
-        paper_v6_forbidden_claims:
-          principle: "Explicit list of claims that remain retracted per the Narrowing Discipline."
-        narrowing_discipline_compliance_audit:
-          shape: "list of {{file, hits, fixes_applied}}"
-        top_3_next_actions: list[str]
-        gaps_for_278: list
-        cited_upstream_artifacts: list
+        pilot_only_artifacts: list
+        aggregation_only_artifacts: list
+        gaps_closed: list
+        gaps_remaining: list
+        forbidden_claims_absent: bool
+        next_milestone_recommendations: list
+        inference_substrate: "aggregation_from_upstream_artifacts"
         duration_s: float
-
-      Do NOT push.
-
-scope_reduction_compliance: "Not applicable — .277 is a paper-v6 rescue milestone, the centerpiece of which is the three Deep Think FATAL-rescue measurements. The .276 planner missed these because they were queued in known-issues.md after .276 was already drafted."
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
