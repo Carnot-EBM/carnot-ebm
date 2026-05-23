@@ -1483,3 +1483,57 @@ sets both claim-allowed fields to false, leaves both transcript-path fields as
 strings, and performs no board-detection or flash command.
 
 **Implementation status:** Planned (Exp 2929)
+
+---
+
+### REQ-HW-070
+
+**Title:** Exp 2930 KV260 p-bit/SSQA scaling projection MUST use real n=64 evidence and remain projection-only
+
+**Description:**
+Experiment 2930 MUST read the clean Exp 2913 KV260 hardware/CPU claim boundary
+before projecting any n=128 or n=256 Ising-style sampler resource pressure. If
+Exp 2913 is absent or `hardware_speedup_claim_eligible` is not true, it MUST
+write `honest_verdict="blocked_clean_kv260_basis_missing"` and stop without
+inventing scaling estimates. When the clean n=64 basis exists, Exp 2930 MUST
+extract the real n=64 latency, sample count, random-seed, sparse topology, and
+available resource-evidence fields from Exp 2913 and upstream artifacts, then
+produce deterministic spreadsheet-style projections for dense, sparse, and
+dual-BRAM-inspired memory layouts at n=128 and n=256. The artifact MUST state
+assumptions explicitly, mark unavailable LUT/FF/BRAM evidence as unknown rather
+than fabricating synthesis numbers, and MUST NOT perform a new hardware run or
+make a new hardware speedup claim.
+
+**Acceptance criteria:**
+- `results/experiment_2930_kv260_pbit_ssqa_scaling_projection_v1.json` is
+  generated with `projection_only=true`, `no_new_hardware_run=true`,
+  `not_a_speedup_claim=true`,
+  `inference_substrate="aggregation_plus_simulation"`, and
+  `run_date="20260523"`.
+- The artifact includes `honest_verdict`,
+  `kv260_scaling_projection_ready`, `source_artifacts`,
+  `n64_real_evidence_summary`, `projection_models`, `n128_projection`,
+  `n256_projection`, `assumptions`, `duration_s`, and all invariant fields
+  listed above.
+- The ready path records dense, sparse, and dual-BRAM-inspired projection
+  models with formulas for memory bits, BRAM36 pressure, and LUT pressure only
+  where local evidence supports the estimate.
+- The blocked path writes the same schema with empty projection dictionaries and
+  preserves the no-new-hardware/no-speedup invariants.
+
+**Implementation status:** Implemented (Exp 2930)
+
+---
+
+### SCENARIO-HW-070
+
+**Scenario:** Clean n=64 KV260 evidence produces projection-only n=128/n=256 resource accounting.
+
+**Given:** Exp 2913 reports `hardware_speedup_claim_eligible=true` for matched
+n=64 sparse Ising KV260 and CPU evidence.
+**When:** Exp 2930 runs the deterministic projection calculation.
+**Then:** It writes the projection-only JSON artifact with real n=64 evidence,
+dense/sparse/dual-BRAM projection models, n=128 and n=256 resource-pressure
+summaries, explicit assumptions, no board execution, and no new speedup claim.
+
+**Implementation status:** Implemented (Exp 2930)
