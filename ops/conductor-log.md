@@ -6030,3 +6030,4 @@ Ripgrep i |
 | 2026-05-23 06:49 UTC | Paper v6 Hardware Validation Section v1 | OK | 81 passed in 3.79s |
 | 2026-05-23 07:00 UTC | KAN Hardware Complexity Accounting v2 | OK | 81 passed in 3.73s |
 | 2026-05-23 07:16 UTC | SOTA Code Generation Bounded-Budget Expansion v1 | OK | 81 passed in 3.73s |
+| 2026-05-23 07:30 UTC | FR-11 Hardware-Accelerated Replay Pilot v1 | OK | 81 passed in 3.45s |
