@@ -6024,3 +6024,4 @@ Ripgrep i |
 | 2026-05-23 04:09 UTC | GateMate A1 yosys/nextpnr LUT Mapping Workaround + | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2899_gatemat |
 | 2026-05-23 04:54 UTC | GateMate A1 yosys/nextpnr LUT Mapping Workaround + | FAIL | No file changes produced |
 | 2026-05-23 05:25 UTC | GateMate A1 yosys/nextpnr LUT Mapping Workaround + | FAIL | Codex CLI error: Wall-clock+idle timeout after 1656s (300s silence). Last out |
+| 2026-05-23 05:40 UTC | PolarFire SoC Carnot Dispatch Smoke v1 | OK | 81 passed in 3.66s |
