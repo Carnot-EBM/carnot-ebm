@@ -5607,3 +5607,53 @@ to `research-roadmap.yaml` or `scripts/research_conductor.py`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2937 | Implemented (`python/carnot/reporting/milestone_276_archive_277_activation.py`) | Implemented (`tests/python/test_experiment_2937_archive_v276.py`) |
+
+### REQ-REPORT-2940: Verifier-Ensemble AUPRC Code-Corpus Base-Rate Audit
+
+The repository shall provide an Exp 2940 AUPRC/base-rate audit generator that
+writes
+`results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json` using
+the checked-in Exp 2910 code-generation candidate artifact and the Exp 2837
+FoVer comparison artifact. The generator MUST NOT call an LLM, rerun code
+generation, launch hardware, or modify conductor/ops status files.
+
+The generator MUST compute a precision-recall curve over Exp 2910 k=8
+candidate rows using per-candidate verifier/status energy and pass/fail labels,
+report code-corpus AUPRC against the empirical paper-v6 random baseline of
+0.075, and report PPV, recall, and F1 at the max-F1, PPV>=0.5, and
+recall>=0.8 operating points. It MUST recompute FoVer AUPRC through the same
+precision-recall implementation from raw Exp 2837 score rows when present, or
+from the local FoVer scoring path used by Exp 2837 when the checked-in artifact
+contains only AUROC summaries.
+
+The terminal artifact MUST include `honest_verdict`,
+`inference_substrate="aggregation_from_upstream_artifacts"`,
+`preconditions_checked`, `code_corpus_auprc`,
+`code_corpus_baseline_random_auprc`, `fover_corpus_auprc`,
+`max_f1_operating_point`, `ppv_50_operating_point`,
+`recall_80_operating_point`, `paper_v6_recommendation`,
+`cited_upstream_artifacts`, `methodology_note`, and measured `duration_s`.
+It MUST cite SHA256 checksums for at least Exp 2910 and Exp 2837. It MUST set
+`paper_v6_recommendation` to `retain` only when `code_corpus_auprc > 0.15` and
+the max-F1 operating point has `f1 > 0.30`; otherwise it MUST recommend
+retracting the code-corpus active-inference claim.
+
+#### SCENARIO-REPORT-2940: AUPRC Replaces AUROC For Extreme Code Base Rate
+
+**Given** Exp 2910 contains k=8 generated code candidates with verifier/status
+scores and pass/fail labels
+**And** Exp 2837 is present for the FoVer comparison baseline
+**When** the Exp 2940 generator runs
+**Then** it writes
+`results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json` with
+code-corpus AUPRC in `[0, 1]`, a non-tautological value not exactly `0.5`, the
+random-baseline AUPRC fixed at `0.075`, all three required operating points,
+FoVer AUPRC from the same precision-recall code path, at least two cited
+upstream artifacts with SHA256 checksums, and a paper-v6 recommendation derived
+from the stated AUPRC/F1 gate.
+
+## Implementation Status (REQ-REPORT-2940)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2940 | Implemented (`python/carnot/reporting/verifier_ensemble_auprc_code_corpora_2940.py`) | Implemented (`tests/python/test_experiment_2940_verifier_ensemble_auprc_code_corpora.py`) |
