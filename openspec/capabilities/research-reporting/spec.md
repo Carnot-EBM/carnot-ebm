@@ -4786,6 +4786,55 @@ row, and next-action fields copied from
 principles describing the archive fields, and no modification to
 `research-roadmap.yaml` or `scripts/research_conductor.py`.
 
+### REQ-REPORT-2894: Clean .273 Cross-Corpus Matrix V7 From Completed Support Artifacts
+
+The repository shall provide an Exp 2894 matrix generator that writes
+`results/experiment_2894_cross_corpus_matrix_v7.json`.
+
+The generator MUST read the clean Exp 2880 cross-corpus matrix v6 and the
+available `.273` support artifacts:
+
+- `results/experiment_2888_truthfulqa_inficheck_taxonomy_manifest_v1.json`
+- `results/experiment_2889_mbpp_humaneval_generated_code_clean_row_v1.json`
+- `results/experiment_2890_code_structural_dependency_verifier_v1.json`
+- `results/experiment_2891_cctu_executable_constraint_validator_pilot_v1.json`
+- `results/experiment_2892_vericot_exact_frontier_expansion_v1.json`
+- `results/experiment_2893_kan_hardware_complexity_accounting_v1.json`
+
+Rows are eligible only when the source artifact is clean, no synthetic row is
+created, headline code metrics have valid generated-output labels and tests,
+taxonomy or pilot rows have explicit non-headline status, and no source used for
+that row has unresolved adversarial or corrigendum flags. The generator MUST
+NOT infer unavailable AUROC, pass@k, generated-answer, CCTU, VeriCoT, KAN, or
+hardware metrics. Unsupported metrics MUST remain `null` with explicit reasons.
+
+The terminal artifact MUST include `honest_verdict`,
+`cross_corpus_matrix_built`, `source_artifacts`, `clean_row_count`,
+`headline_eligible_rows`, `pilot_only_rows`, `taxonomy_only_rows`,
+`blocked_rows`, `missing_rows`, `matrix_rows`, `markdown_table`,
+`synthetic_rows_created=false`, `field_principles`, `run_date="20260523"`, and
+a measured `duration_s`. Each matrix row MUST expose columns for
+`truthfulqa_taxonomy`, `generated_code_status`,
+`structural_dependency_verification`, `cctu_constraint_category_coverage`,
+`vericot_exact_support`, `kan_complexity`, and `residual_gap`.
+
+#### SCENARIO-REPORT-2894: V7 Preserves Headline, Pilot, And Taxonomy Boundaries
+
+**Given** Exp 2880 contains clean FoVer and HaluEval/FEVER headline rows plus
+MBPP/HumanEval pilot-only rows
+**And** Exp 2888 provides a clean TruthfulQA taxonomy manifest without
+generated-answer metrics
+**And** Exp 2889 may contain generated-code rows with unresolved adversarial or
+corrigendum flags
+**And** Exp 2890 through Exp 2893 provide clean support metadata
+**When** the Exp 2894 matrix generator runs
+**Then** it writes `results/experiment_2894_cross_corpus_matrix_v7.json` with
+FoVer and HaluEval/FEVER in `headline_eligible_rows`, MBPP and HumanEval in
+`pilot_only_rows`, TruthfulQA in `taxonomy_only_rows`, any unresolved
+generated-code source flags preserved in `blocked_rows`, no synthetic rows,
+null unsupported metrics with reasons, and a compact markdown table matching
+the machine-readable rows.
+
 ### REQ-REPORT-2884: Milestone 2026.05.272 Capstone Claim Boundary
 
 The repository shall provide an Exp 2884 capstone generator that writes
