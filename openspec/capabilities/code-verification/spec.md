@@ -938,6 +938,41 @@ against the row's local tests, the artifact records the model fingerprint,
 selection rule, per-row pass/fail metadata, and a row status of `pilot_only` or
 `blocked_*` when any output is not clean, and no headline metric is claimed.
 
+### REQ-CODE-2890: MBPP/HumanEval Structural Dependency Verifier
+
+The repository shall provide a deterministic structural-dependency verifier for
+MBPP/HumanEval-like code rows. The verifier MUST NOT run live generation or make
+headline pass@k/AUROC claims. It MUST:
+
+- build serializable contracts for rows selected by Exp 2879 and, when present,
+  Exp 2889, including required inputs, function signature, dependency edges,
+  forbidden imports or side effects, test prerequisites, and output obligations;
+- verify canonical/reference code and available generated outputs with static
+  AST-based checks that localize violations to a code line, contract field, and
+  violation type where possible;
+- record unsupported reasons instead of inferring structure when source code is
+  absent or cannot be parsed;
+- aggregate violation counts and localization examples for downstream matrix v7
+  reuse; and
+- write `results/experiment_2890_code_structural_dependency_verifier_v1.json`
+  with `honest_verdict`, `structural_dependency_verifier_ready`,
+  `source_artifacts`, `contract_schema_version`, `n_contracts_built`,
+  `n_rows_verified`, `violation_types`, `localization_examples`,
+  `generated_outputs_consumed`, `tests_run`, `field_principles`,
+  `run_date="20260523"`, and measured `duration_s`.
+
+### SCENARIO-CODE-2890: Static Contracts Localize Generated-Code Failures
+
+Given Exp 2879 selected MBPP/HumanEval canonical rows and Exp 2889 may provide
+generated outputs for the same manifest rows,
+When the structural dependency verifier builds contracts and statically checks
+the canonical/reference and generated code candidates,
+Then canonical/reference rows pass the structural contract, generated or
+malformed rows surface deterministic violation types such as parse errors,
+missing function definitions, wrong signatures, forbidden imports, or missing
+test prerequisites, unsupported rows are labeled explicitly, and no live
+generation or headline metric is claimed.
+
 ## Implementation Status
 
 | Requirement | Status |
@@ -981,6 +1016,7 @@ selection rule, per-row pass/fail metadata, and a row status of `pilot_only` or
 | REQ-CODE-034 | Implemented (`python/carnot/verifiers/dsl.py`) |
 | REQ-CODE-2879 | Implemented |
 | REQ-CODE-2889 | Implemented |
+| REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
 | REQ-REPAIR-022 | Implemented |
