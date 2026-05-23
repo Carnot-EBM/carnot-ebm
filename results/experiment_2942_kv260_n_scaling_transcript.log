@@ -1,0 +1,68 @@
+experiment_2942 started_at=2026-05-23T20:10:46Z
+$ precondition_ssh: ssh -o ConnectTimeout=5 -o BatchMode=yes kria true
+rc=0 duration_s=2.264927
+
+$ precondition_overlay_list: ssh -o ConnectTimeout=5 kria 'sudo xmutil listapps 2>&1'
+rc=0 duration_s=0.842013
+[stdout]
+                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle
+               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1
+              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1
+              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1
+           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1
+
+$ overlay_load: ssh -o ConnectTimeout=5 kria 'sudo xmutil unloadapp 2>/dev/null; sudo xmutil loadapp carnot_ising_v2_n64'
+rc=0 duration_s=1.516151
+[stdout]
+remove from slot 0 returns: 0 (Ok)
+carnot_ising_v2_n64: Loaded with slot_handle 0
+
+$ overlay_list_after_load: ssh -o ConnectTimeout=5 kria 'sudo xmutil listapps 2>&1'
+rc=0 duration_s=0.818224
+[stdout]
+                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle
+               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1
+              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1
+              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1
+           carnot_ising_v2_n64    XRT_FLAT     carnot_ising_v2_n64  id_ok    XRT_FLAT             (0+0+0)              -1
+
+$ precondition_uio0: ssh -o ConnectTimeout=5 kria 'ls /dev/uio0 2>/dev/null && echo ok'
+rc=0 duration_s=0.430855
+[stdout]
+/dev/uio0
+ok
+
+$ uptime: ssh -o ConnectTimeout=5 kria uptime
+rc=0 duration_s=0.419024
+[stdout]
+ 20:10:52 up 3 days,  7:49,  2 users,  load average: 0.15, 0.03, 0.01
+
+$ list_uio_devices: ssh -o ConnectTimeout=5 kria 'ls /dev/uio* 2>/dev/null'
+rc=0 duration_s=0.427439
+[stdout]
+/dev/uio0
+/dev/uio1
+/dev/uio2
+/dev/uio3
+/dev/uio4
+
+$ bitstream_sha256_bit: ssh -o ConnectTimeout=5 kria 'sha256sum /lib/firmware/xilinx/carnot_ising_v4/*.bit 2>/dev/null | head -n 1'
+rc=0 duration_s=0.445322
+[stdout]
+a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb  /lib/firmware/xilinx/carnot_ising_v4/carnot_ising_v4.bit
+
+$ scp_problem_payload: scp -o ConnectTimeout=5 /home/ianblenke/github.com/ianblenke/carnot/output/experiment_2942_kv260_n_scaling/problem_payload.json kria:/tmp/experiment_2942_kv260_problem.json
+rc=0 duration_s=0.433314
+
+$ scp_board_harness: scp -o ConnectTimeout=5 /home/ianblenke/github.com/ianblenke/carnot/output/experiment_2942_kv260_n_scaling/board_harness.py kria:/tmp/experiment_2942_kv260_board_harness.py
+rc=0 duration_s=0.430365
+
+$ run_board_harness: ssh -o ConnectTimeout=5 kria 'sudo python3 /tmp/experiment_2942_kv260_board_harness.py /tmp/experiment_2942_kv260_problem.json'
+rc=0 duration_s=0.702133
+[stdout]
+BOARD_HARNESS_START experiment_2942
+UIO_DEVICES [{"addr": 4288675840, "addr_hex": "0x00000000ffa00000", "name": "xilinx_apm", "path": "/dev/uio0", "size": 65536}, {"addr": 4245356544, "addr_hex": "0x00000000fd0b0000", "name": "xilinx_apm", "path": "/dev/uio1", "size": 65536}, {"addr": 4249419776, "addr_hex": "0x00000000fd490000", "name": "xilinx_apm", "path": "/dev/uio2", "size": 65536}, {"addr": 4288741376, "addr_hex": "0x00000000ffa10000", "name": "xilinx_apm", "path": "/dev/uio3", "size": 65536}, {"addr": 2684354560, "addr_hex": "0x00000000a0000000", "name": "ising_sampler@a0000000", "path": "/dev/uio4", "size": 131072}]
+SELECTED_UIO {"addr": 2684354560, "addr_hex": "0x00000000a0000000", "name": "ising_sampler@a0000000", "path": "/dev/uio4", "size": 131072}
+RUN n=64 samples=1000
+{"duration_s": 0.04738670901861042, "runs": [{"failed_samples": 0, "n": 64, "n_samples": 1000, "per_sample_us_max": 47.841, "per_sample_us_median": 25.54, "per_sample_us_min": 23.531, "per_sample_us_p95": 25.77}], "selected_uio": "/dev/uio4", "selected_uio_addr_hex": "0x00000000a0000000", "uio_devices": ["/dev/uio0", "/dev/uio1", "/dev/uio2", "/dev/uio3", "/dev/uio4"]}
+

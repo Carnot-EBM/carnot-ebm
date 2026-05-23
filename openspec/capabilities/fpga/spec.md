@@ -1693,6 +1693,62 @@ fabric execution.
 
 ---
 
+### REQ-HW-074
+
+**Title:** Exp 2942 KV260 n-scaling latency profile MUST replace crossover extrapolation with hardware measurement or an explicit fixed-n limitation
+
+**Description:**
+Experiment 2942 MUST attempt a live KV260 latency profile for
+`n in {64, 128, 256, 512, 1024}` using the active `carnot_ising_v4`
+bitstream without modifying or reflashing the bitstream. Before measurement it
+MUST verify `ssh kria`, the Carnot overlay, UIO access, and the active bitstream
+SHA256. The experiment MUST generate deterministic Ising problems for the target
+spin counts, run 1000 board samples for each supported `n`, and record median
+and p95 per-sample latency in microseconds. If the active bitstream only
+supports a fixed `n`, the artifact MUST set
+`bitstream_supports_variable_n=false`, run the largest supported `n` that the
+bitstream honestly exposes, and document that the requested crossover plot still
+lacks direct measurements for the unsupported spin counts.
+
+**Acceptance criteria:**
+- `results/experiment_2942_kv260_continuation_n_scaling_v1.json` is generated
+  with `inference_substrate="hardware_smoke"`.
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `preconditions_checked`, `bitstream_supports_variable_n`, `per_n_results`,
+  `bitstream_sha256`, `random_seeds_used`, `reproducibility_checksum`, and
+  `duration_s`.
+- `per_n_results` is a list of dictionaries shaped exactly as
+  `{n: int, per_sample_us_median: float, per_sample_us_p95: float}` for every
+  measured spin count, and every timing is positive.
+- The run MUST NOT modify the active bitstream; unsupported target spin counts
+  are represented by the fixed-n limitation instead of fabricated
+  extrapolations.
+- Successful hardware-smoke artifacts require a non-empty bitstream SHA256 and
+  at least one measured `per_n_results` row.
+
+**Implementation status:** Planned (Exp 2942)
+
+---
+
+### SCENARIO-HW-074
+
+**Scenario:** KV260 n-scaling continuation records direct latency rows or the active bitstream's fixed-n boundary.
+
+**Given:** `ssh kria` is reachable, the Carnot Ising overlay is available, UIO
+registers are exposed, and the active bitstream SHA256 can be read from the
+KV260 filesystem.
+**When:** Exp 2942 runs the 1000-sample latency harness for the requested spin
+counts `{64, 128, 256, 512, 1024}`.
+**Then:** It writes the v1 n-scaling JSON artifact with hardware-smoke
+provenance, positive median and p95 per-sample timings for every measured `n`,
+the bitstream SHA256, deterministic seeds, a reproducibility checksum, and an
+explicit `bitstream_supports_variable_n=false` limitation if the loaded
+`carnot_ising_v4` image is fixed to a smaller maximum `n`.
+
+**Implementation status:** Planned (Exp 2942)
+
+---
+
 ### SCENARIO-HW-073
 
 **Scenario:** PolarFire riscv64 CPU evaluates the 500-clause continuation scorer without a per-clause timing cliff.

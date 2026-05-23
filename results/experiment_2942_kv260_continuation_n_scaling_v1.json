@@ -1,0 +1,89 @@
+{
+  "bitstream_n_support_detail": "active overlay name includes n64; treating the loaded carnot_ising_v4 image as fixed n=64 for this run",
+  "bitstream_sha256": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
+  "bitstream_supports_variable_n": false,
+  "board_summary": {
+    "bitstream_path": "/lib/firmware/xilinx/carnot_ising_v4/carnot_ising_v4.bit",
+    "board_harness_duration_s": 0.04738670901861042,
+    "board_transcript_path": "results/experiment_2942_kv260_n_scaling_transcript.log",
+    "kv260_ssh_uptime_at_run": "20:10:52 up 3 days,  7:49,  2 users,  load average: 0.15, 0.03, 0.01",
+    "kv260_uio_devices_present": [
+      "/dev/uio0",
+      "/dev/uio1",
+      "/dev/uio2",
+      "/dev/uio3",
+      "/dev/uio4"
+    ],
+    "selected_uio": "/dev/uio4",
+    "selected_uio_addr_hex": "0x00000000a0000000"
+  },
+  "duration_s": 8.764691,
+  "experiment": "exp2942-kv260-continuation-n-scaling-v1",
+  "experiment_id": 2942,
+  "generated_at": "2026-05-23T20:10:55Z",
+  "honest_verdict": "complete: kv260_fixed_n64_latency_profile_recorded",
+  "inference_substrate": "hardware_smoke",
+  "measured_n_values": [
+    64
+  ],
+  "methodology_note": "Latency rows are direct KV260 UIO measurements over 1000 samples for supported n values only. Unsupported requested n values are left as unsupported, not extrapolated.",
+  "n_samples_per_n": 1000,
+  "no_bitstream_modified": true,
+  "per_n_results": [
+    {
+      "n": 64,
+      "per_sample_us_median": 25.54,
+      "per_sample_us_p95": 25.77
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "rc=0; stderr=",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "detail": "Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n              k26-starter-kits    XRT_FLAT        k26-starter-kits  id_ok    XRT_FLAT             (0+0+0)              -1\n           carnot_ising_v2_n64 ",
+      "resource": "kv260_overlay"
+    },
+    {
+      "available": true,
+      "detail": "/dev/uio0\nok",
+      "resource": "kv260_uio0"
+    },
+    {
+      "available": true,
+      "detail": "active overlay name includes n64; treating the loaded carnot_ising_v4 image as fixed n=64 for this run",
+      "resource": "bitstream_n_support"
+    }
+  ],
+  "problem_specs": [
+    {
+      "beta_final_q88": 256,
+      "max_degree": 16,
+      "n": 64,
+      "random_seed": 2942064,
+      "sparse_upload_sha256": "2ddfb9b93d17f8a1f76d9c219b83a275185532070904723cb661d69a7ccb12de"
+    }
+  ],
+  "random_seeds_used": [
+    2942064
+  ],
+  "reproducibility_checksum": "24a988e024456073131e2ec8ebc754ac0801b80cd5d7236a9051bba7cf223c4b",
+  "requested_n_values": [
+    64,
+    128,
+    256,
+    512,
+    1024
+  ],
+  "run_date": "20260523",
+  "schema": "results/v1",
+  "unsupported_n_values": [
+    128,
+    256,
+    512,
+    1024
+  ]
+}
