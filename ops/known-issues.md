@@ -320,6 +320,179 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda — Three FATAL-Rescue Experiments (.276+ MANDATORY)
+
+**Origin:** 2026-05-23 Phase-3 Empirical-Readiness Deep Think round
+(see `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`)
+produced 7 FATAL findings against the current paper-v6 draft. Three
+of those findings cannot be rescued by textual narrowing alone — they
+require new measurements. The other four are textual fixes captured
+in CLAUDE.md "Paper-v6 Narrowing Discipline (Deep Think 2026-05-23)."
+
+The three new experiments are below. Each must be queued in the next
+available milestone roadmap. They are independent (no requires-chain
+between them) so the planner can run them in parallel.
+
+**Experiment 1 — KV260 MMD vs CPU Sequential Gibbs (resolves Deep Think FATAL #1).**
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_kv260_mmd_vs_cpu_sequential_gibbs_v1.json"
+  title: "KV260 MMD vs CPU Sequential Gibbs (Deep Think FATAL #1 Rescue)"
+  priority: critical
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 40
+  estimated_wall_time_min: 60
+  track: hardware
+  inference_substrate: hardware_smoke
+  prior_failures:
+    - experiment_id: exp2898
+      verdict: "complete: kv260_hardware_latency_transcript_recorded"
+      addressed_by: "exp2898 anchored 24 µs/sample but did not check whether the FPGA's synchronous Glauber produces Boltzmann samples. Deep Think 2026-05-23 FATAL #1 flagged that the chain may converge to a NESS / limit cycle rather than the target distribution. This task closes that gap by computing Maximum Mean Discrepancy between exact CPU sequential Gibbs energies and KV260 energies on identical Ising problems."
+      retire_if_same_verdict: true
+
+  concrete steps:
+    0. PRECONDITIONS: ssh kria reachable + exp2898 artifact present
+       + n=64 problem reproducible from exp2898's seeds [42, 137, 271].
+    1. Generate the same n=64 Ising problems used by exp2898.
+    2. Run exact CPU sequential Gibbs to convergence on each problem.
+       Record the empirical energy distribution (10k post-burn-in samples).
+    3. Run KV260 synchronous parallel Glauber on each problem at the
+       same fixed-sweep budget (exp2898's schedule).
+    4. Compute MMD^2 with RBF kernel between CPU and KV260 energy
+       distributions per seed.
+    5. Compute a permutation-test p-value for MMD significance.
+    6. Compute a Kolmogorov-Smirnov statistic on energies as a
+       second-opinion divergence measure.
+
+  required artifact fields:
+    - cpu_sequential_gibbs_energies_sha256: str
+    - kv260_synchronous_glauber_energies_sha256: str
+    - per_seed_mmd_squared: list[float]
+    - per_seed_mmd_pvalue: list[float]
+    - per_seed_ks_statistic: list[float]
+    - per_seed_ks_pvalue: list[float]
+    - distributions_distinguishable: bool   # True if any seed mmd_pvalue < 0.01
+    - methodology_note: str   # what the result means for the paper-v6
+                              # "exact sampling" claim
+
+  acceptance gates:
+    - condition: "len(per_seed_mmd_squared) == 3"
+      principle: "Three seeds replicate the exp2898 anchor."
+    - condition: "duration_s >= 60"
+      principle: "Real CPU sequential Gibbs to convergence + KV260
+                  retrieval cannot finish in less than a minute."
+```
+
+**Experiment 2 — Same-Schedule Synchronous-Parallel CPU Comparator (resolves Deep Think FATAL #4).**
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_cpu_synchronous_parallel_same_schedule_baseline_v1.json"
+  title: "CPU Synchronous-Parallel Same-Schedule Baseline (Deep Think FATAL #4 Rescue)"
+  priority: critical
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 30
+  estimated_wall_time_min: 30
+  track: hardware
+  inference_substrate: live_llm_inference
+  prior_failures:
+    - experiment_id: exp2912
+      verdict: "complete: same_basis_cpu_gibbs_baseline_ready_no_speedup_claim"
+      addressed_by: "exp2912 ran CPU sequential Gibbs as the baseline. Deep Think 2026-05-23 FATAL #4 flagged that the speedup comparison is apples-to-oranges: CPU sequential Gibbs preserves detailed balance, FPGA synchronous parallel Glauber does not. This task adds the apples-to-apples comparator: CPU executing the SAME synchronous parallel update schedule as the FPGA."
+      retire_if_same_verdict: true
+
+  concrete steps:
+    1. Implement a CPU synchronous-parallel Glauber updater (NOT sequential
+       Gibbs) using the same bipartite checkerboard schedule as KV260.
+    2. Run on the same n=64 Ising problems used by exp2898.
+    3. Time the per-sample wall-clock with the same fixed-sweep budget.
+    4. Compute speedup-or-slowdown vs KV260's 24 µs/sample.
+    5. Cross-check that the energies are equivalent (same broken
+       sampler should produce statistically-identical distributions on
+       both substrates).
+
+  required artifact fields:
+    - cpu_synchronous_parallel_per_sample_us_median: float
+    - cpu_synchronous_parallel_per_sample_us_p95: float
+    - kv260_speedup_vs_same_schedule_cpu: float
+    - energy_distribution_equivalence_test: dict
+    - methodology_note: str
+    - random_seeds_used: list[int]
+    - reproducibility_checksum: str
+```
+
+**Experiment 3 — Verifier Ensemble AUPRC on Code Corpora (resolves Deep Think FATAL #5).**
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_verifier_ensemble_auprc_code_corpora_v1.json"
+  title: "Verifier Ensemble AUPRC on Code Corpora at 92.5% Negative Base Rate (Deep Think FATAL #5 Rescue)"
+  priority: critical
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 25
+  estimated_wall_time_min: 25
+  track: evidence
+  inference_substrate: aggregation_from_upstream_artifacts
+  prior_failures:
+    - experiment_id: exp2910
+      verdict: "complete: SOTA code-generation corrigendum executed with pass@1=0.0750 and pass@k=0.1750"
+      addressed_by: "exp2910 measured the base rate (7.5% correct, 92.5% errors) on code corpora. Deep Think 2026-05-23 FATAL #5 flagged that at this base rate, the verifier ensemble's 0.91 AUROC implies PPV < 42% — when the verifier approves code, it is more likely wrong than right. This task computes AUPRC instead of AUROC at the empirical negative base rate, plus PPV/F1 across thresholds, so the paper can either retract the code-corpus active-inference claims or report them honestly."
+      retire_if_same_verdict: true
+
+  concrete steps:
+    1. Load the verifier ensemble's per-candidate energy scores from
+       exp2910's k=8 candidate generations.
+    2. Load the per-candidate pass/fail labels.
+    3. Compute the precision-recall curve. Report AUPRC.
+    4. Compute PPV, recall, F1 at three operating points: max-F1,
+       PPV=0.5, recall=0.8.
+    5. Compare against the FoVer-corpus AUPRC (recompute from exp2837
+       per-verifier energies + labels) so the gap is visible.
+    6. Write the rescue verdict: either "AUPRC holds; paper retains
+       code-corpus claim" or "AUPRC collapsed; paper retracts code-
+       corpus active-inference claim and pins as Limitation."
+
+  required artifact fields:
+    - code_corpus_auprc: float
+    - code_corpus_baseline_random_auprc: float   # = 0.075 (positive base rate)
+    - fover_corpus_auprc: float                   # for comparison
+    - max_f1_operating_point: dict
+    - ppv_50_operating_point: dict
+    - recall_80_operating_point: dict
+    - paper_v6_recommendation: str   # "retain" | "narrow" | "retract"
+    - cited_upstream_artifacts: list
+    - methodology_note: str
+```
+
+**Why this stays in MANDATORY until landed:** all three experiments
+are FATAL-rescue paths for paper-v6. Without them, the paper either
+retains structurally-false claims (FATAL #1 NESS illusion, FATAL #4
+apples-to-oranges speedup, FATAL #5 hallucination-multiplier verifier)
+or has to be retracted from those claim regions entirely. The three
+experiments together let the paper EITHER cite a defensible
+replacement claim OR cite the rescued claim's narrower scope. They
+are not optional.
+
+**Hardware-task continuity caveat:** experiments 1 and 2 require KV260
+access; per the Hardware-Task Continuity Discipline, each milestone
+also needs one task per attached board (KV260, GateMate, PolarFire).
+Experiments 1 and 2 satisfy the KV260 continuity requirement when
+queued in `.276+. The GateMate corrigendum (queued separately below)
+and a PolarFire continuity task still need to be added to the same
+milestone.
+
+---
+
 ### NEW 2026-05-23 (06:15Z): GateMate A1 n=16 Ising Tile Build v2 — Corrected Toolchain Invocation (.276+ MANDATORY)
 
 **Origin:** 2026-05-23 operator directive ("can we unblock gatemate?") after exp2899 (`.274) emitted `blocked_gatemate_toolchain_missing`. Investigation showed the toolchain is fully present — `nextpnr-gatemate` as a standalone binary was retired upstream; the GateMate flow now uses `nextpnr-himbaechel --device CCGM1A1` via the himbaechel backend, with `gmpack` producing the flashable bitstream. End-to-end smoke test on 2026-05-23 06:14Z produced a working bitstream from a minimal counter design. exp2899's PRECONDITIONS step looked for the wrong binary name; the task was structurally blocked at PRECONDITIONS, never reaching the actual build.

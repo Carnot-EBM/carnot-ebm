@@ -5238,3 +5238,79 @@ missing GateMate bitstream.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2922 | Implemented (`python/carnot/reporting/capstone_v275_2922.py`) | Implemented (`tests/python/test_capstone_v275_2922.py`) |
+
+### REQ-REPORT-2923: Archive Milestone 2026.05.275 and Confirm 2026.05.276 Activation
+
+The repository shall provide an Exp 2923 archive/activation generator that
+writes `results/experiment_2923_archive_v275_activate_v276.json`.
+
+The generator MUST first require
+`results/experiment_2922_capstone_v275.json`. If that capstone is absent or
+malformed, it MUST write a terminal artifact with
+`honest_verdict="blocked_capstone_missing"` and MUST NOT modify
+`research-complete.yaml`, `research-roadmap.yaml`, or
+`scripts/research_conductor.py`.
+
+When the capstone is present, the generator MUST read
+`research-complete.yaml` and determine whether milestone `2026.05.275` already
+has a completed archive block. If the block is present, the generator MUST set
+`archive_ready=true` without modifying `research-complete.yaml`. If the block
+is absent, the generator MAY append a minimal completed archive row for
+milestone `2026.05.275` from `results/experiment_2922_capstone_v275.json`
+without modifying `research-roadmap.yaml`.
+
+The generator MUST confirm milestone `2026.05.276` from
+`research-roadmap-next.yaml` when that file exists. If
+`research-roadmap-next.yaml` has already been activated and removed, it MUST
+read the active `research-roadmap.yaml` as a fallback while still leaving that
+roadmap unmodified.
+
+The terminal artifact MUST include:
+
+- `honest_verdict`, equal to
+  `complete: archive_ready=true; archived_milestone=2026.05.275; activated_milestone=2026.05.276`
+  on successful archival
+- `archive_ready`
+- `archived_milestone`, equal to `2026.05.275`
+- `activated_milestone`, equal to `2026.05.276`
+- `capstone_source`, equal to `results/experiment_2922_capstone_v275.json`
+- `paper_ready_from_capstone`
+- `hardware_speedup_claim_eligible_from_capstone`
+- `clean_artifacts_from_capstone`
+- `flagged_artifacts_from_capstone`
+- `blocked_artifacts_from_capstone`
+- `missing_artifacts_from_capstone`
+- `diagnostic_artifacts_from_capstone`
+- `recommended_next_actions`
+- `inference_substrate`, equal to `aggregation_from_upstream_artifacts`
+- `duration_s`, a real wall-clock duration for the archive generator run
+- `run_date`, equal to `20260523`
+
+`recommended_next_actions` MUST be copied from the capstone's
+`recommended_next_actions` list when present. When the capstone uses the prior
+`top_3_next_actions` field instead, the generator MUST copy that list into the
+required `recommended_next_actions` artifact field without inventing new
+actions.
+
+#### SCENARIO-REPORT-2923: Existing .275 Archive Confirms Active .276 Roadmap
+
+**Given** `research-complete.yaml` already contains a completed
+`2026.05.275` archive row
+**And** `research-roadmap-next.yaml` may already have been activated into
+`research-roadmap.yaml`
+**When** the Exp 2923 archive generator runs
+**Then** it writes
+`results/experiment_2923_archive_v275_activate_v276.json` with
+`archive_ready=true`, `archived_milestone=2026.05.275`,
+`activated_milestone=2026.05.276`, paper readiness, hardware speedup claim
+eligibility, clean artifact, flagged artifact, blocked artifact, missing
+artifact, diagnostic artifact, and recommended next-action fields copied from
+`results/experiment_2922_capstone_v275.json`,
+`inference_substrate=aggregation_from_upstream_artifacts`, and no modification
+to `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-2923)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2923 | Implemented (`python/carnot/reporting/milestone_275_archive_276_activation.py`) | Implemented (`tests/python/test_experiment_2923_archive_v275.py`) |

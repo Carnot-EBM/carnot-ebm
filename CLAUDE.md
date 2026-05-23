@@ -1603,6 +1603,107 @@ require full methodology (`random_seed` or `random_seeds_used`,
 
 ---
 
+## Paper-v6 Narrowing Discipline — Deep Think 2026-05-23 (MANDATORY)
+
+**Origin:** 2026-05-23 Phase-3 Empirical-Readiness Deep Think round
+(`docs/research-notes/phase3-empirical-readiness-deep-think-results.md`)
+produced 10 findings against the paper-v6 draft: 7 FATAL (2 unprompted
+bonus), 2 DEGRADING, 1 COSMETIC. Three FATAL findings require new
+measurements (queued in `ops/known-issues.md` MANDATORY-NEXT-MILESTONE
+PRIORITIES as Phase-3 Deep Think Corrigenda). Four FATAL findings,
+both DEGRADING findings, and the COSMETIC finding are textual fixes:
+the paper-v6 draft must NOT re-assert any of the retracted claims
+below in autonomous-loop output (capstones, evidence tables, paper-v6
+synthesizers, in-process docs).
+
+This discipline is forward-only. The autonomous loop (planner +
+capstone agents + paper-v6 synthesizer in `_update_docs_before_planning`)
+must respect the narrowings on every milestone until the three Deep
+Think Corrigenda experiments land AND the paper-v6 draft is rewritten
+to honor the narrowings (operator-curated per Public Documentation
+Discipline).
+
+**The retracted claims.** None of the following may appear in any
+autonomous-loop-generated artifact, capstone, evidence table, or
+in-process doc:
+
+| # | Retracted claim | Forbidden phrasing |
+|---|---|---|
+| **#2** | KV260 samples reach Boltzmann thermalization | "thermalization," "equilibrium samples," "Boltzmann-distributed energies" anywhere the 24 µs anchor is cited. Use "fixed-compute heuristic budget" instead. |
+| **#3** | KV260 hardware speedup over CPU at current d | Any phrasing of "KV260 hardware speedup," "FPGA acceleration over CPU," or "Carnot's verifier ensemble runs faster on KV260" while latent dimension d ∈ {128, 256}. The KV260 is provably SLOWER than CPU at d=128 per the n≈240 crossover. Replace with "POC functional simulator anchoring future high-N deployment." |
+| **#6** | Phase-4 VFE bounds validate KV260 deployment | Any phrasing that cites Phase-4 active-inference artifacts (exp2550, exp2748, exp2753, exp2766) in defense of FPGA-deployment claims. Phase-4 VFE bounds apply EXCLUSIVELY to continuous-sampler deployment (RTX 3090). Add a firewall paragraph in the paper draft. |
+| **#7** | Extropic Z1 / photonic as future production target | The post-pivot DAE-DEBM architecture is Boolean-coupled; analog substrates cannot strictly enforce discrete sign constraints. Replace with "digital ASICs, spatial FPGAs, or bespoke digital Ising machines" as the future production target. |
+| **#8** | Verifier ensemble generalizes universally across modalities | Any unscoped "the verifier ensemble generalizes" or "the verifier ensemble works on novel corpora" claim. The Spera Theorem 9.2 joint null space is coNP-complete; OOD modalities (Lean 4, obfuscated C) have provably-disjoint null spaces. Scope to the 6 corpora in cross-corpus matrix v9+. |
+| **#9** | Hardware sovereignty via commodity FPGA | "Hardware sovereignty" while the path from `pip install carnot-ebm` to 24 µs/sample requires Vivado (commercial), Xilinx BSP (proprietary), and the internal SSH workflow. Replace with "local edge deployability." Reproducibility appendix lists Vivado versions + Xilinx dependencies. |
+| **#10** | The five-paper_ready streak as scientific maturity | Any phrasing that cites the streak (`.271/.272/.273/.274/.275 paper_ready=true`) as evidence of paper readiness. The streak measures CI loop discipline, not statistical semantics. Relegate to infrastructure / MLOps appendix. |
+
+**How to apply (planner-side discipline).** When generating any task
+that produces paper-v6-eligible output:
+
+- Capstone tasks: the `paper_v6_safe_claims` and `paper_v6_forbidden_claims`
+  fields in the capstone artifact must explicitly reflect the seven
+  retractions above. If a capstone's `paper_v6_safe_claims` contains
+  any phrasing matching the forbidden patterns, the capstone is
+  malformed and should be re-emitted.
+- Paper-v6 evidence table tasks: do NOT cite KV260 speedup numbers
+  at d ∈ {128, 256}. Do NOT cite Phase-4 VFE bounds in defense of
+  any FPGA-deployment row. Do NOT cite cross-corpus generalization
+  outside the 6 measured corpora.
+- Cross-corpus matrix tasks: when adding new rows, do not auto-claim
+  generalization beyond the row's specific corpus.
+- Operator-status / dashboard tasks: do not surface the five-streak
+  metric as a top-level paper-readiness signal.
+
+**How to apply (agent-side discipline, for any agent running a
+paper-v6-touching task).** Before emitting any prose, scan the
+output against the forbidden phrasings table above. If any match,
+narrow the prose to the post-Deep-Think framing. If you cannot make
+the claim defensible after narrowing, omit the claim entirely.
+
+**Mechanical enforcement (future).** A `paper_v6_narrowing_lint.py`
+pre-commit hook SHOULD scan `docs/arxiv-paper/main.tex` +
+`docs/technical-report.md` + any new `paper_v6_*` artifact in
+`results/` for the forbidden phrasings. Until that ships, this
+discipline is honor-discipline at the planner + agent layer.
+
+**When this discipline retires.** When all three Deep Think
+Corrigenda experiments land AND the paper-v6 draft is rewritten
+to honor the narrowings (operator-curated commit), this section
+moves from MANDATORY to HISTORICAL. The narrowings themselves are
+permanent; the discipline-as-discipline is a forward-only guard
+until the rewrite is verified.
+
+**What the discipline is NOT.** This is not a blanket suppression
+of all FPGA / Phase-4 / verifier claims. The narrower replacement
+claims are:
+
+- KV260 as **POC functional simulator** anchoring future high-N
+  deployment — defensible
+- Phase-4 VFE bounds for **continuous-sampler (RTX 3090) deployment
+  only** — defensible
+- Verifier ensemble's **0.9131 FoVer AUROC, 5-seed dual-condition,
+  delta=+0.0185** — defensible
+- Cross-corpus matrix's **6 measured headline-eligible rows** —
+  defensible
+- **Local edge deployability** via Xilinx tooling stack — defensible
+  with reproducibility appendix
+- **Apples-to-apples KV260-vs-CPU comparison** if and only if both
+  substrates execute the same synchronous-parallel schedule
+  (requires Deep Think Corrigendum experiment #2)
+- **Code-corpus active-inference** at the AUPRC-defensible threshold
+  (requires Deep Think Corrigendum experiment #3)
+
+**Cross-references:**
+
+- `docs/research-notes/phase3-empirical-readiness-deep-think-prompt.md`
+- `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`
+- `docs/research-notes/phase3-architecture-blindspot-audit-results.md`
+  — the 2026-04-30 precedent
+- `ops/known-issues.md` MANDATORY-NEXT-MILESTONE PRIORITIES —
+  the three new measurement experiments
+
+---
+
 ## Pre-Launch Preconditions Discipline (MANDATORY)
 
 **Origin:** 2026-05-15 operator-directed root-cause fix after 5 confirmed
