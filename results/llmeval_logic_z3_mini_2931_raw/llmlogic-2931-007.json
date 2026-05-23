@@ -1,36 +1,41 @@
-Is s1 sealed necessary?
-|
-|
-|
-|
-|
-1.  **Analyze the input problem.**
-    The problem states: "If a sample is sterile then it is sealed. Sample s1 is sterile. Is s1 sealed necessary?"
-    *   Rule: Sterile(x) $\rightarrow$ Sealed(x)
-    *   Fact: Sterile(s1)
-    *   Question: Is Sealed(s1) necessary?
-
-    *   **Determine the "necessary" part.**
-        In the context of logic problems like this, "necessary" means "must be true in all possible worlds that satisfy the given facts and rules."
-        If the rule and fact are satisfied, is Sealed(s1) true?
-        Yes, because Sterile(s1) is true and Sterile(x) $\rightarrow$ Sealed(x) is a rule.
-
-    *   **Formalize the problem.**
-        *   Facts: Sterile(s1)
-        *   Rules: Sterile(s1) $\rightarrow$ Sealed(s1)
-        *   Query: Sealed(s1)
-        *   Answer: "necessary"
-
-    *   **Refine the formalization.**
-        *   Facts: `[["Sterile", "s1"]]`
-        *   Rules: `[[["Sterile", "s1"], "Sealed", "s1"]]` (Wait, the instruction says `{"if": [["Predicate", "entity"]], "then": ["Predicate", "entity"]}`. Let's check the format.)
-        *   Format check:
-            `"rules": [{"if": [["Predicate", "entity"]], "then": ["Predicate", "entity"]}]`
-            Wait, the `if` part is a list of lists: `[["Predicate", "entity"]]`.
-            The `then` part is a single list: `["Predicate", "entity"]`.
-            So: `{"if": [["Sterile", "s1"]], "then": ["Sealed", "s1"]}`.
-
-    *   **Finalize the components.**
-        *   `facts`: `[["Sterile", "s1"]]`
-        *   `rules`: `[{"if": [["Sterile", "s1"]], "then": ["Sealed", "s1"]}]`
-        *   `exclusions`:
+    If a sample is sterile then it is sealed.
+    If a worlds-state is worlds-state w1 is sterile.
+    If a worlds-state is worlds-state w1 is sealed.
+    If a worlds-state is worlds-state w1 is sterile.
+    If a sample is sterile then it is a sealed.
+    If a sample is sterile then it is a sealed.
+    If a sample is sterile then it is a sealed.
+    If a sample is sterile sterile-sample s1 is sterile.
+    If a sample is sterile then it is a sealed.
+    If a sample is sterile then it is a sealed.
+    If a sample is sterile then it is a sealed.
+    If a sample is sterile then it is a sealed.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is sterile.
+    If aa-sample s1 is
