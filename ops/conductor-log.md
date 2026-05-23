@@ -6064,3 +6064,4 @@ web search:
 | 2026-05-23 15:00 UTC | Aggregation Metadata Corrigendum: Matrix v9 + Caps | OK | 81 passed in 3.84s |
 | 2026-05-23 15:17 UTC | Code Hallucination Taxonomy Provenance Corrigendum | OK | 81 passed in 3.80s |
 | 2026-05-23 15:34 UTC | ConstraintBench Constrained-Output Rerun v2: Non-T | OK | 81 passed in 3.92s |
+| 2026-05-23 15:46 UTC | GateMate Himbaechel Toolchain + Constraint Materia | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2927_gatemat |
