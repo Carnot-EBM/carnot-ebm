@@ -938,6 +938,43 @@ against the row's local tests, the artifact records the model fingerprint,
 selection rule, per-row pass/fail metadata, and a row status of `pilot_only` or
 `blocked_*` when any output is not clean, and no headline metric is claimed.
 
+### REQ-CODE-2905: Bounded-Budget k=8 SOTA Code Generation Expansion
+
+The repository shall provide a live MBPP/HumanEval generated-code expansion
+runner for Exp 2905 that keeps the Exp 2889 safety gates while increasing the
+per-prompt token budget and sampling exactly `k=8` candidates per selected task.
+The runner MUST:
+
+- gate on the same local SOTA GGUF, eval manifest, GPU/offload, and runsc
+  sandbox preconditions as Exp 2889, writing a terminal `blocked_*` artifact
+  instead of fabricating live inference when any precondition is unmet;
+- select a deterministic bounded sample from each corpus and record
+  `n_tasks_per_corpus`, `k_candidates_per_task`, per-task stable IDs, and every
+  random seed used for candidate sampling;
+- use `inference_substrate="live_llm_inference"` and a `model_specs.principle`
+  stating that the task actually invokes the live SOTA model and that the 60s
+  duration floor applies;
+- execute every non-empty generated candidate only through the runsc sandbox
+  test harness, with no in-process fallback;
+- report `per_task_pass_at_1` and `per_task_pass_at_k` lists where each entry
+  is `1.0` when the corresponding task passes on the first candidate or any of
+  its `k` candidates, otherwise `0.0`; and
+- write `results/experiment_2905_sota_code_generation_bounded_budget_expansion_v1.json`
+  with the required schema fields, a reproducibility checksum over manifests,
+  selected tasks, seeds, token budget, and model fingerprint, and measured
+  wall-clock `duration_s`.
+
+### SCENARIO-CODE-2905: k=8 Candidate Sampling Gives The Verifier A Choice Set
+
+Given Exp 2874 recorded clean live SOTA runtime evidence, the code manifests
+verify, and runsc is available,
+When the Exp 2905 runner samples `k=8` candidates for each selected MBPP and
+HumanEval task using the expanded token budget,
+Then the artifact records all candidate seeds and outcomes, computes per-task
+pass@1/pass@k from sandbox execution results, identifies whether pass@k exceeds
+pass@1 on at least one task, and preserves live-inference provenance in
+`model_specs` and `inference_substrate`.
+
 ### REQ-CODE-2890: MBPP/HumanEval Structural Dependency Verifier
 
 The repository shall provide a deterministic structural-dependency verifier for
@@ -1016,6 +1053,7 @@ generation or headline metric is claimed.
 | REQ-CODE-034 | Implemented (`python/carnot/verifiers/dsl.py`) |
 | REQ-CODE-2879 | Implemented |
 | REQ-CODE-2889 | Implemented |
+| REQ-CODE-2905 | Implemented (`python/carnot/eval/sota_code_generation_bounded_budget_expansion.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
