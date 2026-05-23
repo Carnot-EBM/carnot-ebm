@@ -320,6 +320,134 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-23 (19:00Z): exp2934 AquaForte/BEAVER Reformulation Pipeline — Honest Substrate Corrigendum (.278+ MANDATORY)
+
+**Origin:** 2026-05-23 outer-loop drill-down into exp2934's "+88.9pp
+optimality delta" headline. The per-task detail reveals that the
+"retry" step almost certainly did NOT invoke the live LLM. Evidence:
+
+- Total `duration_s = 0.046s` for 18 claimed live-LLM retries on a
+  30B GGUF — impossible (each call would take seconds minimum).
+- `inference_substrate: live_llm_inference_plus_exact_verifier` is
+  declared but no per-task wall-clock attributable to LLM inference
+  exists.
+- `prefix_bound_summary: {frontier_rows: 0, reason: token_logprobs_
+  or_frontier_unavailable}` — no per-token telemetry.
+- The retry `cheap: true` flag + the brute-force exact verifier
+  (`bounded_integer_exhaustive`, `binary_subset_exhaustive`,
+  `color_assignment_exhaustive`) directly produces the optimal
+  solution for these toy-sized problems (25-point integer grids,
+  16-subset knapsacks, 81-coloring spaces). The "retry_solution"
+  is the enumerator's optimal answer, not an LLM response.
+- The artifact is correctly flagged DURATION_TOO_SHORT critical
+  by adversarial_verify; this flag was caught and not yet resolved.
+
+**The +88.9pp delta is real but tautological by construction:** it
+measures "when the LLM's direct output is unparseable, the brute-
+force exact verifier finds the optimal answer 100% of the time" —
+which is true by the verifier's definition for problems small enough
+to enumerate. It is NOT a measurement of "LLM + verifier pipeline
+outperforming LLM alone on hard reasoning."
+
+**The corrigendum task to queue in .278+.** Two-condition controlled
+experiment: actually run the LLM retry with real wall-clock budget,
+AND run the enumerator fallback, AND compare. Then re-substrate or
+relabel exp2934 based on what's actually true.
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_aquaforte_beaver_pipeline_honest_substrate_corrigendum_v1.json"
+  title: "exp2934 AquaForte/BEAVER Reformulation Pipeline Honest Substrate Corrigendum v1"
+  priority: critical
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 50
+  estimated_wall_time_min: 120
+  requires_gpu: true
+  track: paper
+  inference_substrate: live_llm_inference_plus_exact_verifier
+  prior_failures:
+    - experiment_id: exp2934
+      verdict: "complete: exp2926 live GGUF proposals reformulated and exact-verified"
+      addressed_by: "exp2934 claimed live_llm_inference_plus_exact_verifier substrate but duration_s=0.046s on 18 retries proves no live LLM call happened. The retry_solution values are the brute-force enumerator's optimal answers, not LLM responses. This corrigendum runs the actual two-condition controlled experiment: (A) genuine live-LLM retry with measured wall-clock, (B) enumerator-only fallback, compared honestly."
+      retire_if_same_verdict: true
+```
+
+**Concrete steps the corrigendum must execute:**
+
+0. PRECONDITIONS:
+   a. GPU available (CUDA + .venv torch confirmed).
+   b. Gemma-4-26B-A4B-it GGUF cached.
+   c. exp2926's raw_response_dir present (contains the failed initial
+      outputs).
+   d. exp2934 artifact present (for comparison + corrigendum_resolution).
+1. Load the same 18 tasks from exp2926.
+2. For each task: pull the initial LLM proposal from
+   `results/constraintbench_constrained_output_rerun_2926_raw/`.
+3. **Condition A — Live LLM Retry:** issue the same retry prompt
+   exp2934 constructed, but ACTUALLY send it to the GGUF. Measure
+   per-task wall-clock. Record the LLM's response. Verify with the
+   brute-force enumerator.
+4. **Condition B — Enumerator-Only Fallback:** skip the LLM retry,
+   directly compute the optimal solution via brute-force enumeration.
+   This reproduces what exp2934 actually did.
+5. Compare per-task: LLM retry pass rate vs enumerator pass rate
+   (which is 100% by construction for these toy sizes).
+6. Decide the honest substrate label:
+   - If Condition A LLM retry pass rate >= 80% AND median per-task
+     LLM wall-clock >= 1.0s: substrate is genuinely
+     `live_llm_inference_plus_exact_verifier`. Apply
+     corrigendum_resolution to exp2934 stating the substrate was
+     correct but the wall-clock pipeline was broken.
+   - Otherwise: substrate is honestly
+     `enumerator_fallback_on_upstream_llm_failure` or
+     `aggregation_plus_exact_verifier`. Apply corrigendum_resolution
+     to exp2934 relabeling the substrate.
+7. Write the deliverable JSON + the corrigendum_resolution update.
+
+**Required artifact fields (must include all 7):**
+
+| Field | Principle |
+|---|---|
+| `honest_verdict` | Must start with `complete:` per Verdict Terminal-Prefix Discipline. |
+| `inference_substrate` | Set to whichever substrate the corrigendum proves was actually used in exp2934. |
+| `condition_a_live_llm_per_task_us_median` | Real wall-clock per LLM retry. Below 100k µs (= 100 ms) on a 30B GGUF would prove the call didn't happen. |
+| `condition_a_live_llm_pass_rate` | What fraction of failed initial outputs the LLM can recover with the retry prompt. |
+| `condition_b_enumerator_pass_rate` | 1.0 by construction for these toy problems. |
+| `exp2934_corrigendum_resolution_emitted` | bool — confirms exp2934's artifact was updated with the substrate relabeling. |
+| `paper_v6_recommendation` | `retain_with_relabel | retract_lift_claim | retain_as_engineering_pattern` |
+
+**Acceptance gates:**
+
+- `len(condition_a_per_task_results) == 18 AND len(condition_b_per_task_results) == 18`
+- `duration_s >= 90` (18 tasks × ~5s LLM retry minimum)
+- `condition_a_live_llm_per_task_us_median is not None`
+
+**Why this stays in MANDATORY until landed:** the matrix v10 row
+classifier (exp2935) currently places exp2934 in the `flagged` row
+class. Paper-v6 cannot cite the +88.9pp delta as a headline result
+while the substrate declaration is dishonest. The corrigendum either
+rescues the claim (real LLM retry path works) or honestly relabels
+the result as "enumerator fallback pattern" (still a defensible
+engineering pattern, just narrower than the original framing).
+
+**Cross-references:**
+
+- `results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json`
+  — the artifact to be corrigendum'd
+- `results/experiment_2926_constraintbench_constrained_output_rerun_v2.json`
+  — the upstream live LLM source
+- `results/experiment_2935_cross_corpus_matrix_v10_paper_boundary_corrigendum_v1.json`
+  — places exp2934 in `flagged` row class
+- CLAUDE.md "Paper-v6 Narrowing Discipline" — exp2934's claim is
+  a candidate for narrowing
+- CLAUDE.md "Inference-Substrate Declaration Discipline" — the
+  honest-substrate rule the corrigendum re-asserts
+
+---
+
 ### NEW 2026-05-23 (13:30Z): Phase-3 Deep Think Corrigenda — Three FATAL-Rescue Experiments (.276+ MANDATORY)
 
 **Origin:** 2026-05-23 Phase-3 Empirical-Readiness Deep Think round
