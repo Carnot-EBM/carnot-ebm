@@ -1,0 +1,813 @@
+{
+  "artifact": "experiment_2932_citation_hallucination_field_verifier_v1",
+  "citation_verifier_ready": true,
+  "duration_s": 43.85975,
+  "extraction_success_rate": 1.0,
+  "field_match_accuracy": 0.8505747126436781,
+  "fixture_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2932_citation_fixture_v1.json",
+  "hallucination_detection_accuracy": 1.0,
+  "honest_verdict": "complete:citation_field_verifier_ready",
+  "inference_substrate": "live_llm_inference_plus_deterministic_verifier",
+  "model_attempts": [
+    {
+      "blocker": null,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "live_inference_duration_s": 43.657152,
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_used": true
+    }
+  ],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "n_citation_cases": 30,
+  "per_case_results": [
+    {
+      "case_id": "ebt-2507-02092:real",
+      "expected_taxonomy": "real",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 6,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "ebt-2507-02092",
+      "mismatched_fields": [],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "7512875ae144c8c2dd1e4871a8538a7baff0bc0f6c0a3a037f64e2d9bef7b363",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/ebt-2507-02092:real_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "real",
+      "taxonomy_correct": true,
+      "truth_seed_id": "ebt-2507-02092"
+    },
+    {
+      "case_id": "ebt-2507-02092:mutated-title",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "ebt-2507-02092",
+      "mismatched_fields": [
+        "title"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "1f9aaa76fc4cc52a4fb4e688546007b9073905216f08348c18fea2819b1f202b",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/ebt-2507-02092:mutated-title_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "ebt-2507-02092"
+    },
+    {
+      "case_id": "ebt-2507-02092:mutated-authors",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "ebt-2507-02092",
+      "mismatched_fields": [
+        "authors"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "8d0e81ecd832fc69fdbe95f2c0a10f1085dfed26929c2c1a59b96b8ac48928c4",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/ebt-2507-02092:mutated-authors_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "ebt-2507-02092"
+    },
+    {
+      "case_id": "ebt-2507-02092:mutated-year",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "ebt-2507-02092",
+      "mismatched_fields": [
+        "year"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "a44ad37ea7f8dfb9591ea1f49d88276ae867067083fc0c23bb46d299655793e7",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/ebt-2507-02092:mutated-year_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "ebt-2507-02092"
+    },
+    {
+      "case_id": "ebt-2507-02092:mutated-venue",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "ebt-2507-02092",
+      "mismatched_fields": [
+        "venue"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "389fc2ae8bfe662e42e750906259e2efa35a8d99414a70cfd7bcd85eef2565e8",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/ebt-2507-02092:mutated-venue_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "ebt-2507-02092"
+    },
+    {
+      "case_id": "ebt-2507-02092:mutated-arxiv_id",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "url"
+      ],
+      "matched_seed_id": "ebt-2507-02092",
+      "mismatched_fields": [
+        "arxiv_id"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "a617e8c8fb03d0a4ddb4660334f47127db3439c2afdba40ac04f0645f7c01fb1",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/ebt-2507-02092:mutated-arxiv_id_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "ebt-2507-02092"
+    },
+    {
+      "case_id": "ebt-2507-02092:mutated-url",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id"
+      ],
+      "matched_seed_id": "ebt-2507-02092",
+      "mismatched_fields": [
+        "url"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "3d88c93d1bdef33d237a8206a406ff3de8cecbff2f24a0dc9b4b13159a10f598",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/ebt-2507-02092:mutated-url_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "ebt-2507-02092"
+    },
+    {
+      "case_id": "arm-ebm-2512-15605:real",
+      "expected_taxonomy": "real",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 6,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "arm-ebm-2512-15605",
+      "mismatched_fields": [],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "cee55eac4904efb2f86d2893e7bd1ebfa62f4d1c64455575d3aea2351eed4f0b",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/arm-ebm-2512-15605:real_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "real",
+      "taxonomy_correct": true,
+      "truth_seed_id": "arm-ebm-2512-15605"
+    },
+    {
+      "case_id": "arm-ebm-2512-15605:mutated-title",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "arm-ebm-2512-15605",
+      "mismatched_fields": [
+        "title"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "67152f2977580454ec58f0db192ff2c9c59673bfc761f1a998a5e3dcffaf904c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/arm-ebm-2512-15605:mutated-title_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "arm-ebm-2512-15605"
+    },
+    {
+      "case_id": "arm-ebm-2512-15605:mutated-authors",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "arm-ebm-2512-15605",
+      "mismatched_fields": [
+        "authors"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "97b554397f903047c1264fc624808d83140f5393d5b95e3f3d66ed1b9bad5fda",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/arm-ebm-2512-15605:mutated-authors_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "arm-ebm-2512-15605"
+    },
+    {
+      "case_id": "arm-ebm-2512-15605:mutated-year",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 4,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "venue",
+        "arxiv_id"
+      ],
+      "matched_seed_id": "arm-ebm-2512-15605",
+      "mismatched_fields": [
+        "year",
+        "url"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "3091e9858ea10cfe66762b918acf9544338658fe8e269e9bf8bd311d116d258e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/arm-ebm-2512-15605:mutated-year_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "arm-ebm-2512-15605"
+    },
+    {
+      "case_id": "arm-ebm-2512-15605:mutated-venue",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 4,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "arxiv_id"
+      ],
+      "matched_seed_id": "arm-ebm-2512-15605",
+      "mismatched_fields": [
+        "venue",
+        "url"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "ebe5c38205a3d831e4df862473213fe8855de0e2984d0df43cea020d8b6b502e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/arm-ebm-2512-15605:mutated-venue_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "arm-ebm-2512-15605"
+    },
+    {
+      "case_id": "arm-ebm-2512-15605:mutated-arxiv_id",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "url"
+      ],
+      "matched_seed_id": "arm-ebm-2512-15605",
+      "mismatched_fields": [
+        "arxiv_id"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "19f87b0e3c3056ab5f4b16347c731e423548b0ab5d97bb344fc575e186c87031",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/arm-ebm-2512-15605:mutated-arxiv_id_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "arm-ebm-2512-15605"
+    },
+    {
+      "case_id": "arm-ebm-2512-15605:mutated-url",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id"
+      ],
+      "matched_seed_id": "arm-ebm-2512-15605",
+      "mismatched_fields": [
+        "url"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "df63de3a59b1858d251ae2518a7124215bb2c90c4d5189e353e5b87cfb41ad23",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/arm-ebm-2512-15605:mutated-url_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "arm-ebm-2512-15605"
+    },
+    {
+      "case_id": "beaver-2512-05439:real",
+      "expected_taxonomy": "real",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 6,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "beaver-2512-05439",
+      "mismatched_fields": [],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "caba1ff8b463c165223dcbde45308fc235553c30630cec5e18d13eebb9b1d049",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/beaver-2512-05439:real_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "real",
+      "taxonomy_correct": true,
+      "truth_seed_id": "beaver-2512-05439"
+    },
+    {
+      "case_id": "beaver-2512-05439:mutated-title",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "beaver-2512-05439",
+      "mismatched_fields": [
+        "title"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "be05a3ed24c730cbb8b7722d0c5d2498558e4624e4ae9566bedfd41a6cc4c44e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/beaver-2512-05439:mutated-title_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "beaver-2512-05439"
+    },
+    {
+      "case_id": "beaver-2512-05439:mutated-authors",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "beaver-2512-05439",
+      "mismatched_fields": [
+        "authors"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "2820bfa7a78b522294e48b696df6c0c3490b4bec210d9e3410f8c435d7990f71",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/beaver-2512-05439:mutated-authors_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "beaver-2512-05439"
+    },
+    {
+      "case_id": "beaver-2512-05439:mutated-year",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "beaver-2512-05439",
+      "mismatched_fields": [
+        "year"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "b7e470772404629a568900f1948d1cd82d9b7737a5ecf69b4f917250cac5d0ce",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/beaver-2512-05439:mutated-year_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "beaver-2512-05439"
+    },
+    {
+      "case_id": "beaver-2512-05439:mutated-venue",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "beaver-2512-05439",
+      "mismatched_fields": [
+        "venue"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "a5b8df801aff3ce72bf4787658f7c8019784db28e1eb29014fb0f2e50586f46a",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/beaver-2512-05439:mutated-venue_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "beaver-2512-05439"
+    },
+    {
+      "case_id": "beaver-2512-05439:mutated-arxiv_id",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "url"
+      ],
+      "matched_seed_id": "beaver-2512-05439",
+      "mismatched_fields": [
+        "arxiv_id"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "8566bd0eda485e2643b4dffa2001b5aecaa980c4df6eac1a82d87c10858646f7",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/beaver-2512-05439:mutated-arxiv_id_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "beaver-2512-05439"
+    },
+    {
+      "case_id": "beaver-2512-05439:mutated-url",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id"
+      ],
+      "matched_seed_id": "beaver-2512-05439",
+      "mismatched_fields": [
+        "url"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "bff2ccb1e4328fab8511d6eb8a867bf6efa8021bf3c1378db4e9997c1fad33a4",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/beaver-2512-05439:mutated-url_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "beaver-2512-05439"
+    },
+    {
+      "case_id": "halluguard-2601-18753:real",
+      "expected_taxonomy": "real",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 6,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "halluguard-2601-18753",
+      "mismatched_fields": [],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "c9ac57c30b84d8d4baebdfc22ade8017840ac295a993adfcc30646e8bdf674d0",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/halluguard-2601-18753:real_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "real",
+      "taxonomy_correct": true,
+      "truth_seed_id": "halluguard-2601-18753"
+    },
+    {
+      "case_id": "halluguard-2601-18753:mutated-title",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "halluguard-2601-18753",
+      "mismatched_fields": [
+        "title"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "53bde366481ae5d11bcfcfd3fe08e8440975b4406317f0a907d35ab8d3bccf2a",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/halluguard-2601-18753:mutated-title_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "halluguard-2601-18753"
+    },
+    {
+      "case_id": "halluguard-2601-18753:mutated-authors",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "halluguard-2601-18753",
+      "mismatched_fields": [
+        "authors"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "1d9f55f74740c0b84e084e218f37402b422443f61a132e814600e2eb3418cfb7",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/halluguard-2601-18753:mutated-authors_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "halluguard-2601-18753"
+    },
+    {
+      "case_id": "halluguard-2601-18753:mutated-year",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "halluguard-2601-18753",
+      "mismatched_fields": [
+        "year"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "afce3a83fd35cd67e2617a5379dbc4a7acb000e69e36392cd37a6a95054fb24d",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/halluguard-2601-18753:mutated-year_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "halluguard-2601-18753"
+    },
+    {
+      "case_id": "halluguard-2601-18753:mutated-venue",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "halluguard-2601-18753",
+      "mismatched_fields": [
+        "venue"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "4336b6d02743883350de9afe9b68f854d266d619b5612cbede0aee4f5f0b94ca",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/halluguard-2601-18753:mutated-venue_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "halluguard-2601-18753"
+    },
+    {
+      "case_id": "halluguard-2601-18753:mutated-arxiv_id",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "url"
+      ],
+      "matched_seed_id": "halluguard-2601-18753",
+      "mismatched_fields": [
+        "arxiv_id"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "46f2a64e6befba06618eb20b51b8adb3d60577eaf57452aa9abad8ce2461050d",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/halluguard-2601-18753:mutated-arxiv_id_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "halluguard-2601-18753"
+    },
+    {
+      "case_id": "halluguard-2601-18753:mutated-url",
+      "expected_taxonomy": "hallucinated-field",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 5,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id"
+      ],
+      "matched_seed_id": "halluguard-2601-18753",
+      "mismatched_fields": [
+        "url"
+      ],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "3dddca2145dea05afef3f99beac14bec48f7a0505aadcd71a2b44e64315cca3b",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/halluguard-2601-18753:mutated-url_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "hallucinated-field",
+      "taxonomy_correct": true,
+      "truth_seed_id": "halluguard-2601-18753"
+    },
+    {
+      "case_id": "spilled-energy-2602-18671:real",
+      "expected_taxonomy": "real",
+      "extraction_success": true,
+      "field_comparison_count": 6,
+      "field_match_count": 6,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [
+        "title",
+        "authors",
+        "year",
+        "venue",
+        "arxiv_id",
+        "url"
+      ],
+      "matched_seed_id": "spilled-energy-2602-18671",
+      "mismatched_fields": [],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "c0dbfbef83ae8ad12684f98fd8b2948bef3caa24c5b25d3e546a1eaa489a867a",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "real",
+      "taxonomy_correct": true,
+      "truth_seed_id": "spilled-energy-2602-18671"
+    },
+    {
+      "case_id": "nonexistent-seed-2932:fake",
+      "expected_taxonomy": "nonexistent-seed",
+      "extraction_success": true,
+      "field_comparison_count": 0,
+      "field_match_count": 0,
+      "generation_source": "live_sota_llamacpp_citation",
+      "matched_fields": [],
+      "matched_seed_id": null,
+      "mismatched_fields": [],
+      "missing_fields": [],
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "raw_output_sha256": "14cb02edfd5914be3d06087d021ec8d1f99d6c57c40aa7ff5af206af9947039c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw/nonexistent-seed-2932:fake_Gemma4-26B-A4B-it.txt",
+      "taxonomy": "nonexistent-seed",
+      "taxonomy_correct": true,
+      "truth_seed_id": null
+    }
+  ],
+  "random_seed": 2932,
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/citation_hallucination_field_verifier_2932_raw",
+  "reproducibility_checksum": "59e1186172b445b96d4cbb7042de438a756f9679ab2840b42590e471317ab6e1",
+  "run_date": "20260523",
+  "schema": "carnot.citation_hallucination_field_verifier.v1",
+  "taxonomy_counts": {
+    "hallucinated-field": 24,
+    "nonexistent-seed": 1,
+    "potential/ambiguous": 0,
+    "real": 5
+  }
+}

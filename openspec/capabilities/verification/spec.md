@@ -12,6 +12,35 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-2932: Citation Hallucination Field Verifier
+
+The repository shall provide a local citation-hallucination probe that:
+
+- builds a fixture of at least 30 citation cases from real `research-references.md`
+  references plus controlled title, author, year, venue, DOI/arXiv id, URL, and
+  nonexistent-seed mutations;
+- calls `cached_sota_pair(gpu_indices=(0, 1))` before selecting any local GGUF
+  fallback, and records at least one of the mandated SOTA GGUF model IDs when
+  live inference is available;
+- asks the selected local GGUF model for short citation-bearing answers, writes
+  raw responses to disk, and never uses web search as experiment truth;
+- extracts citation fields with deterministic parsing before judgment;
+- verifies extracted title, author, year, venue, DOI/arXiv id, and URL fields
+  against the fixture truth; and
+- writes `results/experiment_2932_citation_hallucination_field_verifier_v1.json`
+  with the required Exp 2932 artifact fields, including taxonomy counts and a
+  reproducibility checksum.
+
+### SCENARIO-VERIFY-2932: Fixture Citations Are Classified By Field Truth
+
+Given the Exp 2932 fixture contains real references, field mutations, and a
+nonexistent-seed case,
+When model raw outputs are parsed into structured citation fields,
+Then the deterministic verifier classifies each citation as `real`,
+`potential/ambiguous`, `hallucinated-field`, or `nonexistent-seed`, reports
+extraction success, field-match accuracy, hallucination-detection accuracy, and
+writes the required terminal JSON without consulting external search.
+
 ### REQ-VERIFY-2358: Synthetic EBM-CoT Consistency Calibration
 
 The repository shall provide a deterministic, CPU-only EBM-CoT consistency
