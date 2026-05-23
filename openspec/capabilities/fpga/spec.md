@@ -1105,3 +1105,48 @@ records `inference_substrate="hardware_smoke"`, and the run duration is at
 least 10 seconds without claiming FPGA fabric execution.
 
 **Implementation status:** Pending (Exp 2900)
+
+---
+
+### REQ-HW-063
+
+**Title:** Operator hardware portfolio status card MUST aggregate KV260, GateMate, PolarFire, and THRML artifacts
+
+**Description:**
+Experiment 2907 MUST write one concise operator-facing portfolio artifact at
+`results/experiment_2907_operator_hardware_portfolio_status_v1.json`. The
+artifact MUST read the upstream hardware-port artifacts from Exp 2898 (KV260),
+Exp 2899 (GateMate), Exp 2900 (PolarFire), and Exp 2901 (THRML), then summarize
+each board into exactly `{state, last_artifact, next_step}`. The aggregation
+MUST use `inference_substrate="aggregation_from_upstream_artifacts"` and MUST
+NOT run a new board command, flash a bitstream, install a dependency, or convert
+software-only THRML parity into a TSU hardware claim.
+
+**Acceptance criteria:**
+- The artifact includes `honest_verdict`, `inference_substrate`,
+  `per_board_status`, `cited_upstream_artifacts`, and `duration_s`.
+- `per_board_status` has exactly `kv260`, `gatemate`, `polarfire`, and `thrml`
+  keys, and every board entry has exactly `state`, `last_artifact`, and
+  `next_step`.
+- `cited_upstream_artifacts` cites the four upstream result JSON files with
+  SHA256 digests and imported field names.
+- The artifact's honest verdict starts with `complete:` only when all four
+  upstream artifacts are present, valid JSON objects, and summarized.
+
+**Implementation status:** Implemented (Exp 2907)
+
+---
+
+### SCENARIO-HW-063
+
+**Scenario:** Operator reads one concise hardware portfolio status card.
+
+**Given:** Exp 2898, Exp 2899, Exp 2900, and Exp 2901 result artifacts exist in
+`results/`.
+**When:** Exp 2907 builds the portfolio status card.
+**Then:** The artifact records a one-entry status for KV260, GateMate,
+PolarFire, and THRML, cites each upstream artifact, sets
+`inference_substrate="aggregation_from_upstream_artifacts"`, and records a real
+non-negative aggregation duration.
+
+**Implementation status:** Implemented (Exp 2907)
