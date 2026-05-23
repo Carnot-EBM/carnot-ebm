@@ -5133,3 +5133,50 @@ artifact, blocked artifact, missing artifact, pilot-only artifact, and
 `results/experiment_2908_capstone_v274.json`,
 `inference_substrate=aggregation_from_upstream_artifacts`, and no modification
 to `research-roadmap.yaml` or `scripts/research_conductor.py`.
+
+### REQ-REPORT-2921: Cross-Corpus Matrix V9 And Paper-v6 Claim Boundary
+
+The repository shall provide an Exp 2921 cross-corpus matrix v9 generator that
+writes `results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json`.
+
+The generator MUST first verify that every gated `.275` upstream artifact is
+present and has the readiness field required by `research-roadmap.yaml`:
+Exp 2911 `code_hallucination_verifier_ready`, Exp 2913
+`kv260_claim_boundary_ready`, Exp 2918 `online_self_learning_ready`, Exp 2919
+`constraintbench_mini_ready`, and Exp 2920 `state_verifier_harness_ready`. If
+any gated artifact is absent or the readiness field is not true, it MUST write
+a terminal artifact with `honest_verdict="blocked_gate_inconsistent"` and MUST
+NOT promote rows from downstream evidence.
+
+When the gates are consistent, the generator MUST read matrix v8 and the
+available `.275` artifacts, classify every candidate row as `clean`,
+`flagged`, `blocked`, `pilot_only`, `diagnostic_only`, or `missing`, and keep
+flagged, blocked, pilot-only, simulator-only, and diagnostic-only rows out of
+headline eligibility. Clean rows MAY become headline eligible only when their
+own direct artifact supports a bounded paper-v6 claim. GateMate and THRML rows
+MUST remain non-headline unless their own artifacts are clean hardware evidence;
+simulator-only THRML parity may be preserved only as diagnostic context.
+
+The terminal artifact MUST include `honest_verdict`,
+`cross_corpus_matrix_v9_built`, `paper_claim_boundary_ready`,
+`headline_eligible_rows`, `clean_rows`, `flagged_rows`, `blocked_rows`,
+`pilot_only_rows`, `diagnostic_only_rows`, `missing_rows`, `matrix_v9_path`,
+`paper_v6_claim_boundary`, `inference_substrate` equal to
+`aggregation_from_upstream_artifacts`, measured `duration_s`, and
+`run_date="20260523"`.
+
+#### SCENARIO-REPORT-2921: V9 Promotes Only Clean Bounded .275 Evidence
+
+**Given** matrix v8 exists with clean headline rows and flagged code-pilot rows
+**And** the `.275` gated artifacts are present and readiness fields are true
+**And** Exp 2911 and Exp 2919 are adversarially flagged despite their ready
+fields
+**When** the Exp 2921 matrix v9 generator runs
+**Then** it writes
+`results/experiment_2921_cross_corpus_matrix_v9_paper_boundary_v1.json` with
+clean bounded rows for SOTA codegen, KV260 claim boundary, FR-11 process
+rewards, and the state verifier harness, flagged rows for the code
+hallucination verifier and ConstraintBench mini, a blocked GateMate row,
+diagnostic-only THRML and spilled-energy rows, no headline promotion from
+flagged or simulator-only evidence, and a paper-v6 claim-boundary block that
+lists exactly the headline-eligible and non-headline rows.
