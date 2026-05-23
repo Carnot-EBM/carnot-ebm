@@ -1,0 +1,88 @@
+{
+  "bitstream_sha256_cited": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
+  "board_summary": {
+    "bitstream_path": "/lib/firmware/xilinx/carnot_ising_v4/carnot_ising_v4.bit",
+    "board_harness_duration_s": 64.17721225199057,
+    "selected_uio": "/dev/uio4",
+    "selected_uio_addr_hex": "0x00000000a0000000"
+  },
+  "cpu_burn_in_sweeps": 5000,
+  "cpu_sequential_gibbs_energies_sha256": "9b622cee32ef812f49313ea1ebb16104abaf4ff8979f413723261ba1ce99bcf3",
+  "cpu_spin_orders_sha256_by_seed": {
+    "137": "e58d67668910c6d6fd75fae60ca797c01ab134dcca1f998d242ed712fb2e89d5",
+    "271": "8a7abd3cdbef03685f25828af80a2c8848d13f66f9703a5f5647c583c0adc692",
+    "42": "16a9157d078d576c4c05a817d82f661101d98185f8ca0048ee6f7935a1b44b51"
+  },
+  "cpu_update_schedule": "cpu_sequential_random_spin_order_single_spin_gibbs_dense_j_beta_1",
+  "distributions_distinguishable": true,
+  "duration_s": 84.125033,
+  "energy_samples_per_seed": 10000,
+  "experiment": "exp2938-kv260-mmd-vs-cpu-sequential-gibbs-v1",
+  "experiment_id": 2938,
+  "hardware_transcript_path": "results/experiment_2938_kv260_mmd_transcript.log",
+  "honest_verdict": "complete: kv260_mmd_vs_cpu_sequential_gibbs_recorded",
+  "inference_substrate": "hardware_smoke",
+  "kv260_synchronous_glauber_energies_sha256": "e2bb6da3519e520b561d2013f471033dce90beb2c97165c05b77f667966cd620",
+  "kv260_update_schedule": "kv260_synchronous_parallel_glauber_exp2898_fixed_sweep",
+  "max_permutation_samples": 2048,
+  "methodology_note": "CPU baseline: dense n=64 sequential single-spin Gibbs, random spin order, beta=1.0, 5000 burn-in sweeps, 10000 post-burn-in energies per seed. KV260: existing Exp 2898 UIO upload and synchronous fixed-sweep Glauber schedule, 10000 energies per seed, bitstream SHA256 cited from board. MMD\u00b2 uses an RBF kernel with median pairwise distance bandwidth over the full traces; MMD p-value uses 1000 balanced permutations with max_permutation_samples=2048 and deterministic random Fourier acceleration for large traces. KS uses scipy.stats.ks_2samp.",
+  "n_permutations": 1000,
+  "paper_v6_recommendation": "retract: distributions distinguishable at p<0.01; paper-v6 must retract the \"exact sampling on FPGA\" claim and frame KV260 outputs as fixed-schedule heuristic samples.",
+  "per_seed_bandwidth": [
+    15.709730506112502,
+    16.306371992732974,
+    15.079997212121725
+  ],
+  "per_seed_ks_pvalue": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "per_seed_ks_statistic": [
+    0.9979,
+    0.9995,
+    0.9956
+  ],
+  "per_seed_mmd_pvalue": [
+    0.000999000999000999,
+    0.000999000999000999,
+    0.000999000999000999
+  ],
+  "per_seed_mmd_squared": [
+    1.3849761415373851,
+    1.4317752664348797,
+    1.3703502061258446
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "detail": "rc=0",
+      "resource": "kv260_ssh"
+    },
+    {
+      "available": true,
+      "detail": "                   Accelerator  Accel_type                    Base    Pid   Base_type  #slots(RPU+PL+AIE)    slot->handle\n               carnot_ising_v4    XRT_FLAT         carnot_ising_v4  id_ok    XRT_FLAT             (0+0+0)              -1\n              k24-starter-kits    XRT_FLAT        k24-st",
+      "resource": "kv260_overlay"
+    },
+    {
+      "available": true,
+      "detail": "/dev/uio0\nok",
+      "resource": "kv260_uio0"
+    },
+    {
+      "available": true,
+      "detail": "a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb",
+      "resource": "active_bitstream_sha256"
+    }
+  ],
+  "random_seeds_used": [
+    42,
+    137,
+    271
+  ],
+  "reproducibility_checksum": "72868e1b0d0f7838048bb9360c09e11e84c09c743a56409005c83d57736928d4",
+  "run_date": "20260523",
+  "source_artifacts": [
+    "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json"
+  ]
+}

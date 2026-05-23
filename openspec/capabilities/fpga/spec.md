@@ -1537,3 +1537,66 @@ dense/sparse/dual-BRAM projection models, n=128 and n=256 resource-pressure
 summaries, explicit assumptions, no board execution, and no new speedup claim.
 
 **Implementation status:** Implemented (Exp 2930)
+
+---
+
+### REQ-HW-071
+
+**Title:** Exp 2938 KV260 MMD comparison MUST test synchronous Glauber energies against exact CPU sequential Gibbs
+
+**Description:**
+Experiment 2938 MUST read the completed Exp 2898 KV260 latency artifact,
+regenerate the same n=64 dense Ising problems for seeds 42, 137, and 271, and
+verify the regenerated dense `J` and `h` checksums against the recorded Exp 2898
+metadata before any comparison. It MUST run an exact CPU sequential Gibbs chain
+with random spin order and single-spin updates for 10,000 post-burn-in energy
+samples per seed. It MUST also exercise the KV260 fabric through SSH and the
+existing UIO register map, using the Exp 2898 fixed-sweep synchronous parallel
+Glauber schedule without modifying the bitstream, and collect 10,000 per-sample
+energies per seed. For every seed it MUST compute RBF-kernel MMD² between the CPU
+and KV260 energy distributions using the median pairwise distance bandwidth, a
+1000-permutation MMD significance p-value, and the Kolmogorov-Smirnov statistic
+and p-value. The artifact MUST turn those three seed-level tests into a single
+`distributions_distinguishable` bit at p<0.01 and a concrete paper-v6
+recommendation for the "exact sampling on FPGA" claim.
+
+**Acceptance criteria:**
+- `results/experiment_2938_kv260_mmd_vs_cpu_sequential_gibbs_v1.json` is
+  generated with `inference_substrate="hardware_smoke"` for successful hardware
+  runs.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `cpu_sequential_gibbs_energies_sha256`,
+  `kv260_synchronous_glauber_energies_sha256`, `bitstream_sha256_cited`,
+  `per_seed_mmd_squared`, `per_seed_mmd_pvalue`, `per_seed_ks_statistic`,
+  `per_seed_ks_pvalue`, `distributions_distinguishable`,
+  `paper_v6_recommendation`, `random_seeds_used`, `reproducibility_checksum`,
+  `methodology_note`, and `duration_s`.
+- Successful artifacts record exactly three MMD² values and three MMD p-values,
+  one for each Exp 2898 seed, and `duration_s >= 60`.
+- If any seed has MMD p-value < 0.01 or KS p-value < 0.01, the artifact MUST
+  set `distributions_distinguishable=true` and recommend retracting the exact
+  FPGA sampling claim in favor of fixed-schedule heuristic samples.
+- If SSH, Exp 2898 provenance, checksum reproduction, or active bitstream SHA
+  verification fails, the artifact MUST start `honest_verdict` with the
+  specific `blocked_<resource>` prefix and stop without producing a success
+  recommendation.
+
+**Implementation status:** Implemented (Exp 2938)
+
+---
+
+### SCENARIO-HW-071
+
+**Scenario:** KV260 synchronous Glauber energies are statistically compared to exact CPU sequential Gibbs energies.
+
+**Given:** `ssh kria` is reachable, Exp 2898 is present, its three dense Ising
+problem checksums reproduce from seeds 42, 137, and 271, and the active KV260
+bitstream SHA256 matches the Exp 2898 citation.
+**When:** Exp 2938 collects 10,000 CPU sequential Gibbs energies and 10,000 KV260
+synchronous Glauber energies per seed.
+**Then:** It writes the MMD/KS comparison artifact, records the two energy-trace
+SHA256 values, and emits a paper-v6 recommendation that retains the narrow
+approximately-Boltzmann claim only when all three seed-level MMD and KS p-values
+are at least 0.01.
+
+**Implementation status:** Implemented (Exp 2938)
