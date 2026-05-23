@@ -6031,3 +6031,4 @@ Ripgrep i |
 | 2026-05-23 07:00 UTC | KAN Hardware Complexity Accounting v2 | OK | 81 passed in 3.73s |
 | 2026-05-23 07:16 UTC | SOTA Code Generation Bounded-Budget Expansion v1 | OK | 81 passed in 3.73s |
 | 2026-05-23 07:30 UTC | FR-11 Hardware-Accelerated Replay Pilot v1 | OK | 81 passed in 3.45s |
+| 2026-05-23 07:41 UTC | Operator Hardware Portfolio Status Card v1 | OK | 81 passed in 3.57s |
