@@ -1069,6 +1069,75 @@ auditable missing-cache, precondition-failure, or generation-failure status
 **And** any legacy small-model smoke context is labeled smoke-only and never
 contributes to headline readiness.
 
+### REQ-INFER-SOTA-021: Exp 3013 SOTA GGUF Logprob Telemetry Preflight
+
+The system SHALL provide an Exp 3013 local-only SOTA GGUF readiness refresh
+that determines both whether at least one mandated headline GGUF can produce a
+live transcript and whether the current local loader exposes token logprob and
+top-k telemetry suitable for Cactus-style constrained acceptance.  The
+preflight SHALL be written to
+`results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json`;
+SHALL record CUDA/GPU availability, free VRAM when available, repository
+commit, Python environment, cache roots, and checksum feasibility before any
+model load; SHALL inspect the mandated headline GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through the shared `cached_sota_pair()` /
+local-cache resolver pattern; and SHALL attempt bounded conservative
+llama.cpp generation only for locally available headline GGUF files.
+
+For every headline model inspected, the artifact SHALL record exact model ID,
+local cache path when present, file-size/checksum evidence when feasible, load
+status, generation status, measured duration, transcript path/hash when live
+generation succeeds, and observed loader telemetry capability booleans for
+token logprobs, top-k alternatives, and logits.  Legacy small models
+`Qwen/Qwen3.5-0.8B` and `unsloth/gemma-4-E4B-it-GGUF` MAY appear only as
+smoke-only context and SHALL never set `sota_headline_ready=true`.
+
+The artifact SHALL expose `sota_headline_ready`, `sota_logprob_ready`,
+`preconditions_checked`, `model_specs`, `headline_models_attempted`,
+`headline_models_available`, `telemetry_capabilities`, `cache_paths`,
+`model_checksums`, `live_transcript_paths`, `legacy_smoke_only_used`,
+`inference_substrate`, `duration_s`, and `honest_verdict`.
+`sota_headline_ready` SHALL be true only when at least one mandated headline
+GGUF produces a real non-empty transcript with cache/provenance fields.
+`sota_logprob_ready` SHALL be true only when observed live loader output
+contains token logprob and top-k alternative data; live transcript generation
+without telemetry SHALL leave `sota_logprob_ready=false` without fabricating
+telemetry.
+
+### SCENARIO-INFER-SOTA-021-001: Live Transcript With Telemetry Opens Both Gates
+
+**Given** Exp 3013 has recorded preconditions before model loading
+**And** at least one mandated headline GGUF resolves to a local file
+**When** Exp 3013 runs a bounded conservative prompt and the loader returns
+non-empty text with token logprob and top-k alternative fields
+**Then** `sota_headline_ready=true`
+**And** `sota_logprob_ready=true`
+**And** the artifact records transcript path/hash, model ID, cache path,
+checksum evidence, load status, generation status, measured duration, and
+observed telemetry capability fields.
+
+### SCENARIO-INFER-SOTA-021-002: Live Transcript Without Telemetry Does Not Fake Logprobs
+
+**Given** a mandated headline GGUF produces non-empty text locally
+**But** the loader output lacks token logprobs or top-k alternatives
+**When** Exp 3013 completes
+**Then** `sota_headline_ready=true`
+**And** `sota_logprob_ready=false`
+**And** `telemetry_capabilities` records the missing telemetry blockers without
+fabricating logprob, top-k, or logits evidence.
+
+### SCENARIO-INFER-SOTA-021-003: No Headline Run Emits Blocked SOTA Artifact
+
+**Given** no mandated headline GGUF can complete live generation locally
+**When** Exp 3013 runs
+**Then** it writes a terminal blocked artifact with
+`honest_verdict=blocked_sota_headline_model_unavailable`
+**And** all mandated headline IDs appear in `headline_models_attempted` with
+auditable missing-cache, precondition-failure, or generation-failure status
+**And** any legacy small-model smoke context is labeled smoke-only and never
+contributes to headline readiness or logprob readiness.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1154,6 +1223,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-016 | Implemented (`python/carnot/reporting/sota_energy_micro_panel_logprob_corrigendum_v2.py`) | Implemented (`tests/python/test_experiment_2875_sota_energy_micro_panel_logprob_corrigendum_v2.py`) |
 | REQ-INFER-SOTA-017 | Implemented (`python/carnot/reporting/sota_micro_panel_clean_telemetry_v3.py`) | Implemented (`tests/python/test_experiment_2886_sota_micro_panel_clean_telemetry_v3.py`) |
 | REQ-INFER-SOTA-018 | Implemented (`python/carnot/reporting/spilled_energy_logit_detector_micro_panel_v1.py`) | Implemented (`tests/python/test_experiment_2917_spilled_energy_logit_detector_micro_panel.py`) |
+| REQ-INFER-SOTA-021 | Implemented (`scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py`) | Implemented (`tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
