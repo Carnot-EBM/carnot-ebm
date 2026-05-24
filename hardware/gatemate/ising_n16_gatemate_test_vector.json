@@ -1,0 +1,144 @@
+{
+  "coupling_addr_width": 8,
+  "coupling_data_width": 8,
+  "couplings_q7": [
+    {
+      "addr": 1,
+      "col": 1,
+      "q7": 32,
+      "row": 0
+    },
+    {
+      "addr": 18,
+      "col": 2,
+      "q7": 32,
+      "row": 1
+    },
+    {
+      "addr": 35,
+      "col": 3,
+      "q7": 32,
+      "row": 2
+    },
+    {
+      "addr": 52,
+      "col": 4,
+      "q7": 32,
+      "row": 3
+    },
+    {
+      "addr": 69,
+      "col": 5,
+      "q7": 32,
+      "row": 4
+    },
+    {
+      "addr": 86,
+      "col": 6,
+      "q7": 32,
+      "row": 5
+    },
+    {
+      "addr": 103,
+      "col": 7,
+      "q7": 32,
+      "row": 6
+    },
+    {
+      "addr": 120,
+      "col": 8,
+      "q7": 32,
+      "row": 7
+    },
+    {
+      "addr": 137,
+      "col": 9,
+      "q7": 32,
+      "row": 8
+    },
+    {
+      "addr": 154,
+      "col": 10,
+      "q7": 32,
+      "row": 9
+    },
+    {
+      "addr": 171,
+      "col": 11,
+      "q7": 32,
+      "row": 10
+    },
+    {
+      "addr": 188,
+      "col": 12,
+      "q7": 32,
+      "row": 11
+    },
+    {
+      "addr": 205,
+      "col": 13,
+      "q7": 32,
+      "row": 12
+    },
+    {
+      "addr": 222,
+      "col": 14,
+      "q7": 32,
+      "row": 13
+    },
+    {
+      "addr": 239,
+      "col": 15,
+      "q7": 32,
+      "row": 14
+    },
+    {
+      "addr": 240,
+      "col": 0,
+      "q7": 32,
+      "row": 15
+    },
+    {
+      "addr": 8,
+      "col": 8,
+      "q7": -24,
+      "row": 0
+    },
+    {
+      "addr": 59,
+      "col": 11,
+      "q7": 18,
+      "row": 3
+    },
+    {
+      "addr": 93,
+      "col": 13,
+      "q7": -16,
+      "row": 5
+    },
+    {
+      "addr": 127,
+      "col": 15,
+      "q7": 12,
+      "row": 7
+    }
+  ],
+  "eta_q1_15": 2949,
+  "init_spins_hex": "0xace1",
+  "interface_sequence": [
+    "pulse rst high for one clk",
+    "pulse load_init with init_spins_hex",
+    "load each couplings_q7 row using addr and q7",
+    "pulse start and wait for done"
+  ],
+  "max_steps": 8,
+  "n_spins": 16,
+  "pressure_delta_q1_15": 0,
+  "pressure_start_q1_15": 0,
+  "schema": "carnot.gatemate.ising_n16_test_vector.v1",
+  "spec_refs": [
+    "REQ-HW-075",
+    "SCENARIO-HW-075"
+  ],
+  "top_module": "ising_n16_gatemate"
+}

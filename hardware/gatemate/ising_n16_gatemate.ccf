@@ -1,0 +1,12 @@
+# GateMate CCGM1A1 build-only constraints for ising_n16_gatemate.
+# Spec: REQ-HW-075, SCENARIO-HW-075.
+#
+# Pin assumption: this repository does not yet contain an
+# authoritative GateMate A1-EVB-2M pin map for every RTL port.
+# This CCF intentionally assigns no physical Pin_in/Pin_out
+# locations. The follow-up build must pass --vopt
+# allow-unconstrained and treat auto-placed IO as build-only
+# evidence, not as a board-level interface claim.
+#
+# Clock assumption is recorded in the Exp 2955 artifact and
+# supplied to nextpnr as --freq 12.0 by the later build task.

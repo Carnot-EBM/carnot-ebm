@@ -1763,3 +1763,59 @@ timings, `scaling_ratio_vs_exp2900` is computed from the Exp 2900 median, and
 the success duration is at least 15 seconds.
 
 **Implementation status:** Pending (Exp 2941)
+
+---
+
+### REQ-HW-075
+
+**Title:** Exp 2955 GateMate constraints materialization MUST create a deterministic n=16 build package without flashing
+
+**Description:**
+Experiment 2955 MUST locate or create the minimum GateMate A1-EVB-2M package
+needed for a later n=16 Ising bitstream build. The package MUST target
+`hardware/gatemate/ising_n16_gatemate.v` with top module
+`ising_n16_gatemate`, provide an explicit GateMate constraint file, provide a
+deterministic test vector for the n=16 coupling/load interface, and record the
+hash of that test vector. Before declaring readiness the experiment MUST check
+`yosys`, `nextpnr-himbaechel`, `gmpack`, and `openFPGALoader`, MAY run the
+read-only `openFPGALoader -c dirtyJtag --detect` probe, and MUST NOT flash or
+program the board. If the package relies on unconstrained non-clock IO because
+the repository has no authoritative board pinout for every RTL port, the
+artifact MUST state that pin assumption explicitly so follow-up bitstream work
+does not turn a build-only gate into a physical IO claim.
+
+**Acceptance criteria:**
+- `results/experiment_2955_gatemate_constraints_materialization_v4.json` is
+  generated with `inference_substrate="deterministic_wiring"`.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `gatemate_constraints_ready`, `constraints_file_paths`,
+  `test_vector_paths`, `top_module`, `clock_assumption`,
+  `dirtyjtag_detected`, `toolchain_versions`, `files_changed`,
+  `reproducibility_checksum`, `inference_substrate`, and `duration_s`.
+- The explicit constraints package includes a GateMate `.ccf` path and a
+  deterministic test-vector JSON path whose SHA256 contributes to the
+  reproducibility checksum.
+- A dry-run lint or synthesis-only check is attempted when yosys is present,
+  and any skipped dry-run condition is recorded instead of fabricated.
+- The experiment never invokes `openFPGALoader` with a board/programming flag
+  such as `-b olimex_gatemateevb`.
+
+**Implementation status:** Planned (Exp 2955)
+
+---
+
+### SCENARIO-HW-075
+
+**Scenario:** GateMate n=16 constraints and test vector are materialized for the next build gate.
+
+**Given:** The current GateMate himbaechel/gmpack toolchain is present and the
+n=16 Ising RTL top exists, but the repository has no explicit
+`hardware/gatemate/ising_n16_gatemate.ccf` constraints package.
+**When:** Exp 2955 runs the materialization step.
+**Then:** It writes the minimal constraints/test-vector files, records the
+clock and pin assumptions, records the test-vector SHA256, attempts a
+synthesis-only dry run when yosys is available, writes the v4 JSON artifact,
+sets `gatemate_constraints_ready=true`, and performs no flash/programming
+command.
+
+**Implementation status:** Planned (Exp 2955)

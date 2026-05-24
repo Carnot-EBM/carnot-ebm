@@ -1,0 +1,114 @@
+{
+  "clock_assumption": "12.0 MHz nextpnr target frequency",
+  "constraints_file_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+  ],
+  "constraints_sha256": "ae31c6010f5dcd5777328ff539839a1812faee3c27de0911b24f0e84ab98bfc9",
+  "device": "CCGM1A1",
+  "dirtyjtag_detected": true,
+  "dry_run_checks": [
+    {
+      "attempted": true,
+      "command": [
+        "/opt/oss-cad-suite/bin/yosys",
+        "-q",
+        "-p",
+        "read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8; stat"
+      ],
+      "output": "",
+      "returncode": 0
+    }
+  ],
+  "duration_s": 1.358,
+  "files_changed": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf",
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json"
+  ],
+  "gatemate_constraints_ready": true,
+  "honest_verdict": "complete: gatemate_constraints_materialized",
+  "inference_substrate": "deterministic_wiring",
+  "missing_toolchain": [],
+  "nextpnr_options_required": [
+    "--freq 12.0",
+    "--vopt allow-unconstrained"
+  ],
+  "no_flash_attempted": true,
+  "pin_assumption": "Non-clock IO pins are intentionally unconstrained for the build-only package; follow-up PnR must use --vopt allow-unconstrained.",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/yosys",
+      "resource": "yosys",
+      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_output": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_returncode": 0
+    },
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "resource": "nextpnr-himbaechel",
+      "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "version_output": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "version_returncode": 0
+    },
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/gmpack",
+      "resource": "gmpack",
+      "version": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+      "version_output": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: /opt/oss-cad-suite/bin/gmpack input.config [output.bit] [options]\n\nAllowed options:\n  -h [ --help ]         show help\n  -v [ --verbose ]      verbose output\n  --reset               reset all configuration latches with CMD_CFGRST\n  --crcmode arg         CRC error behaviour (check, ignore, unused)\n  --spimode arg         SPI Mode to use (single, dual, quad)\n  --reconfig            enable reconfiguration in bitstream\n  --background          enable background reconfiguration in bitstream\n  --bootaddr arg        boot address for secondary bitstream\n  --input arg           input textual configuration\n  --bit arg             output bitstream file",
+      "version_returncode": 1
+    },
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "openFPGALoader",
+      "version": "openFPGALoader v1.1.1",
+      "version_output": "openFPGALoader v1.1.1",
+      "version_returncode": 0
+    },
+    {
+      "available": true,
+      "command": [
+        "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+        "--device",
+        "CCGM1A1"
+      ],
+      "output": "Info: Using uarch 'gatemate' for device 'CCGM1A1'\nInfo: Using timing mode 'WORST'.\nInfo: Using performance mode 'SPEED'.\n\nInfo: Program finished normally.",
+      "resource": "nextpnr_device_CCGM1A1",
+      "returncode": 0
+    },
+    {
+      "available": true,
+      "command": [
+        "/opt/oss-cad-suite/bin/openFPGALoader",
+        "-c",
+        "dirtyJtag",
+        "--detect"
+      ],
+      "output": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\nindex 0:\n\tidcode 0x20000001\n\tmanufacturer colognechip\n\tfamily GateMate Series\n\tmodel  GM1Ax\n\tirlength 6",
+      "resource": "dirtyjtag_detect",
+      "returncode": 0
+    }
+  ],
+  "reproducibility_checksum": "68009542398054b2dff667dd0fc2f611741bc87eeff5f2740282123b4cc697c7",
+  "rtl": {
+    "n16": true,
+    "path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+    "present": true,
+    "sha256": "5e31deaa27e526aeb3e21cfc2950516edd195584f396895b6d30111442d344e1",
+    "top_module": "ising_n16_gatemate"
+  },
+  "run_date": "20260524",
+  "test_vector_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json"
+  ],
+  "test_vector_sha256": "d3b4583f6ddf3ab8f5996a611b96507128c209f3813a488d9a37d5d62df88df4",
+  "toolchain_versions": {
+    "gmpack": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+    "nextpnr-himbaechel": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+    "openFPGALoader": "openFPGALoader v1.1.1",
+    "yosys": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+  },
+  "top_module": "ising_n16_gatemate"
+}
