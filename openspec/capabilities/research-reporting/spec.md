@@ -6814,3 +6814,79 @@ states capstone readiness and paper readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3011 | Implemented (`python/carnot/reporting/capstone_v282_3011.py`) | Implemented (`tests/python/test_experiment_3011_capstone_v282.py`) |
+
+### REQ-REPORT-3012: Archive Milestone 2026.05.282 and Confirm 2026.05.283 Activation
+
+The repository shall provide an Exp 3012 archive/activation generator that
+writes `results/experiment_3012_archive_v282_activate_v283.json` using only
+checked-in roadmap state, `research-complete.yaml`,
+`results/experiment_3011_capstone_v282.json`,
+`results/experiment_3010_cross_corpus_matrix_v16.json`, and the local `.282`
+result artifacts referenced by the capstone. The generator MUST NOT modify
+`scripts/research_conductor.py`, MUST NOT modify `research-roadmap.yaml`, MUST
+NOT push, MUST NOT call an LLM, and MUST NOT rerun live inference, verifier
+scoring, solver execution, synthesis, board flashing, readback, hardware smoke
+tests, or historical experiments.
+
+The generator MUST read the Exp 3011 capstone and all `.282` result artifacts
+referenced by its `source_artifacts_read` entries when they exist locally.
+Missing referenced artifacts MUST remain missing and MUST NOT be repaired or
+synthesized. The generator MUST summarize clean, flagged, blocked,
+gated-skipped, projection-only, pilot-only, missing, and adversarially flagged
+counts from the capstone and matrix evidence. Blocked, flagged, missing,
+gated-skipped, and adversarially flagged rows MUST be carried forward
+explicitly so downstream planning can see unresolved work.
+
+The generator MUST ensure `research-complete.yaml` contains exactly one
+completed `2026.05.282` milestone archive row after the run. If the row already
+exists, it MUST leave the archive ledger unchanged. If the row is absent and
+the capstone is present, it MAY append the completed `.282` task list and
+capstone outcome without rewriting unrelated historical milestone entries.
+
+The generator MUST confirm that milestone `2026.05.283` is activated from
+roadmap state. It MUST prefer `research-roadmap-next.yaml` when that file is
+present; when it is absent because activation has already occurred, it MUST use
+the active `research-roadmap.yaml` as a read-only fallback, require non-empty
+tasks, and record that fallback in artifact metadata. When an outer conductor
+prompt directs ops-doc reconciliation to a separate step, the generator MUST
+leave `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`
+unchanged and report `status_updates_written=false` honestly unless those docs
+already contain both milestone identifiers.
+
+The terminal artifact MUST include `archive_ready`,
+`archived_milestone="2026.05.282"`,
+`activated_milestone="2026.05.283"`, `research_complete_updated`,
+`status_updates_written`, `n_tasks_archived`,
+`blocked_or_flagged_rows_carried_forward`,
+`adversarial_flags_carried_forward`,
+`inference_substrate="aggregation_from_upstream_artifacts"`,
+`validation_commands`, and `honest_verdict` with an accepted terminal prefix.
+It MUST NOT include a top-level `model_specs` field. It MAY include source-read
+summaries, capstone and matrix classification counts, read-only roadmap hashes,
+ops-doc mutation checks, and notes as long as every value is direct aggregation
+from local artifacts.
+
+#### SCENARIO-REPORT-3012: Existing .282 Archive Confirms Active .283 Roadmap
+
+**Given** `results/experiment_3011_capstone_v282.json` exists
+**And** `research-complete.yaml` already contains a completed
+`2026.05.282` archive row with the completed `.282` task list
+**And** `research-roadmap-next.yaml` is absent because
+`research-roadmap.yaml` is already activated at `2026.05.283` with non-empty
+tasks
+**When** the Exp 3012 generator runs
+**Then** it writes `results/experiment_3012_archive_v282_activate_v283.json`
+with all required fields, `archive_ready=true`,
+`research_complete_updated=true`, `n_tasks_archived=12`,
+`activation.used_active_roadmap_fallback=true`, classification counts copied
+from the capstone and matrix evidence, blocked, flagged, missing,
+gated-skipped, and adversarially flagged rows carried forward, no top-level
+`model_specs`, and unchanged `research-roadmap.yaml`,
+`scripts/research_conductor.py`, `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md`.
+
+## Implementation Status (REQ-REPORT-3012)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3012 | Implemented (`python/carnot/reporting/milestone_282_archive_283_activation.py`) | Implemented (`tests/python/test_experiment_3012_archive_v282.py`) |
