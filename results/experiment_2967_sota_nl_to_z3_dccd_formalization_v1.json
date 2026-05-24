@@ -1675,5 +1675,23 @@
     }
   },
   "solver_verified_accuracy": 0.208333,
-  "z3_execution_rate": 0.208333
+  "z3_execution_rate": 0.208333,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "answer_accuracy=0.25 and parseability_rate=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "solver_verified_accuracy=0.208333 and z3_execution_rate=0.208333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }

@@ -6123,3 +6123,4 @@ web search: https://arxiv. |
 | 2026-05-24 05:15 UTC | Gated SOTA DCCD Code Repair Replication v1 | OK | 81 passed in 4.16s |
 | 2026-05-24 05:28 UTC | BEAVER-Style Repair Certificate Audit v1 | OK | 81 passed in 3.05s |
 | 2026-05-24 05:40 UTC | LogicSkills LLMEval Exact Frontier Materializer v1 | OK | 81 passed in 3.19s |
+| 2026-05-24 06:02 UTC | Gated SOTA NL-to-Z3 DCCD Formalization v1 | OK | 81 passed in 3.30s |
