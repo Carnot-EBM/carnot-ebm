@@ -857,5 +857,33 @@
   "source_raw_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw",
   "z3_execution_rate": 0.083333,
   "z3_execution_repaired": true,
-  "z3_import_ok": true
+  "z3_import_ok": true,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "answer_accuracy=0.083333 and parseability_rate=0.083333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "answer_accuracy=0.083333 and z3_execution_rate=0.083333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "parseability_rate=0.083333 and z3_execution_rate=0.083333 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.043118 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
