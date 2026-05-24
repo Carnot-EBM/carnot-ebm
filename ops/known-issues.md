@@ -320,6 +320,147 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-24 (13:30Z): Verifier-Ensemble Multi-Violation Degradation Curve (.281+ MANDATORY)
+
+**Origin:** 2026-05-24 outer-loop review of Appen's "Benchmarking
+Subquadratics SSA Kernel" whitepaper. The RULER benchmark reported
+SSA accuracy degrading from 100% (single needle) → 96% (2 keys) →
+83% (4 keys) → 68% (8 keys) — a 32-percentage-point drop as more
+simultaneous constraints are introduced. The whitepaper framed this
+as a general industry pattern.
+
+Carnot has a structurally identical exposure that we have NEVER
+measured. Our verifier ensemble is k=15 base verifiers
+AND-composed. Spera Theorem 9.2 says joint-null-space detection
+across AND-composed verifiers is coNP-complete; the Deep Think
+DEGRADING #8 finding (2026-05-23) warned that on novel modalities,
+joint null spaces are statistically guaranteed to interact in ways
+that destroy the verifier-ensemble lift.
+
+We measure cross-corpus BREADTH (matrix v14: 29 clean rows). We
+have not measured DEPTH-of-composition: how does ensemble accuracy
+degrade as a function of the number of constraints simultaneously
+violated? Without that curve, the paper-v6 generalization claim
+(Deep Think DEGRADING #8) remains undefended.
+
+**The task to queue.** Synthesize inputs that violate n ∈
+{0, 1, 2, 4, 8, 12, 15} distinct constraints, run the k=15 verifier
+ensemble, measure the accept/reject curve. This is Carnot's
+equivalent of RULER's multi-needle curve.
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_verifier_ensemble_multi_violation_degradation_curve_v1.json"
+  title: "Verifier-Ensemble Multi-Violation Degradation Curve v1"
+  priority: critical
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 50
+  estimated_wall_time_min: 60
+  track: evidence
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  prior_failures:
+    - experiment_id: exp2837
+      verdict: "complete: FoVer dual-condition measured (5-seed)"
+      addressed_by: "exp2837 measured the verifier ensemble on FoVer (a fixed distribution). This task measures it on synthetic inputs with a controlled number of simultaneous violations — orthogonal axis. Different question: how does the AND-composed ensemble's accuracy scale with the number of constraints simultaneously violated?"
+      retire_if_same_verdict: true
+```
+
+**Concrete steps:**
+
+1. PRECONDITIONS:
+   a. The k=15 verifier ensemble code path is callable
+      (python/carnot/verify/ + ensemble composition).
+   b. exp2837 / matrix v14 artifacts are present (anchors for
+      comparison baselines).
+2. **Synthesize the corpus.** For each n in
+   {0, 1, 2, 4, 8, 12, 15}, generate ≥100 inputs where exactly n
+   of the k=15 verifiers should fire. The synthesis pattern: start
+   with a clean reference output, then inject n distinct violations
+   from a known-violation catalogue (one per verifier). The
+   catalogue lives at `tests/python/violation_catalogue/` or
+   equivalent; if absent, the task creates it from existing
+   ensemble training fixtures.
+3. **Run the k=15 ensemble.** For each input, record:
+   - Each verifier's binary decision (which of the 15 fire)
+   - The AND-composed ensemble's accept/reject
+   - Localization accuracy: does the ensemble's "which verifiers
+     fired" set match the synthesized "which constraints were
+     injected" set?
+4. **Compute the curve.** For each n ∈ {0, 1, 2, 4, 8, 12, 15}:
+   - Ensemble rejection rate (should approach 1.0 as n grows)
+   - Mean per-violation localization accuracy
+   - Per-input localization-set Jaccard similarity to ground truth
+5. **Detect bimodal error.** Following the Appen MRCR finding, test
+   whether the per-input localization-accuracy distribution is
+   bimodal (clustered at 0 and 1) or gradient (continuous).
+   Compute a bimodality coefficient or Hartigan's dip-test p-value.
+6. **Compare against random baseline.** A random ensemble with the
+   same per-verifier base rates would produce a known curve;
+   measure how much above random the real ensemble sits at each n.
+
+**Required artifact fields:**
+
+| Field | Principle |
+|---|---|
+| `honest_verdict` | Must start with complete:/success: per Verdict Terminal-Prefix Discipline. |
+| `inference_substrate` | `verifier_ensemble_against_cached_candidates` (no LLM inference; just verifier scoring on synthetic inputs). |
+| `preconditions_checked` | List with ensemble code path + violation catalogue resources. |
+| `per_n_results` | shape: list of `{n_violations: int, n_inputs: int, ensemble_reject_rate: float, localization_accuracy_mean: float, jaccard_similarity_mean: float}`. Each n in {0, 1, 2, 4, 8, 12, 15}. |
+| `bimodality_detected` | bool — true if Hartigan's dip-test rejects unimodality at p<0.05 on the localization-accuracy distribution at any n. |
+| `bimodality_p_value_per_n` | list of p-values from dip-test. |
+| `random_baseline_curve` | shape: list of `{n_violations: int, ensemble_reject_rate_random: float}` for comparison. |
+| `lift_over_random_per_n` | list[float] — real ensemble accept rate minus random ensemble accept rate at each n. |
+| `random_seeds_used` | list[int] for the synthesis seeds. |
+| `reproducibility_checksum` | SHA256 over synthesized corpus + verifier-ensemble version + seeds. |
+| `paper_v6_recommendation` | str: `defensible_curve` if degradation is gradient and lift > 2x baseline / `bimodal_failure` if dip-test rejects at any n / `joint_null_space_exposed` if rejection rate plateaus far below 1.0 at high n. |
+| `methodology_note` | str |
+| `duration_s` | float |
+
+**Acceptance gates:**
+
+- `len(per_n_results) >= 7` (one entry per n value)
+- `n_inputs >= 100` for each n value (statistical floor)
+- `duration_s >= 30` (synthesis + 700+ verifier-ensemble evaluations)
+- `bimodality_detected` field is populated (true or false; never null)
+
+**Why this stays in MANDATORY until landed:** the paper-v6 claim
+that the k=15 verifier ensemble generalizes depends on its
+behavior under multi-constraint inputs. The Deep Think DEGRADING #8
+finding flagged this as the most likely path to a reviewer-surfaced
+objection. Cross-corpus breadth (matrix v14) addresses "does the
+ensemble work on different distributions" but NOT "does the
+ensemble work when many constraints fire simultaneously." This
+task closes the second axis. Without it, the paper's "generalizes
+to k=15 verifiers" claim is asserted but not demonstrated.
+
+**Comparator context (from the Appen paper):**
+
+| Architecture | 1 needle | 2 keys | 4 keys | 8 keys |
+|---|---|---|---|---|
+| SSA (sparse attention, 128K) | 100% | 96% | 83% | 68% |
+| Carnot k=15 verifier ensemble | (to measure) | (to measure) | (to measure) | (to measure) |
+
+The Appen number is 32pp degradation from 1 → 8 needles. Carnot
+may exhibit similar, less, or more — the headline finding from
+this task is wherever the actual curve lands.
+
+**Cross-references:**
+
+- Appen whitepaper: https://www.appen.com/whitepapers/benchmarking-subquadratics-latest-model-ssa-kernel
+- Spera Theorem 9.2 reference: `reference_spera_theorem_92` (memory)
+- `project_null_space_mimicry_attack` (memory) — the closely
+  related attack pattern; this task measures the magnitude of the
+  joint-null-space exposure that the attack would exploit.
+- Deep Think DEGRADING #8: `docs/research-notes/phase3-empirical-readiness-deep-think-results.md`
+- CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor"
+  — n >= 100 inputs per n_violations bucket is the sample-size
+  floor that section requires for distributional claims.
+
+---
+
 ### NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 — Board Reattached (.279+ MANDATORY)
 
 **Origin:** 2026-05-24 operator confirmed the GateMate A1-EVB-2M is
