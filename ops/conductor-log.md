@@ -6184,3 +6184,4 @@ web search: site |
 | 2026-05-24 20:08 UTC | Solver-to-validator tree expansion | OK | 81 passed in 4.33s |
 | 2026-05-24 20:19 UTC | EqR fixed-point energy diagnostic | OK | 81 passed in 4.29s |
 | 2026-05-24 20:35 UTC | FR-11 attractor trace-memory stability | OK | 81 passed in 3.24s |
+| 2026-05-24 20:47 UTC | GateMate host-visible IO transport v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3008_gatemat |
