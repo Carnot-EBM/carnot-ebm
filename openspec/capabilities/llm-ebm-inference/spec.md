@@ -971,6 +971,55 @@ final-token logits
 `spilled_energy_micro_panel_ready=false`, `logprob_or_logits_available=false`,
 and exits without fabricating spilled-energy metrics or benchmark claims.
 
+### REQ-INFER-SOTA-019: Exp 2989 SOTA GGUF Cache Provenance Preflight
+
+The system SHALL provide an Exp 2989 bounded SOTA GGUF cache/provenance
+preflight that gates downstream headline live-LLM claims before Exp 2977-style
+repair evidence is reused.  The preflight SHALL be written to
+`results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json`; SHALL
+record CUDA/GPU availability, free VRAM when available, the repository commit,
+the Python environment, and local cache-root existence before any model load;
+SHALL inspect the mandated headline GGUF IDs
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF` through the shared `cached_sota_pair()` /
+local-cache resolver pattern; and SHALL attempt a bounded conservative
+llama.cpp prompt only for locally available headline GGUF files.
+
+For every headline model inspected, the artifact SHALL record the exact model
+ID, local cache path when present, file-size/checksum evidence when feasible,
+load status, generation status, duration, and transcript path/hash when live
+generation succeeds.  Legacy small models `Qwen/Qwen3.5-0.8B` and
+`unsloth/gemma-4-E4B-it-GGUF` MAY appear only as smoke-only context and SHALL
+never set `sota_headline_ready=true`.
+
+The artifact SHALL expose `sota_headline_ready`, `preconditions_checked`,
+`model_specs`, `sota_models_attempted`, `sota_models_available`, `cache_paths`,
+`model_checksums`, `live_transcript_paths`, `legacy_smoke_only_used`,
+`inference_substrate`, `duration_seconds`, and `honest_verdict`.
+`sota_headline_ready` SHALL be true only when at least one mandated headline
+GGUF produces a real non-empty transcript with cache/provenance fields.
+
+### SCENARIO-INFER-SOTA-019-001: Available Headline GGUF Produces Transcript Evidence
+
+**Given** preconditions have been recorded before model loading
+**And** at least one mandated headline GGUF resolves to a local file
+**When** Exp 2989 runs a bounded conservative prompt on that headline model
+**Then** `sota_headline_ready=true` only if the model produces a non-empty
+transcript
+**And** the artifact records the transcript path/hash, model ID, cache path,
+checksum evidence, load status, generation status, measured duration, and
+`honest_verdict` starting with `success:`.
+
+### SCENARIO-INFER-SOTA-019-002: Missing Headline Cache Blocks Without Small-Model Promotion
+
+**Given** no mandated headline GGUF resolves to a local file
+**When** Exp 2989 runs
+**Then** it writes a terminal blocked artifact with `sota_headline_ready=false`
+**And** all mandated headline IDs appear in `sota_models_attempted` with
+missing-cache status
+**And** any legacy small-model smoke context is labeled `smoke_only` and never
+contributes to headline readiness.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
