@@ -1,28 +1,28 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.280",
-  "generated_at": "2026-05-24T13:23:02Z",
+  "generated_at": "2026-05-24T13:45:59Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Authoritative timing data reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments for milestone 2026.05.280. Slowest compute-bound experiments, compute-bound GPU efficiency, and parallel multi-model runner coverage have no data available this milestone.",
+  "summary": "The authoritative milestone timing block reports 0 completed experiments, 0 wall-time minutes, and 0 compute-bound experiments for 2026.05.280. Slowest compute-bound experiments, GPU efficiency on compute-bound work, and parallel multi-model runner engagement have no data available this milestone.",
   "bottlenecks_identified": [
-    "no data available this milestone for slowest compute-bound experiments",
-    "no data available this milestone for wall-time bottleneck ranking"
+    "no data available this milestone for compute-bound runtime bottlenecks",
+    "no data available this milestone for slowest-experiment ranking"
   ],
   "improvements_suggested": [
-    "Add an activation-window sentinel that records an explicit no-run closeout when the timing source contains 0 completed experiments.",
-    "Gate GPU-efficiency and runner recommendations on compute_bound_experiments_count > 0 before interpreting idle GPU monitor state.",
-    "Require a parallel multi-model marker before recommending DualGPURunner engagement."
+    "Add an activation-window no-data sentinel that finalizes a no-run retro before any GPU-runner interpretation is attempted.",
+    "Gate GPU-idle and DualGPURunner recommendations on compute-bound timing rows and explicit parallel-model markers.",
+    "Surface the milestone-scoped experiment count in closeout status before retrospective synthesis."
   ],
   "top_3_highest_leverage_actions": [
-    "Implement the empty activation-window sentinel in the operational retro generator.",
-    "Emit no data available this milestone for slowest-run, GPU-efficiency, and DualGPURunner sections when experiments_completed is 0.",
-    "Keep GPU idle classification null unless at least one compute-bound timing row exists."
+    "Implement the no-data sentinel for empty activation windows.",
+    "Require compute-bound timing evidence before GPU-utilization findings are emitted.",
+    "Require an explicit parallel-model marker before DualGPURunner guidance is suggested."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The GPU monitor showed idle devices, but the timing source contains 0 compute-bound experiments, so the idle state is not evidence of an execution bottleneck. The main operational gap is observability: the closeout should make an empty milestone-scoped timing window explicit before suggesting compute-runner changes."
+  "meta_reflection": "The GPU monitor reported idle devices, but without any compute-bound timing entries that state is not evidence of inefficient execution. The only defensible efficiency recommendation is to improve observability around empty timing windows."
 }
