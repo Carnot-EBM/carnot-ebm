@@ -252,3 +252,99 @@ def test_req_verify_2977_blocks_when_protocol_not_ready(tmp_path: Path) -> None:
     assert artifact["repair_rerun_clean"] is False
     assert artifact["n_tasks"] == 0
     assert artifact["candidate_evaluations"] == []
+
+
+def test_req_verify_2977_blocks_when_required_sources_are_missing(tmp_path: Path) -> None:
+    """REQ-VERIFY-2977: missing upstream repair inputs block evaluation."""
+    _write_sources(tmp_path, n_tasks=20)
+    (tmp_path / "results" / exp.THRESHOLD_FILENAME).unlink()
+
+    artifact = exp.build_artifact(
+        _config(tmp_path, n_tasks=20),
+        cached_pair_func=_cached_pair,
+        generator=_clean_generator,
+    )
+
+    assert artifact["honest_verdict"] == "blocked_missing_upstream_repair_artifacts"
+    assert artifact["headline_result"] is False
+    assert artifact["repair_rerun_clean"] is False
+    assert artifact["n_tasks"] == 0
+    assert artifact["candidate_evaluations"] == []
+
+
+def test_req_verify_2977_blocks_when_no_repair_tasks_remain(tmp_path: Path) -> None:
+    """REQ-VERIFY-2977: an empty selected repair set blocks the rerun."""
+    _write_sources(tmp_path, n_tasks=1)
+    upstream_path = tmp_path / "results" / exp.UPSTREAM_REPAIR_FILENAME
+    upstream_payload = json.loads(upstream_path.read_text(encoding="utf-8"))
+    upstream_payload["selected_repair_set"] = ["not-a-mapping"]
+    _write_json(upstream_path, upstream_payload)
+
+    artifact = exp.build_artifact(
+        _config(tmp_path, n_tasks=20),
+        cached_pair_func=_cached_pair,
+        generator=_clean_generator,
+    )
+
+    assert artifact["honest_verdict"] == "blocked_no_repair_tasks_available"
+    assert artifact["headline_result"] is False
+    assert artifact["repair_rerun_clean"] is False
+    assert artifact["n_tasks"] == 0
+
+
+def test_scenario_verify_2977_normalizes_task_rows_and_external_raw_refs(tmp_path: Path) -> None:
+    """SCENARIO-VERIFY-2977: malformed rows are skipped and raw refs stay traceable."""
+    _write_sources(tmp_path, n_tasks=20)
+    upstream_path = tmp_path / "results" / exp.UPSTREAM_REPAIR_FILENAME
+    upstream_payload = json.loads(upstream_path.read_text(encoding="utf-8"))
+    upstream_payload["selected_repair_set"] = [
+        "not-a-mapping",
+        {
+            "stable_id": "odd/id",
+            "corpus": "MBPP",
+            "original_failure_categories": [7],
+        },
+    ]
+    _write_json(upstream_path, upstream_payload)
+    outside_raw_dir = tmp_path.parent / "external-exp2977-raw"
+
+    artifact = exp.build_artifact(
+        exp.ExperimentConfig(
+            repo_root=tmp_path,
+            output_path=tmp_path / "results" / exp.ARTIFACT_FILENAME,
+            raw_response_dir=outside_raw_dir,
+            n_tasks=2,
+            samples_per_mode=1,
+            started_at=10.0,
+            clock=lambda: 72.5,
+        ),
+        cached_pair_func=_cached_pair,
+        generator=_clean_generator,
+    )
+
+    assert artifact["n_tasks"] == 1
+    first_row = artifact["candidate_evaluations"][0]
+    assert first_row["task_id"] == "MBPP:odd/id"
+    assert first_row["stable_id"] == "odd/id"
+    assert first_row["sample_id"] == "MBPP:odd/id"
+    assert first_row["original_failure_categories"] == ["7"]
+    assert first_row["raw_candidate_ref"].startswith(str(outside_raw_dir))
+    assert "odd_id" in first_row["raw_candidate_ref"]
+
+
+def test_req_verify_2977_nonclean_verdict_and_main_return(monkeypatch: pytest.MonkeyPatch) -> None:
+    """REQ-VERIFY-2977: non-clean gates remain explicit and main returns status."""
+    assert (
+        exp._complete_verdict(False)
+        == "complete: intent-preserving trace-aware repair rerun did not clear gates"
+    )
+
+    monkeypatch.setattr(
+        exp,
+        "write_artifact",
+        lambda _config: {"honest_verdict": "blocked_missing_upstream_repair_artifacts"},
+    )
+    assert exp.main() == 1
+
+    monkeypatch.setattr(exp, "write_artifact", lambda _config: {"honest_verdict": "complete"})
+    assert exp.main() == 0
