@@ -6108,3 +6108,4 @@ web search:
 | 2026-05-24 01:51 UTC | Gated GateMate n=16 Bitstream Build v4 | OK | cache hit: 81 passed in 2.81s |
 | 2026-05-24 02:06 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
 | 2026-05-24 02:12 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
+| 2026-05-24 02:19 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
