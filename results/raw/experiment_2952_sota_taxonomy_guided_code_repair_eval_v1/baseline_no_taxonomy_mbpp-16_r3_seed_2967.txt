@@ -1,0 +1,18 @@
+
+
+Return only corrected Python code.
+<|channel>thought
+```python
+import re
+
+def text_lowercase_underscore(s: str) -> bool:
+    # The pattern should match [a-z]+_[a-z]+
+    pattern = r'[a-z]+_[a-z]+'
+    if re.search(pattern, s):
+        # Ensure that the matched part doesn't contain uppercase letters
+        # However, re.search with [a-z] already ensures the matched part is lowercase.
+        # We need to check if the entire string contains any uppercase letters? 
+        # No, the task says "returns true if the input string contains sequences..."
+        # Looking at examples: "aab_Abbbc" is False. This implies the sequence itself 
+        # must be lowercase, but the presence of 'A' makes the whole string False?
+        #

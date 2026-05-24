@@ -1,0 +1,17 @@
+
+
+Return only corrected Python code.
+<|channel>thought
+```python
+import re
+
+def text_lowercase_underscore(s: str) -> bool:
+    # The pattern should match [a-z]+_[a-z]+
+    pattern = r'[a-z]+_[a-z]+'
+    if re.search(pattern, s):
+        # Ensure that the matched part doesn't contain uppercase letters 
+        # (re.search already handles this by only matching lowercase)
+        # However, we must ensure the string doesn't violate the "lowercase" rule 
+        # if the task implies the WHOLE string must be lowercase.
+        # Looking at examples: "aab_cbbbc" (True), "aab_Abbbc" (False), "Aaab_abbbc" (False)
+        # This implies the entire string must consist only of lowercase letters

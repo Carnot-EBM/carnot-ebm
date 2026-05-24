@@ -1,0 +1,11 @@
+
+
+A. pattern = r'[a-z]+_[a-z]+'
+    B. return bool(re.search(pattern, s))
+    C. return bool(re.search(r'[a-z]+_[a-z]+', s))
+
+    # However, the task asks for "contains sequences of lowercase letters joined with an underscore".
+    # This is best represented by the pattern [a-z]+_[a-z]+
+    # But wait, the pattern [a-z]+_[a-z]+ might match "a_b" in "a_b_c" or "a_b" in "a_b_c" or "a_b" in "a_b_c".
+    # Actually, the pattern [a-z]+_[a-z]+ is sufficient for "contains".
+    # The pattern [a-z]+_[

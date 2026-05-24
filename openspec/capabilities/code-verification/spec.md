@@ -1144,6 +1144,48 @@ availability, deterministic validation results for all fixtures, downstream
 SOTA GGUF model specs, and readiness only when the deterministic fallback
 accepts the valid row and rejects no schema-compliant failure rows.
 
+### REQ-CODE-2952: SOTA Taxonomy-Guided Code-Repair Evaluation
+
+The repository shall provide an Exp 2952 bounded live repair evaluator for the
+post-.277 generated-code failures. The evaluator MUST:
+
+- require checked-in Exp 2940, Exp 2946, Exp 2950, and Exp 2951 artifacts and
+  preserve the selected Exp 2946 task IDs, candidate seeds, and original
+  failure categories;
+- check the dual RTX 3090 host, local llama.cpp GGUF runtime, runsc sandbox,
+  Exp 2950 repair manifest, Exp 2951 structured candidate schema, and at least
+  one cached mandated headline GGUF before live repair;
+- run a baseline no-taxonomy repair prompt and a taxonomy-guided repair prompt
+  under the same bounded sample budget using only mandated local SOTA GGUF
+  models for headline results, while legacy small models remain smoke-only;
+- validate every generated repair through the Exp 2951 structured manifest
+  schema, Python parser/static checks, available MBPP/HumanEval tests, and the
+  Exp 2940 code-verifier threshold;
+- report baseline and taxonomy-guided pass@1/pass@k, syntax failure rate,
+  schema failure rate, verifier acceptance rate, false verifier accepts, and
+  audit notes; and
+- write `results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json`
+  with top-level `honest_verdict`, `inference_substrate="live_llm_inference"`,
+  `preconditions_checked`, `model_specs`, `headline_models_used`,
+  `legacy_models_only_for_smoke`, `n_tasks`, `baseline_pass_at_1`,
+  `repair_pass_at_1`, `pass_at_1_delta`, `baseline_pass_at_k`,
+  `repair_pass_at_k`, `pass_at_k_delta`, `syntax_failure_rate_delta`,
+  `schema_failure_rate_delta`, `false_accept_delta`,
+  `taxonomy_repair_delta_pass`, `candidate_manifest_sha256`,
+  `reproducibility_checksum`, and measured `duration_s`.
+
+### SCENARIO-CODE-2952: Taxonomy Repair Is Accepted Only With Cleaner Metrics
+
+Given Exp 2946 contains failed generated-code candidates and Exp 2950/2951 are
+ready,
+When Exp 2952 runs equal-budget baseline and taxonomy-guided repairs through a
+mandated cached local GGUF,
+Then the artifact records the same selected task IDs for both modes, validates
+each repair candidate through the structured manifest and deterministic
+checks, computes deltas as taxonomy-guided minus baseline, and sets
+`taxonomy_repair_delta_pass=true` only when `pass_at_1_delta > 0` or
+`syntax_failure_rate_delta < 0` while `false_accept_delta <= 0`.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
