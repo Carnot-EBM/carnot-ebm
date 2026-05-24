@@ -1,0 +1,33 @@
+{
+  "condition": "live_llm_retry",
+  "duration_seconds": 10.074176,
+  "model": {
+    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+  },
+  "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"parse_error\":\"no_json_object\"},\"task_data\":{\"constraints\":[{\"coefficients\":{\"x\":1,\"y\":2},\"op\":\"<=\",\"rhs\":6},{\"coefficients\":{\"x\":2,\"y\":1},\"op\":\"<=\",\"rhs\":7}],\"objective\":{\"x\":3,\"y\":2},\"variables\":{\"x\":[0,4],\"y\":[0,4]}},\"task_id\":\"cbmini-2926-linear-001\",\"task_type\":\"linear_integer\",\"violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}",
+  "response_text": "violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_0_json_object\"]}violation_rep_reasons\":[\"no_json_object\"]}violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}violation_class\":\"syntax_invalid\",\"violation_reons\":[\"no_json_object\"]}violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}violation_class\":\"invalid_output_format\"}invalid_output_format\"}\n\n```json\n{\n  \"x\":",
+  "runner": {
+    "attempted": true,
+    "blocker": null,
+    "generation_status": "generated",
+    "inference_substrate": "llama_cpp_gpu",
+    "load_status": "loaded",
+    "tokens_generated": 128,
+    "truly_live": true
+  },
+  "substrate_label": "live_llm_inference_plus_exact_verifier",
+  "task_id": "cbmini-2926-linear-001",
+  "verifier": {
+    "accepted": false,
+    "feasible": false,
+    "objective_value": null,
+    "optimal": false,
+    "optimum_value": 11,
+    "syntax_valid": false,
+    "violation_class": "syntax_invalid",
+    "violation_reasons": [
+      "no_json_object"
+    ]
+  }
+}

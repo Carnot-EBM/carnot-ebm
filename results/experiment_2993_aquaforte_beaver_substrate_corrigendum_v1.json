@@ -1,0 +1,141 @@
+{
+  "artifact": "experiment_2993_aquaforte_beaver_substrate_corrigendum_v1",
+  "corrected_claim_labels": {
+    "exp2934_original_inference_substrate": "live_llm_inference_plus_exact_verifier",
+    "exp2934_retry_substrate": "enumerator_only_fallback_plus_exact_verifier",
+    "exp2993_live_condition_substrate": "live_llm_inference_plus_exact_verifier",
+    "paper_v6_recommendation": "retract_exp2934_live_retry_lift_claim; retain enumerator fallback as engineering pattern"
+  },
+  "duration_s": 10.756666,
+  "enumerator_only_fallback_measured": true,
+  "exp2934_corrigendum_resolution_emitted": true,
+  "exp2934_source_duration_s": 0.04629087448120117,
+  "exp2934_source_inference_substrate": "live_llm_inference_plus_exact_verifier",
+  "fallback_duration_seconds": 0.000593,
+  "headline_models": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "honest_verdict": "complete: live retry measured separately and exp2934 retry substrate relabeled",
+  "inference_substrate": "live_llm_inference_plus_exact_verifier_and_enumerator_fallback",
+  "live_llm_retry_measured": true,
+  "live_retry_duration_seconds": 10.074176,
+  "no_impossible_duration_claims": true,
+  "preconditions": {
+    "exact_verifier_available": {
+      "exact_verifier_types": [
+        "binary_subset_exhaustive",
+        "bounded_integer_exhaustive",
+        "color_assignment_exhaustive"
+      ],
+      "ok": true
+    },
+    "exp2926_inputs_loaded": {
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2926_constraintbench_constrained_output_rerun_v2.json",
+      "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/constraintbench_constrained_output_rerun_2926_raw"
+    },
+    "exp2934_artifact_loaded": {
+      "duration_s": 0.04629087448120117,
+      "inference_substrate": "live_llm_inference_plus_exact_verifier",
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json"
+    },
+    "known_issue_confirmed": {
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/ops/known-issues.md"
+    },
+    "sota_cache_preflight_loaded": {
+      "headline_available_count": 1,
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json",
+      "sota_headline_ready": true
+    }
+  },
+  "random_seed": 2993,
+  "run_date": "20260524",
+  "schema": "carnot.aquaforte_beaver_substrate_corrigendum.v1",
+  "selected_task_ids": [
+    "cbmini-2926-linear-001"
+  ],
+  "smoke_only_models": [
+    "Qwen/Qwen3.5-0.8B",
+    "unsloth/gemma-4-E4B-it-GGUF"
+  ],
+  "substrate_corrigendum_complete": true,
+  "substrate_labels_corrected": true,
+  "tests_run": [
+    "focused pytest + 100% new-module coverage"
+  ],
+  "verifier_results_by_condition": {
+    "enumerator_only_fallback": {
+      "duration_seconds": 0.000593,
+      "measured": true,
+      "pass_rate": 1.0,
+      "per_task_results": [
+        {
+          "task_id": "cbmini-2926-linear-001",
+          "transcript": {
+            "condition": "enumerator_only_fallback",
+            "llm_disabled": true,
+            "response_text": "{\"solution\": {\"variables\": {\"x\": 3, \"y\": 1}}}",
+            "substrate_label": "enumerator_only_fallback_plus_exact_verifier",
+            "task_id": "cbmini-2926-linear-001",
+            "verifier": {
+              "accepted": true,
+              "feasible": true,
+              "objective_value": 11,
+              "optimal": true,
+              "optimum_value": 11,
+              "syntax_valid": true,
+              "violation_class": "none",
+              "violation_reasons": []
+            }
+          },
+          "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1/enumerator_only_fallback__cbmini-2926-linear-001.json",
+          "verifier": {
+            "accepted": true,
+            "feasible": true,
+            "objective_value": 11,
+            "optimal": true,
+            "optimum_value": 11,
+            "syntax_valid": true,
+            "violation_class": "none",
+            "violation_reasons": []
+          }
+        }
+      ],
+      "substrate_label": "enumerator_only_fallback_plus_exact_verifier",
+      "task_count": 1
+    },
+    "live_llm_retry": {
+      "duration_seconds": 10.074176,
+      "measured": true,
+      "pass_rate": 0.0,
+      "per_task_results": [
+        {
+          "duration_seconds": 10.074176,
+          "task_id": "cbmini-2926-linear-001",
+          "tokens_generated": 128,
+          "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1/live_llm_retry__cbmini-2926-linear-001.json",
+          "truly_live": true,
+          "verifier": {
+            "accepted": false,
+            "feasible": false,
+            "objective_value": null,
+            "optimal": false,
+            "optimum_value": 11,
+            "syntax_valid": false,
+            "violation_class": "syntax_invalid",
+            "violation_reasons": [
+              "no_json_object"
+            ]
+          }
+        }
+      ],
+      "substrate_label": "live_llm_inference_plus_exact_verifier",
+      "task_count": 1
+    }
+  }
+}

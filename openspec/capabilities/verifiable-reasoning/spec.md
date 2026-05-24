@@ -19586,3 +19586,56 @@ evidence is present.
 **Implementation Status:** Proposed (Exp 2934)
 
 **Spec traces:** REQ-VERIFY-2934, SCENARIO-VERIFY-2934, Exp 2934
+
+## REQ-VERIFY-2993: AquaForte/BEAVER Substrate Corrigendum
+
+**Capability:** verifiable-reasoning / honest substrate separation for exact verifier fallback
+
+Carnot SHALL provide an Exp 2993 corrigendum for Exp 2934 that separates a
+genuine live local SOTA GGUF retry from the enumerator-only fallback that Exp
+2934 recorded as a cheap retry. The corrigendum SHALL preserve the exact
+verifier as the authority, measure wall-clock durations for both conditions,
+and emit corrected claim labels so paper-facing artifacts cannot confuse
+live-LLM retry evidence with deterministic exhaustive enumeration.
+
+**Requirements:**
+
+- REQ-VERIFY-2993-1: The runner SHALL confirm the known-issue text for Exp
+  2934, Exp 2989 SOTA cache readiness, exact verifier availability, the Exp
+  2934 artifact, and the Exp 2926 raw-response inputs before attempting either
+  condition. Missing preconditions SHALL produce an honest blocked artifact
+  rather than fabricated live-retry evidence.
+- REQ-VERIFY-2993-2: Condition A SHALL attempt a real local llama.cpp retry on
+  at least one mandated headline GGUF model when one is locally cached and the
+  runtime preconditions are available. If no headline model can be used, the
+  artifact SHALL set `live_llm_retry_measured=false` and report the live retry
+  as blocked.
+- REQ-VERIFY-2993-3: Condition B SHALL disable LLM inference and directly run
+  the deterministic exhaustive solver for the same selected task set. Its
+  duration, transcript, verifier results, and substrate label SHALL be recorded
+  separately from Condition A.
+- REQ-VERIFY-2993-4: The corrigendum SHALL compute corrected substrate labels
+  and SHALL set `no_impossible_duration_claims=true` only when no live retry is
+  represented by sub-second or enumerator-derived evidence.
+- REQ-VERIFY-2993-5: The artifact
+  `results/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1.json`
+  SHALL include `substrate_corrigendum_complete`, `live_llm_retry_measured`,
+  `enumerator_only_fallback_measured`, `substrate_labels_corrected`,
+  `no_impossible_duration_claims`, `live_retry_duration_seconds`,
+  `fallback_duration_seconds`, `verifier_results_by_condition`,
+  `inference_substrate`, and `honest_verdict`.
+
+### SCENARIO-VERIFY-2993: Live Retry And Enumerator Fallback Are Reported Separately
+
+**Given** Exp 2934 is flagged for an impossible live-retry duration
+**And** Exp 2926 raw responses and exact verifiers are available
+**When** the Exp 2993 corrigendum runs the live-retry and enumerator-only
+conditions
+**Then** the deliverable records separate durations, transcripts, verifier
+results, and substrate labels for each condition
+**And** the terminal verdict either completes the corrigendum with corrected
+labels or blocks the live condition without promoting smoke-only evidence.
+
+**Implementation Status:** Proposed (Exp 2993)
+
+**Spec traces:** REQ-VERIFY-2993, SCENARIO-VERIFY-2993, Exp 2993
