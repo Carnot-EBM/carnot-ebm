@@ -6149,3 +6149,4 @@ web search: https://arxiv. |
 | 2026-05-24 11:58 UTC | GateMate Readback + Smoke Vector Harness v4 | OK | 93 passed in 4.24s |
 | 2026-05-24 12:12 UTC | SSQA Dual-BRAM Hardware Projection + Register-Map  | OK | 81 passed in 3.64s |
 | 2026-05-24 12:29 UTC | Cross-Corpus Matrix v14 + Claim Boundary Audit | OK | 81 passed in 3.74s |
+| 2026-05-24 12:46 UTC | Milestone .280 Capstone + Paper-Readiness Decision | OK | 81 passed in 3.58s |
