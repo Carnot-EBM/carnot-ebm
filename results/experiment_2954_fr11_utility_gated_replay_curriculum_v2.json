@@ -1,0 +1,201 @@
+{
+  "artifact": "experiment_2954_fr11_utility_gated_replay_curriculum_v2",
+  "candidate_replay_weights": {
+    "extraction_repair": 0.362674864621,
+    "runtime_repair": 0.0765625,
+    "syntax_repair": 0.342012635379,
+    "verified_pass": 0.21875
+  },
+  "continuous_self_learning_task": true,
+  "duration_s": 0.007443189621,
+  "final_replay_weights": {
+    "extraction_repair": 0.362674864621,
+    "runtime_repair": 0.0765625,
+    "syntax_repair": 0.342012635379,
+    "verified_pass": 0.21875
+  },
+  "forgetting_guard_metric_after": 0.21875,
+  "forgetting_guard_metric_before": 0.21875,
+  "forgetting_guard_passed": true,
+  "heldout_utility_after": 0.352886467009,
+  "heldout_utility_baseline": 0.241027227723,
+  "heldout_utility_delta": 0.111859239286,
+  "honest_verdict": "complete: utility_gated_replay_improved_heldout_without_forgetting",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "live_model_invoked": false,
+  "missing_fields": [],
+  "model_weights_mutated": false,
+  "replay_policies_compared": [
+    {
+      "accepted": false,
+      "forgetting_guard_metric": null,
+      "heldout_utility": 0.25,
+      "policy_name": "flat_replay",
+      "weights": {
+        "extraction_repair": 0.25,
+        "runtime_repair": 0.25,
+        "syntax_repair": 0.25,
+        "verified_pass": 0.25
+      }
+    },
+    {
+      "accepted": false,
+      "forgetting_guard_metric": 0.21875,
+      "heldout_utility": 0.241027227723,
+      "policy_name": "nonuniform_replay_exp2947",
+      "weights": {
+        "extraction_repair": 0.15625,
+        "runtime_repair": 0.21875,
+        "syntax_repair": 0.40625,
+        "verified_pass": 0.21875
+      }
+    },
+    {
+      "accepted": true,
+      "forgetting_guard_metric": 0.21875,
+      "heldout_utility": 0.352886467009,
+      "policy_name": "utility_gated_replay",
+      "weights": {
+        "extraction_repair": 0.362674864621,
+        "runtime_repair": 0.0765625,
+        "syntax_repair": 0.342012635379,
+        "verified_pass": 0.21875
+      }
+    }
+  ],
+  "required_artifact_fields": [
+    "honest_verdict",
+    "continuous_self_learning_task",
+    "self_learning_utility_artifact_ready",
+    "source_artifacts",
+    "replay_policies_compared",
+    "heldout_utility_baseline",
+    "heldout_utility_after",
+    "heldout_utility_delta",
+    "self_learning_utility_positive",
+    "forgetting_guard_metric_before",
+    "forgetting_guard_metric_after",
+    "forgetting_guard_passed",
+    "rollback_triggered",
+    "update_rule",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "rollback_triggered": false,
+  "run_date": "20260524",
+  "schema": "carnot.fr11.utility_gated_replay_curriculum.v2",
+  "self_learning_utility_artifact_ready": true,
+  "self_learning_utility_positive": true,
+  "slice_manifest": {
+    "forgetting_guard": {
+      "candidate_count": 80,
+      "stable_task_count": 10,
+      "taxonomy_counts": {
+        "extraction_repair": 41,
+        "syntax_repair": 33,
+        "verified_pass": 6
+      }
+    },
+    "heldout_utility": {
+      "candidate_count": 80,
+      "stable_task_count": 10,
+      "taxonomy_counts": {
+        "extraction_repair": 44,
+        "runtime_repair": 2,
+        "syntax_repair": 34
+      }
+    },
+    "train_replay": {
+      "candidate_count": 240,
+      "stable_task_count": 30,
+      "taxonomy_counts": {
+        "extraction_repair": 112,
+        "syntax_repair": 109,
+        "verified_pass": 19
+      }
+    }
+  },
+  "soft_radial_projection_note": "Soft-Radial Projection is future design context for differentiable constraint-preserving adaptation; it is not implemented or scored in this scheduler-only artifact.",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp2947",
+      "fields_imported": [
+        "replay_count_distribution",
+        "curriculum_signal_scores",
+        "honest_verdict"
+      ],
+      "path": "results/experiment_2947_fr11_continuation_replay_curriculum_v1.json",
+      "present": true,
+      "required": true,
+      "role": "nonuniform_replay_pilot",
+      "sha256": "566f361d186114235943cbef3324808f3ca022ac8e9432c1954423e9eb70481b"
+    },
+    {
+      "experiment_id": "exp2946",
+      "fields_imported": [
+        "protocol_artifact_path",
+        "pass_at_1",
+        "pass_at_k",
+        "honest_verdict"
+      ],
+      "path": "results/experiment_2946_sota_code_generation_continuation_v1.json",
+      "present": true,
+      "required": true,
+      "role": "continuation_summary",
+      "sha256": "3b7a2b3fdf1200c26dc7b2e76a77542897eb24ff600f9bdebdc5c2a075b39a45"
+    },
+    {
+      "experiment_id": "exp2940",
+      "fields_imported": [
+        "code_status_energy_values",
+        "max_f1_operating_point",
+        "code_status_energy_definition"
+      ],
+      "path": "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json",
+      "present": true,
+      "required": true,
+      "role": "verifier_energy_reward_signal",
+      "sha256": "3edd2cdb8f6295670aba334081230d7f60d2c42d7046e65da9fbcb25b4b9181f"
+    },
+    {
+      "experiment_id": "exp2946_protocol",
+      "fields_imported": [
+        "candidate_results",
+        "per_task_results"
+      ],
+      "path": "results/experiment_2946_nested_exp2910_protocol.json",
+      "present": true,
+      "required": true,
+      "role": "repair_taxonomy_rows",
+      "sha256": "8cb4d2fbfe1bf33d7aa496add339141380a54e373455cf9785830e9374b9bf13"
+    }
+  ],
+  "source_replay_distribution": {
+    "continuation_boundary_replay": 10,
+    "process_reward_replay": 14,
+    "retention_guard_replay": 14,
+    "structural_memory_bootstrap": 26
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_2954_fr11_utility_gated_replay_curriculum_v2.py -q --no-cov",
+    ".venv/bin/coverage run -m pytest tests/python/test_experiment_2954_fr11_utility_gated_replay_curriculum_v2.py -q -o addopts= --no-cov",
+    ".venv/bin/coverage report --include=python/carnot/eval/utility_gated_replay_curriculum_v2.py --fail-under=100 -m",
+    "ruff check python/carnot/eval/utility_gated_replay_curriculum_v2.py tests/python/test_experiment_2954_fr11_utility_gated_replay_curriculum_v2.py",
+    ".venv/bin/pytest tests/python -q (attempted once; interrupted after unrelated Z3/JAX worker crashes and hang near 92%)",
+    ".venv/bin/python scripts/check_spec_coverage.py (fails on pre-existing untraced tests outside Exp 2954)"
+  ],
+  "update_rule": {
+    "acceptance_rule": "accept only when held-out utility improves and forgetting guard does not degrade",
+    "baseline_policy": "nonuniform_replay_exp2947",
+    "candidate_policy": "train_slice_verifier_energy_weighted_taxonomy_replay",
+    "exp2940_max_f1_ppv": 0.8888888888888888,
+    "exp2940_max_f1_threshold": 1.0,
+    "guard_taxonomies": [
+      "verified_pass"
+    ],
+    "learning_rate": 0.65,
+    "name": "verifier_weighted_utility_gate_v2",
+    "reward_signal": "Exp2946 row_status mapped to Exp2940 code-status energy and repair taxonomy; signals are scaled by Exp2940 max-F1 PPV.",
+    "rollback_rule": "restore baseline replay weights when forgetting_guard_metric_after < before"
+  }
+}

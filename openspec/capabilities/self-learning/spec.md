@@ -6666,3 +6666,67 @@ beginning with `blocked_` and an empty `replay_count_distribution`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2947 | Implemented (`python/carnot/eval/fr11_continuation_replay_curriculum_v1.py`) | Implemented (`tests/python/test_experiment_2947_fr11_continuation_replay_curriculum_v1.py`) |
+
+## REQ-LEARN-2954: FR-11 Utility-Gated Replay Curriculum With Rollback
+
+**Given** Exp 2947 provides the non-uniform replay pilot, Exp 2946 provides a
+checked-in code-generation continuation protocol, and Exp 2940 provides
+verifier-grounded code-status energy evidence
+**When** Exp 2954 evaluates replay policies offline
+**Then** it SHALL define deterministic train/replay, held-out utility, and
+stable forgetting-guard slices from the existing artifacts.
+**And** it SHALL compare flat replay, the Exp 2947 non-uniform replay pilot,
+and a utility-gated replay update.
+**And** it SHALL update replay weights only when verifier-grounded held-out
+utility improves over the non-uniform pilot and SHALL roll back the candidate
+weights whenever the stable forgetting guard degrades.
+**And** it SHALL write
+`results/experiment_2954_fr11_utility_gated_replay_curriculum_v2.json` with
+`honest_verdict`, `continuous_self_learning_task=true`,
+`self_learning_utility_artifact_ready`, `source_artifacts`,
+`replay_policies_compared`, `heldout_utility_baseline`,
+`heldout_utility_after`, `heldout_utility_delta`,
+`self_learning_utility_positive`, `forgetting_guard_metric_before`,
+`forgetting_guard_metric_after`, `forgetting_guard_passed`,
+`rollback_triggered`, `update_rule`,
+`inference_substrate="aggregation_from_upstream_artifacts"`, and
+`duration_s`.
+
+### REQ-LEARN-2954 Sub-requirements
+
+- REQ-LEARN-2954-1: The evaluator SHALL cite every required upstream artifact
+  it imports with path, SHA256, role, and imported field names.
+- REQ-LEARN-2954-2: The train/replay, held-out utility, and forgetting-guard
+  slices SHALL be deterministic for the same Exp 2946 protocol rows.
+- REQ-LEARN-2954-3: Replay-policy utility SHALL be computed only from
+  verifier outcomes, code-status energy, and repair taxonomy; the evaluator
+  SHALL NOT invoke a live model or mutate closed-model weights.
+- REQ-LEARN-2954-4: The utility-gated update SHALL retain the previous
+  non-uniform weights when held-out utility does not improve or when the
+  forgetting guard degrades.
+- REQ-LEARN-2954-5: Soft-Radial Projection MAY be mentioned only as future
+  differentiable constraint-preserving design context, not as an implemented
+  update mechanism in this artifact.
+
+### SCENARIO-LEARN-2954: Utility Gate Accepts Non-Forgetting Replay Update
+
+**Given** the checked-in Exp 2947, Exp 2946, and Exp 2940 artifacts are present
+**When** Exp 2954 builds the offline replay policy comparison
+**Then** the utility-gated replay policy reports held-out utility before and
+after the candidate update
+**And** the candidate weights are accepted only if held-out utility improves and
+the forgetting guard passes.
+
+### SCENARIO-LEARN-2954-ROLLBACK: Forgetting Guard Rolls Back Candidate Weights
+
+**Given** a candidate replay update improves the held-out utility metric but
+reduces the stable forgetting-guard metric
+**When** the utility gate evaluates the candidate
+**Then** the update is rolled back to the baseline weights and
+`rollback_triggered=true`.
+
+## Implementation Status (REQ-LEARN-2954)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2954 | Implemented (`python/carnot/eval/utility_gated_replay_curriculum_v2.py`) | Implemented (`tests/python/test_experiment_2954_fr11_utility_gated_replay_curriculum_v2.py`) |
