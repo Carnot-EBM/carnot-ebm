@@ -1,0 +1,543 @@
+{
+  "duration_s": 0.029865222983062267,
+  "environment_diagnostics": {
+    "python_executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+    "python_version": "3.14.4",
+    "z3_import_error": null,
+    "z3_import_ok": true
+  },
+  "exp2980_input_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2979_solver_feedback_mcs_frontier_v1.json",
+  "failure_categories_from_exp2967": {
+    "execution_errors": {
+      "z3_exception": 1
+    },
+    "parse_errors": {
+      "unparseable": 18
+    },
+    "raw": {
+      "solver_verified_correct": 5,
+      "unparseable": 18,
+      "wrong_answer": 0,
+      "wrong_formula": 0,
+      "z3_exception": 1
+    },
+    "solver_verified_correct": 5,
+    "solver_wrong": {
+      "wrong_answer": 0,
+      "wrong_formula": 0
+    }
+  },
+  "feedback_schema": {
+    "fields": {
+      "accepted_reference_formalization": {
+        "description": "The accepted SMT-LIB reference Exp 2980 should preserve.",
+        "type": "object"
+      },
+      "minimal_correction_hint": {
+        "description": "Skill-specific deterministic repair hint, not a verifier decision.",
+        "type": "string"
+      },
+      "model_counterexample": {
+        "description": "A bounded Z3 model for satisfiable references or wrong-formula repair.",
+        "type": "object|null"
+      },
+      "parse_error": {
+        "description": "Structured parse failure such as no_json_object or missing_schema_field.",
+        "type": "string|null"
+      },
+      "skill_label": {
+        "description": "One Exp 2966 skill label.",
+        "type": "string"
+      },
+      "unsat_core_or_mus": {
+        "description": "Named unsat core and minimal unsat subsets for local contradiction repair.",
+        "type": "object|null"
+      },
+      "z3_exception": {
+        "description": "Solver compilation or execution exception for parseable proposals.",
+        "type": "string|null"
+      }
+    },
+    "object": "solver_feedback",
+    "ready_for_exp2980": true,
+    "required": [
+      "parse_error",
+      "z3_exception",
+      "model_counterexample",
+      "unsat_core_or_mus",
+      "minimal_correction_hint",
+      "skill_label",
+      "accepted_reference_formalization"
+    ],
+    "version": 1
+  },
+  "frontier_items": [
+    {
+      "accepted_reference_formalization": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const milo Entity)\n(declare-fun Cat (Entity) Bool)\n(declare-fun Mammal (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Cat x) (Mammal x))))\n(assert (Cat milo))\n(assert (not (Mammal milo)))\n",
+        "expected_answer_values": {},
+        "expected_solver_status": "unsat",
+        "format": "smt2"
+      },
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-001",
+      "prompt": "All cats are mammals. Milo is a cat. Therefore Milo is a mammal.",
+      "reference_z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-001",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "skill_label": "symbolization",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ],
+      "solver_feedback": {
+        "accepted_reference_formalization": {
+          "assertions": "(declare-sort Entity 0)\n(declare-const milo Entity)\n(declare-fun Cat (Entity) Bool)\n(declare-fun Mammal (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Cat x) (Mammal x))))\n(assert (Cat milo))\n(assert (not (Mammal milo)))\n",
+          "expected_answer_values": {},
+          "expected_solver_status": "unsat",
+          "format": "smt2"
+        },
+        "minimal_correction_hint": "Use the reference predicate and constant inventory before writing assertions.",
+        "model_counterexample": null,
+        "parse_error": "no_json_object",
+        "skill_label": "symbolization",
+        "unsat_core_or_mus": {
+          "mcs_candidates": [
+            [
+              "premise"
+            ],
+            [
+              "negated_goal"
+            ]
+          ],
+          "minimal_unsat_subsets": [
+            [
+              "premise",
+              "negated_goal"
+            ]
+          ],
+          "solver_status": "unsat",
+          "unsat_core": [
+            "premise",
+            "negated_goal"
+          ]
+        },
+        "z3_exception": null
+      }
+    },
+    {
+      "accepted_reference_formalization": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const ada Entity)\n(declare-fun Pilot (Entity) Bool)\n(declare-fun Licensed (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Pilot x) (Licensed x))))\n(assert (Licensed ada))\n(assert (not (Pilot ada)))\n",
+        "expected_answer_values": {},
+        "expected_solver_status": "sat",
+        "format": "smt2"
+      },
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-002",
+      "prompt": "Every pilot is licensed. Ada is licensed. Ada need not be a pilot.",
+      "reference_z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "not_entailed",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-002",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "skill_label": "quantifier handling",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "validity"
+      ],
+      "solver_feedback": {
+        "accepted_reference_formalization": {
+          "assertions": "(declare-sort Entity 0)\n(declare-const ada Entity)\n(declare-fun Pilot (Entity) Bool)\n(declare-fun Licensed (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Pilot x) (Licensed x))))\n(assert (Licensed ada))\n(assert (not (Pilot ada)))\n",
+          "expected_answer_values": {},
+          "expected_solver_status": "sat",
+          "format": "smt2"
+        },
+        "minimal_correction_hint": "Keep universal and existential scopes explicit in SMT-LIB.",
+        "model_counterexample": {
+          "assignments": {
+            "Licensed": "[else -> True]",
+            "Pilot": "[else -> False]",
+            "ada": "Entity!val!0"
+          },
+          "note": "bounded model from accepted reference formalization",
+          "solver_status": "sat"
+        },
+        "parse_error": "no_json_object",
+        "skill_label": "quantifier handling",
+        "unsat_core_or_mus": null,
+        "z3_exception": null
+      }
+    },
+    {
+      "accepted_reference_formalization": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const nia Entity)\n(declare-fun Student (Entity) Bool)\n(declare-fun Athlete (Entity) Bool)\n(assert (Student nia))\n(assert (exists ((x Entity)) (and (Student x) (Athlete x))))\n(assert (not (Athlete nia)))\n",
+        "expected_answer_values": {},
+        "expected_solver_status": "sat",
+        "format": "smt2"
+      },
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-004",
+      "prompt": "Some student is an athlete, but Nia being a student does not force Nia to be one.",
+      "reference_z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "satisfiable_countermodel",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-004",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "skill_label": "countermodel construction",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "satisfiability"
+      ],
+      "solver_feedback": {
+        "accepted_reference_formalization": {
+          "assertions": "(declare-sort Entity 0)\n(declare-const nia Entity)\n(declare-fun Student (Entity) Bool)\n(declare-fun Athlete (Entity) Bool)\n(assert (Student nia))\n(assert (exists ((x Entity)) (and (Student x) (Athlete x))))\n(assert (not (Athlete nia)))\n",
+          "expected_answer_values": {},
+          "expected_solver_status": "sat",
+          "format": "smt2"
+        },
+        "minimal_correction_hint": "When the target is satisfiable, preserve a model-producing negated goal.",
+        "model_counterexample": {
+          "assignments": {
+            "Athlete": "[Entity!val!0 -> False, else -> True]",
+            "Student": "[else -> True]",
+            "nia": "Entity!val!0"
+          },
+          "note": "bounded model from accepted reference formalization",
+          "solver_status": "sat"
+        },
+        "parse_error": "no_json_object",
+        "skill_label": "countermodel construction",
+        "unsat_core_or_mus": null,
+        "z3_exception": null
+      }
+    },
+    {
+      "accepted_reference_formalization": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const rho Entity)\n(declare-fun Robot (Entity) Bool)\n(declare-fun Organic (Entity) Bool)\n(assert (forall ((x Entity)) (not (and (Robot x) (Organic x)))))\n(assert (Robot rho))\n(assert (Organic rho))\n",
+        "expected_answer_values": {},
+        "expected_solver_status": "unsat",
+        "format": "smt2"
+      },
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-003",
+      "prompt": "No robot is organic. Rho is a robot. Rho cannot also be organic.",
+      "reference_z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-003",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "skill_label": "satisfiability",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ],
+      "solver_feedback": {
+        "accepted_reference_formalization": {
+          "assertions": "(declare-sort Entity 0)\n(declare-const rho Entity)\n(declare-fun Robot (Entity) Bool)\n(declare-fun Organic (Entity) Bool)\n(assert (forall ((x Entity)) (not (and (Robot x) (Organic x)))))\n(assert (Robot rho))\n(assert (Organic rho))\n",
+          "expected_answer_values": {},
+          "expected_solver_status": "unsat",
+          "format": "smt2"
+        },
+        "minimal_correction_hint": "Separate contradictory assertions so a minimal unsat subset can name the conflict.",
+        "model_counterexample": null,
+        "parse_error": "no_json_object",
+        "skill_label": "satisfiability",
+        "unsat_core_or_mus": {
+          "mcs_candidates": [
+            [
+              "negated_goal"
+            ],
+            [
+              "premise"
+            ]
+          ],
+          "minimal_unsat_subsets": [
+            [
+              "premise",
+              "negated_goal"
+            ]
+          ],
+          "solver_status": "unsat",
+          "unsat_core": [
+            "negated_goal",
+            "premise"
+          ]
+        },
+        "z3_exception": null
+      }
+    },
+    {
+      "accepted_reference_formalization": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const ivo Entity)\n(declare-fun Archivist (Entity) Bool)\n(declare-fun Careful (Entity) Bool)\n(declare-fun Trusted (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Archivist x) (Careful x))))\n(assert (forall ((x Entity)) (=> (Careful x) (Trusted x))))\n(assert (Archivist ivo))\n(assert (not (Trusted ivo)))\n",
+        "expected_answer_values": {},
+        "expected_solver_status": "unsat",
+        "format": "smt2"
+      },
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-005",
+      "prompt": "Archivists are careful; careful people are trusted; Ivo is an archivist.",
+      "reference_z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-005",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "skill_label": "validity",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ],
+      "solver_feedback": {
+        "accepted_reference_formalization": {
+          "assertions": "(declare-sort Entity 0)\n(declare-const ivo Entity)\n(declare-fun Archivist (Entity) Bool)\n(declare-fun Careful (Entity) Bool)\n(declare-fun Trusted (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Archivist x) (Careful x))))\n(assert (forall ((x Entity)) (=> (Careful x) (Trusted x))))\n(assert (Archivist ivo))\n(assert (not (Trusted ivo)))\n",
+          "expected_answer_values": {},
+          "expected_solver_status": "unsat",
+          "format": "smt2"
+        },
+        "minimal_correction_hint": "Encode validity by asserting the premises plus the negated conclusion.",
+        "model_counterexample": null,
+        "parse_error": "no_json_object",
+        "skill_label": "validity",
+        "unsat_core_or_mus": {
+          "mcs_candidates": [
+            [
+              "negated_goal"
+            ],
+            [
+              "premise"
+            ]
+          ],
+          "minimal_unsat_subsets": [
+            [
+              "premise",
+              "negated_goal"
+            ]
+          ],
+          "solver_status": "unsat",
+          "unsat_core": [
+            "negated_goal",
+            "premise"
+          ]
+        },
+        "z3_exception": null
+      }
+    },
+    {
+      "accepted_reference_formalization": {
+        "assertions": "(declare-const left Int)\n(declare-const right Int)\n(declare-const answer Int)\n(assert (= left 3))\n(assert (= right 4))\n(assert (= answer (+ left right)))\n",
+        "expected_answer_values": {
+          "answer": "7"
+        },
+        "expected_solver_status": "sat",
+        "format": "smt2"
+      },
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-013",
+      "prompt": "Three plus four gives the answer.",
+      "reference_z3_result": {
+        "actual_answer_values": {
+          "answer": "7"
+        },
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {
+          "answer": "7"
+        },
+        "expected_label": "answer=7",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-013",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "skill_label": "answer extraction",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ],
+      "solver_feedback": {
+        "accepted_reference_formalization": {
+          "assertions": "(declare-const left Int)\n(declare-const right Int)\n(declare-const answer Int)\n(assert (= left 3))\n(assert (= right 4))\n(assert (= answer (+ left right)))\n",
+          "expected_answer_values": {
+            "answer": "7"
+          },
+          "expected_solver_status": "sat",
+          "format": "smt2"
+        },
+        "minimal_correction_hint": "Declare answer variables and constrain them before reading model values.",
+        "model_counterexample": {
+          "assignments": {
+            "answer": "7",
+            "left": "3",
+            "right": "4"
+          },
+          "note": "bounded model from accepted reference formalization",
+          "solver_status": "sat"
+        },
+        "parse_error": "no_json_object",
+        "skill_label": "answer extraction",
+        "unsat_core_or_mus": null,
+        "z3_exception": null
+      }
+    }
+  ],
+  "frontier_upgrade_ready": true,
+  "honest_verdict": "complete: deterministic solver-feedback MCS/MUS frontier ready for Exp 2980",
+  "inference_substrate": "deterministic_z3_and_artifact_generation",
+  "mcs_feedback_schema_ready": true,
+  "mcs_mus_examples": [
+    {
+      "item_id": "lf-2966-001",
+      "minimal_correction_hint": "Use the reference predicate and constant inventory before writing assertions.",
+      "skill_label": "symbolization",
+      "unsat_core_or_mus": {
+        "mcs_candidates": [
+          [
+            "premise"
+          ],
+          [
+            "negated_goal"
+          ]
+        ],
+        "minimal_unsat_subsets": [
+          [
+            "premise",
+            "negated_goal"
+          ]
+        ],
+        "solver_status": "unsat",
+        "unsat_core": [
+          "premise",
+          "negated_goal"
+        ]
+      }
+    },
+    {
+      "item_id": "lf-2966-003",
+      "minimal_correction_hint": "Separate contradictory assertions so a minimal unsat subset can name the conflict.",
+      "skill_label": "satisfiability",
+      "unsat_core_or_mus": {
+        "mcs_candidates": [
+          [
+            "negated_goal"
+          ],
+          [
+            "premise"
+          ]
+        ],
+        "minimal_unsat_subsets": [
+          [
+            "premise",
+            "negated_goal"
+          ]
+        ],
+        "solver_status": "unsat",
+        "unsat_core": [
+          "negated_goal",
+          "premise"
+        ]
+      }
+    },
+    {
+      "item_id": "lf-2966-005",
+      "minimal_correction_hint": "Encode validity by asserting the premises plus the negated conclusion.",
+      "skill_label": "validity",
+      "unsat_core_or_mus": {
+        "mcs_candidates": [
+          [
+            "negated_goal"
+          ],
+          [
+            "premise"
+          ]
+        ],
+        "minimal_unsat_subsets": [
+          [
+            "premise",
+            "negated_goal"
+          ]
+        ],
+        "solver_status": "unsat",
+        "unsat_core": [
+          "negated_goal",
+          "premise"
+        ]
+      }
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "detail": "4.16.0",
+      "name": "z3_import",
+      "ok": true
+    },
+    {
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2966_logic_frontier_materializer_v1.json",
+      "name": "exp2966_logic_frontier_materialized",
+      "ok": true
+    },
+    {
+      "detail": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json",
+      "name": "exp2967_failure_categories_loaded",
+      "ok": true
+    }
+  ],
+  "reference_solver_verified_accuracy": 1.0,
+  "reference_z3_execution_rate": 1.0,
+  "run_date": "20260524",
+  "source_artifacts": {
+    "exp2966": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2966_logic_frontier_materializer_v1.json",
+    "exp2967": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json",
+    "manifest": "/home/ianblenke/github.com/ianblenke/carnot/data/research/logic_frontier_2966_manifest.json"
+  }
+}

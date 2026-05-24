@@ -150,6 +150,57 @@ failure modes, and keeps `no_headline_verifier_claim=true`.
 |---|---|---|
 | REQ-VERIFY-2978 | Implemented (`python/carnot/reporting/first_step_semantic_energy_repair_telemetry_v1.py`) | Implemented (`tests/python/test_experiment_2978_first_step_semantic_energy_repair_telemetry.py`) |
 
+### REQ-VERIFY-2979: Solver-Feedback MCS/MUS Frontier
+
+The repository shall provide a deterministic Exp 2979 solver-feedback frontier
+builder over the existing Exp 2966 exact-verifier tasks and Exp 2967 live
+NL-to-Z3 formalization outcomes. The builder MUST NOT run fresh live inference,
+MUST NOT modify `scripts/research_conductor.py`, and MUST write
+`results/experiment_2979_solver_feedback_mcs_frontier_v1.json`.
+
+The builder MUST check that Python can import Z3 before building the frontier.
+If Z3 is unavailable, it MUST write an honest blocked artifact with exact
+environment diagnostics. When Z3 is available, it MUST load Exp 2966 and Exp
+2967, preserve Exp 2967 parse, execution, and solver-wrong failure categories,
+define a consumable `solver_feedback` schema containing `parse_error`,
+`z3_exception`, `model_counterexample`, `unsat_core_or_mus`,
+`minimal_correction_hint`, `skill_label`, and
+`accepted_reference_formalization`, build a small deterministic fixture with
+reference formalizations and feedback examples for every Exp 2966 skill label,
+and run Z3 over the fixture references.
+
+The terminal artifact MUST include `honest_verdict`,
+`mcs_feedback_schema_ready`, `frontier_upgrade_ready`,
+`reference_z3_execution_rate`, `reference_solver_verified_accuracy`,
+`feedback_schema`, `frontier_items`, `failure_categories_from_exp2967`,
+`mcs_mus_examples`, `exp2980_input_path`,
+`inference_substrate="deterministic_z3_and_artifact_generation"`, and
+`duration_s`.
+
+`mcs_feedback_schema_ready` and `frontier_upgrade_ready` shall be true only
+when the schema contains all required feedback fields, the deterministic
+fixture covers every Exp 2966 skill label, Z3 executes every fixture reference,
+reference solver accuracy is 100%, and `exp2980_input_path` points to the
+written artifact.
+
+### SCENARIO-VERIFY-2979: Exp 2967 Failures Become Structured Feedback
+
+Given Exp 2966 has materialized the exact-verifier frontier and Exp 2967 has
+reported live NL-to-Z3 formalization failures,
+When the Exp 2979 frontier builder runs with Z3 importable,
+Then it writes the terminal JSON artifact, exposes a `solver_feedback` schema
+that Exp 2980 can consume, maps unparseable rows to `parse_error` feedback, Z3
+execution failures to `z3_exception` feedback, satisfiable wrong or
+countermodel rows to `model_counterexample`, unsatisfiable diagnostic rows to
+`unsat_core_or_mus`, records skill-specific `minimal_correction_hint` values,
+and reports deterministic reference execution and solver accuracy from Z3.
+
+## Implementation Status (REQ-VERIFY-2979)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-2979 | Implemented (`python/carnot/reporting/solver_feedback_mcs_frontier_v1.py`) | Implemented (`tests/python/test_experiment_2979_solver_feedback_mcs_frontier.py`) |
+
 ### REQ-VERIFY-2932: Citation Hallucination Field Verifier
 
 The repository shall provide a local citation-hallucination probe that:
