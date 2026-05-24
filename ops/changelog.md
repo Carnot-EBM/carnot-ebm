@@ -7223,3 +7223,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: Gated GateMate n=16 Bitstream Build v4 (⚠️ Blocked) — honest_verdict=blocked_gatemate_pnr_failed; results/experiment_2956_gatemate_n16_bitstream_build_v4.json
 - 2026-05-24: Gated GateMate n=16 Bitstream Build v4 (✅ Complete) — honest_verdict=complete: gatemate_n16_bitstream_built; results/experiment_2956_gatemate_n16_bitstream_build_v4.json
 - 2026-05-24: Gated GateMate Flash + Timing Smoke v2 (⚠️ Blocked) — honest_verdict=blocked_post_flash_board_contact_missing; results/experiment_2957_gatemate_flash_timing_smoke_v2.json
+- 2026-05-24: Gated GateMate Flash + Timing Smoke v2 (⚠️ Blocked) — honest_verdict=blocked_board_not_detected; results/experiment_2957_gatemate_flash_timing_smoke_v2.json
