@@ -6177,3 +6177,4 @@ web search: site |
 | 2026-05-24 18:40 UTC | Plan milestone 2026.05.282 | OK | 12 tasks proposed |
 | 2026-05-24 18:42 UTC | Milestone 2026.05.282 activated | OK | 12 tasks queued |
 | 2026-05-24 18:55 UTC | Archive .281 and activate .282 | OK | 81 passed in 3.77s |
+| 2026-05-24 19:06 UTC | SOTA GGUF cache carry-forward and checksum refresh | OK | 81 passed in 4.18s |
