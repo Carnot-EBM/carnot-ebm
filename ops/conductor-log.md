@@ -6192,3 +6192,5 @@ web search: site |
 | 2026-05-24 21:29 UTC | SSQA dual-BRAM RTL PnR resource report v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3008-gatemate-host-visible-io-transport-v |
 | 2026-05-24 21:40 UTC | Milestone .282 capstone | OK | 81 passed in 3.16s |
 | 2026-05-24 21:42 UTC | SSQA dual-BRAM RTL PnR resource report v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3008-gatemate-host-visible-io-transport-v |
+| 2026-05-24 22:19 UTC | Plan milestone 2026.05.283 | OK | 14 tasks proposed |
+| 2026-05-24 22:21 UTC | Milestone 2026.05.283 activated | OK | 14 tasks queued |
