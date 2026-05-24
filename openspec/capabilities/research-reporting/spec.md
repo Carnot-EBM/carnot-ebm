@@ -6173,3 +6173,67 @@ phrasing.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2973 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v13_2973.py`) | Implemented (`tests/python/test_experiment_2973_cross_corpus_matrix_v13.py`) |
+
+### REQ-REPORT-2974: Milestone 2026.05.279 Terminal Capstone
+
+The repository shall provide an Exp 2974 milestone capstone generator that
+writes `results/experiment_2974_capstone_v279.json` by aggregating only
+checked-in `.279` roadmap, upstream result, and matrix artifacts. The
+generator MUST NOT call an LLM, rerun tests for an upstream experiment, run
+hardware, launch synthesis, push, modify `scripts/research_conductor.py`, or
+modify ops/changelog/status/traceability files during the conductor closeout
+task.
+
+The generator MUST read every available `.279` task artifact from Exp 2962
+through Exp 2973, the active milestone roadmap, the `.278` terminal capstone,
+and the v13 matrix when present. It MUST classify every planned `.279` task as
+exactly one of `clean`, `flagged`, `blocked`, `gated-skipped`, `missing`,
+`pilot-only`, or `aggregation-only`. Missing branch outcomes MUST remain
+`missing` or `gated-skipped` according to explicit roadmap gates rather than
+being inferred from downstream artifacts.
+
+The capstone MUST summarize DCCD code repair, BEAVER-style certificates,
+solver-frontier formalization, partial monitors, FR-11 non-tautology, KAN
+memory, and GateMate outcomes from source artifact fields. It MUST identify
+which of the three biggest `.279` gaps closed and which remain open. It MUST
+restate forbidden claims that remain forbidden while keeping those
+re-statements separate from paper-safe claim prose.
+
+`paper_ready` MUST be true only when `.279` clears `.278`'s flagged code,
+FR-11, and solver rows or preserves them as explicitly non-headline without new
+adversarial flags, the v13 matrix is ready, forbidden claims are absent, and
+there are no unresolved current `.279` flagged, blocked, gated-skipped,
+missing, or pilot-only artifacts affecting the narrowed paper claim set.
+
+The terminal artifact MUST include `honest_verdict`,
+`milestone="2026.05.279"`, `paper_ready`, `headline_outcome`,
+`clean_artifacts`, `flagged_artifacts`, `blocked_artifacts`,
+`gated_skipped_artifacts`, `missing_artifacts`, `pilot_only_artifacts`,
+`aggregation_only_artifacts`, `gaps_closed`, `gaps_remaining`,
+`forbidden_claims_absent`, `next_milestone_recommendations`,
+`inference_substrate="aggregation_from_upstream_artifacts"`, and measured
+`duration_s`. It MAY include compact outcome summaries, source checksums,
+classification details, safe/forbidden claim lists, and no-new-execution
+booleans as long as they are derived from upstream artifacts.
+
+#### SCENARIO-REPORT-2974: Capstone Closes .279 Without Promoting Flagged Rows
+
+**Given** the active roadmap describes milestone `2026.05.279`
+**And** the `.278` capstone and every available `.279` result artifact through
+Exp 2973 are present or honestly absent
+**And** Exp 2964, Exp 2967, Exp 2969, and Exp 2973 remain adversarially flagged
+**And** Exp 2968 is a pilot-only partial monitor harness
+**When** the Exp 2974 capstone generator runs
+**Then** it writes `results/experiment_2974_capstone_v279.json` with all
+required fields, classifies every planned `.279` task into one terminal bucket,
+records GateMate board contact/flash and KAN forgetting guard as bounded clean
+outcomes, keeps DCCD repair, solver formalization, FR-11, and matrix v13 flags
+out of headline claims, sets `paper_ready=false`, reports
+`forbidden_claims_absent=true`, and recommends two to four concrete `.280`
+gaps.
+
+## Implementation Status (REQ-REPORT-2974)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2974 | Implemented (`python/carnot/reporting/capstone_v279_2974.py`) | Implemented (`tests/python/test_experiment_2974_capstone_v279.py`) |

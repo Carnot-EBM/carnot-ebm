@@ -1,0 +1,513 @@
+{
+  "aggregation_only_artifacts": [
+    "exp2962",
+    "exp2974"
+  ],
+  "artifact": "experiment_2974_capstone_v279",
+  "artifact_classification_counts": {
+    "aggregation-only": 2,
+    "blocked": 0,
+    "clean": 4,
+    "flagged": 6,
+    "gated-skipped": 0,
+    "missing": 0,
+    "pilot-only": 1
+  },
+  "blocked_artifacts": [],
+  "classification_details": [
+    {
+      "classification": "aggregation-only",
+      "flag_kinds": [],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2962_archive_v278_activate_v279.json",
+      "present": true,
+      "source_honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.278; activated_milestone=2026.05.279",
+      "task_id": "exp2962",
+      "title": "Archive .278 + Activate .279"
+    },
+    {
+      "classification": "flagged",
+      "flag_kinds": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2963_dccd_repair_protocol_manifest_v1.json",
+      "present": true,
+      "source_honest_verdict": "complete: DCCD structured-repair protocol ready; no pass-rate improvement claimed",
+      "task_id": "exp2963",
+      "title": "DCCD Structured Repair Protocol Manifest v1"
+    },
+    {
+      "classification": "flagged",
+      "flag_kinds": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "present": true,
+      "source_honest_verdict": "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05",
+      "task_id": "exp2964",
+      "title": "Gated SOTA DCCD Code Repair Replication v1"
+    },
+    {
+      "classification": "clean",
+      "flag_kinds": [],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2965_beaver_style_repair_certificate_v1.json",
+      "present": true,
+      "source_honest_verdict": "complete: bounded certificate audit ready; full BEAVER probability bound not claimed",
+      "task_id": "exp2965",
+      "title": "BEAVER-Style Repair Certificate Audit v1"
+    },
+    {
+      "classification": "flagged",
+      "flag_kinds": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2966_logic_frontier_materializer_v1.json",
+      "present": true,
+      "source_honest_verdict": "complete: exact skill-labeled logic frontier materialized",
+      "task_id": "exp2966",
+      "title": "LogicSkills LLMEval Exact Frontier Materializer v1"
+    },
+    {
+      "classification": "flagged",
+      "flag_kinds": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json",
+      "present": true,
+      "source_honest_verdict": "complete: local SOTA DCCD formalizations did not clear .278 delta gate",
+      "task_id": "exp2967",
+      "title": "Gated SOTA NL-to-Z3 DCCD Formalization v1"
+    },
+    {
+      "classification": "pilot-only",
+      "flag_kinds": [],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2968_interwhen_partial_monitor_harness_v1.json",
+      "present": true,
+      "source_honest_verdict": "complete: deterministic partial monitor harness ready",
+      "task_id": "exp2968",
+      "title": "Interwhen-Style Partial Monitor Harness v1"
+    },
+    {
+      "classification": "flagged",
+      "flag_kinds": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "IMPLAUSIBLE_PERFECT:info"
+      ],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2969_fr11_non_tautological_utility_gate_v3.json",
+      "present": true,
+      "source_honest_verdict": "complete: non_tautological_self_learning_ready",
+      "task_id": "exp2969",
+      "title": "FR-11 Non-Tautological Utility Gate v3"
+    },
+    {
+      "classification": "clean",
+      "flag_kinds": [],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json",
+      "present": true,
+      "source_honest_verdict": "complete: kan_forgetting_guard_ready",
+      "task_id": "exp2970",
+      "title": "KAN Forgetting Guard + Constraint Memory Audit v1"
+    },
+    {
+      "classification": "clean",
+      "flag_kinds": [],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2971_gatemate_board_detection_flash_harness_v3.json",
+      "present": true,
+      "source_honest_verdict": "complete: gatemate_flash_preconditions_ready",
+      "task_id": "exp2971",
+      "title": "GateMate Board Detection + Flash Harness v3"
+    },
+    {
+      "classification": "clean",
+      "flag_kinds": [],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2972_gatemate_post_flash_output_hash_v3.json",
+      "present": true,
+      "source_honest_verdict": "complete: gatemate_flash_contact_smoke_no_readback",
+      "task_id": "exp2972",
+      "title": "Gated GateMate Post-Flash Output Hash Smoke v3"
+    },
+    {
+      "classification": "flagged",
+      "flag_kinds": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2973_cross_corpus_matrix_v13.json",
+      "present": true,
+      "source_honest_verdict": "complete: matrix_v13_ready=true; clean=26; flagged=14; blocked=5; gated_skipped=0; pilot_only=4",
+      "task_id": "exp2973",
+      "title": "Cross-Corpus Matrix v13"
+    },
+    {
+      "classification": "aggregation-only",
+      "flag_kinds": [],
+      "gate_blocked_by": [],
+      "path": "results/experiment_2974_capstone_v279.json",
+      "present": true,
+      "source_honest_verdict": "complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0",
+      "task_id": "exp2974",
+      "title": "Capstone .279"
+    }
+  ],
+  "clean_artifacts": [
+    "exp2965",
+    "exp2970",
+    "exp2971",
+    "exp2972"
+  ],
+  "duration_s": 1e-06,
+  "flagged_artifacts": [
+    "exp2963",
+    "exp2964",
+    "exp2966",
+    "exp2967",
+    "exp2969",
+    "exp2973"
+  ],
+  "forbidden_claims_absent": true,
+  "forbidden_claims_reaffirmed": [
+    "KV260 speedup claims remain forbidden.",
+    "KV260 Boltzmann, thermalization, or equilibrium-sampling claims remain forbidden.",
+    "Extropic TSU, Kona, and Aleph-equivalent performance claims remain forbidden.",
+    "Native EBT training claims remain forbidden.",
+    "Broad verifier-generalization claims beyond measured rows remain forbidden.",
+    "Full BEAVER probability-bound claims remain forbidden.",
+    "Full streaming partial-monitor verification claims remain forbidden."
+  ],
+  "gaps_closed": [
+    "BEAVER-style bounded repair certificate audit landed without probability-bound claims.",
+    "KAN per-knot forgetting guard landed as a bounded fixture result.",
+    "GateMate board contact and flash hash path closed the .278 board-detection blocker."
+  ],
+  "gaps_remaining": [
+    "DCCD repair replication remains open: pass deltas regressed and the artifact is flagged.",
+    "Solver-frontier formalization remains flagged despite parseability improvement.",
+    "FR-11 non-tautology remains flagged and cannot headline self-learning.",
+    "Matrix v13 is aggregation-complete but adversarially flagged.",
+    "Partial monitors remain pilot-only; no full streaming verification claim is available.",
+    "GateMate still lacks a passed smoke vector or readback-backed sampler claim."
+  ],
+  "gated_skipped_artifacts": [],
+  "headline_outcome": "partial: bounded KAN, BEAVER, and GateMate-contact evidence landed, but 6 unresolved gaps keep paper readiness false",
+  "honest_verdict": "complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "milestone": "2026.05.279",
+  "missing_artifacts": [],
+  "next_milestone_recommendations": [
+    "DCCD .280: repair schema failures and rerun n>=20 with positive pass delta and no new flags.",
+    "Solver .280: target parseability >=0.50 and solver-verified accuracy >=0.40 with tautology flags removed.",
+    "FR-11 .280: rerun the non-tautological utility gate with independent metric slices and no identical-metric flags.",
+    "GateMate .280: add readback or a passed smoke vector before any sampler-facing hardware claim."
+  ],
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "outcome_summaries": {
+    "beaver_style_certificates": {
+      "audited_candidate_count": 32,
+      "available_candidate_count": 32,
+      "certificate_ready": true,
+      "probability_bound_claimed": false,
+      "status": "bounded_certificate_audit_only",
+      "validation_fixture_count": 5,
+      "validation_fixture_passed": true
+    },
+    "dccd_code_repair": {
+      "artifact_flagged": true,
+      "baseline_pass_at_1": 0.2,
+      "dccd_repair_pass_at_1": 0.0,
+      "dccd_repair_replication_clean": false,
+      "false_accept_delta": -0.05,
+      "headline_model_count": 1,
+      "n_tasks": 20,
+      "pass_at_1_delta": -0.2,
+      "pass_at_k_delta": -0.3,
+      "protocol_artifact_flagged": true,
+      "protocol_ready": true,
+      "schema_failure_rate_delta": 0.95,
+      "status": "open_flagged_regression",
+      "syntax_failure_rate_delta": 0.30000000000000004,
+      "taxonomy_repair_pass_at_1": 0.45
+    },
+    "fr11_non_tautology": {
+      "artifact_flagged": true,
+      "continuous_self_learning_task": true,
+      "forgetting_guard_passed": true,
+      "heldout_utility_delta_vs_random": 0.093156544055,
+      "leakage_check_passed": true,
+      "negative_control_delta": 0.0,
+      "non_tautological_self_learning_ready": true,
+      "rollback_triggered": false,
+      "status": "flagged_non_tautological_ready"
+    },
+    "gatemate": {
+      "bitstream_sha256_verified": true,
+      "board_detected": true,
+      "flash_attempted": true,
+      "flash_preconditions_ready": true,
+      "flash_succeeded": true,
+      "observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+      "post_flash_contact_detected": true,
+      "prior_278_board_detected": false,
+      "prior_278_flash_state": "blocked_board_not_detected",
+      "smoke_vector_passed": false,
+      "status": "contact_and_flash_hash_only"
+    },
+    "kan_memory": {
+      "current_domain_utility": {
+        "adapter_style_update": 1.0,
+        "eager_update": 1.0,
+        "frozen": 0.0,
+        "per_knot_importance_update": 1.0
+      },
+      "forgetting_delta_by_policy": {
+        "adapter_style_update": 0.0,
+        "eager_update": 0.75,
+        "frozen": 0.0,
+        "per_knot_importance_update": 0.0
+      },
+      "forgetting_threshold": 0.05,
+      "high_dimensional_claim_allowed": false,
+      "kan_forgetting_guard_ready": true,
+      "no_analog_claim": true,
+      "no_synthesis_claim": true,
+      "old_domain_utility": {
+        "adapter_style_update": 1.0,
+        "eager_update": 0.25,
+        "frozen": 1.0,
+        "per_knot_importance_update": 1.0
+      },
+      "selected_policy": "per_knot_importance_update",
+      "status": "clean_bounded_fixture"
+    },
+    "matrix_v13": {
+      "artifact_flagged": true,
+      "blocked_rows": 5,
+      "clean_rows": 26,
+      "flagged_rows": 14,
+      "forbidden_claims_absent": true,
+      "matrix_v13_ready": true,
+      "pilot_only_rows": 4
+    },
+    "partial_monitors": {
+      "coverage_by_event": {
+        "assertion_or_formula_line": {
+          "checks": [
+            "parser_prefix_validity",
+            "schema_field_coverage",
+            "symbol_consistency"
+          ],
+          "count": 5,
+          "passed": true
+        },
+        "final_answer": {
+          "checks": [
+            "schema_field_coverage",
+            "symbol_consistency"
+          ],
+          "count": 5,
+          "passed": true
+        },
+        "function_sig": {
+          "checks": [
+            "parser_prefix_validity",
+            "schema_field_coverage",
+            "symbol_consistency"
+          ],
+          "count": 4,
+          "passed": true
+        },
+        "import_line": {
+          "checks": [
+            "import_allow_list",
+            "parser_prefix_validity",
+            "schema_field_coverage"
+          ],
+          "count": 1,
+          "passed": true
+        },
+        "partial_code_block": {
+          "checks": [
+            "parser_prefix_validity",
+            "schema_field_coverage"
+          ],
+          "count": 4,
+          "passed": true
+        },
+        "solver_query": {
+          "checks": [
+            "schema_field_coverage",
+            "z3_parse_check"
+          ],
+          "count": 1,
+          "passed": true
+        }
+      },
+      "fixture_checks_passed": true,
+      "fixture_trace_count": 5,
+      "full_streaming_verification_claim": false,
+      "latency_estimate_ms": 4.67,
+      "partial_monitor_harness_ready": true,
+      "status": "pilot_only"
+    },
+    "solver_frontier_formalization": {
+      "artifact_flagged": true,
+      "baseline_parseability_rate": 0.083333,
+      "baseline_solver_verified_accuracy": 0.0,
+      "formalization_delta_clean": false,
+      "formalization_n_items": 24,
+      "frontier_materialized": true,
+      "frontier_n_items": 24,
+      "parseability_delta_vs_278": 0.166667,
+      "parseability_rate": 0.25,
+      "reference_solver_accuracy": 1.0,
+      "solver_verified_accuracy": 0.208333,
+      "solver_verified_accuracy_delta_vs_278": 0.208333,
+      "status": "open_flagged_partial_improvement"
+    }
+  },
+  "paper_ready": false,
+  "paper_v6_safe_claims": [
+    "BEAVER-style evidence is limited to bounded deterministic candidate-certificate auditing.",
+    "KAN memory evidence is limited to a bounded per-knot forgetting-guard fixture.",
+    "GateMate evidence is limited to board contact, bitstream integrity, flash, and output hash.",
+    "DCCD repair replication remains non-headline because current repair deltas regressed.",
+    "Solver formalization remains non-headline despite higher parseability.",
+    "FR-11 non-tautology controls are recorded as flagged, non-headline evidence."
+  ],
+  "pilot_only_artifacts": [
+    "exp2968"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.milestone_capstone.v279_aggregation.v1",
+  "source_artifacts_read": [
+    {
+      "path": "results/experiment_2960_cross_corpus_matrix_v12.json",
+      "present": true,
+      "sha256": "bc76302404a593b5092dd0a2c410a70616fcb87a30bf38079acb05d325563edd"
+    },
+    {
+      "path": "results/experiment_2961_capstone_v278.json",
+      "present": true,
+      "sha256": "bec413909bccd5e7b3bcad708049f8e4253e0a014a578688ff20a19cd0eb2bae"
+    },
+    {
+      "path": "results/experiment_2962_archive_v278_activate_v279.json",
+      "present": true,
+      "sha256": "df0b658cf51ce47e797b73a1552b580df0ead5a37d637aeb11228e9f335eb306"
+    },
+    {
+      "path": "results/experiment_2963_dccd_repair_protocol_manifest_v1.json",
+      "present": true,
+      "sha256": "23fa4933fff5132c84c64c0d0640499e9a982f847bb6a25dfae6fcaeb4e6d88f"
+    },
+    {
+      "path": "results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "present": true,
+      "sha256": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2"
+    },
+    {
+      "path": "results/experiment_2965_beaver_style_repair_certificate_v1.json",
+      "present": true,
+      "sha256": "715161b9e3214a03cc339acd1c45d2a89bc227be7fc84b28af21e952ccfe931e"
+    },
+    {
+      "path": "results/experiment_2966_logic_frontier_materializer_v1.json",
+      "present": true,
+      "sha256": "b600c83e12458633e87c6576429c4ae0bbc1d61e814abb4a4e422f9f428d2c2d"
+    },
+    {
+      "path": "results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json",
+      "present": true,
+      "sha256": "30ac8330b454530a5dbde826bcd00369211d375959f22d45da41c71d2357d82c"
+    },
+    {
+      "path": "results/experiment_2968_interwhen_partial_monitor_harness_v1.json",
+      "present": true,
+      "sha256": "05578eeaee612f7c7757fe8e8d7e40986d6b9f9d3a11034e13b0443005755199"
+    },
+    {
+      "path": "results/experiment_2969_fr11_non_tautological_utility_gate_v3.json",
+      "present": true,
+      "sha256": "abc6e4b4b9b383f107cac796c86b99dcd83e097db93400d8142822462c0896c9"
+    },
+    {
+      "path": "results/experiment_296_results.json",
+      "present": true,
+      "sha256": "35747edc9cd76f4adbc7ee2bd58cb5f198fc724463340fb1cc769251b84eca8f"
+    },
+    {
+      "path": "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json",
+      "present": true,
+      "sha256": "7779857fe0c036b85e4842e1c4b925ed84cee5a7964514b91cf9f939bf283373"
+    },
+    {
+      "path": "results/experiment_2971_gatemate_board_detection_flash_harness_v3.json",
+      "present": true,
+      "sha256": "3cb7e3dbb4cf7b4cec7b17467bc67394488e57721094804e0c4cc404be7ed07b"
+    },
+    {
+      "path": "results/experiment_2972_gatemate_post_flash_output_hash_v3.json",
+      "present": true,
+      "sha256": "db2884eb5bf3d653119e08129829bb38bf6ecb38c28173f6932c24b5513cf74e"
+    },
+    {
+      "path": "results/experiment_2973_cross_corpus_matrix_v13.json",
+      "present": true,
+      "sha256": "6c1ccc6b948effd70b496ad27016abeb5a0ba7f4968fd86833c747453a5aaf1c"
+    },
+    {
+      "path": "results/experiment_2974_capstone_v279.json",
+      "present": true,
+      "sha256": "57fa93849faaadf2f8eacef25651c45cb411e0982b2bd3b8a5a1eb1ce3613892"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_2960_cross_corpus_matrix_v12.json": "bc76302404a593b5092dd0a2c410a70616fcb87a30bf38079acb05d325563edd",
+    "results/experiment_2961_capstone_v278.json": "bec413909bccd5e7b3bcad708049f8e4253e0a014a578688ff20a19cd0eb2bae",
+    "results/experiment_2962_archive_v278_activate_v279.json": "df0b658cf51ce47e797b73a1552b580df0ead5a37d637aeb11228e9f335eb306",
+    "results/experiment_2963_dccd_repair_protocol_manifest_v1.json": "23fa4933fff5132c84c64c0d0640499e9a982f847bb6a25dfae6fcaeb4e6d88f",
+    "results/experiment_2964_sota_dccd_repair_replication_v1.json": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2",
+    "results/experiment_2965_beaver_style_repair_certificate_v1.json": "715161b9e3214a03cc339acd1c45d2a89bc227be7fc84b28af21e952ccfe931e",
+    "results/experiment_2966_logic_frontier_materializer_v1.json": "b600c83e12458633e87c6576429c4ae0bbc1d61e814abb4a4e422f9f428d2c2d",
+    "results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json": "30ac8330b454530a5dbde826bcd00369211d375959f22d45da41c71d2357d82c",
+    "results/experiment_2968_interwhen_partial_monitor_harness_v1.json": "05578eeaee612f7c7757fe8e8d7e40986d6b9f9d3a11034e13b0443005755199",
+    "results/experiment_2969_fr11_non_tautological_utility_gate_v3.json": "abc6e4b4b9b383f107cac796c86b99dcd83e097db93400d8142822462c0896c9",
+    "results/experiment_296_results.json": "35747edc9cd76f4adbc7ee2bd58cb5f198fc724463340fb1cc769251b84eca8f",
+    "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json": "7779857fe0c036b85e4842e1c4b925ed84cee5a7964514b91cf9f939bf283373",
+    "results/experiment_2971_gatemate_board_detection_flash_harness_v3.json": "3cb7e3dbb4cf7b4cec7b17467bc67394488e57721094804e0c4cc404be7ed07b",
+    "results/experiment_2972_gatemate_post_flash_output_hash_v3.json": "db2884eb5bf3d653119e08129829bb38bf6ecb38c28173f6932c24b5513cf74e",
+    "results/experiment_2973_cross_corpus_matrix_v13.json": "6c1ccc6b948effd70b496ad27016abeb5a0ba7f4968fd86833c747453a5aaf1c",
+    "results/experiment_2974_capstone_v279.json": "57fa93849faaadf2f8eacef25651c45cb411e0982b2bd3b8a5a1eb1ce3613892"
+  },
+  "three_biggest_gap_assessment": {
+    "code_repair_replication": "open_flagged_regression",
+    "fr11_and_hardware": "partial_gate_mate_contact_closed_fr11_flagged",
+    "solver_frontier_formalization": "open_flagged_partial_improvement"
+  }
+}
