@@ -4,48 +4,48 @@
 # docs_audit_report — 2026-05-24
 
 ## TL;DR (stranger's 30-second take)
-A stranger would bounce. The page starts strong but quickly devolves into an impenetrable wall of acronyms (CCTU, SVAMP, FoVer) and 28 disparate UI cards, including 12 dense result cards with highly suspicious "100%" metrics. It reads like an internal status update for project insiders rather than a welcoming landing page.
+I am closing the tab. The page hits me with a wall of unexplained acronyms (FoVer, HIVE, CCTU), impossibly perfect "100%" result bars, and insider status updates that make it feel like an internal team dashboard leaked to the public, rather than a production-ready tool I can trust.
 
 ## TOP 3 PROBLEMS
-1. INTERNAL JARGON — "Evidence" section is completely unreadable due to acronym soup (HIVE, CCTU, SVAMP, VeriCoT, PRM-BiasBench).
-2. FABRICATION SIGNALS — Claims of exactly "1.0", "60/60", and "identical losses" in the Evidence section immediately destroy credibility.
-3. BLOAT — The page has 28 separate UI cards across different sections (bento, results, blogs), causing severe visual fatigue.
+1. Jargon avalanche in the "Evidence" grid hides any real achievements behind internal benchmark names.
+2. Suspiciously perfect 100% metrics (1.0 TP rate, 60/60 attacks) with zero immediate proof or linked artifacts.
+3. Sections like "Recent progress" and "Preprint" read exactly like internal Slack status updates instead of marketing copy.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Entire Page — 28 distinct cards — Way too many isolated boxes; a stranger will skim none of them.
-- Results Grid (Evidence section) — 12 cards — Cap to 4-6 most impactful results.
-- Blog list (Writing section) — 7 full cards — Cap to 3 most recent/relevant posts.
+- `results-grid` (What we measured) — 12 cards — cap at 4 to 6 of the most defensible, universally understood metrics. A stranger will read zero of these if faced with 12.
+- `results-grid` (From the blog) — 7 cards — cap at 3. The page is scrolling too far into the weeds of project operations.
 
 ### Internal jargon
-- Stats Bar — "HIVE peer", "FoVer step-error corpus" — A stranger doesn't know what these benchmarks or corpora are.
-- "Test-Time Compute (TTC) & PREM" Bento Card — "PREM" (Process-Reward Energy Model) is used but barely explained.
-- Results Grid (Evidence) — "CCTU", "IterativeSelfRepair", "SVAMP", "VeriCoT", "PRM-BiasBench", "HalluGuard v3" — Completely meaningless to anyone not actively working on this specific project.
-- Live benchmark r-card — "Qwen3.6-35B-A3B", "@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt" — A raw internal file path literally leaked into the HTML output.
+- `Hero Stats` — "HIVE peer 0.924" — I have no idea what HIVE is.
+- `Recent progress` — "FoVer step-error corpus" — Means nothing outside the project.
+- `Results Grid` — "CCTU", "PRM-BiasBench-style", "IterativeSelfRepair", "EstimationVerifier SVAMP AUC", "VeriCoT", "HalluGuard v3", "Qwen3.6-35B-A3B" — Alphabet soup that completely dilutes the actual claims.
+- `Preprint section` — "paper-v6" — Internal versioning that means nothing to me.
 
 ### Per-milestone narrative
-- Stats Bar "Recent progress" card — "The reference verifier ensemble reaches an AUROC of 0.9857... A position paper covering the framework is in preparation..." — Reads exactly like a copy-pasted milestone status update.
-- "Evidence" description — "Synthetic pilots are included only when the card says so..." — Reads like a defensive internal PRD disclaimer, not marketing copy.
+- `Recent progress card` — "A position paper covering the framework is in preparation..." reads like a weekly standup note.
+- `Preprint section` — "The arXiv submission is prepared but pending operator-initiated upload." A stranger does not care about your operator-upload pipeline. Just link the paper or say it's coming.
 
 ### Inconsistencies
-- Live benchmark card claims "SOTA 35B (Qwen3.6-35B-A3B)" in the title, but the leaked text directly beneath it says `real_Gemma4-26B-A4B-it.txt`.
-- Stats Bar claims 0.9857 AUROC as the headline, while the "Safety" result card claims 0.91 AUROC, and "Math reasoning" claims 0.90 AUC.
+- `Hero` claims a single "0.9857 Verifier AUROC" while the `Results Grid` claims "0.91 AUROC" (safety) and "0.90 AUC" (math) without clarifying why they differ to a casual reader.
+- `Hero` says "Carnot is installable via PyPI" but the primary "Get Started" button links to a GitHub markdown file instead of the PyPI page or actual installation instructions.
 
 ### Missing essentials
-- Why should I trust the numbers? The text claims they are backed by "checked-in experiment artifacts," but there are no links to these artifacts for a stranger to verify.
+- **Trust anchors for the numbers:** You claim "Every number below is backed by a checked-in experiment artifact" but don't link a single card in the results grid to its corresponding artifact. 
+- **PyPI Link:** You tell me to `pip install carnot-ebm` but provide no clickable PyPI badge or link to verify it exists.
 
 ### Fabrication signals
-- Math extraction card — "GSM8K extraction TP rate: 0.5 -> 1.0" — Perfect 1.0 (100%) True Positive rate on extraction is highly suspicious.
-- Adversarial audit card — "k=5 ensemble catches 60/60 attacks" — 100% defense success rate looks like an overfit or fabricated number.
-- Training card — "2.0x speedup, identical losses" — Exactly 2.0x speedup and perfectly identical loss in distributed floating-point training is mathematically suspect.
+- `Results Grid` — "GSM8K extraction TP rate: 0.5 -> 1.0" (100% mathematically perfect True Positive rate is an immediate red flag).
+- `Results Grid` — "k=5 ensemble catches 60/60 attacks" (Perfect catch rate on a tiny sample size of 60).
+- `Hero Stats` — "0.9857 AUROC" (Four sig-figs of precision is dangerously close to 1.0 and looks suspiciously like overfitting).
 
 ## WHAT'S WORKING
-- The hero headline ("Catch the mistakes your LLM confidently makes up.") and the "How it works" three-step breakdown are excellent and immediately understandable.
-- The Quick Start tabbed code snippet is very effective at demonstrating ease of use.
+- The "Extract -> Check -> Repair" mental model is clean, understandable, and tells me exactly what the framework does in 10 seconds.
+- The "Quick Start" code is short, readable, and actually delivers on the "five lines" promise.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove the leaked internal file path (`@results/citation_...`) from the Live benchmark card.
-2. Cull the Evidence grid from 12 cards down to 4-6 that use plain English instead of internal benchmark acronyms.
-3. Address the perfect metrics (1.0, 60/60, identical losses) by either providing direct links to the artifacts proving them or replacing them with realistic claims.
-4. Remove the "Recent progress" card from the stats bar entirely; it breaks the layout and reads like a status report.
-5. Expand acronyms (CCTU, SVAMP) or replace them with generic terms like "math reasoning benchmark".
+1. Purge internal acronyms (FoVer, CCTU, HIVE) from the headline copy and replace them with generic, descriptive equivalents (e.g., "Math reasoning benchmark", "Tool use dataset").
+2. Cut the Results grid from 12 cards to the 4 strongest, most defensible metrics, and hyperlink them directly to the experimental artifacts.
+3. Tone down or heavily caveat the 1.0/100% claims in the Results section to avoid triggering "too good to be true" alarms.
+4. Rewrite the "Recent progress" and "Preprint" sections to focus on user value ("Read our methodology") instead of internal status reporting ("pending operator upload").
+5. Add a direct PyPI badge/link near the hero snippet.

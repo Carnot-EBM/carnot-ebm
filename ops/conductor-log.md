@@ -6150,3 +6150,6 @@ web search: https://arxiv. |
 | 2026-05-24 12:12 UTC | SSQA Dual-BRAM Hardware Projection + Register-Map  | OK | 81 passed in 3.64s |
 | 2026-05-24 12:29 UTC | Cross-Corpus Matrix v14 + Claim Boundary Audit | OK | 81 passed in 3.74s |
 | 2026-05-24 12:46 UTC | Milestone .280 Capstone + Paper-Readiness Decision | OK | 81 passed in 3.58s |
+| 2026-05-24 13:17 UTC | Plan next milestone | FAIL | Codex CLI error: g/abs/2604.17884
+web search: 
+web search: https://logicalint |
