@@ -1,0 +1,2536 @@
+{
+  "artifact": "experiment_2965_beaver_style_repair_certificate_v1",
+  "available_repair_candidate_audited_count": 32,
+  "available_repair_candidate_count": 32,
+  "beaver_style_certificate_ready": true,
+  "candidate_certificates": [
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "synthetic_valid",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": "add",
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": true,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "synthetic",
+      "function_name_preserved": true,
+      "function_name_status": "preserved",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 1,
+      "candidate_id": "synthetic_unsafe_import",
+      "code_block_complete": true,
+      "deterministic_accept": false,
+      "expected_function_name": "add",
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": false,
+        "false_accept": true,
+        "function_name_preserved": true,
+        "import_allowlist_passed": false,
+        "parser_valid": true,
+        "reasons": [
+          "unsafe_imports"
+        ],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "synthetic",
+      "function_name_preserved": true,
+      "function_name_status": "preserved",
+      "import_allowlist_passed": false,
+      "imports_seen": [
+        "os"
+      ],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [
+        "os"
+      ],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 1,
+      "candidate_id": "synthetic_function_mismatch",
+      "code_block_complete": true,
+      "deterministic_accept": false,
+      "expected_function_name": "add",
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": false,
+        "false_accept": true,
+        "function_name_preserved": false,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [
+          "function_name_not_preserved"
+        ],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "synthetic",
+      "function_name_preserved": false,
+      "function_name_status": "missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 1,
+      "candidate_id": "synthetic_failed_tests",
+      "code_block_complete": true,
+      "deterministic_accept": false,
+      "expected_function_name": "add",
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": false,
+        "false_accept": true,
+        "function_name_preserved": true,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "failed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "synthetic",
+      "function_name_preserved": true,
+      "function_name_status": "preserved",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "failed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 4,
+      "candidate_id": "synthetic_syntax_error",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": "add",
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": false,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "function_name_not_preserved",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "synthetic",
+      "function_name_preserved": false,
+      "function_name_status": "missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-11:baseline_no_taxonomy:0",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-11:baseline_no_taxonomy:1",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-11:baseline_no_taxonomy:2",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-11:baseline_no_taxonomy:3",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-11:taxonomy_guided:0",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: unterminated string literal (detected at line 6)",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-11:taxonomy_guided:1",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: unterminated string literal (detected at line 4)",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-11:taxonomy_guided:2",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-11:taxonomy_guided:3",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-12:baseline_no_taxonomy:0",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-12:baseline_no_taxonomy:1",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-12:baseline_no_taxonomy:2",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-12:baseline_no_taxonomy:3",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-12:taxonomy_guided:0",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-12:taxonomy_guided:1",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-12:taxonomy_guided:2",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 0,
+      "candidate_id": "MBPP:mbpp-12:taxonomy_guided:3",
+      "code_block_complete": true,
+      "deterministic_accept": true,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": true,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [],
+        "schema_valid": true,
+        "test_status": "passed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": true,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "passed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:baseline_no_taxonomy:0",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: unterminated string literal (detected at line 15)",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:baseline_no_taxonomy:1",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: unterminated string literal (detected at line 9)",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:baseline_no_taxonomy:2",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: unterminated string literal (detected at line 13)",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:baseline_no_taxonomy:3",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:taxonomy_guided:0",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: unterminated string literal (detected at line 7)",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:taxonomy_guided:1",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:taxonomy_guided:2",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "IndentationError: expected an indented block after function definition on line 1",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-14:taxonomy_guided:3",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 1,
+      "candidate_id": "MBPP:mbpp-16:baseline_no_taxonomy:0",
+      "code_block_complete": true,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": false,
+        "false_accept": true,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "failed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [
+        "re"
+      ],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "failed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-16:baseline_no_taxonomy:1",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 1,
+      "candidate_id": "MBPP:mbpp-16:baseline_no_taxonomy:2",
+      "code_block_complete": true,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": true,
+        "deterministic_accept": false,
+        "false_accept": true,
+        "function_name_preserved": null,
+        "import_allowlist_passed": true,
+        "parser_valid": true,
+        "reasons": [
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "failed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": true,
+      "imports_seen": [
+        "re"
+      ],
+      "parser_error": null,
+      "parser_valid": true,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "failed",
+      "unsafe_imports": [],
+      "verifier_score": 1.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-16:baseline_no_taxonomy:3",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-16:taxonomy_guided:0",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.25
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: invalid syntax",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.25,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-16:taxonomy_guided:1",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "IndentationError: unexpected indent",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-16:taxonomy_guided:2",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "IndentationError: unexpected indent",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    },
+    {
+      "blocked_prefix_count": 3,
+      "candidate_id": "MBPP:mbpp-16:taxonomy_guided:3",
+      "code_block_complete": false,
+      "deterministic_accept": false,
+      "expected_function_name": null,
+      "explored_prefix_count": 5,
+      "false_accept_audit": {
+        "code_block_complete": false,
+        "deterministic_accept": false,
+        "false_accept": false,
+        "function_name_preserved": null,
+        "import_allowlist_passed": false,
+        "parser_valid": false,
+        "reasons": [
+          "parser_invalid",
+          "code_block_incomplete",
+          "unsafe_imports",
+          "test_status_not_passed"
+        ],
+        "schema_valid": true,
+        "test_status": "not_run",
+        "verifier_accepted": false,
+        "verifier_score": 0.0
+      },
+      "fixture_source": "exp2952_available",
+      "function_name_preserved": null,
+      "function_name_status": "not_applicable_missing_expected_function",
+      "import_allowlist_passed": false,
+      "imports_seen": [],
+      "parser_error": "SyntaxError: unterminated triple-quoted string literal (detected at line 12)",
+      "parser_valid": false,
+      "prefix_results": [
+        {
+          "constraint_id": "schema_validity",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "code_block_completeness",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "import_allowlist",
+          "passed": false,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "function_name_preservation",
+          "passed": true,
+          "prefix_closed": true
+        },
+        {
+          "constraint_id": "test_verifier_status_fields",
+          "passed": false,
+          "prefix_closed": true
+        }
+      ],
+      "schema_errors": [],
+      "schema_valid": true,
+      "test_status": "not_run",
+      "unsafe_imports": [],
+      "verifier_score": 0.0,
+      "verifier_threshold_used": 1.0
+    }
+  ],
+  "certificate_schema_version": "carnot.beaver_style_repair_certificate.v1",
+  "duration_s": 0.07085299491882324,
+  "false_accept_audit_fields": [
+    "verifier_accepted",
+    "deterministic_accept",
+    "schema_valid",
+    "parser_valid",
+    "code_block_complete",
+    "import_allowlist_passed",
+    "function_name_preserved",
+    "test_status",
+    "verifier_score",
+    "false_accept",
+    "reasons"
+  ],
+  "files_changed": [
+    "openspec/capabilities/code-verification/spec.md",
+    "python/carnot/eval/beaver_style_repair_certificate.py",
+    "tests/python/test_experiment_2965_beaver_style_repair_certificate.py",
+    "results/experiment_2965_beaver_style_repair_certificate_v1.json"
+  ],
+  "full_beaver_claim": false,
+  "honest_verdict": "complete: bounded certificate audit ready; full BEAVER probability bound not claimed",
+  "inference_substrate": "deterministic_wiring",
+  "json_schema_validation_support": "deterministic_schema_validation_fallback",
+  "llama_cpp_grammar_available": true,
+  "llguidance_available": false,
+  "local_backends_checked": [
+    {
+      "available": false,
+      "backend_name": "jsonschema",
+      "detail": "ImportError: No module named 'jsonschema'"
+    },
+    {
+      "available": false,
+      "backend_name": "llguidance",
+      "detail": "ImportError: No module named 'llguidance'"
+    },
+    {
+      "available": true,
+      "backend_name": "llama_cpp_grammar",
+      "detail": "LlamaGrammar.from_json_schema available"
+    }
+  ],
+  "malformed_source_artifacts": [],
+  "missing_source_artifacts": [],
+  "prefix_closed_constraints": [
+    {
+      "constraint_id": "schema_validity",
+      "description": "The candidate manifest must validate against the Exp 2951 schema.",
+      "prefix_closed": true
+    },
+    {
+      "constraint_id": "code_block_completeness",
+      "description": "The repaired_code field must be a complete parseable Python block.",
+      "prefix_closed": true
+    },
+    {
+      "constraint_id": "import_allowlist",
+      "description": "Imports must stay inside the deterministic repair allow-list.",
+      "prefix_closed": true
+    },
+    {
+      "constraint_id": "function_name_preservation",
+      "description": "When an expected entry point is known, repaired code must define it.",
+      "prefix_closed": true
+    },
+    {
+      "constraint_id": "test_verifier_status_fields",
+      "description": "Parser, test, and verifier fields must support deterministic acceptance.",
+      "prefix_closed": true
+    }
+  ],
+  "required_artifact_fields": [
+    "honest_verdict",
+    "beaver_style_certificate_ready",
+    "full_beaver_claim",
+    "source_artifacts",
+    "certificate_schema_version",
+    "prefix_closed_constraints",
+    "validation_fixture_count",
+    "validation_fixture_passed",
+    "local_backends_checked",
+    "llguidance_available",
+    "llama_cpp_grammar_available",
+    "false_accept_audit_fields",
+    "files_changed",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.beaver_style_repair_certificate_artifact.v1",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp2963",
+      "fields_imported": [
+        "dccd_repair_protocol_ready"
+      ],
+      "path": "results/experiment_2963_dccd_repair_protocol_manifest_v1.json",
+      "present": true,
+      "required": true,
+      "role": "ready_dccd_repair_protocol_precondition",
+      "sha256": "23fa4933fff5132c84c64c0d0640499e9a982f847bb6a25dfae6fcaeb4e6d88f"
+    },
+    {
+      "experiment_id": "exp2951",
+      "fields_imported": [
+        "candidate_manifest_schema",
+        "local_backends_checked"
+      ],
+      "path": "results/experiment_2951_structured_candidate_manifest_adapter_v1.json",
+      "present": true,
+      "required": true,
+      "role": "candidate_schema_and_local_backend_status",
+      "sha256": "2cffa2b64978c49d406bf2e8d7a070de5eec76318d7d78b2cb085c335cace19c"
+    },
+    {
+      "experiment_id": "exp2953",
+      "fields_imported": [
+        "selected_default_threshold"
+      ],
+      "path": "results/experiment_2953_code_verifier_threshold_policy_v1.json",
+      "present": true,
+      "required": true,
+      "role": "verifier_threshold_policy",
+      "sha256": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a"
+    },
+    {
+      "experiment_id": "exp2952",
+      "fields_imported": [
+        "candidate_manifests"
+      ],
+      "path": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "present": true,
+      "required": false,
+      "role": "available_v278_repair_candidate_manifests",
+      "sha256": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030"
+    }
+  ],
+  "tests_run": [],
+  "validation_fixture_count": 5,
+  "validation_fixture_passed": true
+}

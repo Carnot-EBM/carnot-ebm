@@ -1320,6 +1320,51 @@ computes DCCD-minus-baseline deltas, and keeps
 `dccd_repair_replication_clean=false` unless the pre-registered sample-size,
 improvement, and false-accept gates all clear.
 
+### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
+
+The repository shall provide an Exp 2965 deterministic certificate audit for
+structured code-repair manifests. The audit MUST:
+
+- require `results/experiment_2963_dccd_repair_protocol_manifest_v1.json` with
+  `dccd_repair_protocol_ready=true` before marking the certificate ready;
+- consume the Exp 2951 structured candidate schema, Exp 2952 .278 repair
+  candidate manifests when present, and the Exp 2953 verifier threshold policy;
+- define prefix-closed acceptance constraints for schema validity, code-block
+  completeness, import allow-list checks, function-name preservation when an
+  expected entry point is available, parser validity, test/verifier status
+  fields, and false-accept accounting;
+- add per-candidate certificate fields `explored_prefix_count`,
+  `blocked_prefix_count`, `schema_valid`, `parser_valid`,
+  `verifier_threshold_used`, and `false_accept_audit`;
+- validate the certificate logic on at least five synthetic candidate records
+  and every available .278 repair candidate manifest from Exp 2952;
+- record local `llguidance` and llama.cpp grammar support while retaining a
+  deterministic fallback; and
+- write `results/experiment_2965_beaver_style_repair_certificate_v1.json` with
+  `honest_verdict`, `beaver_style_certificate_ready`,
+  `full_beaver_claim=false`, `source_artifacts`,
+  `certificate_schema_version`, `prefix_closed_constraints`,
+  `validation_fixture_count`, `validation_fixture_passed`,
+  `local_backends_checked`, `llguidance_available`,
+  `llama_cpp_grammar_available`, `false_accept_audit_fields`,
+  `files_changed`, `inference_substrate="deterministic_wiring"`, and measured
+  `duration_s`.
+
+The audit MUST NOT claim full BEAVER probability bounds unless such bounds are
+actually computed. The Exp 2965 artifact is a bounded certificate over the
+manifest and deterministic repair gates, not a probabilistic verifier proof.
+
+### SCENARIO-CODE-2965: Certificate Audit Rejects Verifier-Only Accept Paths
+
+Given Exp 2963 is ready and Exp 2951/2952/2953 artifacts are available,
+When Exp 2965 audits synthetic and checked-in .278 structured repair manifests,
+Then the artifact records ready BEAVER-style certificate fields, reports
+grammar-backend availability, keeps `full_beaver_claim=false`, validates at
+least five synthetic fixtures, audits all available Exp 2952 candidate
+manifests, and flags any verifier-threshold accept that lacks schema, parser,
+allowed-import, preserved-function, and available-test evidence as a
+false-accept path rather than as a pass.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
@@ -1442,6 +1487,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2953 | Implemented (`python/carnot/eval/code_verifier_threshold_policy.py`) |
 | REQ-CODE-2963 | Implemented (`python/carnot/eval/dccd_repair_protocol_manifest.py`) |
 | REQ-CODE-2964 | Implemented (`python/carnot/eval/sota_dccd_repair_replication.py`) |
+| REQ-CODE-2965 | Implemented (`python/carnot/eval/beaver_style_repair_certificate.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
