@@ -197,5 +197,13 @@
     "name": "verifier_weighted_utility_gate_v2",
     "reward_signal": "Exp2946 row_status mapped to Exp2940 code-status energy and repair taxonomy; signals are scaled by Exp2940 max-F1 PPV.",
     "rollback_rule": "restore baseline replay weights when forgetting_guard_metric_after < before"
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "forgetting_guard_metric_after=0.21875 and forgetting_guard_metric_before=0.21875 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
+  ]
 }

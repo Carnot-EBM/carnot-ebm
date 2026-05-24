@@ -6102,3 +6102,4 @@ web search:
 | 2026-05-23 23:56 UTC | Structured Candidate Manifest Adapter v1 | OK | 81 passed in 3.04s |
 | 2026-05-24 00:18 UTC | Gated SOTA Taxonomy-Guided Code Repair Evaluation  | OK | 81 passed in 3.68s |
 | 2026-05-24 00:31 UTC | Code Verifier Threshold Policy v1 | OK | 81 passed in 4.74s |
+| 2026-05-24 01:15 UTC | FR-11 Utility-Gated Replay Curriculum v2 | OK | 81 passed in 3.06s |
