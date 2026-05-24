@@ -6179,3 +6179,4 @@ web search: site |
 | 2026-05-24 18:55 UTC | Archive .281 and activate .282 | OK | 81 passed in 3.77s |
 | 2026-05-24 19:06 UTC | SOTA GGUF cache carry-forward and checksum refresh | OK | 81 passed in 4.18s |
 | 2026-05-24 19:23 UTC | Metamorphic repair-oracle audit for hard-set repai | OK | 81 passed in 4.46s |
+| 2026-05-24 19:42 UTC | Gated SOTA repair rerun with metamorphic false-acc | OK | 81 passed in 3.92s |
