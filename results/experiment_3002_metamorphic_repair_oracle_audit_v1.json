@@ -1,0 +1,136 @@
+{
+  "artifact": "experiment_3002_metamorphic_repair_oracle_audit_v1",
+  "duration_s": 0.174982,
+  "false_accept_probe_ready": true,
+  "false_accept_probe_summary": {
+    "metamorphic_catches_count": 10,
+    "original_overfit_pass_count": 22
+  },
+  "hard_set_manifest_path": "datasets/repair_hard/manifest_v1.jsonl",
+  "honest_verdict": "flagged: metamorphic oracle ready; downstream repair promotion must rerun against it",
+  "inference_substrate": "deterministic_oracle_audit_no_live_llm",
+  "live_llm_repair_run": false,
+  "metamorphic_manifest_path": "results/raw/experiment_3002_metamorphic_repair_oracle_audit_v1/metamorphic_manifest.jsonl",
+  "metamorphic_manifest_sha256": "3eff58c5272bed4956c4b2ea9b9941b4c544d61afcfd5257bd650579af853ec1",
+  "metamorphic_oracle_ready": true,
+  "n_metamorphic_variants": 59,
+  "n_source_items": 24,
+  "rejected_variants": [
+    {
+      "baseline_errors": [
+        {
+          "error_type": "AssertionError",
+          "message": "",
+          "test_id": "SCENARIO-CODE-2990-repair-hard-0002-1"
+        },
+        {
+          "error_type": "AssertionError",
+          "message": "",
+          "test_id": "SCENARIO-CODE-2990-repair-hard-0002-3"
+        },
+        {
+          "error_type": "AssertionError",
+          "message": "",
+          "test_id": "SCENARIO-CODE-3002-repair-hard-0002-semantic-reject-1"
+        }
+      ],
+      "baseline_passed": false,
+      "reason": "reference_failed_semantics_changed",
+      "reference_errors": [
+        {
+          "error_type": "AssertionError",
+          "message": "",
+          "test_id": "SCENARIO-CODE-3002-repair-hard-0002-semantic-reject-1"
+        }
+      ],
+      "reference_passed": false,
+      "relation_type": "input_permutation",
+      "source_item_id": "repair-hard-0002",
+      "variant_id": "repair-hard-0002__input_permutation__semantic-reject"
+    },
+    {
+      "baseline_errors": [],
+      "baseline_passed": true,
+      "reason": "tautological_oracle_rejected",
+      "reference_errors": [],
+      "reference_passed": true,
+      "relation_type": "tautology_probe",
+      "source_item_id": "repair-hard-0001",
+      "variant_id": "repair-hard-0001__tautology_probe__vacuous"
+    }
+  ],
+  "relation_types": [
+    "alpha_renaming",
+    "equivalent_boundary_case",
+    "input_permutation",
+    "oracle_preserving_refactor"
+  ],
+  "required_artifact_fields": [
+    "metamorphic_oracle_ready",
+    "hard_set_manifest_path",
+    "metamorphic_manifest_path",
+    "n_source_items",
+    "n_metamorphic_variants",
+    "relation_types",
+    "false_accept_probe_ready",
+    "tautology_probe_ready",
+    "rejected_variants",
+    "verifier_transcript_paths",
+    "honest_verdict"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.metamorphic_repair_oracle_audit.v1",
+  "source_item_ids": [
+    "repair-hard-0001",
+    "repair-hard-0002",
+    "repair-hard-0003",
+    "repair-hard-0004",
+    "repair-hard-0005",
+    "repair-hard-0006",
+    "repair-hard-0007",
+    "repair-hard-0008",
+    "repair-hard-0009",
+    "repair-hard-0010",
+    "repair-hard-0011",
+    "repair-hard-0012",
+    "repair-hard-0013",
+    "repair-hard-0014",
+    "repair-hard-0015",
+    "repair-hard-0016",
+    "repair-hard-0017",
+    "repair-hard-0018",
+    "repair-hard-0019",
+    "repair-hard-0020",
+    "repair-hard-0021",
+    "repair-hard-0022",
+    "repair-hard-0023",
+    "repair-hard-0024"
+  ],
+  "source_manifest_resolution": {
+    "mode": "manifest",
+    "source_artifact_path": "datasets/repair_hard/manifest_v1.jsonl"
+  },
+  "tautology_probe_ready": true,
+  "tautology_probe_summary": {
+    "baseline_passes_vacuous_probe": true,
+    "reference_passes_vacuous_probe": true
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3002_metamorphic_repair_oracle_audit.py -q",
+    ".venv/bin/pytest tests/python -q",
+    "python scripts/check_spec_coverage.py"
+  ],
+  "validation_summary": {
+    "baseline_variant_passes": 0,
+    "cached_exp2991_candidates_seen": 24,
+    "original_validation_rows": 72,
+    "reference_variant_failures": 0,
+    "variant_validation_rows": 177
+  },
+  "verifier_transcript_paths": [
+    "results/raw/experiment_3002_metamorphic_repair_oracle_audit_v1/original_verifier_transcript.jsonl",
+    "results/raw/experiment_3002_metamorphic_repair_oracle_audit_v1/metamorphic_verifier_transcript.jsonl",
+    "results/raw/experiment_3002_metamorphic_repair_oracle_audit_v1/probe_verifier_transcript.jsonl"
+  ],
+  "invariant_violations": []
+}

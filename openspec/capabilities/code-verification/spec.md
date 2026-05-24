@@ -1403,6 +1403,45 @@ models, records replayable transcripts, patches, verifier logs, and metric
 deltas against the failing baselines, and marks the result clean only when the
 sample-size, pass-rate, schema, syntax, false-accept, and trace gates all pass.
 
+### REQ-CODE-3002: Metamorphic Hard-Set Repair Oracle Audit
+
+The repository shall provide an Exp 3002 deterministic audit that strengthens
+the Exp 2990/2991 hard-code stress oracle without running live LLM repair. The
+audit MUST:
+
+- load `datasets/repair_hard/manifest_v1.jsonl`, or reconstruct an inspectable
+  hard-set manifest from Exp 2991 artifacts and checked-in hard-set fixtures
+  when the original manifest has moved;
+- generate a bounded inspectable metamorphic manifest containing only
+  relation-preserving variants, including conservative alpha-renaming,
+  equivalent boundary cases, input permutation where order is irrelevant, and
+  oracle-preserving refactors;
+- reject and report generated variants when executable validation shows the
+  reference solution no longer satisfies the intended semantics or the probe is
+  tautological;
+- replay executable validators on original and metamorphic cases against the
+  reference solution, baseline candidate, and any cached Exp 2991 repair
+  candidates found in local artifacts;
+- produce false-accept probes that pass the original hard-set tests with a
+  visible-test-overfit candidate but fail the independent metamorphic verifier,
+  plus tautology probes that demonstrate vacuous tests would be rejected; and
+- write
+  `results/experiment_3002_metamorphic_repair_oracle_audit_v1.json` with
+  `metamorphic_oracle_ready`, `hard_set_manifest_path`,
+  `metamorphic_manifest_path`, `n_source_items`, `n_metamorphic_variants`,
+  `relation_types`, `false_accept_probe_ready`, `tautology_probe_ready`,
+  `rejected_variants`, `verifier_transcript_paths`, and `honest_verdict`.
+
+### SCENARIO-CODE-3002: Metamorphic Oracle Evidence Is Replayable
+
+Given the Exp 2990 hard-set manifest and any cached Exp 2991 repair patches,
+When Exp 3002 runs the deterministic metamorphic oracle audit,
+Then every accepted variant passes the reference solution under executable
+validation, rejected variants remain visible with reasons, original and variant
+validators write replayable transcripts, false-accept and tautology probes are
+ready, and the terminal artifact marks downstream repair promotion as ready,
+flagged, or blocked without invoking live LLM repair.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for
@@ -1573,6 +1612,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2965 | Implemented (`python/carnot/eval/beaver_style_repair_certificate.py`) |
 | REQ-CODE-2990 | Implemented (`python/carnot/eval/hard_code_stress_manifest.py`) |
 | REQ-CODE-2991 | Implemented (`python/carnot/eval/gated_sota_intent_preserving_repair_hard_set.py`) |
+| REQ-CODE-3002 | Planned (`python/carnot/eval/metamorphic_repair_oracle_audit.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
