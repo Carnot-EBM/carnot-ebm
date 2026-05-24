@@ -1,0 +1,116 @@
+{
+  "baseline_policy_metrics": {
+    "accept_all": {
+      "accepted_count": 24,
+      "accepted_item_ids": [
+        "repair-hard-0001",
+        "repair-hard-0002",
+        "repair-hard-0003",
+        "repair-hard-0004",
+        "repair-hard-0005",
+        "repair-hard-0006",
+        "repair-hard-0007",
+        "repair-hard-0008",
+        "repair-hard-0009",
+        "repair-hard-0010",
+        "repair-hard-0011",
+        "repair-hard-0012",
+        "repair-hard-0013",
+        "repair-hard-0014",
+        "repair-hard-0015",
+        "repair-hard-0016",
+        "repair-hard-0017",
+        "repair-hard-0018",
+        "repair-hard-0019",
+        "repair-hard-0020",
+        "repair-hard-0021",
+        "repair-hard-0022",
+        "repair-hard-0023",
+        "repair-hard-0024"
+      ],
+      "candidate_count": 24,
+      "false_accept_rate": 0.0,
+      "pass_at_1": 0.416666666667,
+      "rejected_count": 0,
+      "schema_failure_rate": 0.5,
+      "syntax_failure_rate": 0.5,
+      "tautology_exposure_rate": 0.0
+    },
+    "conservative_accept_only_clean": {
+      "accepted_count": 10,
+      "accepted_item_ids": [
+        "repair-hard-0003",
+        "repair-hard-0005",
+        "repair-hard-0006",
+        "repair-hard-0012",
+        "repair-hard-0013",
+        "repair-hard-0015",
+        "repair-hard-0016",
+        "repair-hard-0017",
+        "repair-hard-0018",
+        "repair-hard-0023"
+      ],
+      "candidate_count": 24,
+      "false_accept_rate": 0.0,
+      "pass_at_1": 1.0,
+      "rejected_count": 14,
+      "schema_failure_rate": 0.0,
+      "syntax_failure_rate": 0.0,
+      "tautology_exposure_rate": 0.0
+    }
+  },
+  "feature_names": [
+    "schema_valid",
+    "syntax_success",
+    "entry_point_present",
+    "false_accept_probe_clean",
+    "tautology_probe_clean",
+    "intent_drift_class",
+    "original_passed",
+    "metamorphic_passed_all",
+    "optional_telemetry_available"
+  ],
+  "llm_judge_used": false,
+  "optional_telemetry_available": true,
+  "policy_type": "transparent_grid_rule",
+  "search_evaluated_rule_count": 128,
+  "selected_policy_metrics": {
+    "accepted_count": 10,
+    "accepted_item_ids": [
+      "repair-hard-0003",
+      "repair-hard-0005",
+      "repair-hard-0006",
+      "repair-hard-0012",
+      "repair-hard-0013",
+      "repair-hard-0015",
+      "repair-hard-0016",
+      "repair-hard-0017",
+      "repair-hard-0018",
+      "repair-hard-0023"
+    ],
+    "candidate_count": 24,
+    "false_accept_rate": 0.0,
+    "pass_at_1": 1.0,
+    "rejected_count": 14,
+    "schema_failure_rate": 0.0,
+    "syntax_failure_rate": 0.0,
+    "tautology_exposure_rate": 0.0
+  },
+  "selected_rule": {
+    "require_entry_point_present": true,
+    "require_false_accept_probe_clean": true,
+    "require_metamorphic_passed_all": true,
+    "require_no_intent_drift": true,
+    "require_original_passed": true,
+    "require_schema_valid": true,
+    "require_syntax_success": true,
+    "require_tautology_probe_clean": true
+  },
+  "selection_objective": [
+    "do_not_increase_false_accept_rate",
+    "do_not_increase_syntax_failure_rate",
+    "do_not_increase_schema_failure_rate",
+    "maximize_accepted_pass_rate",
+    "prefer_more_explicit_safety_requirements_on_ties"
+  ]
+}

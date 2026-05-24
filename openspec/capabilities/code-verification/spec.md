@@ -1528,6 +1528,49 @@ the required counts and acceptance rules, and uses any data-driven versus
 reasoning-driven taxonomy language only as plain taxonomy language without
 claiming an NTK or HalluGuard implementation.
 
+### REQ-CODE-3015: Offline Cactus-Style Repair Acceptance Controller
+
+The repository shall provide an Exp 3015 offline repair-candidate acceptance
+controller over cached Exp 3003 candidates, Exp 3014 taxonomy rows, verifier
+logs, and Exp 3002 metamorphic oracle evidence. The controller MUST:
+
+- load cached candidates, taxonomy rows, verifier outcomes, the metamorphic
+  oracle artifact and manifest, and optional telemetry artifacts when present;
+- derive deterministic candidate features for schema validity, syntax validity,
+  false-accept probe status, tautology probe status, intent-drift class,
+  original-test pass/fail, metamorphic-variant pass/fail, and optional
+  telemetry availability without invoking a live LLM or black-box judge;
+- grid-search a tiny transparent accept/reject rule over those features and
+  record the selected rule in an inspectable controller config;
+- evaluate the selected rule against accept-all and conservative accept-only-
+  clean policies, reporting offline deltas for false accepts, syntax failures,
+  schema failures, and pass@1 against accept-all;
+- reject candidates whose apparent usefulness is explained only by increased
+  syntax/schema failures, false accepts, or tautology exposure; and
+- write
+  `results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json`
+  with `acceptance_controller_ready`, `controller_config_path`,
+  `n_candidates_evaluated`, `false_accept_delta_offline`,
+  `syntax_failure_delta_offline`, `schema_failure_delta_offline`,
+  `pass_at_1_delta_offline`, `rejected_candidate_table_path`,
+  `llm_judge_used=false`, and `honest_verdict`.
+
+`acceptance_controller_ready` shall be true only when the selected controller
+is inspectable, evaluates at least one cached candidate, does not increase
+false accepts, syntax failures, or schema failures against accept-all, and has
+usable tautology-probe evidence from Exp 3002.
+
+### SCENARIO-CODE-3015: Deterministic Cached Evidence Selects An Inspectable Rule
+
+Given Exp 3002, Exp 3003, and Exp 3014 artifacts are present with cached
+candidate rows and taxonomy evidence,
+When Exp 3015 builds the offline acceptance controller,
+Then it writes an inspectable controller config and rejected-candidate table,
+marks `llm_judge_used=false`, reports sample size and offline deltas, and only
+marks the controller ready when the selected transparent rule rejects unsafe
+syntax/schema, false-accept, tautology, or intent-drift evidence without
+promoting a regression over accept-all.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for
@@ -1701,6 +1744,7 @@ generation or headline metric is claimed.
 | REQ-CODE-3002 | Planned (`python/carnot/eval/metamorphic_repair_oracle_audit.py`) |
 | REQ-CODE-3003 | Implemented (`python/carnot/eval/gated_sota_repair_metamorphic_false_accept_rerun.py`) |
 | REQ-CODE-3014 | Planned (`python/carnot/eval/repair_failure_taxonomy.py`) |
+| REQ-CODE-3015 | Implemented (`python/carnot/eval/repair_acceptance_controller.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
