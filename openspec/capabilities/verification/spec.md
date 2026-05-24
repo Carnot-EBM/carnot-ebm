@@ -47,6 +47,54 @@ repair tasks across baseline, schema-only DCCD, intent-preserving DCCD, and
 trace-aware repair conditions, and sets promotion gates so the Exp 2964
 schema/syntax collapse and pass-rate regression cannot be accepted as progress.
 
+### REQ-VERIFY-2977: SOTA Intent-Preserving Code-Repair Rerun
+
+The repository shall provide an Exp 2977 rerun harness that applies the Exp
+2976 intent-preserving, trace-aware repair protocol to code-repair candidates
+from prior repair artifacts and writes
+`results/experiment_2977_sota_intent_preserving_code_repair_v1.json`.
+
+The harness shall call `cached_sota_pair()` before selecting any model. When a
+cached SOTA GGUF pair is available, the harness shall run at least 20
+code-repair tasks across baseline, schema-only DCCD, and intent-preserving
+trace-aware repair conditions with local live LLM inference, store raw
+candidates, runtime traces, verifier outputs, and schema/syntax diagnostics,
+and compute pass@1, pass@k, schema-failure, syntax-failure, false-accept, trace
+coverage, and per-model metrics. When `cached_sota_pair()` returns `None`, the
+harness shall run only a bounded CPU smoke path with legacy tiny-model labels,
+set `headline_result=false`, set `legacy_model_used_only_for_smoke=true`, and
+mark the verdict blocked or pilot-only rather than clean.
+
+The artifact shall include `honest_verdict`, `repair_rerun_clean`,
+`headline_result`, `n_tasks`, `models_used`, `model_specs`,
+`mandatory_headline_model_ids`, `legacy_model_used_only_for_smoke`,
+`baseline_pass_at_1`, `schema_only_pass_at_1`,
+`intent_preserving_pass_at_1`, `pass_at_1_delta`, `pass_at_k_delta`,
+`schema_failure_rate_delta`, `syntax_failure_rate_delta`, `false_accept_delta`,
+`runtime_trace_coverage`, `per_model_metrics`, `failures_by_category`,
+`inference_substrate="live_llm_inference"`, and `duration_s`.
+
+`repair_rerun_clean` shall be true only when `n_tasks>=20`,
+`pass_at_1_delta>0`, `pass_at_k_delta>=0`,
+`schema_failure_rate_delta<=0`, `syntax_failure_rate_delta<=0`,
+`false_accept_delta<=0`, and `runtime_trace_coverage>=0.8`.
+
+### SCENARIO-VERIFY-2977: Cached GGUF Gate Controls Headline Promotion
+
+Given the Exp 2976 protocol artifact is ready and prior repair artifacts
+provide at least 20 candidate repair tasks,
+When the Exp 2977 rerun harness executes,
+Then it first attempts `cached_sota_pair()`, preserves raw candidate and trace
+evidence for every evaluated condition, reports the required metrics and
+per-model breakdowns, and promotes to a clean headline result only when the
+Exp 2976 pass-rate, schema, syntax, false-accept, and runtime-trace gates all
+clear.
+
+If the cached SOTA GGUF pair is unavailable, then the same harness writes the
+terminal Exp 2977 JSON as a non-headline CPU-smoke artifact, reports fewer than
+20 smoke tasks, keeps `repair_rerun_clean=false`, and records that legacy
+models were used only for smoke coverage.
+
 ### REQ-VERIFY-2932: Citation Hallucination Field Verifier
 
 The repository shall provide a local citation-hallucination probe that:

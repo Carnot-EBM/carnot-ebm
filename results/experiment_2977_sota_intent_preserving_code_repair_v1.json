@@ -1,0 +1,591 @@
+{
+  "artifact": "experiment_2977_sota_intent_preserving_code_repair_v1",
+  "baseline_pass_at_1": 0.0,
+  "candidate_evaluations": [
+    {
+      "corpus": "MBPP",
+      "false_accept": false,
+      "generation_backend": "legacy_cpu_smoke",
+      "generation_backend_detail": "Qwen/Qwen3.5-0.8B",
+      "generation_duration_s": 0.0,
+      "generation_error": null,
+      "mode": "baseline",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "model_path": "",
+      "original_failure_categories": [
+        "syntax_error"
+      ],
+      "passed": false,
+      "raw_candidate_ref": "results/raw/experiment_2977_sota_intent_preserving_code_repair_v1/baseline_mbpp-11_r0_seed_297700.txt",
+      "raw_candidate_sha256": "3273f5324223334bc2061b903ea01d2b101e8a9cee5c2895be05ca05212ad216",
+      "runtime_trace": [],
+      "runtime_trace_present": false,
+      "sample_id": "MBPP:mbpp-11:c0:s2910",
+      "sample_index": 0,
+      "schema_diagnostics": {
+        "schema_errors": [],
+        "schema_valid": true
+      },
+      "schema_valid": true,
+      "seed": 297700,
+      "stable_id": "mbpp-11",
+      "syntax_diagnostics": {
+        "syntax_errors": [
+          "invalid syntax"
+        ],
+        "syntax_success": false
+      },
+      "syntax_success": false,
+      "task_id": "MBPP:mbpp-11",
+      "tokens_generated": 8,
+      "verifier_accepted": false,
+      "verifier_output": {
+        "accepted_by_verifier": false,
+        "score": 0.0,
+        "threshold": 1.0
+      }
+    },
+    {
+      "corpus": "MBPP",
+      "false_accept": false,
+      "generation_backend": "legacy_cpu_smoke",
+      "generation_backend_detail": "Qwen/Qwen3.5-0.8B",
+      "generation_duration_s": 0.0,
+      "generation_error": null,
+      "mode": "schema_only_dccd",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "model_path": "",
+      "original_failure_categories": [
+        "syntax_error"
+      ],
+      "passed": false,
+      "raw_candidate_ref": "results/raw/experiment_2977_sota_intent_preserving_code_repair_v1/schema_only_dccd_mbpp-11_r0_seed_307700.txt",
+      "raw_candidate_sha256": "e9a14d8e66cd425cacbafd0149456817b4de92aba3e84f302fbeeaf196c7078b",
+      "runtime_trace": [],
+      "runtime_trace_present": false,
+      "sample_id": "MBPP:mbpp-11:c0:s2910",
+      "sample_index": 0,
+      "schema_diagnostics": {
+        "schema_errors": [
+          "smoke schema-only candidate is intentionally incomplete"
+        ],
+        "schema_valid": false
+      },
+      "schema_valid": false,
+      "seed": 307700,
+      "stable_id": "mbpp-11",
+      "syntax_diagnostics": {
+        "syntax_errors": [],
+        "syntax_success": false
+      },
+      "syntax_success": false,
+      "task_id": "MBPP:mbpp-11",
+      "tokens_generated": 12,
+      "verifier_accepted": false,
+      "verifier_output": {
+        "accepted_by_verifier": false,
+        "score": 0.0,
+        "threshold": 1.0
+      }
+    },
+    {
+      "corpus": "MBPP",
+      "false_accept": false,
+      "generation_backend": "legacy_cpu_smoke",
+      "generation_backend_detail": "Qwen/Qwen3.5-0.8B",
+      "generation_duration_s": 0.0,
+      "generation_error": null,
+      "mode": "intent_preserving_trace_aware_repair",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "model_path": "",
+      "original_failure_categories": [
+        "syntax_error"
+      ],
+      "passed": false,
+      "raw_candidate_ref": "results/raw/experiment_2977_sota_intent_preserving_code_repair_v1/intent_preserving_trace_aware_repair_mbpp-11_r0_seed_317700.txt",
+      "raw_candidate_sha256": "db73a7d25b256d2a281612faefc7bc7606c5adc05ca1d99f1505c322a8ae3625",
+      "runtime_trace": [
+        {
+          "command": "cpu-smoke-deterministic-check",
+          "exit_code": 1,
+          "failing_assertions": [
+            "smoke assertion failed"
+          ],
+          "stderr": "",
+          "stdout": "failed"
+        }
+      ],
+      "runtime_trace_present": true,
+      "sample_id": "MBPP:mbpp-11:c0:s2910",
+      "sample_index": 0,
+      "schema_diagnostics": {
+        "schema_errors": [],
+        "schema_valid": true
+      },
+      "schema_valid": true,
+      "seed": 317700,
+      "stable_id": "mbpp-11",
+      "syntax_diagnostics": {
+        "syntax_errors": [],
+        "syntax_success": true
+      },
+      "syntax_success": true,
+      "task_id": "MBPP:mbpp-11",
+      "tokens_generated": 24,
+      "verifier_accepted": false,
+      "verifier_output": {
+        "accepted_by_verifier": false,
+        "score": 0.0,
+        "threshold": 1.0
+      }
+    },
+    {
+      "corpus": "MBPP",
+      "false_accept": false,
+      "generation_backend": "legacy_cpu_smoke",
+      "generation_backend_detail": "Qwen/Qwen3.5-0.8B",
+      "generation_duration_s": 0.0,
+      "generation_error": null,
+      "mode": "baseline",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "model_path": "",
+      "original_failure_categories": [
+        "syntax_error"
+      ],
+      "passed": false,
+      "raw_candidate_ref": "results/raw/experiment_2977_sota_intent_preserving_code_repair_v1/baseline_mbpp-12_r0_seed_297800.txt",
+      "raw_candidate_sha256": "6f3d5a8c9e20bdd65a6fd8bb402817df1abb769ddc841c15ad349926cec9942c",
+      "runtime_trace": [],
+      "runtime_trace_present": false,
+      "sample_id": "MBPP:mbpp-12:c0:s2918",
+      "sample_index": 0,
+      "schema_diagnostics": {
+        "schema_errors": [],
+        "schema_valid": true
+      },
+      "schema_valid": true,
+      "seed": 297800,
+      "stable_id": "mbpp-12",
+      "syntax_diagnostics": {
+        "syntax_errors": [
+          "invalid syntax"
+        ],
+        "syntax_success": false
+      },
+      "syntax_success": false,
+      "task_id": "MBPP:mbpp-12",
+      "tokens_generated": 8,
+      "verifier_accepted": false,
+      "verifier_output": {
+        "accepted_by_verifier": false,
+        "score": 0.0,
+        "threshold": 1.0
+      }
+    },
+    {
+      "corpus": "MBPP",
+      "false_accept": false,
+      "generation_backend": "legacy_cpu_smoke",
+      "generation_backend_detail": "Qwen/Qwen3.5-0.8B",
+      "generation_duration_s": 0.0,
+      "generation_error": null,
+      "mode": "schema_only_dccd",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "model_path": "",
+      "original_failure_categories": [
+        "syntax_error"
+      ],
+      "passed": false,
+      "raw_candidate_ref": "results/raw/experiment_2977_sota_intent_preserving_code_repair_v1/schema_only_dccd_mbpp-12_r0_seed_307800.txt",
+      "raw_candidate_sha256": "e9a14d8e66cd425cacbafd0149456817b4de92aba3e84f302fbeeaf196c7078b",
+      "runtime_trace": [],
+      "runtime_trace_present": false,
+      "sample_id": "MBPP:mbpp-12:c0:s2918",
+      "sample_index": 0,
+      "schema_diagnostics": {
+        "schema_errors": [
+          "smoke schema-only candidate is intentionally incomplete"
+        ],
+        "schema_valid": false
+      },
+      "schema_valid": false,
+      "seed": 307800,
+      "stable_id": "mbpp-12",
+      "syntax_diagnostics": {
+        "syntax_errors": [],
+        "syntax_success": false
+      },
+      "syntax_success": false,
+      "task_id": "MBPP:mbpp-12",
+      "tokens_generated": 12,
+      "verifier_accepted": false,
+      "verifier_output": {
+        "accepted_by_verifier": false,
+        "score": 0.0,
+        "threshold": 1.0
+      }
+    },
+    {
+      "corpus": "MBPP",
+      "false_accept": false,
+      "generation_backend": "legacy_cpu_smoke",
+      "generation_backend_detail": "Qwen/Qwen3.5-0.8B",
+      "generation_duration_s": 0.0,
+      "generation_error": null,
+      "mode": "intent_preserving_trace_aware_repair",
+      "model_hf_id": "Qwen/Qwen3.5-0.8B",
+      "model_path": "",
+      "original_failure_categories": [
+        "syntax_error"
+      ],
+      "passed": false,
+      "raw_candidate_ref": "results/raw/experiment_2977_sota_intent_preserving_code_repair_v1/intent_preserving_trace_aware_repair_mbpp-12_r0_seed_317800.txt",
+      "raw_candidate_sha256": "0ccdef0c1e22322e2698f06436c502f794fa248af068294950ade95069c138ef",
+      "runtime_trace": [
+        {
+          "command": "cpu-smoke-deterministic-check",
+          "exit_code": 1,
+          "failing_assertions": [
+            "smoke assertion failed"
+          ],
+          "stderr": "",
+          "stdout": "failed"
+        }
+      ],
+      "runtime_trace_present": true,
+      "sample_id": "MBPP:mbpp-12:c0:s2918",
+      "sample_index": 0,
+      "schema_diagnostics": {
+        "schema_errors": [],
+        "schema_valid": true
+      },
+      "schema_valid": true,
+      "seed": 317800,
+      "stable_id": "mbpp-12",
+      "syntax_diagnostics": {
+        "syntax_errors": [],
+        "syntax_success": true
+      },
+      "syntax_success": true,
+      "task_id": "MBPP:mbpp-12",
+      "tokens_generated": 24,
+      "verifier_accepted": false,
+      "verifier_output": {
+        "accepted_by_verifier": false,
+        "score": 0.0,
+        "threshold": 1.0
+      }
+    }
+  ],
+  "candidate_manifest_sha256": "ca34eb3fa9df2928c2e9bd22a6112b58e1adec8981a586adca4884e937cec402",
+  "duration_s": 0.004538,
+  "failures_by_category": {
+    "syntax_error": 2
+  },
+  "false_accept_delta": 0.0,
+  "headline_result": false,
+  "honest_verdict": "blocked_cached_sota_pair_unavailable_cpu_smoke_only",
+  "inference_substrate": "live_llm_inference",
+  "intent_preserving_pass_at_1": 0.0,
+  "legacy_model_used_only_for_smoke": true,
+  "mandatory_headline_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "mode_metrics": {
+    "baseline": {
+      "candidate_count": 2,
+      "false_accept_rate": 0.0,
+      "mode": "baseline",
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "per_task_results": [
+        {
+          "pass_at_1": 0.0,
+          "pass_at_k": 0.0,
+          "pass_vector": [
+            false
+          ],
+          "task_id": "MBPP:mbpp-11"
+        },
+        {
+          "pass_at_1": 0.0,
+          "pass_at_k": 0.0,
+          "pass_vector": [
+            false
+          ],
+          "task_id": "MBPP:mbpp-12"
+        }
+      ],
+      "schema_failure_rate": 0.0,
+      "syntax_failure_rate": 1.0,
+      "verifier_acceptance_rate": 0.0
+    },
+    "intent_preserving_trace_aware_repair": {
+      "candidate_count": 2,
+      "false_accept_rate": 0.0,
+      "mode": "intent_preserving_trace_aware_repair",
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "per_task_results": [
+        {
+          "pass_at_1": 0.0,
+          "pass_at_k": 0.0,
+          "pass_vector": [
+            false
+          ],
+          "task_id": "MBPP:mbpp-11"
+        },
+        {
+          "pass_at_1": 0.0,
+          "pass_at_k": 0.0,
+          "pass_vector": [
+            false
+          ],
+          "task_id": "MBPP:mbpp-12"
+        }
+      ],
+      "schema_failure_rate": 0.0,
+      "syntax_failure_rate": 0.0,
+      "verifier_acceptance_rate": 0.0
+    },
+    "schema_only_dccd": {
+      "candidate_count": 2,
+      "false_accept_rate": 0.0,
+      "mode": "schema_only_dccd",
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "per_task_results": [
+        {
+          "pass_at_1": 0.0,
+          "pass_at_k": 0.0,
+          "pass_vector": [
+            false
+          ],
+          "task_id": "MBPP:mbpp-11"
+        },
+        {
+          "pass_at_1": 0.0,
+          "pass_at_k": 0.0,
+          "pass_vector": [
+            false
+          ],
+          "task_id": "MBPP:mbpp-12"
+        }
+      ],
+      "schema_failure_rate": 1.0,
+      "syntax_failure_rate": 1.0,
+      "verifier_acceptance_rate": 0.0
+    }
+  },
+  "model_specs": [
+    {
+      "cached": false,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": "",
+      "name": "Qwen3.6-35B-A3B",
+      "pair_unavailable": true,
+      "selected_for_live_repair": false
+    },
+    {
+      "cached": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "pair_unavailable": true,
+      "selected_for_live_repair": false
+    },
+    {
+      "cached": false,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": "",
+      "name": "Gemma4-31B-it",
+      "pair_unavailable": true,
+      "selected_for_live_repair": false
+    },
+    {
+      "device": "cpu",
+      "hf_id": "Qwen/Qwen3.5-0.8B",
+      "legacy_smoke_only": true,
+      "name": "Qwen3.5-0.8B"
+    },
+    {
+      "device": "cpu",
+      "hf_id": "google/gemma-4-E4B-it",
+      "legacy_smoke_only": true,
+      "name": "Gemma4-E4B-it"
+    }
+  ],
+  "models_used": [
+    "Qwen/Qwen3.5-0.8B"
+  ],
+  "n_tasks": 2,
+  "pass_at_1_delta": 0.0,
+  "pass_at_k_delta": 0.0,
+  "per_model_metrics": {
+    "Qwen/Qwen3.5-0.8B": {
+      "baseline": {
+        "candidate_count": 2,
+        "false_accept_rate": 0.0,
+        "mode": "baseline",
+        "pass_at_1": 0.0,
+        "pass_at_k": 0.0,
+        "per_task_results": [
+          {
+            "pass_at_1": 0.0,
+            "pass_at_k": 0.0,
+            "pass_vector": [
+              false
+            ],
+            "task_id": "MBPP:mbpp-11"
+          },
+          {
+            "pass_at_1": 0.0,
+            "pass_at_k": 0.0,
+            "pass_vector": [
+              false
+            ],
+            "task_id": "MBPP:mbpp-12"
+          }
+        ],
+        "schema_failure_rate": 0.0,
+        "syntax_failure_rate": 1.0,
+        "verifier_acceptance_rate": 0.0
+      },
+      "intent_preserving_trace_aware_repair": {
+        "candidate_count": 2,
+        "false_accept_rate": 0.0,
+        "mode": "intent_preserving_trace_aware_repair",
+        "pass_at_1": 0.0,
+        "pass_at_k": 0.0,
+        "per_task_results": [
+          {
+            "pass_at_1": 0.0,
+            "pass_at_k": 0.0,
+            "pass_vector": [
+              false
+            ],
+            "task_id": "MBPP:mbpp-11"
+          },
+          {
+            "pass_at_1": 0.0,
+            "pass_at_k": 0.0,
+            "pass_vector": [
+              false
+            ],
+            "task_id": "MBPP:mbpp-12"
+          }
+        ],
+        "schema_failure_rate": 0.0,
+        "syntax_failure_rate": 0.0,
+        "verifier_acceptance_rate": 0.0
+      },
+      "schema_only_dccd": {
+        "candidate_count": 2,
+        "false_accept_rate": 0.0,
+        "mode": "schema_only_dccd",
+        "pass_at_1": 0.0,
+        "pass_at_k": 0.0,
+        "per_task_results": [
+          {
+            "pass_at_1": 0.0,
+            "pass_at_k": 0.0,
+            "pass_vector": [
+              false
+            ],
+            "task_id": "MBPP:mbpp-11"
+          },
+          {
+            "pass_at_1": 0.0,
+            "pass_at_k": 0.0,
+            "pass_vector": [
+              false
+            ],
+            "task_id": "MBPP:mbpp-12"
+          }
+        ],
+        "schema_failure_rate": 1.0,
+        "syntax_failure_rate": 1.0,
+        "verifier_acceptance_rate": 0.0
+      }
+    }
+  },
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json",
+      "resource": "exp2976_protocol",
+      "sha256": "63a51206a3c1a44806fafbad893bb7bc804476e598a54c91f06c90a1aa70a582"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "resource": "exp2964_repair_tasks",
+      "sha256": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2953_code_verifier_threshold_policy_v1.json",
+      "resource": "exp2953_threshold_policy",
+      "sha256": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a"
+    },
+    {
+      "available": false,
+      "detail": "cached_sota_pair returned None",
+      "resource": "cached_sota_pair"
+    }
+  ],
+  "repair_rerun_clean": false,
+  "reproducibility_checksum": "d0d8c537436dd6d19530edbe6e338a0ed1845f0719e699e31e78cdf0c87e9c90",
+  "required_artifact_fields": [
+    "honest_verdict",
+    "repair_rerun_clean",
+    "headline_result",
+    "n_tasks",
+    "models_used",
+    "model_specs",
+    "mandatory_headline_model_ids",
+    "legacy_model_used_only_for_smoke",
+    "baseline_pass_at_1",
+    "schema_only_pass_at_1",
+    "intent_preserving_pass_at_1",
+    "pass_at_1_delta",
+    "pass_at_k_delta",
+    "schema_failure_rate_delta",
+    "syntax_failure_rate_delta",
+    "false_accept_delta",
+    "runtime_trace_coverage",
+    "per_model_metrics",
+    "failures_by_category",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "run_date": "20260524",
+  "runtime_trace_coverage": 1.0,
+  "schema": "carnot.sota_intent_preserving_code_repair.v1",
+  "schema_failure_rate_delta": 0.0,
+  "schema_only_pass_at_1": 0.0,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json",
+      "present": true,
+      "sha256": "63a51206a3c1a44806fafbad893bb7bc804476e598a54c91f06c90a1aa70a582"
+    },
+    {
+      "path": "results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "present": true,
+      "sha256": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2"
+    },
+    {
+      "path": "results/experiment_2953_code_verifier_threshold_policy_v1.json",
+      "present": true,
+      "sha256": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a"
+    }
+  ],
+  "syntax_failure_rate_delta": -1.0,
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_2977_sota_intent_preserving_code_repair.py -q",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}
