@@ -7266,3 +7266,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: Trace-to-Skill Repair Memory Pilot v1 (✅ Complete) — honest_verdict=complete: trace_to_skill_memory_ready; results/experiment_2983_trace_to_skill_repair_memory_pilot_v1.json
 - 2026-05-24: GateMate Readback + Smoke Vector Harness v4 (⚠️ Blocked) — honest_verdict=blocked_board_not_detected; results/experiment_2984_gatemate_readback_smoke_vector_v4.json
 - 2026-05-24: GateMate Readback + Smoke Vector Harness v4 (⚠️ Blocked) — honest_verdict=blocked_board_not_detected; results/experiment_2984_gatemate_readback_smoke_vector_v4.json
+- 2026-05-24: GateMate Readback + Smoke Vector Harness v4 (✅ Complete) — honest_verdict=complete: gatemate_no_readback_no_host_smoke_io; results/experiment_2984_gatemate_readback_smoke_vector_v4.json
