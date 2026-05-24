@@ -1,0 +1,26 @@
+assert is_samepatterns(["red","green","green"], ["a", "b", "b"])==True
+assert is_samepatterns(["red","green","greenn"], ["a","b","b"])==False
+assert    is_samepatterns(["red","green","greenn"], ["a","b"])==False
+
+assert is_samepatterns(["red","green","green"], ["a", "b", "b"])==True
+assert is_samepatterns(["red","green","greenn"], ["a","b","b"])==False
+assert is_samepatterns(["red","green","greenn"], ["a","b"])==False
+
+def is_samepatterns(pattern, pattern2):
+    if len(pattern) != len(pattern2):
+        return False
+    map1 = {}
+    map2 = {}
+    for i in range(len(pattern)):
+        p = pattern[i]
+        p2 = pattern2[i]
+        if p in map1 and map1[p] != p2:
+            return False
+        if p2 in map2 and map2[p2] != p:
+            return False
+        map1[p] = p2
+        map2[p2] = p
+    return True
+```
+
+{"additionalProperties": false, "properties": {"failure_taxonomy": {"items": {"enum": ["none", "syntax_error", "unsupported_import", "unsupported_api_hallucination", "failed_tests"], "failed_tests": "failed_tests"}, "model_id": {"minLength": 1, "type": "string"}, "parser_status": {"enum": ["parsed", "syntax_error"], "type": "string"}, "end_of_file": {"enum":

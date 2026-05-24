@@ -1,0 +1,26 @@
+Repair strategy: The code is provided in a
+unterminated string literal (detected at line 26)
+The code block is actually truncated or has an unterminated string literal in the prompt.
+The repair will provide the full, functional Python code that satisfies the logic and the examples.
+
+Logic check:
+'111'
+'1' (sum 1, len 1) -> 1
+'1' (sum 1, len 1) -> 1
+'1' (sum 1, len 1) -> 1
+'2-char substrings':
+'11' (sum 2, len 2) -> 1
+'11' (sum 2, len 2) -> 1
+'11' (sum 11, len 2) -> 1 (Wait, '11' is sum 2, len 2)
+'3-char substrings':
+'111' (sum 3, len 3) -> 1
+Total: 1+1+1 + 1+1 + 1 = 6. Correct.
+
+'112112'
+'1' (sum 1, len 1) -> 6
+'11' (sum 2, len 2) -> 2 ('11' at index 0,1 and 4,5)
+'112' (sum 4, len 3) -> 0
+'12' (sum 3, len 2) -> 0
+'21' (sum 3, len 2) -> 0
+'112' (sum 4, len 3) -> 0
+'112112' (sum 8,

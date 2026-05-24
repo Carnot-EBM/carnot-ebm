@@ -1,0 +1,32 @@
+
+
+Repair:
+```python
+def sort_matrix(matrix):
+    return sorted(matrix, key=lambda row: sum(row))
+```
+```
+
+The user wants me to provide the final corrected Python function.
+
+The task is to write a function `sort_matrix(matrix)` that sorts the rows of a matrix based on their sums in ascending order.
+
+Example 1:
+`[[1, 2, 3], [2, 4, 5], [1, 1, 1]]`
+Sums: `6, 11, 3`
+Sorted sums: `3, 6, 11`
+Result: `[[1, 1, 1], [1, 2, 3], [2, 4, 5]]` (Correct)
+
+Example 2:
+`[[1, 2, 3], [-2, 4, -5], [1, -1, 1]]`
+Sums: `6, -3, 1`
+Sorted sums: `-3, 1, 6`
+Result: `[[-2, 4, -5], [1, -1, 1], [1, 2, 3]]` (Correct)
+
+Example 3:
+`[[5, 8, 9], [6, 4, 3], [2, 1, 4]]`
+Sums: `22, 13, 7`
+Sorted sums: `7, 13, 22`
+Result: `[[2, 1, 4], [6, 4, 3], [5, 8, 9]]` (Correct)
+
+The implementation `sorted(matrix, key=lambda row: sum(

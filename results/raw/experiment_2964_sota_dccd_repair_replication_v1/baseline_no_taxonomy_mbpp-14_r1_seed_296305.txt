@@ -1,0 +1,23 @@
+
+```
+
+Wait, looking at the signature provided in the candidate code:
+`def find_Volume(base_length, triangle_height, triangle_base, triangle_height_prism) -> float:`
+This signature has 4 arguments, but the examples only provide 3 arguments.
+
+Let's re-examine the examples:
+`find_Volume(10, 8, 6) == 240`
+`find_Volume(3, 2, 2) == 6`
+`find_Volume(1, 2, 1) == 1`
+
+Formula for volume of triangular prism: $V = (\text{base} \times \text{height} / 2) \times \text{length}$.
+Example 1: $(10 \times 8 / 2) \times 6 = 40 \times 6 = 240$. Correct.
+Example 2: $(3 \times 2 / 2) \times 2 = 3 \times 2 = 6$. Correct.
+Example 3: $(1 \times 2 / 2) \times 1 = 1 \times 1 = 1$. Correct.
+
+The candidate code signature `def find_Volume(base_length, triangle_height, triangle_base, triangle_height_prism)` is incorrect because it has 4 parameters while the test cases use 3. I must provide a function that satisfies the `assert` statements.
+
+```python
+def find_Volume(base, height, length):
+    return (base * height / 2) * length
+```

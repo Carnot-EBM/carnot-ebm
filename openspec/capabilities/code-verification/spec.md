@@ -1274,6 +1274,52 @@ downstream SOTA GGUF model specs, fixed seeds, and deterministic acceptance
 gates while preserving `inference_substrate="aggregation_from_upstream_artifacts"`
 and explicitly making no claim that DCCD improves pass@1 or pass@k.
 
+### REQ-CODE-2964: SOTA DCCD Repair Replication
+
+The repository shall provide an Exp 2964 bounded live replication for DCCD
+structured code repair. The replication MUST:
+
+- check the dual RTX 3090 host, local llama.cpp runtime, runsc sandbox,
+  cached mandated headline GGUF availability, checked-in Exp 2946 failed
+  candidates, checked-in Exp 2952/2953 references, and
+  `results/experiment_2963_dccd_repair_protocol_manifest_v1.json` with
+  `dccd_repair_protocol_ready=true` before attempting live generation;
+- select at least 20 failed or low-scoring Exp 2946 code candidates when
+  preconditions pass, preserving stable task IDs, candidate seeds, raw-response
+  references, and original failure categories;
+- run baseline no-taxonomy repair, Exp 2952 taxonomy-guided repair, and DCCD
+  structured repair under the same sample budget using mandated local SOTA GGUF
+  models for headline measurements, while legacy small models remain smoke-only;
+- validate every candidate through structured schema validation, Python parser
+  and static checks, available MBPP/HumanEval task tests, the Exp 2953
+  verifier threshold, and a false-accept audit that does not count verifier-only
+  accepts as pass@1/pass@k;
+- set `dccd_repair_replication_clean=true` only when `n_tasks>=20`,
+  `pass_at_1_delta > 0` or `syntax_failure_rate_delta < 0`, and
+  `false_accept_delta <= 0`; and
+- write `results/experiment_2964_sota_dccd_repair_replication_v1.json` with
+  `honest_verdict`, `inference_substrate="live_llm_inference"`,
+  `preconditions_checked`, `model_specs`, `headline_models_used`,
+  `legacy_models_only_for_smoke`, `n_tasks`, `baseline_pass_at_1`,
+  `taxonomy_repair_pass_at_1`, `dccd_repair_pass_at_1`,
+  `pass_at_1_delta`, `baseline_pass_at_k`, `dccd_repair_pass_at_k`,
+  `pass_at_k_delta`, `syntax_failure_rate_delta`,
+  `schema_failure_rate_delta`, `false_accept_delta`,
+  `dccd_repair_replication_clean`, `candidate_manifest_sha256`,
+  `reproducibility_checksum`, and measured `duration_s`.
+
+### SCENARIO-CODE-2964: DCCD Replication Promotes Only Clean Live Results
+
+Given Exp 2963 is ready and at least one mandated local SOTA GGUF can run on
+the dual RTX 3090 host,
+When Exp 2964 runs equal-budget baseline, taxonomy-guided, and DCCD structured
+repair across at least 20 failed or low-scoring Exp 2946 candidates,
+Then the artifact records all selected task IDs and failure labels, validates
+every generated candidate through schema/parser/static/tests/verifier gates,
+computes DCCD-minus-baseline deltas, and keeps
+`dccd_repair_replication_clean=false` unless the pre-registered sample-size,
+improvement, and false-accept gates all clear.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
@@ -1395,6 +1441,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2952 | Implemented (`python/carnot/eval/sota_taxonomy_guided_code_repair_eval.py`) |
 | REQ-CODE-2953 | Implemented (`python/carnot/eval/code_verifier_threshold_policy.py`) |
 | REQ-CODE-2963 | Implemented (`python/carnot/eval/dccd_repair_protocol_manifest.py`) |
+| REQ-CODE-2964 | Implemented (`python/carnot/eval/sota_dccd_repair_replication.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

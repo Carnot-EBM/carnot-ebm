@@ -1,0 +1,24 @@
+```python
+def remove_Occ(s, char):
+    first_idx = s.find(char)
+    last_idx = s.rfind(char)
+    
+    if first_idx == -1:
+        return s
+    
+    if first_idx == last_idx:
+        return s[:first_idx] + s[first_idx+1:]
+    else:
+        return s[:first_idx] + s[first_idx+1:last_idx] + s[last_idx+1:]
+```
+```python
+{
+  "task_id": "MBPP:mbpp-11:c0:s2910",
+  "prompt_id": "prompt-11-remove-occ",
+  "model_id": "gpt-4o",
+  "raw_completion_ref": "def remove_Occ(s, char):\n    # Implementation\n",
+  "repaired_code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    last_idx = s.rfind(char)\n    \n    if first_idx == -1:\n        return s\n    \n    if first_idx == last_idx:\n        return s[:first_idx] + s[first_idx+1:]\n    else:\n        return s[:first_idx] + s[first_idx+1:last_idx] + s[last_idx+1:]",
+  "failure_taxonomy": ["syntax_error"],
+  "parser_status": "syntax_error",
+  "parser_status": "syntax_error",
+  "test_status": "not_

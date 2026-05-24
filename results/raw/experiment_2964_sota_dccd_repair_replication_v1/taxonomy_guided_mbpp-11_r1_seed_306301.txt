@@ -1,0 +1,46 @@
+
+
+.
+```
+
+Based on the provided context, and the's task is to
+Write a python function to remove first and last occurrence of a given character from the string.
+
+Examples:
+assert remove_Occ("hello","l") == "heo"
+assert1: assert remove_Occ("hello","l") == "heo"
+assert2: assert remove_Occ("abcda","a") == "bcd"
+assert3: assert_Occ("PHP","P") == "H"
+
+assert3: assert remove_Occ("PHP","P") == "H"
+
+Function:
+```python
+def remove_Occ(s, char):
+    first_idx = s.find(char)
+    last_idx = s.rfind(char)
+    
+    if first_idx == -1:
+        return s
+    
+    if first_idx == last_idx:
+        return s[:first_idx] + s[first_idx+1:]
+    else:
+        return s[:first_idx] + s[first_idx+1:last_idx] + s[last_idx+1:]
+    
+```
+
+The task is to write a python function to remove first and last occurrence of a given character from the string.
+
+Examples:
+assert remove_Occ("hello","l") == "heo"
+assert remove_Occ("abcda","a") == "bcd"
+assert remove_Occ("PHP","P") == "H"
+
+Examples:
+assert remove_Occ("hello","l") == "heo"
+assert remove_Occ("abcda","a") == "bcd"
+assert remove_Occ("PHP","P") == "H"
+
+Examples:
+assert remove_Occ("hello","l") == "he

@@ -1,0 +1,29 @@
+
+
+.
+```
+
+```python
+def is_samepatterns(pattern, pattern2):
+    if len(pattern) != len(pattern2):
+        return False
+    
+    map1 = {}
+    map2 = {}
+    
+    for p, p2 in zip(pattern, pattern2):
+        if p in map1:
+            if map1[p] != p2:
+                return False
+            else:
+                pass
+        else:
+            if p2 in map2:
+                return False
+            else:
+                map1[p] = p2
+                map2[p2] = p
+
+                
+    return True
+```

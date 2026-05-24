@@ -1,0 +1,30 @@
+
+
+Wait, the user provided a "Candidate code" that is incomplete and has a signature mismatch with the examples.
+The examples use `find_Volume(a, b, c)`.
+Example 1: 10, 8, 6 -> 240. (10 * 8 / 2) * 6 = 240.
+Example 2: 3, 2, 2 -> 6. (3 * 2 / 2) * 2 = 6.
+Example 3: 1, 2, 1 -> 1. (1 * 2 / 2) * 1 = 1.
+
+The signature in the candidate code is `def find_Volume(base_length, triangle_height, triangle_base, triangle_height_prism) -> float:`. This has 4 arguments, but the examples have 3.
+I will follow the logic of the examples (3 arguments).
+
+```python
+def find_Volume(base, height, length):
+    return (base * height / 2) * length
+```
+
+Wait, the prompt asks me to "Reply with ONLY one Python function inside a ```python ... ``` code block".
+
+Let's re-examine the candidate code provided:
+`def find_Volume(base_length, triangle_height, triangle_base, triangle_height_prism) -> float:`
+This is clearly broken (4 args vs 3 in examples). I will provide the correct 3-argument version.
+
+```python
+def find_Volume(base, height, length):
+    return (base * height / 2) * length
+```
+
+Wait, looking at the prompt again: "The function must satisfy every assert statement shown."
+The asserts are:
+`assert find_

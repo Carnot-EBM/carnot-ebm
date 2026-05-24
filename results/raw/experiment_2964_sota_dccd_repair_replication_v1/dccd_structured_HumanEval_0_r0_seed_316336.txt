@@ -1,0 +1,10 @@
+```python
+def has_close_elements(numbers: List[float], threshold: float) -> bool:
+    for i in range(len(numbers)):
+        for j in range(i + 1, len(numbers)):
+            if abs(numbers[i] - numbers[j]) < threshold:
+                return True
+    return False
+```
+```python
+{"additionalProperties": false, "properties": {"failure_taxonomy": {"items": {"enum": ["none", "syntax_error", "unsupported_import", "unsupported_api_hallucination", "failed_tests"], "type": "string"}, "minItems": 1, "type": "array"}, "model_id": {"minLength": 1, "type": "string"}, "parser_status": {"enum": ["parsed", "syntax_error"], "type": "string"}, "prompt_id": {"minLength": 1, "type": "string"}, "model_id": {"minLength": 1, "type": "string"}, "parser_status": {"enum": ["parsed", "syntax_error"], "type": "string"}, "prompt_id": {"minLength": 1, "type": "string"}, "model_id": {"minLength": 1, "type": "string"}, "parser_status": {"enum": ["none", "syntax_error"], "type": "string"}, "prompt_id": {"minLength": 1, "type": "string"}, "model_id": {"minLength": 1, "type": "string"}, "parser_status": {"enum": ["parsed", "syntax_error"], "type": "string"}, "prompt_id": {"minLength": 1, "type": "string"}, "model_id": {"minLength": 1,

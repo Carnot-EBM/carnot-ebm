@@ -1,0 +1,21 @@
+
+
+Repair:
+```python
+def sort_matrix(matrix):
+    return sorted(matrix, key=lambda row: sum(row))
+```
+```
+
+The user wants me to provide the final corrected Python code block.
+
+The task is to sort a matrix based on the sum of its rows.
+The function signature is `sort_matrix(matrix)`.
+The logic `sorted(matrix, key=lambda row: sum(row))` is correct.
+
+Final check of the examples:
+- `[[1, 2, 3], [2, 4, 5], [1, 1, 1]]` -> sums: `[6, 11, 3]` -> sorted sums: `[3, 6, 11]` -> `[[1, 1, 1], [1, 2, 3], [2, 4, 5]]`. Correct.
+- `[[1, 2, 3], [-2, 4, -5], [1, -1, 1]]` -> sums: `[6, -3, 1]` -> sorted sums: `[-3, 1, 6]` -> `[[-2, 4, -5], [1, -1, 1], [1, 2, 3]]`. Correct.
+- `[[5, 8, 9], [6, 4, 3], [2, 1, 4]]` -> sums: `[22, 13, 7]` -> sorted sums: `[7, 13, 22]` -> `[[2, 1, 4], [6, 4, 3], [5, 8, 9]]`. Correct.
+
+The code

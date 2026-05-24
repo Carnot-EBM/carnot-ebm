@@ -1,0 +1,30 @@
+
+
+    ```python
+---
+<|channel>thought
+Step 1: Analyze the task.
+The task asks for a function `bell_number(n)` that returns the $n$-th Bell number.
+Bell numbers $B_n$ represent the number of ways to partition a set of $n$ elements.
+
+Step 2: Identify the formula for Bell numbers.
+Bell numbers can be calculated using the Bell triangle or the recurrence relation:
+$B_{n+1} = \sum_{k=0}^{n} \binom{n}{k} B_k$
+where $B_0 = 1$.
+
+Step 3: Implement the function.
+Given the large size of $B_{56}$, we need an efficient way to compute it. The recurrence relation with memoization or a dynamic programming approach using the Bell triangle is suitable.
+
+Let's use the Bell triangle method (also known as Aitken's array or the Peirce triangle):
+1. Start with $B_0 = 1$.
+2. Row 1: [1]
+3. Row 2: [1, 2] (Take the last element of the previous row, put it at the start. Then each subsequent element is the sum of the element to its left and the element above it in the previous row).
+Actually, the construction is:
+Row 0: 1
+Row 1: 1, 2
+Row 2: 2, 3, 5
+Row 3: 5, 7, 10, 15
+Row 4: 15, 20, 27, 37, 52
+Wait, let's re-verify the Bell triangle construction:
+1. The first row is [1].
+2. To

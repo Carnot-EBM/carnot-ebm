@@ -1,0 +1,22 @@
+
+
+ asserts:
+assert pos_count([1,-2,3,-4]) == 2
+assert pos_count([3,4,5,-1]) == 3
+assert pos_count[3,4,5,-1] == 3 # This is a typo in the prompt's example, but the code must handle the logic.
+assert pos_count([1,2,3,4]) == 4
+
+ asserts:
+assert pos_count([1,-2,3,-4]) == 2
+assert pos_count([3,4,5,-1]) == 3
+assert pos_count([1,2,3,4]) == 4
+```
+
+```python
+def pos_count(lst):
+    count = 0
+    for num in lst:
+        if num > 0:
+            count += 1
+    return count
+```

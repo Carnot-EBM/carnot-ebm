@@ -1,0 +1,22 @@
+assert bell_number(2)==2
+assert bell_number(10)==115975
+115975 is the 10th Bell number.
+assert bell_number(56)==67756853206458322581483068371419745979053216268760300
+Wait, the prompt says "partition a set of Bell numbers", but the examples show the standard Bell number calculation. I will follow the examples.
+
+Implementation:
+Bell numbers can be calculated using the Bell triangle (or Aitken's array).
+B(n,k) is the element in the row n.
+Row 0: 1
+Row 1: 1, 2
+Row 2: 5
+Row 3: 15
+Wait, let's use the recurrence relation:
+B(n+1) = sum_{k=0}^n (n choose k) B(k)
+B(0) = 1
+
+Let's check:
+B(0) = 1
+B(1) = sum_{k=0}^0 (0 choose 0) B(0) = 1 * 1 = 1
+B(2) = sum_{k=0}^1 (1 choose 0) B(0) + (1 choose 1) B(1) = 1*1 + 1*1 = 2
+B(3) = sum_{k=0}^2 (2 choose 0) B(0) + (2 choose 1) B(1) + (2 choose 2) B(2) = 1*

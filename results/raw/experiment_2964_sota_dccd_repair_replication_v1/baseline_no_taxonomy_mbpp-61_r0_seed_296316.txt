@@ -1,0 +1,46 @@
+
+
+```python
+def count_Substrings(s):
+    n = len(s)
+    count = 0
+    for i in range(n):
+        for j in range(i, n):
+            substring = s[i:j+1]
+            sum_digits = sum(int(digit) for digit in substring)
+            length = len(substring)
+            if sum_digits == length:
+                count += 1
+    return count
+```
+```
+
+Wait, the candidate code provided in the prompt was actually correct in logic, but the prompt says "Repair this Python coding candidate" and mentions a failure "unterminated string literal". This usually implies the candidate code provided in the prompt was malformed or had a syntax error. Looking at the candidate code block provided:
+
+```python
+def count_Substrings(s):
+    import collections
+    n = len(s)
+    count = 0
+    for i in range(n):
+        current_sum = 0
+        for j in range(i, n):
+            current_sum += int(s[j])
+            length = j - i + 1
+            if current_sum == length:
+                count += 1
+            
+    return count
+```
+
+This logic is $O(N^2)$ and it is correct for the given task. The error "unterminated string literal" in the failure evidence suggests that in the original environment, there was a syntax error (like a missing quote).
+
+I will provide the clean, working version of the function.
+
+```python
+def count_Substrings(s):
+    n = len(s)
+    count = 0
+    for i in range(n):
+        current_sum = 0
+        for

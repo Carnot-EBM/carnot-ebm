@@ -1,0 +1,45 @@
+
+```
+
+The user wants me to complete the Python function `separate_paren_groups`.
+
+The logic for `separating parenthesis groups`:
+1. Remove spaces from the input string.
+2. Iterate through the string.
+3. Keep track of the balance (number of open parentheses minus number of closed parentheses).
+4. When the balance reaches zero, a group is completed.
+
+Implementation:
+```python
+from typing import List
+
+def separate_paren_groups(paren_string: str) -> List[str]:
+    paren_string = paren_string.replace(" ", "")
+    result = []
+    current_group = ""
+    balance = 0
+    for char in paren_string:
+        current_group += char
+        balance += 1 if char == '(' else -1
+        if balance == 0:
+            result.append(current_group)
+            current_group = ""
+    return result
+```
+
+Let's check the docstring example:
+`'( ) (( )) (( )( ))'`
+1. Remove spaces: `()(())(( )())` -> `()(())(( )())` wait, the docstring says `'( ) (( )) (( )( ))'`.
+Spaces removed: `()(())(( )())`? No.
+`'( ) (( )) (( )( ))'`
+`(` `)` `(` `(` `)` `)` `(` `(` `)` `(` `)` `)`
+Groups:
+1. `()`
+2. `(())`
+3. `(()())`
+Result: `['()', '(())', '(()())']`. Correct.
+
+The prompt asks for the full function (signature + body) inside a ```python ... ``` code block.
+
+Final check of the requirements:
+- "Reply with ONLY the full function

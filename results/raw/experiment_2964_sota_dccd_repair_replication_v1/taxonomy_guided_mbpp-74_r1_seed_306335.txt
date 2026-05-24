@@ -1,0 +1,36 @@
+
+
+.
+```
+
+```python
+def is_samepatterns(pattern, pattern2):
+    if len(pattern) != len(pattern2):
+        return False
+    
+    map1 = {}
+    map2 = {}
+    
+    for p1, p2 in zip(pattern, pattern2):
+        if p1 in map1:
+            if map1[p1] != p2:
+                return False
+        else:
+            map1[p1] = p2
+            
+        if p2 in map2:
+            if map2[p2] != p1:
+                return True # This is wrong, should be False
+            # Wait, let me re-read the logic.
+```
+
+The user wants a function `is_samepatterns(pattern, pattern1, pattern2)`? No, the signature is `is_samepatterns(pattern, pattern2)`.
+The logic for checking if two sequences follow the same pattern is a bijection.
+A bijection means:
+1. For every element in `pattern`, there is a unique corresponding element in `pattern2`.
+2. For every element in `pattern2`, there is there is a unique corresponding element in `pattern`.
+
+Let's check the examples:
+`is_samepatterns(["red","green","green"], ["a", "b", "b"])` -> `True`
+`is_samepatterns(["red","green","greenn"], ["a","b","b"])` -> `False` (lengths are 3 and 3, but "greenn" is unique in pattern, while "b" is not unique in pattern2)
+Wait, `["red","green","greenn"]` has 3 unique elements. `["a","b","b"]` has 

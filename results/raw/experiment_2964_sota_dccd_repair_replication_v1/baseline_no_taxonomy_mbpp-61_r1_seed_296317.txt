@@ -1,0 +1,50 @@
+
+
+```python
+def count_Substrings(s):
+    n = len(s)
+    count = 0
+    for i in range(n):
+        for j in range(i, n):
+            substring = s[i:j+1]
+            digit_sum = sum(int(d) for d in substring)
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                
+            if digit_sum == len(substring):
+                count += 1
+    return count
+```
+```
+
+The candidate code provided in the prompt is actually quite close to being correct, but it contains a lot of empty lines and formatting issues. The's actually a bit more complex. Let's re-    read.
+The task is:
+"count the number of substrings with the sum of digits equal to their length."
+
+Let's check the example:
+'111'
+Substrings:
+'1' (sum 1, len 1) -> yes
+'1' (sum 1, len 1) -> yes
+'1' (sum 1, enough)
+'11' (sum 2, len 2) -> yes
+'11' (sum 2, len 2) -> yes
+'111' (sum 3, len 3) -> yes
+Wait, '111' has:
+'1' (index 0)
+'1' (index 1)
+'1' (1) (index 2)
+'11' (0,1)
+'11' (1,2)
+'111' (0,1,2)
+Total: 3 + 2 + 

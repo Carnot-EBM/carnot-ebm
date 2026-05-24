@@ -1,0 +1,24 @@
+tests:
+  - task_id: MBPP:mbpp-69:c0:s3070
+  - test_status: failed
+  - verifier_score: 0.0
+
+[Semantic Draft]
+The candidate code is a truncated function definition `def is_sublist(lst, sub):` without a body, leading to a `syntax_error` (specifically an indentation error). The repair should provide the full, functional body of the function that satisfies the provided examples.
+
+[Taxonomy Repair]
+The failure is a `syntax_error` due to truncation/lack of body.
+The target is to provide the complete, valid Python function `is_sublist` that implements the sublist check logic.
+
+[Final JSON Construction]
+The JSON must include the `task_id`, `prompt_id`, `model_id`, `raw_completion_ref`, `repaired_code`, `failure_taxonomy`, `parser_status`, `test_status`, `test_id`, `verifier_score`, and `provenance_checksums`.
+
+[Manifest Schema Verification]
+- `task_id`: MBPP:mbpp-69:c0:s3070
+- `prompt_id`: [Not provided, but I will use a placeholder or derived ID]
+- `prompt_id`: "prompt-69-c0-s3070"
+- `model_id`: "repair-model-v1"
+- `raw_completion_ref`: "candidate-code-truncated"
+- `parser_status`: "syntax_error"
+- `failure_taxonomy`: ["syntax_error"]
+- `repaired_code`: "def is_sublist(lst, sub):\n    n = len(
