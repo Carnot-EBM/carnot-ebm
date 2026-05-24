@@ -1,0 +1,29 @@
+{
+  "draft_intent": "Implement a binary search algorithm to find the leftmost index of a target value in a sorted list. The baseline candidate uses a linear search that incorrectly identifies the last occurrence instead of the first, or is inefficient. The goal is to correct the logic to find the leftmost index efficiently using binary search principles.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "3896e0db7522882f38d22a9eb2d82cd5e0f8f4b735a478a63615fdaca3822a05",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0015-1"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0015-1"
+    ],
+    "passed": false,
+    "test_suite_sha256": "71e3f52f0c7b0c41dd93174607ae473f4ec62f0ab52e8c91638b627eb1b2831a",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "e3512102af8c387cde30393f4abfa6e27e34c26639b8fff069c4f3243c3cde36",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.839344886946492,
+  "item_id": "repair-hard-0015",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0015\nEntry point: binary_search_leftmost\nExpected behavior: Return the leftmost index of target in a sorted list, or -1.\nBaseline candidate:\ndef binary_search_leftmost(nums, target):\n    found = -1\n    for index, value in enumerate(nums):\n        if value == target:\n            found = index\n    return found\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0015-1\nFailing assertions:\nassert binary_search_leftmost([1, 2, 2, 2, 5], 2) == 1\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "84e637073d89eaa9f1828afb195bf83e22662b33a42cb76dbdcf0405a83ec7b4",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0015_unsloth_gemma-4-26B-A4B-it-GGUF_299114.json",
+  "source_transcript_sha256": "1494129dbdaff8b67ae8a47c0b88e481671b12c2cc3351b53d4c8c83827df9a4"
+}

@@ -1,0 +1,35 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "370032739dfd958e87138e62a14a794aeb36b04d219e978e5497b8e735502ec9",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0019-1"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0019-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0019-1",
+      "SCENARIO-CODE-2990-repair-hard-0019-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "236474c3906fa9df1958f68c305e05912f15027b3ab9fd9367a8856c7adb5171",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "4a4dc3881f36d55eae98f1b0350399aaea9e59821dbb0842554185d060ba944a",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.854660526965745,
+  "item_id": "repair-hard-0019",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0019\nEntry point: fizzbuzz\nExpected behavior: Return FizzBuzz labels for integers 1 through n inclusive.\nBaseline candidate:\ndef fizzbuzz(n):\n    out = []\n    for value in range(n):\n        if value % 15 == 0:\n            out.append('FizzBuzz')\n        elif value % 3 == 0:\n            out.append('Fizz')\n        elif value % 5 == 0:\n            out.append('Buzz')\n        else:\n            out.append(str(value))\n    return out\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0019-1, SCENARIO-CODE-2990-repair-hard-0019-2\nFailing assertions:\nassert fizzbuzz(5) == ['1', '2', 'Fizz', '4', 'Buzz']\nassert fizzbuzz(15)[-1] == 'FizzBuzz'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "453c60062d92c91c4362c0c1208e537565eb244a79025eacacd13453d0107dc0",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0019_unsloth_gemma-4-26B-A4B-it-GGUF_299118.json",
+  "source_transcript_sha256": "d31b39d7ed5ad5df959c8d69f4b41e40629985246f209995ff1af2c882ee416a"
+}

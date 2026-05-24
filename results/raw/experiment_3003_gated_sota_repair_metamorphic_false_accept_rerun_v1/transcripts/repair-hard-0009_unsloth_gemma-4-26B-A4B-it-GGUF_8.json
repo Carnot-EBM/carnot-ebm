@@ -1,0 +1,35 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "3ad9104f6fbfc6081288294ffe9725e3759e777523016fc05b02c989f2b88416",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0009-1"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0009-3"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0009-1",
+      "SCENARIO-CODE-2990-repair-hard-0009-3"
+    ],
+    "passed": false,
+    "test_suite_sha256": "68bd99526b150a5dba37cc6375865a9cf6e73330480131dbd1fc27b77f639a77",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "c16db331ce7e60c3c4c09a8a25118e249dda3c286468c717868cfa5875f5e868",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.8244409000035375,
+  "item_id": "repair-hard-0009",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0009\nEntry point: chunked\nExpected behavior: Split a sequence into lists of size n, preserving a final short chunk.\nBaseline candidate:\ndef chunked(seq, n):\n    return [list(seq[i:i+n]) for i in range(0, len(seq) - n + 1, n)]\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0009-1, SCENARIO-CODE-2990-repair-hard-0009-3\nFailing assertions:\nassert chunked([1, 2, 3, 4, 5], 2) == [[1, 2], [3, 4], [5]]\nassert chunked('abcd', 3) == [['a', 'b', 'c'], ['d']]\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "c4d465921ac1ec6e516cf9d0231125b9d4a5cdcac55db9f46f69cd7a9fe135e1",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0009_unsloth_gemma-4-26B-A4B-it-GGUF_299108.json",
+  "source_transcript_sha256": "9f4d18a4c25ea6f324e968eba780064ab263b39b63d5507f0ee8d80418780ff8"
+}

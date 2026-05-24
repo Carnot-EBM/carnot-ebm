@@ -1,0 +1,29 @@
+{
+  "draft_intent": "The function should determine if a given string is a palindrome, ignoring non-alphanumeric characters and case sensitivity. It should filter the input to include only alphanumeric characters and convert them to a uniform case before performing the palindrome check.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "f4f8a031c09990a9047b3d43d1aab96747a7fa9757473b0248f9464357f19944",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0006-1"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0006-1"
+    ],
+    "passed": false,
+    "test_suite_sha256": "62ddee04c5ffaf68602cee9edf05a9d207894217d70ccd016d83a0663036075f",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "f10b210739434ca123659786c4bac3c13bd56aa05988548ffdbb1baee2994c71",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.803690650034696,
+  "item_id": "repair-hard-0006",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0006\nEntry point: is_palindrome_text\nExpected behavior: Return True when alphanumeric characters form a case-insensitive palindrome.\nBaseline candidate:\ndef is_palindrome_text(text):\n    return text == text[::-1]\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0006-1\nFailing assertions:\nassert is_palindrome_text('A man, a plan, a canal: Panama') is True\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "481be09082690289d23580b0b9e8bb8bfa543ad0428125cd4c7b8decb22d33da",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0006_unsloth_gemma-4-26B-A4B-it-GGUF_299105.json",
+  "source_transcript_sha256": "c574729934b198263aeaa710595b5e22fc3aa486d9cf8cfb918b35c16dffeec5"
+}

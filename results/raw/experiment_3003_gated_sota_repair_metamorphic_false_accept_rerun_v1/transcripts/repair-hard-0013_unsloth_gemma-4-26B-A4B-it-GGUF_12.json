@@ -1,0 +1,35 @@
+{
+  "draft_intent": "Iterate through the list of values to find the first element that is not None. If no such element is found, return the default value.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "2992678845aec7c6174391dcf9db3b35eb6f12bb0cc7f41dc7245e4bf39ac982",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0013-1"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0013-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0013-1",
+      "SCENARIO-CODE-2990-repair-hard-0013-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "dbc59b9a2e790df7480477f7e740c84820030a34a5f6e4b567aab8192e227466",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "321359aee81298e2a6c212b4211cdff7e55d29613d13ac0a861c8717446951e6",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 0.9675115500576794,
+  "item_id": "repair-hard-0013",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0013\nEntry point: first_non_none\nExpected behavior: Return the first value that is not None, or default when none exists.\nBaseline candidate:\ndef first_non_none(values, default=None):\n    return values[0] if values else default\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0013-1, SCENARIO-CODE-2990-repair-hard-0013-2\nFailing assertions:\nassert first_non_none([None, 0, 2], default=9) == 0\nassert first_non_none([None, None], default='x') == 'x'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "f478b9332ed72f2090febaff6f97d54110dc1fbd9789c2b3488762c6244e4194",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0013_unsloth_gemma-4-26B-A4B-it-GGUF_299112.json",
+  "source_transcript_sha256": "557d430b370d4c5f56a8b0ea35990753b111a870e324fcf44744552ff4584c80"
+}

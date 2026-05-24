@@ -1442,6 +1442,52 @@ validators write replayable transcripts, false-accept and tautology probes are
 ready, and the terminal artifact marks downstream repair promotion as ready,
 flagged, or blocked without invoking live LLM repair.
 
+### REQ-CODE-3003: Gated SOTA Repair Rerun With Metamorphic False-Accept Evidence
+
+The repository shall provide an Exp 3003 claim-repair harness that reruns the
+hard-set repair evidence against the Exp 3002 metamorphic oracle before any
+repair row can be promoted. The harness MUST:
+
+- require
+  `results/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.json`
+  with `sota_headline_ready=true` and
+  `results/experiment_3002_metamorphic_repair_oracle_audit_v1.json` with
+  `metamorphic_oracle_ready=true` before evaluating repair promotion;
+- verify CUDA/cache status, headline GGUF checksum availability, hard-set
+  integrity, and metamorphic manifest integrity as explicit preconditions;
+- load the original hard-set manifest and the metamorphic manifest, then run
+  deterministic baseline validators before evaluating SOTA repair candidates;
+- preserve headline model identity, prompt, draft intent, failing trace, final
+  patch, generation duration, source transcript hash, candidate patch path, and
+  verifier log path for every evaluated repair candidate;
+- compute pass@1/pass@k, syntax/schema failure, verifier false-accept, and
+  tautology deltas against the baseline and include comparable Exp 2991 deltas
+  when available, while keeping smoke-only model evidence separate from
+  headline evidence;
+- set `repair_rerun_clean=false` when false accepts rise, tautology probes pass
+  vacuously, schema or syntax failures rise, `n_tasks` is too small, no
+  metamorphic variants are available, or only smoke models ran; and
+- write
+  `results/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.json`
+  with `repair_rerun_clean`, `headline_result`, `preconditions_checked`,
+  `n_tasks`, `n_metamorphic_variants`, `model_specs`, `headline_models_used`,
+  `model_checksums`, `pass_at_1_delta`, `pass_at_k_delta`,
+  `false_accept_delta`, `tautology_gate_clean`,
+  `syntax_failure_rate_delta`, `live_transcript_paths`,
+  `verifier_log_paths`, and `honest_verdict`.
+
+### SCENARIO-CODE-3003: Metamorphic Repair Promotion Is Terminally Gated
+
+Given Exp 3001 reports a live headline SOTA GGUF transcript and Exp 3002
+reports a ready metamorphic oracle,
+When Exp 3003 evaluates headline repair candidates across the original hard
+set and every accepted metamorphic variant,
+Then the artifact records replayable live transcripts, candidate patches,
+verifier logs, model checksums, baseline and repair metrics, and marks the
+result `clean`, `flagged`, or `blocked` without allowing smoke-only, vacuous,
+syntax-regressed, schema-regressed, or false-accept-regressed evidence to
+promote.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for

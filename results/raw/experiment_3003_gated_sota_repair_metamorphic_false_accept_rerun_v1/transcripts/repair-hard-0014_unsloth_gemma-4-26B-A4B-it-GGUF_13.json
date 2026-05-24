@@ -1,0 +1,29 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "b95ff82fde718321bc10c3ff5ff7bf9bcff0ab28661214767459db02a30bf572",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0014-1"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0014-1"
+    ],
+    "passed": false,
+    "test_suite_sha256": "6605c53e9c643f2aac38238d6ff52ea6c025230c0b36da1762f3719111358fc0",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "8d7eb720eea9cf29524f90bddde3e4b7662dacb57ddd67d549f21b9ee7ccd799",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.816400288953446,
+  "item_id": "repair-hard-0014",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0014\nEntry point: top_k_counts\nExpected behavior: Return (item, count) pairs sorted by count descending, then item ascending.\nBaseline candidate:\ndef top_k_counts(items, k):\n    counts = {}\n    for item in items:\n        counts[item] = counts.get(item, 0) + 1\n    return sorted(counts.items(), key=lambda pair: -pair[1])[:k]\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0014-1\nFailing assertions:\nassert top_k_counts(['b', 'a', 'b', 'a', 'c'], 2) == [('a', 2), ('b', 2)]\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "f098fa65f34e10c4cbddf96523a32acd401d18ed585915f93e076bf8b6eea8a8",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0014_unsloth_gemma-4-26B-A4B-it-GGUF_299113.json",
+  "source_transcript_sha256": "486bb1890d375b7b33c9c3f0131436aa75303ff7d3f6356304960d67fa45a42d"
+}

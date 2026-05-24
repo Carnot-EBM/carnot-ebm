@@ -1,0 +1,29 @@
+{
+  "draft_intent": "The function should check if a string of parentheses is valid. A valid string must have an equal number of opening and closing parentheses, and at any point while reading the string from left to right, the number of closing parentheses must not exceed the number of opening parentheses.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "988c82b982d912fa99bdc991f97554c63bf249e7fd8c5a3a95b7316550061b97",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0017-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0017-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "8a19e94b3be5f3d59d6b27f535da95ef3ab62ac86ef85afcd11f41dc384f51f4",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "608a07a874aed93513b57e7dedd556e6acb165bed12a926f20f28414e3f08942",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 1.3820969860535115,
+  "item_id": "repair-hard-0017",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0017\nEntry point: is_valid_parentheses\nExpected behavior: Return True when parentheses are balanced and every prefix is valid.\nBaseline candidate:\ndef is_valid_parentheses(s):\n    return s.count('(') == s.count(')')\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0017-2\nFailing assertions:\nassert is_valid_parentheses(')(') is False\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "6e8e43179aa9a06e91aaf4fe0564c9df13760bf930de091eeb7aba199345d014",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0017_unsloth_gemma-4-26B-A4B-it-GGUF_299116.json",
+  "source_transcript_sha256": "853b148f56363b4d99fd7afc2140afebf59d20d5dc15114cee1f260ff994b06e"
+}

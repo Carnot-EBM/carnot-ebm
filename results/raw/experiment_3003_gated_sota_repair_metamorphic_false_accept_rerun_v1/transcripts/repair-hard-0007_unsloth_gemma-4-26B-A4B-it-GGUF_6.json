@@ -1,0 +1,29 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "15cdc066ed5c564f6af5af45e6b1ff514f44907fc78d434393a54b3d2206ea39",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0007-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0007-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "515d05b8bcee80912b3fc292ce1d2d7bea7232adc3dd6c6bb2ecb9173a2140ac",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "0fa3f9cea0201aab2f393495c88b4a24e9736df73d1ab15b9ca871b576868cf4",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.7888482090784237,
+  "item_id": "repair-hard-0007",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0007\nEntry point: parse_bool\nExpected behavior: Parse common boolean strings and booleans into True or False.\nBaseline candidate:\ndef parse_bool(value):\n    return bool(value)\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0007-2\nFailing assertions:\nassert parse_bool(' False ') is False\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "80481b52698dc3ceb2f10cb0f1e0b00523aaf437ecaddbaf02178c34e3c67e17",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0007_unsloth_gemma-4-26B-A4B-it-GGUF_299106.json",
+  "source_transcript_sha256": "0454712c230061457084065c2878e7068c4fd9d3d6985629cce847af6ea06b16"
+}

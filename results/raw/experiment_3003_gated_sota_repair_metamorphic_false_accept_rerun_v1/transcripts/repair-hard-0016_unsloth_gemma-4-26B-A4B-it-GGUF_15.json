@@ -1,0 +1,35 @@
+{
+  "draft_intent": "The goal is to fix the roman_to_int function so that it correctly handles subtractive pairs (like 'IV' for 4 or 'CM' for 900) instead of just summing all character values. The logic should check if a character's value is less than the value of the next character; if so, subtract it from the total, otherwise add it.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "263f3e06c30ec702d654bda154094ebf454a1931d2fddc927e134ce3084b6977",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0016-2"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0016-3"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0016-2",
+      "SCENARIO-CODE-2990-repair-hard-0016-3"
+    ],
+    "passed": false,
+    "test_suite_sha256": "fbd005781fa8d16fb4ebd8b7131d93e8570711af2dca85a5e3c8c1d4895b43a2",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "2392e97f63ab35e3395f519d75371639fbf125923042338762c81f879a54cc4b",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.2467734849778935,
+  "item_id": "repair-hard-0016",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0016\nEntry point: roman_to_int\nExpected behavior: Convert a Roman numeral using subtractive pairs.\nBaseline candidate:\ndef roman_to_int(s):\n    values = {'I': 1, 'V': 5, 'X': 10, 'L': 50, 'C': 100, 'D': 500, 'M': 1000}\n    return sum(values[ch] for ch in s)\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0016-2, SCENARIO-CODE-2990-repair-hard-0016-3\nFailing assertions:\nassert roman_to_int('IV') == 4\nassert roman_to_int('MCMXCIV') == 1994\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "d3fe931135a86f77de17da96b52702580971c877714ea1f85614e5f53985ee48",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0016_unsloth_gemma-4-26B-A4B-it-GGUF_299115.json",
+  "source_transcript_sha256": "b593959aead5adc66c00dccbf7f4ae109d71bb44eaa80fe17d698d31575efc66"
+}

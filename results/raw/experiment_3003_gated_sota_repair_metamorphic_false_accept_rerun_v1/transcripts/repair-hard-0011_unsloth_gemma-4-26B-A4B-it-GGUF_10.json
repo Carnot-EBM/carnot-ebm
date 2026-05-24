@@ -1,0 +1,29 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "b648bd4b816f714b6b9590d325ac3faa6ab985fb8c8cf18d18f57ad286c45fdd",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0011-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0011-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "647118a31c940c31d27ba0b717fdf091c5c0f0cb8a38170f1193e2dbf65ffca2",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "1d62e146983a877bc1d3f0d88834193880423d572269fa26de077f6a3859a000",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.8430365859530866,
+  "item_id": "repair-hard-0011",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0011\nEntry point: merge_intervals\nExpected behavior: Merge overlapping or touching closed intervals.\nBaseline candidate:\ndef merge_intervals(intervals):\n    intervals = sorted(intervals)\n    out = []\n    for start, end in intervals:\n        if not out or start >= out[-1][1]:\n            out.append([start, end])\n        else:\n            out[-1][1] = max(out[-1][1], end)\n    return out\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0011-2\nFailing assertions:\nassert merge_intervals([[1, 2], [2, 4]]) == [[1, 4]]\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "f2c2e08f44aaeccc7724153951526a223b2dacd24c4be0090eb1a76927b81d4d",
+  "source_transcript_path": "results/raw/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1/transcripts/repair-hard-0011_unsloth_gemma-4-26B-A4B-it-GGUF_299110.json",
+  "source_transcript_sha256": "2f75384795a26ffc525a1d05dfcd78c873864e8512ca437462ca025c2257beae"
+}
