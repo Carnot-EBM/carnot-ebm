@@ -6954,3 +6954,79 @@ beginning with `blocked_`, `fr11_independent_metrics_evaluated=false`, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2982 | Implemented (`python/carnot/eval/fr11_independent_metric_utility_gate_v4.py`) | Implemented (`tests/python/test_experiment_2982_fr11_independent_metric_utility_gate_v4.py`) |
+
+## REQ-LEARN-2983: Trace-To-Skill Repair Memory Pilot
+
+**Given** Exp 2976 reports `trace_execution_plan_ready=true` and checked-in
+repair or partial-monitor artifacts contain row-level trace evidence
+**When** Exp 2983 runs the continuous self-learning trace-to-skill memory pilot
+**Then** it SHALL convert failed repair traces and deterministic partial-monitor
+events into candidate skill memories with a `trace_to_skill_memory` schema.
+**And** every memory SHALL include `failure_signature`, `verifier_feedback`,
+`minimal_fix_pattern`, `applicability_conditions`, and
+`forbidden_label_leakage`.
+**And** it SHALL evaluate frozen/no-memory, random-memory, and trace-memory
+replay on held-out repair or formalization tasks whose IDs are disjoint from
+the memory extraction sources.
+**And** it SHALL keep the update selector distinct from the reported held-out
+utility metric, include a negative control, and set `leakage_flag=false` only
+when no memory contains held-out labels, expected answers, pass vectors, or
+held-out task IDs.
+**And** it SHALL use
+`inference_substrate="artifact_replay_and_optional_live_llm"` without reporting
+a headline result unless fresh live inference used at least one mandated SOTA
+GGUF model.
+
+The terminal artifact SHALL be
+`results/experiment_2983_trace_to_skill_repair_memory_pilot_v1.json` and SHALL
+include `honest_verdict`, `continuous_self_learning_task=true`,
+`trace_to_skill_memory_ready`, `headline_result`, `pilot_source`,
+`models_used`, `mandatory_headline_model_ids`, `memory_schema`,
+`extracted_memory_count`, `heldout_task_count`, `no_memory_metrics`,
+`random_memory_metrics`, `trace_memory_metrics`,
+`heldout_skill_reuse_delta`, `leakage_flag`, `negative_control_delta`,
+`inference_substrate="artifact_replay_and_optional_live_llm"`, and measured
+`duration_s`.
+
+### REQ-LEARN-2983 Sub-requirements
+
+- REQ-LEARN-2983-1: The evaluator SHALL fail closed when Exp 2976 is missing
+  or `trace_execution_plan_ready` is not true.
+- REQ-LEARN-2983-2: The evaluator SHALL prefer Exp 2977 repair traces when the
+  artifact exists; if Exp 2977 is absent, it SHALL use Exp 2964 repair traces
+  and set `pilot_source=".279"`.
+- REQ-LEARN-2983-3: Candidate memories SHALL be extracted only from failed
+  repair rows or partial-monitor event schemas and SHALL NOT copy pass/fail
+  labels, held-out task IDs, or exact expected answers into the memory body.
+- REQ-LEARN-2983-4: Held-out evaluation SHALL compare no-memory,
+  random-memory, and trace-memory conditions with a deterministic negative
+  control and SHALL report a positive `heldout_skill_reuse_delta` only when
+  trace-memory replay improves over random-memory replay.
+- REQ-LEARN-2983-5: `trace_to_skill_memory_ready` SHALL be true only when the
+  schema is usable, `heldout_skill_reuse_delta > 0`, the negative control does
+  not improve, and `leakage_flag=false`.
+
+### SCENARIO-LEARN-2983: Trace Memories Improve Held-Out Replay Without Leakage
+
+**Given** Exp 2976 is ready, Exp 2977 or Exp 2964 provides failed repair rows,
+and Exp 2968 provides deterministic partial-monitor events
+**When** Exp 2983 builds candidate skill memories and evaluates held-out replay
+**Then** the artifact reports a usable memory schema, non-zero extracted memory
+count, disjoint held-out task count, no label leakage, non-improving negative
+control, positive trace-memory delta over random-memory replay, and
+`trace_to_skill_memory_ready=true`.
+
+### SCENARIO-LEARN-2983-BLOCKED: Missing Protocol Readiness Fails Closed
+
+**Given** Exp 2976 is missing or does not report
+`trace_execution_plan_ready=true`
+**When** Exp 2983 runs
+**Then** it writes the required artifact schema with `trace_to_skill_memory_ready=false`,
+`heldout_task_count=0`, `extracted_memory_count=0`, `leakage_flag=true`, and an
+`honest_verdict` beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-2983)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2983 | Implemented (`python/carnot/eval/trace_to_skill_repair_memory_pilot_v1.py`) | Implemented (`tests/python/test_experiment_2983_trace_to_skill_repair_memory_pilot_v1.py`) |

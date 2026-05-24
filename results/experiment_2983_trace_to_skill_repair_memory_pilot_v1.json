@@ -1,0 +1,787 @@
+{
+  "artifact": "experiment_2983_trace_to_skill_repair_memory_pilot_v1",
+  "claim_boundary": "artifact replay only; no new local GGUF inference was invoked by Exp 2983",
+  "continuous_self_learning_task": true,
+  "duration_s": 0.00463771,
+  "extracted_memory_count": 14,
+  "extraction_source": "exp2977",
+  "fresh_live_llm_inference_used": false,
+  "headline_result": false,
+  "heldout_skill_reuse_delta": 0.22222223,
+  "heldout_task_count": 18,
+  "heldout_task_summaries": [
+    {
+      "baseline_success": false,
+      "corpus": "HumanEval",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "HumanEval:HumanEval/0",
+      "trace_assisted_success": false
+    },
+    {
+      "baseline_success": false,
+      "corpus": "HumanEval",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "HumanEval:HumanEval/1",
+      "trace_assisted_success": false
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-14",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::runtime_trace_failure",
+        "repair::false_accept_risk",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-16",
+      "trace_assisted_success": false
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-17",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-18",
+      "trace_assisted_success": false
+    },
+    {
+      "baseline_success": true,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-19",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::schema_invalid",
+        "repair::syntax_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-56",
+      "trace_assisted_success": false
+    },
+    {
+      "baseline_success": true,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::schema_invalid",
+        "repair::syntax_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-61",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": true,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-62",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-64",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-66",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-67",
+      "trace_assisted_success": false
+    },
+    {
+      "baseline_success": true,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::schema_invalid",
+        "repair::syntax_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-68",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": true,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::schema_invalid",
+        "repair::syntax_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-69",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": true,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::runtime_trace_failure",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-70",
+      "trace_assisted_success": true
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-72",
+      "trace_assisted_success": false
+    },
+    {
+      "baseline_success": false,
+      "corpus": "MBPP",
+      "failure_signatures": [
+        "repair::syntax_invalid",
+        "repair::schema_invalid"
+      ],
+      "source_modes": [
+        "baseline_no_taxonomy",
+        "dccd_structured",
+        "taxonomy_guided"
+      ],
+      "task_id": "MBPP:mbpp-74",
+      "trace_assisted_success": false
+    }
+  ],
+  "heldout_utility_metric": "heldout_task_success_rate",
+  "honest_verdict": "complete: trace_to_skill_memory_ready",
+  "inference_substrate": "artifact_replay_and_optional_live_llm",
+  "leakage_audit": {
+    "heldout_metric": "heldout_task_success_rate",
+    "heldout_task_ids": [
+      "HumanEval:HumanEval/0",
+      "HumanEval:HumanEval/1",
+      "MBPP:mbpp-14",
+      "MBPP:mbpp-16",
+      "MBPP:mbpp-17",
+      "MBPP:mbpp-18",
+      "MBPP:mbpp-19",
+      "MBPP:mbpp-56",
+      "MBPP:mbpp-61",
+      "MBPP:mbpp-62",
+      "MBPP:mbpp-64",
+      "MBPP:mbpp-66",
+      "MBPP:mbpp-67",
+      "MBPP:mbpp-68",
+      "MBPP:mbpp-69",
+      "MBPP:mbpp-70",
+      "MBPP:mbpp-72",
+      "MBPP:mbpp-74"
+    ],
+    "memory_contains_heldout_ids": false,
+    "selection_metric": "source_failure_signature_frequency",
+    "selection_metric_reused_as_heldout_metric": false,
+    "train_heldout_intersection": [],
+    "train_task_ids": [
+      "MBPP:mbpp-11",
+      "MBPP:mbpp-12"
+    ]
+  },
+  "leakage_flag": false,
+  "mandatory_headline_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "memory_candidates": [
+    {
+      "applicability_conditions": {
+        "corpus": "MBPP",
+        "failure_signature": "repair::syntax_invalid",
+        "mode": "baseline",
+        "original_failure_categories": [
+          "syntax_error"
+        ],
+        "source": "exp2977"
+      },
+      "failure_signature": "repair::syntax_invalid",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-0bb66a55ba4f6268",
+      "minimal_fix_pattern": "produce a parseable Python function before optimizing behavior",
+      "source": "exp2977",
+      "source_task_id": "MBPP:mbpp-11",
+      "source_trace_kind": "repair_trace",
+      "verifier_feedback": "syntax checker reported: invalid syntax"
+    },
+    {
+      "applicability_conditions": {
+        "corpus": "MBPP",
+        "failure_signature": "repair::schema_invalid",
+        "mode": "schema_only_dccd",
+        "original_failure_categories": [
+          "syntax_error"
+        ],
+        "source": "exp2977"
+      },
+      "failure_signature": "repair::schema_invalid",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-77152a739922b7e3",
+      "minimal_fix_pattern": "emit all required structured fields before running code checks",
+      "source": "exp2977",
+      "source_task_id": "MBPP:mbpp-11",
+      "source_trace_kind": "repair_trace",
+      "verifier_feedback": "schema validation reported: smoke schema-only candidate is intentionally incomplete"
+    },
+    {
+      "applicability_conditions": {
+        "corpus": "MBPP",
+        "failure_signature": "repair::runtime_trace_failure",
+        "mode": "intent_preserving_trace_aware_repair",
+        "original_failure_categories": [
+          "syntax_error"
+        ],
+        "source": "exp2977"
+      },
+      "failure_signature": "repair::runtime_trace_failure",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-de5b9697187b432b",
+      "minimal_fix_pattern": "turn the first executable failure into a focused regression check",
+      "source": "exp2977",
+      "source_task_id": "MBPP:mbpp-11",
+      "source_trace_kind": "repair_trace",
+      "verifier_feedback": "runtime trace reported an executable check failure"
+    },
+    {
+      "applicability_conditions": {
+        "corpus": "MBPP",
+        "failure_signature": "repair::syntax_invalid",
+        "mode": "baseline",
+        "original_failure_categories": [
+          "syntax_error"
+        ],
+        "source": "exp2977"
+      },
+      "failure_signature": "repair::syntax_invalid",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-194410523cfc44a6",
+      "minimal_fix_pattern": "produce a parseable Python function before optimizing behavior",
+      "source": "exp2977",
+      "source_task_id": "MBPP:mbpp-12",
+      "source_trace_kind": "repair_trace",
+      "verifier_feedback": "syntax checker reported: invalid syntax"
+    },
+    {
+      "applicability_conditions": {
+        "corpus": "MBPP",
+        "failure_signature": "repair::schema_invalid",
+        "mode": "schema_only_dccd",
+        "original_failure_categories": [
+          "syntax_error"
+        ],
+        "source": "exp2977"
+      },
+      "failure_signature": "repair::schema_invalid",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-d71c3e6c731a8fc9",
+      "minimal_fix_pattern": "emit all required structured fields before running code checks",
+      "source": "exp2977",
+      "source_task_id": "MBPP:mbpp-12",
+      "source_trace_kind": "repair_trace",
+      "verifier_feedback": "schema validation reported: smoke schema-only candidate is intentionally incomplete"
+    },
+    {
+      "applicability_conditions": {
+        "corpus": "MBPP",
+        "failure_signature": "repair::runtime_trace_failure",
+        "mode": "intent_preserving_trace_aware_repair",
+        "original_failure_categories": [
+          "syntax_error"
+        ],
+        "source": "exp2977"
+      },
+      "failure_signature": "repair::runtime_trace_failure",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-06d1de769c050f4f",
+      "minimal_fix_pattern": "turn the first executable failure into a focused regression check",
+      "source": "exp2977",
+      "source_task_id": "MBPP:mbpp-12",
+      "source_trace_kind": "repair_trace",
+      "verifier_feedback": "runtime trace reported an executable check failure"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "parser_prefix_validity",
+          "schema_field_coverage"
+        ],
+        "event_name": "partial_code_block",
+        "trace_kind": "code"
+      },
+      "failure_signature": "partial_monitor::partial_code_block",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-43b763efde9a2bb5",
+      "minimal_fix_pattern": "parse each emitted code prefix before downstream verification",
+      "source": "exp2968",
+      "source_trace_id": "exp2952-code-1",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: parser_prefix_validity, schema_field_coverage"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "parser_prefix_validity",
+          "schema_field_coverage",
+          "symbol_consistency"
+        ],
+        "event_name": "function_sig",
+        "trace_kind": "code"
+      },
+      "failure_signature": "partial_monitor::function_sig",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-ad8125a7744bf612",
+      "minimal_fix_pattern": "stabilize the function signature and preserve referenced symbols",
+      "source": "exp2968",
+      "source_trace_id": "exp2952-code-1",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: parser_prefix_validity, schema_field_coverage, symbol_consistency"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "parser_prefix_validity",
+          "schema_field_coverage",
+          "symbol_consistency"
+        ],
+        "event_name": "assertion_or_formula_line",
+        "trace_kind": "code"
+      },
+      "failure_signature": "partial_monitor::assertion_or_formula_line",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-69840c47ae911b8b",
+      "minimal_fix_pattern": "check assertion or formalization symbols before escalation",
+      "source": "exp2968",
+      "source_trace_id": "exp2952-code-1",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: parser_prefix_validity, schema_field_coverage, symbol_consistency"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "schema_field_coverage",
+          "symbol_consistency"
+        ],
+        "event_name": "final_answer",
+        "trace_kind": "code"
+      },
+      "failure_signature": "partial_monitor::final_answer",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-47faee478aeae50e",
+      "minimal_fix_pattern": "cross-check the final answer against observed symbols or solver output",
+      "source": "exp2968",
+      "source_trace_id": "exp2952-code-1",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: schema_field_coverage, symbol_consistency"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "import_allow_list",
+          "parser_prefix_validity",
+          "schema_field_coverage"
+        ],
+        "event_name": "import_line",
+        "trace_kind": "code"
+      },
+      "failure_signature": "partial_monitor::import_line",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-21e22b9cc4aa9de4",
+      "minimal_fix_pattern": "keep imports inside the allow-list before executing generated code",
+      "source": "exp2968",
+      "source_trace_id": "synthetic-code-allowlist",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: import_allow_list, parser_prefix_validity, schema_field_coverage"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "parser_prefix_validity",
+          "schema_field_coverage",
+          "symbol_consistency"
+        ],
+        "event_name": "assertion_or_formula_line",
+        "trace_kind": "logic"
+      },
+      "failure_signature": "partial_monitor::assertion_or_formula_line",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-7414c89977d55252",
+      "minimal_fix_pattern": "check assertion or formalization symbols before escalation",
+      "source": "exp2968",
+      "source_trace_id": "exp2959-logic-1",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: parser_prefix_validity, schema_field_coverage, symbol_consistency"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "schema_field_coverage",
+          "z3_parse_check"
+        ],
+        "event_name": "solver_query",
+        "trace_kind": "logic"
+      },
+      "failure_signature": "partial_monitor::solver_query",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-dfee1648c6afa500",
+      "minimal_fix_pattern": "parse the formal query before using solver feedback",
+      "source": "exp2968",
+      "source_trace_id": "exp2959-logic-1",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: schema_field_coverage, z3_parse_check"
+    },
+    {
+      "applicability_conditions": {
+        "deterministic_checks": [
+          "schema_field_coverage",
+          "symbol_consistency"
+        ],
+        "event_name": "final_answer",
+        "trace_kind": "logic"
+      },
+      "failure_signature": "partial_monitor::final_answer",
+      "forbidden_label_leakage": [
+        "held-out task ids",
+        "outcome labels",
+        "pass vectors",
+        "expected outputs",
+        "reference solutions",
+        "metric targets"
+      ],
+      "memory_id": "skill-bebb1565d342bf27",
+      "minimal_fix_pattern": "cross-check the final answer against observed symbols or solver output",
+      "source": "exp2968",
+      "source_trace_id": "exp2959-logic-1",
+      "source_trace_kind": "partial_monitor_event",
+      "verifier_feedback": "partial monitor event uses deterministic checks: schema_field_coverage, symbol_consistency"
+    }
+  ],
+  "memory_schema": {
+    "additionalProperties": true,
+    "properties": {
+      "applicability_conditions": {
+        "description": "Non-label conditions needed before the memory can be replayed.",
+        "type": "object"
+      },
+      "failure_signature": {
+        "description": "Normalized verifier or monitor event pattern that triggers reuse.",
+        "type": "string"
+      },
+      "forbidden_label_leakage": {
+        "description": "Evidence that must not appear in memory contents.",
+        "items": {
+          "type": "string"
+        },
+        "type": "array"
+      },
+      "minimal_fix_pattern": {
+        "description": "Small reusable repair action, not an answer or task-specific patch.",
+        "type": "string"
+      },
+      "verifier_feedback": {
+        "description": "Verifier, parser, schema, runtime, or monitor feedback stripped of labels.",
+        "type": "string"
+      }
+    },
+    "required": [
+      "failure_signature",
+      "verifier_feedback",
+      "minimal_fix_pattern",
+      "applicability_conditions",
+      "forbidden_label_leakage"
+    ],
+    "schema_version": "carnot.trace_to_skill_memory.v1",
+    "type": "object"
+  },
+  "models_used": [
+    "Qwen/Qwen3.5-0.8B",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "negative_control_delta": 0.0,
+  "negative_control_metrics": {
+    "condition": "negative_control",
+    "task_count": 18,
+    "task_success_count": 6,
+    "task_success_rate": 0.33333333
+  },
+  "no_memory_metrics": {
+    "condition": "no_memory",
+    "task_count": 18,
+    "task_success_count": 6,
+    "task_success_rate": 0.33333333
+  },
+  "pilot_source": ".280",
+  "random_memory_metrics": {
+    "condition": "random_memory",
+    "task_count": 18,
+    "task_success_count": 6,
+    "task_success_rate": 0.33333333
+  },
+  "run_date": "20260524",
+  "schema": "carnot.trace_to_skill_repair_memory_pilot.v1",
+  "source_artifacts": {
+    "exp2964": {
+      "path": "results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "present": true,
+      "role": "fallback_and_heldout_repair_rows",
+      "sha256": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2"
+    },
+    "exp2968": {
+      "path": "results/experiment_2968_interwhen_partial_monitor_harness_v1.json",
+      "present": true,
+      "role": "partial_monitor_events",
+      "sha256": "05578eeaee612f7c7757fe8e8d7e40986d6b9f9d3a11034e13b0443005755199"
+    },
+    "exp2976": {
+      "path": "results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json",
+      "present": true,
+      "role": "trace_execution_protocol",
+      "sha256": "63a51206a3c1a44806fafbad893bb7bc804476e598a54c91f06c90a1aa70a582"
+    },
+    "exp2977": {
+      "path": "results/experiment_2977_sota_intent_preserving_code_repair_v1.json",
+      "present": true,
+      "role": "preferred_failed_repair_traces",
+      "sha256": "1c98cc507e7d2939ed915f5d58c6f0268449f9f735ddfa8b8f3de23911c91373"
+    }
+  },
+  "tests_run": [],
+  "trace_memory_metrics": {
+    "condition": "trace_memory",
+    "task_count": 18,
+    "task_success_count": 10,
+    "task_success_rate": 0.55555556
+  },
+  "trace_to_skill_memory_ready": true,
+  "update_selection_metric": "source_failure_signature_frequency"
+}
