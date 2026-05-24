@@ -95,6 +95,61 @@ terminal Exp 2977 JSON as a non-headline CPU-smoke artifact, reports fewer than
 20 smoke tasks, keeps `repair_rerun_clean=false`, and records that legacy
 models were used only for smoke coverage.
 
+### REQ-VERIFY-2978: First-Step And Semantic-Energy Repair Telemetry Panel
+
+The repository shall provide an Exp 2978 diagnostic telemetry panel that reads
+checked-in repair and solver candidate artifacts from `.279` or `.280` and
+writes `results/experiment_2978_first_step_semantic_energy_repair_telemetry_v1.json`.
+The panel MUST NOT run fresh live inference unless explicitly configured, MUST
+NOT modify `scripts/research_conductor.py`, MUST NOT push, and MUST NOT promote
+early-prefix, first-step, logprob, confidence, or semantic-energy telemetry into
+a verifier or acceptance gate.
+
+The panel MUST require at least one candidate-level repair or solver source
+artifact. It SHALL prefer Exp 2977 candidate rows when present and SHALL use Exp
+2964 and Exp 2967 as fallback or additional sources. It SHALL extract one row
+per candidate with final verifier outcome, schema status, syntax or solver
+execution status, failure category, source artifact, model identity, and
+bounded diagnostic feature values. If local token traces or logprobs are absent,
+the artifact SHALL set `logprob_unavailable=true`, leave direct logprob metrics
+unclaimed, and compute only artifact-derived proxy telemetry.
+
+The terminal artifact MUST include `honest_verdict`, `telemetry_panel_ready`,
+`first_step_signal_usable`, `semantic_energy_signal_usable`,
+`logprob_unavailable`, `no_headline_verifier_claim=true`, `models_used`,
+`mandatory_headline_model_ids`, `candidate_rows`, `calibration_metrics`,
+`triage_examples`, `failure_modes_explained`,
+`inference_substrate="mixed_artifact_and_optional_live_llm"`, and measured
+`duration_s`. It MAY include `model_specs`, sampled or full candidate-level
+rows, source checksums, run date, and methodology notes as long as every value
+is derived from local artifacts or explicitly marked as optional live inference
+evidence.
+
+`telemetry_panel_ready` shall be true only when at least one candidate row is
+loaded and calibration metrics are computed or honestly marked unavailable.
+`first_step_signal_usable` and `semantic_energy_signal_usable` shall be true
+only when the corresponding local calibration metric is defined and clears the
+panel's diagnostic floor; otherwise the panel shall report the signal as
+measured but not usable. `no_headline_verifier_claim` shall always remain true.
+
+### SCENARIO-VERIFY-2978: Artifact-Only Telemetry Is Calibrated As Triage
+
+Given Exp 2977 is present or Exp 2964 and Exp 2967 are present with
+candidate-level rows,
+When the Exp 2978 telemetry panel runs without live logprob traces,
+Then it writes the terminal JSON artifact with the required fields, sets
+`logprob_unavailable=true`, extracts candidate rows from available source
+artifacts, computes AUROC or rank-correlation diagnostics only where both
+failure classes and finite proxy scores exist, reports false-positive and
+false-negative triage examples, explains schema, syntax, solver, and verifier
+failure modes, and keeps `no_headline_verifier_claim=true`.
+
+## Implementation Status (REQ-VERIFY-2978)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-2978 | Implemented (`python/carnot/reporting/first_step_semantic_energy_repair_telemetry_v1.py`) | Implemented (`tests/python/test_experiment_2978_first_step_semantic_energy_repair_telemetry.py`) |
+
 ### REQ-VERIFY-2932: Citation Hallucination Field Verifier
 
 The repository shall provide a local citation-hallucination probe that:
