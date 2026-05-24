@@ -7239,3 +7239,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: Gated SOTA NL-to-Z3 DCCD Formalization v1 (✅ Complete) — honest_verdict=complete: local SOTA DCCD formalizations did not clear .278 delta gate; results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json
 - 2026-05-24: Interwhen-Style Partial Monitor Harness v1 (⚠️ Research Finding) — honest_verdict=complete: deterministic partial monitor harness ready; results/experiment_2968_interwhen_partial_monitor_harness_v1.json
 - 2026-05-24: FR-11 Non-Tautological Utility Gate v3 (✅ Complete) — honest_verdict=complete: non_tautological_self_learning_ready; results/experiment_2969_fr11_non_tautological_utility_gate_v3.json
+- 2026-05-24: KAN Forgetting Guard + Constraint Memory Audit v1 (✅ Complete) — honest_verdict=complete: kan_forgetting_guard_ready; results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json
