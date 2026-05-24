@@ -3510,5 +3510,53 @@
     "results/verifier_transcripts/experiment_2991/repair-hard-0022_unsloth_gemma-4-26B-A4B-it-GGUF_299121.json",
     "results/verifier_transcripts/experiment_2991/repair-hard-0023_unsloth_gemma-4-26B-A4B-it-GGUF_299122.json",
     "results/verifier_transcripts/experiment_2991/repair-hard-0024_unsloth_gemma-4-26B-A4B-it-GGUF_299123.json"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_1_delta=0.4166666666666667 and pass_at_k_delta=0.4166666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_1_delta=0.4166666666666667 and repair_pass_at_1=0.4166666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_1_delta=0.4166666666666667 and repair_pass_at_k=0.4166666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_k_delta=0.4166666666666667 and repair_pass_at_1=0.4166666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_k_delta=0.4166666666666667 and repair_pass_at_k=0.4166666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "repair_pass_at_1=0.4166666666666667 and repair_pass_at_k=0.4166666666666667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "schema_failure_rate_delta=0.5 and syntax_failure_rate_delta=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "verifier_false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
   ]
 }
