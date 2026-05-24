@@ -345,5 +345,18 @@
   "tests_run": [
     ".venv/bin/pytest tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py -q --no-cov",
     "COVERAGE_RCFILE=/dev/null .venv/bin/pytest tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py --override-ini addopts=\"\" --cov=scripts.experiment_3013_sota_gguf_logprob_telemetry_preflight_v1 --cov-report=term-missing --cov-fail-under=100"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=16.846551 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }

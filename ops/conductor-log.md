@@ -6195,3 +6195,4 @@ web search: site |
 | 2026-05-24 22:19 UTC | Plan milestone 2026.05.283 | OK | 14 tasks proposed |
 | 2026-05-24 22:21 UTC | Milestone 2026.05.283 activated | OK | 14 tasks queued |
 | 2026-05-24 22:33 UTC | Archive .282 and activate .283 | OK | 81 passed in 4.52s |
+| 2026-05-24 22:49 UTC | SOTA GGUF logprob telemetry preflight | OK | 81 passed in 4.12s |
