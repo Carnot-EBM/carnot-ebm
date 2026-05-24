@@ -1,29 +1,28 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.280",
-  "generated_at": "2026-05-24T12:53:47.551489Z",
+  "generated_at": "2026-05-24T13:23:02Z",
   "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "Milestone 2026.05.280 records 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments in the authoritative timing window. Compute-bound slowest-run analysis, GPU efficiency on compute-bound work, and parallel multi-model runner coverage have no data available this milestone.",
+  "summary": "Authoritative timing data reports 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments for milestone 2026.05.280. Slowest compute-bound experiments, compute-bound GPU efficiency, and parallel multi-model runner coverage have no data available this milestone.",
   "bottlenecks_identified": [
-    "no data available this milestone for compute-bound experiment duration or root-cause ranking",
-    "no data available this milestone for GPU utilization efficiency on compute-bound work",
-    "no data available this milestone for 2+ model compute-bound tasks or DualGPURunner engagement"
+    "no data available this milestone for slowest compute-bound experiments",
+    "no data available this milestone for wall-time bottleneck ranking"
   ],
   "improvements_suggested": [
-    "Add a closeout sentinel that emits a dedicated empty-timing-window result before retrospective analysis attempts bottleneck ranking.",
-    "Suppress GPU and DualGPURunner guidance automatically when compute_bound_experiments_count is 0.",
-    "Expose the activation-window commit count in the closeout preflight so operators can distinguish no-run windows from slow or blocked compute."
+    "Add an activation-window sentinel that records an explicit no-run closeout when the timing source contains 0 completed experiments.",
+    "Gate GPU-efficiency and runner recommendations on compute_bound_experiments_count > 0 before interpreting idle GPU monitor state.",
+    "Require a parallel multi-model marker before recommending DualGPURunner engagement."
   ],
   "top_3_highest_leverage_actions": [
-    "Implement an empty-window sentinel for milestone closeout.",
-    "Gate GPU-efficiency language on at least one compute-bound timing row.",
-    "Show activation-window experiment count before generating retrospective prompts."
+    "Implement the empty activation-window sentinel in the operational retro generator.",
+    "Emit no data available this milestone for slowest-run, GPU-efficiency, and DualGPURunner sections when experiments_completed is 0.",
+    "Keep GPU idle classification null unless at least one compute-bound timing row exists."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The only supported conclusion is that the operational timing window is empty. The GPU monitor reported idle devices, but with 0 compute-bound experiments that state is not evidence of a compute bottleneck."
+  "meta_reflection": "The GPU monitor showed idle devices, but the timing source contains 0 compute-bound experiments, so the idle state is not evidence of an execution bottleneck. The main operational gap is observability: the closeout should make an empty milestone-scoped timing window explicit before suggesting compute-runner changes."
 }
