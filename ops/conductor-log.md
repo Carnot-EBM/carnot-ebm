@@ -6163,3 +6163,4 @@ web search: site |
 | 2026-05-24 15:08 UTC | Verifier-backed hard-code stress manifest | OK | 81 passed in 3.07s |
 | 2026-05-24 15:25 UTC | Gated SOTA intent-preserving repair on verifier ha | OK | 81 passed in 4.00s |
 | 2026-05-24 15:43 UTC | SOTA solver formalization provenance reproduction | OK | 81 passed in 3.78s |
+| 2026-05-24 15:58 UTC | AquaForte BEAVER honest substrate corrigendum | OK | 81 passed in 3.90s |
