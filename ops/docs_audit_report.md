@@ -4,49 +4,49 @@
 # docs_audit_report — 2026-05-23
 
 ## TL;DR (stranger's 30-second take)
-I'd close the tab. The page buries a great core premise under defensive internal project-management copy, obscure internal dataset acronyms, and raw file paths, making it feel like a leaked internal CI status board rather than a public tool.
+I am closing the tab. The page feels like a defensive internal status board heavily polluted with laboratory jargon rather than a product landing page; the suspiciously perfect test numbers and mismatched claims shatter trust immediately.
 
 ## TOP 3 PROBLEMS
-1. **Raw internal artifacts exposed as copy:** The Live Benchmark card dumps a raw file path (`@results/citation_hallucination...txt`) right into a headline result.
-2. **Defensive, internal narrative:** The intro to the Results section ("checked-in experiment artifact", "labeled by provenance") reads like a defensive retrospective rather than external marketing copy.
-3. **Massive metric inconsistency:** The `Code` feature card claims repair pushes pass-rate up by +3 points, but the `Code repair` result card claims a suspiciously perfect +72 points (8% -> 80%).
+1. Defensive Per-Milestone Narrative: The "Evidence" and "Preprint" sections read like defensive commit messages meant for an internal audit, not a user.
+2. Unexplained Internal Jargon: The results cards are an alphabet soup of internal experiment names (FoVer, CCTU, PREM, VeriCoT, HalluGuard) that mean nothing to a stranger.
+3. Fabrication Signals: Claims of exactly "1.0 TP rate", "60/60 attacks", and perfectly linear "2.0x speedup" with identical losses scream fabrication.
 
 ## DETAILED FINDINGS
 ### Bloat
-- **Page-wide card density** — 25 total cards (7 features, 12 results, 6 blog) — Cap at ~15 total. The sheer volume guarantees a stranger will skim and absorb none of them.
-- **Results section grid** — 12 result cards — Cap at 6 of the most universally recognizable, high-impact metrics.
+- Hero "Recent progress" r-card — 62 words — 0 words (Delete entirely; a status report doesn't belong in the hero stats bar).
+- "Evidence" section description — 45 words — 15 words (Cut all the internal defensive clauses about checked-in artifacts and provenance).
 
 ### Internal jargon
-- **Live benchmark result card** — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — This is a raw internal filesystem path that means absolutely nothing to an external reader.
-- **Hero Stats & Recent progress** — "HIVE peer", "FoVer step-error corpus" — Undefined internal datasets and competitor aliases.
-- **Test-Time Compute feature card** — "PREM" — Acronym dropped with no explanation of what a Process-Reward Energy Model actually is or does for the user.
-- **Adversarial audit result card** — "PRM-BiasBench-style attacks" — Obscure benchmarking jargon.
+- Stats bar / Evidence cards — "FoVer step-error corpus", "HIVE peer 0.924", "CCTU", "PREM" — Acronyms and internal dataset codenames have no meaning to a visitor.
+- Evidence cards — "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)", "EstimationVerifier SVAMP AUC", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3" — These are internal experiment or framework names lacking context.
+- Preprint section — "operator-initiated upload" — Pure internal operational jargon.
 
 ### Per-milestone narrative
-- **Results section intro** — "Every number below is backed by a checked-in experiment artifact... synthetic-pilot, and adversarial-audit rows are labeled by provenance." — Reads exactly like an internal audit checklist or defensive PR description.
-- **Blog section cards** — "The three-layer defense we shipped", "the seven-rule detector we shipped to stop it" — Reads like copy-pasted sprint retrospectives.
-- **Research operations feature card** — "Carnot is developed through an autonomous research loop..." — CI/CD internal process masquerading as a user-facing feature.
+- "Evidence" section intro — "Every number below is backed by a checked-in experiment artifact... Synthetic pilots are included only when the card says so..."
+- "Preprint" section — "The arXiv submission is prepared but pending operator-initiated upload."
+- Capabilities / "Research operations" card — "Every experiment artifact is stored as a structured JSON record with reproducibility metadata."
 
 ### Inconsistencies
-- **HumanEval repair pass-rate vs Code feature card** — The `Features > Code` card claims repair pushes pass-rate up by 3 points (HumanEval), but the `Results > Code repair` card claims an "8% -> 80% pass rate (+72pp)" on HumanEval-50. A stranger will immediately spot the massive contradiction between +3 and +72 points.
-- **Global AUROC vs Specific AUROCs** — The Hero claims a global "0.9857 Verifier AUROC", but the Results section lists "0.91 AUROC" for safety and "0.90 AUC" for math without clarifying what the 0.9857 actually applies to.
+- "No model fine-tuning required" (How it works section) vs "Training — Two-GPU parallel retrain 2.0x speedup" (Results section). Why boast about training speed if no tuning is required?
+- Visual bar widths vs Claims (Results section) — "+4.9 points" has a 66.7% wide bar, while "+3.0 points" has a 14.6% wide bar. The progress bars don't accurately correspond to the numbers.
 
 ### Missing essentials
-- **Trust anchors / Why should I trust the numbers?** — The page defends its numbers by saying they are "backed by a checked-in experiment artifact" and "labeled by provenance", which is internal CI/CD trust ("we checked our homework into git"). There is no external third-party or clear standardized benchmarking trust established.
+- The Quickstart code snippet is missing the installation command. The intro text says "Install with pip", but the code block just assumes the framework is installed and jumps straight to `from carnot.pipeline import VerifyRepairPipeline`.
 
 ### Fabrication signals
-- **Math extraction result card** — "TP rate: 0.5 -> 1.0" — A perfect 1.0 (100%) extraction rate is highly suspicious for LLM parsing without caveats.
-- **Adversarial audit result card** — "catches 60/60 attacks" — A suspiciously perfect 100% score on a very small (n=60) sample size.
-- **Dogfooding blog card** — "Zero false positives" — Impossible-sounding perfection for code constraint analysis.
+- "0.9857 Verifier AUROC" (Hero stats) — 4 significant figures is a classic over-precision tell.
+- "k=5 ensemble catches 60/60 attacks" (Results) — Suspiciously perfect 100% success rate on a very small sample size.
+- "GSM8K extraction TP rate: 0.5 -> 1.0" (Results) — Perfect 1.0 True Positive rate.
+- "2.0x speedup, identical losses" (Results) — Perfectly linear distributed training scaling is a well-known red flag.
 
 ## WHAT'S WORKING
-- The core hero messaging ("Catch the mistakes your LLM confidently makes up.") is excellent. It explains the exact value proposition in plain English in one sentence.
-- The Quickstart section effectively uses tabbed code blocks to prove the tool is real and easy to integrate in just a few lines of Python.
+- The "The Problem" section is excellent: "LLMs predict. They don't check." paired with the 47+28=76 example makes the value proposition instantly understandable.
+- The visual aesthetics, including the micro-interactions and dark-mode code window styling, are modern and polished.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove the raw file path (`@results/...`) from the Live benchmark result card and replace it with a clean model name and metric.
-2. Reconcile the conflicting HumanEval claims to present a single, honest repair metric (is it +3 or +72?).
-3. Rewrite the Results section introduction to remove internal defensive language (provenance, checked-in artifacts) and simply state what was measured.
-4. Prune the 12 result cards down to the top 6 most universally understood metrics.
-5. Replace internal benchmark acronyms (FoVer, HIVE, PREM) with descriptive, generic terms.
-6. Remove the "Research operations" feature card entirely; your internal CI loop is not a capability for the user of the tool.
+1. Delete the "Recent progress" card from the hero stats bar to remove the awkwardly placed status update.
+2. Rewrite the "Evidence" intro paragraph to be a single sentence (e.g., "Performance metrics evaluated on public models and benchmarks.") and remove defensive artifact tracking text.
+3. Scrub all internal acronyms (FoVer, CCTU, VeriCoT, PREM) from the Results grid and replace them with standard industry terms.
+4. Round the 0.9857 AUROC to 0.99, and add explicit caveats/sample sizes to the 60/60 and 1.0 TP rate claims to ground them in reality.
+5. Add `pip install carnot-ebm` as the first line in the Python Quickstart code block.
+6. Remove the "pending operator-initiated upload" status from the Preprint section.
