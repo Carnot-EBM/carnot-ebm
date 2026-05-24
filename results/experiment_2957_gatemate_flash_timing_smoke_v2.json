@@ -3,16 +3,16 @@
   "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
   "bitstream_sha256_verified": true,
   "board_detected": false,
-  "duration_s": 0.684684,
+  "duration_s": 0.018715,
   "failure_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect",
   "failure_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
-  "flash_attempted": true,
-  "flash_succeeded": true,
-  "honest_verdict": "blocked_post_flash_board_contact_missing",
+  "flash_attempted": false,
+  "flash_succeeded": false,
+  "honest_verdict": "blocked_board_not_detected",
   "inference_substrate": "hardware_smoke",
   "no_boltzmann_claim": true,
   "no_speedup_claim": true,
-  "observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+  "observed_output_sha256": "",
   "preconditions_checked": [
     {
       "available": true,
@@ -38,38 +38,27 @@
       "resource": "openFPGALoader"
     },
     {
-      "available": true,
+      "available": false,
       "command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect",
       "resource": "gatemate_board_detection",
       "returncode": 0,
       "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/detect.txt"
-    },
-    {
-      "available": true,
-      "command_shape": "openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream>",
-      "resource": "documented_gatemate_flash_path"
     }
   ],
   "run_date": "20260524",
   "smoke_vector_passed": false,
   "timing_observation": {
     "command_durations_s": {
-      "detect": 0.017212,
-      "flash": 0.647733,
-      "post_flash_detect": 0.017558
+      "detect": 0.017263
     },
     "readback_reason": "Exp 2956 uses build-only constraints with no physical board output/readback path.",
     "readback_supported": false,
     "timing_source": "host_wall_clock_command_duration"
   },
   "transcript_paths": [
-    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/detect.txt",
-    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/flash.txt",
-    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/post_flash_detect.txt"
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/detect.txt"
   ],
   "transcript_sha256": {
-    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/detect.txt": "2916bf7f74eaae592e07cb0837352efa53c296bdd45191c829211840128eca55",
-    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/flash.txt": "ddc312d385e4013ce8aa07d959582494d36ee11918c17bade4c09b56350f7a64",
-    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/post_flash_detect.txt": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e"
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2957_gatemate_flash_timing_smoke_v2/detect.txt": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e"
   }
 }
