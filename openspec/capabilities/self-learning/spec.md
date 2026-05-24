@@ -7030,3 +7030,75 @@ control, positive trace-memory delta over random-memory replay, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2983 | Implemented (`python/carnot/eval/trace_to_skill_repair_memory_pilot_v1.py`) | Implemented (`tests/python/test_experiment_2983_trace_to_skill_repair_memory_pilot_v1.py`) |
+
+## REQ-LEARN-2995: FR-11 Verifier-Grounded Trace Memory v2
+
+**Given** Exp 2982 preserves the independent FR-11 metric boundary, Exp 2983
+is only a trace-memory pilot, Exp 2992 records fresh solver-backed
+formalization transcripts, and Exp 2994 records deterministic validator-tree
+successes and failures
+**When** Exp 2995 builds verifier-grounded trace memory v2
+**Then** it SHALL extract candidate memories from Exp 2992 solver transcripts
+and Exp 2994 validator-tree feedback only when the candidate includes
+process-verifiable evidence from exact checks.
+**And** it SHALL use a bounded update or memory-selection rule that selects
+memories by utility metrics such as process verification score and trace
+evidence density, not by the reported independent held-out metrics.
+**And** it SHALL evaluate held-out pass@1, solver-verified accuracy,
+syntax/schema failure, verifier false accepts, and forgetting with the
+independent metric direction rules established by Exp 2982.
+**And** it SHALL include deterministic negative controls where trace memory
+selection is disabled or made uninformative, and SHALL refuse promotion if the
+selection utility is identical to the independent metrics or the controls
+improve equally.
+
+The terminal artifact SHALL be
+`results/experiment_2995_fr11_verifier_grounded_trace_memory_v2.json` and
+SHALL include `independent_self_learning_boundary_preserved`,
+`continuous_self_learning_task=true`, `trace_memory_ready`,
+`n_trace_memories`, `independent_metric_names`, `utility_metric_names`,
+`no_identical_metric_flag`, `negative_control_deltas`,
+`forgetting_guard_passed`, `heldout_metric_deltas`, and `honest_verdict`.
+
+### REQ-LEARN-2995 Sub-requirements
+
+- REQ-LEARN-2995-1: The evaluator SHALL fail closed when Exp 2982, Exp 2992,
+  or Exp 2994 readiness evidence is absent or malformed.
+- REQ-LEARN-2995-2: Candidate memories SHALL include explicit exact-check
+  evidence from Z3, runtime JSON parsing, Python AST parsing, or deterministic
+  validator-tree feedback, and SHALL NOT copy held-out labels or answers into
+  memory bodies.
+- REQ-LEARN-2995-3: The bounded selection rule SHALL be disableable for a
+  random/control condition and SHALL select by utility metrics that are
+  disjoint from held-out metric names.
+- REQ-LEARN-2995-4: Held-out deltas SHALL use Exp 2982 directional semantics:
+  higher is better for pass@1 and solver-verified accuracy, while lower is
+  better for syntax/schema failure and verifier false accepts.
+- REQ-LEARN-2995-5: `trace_memory_ready` SHALL be true only when at least one
+  verifier-grounded memory is selected, independent held-out deltas improve,
+  negative controls do not improve equally, the forgetting guard passes, and
+  `no_identical_metric_flag=true`.
+
+### SCENARIO-LEARN-2995: Verifier-Grounded Memories Improve Held-Out Verification
+
+**Given** ready Exp 2982, reproduced Exp 2992 solver provenance, and ready Exp
+2994 validator-tree feedback
+**When** Exp 2995 extracts and selects bounded trace memories
+**Then** it writes the required artifact fields, reports non-zero
+`n_trace_memories`, preserves distinct utility and independent metric names,
+reports positive held-out directional deltas, reports non-improving negative
+controls, passes the forgetting guard, and sets `trace_memory_ready=true`.
+
+### SCENARIO-LEARN-2995-BLOCKED: Missing Verifier Evidence Fails Closed
+
+**Given** any required upstream verifier artifact is missing or not ready
+**When** Exp 2995 runs
+**Then** it writes the required artifact fields with `trace_memory_ready=false`,
+`n_trace_memories=0`, empty held-out deltas, non-ready forgetting evidence, and
+an `honest_verdict` beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-2995)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2995 | Implemented (`python/carnot/eval/fr11_verifier_grounded_trace_memory_v2.py`) | Implemented (`tests/python/test_experiment_2995_fr11_verifier_grounded_trace_memory_v2.py`) |
