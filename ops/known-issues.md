@@ -320,6 +320,101 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-24 (02:50Z): GateMate n=16 Bitstream Flash + Timing Smoke v3 — Board Reattached (.279+ MANDATORY)
+
+**Origin:** 2026-05-24 operator confirmed the GateMate A1-EVB-2M is
+reattached after a power-cycle replug. exp2957 (`.278) had emitted
+`blocked_board_not_detected` because the DirtyJTAG USB enumeration
+was momentarily absent (board showed only red LED). After unplug +
+re-plug the board now shows green LED. Verification 2026-05-24
+02:48Z:
+
+- `lsusb` shows `1209:c0ca` on bus 3 device 14 (new device-id after
+  replug — was device 6 on 2026-05-22)
+- `openFPGALoader --scan-usb` enumerates the DirtyJTAG probe
+- `openFPGALoader -c dirtyJtag --detect` returns IDCODE 0x20000001,
+  manufacturer `colognechip`, family `GateMate Series`, model
+  `GM1Ax`, irlength 6
+- `openFPGALoader -c dirtyJtag -b olimex_gatemateevb --detect`
+  same IDCODE recognized with board-target invocation
+
+**The task to queue.** exp2956 already built a real n=16 Ising
+bitstream (sha256 recorded in exp2956's deliverable). The retry
+just needs to flash that specific bitstream and run a smoke test.
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_gatemate_n16_flash_timing_smoke_v3.json"
+  title: "GateMate n=16 Bitstream Flash + Timing Smoke v3 (board reattached)"
+  priority: high
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 25
+  estimated_wall_time_min: 30
+  track: hardware
+  inference_substrate: hardware_smoke
+  prior_failures:
+    - experiment_id: exp2957
+      verdict: "blocked_board_not_detected"
+      addressed_by: "Board was momentarily not USB-enumerated at exp2957 launch time (red LED only). Operator power-cycled the board 2026-05-24 02:48Z; DirtyJTAG now enumerates on bus 3 device 14 (was device 6 on 2026-05-22 — new device-id confirms replug). openFPGALoader --detect succeeds with the GateMate Series GM1Ax IDCODE 0x20000001. exp2956's bitstream is already built and on disk; this task just flashes and smoke-tests."
+      retire_if_same_verdict: true
+```
+
+**Concrete steps:**
+
+0. PRECONDITIONS:
+   a. `openFPGALoader -c dirtyJtag --detect 2>&1 | grep -q "GateMate Series"` returns 0 (board reachable). If non-zero, write `honest_verdict: blocked_gatemate_board_unreachable` and exit (the operator-replug fix did not stick).
+   b. exp2956's bitstream file exists at the path exp2956 recorded.
+1. `openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream-path>`
+2. Capture full stdout. Record the load duration.
+3. After flash, attempt to read board status (the GateMate's config-readback register if reachable; otherwise just confirm openFPGALoader exit code 0 and the "load done" status line).
+4. Optionally: power-cycle the board (operator-controlled) and verify the bitstream survived a reset.
+5. Record per-step timings, bitstream sha256 cited from exp2956.
+
+**Required artifact fields:**
+
+| Field | Principle |
+|---|---|
+| `honest_verdict` | Must start with `complete:` / `success:` per Verdict Terminal-Prefix Discipline. |
+| `inference_substrate` | `hardware_smoke` |
+| `preconditions_checked` | List with `gatemate_board_reachable` and `exp2956_bitstream_present` resources |
+| `bitstream_sha256_flashed` | Cited from exp2956 |
+| `flash_duration_s` | Real wall-clock of the openFPGALoader invocation |
+| `flash_succeeded` | bool — openFPGALoader exit code 0 + load-done status line |
+| `board_state_after_flash` | str — config-readback if available, else "config_readback_not_attempted" |
+| `duration_s` | Real wall-clock of the whole task |
+
+**Acceptance gates:**
+
+- `flash_succeeded is True`
+- `duration_s >= 5` (real openFPGALoader invocation cannot finish faster)
+- `bitstream_sha256_flashed` matches exp2956's recorded bitstream sha256
+
+**Why this stays in MANDATORY until landed:** the GateMate chain
+needs to reach a real flashed-to-board state to satisfy the
+Hardware-Task Continuity Discipline boundary in
+`research-hardware-wishlist.md` (the "No GateMate latency or speedup
+claim until a Carnot Ising tile is flashed AND a smoke-test records
+sample-level timing" rule). exp2956 produced the bitstream; this
+task produces the flash transcript. Together they close the
+GateMate bring-up arc that began with exp2899 `.274's false-block
+on the renamed-binary issue.
+
+**Cross-references:**
+
+- `results/experiment_2956_gated_gatemate_n16_bitstream_build_v4.json`
+  — the bitstream this task flashes
+- `results/experiment_2957_gated_gatemate_flash_timing_smoke_v2.json`
+  — the blocked-on-detection predecessor
+- `research-hardware-wishlist.md` — the GateMate Active track row
+  whose boundary this task closes
+- CLAUDE.md "Pre-Launch Preconditions Discipline" GateMate row —
+  the precondition format this task uses
+
+---
+
 ### NEW 2026-05-23 (19:00Z): exp2934 AquaForte/BEAVER Reformulation Pipeline — Honest Substrate Corrigendum (.278+ MANDATORY)
 
 **Origin:** 2026-05-23 outer-loop drill-down into exp2934's "+88.9pp
