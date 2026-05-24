@@ -260,6 +260,58 @@ gates all clear.
 |---|---|---|
 | REQ-VERIFY-2980 | Implemented (`python/carnot/eval/sota_solver_formalization_feedback_v2.py`) | Implemented (`tests/python/test_experiment_2980_sota_solver_formalization_feedback.py`) |
 
+### REQ-VERIFY-2992: SOTA Solver Formalization Provenance Reproduction
+
+The repository shall provide an Exp 2992 local SOTA solver-feedback
+reproduction runner that re-tests the Exp 2980 NL-to-Z3 result on a fixed item
+set of at least 12 Exp 2966 exact-verifier items, preserves durable model and
+solver provenance, and writes
+`results/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.json`.
+
+The runner MUST first verify SOTA cache readiness through the repo-local SOTA
+helper, CUDA/cache status, exact Z3 availability, the fixed item-set hash, and
+availability of the prior Exp 2980 artifact. If those preconditions cannot
+support live headline evidence, it MUST write a terminal blocked artifact rather
+than promoting smoke-only or simulated evidence.
+
+For every selected item, the runner shall record the prompt hash, raw model
+output, raw output hash, solver feedback used for repair, final Z3 input, Z3
+transcript hash, solver status, answer correctness, and unsat-core/MCS/MUS
+evidence where applicable. Z3/runtime verification remains authoritative: LLM
+self-judgment MUST NOT decide correctness, and implausibly short live-inference
+durations MUST NOT set `solver_provenance_reproduced=true`.
+
+The terminal artifact MUST include `solver_provenance_reproduced`,
+`formalization_clean`, `n_items`, `parseability`, `z3_execution_rate`,
+`solver_verified_accuracy`, `feedback_repair_delta`, `tautology_rate`,
+`prompt_hashes_recorded`, `z3_transcript_hashes_recorded`,
+`model_checksums_recorded`, `duration_seconds`, `inference_substrate`, and
+`honest_verdict`.
+
+`solver_provenance_reproduced` shall be true only when the fixed item set has at
+least 12 items, at least one mandated headline GGUF produced live local output,
+model checksum evidence is recorded, prompt and Z3 transcript hashes are
+recorded for every item, exact Z3 executes every final formalization,
+`formalization_clean=true`, and live inference duration is plausible for a
+headline GGUF run.
+
+### SCENARIO-VERIFY-2992: Larger Fixed Set Reproduces Or Falsifies Exp 2980
+
+Given Exp 2980 previously reported a clean feedback-aware SOTA formalization
+result,
+When the Exp 2992 runner executes on the fixed 12+ item set with a mandated
+headline GGUF and exact Z3,
+Then it writes the terminal JSON artifact, compares its metrics against Exp
+2980, reports any regression or non-reproduction reason, records replayable
+prompt/model/Z3 provenance, and sets `honest_verdict` to reproduced, flagged, or
+blocked according to the solver-backed evidence.
+
+## Implementation Status (REQ-VERIFY-2992)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-2992 | Planned (`python/carnot/eval/sota_solver_formalization_provenance_reproduction_v1.py`) | Planned (`tests/python/test_experiment_2992_sota_solver_formalization_provenance_reproduction.py`) |
+
 ### REQ-VERIFY-2981: Interwhen Partial-Monitor Promotion Metrics V2
 
 The repository shall provide an Exp 2981 deterministic promotion evaluator for

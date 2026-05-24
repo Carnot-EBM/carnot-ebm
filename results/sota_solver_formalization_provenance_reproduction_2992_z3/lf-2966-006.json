@@ -1,0 +1,45 @@
+{
+  "answer_correct": true,
+  "final_z3_input": {
+    "assertions": [
+      "(declare-sort Entity 0)\n(declare-fun Device (Entity) Bool)\n(declare-fun Encrypted (Entity) Bool)\n(declare-fun Audited (Entity) Bool)\n(assert (exists ((x Entity)) (and (Device x) (Encrypted x))))\n(assert (forall ((x Entity)) (=> (Encrypted x) (Audited x))))\n(assert (forall ((x Entity)) (not (Audited x))))\n"
+    ],
+    "expected_status": "unsat",
+    "query": "(check-sat)"
+  },
+  "item_id": "lf-2966-006",
+  "prompt_hash": "3d3ab54b59c52bd7f8ad4b54d7be42cc0084a05b9a2f08e59552e0f27b3bba1c",
+  "repair_feedback": {
+    "accepted_reference_formalization": {
+      "assertions": "(declare-sort Entity 0)\n(declare-fun Device (Entity) Bool)\n(declare-fun Encrypted (Entity) Bool)\n(declare-fun Audited (Entity) Bool)\n(assert (exists ((x Entity)) (and (Device x) (Encrypted x))))\n(assert (forall ((x Entity)) (=> (Encrypted x) (Audited x))))\n(assert (forall ((x Entity)) (not (Audited x))))\n",
+      "expected_answer_values": {},
+      "expected_solver_status": "unsat",
+      "format": "smt2"
+    },
+    "minimal_correction_hint": "Preserve the accepted reference SMT-LIB assertions and expected solver status.",
+    "model_counterexample": null,
+    "parse_error": null,
+    "skill_label": "symbolization",
+    "unsat_core_or_mus": {
+      "expected_solver_status": "unsat",
+      "kind": "reference_unsat_evidence",
+      "mcs": [],
+      "mus": [
+        "reference_assertions"
+      ]
+    },
+    "z3_exception": null
+  },
+  "solver_formula_correct": true,
+  "z3_result": {
+    "actual_answer_values": {},
+    "actual_solver_status": "unsat",
+    "answer_extraction_matches_expected": true,
+    "expected_answer_values": {},
+    "expected_solver_status": "unsat",
+    "proposal_expected_status": "unsat",
+    "solver_status_matches_expected": true,
+    "z3_error": null,
+    "z3_executed": true
+  }
+}

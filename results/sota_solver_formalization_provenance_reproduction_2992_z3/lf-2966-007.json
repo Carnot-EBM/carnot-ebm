@@ -1,0 +1,45 @@
+{
+  "answer_correct": true,
+  "final_z3_input": {
+    "assertions": [
+      "(declare-const access Bool)\n(declare-const badge Bool)\n(assert (=> access badge))\n(assert access)\n(assert (not badge))\n"
+    ],
+    "expected_status": "unsat",
+    "query": "(check-sat)"
+  },
+  "item_id": "lf-2966-007",
+  "prompt_hash": "5c9c7c8fc7fde3ce75982b9a8f4cdff0cc06e3b5b03bd27ff374196cbd47963b",
+  "repair_feedback": {
+    "accepted_reference_formalization": {
+      "assertions": "(declare-const access Bool)\n(declare-const badge Bool)\n(assert (=> access badge))\n(assert access)\n(assert (not badge))\n",
+      "expected_answer_values": {},
+      "expected_solver_status": "unsat",
+      "format": "smt2"
+    },
+    "minimal_correction_hint": "Preserve the accepted reference SMT-LIB assertions and expected solver status.",
+    "model_counterexample": null,
+    "parse_error": null,
+    "skill_label": "symbolization",
+    "unsat_core_or_mus": {
+      "expected_solver_status": "unsat",
+      "kind": "reference_unsat_evidence",
+      "mcs": [],
+      "mus": [
+        "reference_assertions"
+      ]
+    },
+    "z3_exception": null
+  },
+  "solver_formula_correct": true,
+  "z3_result": {
+    "actual_answer_values": {},
+    "actual_solver_status": "unsat",
+    "answer_extraction_matches_expected": true,
+    "expected_answer_values": {},
+    "expected_solver_status": "unsat",
+    "proposal_expected_status": "unsat",
+    "solver_status_matches_expected": true,
+    "z3_error": null,
+    "z3_executed": true
+  }
+}

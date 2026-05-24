@@ -1,0 +1,45 @@
+{
+  "answer_correct": true,
+  "final_z3_input": {
+    "assertions": [
+      "(declare-sort Entity 0)\n(declare-const rho Entity)\n(declare-fun Robot (Entity) Bool)\n(declare-fun Organic (Entity) Bool)\n(assert (forall ((x Entity)) (not (and (Robot x) (Organic x)))))\n(assert (Robot rho))\n(assert (Organic rho))\n"
+    ],
+    "expected_status": "unsat",
+    "query": "(check-sat)"
+  },
+  "item_id": "lf-2966-003",
+  "prompt_hash": "4de6699263ed7eed2768ceb873f1b60af5565ad7cdd733c164e0ef42a0650c51",
+  "repair_feedback": {
+    "accepted_reference_formalization": {
+      "assertions": "(declare-sort Entity 0)\n(declare-const rho Entity)\n(declare-fun Robot (Entity) Bool)\n(declare-fun Organic (Entity) Bool)\n(assert (forall ((x Entity)) (not (and (Robot x) (Organic x)))))\n(assert (Robot rho))\n(assert (Organic rho))\n",
+      "expected_answer_values": {},
+      "expected_solver_status": "unsat",
+      "format": "smt2"
+    },
+    "minimal_correction_hint": "Preserve the accepted reference SMT-LIB assertions and expected solver status.",
+    "model_counterexample": null,
+    "parse_error": null,
+    "skill_label": "symbolization",
+    "unsat_core_or_mus": {
+      "expected_solver_status": "unsat",
+      "kind": "reference_unsat_evidence",
+      "mcs": [],
+      "mus": [
+        "reference_assertions"
+      ]
+    },
+    "z3_exception": null
+  },
+  "solver_formula_correct": true,
+  "z3_result": {
+    "actual_answer_values": {},
+    "actual_solver_status": "unsat",
+    "answer_extraction_matches_expected": true,
+    "expected_answer_values": {},
+    "expected_solver_status": "unsat",
+    "proposal_expected_status": "unsat",
+    "solver_status_matches_expected": true,
+    "z3_error": null,
+    "z3_executed": true
+  }
+}

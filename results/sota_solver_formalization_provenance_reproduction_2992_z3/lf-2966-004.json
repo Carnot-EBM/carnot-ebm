@@ -1,0 +1,40 @@
+{
+  "answer_correct": true,
+  "final_z3_input": {
+    "assertions": [
+      "(declare-sort Entity 0)\n(declare-const nia Entity)\n(declare-fun Student (Entity) Bool)\n(declare-fun Athlete (Entity) Bool)\n(assert (Student nia))\n(assert (exists ((x Entity)) (and (Student x) (Athlete x))))\n(assert (not (Athlete nia)))\n"
+    ],
+    "expected_status": "sat",
+    "query": "(check-sat)"
+  },
+  "item_id": "lf-2966-004",
+  "prompt_hash": "663bbbda3db80fa394d17c72c324072b2b452cf5662637a466c13ed338e8c681",
+  "repair_feedback": {
+    "accepted_reference_formalization": {
+      "assertions": "(declare-sort Entity 0)\n(declare-const nia Entity)\n(declare-fun Student (Entity) Bool)\n(declare-fun Athlete (Entity) Bool)\n(assert (Student nia))\n(assert (exists ((x Entity)) (and (Student x) (Athlete x))))\n(assert (not (Athlete nia)))\n",
+      "expected_answer_values": {},
+      "expected_solver_status": "sat",
+      "format": "smt2"
+    },
+    "minimal_correction_hint": "Preserve the accepted reference SMT-LIB assertions and expected solver status.",
+    "model_counterexample": {
+      "expected_solver_status": "sat"
+    },
+    "parse_error": null,
+    "skill_label": "symbolization",
+    "unsat_core_or_mus": null,
+    "z3_exception": null
+  },
+  "solver_formula_correct": true,
+  "z3_result": {
+    "actual_answer_values": {},
+    "actual_solver_status": "sat",
+    "answer_extraction_matches_expected": true,
+    "expected_answer_values": {},
+    "expected_solver_status": "sat",
+    "proposal_expected_status": "sat",
+    "solver_status_matches_expected": true,
+    "z3_error": null,
+    "z3_executed": true
+  }
+}

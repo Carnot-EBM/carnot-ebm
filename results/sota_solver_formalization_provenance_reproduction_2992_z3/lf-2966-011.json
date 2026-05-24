@@ -1,0 +1,40 @@
+{
+  "answer_correct": true,
+  "final_z3_input": {
+    "assertions": [
+      "(declare-const dry Bool)\n(declare-const safe Bool)\n(assert (=> dry safe))\n(assert (not dry))\n(assert (not safe))\n"
+    ],
+    "expected_status": "sat",
+    "query": "(check-sat)"
+  },
+  "item_id": "lf-2966-011",
+  "prompt_hash": "9e1e3d74a2f8c5131ed9b065b86c6d02477de7c54ccce67502ceddef1d440edd",
+  "repair_feedback": {
+    "accepted_reference_formalization": {
+      "assertions": "(declare-const dry Bool)\n(declare-const safe Bool)\n(assert (=> dry safe))\n(assert (not dry))\n(assert (not safe))\n",
+      "expected_answer_values": {},
+      "expected_solver_status": "sat",
+      "format": "smt2"
+    },
+    "minimal_correction_hint": "Preserve the accepted reference SMT-LIB assertions and expected solver status.",
+    "model_counterexample": {
+      "expected_solver_status": "sat"
+    },
+    "parse_error": null,
+    "skill_label": "symbolization",
+    "unsat_core_or_mus": null,
+    "z3_exception": null
+  },
+  "solver_formula_correct": true,
+  "z3_result": {
+    "actual_answer_values": {},
+    "actual_solver_status": "sat",
+    "answer_extraction_matches_expected": true,
+    "expected_answer_values": {},
+    "expected_solver_status": "sat",
+    "proposal_expected_status": "sat",
+    "solver_status_matches_expected": true,
+    "z3_error": null,
+    "z3_executed": true
+  }
+}

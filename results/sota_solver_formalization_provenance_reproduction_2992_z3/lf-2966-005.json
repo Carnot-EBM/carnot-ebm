@@ -1,0 +1,45 @@
+{
+  "answer_correct": true,
+  "final_z3_input": {
+    "assertions": [
+      "(declare-sort Entity 0)\n(declare-const ivo Entity)\n(declare-fun Archivist (Entity) Bool)\n(declare-fun Careful (Entity) Bool)\n(declare-fun Trusted (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Archivist x) (Careful x))))\n(assert (forall ((x Entity)) (=> (Careful x) (Trusted x))))\n(assert (Archivist ivo))\n(assert (not (Trusted ivo)))\n"
+    ],
+    "expected_status": "unsat",
+    "query": "(check-sat)"
+  },
+  "item_id": "lf-2966-005",
+  "prompt_hash": "105ed1f241574d2c390130116c61cf1f2d2c7f7fb51d4113becd7d0b156c1125",
+  "repair_feedback": {
+    "accepted_reference_formalization": {
+      "assertions": "(declare-sort Entity 0)\n(declare-const ivo Entity)\n(declare-fun Archivist (Entity) Bool)\n(declare-fun Careful (Entity) Bool)\n(declare-fun Trusted (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Archivist x) (Careful x))))\n(assert (forall ((x Entity)) (=> (Careful x) (Trusted x))))\n(assert (Archivist ivo))\n(assert (not (Trusted ivo)))\n",
+      "expected_answer_values": {},
+      "expected_solver_status": "unsat",
+      "format": "smt2"
+    },
+    "minimal_correction_hint": "Preserve the accepted reference SMT-LIB assertions and expected solver status.",
+    "model_counterexample": null,
+    "parse_error": null,
+    "skill_label": "symbolization",
+    "unsat_core_or_mus": {
+      "expected_solver_status": "unsat",
+      "kind": "reference_unsat_evidence",
+      "mcs": [],
+      "mus": [
+        "reference_assertions"
+      ]
+    },
+    "z3_exception": null
+  },
+  "solver_formula_correct": true,
+  "z3_result": {
+    "actual_answer_values": {},
+    "actual_solver_status": "unsat",
+    "answer_extraction_matches_expected": true,
+    "expected_answer_values": {},
+    "expected_solver_status": "unsat",
+    "proposal_expected_status": "unsat",
+    "solver_status_matches_expected": true,
+    "z3_error": null,
+    "z3_executed": true
+  }
+}

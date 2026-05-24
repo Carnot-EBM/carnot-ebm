@@ -1,0 +1,45 @@
+{
+  "answer_correct": true,
+  "final_z3_input": {
+    "assertions": [
+      "(declare-sort Entity 0)\n(declare-const milo Entity)\n(declare-fun Cat (Entity) Bool)\n(declare-fun Mammal (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Cat x) (Mammal x))))\n(assert (Cat milo))\n(assert (not (Mammal milo)))\n"
+    ],
+    "expected_status": "unsat",
+    "query": "(check-sat)"
+  },
+  "item_id": "lf-2966-001",
+  "prompt_hash": "17c696a16e764cce6969acfba16ba26a43cfc4f569e1acc401b02f33016ac205",
+  "repair_feedback": {
+    "accepted_reference_formalization": {
+      "assertions": "(declare-sort Entity 0)\n(declare-const milo Entity)\n(declare-fun Cat (Entity) Bool)\n(declare-fun Mammal (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Cat x) (Mammal x))))\n(assert (Cat milo))\n(assert (not (Mammal milo)))\n",
+      "expected_answer_values": {},
+      "expected_solver_status": "unsat",
+      "format": "smt2"
+    },
+    "minimal_correction_hint": "Preserve the accepted reference SMT-LIB assertions and expected solver status.",
+    "model_counterexample": null,
+    "parse_error": null,
+    "skill_label": "symbolization",
+    "unsat_core_or_mus": {
+      "expected_solver_status": "unsat",
+      "kind": "reference_unsat_evidence",
+      "mcs": [],
+      "mus": [
+        "reference_assertions"
+      ]
+    },
+    "z3_exception": null
+  },
+  "solver_formula_correct": true,
+  "z3_result": {
+    "actual_answer_values": {},
+    "actual_solver_status": "unsat",
+    "answer_extraction_matches_expected": true,
+    "expected_answer_values": {},
+    "expected_solver_status": "unsat",
+    "proposal_expected_status": "unsat",
+    "solver_status_matches_expected": true,
+    "z3_error": null,
+    "z3_executed": true
+  }
+}
