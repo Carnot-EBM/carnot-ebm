@@ -2163,3 +2163,58 @@ evidence exists, and either readback/smoke-vector evidence or an exact blocker
 explaining why the current bitstream cannot expose sampler output.
 
 **Implementation status:** Planned (Exp 2984)
+
+---
+
+### REQ-HW-081
+
+**Title:** Exp 2985 SSQA dual-BRAM register-map plan MUST remain projection-only
+
+**Description:**
+Experiment 2985 MUST produce a design-only register-map and memory-banking plan
+for the Carnot n=16 GateMate tile and a future SSQA-style dual-BRAM sampling
+state. The artifact MUST read the current GateMate bitstream/contact evidence
+from Exp 2972, the readback/smoke-vector blocker from Exp 2984, and the
+GateMate constraints/build package evidence from Exp 2955/2956. It MUST turn
+that evidence into explicit host-visible register offsets, banked memory
+layout assumptions, IO smoke vectors, readback checks, and resource-accounting
+fields without flashing hardware, running a sampler, claiming physical
+performance, or touching `scripts/research_conductor.py`.
+
+**Acceptance criteria:**
+- `results/experiment_2985_ssqa_dual_bram_register_map_plan_v1.json` is
+  generated with `inference_substrate="architecture_projection_only"`.
+- The artifact includes `honest_verdict`, `register_map_plan_ready`,
+  `projection_only=true`, `target_boards`, `register_map`, `memory_layout`,
+  `smoke_vectors`, `readback_checks`, `resource_accounting`, `risks`,
+  `sampler_claim_allowed=false`, `speedup_claim_allowed=false`,
+  `inference_substrate`, and `duration_s`.
+- The register map separates input/control fields, seed/state fields,
+  energy/verifier fields, output fields, and status/error fields, with stable
+  32-bit aligned offsets and explicit access directions.
+- The memory layout documents a two-bank plan: a read-snapshot bank for
+  couplings/bias/current spins and a delayed-write bank for next spins, field
+  cache, RNG threshold state, and phase flags. Resource accounting MUST include
+  formulas, bit counts, per-bank BRAM rounding, and unknown fields where no
+  synthesis utilization evidence exists.
+- Smoke vectors and readback checks are executable only by a later milestone
+  with a host-visible IO path; the current artifact MUST preserve
+  `sampler_claim_allowed=false` and `speedup_claim_allowed=false`.
+
+**Implementation status:** Planned (Exp 2985)
+
+---
+
+### SCENARIO-HW-081
+
+**Scenario:** Projection-only register map prepares later GateMate/KV260 readback.
+
+**Given:** Exp 2972 records a flashed GateMate n=16 bitstream but no sampler
+readback path, Exp 2984 records that GateMate readback and host smoke-vector IO
+are unavailable, and Exp 2955/2956 record the current constraints/build package.
+**When:** Exp 2985 builds the SSQA dual-BRAM register-map plan.
+**Then:** It writes the projection-only JSON with explicit registers, memory
+banks, smoke vectors, readback checks, resource-accounting formulas, and claim
+flags fixed false.
+
+**Implementation status:** Planned (Exp 2985)

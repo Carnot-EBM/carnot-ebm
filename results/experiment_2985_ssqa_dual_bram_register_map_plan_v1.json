@@ -1,0 +1,622 @@
+{
+  "duration_s": 0.000322,
+  "honest_verdict": "complete: ssqa_dual_bram_register_map_plan_ready_projection_only",
+  "inference_substrate": "architecture_projection_only",
+  "memory_layout": {
+    "assumptions": {
+      "bias_width_bits": 16,
+      "coefficient_width_bits": 16,
+      "field_cache_width_bits": 24,
+      "layout_scope": "projection for register-map planning, not synthesized RTL",
+      "n_spins": 16,
+      "rng_threshold_width_bits": 16
+    },
+    "bank_swap_semantics": "Bank A is stable during row reads; Bank B accumulates delayed writes; CONTROL.bank_swap_enable permits commit only after STATUS.busy clears.",
+    "banks": {
+      "bank_a_read_snapshot": {
+        "fields": {
+          "bias_q8_8_bits": 256,
+          "current_spin_bits": 16,
+          "dense_coupling_matrix_q8_8_bits": 4096
+        },
+        "formula": "n*n*16 + n*16 + n",
+        "role": "stable row-read snapshot during one sweep",
+        "total_bits": 4368,
+        "total_bytes": 546
+      },
+      "bank_b_delayed_write": {
+        "fields": {
+          "field_cache_q16_8_bits": 384,
+          "next_spin_bits": 16,
+          "phase_flag_bits": 16,
+          "rng_threshold_bits": 256
+        },
+        "formula": "n*(1 + 24 + 16 + 1)",
+        "role": "delayed writes, field cache, stochastic thresholds, phase metadata",
+        "total_bits": 672,
+        "total_bytes": 84
+      }
+    },
+    "current_gatemate_rtl_floor": {
+      "dense_coupling_bits_q7": 2048,
+      "note": "Current RTL stores j_matrix as registers; the plan moves state into banks.",
+      "spin_register_floor_bits": 48,
+      "top_module": "ising_n16_gatemate"
+    },
+    "gatemate_block_ram_budget": "unknown_until_nextpnr_resource_report_is_parsed",
+    "kv260_bram36_blocks_min_by_bank": {
+      "bank_a_read_snapshot": 1,
+      "bank_b_delayed_write": 1,
+      "total_if_banks_are_separate": 2
+    },
+    "kv260_bram36_budget": 144,
+    "total_projected_bits": 5040,
+    "total_projected_bytes": 630
+  },
+  "projection_only": true,
+  "readback_checks": [
+    {
+      "claim_unlocked_by_check": "none",
+      "current_status": "already_available_as_file_hash_not_sampler_output",
+      "name": "bitstream_hash_recheck",
+      "pass_condition": "local bitstream SHA256 still matches Exp 2972/2956",
+      "registers_or_files": [
+        "bitstream_path",
+        "bitstream_sha256"
+      ]
+    },
+    {
+      "claim_unlocked_by_check": "none",
+      "current_status": "blocked_until_register_transport_exists",
+      "name": "status_register_round_trip",
+      "pass_condition": "read STATUS/ERROR_CODE and write-read SCRATCH through a real host IO path",
+      "registers_or_files": [
+        "STATUS",
+        "ERROR_CODE",
+        "SCRATCH"
+      ]
+    },
+    {
+      "claim_unlocked_by_check": "none",
+      "current_status": "blocked_until_bank_readback_or_crc_registers_exist",
+      "name": "bank_crc32_round_trip",
+      "pass_condition": "hardware CRC32 equals host CRC32 for Bank A and Bank B payloads",
+      "registers_or_files": [
+        "BANK_A_CRC32",
+        "BANK_B_CRC32"
+      ]
+    },
+    {
+      "claim_unlocked_by_check": "none",
+      "current_status": "planned_timing_evidence_not_physical_performance_claim",
+      "name": "cycle_counter_timing_readback",
+      "pass_condition": "cycle counter increases while busy and STEP_COUNT reaches requested steps",
+      "registers_or_files": [
+        "CYCLE_COUNT_LO",
+        "CYCLE_COUNT_HI",
+        "STEP_COUNT"
+      ]
+    },
+    {
+      "claim_unlocked_by_check": "none",
+      "current_status": "blocked_by_exp2984_no_host_visible_smoke_io",
+      "name": "sample_output_hash_readback",
+      "pass_condition": "observed sample output and hash match the selected smoke vector",
+      "registers_or_files": [
+        "SAMPLE_OUT_LO",
+        "OUTPUT_HASH_LO",
+        "OUTPUT_HASH_HI"
+      ]
+    }
+  ],
+  "register_map": {
+    "address_unit": "byte",
+    "endianness": "little",
+    "memory_windows": {
+      "BANK_A_READ_SNAPSHOT": {
+        "access": "rw_before_start_ro_while_busy",
+        "base": 4096,
+        "size_bytes": 4096
+      },
+      "BANK_B_DELAYED_WRITE": {
+        "access": "ro_for_host_rw_for_core",
+        "base": 8192,
+        "size_bytes": 4096
+      },
+      "TRACE_LOG": {
+        "access": "ro",
+        "base": 12288,
+        "size_bytes": 4096
+      }
+    },
+    "register_groups": {
+      "energy_verifier": {
+        "purpose": "Read projected energy/checksum evidence, not sampler quality claims.",
+        "registers": [
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "energy low word"
+            },
+            "name": "ENERGY_ACCUM_LO",
+            "offset": 80,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "energy high word"
+            },
+            "name": "ENERGY_ACCUM_HI",
+            "offset": 84,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "last field sum"
+            },
+            "name": "FIELD_ACCUM_Q16_8",
+            "offset": 88,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits31_0": "expected smoke-vector hash low word"
+            },
+            "name": "VERIFIER_HASH_LO",
+            "offset": 92,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits31_0": "expected smoke-vector hash high word"
+            },
+            "name": "VERIFIER_HASH_HI",
+            "offset": 96,
+            "reset": 0,
+            "width_bits": 32
+          }
+        ]
+      },
+      "input_control": {
+        "purpose": "Host writes problem shape, schedule, and start/reset controls.",
+        "registers": [
+          {
+            "access": "rw",
+            "fields": {
+              "bit0": "start",
+              "bit1": "reset",
+              "bit2": "load_commit",
+              "bit3": "clear_error",
+              "bit4": "bank_swap_enable"
+            },
+            "name": "CONTROL",
+            "offset": 0,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits15_0": "n_spins"
+            },
+            "name": "N_SPINS",
+            "offset": 16,
+            "reset": 16,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits15_0": "max_steps"
+            },
+            "name": "MAX_STEPS",
+            "offset": 20,
+            "reset": 8,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits15_0": "eta_q1_15"
+            },
+            "name": "ETA_Q1_15",
+            "offset": 24,
+            "reset": 2949,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits15_0": "pressure_start_q1_15"
+            },
+            "name": "PRESSURE_START_Q1_15",
+            "offset": 28,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits15_0": "pressure_delta_q1_15"
+            },
+            "name": "PRESSURE_DELTA_Q1_15",
+            "offset": 32,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits7_0": "sparse fanout or 0=dense"
+            },
+            "name": "FANOUT_K",
+            "offset": 36,
+            "reset": 0,
+            "width_bits": 32
+          }
+        ]
+      },
+      "output": {
+        "purpose": "Host-visible sample and timing outputs for later smoke runs.",
+        "registers": [
+          {
+            "access": "ro",
+            "fields": {
+              "bits15_0": "n=16 spin_out"
+            },
+            "name": "SAMPLE_OUT_LO",
+            "offset": 112,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "reserved for n>32"
+            },
+            "name": "SAMPLE_OUT_HI",
+            "offset": 116,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "completed steps"
+            },
+            "name": "STEP_COUNT",
+            "offset": 120,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "observed output hash low"
+            },
+            "name": "OUTPUT_HASH_LO",
+            "offset": 124,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "observed output hash high"
+            },
+            "name": "OUTPUT_HASH_HI",
+            "offset": 128,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "cycle counter low"
+            },
+            "name": "CYCLE_COUNT_LO",
+            "offset": 132,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "cycle counter high"
+            },
+            "name": "CYCLE_COUNT_HI",
+            "offset": 136,
+            "reset": 0,
+            "width_bits": 32
+          }
+        ]
+      },
+      "seed_state": {
+        "purpose": "Host writes deterministic seeds and reads state snapshots.",
+        "registers": [
+          {
+            "access": "rw",
+            "fields": {
+              "bits31_0": "rng_seed_lo"
+            },
+            "name": "RNG_SEED_LO",
+            "offset": 48,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits31_0": "rng_seed_hi"
+            },
+            "name": "RNG_SEED_HI",
+            "offset": 52,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits15_0": "initial n=16 spins"
+            },
+            "name": "INIT_SPINS_LO",
+            "offset": 56,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits15_0": "current spins"
+            },
+            "name": "CURRENT_SPINS_LO",
+            "offset": 60,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits15_0": "delayed-write spins"
+            },
+            "name": "NEXT_SPINS_LO",
+            "offset": 64,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bit0": "0=bank_a_read, 1=bank_b_commit"
+            },
+            "name": "PHASE",
+            "offset": 68,
+            "reset": 0,
+            "width_bits": 32
+          }
+        ]
+      },
+      "status_error": {
+        "purpose": "Readiness, error, and readback-integrity checks.",
+        "registers": [
+          {
+            "access": "ro",
+            "fields": {
+              "bit0": "ready",
+              "bit1": "busy",
+              "bit2": "done",
+              "bit3": "error",
+              "bit4": "readback_supported"
+            },
+            "name": "STATUS",
+            "offset": 144,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "first failing condition"
+            },
+            "name": "ERROR_CODE",
+            "offset": 148,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bit0": "sampler_claim_allowed",
+              "bit1": "speedup_claim_allowed"
+            },
+            "name": "CLAIM_FLAGS",
+            "offset": 152,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "rw",
+            "fields": {
+              "bits31_0": "write/readback sanity word"
+            },
+            "name": "SCRATCH",
+            "offset": 156,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "bank A CRC32"
+            },
+            "name": "BANK_A_CRC32",
+            "offset": 160,
+            "reset": 0,
+            "width_bits": 32
+          },
+          {
+            "access": "ro",
+            "fields": {
+              "bits31_0": "bank B CRC32"
+            },
+            "name": "BANK_B_CRC32",
+            "offset": 164,
+            "reset": 0,
+            "width_bits": 32
+          }
+        ]
+      }
+    },
+    "word_width_bits": 32
+  },
+  "register_map_plan_ready": true,
+  "resource_accounting": {
+    "constraints_evidence": {
+      "clock_assumption": "12.0 MHz nextpnr target frequency",
+      "constraints_ready": true,
+      "constraints_sha256": "ae31c6010f5dcd5777328ff539839a1812faee3c27de0911b24f0e84ab98bfc9",
+      "nextpnr_options_required": [
+        "--freq 12.0",
+        "--vopt allow-unconstrained"
+      ],
+      "pin_assumption": "Non-clock IO pins are intentionally unconstrained for the build-only package; follow-up PnR must use --vopt allow-unconstrained."
+    },
+    "current_gatemate_evidence": {
+      "bitstream_built": true,
+      "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "board_detected": true,
+      "device": "CCGM1A1",
+      "flash_succeeded": true,
+      "host_visible_smoke_io_available": false,
+      "io_gap": "unavailable_no_host_visible_io_path",
+      "readback_supported": false,
+      "timing_summary": {
+        "max_frequency_mhz": 15.69,
+        "requested_frequency_mhz": 12.0,
+        "timing_met": true
+      },
+      "top_module": "ising_n16_gatemate",
+      "utilization_counts_available": false,
+      "utilization_summary": {
+        "nextpnr_resource_lines": [],
+        "yosys_cell_counts": {},
+        "yosys_cells_total": null
+      }
+    },
+    "formulas": {
+      "current_gatemate_dense_coupling_bits": "16*16*8",
+      "kv260_bram36_blocks": "ceil(bits/36864) rounded per independent bank",
+      "projected_bank_a_bits": "16*16*16 + 16*16 + 16",
+      "projected_bank_b_bits": "16*(1 + 24 + 16 + 1)"
+    },
+    "memory_projection": {
+      "gatemate_block_ram_budget": "unknown_until_nextpnr_resource_report_is_parsed",
+      "kv260_bram36_blocks_min_by_bank": {
+        "bank_a_read_snapshot": 1,
+        "bank_b_delayed_write": 1,
+        "total_if_banks_are_separate": 2
+      },
+      "total_projected_bits": 5040,
+      "total_projected_bytes": 630
+    },
+    "unknowns_before_implementation": [
+      "GateMate placed LUT/FF/BRAM counts are unavailable in the current Exp 2956 artifact.",
+      "GateMate host register transport is not present in the current n=16 bitstream.",
+      "KV260 UIO register compatibility for this projected map has not been implemented.",
+      "Dual-BRAM arbitration LUT/FF cost requires RTL before synthesis accounting is real."
+    ]
+  },
+  "risks": [
+    "The current GateMate bitstream proves flash/contact only; it exposes no sampler output.",
+    "The current GateMate CCF is build-only and intentionally leaves non-clock IO unconstrained.",
+    "Resource counts beyond memory bit formulas remain unknown until RTL and PnR reports exist.",
+    "Cycle-count readback is required before timing evidence can be sample-level evidence.",
+    "This plan does not permit sampler, thermodynamic, or physical performance claims."
+  ],
+  "run_date": "20260524",
+  "sampler_claim_allowed": false,
+  "smoke_vectors": [
+    {
+      "claim_unlocked_by_vector": "none",
+      "name": "reset_status_scratch",
+      "pass_condition": "SCRATCH == 0xa5a55a5a and STATUS.ready=1 and STATUS.error=0",
+      "requires_host_visible_io": true,
+      "sequence": [
+        "write CONTROL.reset=1",
+        "write SCRATCH=0xa5a55a5a",
+        "read SCRATCH",
+        "read STATUS"
+      ],
+      "source": "register_map_plan"
+    },
+    {
+      "claim_unlocked_by_vector": "none",
+      "init_spins_hex": "0xace1",
+      "max_steps": 8,
+      "name": "n16_ring_chord_from_exp2955",
+      "pass_condition": "after STATUS.done=1, SAMPLE_OUT_LO[15:0] == 0xe7ac and STEP_COUNT == 8",
+      "requires_host_visible_io": true,
+      "sequence": [
+        "load INIT_SPINS_LO=0xace1",
+        "load exp2955 couplings into BANK_A_READ_SNAPSHOT",
+        "write MAX_STEPS=8",
+        "write CONTROL.start=1",
+        "poll STATUS.done",
+        "read SAMPLE_OUT_LO and STEP_COUNT"
+      ],
+      "software_reference_spin_out_hex": "0xe7ac",
+      "source": "hardware/gatemate/ising_n16_gatemate_test_vector.json"
+    },
+    {
+      "claim_unlocked_by_vector": "none",
+      "name": "bank_swap_crc",
+      "pass_condition": "CRC32 values match host-computed payloads and PHASE toggles once",
+      "requires_host_visible_io": true,
+      "sequence": [
+        "write dense q8.8 couplings to Bank A",
+        "write delayed state pattern to Bank B",
+        "read BANK_A_CRC32 and BANK_B_CRC32",
+        "toggle CONTROL.bank_swap_enable after done",
+        "read PHASE"
+      ],
+      "source": "ssqa_dual_bram_projection"
+    }
+  ],
+  "source_artifacts": [
+    "results/experiment_2972_gatemate_post_flash_output_hash_v3.json",
+    "results/experiment_2984_gatemate_readback_smoke_vector_v4.json",
+    "results/experiment_2955_gatemate_constraints_materialization_v4.json",
+    "results/experiment_2956_gatemate_n16_bitstream_build_v4.json",
+    "research-references.md",
+    "research-hardware-wishlist.md",
+    "hardware/gatemate/ising_n16_gatemate.v",
+    "hardware/gatemate/ising_n16_gatemate.ccf",
+    "hardware/gatemate/ising_n16_gatemate_test_vector.json"
+  ],
+  "speedup_claim_allowed": false,
+  "target_board_details": {
+    "AMD/Xilinx KV260": {
+      "current_role": "future AXI-Lite/UIO implementation target for the same map",
+      "planned_register_transport": "/dev/uio* register window",
+      "precondition": "ssh -o ConnectTimeout=5 -o BatchMode=yes kria 'true'"
+    },
+    "GateMate A1-EVB-2M": {
+      "current_interface_gap": "no host-visible sampler IO path per Exp 2984",
+      "current_role": "n=16 tile bring-up and future IO smoke-vector target"
+    }
+  },
+  "target_boards": [
+    "GateMate A1-EVB-2M",
+    "AMD/Xilinx KV260"
+  ],
+  "thermodynamic_claim_allowed": false
+}
