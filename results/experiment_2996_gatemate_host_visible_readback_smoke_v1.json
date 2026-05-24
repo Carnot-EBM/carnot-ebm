@@ -1,0 +1,115 @@
+{
+  "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+  "board_detected": false,
+  "board_id": "",
+  "duration_s": 0.059545,
+  "failure_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect",
+  "failure_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+  "flash_attempted": false,
+  "flash_succeeded": false,
+  "hardware_smoke_boundary_recorded": true,
+  "honest_verdict": "blocked_board_not_detected",
+  "host_visible_output_path": "blocked:no_host_visible_transport_for_spin_out_done",
+  "inference_substrate": "physical_gatemate_board",
+  "interface_evidence": {
+    "constraints_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf",
+    "constraints_sha256": "ae31c6010f5dcd5777328ff539839a1812faee3c27de0911b24f0e84ab98bfc9",
+    "rtl_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+    "rtl_sha256": "5e31deaa27e526aeb3e21cfc2950516edd195584f396895b6d30111442d344e1",
+    "test_vector_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json",
+    "test_vector_sha256": "d3b4583f6ddf3ab8f5996a611b96507128c209f3813a488d9a37d5d62df88df4"
+  },
+  "missing_interface": "no physical Pin_in/Pin_out assignment binds output ports to board pins; no UART/GPIO/JTAG/status-register/CSR/AXI transport exists in RTL; spin_out/done are RTL signals only and are not observable by the host",
+  "precondition_details": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2971_gatemate_board_detection_flash_harness_v3.json",
+      "resource": "prior_exp2971_artifact"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2972_gatemate_post_flash_output_hash_v3.json",
+      "prior_flash_succeeded": true,
+      "resource": "prior_exp2972_artifact"
+    },
+    {
+      "actual_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "available": true,
+      "expected_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "resource": "target_bitstream_sha256",
+      "verified": true
+    },
+    {
+      "available": false,
+      "missing_interface": "no physical Pin_in/Pin_out assignment binds output ports to board pins; no UART/GPIO/JTAG/status-register/CSR/AXI transport exists in RTL; spin_out/done are RTL signals only and are not observable by the host",
+      "path": "blocked:no_host_visible_transport_for_spin_out_done",
+      "resource": "intended_host_visible_output_path"
+    }
+  ],
+  "preconditions_checked": true,
+  "programmer_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "readback_attempted": false,
+  "readback_hash": "",
+  "readback_supported": false,
+  "run_date": "20260524",
+  "sampler_claim_allowed": false,
+  "sampler_claim_made": false,
+  "smoke_vector_attempted": false,
+  "smoke_vector_passed": false,
+  "speedup_claim_allowed": false,
+  "speedup_claim_made": false,
+  "target_rtl_path": "hardware/gatemate/ising_n16_gatemate.v",
+  "thermodynamic_claim_made": false,
+  "timing_observation": {
+    "command_durations_s": {
+      "pre_flash_detect": 0.01554
+    },
+    "flash_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+    "intended_host_visible_output_path": "blocked:no_host_visible_transport_for_spin_out_done",
+    "prior_observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+    "readback_reason": "openFPGALoader advertises only SPI-flash dump/verify style paths; no GateMate SRAM or sampler-output readback path is exposed.",
+    "timing_source": "host_wall_clock_command_duration"
+  },
+  "tool_versions": {
+    "gmpack": {
+      "available": true,
+      "command": "/opt/oss-cad-suite/bin/gmpack --help",
+      "output_sha256": "161c91250db112ca16cf50513a377debd7afa7ce908494abf631262cbf8a73d7",
+      "path": "/opt/oss-cad-suite/bin/gmpack",
+      "returncode": 0,
+      "version": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418"
+    },
+    "nextpnr-himbaechel": {
+      "available": true,
+      "command": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --version",
+      "output_sha256": "7b0107873a07d1ea7f1dd1272b3274650a51b779f5852a2c97397e804281337c",
+      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "returncode": 0,
+      "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+    },
+    "openFPGALoader": {
+      "available": true,
+      "command": "/opt/oss-cad-suite/bin/openFPGALoader -V",
+      "output_sha256": "17b5879f3318a87ac120903e83e0e16dcb7476a5f0c0d2d7d019e066547aeb28",
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "returncode": 0,
+      "version": "openFPGALoader v1.1.1"
+    },
+    "yosys": {
+      "available": true,
+      "command": "/opt/oss-cad-suite/bin/yosys -V",
+      "output_sha256": "deae6e7c85c1f8b5ece7fdd08b637db61524ae7ac5e9fbc7395bf85175ba938b",
+      "path": "/opt/oss-cad-suite/bin/yosys",
+      "returncode": 0,
+      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+    }
+  },
+  "transcript_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2996_gatemate_host_visible_readback_smoke_v1/pre_flash_detect.txt"
+  ],
+  "transcript_sha256": {
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2996_gatemate_host_visible_readback_smoke_v1/pre_flash_detect.txt": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e"
+  }
+}

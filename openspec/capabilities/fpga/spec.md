@@ -2218,3 +2218,63 @@ banks, smoke vectors, readback checks, resource-accounting formulas, and claim
 flags fixed false.
 
 **Implementation status:** Planned (Exp 2985)
+
+---
+
+### REQ-HW-082
+
+**Title:** Exp 2996 GateMate host-visible readback smoke MUST terminate at observable IO or a precise blocker
+
+**Description:**
+Experiment 2996 MUST perform a bounded GateMate A1-EVB-2M hardware smoke boundary
+for the currently built n=16 bitstream without making sampler, thermodynamic, or
+speedup claims. The experiment MUST identify the board connection, installed
+GateMate tool versions, target bitstream/RTL, programmer command, and intended
+host-visible IO path before programming. It MUST then record whether board
+contact, flashing, readback support, readback attempt, smoke-vector attempt, and
+host-visible smoke-vector pass occurred as separate booleans. If the current RTL,
+CCF, test vector, or installed tools do not expose a host-visible path for
+`spin_out`/`done`, the artifact MUST record the exact missing interface and
+return a blocked verdict rather than upgrading flash/contact evidence into
+sampler evidence.
+
+**Acceptance criteria:**
+- `results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json` is
+  generated with a terminal claim boundary.
+- The artifact includes `hardware_smoke_boundary_recorded`,
+  `preconditions_checked`, `board_detected`, `flash_attempted`,
+  `flash_succeeded`, `readback_attempted`, `readback_supported`,
+  `smoke_vector_attempted`, `smoke_vector_passed`, `host_visible_output_path`,
+  `transcript_paths`, `sampler_claim_made=false`, `speedup_claim_made=false`,
+  and `honest_verdict`.
+- Preconditions distinguish setup failures from design/interface failures by
+  recording board connection evidence, tool versions, target bitstream/RTL,
+  programmer command, and the intended host-visible IO path before flash.
+- Flash success MUST be recorded separately from readback and smoke-vector
+  success.
+- `smoke_vector_passed=true` is allowed only when a host-observable readback or
+  IO transcript contains the expected deterministic smoke-vector output.
+- When no UART, GPIO, JTAG register, status register, AXI/CSR, or physically
+  constrained pin path exposes `spin_out`/`done`, the artifact MUST set
+  `readback_supported=false`, `smoke_vector_passed=false`, and an honest blocked
+  verdict with the exact missing interface.
+
+**Implementation status:** Planned (Exp 2996)
+
+---
+
+### SCENARIO-HW-082
+
+**Scenario:** GateMate host-visible smoke terminates at blocked IO without sampler claims.
+
+**Given:** Prior GateMate artifacts record board contact, a matching n=16
+bitstream, and a flash command for the GateMate A1-EVB-2M.
+**When:** Exp 2996 checks preconditions, flashes the target bitstream, probes
+readback support, and inspects the current GateMate RTL/CCF/test-vector package
+for a host-visible output path.
+**Then:** It writes the v1 JSON with required schema fields, replayable command
+transcripts, no sampler or speedup claims, and either observable smoke/readback
+evidence or a precise blocked diagnosis naming the missing host-visible
+interface.
+
+**Implementation status:** Planned (Exp 2996)
