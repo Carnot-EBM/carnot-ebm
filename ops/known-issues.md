@@ -320,6 +320,155 @@ tasks are not.
 
 ## MANDATORY-NEXT-MILESTONE PRIORITIES (.86 planner — hard pickup per CLAUDE.md)
 
+### NEW 2026-05-24 (16:30Z): Verifier-Ensemble Multi-Axis Composition Robustness (.282+ MANDATORY)
+
+**Origin:** 2026-05-24 outer-loop analysis of a detailed external
+assessment of SubQuadratic's ARC-AGI architecture (sub-quadratic
+attention with 12M-token context). The assessment describes
+"Multi-Directional Spatial Scans" — scanning ARC grids horizontally,
+vertically, AND diagonally — as a load-bearing primitive for
+2D-topology preservation in 1D-token-stream sub-quadratic
+architectures.
+
+The structural insight transfers: Carnot's k=15 verifier ensemble
+currently fires in a fixed order (verifier-id sequence) on output
+tokens read left-to-right. We have NEVER measured whether the
+ensemble's joint decisions are invariant to verifier ordering, or
+whether different "scan orderings" through the same input produce
+independent decision signal.
+
+If different orderings produce different decisions, ensembling
+across orderings is a free robustness lift (and the paper has a
+new measurable axis). If they don't, we've documented an unexplored
+axis of robustness, which itself is publishable as a methodology
+contribution alongside the multi-violation curve (queued separately).
+
+This is the sibling experiment to "Verifier-Ensemble Multi-Violation
+Degradation Curve" queued above — both share methodology (synthetic
+inputs / cached candidates, controlled axis variation, ensemble
+accuracy as function of axis state, dip-test bimodality detection).
+They produce a coherent "we measured the verifier ensemble's
+robustness on two independent axes" paper-v6 story.
+
+**The task to queue:**
+
+```yaml
+- id: exp<next>
+  milestone: "2026.05.<NNN>"
+  deliverable: "results/experiment_<next>_verifier_ensemble_multi_axis_composition_v1.json"
+  title: "Verifier-Ensemble Multi-Axis Composition Robustness v1"
+  priority: high
+  agent_type: codex
+  model: gpt-5.5
+  requires_codex: true
+  max_turns: 40
+  estimated_wall_time_min: 40
+  track: evidence
+  inference_substrate: verifier_ensemble_against_cached_candidates
+  prior_failures:
+    - experiment_id: exp2940
+      verdict: "complete: verifier provides meaningful information on code corpora"
+      addressed_by: "exp2940 measured AUPRC under a single canonical verifier ordering. This task measures AUPRC and ensemble-accept-rate under N different orderings to surface whether the ensemble's joint signal is ordering-invariant or whether ensembling across orderings is a free lift."
+      retire_if_same_verdict: true
+```
+
+**Concrete steps:**
+
+1. PRECONDITIONS:
+   a. exp2940 artifact present (per-candidate energy scores + labels
+      for code corpora).
+   b. exp2837 artifact present (per-verifier FoVer scores for the
+      apples-to-apples corpus).
+   c. The k=15 verifier ensemble code path callable in batch mode
+      with configurable verifier-ordering parameter.
+2. **Define the orderings.** For each candidate, run the ensemble in
+   each of these orderings:
+   - **A. Verifier-id natural order** (current baseline behavior).
+   - **B. By verifier confidence** — sort verifiers by their
+     mean confidence across the training set; fire most-confident
+     first.
+   - **C. By verifier tier** — Tier 0 (cheap text-statistical)
+     first, then Tier 1 (structural), then deeper.
+   - **D. Output-token position scan reversed** — verifiers that
+     fire on early tokens go last; verifiers that fire on late
+     tokens go first.
+   - **E. By violation-class type** — syntax violations first,
+     then semantic, then logical.
+   - **F. By inter-verifier orthogonality** — verifiers ranked
+     by pairwise Spearman-correlation distance; most-orthogonal
+     pairings fire adjacently.
+3. **Per ordering, per candidate, record:**
+   - Each verifier's individual decision
+   - The AND-composed ensemble decision
+   - The energy-rank-based scalar score
+4. **Compute agreement metrics across orderings:**
+   - Pairwise agreement matrix (6x6, fraction of candidates where
+     orderings i and j produced identical ensemble decisions)
+   - Krippendorff's alpha for inter-ordering agreement
+   - Number of candidates where the SAME input produces DIFFERENT
+     ensemble decisions depending on ordering
+5. **Compute axis-aware ensembling:**
+   - "Majority-vote across orderings" decision per candidate
+   - AUPRC of the majority-vote vs each individual ordering
+   - If majority-vote AUPRC > best-individual-ordering AUPRC by
+     > 0.01, ensembling across orderings is a real lift.
+
+**Required artifact fields (must include all 7):**
+
+| Field | Principle |
+|---|---|
+| `honest_verdict` | Must start with `complete:` per Verdict Terminal-Prefix Discipline. |
+| `inference_substrate` | `verifier_ensemble_against_cached_candidates` |
+| `preconditions_checked` | list with exp2940, exp2837, ensemble code path resources |
+| `per_ordering_results` | shape: list of 6, each `{ordering_id: str, ensemble_accept_rate: float, auprc: float, max_f1: float}` |
+| `inter_ordering_agreement` | shape: `{krippendorff_alpha: float, pairwise_matrix: list[list[float]], n_disagreement_cases: int}` |
+| `majority_vote_lift` | shape: `{majority_vote_auprc: float, best_single_ordering_auprc: float, lift: float, lift_significant: bool}` (significant = lift > 0.01) |
+| `paper_v6_recommendation` | `axis_invariant` if all orderings agree → ensemble robustness publishable as axis-invariance claim; `axis_dependent_lift_available` if majority vote lifts AUPRC > 0.01 → publishable as free-robustness method; `axis_dependent_no_lift` if orderings disagree but majority vote doesn't lift → publishable as failure-mode characterization. |
+
+**Acceptance gates:**
+
+- `len(per_ordering_results) == 6`
+- `n_candidates_evaluated >= 100` per ordering
+- `duration_s >= 20` (synthesis + 6 × 100 ensemble evaluations + agreement matrix)
+- `paper_v6_recommendation` is one of the three explicit values
+  above; never null
+
+**Why this stays in MANDATORY until landed:** the paper-v6 verifier-
+ensemble robustness claim depends on the ensemble producing
+consistent decisions independent of presentation order. We have
+never measured this. The SubQ assessment surfaced the structural
+analogue (multi-directional scans for 2D topology) in a related
+domain; testing whether Carnot's ensemble has the same kind of
+order-dependence is a near-term cheap experiment with clean
+publication paths in either direction.
+
+**Comparator context (from the SubQ assessment):**
+
+The assessment claims SubQ scans ARC grids in 3 directions
+(horizontal / vertical / diagonal) to preserve 2D topology in 1D
+token sequences. Carnot's analogue: 6 verifier orderings as 6
+"scan directions" through the same output. Whichever direction
+the agreement matrix lands in (full invariance vs heterogeneity)
+becomes a paper-v6 claim with a defensible methodology.
+
+**Cross-references:**
+
+- External source: detailed assessment of SubQuadratic ARC-AGI
+  architecture (sub-quadratic attention with 12M context),
+  describing "Multi-Directional Spatial Scans" as a load-bearing
+  primitive for 2D-topology preservation.
+- Sibling task: "Verifier-Ensemble Multi-Violation Degradation
+  Curve" queued above (same methodology, different axis).
+- exp2940 — the AUPRC baseline this task varies from.
+- exp2837 — the FoVer apples-to-apples comparator.
+- Spera Theorem 9.2 (`reference_spera_theorem_92` memory) — the
+  joint-null-space concern that multi-axis composition may or may
+  not partially mitigate.
+- CLAUDE.md "Adversarial Artifact Verification + Sample-Size Rigor"
+  — n >= 100 candidates per ordering is the floor.
+
+---
+
 ### NEW 2026-05-24 (13:30Z): Verifier-Ensemble Multi-Violation Degradation Curve (.281+ MANDATORY)
 
 **Origin:** 2026-05-24 outer-loop review of Appen's "Benchmarking
