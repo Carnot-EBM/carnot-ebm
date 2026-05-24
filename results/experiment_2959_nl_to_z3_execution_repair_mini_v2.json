@@ -1,0 +1,861 @@
+{
+  "answer_accuracy": 0.083333,
+  "cached_sota_pair_used": false,
+  "duration_s": 0.043118,
+  "failure_categories": {
+    "solver_verified_correct": 0,
+    "unparseable": 11,
+    "wrong_answer": 0,
+    "wrong_formula": 1,
+    "z3_exception": 0
+  },
+  "formalization_manifest_sha256": "5674a3157a664bc0ee7898bc0a7ad9928c69ece7cdc9c0c774ebb255ddb409e5",
+  "headline_models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "honest_verdict": "complete: local SOTA logic proposals accepted_or_rejected_by_z3",
+  "inference_substrate": "live_llm_inference",
+  "item_manifest": [
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Cat",
+            "milo"
+          ]
+        ],
+        "query": [
+          "Mammal",
+          "milo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Cat",
+                "milo"
+              ]
+            ],
+            "then": [
+              "Mammal",
+              "milo"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-001",
+      "problem": "All cats are mammals. Milo is a cat. Is Milo necessarily a mammal?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Student",
+            "nia"
+          ]
+        ],
+        "query": [
+          "Athlete",
+          "nia"
+        ],
+        "rules": []
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-002",
+      "problem": "Nia is a student. Some students may be athletes, but no rule says Nia is one. Is Nia an athlete possible?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Organic",
+              "rho"
+            ],
+            [
+              "Robot",
+              "rho"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Robot",
+            "rho"
+          ]
+        ],
+        "query": [
+          "Organic",
+          "rho"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-003",
+      "problem": "No robot is organic. Rho is a robot. Is Rho organic possible?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Archivist",
+            "ivo"
+          ]
+        ],
+        "query": [
+          "Trusted",
+          "ivo"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Archivist",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Careful",
+              "ivo"
+            ]
+          },
+          {
+            "if": [
+              [
+                "Careful",
+                "ivo"
+              ]
+            ],
+            "then": [
+              "Trusted",
+              "ivo"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-004",
+      "problem": "Every archivist is careful. Every careful person is trusted. Ivo is an archivist. Is Ivo trusted necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Active",
+              "tau"
+            ],
+            [
+              "Revoked",
+              "tau"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Revoked",
+            "tau"
+          ]
+        ],
+        "query": [
+          "Active",
+          "tau"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-005",
+      "problem": "A token cannot be both active and revoked. Token tau is revoked. Can tau be active?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Licensed",
+            "ada"
+          ]
+        ],
+        "query": [
+          "Pilot",
+          "ada"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Pilot",
+                "ada"
+              ]
+            ],
+            "then": [
+              "Licensed",
+              "ada"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-006",
+      "problem": "Every pilot is licensed. Ada is licensed, but nothing says Ada is a pilot. Is Ada a pilot necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Sterile",
+            "s1"
+          ]
+        ],
+        "query": [
+          "Sealed",
+          "s1"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Sterile",
+                "s1"
+              ]
+            ],
+            "then": [
+              "Sealed",
+              "s1"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-007",
+      "problem": "If a sample is sterile then it is sealed. Sample s1 is sterile. Is s1 sealed necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "BlueBadge",
+              "b7"
+            ],
+            [
+              "Temporary",
+              "b7"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "BlueBadge",
+            "b7"
+          ]
+        ],
+        "query": [
+          "Temporary",
+          "b7"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-008",
+      "problem": "No blue badge is temporary. Badge b7 is blue. Can b7 be temporary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Audited",
+            "kappa"
+          ],
+          [
+            "Signed",
+            "kappa"
+          ]
+        ],
+        "query": [
+          "Reproducible",
+          "kappa"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Audited",
+                "kappa"
+              ]
+            ],
+            "then": [
+              "Reproducible",
+              "kappa"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-009",
+      "problem": "Every audited build is reproducible. Build kappa is audited and signed. Is kappa reproducible necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [
+          [
+            [
+              "Offline",
+              "n4"
+            ],
+            [
+              "Reachable",
+              "n4"
+            ]
+          ]
+        ],
+        "facts": [
+          [
+            "Offline",
+            "n4"
+          ]
+        ],
+        "query": [
+          "Reachable",
+          "n4"
+        ],
+        "rules": []
+      },
+      "gold_answer": "impossible",
+      "item_id": "llmlogic-2931-010",
+      "problem": "No node can be both offline and reachable. Node n4 is offline. Can n4 be reachable?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Fragile",
+            "p2"
+          ],
+          [
+            "Shipped",
+            "p2"
+          ]
+        ],
+        "query": [
+          "Padded",
+          "p2"
+        ],
+        "rules": [
+          {
+            "if": [
+              [
+                "Fragile",
+                "p2"
+              ],
+              [
+                "Shipped",
+                "p2"
+              ]
+            ],
+            "then": [
+              "Padded",
+              "p2"
+            ]
+          }
+        ]
+      },
+      "gold_answer": "necessary",
+      "item_id": "llmlogic-2931-011",
+      "problem": "If a parcel is fragile and shipped, it must be padded. Parcel p2 is fragile and shipped. Is p2 padded necessary?"
+    },
+    {
+      "formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "Enrolled",
+            "kai"
+          ]
+        ],
+        "query": [
+          "Graduated",
+          "kai"
+        ],
+        "rules": []
+      },
+      "gold_answer": "possible",
+      "item_id": "llmlogic-2931-012",
+      "problem": "Kai is enrolled. There is no rule connecting enrollment to graduation. Is Kai graduated possible?"
+    }
+  ],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "n_items": 12,
+  "parseability_rate": 0.083333,
+  "per_item_results": [
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-001",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2931,
+      "prompt_hash": "b64c9756aa58f205364f05d56c2d5e82382e50b18e08ffbde9da6dd42304705d",
+      "raw_output_sha256": "ceac26ceb18f112e88cf1790c4689e1bb2561a100b632f325c21837f7b705196",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-001.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": true,
+      "elapsed_seconds": null,
+      "failure_category": "wrong_formula",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "possible",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-002",
+      "model_answer": "possible",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": null,
+      "parse_repair_applied": true,
+      "parse_repair_note": "formalization_fragment_plus_answer_line",
+      "parseable": true,
+      "parsed_formalization": {
+        "exclusions": [],
+        "facts": [
+          [
+            "is_athlete",
+            "Nia"
+          ],
+          [
+            "is_student",
+            "Nia"
+          ]
+        ],
+        "query": [
+          "is_athlete",
+          "Nia"
+        ],
+        "rules": []
+      },
+      "per_item_seed": 2932,
+      "prompt_hash": "e916dd010788fd5e52077d88de671f1afa69c539c38b70aa87d3478997fdd957",
+      "raw_output_sha256": "324d40bba175b0bc913503d4aac98d0d6c27b4201f1ddc2a8a80054d1b9b4e53",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-002.json",
+      "solver_answer": "necessary",
+      "solver_formula_correct": false,
+      "z3_executed": true,
+      "z3_result": {
+        "knowledge_base_consistent": true,
+        "necessary": true,
+        "possible": true,
+        "solver_answer": "necessary",
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-003",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2933,
+      "prompt_hash": "ddfd74033897d5c27e70fa4e7c27a6ae4f422b7370d589160665bb8b0d6d4a76",
+      "raw_output_sha256": "fd1b8919fbdc1be620887eeff37d31f24794baa8cd9fa92d882b78a8abadcf39",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-003.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-004",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2934,
+      "prompt_hash": "3897bc31ba74e0678da780d3833b07be111e5f15d29a175f37134be333905a10",
+      "raw_output_sha256": "2287f0d691d5fcb1bf5c0692551502947d456a7a80930050ef032128eced08ce",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-004.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-005",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2935,
+      "prompt_hash": "20af653ede1cd3d0c2e6a3cdd60bbcb1be1c404f7f26edc23963bcdb3d94ec73",
+      "raw_output_sha256": "dd89f30136a33e2bf808492c2f5d5907d2b5ab42867bdc8b27aee54ff0a6742a",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-005.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "possible",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-006",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2936,
+      "prompt_hash": "96f1b426a11eebbb3983e66b84d8251446aef820cc78b9475108e09376d5fbea",
+      "raw_output_sha256": "f885ef67153db581a082a0c19e8a54e7aee68beb0b7c7f2f1bba66462334b73f",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-006.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-007",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2937,
+      "prompt_hash": "ff7f9d5fe324f7a561e19a64c62dab0e228038855e887f6ac3b2699d4972057a",
+      "raw_output_sha256": "80d9884a121feb4bd598ed7f49cab285f0988f68b0f8cc06945a242fe345f06c",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-007.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-008",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2938,
+      "prompt_hash": "ab4a1887b021e17df30bf00c3db2a552a9e65b74003390858b7e3b007ba4f880",
+      "raw_output_sha256": "f66561beab12102fc985ef972b1ba453c93e801f5d023878b6d7c12a70bf66ae",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-008.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-009",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2939,
+      "prompt_hash": "ccc9a0ff16101323300bc20d896463985cbc11020a8ee5a1f774fc8e090ac850",
+      "raw_output_sha256": "55017c8011f74a7f198408291d4f8f66fdcc2b89602a5edfc43d48fc2409f18b",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-009.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "impossible",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-010",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2940,
+      "prompt_hash": "461fd665d5b466f225b681a656816b35ffa42f8502948beb8f77d2be08a327b6",
+      "raw_output_sha256": "0ae0618b23b7833ec326512e266be1d15d90dab404186033847330242044c8a2",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-010.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "necessary",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-011",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2941,
+      "prompt_hash": "3cd2e4e1166b32dc0ca630598623c46cd45ece616b3afaee5c144c75d39cdfa0",
+      "raw_output_sha256": "4f1e6009b0b51fde75abda5af88b4055f8279a076d51340f7b1db4d3645ad1af",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-011.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "elapsed_seconds": null,
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "prior_live_sota_llamacpp_logic_json",
+      "gold_answer": "possible",
+      "gpu_index": null,
+      "item_id": "llmlogic-2931-012",
+      "model_answer": null,
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_repairable_formalization",
+      "parse_repair_applied": false,
+      "parse_repair_note": null,
+      "parseable": false,
+      "parsed_formalization": null,
+      "per_item_seed": 2942,
+      "prompt_hash": "1107ed5928deb74b4adb73308fac302e90d64e3806d8971a41486e7604cbfe88",
+      "raw_output_sha256": "4f1c3d7816d83b243c05410734d9bc192468f70f2638ed738a9c48be86ff4c24",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw/llmlogic-2931-012.json",
+      "solver_answer": null,
+      "solver_formula_correct": false,
+      "z3_executed": false,
+      "z3_result": {
+        "knowledge_base_consistent": false,
+        "necessary": false,
+        "possible": false,
+        "solver_answer": null,
+        "z3_error": "no_repairable_formalization",
+        "z3_executed": false
+      }
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "detail": "import_ok",
+      "name": "z3_import",
+      "ok": true
+    },
+    {
+      "detail": "import_ok",
+      "name": "llama_cpp_runtime",
+      "ok": true
+    },
+    {
+      "detail": "returned_0_model_spec(s)",
+      "name": "cached_sota_pair",
+      "ok": false
+    },
+    {
+      "detail": "single_cached_mandated_gguf",
+      "name": "mandated_headline_model_resolved",
+      "ok": true
+    }
+  ],
+  "random_seed": 2959,
+  "run_date": "20260524",
+  "solver_verified_accuracy": 0.0,
+  "source_artifact": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2931_llmeval_logic_z3_mini_v1.json",
+  "source_raw_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/llmeval_logic_z3_mini_2931_raw",
+  "z3_execution_rate": 0.083333,
+  "z3_execution_repaired": true,
+  "z3_import_ok": true
+}

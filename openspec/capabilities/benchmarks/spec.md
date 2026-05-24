@@ -256,6 +256,52 @@ and Z3 execution.
 
 **Spec traces:** REQ-BENCH-2931
 
+### REQ-BENCH-2959: NL-To-Z3 Execution Repair Mini Benchmark
+
+Carnot MUST provide a bounded natural-language-to-Z3 execution repair mini
+benchmark that replays or collects 8-12 LLMEval-Logic-style local SOTA GGUF
+formalization proposals, repairs only schema-fragment formatting into the
+strict ground-logic JSON contract, executes Z3 on every parseable
+formalization, and never treats model prose or model self-judgment as a proof.
+
+The benchmark MUST include at least one of the mandated local GGUF model IDs in
+`model_specs`, call `cached_sota_pair(gpu_indices=(0, 1))` during precondition
+checking, and honestly record whether a headline model was resolved through the
+pair helper or through a single mandated cached GGUF fallback.  The terminal
+artifact MUST be written to
+`results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json` and include:
+`honest_verdict`, `inference_substrate="live_llm_inference"`,
+`preconditions_checked`, `model_specs`, `headline_models_used`, `z3_import_ok`,
+`z3_execution_repaired`, `n_items`, `parseability_rate`,
+`z3_execution_rate`, `solver_verified_accuracy`, `answer_accuracy`,
+`failure_categories`, `formalization_manifest_sha256`, and `duration_s`.
+
+**Acceptance criteria:**
+- The selected item pack contains 8-12 small logic items with known
+  Z3-checkable labels.
+- The parser repairs only bounded schema fragments such as
+  `formalization: {...}` plus an answer line into the strict JSON contract.
+- Every parseable formalization is executed by Z3; Z3 exceptions are reported
+  separately from parse failures.
+- The artifact reports mutually exclusive counts for `unparseable`,
+  `z3_exception`, `wrong_formula`, `wrong_answer`, and
+  `solver_verified_correct`.
+- `solver_verified_accuracy` is based on the Z3-derived label, while
+  `answer_accuracy` is based on the model answer string; neither metric may be
+  substituted for the other.
+
+### SCENARIO-BENCH-2959: Fragmented Formalizations Are Accepted Or Rejected By Z3
+
+**Given** a live local SOTA GGUF response that contains a repairable
+formalization fragment and a model answer line
+**When** Carnot converts the fragment to the strict ground-logic schema
+**Then** Z3 derives the modal answer for the query, the model answer is scored
+separately, and the row is categorized as solver-verified correct, wrong
+formula, wrong answer, Z3 exception, or unparseable without using model prose as
+proof.
+
+**Spec traces:** REQ-BENCH-2959, SCENARIO-BENCH-2959
+
 ### REQ-BENCH-1536: SATQuest CNF Verifier Benchmark
 
 Carnot MUST provide a bounded SATQuest-style CNF verifier benchmark that
@@ -403,6 +449,8 @@ a blocked artifact or mock data for testing.
 | SCENARIO-BENCH-1536 | Planned (`tests/python/test_experiment_1536_satquest_cnf_verifier_benchmark.py`) | Exp 1536 |
 | SCENARIO-BENCH-1540 | Implemented (`tests/python/test_experiment_1540_product_line_staged_benchmark_scale.py`) | Exp 1540 |
 | SCENARIO-BENCH-1550 | Planned (`tests/python/test_experiment_1550_satquest_sota_reeval_zero_false_accepts.py`) | Exp 1550 |
+| REQ-BENCH-2959 | Implemented (`python/carnot/eval/nl_to_z3_execution_repair_mini_v2.py`) | Exp 2959 |
+| SCENARIO-BENCH-2959 | Implemented (`tests/python/test_experiment_2959_nl_to_z3_execution_repair_mini_v2.py`) | Exp 2959 |
 
 ### REQ-DUALGPU-101: DualGPU System-2 EqM Benchmark
 
