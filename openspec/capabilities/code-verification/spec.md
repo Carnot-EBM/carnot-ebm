@@ -1230,6 +1230,50 @@ Then it sets `threshold_policy_ready=false`, `missing_score_distribution=true`,
 names the missing Exp 2940 field, proposes the next local command to regenerate
 Exp 2940, and does not emit invented operating scores.
 
+### REQ-CODE-2963: DCCD Structured-Repair Protocol Manifest
+
+The repository shall provide an Exp 2963 deterministic DCCD structured-repair
+protocol manifest for the downstream live SOTA replication. The builder MUST:
+
+- require checked-in Exp 2950, Exp 2951, Exp 2952, and Exp 2953 artifacts before
+  marking the protocol ready, and block honestly when any prerequisite is absent
+  or malformed;
+- extract the Exp 2950 failure taxonomy and deterministic repair checks, the
+  Exp 2951 structured candidate schema and backend status, the Exp 2952
+  flagged repair delta and false-accept evidence, and the Exp 2953 conservative
+  verifier threshold policy;
+- define a DCCD flow that separates unconstrained semantic draft generation,
+  taxonomy-conditioned repair, constrained manifest emission, parser/static/test
+  checks, verifier-threshold checking, and a false-accept audit;
+- define a downstream replication cohort with at least 20 planned tasks, fixed
+  seeds, and separate accounting for pass@1/pass@k, syntax/schema failures,
+  test failures, and verifier-only accepts;
+- record local structured-output backends to check downstream, including
+  `llguidance`, llama.cpp grammar, and deterministic JSON-schema validation
+  fallback;
+- include downstream live-use model specs for
+  `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`, while keeping legacy small models
+  smoke-only; and
+- write `results/experiment_2963_dccd_repair_protocol_manifest_v1.json` with
+  `honest_verdict`, `dccd_repair_protocol_ready`, `source_artifacts`,
+  `model_specs`, `legacy_models_only_for_smoke`, `n_tasks_planned_min`,
+  `fixed_seed_plan`, `dccd_steps`, `structured_backends_to_check`,
+  `deterministic_acceptance_checks`, `false_accept_audit_plan`,
+  `downstream_gate`, `inference_substrate="aggregation_from_upstream_artifacts"`,
+  and measured `duration_s`.
+
+### SCENARIO-CODE-2963: DCCD Protocol Is Pre-Registered Without A Pass-Rate Claim
+
+Given the checked-in Exp 2950, Exp 2951, Exp 2952, and Exp 2953 artifacts are
+present,
+When Exp 2963 builds the DCCD protocol manifest,
+Then the artifact records a ready protocol that cites the upstream taxonomy,
+schema, repair-delta warning, threshold policy, false-accept constraints,
+downstream SOTA GGUF model specs, fixed seeds, and deterministic acceptance
+gates while preserving `inference_substrate="aggregation_from_upstream_artifacts"`
+and explicitly making no claim that DCCD improves pass@1 or pass@k.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
@@ -1350,6 +1394,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2951 | Implemented (`python/carnot/eval/structured_candidate_manifest_adapter.py`) |
 | REQ-CODE-2952 | Implemented (`python/carnot/eval/sota_taxonomy_guided_code_repair_eval.py`) |
 | REQ-CODE-2953 | Implemented (`python/carnot/eval/code_verifier_threshold_policy.py`) |
+| REQ-CODE-2963 | Implemented (`python/carnot/eval/dccd_repair_protocol_manifest.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

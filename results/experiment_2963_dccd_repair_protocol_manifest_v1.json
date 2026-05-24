@@ -1,0 +1,514 @@
+{
+  "artifact": "experiment_2963_dccd_repair_protocol_manifest_v1",
+  "candidate_schema_summary": {
+    "required_fields": [
+      "task_id",
+      "prompt_id",
+      "model_id",
+      "raw_completion_ref",
+      "repaired_code",
+      "failure_taxonomy",
+      "parser_status",
+      "test_status",
+      "verifier_score",
+      "provenance_checksums"
+    ],
+    "schema_fields": [
+      "task_id",
+      "prompt_id",
+      "model_id",
+      "raw_completion_ref",
+      "repaired_code",
+      "failure_taxonomy",
+      "parser_status",
+      "test_status",
+      "verifier_score",
+      "provenance_checksums"
+    ],
+    "schema_version": "carnot.structured_candidate_manifest.v1",
+    "structured_decode_manifest_ready": true
+  },
+  "dccd_repair_protocol_ready": true,
+  "dccd_steps": [
+    {
+      "purpose": "Generate an unconstrained draft so semantic intent is not damaged by early masks.",
+      "source": "DCCD",
+      "step_id": "unconstrained_semantic_draft"
+    },
+    {
+      "purpose": "Repair the draft using the Exp 2950 failure label and repair focus.",
+      "source": "exp2950",
+      "step_id": "taxonomy_conditioned_repair"
+    },
+    {
+      "purpose": "Emit only the Exp 2951 structured candidate manifest fields.",
+      "source": "exp2951",
+      "step_id": "constrained_manifest_emission"
+    },
+    {
+      "purpose": "Run parser, static import/name/API checks, and task tests where present.",
+      "source": "exp2950_exp2952",
+      "step_id": "parser_static_test_checks"
+    },
+    {
+      "purpose": "Apply the Exp 2953 conservative threshold after deterministic code checks.",
+      "source": "exp2953",
+      "step_id": "verifier_threshold_check"
+    },
+    {
+      "purpose": "Separate verifier-only accepts from pass@1/pass@k and audit known false-accept patterns.",
+      "source": "exp2952",
+      "step_id": "false_accept_audit"
+    }
+  ],
+  "deterministic_acceptance_checks": [
+    {
+      "applies_to": [
+        "syntax_error",
+        "missing_symbol",
+        "wrong_return_type",
+        "failed_tests",
+        "unsafe_import",
+        "unsupported_api_hallucination"
+      ],
+      "check_id": "parser_ast_parse",
+      "description": "The repaired candidate must parse with Python ast.parse.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "syntax_error"
+      ],
+      "check_id": "function_extraction",
+      "description": "The repaired output must contain the expected entry-point function.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "missing_symbol",
+        "unsafe_import"
+      ],
+      "check_id": "static_import_name_checks",
+      "description": "Static import and name checks must find no unsafe imports or missing names.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "wrong_return_type"
+      ],
+      "check_id": "return_type_contract_probe",
+      "description": "Where a signature or oracle states a type, probes must return that type.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "failed_tests"
+      ],
+      "check_id": "tests_where_present",
+      "description": "Official or manifest-local tests must pass when the row provides tests.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "unsupported_api_hallucination"
+      ],
+      "check_id": "unsupported_api_static_attr_check",
+      "description": "Imported module attributes must exist on the supported local API surface.",
+      "required": true
+    },
+    {
+      "applies_to": [
+        "syntax_error",
+        "missing_symbol",
+        "wrong_return_type",
+        "failed_tests",
+        "unsafe_import",
+        "unsupported_api_hallucination"
+      ],
+      "check_id": "exp2940_verifier_threshold",
+      "description": "The code-corpus verifier score must meet the retained Exp 2940 threshold.",
+      "required": true,
+      "source_artifact": "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json",
+      "threshold": 1.0
+    },
+    {
+      "check_id": "structured_candidate_schema_validation",
+      "description": "The constrained emission must validate against the Exp 2951 manifest schema.",
+      "required": true
+    },
+    {
+      "check_id": "verifier_only_accept_rejection",
+      "description": "Verifier-approved rows that fail parser/static/tests stay in verifier-only accounting.",
+      "required": true
+    },
+    {
+      "check_id": "pass_metric_bucket_separation",
+      "description": "pass@1/pass@k, syntax, schema, test, and verifier-only buckets are reported separately.",
+      "required": true
+    }
+  ],
+  "downstream_gate": {
+    "acceptance_before_claim": [
+      "Run the downstream live replication; this manifest is protocol-only.",
+      "Report pass@1 and pass@k separately from syntax, schema, test, and verifier-only failures.",
+      "Reject any candidate that is verifier-approved but fails parser/static/available task tests."
+    ],
+    "accounting_buckets": [
+      "pass_at_1",
+      "pass_at_k",
+      "syntax_failures",
+      "schema_failures",
+      "test_failures",
+      "verifier_only_accepts"
+    ],
+    "fixed_seed_plan": [
+      296300,
+      296301,
+      296302,
+      296303,
+      296304,
+      296305,
+      296306,
+      296307,
+      296308,
+      296309,
+      296310,
+      296311,
+      296312,
+      296313,
+      296314,
+      296315,
+      296316,
+      296317,
+      296318,
+      296319
+    ],
+    "legacy_small_models_allowed_only_for_cpu_smoke": true,
+    "may_claim_pass_rate_improvement": false,
+    "n_tasks_min": 20,
+    "required_model_hf_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "requires_fresh_live_replication": true,
+    "selected_default_threshold": 1.0
+  },
+  "duration_s": 0.0013930797576904297,
+  "extracted_failure_taxonomy": {
+    "failed_tests": {
+      "description": "Candidate parses and runs, but deterministic task tests fail.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "tests_where_present"
+      ],
+      "evidence_count": 0,
+      "sample_ids": []
+    },
+    "missing_symbol": {
+      "description": "Candidate references a name that is not defined in scope.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "static_import_name_checks"
+      ],
+      "evidence_count": 2,
+      "sample_ids": [
+        "MBPP:mbpp-56:c2:s2976",
+        "MBPP:mbpp-56:c7:s2981"
+      ]
+    },
+    "syntax_error": {
+      "description": "Candidate cannot be parsed as Python after extraction.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "function_extraction"
+      ],
+      "evidence_count": 373,
+      "sample_ids": [
+        "MBPP:mbpp-11:c0:s2910",
+        "MBPP:mbpp-11:c1:s2911",
+        "MBPP:mbpp-11:c2:s2912",
+        "MBPP:mbpp-11:c3:s2913",
+        "MBPP:mbpp-11:c4:s2914"
+      ]
+    },
+    "unsafe_import": {
+      "description": "Candidate imports or reaches unsafe local-system functionality.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "static_import_name_checks"
+      ],
+      "evidence_count": 0,
+      "sample_ids": []
+    },
+    "unsupported_api_hallucination": {
+      "description": "Candidate calls an invented or unsupported API surface.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "unsupported_api_static_attr_check"
+      ],
+      "evidence_count": 0,
+      "sample_ids": []
+    },
+    "wrong_return_type": {
+      "description": "Candidate returns a value incompatible with the task contract.",
+      "deterministic_checks": [
+        "parser_ast_parse",
+        "return_type_contract_probe"
+      ],
+      "evidence_count": 0,
+      "sample_ids": []
+    }
+  },
+  "false_accept_audit_plan": {
+    "audit_dimensions": [
+      "verifier_only_accepts",
+      "parser_or_schema_failure_accepted",
+      "test_failure_accepted",
+      "metric_tautology",
+      "missing_seed_or_checksum"
+    ],
+    "corrigendum_kinds_to_audit": [
+      "IMPLAUSIBLE_PERFECT",
+      "METHODOLOGY_MISSING",
+      "TAUTOLOGY"
+    ],
+    "known_false_accept_constraints": [
+      {
+        "mode": "baseline_no_taxonomy",
+        "parser_status": "parsed",
+        "passed": false,
+        "sample_id": "MBPP:mbpp-16:c0:s2934",
+        "seed": 2964,
+        "test_status": "failed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      },
+      {
+        "mode": "baseline_no_taxonomy",
+        "parser_status": "parsed",
+        "passed": false,
+        "sample_id": "MBPP:mbpp-16:c0:s2934",
+        "seed": 2966,
+        "test_status": "failed",
+        "verifier_accepted": true,
+        "verifier_score": 1.0
+      }
+    ],
+    "required_conditions": {
+      "every_accept_requires_parser_static_and_available_tests": true,
+      "false_accept_delta_must_be_nonpositive": true,
+      "verifier_only_accepts_must_not_count_as_pass": true
+    },
+    "upstream_known_false_accept_count": 2,
+    "upstream_notes": [
+      "false accepts decreased under taxonomy-guided repair",
+      "baseline=0.125, repair=0.0"
+    ]
+  },
+  "fixed_seed_plan": [
+    296300,
+    296301,
+    296302,
+    296303,
+    296304,
+    296305,
+    296306,
+    296307,
+    296308,
+    296309,
+    296310,
+    296311,
+    296312,
+    296313,
+    296314,
+    296315,
+    296316,
+    296317,
+    296318,
+    296319
+  ],
+  "honest_verdict": "complete: DCCD structured-repair protocol ready; no pass-rate improvement claimed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "legacy_models_only_for_smoke": true,
+  "malformed_source_artifacts": [],
+  "missing_source_artifacts": [],
+  "model_specs": [
+    {
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "name": "Qwen3.6-35B-A3B-GGUF",
+      "role": "downstream_live_dccd_repair_generation"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "name": "gemma-4-31B-it-GGUF",
+      "role": "downstream_live_dccd_repair_generation"
+    },
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "name": "gemma-4-26B-A4B-it-GGUF",
+      "role": "downstream_live_dccd_repair_generation"
+    }
+  ],
+  "n_tasks_planned_min": 20,
+  "repair_delta_summary": {
+    "baseline_pass_at_1": 0.0,
+    "baseline_pass_at_k": 0.25,
+    "false_accept_delta": -0.125,
+    "flagged_adversarial": true,
+    "may_claim_pass_rate_improvement": false,
+    "pass_at_1_delta": 0.25,
+    "pass_at_k_delta": 0.25,
+    "reason": "Exp 2952 was positive but adversarially flagged; Exp 2963 only pre-registers repair.",
+    "repair_pass_at_1": 0.25,
+    "repair_pass_at_k": 0.5,
+    "schema_failure_rate_delta": 0.0,
+    "syntax_failure_rate_delta": -0.0625,
+    "upstream_n_tasks": 4,
+    "upstream_selected_task_ids": [
+      "MBPP:mbpp-11",
+      "MBPP:mbpp-12",
+      "MBPP:mbpp-14",
+      "MBPP:mbpp-16"
+    ]
+  },
+  "required_artifact_fields": [
+    "honest_verdict",
+    "dccd_repair_protocol_ready",
+    "source_artifacts",
+    "model_specs",
+    "legacy_models_only_for_smoke",
+    "n_tasks_planned_min",
+    "fixed_seed_plan",
+    "dccd_steps",
+    "structured_backends_to_check",
+    "deterministic_acceptance_checks",
+    "false_accept_audit_plan",
+    "downstream_gate",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.dccd_repair_protocol_manifest.v1",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp2950",
+      "fields_imported": [
+        "taxonomy_labels",
+        "deterministic_checks",
+        "downstream_eval_plan"
+      ],
+      "path": "results/experiment_2950_code_taxonomy_repair_prompt_manifest_v1.json",
+      "present": true,
+      "required": true,
+      "role": "failure_taxonomy_and_repair_checks",
+      "sha256": "4a054e33bb5487bc4f91885bba3d172bdb1596ade969280f5cbdb1a1ad3762a5"
+    },
+    {
+      "experiment_id": "exp2951",
+      "fields_imported": [
+        "schema_fields",
+        "candidate_manifest_schema",
+        "local_backends_checked"
+      ],
+      "path": "results/experiment_2951_structured_candidate_manifest_adapter_v1.json",
+      "present": true,
+      "required": true,
+      "role": "candidate_schema_and_structured_backends",
+      "sha256": "2cffa2b64978c49d406bf2e8d7a070de5eec76318d7d78b2cb085c335cace19c"
+    },
+    {
+      "experiment_id": "exp2952",
+      "fields_imported": [
+        "candidate_evaluations",
+        "corrigendum_pending",
+        "false_accept_audit_notes"
+      ],
+      "path": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "present": true,
+      "required": true,
+      "role": "flagged_repair_delta_and_false_accepts",
+      "sha256": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030"
+    },
+    {
+      "experiment_id": "exp2953",
+      "fields_imported": [
+        "selected_default_threshold",
+        "operating_points",
+        "deployment_boundary"
+      ],
+      "path": "results/experiment_2953_code_verifier_threshold_policy_v1.json",
+      "present": true,
+      "required": true,
+      "role": "verifier_threshold_policy",
+      "sha256": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a"
+    }
+  ],
+  "structured_backends_to_check": [
+    {
+      "backend_name": "llguidance",
+      "must_check_downstream": true,
+      "role": "preferred local JSON-schema/CFG constrained decoding backend when installed",
+      "upstream_available": false
+    },
+    {
+      "backend_name": "llama_cpp_grammar",
+      "must_check_downstream": true,
+      "role": "llama.cpp grammar emission path for local GGUF generation",
+      "upstream_available": true
+    },
+    {
+      "backend_name": "json_schema_validation_fallback",
+      "must_check_downstream": true,
+      "role": "deterministic post-decode schema validation fallback",
+      "upstream_available": false
+    }
+  ],
+  "tests_run": [],
+  "threshold_policy": {
+    "deployment_boundary": "Default threshold 1.0000 is scoped to deterministic candidate filtering and repair triage for Exp2910-like Python code generation rows with sandbox/test evidence. It is not a standalone correctness oracle, not a pass-rate claim, and not a deployment accept gate for non-code tasks, non-Python code, missing extraction, unseen corpora, or candidates that have not passed parser, static, sandbox, and available task-test checks.",
+    "expected_false_accept_rate_at_default": 0.010135135135,
+    "expected_ppv_at_default": 0.8888888888888888,
+    "expected_recall_at_default": 1.0,
+    "operating_points": [
+      {
+        "approval_rule": "Accept for downstream repair only when approval_score >= threshold.",
+        "expected_false_accept_count": 3.0,
+        "expected_false_accept_rate": 0.010135135135,
+        "expected_ppv": 0.8888888888888888,
+        "expected_recall": 1.0,
+        "expected_true_accept_count": 24.0,
+        "false_accept_limit": 0.02,
+        "policy_name": "conservative",
+        "recommended_use": "automated_candidate_filtering",
+        "threshold": 1.0
+      },
+      {
+        "approval_rule": "Prioritize for repair review; keep tests and sandbox gates mandatory.",
+        "expected_false_accept_count": 9.0,
+        "expected_false_accept_rate": 0.030405405405,
+        "expected_ppv": 0.7272727272727273,
+        "expected_recall": 1.0,
+        "expected_true_accept_count": 24.0,
+        "false_accept_limit": 0.05,
+        "policy_name": "balanced",
+        "recommended_use": "repair_queue_triage",
+        "threshold": 0.5
+      },
+      {
+        "approval_rule": "Use only to inspect failure modes; do not auto-accept repairs.",
+        "expected_false_accept_count": 131.0,
+        "expected_false_accept_rate": 0.442567567568,
+        "expected_ppv": 0.15483870967741936,
+        "expected_recall": 1.0,
+        "expected_true_accept_count": 24.0,
+        "false_accept_limit": 0.5,
+        "policy_name": "permissive",
+        "recommended_use": "diagnostic_review_only",
+        "threshold": 0.25
+      }
+    ],
+    "selected_default_threshold": 1.0,
+    "threshold_policy_ready": true
+  }
+}
