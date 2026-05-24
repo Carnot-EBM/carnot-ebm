@@ -5,13 +5,28 @@ Carnot verifies LLM output by extracting constraints (arithmetic, code, logic) a
 ## Install
 
 ```bash
-pip install -e ".[dev]"
+pip install carnot-ebm
 ```
 
 This installs the `carnot` CLI and the Python library. Requires Python 3.11+.
 
-> JAX runs on CPU by default. For GPU acceleration, install with `pip install carnot[cuda]`.
+If you're working from a clone of the repository and want to develop against it, use the editable install with dev extras instead:
+
+```bash
+pip install -e ".[dev]"
+```
+
+> JAX runs on CPU by default. For GPU acceleration, install with `pip install carnot-ebm[cuda]`.
 > On AMD/ROCm systems, force CPU mode: `JAX_PLATFORMS=cpu`.
+
+### First time using Carnot?
+
+Walk through the [**30-minute narrative tutorial**](tutorial.md) before
+reading the rest of this page. It builds a small hallucination-resistant
+math helper end-to-end (basic verify → reading violations → repair loop
+→ custom checks → production wrap) and leaves you with a function ready
+to drop into a FastAPI route. The full code is at
+[`examples/tutorial-project/`](https://github.com/Carnot-EBM/carnot-ebm/tree/main/examples/tutorial-project).
 
 ## Quick Start (5 lines)
 
@@ -163,6 +178,7 @@ if not result.verified:
 
 ## Next Steps
 
+- [**Tutorial**](tutorial.md) -- 30-minute narrative walkthrough building a hallucination-resistant math helper end-to-end (start here if you haven't already)
 - [Concepts](concepts.md) -- understand constraint verification in plain English
 - [API Reference](api-reference.md) -- all public classes and methods
 - [Examples](https://github.com/Carnot-EBM/carnot-ebm/tree/main/examples) -- runnable integration examples
