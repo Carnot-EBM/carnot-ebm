@@ -1,0 +1,75 @@
+{
+  "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+  "bitstream_sha256_verified": true,
+  "board_detected": true,
+  "duration_s": 0.684231,
+  "failure_command": "",
+  "failure_excerpt": "",
+  "flash_attempted": true,
+  "flash_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "flash_succeeded": true,
+  "honest_verdict": "complete: gatemate_flash_contact_smoke_no_readback",
+  "inference_substrate": "hardware_smoke",
+  "no_boltzmann_claim": true,
+  "no_speedup_claim": true,
+  "no_thermalization_claim": true,
+  "observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "bitstream_sha256_verified": true,
+      "gatemate_board_detected": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2971_gatemate_board_detection_flash_harness_v3.json",
+      "reason": "",
+      "resource": "exp2971_preconditions"
+    },
+    {
+      "available": true,
+      "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "reason": "",
+      "resource": "exp2971_flash_command"
+    },
+    {
+      "actual_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "available": true,
+      "expected_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "resource": "exp2971_bitstream_sha256_recheck",
+      "verified": true
+    },
+    {
+      "available": true,
+      "command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect",
+      "resource": "pre_flash_gatemate_board_detection",
+      "returncode": 0,
+      "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/pre_flash_detect.txt"
+    }
+  ],
+  "run_date": "20260524",
+  "smoke_vector_passed": false,
+  "timing_observation": {
+    "command_durations_s": {
+      "flash": 0.649637,
+      "post_flash_detect": 0.015362,
+      "pre_flash_detect": 0.017421
+    },
+    "post_flash_contact_detected": true,
+    "post_flash_idcode_detected": false,
+    "readback_reason": "No GateMate n=16 host-visible sampler output/readback path is defined; post-flash detect is contact smoke only.",
+    "readback_supported": false,
+    "smoke_path": "post_flash_detect",
+    "timing_source": "host_wall_clock_command_duration"
+  },
+  "transcript_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/pre_flash_detect.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/flash.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/post_flash_detect.txt"
+  ],
+  "transcript_sha256": {
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/flash.txt": "ddc312d385e4013ce8aa07d959582494d36ee11918c17bade4c09b56350f7a64",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/post_flash_detect.txt": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/pre_flash_detect.txt": "2916bf7f74eaae592e07cb0837352efa53c296bdd45191c829211840128eca55"
+  }
+}

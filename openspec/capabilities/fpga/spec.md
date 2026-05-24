@@ -2041,3 +2041,64 @@ transcripts, the exact flash command to run later when ready, and either
 with the first failing command and transcript path.
 
 **Implementation status:** Planned (Exp 2971)
+
+---
+
+### REQ-HW-079
+
+**Title:** Exp 2972 GateMate post-flash output-hash smoke MUST be gated on Exp 2971 and avoid sampler claims
+
+**Description:**
+Experiment 2972 MUST flash the GateMate n=16 bitstream only after
+`results/experiment_2971_gatemate_board_detection_flash_harness_v3.json`
+reports both `gatemate_board_detected=true` and
+`bitstream_sha256_verified=true`. Immediately before flashing, the experiment
+MUST re-run the DirtyJTAG/GateMate detection command and re-verify the local
+bitstream SHA256 against the Exp 2971 command payload. The flash command MUST be
+the exact command emitted by Exp 2971. Every detection, flash, and post-flash
+smoke/readback command MUST be captured to a raw transcript file and hashed.
+Because the current GateMate n=16 bitstream has no host-visible sampler output
+or readback path, a successful run MAY report only flash/contact transcript
+hashes and directly measured command timing. It MUST NOT claim speedup,
+Boltzmann sampling, thermalization, or thermodynamic sampling behavior.
+
+**Acceptance criteria:**
+- `results/experiment_2972_gatemate_post_flash_output_hash_v3.json` is
+  generated with `inference_substrate="hardware_smoke"`.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `board_detected`, `bitstream_sha256_verified`, `flash_attempted`,
+  `flash_succeeded`, `smoke_vector_passed`, `observed_output_sha256`,
+  `timing_observation`, `transcript_paths`, `failure_command`,
+  `failure_excerpt`, `no_speedup_claim=true`, `no_boltzmann_claim=true`,
+  `no_thermalization_claim=true`, `inference_substrate`, and `duration_s`.
+- Preconditions fail closed unless Exp 2971 reports board detection and
+  SHA256 verification, the parsed Exp 2971 flash command names an existing
+  bitstream, the local bitstream SHA256 still matches the Exp 2971 hash, and
+  the immediate pre-flash detection transcript identifies GateMate hardware.
+- A flash failure or post-flash contact/readback failure writes a `blocked_*`
+  artifact with `flash_attempted` and `flash_succeeded` reflecting what really
+  happened, plus the exact failing command and transcript-backed excerpt.
+- A successful no-readback smoke records the pre-flash detection transcript,
+  flash transcript, post-flash detection transcript, transcript SHA256 values,
+  measured command durations, `smoke_vector_passed=false`, and the post-flash
+  transcript hash as `observed_output_sha256`.
+
+**Implementation status:** Planned (Exp 2972)
+
+---
+
+### SCENARIO-HW-079
+
+**Scenario:** GateMate post-flash smoke records output hash evidence or an exact blocker.
+
+**Given:** Exp 2971 reports GateMate board detection, bitstream SHA256
+verification, and an exact openFPGALoader flash command for the Exp 2956 n=16
+GateMate bitstream.
+**When:** Exp 2972 rechecks detection and hash evidence, executes the Exp 2971
+flash command, and runs the smallest available post-flash contact/readback path.
+**Then:** It writes the v3 hardware-smoke JSON with transcript paths,
+transcript hashes, command timing observations, no forbidden sampler claims, and
+either a successful flash/contact hash smoke or a blocked verdict with the exact
+failing command.
+
+**Implementation status:** Planned (Exp 2972)
