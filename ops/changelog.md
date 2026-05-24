@@ -7237,3 +7237,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: BEAVER-Style Repair Certificate Audit v1 (✅ Complete) — honest_verdict=complete: bounded certificate audit ready; full BEAVER probability bound not claimed; results/experiment_2965_beaver_style_repair_certificate_v1.json
 - 2026-05-24: LogicSkills LLMEval Exact Frontier Materializer v1 (✅ Complete) — honest_verdict=complete: exact skill-labeled logic frontier materialized; results/experiment_2966_logic_frontier_materializer_v1.json
 - 2026-05-24: Gated SOTA NL-to-Z3 DCCD Formalization v1 (✅ Complete) — honest_verdict=complete: local SOTA DCCD formalizations did not clear .278 delta gate; results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json
+- 2026-05-24: Interwhen-Style Partial Monitor Harness v1 (⚠️ Research Finding) — honest_verdict=complete: deterministic partial monitor harness ready; results/experiment_2968_interwhen_partial_monitor_harness_v1.json
