@@ -312,6 +312,63 @@ blocked according to the solver-backed evidence.
 |---|---|---|
 | REQ-VERIFY-2992 | Planned (`python/carnot/eval/sota_solver_formalization_provenance_reproduction_v1.py`) | Planned (`tests/python/test_experiment_2992_sota_solver_formalization_provenance_reproduction.py`) |
 
+### REQ-VERIFY-2994: Prompt-To-Validator Dialogue Schema V1
+
+The repository shall provide a bounded prompt-to-validator dialogue protocol
+and deterministic harness for translating prompt-defined natural-language
+requirements into executable validator trees without running live LLM
+inference. The protocol document shall live under
+`openspec/change-proposals/` or `ops/` and shall describe the required stages:
+prompt constraints, validator tree, exact-check nodes, feedback object, and
+rejection reasons.
+
+The deterministic harness shall compile at least three fixed prompt-defined
+constraint fixtures into executable validator trees. The fixture set shall
+include JSON/runtime validation, Python AST/runtime validation, and exact Z3
+or equivalent solver-backed validation. The harness shall evaluate known-good
+and known-bad candidates for every compiled fixture and shall reject
+unsupported prompt patterns instead of speculatively accepting them.
+
+The protocol may include a STATIC-inspired sparse/static transition-table
+representation for validator grammars, but it MUST present that representation
+only as a schema/automaton design proposal. The artifact MUST NOT make any
+local speed, latency, or acceleration claim from STATIC inspiration alone.
+LLM self-judgment MUST NOT decide correctness; exact Z3/runtime validator
+execution remains the acceptance authority.
+
+The terminal artifact MUST be written to
+`results/experiment_2994_prompt_validator_dialogue_schema_v1.json` and include
+`prompt_validator_protocol_ready`, `protocol_doc_path`,
+`deterministic_harness_path`, `n_validator_tree_fixtures`,
+`exact_verifier_authority_preserved`,
+`static_transition_representation_designed`, `no_speed_claim_made`,
+`validation_commands`, and `honest_verdict`.
+
+`prompt_validator_protocol_ready` shall be true only when the protocol document
+exists, at least three validator-tree fixtures compile, every known-good
+fixture is accepted, every known-bad fixture is rejected by exact runtime/Z3
+feedback, unsupported prompt patterns reject with a named reason, the static
+transition representation is present without speed claims, and the artifact's
+`honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-2994: Prompt Constraints Become Exact Validator Feedback
+
+Given the prompt-validator protocol document is present and exact local
+runtime/Z3 verification is available,
+When the deterministic Exp 2994 harness runs,
+Then it compiles the fixed JSON, Python AST, and solver fixtures into validator
+trees, evaluates known-good and known-bad candidates through exact-check nodes,
+emits feedback objects with named failing node IDs and rejection reasons,
+records a sparse/static transition-table design proposal without claiming
+speed, and writes the required terminal JSON artifact with
+`exact_verifier_authority_preserved=true`.
+
+## Implementation Status (REQ-VERIFY-2994)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-2994 | Implemented (`python/carnot/eval/prompt_validator_dialogue_schema_v1.py`) | Implemented (`tests/python/test_experiment_2994_prompt_validator_dialogue_schema.py`) |
+
 ### REQ-VERIFY-2981: Interwhen Partial-Monitor Promotion Metrics V2
 
 The repository shall provide an Exp 2981 deterministic promotion evaluator for

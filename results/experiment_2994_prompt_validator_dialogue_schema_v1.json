@@ -1,0 +1,322 @@
+{
+  "artifact": "experiment_2994_prompt_validator_dialogue_schema_v1",
+  "deterministic_harness_path": "python/carnot/eval/prompt_validator_dialogue_schema_v1.py",
+  "duration_s": 0.004477,
+  "exact_verifier_authority_preserved": true,
+  "honest_verdict": "complete: prompt-validator dialogue protocol ready with deterministic exact checks",
+  "inference_substrate": "deterministic_prompt_validator_harness",
+  "live_llm_judge_used": false,
+  "llm_inference_run": false,
+  "n_validator_tree_fixtures": 3,
+  "no_speed_claim_made": true,
+  "prompt_validator_protocol_ready": true,
+  "protocol_doc_path": "openspec/change-proposals/prompt-validator-dialogue-schema-v1.md",
+  "run_date": "20260524",
+  "schema": "carnot.prompt_validator_dialogue_schema.v1",
+  "source_artifacts": {
+    "exp2979": {
+      "fields": {
+        "frontier_upgrade_ready": true,
+        "honest_verdict": "complete: deterministic solver-feedback MCS/MUS frontier ready for Exp 2980",
+        "mcs_feedback_schema_ready": true
+      },
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2979_solver_feedback_mcs_frontier_v1.json",
+      "present": true,
+      "sha256": "6c68d7a0331dfede23bbd130ef9c253df1d1e88859a67e56a2ca6df1308f8c35"
+    },
+    "exp2981": {
+      "fields": {
+        "full_streaming_verification_claim": false,
+        "honest_verdict": "complete: deterministic partial monitor promoted with measured coverage and localization",
+        "partial_monitor_promoted": true
+      },
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2981_interwhen_partial_monitor_promotion_v2.json",
+      "present": true,
+      "sha256": "aefa08cf74300b0d77605a1a82c0f79936267e4e7df39a70391ffeb90e44c54d"
+    },
+    "exp2992": {
+      "fields": {
+        "formalization_clean": true,
+        "honest_verdict": "reproduced: solver-feedback formalization gain reproduced with stricter Z3 provenance",
+        "solver_provenance_reproduced": true
+      },
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.json",
+      "present": true,
+      "sha256": "ef2db1c1b16ab1ea3eb558f09ec3a6c7e5ed8d606815fdc3b4ef0550f11518ac"
+    }
+  },
+  "static_transition_representation": {
+    "designed": true,
+    "name": "validator_tree_static_sparse_transition_table",
+    "note": "STATIC inspires the sparse transition shape only; this artifact does not benchmark or claim acceleration.",
+    "representation": {
+      "accepting_states": [
+        4
+      ],
+      "labels": [
+        "json_object",
+        "python_ast",
+        "z3_assignment",
+        "leaf",
+        "accept"
+      ],
+      "row_offsets": [
+        0,
+        3,
+        4,
+        5,
+        5
+      ],
+      "targets": [
+        1,
+        2,
+        3,
+        4,
+        4
+      ]
+    },
+    "speed_claim": null,
+    "speed_claim_made": false
+  },
+  "static_transition_representation_designed": true,
+  "unsupported_prompt_rejection": {
+    "compiled": false,
+    "constraint_id": "unsupported-haiku-judge",
+    "rejection_reasons": [
+      "unsupported_prompt_pattern"
+    ],
+    "validator_tree": null
+  },
+  "validation_commands": [
+    "tests-first: .venv/bin/pytest tests/python/test_experiment_2994_prompt_validator_dialogue_schema.py -q (failed before implementation, missing module)",
+    "focused: .venv/bin/pytest tests/python/test_experiment_2994_prompt_validator_dialogue_schema.py -q -o addopts='' (passed: 6 passed)",
+    "coverage-new-code: .venv/bin/coverage erase && .venv/bin/coverage run --include='*/python/carnot/eval/prompt_validator_dialogue_schema_v1.py' -m pytest tests/python/test_experiment_2994_prompt_validator_dialogue_schema.py -q -o addopts='' && .venv/bin/coverage report --include='*/python/carnot/eval/prompt_validator_dialogue_schema_v1.py' --fail-under=100 --show-missing (passed: 100%)",
+    "lint: .venv/bin/python -m ruff check python/carnot/eval/prompt_validator_dialogue_schema_v1.py tests/python/test_experiment_2994_prompt_validator_dialogue_schema.py (blocked: No module named ruff)",
+    "spec-coverage: .venv/bin/python scripts/check_spec_coverage.py (failed: 444 pre-existing tests missing REQ/SCENARIO references)",
+    "full-python: .venv/bin/pytest tests/python -q (failed/hung: unrelated native crashes in existing tokenizer/JAX/model/Z3 tests; terminated after teardown failure)",
+    "harness: .venv/bin/python -m carnot.eval.prompt_validator_dialogue_schema_v1 --output results/experiment_2994_prompt_validator_dialogue_schema_v1.json (...)"
+  ],
+  "validator_tree_fixtures": [
+    {
+      "compiled": true,
+      "fixture_id": "json-final-answer-confidence",
+      "known_bad_feedback": {
+        "accepted": false,
+        "failing_node_ids": [
+          "json-final-answer-confidence:confidence"
+        ],
+        "llm_judge_used": false,
+        "node_results": [
+          {
+            "accepted": true,
+            "authority": "runtime_json_parser",
+            "kind": "json_field_equals",
+            "node_id": "json-final-answer-confidence:final_answer",
+            "rejection_reason": null
+          },
+          {
+            "accepted": false,
+            "authority": "runtime_json_parser",
+            "kind": "json_number_between",
+            "node_id": "json-final-answer-confidence:confidence",
+            "rejection_reason": "numeric_range_violation"
+          }
+        ],
+        "rejection_reasons": [
+          "numeric_range_violation"
+        ]
+      },
+      "known_good_feedback": {
+        "accepted": true,
+        "failing_node_ids": [],
+        "llm_judge_used": false,
+        "node_results": [
+          {
+            "accepted": true,
+            "authority": "runtime_json_parser",
+            "kind": "json_field_equals",
+            "node_id": "json-final-answer-confidence:final_answer",
+            "rejection_reason": null
+          },
+          {
+            "accepted": true,
+            "authority": "runtime_json_parser",
+            "kind": "json_number_between",
+            "node_id": "json-final-answer-confidence:confidence",
+            "rejection_reason": null
+          }
+        ],
+        "rejection_reasons": []
+      },
+      "prompt": "The candidate must be a JSON object with field `final_answer` equal to \"SAFE\" and field `confidence` between 0.0 and 1.0.",
+      "validator_tree": {
+        "nodes": [
+          {
+            "authority": "runtime_json_parser",
+            "expected": "SAFE",
+            "field": "final_answer",
+            "kind": "json_field_equals",
+            "node_id": "json-final-answer-confidence:final_answer"
+          },
+          {
+            "authority": "runtime_json_parser",
+            "field": "confidence",
+            "kind": "json_number_between",
+            "maximum": 1.0,
+            "minimum": 0.0,
+            "node_id": "json-final-answer-confidence:confidence"
+          }
+        ],
+        "root": {
+          "children": [
+            "json-final-answer-confidence:final_answer",
+            "json-final-answer-confidence:confidence"
+          ],
+          "op": "all"
+        },
+        "tree_id": "json-final-answer-confidence"
+      }
+    },
+    {
+      "compiled": true,
+      "fixture_id": "python-normalize-slug-ast",
+      "known_bad_feedback": {
+        "accepted": false,
+        "failing_node_ids": [
+          "python-normalize-slug-ast:signature"
+        ],
+        "llm_judge_used": false,
+        "node_results": [
+          {
+            "accepted": false,
+            "authority": "python_ast_parser",
+            "kind": "python_function_signature",
+            "node_id": "python-normalize-slug-ast:signature",
+            "rejection_reason": "function_signature_mismatch"
+          },
+          {
+            "accepted": true,
+            "authority": "python_ast_parser",
+            "kind": "python_no_imports",
+            "node_id": "python-normalize-slug-ast:no_imports",
+            "rejection_reason": null
+          }
+        ],
+        "rejection_reasons": [
+          "function_signature_mismatch"
+        ]
+      },
+      "known_good_feedback": {
+        "accepted": true,
+        "failing_node_ids": [],
+        "llm_judge_used": false,
+        "node_results": [
+          {
+            "accepted": true,
+            "authority": "python_ast_parser",
+            "kind": "python_function_signature",
+            "node_id": "python-normalize-slug-ast:signature",
+            "rejection_reason": null
+          },
+          {
+            "accepted": true,
+            "authority": "python_ast_parser",
+            "kind": "python_no_imports",
+            "node_id": "python-normalize-slug-ast:no_imports",
+            "rejection_reason": null
+          }
+        ],
+        "rejection_reasons": []
+      },
+      "prompt": "The candidate must define Python function `normalize_slug` with exactly 1 parameter and must not contain import statements.",
+      "validator_tree": {
+        "nodes": [
+          {
+            "authority": "python_ast_parser",
+            "function_name": "normalize_slug",
+            "kind": "python_function_signature",
+            "node_id": "python-normalize-slug-ast:signature",
+            "parameter_count": 1
+          },
+          {
+            "authority": "python_ast_parser",
+            "kind": "python_no_imports",
+            "node_id": "python-normalize-slug-ast:no_imports"
+          }
+        ],
+        "root": {
+          "children": [
+            "python-normalize-slug-ast:signature",
+            "python-normalize-slug-ast:no_imports"
+          ],
+          "op": "all"
+        },
+        "tree_id": "python-normalize-slug-ast"
+      }
+    },
+    {
+      "compiled": true,
+      "fixture_id": "z3-linear-integer-assignment",
+      "known_bad_feedback": {
+        "accepted": false,
+        "failing_node_ids": [
+          "z3-linear-integer-assignment:linear_constraints"
+        ],
+        "llm_judge_used": false,
+        "node_results": [
+          {
+            "accepted": false,
+            "authority": "z3_solver",
+            "kind": "z3_linear_integer_relation",
+            "node_id": "z3-linear-integer-assignment:linear_constraints",
+            "rejection_reason": "z3_unsatisfied"
+          }
+        ],
+        "rejection_reasons": [
+          "z3_unsatisfied"
+        ]
+      },
+      "known_good_feedback": {
+        "accepted": true,
+        "failing_node_ids": [],
+        "llm_judge_used": false,
+        "node_results": [
+          {
+            "accepted": true,
+            "authority": "z3_solver",
+            "kind": "z3_linear_integer_relation",
+            "node_id": "z3-linear-integer-assignment:linear_constraints",
+            "rejection_reason": null
+          }
+        ],
+        "rejection_reasons": []
+      },
+      "prompt": "The candidate must provide integer assignments `x` and `y` in JSON such that `x + y = 10` and `x > y`.",
+      "validator_tree": {
+        "nodes": [
+          {
+            "authority": "z3_solver",
+            "kind": "z3_linear_integer_relation",
+            "node_id": "z3-linear-integer-assignment:linear_constraints",
+            "strict_greater": [
+              "x",
+              "y"
+            ],
+            "sum_equals": 10,
+            "variables": [
+              "x",
+              "y"
+            ]
+          }
+        ],
+        "root": {
+          "children": [
+            "z3-linear-integer-assignment:linear_constraints"
+          ],
+          "op": "all"
+        },
+        "tree_id": "z3-linear-integer-assignment"
+      }
+    }
+  ]
+}
