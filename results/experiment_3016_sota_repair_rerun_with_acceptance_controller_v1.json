@@ -6300,5 +6300,33 @@
     "results/verifier_transcripts/experiment_3016/repair-hard-0022_unsloth_gemma-4-26B-A4B-it-GGUF_21.json",
     "results/verifier_transcripts/experiment_3016/repair-hard-0023_unsloth_gemma-4-26B-A4B-it-GGUF_22.json",
     "results/verifier_transcripts/experiment_3016/repair-hard-0024_unsloth_gemma-4-26B-A4B-it-GGUF_23.json"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_1_delta=0.375 and pass_at_k_delta=0.375 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "syntax_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
   ]
 }
