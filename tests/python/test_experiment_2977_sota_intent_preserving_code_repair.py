@@ -202,7 +202,10 @@ def test_scenario_verify_2977_cpu_smoke_when_cached_pair_missing(tmp_path: Path)
     assert artifact["inference_substrate"] == "live_llm_inference"
     assert artifact["runtime_trace_coverage"] == pytest.approx(1.0)
     assert len(artifact["candidate_evaluations"]) == 2 * len(exp.CONDITIONS)
-    assert all(Path(tmp_path, row["raw_candidate_ref"]).is_file() for row in artifact["candidate_evaluations"])
+    assert all(
+        Path(tmp_path, row["raw_candidate_ref"]).is_file()
+        for row in artifact["candidate_evaluations"]
+    )
 
 
 def test_scenario_verify_2977_clean_headline_requires_all_gates(tmp_path: Path) -> None:
@@ -215,7 +218,9 @@ def test_scenario_verify_2977_clean_headline_requires_all_gates(tmp_path: Path) 
         generator=_clean_generator,
     )
 
-    assert artifact["honest_verdict"] == "complete: intent-preserving trace-aware repair rerun clean"
+    assert (
+        artifact["honest_verdict"] == "complete: intent-preserving trace-aware repair rerun clean"
+    )
     assert artifact["headline_result"] is True
     assert artifact["repair_rerun_clean"] is True
     assert artifact["legacy_model_used_only_for_smoke"] is False
@@ -235,6 +240,155 @@ def test_scenario_verify_2977_clean_headline_requires_all_gates(tmp_path: Path) 
     assert artifact["per_model_metrics"]["unsloth/Qwen3.6-35B-A3B-GGUF"][
         exp.INTENT_PRESERVING_MODE
     ]["pass_at_1"] == pytest.approx(1.0)
+
+
+def test_req_verify_2977_cached_headline_uses_live_generator_by_default(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """REQ-VERIFY-2977: cached headline models use the live GGUF generator, not smoke output."""
+    _write_sources(tmp_path, n_tasks=20)
+    calls: list[dict[str, Any]] = []
+
+    def live_factory(*, model_path: str, main_gpu: int) -> exp.RepairGenerator:
+        calls.append({"model_path": model_path, "main_gpu": main_gpu})
+        return _clean_generator
+
+    monkeypatch.setattr(exp, "llama_cpp_trace_aware_repair_generator", live_factory, raising=False)
+
+    artifact = exp.build_artifact(
+        _config(tmp_path, n_tasks=20),
+        cached_pair_func=_cached_pair,
+    )
+
+    assert calls == [{"model_path": "/models/qwen.gguf", "main_gpu": 0}]
+    assert artifact["headline_result"] is True
+    assert artifact["legacy_model_used_only_for_smoke"] is False
+    assert (
+        artifact["honest_verdict"] == "complete: intent-preserving trace-aware repair rerun clean"
+    )
+    assert {row["generation_backend"] for row in artifact["candidate_evaluations"]} == {
+        "fake-live-llama"
+    }
+
+
+def test_req_verify_2977_llama_cpp_generator_records_trace_without_auto_accepting() -> None:
+    """REQ-VERIFY-2977: live GGUF output keeps raw text, diagnostics, and trace evidence."""
+    prompts: list[str] = []
+
+    class FakeLlama:
+        def __call__(self, prompt: str, **kwargs: Any) -> dict[str, Any]:
+            prompts.append(prompt)
+            assert kwargs["seed"] == 123
+            assert kwargs["max_tokens"] == 256
+            return {
+                "choices": [
+                    {
+                        "text": (
+                            '{"repaired_code": "def fixed(x):\\n    return x + 1\\n"}'
+                            if "schema-only" in prompt
+                            else "```python\ndef fixed(x):\n    return x + 1\n```"
+                        )
+                    }
+                ],
+                "usage": {"completion_tokens": 17},
+            }
+
+    created: list[dict[str, Any]] = []
+
+    def fake_factory(**kwargs: Any) -> FakeLlama:
+        created.append(kwargs)
+        return FakeLlama()
+
+    generator = exp.llama_cpp_trace_aware_repair_generator(
+        model_path="/models/qwen.gguf",
+        main_gpu=1,
+        llama_factory=fake_factory,
+    )
+    task = exp.RepairTask(
+        task_id="MBPP:mbpp-1",
+        stable_id="mbpp-1",
+        corpus="MBPP",
+        sample_id="MBPP:mbpp-1:c0:s2911",
+        original_failure_categories=("syntax_error",),
+    )
+
+    schema_payload = generator(
+        task,
+        exp.SCHEMA_ONLY_MODE,
+        0,
+        123,
+        {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "model_path": "/models/qwen.gguf"},
+    )
+    intent_payload = generator(
+        task,
+        exp.INTENT_PRESERVING_MODE,
+        0,
+        123,
+        {"hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF", "model_path": "/models/qwen.gguf"},
+    )
+
+    assert created == [
+        {
+            "model_path": "/models/qwen.gguf",
+            "n_ctx": 4096,
+            "n_batch": 128,
+            "n_ubatch": 128,
+            "n_gpu_layers": -1,
+            "main_gpu": 1,
+            "verbose": False,
+        }
+    ]
+    assert len(prompts) == 2
+    assert "schema-only DCCD" in prompts[0]
+    assert "intent-preserving trace-aware repair" in prompts[1]
+    assert schema_payload["schema_valid"] is True
+    assert schema_payload["syntax_success"] is True
+    assert schema_payload["passed"] is False
+    assert schema_payload["verifier_accepted"] is False
+    assert schema_payload["tokens_generated"] == 17
+    assert schema_payload["generation_backend"] == "llama_cpp"
+    assert intent_payload["execution_trace"][0]["stage"] == "ast_parse"
+    assert intent_payload["execution_trace"][0]["exit_code"] == 0
+    assert intent_payload["passed"] is False
+    assert intent_payload["verifier_accepted"] is False
+
+
+def test_req_verify_2977_live_generator_defensive_diagnostics() -> None:
+    """REQ-VERIFY-2977: malformed live outputs become diagnostics, not accepted repairs."""
+
+    class FailingLlama:
+        def __call__(self, _prompt: str, **_kwargs: Any) -> dict[str, Any]:
+            raise RuntimeError("boom")
+
+    generator = exp.llama_cpp_trace_aware_repair_generator(
+        model_path="/models/qwen.gguf",
+        llama_factory=lambda **_kwargs: FailingLlama(),
+    )
+    task = exp.RepairTask(
+        task_id="MBPP:bad",
+        stable_id="bad",
+        corpus="MBPP",
+        sample_id="MBPP:bad:c0:s1",
+        original_failure_categories=(),
+    )
+
+    payload = generator(task, exp.BASELINE_MODE, 0, 1, {"model_path": "/models/qwen.gguf"})
+
+    assert payload["generation_error"] == "RuntimeError: boom"
+    assert payload["schema_valid"] is False
+    assert payload["syntax_success"] is False
+    assert payload["execution_trace"] == []
+    assert exp._parse_schema_repair("not-json")[1] == ["invalid JSON: Expecting value"]
+    assert exp._parse_schema_repair("[]")[1] == ["schema repair output is not a JSON object"]
+    assert exp._parse_schema_repair('{"repaired_code": ""}')[1] == [
+        'schema repair output missing non-empty "repaired_code"'
+    ]
+    assert exp._extract_python_code("plain text") == "plain text"
+    assert exp._syntax_diagnostics("") == (False, ["empty candidate"])
+    assert exp._syntax_diagnostics("def bad(:") == (False, ["SyntaxError: invalid syntax"])
+    assert exp._llama_text({"choices": ["not-a-mapping"]}).startswith("{'choices'")
+    assert exp._llama_completion_tokens({"usage": "not-a-mapping"}) == 0
 
 
 def test_req_verify_2977_blocks_when_protocol_not_ready(tmp_path: Path) -> None:

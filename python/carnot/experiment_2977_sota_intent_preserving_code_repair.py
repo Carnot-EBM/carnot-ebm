@@ -10,12 +10,14 @@ of promoting legacy-model output as a research result.
 
 from __future__ import annotations
 
+import ast
 from collections import Counter
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field
 import hashlib
 import json
 from pathlib import Path
+import re
 import time
 from typing import Any
 
@@ -25,6 +27,7 @@ from carnot.inference.sota_models import SOTA_GGUF_MODELS, cached_sota_pair, res
 JsonDict = dict[str, Any]
 CachedPairFunc = Callable[..., list[JsonDict] | None]
 RepairGenerator = Callable[["RepairTask", str, int, int, JsonDict], Mapping[str, Any]]
+LlamaFactory = Callable[..., Any]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 RUN_DATE = "20260524"
@@ -121,7 +124,10 @@ class ExperimentConfig:
         return self.output_path or self.repo_root / "results" / ARTIFACT_FILENAME
 
     def raw_dir(self) -> Path:
-        return self.raw_response_dir or self.repo_root / "results" / "raw" / ARTIFACT_FILENAME.removesuffix(".json")
+        return (
+            self.raw_response_dir
+            or self.repo_root / "results" / "raw" / ARTIFACT_FILENAME.removesuffix(".json")
+        )
 
 
 def build_artifact(
@@ -175,7 +181,7 @@ def build_artifact(
         )
 
     active_model = dict(cached_pair_result[0]) if cached_pair_result else _legacy_model_specs()[0]
-    active_generator = generator or _legacy_cpu_smoke_generator
+    active_generator = generator or _default_generator_for_model(headline_result, active_model)
     evaluations = _evaluate_conditions(config, tasks, active_model, active_generator)
     return _complete_artifact(
         config=config,
@@ -221,7 +227,11 @@ def _evaluate_conditions(
             for sample_index in range(config.samples_per_mode):
                 seed = _candidate_seed(config.random_seed, task_index, mode, sample_index)
                 payload = dict(generator(task, mode, sample_index, seed, model_spec))
-                rows.append(_candidate_evaluation(config, task, mode, sample_index, seed, model_spec, payload))
+                rows.append(
+                    _candidate_evaluation(
+                        config, task, mode, sample_index, seed, model_spec, payload
+                    )
+                )
     return rows
 
 
@@ -329,7 +339,9 @@ def _complete_artifact(
         "false_accept_delta": deltas["false_accept_delta"],
         "runtime_trace_coverage": runtime_trace_coverage,
         "per_model_metrics": _per_model_metrics(evaluations, tasks),
-        "failures_by_category": dict(Counter(category for task in tasks for category in task.original_failure_categories)),
+        "failures_by_category": dict(
+            Counter(category for task in tasks for category in task.original_failure_categories)
+        ),
         "inference_substrate": INFERENCE_SUBSTRATE,
         "duration_s": _elapsed(config, started),
         "mode_metrics": {
@@ -387,7 +399,9 @@ def _mode_metrics(
         by_task.setdefault(str(row.get("task_id")), []).append(row)
     per_task: list[JsonDict] = []
     for task in tasks:
-        task_rows = sorted(by_task.get(task.task_id, []), key=lambda row: int(row.get("sample_index") or 0))
+        task_rows = sorted(
+            by_task.get(task.task_id, []), key=lambda row: int(row.get("sample_index") or 0)
+        )
         pass_vector = [bool(row.get("passed")) for row in task_rows]
         per_task.append(
             {
@@ -410,9 +424,13 @@ def _mode_metrics(
     }
 
 
-def _per_model_metrics(evaluations: Sequence[Mapping[str, Any]], tasks: Sequence[RepairTask]) -> JsonDict:
+def _per_model_metrics(
+    evaluations: Sequence[Mapping[str, Any]], tasks: Sequence[RepairTask]
+) -> JsonDict:
     metrics: JsonDict = {}
-    for model_id in sorted({str(row.get("model_hf_id") or "") for row in evaluations if row.get("model_hf_id")}):
+    for model_id in sorted(
+        {str(row.get("model_hf_id") or "") for row in evaluations if row.get("model_hf_id")}
+    ):
         model_rows = [row for row in evaluations if row.get("model_hf_id") == model_id]
         metrics[model_id] = {mode: _mode_metrics(model_rows, mode, tasks) for mode in CONDITIONS}
     return metrics
@@ -430,7 +448,9 @@ def _metric_deltas(baseline: Mapping[str, Any], intent: Mapping[str, Any]) -> Js
             intent.get("syntax_failure_rate"),
             baseline.get("syntax_failure_rate"),
         ),
-        "false_accept_delta": _delta(intent.get("false_accept_rate"), baseline.get("false_accept_rate")),
+        "false_accept_delta": _delta(
+            intent.get("false_accept_rate"), baseline.get("false_accept_rate")
+        ),
     }
 
 
@@ -472,7 +492,9 @@ def _load_repair_tasks(config: ExperimentConfig, limit: int) -> list[RepairTask]
                 stable_id=str(row.get("stable_id") or task_id),
                 corpus=str(row.get("corpus") or ""),
                 sample_id=str(row.get("sample_id") or task_id),
-                original_failure_categories=tuple(str(item) for item in row.get("original_failure_categories") or ()),
+                original_failure_categories=tuple(
+                    str(item) for item in row.get("original_failure_categories") or ()
+                ),
             )
         )
     return tasks
@@ -484,8 +506,10 @@ def _source_precondition_checks(config: ExperimentConfig) -> list[JsonDict]:
         (
             "exp2976_protocol",
             results_dir / PROTOCOL_FILENAME,
-            lambda payload: payload.get("intent_preserving_repair_protocol_ready") is True
-            and payload.get("trace_execution_plan_ready") is True,
+            lambda payload: (
+                payload.get("intent_preserving_repair_protocol_ready") is True
+                and payload.get("trace_execution_plan_ready") is True
+            ),
         ),
         (
             "exp2964_repair_tasks",
@@ -582,6 +606,222 @@ def _legacy_cpu_smoke_generator(
     }
 
 
+def _default_generator_for_model(
+    headline_result: bool, model_spec: Mapping[str, Any]
+) -> RepairGenerator:
+    if not headline_result:
+        return _legacy_cpu_smoke_generator
+    return llama_cpp_trace_aware_repair_generator(
+        model_path=str(model_spec.get("model_path") or ""),
+        main_gpu=int(model_spec.get("gpu") or 0),
+    )
+
+
+def llama_cpp_trace_aware_repair_generator(
+    *,
+    model_path: str,
+    main_gpu: int = 0,
+    n_ctx: int = 4096,
+    n_batch: int = 128,
+    n_gpu_layers: int = -1,
+    temperature: float = 0.2,
+    max_tokens: int = 256,
+    llama_factory: LlamaFactory | None = None,
+) -> RepairGenerator:
+    """Return a trace-aware code-repair generator backed by local llama.cpp.
+
+    Why this is intentionally conservative: Exp 2977 is allowed to claim a
+    repair only after execution evidence exists. This generator performs live
+    local GGUF generation and records parser/runtime-trace diagnostics, but it
+    leaves ``passed`` and ``verifier_accepted`` false because these selected
+    rows do not carry a fresh task-test oracle inside the Exp 2964 repair-set
+    manifest.
+    """
+
+    state: dict[str, Any] = {"llm": None}
+
+    def _ensure_loaded() -> Any:
+        if state["llm"] is None:
+            factory = llama_factory
+            if factory is None:  # pragma: no cover - real GGUF runtime path.
+                from llama_cpp import Llama
+
+                factory = Llama
+            state["llm"] = factory(
+                model_path=model_path,
+                n_ctx=n_ctx,
+                n_batch=n_batch,
+                n_ubatch=n_batch,
+                n_gpu_layers=n_gpu_layers,
+                main_gpu=main_gpu,
+                verbose=False,
+            )
+        return state["llm"]
+
+    def _generate(
+        task: RepairTask,
+        mode: str,
+        _sample_index: int,
+        seed: int,
+        model_spec: JsonDict,
+    ) -> JsonDict:
+        prompt = _live_repair_prompt(task, mode)
+        started = time.monotonic()
+        try:
+            output = _ensure_loaded()(
+                prompt,
+                max_tokens=int(max_tokens),
+                temperature=float(temperature),
+                seed=int(seed),
+                stop=["\n\n\n"],
+            )
+            duration_s = time.monotonic() - started
+            raw_candidate = _llama_text(output)
+            diagnostics = _diagnose_live_candidate(raw_candidate, mode)
+            return {
+                "raw_candidate": raw_candidate,
+                "schema_valid": diagnostics["schema_valid"],
+                "schema_errors": diagnostics["schema_errors"],
+                "syntax_success": diagnostics["syntax_success"],
+                "syntax_errors": diagnostics["syntax_errors"],
+                "passed": False,
+                "verifier_accepted": False,
+                "verifier_score": 0.0,
+                "execution_trace": diagnostics["execution_trace"],
+                "tokens_generated": _llama_completion_tokens(output),
+                "generation_duration_s": duration_s,
+                "generation_backend": "llama_cpp",
+                "generation_backend_detail": model_path or str(model_spec.get("model_path") or ""),
+                "prompt_sha256": _sha256_text(prompt),
+            }
+        except Exception as exc:
+            return {
+                "raw_candidate": "",
+                "schema_valid": False,
+                "schema_errors": [f"{type(exc).__name__}: {exc}"],
+                "syntax_success": False,
+                "syntax_errors": ["generation failed before parsing"],
+                "passed": False,
+                "verifier_accepted": False,
+                "verifier_score": 0.0,
+                "execution_trace": [],
+                "tokens_generated": 0,
+                "generation_duration_s": time.monotonic() - started,
+                "generation_backend": "llama_cpp",
+                "generation_backend_detail": model_path or str(model_spec.get("model_path") or ""),
+                "generation_error": f"{type(exc).__name__}: {exc}",
+                "prompt_sha256": _sha256_text(prompt),
+            }
+
+    return _generate
+
+
+def _live_repair_prompt(task: RepairTask, mode: str) -> str:
+    mode_instruction = {
+        BASELINE_MODE: "baseline repair",
+        SCHEMA_ONLY_MODE: "schema-only DCCD repair",
+        INTENT_PRESERVING_MODE: "intent-preserving trace-aware repair",
+    }[mode]
+    schema_instruction = (
+        'Return one JSON object with a string field named "repaired_code".'
+        if mode == SCHEMA_ONLY_MODE
+        else "Return only the corrected Python function, preferably in a python code fence."
+    )
+    trace_instruction = (
+        "Before accepting the patch, preserve the draft intent and reason from the failing category."
+        if mode == INTENT_PRESERVING_MODE
+        else "Preserve the public function signature and avoid unrelated rewrites."
+    )
+    return (
+        f"Exp 2977 {mode_instruction}.\n"
+        f"Corpus: {task.corpus}\n"
+        f"Task: {task.stable_id}\n"
+        f"Sample: {task.sample_id}\n"
+        f"Known failure categories: {', '.join(task.original_failure_categories) or 'unknown'}\n"
+        f"{trace_instruction}\n"
+        f"{schema_instruction}"
+    )
+
+
+def _diagnose_live_candidate(raw_candidate: str, mode: str) -> JsonDict:
+    schema_errors: list[str] = []
+    code = raw_candidate
+    schema_valid = True
+    if mode == SCHEMA_ONLY_MODE:
+        schema_valid, schema_errors, code = _parse_schema_repair(raw_candidate)
+    else:
+        code = _extract_python_code(raw_candidate)
+    syntax_success, syntax_errors = _syntax_diagnostics(code)
+    execution_trace = [
+        {
+            "stage": "ast_parse",
+            "exit_code": 0 if syntax_success else 1,
+            "stdout": "syntax ok" if syntax_success else "",
+            "stderr": "; ".join(syntax_errors),
+            "failing_assertions": [],
+        }
+    ]
+    return {
+        "schema_valid": schema_valid,
+        "schema_errors": schema_errors,
+        "syntax_success": syntax_success,
+        "syntax_errors": syntax_errors,
+        "execution_trace": execution_trace,
+    }
+
+
+def _parse_schema_repair(raw_candidate: str) -> tuple[bool, list[str], str]:
+    try:
+        parsed = json.loads(raw_candidate)
+    except json.JSONDecodeError as exc:
+        return False, [f"invalid JSON: {exc.msg}"], raw_candidate
+    if not isinstance(parsed, Mapping):
+        return False, ["schema repair output is not a JSON object"], raw_candidate
+    repaired_code = parsed.get("repaired_code")
+    if not isinstance(repaired_code, str) or not repaired_code.strip():
+        return False, ['schema repair output missing non-empty "repaired_code"'], raw_candidate
+    return True, [], repaired_code
+
+
+_PYTHON_FENCE_RE = re.compile(r"```(?:python)?\s*(.*?)```", re.DOTALL | re.IGNORECASE)
+
+
+def _extract_python_code(raw_candidate: str) -> str:
+    for match in _PYTHON_FENCE_RE.finditer(raw_candidate):
+        block = match.group(1).strip()
+        if "def " in block:
+            return block
+    return raw_candidate.strip()
+
+
+def _syntax_diagnostics(code: str) -> tuple[bool, list[str]]:
+    if not code.strip():
+        return False, ["empty candidate"]
+    try:
+        ast.parse(code)
+    except SyntaxError as exc:
+        return False, [f"SyntaxError: {exc.msg}"]
+    return True, []
+
+
+def _llama_text(output: Any) -> str:
+    if isinstance(output, Mapping):
+        choices = output.get("choices")
+        if isinstance(choices, Sequence) and choices:
+            first = choices[0]
+            if isinstance(first, Mapping):
+                return str(first.get("text") or "")
+    return str(output)
+
+
+def _llama_completion_tokens(output: Any) -> int:
+    if isinstance(output, Mapping):
+        usage = output.get("usage")
+        if isinstance(usage, Mapping):
+            return int(usage.get("completion_tokens") or 0)
+    return 0
+
+
 def _call_cached_pair(cached_pair_func: CachedPairFunc) -> list[JsonDict] | None:
     try:
         result = cached_pair_func(gpu_indices=(0, 1))
@@ -653,7 +893,9 @@ def _safe_token(value: str) -> str:
     return "".join(ch if ch.isalnum() or ch in {"-", "_"} else "_" for ch in value)
 
 
-def _rate(rows: Sequence[Mapping[str, Any]], predicate: Callable[[Mapping[str, Any]], bool]) -> float:
+def _rate(
+    rows: Sequence[Mapping[str, Any]], predicate: Callable[[Mapping[str, Any]], bool]
+) -> float:
     return 0.0 if not rows else sum(1 for row in rows if predicate(row)) / len(rows)
 
 
@@ -732,6 +974,7 @@ __all__ = [
     "THRESHOLD_FILENAME",
     "UPSTREAM_REPAIR_FILENAME",
     "build_artifact",
+    "llama_cpp_trace_aware_repair_generator",
     "main",
     "write_artifact",
 ]
