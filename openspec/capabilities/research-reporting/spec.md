@@ -6674,3 +6674,74 @@ forward, and unchanged `research-roadmap.yaml`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3000 | Implemented (`python/carnot/reporting/milestone_281_archive_282_activation.py`) | Implemented (`tests/python/test_experiment_3000_archive_v281.py`) |
+
+### REQ-REPORT-3010: Cross-Corpus Matrix V16 From .282 Artifacts
+
+The repository shall provide an Exp 3010 cross-corpus matrix v16 generator
+that writes `results/experiment_3010_cross_corpus_matrix_v16.json` using only
+checked-in upstream artifact JSON files and checked-in claim-boundary
+documents. The generator MUST read
+`results/experiment_2998_cross_corpus_matrix_v15.json`,
+`results/experiment_2999_capstone_v281.json`, every available `.282`
+artifact from Exp 3000 through Exp 3009, the active `.282` roadmap, and the
+paper-v6/OpenSpec/PRD hardware-boundary documents needed to classify claims.
+It MUST NOT rerun live inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, the conductor, or
+external publication tooling.
+
+The generator MUST build a terminal aggregation artifact even when upstream
+`.282` tasks are flagged, blocked, gated-skipped, projection-only,
+pilot-only, or missing. Missing artifacts MUST remain explicit in source-read
+metadata. Structured gates MUST remain visible: Exp 3009 is
+`gated-skipped` when Exp 3008 reports `host_visible_io_ready=false`, even if
+the Exp 3009 JSON artifact is absent. The matrix rows MUST separately track
+SOTA GGUF cache readiness, metamorphic oracle readiness, SOTA hard-set repair,
+AquaForte/BEAVER substrate provenance, validator-tree expansion,
+fixed-point diagnostics, FR-11 trace-memory stability, GateMate host-visible
+IO, and SSQA dual-BRAM RTL/PnR/resource status.
+
+The generator MUST preserve claim-boundary distinctions across PRD FR-11 and
+FR-12, OpenSpec reporting requirements, paper-v6 narrowing, hardware
+boundaries, and the `.282` roadmap acceptance criteria. Rows MUST NOT promote
+flagged, blocked, gated-skipped, projection-only, pilot-only, or missing
+evidence into paper-v6 headline claims. The matrix MUST detect and report
+unsupported boundary claims including LLM-as-verifier authority, false SOTA
+headline use, TSU/Kona access or parity claims, and GateMate/KV260 hardware
+speedup or thermodynamic claims. FR-11 evidence MUST stay bounded to
+verifier-grounded trace-memory stability unless independent held-out metrics,
+negative controls, drift checks, and forgetting checks are clean and
+unflagged.
+
+The terminal artifact MUST include `matrix_v16_ready`, `clean_count`,
+`flagged_count`, `blocked_count`, `gated_skipped_count`, `missing_count`,
+`projection_only_count`, `repaired_claims`, `still_blocked_claims`,
+`claim_boundary_violations`, `recommended_next_actions`, and
+`honest_verdict`. It MAY include `pilot_only_count`, `rows`, row-count
+metadata, claim-row summaries, source checksums, missing-artifact metadata,
+paper-v6/PRD/OpenSpec boundary summaries, no-new-execution booleans, and
+measured `duration_s` as long as every value is derived from upstream JSON
+fields or checked-in claim-boundary documents. When a conductor prompt assigns
+ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3010: V16 Aggregates .282 Rows Without Requiring Upstream Success
+
+**Given** matrix v15 and the `.281` capstone are present
+**And** Exp 3000 through Exp 3009 artifacts are present, flagged, blocked,
+gated-skipped, projection-only, pilot-only, or honestly absent
+**And** Exp 3008 reports `host_visible_io_ready=false`
+**When** the Exp 3010 matrix v16 generator runs
+**Then** it writes `results/experiment_3010_cross_corpus_matrix_v16.json`
+with `matrix_v16_ready=true`, explicit counts for every terminal status
+bucket, explicit source-read metadata for missing artifacts, Exp 3009
+classified as `gated-skipped`, claim rows for the .282 repair, substrate,
+FR-11, GateMate, and SSQA branches, repaired-claim names for clean claim
+repairs, still-blocked claim names for unresolved rows, exact recommended
+next actions, no unsupported paper-v6/hardware/Kona/TSU/LLM-verifier claim
+promotion, and an `honest_verdict` that states readiness and counts.
+
+## Implementation Status (REQ-REPORT-3010)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3010 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v16_3010.py`) | Implemented (`tests/python/test_experiment_3010_cross_corpus_matrix_v16.py`) |
