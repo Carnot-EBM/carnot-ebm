@@ -6304,3 +6304,60 @@ from the capstone `headline_outcome`, zero duplicate `.279` archive rows,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2975 | Implemented (`python/carnot/reporting/milestone_279_archive_280_activation.py`) | Implemented (`tests/python/test_experiment_2975_archive_v279.py`) |
+
+### REQ-REPORT-2986: Cross-Corpus Matrix V14 From .280 Artifacts
+
+The repository shall provide an Exp 2986 cross-corpus matrix v14 generator
+that writes `results/experiment_2986_cross_corpus_matrix_v14.json` using only
+checked-in upstream artifact JSON files. The generator MUST read
+`results/experiment_2973_cross_corpus_matrix_v13.json`,
+`results/experiment_2974_capstone_v279.json`, and every available `.280`
+artifact from Exp 2975 through Exp 2985 without rerunning live inference,
+verifier scoring, solver execution, synthesis, board flashing, readback, or
+hardware smoke tests.
+
+The generator MUST require
+`results/experiment_2982_fr11_independent_metric_utility_gate_v4.json` to
+report `fr11_independent_metrics_evaluated=true`. If that precondition is not
+met, it MUST write a terminal blocked artifact rather than fabricating a clean
+self-learning row.
+
+The matrix v14 rows MUST classify every source artifact by terminal status
+(`clean`, `flagged`, `blocked`, `gated-skipped`, `pilot-only`, or
+`projection-only`), claim class, evidence type, model compliance, hardware
+compliance, and prior-failure outcome. Repair, solver, FR-11, monitor, and
+hardware rows MUST be clean only when their own clean/readiness booleans pass
+and their claim-boundary guards do not allow unsupported headline, model,
+hardware-speedup, sampler, thermodynamic, or full-streaming claims. Missing or
+gated `.280` rows MUST remain explicit gated-skipped rows rather than being
+inferred from downstream artifacts.
+
+The terminal artifact MUST include `honest_verdict`, `matrix_v14_ready`,
+`milestone="2026.05.280"`, `clean_count`, `flagged_count`, `blocked_count`,
+`gated_skipped_count`, `pilot_only_count`, `projection_only_count`,
+`row_count`, `rows`, `repair_claim_status`, `solver_claim_status`,
+`fr11_claim_status`, `hardware_claim_status`, `model_compliance_summary`,
+`claim_boundary_violations`, `next_milestone_recommendations`,
+`inference_substrate="aggregation_from_upstream_artifacts"`, and measured
+`duration_s`. It MAY include source-artifact checksums and no-new-execution
+booleans as long as every value is derived from upstream JSON fields.
+
+#### SCENARIO-REPORT-2986: V14 Aggregates .280 Rows With Explicit Claim Boundaries
+
+**Given** matrix v13 and the `.279` capstone are present
+**And** Exp 2975 through Exp 2985 artifacts are present or honestly absent
+**And** Exp 2982 reports `fr11_independent_metrics_evaluated=true`
+**When** the Exp 2986 matrix v14 generator runs
+**Then** it writes `results/experiment_2986_cross_corpus_matrix_v14.json`
+with all required fields, carry-forward rows for prior `.279` buckets,
+explicit rows for every `.280` artifact, flagged code-repair and solver rows
+kept separate from clean rows, Exp 2982 classified clean only when its
+independent metric and guard fields pass, GateMate readback/smoke limitations
+classified as blocked hardware evidence, Exp 2985 classified projection-only,
+and next milestone recommendations that preserve those claim boundaries.
+
+## Implementation Status (REQ-REPORT-2986)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2986 | Planned (`python/carnot/reporting/cross_corpus_matrix_v14_2986.py`) | Planned (`tests/python/test_experiment_2986_cross_corpus_matrix_v14.py`) |
