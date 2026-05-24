@@ -201,6 +201,65 @@ and reports deterministic reference execution and solver accuracy from Z3.
 |---|---|---|
 | REQ-VERIFY-2979 | Implemented (`python/carnot/reporting/solver_feedback_mcs_frontier_v1.py`) | Implemented (`tests/python/test_experiment_2979_solver_feedback_mcs_frontier.py`) |
 
+### REQ-VERIFY-2980: SOTA Solver Formalization Feedback V2
+
+The repository shall provide an Exp 2980 local SOTA NL-to-Z3 formalization
+runner that consumes
+`results/experiment_2979_solver_feedback_mcs_frontier_v1.json`, uses
+feedback-aware prompts, runs deterministic Z3 authority over every parseable
+proposal, optionally applies one deterministic repair pass from the recorded
+solver feedback fields, and writes
+`results/experiment_2980_sota_solver_formalization_feedback_v2.json`.
+
+The runner MUST first verify that Exp 2979 reports
+`mcs_feedback_schema_ready=true` and that Python can import Z3. It MUST call
+`cached_sota_pair(gpu_indices=(0, 1))` before any single-model fallback. For
+headline results, `MODEL_SPECS` and `models_used` MUST include at least one of
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If only legacy tiny models run, the runner
+MUST set `headline_result=false`, MUST NOT claim a clean solver row, and MUST
+label the run as smoke-only.
+
+For each Exp 2979 frontier item, the runner shall record the initial local-GGUF
+formalization proposal, parse outcome, Z3 execution result, solver feedback
+object, and final post-repair proposal/result. The deterministic repair pass
+may use `parse_error`, `z3_exception`, `model_counterexample`,
+`unsat_core_or_mus`, `minimal_correction_hint`, `skill_label`, and
+`accepted_reference_formalization` from Exp 2979, but the artifact must expose
+the resulting `feedback_repair_delta` rather than attributing the repair to raw
+model capability alone.
+
+The terminal artifact MUST include `honest_verdict`,
+`formalization_feedback_clean`, `headline_result`, `n_items`, `models_used`,
+`model_specs`, `mandatory_headline_model_ids`, `parseability_rate`,
+`z3_execution_rate`, `solver_verified_accuracy`, `answer_accuracy`,
+`tautology_flag_rate`, `per_skill_metrics`, `feedback_repair_delta`,
+`failure_categories`, `solver_feedback_examples`,
+`inference_substrate="live_llm_inference_plus_z3"`, and `duration_s`.
+
+`formalization_feedback_clean` shall be true only when `headline_result=true`,
+`parseability_rate>=0.50`, `z3_execution_rate>=0.50`,
+`solver_verified_accuracy>=0.40`, `answer_accuracy>=0.40`, and
+`tautology_flag_rate==0`.
+
+### SCENARIO-VERIFY-2980: Solver Feedback Repairs Local Formalization Proposals
+
+Given Exp 2979 has produced a feedback-ready solver frontier and at least one
+mandated local SOTA GGUF can generate proposal text,
+When the Exp 2980 runner processes each frontier item,
+Then it records the initial proposal, executes parseable proposals with Z3,
+attaches the explicit solver feedback object, applies at most one deterministic
+feedback repair pass, computes aggregate and per-skill parseability, Z3
+execution, solver accuracy, answer accuracy, tautology, failure-category, and
+repair-delta metrics, and promotes a clean result only if the explicit .280
+gates all clear.
+
+## Implementation Status (REQ-VERIFY-2980)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-2980 | Implemented (`python/carnot/eval/sota_solver_formalization_feedback_v2.py`) | Implemented (`tests/python/test_experiment_2980_sota_solver_formalization_feedback.py`) |
+
 ### REQ-VERIFY-2932: Citation Hallucination Field Verifier
 
 The repository shall provide a local citation-hallucination probe that:
