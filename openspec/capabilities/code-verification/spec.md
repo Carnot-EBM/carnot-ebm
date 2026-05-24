@@ -1488,6 +1488,46 @@ result `clean`, `flagged`, or `blocked` without allowing smoke-only, vacuous,
 syntax-regressed, schema-regressed, or false-accept-regressed evidence to
 promote.
 
+### REQ-CODE-3014: Cached Repair-Failure Taxonomy For Exp 3003
+
+The repository shall provide an Exp 3014 deterministic repair-failure taxonomy
+for Exp 3003 candidates and validators without running live LLM inference. The
+taxonomy builder MUST:
+
+- load the Exp 3002 oracle artifact, Exp 3002 metamorphic manifest, Exp 3003
+  repair artifact, candidate transcripts, verifier logs, cached candidate patch
+  files, and the repair-hard manifest when present;
+- replay deterministic parser/schema checks and executable original plus
+  metamorphic validators over cached candidates only;
+- classify candidate and validator failures into root causes including
+  prompt-format pressure, parser/schema mismatch, invalid patch shape, oracle
+  ambiguity, intent drift, false accept, and tautology;
+- count syntax, schema, false-accept, tautology, and intent-preservation
+  failures explicitly so downstream controllers can gate on diagnosed failure
+  modes rather than only aggregate Exp 3003 deltas;
+- write an inspectable taxonomy table under `results/` or
+  `datasets/repair_hard/` with per-candidate and per-validator evidence rows;
+- produce a minimal Exp 3015/3016 acceptance-rule plan that rejects diagnosed
+  unsafe modes before another live repair rerun; and
+- write
+  `results/experiment_3014_repair_syntax_schema_failure_taxonomy_v1.json`
+  with `repair_failure_taxonomy_ready`, `taxonomy_table_path`,
+  `n_cached_candidates_audited`, `syntax_failure_count`,
+  `schema_failure_count`, `false_accept_count`, `tautology_failure_count`,
+  `intent_drift_count`, `recommended_acceptance_rules`,
+  `halluguard_ntk_claim_made=false`, and `honest_verdict`.
+
+### SCENARIO-CODE-3014: Cached Failure Classifications Are Inspectable
+
+Given Exp 3002 and Exp 3003 artifacts with cached candidate patches,
+transcripts, and verifier logs,
+When Exp 3014 runs the taxonomy builder,
+Then it does not invoke live inference, replays parser/schema checks and
+validators over the cached patches, writes an inspectable taxonomy table, emits
+the required counts and acceptance rules, and uses any data-driven versus
+reasoning-driven taxonomy language only as plain taxonomy language without
+claiming an NTK or HalluGuard implementation.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for
@@ -1659,6 +1699,8 @@ generation or headline metric is claimed.
 | REQ-CODE-2990 | Implemented (`python/carnot/eval/hard_code_stress_manifest.py`) |
 | REQ-CODE-2991 | Implemented (`python/carnot/eval/gated_sota_intent_preserving_repair_hard_set.py`) |
 | REQ-CODE-3002 | Planned (`python/carnot/eval/metamorphic_repair_oracle_audit.py`) |
+| REQ-CODE-3003 | Implemented (`python/carnot/eval/gated_sota_repair_metamorphic_false_accept_rerun.py`) |
+| REQ-CODE-3014 | Planned (`python/carnot/eval/repair_failure_taxonomy.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
