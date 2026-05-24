@@ -4,49 +4,48 @@
 # docs_audit_report — 2026-05-24
 
 ## TL;DR (stranger's 30-second take)
-I would close this tab in 10 seconds. The page feels like an internal telemetry dashboard that leaked onto the public internet; it is littered with raw file paths in the text, unexplained internal acronyms (FoVer, CCTU, PREM), and a wall of 28+ cards that no stranger will ever read.
+Close the tab. It reads like an internal project dashboard masquerading as a landing page; it's drowning in over 30 UI cards, opaque acronyms, leaked file paths, and suspiciously perfect 100% claims that undermine all trust.
 
 ## TOP 3 PROBLEMS
-1. Literal tool leakage into public copy (Raw file paths like `@results/...` injected into text, fonts, and CSS).
-2. Extreme bloat (28+ cards across the page is completely overwhelming for a stranger).
-3. Fabrication signals (Perfect 1.0, 60/60, and "zero false positive" metrics look faked without strong external anchors).
+1. Death by cards: The page has 33 UI cards (12 in Results alone), guaranteeing visitors will get card fatigue and skim none of them.
+2. Impenetrable jargon: Rampant use of unexplained acronyms (FoVer, CCTU, PREM, SVAMP) and raw leaked file paths (`@results/citation...`) alienates strangers.
+3. Internal status leaking: Passages read like retrospective commit logs ("Repinned from v2 0.9857 after pre-submission adversarial audit", "pending operator-initiated upload").
 
 ## DETAILED FINDINGS
 ### Bloat
-- Entire Page — 29 total cards (1 stats, 2 problem, 7 bento, 12 results, 7 blog) — Suggested cap: 12-15 cards maximum across the entire page. Strangers do not skim 29 cards.
-- Results Grid — 12 cards — Suggested cap: 4 to 6. You are drowning your best numbers in minor micro-benchmarks.
-- "Why Energy-Based?" card — 65 words — Suggested cap: 50 words.
+- Entire Page — 33 UI cards — Cap at ~12-15 total. The Results grid alone has 12 cards, plus 7 feature cards and 7 blog cards. Visitors will skim none of it.
+- Stats Bar — 5 elements — Contains 4 stats plus an entire nested 49-word "Recent progress" result card crammed into the hero section.
 
 ### Internal jargon
-- Fonts & CSS definitions — `@results/adversarial_gsm8k_data_400.json`, `@ops/latent_deterministic_discipline_gate_1500.md`, `@openspec/change-proposals/paper-v5-integrity-remediation.md` — Literal system file paths have corrupted your `<link>` tags and CSS media queries.
-- Live benchmark card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — File path leaked directly into the headline text. 
-- Recent progress card — "FoVer (5-seed dual-condition)" — A stranger has no idea what corpus this is or what the condition means.
-- Features: TTC & PREM card — "Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance" — Impenetrable acronym soup.
-- Results Grid — "SVAMP", "VeriCoT", "CCTU", "PRM-BiasBench", "HumanEval-50" — Unexplained internal/niche benchmarks.
+- "Results" section (SOTA 35B card) — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — A literal internal file path leaked into the UI headline.
+- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `v2 0.9857` — Strangers have no idea what your datasets or historical versions mean.
+- "Features" section (TTC & PREM card) — `PREM` — "Process-Reward Energy Model" is dropped without context.
+- "Results" section — `SVAMP AUC`, `IterativeSelfRepair`, `VeriCoT`, `PRM-BiasBench-style`, `HalluGuard v3`, `CCTU` — Alphabet soup. Strangers do not care about internal experiment variants.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This is an internal post-mortem, not a product pitch.
-- Preprint section — "pending operator-initiated upload" — Reads like an internal operations checklist.
-- Results: Safety card — "(publication gate)" — Meaningless internal project management language.
+- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like a Jira ticket comment or milestone retrospective.
+- "Preprint" section — "The arXiv submission is prepared but pending operator-initiated upload." Strangers don't care about your operator runbook status.
+- "Stats bar" — "382 Completed milestones" and "2,477 Experiment runs" are internal velocity metrics, not product value propositions.
 
 ### Inconsistencies
-- Live benchmark card headline vs content — The card title claims "Qwen3.6-35B-A3B", but the hallucinated file path injected directly into the text underneath it says `real_Gemma4-26B-A4B-it.txt`. 
+- The AUROC claim vs The AUROC claim — The stats bar claims `0.9131 Verifier AUROC`, but the Results grid lists `0.91 AUROC (publication gate)` and `0.90 AUC`.
+- Code repair results vs Code repair results — The Features "Code" card claims `+3.0 points on pass-rate`, but the Results "Code repair" card says `8% -> 80% pass rate (+72pp)`. These contradict each other wildly.
 
 ### Missing essentials
-- Context for trustworthiness — The page says "Every number below is backed by a checked-in experiment artifact." A stranger doesn't know what your "artifacts" are or have access to your repo's internal `results/` folder to verify them.
+- Who maintains it? The footer says "Ian Blenke · Carnot Project" but there is no context on what the Carnot Project is, its backing, or team size. No credibility anchor for the author.
 
 ### Fabrication signals
-- Results: Math extraction — "TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate on LLM math extraction looks fake to any ML practitioner.
-- Results: Adversarial audit — "k=5 ensemble catches 60/60 attacks" — Perfect scores trigger immediate skepticism.
-- Blog: Dogfooding — "Zero false positives" — Claiming absolutely zero false positives on a code analysis tool is an instant credibility killer.
+- 1.0 (100%) — "Math extraction" result card claims `GSM8K extraction TP rate: 0.5 -> 1.0`. A suspiciously perfect 1.0 on a messy dataset.
+- 60/60 (100%) — "Adversarial audit" result card claims `k=5 ensemble catches 60/60 attacks`. A 100% catch rate on adversarial attacks triggers immediate skepticism.
+- Identical losses — "Training" result card claims `2.0x speedup, identical losses`. Literally identical losses in distributed training is mathematically suspicious without a credibility anchor.
 
 ## WHAT'S WORKING
-- The Hero section value proposition ("Catch the mistakes your LLM confidently makes up") is punchy and immediately answers what the tool does.
-- The 3-step "Extract -> Check -> Repair" breakdown is conceptually excellent and easy to digest.
+- The one-sentence hero pitch "Catch the mistakes your LLM confidently makes up." is excellent, grounded, and immediately understandable.
+- The Quickstart section effectively proves the project is real by showing clean, 3-line Python vs. Rust examples.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Scrub the `index.html` file of all leaked file paths (remove `@results/...` and `@openspec/...` from `<link>` tags, CSS media queries, and the Live benchmark card text).
-2. Cut the "Results" grid down from 12 cards to the 6 most impressive, externally recognizable metrics.
-3. Remove or completely rewrite the "TTC & PREM" card; it provides zero value to a newcomer in its current state.
-4. Purge internal ops language ("publication gate", "operator-initiated upload", "repinned from v2").
-5. Add caveats or context to the "perfect" numbers (1.0 TP, 60/60, zero false positives), or replace them with more representative large-sample metrics.
+1. Ruthlessly prune the Results grid from 12 cards down to the 3 or 4 strongest, most defensible claims.
+2. Purge the leaked file path (`@results/...`) and opaque dataset acronyms (FoVer, CCTU, SVAMP) from all copy, replacing them with plain English descriptions.
+3. Delete the "Recent progress" card from the hero stats bar; move valid news to a blog post.
+4. Contextualize or soften the perfect "1.0" and "60/60" claims so they don't look fabricated.
+5. Reconcile the contradicting AUROC numbers and Code Repair (+3 vs +72pp) claims to establish a single, coherent narrative.

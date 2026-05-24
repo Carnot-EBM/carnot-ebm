@@ -1,6 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-24 (Milestone 2026.05.281 operational retrospective complete)
+**Last Updated:** 2026-05-24 (Milestone 2026.05.283 research planning staged)
+
+## Session 2026-05-24 - Milestone 2026.05.283 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.283 as "Claim Repair v2 + Feasibility-Gated Self-Learning + GateMate IO Boundary" after the operator reported all `.282` tasks completed. The plan treats `results/experiment_3011_capstone_v282.json` as the authoritative closeout: `.282` completed but remained `paper_ready=false`; only AquaForte/BEAVER provenance was repaired cleanly, while SOTA repair, FR-11 trace-memory stability, GateMate host-visible IO, and SSQA stayed flagged, blocked, or gate-skipped. The `.282` capstone aggregation false-positive is carried forward as a matrix/capstone hygiene constraint.
+
+Updated `research-references.md` with the post-`.282` sweep covering Cactus constrained acceptance, DVI verifier-feedback learning, Differentiable Symbolic Planning, NSVIF, adaptive controllable analog Ising machines, HalluGuard, BEAVER, EBT implementation watch, Extropic TSU/THRML status, and Logical Intelligence Aleph/Kona updates. Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks (`exp3012`-`exp3025`). `exp3020-dvi-verifier-feedback-self-learning-controller` is the mandatory continuous self-learning experiment. Validation passed for YAML parse, prompt-section/end-line checks, prior-failure lint, exclusion-manifest lint, gate audit, and whitespace diff checks. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-24 - Milestone 2026.05.281 Operational Retrospective Complete
 

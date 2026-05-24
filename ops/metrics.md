@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-24 Milestone 2026.05.283 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-24T22:02:46Z | 2026-05-24T22:18:46Z | Planned milestone 2026.05.283 after reading required project context, `.282` roadmap/conductor/capstone evidence, exclusion manifest, hardware notes, and latest research references. Added Post-.282 research sweep to `research-references.md` (Cactus, DVI, Differentiable Symbolic Planning, NSVIF, CAIM, HalluGuard, BEAVER, EBT implementation watch, Extropic TSU/THRML, Logical Intelligence Aleph/Kona). Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks exp3012-exp3025, including SOTA GGUF telemetry, Cactus-style repair acceptance, validator-tree/frontier certificates, FR-11 DVI self-learning, GateMate transport boundary, explicit SSQA gate artifact, matrix v17, and capstone. Validation: YAML parse OK; prompt checks OK; prior-failure validator OK; exclusion-manifest lint OK; roadmap gate audit OK with 8 gate checks and 0 failures; diff whitespace check clean. | ~170k |
+
+---
+
 ## Session: 2026-05-22 Milestone 2026.05.271 Research Planning
 
 ### Turn Log

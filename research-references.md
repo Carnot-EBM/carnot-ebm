@@ -15747,3 +15747,98 @@ hardware/software pages, and Logical Intelligence Kona/Aleph public pages.
   FR-11 trace memory, and hardware smoke artifacts.
   Sources: https://logicalintelligence.com/blog/aleph-leading-benchmarks and
   https://logicalintelligence.com/kona-ebms-energy-based-models
+
+## 2026-05-24 Post-.282 Planning Sweep (Milestone 2026.05.283)
+
+Scope: arXiv, OpenReview/ICLR 2026, Hugging Face papers, Semantic
+Scholar-style citation discovery for EBT/ARM-EBM, GitHub discovery, Extropic
+hardware/software pages, and Logical Intelligence Kona/Aleph public pages.
+
+- **Cactus constrained-acceptance speculative sampling (arXiv:2604.04987;
+  ICLR 2026)**: frames speculative decoding acceptance as constrained
+  optimization, increasing throughput while bounding divergence from the
+  verifier distribution. Relevance to Carnot: `.283` should add a bounded
+  candidate-acceptance controller for local SOTA repair candidates, separating
+  acceptance rate from verifier safety and refusing promotion if false accepts
+  rise.
+  Sources: https://arxiv.org/abs/2604.04987 and
+  https://huggingface.co/papers/2604.04987
+
+- **Draft, Verify, and Improve (DVI; arXiv:2510.05421)**: converts verifier
+  accept/reject decisions during self-speculative decoding into online
+  supervision for a drafter head, reporting lossless speedups with minimal
+  training overhead. Relevance to Carnot: this is a direct FR-11 pattern for
+  online learning from verifier feedback, but `.283` should test it only as a
+  small controller over cached validator-tree traces, not as a native LLM
+  training claim.
+  Source: https://arxiv.org/abs/2510.05421
+
+- **Differentiable Symbolic Planning (arXiv:2604.02350)**: introduces a learned
+  feasibility channel that aggregates constraint-satisfaction evidence and uses
+  sparsemax for exact-zero rule selection across reachability, SAT, and
+  planning tasks. Relevance to Carnot: use a feasibility-channel diagnostic to
+  de-tautologize exp3007 FR-11 trace memory by measuring independent feasible /
+  infeasible separation instead of held-out deltas alone.
+  Source: https://arxiv.org/abs/2604.02350
+
+- **NSVIF: Neuro-Symbolic Verification on Instruction Following
+  (arXiv:2601.17789)**: models instruction following as logical and semantic
+  constraints solved by a unified verifier and reports interpretable feedback
+  that can improve LLM instruction following without post-training. Relevance
+  to Carnot: `.283` should extend validator trees from code/solver cases into
+  a small instruction-following constraint set with Z3/runtime authority where
+  possible, not LLM-as-judge labels.
+  Source: https://arxiv.org/abs/2601.17789
+
+- **Adaptive controllable analog Ising machine (CAIM; arXiv:2602.05595)**:
+  treats the binarization constraint in analog Ising machines as a controllable
+  optimization variable and demonstrates an FPGA-controlled LC-oscillator proof
+  of concept on 50-node MaxCut. Relevance to Carnot: useful hardware context
+  for future Ising control loops, but `.283` should remain digital GateMate IO
+  first; no analog, Boltzmann, or speedup claim is justified locally.
+  Source: https://arxiv.org/abs/2602.05595
+
+- **HalluGuard (Hugging Face paper page for arXiv:2601.18753; ICLR 2026)**:
+  decomposes hallucination risk into data-driven and reasoning-driven
+  components and proposes an NTK-based score. Relevance to Carnot: the
+  decomposition is useful for matrix taxonomy and claim boundaries, but the
+  repo must not repeat the old dishonest-naming failure where a regex heuristic
+  was labeled as HalluGuard/NTK. Any `.283` use must be taxonomy-only unless
+  the implementation actually computes the claimed NTK/geometric substrate.
+  Source: https://huggingface.co/papers/2601.18753
+
+- **BEAVER deterministic LLM verifier citation surface (Hugging Face paper page
+  for arXiv:2512.05439)**: BEAVER-style deterministic probability bounds remain
+  relevant, and the recommendation cluster around TreeCoder, AdapTrack, and
+  ProofSketch reinforces prefix-closed semantic constraints and frontier data
+  structures. Relevance to Carnot: `.283` should produce a BEAVER-style frontier
+  certificate over the validator-tree corpus only if the artifact separates
+  enumerator fallback from live LLM evidence.
+  Source: https://huggingface.co/papers/2512.05439
+
+- **Energy-Based Transformers implementation watch (arXiv:2507.02092 +
+  alexiglad/EBT)**: the EBT paper and Apache-2.0 PyTorch repository provide a
+  concrete codebase for verifier-as-energy optimization over text and other
+  modalities. Relevance to Carnot: `.283` can audit the codebase for a tiny
+  adapter feasibility note, but full native EBT training remains out of scope
+  until local repair, FR-11, and hardware evidence are clean.
+  Sources: https://arxiv.org/abs/2507.02092 and
+  https://github.com/alexiglad/EBT
+
+- **Extropic TSU public status and THRML simulator pages**: Extropic continues
+  to describe TSUs as hardware that samples from programmable EBMs, with THRML
+  as the JAX simulator for probabilistic graphical models and future Z1 designs.
+  Relevance to Carnot: keep TSU as architecture-readiness context only. `.283`
+  local hardware work must stay on GateMate host-visible IO and must not imply
+  XTR-0/Z1 access.
+  Sources: https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+  and https://extropic.ai/software
+
+- **Logical Intelligence Aleph Prover update (May 20, 2026)**: Logical reports
+  formal-reasoning benchmark leadership for Aleph and frames machine-checkable
+  proofs as the path toward verified code generation, with Kona still positioned
+  as the EBM reasoning layer. Relevance to Carnot: supports prioritizing
+  exact-check validator trees and formal-proof/provenance rows over broad
+  repair headlines; no local Carnot performance claim should cite Aleph/Kona
+  numbers.
+  Source: https://logicalintelligence.com/blog/aleph-prover-tops-leading-benchmarks

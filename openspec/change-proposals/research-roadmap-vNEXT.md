@@ -1,297 +1,318 @@
-# Research Roadmap vNEXT: Milestone 2026.05.282
+# Research Roadmap vNEXT: Milestone 2026.05.283
 
-**Title:** Claim Repair + Metamorphic Validation + Attractor Memory + GateMate IO
+**Title:** Claim Repair v2 + Feasibility-Gated Self-Learning + GateMate IO Boundary
 
 **Planned:** 2026-05-24
 
-**Previous milestone:** 2026.05.281
+**Previous milestone:** 2026.05.282
 
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.281 Proved
+## What 2026.05.282 Proved
 
-Milestone `.281` completed through
-`results/experiment_2999_capstone_v281.json`. The capstone verdict is
-`complete: capstone_ready=true; paper_ready=false; clean=34; flagged=20;
-blocked=8; missing=1; gated_skipped=0`.
+Milestone `.282` completed through
+`results/experiment_3011_capstone_v282.json`. The capstone verdict is
+`complete: capstone_ready=true; paper_ready=false; repaired=4; flagged=23;
+blocked=9; gated_skipped=1; missing=1; next=2026.05.283 claim-repair-v2`.
 
-- **Mandated SOTA local GGUF inference is usable.** `exp2989` proved that at
-  least one mandated headline local GGUF model can produce a live transcript
-  with provenance. `.282` should reuse that cache path, not broaden the model
-  claim.
-- **The repair signal is real but not claim-safe.** `exp2991` produced a live
-  headline hard-set repair delta (`pass_at_1_delta=0.4167`), but the row was
-  flagged because methodology, tautology, and false-accept provenance did not
-  clear promotion gates.
-- **Solver feedback is the cleanest technical result.** `exp2992` reproduced
-  solver-feedback formalization gains with stricter Z3 provenance
-  (`formalization_clean=true`, `feedback_repair_delta=1.0`).
-- **Prompt-to-validator structure is ready.** `exp2994` produced a deterministic
-  exact-check dialogue protocol. It is a schema/protocol result, not proof that
-  LLM judgments are verifiers.
-- **FR-11 has a narrow ready boundary.** `exp2995` produced verifier-grounded
-  trace memory while preserving the independent self-learning boundary.
-- **AquaForte/BEAVER still needs durable live retry provenance.** `exp2993`
-  separated live retry and enumerator fallback, but the matrix/capstone still
-  require clean model checksums and duration provenance before promotion.
-- **GateMate remains blocked at host-visible evidence.** `exp2996` detected the
-  board but flash failed, readback was unsupported, and no smoke vector passed.
-  `exp2997` was gate-blocked/missing because SSQA cannot advance on flash-only
-  or failed-flash evidence.
-- **The next milestone should be claim repair, not publication.** The matrix
-  and capstone identify exact repair targets: hard-set methodology, substrate
-  provenance, hardware IO/readback, missing SSQA artifact, and bounded FR-11
-  carry-forward.
+- **Local SOTA GGUF execution is available but still narrow.** `exp3001`
+  refreshed cache/provenance and at least one mandated headline model ran
+  live. `.283` should reuse the proven path and add top-k/logprob telemetry
+  only if the local loader exposes it honestly.
+- **Repair has a real delta but remains non-promotable.** `exp3003` used
+  `unsloth/gemma-4-26B-A4B-it-GGUF` and produced
+  `pass_at_1_delta=0.4167`, but `repair_rerun_clean=false` because
+  syntax/schema failure deltas were both `+0.5`. The next repair task must
+  reduce those failures without increasing false accepts.
+- **Metamorphic oracle construction was useful but flagged as an audit gate.**
+  `exp3002` produced 59 variants over 24 source items plus false-accept and
+  tautology probes. It should be treated as methodology infrastructure, not as
+  a headline result.
+- **AquaForte/BEAVER substrate provenance was repaired.** `exp3004` cleanly
+  separated live retry from enumerator fallback and supplied durable model,
+  transcript, and duration evidence. Carry it forward only as a provenance
+  repair, not as a claim that the live retry solved the task.
+- **Validator trees and fixed-point diagnostics are the cleanest growth path.**
+  `exp3005` exact-checked 20 validator trees and `exp3006` completed a bounded
+  fixed-point diagnostic with no native EqR claim.
+- **FR-11 is still flagged.** `exp3007` reported
+  `trace_memory_stability_ready=true`, but matrix/capstone kept it
+  non-promotable because the held-out evidence is too small and still risks
+  tautological scoring. `.283` needs independent feasible/infeasible separation
+  and negative controls.
+- **GateMate remains blocked before SSQA.** `exp3008` detected the board and
+  attempted flash, but `host_visible_io_ready=false`: spin output and done
+  signals remain internal RTL wires with no physical pin, UART, GPIO, JTAG,
+  status register, CSR, AXI, or logic-analyzer transport. `exp3009` then
+  gate-skipped and no artifact was written.
+- **The capstone itself was adversarial-flagged by aggregation false positives.**
+  `exp3011` did no new LLM call, but the artifact referenced upstream GGUF/CUDA
+  markers and was flagged `DURATION_TOO_SHORT`. `.283` aggregation artifacts
+  must keep source model metadata under cited-upstream provenance fields rather
+  than top-level live-inference fields.
 
 ## Three Biggest Gaps
 
-### Gap 1: Repair Evidence Has a Promotion Gap
+### Gap 1: Repair Promotion Needs an Acceptance Controller
 
-The PRD requires verifiable reasoning, but a positive pass-rate delta is not
-enough if the benchmark, oracle, or false-accept path is ambiguous. Recent
-metamorphic-testing work (LLMORPH, MR-Coupler, and the 2026 metamorphic testing
-survey note) suggests the next repair attempt should add relation-preserving
-variants, test-amplification provenance, and separate false-accept accounting
-before re-running live local GGUF repair.
+The PRD requires verifiable reasoning, not just a positive repair delta.
+`exp3003` showed the useful signal and the failure mode at the same time:
+repairs improved pass rate but also raised syntax/schema failures. Cactus-style
+constrained acceptance suggests a bounded accept/reject layer over candidate
+repairs: accept more only when divergence and false-accept risk are controlled.
 
-### Gap 2: Continuous Self-Learning Needs Stability Evidence
+### Gap 2: FR-11 Needs Independent Feasibility Evidence
 
-`.281` made FR-11 trace memory ready in a narrow sense, but the long-term PRD
-vision needs memories that converge, resist drift, reject negative controls,
-and remain useful on held-out verifier metrics. New attractor/fixed-point work
-(Equilibrium Reasoners and Solve the Loop) gives a bounded diagnostic target:
-measure convergence and drift over existing solver/validator traces before
-claiming any native attractor-model capability.
+The continuous self-learning loop is still too close to grading itself. DVI
+shows how verifier accept/reject events can become online supervision, while
+Differentiable Symbolic Planning suggests an interpretable feasibility channel.
+Carnot should test a small verifier-feedback learner over exact validator-tree
+traces, with independent feasible/infeasible separation, forgetting guards, and
+negative controls.
 
-### Gap 3: Hardware Still Lacks a Host-Visible Output Contract
+### Gap 3: GateMate Needs an Output Contract Before Any Sampler Work
 
-GateMate detection without flash/readback/smoke output cannot support SSQA,
-sampler, or acceleration claims. `.282` must build or conclusively diagnose a
-minimal host-visible IO path, then gate SSQA RTL/PnR/resource reporting on that
-boundary. Extropic/THRML and Kona remain strategic context only.
+GateMate cannot support SSQA, sampler, or acceleration claims until the host can
+observe at least one deterministic status bit or byte. `.283` should first add
+or diagnose a bounded RTL/CCF transport shim, then attempt board smoke only if
+the transport exists. SSQA must always write an explicit artifact, even when the
+hardware gate remains closed.
 
 ## New Research Integrated
 
-The 2026-05-24 post-`.281` sweep appended these sources to
+The 2026-05-24 post-`.282` sweep appended these sources to
 `research-references.md` before this design was written:
 
-- **LLMORPH (arXiv:2603.23611):** metamorphic relations can expose LLM
-  inconsistencies without a full label set. `.282` uses this as methodology
-  repair for hard-set repair.
-- **From Untestable to Testable (arXiv:2603.24774):** metamorphic testing turns
-  relations across executions into executable oracles. Carnot uses it as a
-  supplement to Z3/runtime checks, not as a replacement.
-- **MR-Coupler (arXiv:2604.10126):** functional coupling can seed metamorphic
-  test cases. `.282` applies the idea to solver/validator-coupled repair
-  stressors.
-- **LAVE (arXiv:2602.00612):** partial outputs should remain extendable to a
-  valid grammar. `.282` applies the idea to validator-tree viability checks.
-- **Equilibrium Reasoners (arXiv:2605.21488):** iterative reasoning can be
-  analyzed as convergence to task-conditioned attractors. `.282` adds a
-  fixed-point diagnostic over existing traces.
-- **Solve the Loop (arXiv:2605.12466):** attractor modules support adaptive
-  fixed-point refinement. `.282` uses this as inspiration for FR-11 memory drift
-  and convergence tests.
-- **Universal Verifier (arXiv:2604.06240):** process/outcome separation and
-  controllable/uncontrollable failure accounting inform `.282` matrix and
-  capstone claim boundaries.
-- **Extropic and Logical Intelligence public pages:** both remain relevant
-  architecture context, but no `.282` claim may depend on TSU/Z1/Kona access.
+- **Cactus (arXiv:2604.04987):** constrained-acceptance speculative sampling.
+  Used in `.283` as a repair-candidate acceptance controller, not a decoding
+  speed claim.
+- **Draft, Verify, and Improve (arXiv:2510.05421):** verifier feedback becomes
+  online supervision. Used for the FR-11 verifier-feedback controller over
+  cached exact traces.
+- **Differentiable Symbolic Planning (arXiv:2604.02350):** learned feasibility
+  channel with exact-zero rule selection. Used to de-tautologize FR-11 memory.
+- **NSVIF (arXiv:2601.17789):** instruction-following verification as
+  constraint satisfaction. Used to expand validator trees beyond code/solver
+  rows without LLM-as-judge labels.
+- **CAIM (arXiv:2602.05595):** adaptive Ising control as hardware context.
+  Informative only; `.283` remains digital GateMate IO first.
+- **HalluGuard (arXiv:2601.18753 via Hugging Face):** useful taxonomy split
+  between data-driven and reasoning-driven hallucinations. No NTK claim unless
+  the implementation actually computes the NTK/geometric substrate.
+- **BEAVER (arXiv:2512.05439 via Hugging Face):** deterministic prefix-closed
+  bounds. Used for a validator-tree frontier certificate with strict separation
+  from live LLM evidence.
+- **EBT/ARM-EBM citation watch:** supports the long-term Phase-3 direction but
+  does not justify native EBT training in `.283`.
+- **Extropic and Logical Intelligence updates:** strategic context only. No
+  local TSU/Z1/Kona/Aleph performance claim is allowed.
 
 ## Architecture Snapshot
 
 ```text
-                  exp2999 capstone v281 / matrix v15
+                  exp3011 capstone v282 / matrix v16
                                   |
                                   v
-                    exp3000 archive .281 and activate .282
+                    exp3012 archive .282 and activate .283
                                   |
                                   v
-                  exp3001 SOTA GGUF cache carry-forward gate
-                         /              |                 \
-                        /               |                  \
-                       v                v                   v
-      exp3002 metamorphic        exp3004 AquaForte/     exp3005 validator
-      repair-oracle audit        BEAVER live retry      tree expansion
-             |                         |                   |
-             v                         |                   v
-      exp3003 SOTA repair              |           exp3006 fixed-point
-      rerun with metamorphic           |           energy diagnostic
-      false-accept evidence            |                   |
-             \                         |                   v
-              \                        |           exp3007 FR-11 attractor
-               \                       |           trace memory stability
-                \                      |                   |
-                 ---------------> exp3010 matrix v16 <-----+
-
-        Hardware side branch:
-          exp3008 GateMate host-visible IO transport
-              |
-              v
-          exp3009 SSQA dual-BRAM RTL/PnR/resource report
-              |
-              v
-          exp3010 matrix v16
-              |
-              v
-          exp3011 capstone v282
+              exp3013 SOTA GGUF + logprob/top-k preflight
+                         |                         \
+                         |                          \
+                         v                           v
+      exp3014 repair failure taxonomy      exp3017 NSVIF instruction
+                         |                  validator-tree expansion
+                         v                           |
+      exp3015 Cactus acceptance controller           v
+                         |                  exp3018 BEAVER frontier
+                         v                  certificate
+      exp3016 SOTA repair rerun                       |
+                         |                            v
+                         |                  exp3019 feasibility-channel
+                         |                  FR-11 diagnostic
+                         |                            |
+                         |                            v
+                         |                  exp3020 DVI verifier-feedback
+                         |                  self-learning controller
+                         |                            |
+                         +-------------> exp3024 matrix v17 <-------------+
+                                                                            |
+   Hardware branch:                                                          |
+      exp3021 GateMate RTL/CCF host-visible transport shim                   |
+              |                                                             |
+              v                                                             |
+      exp3022 GateMate transport flash/smoke v3                              |
+              |                                                             |
+              v                                                             |
+      exp3023 SSQA explicit gate artifact / RTL report ----------------------+
+                                                                            |
+                                  exp3025 capstone v283
 ```
 
 ## Phase Structure
 
-### Phase A: Activation and Evidence Gates
+### Phase A: Activation and Live-Model Boundary
 
-1. **exp3000 - Archive `.281` and activate `.282`.**
-   Archive `.281`, carry forward unresolved rows explicitly, and make the
-   staged roadmap active.
+1. **exp3012 - Archive `.282` and activate `.283`.**
+   Archive `.282`, preserve flagged/blocked/missing rows, and activate the new
+   queue without modifying `scripts/research_conductor.py`.
 
-2. **exp3001 - SOTA GGUF cache carry-forward and checksum refresh.**
-   Refresh the `.281` SOTA local GGUF evidence and provide the upstream gate for
-   live LLM tasks. At least one mandated headline model must run for
-   `sota_headline_ready=true`.
+2. **exp3013 - SOTA GGUF logprob/top-k telemetry preflight.**
+   Reuse the mandated local SOTA cache and determine whether the loader exposes
+   enough top-k/logprob telemetry for Cactus-style candidate acceptance. Legacy
+   small models remain smoke-only.
 
-3. **exp3002 - Metamorphic repair-oracle audit.**
-   Build deterministic relation-preserving repair variants and false-accept
-   accounting around the flagged `exp2991` hard set. No live LLM repair happens
-   here.
+3. **exp3014 - Repair syntax/schema failure taxonomy.**
+   Diagnose why `exp3003` improved pass rate while increasing syntax/schema
+   failures. Use HalluGuard's data-vs-reasoning split as taxonomy only.
 
-### Phase B: Claim Repair and Validator Expansion
+### Phase B: Repair Acceptance and Formal Validator Expansion
 
-4. **exp3003 - Gated SOTA repair rerun with metamorphic checks.**
-   Rerun repair only if the SOTA and metamorphic-oracle gates pass. Promotion
-   requires positive deltas plus clean false-accept and tautology evidence.
+4. **exp3015 - Cactus-style repair acceptance controller.**
+   Build an offline accept/reject controller over cached candidates and
+   metamorphic variants. It must reduce syntax/schema promotion risk without
+   increasing false accepts.
 
-5. **exp3004 - AquaForte/BEAVER live retry provenance v2.**
-   Rerun only the live retry substrate with durable model checksum, transcript,
-   and duration evidence; enumerator fallback remains separate.
+5. **exp3016 - Gated SOTA repair rerun with acceptance controller.**
+   Run live repair only if the SOTA telemetry and acceptance-controller gates
+   pass. Promotion requires positive deltas, clean false accepts, and no
+   syntax/schema regression.
 
-6. **exp3005 - Solver-to-validator tree expansion.**
-   Expand the clean solver/protocol line into a larger deterministic validator
-   tree corpus with prompt-to-validator viability checks.
+6. **exp3017 - NSVIF-style instruction validator tree expansion.**
+   Extend the exact-check validator tree corpus into small instruction-following
+   constraints with logical/runtime authority where possible.
 
-7. **exp3006 - EqR fixed-point energy diagnostic.**
-   Measure convergence, basin sensitivity, and fixed-point stability over cached
-   solver/validator trajectories. This is diagnostic only, not a native EqR
-   implementation claim.
+7. **exp3018 - BEAVER-style validator frontier certificate.**
+   Produce deterministic frontier/probability-bound style evidence over the
+   validator-tree corpus. Keep live LLM retry and enumerator fallback separate.
 
-### Phase C: Continuous Self-Learning and Hardware Grounding
+### Phase C: Continuous Self-Learning and Hardware Boundary
 
-8. **exp3007 - FR-11 attractor trace-memory stability.**
-   Continuous self-learning task. Stress verifier-grounded trace memory with
-   drift, convergence, negative-control, and forgetting checks inspired by
-   attractor/fixed-point work.
+8. **exp3019 - Feasibility-channel FR-11 de-tautology diagnostic.**
+   Add a DSP-inspired feasibility channel over exact traces and test whether it
+   separates feasible from infeasible cases on independent metrics.
 
-9. **exp3008 - GateMate host-visible IO transport v2.**
-   Add or conclusively diagnose a minimal host-visible IO path. No sampler or
-   speedup claim is allowed.
+9. **exp3020 - DVI verifier-feedback self-learning controller.**
+   Continuous self-learning task. Convert verifier accept/reject events into a
+   small online controller and test held-out utility, forgetting, drift, and
+   negative controls.
 
-10. **exp3009 - SSQA dual-BRAM RTL/PnR/resource report v2.**
-    Produce the missing SSQA artifact only when the IO boundary supports it;
-    otherwise gate-skip cleanly with no Sonnet call wasted.
+10. **exp3021 - GateMate RTL/CCF host-visible transport shim.**
+    Add or precisely diagnose physical output binding for `spin_out`/`done`.
+    No board sampler, thermalization, or speedup claim.
+
+11. **exp3022 - GateMate transport flash/smoke v3.**
+    Attempt board flash/smoke only if the transport shim is ready, then capture
+    deterministic host-visible bytes or a precise blocked transcript.
+
+12. **exp3023 - SSQA explicit gate artifact and RTL report.**
+    Always write an SSQA artifact. If the GateMate gate is still closed, record
+    explicit gate-skipped status; if it is open, produce bounded RTL/PnR/resource
+    evidence with no sampler or speedup claim.
 
 ### Phase D: Synthesis and Go/No-Go
 
-11. **exp3010 - Cross-corpus matrix v16.**
-    Aggregate `.282` against the PRD, paper-v6 claim boundaries, OpenSpec,
-    hardware, and FR-11 requirements. The matrix must run even if upstream tasks
-    are blocked or flagged.
+13. **exp3024 - Cross-corpus matrix v17.**
+    Aggregate `.283` honestly, classify every row, and avoid top-level
+    live-inference metadata in aggregation-only artifacts.
 
-12. **exp3011 - Milestone `.282` capstone.**
-    Decide whether claim repair succeeded, list blocked/flagged rows, and
-    recommend the next exact milestone. No publication action.
+14. **exp3025 - Milestone `.283` capstone.**
+    Decide whether repair, FR-11, and GateMate/SSQA are promotable. Keep
+    `paper_ready=false` unless every promotion gate is clean.
 
 ## Dependency Graph
 
 ```text
-exp3000
-  -> exp3001
-       -> exp3003
-       -> exp3004
-  -> exp3002 -> exp3003
-  -> exp3005 -> exp3006 -> exp3007
-exp3008 -> exp3009
-exp3003 -> exp3010
-exp3004 -> exp3010
-exp3007 -> exp3010
-exp3009 -> exp3010
-exp3010 -> exp3011
+exp3012
+  -> exp3013
+       -> exp3016
+  -> exp3014 -> exp3015 -> exp3016
+  -> exp3017 -> exp3018 -> exp3019 -> exp3020
+  -> exp3021 -> exp3022 -> exp3023
+exp3016 -> exp3024
+exp3018 -> exp3024
+exp3020 -> exp3024
+exp3023 -> exp3024
+exp3024 -> exp3025
 ```
 
 Structured conductor gates are included for:
 
-- `exp3003`: requires `exp3001.sota_headline_ready == true` and
-  `exp3002.metamorphic_oracle_ready == true`.
-- `exp3004`: requires `exp3001.sota_headline_ready == true`.
-- `exp3006`: requires `exp3005.validator_tree_expanded == true`.
-- `exp3007`: requires `exp3006.fixed_point_diagnostic_ready == true`.
-- `exp3009`: requires `exp3008.host_visible_io_ready == true`.
-- `exp3011`: requires `exp3010.matrix_v16_ready == true`.
+- `exp3015`: requires `exp3014.repair_failure_taxonomy_ready == true`.
+- `exp3016`: requires `exp3013.sota_logprob_ready == true` and
+  `exp3015.acceptance_controller_ready == true`.
+- `exp3018`: requires `exp3017.instruction_validator_tree_ready == true`.
+- `exp3019`: requires `exp3018.frontier_certificate_ready == true`.
+- `exp3020`: requires `exp3019.feasibility_channel_diagnostic_ready == true`.
+- `exp3022`: requires `exp3021.gatemate_transport_rtl_ready == true`.
+- `exp3025`: requires `exp3024.matrix_v17_ready == true`.
 
-`exp3010` intentionally has no hard gate. It is the aggregation task that must
-still run when upstream rows are blocked, flagged, or gate-skipped.
+`exp3023` intentionally has no structured gate. It always writes an artifact so
+the `.282` missing-SSQA pattern does not recur.
 
 ## Hardware Requirements
 
-- **Dual RTX 3090 CUDA host:** required for live local SOTA GGUF cache refresh,
-  repair rerun, and AquaForte/BEAVER live retry. Legacy small models are allowed
-  only as CPU smoke tests and cannot support headline fields.
-- **CPU-only path:** acceptable for archive, deterministic metamorphic-audit,
-  validator expansion, fixed-point diagnostics over cached traces, matrix, and
-  capstone tasks.
-- **GateMate A1:** required for `exp3008`. Advancement requires host-visible
-  output, readback, or a precise blocked diagnosis. Flash-only or failed-flash
-  evidence remains non-promotable.
-- **SSQA/GateMate RTL/PnR:** `exp3009` may produce RTL, PnR, resource reports,
-  and testbench/smoke hooks. It must not claim sampler speed, Boltzmann
-  correctness, thermodynamic behavior, or FPGA acceleration without observable
-  sample/timing evidence.
-- **Extropic/THRML and Kona/Aleph:** public context only. No task depends on
-  authenticated TSU/Z1/XTR-0 or Kona internals.
+- **Dual RTX 3090 CUDA host:** required for `exp3013` and `exp3016` live local
+  SOTA GGUF work. At least one of `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF` must
+  produce a live transcript for headline fields.
+- **CPU-only path:** acceptable for archive, repair taxonomy, offline
+  acceptance controller, validator expansion, frontier certificate,
+  feasibility diagnostics, FR-11 controller over cached traces, matrix, and
+  capstone.
+- **GateMate A1:** required for `exp3022`. `exp3021` may be RTL/CCF/toolchain
+  only; `exp3022` is the first board-facing task and must record board
+  detection, flash status, and host-visible bytes/status or a precise blocker.
+- **SSQA/GateMate RTL/PnR:** `exp3023` may produce RTL/PnR/resource evidence
+  only within the output-contract boundary. It must not claim speedup,
+  thermalization, Boltzmann sampling, or FPGA acceleration.
+- **Extropic/THRML, CAIM, Kona/Aleph:** architecture context only. No `.283`
+  task depends on authenticated TSU/Z1/XTR-0, analog Ising hardware, or Kona
+  internals.
 
 ## Acceptance Criteria
 
-- `research-references.md` contains the post-`.281` sweep before the roadmap
+- `research-references.md` contains the post-`.282` sweep before the roadmap
   design.
-- `research-roadmap-next.yaml` declares milestone `2026.05.282` and leaves
+- `research-roadmap-next.yaml` declares milestone `2026.05.283` and leaves
   `research-roadmap.yaml` unchanged.
 - Every live LLM task includes the mandated SOTA GGUF models in `MODEL_SPECS`
-  and records model/cache/provenance fields.
-- The hard-set repair row cannot be promoted unless metamorphic variants,
-  tautology checks, and false-accept accounting are clean.
-- AquaForte/BEAVER cannot be promoted unless live retry duration, transcript,
-  model checksum, and enumerator separation are all durable.
-- FR-11 includes at least one continuous self-learning experiment with
-  independent held-out metrics, negative controls, drift checks, and forgetting
-  checks.
-- GateMate/SSQA claims remain bounded to host-visible IO, RTL/PnR/resource, and
-  smoke-hook evidence.
-- Matrix and capstone preserve the `.281` claim narrowing: no KV260/GateMate
-  speedup, no Extropic/Z1 hardware claim, no Kona parity claim, no broad
-  self-learning claim beyond verifier-grounded trace memory stability.
+  and records model/cache/provenance fields. Legacy models remain smoke-only.
+- Repair cannot be promoted unless pass-rate deltas are positive,
+  false-accept deltas are non-positive, tautology probes are clean, and
+  syntax/schema failures do not regress.
+- FR-11 cannot be promoted unless the verifier-feedback controller improves
+  independent held-out metrics, rejects negative controls, preserves forgetting
+  guards, and records a non-tautological feasibility channel.
+- GateMate cannot be promoted unless host-visible output exists or the blocker
+  is precisely diagnosed. SSQA must emit an explicit artifact even when gated.
+- Matrix and capstone aggregation artifacts must use
+  `inference_substrate=aggregation_from_upstream_artifacts` and avoid top-level
+  live model metadata that would trigger false `DURATION_TOO_SHORT` flags.
 
 ## Failed-Experiment Rerun Compliance
 
 Carry-forward tasks include `prior_failures` entries with mandatory
 `retire_if_same_verdict: true` for the relevant blocked/flagged lineages:
 
-- `exp2991` flagged repair methodology.
-- `exp2993` AquaForte/BEAVER substrate corrigendum requiring cleaner live retry
-  provenance.
-- `exp2996` GateMate blocked flash/readback/smoke evidence.
-- `exp2997` SSQA gate-blocked/missing artifact.
-- `exp2998` and `exp2999` synthesis/capstone rows that ended with
-  `paper_ready=false`.
+- `exp3003` flagged repair methodology and syntax/schema regression.
+- `exp3007` flagged FR-11 trace-memory stability.
+- `exp3008` blocked GateMate host-visible IO.
+- `exp3009` gated-skipped/missing SSQA artifact.
+- `exp3010` / `exp3011` synthesis rows that ended with `paper_ready=false` and
+  aggregation false positives.
 
-The new tasks do not depend on retired upstream IDs from
-`ops/exclusion_manifest.yaml`.
+No task depends on a retired upstream ID from `ops/exclusion_manifest.yaml`.
 
 ## Out of Scope
 
-- Publishing or broadening paper-v6 claims.
-- New WOPR/game cartridges, GRPO/VPRM reruns, SpecAnn revival, PIMI revival, or
-  retired THRML/host-SD/OTV scopes.
-- Claiming live Extropic/TSU/Z1, Kona, photonic, or quantum hardware access.
-- Claiming GateMate/KV260 acceleration or thermalization without board-visible
-  sample/timing evidence.
-- Treating LLM judges, metamorphic consistency, or prompt schemas as substitutes
-  for executable verifiers.
+- External publication, arXiv submission, Hugging Face public release action, or
+  public announcement.
+- New WOPR/game cartridges, GRPO/VPRM, HardNet++/DSP, SpecAnn, PIMI, OTV, or
+  KV260 host-SD-card scopes.
+- Claiming Extropic/TSU/Z1/XTR-0, analog Ising hardware, Kona/Aleph, photonic,
+  or quantum hardware access.
+- Claiming GateMate/KV260 acceleration, thermalization, or Boltzmann sampling
+  without board-visible sample/timing evidence.
+- Treating LLM judges, HalluGuard name reuse, NTK claims, metamorphic
+  consistency, or prompt schemas as substitutes for executable verifiers.
