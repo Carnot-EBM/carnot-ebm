@@ -15555,3 +15555,84 @@ ARM-EBM discovery paths, and Logical Intelligence Kona/Aleph updates.
   speedup, Boltzmann, or thermodynamic-computing claim.
   Sources: https://arxiv.org/abs/2602.16143 and
   https://arxiv.org/abs/2601.18007
+
+## 2026-05-24 Post-.280 Planning Sweep (Milestone 2026.05.281)
+
+- **Verifier-Backed Hard Problem Generation for Mathematical Reasoning
+  (arXiv:2605.06660)**: introduces verifier-enhanced three-party self-play
+  where problem validity is checked by an independent verifier and difficulty
+  by a solver. Relevance to Carnot: `.281` should stop treating code/solver
+  benchmark items as static fixtures only; hard-example generation can be
+  adopted in a bounded way by generating verifier-backed stress items and
+  refusing any item without independent executable validity evidence.
+  Source: https://arxiv.org/abs/2605.06660
+
+- **HardTests / HARDTESTGEN for coding verifiers (arXiv:2505.24098)**:
+  synthesizes high-quality tests for LLM-generated code and reports improved
+  precision/recall over existing tests when catching wrong solutions. Relevance
+  to Carnot: the next SOTA repair rerun should include a hard-test manifest and
+  edge-case amplification before claiming pass-rate deltas, because `.280`
+  repair was blocked before useful SOTA evidence was available.
+  Source: https://arxiv.org/abs/2505.24098
+
+- **ConstrainPrompt - code-based assurance of prompt-defined constraints
+  (OpenReview ICLR 2026 submission)**: extracts code-verifiable constraints
+  from natural-language prompts, builds a logical evaluation tree, and compiles
+  executable validators. Relevance to Carnot: useful for translating repair and
+  formalization prompts into validator trees, but Carnot should keep Z3/runtime
+  checks as authority instead of promoting LLM-as-judge semantics.
+  Source: https://openreview.net/forum?id=O3Kg4dLdpg
+
+- **STATIC constrained decoding (arXiv:2602.22647)**: vectorizes trie-style
+  constrained decoding as sparse-matrix operations for accelerator-friendly
+  strict output spaces. Relevance to Carnot: not a local speed claim, but a
+  design cue for representing small verifier grammars and schema masks as
+  static sparse transition tables rather than ad hoc Python trie traversal.
+  Source: https://arxiv.org/abs/2602.22647
+
+- **Attribution-Guided Decoding (OpenReview ICLR 2026 poster)**: selects among
+  likely next-token candidates using attribution to an instruction or knowledge
+  region, improving instruction adherence and factuality in reported settings.
+  Relevance to Carnot: first-step/prefix telemetry from `.280` should remain a
+  triage signal, but `.281` can test attribution-inspired prompt-region
+  provenance as a feature for repair candidate ranking, never as a verifier.
+  Source: https://openreview.net/forum?id=ifBXz7ABV0
+
+- **Group Verification-based Policy Optimization for Interactive Coding Agents
+  (OpenReview ICLR 2026 poster)**: combines outcome-verifiable rewards with
+  process-verifiable execution feedback for coding-agent credit assignment.
+  Relevance to Carnot: supports FR-11 trace memory over independent held-out
+  metrics, with syntax/runtime/Z3 traces as process evidence and final verifier
+  success as outcome evidence.
+  Source: https://openreview.net/forum?id=RY47Tq0VsV
+
+- **Inference-Time Scaling of Verification / DeepVerifier
+  (arXiv:2601.15808)**: uses iterative verifier feedback at test time for
+  self-evolving research agents. Relevance to Carnot: supports continuous
+  self-learning only when feedback loops are checked against negative controls,
+  forgetting guards, and independent metrics rather than self-reported utility.
+  Source: https://arxiv.org/abs/2601.15808
+
+- **KAN hardware complexity and analog KAN updates (arXiv:2604.03345,
+  arXiv:2602.07518)**: 2026 work is converging on hardware-oriented KAN
+  inference-complexity metrics and physical analog KAN primitives. Relevance to
+  Carnot: KAN/KAEM hardware claims should stay metric-backed and projection-only
+  unless there is local synthesis, PnR, or board transcript evidence.
+  Sources: https://arxiv.org/abs/2604.03345 and
+  https://arxiv.org/abs/2602.07518
+
+- **Digital compute-in-memory Ising annealer with probabilistic SRAM bits
+  (npj Unconventional Computing, 2026)**: demonstrates a fabricated 28 nm
+  Ising-style annealer for TSP with explicit hardware/cost evidence. Relevance
+  to Carnot: reinforces the need for host-visible sample output and timing
+  before any sampler-facing FPGA claim; `.281` GateMate work should remain a
+  readback/smoke-vector milestone, not a speedup milestone.
+  Source: https://www.nature.com/articles/s44335-026-00060-w
+
+- **Extropic and Logical Intelligence public updates**: Extropic's public
+  writing page exposes no new locally actionable TSU access as of this sweep,
+  while Logical Intelligence continues to frame Kona/Aleph as EBM/formal
+  reasoning architecture. Relevance to Carnot: keep Extropic/THRML as simulation
+  context and Kona/Aleph as architecture comparison only; do not cite either as
+  local Carnot performance evidence.
+  Sources: https://extropic.ai/writing and https://logicalintelligence.com/

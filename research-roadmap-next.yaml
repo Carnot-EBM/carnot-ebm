@@ -1,0 +1,780 @@
+milestone: "2026.05.281"
+milestone_title: "SOTA Cache Recovery + Verifier-Backed Repair + Provenance-Grounded Self-Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+tasks:
+  - id: exp2988-archive-v280-activate-v281
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2988_archive_v280_activate_v281.json"
+    title: "Archive .280 and activate .281"
+    priority: critical
+    max_turns: 20
+    estimated_wall_time_min: 10
+    track: "archive"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    prior_failures:
+      - experiment_id: exp2975-archive-v279-activate-v280
+        verdict: "complete: archive_ready=true; archived_milestone=2026.05.279; activated_milestone=2026.05.280"
+        addressed_by: "Same archive pattern applied to the completed .280 artifact chain and .281 staged roadmap."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The current milestone 2026.05.280 has completed. The authority artifact is results/experiment_2987_capstone_v280.json. This task archives .280 and activates the pre-staged 2026.05.281 roadmap. Treat missing or flagged .280 artifacts honestly; do not repair historical results.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - CODEX.md
+      - research-roadmap.yaml
+      - research-roadmap-next.yaml
+      - research-complete.yaml
+      - scripts/experiment_template.py
+      - scripts/research_conductor.py for archive behavior only; do not modify it
+      - ops/status.md
+      - ops/changelog.md
+      - results/experiment_2986_cross_corpus_matrix_v14.json
+      - results/experiment_2987_capstone_v280.json
+
+      TASK:
+      Archive milestone 2026.05.280 into research-complete.yaml, update ops/status.md and ops/changelog.md with the activation result, and emit a terminal archive artifact for .281 activation. Do not alter research-roadmap-next.yaml except through normal activation mechanics already used by the repo.
+
+      CONCRETE STEPS:
+      1. Confirm research-roadmap-next.yaml declares milestone 2026.05.281 and has non-empty tasks.
+      2. Read all .280 result artifacts referenced by exp2987 and summarize clean, flagged, blocked, projection-only, pilot-only, and missing counts.
+      3. Append the completed .280 task list and capstone outcome to research-complete.yaml using the existing archive style.
+      4. Update ops/status.md and ops/changelog.md with a concise .280 archive/.281 activation note.
+      5. Write results/experiment_2988_archive_v280_activate_v281.json with a terminal honest_verdict.
+      6. Run YAML parsing and the relevant roadmap/pre-activation validation commands available in scripts/.
+
+      REQUIRED ARTIFACT FIELDS:
+      - archive_ready: bool (principle: activation must be explicit and machine-checkable)
+      - archived_milestone: str (principle: archive target must be unambiguous)
+      - activated_milestone: str (principle: next milestone must match research-roadmap-next.yaml)
+      - research_complete_updated: bool (principle: completed experiments must be discoverable by future planners)
+      - status_updates_written: bool (principle: ops docs must reflect milestone state)
+      - n_tasks_archived: int (principle: archive completeness must be countable)
+      - blocked_or_flagged_rows_carried_forward: list (principle: unresolved work must not be hidden)
+      - validation_commands: list (principle: validation claims must name the commands run)
+      - honest_verdict: str (principle: terminal verdict must use an accepted complete:/blocked:/failed: style prefix)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2989-sota-gguf-cache-provenance-preflight
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json"
+    title: "Mandated SOTA GGUF cache and provenance preflight"
+    priority: critical
+    model: opus
+    requires_claude: true
+    requires_gpu: true
+    max_turns: 100
+    estimated_wall_time_min: 60
+    track: "infrastructure"
+    inference_substrate: "live_llm_inference"
+    prior_failures:
+      - experiment_id: exp2977-sota-intent-preserving-code-repair
+        verdict: "blocked_cached_sota_pair_unavailable_cpu_smoke_only"
+        addressed_by: "This task isolates model-cache/provenance as an upstream gate before any headline repair or solver rerun."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp 2977 could not produce headline repair evidence because the mandated SOTA cached local GGUF models were unavailable and only a small CPU smoke model ran. This preflight is the upstream gate for all .281 live LLM claims.
+
+      MODEL_SPECS:
+      - headline_models:
+        - unsloth/Qwen3.6-35B-A3B-GGUF
+        - unsloth/gemma-4-31B-it-GGUF
+        - unsloth/gemma-4-26B-A4B-it-GGUF
+      - smoke_only_models:
+        - Qwen/Qwen3.5-0.8B
+        - unsloth/gemma-4-E4B-it-GGUF
+      - Use python/carnot/inference/sota_models.py and the cached_sota_pair() pattern when applicable.
+      - A headline SOTA result requires at least one headline model to produce a real transcript with cache/provenance fields.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - scripts/experiment_template.py
+      - scripts/experiment_2977_sota_intent_preserving_code_repair_v1.py
+      - python/carnot/inference/sota_models.py
+      - python/carnot/inference/
+      - results/experiment_2977_sota_intent_preserving_code_repair_v1.json
+      - research-hardware-wishlist.md
+
+      TASK:
+      Implement and run a bounded preflight that checks the mandated SOTA GGUF cache, records provenance, and produces one minimal live transcript per available headline model. If no headline model is available, emit a terminal blocked artifact and do not substitute small models for headline readiness.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: record CUDA/GPU availability, free VRAM if available, repo commit, Python environment, and whether cache paths exist before any model load.
+      1. Add a focused script under scripts/ for exp2989 following scripts/experiment_template.py.
+      2. Attempt the mandated headline models in MODEL_SPECS with conservative prompts and timeouts.
+      3. For each attempted model, record exact model id, local cache path, file/checksum evidence when available, load status, generation status, duration, and transcript path/hash.
+      4. If no headline model runs, optionally run a legacy small smoke test but label it smoke_only and set sota_headline_ready=false.
+      5. Write the JSON artifact and ensure honest_verdict is terminal and explicit.
+      6. Run the new script and any relevant unit/import checks.
+
+      REQUIRED ARTIFACT FIELDS:
+      - sota_headline_ready: bool (principle: downstream headline tasks must gate on real SOTA availability)
+      - preconditions_checked: bool (principle: compute-bound failures must distinguish environment from method failure)
+      - model_specs: dict (principle: model identity must be explicit)
+      - sota_models_attempted: list (principle: failed availability must be auditable)
+      - sota_models_available: list (principle: successful availability must be auditable)
+      - cache_paths: dict (principle: model provenance must be local and inspectable)
+      - model_checksums: dict (principle: repeated runs must be tied to exact artifacts when feasible)
+      - live_transcript_paths: list (principle: live inference claims require replayable output evidence)
+      - legacy_smoke_only_used: bool (principle: small models must not become headline evidence)
+      - inference_substrate: str (principle: substrate claims must match actual execution)
+      - duration_seconds: float (principle: impossible-duration artifacts must be catchable)
+      - honest_verdict: str (principle: terminal verdict must state ready or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2990-verifier-backed-hard-code-stress-manifest
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2990_verifier_backed_hard_code_stress_manifest_v1.json"
+    title: "Verifier-backed hard-code stress manifest"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 50
+    estimated_wall_time_min: 45
+    track: "code_repair"
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
+    prior_failures:
+      - experiment_id: exp2964-sota-dccd-repair-replication
+        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
+        addressed_by: "This task constructs verifier-backed hard cases before rerunning repair instead of reusing a broad over-constrained repair set."
+        retire_if_same_verdict: true
+      - experiment_id: exp2977-sota-intent-preserving-code-repair
+        verdict: "blocked_cached_sota_pair_unavailable_cpu_smoke_only"
+        addressed_by: "The manifest is model-independent and gives the gated SOTA rerun a validated hard-test target once cache is ready."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Recent verifier-backed hard-problem and HARDTESTGEN work suggests that repair evidence should be measured on executable hard cases with independent validators. Carnot needs a small high-quality hard-code stress manifest before another SOTA repair rerun.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-references.md
+      - scripts/experiment_2964_sota_dccd_repair_replication_v1.py
+      - scripts/experiment_2977_sota_intent_preserving_code_repair_v1.py
+      - python/carnot/
+      - tests/
+      - results/experiment_2964_sota_dccd_repair_replication_v1.json
+      - results/experiment_2977_sota_intent_preserving_code_repair_v1.json
+
+      TASK:
+      Build a verifier-backed hard-code stress manifest for the .281 repair rerun. The manifest must contain executable tests, baseline-failing candidates, provenance, and edge-case rationale. Do not run a headline LLM repair experiment in this task.
+
+      CONCRETE STEPS:
+      1. Create a small manifest path such as datasets/repair_hard/manifest_v1.jsonl if no equivalent exists.
+      2. Select or synthesize 20-40 code-repair items with deterministic tests; prefer existing repo fixtures and lightweight generated cases over broad external dependencies.
+      3. For each item, include a baseline incorrect candidate that fails at least one verifier test and a reference or expected behavior.
+      4. Run the verifier/test suite for every item and record pass/fail hashes or transcripts.
+      5. Reject items whose tests are flaky, non-deterministic, or do not distinguish baseline failure from reference success.
+      6. Write the result artifact with manifest statistics and validation commands.
+
+      REQUIRED ARTIFACT FIELDS:
+      - hard_code_stress_set_ready: bool (principle: downstream repair must gate on a valid hard set)
+      - manifest_path: str (principle: generated benchmark evidence must be inspectable)
+      - n_items: int (principle: sample size must be explicit)
+      - all_items_have_tests: bool (principle: repair correctness requires executable checks)
+      - all_baseline_candidates_fail: bool (principle: hard cases must expose a real defect)
+      - all_reference_solutions_pass: bool (principle: tests must be satisfiable)
+      - flaky_items: list (principle: nondeterminism must be excluded from headline claims)
+      - verifier_transcript_paths: list (principle: test evidence must be replayable)
+      - hard_generation_sources: list (principle: synthesized items need provenance)
+      - honest_verdict: str (principle: terminal verdict must say ready or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2991-gated-sota-intent-preserving-repair-hard-set
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1.json"
+    title: "Gated SOTA intent-preserving repair on verifier hard set"
+    priority: critical
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 90
+    track: "code_repair"
+    inference_substrate: "live_llm_inference"
+    gated_on:
+      - upstream: exp2989-sota-gguf-cache-provenance-preflight
+        artifact_field: sota_headline_ready
+        op: "=="
+        value: true
+      - upstream: exp2990-verifier-backed-hard-code-stress-manifest
+        artifact_field: hard_code_stress_set_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2977-sota-intent-preserving-code-repair
+        verdict: "blocked_cached_sota_pair_unavailable_cpu_smoke_only"
+        addressed_by: "Now gated on actual mandated SOTA cache readiness and a verifier-backed hard-code manifest."
+        retire_if_same_verdict: true
+      - experiment_id: exp2964-sota-dccd-repair-replication
+        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
+        addressed_by: "Uses intent-preserving repair plus hard-test execution rather than stricter schema-only DCCD pressure."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the .281 repair headline attempt, but it is allowed to run only after the SOTA cache preflight and hard-code stress manifest pass. The goal is useful verifier-backed repair, not prettier JSON.
+
+      MODEL_SPECS:
+      - headline_models:
+        - unsloth/Qwen3.6-35B-A3B-GGUF
+        - unsloth/gemma-4-31B-it-GGUF
+        - unsloth/gemma-4-26B-A4B-it-GGUF
+      - smoke_only_models:
+        - Qwen/Qwen3.5-0.8B
+        - unsloth/gemma-4-E4B-it-GGUF
+      - Use cached_sota_pair() or the current repo-local SOTA cache helper.
+      - At least one headline model must produce live results for headline_result=true.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - scripts/experiment_2977_sota_intent_preserving_code_repair_v1.py
+      - scripts/experiment_2964_sota_dccd_repair_replication_v1.py
+      - python/carnot/inference/sota_models.py
+      - datasets/repair_hard/manifest_v1.jsonl if present
+      - results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json
+      - results/experiment_2990_verifier_backed_hard_code_stress_manifest_v1.json
+
+      TASK:
+      Run the intent-preserving repair protocol on the hard-code stress set using mandated SOTA local GGUF models. Compare against baseline candidates and record pass@1/pass@k, syntax/schema failure, and false-accept deltas. If preconditions are not met, emit a terminal blocked artifact.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify exp2989.sota_headline_ready=true, exp2990.hard_code_stress_set_ready=true, CUDA/cache status, and hard-set manifest integrity.
+      1. Add a focused exp2991 script following scripts/experiment_template.py.
+      2. Load the hard manifest and run baseline verifier tests before any LLM repair.
+      3. Generate repair candidates with at least one mandated headline model; preserve draft intent, runtime trace, failing assertion, and final patch.
+      4. Execute deterministic tests for every candidate and compute deltas against the baseline and any small-model smoke data separately.
+      5. Reject headline promotion if schema/syntax failures rise, false accepts rise, n_tasks is too small, or only smoke models ran.
+      6. Write transcripts, candidate patches, verifier logs, and the JSON artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+      - repair_rerun_clean: bool (principle: the repair row must be machine-gated)
+      - headline_result: bool (principle: SOTA claim must be separate from smoke evidence)
+      - n_tasks: int (principle: sample size must be explicit)
+      - model_specs: dict (principle: model identities must match mandated GGUFs)
+      - headline_models_used: list (principle: SOTA evidence requires actual headline models)
+      - pass_at_1_delta: float (principle: usefulness must be measured against baseline)
+      - pass_at_k_delta: float (principle: candidate-set value must be measured separately)
+      - schema_failure_rate_delta: float (principle: constraints must not create parser regressions)
+      - syntax_failure_rate_delta: float (principle: constraints must not create code regressions)
+      - verifier_false_accept_delta: float (principle: repair must not game the verifier)
+      - trace_coverage: float (principle: trace-aware repair requires trace evidence)
+      - transcript_paths: list (principle: live inference must be replayable)
+      - inference_substrate: str (principle: substrate labels must match actual execution)
+      - honest_verdict: str (principle: terminal verdict must state clean, flagged, or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2992-sota-solver-formalization-provenance-reproduction
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.json"
+    title: "SOTA solver formalization provenance reproduction"
+    priority: critical
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 90
+    track: "solver_reasoning"
+    inference_substrate: "live_llm_inference"
+    gated_on:
+      - upstream: exp2989-sota-gguf-cache-provenance-preflight
+        artifact_field: sota_headline_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2980-sota-solver-formalization-feedback
+        verdict: "complete: feedback-aware local SOTA formalization cleared .280 Z3 gates"
+        addressed_by: "Repeats the strong solver result with larger coverage, prompt hashes, model checksums, Z3 transcript hashes, and durable duration provenance."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp 2980 produced the strongest .280 technical signal, but matrix/capstone flagged it because methodology, duration, checksum, and provenance evidence were insufficient. This task preserves or falsifies that gain under stricter evidence.
+
+      MODEL_SPECS:
+      - headline_models:
+        - unsloth/Qwen3.6-35B-A3B-GGUF
+        - unsloth/gemma-4-31B-it-GGUF
+        - unsloth/gemma-4-26B-A4B-it-GGUF
+      - smoke_only_models:
+        - Qwen/Qwen3.5-0.8B
+        - unsloth/gemma-4-E4B-it-GGUF
+      - Use cached_sota_pair() or the current repo-local SOTA helper.
+      - Solver headline evidence requires live local inference from at least one headline model plus exact Z3 execution.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - scripts/experiment_2980_sota_solver_formalization_feedback_v2.py
+      - scripts/experiment_2979_solver_feedback_mcs_frontier_v1.py
+      - python/carnot/
+      - python/carnot/inference/sota_models.py
+      - results/experiment_2979_solver_feedback_mcs_frontier_v1.json
+      - results/experiment_2980_sota_solver_formalization_feedback_v2.json
+      - results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json
+
+      TASK:
+      Reproduce the solver-feedback formalization result with a larger fixed item set and durable provenance. Z3/runtime verification remains the authority. Do not promote LLM self-judgment, and do not treat impossible durations as valid live inference.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify SOTA cache readiness, CUDA/cache status, exact Z3 availability, fixed item-set hash, and prior exp2980 artifact availability.
+      1. Add or update an exp2992 script without modifying scripts/research_conductor.py.
+      2. Use a fixed set of at least 12 NL-to-Z3/constraint items unless preconditions force a terminal blocked artifact.
+      3. Generate formalizations with solver feedback, record prompt hashes, raw model outputs, repair feedback, and final Z3 inputs.
+      4. Execute Z3 and record transcript hashes, satisfiability/unsat-core/MCS/MUS where applicable, and answer correctness.
+      5. Compare against exp2980 and explain any regression or non-reproduction.
+      6. Write artifact and run relevant unit/import/script checks.
+
+      REQUIRED ARTIFACT FIELDS:
+      - solver_provenance_reproduced: bool (principle: downstream self-learning must gate on reproducible solver evidence)
+      - formalization_clean: bool (principle: solver promotion must be explicit)
+      - n_items: int (principle: sample size must exceed the .280 pilot)
+      - parseability: float (principle: syntax validity must be measured)
+      - z3_execution_rate: float (principle: exact verifier execution is required)
+      - solver_verified_accuracy: float (principle: correctness must be solver-backed)
+      - feedback_repair_delta: float (principle: solver feedback value must be isolated)
+      - tautology_rate: float (principle: formalizations must not game validity)
+      - prompt_hashes_recorded: bool (principle: prompts must be replayable)
+      - z3_transcript_hashes_recorded: bool (principle: exact verifier evidence must be replayable)
+      - model_checksums_recorded: bool (principle: model provenance must be durable)
+      - duration_seconds: float (principle: live inference timing must be plausible)
+      - inference_substrate: str (principle: substrate labels must match execution)
+      - honest_verdict: str (principle: terminal verdict must state reproduced, flagged, or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2993-aquaforte-beaver-substrate-corrigendum
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1.json"
+    title: "AquaForte BEAVER honest substrate corrigendum"
+    priority: high
+    requires_gpu: true
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: "paper_integrity"
+    inference_substrate: "live_llm_inference"
+    gated_on:
+      - upstream: exp2989-sota-gguf-cache-provenance-preflight
+        artifact_field: sota_headline_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2934-aquaforte-beaver-reformulation-pipeline
+        verdict: "complete: exp2926 live GGUF proposals reformulated and exact-verified"
+        addressed_by: "Known-issues mandate requires separating true live LLM retry from enumerator-only fallback and relabeling substrate claims."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      ops/known-issues.md marks exp2934 as a mandatory substrate-corrigendum issue: the artifact claimed live LLM retry, but the duration was too short for the reported retries. This task must correct the record with a controlled two-condition experiment.
+
+      MODEL_SPECS:
+      - headline_models:
+        - unsloth/Qwen3.6-35B-A3B-GGUF
+        - unsloth/gemma-4-31B-it-GGUF
+        - unsloth/gemma-4-26B-A4B-it-GGUF
+      - smoke_only_models:
+        - Qwen/Qwen3.5-0.8B
+        - unsloth/gemma-4-E4B-it-GGUF
+      - A live retry condition must use at least one headline model or be reported as blocked.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - ops/known-issues.md
+      - results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json
+      - scripts/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.py
+      - python/carnot/inference/sota_models.py
+      - any AquaForte or BEAVER related modules under python/carnot/
+      - results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json
+
+      TASK:
+      Produce an honest substrate corrigendum for AquaForte/BEAVER by measuring two separate conditions: actual live local SOTA LLM retry and enumerator-only fallback. Relabel claims so paper/roadmap artifacts cannot confuse the two.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: confirm known issue text, SOTA cache readiness, exact verifier availability, and exp2934 script/artifact inputs.
+      1. Add a focused exp2993 script.
+      2. Run a small controlled live-retry condition using a mandated headline model if available.
+      3. Run the enumerator-only fallback condition with LLM disabled.
+      4. Record durations, transcripts, verifier results, and exact substrate labels for each condition.
+      5. Emit corrected claim labels and any docs/status note required to prevent future paper overclaiming.
+      6. Write the result artifact and run the script.
+
+      REQUIRED ARTIFACT FIELDS:
+      - substrate_corrigendum_complete: bool (principle: known issue closure must be explicit)
+      - live_llm_retry_measured: bool (principle: live claims need live evidence)
+      - enumerator_only_fallback_measured: bool (principle: fallback evidence must be separate)
+      - substrate_labels_corrected: bool (principle: paper claims must name the real substrate)
+      - no_impossible_duration_claims: bool (principle: timing must be physically plausible)
+      - live_retry_duration_seconds: float (principle: live inference timing must be recorded)
+      - fallback_duration_seconds: float (principle: fallback timing must be recorded separately)
+      - verifier_results_by_condition: dict (principle: exact verification must remain authority)
+      - inference_substrate: str (principle: artifact substrate must match actual execution)
+      - honest_verdict: str (principle: terminal verdict must close or block the corrigendum)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2994-prompt-validator-dialogue-schema
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2994_prompt_validator_dialogue_schema_v1.json"
+    title: "Prompt-to-validator dialogue schema"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 50
+    track: "verification_protocol"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    gated_on:
+      - upstream: exp2992-sota-solver-formalization-provenance-reproduction
+        artifact_field: solver_provenance_reproduced
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2979-solver-feedback-mcs-frontier
+        verdict: "complete: deterministic solver-feedback MCS/MUS frontier ready for Exp 2980"
+        addressed_by: "Elevates the deterministic feedback frontier into a prompt-to-validator protocol with executable validator trees."
+        retire_if_same_verdict: true
+      - experiment_id: exp2981-interwhen-partial-monitor-promotion
+        verdict: "complete: deterministic partial monitor promoted with measured coverage and localization"
+        addressed_by: "Reuses partial-monitor localization as a validator-tree stage rather than a standalone pilot."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The .281 source sweep found ConstrainPrompt and STATIC-style constrained decoding relevant to Carnot, but Carnot must keep exact Z3/runtime verification as authority. This task designs and validates a local protocol, not a paper claim.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-references.md
+      - results/experiment_2979_solver_feedback_mcs_frontier_v1.json
+      - results/experiment_2981_interwhen_partial_monitor_promotion_v2.json
+      - results/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.json
+      - python/carnot/
+      - openspec/capabilities/
+
+      TASK:
+      Create a bounded prompt-to-validator dialogue schema that maps natural-language requirements to executable validator trees. Do not run live LLM inference in this task; the deliverable here is a schema/protocol and deterministic validation harness. Exact verifier execution remains the correctness authority.
+
+      CONCRETE STEPS:
+      1. Review ConstrainPrompt/STATIC notes in research-references.md and the existing MCS/MUS plus partial-monitor artifacts.
+      2. Add a protocol doc under openspec/change-proposals/ or ops/ describing stages: prompt constraints, validator tree, exact-check nodes, feedback object, and rejection reasons.
+      3. Implement a small deterministic harness or fixture that compiles at least three prompt-defined constraints into executable checks without requiring live LLM inference.
+      4. Include a sparse/static transition-table design note only as a representation proposal, not a speed claim.
+      5. Run the harness and write the JSON artifact.
+
+      REQUIRED ARTIFACT FIELDS:
+      - prompt_validator_protocol_ready: bool (principle: downstream self-learning must gate on a usable protocol)
+      - protocol_doc_path: str (principle: protocol must be reviewable)
+      - deterministic_harness_path: str (principle: schema must have executable evidence)
+      - n_validator_tree_fixtures: int (principle: protocol coverage must be counted)
+      - exact_verifier_authority_preserved: bool (principle: LLM judge substitution is disallowed)
+      - static_transition_representation_designed: bool (principle: constrained decoding representation must be explicit)
+      - no_speed_claim_made: bool (principle: STATIC is inspiration, not local acceleration evidence)
+      - validation_commands: list (principle: protocol evidence must name commands run)
+      - honest_verdict: str (principle: terminal verdict must say ready, flagged, or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2995-fr11-verifier-grounded-trace-memory-v2
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2995_fr11_verifier_grounded_trace_memory_v2.json"
+    title: "FR-11 verifier-grounded trace memory v2"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: "continuous_self_learning"
+    continuous_self_learning: true
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
+    gated_on:
+      - upstream: exp2992-sota-solver-formalization-provenance-reproduction
+        artifact_field: solver_provenance_reproduced
+        op: "=="
+        value: true
+      - upstream: exp2994-prompt-validator-dialogue-schema
+        artifact_field: prompt_validator_protocol_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2982-fr11-independent-metric-utility-gate
+        verdict: "complete: fr11_independent_self_learning_ready"
+        addressed_by: "Carries the clean independent metric boundary forward using fresh .281 solver traces rather than reusing only utility-aligned metrics."
+        retire_if_same_verdict: true
+      - experiment_id: exp2983-trace-to-skill-repair-memory-pilot
+        verdict: "complete: trace_to_skill_memory_ready"
+        addressed_by: "Moves from pilot memory readiness to held-out verifier-grounded trace memory with negative controls and forgetting guards."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      The research program requires at least one continuous self-learning experiment per milestone. Exp 2982 made FR-11 clean on independent metrics, while exp2983 stayed a pilot. This task must show whether verifier-backed traces can improve future verification without collapsing into the same utility metric.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-program.md
+      - _bmad/prd.md FR-11
+      - scripts/experiment_2982_fr11_independent_metric_utility_gate_v4.py
+      - scripts/experiment_2983_trace_to_skill_repair_memory_pilot_v1.py
+      - results/experiment_2982_fr11_independent_metric_utility_gate_v4.json
+      - results/experiment_2983_trace_to_skill_repair_memory_pilot_v1.json
+      - results/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.json
+      - results/experiment_2994_prompt_validator_dialogue_schema_v1.json
+
+      TASK:
+      Implement FR-11 verifier-grounded trace memory v2. Use fresh solver/validator traces as candidate memories, select updates by process-verifiable evidence, and evaluate on independent held-out metrics with negative controls and forgetting checks.
+
+      CONCRETE STEPS:
+      1. Reuse the independent metric framework from exp2982 and do not collapse metrics into the update-selection utility.
+      2. Build a trace-memory candidate set from exp2992 solver transcripts and exp2994 validator-tree failures/successes.
+      3. Apply a bounded update or memory-selection rule that can be disabled for a random/control condition.
+      4. Evaluate held-out pass@1, solver-verified accuracy, syntax/schema failure, verifier false accepts, and forgetting.
+      5. Record negative-control deltas and refuse promotion if independent metrics are identical to utility or controls improve equally.
+      6. Write the artifact and run the relevant tests/script.
+
+      REQUIRED ARTIFACT FIELDS:
+      - independent_self_learning_boundary_preserved: bool (principle: downstream synthesis must gate on non-tautological FR-11 evidence)
+      - continuous_self_learning_task: bool (principle: milestone must explicitly satisfy self-learning requirement)
+      - trace_memory_ready: bool (principle: memory update evidence must be explicit)
+      - n_trace_memories: int (principle: update sample size must be counted)
+      - independent_metric_names: list (principle: held-out metrics must be named)
+      - utility_metric_names: list (principle: utility/selection metrics must be separable)
+      - no_identical_metric_flag: bool (principle: self-learning cannot be tautological)
+      - negative_control_deltas: dict (principle: control behavior must be visible)
+      - forgetting_guard_passed: bool (principle: learning must not erase prior capability)
+      - heldout_metric_deltas: dict (principle: improvement must be measured out of sample)
+      - honest_verdict: str (principle: terminal verdict must state ready, flagged, or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2996-gatemate-host-visible-readback-smoke
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json"
+    title: "GateMate host-visible readback smoke"
+    priority: high
+    model: opus
+    requires_claude: true
+    requires_hardware: true
+    hardware: "GateMate"
+    max_turns: 100
+    estimated_wall_time_min: 90
+    track: "hardware"
+    inference_substrate: "hardware_smoke"
+    prior_failures:
+      - experiment_id: exp2984-gatemate-readback-smoke-vector
+        verdict: "complete: gatemate_no_readback_no_host_smoke_io"
+        addressed_by: "Focuses on adding or conclusively testing host-visible IO/readback rather than repeating flash-only evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp 2984 detected and flashed GateMate but produced no host-visible readback or smoke-vector output. The only acceptable .281 hardware advancement is observable IO/readback evidence or a precise blocked diagnosis. No sampler or speedup claim is allowed.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-hardware-wishlist.md
+      - ops/known-issues.md
+      - results/experiment_2984_gatemate_readback_smoke_vector_v4.json
+      - any GateMate scripts or RTL under hardware/, fpga/, rtl/, scripts/
+      - ops/conductor-log.md entries around exp2984
+
+      TASK:
+      Attempt to add or exercise host-visible GateMate readback/smoke-vector IO. If the current bitstream or board wiring cannot expose output, document the exact missing interface and emit a terminal artifact. Do not claim sampling, Boltzmann correctness, thermodynamic behavior, or speedup.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: identify board connection, toolchain versions, target bitstream/RTL, programmer command, and the intended host-visible IO path before flashing.
+      1. Inspect existing GateMate RTL/scripts for UART, GPIO, JTAG, or status-register output options.
+      2. Prefer a minimal deterministic smoke vector: write/flash, trigger a simple known state, read or observe host-visible output, and hash the transcript.
+      3. If no readback path exists, add the smallest bounded IO shim only if it fits existing patterns; otherwise report the blocked reason without broad refactor.
+      4. Capture command transcripts, board identifiers, output bytes/status, and timing only for smoke/readback.
+      5. Write the artifact with strict claim boundaries and run any available hardware smoke command.
+
+      REQUIRED ARTIFACT FIELDS:
+      - hardware_smoke_boundary_recorded: bool (principle: downstream hardware tasks need an explicit smoke/readback boundary)
+      - preconditions_checked: bool (principle: board failures must distinguish setup from design failure)
+      - board_detected: bool (principle: board contact must be explicit)
+      - flash_attempted: bool (principle: programming attempt must be explicit)
+      - flash_succeeded: bool (principle: flash evidence must be separated from readback)
+      - readback_attempted: bool (principle: readback absence must be explicit)
+      - readback_supported: bool (principle: unsupported readback must block claims)
+      - smoke_vector_attempted: bool (principle: smoke output attempt must be explicit)
+      - smoke_vector_passed: bool (principle: hardware success must be observable)
+      - host_visible_output_path: str (principle: observed output must be inspectable)
+      - transcript_paths: list (principle: hardware evidence must be replayable)
+      - sampler_claim_made: bool (principle: sampler claims are out of scope)
+      - speedup_claim_made: bool (principle: speedup claims require timing/sample evidence not expected here)
+      - honest_verdict: str (principle: terminal verdict must state smoke passed, flagged, or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2997-ssqa-dual-bram-rtl-pnr-resource-report
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2997_ssqa_dual_bram_rtl_pnr_resource_report_v1.json"
+    title: "SSQA dual-BRAM RTL PnR resource report"
+    priority: high
+    model: opus
+    requires_claude: true
+    requires_hardware: true
+    hardware: "GateMate"
+    max_turns: 100
+    estimated_wall_time_min: 90
+    track: "hardware"
+    inference_substrate: "hardware_smoke"
+    gated_on:
+      - upstream: exp2996-gatemate-host-visible-readback-smoke
+        artifact_field: hardware_smoke_boundary_recorded
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2985-ssqa-dual-bram-register-map-plan
+        verdict: "complete: ssqa_dual_bram_register_map_plan_ready_projection_only"
+        addressed_by: "Converts the .280 register-map projection into bounded RTL/PnR/resource evidence and smoke hooks."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Exp 2985 produced a useful SSQA dual-BRAM register-map plan, but it was projection-only. This task should move one step toward implementation by producing RTL/PnR/resource reports and smoke hooks, while respecting the GateMate readback boundary from exp2996.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-hardware-wishlist.md
+      - results/experiment_2985_ssqa_dual_bram_register_map_plan_v1.json
+      - results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
+      - hardware/, fpga/, rtl/, scripts/ GateMate or SSQA files
+      - ops/known-issues.md
+
+      TASK:
+      Convert the SSQA dual-BRAM register-map plan into bounded RTL/PnR/resource evidence. A passing result may be synthesis/PnR/resource-report ready with smoke hooks; it must not claim sampling speedup or thermodynamic correctness.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify exp2996 boundary, toolchain availability, target board, and register-map source artifact.
+      1. Locate or create minimal RTL/module files for the dual-BRAM register map using existing project layout.
+      2. Run available synthesis/PnR/resource reporting for GateMate if the toolchain is available.
+      3. Add smoke-vector hook documentation or testbench hooks that align with the exp2996 host-visible IO boundary.
+      4. Capture resource reports, PnR logs, and any smoke/testbench transcripts.
+      5. Write the artifact with projection vs implementation boundaries explicit.
+
+      REQUIRED ARTIFACT FIELDS:
+      - ssqa_rtl_pnr_report_ready: bool (principle: projection-to-RTL progress must be machine-gated)
+      - preconditions_checked: bool (principle: hardware/toolchain failures must be explicit)
+      - rtl_path: str (principle: implementation evidence must have a source path)
+      - pnr_report_path: str (principle: place-and-route evidence must be inspectable)
+      - resource_report_path: str (principle: resource claims require report evidence)
+      - smoke_hook_paths: list (principle: future board smoke must have concrete hooks)
+      - readback_boundary_used: bool (principle: SSQA claims must respect exp2996 evidence)
+      - projection_only: bool (principle: remaining projection status must be explicit)
+      - sampler_claim_made: bool (principle: sampler claims are out of scope)
+      - speedup_claim_made: bool (principle: speedup claims require sample/timing evidence)
+      - honest_verdict: str (principle: terminal verdict must state ready, projection-only, or blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2998-cross-corpus-matrix-v15
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2998_cross_corpus_matrix_v15.json"
+    title: "Cross-corpus matrix v15"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 45
+    track: "synthesis"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    prior_failures:
+      - experiment_id: exp2986-cross-corpus-matrix-v14
+        verdict: "complete: matrix_v14_ready=true; clean=29; flagged=18; blocked=7; gated_skipped=0; pilot_only=4; projection_only=7"
+        addressed_by: "Aggregates .281 outcomes, including SOTA cache, repair, solver provenance, FR-11, and hardware readback/SSQA rows."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This matrix must aggregate .281 honestly even if some upstream tasks were gated or blocked. Do not require all experiments to pass before producing the matrix; the matrix is the place where blocked/flagged/gated outcomes become visible.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-roadmap-next.yaml
+      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - results/experiment_2987_capstone_v280.json
+      - all available results/experiment_2988_*.json through results/experiment_2997_*.json
+      - ops/status.md
+      - ops/changelog.md
+      - research-references.md
+      - _bmad/prd.md
+      - _bmad/architecture.md
+
+      TASK:
+      Build matrix v15 across PRD, OpenSpec, paper-v6 claim boundaries, hardware boundaries, FR-11, and .281 research outcomes. Mark clean, flagged, blocked, gated-skipped, pilot-only, projection-only, and missing rows explicitly.
+
+      CONCRETE STEPS:
+      1. Collect all available .281 artifacts and note missing/gated-skipped tasks.
+      2. Compare each result against PRD requirements, paper-v6 claim boundaries, and hardware boundaries.
+      3. Track separate rows for SOTA cache, hard-code manifest, repair, solver provenance, AquaForte/BEAVER substrate, prompt-validator protocol, FR-11 self-learning, GateMate, and SSQA.
+      4. Preserve the distinction between live LLM inference, verifier-only artifacts, aggregation, and hardware smoke.
+      5. Write the matrix artifact and include next-milestone blockers/recommendations.
+
+      REQUIRED ARTIFACT FIELDS:
+      - matrix_v15_ready: bool (principle: capstone must gate on a complete aggregation artifact)
+      - n_clean: int (principle: clean count must be explicit)
+      - n_flagged: int (principle: flagged count must be explicit)
+      - n_blocked: int (principle: blocked count must be explicit)
+      - n_gated_skipped: int (principle: structured skips must be visible)
+      - n_pilot_only: int (principle: pilot evidence must not be overpromoted)
+      - n_projection_only: int (principle: projection evidence must not be overpromoted)
+      - claim_rows: dict (principle: paper/PRD claim status must be inspectable)
+      - hardware_claim_boundary: dict (principle: hardware claims need separate boundaries)
+      - self_learning_claim_boundary: dict (principle: FR-11 evidence must be separated)
+      - unresolved_blockers: list (principle: next planning must start from real gaps)
+      - honest_verdict: str (principle: terminal verdict must state matrix readiness and counts)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2999-milestone-281-capstone
+    milestone: "2026.05.281"
+    deliverable: "results/experiment_2999_capstone_v281.json"
+    title: "Milestone .281 capstone"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 45
+    track: "capstone"
+    inference_substrate: "aggregation_from_upstream_artifacts"
+    gated_on:
+      - upstream: exp2998-cross-corpus-matrix-v15
+        artifact_field: matrix_v15_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2987-capstone-v280
+        verdict: "complete: milestone_280_capstone; paper_ready=false; clean=3; flagged=5; blocked=2; missing=0"
+        addressed_by: "Evaluates whether .281 closed the exact .280 gaps: SOTA repair cache, solver provenance, FR-11 carry-forward, and GateMate/SSQA evidence."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      This is the final synthesis task for milestone 2026.05.281. It must decide what the milestone actually proved, whether paper-v6 is closer to readiness, and what the next milestone should do. It must not trigger external publication.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-roadmap-next.yaml
+      - openspec/change-proposals/research-roadmap-vNEXT.md
+      - results/experiment_2998_cross_corpus_matrix_v15.json
+      - all available results/experiment_2988_*.json through results/experiment_2997_*.json
+      - results/experiment_2987_capstone_v280.json
+      - ops/status.md
+      - ops/changelog.md
+      - research-complete.yaml
+      - research-program.md
+      - _bmad/prd.md
+
+      TASK:
+      Produce the .281 capstone artifact. Decide paper_ready, enumerate clean/flagged/blocked/missing/gated rows, state exactly which .280 gaps were closed, and recommend the next milestone. Keep all hardware, SOTA, and self-learning boundaries honest.
+
+      CONCRETE STEPS:
+      1. Read matrix v15 and every available .281 artifact.
+      2. Summarize what .281 proved relative to .280: SOTA cache, hard repair, solver provenance, AquaForte/BEAVER substrate, prompt-validator schema, FR-11 self-learning, GateMate, and SSQA.
+      3. Decide paper_ready using only local artifacts, not external aspiration.
+      4. Update ops/status.md and ops/changelog.md with the capstone result if that is the repo pattern for capstones.
+      5. Write results/experiment_2999_capstone_v281.json and include next-milestone recommendations.
+
+      REQUIRED ARTIFACT FIELDS:
+      - capstone_ready: bool (principle: milestone terminal synthesis must be explicit)
+      - paper_ready: bool (principle: publication readiness must be artifact-backed)
+      - clean_artifacts: list (principle: clean claims must be traceable)
+      - flagged_artifacts: list (principle: weak claims must be visible)
+      - blocked_artifacts: list (principle: blocked work must not be hidden)
+      - missing_artifacts: list (principle: missing work must be visible)
+      - gated_skipped_artifacts: list (principle: structured skips must be counted)
+      - gaps_closed: list (principle: progress must map to previous gaps)
+      - gaps_remaining: list (principle: next planning must be grounded)
+      - next_milestone_recommendations: list (principle: conductor planning needs exact next actions)
+      - external_publication_triggered: bool (principle: publication actions are operator-only)
+      - honest_verdict: str (principle: terminal verdict must state capstone readiness and paper status)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

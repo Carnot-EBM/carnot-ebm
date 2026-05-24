@@ -4,48 +4,47 @@
 # docs_audit_report — 2026-05-24
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab immediately. The page is drowning in internal project jargon, raw file paths, and status-report prose that makes it feel like an internal dashboard rather than a public-facing product. 
+The page has a strong initial hook, but catastrophic templating bugs have injected raw repository file paths directly into the CSS and user-facing text, making the project look broken and abandoned. Even ignoring the layout breakage, the heavy reliance on acronyms and internal ticket-status updates in the copy would cause me to close the tab immediately.
 
 ## TOP 3 PROBLEMS
-1. Raw artifact paths rendering in the public UI (Evidence section: SOTA 35B card).
-2. Heavy internal jargon (FoVer, HIVE, CCTU, PREM) that alienates newcomers.
-3. Suspiciously perfect numbers (1.0 TP rate, 60/60, exact 2.0x speedup) with no credibility anchors.
+1. Catastrophic template injections — Raw artifact paths have overwritten `@media` CSS rules and Google Fonts URLs, breaking the site's styling.
+2. Leaked internal paths in headlines — The "Live benchmark" result card dumps a literal file path into the user-facing text.
+3. Ticket-status copy — Sections like the "Preprint" block read like internal Jira updates ("pending operator-initiated upload") rather than public marketing copy.
 
 ## DETAILED FINDINGS
 ### Bloat
-- `Evidence` section — 12 result cards — cap at 6 of the most universally understandable benchmarks.
-- `Preprint` section — 41 words — cap at 20 words focused on the paper's thesis.
-- `Recent progress` card in Stats — 52 words — drop entirely or condense to a 10-word headline.
+- Results grid — 12 cards — cap at 6-8. A stranger won't read 12 benchmark cards, especially when several rely on unexplained metrics.
+- Writing section (Blog) — 7 cards — cap at 3-4.
 
 ### Internal jargon
-- `Hero stats bar` — "HIVE peer 0.924", "FoVer step-error corpus" — Strangers do not know these internal benchmarks or corpora.
-- `Capabilities grid` — "Test-Time Compute (TTC) & PREM", "Process-Reward Energy Model" — Undefined project acronyms.
-- `Evidence cards` — "CCTU constrained micro-benchmark", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks" — Incomprehensible to anyone outside the core team.
+- Head / Google Fonts link — `family=Inter:wght @results/adversarial_gsm8k_data_400.json` — The templating engine clearly broke on the `@` symbol, injecting internal paths. A stranger will see this in the source and assume amateur hour.
+- CSS block — `@openspec/change-proposals/paper-v5-integrity-remediation.md (max-width: 1024px)` — Media queries were replaced by internal file paths, breaking mobile responsiveness.
+- Results / Live benchmark — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — A raw filepath leaked into the headline claim; a stranger will immediately assume the dashboard is broken.
+- Features / APIs card — `VerdictRecord`, `SessionMemory` — Internal class names mean nothing to someone evaluating the framework's broader capabilities.
+- Results & Features — `CCTU`, `FoVer`, `SVAMP`, `VeriCoT`, `TP` — Unexplained academic and internal acronyms alienate readers who lack the specific context.
 
 ### Per-milestone narrative
-- `Preprint` section — "The arXiv submission is prepared but pending operator-initiated upload." — This is internal operational status, not public copy.
-- `Recent progress` card — "A position paper covering the framework is in preparation..." — Reads like a weekly stand-up update.
-- `Blog descriptions` — "Three rigorous theory rounds approved the architecture..." — Reads like an internal retrospective or commit message.
+- Preprint section — "paper-v6", "pending operator-initiated upload" — Reads like an internal commit message or a team status update, not a public resource description.
+- Features / Research operations — "adversarial-verify pass catches fabricated or methodology-incomplete artifacts before they influence headline claims" — Describes internal team methodology and workflow operations rather than an end-user capability.
 
 ### Inconsistencies
-- Claiming "No model fine-tuning required" (How it works) vs "continuous self-learning" (Features) and "Training — Two-GPU parallel retrain" (Evidence).
-- Headline claims "0.9857 Verifier AUROC" while lower cards boast "0.91 AUROC" and "0.90 AUC" for different tasks, confusing the project's primary metric of success.
+- Qwen vs Gemma — The "Live benchmark" card tag claims "SOTA 35B (Qwen3.6-35B-A3B)", but the leaked text string inside the exact same card says "real_Gemma4-26B-A4B-it.txt". A stranger will assume the numbers are completely made up if the models don't even match.
 
 ### Missing essentials
-- Why should I trust the numbers? The preamble says claims are "backed by a checked-in experiment artifact" but provides no clickable links to these artifacts or instructions for third-party validation.
+- Core essentials (value proposition, installation, license, trust anchor) are surprisingly well-represented at the top of the page. No major essentials are missing.
 
 ### Fabrication signals
-- `1.0` — GSM8K extraction TP rate card claims a mathematically perfect 1.0.
-- `60/60` — Adversarial audit card claims 60/60 attacks caught (perfect 100% on a suspiciously small sample).
-- `2.0x` — Training card claims exactly 2.0x speedup with "identical losses", which defies standard distributed training overheads.
+- Results / Math extraction — `TP rate: 0.5 -> 1.0` (Perfect 1.0 true positive rate is a massive red flag without a credibility anchor or explicit sample size).
+- Results / Adversarial audit — `catches 60/60 attacks` (Perfect 100% success on exactly 60 attacks looks artificial without stating how difficult the attacks actually are).
+- Writing / Dogfooding blog — `Zero false positives` across 639 experiments is statistically highly suspect for any LLM-based verifier.
 
 ## WHAT'S WORKING
-- The "Extract → Check → Repair" 3-step explanation is clear, concise, and effectively communicates the core value proposition.
-- The Python and Rust code snippets in the Quick Start section are excellent and demonstrate exactly how simple the API is to use.
+- The hero section is excellent. "Catch the mistakes your LLM confidently makes up" is a punchy, grounded value proposition that immediately anchors the reader.
+- The "How it works" 3-step breakdown (Extract -> Check -> Repair) is highly readable and demystifies the process cleanly.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove the raw `@results/citation_hallucination_field_verifier_2932_raw/...` file path from the "SOTA 35B" Evidence card immediately.
-2. Scrub all internal acronyms (FoVer, CCTU, PREM, HIVE) and replace them with standard industry terms or brief, clear explanations.
-3. Trim the Evidence section to the 4-6 most compelling, standard-benchmark results (e.g., HumanEval).
-4. Add sample size (n=...) caveats to the perfect 1.0 and 60/60 claims to ground them in reality.
-5. Rewrite the "Recent progress" and "Preprint" sections to pitch the value of the project rather than reporting their operational upload status.
+1. Fix the templating engine bug that replaced `@` strings with file paths (Google Fonts link, CSS media queries, and the "Live benchmark" result card).
+2. Resolve the glaring inconsistency between the "Qwen3.6-35B-A3B" tag and the "Gemma4-26B" file path in the Live benchmark card.
+3. Rewrite the "Preprint" section to remove internal status notes ("operator-initiated upload") and focus purely on what a reader will learn from the paper.
+4. Add credibility anchors (sample sizes, dataset difficulty) to the perfect "1.0 TP", "60/60", and "Zero false positives" claims.
+5. Prune the Results grid down to the 6 most impressive and universally understandable metrics, dropping acronym-heavy cards entirely.
