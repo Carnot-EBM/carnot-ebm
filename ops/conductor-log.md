@@ -6181,3 +6181,4 @@ web search: site |
 | 2026-05-24 19:23 UTC | Metamorphic repair-oracle audit for hard-set repai | OK | 81 passed in 4.46s |
 | 2026-05-24 19:42 UTC | Gated SOTA repair rerun with metamorphic false-acc | OK | 81 passed in 3.92s |
 | 2026-05-24 19:56 UTC | AquaForte/BEAVER live retry provenance v2 | OK | 81 passed in 3.37s |
+| 2026-05-24 20:08 UTC | Solver-to-validator tree expansion | OK | 81 passed in 4.33s |
