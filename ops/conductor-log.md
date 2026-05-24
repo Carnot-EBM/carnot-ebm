@@ -6160,3 +6160,4 @@ web search: site |
 | 2026-05-24 14:24 UTC | Milestone 2026.05.281 activated | OK | 12 tasks queued |
 | 2026-05-24 14:37 UTC | Archive .280 and activate .281 | OK | 81 passed in 4.13s |
 | 2026-05-24 14:55 UTC | Mandated SOTA GGUF cache and provenance preflight | OK | 81 passed in 4.13s |
+| 2026-05-24 15:08 UTC | Verifier-backed hard-code stress manifest | OK | 81 passed in 3.07s |
