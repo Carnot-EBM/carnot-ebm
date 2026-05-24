@@ -6482,3 +6482,68 @@ unchanged `research-roadmap.yaml`, `scripts/research_conductor.py`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2988 | Implemented (`python/carnot/reporting/milestone_280_archive_281_activation.py`) | Implemented (`tests/python/test_experiment_2988_archive_v280.py`) |
+
+### REQ-REPORT-2998: Cross-Corpus Matrix V15 From .281 Artifacts
+
+The repository shall provide an Exp 2998 cross-corpus matrix v15 generator
+that writes `results/experiment_2998_cross_corpus_matrix_v15.json` using only
+checked-in upstream artifact JSON files. The generator MUST read
+`results/experiment_2986_cross_corpus_matrix_v14.json`,
+`results/experiment_2987_capstone_v280.json`, and every available `.281`
+artifact from Exp 2988 through Exp 2997 without rerunning live inference,
+verifier scoring, solver execution, synthesis, board flashing, readback, or
+hardware smoke tests.
+
+The generator MUST build an aggregation artifact even when upstream `.281`
+tasks are flagged, blocked, gated-skipped, projection-only, pilot-only, or
+missing. Missing or gated upstream tasks MUST remain explicit rows rather than
+being inferred from downstream artifacts. The matrix rows MUST separately track
+SOTA cache provenance, verifier-backed hard-code manifest readiness,
+intent-preserving repair, solver-provenance reproduction, AquaForte/BEAVER
+substrate corrigendum, prompt-validator protocol evidence, FR-11
+self-learning evidence, GateMate host-visible smoke/readback evidence, and
+SSQA dual-BRAM RTL/PnR/resource evidence.
+
+The generator MUST preserve claim-boundary distinctions across PRD
+requirements, OpenSpec reporting requirements, paper-v6 anchored claim
+boundaries, hardware boundaries, and FR-11 self-learning boundaries. Live LLM
+inference, verifier-only or deterministic artifacts, aggregation artifacts,
+and hardware smoke artifacts MUST remain distinguishable by row evidence type
+and `inference_substrate`. Rows MUST NOT promote pilot-only, projection-only,
+flagged, blocked, gated-skipped, or missing evidence into paper-v6 headline
+claims. Hardware rows MUST NOT claim sampler speedup, Boltzmann
+thermalization, same-basis CPU-vs-FPGA speedup, Extropic execution, NPU
+acceleration, photonic execution, or broad hardware sovereignty without
+authenticated source evidence. FR-11 rows MUST keep verifier-grounded trace
+memory separate from broad autonomous self-improvement or model-weight update
+claims.
+
+The terminal artifact MUST include `matrix_v15_ready`, `n_clean`,
+`n_flagged`, `n_blocked`, `n_gated_skipped`, `n_pilot_only`,
+`n_projection_only`, `claim_rows`, `hardware_claim_boundary`,
+`self_learning_claim_boundary`, `unresolved_blockers`, and `honest_verdict`.
+It MAY include `n_missing`, `rows`, row-count metadata, source checksums,
+paper-v6 boundary summaries, PRD/OpenSpec boundary summaries, no-new-execution
+booleans, and next-milestone recommendations as long as every value is derived
+from upstream JSON fields or checked-in claim-boundary documents.
+
+#### SCENARIO-REPORT-2998: V15 Aggregates .281 Rows Without Requiring All Upstream Successes
+
+**Given** matrix v14 and the `.280` capstone are present
+**And** Exp 2988 through Exp 2997 artifacts are present, flagged, blocked,
+gated-skipped, projection-only, pilot-only, or honestly absent
+**When** the Exp 2998 matrix v15 generator runs
+**Then** it writes `results/experiment_2998_cross_corpus_matrix_v15.json`
+with all required fields, `matrix_v15_ready=true`, explicit counts for every
+terminal status bucket, explicit claim rows for SOTA cache, hard-code manifest,
+repair, solver provenance, AquaForte/BEAVER substrate, prompt-validator
+protocol, FR-11 self-learning, GateMate, and SSQA, hardware and self-learning
+claim-boundary dictionaries, unresolved blockers for real gaps, and an
+`honest_verdict` that states readiness and counts without promoting blocked,
+flagged, pilot-only, projection-only, gated-skipped, or missing evidence.
+
+## Implementation Status (REQ-REPORT-2998)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2998 | Planned (`python/carnot/reporting/cross_corpus_matrix_v15_2998.py`) | Planned (`tests/python/test_experiment_2998_cross_corpus_matrix_v15.py`) |
