@@ -4,47 +4,49 @@
 # docs_audit_report — 2026-05-24
 
 ## TL;DR (stranger's 30-second take)
-The page has a strong initial hook, but catastrophic templating bugs have injected raw repository file paths directly into the CSS and user-facing text, making the project look broken and abandoned. Even ignoring the layout breakage, the heavy reliance on acronyms and internal ticket-status updates in the copy would cause me to close the tab immediately.
+I would close this tab in 10 seconds. The page feels like an internal telemetry dashboard that leaked onto the public internet; it is littered with raw file paths in the text, unexplained internal acronyms (FoVer, CCTU, PREM), and a wall of 28+ cards that no stranger will ever read.
 
 ## TOP 3 PROBLEMS
-1. Catastrophic template injections — Raw artifact paths have overwritten `@media` CSS rules and Google Fonts URLs, breaking the site's styling.
-2. Leaked internal paths in headlines — The "Live benchmark" result card dumps a literal file path into the user-facing text.
-3. Ticket-status copy — Sections like the "Preprint" block read like internal Jira updates ("pending operator-initiated upload") rather than public marketing copy.
+1. Literal tool leakage into public copy (Raw file paths like `@results/...` injected into text, fonts, and CSS).
+2. Extreme bloat (28+ cards across the page is completely overwhelming for a stranger).
+3. Fabrication signals (Perfect 1.0, 60/60, and "zero false positive" metrics look faked without strong external anchors).
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — cap at 6-8. A stranger won't read 12 benchmark cards, especially when several rely on unexplained metrics.
-- Writing section (Blog) — 7 cards — cap at 3-4.
+- Entire Page — 29 total cards (1 stats, 2 problem, 7 bento, 12 results, 7 blog) — Suggested cap: 12-15 cards maximum across the entire page. Strangers do not skim 29 cards.
+- Results Grid — 12 cards — Suggested cap: 4 to 6. You are drowning your best numbers in minor micro-benchmarks.
+- "Why Energy-Based?" card — 65 words — Suggested cap: 50 words.
 
 ### Internal jargon
-- Head / Google Fonts link — `family=Inter:wght @results/adversarial_gsm8k_data_400.json` — The templating engine clearly broke on the `@` symbol, injecting internal paths. A stranger will see this in the source and assume amateur hour.
-- CSS block — `@openspec/change-proposals/paper-v5-integrity-remediation.md (max-width: 1024px)` — Media queries were replaced by internal file paths, breaking mobile responsiveness.
-- Results / Live benchmark — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — A raw filepath leaked into the headline claim; a stranger will immediately assume the dashboard is broken.
-- Features / APIs card — `VerdictRecord`, `SessionMemory` — Internal class names mean nothing to someone evaluating the framework's broader capabilities.
-- Results & Features — `CCTU`, `FoVer`, `SVAMP`, `VeriCoT`, `TP` — Unexplained academic and internal acronyms alienate readers who lack the specific context.
+- Fonts & CSS definitions — `@results/adversarial_gsm8k_data_400.json`, `@ops/latent_deterministic_discipline_gate_1500.md`, `@openspec/change-proposals/paper-v5-integrity-remediation.md` — Literal system file paths have corrupted your `<link>` tags and CSS media queries.
+- Live benchmark card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — File path leaked directly into the headline text. 
+- Recent progress card — "FoVer (5-seed dual-condition)" — A stranger has no idea what corpus this is or what the condition means.
+- Features: TTC & PREM card — "Test-Time Compute (TTC) based on Process-Reward Energy Model (PREM) variance" — Impenetrable acronym soup.
+- Results Grid — "SVAMP", "VeriCoT", "CCTU", "PRM-BiasBench", "HumanEval-50" — Unexplained internal/niche benchmarks.
 
 ### Per-milestone narrative
-- Preprint section — "paper-v6", "pending operator-initiated upload" — Reads like an internal commit message or a team status update, not a public resource description.
-- Features / Research operations — "adversarial-verify pass catches fabricated or methodology-incomplete artifacts before they influence headline claims" — Describes internal team methodology and workflow operations rather than an end-user capability.
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This is an internal post-mortem, not a product pitch.
+- Preprint section — "pending operator-initiated upload" — Reads like an internal operations checklist.
+- Results: Safety card — "(publication gate)" — Meaningless internal project management language.
 
 ### Inconsistencies
-- Qwen vs Gemma — The "Live benchmark" card tag claims "SOTA 35B (Qwen3.6-35B-A3B)", but the leaked text string inside the exact same card says "real_Gemma4-26B-A4B-it.txt". A stranger will assume the numbers are completely made up if the models don't even match.
+- Live benchmark card headline vs content — The card title claims "Qwen3.6-35B-A3B", but the hallucinated file path injected directly into the text underneath it says `real_Gemma4-26B-A4B-it.txt`. 
 
 ### Missing essentials
-- Core essentials (value proposition, installation, license, trust anchor) are surprisingly well-represented at the top of the page. No major essentials are missing.
+- Context for trustworthiness — The page says "Every number below is backed by a checked-in experiment artifact." A stranger doesn't know what your "artifacts" are or have access to your repo's internal `results/` folder to verify them.
 
 ### Fabrication signals
-- Results / Math extraction — `TP rate: 0.5 -> 1.0` (Perfect 1.0 true positive rate is a massive red flag without a credibility anchor or explicit sample size).
-- Results / Adversarial audit — `catches 60/60 attacks` (Perfect 100% success on exactly 60 attacks looks artificial without stating how difficult the attacks actually are).
-- Writing / Dogfooding blog — `Zero false positives` across 639 experiments is statistically highly suspect for any LLM-based verifier.
+- Results: Math extraction — "TP rate: 0.5 -> 1.0" — A perfect 1.0 true positive rate on LLM math extraction looks fake to any ML practitioner.
+- Results: Adversarial audit — "k=5 ensemble catches 60/60 attacks" — Perfect scores trigger immediate skepticism.
+- Blog: Dogfooding — "Zero false positives" — Claiming absolutely zero false positives on a code analysis tool is an instant credibility killer.
 
 ## WHAT'S WORKING
-- The hero section is excellent. "Catch the mistakes your LLM confidently makes up" is a punchy, grounded value proposition that immediately anchors the reader.
-- The "How it works" 3-step breakdown (Extract -> Check -> Repair) is highly readable and demystifies the process cleanly.
+- The Hero section value proposition ("Catch the mistakes your LLM confidently makes up") is punchy and immediately answers what the tool does.
+- The 3-step "Extract -> Check -> Repair" breakdown is conceptually excellent and easy to digest.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the templating engine bug that replaced `@` strings with file paths (Google Fonts link, CSS media queries, and the "Live benchmark" result card).
-2. Resolve the glaring inconsistency between the "Qwen3.6-35B-A3B" tag and the "Gemma4-26B" file path in the Live benchmark card.
-3. Rewrite the "Preprint" section to remove internal status notes ("operator-initiated upload") and focus purely on what a reader will learn from the paper.
-4. Add credibility anchors (sample sizes, dataset difficulty) to the perfect "1.0 TP", "60/60", and "Zero false positives" claims.
-5. Prune the Results grid down to the 6 most impressive and universally understandable metrics, dropping acronym-heavy cards entirely.
+1. Scrub the `index.html` file of all leaked file paths (remove `@results/...` and `@openspec/...` from `<link>` tags, CSS media queries, and the Live benchmark card text).
+2. Cut the "Results" grid down from 12 cards to the 6 most impressive, externally recognizable metrics.
+3. Remove or completely rewrite the "TTC & PREM" card; it provides zero value to a newcomer in its current state.
+4. Purge internal ops language ("publication gate", "operator-initiated upload", "repinned from v2").
+5. Add caveats or context to the "perfect" numbers (1.0 TP, 60/60, zero false positives), or replace them with more representative large-sample metrics.

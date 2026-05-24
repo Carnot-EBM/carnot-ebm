@@ -15643,3 +15643,84 @@ ARM-EBM discovery paths, and Logical Intelligence Kona/Aleph updates.
   context and Kona/Aleph as architecture comparison only; do not cite either as
   local Carnot performance evidence.
   Sources: https://extropic.ai/writing and https://logicalintelligence.com/
+
+## 2026-05-24 Post-.281 Planning Sweep (Milestone 2026.05.282)
+
+Scope: arXiv, OpenReview-style discovery queries, Hugging Face papers search,
+Semantic Scholar discovery paths for EBT/ARM-EBM, GitHub discovery, Extropic
+hardware/software pages, and Logical Intelligence Kona/Aleph public pages.
+
+- **LLMORPH: Automated Metamorphic Testing of Large Language Models
+  (arXiv:2603.23611; ASE 2025)**: applies metamorphic relations to LLM systems
+  so robustness bugs can be exposed without fully labeled answer keys. Relevance
+  to Carnot: `.282` hard-set repair should not trust a raw pass-rate delta; it
+  needs relation-preserving variants, false-accept provenance, and separate
+  executable verifier outcomes before any repair gain is promotable.
+  Source: https://arxiv.org/abs/2603.23611
+
+- **From Untestable to Testable: Metamorphic Testing in the Age of LLMs
+  (arXiv:2603.24774; IEEE Computer 2026)**: frames metamorphic testing as a
+  way to turn relations across multiple executions into executable test oracles
+  for systems where direct labels are expensive or unavailable. Relevance to
+  Carnot: use metamorphic oracles as a methodology repair for `.281` flagged
+  hard-set repair and AquaForte/BEAVER retries, not as a replacement for Z3 or
+  runtime verification.
+  Source: https://arxiv.org/abs/2603.24774
+
+- **MR-Coupler: Automated Metamorphic Test Generation via Functional Coupling
+  Analysis (arXiv:2604.10126; FSE 2026)**: constructs metamorphic relations from
+  functional coupling, then validates generated tests through amplification and
+  mutation analysis. Relevance to Carnot: useful for deriving repair stressors
+  from coupled solver/validator functions instead of hand-picking easy variants.
+  `.282` can start with deterministic coupling audits rather than full automatic
+  test synthesis.
+  Source: https://arxiv.org/abs/2604.10126
+
+- **Lookahead-then-Verify / LAVE for constrained dLLM decoding
+  (arXiv:2602.00612)**: verifies proposed tokens by checking whether partial
+  outputs remain extendable to valid grammar strings. Relevance to Carnot:
+  supports a strict partial-candidate viability check for prompt-validator trees
+  and schema-constrained repair outputs. Near-term use should be diagnostic
+  because Carnot's mandated GGUF models are autoregressive, not diffusion LLMs.
+  Source: https://arxiv.org/abs/2602.00612
+
+- **Equilibrium Reasoners: Learning Attractors Enables Scalable Reasoning
+  (arXiv:2605.21488; ICML 2026)**: treats iterative reasoning as convergence
+  toward task-conditioned attractors and reports gains from depth/breadth
+  test-time scaling. Relevance to Carnot: `.282` should add a bounded fixed-point
+  diagnostic over existing solver/validator trajectories before claiming any
+  native Equilibrium Reasoner capability.
+  Source: https://arxiv.org/abs/2605.21488
+
+- **Solve the Loop: Attractor Models for Language and Reasoning
+  (arXiv:2605.12466)**: proposes attractor modules that refine embeddings by
+  fixed-point solving with adaptive iteration counts. Relevance to Carnot:
+  directly informs FR-11 trace-memory stability tests: learned memories should
+  show convergence, bounded drift, and negative-control rejection before being
+  called continuous self-learning.
+  Source: https://arxiv.org/abs/2605.12466
+
+- **The Art of Building Verifiers for Computer Use Agents / Universal Verifier
+  (arXiv:2604.06240)**: emphasizes non-overlapping rubrics, process/outcome
+  separation, controllable versus uncontrollable failure labels, and cascade-free
+  failure accounting. Relevance to Carnot: `.282` capstone and matrix work
+  should preserve these distinctions when separating repair methodology flags,
+  substrate duration flags, and hardware transport blockers.
+  Source: https://arxiv.org/abs/2604.06240
+
+- **Extropic XTR-0/Z1 and THRML current public status**: official pages list
+  XTR-0 as the Q3 2025 testing platform, Z1 as early-access 2026, and THRML as
+  the JAX simulator for PGMs/EBMs intended for TSUs. Relevance to Carnot: keep
+  Extropic as software/hardware-readiness context only; `.282` local hardware
+  work should stay on GateMate/SSQA host-visible output and must not imply TSU
+  or Z1 access.
+  Sources: https://extropic.ai/hardware and https://extropic.ai/software
+
+- **Logical Intelligence Aleph/Kona May 2026 public update**: Logical reports
+  formal reasoning benchmark progress for Aleph and continues to position Kona
+  as a non-chatbot EBM reasoning layer beneath LLM interfaces. Relevance to
+  Carnot: use Kona/Aleph only as architecture and claim-boundary comparison.
+  `.282` evidence remains local: solver provenance, SOTA GGUF transcripts,
+  FR-11 trace memory, and hardware smoke artifacts.
+  Sources: https://logicalintelligence.com/blog/aleph-leading-benchmarks and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
