@@ -260,6 +260,61 @@ gates all clear.
 |---|---|---|
 | REQ-VERIFY-2980 | Implemented (`python/carnot/eval/sota_solver_formalization_feedback_v2.py`) | Implemented (`tests/python/test_experiment_2980_sota_solver_formalization_feedback.py`) |
 
+### REQ-VERIFY-2981: Interwhen Partial-Monitor Promotion Metrics V2
+
+The repository shall provide an Exp 2981 deterministic promotion evaluator for
+the Exp 2968 partial-output monitor harness. The evaluator MUST NOT run fresh
+live inference, MUST NOT modify `scripts/research_conductor.py`, and MUST write
+`results/experiment_2981_interwhen_partial_monitor_promotion_v2.json`.
+
+The evaluator MUST first verify that
+`results/experiment_2979_solver_feedback_mcs_frontier_v1.json` reports
+`frontier_upgrade_ready=true`. It SHALL load the Exp 2968 monitor harness
+artifact and the Exp 2979 feedback frontier, define partial code and solver
+monitor event types for `draft_intent`, `constraint_emission`,
+`parse_boundary`, `verifier_call`, `counterexample`, and `repair_step`, and
+evaluate deterministic monitor fixtures that measure event coverage, prefix
+failure localization, monitor latency, and false alarms.
+
+When `results/experiment_2980_sota_solver_formalization_feedback_v2.json` is
+present, the evaluator SHALL additionally derive monitor traces from the actual
+Exp 2980 solver candidate rows. When Exp 2980 is absent, it SHALL report
+`live_trace_count=0` and rely only on deterministic fixtures. The evaluator
+SHALL keep `full_streaming_verification_claim=false` unless all required live
+code and solver streams are actually monitored; checked-in partial fixtures
+and solver candidate traces alone do not justify a full streaming verification
+claim.
+
+The terminal artifact MUST include `honest_verdict`,
+`partial_monitor_promoted`, `full_streaming_verification_claim=false`,
+`event_types`, `coverage_by_event`, `prefix_failure_localization_rate`,
+`monitor_latency_ms`, `false_alarm_rate`, `fixture_count`,
+`live_trace_count`, `promotion_gates`,
+`inference_substrate="deterministic_monitor_harness"`, and `duration_s`.
+
+`partial_monitor_promoted` shall be true only when Exp 2979 is ready, every
+required event type has measured coverage, both code and solver streams are
+covered by fixtures or live traces, prefix failure localization is at least
+0.80, and false alarm rate is at most 0.20.
+
+### SCENARIO-VERIFY-2981: Promotion Requires Coverage And Localization Metrics
+
+Given Exp 2968 has produced a deterministic partial monitor harness artifact
+and Exp 2979 reports `frontier_upgrade_ready=true`,
+When the Exp 2981 promotion evaluator runs,
+Then it emits the required event vocabulary, measures coverage for code and
+solver partial-output events, computes prefix failure localization and
+false-alarm rates from deterministic fixtures plus any available Exp 2980
+candidate traces, promotes the partial monitor only when the explicit gates
+clear, and leaves `full_streaming_verification_claim=false` because the
+artifact does not monitor all live generation streams.
+
+## Implementation Status (REQ-VERIFY-2981)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-2981 | Implemented (`python/carnot/eval/interwhen_partial_monitor_promotion_v2.py`) | Implemented (`tests/python/test_experiment_2981_interwhen_partial_monitor_promotion_v2.py`) |
+
 ### REQ-VERIFY-2932: Citation Hallucination Field Verifier
 
 The repository shall provide a local citation-hallucination probe that:

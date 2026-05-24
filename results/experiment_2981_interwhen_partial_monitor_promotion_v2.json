@@ -1,0 +1,356 @@
+{
+  "artifact": "experiment_2981_interwhen_partial_monitor_promotion_v2",
+  "coverage_by_event": {
+    "constraint_emission": {
+      "count": 17,
+      "fixture_count": 11,
+      "live_count": 6,
+      "live_stream_kinds": [
+        "solver"
+      ],
+      "stream_kinds": [
+        "code",
+        "solver"
+      ]
+    },
+    "counterexample": {
+      "count": 12,
+      "fixture_count": 6,
+      "live_count": 6,
+      "live_stream_kinds": [
+        "solver"
+      ],
+      "stream_kinds": [
+        "solver"
+      ]
+    },
+    "draft_intent": {
+      "count": 17,
+      "fixture_count": 11,
+      "live_count": 6,
+      "live_stream_kinds": [
+        "solver"
+      ],
+      "stream_kinds": [
+        "code",
+        "solver"
+      ]
+    },
+    "parse_boundary": {
+      "count": 17,
+      "fixture_count": 11,
+      "live_count": 6,
+      "live_stream_kinds": [
+        "solver"
+      ],
+      "stream_kinds": [
+        "code",
+        "solver"
+      ]
+    },
+    "repair_step": {
+      "count": 12,
+      "fixture_count": 6,
+      "live_count": 6,
+      "live_stream_kinds": [
+        "solver"
+      ],
+      "stream_kinds": [
+        "solver"
+      ]
+    },
+    "verifier_call": {
+      "count": 17,
+      "fixture_count": 11,
+      "live_count": 6,
+      "live_stream_kinds": [
+        "solver"
+      ],
+      "stream_kinds": [
+        "code",
+        "solver"
+      ]
+    }
+  },
+  "duration_s": 0.001447,
+  "event_types": [
+    "draft_intent",
+    "constraint_emission",
+    "parse_boundary",
+    "verifier_call",
+    "counterexample",
+    "repair_step"
+  ],
+  "false_alarm_rate": 0.0,
+  "fixture_count": 11,
+  "full_streaming_verification_claim": false,
+  "honest_verdict": "complete: deterministic partial monitor promoted with measured coverage and localization",
+  "inference_substrate": "deterministic_monitor_harness",
+  "live_trace_count": 6,
+  "methodology_notes": [
+    "Exp 2981 replays checked-in partial-output artifacts; it does not run a live generator.",
+    "Coverage and localization promote only the deterministic partial monitor harness.",
+    "full_streaming_verification_claim remains false because live code streams are not monitored."
+  ],
+  "monitor_latency_ms": {
+    "by_event": {
+      "constraint_emission": 2.04,
+      "counterexample": 3.6,
+      "draft_intent": 0.85,
+      "parse_boundary": 3.4,
+      "repair_step": 1.8,
+      "verifier_call": 12.75
+    },
+    "max_trace": 1.57,
+    "mean_per_trace": 1.438,
+    "total": 24.44
+  },
+  "partial_monitor_promoted": true,
+  "prefix_failure_localization_rate": 1.0,
+  "promotion_gates": {
+    "event_coverage_broad": {
+      "actual": {
+        "constraint_emission": 17,
+        "counterexample": 12,
+        "draft_intent": 17,
+        "parse_boundary": 17,
+        "repair_step": 12,
+        "verifier_call": 17
+      },
+      "passed": true,
+      "required": "count>0 for every required event type"
+    },
+    "exp2979_frontier_upgrade_ready": {
+      "actual": true,
+      "passed": true,
+      "required": true
+    },
+    "false_alarm_rate_bounded": {
+      "actual": 0.0,
+      "passed": true,
+      "required": 0.2
+    },
+    "full_streaming_claim_supported": {
+      "actual": [
+        "solver"
+      ],
+      "passed": false,
+      "required": [
+        "code",
+        "solver"
+      ]
+    },
+    "prefix_failure_localization_measured": {
+      "actual": 11,
+      "passed": true,
+      "required": "at least one failing trace"
+    },
+    "prefix_failure_localization_rate": {
+      "actual": 1.0,
+      "passed": true,
+      "required": 0.8
+    },
+    "stream_coverage_broad": {
+      "actual": [
+        "code",
+        "solver"
+      ],
+      "passed": true,
+      "required": [
+        "code",
+        "solver"
+      ]
+    }
+  },
+  "run_date": "20260524",
+  "schema": "carnot.interwhen_partial_monitor_promotion.v2",
+  "source_artifacts": {
+    "exp2968": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2968_interwhen_partial_monitor_harness_v1.json",
+      "present": true,
+      "sha256": "05578eeaee612f7c7757fe8e8d7e40986d6b9f9d3a11034e13b0443005755199"
+    },
+    "exp2979": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2979_solver_feedback_mcs_frontier_v1.json",
+      "present": true,
+      "sha256": "6c68d7a0331dfede23bbd130ef9c253df1d1e88859a67e56a2ca6df1308f8c35"
+    },
+    "exp2980": {
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2980_sota_solver_formalization_feedback_v2.json",
+      "present": true,
+      "sha256": "0c905f7a3846b122bd8d1784bdec0724e88bf4b3bfc8c4bbadfbf2b812347a48"
+    }
+  },
+  "trace_summaries": [
+    {
+      "event_count": 4,
+      "first_expected_failure_index": null,
+      "first_monitor_flag_index": null,
+      "has_expected_failure": false,
+      "has_monitor_flag": false,
+      "stream_kind": "code",
+      "trace_id": "fixture:exp2952-code-1",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 4,
+      "first_expected_failure_index": null,
+      "first_monitor_flag_index": null,
+      "has_expected_failure": false,
+      "has_monitor_flag": false,
+      "stream_kind": "code",
+      "trace_id": "fixture:exp2952-code-2",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 4,
+      "first_expected_failure_index": null,
+      "first_monitor_flag_index": null,
+      "has_expected_failure": false,
+      "has_monitor_flag": false,
+      "stream_kind": "code",
+      "trace_id": "fixture:exp2952-code-3",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 4,
+      "first_expected_failure_index": null,
+      "first_monitor_flag_index": null,
+      "has_expected_failure": false,
+      "has_monitor_flag": false,
+      "stream_kind": "code",
+      "trace_id": "fixture:synthetic-code-allowlist",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 4,
+      "first_expected_failure_index": null,
+      "first_monitor_flag_index": null,
+      "has_expected_failure": false,
+      "has_monitor_flag": false,
+      "stream_kind": "code",
+      "trace_id": "fixture:exp2959-logic-1",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "fixture:lf-2966-001",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "fixture:lf-2966-002",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "fixture:lf-2966-004",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "fixture:lf-2966-003",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "fixture:lf-2966-005",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "fixture:lf-2966-013",
+      "trace_source": "fixture"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "live_exp2980:lf-2966-001",
+      "trace_source": "live_exp2980"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "live_exp2980:lf-2966-002",
+      "trace_source": "live_exp2980"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "live_exp2980:lf-2966-004",
+      "trace_source": "live_exp2980"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 2,
+      "first_monitor_flag_index": 2,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "live_exp2980:lf-2966-003",
+      "trace_source": "live_exp2980"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": 3,
+      "first_monitor_flag_index": 3,
+      "has_expected_failure": true,
+      "has_monitor_flag": true,
+      "stream_kind": "solver",
+      "trace_id": "live_exp2980:lf-2966-005",
+      "trace_source": "live_exp2980"
+    },
+    {
+      "event_count": 6,
+      "first_expected_failure_index": null,
+      "first_monitor_flag_index": null,
+      "has_expected_failure": false,
+      "has_monitor_flag": false,
+      "stream_kind": "solver",
+      "trace_id": "live_exp2980:lf-2966-013",
+      "trace_source": "live_exp2980"
+    }
+  ]
+}
