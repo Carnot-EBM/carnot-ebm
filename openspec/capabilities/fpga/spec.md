@@ -1766,6 +1766,60 @@ the success duration is at least 15 seconds.
 
 ---
 
+### REQ-HW-076
+
+**Title:** Exp 2958 PolarFire scorer continuation MUST extend the hash evidence to 1000 clauses without performance claims
+
+**Description:**
+Experiment 2958 MUST continue the narrow Exp 2941 PolarFire SAT scorer path with
+a deterministic 1000-clause SAT instance. Before dispatch it MUST verify the
+Exp 2941 500-clause baseline artifact and transcript are present and that the
+baseline scorer hash was verified. It MUST then check whether `ssh polarfire`
+is reachable through the documented path. If the board is reachable, the
+experiment MUST SCP the 1000-clause instance and scorer to the PolarFire Linux
+CPU substrate, pull back the transcript, and verify the remote scorer output
+SHA256 against the locally computed expected scorer output. If the board is not
+reachable, it MUST write a blocked artifact using the existing Exp 2941
+baseline/transcript context rather than fabricating a successful hardware
+smoke. The artifact MUST report only hash, transcript, reachability, and
+elapsed-time evidence; it MUST NOT claim speedup or general acceleration.
+
+**Acceptance criteria:**
+- `results/experiment_2958_polarfire_1000_clause_scorer_v2.json` is generated.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `polarfire_1000_clause_hash_verified`, `baseline_500_clause_artifact`,
+  `clause_count=1000`, `input_sha256`, `scorer_output_sha256`,
+  `transcript_paths`, `elapsed_ms`, `board_reachable`,
+  `no_speedup_claim=true`, `no_general_acceleration_claim=true`,
+  `inference_substrate="hardware_smoke"`, and `duration_s`.
+- Successful artifacts require `board_reachable=true`,
+  `polarfire_1000_clause_hash_verified=true`, a 1000-clause input hash, a
+  scorer output hash, and a transcript path for the 1000-clause run.
+- Blocked artifacts require `board_reachable=false`,
+  `polarfire_1000_clause_hash_verified=false`, and the Exp 2941 transcript path
+  preserved as evidence for the baseline context.
+
+**Implementation status:** Planned (Exp 2958)
+
+---
+
+### SCENARIO-HW-076
+
+**Scenario:** PolarFire 1000-clause scorer records hash evidence or a precise board block.
+
+**Given:** The Exp 2941 500-clause artifact and transcript exist and the
+Exp 2941 artifact records a verified scorer output hash.
+**When:** Exp 2958 checks `ssh polarfire` and either dispatches the deterministic
+1000-clause SAT scorer or records the unreachable-board block.
+**Then:** The v2 result JSON records the baseline artifact path, all required
+hash/transcript fields, the board reachability result, elapsed time if measured,
+and explicit `no_speedup_claim=true` plus
+`no_general_acceleration_claim=true` boundaries.
+
+**Implementation status:** Planned (Exp 2958)
+
+---
+
 ### REQ-HW-075
 
 **Title:** Exp 2955 GateMate constraints materialization MUST create a deterministic n=16 build package without flashing

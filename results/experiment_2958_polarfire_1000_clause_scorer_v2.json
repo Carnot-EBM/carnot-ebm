@@ -1,0 +1,72 @@
+{
+  "baseline_500_clause_artifact": "results/experiment_2941_polarfire_continuation_v1.json",
+  "board_reachable": true,
+  "clause_count": 1000,
+  "duration_s": 10.028972,
+  "elapsed_ms": 1029.3225100031123,
+  "expected_scorer_output_sha256": "a2c8e28a8096517de874ee05f6e814eb726e35bf301c08846122deb8ab209366",
+  "experiment": 2958,
+  "honest_verdict": "complete: polarfire_1000_clause_constraint_scorer_hash_verified",
+  "inference_substrate": "hardware_smoke",
+  "input_sha256": "0dbd4aa3ed3e64e202188af874809c940d6fd2bca31b39350ba2e273e7bc6a57",
+  "no_general_acceleration_claim": true,
+  "no_speedup_claim": true,
+  "polarfire_1000_clause_hash_verified": true,
+  "polarfire_arch": "riscv64",
+  "preconditions_checked": [
+    {
+      "observed": "3b91df6ed5a3fa14e4810994fb185e6869afe78a3827a2efd8d104e02004ad66",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2941_polarfire_continuation_v1.json",
+      "resource": "baseline_500_clause_artifact"
+    },
+    {
+      "observed": "present",
+      "passed": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2941_polarfire_transcript_v1.json",
+      "resource": "baseline_500_clause_transcript"
+    },
+    {
+      "command": "ssh -o ConnectTimeout=5 -o BatchMode=yes polarfire true",
+      "observed": "returncode=0",
+      "passed": true,
+      "resource": "polarfire_ssh"
+    },
+    {
+      "command": "ssh polarfire 'uname -m'",
+      "observed": "riscv64",
+      "passed": true,
+      "resource": "polarfire_arch"
+    },
+    {
+      "command": "ssh polarfire 'python3 --version'",
+      "observed": "Python 3.12.12",
+      "passed": true,
+      "resource": "polarfire_python"
+    },
+    {
+      "command": "ssh polarfire uptime",
+      "observed": "02:30:19 up 9 days,  8:15,  0 user,  load average: 0.00, 0.00, 0.00",
+      "passed": true,
+      "resource": "polarfire_uptime"
+    },
+    {
+      "command": "ssh polarfire 'uname -r'",
+      "observed": "6.18.17-linux4microchip-2026.04.1-g7fbe4f69684d",
+      "passed": true,
+      "resource": "polarfire_kernel"
+    }
+  ],
+  "remote_arch": "riscv64",
+  "remote_python": "3.12.12",
+  "schema": "carnot.polarfire_1000_clause_scorer.v2",
+  "scorer_output_sha256": "a2c8e28a8096517de874ee05f6e814eb726e35bf301c08846122deb8ab209366",
+  "spec_refs": [
+    "REQ-HW-076",
+    "SCENARIO-HW-076"
+  ],
+  "transcript_paths": [
+    "results/experiment_2941_polarfire_transcript_v1.json",
+    "results/experiment_2958_polarfire_1000_clause_transcript_v2.json"
+  ]
+}
