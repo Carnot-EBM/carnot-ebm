@@ -14,6 +14,8 @@ from carnot.experiment_2984_gatemate_readback_smoke_vector import (
     EXP2971_FILENAME,
     EXP2972_FILENAME,
     CommandResult,
+    _iter_prior_transcript_paths,
+    _recover_prior_board_id,
     build_artifact,
     run_experiment,
 )
@@ -66,6 +68,7 @@ def _write_prior_artifacts(
     sha_override: str | None = None,
     flash_succeeded: bool = True,
     ccf_text: str | None = None,
+    detection_transcript_text: str | None = None,
 ) -> Path:
     loader = repo_root / "suite" / "bin" / "openFPGALoader"
     loader.parent.mkdir(parents=True, exist_ok=True)
@@ -123,6 +126,11 @@ def _write_prior_artifacts(
         "flash_command": f"{loader} -c dirtyJtag -b olimex_gatemateevb {bitstream}",
         "detection_commands": [f"{loader} -c dirtyJtag --detect"],
     }
+    if detection_transcript_text is not None:
+        transcript = repo_root / "logs" / "experiment_2971" / "detect_1.txt"
+        transcript.parent.mkdir(parents=True, exist_ok=True)
+        transcript.write_text(detection_transcript_text, encoding="utf-8")
+        exp2971["detection_transcript_paths"] = [str(transcript)]
     exp2972 = {
         "honest_verdict": "complete: gatemate_flash_contact_smoke_no_readback",
         "board_detected": True,
@@ -131,6 +139,7 @@ def _write_prior_artifacts(
         "bitstream_path": str(bitstream),
         "bitstream_sha256": sha,
         "flash_command": exp2971["flash_command"],
+        "observed_output_sha256": "prior-output-hash",
         "timing_observation": {"post_flash_contact_detected": True},
         "transcript_sha256": {"post_flash_detect.txt": "abc123"},
     }
@@ -252,6 +261,7 @@ def test_exp2984_contact_confirmed_but_readback_and_smoke_io_are_unavailable(
     assert artifact["observed_smoke_output"] == ""
     assert artifact["expected_smoke_output"] == "unavailable_no_host_visible_io_path"
     assert artifact["timing_observation"]["command_durations_s"]["detect"] == 0.1
+    assert artifact["timing_observation"]["prior_observed_output_sha256"] == "prior-output-hash"
     assert "SPI Flash only" in artifact["timing_observation"]["readback_reason"]
     assert "no physical Pin_in/Pin_out" in artifact["timing_observation"]["smoke_vector_reason"]
     assert artifact["sampler_claim_allowed"] is False
@@ -265,6 +275,79 @@ def test_exp2984_contact_confirmed_but_readback_and_smoke_io_are_unavailable(
         (loader, "--help"),
         (loader, "-c", "dirtyJtag", "--detect"),
     ]
+
+
+def test_exp2984_live_jtag_contact_uses_prior_idcode_without_claiming_smoke_io(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-HW-080: post-flash contact plus prior IDCODE is board evidence, not IO."""
+    prior_detect = (
+        "COMMAND: /suite/bin/openFPGALoader -c dirtyJtag --detect\n"
+        "RETURNCODE: 0\n"
+        "STDOUT:\n"
+        "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+        "index 0:\n"
+        "\tidcode 0x20000001\n"
+        "\tmanufacturer colognechip\n"
+        "\tfamily GateMate Series\n"
+        "\tmodel  GM1Ax\n"
+        "\tirlength 6\n"
+    )
+    _write_prior_artifacts(tmp_path, detection_transcript_text=prior_detect)
+    loader = str(tmp_path / "suite" / "bin" / "openFPGALoader")
+    results = _tool_results(loader)
+    results[(loader, "-c", "dirtyJtag", "--detect")] = CommandResult(
+        0, "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n", ""
+    )
+    runner, calls = _runner(results)
+
+    artifact = build_artifact(
+        repo_root=tmp_path,
+        run_command=runner,
+        which_func=_which_from({"openFPGALoader": loader}),
+        monotonic=_clock([18.0, 18.1, 18.2, 18.3]),
+    )
+
+    assert artifact["honest_verdict"] == "complete: gatemate_no_readback_no_host_smoke_io"
+    assert artifact["board_detected"] is True
+    assert artifact["board_id"] == "idcode 0x20000001; colognechip; GateMate Series; GM1Ax"
+    assert artifact["readback_attempted"] is False
+    assert artifact["smoke_vector_passed"] is False
+    assert artifact["timing_observation"]["live_board_id"] == ""
+    assert artifact["timing_observation"]["prior_board_id"] == artifact["board_id"]
+    assert artifact["timing_observation"]["board_detection_basis"] == (
+        "live_dirtyjtag_contact_with_prior_gatemate_idcode"
+    )
+    assert calls == [(loader, "-V"), (loader, "--help"), (loader, "-c", "dirtyJtag", "--detect")]
+
+
+def test_exp2984_recovers_prior_idcode_from_all_prior_transcript_locations(
+    tmp_path: Path,
+) -> None:
+    """REQ-HW-080: prior board ID recovery searches all recorded transcript slots."""
+    missing = tmp_path / "missing.txt"
+    no_id = tmp_path / "no_id.txt"
+    direct_id = tmp_path / "direct_id.txt"
+    nested = tmp_path / "nested.txt"
+    no_id.write_text("Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n", encoding="utf-8")
+    direct_id.write_text(
+        "idcode 0x20000001\nmanufacturer colognechip\nfamily GateMate Series\nmodel  GM1Ax\n",
+        encoding="utf-8",
+    )
+    nested.write_text("nested transcript", encoding="utf-8")
+    payload = {
+        "transcript_paths": [str(missing), str(no_id)],
+        "preconditions_checked": [
+            {"transcript_path": str(direct_id), "transcript_paths": [str(nested)]}
+        ],
+    }
+
+    paths = _iter_prior_transcript_paths([payload], tmp_path)
+
+    assert paths == [missing, no_id, direct_id, nested]
+    assert _recover_prior_board_id([payload], tmp_path) == (
+        "idcode 0x20000001; colognechip; GateMate Series; GM1Ax"
+    )
 
 
 def test_exp2984_supported_readback_attempt_hashes_readback_file(tmp_path: Path) -> None:

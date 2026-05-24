@@ -1,12 +1,12 @@
 {
   "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
   "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
-  "board_detected": false,
-  "board_id": "",
-  "duration_s": 0.058082,
-  "expected_smoke_output": "unavailable_board_not_detected",
+  "board_detected": true,
+  "board_id": "idcode 0x20000001; colognechip; GateMate Series; GM1Ax",
+  "duration_s": 0.060325,
+  "expected_smoke_output": "unavailable_no_host_visible_io_path",
   "flash_succeeded": true,
-  "honest_verdict": "blocked_board_not_detected",
+  "honest_verdict": "complete: gatemate_no_readback_no_host_smoke_io",
   "inference_substrate": "physical_gatemate_board",
   "observed_smoke_output": "",
   "readback_attempted": false,
@@ -19,18 +19,20 @@
   "speedup_claim_allowed": false,
   "thermodynamic_claim_allowed": false,
   "timing_observation": {
+    "board_detection_basis": "live_dirtyjtag_contact_with_prior_gatemate_idcode",
     "command_durations_s": {
-      "detect": 0.012184
+      "detect": 0.016655
     },
     "dirtyjtag_contact_detected": true,
-    "failure_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect",
-    "failure_excerpt": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
     "flash_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+    "live_board_id": "",
+    "prior_board_id": "idcode 0x20000001; colognechip; GateMate Series; GM1Ax",
     "prior_exp2972_transcript_sha256": {
       "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/flash.txt": "ddc312d385e4013ce8aa07d959582494d36ee11918c17bade4c09b56350f7a64",
       "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/post_flash_detect.txt": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
       "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2972_gatemate_post_flash_output_hash_v3/pre_flash_detect.txt": "2916bf7f74eaae592e07cb0837352efa53c296bdd45191c829211840128eca55"
     },
+    "prior_observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
     "readback_reason": "openFPGALoader exposes flash dump/verify options, but verify is SPI Flash only; no GateMate SRAM or sampler-output readback command is advertised.",
     "smoke_vector_evidence": "{\"constraints_path\": \"/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf\", \"constraints_sha256\": \"ae31c6010f5dcd5777328ff539839a1812faee3c27de0911b24f0e84ab98bfc9\", \"rtl_path\": \"/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v\", \"rtl_sha256\": \"5e31deaa27e526aeb3e21cfc2950516edd195584f396895b6d30111442d344e1\", \"test_vector_path\": \"/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json\", \"test_vector_sha256\": \"d3b4583f6ddf3ab8f5996a611b96507128c209f3813a488d9a37d5d62df88df4\"}",
     "smoke_vector_reason": "GateMate n=16 CCF assigns no physical Pin_in/Pin_out locations and requires allow-unconstrained; RTL/test-vector ports have no JTAG, UART, GPIO, or host register protocol for observing spin_out.",

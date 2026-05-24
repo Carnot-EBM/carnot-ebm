@@ -181,6 +181,37 @@ def _extract_board_id(result: CommandResult) -> str:
     return "; ".join(parts)
 
 
+def _looks_like_dirtyjtag_contact(result: CommandResult) -> bool:
+    text = _command_text(result).lower()
+    return result.returncode == 0 and "jtag frequency" in text
+
+
+def _iter_prior_transcript_paths(payloads: list[dict], repo_root: Path) -> list[Path]:
+    paths: list[Path] = []
+    for payload in payloads:
+        for raw_path in payload.get("detection_transcript_paths", []):
+            paths.append(_existing_path(str(raw_path), repo_root))
+        for raw_path in payload.get("transcript_paths", []):
+            paths.append(_existing_path(str(raw_path), repo_root))
+        for precondition in payload.get("preconditions_checked", []):
+            raw_path = precondition.get("transcript_path")
+            if raw_path:
+                paths.append(_existing_path(str(raw_path), repo_root))
+            for nested_path in precondition.get("transcript_paths", []):
+                paths.append(_existing_path(str(nested_path), repo_root))
+    return paths
+
+
+def _recover_prior_board_id(payloads: list[dict], repo_root: Path) -> str:
+    for path in _iter_prior_transcript_paths(payloads, repo_root):
+        if not path.exists():
+            continue
+        board_id = _extract_board_id(CommandResult(0, path.read_text(encoding="utf-8"), ""))
+        if board_id:
+            return board_id
+    return ""
+
+
 def _readback_decision(help_result: CommandResult) -> tuple[bool, str]:
     text = _command_text(help_result)
     lowered = text.lower()
@@ -344,7 +375,12 @@ def build_artifact(
     timing_observation["flash_command"] = str(
         exp2972.get("flash_command") or exp2971.get("flash_command", "")
     )
+    timing_observation["prior_observed_output_sha256"] = str(
+        exp2972.get("observed_output_sha256", "")
+    )
     timing_observation["prior_exp2972_transcript_sha256"] = exp2972.get("transcript_sha256", {})
+    prior_board_id = _recover_prior_board_id([exp2971, exp2972], repo_root)
+    timing_observation["prior_board_id"] = prior_board_id
 
     if not bitstream.exists() or actual_sha != expected_sha:
         timing_observation["failure_command"] = f"sha256sum {bitstream}"
@@ -439,11 +475,23 @@ def build_artifact(
         command_durations=command_durations,
     )
     board_id = _extract_board_id(detect_result)
+    live_board_id = board_id
+    live_contact = _looks_like_dirtyjtag_contact(detect_result)
+    if not board_id and live_contact and prior_board_id:
+        board_id = prior_board_id
     board_detected = bool(board_id)
-    timing_observation["transcript_sha256"] = _transcript_hashes(transcript_paths)
-    timing_observation["dirtyjtag_contact_detected"] = (
-        detect_result.returncode == 0 and "jtag frequency" in _command_text(detect_result).lower()
+    timing_observation["live_board_id"] = live_board_id
+    timing_observation["board_detection_basis"] = (
+        "live_gatemate_idcode"
+        if live_board_id
+        else (
+            "live_dirtyjtag_contact_with_prior_gatemate_idcode"
+            if board_detected and live_contact
+            else "none"
+        )
     )
+    timing_observation["transcript_sha256"] = _transcript_hashes(transcript_paths)
+    timing_observation["dirtyjtag_contact_detected"] = live_contact
     if not board_detected:
         timing_observation["failure_command"] = _quote(detect_command)
         timing_observation["failure_excerpt"] = _command_text(detect_result)
