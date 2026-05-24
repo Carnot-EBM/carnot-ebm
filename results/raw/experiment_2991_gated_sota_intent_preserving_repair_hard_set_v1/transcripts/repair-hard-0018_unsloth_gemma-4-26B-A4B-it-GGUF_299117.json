@@ -1,0 +1,10 @@
+{
+  "draft_intent": "Transpose a rectangular matrix where the input is a list of lists and the output must be a list of lists (not a list of tuples).",
+  "final_patch_sha256": "78a187382ed6f9645cbdb4695a4ef55268ea0d29ba124d24a3edeaca821d88a8",
+  "item_id": "repair-hard-0018",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0018\nEntry point: transpose\nExpected behavior: Transpose a rectangular matrix and return rows as lists.\nBaseline candidate:\ndef transpose(matrix):\n    return list(zip(*matrix))\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0018-1, SCENARIO-CODE-2990-repair-hard-0018-3\nFailing assertions:\nassert transpose([[1, 2], [3, 4], [5, 6]]) == [[1, 3, 5], [2, 4, 6]]\nassert transpose([[7]]) == [[7]]\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "raw_response": "\n\n<|channel>thought\n<channel|>```json\n{\n  \"draft_intent\": \"Transpose a rectangular matrix where the input is a list of lists and the output must be a list of lists (not a list of tuples).\",\n  \"final_patch\": \"def transpose(matrix):\\n    return [list(row) for row in zip(*matrix)]\"\n}\n```",
+  "schema_errors": [],
+  "schema_valid": true
+}

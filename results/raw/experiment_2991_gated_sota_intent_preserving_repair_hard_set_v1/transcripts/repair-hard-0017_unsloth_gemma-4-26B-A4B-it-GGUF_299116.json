@@ -1,0 +1,10 @@
+{
+  "draft_intent": "The function should check if a string of parentheses is valid. A valid string must have an equal number of opening and closing parentheses, and at any point while reading the string from left to right, the number of closing parentheses must not exceed the number of opening parentheses.",
+  "final_patch_sha256": "608a07a874aed93513b57e7dedd556e6acb165bed12a926f20f28414e3f08942",
+  "item_id": "repair-hard-0017",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0017\nEntry point: is_valid_parentheses\nExpected behavior: Return True when parentheses are balanced and every prefix is valid.\nBaseline candidate:\ndef is_valid_parentheses(s):\n    return s.count('(') == s.count(')')\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0017-2\nFailing assertions:\nassert is_valid_parentheses(')(') is False\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "raw_response": "\n<|channel>thought\n<channel|>```json\n{\n  \"draft_intent\": \"The function should check if a string of parentheses is valid. A valid string must have an equal number of opening and closing parentheses, and at any point while reading the string from left to right, the number of closing parentheses must not exceed the number of opening parentheses.\",\n  \"final_patch\": \"def is_valid_parentheses(s):\\n    balance = 0\\n    for char in s:\\n        if char == '(':\\n            balance += 1\\n        elif char == ')':\\n            balance -= 1\\n        if balance < 0:\\n            return False\\n    return balance == 0\"\n}\n```",
+  "schema_errors": [],
+  "schema_valid": true
+}

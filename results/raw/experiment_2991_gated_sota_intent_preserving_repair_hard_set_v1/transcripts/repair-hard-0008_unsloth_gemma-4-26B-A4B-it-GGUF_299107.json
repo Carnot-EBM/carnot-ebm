@@ -1,0 +1,10 @@
+{
+  "draft_intent": "...",
+  "final_patch_sha256": "a00c3b59d5e9e2d8ad78e29258e13b5cf4807919ebb5a523c199e8da1cda91b9",
+  "item_id": "repair-hard-0008",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0008\nEntry point: safe_divide\nExpected behavior: Divide a by b, returning default when b is zero.\nBaseline candidate:\ndef safe_divide(a, b, default=None):\n    return a / b\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0008-2\nFailing assertions:\nassert safe_divide(8, 0, default='n/a') == 'n/a'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "raw_response": "\n\n<|channel>thought0008\n- `safe_divide(a, b, default=None)`\n- Goal: Divide `a` by `b`.\n- Constraint: If `b` is zero, return `default`.\n- Baseline: `return a / b` (This fails because it raises `ZeroDivisionError` instead of returning `default`).\n\n- `safe_divide(8, 0, default='n/a')` should return `'n/a'`.\n\n- Check if `b == 0`.\n- If yes, return `default`.\n- If no, return `a / b`.\n\n- `draft_intent`: \"Implement safe division by checking if the divisor is zero and returning a provided default value in that case, otherwise performing the division.\"\n- `final_patch`:\n```python\ndef safe_divide(a, b, default=None):\n    if b == 0:\n        return default\n    return a / b\n```\n\n- Signature preserved? Yes.\n- Intent preserved? Yes.\n- Handles zero divisor? Yes.\n- Returns default? Yes.\n\nWait, let's check if there are any other edge cases. The prompt says \"Divide a by b, returning default when b is zero.\"\nThe baseline `return a / b` is definitely wrong for the requirement.\n\nFinal check of the JSON structure:\n`{\"draft_intent\": \"...\", \"final_patch\": \"...\"}`\n\nOne detail: `a / b`",
+  "schema_errors": [],
+  "schema_valid": true
+}

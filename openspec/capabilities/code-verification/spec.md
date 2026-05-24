@@ -1356,6 +1356,53 @@ fails at least one verifier assertion, every reference solution passes, no
 flaky item remains in the ready set, and the artifact points to replayable
 transcripts for the verifier evidence.
 
+### REQ-CODE-2991: Gated SOTA Intent-Preserving Repair on the Hard Set
+
+The repository shall provide an Exp 2991 rerun harness that applies the
+intent-preserving, trace-aware repair protocol to the Exp 2990 hard-code stress
+manifest using mandated local headline GGUF models. The harness MUST:
+
+- require
+  `results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json` with
+  `sota_headline_ready=true` and
+  `results/experiment_2990_verifier_backed_hard_code_stress_manifest_v1.json`
+  with `hard_code_stress_set_ready=true` before any live repair generation;
+- validate the hard manifest SHA, item count, deterministic tests, baseline
+  failures, and reference-solution passes before selecting repair tasks;
+- call the repo-local SOTA cache helper, accepting only mandated headline GGUF
+  model IDs for headline measurements while keeping tiny legacy models
+  smoke-only;
+- execute baseline verifier tests before LLM repair, then preserve draft
+  intent, runtime trace, failing assertion evidence, final patch, transcript
+  path, candidate patch path, and verifier log path for every generated repair
+  candidate;
+- compute pass@1/pass@k, schema-failure, syntax-failure, verifier
+  false-accept, and trace-coverage deltas against the baseline candidates,
+  keeping small-model smoke evidence separate from headline metrics;
+- set `repair_rerun_clean=true` only when `headline_result=true`,
+  `n_tasks>=20`, at least one mandated headline model produced live results,
+  pass@1 improves, pass@k does not regress, schema and syntax failure rates do
+  not rise, verifier false accepts do not rise, and trace coverage is complete
+  enough for trace-aware repair; and
+- write
+  `results/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1.json`
+  with `repair_rerun_clean`, `headline_result`, `n_tasks`, `model_specs`,
+  `headline_models_used`, `pass_at_1_delta`, `pass_at_k_delta`,
+  `schema_failure_rate_delta`, `syntax_failure_rate_delta`,
+  `verifier_false_accept_delta`, `trace_coverage`, `transcript_paths`,
+  `inference_substrate`, and `honest_verdict`.
+
+### SCENARIO-CODE-2991: Hard-Set Repair Promotion Is Machine-Gated
+
+Given Exp 2989 proves at least one mandated headline GGUF can produce a live
+local transcript and Exp 2990 proves the hard-code stress manifest is ready,
+When Exp 2991 runs equal-budget baseline and intent-preserving repair on the
+hard set,
+Then the artifact reports headline evidence only from actual headline GGUF
+models, records replayable transcripts, patches, verifier logs, and metric
+deltas against the failing baselines, and marks the result clean only when the
+sample-size, pass-rate, schema, syntax, false-accept, and trace gates all pass.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for
@@ -1525,6 +1572,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2964 | Implemented (`python/carnot/eval/sota_dccd_repair_replication.py`) |
 | REQ-CODE-2965 | Implemented (`python/carnot/eval/beaver_style_repair_certificate.py`) |
 | REQ-CODE-2990 | Implemented (`python/carnot/eval/hard_code_stress_manifest.py`) |
+| REQ-CODE-2991 | Implemented (`python/carnot/eval/gated_sota_intent_preserving_repair_hard_set.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

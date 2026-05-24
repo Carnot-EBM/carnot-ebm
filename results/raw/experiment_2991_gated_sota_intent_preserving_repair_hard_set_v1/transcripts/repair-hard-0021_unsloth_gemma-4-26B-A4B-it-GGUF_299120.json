@@ -1,0 +1,12 @@
+{
+  "draft_intent": "",
+  "final_patch_sha256": "be621378a0942460315ecd4a40699ca520c0ef63ed1c0e2499ddd67a50838c24",
+  "item_id": "repair-hard-0021",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0021\nEntry point: anagram_key\nExpected behavior: Return a lowercase sorted alphanumeric key for anagram grouping.\nBaseline candidate:\ndef anagram_key(text):\n    return ''.join(sorted(text))\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0021-1, SCENARIO-CODE-2990-repair-hard-0021-2\nFailing assertions:\nassert anagram_key('Dormitory!!') == anagram_key('dirty room')\nassert anagram_key('A-b') == 'ab'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "raw_response": " old-code-style: old-code-style: old-1.0.0\n\nold-code-style: old-1.0.0\n\n```python\ndef anagram_key(text):\n    return ''.join(sorted(text))\n```\n\n```python\ndef anagram_key(text):\n    return ''.join(sorted(text.lower().replace(' ', '').replace('!', '').replace('-', '').replace('?', '').replace('.', '').replace('?', '').replace('!', '').replace('')))\n```\n```python\nimport re\nimport string\n\ndef anagram_key(text):\n        return ''.join(sorted(re.sub(r'[^a-z0-9]', '', text.lower())))\n```python\nimport re\n\ndef anagram_key(text):\n    return ''.join(sorted(re.sub(r'[^a-z0-9]', '', text.lower())))\n```python\nimport re\n\ndef anagram_key(text):\n    return ''.join(sorted(re.sub(r'[^a-z0-9]', '', text.lower())))\n```python\n\n```python\nimport re\n\ndef anagram_key(text):\n    return ''.join(sorted(re.sub(r'[^a-z0-9]', '', text.lower())))\n```python\n```python\nimport re\n\ndef anagram_key(text):\n    return ''.join(sorted(re.sub(r'[^a-z0-9]',",
+  "schema_errors": [
+    "no JSON object found"
+  ],
+  "schema_valid": false
+}
