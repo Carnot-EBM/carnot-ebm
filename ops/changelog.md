@@ -7294,3 +7294,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: EqR fixed-point energy diagnostic (✅ Complete) — honest_verdict=ready: fixed-point diagnostic over cached validator trajectories complete; results/experiment_3006_eqr_fixed_point_energy_diagnostic_v1.json
 - 2026-05-24: FR-11 attractor trace-memory stability (✅ Complete) — honest_verdict=ready: trace_memory_stability_ready; results/experiment_3007_fr11_attractor_trace_memory_stability_v1.json
 - 2026-05-24: GateMate host-visible IO transport v2 (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_3008_gatemate_host_visible_io_transport_v2.json
+- 2026-05-24: GateMate host-visible IO transport v2 (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_3008_gatemate_host_visible_io_transport_v2.json
