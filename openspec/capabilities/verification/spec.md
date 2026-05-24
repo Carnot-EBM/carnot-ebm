@@ -427,6 +427,64 @@ gate clears.
 |---|---|---|
 | REQ-VERIFY-3005 | Implemented (`python/carnot/eval/solver_to_validator_tree_expansion_v1.py`) | Implemented (`tests/python/test_experiment_3005_solver_to_validator_tree_expansion.py`) |
 
+### REQ-VERIFY-3017: NSVIF Instruction Validator-Tree Expansion
+
+The repository shall provide a deterministic Exp 3017 instruction-following
+validator-tree expansion harness that extends the Exp 3005 exact-check corpus
+from solver/formalization items into at least 20 small instruction-following
+items and writes
+`results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json`.
+
+The accepted instruction items shall cover required output fields, forbidden
+tokens, ordering constraints, numeric bounds, simple string transformations,
+Z3-checkable integer relations, Python AST constraints, and executable
+runtime invariants. Each accepted item shall have an inspectable validator
+tree. Authoritative validator nodes MUST use executable local authority such
+as runtime JSON parsing, string checks, Python AST parsing, Python runtime
+execution, or Z3 solver replay. Any semantic-only node MUST be marked
+non-authoritative and MUST NOT decide acceptance.
+
+The harness shall execute every accepted validator tree against a known-good
+candidate and a known-bad candidate, save replayable runtime and Z3 transcripts
+with SHA-256 hashes, and write a JSONL validator manifest. Ambiguous
+instructions, nondeterministic validators, and LLM-only labels shall be
+rejected and reported rather than included as verifier authority. LLM
+self-judgment MUST NOT be used as verifier authority.
+
+The terminal artifact MUST include `instruction_validator_tree_ready`,
+`validator_manifest_path`, `n_instruction_items`, `n_validator_trees`,
+`exact_check_coverage`, `all_authoritative_nodes_exact_checked`,
+`z3_transcript_paths`, `runtime_transcript_paths`, `rejected_items`,
+`llm_judge_used`, and `honest_verdict`.
+
+`instruction_validator_tree_ready` shall be true only when at least 20
+instruction items are accepted, every accepted item has exactly one validator
+tree, all authoritative nodes execute exact local checks, every known-good
+candidate is accepted, every known-bad candidate is rejected with named
+reasons, transcript paths are present and hashable, rejected invalid items are
+surfaced, `llm_judge_used=false`, and `honest_verdict` starts with a terminal
+success prefix.
+
+### SCENARIO-VERIFY-3017: Instruction Constraints Become Executable Validator Evidence
+
+Given the Exp 3005 validator-tree expansion line is present and the Exp 2994
+prompt-validator protocol preserves exact verifier authority,
+When the Exp 3017 harness runs,
+Then it writes an inspectable manifest for at least 20 instruction-following
+items spanning required fields, forbidden tokens, ordering, numeric bounds,
+transformations, Z3 relations, AST checks, and runtime invariants; executes
+each tree through exact authoritative nodes; records runtime and Z3 transcript
+hashes; marks semantic-only labels as non-authoritative; rejects ambiguous,
+nondeterministic, or LLM-only candidates; and writes the terminal artifact with
+`instruction_validator_tree_ready=true` only when every exact authority gate
+clears.
+
+## Implementation Status (REQ-VERIFY-3017)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3017 | Implemented (`python/carnot/eval/nsvif_instruction_validator_tree_expansion_v1.py`) | Implemented (`tests/python/test_experiment_3017_nsvif_instruction_validator_tree_expansion.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
