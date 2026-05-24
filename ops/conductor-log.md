@@ -6112,3 +6112,4 @@ web search:
 | 2026-05-24 02:32 UTC | PolarFire 1000-Clause Scorer Hash v2 | OK | 81 passed in 3.77s |
 | 2026-05-24 02:50 UTC | NL-to-Z3 Execution Repair Mini v2 | OK | 81 passed in 3.41s |
 | 2026-05-24 03:07 UTC | Cross-Corpus Matrix v12 | OK | 81 passed in 3.61s |
+| 2026-05-24 03:22 UTC | Capstone .278 | OK | 81 passed in 3.57s |
