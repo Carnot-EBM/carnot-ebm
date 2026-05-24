@@ -515,5 +515,18 @@
     "results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json": "e74653bd516c1113aee02d0cf9377fe37ce01554570dd84568c2b0eb10c11bad",
     "results/experiment_2997_ssqa_dual_bram_rtl_pnr_resource_report_v1.json": null,
     "results/experiment_2998_cross_corpus_matrix_v15.json": "2d62f55f76404f6b860b68d972ceeb9b09fbac5cd8594c56db0449da3010261d"
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.006655 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }

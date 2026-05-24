@@ -6172,3 +6172,5 @@ web search: site |
 | 2026-05-24 17:29 UTC | SSQA dual-BRAM RTL PnR resource report | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2996-gatemate-host-visible-readback-smoke |
 | 2026-05-24 17:43 UTC | Cross-corpus matrix v15 | OK | 81 passed in 3.93s |
 | 2026-05-24 17:45 UTC | SSQA dual-BRAM RTL PnR resource report | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2996-gatemate-host-visible-readback-smoke |
+| 2026-05-24 17:58 UTC | Milestone .281 capstone | OK | 81 passed in 3.58s |
+| 2026-05-24 18:00 UTC | SSQA dual-BRAM RTL PnR resource report | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2996-gatemate-host-visible-readback-smoke |
