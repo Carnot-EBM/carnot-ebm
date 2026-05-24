@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-05-24 (Milestone 2026.05.280 Research Planning)
+
+- [outer-loop] Planned milestone 2026.05.280 as "Intent-Preserving Repair + Solver Feedback + Readback-Grounded Self-Learning" after the operator confirmed all `.279` tasks completed. Used `results/experiment_2974_capstone_v279.json` as the authoritative closeout: `.279` completed but remained `paper_ready=false` because DCCD repair regressed, solver formalization remained below gates, FR-11 independent-metric evidence was flagged, and GateMate had flash/contact evidence without readback or a passed smoke vector.
+- [outer-loop] Updated `research-references.md` before experiment design with a post-`.279` sweep covering AdapTrack, TraceCoder, Thinking Before Constraining, constrained-decoding diffusion LLMs, imperfect process verifier work, ARM-as-EBM citation-watch follow-ons, false-first-step/first-token telemetry, and FPGA SSQA/readback planning.
+- [outer-loop] Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` for milestone `.280` with the `.279` findings, three biggest PRD gaps, new research integration, architecture diagram, four-phase plan, dependency graph, hardware requirements, acceptance criteria, failed-rerun compliance, and claim-boundary exclusions.
+- [outer-loop] Created `research-roadmap-next.yaml` with 13 conductor tasks (`exp2975`-`exp2987`): archive/activate, DCCD AdapTrack/TraceCoder protocol, gated SOTA intent-preserving repair, first-step telemetry, solver-feedback/MCS frontier, gated SOTA solver formalization, Interwhen monitor promotion, FR-11 independent metric gate, trace-to-skill memory pilot, GateMate readback/smoke, SSQA register-map projection, matrix v14, and capstone.
+- [outer-loop] Validation passed: YAML parse OK; prompt section/end-line checks OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml` OK; `scripts/exclusion_manifest_lint.py research-roadmap-next.yaml` OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` returned `all_checks_pass` with 5 gate checks and 0 failures; diff whitespace check clean for the planning files. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-22 (Milestone 2026.05.273 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.273 as "Clean Telemetry + Fast/Slow Memory + Constraint Benchmark Expansion" after the operator confirmed all `.272` tasks completed. Used `results/experiment_2884_capstone_v272.json` as the authoritative closeout: `.272` is paper-ready but still fences off the SOTA micro-panel, FR-11 RecMem scale-up, THRML sampler portability, MBPP/HumanEval pilot rows, and missing TruthfulQA evidence.

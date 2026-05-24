@@ -1,0 +1,1063 @@
+milestone: "2026.05.280"
+milestone_title: "Intent-Preserving Repair + Solver Feedback + Readback-Grounded Self-Learning"
+milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
+
+# Pre-staged 2026-05-24 by outer-loop planning.
+#
+# Centerpiece: .279 completed all work but kept paper_ready=false. The largest
+# unresolved gaps are harmful structured code repair, weak solver formalization,
+# flagged FR-11 evidence, and GateMate flash without readback/smoke-vector proof.
+# .280 tests intent-preserving repair, solver feedback, independent self-learning
+# metrics, and bounded hardware readback/smoke evidence.
+
+tasks:
+  - id: exp2975
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2975_archive_v279_activate_v280.json"
+    title: "Archive .279 + Activate .280"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 20
+    estimated_wall_time_min: 10
+    track: admin
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2962
+        verdict: "complete: archive_ready=true; archived_milestone=2026.05.278; activated_milestone=2026.05.279"
+        addressed_by: "Recurring archive/activation task with new source milestone .279 and target milestone .280."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. Milestone 2026.05.279 has completed.
+        Its terminal capstone is results/experiment_2974_capstone_v279.json.
+        This task performs standard archive/activation bookkeeping for
+        2026.05.280 without modifying research-roadmap.yaml.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-roadmap.yaml
+        - research-roadmap-next.yaml
+        - results/experiment_2974_capstone_v279.json
+        - research-complete.yaml
+        - ops/status.md
+        - ops/changelog.md
+
+      TASK:
+        Archive .279 into research-complete.yaml if it is not already archived,
+        confirm the next-roadmap milestone is 2026.05.280, and write the
+        activation artifact.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: results/experiment_2974_capstone_v279.json exists and
+           research-roadmap-next.yaml milestone equals 2026.05.280.
+        1. Read the .279 capstone and summarize paper_ready, headline_outcome,
+           clean/flagged/blocked/missing counts, pilot-only rows, and next gaps.
+        2. Append .279 completion metadata to research-complete.yaml only if
+           missing; do not duplicate an existing .279 milestone entry.
+        3. Verify research-roadmap.yaml remains untouched and current.
+        4. Write the deliverable JSON.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        archived_milestone: "2026.05.279"
+        activated_milestone: "2026.05.280"
+        capstone_source: "results/experiment_2974_capstone_v279.json"
+        paper_ready_from_capstone: bool
+        headline_outcome_from_capstone: str
+        clean_artifacts_from_capstone: list
+        flagged_artifacts_from_capstone: list
+        blocked_artifacts_from_capstone: list
+        missing_artifacts_from_capstone: list
+        pilot_only_artifacts_from_capstone: list
+        archive_ready: bool
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2976
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json"
+    title: "DCCD AdapTrack + TraceCoder Repair Protocol v1"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 45
+    estimated_wall_time_min: 45
+    track: code_generation
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2963
+        verdict: "complete: DCCD structured-repair protocol ready; no pass-rate improvement claimed"
+        addressed_by: "The protocol is extended with intent-preserving backtracking and execution-trace evidence instead of schema-only DCCD."
+        retire_if_same_verdict: true
+      - experiment_id: exp2964
+        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
+        addressed_by: "The failed replication is converted into a diagnostic protocol that directly targets schema/syntax regression and pass-rate damage."
+        retire_if_same_verdict: true
+      - experiment_id: exp2952
+        verdict: "complete: taxonomy-guided repair delta passed; pass@1_delta=0.25, syntax_failure_rate_delta=-0.0625, false_accept_delta=-0.125"
+        addressed_by: "The prior small-N positive result is treated as seed evidence only; the new protocol pre-registers n>=20 and trace-backed gates."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. .279 proved DCCD infrastructure but
+        the live repair rerun regressed. The post-.279 research sweep found
+        AdapTrack, TraceCoder, Thinking Before Constraining, and backtracking
+        constrained-decoding ideas that directly address this failure mode.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (SOTA Local Models; Failed-Experiment Rerun Discipline)
+        - CODEX.md
+        - research-program.md (Continuous Self-Learning)
+        - research-references.md (2026-05-24 Post-.279 Planning Sweep)
+        - scripts/experiment_template.py (cached_sota_pair docstring)
+        - results/experiment_2963_dccd_repair_protocol_manifest_v1.json
+        - results/experiment_2964_sota_dccd_repair_replication_v1.json
+        - results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json
+        - results/experiment_2953_code_verifier_threshold_policy_v1.json
+
+      TASK:
+        Build a pre-registered intent-preserving code-repair protocol for the
+        downstream SOTA rerun. It must keep the model's draft intent, apply
+        constraints with repair/backtracking, collect runtime traces, and define
+        deterministic acceptance gates that prevent the .279 schema-collapse
+        failure from being mistaken for progress.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: .279 repair artifacts exist and research-references.md
+           contains the post-.279 sweep entries.
+        1. Compare exp2963 and exp2964 to identify which DCCD fields correlated
+           with schema failures, syntax failures, false accepts, and pass-rate
+           regression.
+        2. Design a repair manifest schema with draft_intent, constrained_patch,
+           backtracking_steps, execution_trace, verifier_result,
+           schema_result, syntax_result, false_accept_audit, and acceptance_reason.
+        3. Define a downstream evaluation plan over at least 20 repair tasks:
+           baseline, schema-only DCCD, intent-preserving DCCD, and trace-aware
+           repair.
+        4. Include mandatory MODEL_SPECS guidance: call cached_sota_pair() first
+           and require at least one of unsloth/Qwen3.6-35B-A3B-GGUF,
+           unsloth/gemma-4-31B-it-GGUF, or
+           unsloth/gemma-4-26B-A4B-it-GGUF for headline results. Legacy small
+           models are CPU smoke tests only.
+        5. Write the protocol artifact with clear pass/fail gates for exp2977.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        intent_preserving_repair_protocol_ready: bool
+        trace_execution_plan_ready: bool
+        downstream_min_tasks: int
+        required_model_specs: list
+        mandatory_headline_model_ids: list
+        legacy_model_policy: str
+        baseline_conditions: list
+        repair_manifest_schema: dict
+        acceptance_gates: dict
+        schema_regression_guard: dict
+        syntax_regression_guard: dict
+        false_accept_guard: dict
+        prior_failure_addressed: bool
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2977
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2977_sota_intent_preserving_code_repair_v1.json"
+    title: "Gated SOTA Intent-Preserving Code Repair Rerun v1"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 150
+    track: code_generation
+    inference_substrate: live_llm_inference
+    requires_gpu: true
+    gated_on:
+      - upstream: exp2976
+        artifact_field: intent_preserving_repair_protocol_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2964
+        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
+        addressed_by: "This rerun replaces schema-only DCCD with intent-preserving and trace-aware repair, using the exp2976 protocol and explicit regression guards."
+        retire_if_same_verdict: true
+      - experiment_id: exp2952
+        verdict: "complete: taxonomy-guided repair delta passed; pass@1_delta=0.25, syntax_failure_rate_delta=-0.0625, false_accept_delta=-0.125"
+        addressed_by: "The previous positive row was small-N; this task requires n>=20 and all mandated SOTA local GGUF headline checks."
+        retire_if_same_verdict: true
+      - experiment_id: exp2963
+        verdict: "complete: DCCD structured-repair protocol ready; no pass-rate improvement claimed"
+        addressed_by: "This is the live execution of the revised protocol, not another manifest-only task."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. exp2976 must have produced an
+        intent-preserving, trace-aware repair protocol. This task is the live
+        SOTA local GGUF rerun that determines whether repair is now actually
+        useful instead of merely schema-valid.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (SOTA Local Models)
+        - CODEX.md
+        - scripts/experiment_template.py (cached_sota_pair pattern)
+        - carnot/inference/sota_models.py
+        - results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json
+        - results/experiment_2964_sota_dccd_repair_replication_v1.json
+        - results/experiment_2953_code_verifier_threshold_policy_v1.json
+        - ops/exclusion_manifest.yaml
+
+      TASK:
+        Execute the exp2976 protocol on at least 20 code-repair tasks with real
+        local SOTA GGUF inference. Compare baseline, schema-only DCCD, and
+        intent-preserving trace-aware repair. The result is clean only if pass
+        rate improves and schema/syntax/false-accept metrics do not regress.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2976.intent_preserving_repair_protocol_ready is
+           true; Python env is available; do not use network-only models.
+        1. Use cached_sota_pair() first. MODEL_SPECS must include at least one
+           of these headline IDs if available:
+           unsloth/Qwen3.6-35B-A3B-GGUF,
+           unsloth/gemma-4-31B-it-GGUF,
+           unsloth/gemma-4-26B-A4B-it-GGUF.
+        2. If cached_sota_pair() returns None, run only a CPU smoke test with
+           legacy tiny models, set headline_result=false, and make the verdict
+           blocked or pilot-only rather than clean.
+        3. Build or reuse the n>=20 repair task set from prior repair artifacts.
+        4. Run baseline, schema-only DCCD, and intent-preserving trace-aware
+           repair conditions. Store raw candidates, traces, verifier outputs,
+           and schema/syntax diagnostics.
+        5. Compute pass@1_delta, pass@k_delta, schema_failure_rate_delta,
+           syntax_failure_rate_delta, false_accept_delta, trace_coverage, and
+           per-model breakdowns.
+        6. Set repair_rerun_clean=true only if n_tasks>=20, pass@1_delta>0,
+           pass@k_delta>=0, schema_failure_rate_delta<=0,
+           syntax_failure_rate_delta<=0, false_accept_delta<=0, and
+           runtime_trace_coverage>=0.8.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        repair_rerun_clean: bool
+        headline_result: bool
+        n_tasks: int
+        models_used: list
+        model_specs: list
+        mandatory_headline_model_ids: list
+        legacy_model_used_only_for_smoke: bool
+        baseline_pass_at_1: float
+        schema_only_pass_at_1: float
+        intent_preserving_pass_at_1: float
+        pass_at_1_delta: float
+        pass_at_k_delta: float
+        schema_failure_rate_delta: float
+        syntax_failure_rate_delta: float
+        false_accept_delta: float
+        runtime_trace_coverage: float
+        per_model_metrics: dict
+        failures_by_category: dict
+        inference_substrate: "live_llm_inference"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2978
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2978_first_step_semantic_energy_repair_telemetry_v1.json"
+    title: "First-Step + Semantic-Energy Repair Telemetry Panel v1"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 75
+    track: verification
+    inference_substrate: mixed_artifact_and_optional_live_llm
+    requires_gpu: true
+    prior_failures:
+      - experiment_id: exp2968
+        verdict: "complete: deterministic partial monitor harness ready"
+        addressed_by: "This task adds first-step and semantic-energy telemetry as candidate triage, not a full monitor or verifier claim."
+        retire_if_same_verdict: true
+      - experiment_id: exp2967
+        verdict: "complete: local SOTA DCCD formalizations did not clear .278 delta gate"
+        addressed_by: "The telemetry targets early/prefix failure localization that may explain unparseable formalization and repair candidates."
+        retire_if_same_verdict: true
+      - experiment_id: exp2964
+        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
+        addressed_by: "The panel diagnoses where failed repair candidates first diverge instead of retrying the same repair method."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. The research sweep found false-first-
+        step and first-token telemetry work that may help triage candidates, but
+        Carnot must not promote these signals into verifiers without local
+        calibration.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-references.md (false first steps; first-token telemetry)
+        - results/experiment_2964_sota_dccd_repair_replication_v1.json
+        - results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json
+        - results/experiment_2968_interwhen_partial_monitor_harness_v1.json
+        - results/experiment_2977_sota_intent_preserving_code_repair_v1.json (if present)
+        - carnot/inference/sota_models.py
+
+      TASK:
+        Build a telemetry panel that measures whether early-prefix, first-step,
+        logprob/proxy confidence, or semantic-energy features predict downstream
+        repair or formalization failure. The output is diagnostic triage only.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: At least one repair or solver candidate artifact from
+           .279 or .280 exists. If exp2977 is absent, use exp2964 and exp2967.
+        1. Extract candidate-level rows with final verifier outcome, schema
+           status, syntax status, and failure category.
+        2. If local model traces/logprobs are available, compute first-token,
+           first-step, and prefix confidence features. If not, record
+           logprob_unavailable=true and use artifact-derived proxy telemetry.
+        3. Compute simple calibration metrics: AUROC or rank correlation where
+           valid, plus false-positive/false-negative examples.
+        4. Include MODEL_SPECS and models_used if fresh live inference is needed;
+           headline live inference must include at least one mandated GGUF from
+           CLAUDE.md or be marked pilot-only.
+        5. Set no_headline_verifier_claim=true and do not gate acceptance on
+           telemetry alone.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        telemetry_panel_ready: bool
+        first_step_signal_usable: bool
+        semantic_energy_signal_usable: bool
+        logprob_unavailable: bool
+        no_headline_verifier_claim: true
+        models_used: list
+        mandatory_headline_model_ids: list
+        candidate_rows: int
+        calibration_metrics: dict
+        triage_examples: list
+        failure_modes_explained: dict
+        inference_substrate: "mixed_artifact_and_optional_live_llm"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2979
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2979_solver_feedback_mcs_frontier_v1.json"
+    title: "Solver Feedback Schema + MCS/MUS Frontier Upgrade v1"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 45
+    estimated_wall_time_min: 60
+    track: solver_reasoning
+    inference_substrate: deterministic_z3_and_artifact_generation
+    prior_failures:
+      - experiment_id: exp2966
+        verdict: "complete: exact skill-labeled logic frontier materialized"
+        addressed_by: "The frontier is extended with solver feedback objects and minimal-conflict diagnostics instead of only reference labels."
+        retire_if_same_verdict: true
+      - experiment_id: exp2967
+        verdict: "complete: local SOTA DCCD formalizations did not clear .278 delta gate"
+        addressed_by: "The new frontier is designed to feed parse and solver errors back into the next formalization rerun."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. .279 improved solver formalization
+        over .278, but parseability and solver-verified accuracy remained too
+        low. The next step is a deterministic feedback frontier, not another
+        free-form prompt.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-references.md (solver feedback, process-verifier caution)
+        - results/experiment_2966_logic_frontier_materializer_v1.json
+        - results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json
+        - results/experiment_2968_interwhen_partial_monitor_harness_v1.json
+        - openspec/capabilities/verification/spec.md
+        - carnot/verification
+
+      TASK:
+        Add a solver-feedback schema and MCS/MUS-style diagnostic frontier over
+        the existing exact-verifier tasks. The artifact should give exp2980
+        concrete feedback fields for parse errors, unsat cores, missing
+        constraints, counterexamples, and skill-specific corrections.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: Python z3 is importable or the artifact is blocked
+           with exact environment diagnostics.
+        1. Load exp2966 and exp2967 to identify parse, execution, and
+           solver-wrong failure categories.
+        2. Define a solver_feedback object with parse_error, z3_exception,
+           model_counterexample, unsat_core_or_mus, minimal_correction_hint,
+           skill_label, and accepted_reference_formalization.
+        3. Build or update a small deterministic frontier fixture with reference
+           formalizations and feedback examples per skill.
+        4. Run Z3 over the reference set and report execution rate and verified
+           reference accuracy.
+        5. Write the artifact and set mcs_feedback_schema_ready=true only if the
+           feedback schema and deterministic fixture can be consumed by exp2980.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        mcs_feedback_schema_ready: bool
+        frontier_upgrade_ready: bool
+        reference_z3_execution_rate: float
+        reference_solver_verified_accuracy: float
+        feedback_schema: dict
+        frontier_items: list
+        failure_categories_from_exp2967: dict
+        mcs_mus_examples: list
+        exp2980_input_path: str
+        inference_substrate: "deterministic_z3_and_artifact_generation"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2980
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2980_sota_solver_formalization_feedback_v2.json"
+    title: "Gated SOTA Solver Formalization with Feedback v2"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 150
+    track: solver_reasoning
+    inference_substrate: live_llm_inference_plus_z3
+    requires_gpu: true
+    gated_on:
+      - upstream: exp2979
+        artifact_field: mcs_feedback_schema_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2967
+        verdict: "complete: local SOTA DCCD formalizations did not clear .278 delta gate"
+        addressed_by: "This rerun adds deterministic solver feedback, MCS/MUS diagnostics, and stricter parse/accuracy gates."
+        retire_if_same_verdict: true
+      - experiment_id: exp2966
+        verdict: "complete: exact skill-labeled logic frontier materialized"
+        addressed_by: "The exact frontier is now used as feedback input to live local GGUF proposals, not just as a materialized corpus."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. exp2979 must have produced a
+        feedback-ready solver frontier. This task reruns local SOTA NL-to-Z3
+        formalization with deterministic Z3 authority and explicit feedback
+        fields.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (SOTA Local Models)
+        - CODEX.md
+        - scripts/experiment_template.py (cached_sota_pair pattern)
+        - carnot/inference/sota_models.py
+        - results/experiment_2979_solver_feedback_mcs_frontier_v1.json
+        - results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json
+        - results/experiment_2966_logic_frontier_materializer_v1.json
+
+      TASK:
+        Run SOTA local GGUF formalization with feedback-aware prompting and Z3
+        verification. The result is clean only if parseability, Z3 execution,
+        solver-verified accuracy, and answer accuracy all clear the .280 gates.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2979.mcs_feedback_schema_ready is true and Z3 is
+           available.
+        1. Use cached_sota_pair() first. MODEL_SPECS must include at least one
+           of: unsloth/Qwen3.6-35B-A3B-GGUF,
+           unsloth/gemma-4-31B-it-GGUF,
+           unsloth/gemma-4-26B-A4B-it-GGUF for headline results.
+        2. If only legacy tiny models run, mark headline_result=false and do not
+           claim a clean solver row.
+        3. For each frontier item, generate formalization proposals, parse them,
+           run Z3, record feedback objects, and optionally run one repair pass
+           using deterministic feedback.
+        4. Compute parseability_rate, z3_execution_rate,
+           solver_verified_accuracy, answer_accuracy, tautology_flag_rate, and
+           per-skill metrics.
+        5. Set formalization_feedback_clean=true only if parseability_rate>=0.50,
+           z3_execution_rate>=0.50, solver_verified_accuracy>=0.40,
+           answer_accuracy>=0.40, and tautology_flag_rate==0.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        formalization_feedback_clean: bool
+        headline_result: bool
+        n_items: int
+        models_used: list
+        model_specs: list
+        mandatory_headline_model_ids: list
+        parseability_rate: float
+        z3_execution_rate: float
+        solver_verified_accuracy: float
+        answer_accuracy: float
+        tautology_flag_rate: float
+        per_skill_metrics: dict
+        feedback_repair_delta: float
+        failure_categories: dict
+        solver_feedback_examples: list
+        inference_substrate: "live_llm_inference_plus_z3"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2981
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2981_interwhen_partial_monitor_promotion_v2.json"
+    title: "Interwhen Partial Monitor Promotion v2"
+    priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 45
+    estimated_wall_time_min: 60
+    track: verification
+    inference_substrate: deterministic_monitor_harness
+    gated_on:
+      - upstream: exp2979
+        artifact_field: frontier_upgrade_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2968
+        verdict: "complete: deterministic partial monitor harness ready"
+        addressed_by: "This task adds promotion gates, event coverage, and failure-localization measurements to move beyond a harness-only artifact."
+        retire_if_same_verdict: true
+      - experiment_id: exp2967
+        verdict: "complete: local SOTA DCCD formalizations did not clear .278 delta gate"
+        addressed_by: "The monitor now localizes parse/solver failures against the upgraded feedback frontier."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. .279 produced a deterministic
+        Interwhen-style partial monitor harness, but it stayed pilot-only.
+        Promotion requires measured coverage and failure localization.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - results/experiment_2968_interwhen_partial_monitor_harness_v1.json
+        - results/experiment_2979_solver_feedback_mcs_frontier_v1.json
+        - results/experiment_2980_sota_solver_formalization_feedback_v2.json (if present)
+        - carnot/verification
+        - tests
+
+      TASK:
+        Extend the partial monitor harness with promotion metrics for code and
+        solver outputs. It may be promoted only if coverage and localization are
+        measured. It must explicitly avoid claiming full streaming verification
+        unless the artifact supports that claim.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2979.frontier_upgrade_ready is true.
+        1. Load the exp2968 monitor harness and the exp2979 feedback frontier.
+        2. Define event types for partial code and solver outputs: draft intent,
+           constraint emission, parse boundary, verifier call, counterexample,
+           and repair step.
+        3. Run deterministic monitor fixtures and compute event coverage,
+           prefix_failure_localization_rate, monitor_latency_ms, and
+           false_alarm_rate.
+        4. If exp2980 is present, evaluate the monitor on actual solver
+           candidate traces; otherwise use deterministic fixtures only.
+        5. Set partial_monitor_promoted=true only if coverage is broad enough
+           and false_alarm_rate is bounded. Keep full_streaming_verification_claim=false
+           unless all required streams are actually monitored.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        partial_monitor_promoted: bool
+        full_streaming_verification_claim: false
+        event_types: list
+        coverage_by_event: dict
+        prefix_failure_localization_rate: float
+        monitor_latency_ms: dict
+        false_alarm_rate: float
+        fixture_count: int
+        live_trace_count: int
+        promotion_gates: dict
+        inference_substrate: "deterministic_monitor_harness"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2982
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2982_fr11_independent_metric_utility_gate_v4.json"
+    title: "FR-11 Independent Metric Continuous Self-Learning Gate v4"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 90
+    track: continuous_self_learning
+    inference_substrate: aggregation_and_deterministic_replay
+    continuous_self_learning_task: true
+    prior_failures:
+      - experiment_id: exp2969
+        verdict: "complete: non_tautological_self_learning_ready"
+        addressed_by: "The new gate separates update-selection utility from independent held-out metrics and requires negative-control and forgetting checks."
+        retire_if_same_verdict: true
+      - experiment_id: exp2974
+        verdict: "complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0"
+        addressed_by: "The capstone flagged FR-11 despite non-tautological utility; this task targets the specific independent-metric gap."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. research-program.md requires at
+        least one continuous self-learning experiment per milestone. .279 made
+        FR-11 non-tautological but not headline-clean because independent metric
+        evidence was still weak.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-program.md (Continuous Self-Learning)
+        - _bmad/prd.md (FR-11)
+        - results/experiment_2969_fr11_non_tautological_utility_gate_v3.json
+        - results/experiment_2970_kan_forgetting_guard_v1.json
+        - results/experiment_2973_cross_corpus_matrix_v13.json
+        - ops/exclusion_manifest.yaml
+
+      TASK:
+        Rerun the FR-11 continuous self-learning gate with independent metrics.
+        The update-selection utility must be distinct from the reported held-out
+        improvement metrics. Negative controls, random replay, frozen baseline,
+        and forgetting checks are mandatory.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2969 and exp2970 artifacts exist.
+        1. Identify the update-selection metric used in exp2969 and define at
+           least three independent metrics, such as pass@1, solver-verified
+           accuracy, schema failure, and verifier false-accept rate.
+        2. Compare frozen baseline, random replay, previous FR-11 replay, and a
+           new independent-metric replay policy.
+        3. Run or replay deterministic held-out evaluations with reset controls.
+        4. Check negative controls and forgetting guards. Reuse the KAN guard
+           only as bounded memory evidence; do not overclaim KAN acceleration.
+        5. Set fr11_independent_self_learning_ready=true only if held-out
+           independent metrics improve over random replay, negative controls do
+           not improve, and forgetting guards pass.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        continuous_self_learning_task: true
+        fr11_independent_metrics_evaluated: bool
+        fr11_independent_self_learning_ready: bool
+        update_selection_metric: str
+        independent_metrics: list
+        frozen_baseline_metrics: dict
+        random_replay_metrics: dict
+        prior_fr11_metrics: dict
+        new_replay_metrics: dict
+        heldout_independent_delta_vs_random: dict
+        negative_control_delta: dict
+        forgetting_guard_passed: bool
+        leakage_audit: dict
+        no_identical_metric_flag: bool
+        inference_substrate: "aggregation_and_deterministic_replay"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2983
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2983_trace_to_skill_repair_memory_pilot_v1.json"
+    title: "Trace-to-Skill Repair Memory Pilot v1"
+    priority: high
+    max_turns: 50
+    estimated_wall_time_min: 90
+    track: continuous_self_learning
+    inference_substrate: artifact_replay_and_optional_live_llm
+    continuous_self_learning_task: true
+    gated_on:
+      - upstream: exp2976
+        artifact_field: trace_execution_plan_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2964
+        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
+        addressed_by: "Failed execution traces are converted into reusable skill memories rather than rerunning the same repair prompt."
+        retire_if_same_verdict: true
+      - experiment_id: exp2969
+        verdict: "complete: non_tautological_self_learning_ready"
+        addressed_by: "This pilot tests a different FR-11 mechanism: trace-derived skill memory with independent held-out utility."
+        retire_if_same_verdict: true
+      - experiment_id: exp2968
+        verdict: "complete: deterministic partial monitor harness ready"
+        addressed_by: "Partial monitor events become memory candidates only after trace-field validation."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. TraceCoder-style execution evidence
+        gives Carnot a possible self-learning substrate: failed traces can become
+        reusable skill memories. This is a pilot and must keep claim boundaries.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (SOTA Local Models; FR-11 discipline)
+        - CODEX.md
+        - research-program.md (Continuous Self-Learning)
+        - results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json
+        - results/experiment_2977_sota_intent_preserving_code_repair_v1.json (if present)
+        - results/experiment_2964_sota_dccd_repair_replication_v1.json
+        - results/experiment_2969_fr11_non_tautological_utility_gate_v3.json
+        - results/experiment_2968_interwhen_partial_monitor_harness_v1.json
+
+      TASK:
+        Convert execution traces and partial-monitor events into candidate skill
+        memories, then test whether replaying those memories improves held-out
+        repair or formalization tasks without leaking labels or reusing the same
+        utility metric as the update selector.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2976.trace_execution_plan_ready is true. If exp2977
+           is absent, use exp2964 traces and mark pilot_source=.279.
+        1. Define a trace_to_skill_memory schema with failure_signature,
+           verifier_feedback, minimal_fix_pattern, applicability_conditions,
+           and forbidden_label_leakage.
+        2. Extract skill-memory candidates from failed repair traces and partial
+           monitor events.
+        3. Evaluate frozen/no-memory, random-memory, and trace-memory replay on
+           held-out tasks.
+        4. If fresh live LLM inference is used, MODEL_SPECS must include at
+           least one mandated GGUF for headline results; otherwise mark the
+           artifact as replay-only or pilot-only.
+        5. Set trace_to_skill_memory_ready=true only if the schema is usable and
+           heldout_skill_reuse_delta is positive with no leakage flag.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        continuous_self_learning_task: true
+        trace_to_skill_memory_ready: bool
+        headline_result: bool
+        pilot_source: str
+        models_used: list
+        mandatory_headline_model_ids: list
+        memory_schema: dict
+        extracted_memory_count: int
+        heldout_task_count: int
+        no_memory_metrics: dict
+        random_memory_metrics: dict
+        trace_memory_metrics: dict
+        heldout_skill_reuse_delta: float
+        leakage_flag: bool
+        negative_control_delta: float
+        inference_substrate: "artifact_replay_and_optional_live_llm"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2984
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2984_gatemate_readback_smoke_vector_v4.json"
+    title: "GateMate Readback + Smoke Vector Harness v4"
+    priority: critical
+    model: opus
+    max_turns: 100
+    estimated_wall_time_min: 120
+    track: hardware
+    inference_substrate: physical_gatemate_board
+    requires_hardware: true
+    prior_failures:
+      - experiment_id: exp2972
+        verdict: "complete: gatemate_flash_contact_smoke_no_readback"
+        addressed_by: "This hardware task targets the missing readback and smoke-vector evidence directly, with no sampler or speedup claim allowed without sample-level proof."
+        retire_if_same_verdict: true
+      - experiment_id: exp2974
+        verdict: "complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0"
+        addressed_by: "The capstone identified GateMate no-readback/no-smoke as a remaining gap; this task is scoped only to that gap."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. .279 proved GateMate board contact
+        and flash/output-hash evidence but did not produce readback or a passed
+        smoke vector. This task is hardware integration and should route directly
+        to Opus per CLAUDE.md guidance.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Hardware Task Continuity; Hardware Claim Boundaries)
+        - CODEX.md
+        - research-hardware-wishlist.md
+        - results/experiment_2971_gatemate_flash_preconditions_v2.json
+        - results/experiment_2972_gatemate_post_flash_output_hash_v3.json
+        - openspec/change-proposals/gatemate-hardware-path.md
+        - ops/status.md
+
+      TASK:
+        Attempt to convert GateMate flash contact into readback-backed smoke
+        evidence. Record board detection, tool versions, bitstream hash,
+        readback status, smoke-vector IO, and timing observations if available.
+        Do not claim sampling, speedup, Boltzmann behavior, or thermodynamic
+        computing.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: GateMate A1-EVB-2M is attached or the artifact must
+           honestly block with cable/device/tool diagnostics.
+        1. Read exp2971 and exp2972 to recover board ID, bitstream path/hash,
+           flash command, and output-hash evidence.
+        2. Probe board detection and toolchain state without destructive resets.
+        3. If supported by the installed tools, run readback or equivalent
+           verification and record exact command/output hashes.
+        4. Drive the simplest available smoke vector for the n=16 tile or
+           explain exactly why no IO path is available.
+        5. Set smoke_vector_passed=true only if observed output matches expected
+           smoke-vector output. Set sampler_claim_allowed=false unless there is
+           sample-level evidence and timing.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        board_detected: bool
+        board_id: str
+        tool_versions: dict
+        bitstream_path: str
+        bitstream_sha256: str
+        flash_succeeded: bool
+        readback_supported: bool
+        readback_attempted: bool
+        readback_hash: str
+        smoke_vector_attempted: bool
+        smoke_vector_passed: bool
+        observed_smoke_output: str
+        expected_smoke_output: str
+        timing_observation: dict
+        sampler_claim_allowed: false
+        speedup_claim_allowed: false
+        thermodynamic_claim_allowed: false
+        inference_substrate: "physical_gatemate_board"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2985
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2985_ssqa_dual_bram_register_map_plan_v1.json"
+    title: "SSQA Dual-BRAM Hardware Projection + Register-Map Plan v1"
+    priority: medium
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 45
+    estimated_wall_time_min: 60
+    track: hardware
+    inference_substrate: architecture_projection_only
+    prior_failures:
+      - experiment_id: exp2972
+        verdict: "complete: gatemate_flash_contact_smoke_no_readback"
+        addressed_by: "This projection produces register-map and memory-layout prerequisites for future smoke/readback work, without claiming present hardware success."
+        retire_if_same_verdict: true
+      - experiment_id: exp2974
+        verdict: "complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0"
+        addressed_by: "The capstone requested hardware claim boundaries; this task is explicitly projection-only and supports future board work."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. The post-.279 research sweep found
+        recent FPGA stochastic-sampling work emphasizing memory layout,
+        dual-BRAM designs, register maps, and readback-backed timing evidence.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md (Hardware Claim Boundaries)
+        - CODEX.md
+        - research-references.md (SSQA dual-BRAM and memory-efficient SSA)
+        - research-hardware-wishlist.md
+        - results/experiment_2972_gatemate_post_flash_output_hash_v3.json
+        - openspec/change-proposals/gatemate-hardware-path.md
+        - ops/status.md
+
+      TASK:
+        Produce a projection-only hardware plan that maps the Carnot n=16 tile
+        and future SSQA-style sampling state into explicit registers, memory
+        banks, IO smoke vectors, and readback checks for GateMate/KV260.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: This is a design/projection task only; do not touch
+           scripts/research_conductor.py or claim physical performance.
+        1. Extract current GateMate constraints, bitstream/status, and known IO
+           gaps from exp2972 and hardware docs.
+        2. Define a register map with input fields, seed/state fields, energy
+           or verifier fields, output fields, and status/error fields.
+        3. Define dual-BRAM or memory-bank layout assumptions and explicit
+           resource-accounting fields.
+        4. Specify smoke vectors and readback checks that exp2984 or a later
+           milestone can execute.
+        5. Set projection_only=true and speedup_claim_allowed=false.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        register_map_plan_ready: bool
+        projection_only: true
+        target_boards: list
+        register_map: dict
+        memory_layout: dict
+        smoke_vectors: list
+        readback_checks: list
+        resource_accounting: dict
+        risks: list
+        sampler_claim_allowed: false
+        speedup_claim_allowed: false
+        inference_substrate: "architecture_projection_only"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2986
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2986_cross_corpus_matrix_v14.json"
+    title: "Cross-Corpus Matrix v14 + Claim Boundary Audit"
+    priority: high
+    max_turns: 40
+    estimated_wall_time_min: 60
+    track: synthesis
+    inference_substrate: aggregation_from_upstream_artifacts
+    gated_on:
+      - upstream: exp2982
+        artifact_field: fr11_independent_metrics_evaluated
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp2973
+        verdict: "complete: matrix_v13_ready=true; clean=26; flagged=14; blocked=5; gated_skipped=0; pilot_only=4"
+        addressed_by: "Matrix v14 adds .280 repair, solver-feedback, independent FR-11, telemetry, and hardware claim-boundary rows."
+        retire_if_same_verdict: true
+      - experiment_id: exp2974
+        verdict: "complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0"
+        addressed_by: "The new matrix targets the exact capstone gaps and preserves paper-ready/flagged distinctions."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. Matrix v13 completed but was heavily
+        flagged. Matrix v14 should aggregate .280 rows and make claim boundaries
+        explicit before the capstone.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - results/experiment_2973_cross_corpus_matrix_v13.json
+        - results/experiment_2974_capstone_v279.json
+        - results/experiment_2977_sota_intent_preserving_code_repair_v1.json (if present)
+        - results/experiment_2980_sota_solver_formalization_feedback_v2.json (if present)
+        - results/experiment_2982_fr11_independent_metric_utility_gate_v4.json
+        - results/experiment_2984_gatemate_readback_smoke_vector_v4.json (if present)
+        - results/experiment_2985_ssqa_dual_bram_register_map_plan_v1.json (if present)
+        - ops/exclusion_manifest.yaml
+
+      TASK:
+        Build cross-corpus matrix v14 with rows for all .280 tasks, prior .279
+        carry-forward rows, and explicit claim-boundary classifications. The
+        matrix must distinguish clean, flagged, blocked, gated-skipped,
+        pilot-only, and projection-only artifacts.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: exp2982.fr11_independent_metrics_evaluated is true so
+           the required self-learning row can be classified honestly.
+        1. Load all available .280 artifacts and the .279 capstone/matrix.
+        2. For each artifact, classify status, claim class, evidence type,
+           model compliance, hardware compliance, and prior-failure outcome.
+        3. Mark repair, solver, FR-11, monitor, and hardware rows clean only if
+           their own clean booleans and claim-boundary guards pass.
+        4. Record missing or gated-skipped rows explicitly.
+        5. Write the matrix artifact and include next_milestone_recommendations.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        matrix_v14_ready: bool
+        milestone: "2026.05.280"
+        clean_count: int
+        flagged_count: int
+        blocked_count: int
+        gated_skipped_count: int
+        pilot_only_count: int
+        projection_only_count: int
+        row_count: int
+        rows: list
+        repair_claim_status: str
+        solver_claim_status: str
+        fr11_claim_status: str
+        hardware_claim_status: str
+        model_compliance_summary: dict
+        claim_boundary_violations: list
+        next_milestone_recommendations: list
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp2987
+    milestone: "2026.05.280"
+    deliverable: "results/experiment_2987_capstone_v280.json"
+    title: "Milestone .280 Capstone + Paper-Readiness Decision"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: synthesis
+    inference_substrate: aggregation_from_upstream_artifacts
+    prior_failures:
+      - experiment_id: exp2974
+        verdict: "complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0"
+        addressed_by: "This capstone evaluates the .280 repair, solver, FR-11, and hardware gap-closure attempts rather than repeating the .279 summary."
+        retire_if_same_verdict: true
+      - experiment_id: exp2973
+        verdict: "complete: matrix_v13_ready=true; clean=26; flagged=14; blocked=5; gated_skipped=0; pilot_only=4"
+        addressed_by: "The capstone consumes matrix v14 and requires explicit claim-boundary decisions."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+        Run from {project_root} on {date}. This closes milestone 2026.05.280.
+        It must honestly classify whether intent-preserving repair, solver
+        feedback, independent FR-11 self-learning, and GateMate readback/smoke
+        evidence are paper-ready.
+
+      EXISTING CODE TO READ FIRST:
+        - CLAUDE.md
+        - CODEX.md
+        - research-roadmap-next.yaml
+        - openspec/change-proposals/research-roadmap-vNEXT.md
+        - results/experiment_2986_cross_corpus_matrix_v14.json (if present)
+        - results/experiment_2975_archive_v279_activate_v280.json
+        - results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json
+        - results/experiment_2977_sota_intent_preserving_code_repair_v1.json (if present)
+        - results/experiment_2978_first_step_semantic_energy_repair_telemetry_v1.json (if present)
+        - results/experiment_2979_solver_feedback_mcs_frontier_v1.json (if present)
+        - results/experiment_2980_sota_solver_formalization_feedback_v2.json (if present)
+        - results/experiment_2981_interwhen_partial_monitor_promotion_v2.json (if present)
+        - results/experiment_2982_fr11_independent_metric_utility_gate_v4.json (if present)
+        - results/experiment_2983_trace_to_skill_repair_memory_pilot_v1.json (if present)
+        - results/experiment_2984_gatemate_readback_smoke_vector_v4.json (if present)
+        - results/experiment_2985_ssqa_dual_bram_register_map_plan_v1.json (if present)
+        - ops/status.md
+        - ops/changelog.md
+
+      TASK:
+        Produce the .280 terminal capstone. Classify clean, flagged, blocked,
+        missing, pilot-only, and projection-only artifacts. Decide paper_ready
+        only from local evidence and claim-boundary compliance.
+
+      CONCRETE STEPS:
+        0. PRECONDITIONS: The conductor has attempted all non-skipped .280 tasks
+           or recorded their gated/blocked status.
+        1. Load every available .280 artifact plus matrix v14 if present.
+        2. Verify each task's deliverable, honest_verdict, required claim
+           booleans, model-compliance fields, and prior-failure outcome.
+        3. Classify milestone gaps closed and remaining. In particular, state
+           whether repair, solver formalization, FR-11, and GateMate are clean.
+        4. Update ops/status.md and ops/changelog.md with a concise .280 closeout
+           entry if the repository workflow requires it.
+        5. Write the capstone artifact with next-milestone recommendations and
+           explicit retirement recommendations for repeated failed scopes.
+
+      REQUIRED ARTIFACT FIELDS:
+        honest_verdict: str
+        milestone: "2026.05.280"
+        paper_ready: bool
+        headline_outcome: str
+        clean_artifacts: list
+        flagged_artifacts: list
+        blocked_artifacts: list
+        missing_artifacts: list
+        gated_skipped_artifacts: list
+        pilot_only_artifacts: list
+        projection_only_artifacts: list
+        gaps_closed: list
+        gaps_remaining: list
+        repair_ready: bool
+        solver_ready: bool
+        fr11_ready: bool
+        hardware_ready: bool
+        model_compliance_summary: dict
+        hardware_claim_boundary_summary: dict
+        retirement_recommendations: list
+        next_milestone_recommendations: list
+        inference_substrate: "aggregation_from_upstream_artifacts"
+        duration_s: float
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'

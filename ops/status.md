@@ -1,6 +1,10 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-24 (Milestone 2026.05.279 operational retrospective complete)
+**Last Updated:** 2026-05-24 (Milestone 2026.05.280 research planning staged)
+
+## Session 2026-05-24 - Milestone 2026.05.280 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.280 as "Intent-Preserving Repair + Solver Feedback + Readback-Grounded Self-Learning" after the operator confirmed all `.279` tasks completed. The plan uses `results/experiment_2974_capstone_v279.json` as the authoritative closeout: `.279` is not paper-ready because DCCD repair regressed, solver formalization stayed below promotion gates, FR-11 remained flagged by independent-metric concerns, and GateMate still lacks readback or a passed smoke vector. Updated `research-references.md` with the post-.279 research sweep, rewrote `openspec/change-proposals/research-roadmap-vNEXT.md`, and created `research-roadmap-next.yaml` with 13 tasks (`exp2975`-`exp2987`). Validation passed for YAML parse, prompt-section/end-line checks, prior-failure lint, exclusion-manifest lint, gate audit, and whitespace diff checks. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-24 - Milestone 2026.05.279 Operational Retrospective Complete
 

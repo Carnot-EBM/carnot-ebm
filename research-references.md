@@ -15482,3 +15482,76 @@ ARM-EBM discovery paths, and Logical Intelligence Kona/Aleph updates.
   evidence.
   Sources: https://logicalintelligence.com/kona-ebms-energy-based-models and
   https://logicalintelligence.com/blog/aleph-solves-putnambench
+
+## 2026-05-24 Post-.279 Planning Sweep (Milestone 2026.05.280)
+
+- **AdapTrack constrained decoding without output-intent distortion (ICSE
+  2026)**: proposes adaptive constraint tracking/backtracking for constrained
+  code generation while preserving the model's intended output. Relevance to
+  Carnot: `.279` DCCD repair regressed badly because schema pressure increased
+  syntax/schema failures. `.280` should test intent-preserving repair and
+  backtracking constraints rather than simply tightening the JSON/schema mask.
+  Source:
+  https://conf.researchr.org/details/icse-2026/icse-2026-research-track/102/AdapTrack-Constrained-Decoding-without-Distorting-LLM-s-Output-Intent
+
+- **TraceCoder - execution-aware verification for code LLMs (arXiv:2602.06875)**:
+  uses execution traces as verification signals for code-generation repair.
+  Relevance to Carnot: next code-repair experiments should log runtime traces,
+  failing assertions, and intermediate verifier state before accepting or
+  rejecting a repair. This directly addresses the `.279` DCCD failure mode where
+  structured outputs satisfied shape requirements while harming pass rate.
+  Source: https://arxiv.org/abs/2602.06875
+
+- **Thinking Before Constraining (arXiv:2601.07525)**: argues for preserving
+  reasoning/draft context before applying formal constraints. Relevance to
+  Carnot: this supports a draft-first, constrain-later protocol for both code
+  repair and NL-to-Z3 formalization, with semantic-intent checks between the
+  draft and constrained candidate.
+  Source: https://arxiv.org/abs/2601.07525
+
+- **Constrained Decoding Diffusion LLMs (arXiv:2604.26139)**: frames
+  constrained generation as a backtracking/repair process that can revisit
+  earlier choices rather than only masking the next token. Relevance to Carnot:
+  useful as a design pattern for `.280` DCCD repair and solver formalization,
+  especially after `.279` showed token/schema constraints can overconstrain
+  local GGUF outputs.
+  Source: https://papers.cool/arxiv/2604.26139
+
+- **Taming Imperfect Process Verifiers (OpenReview ICLR 2026 submission)**:
+  studies process verifiers that are useful but noisy. Relevance to Carnot:
+  supports treating verifier feedback as weighted evidence with rollback and
+  negative controls, not as an unquestioned reward. `.280` FR-11 and code-repair
+  self-learning should separate true held-out improvement from verifier-threshold
+  overfitting.
+  Source: https://openreview.net/forum?id=7Sph4KyeYO
+
+- **ARM-as-EBM citation watch via Semantic Scholar**: the ARM-as-EBM record
+  (arXiv:2512.15605) now has citations including LoopUS, Ontology-Constrained
+  Neural Reasoning, Graph Energy Matching, and False First Steps. Relevance to
+  Carnot: no new native-EBT training trigger is justified, but the citation
+  cluster reinforces latent-loop/self-correction diagnostics and ontology/graph
+  energy constraints as future research directions.
+  Source: https://www.semanticscholar.org/paper/2512.15605
+
+- **False first steps in inference-time planning (arXiv:2602.02991)**:
+  identifies early-step failures as a major planning failure mode. Relevance to
+  Carnot: `.280` should add first-step/prefix diagnostics for repair and solver
+  candidates, especially when Interwhen-style partial monitors can localize an
+  error before final verifier execution.
+  Source: https://arxiv.org/abs/2602.02991
+
+- **First-token confidence / hallucination telemetry (arXiv:2605.05166 watch)**:
+  first-token and early-prefix signals are emerging as cheap uncertainty
+  indicators. Relevance to Carnot: use first-token/logprob or proxy telemetry
+  only as candidate-triage evidence; do not promote it as a verifier or
+  hallucination detector without local calibration.
+  Source: https://arxiv.org/abs/2605.05166
+
+- **FPGA stochastic-sampling memory patterns (SSQA dual-BRAM and memory-efficient
+  SSA, arXiv:2602.16143 / arXiv:2601.18007)**: recent FPGA sampling work
+  emphasizes explicit memory layout, register maps, and readback-backed timing.
+  Relevance to Carnot: `.280` GateMate/KV260 work should focus on smoke vectors,
+  readback, output hashes, and register-map planning before making any sampler,
+  speedup, Boltzmann, or thermodynamic-computing claim.
+  Sources: https://arxiv.org/abs/2602.16143 and
+  https://arxiv.org/abs/2601.18007
