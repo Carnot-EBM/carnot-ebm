@@ -6196,3 +6196,4 @@ web search: site |
 | 2026-05-24 22:21 UTC | Milestone 2026.05.283 activated | OK | 14 tasks queued |
 | 2026-05-24 22:33 UTC | Archive .282 and activate .283 | OK | 81 passed in 4.52s |
 | 2026-05-24 22:49 UTC | SOTA GGUF logprob telemetry preflight | OK | 81 passed in 4.12s |
+| 2026-05-24 23:06 UTC | Repair syntax and schema failure taxonomy | OK | 81 passed in 3.42s |
