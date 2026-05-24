@@ -1,0 +1,312 @@
+{
+  "artifact": "experiment_2969_fr11_non_tautological_utility_gate_v3",
+  "candidate_pre_rollback_heldout_utility": 0.236013686912,
+  "candidate_replay_weights": {
+    "logic_guard": 0.142857142857,
+    "logic_repair": 0.3250641574,
+    "syntax_repair": 0.246364414029,
+    "threshold_policy": 0.142857142857,
+    "verified_pass": 0.142857142857
+  },
+  "continuous_self_learning_task": true,
+  "duration_s": 0.002241134644,
+  "final_replay_weights": {
+    "logic_guard": 0.142857142857,
+    "logic_repair": 0.3250641574,
+    "syntax_repair": 0.246364414029,
+    "threshold_policy": 0.142857142857,
+    "verified_pass": 0.142857142857
+  },
+  "forgetting_guard_passed": true,
+  "frozen_heldout_utility": 0.033333333333,
+  "frozen_replay_weights": {
+    "logic_guard": 0.333333333333,
+    "threshold_policy": 0.333333333333,
+    "verified_pass": 0.333333333333
+  },
+  "guard_metrics_after": {
+    "stable_code": 0.142857142857,
+    "stable_logic": 0.142857142857,
+    "threshold_policy": 0.142857142857
+  },
+  "guard_metrics_before": {
+    "stable_code": 0.142857142857,
+    "stable_logic": 0.142857142857,
+    "threshold_policy": 0.142857142857
+  },
+  "heldout_utility_delta_vs_random": 0.093156544055,
+  "honest_verdict": "complete: non_tautological_self_learning_ready",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "leakage_check_passed": true,
+  "missing_fields": [],
+  "model_specs_if_live_llm_used": [],
+  "negative_control_delta": 0.0,
+  "negative_control_heldout_utility": 0.142857142857,
+  "new_heldout_utility": 0.236013686912,
+  "non_tautological_self_learning_ready": true,
+  "prior_utility_gated_heldout_utility": 0.329686371841,
+  "prior_utility_gated_replay_weights": {
+    "extraction_repair": 0.362674864621,
+    "runtime_repair": 0.0765625,
+    "syntax_repair": 0.342012635379,
+    "verified_pass": 0.21875
+  },
+  "random_replay_heldout_utility": 0.142857142857,
+  "random_replay_weights": {
+    "extraction_repair": 0.142857142857,
+    "logic_guard": 0.142857142857,
+    "logic_repair": 0.142857142857,
+    "runtime_repair": 0.142857142857,
+    "syntax_repair": 0.142857142857,
+    "threshold_policy": 0.142857142857,
+    "verified_pass": 0.142857142857
+  },
+  "replay_policies_compared": [
+    {
+      "accepted": false,
+      "guard_metrics": null,
+      "heldout_utility": 0.033333333333,
+      "policy_name": "frozen_baseline",
+      "weights": {
+        "logic_guard": 0.333333333333,
+        "threshold_policy": 0.333333333333,
+        "verified_pass": 0.333333333333
+      }
+    },
+    {
+      "accepted": false,
+      "guard_metrics": {
+        "stable_code": 0.142857142857,
+        "stable_logic": 0.142857142857,
+        "threshold_policy": 0.142857142857
+      },
+      "heldout_utility": 0.142857142857,
+      "policy_name": "random_replay",
+      "weights": {
+        "extraction_repair": 0.142857142857,
+        "logic_guard": 0.142857142857,
+        "logic_repair": 0.142857142857,
+        "runtime_repair": 0.142857142857,
+        "syntax_repair": 0.142857142857,
+        "threshold_policy": 0.142857142857,
+        "verified_pass": 0.142857142857
+      }
+    },
+    {
+      "accepted": false,
+      "guard_metrics": null,
+      "heldout_utility": 0.329686371841,
+      "policy_name": "prior_278_utility_gated_replay",
+      "weights": {
+        "extraction_repair": 0.362674864621,
+        "runtime_repair": 0.0765625,
+        "syntax_repair": 0.342012635379,
+        "verified_pass": 0.21875
+      }
+    },
+    {
+      "accepted": false,
+      "guard_metrics": null,
+      "heldout_utility": 0.142857142857,
+      "policy_name": "negative_control_uninformative",
+      "weights": {
+        "extraction_repair": 0.142857142857,
+        "logic_guard": 0.142857142857,
+        "logic_repair": 0.142857142857,
+        "runtime_repair": 0.142857142857,
+        "syntax_repair": 0.142857142857,
+        "threshold_policy": 0.142857142857,
+        "verified_pass": 0.142857142857
+      }
+    },
+    {
+      "accepted": true,
+      "guard_metrics": {
+        "stable_code": 0.142857142857,
+        "stable_logic": 0.142857142857,
+        "threshold_policy": 0.142857142857
+      },
+      "heldout_utility": 0.236013686912,
+      "policy_name": "non_tautological_utility_gated_replay",
+      "weights": {
+        "logic_guard": 0.142857142857,
+        "logic_repair": 0.3250641574,
+        "syntax_repair": 0.246364414029,
+        "threshold_policy": 0.142857142857,
+        "verified_pass": 0.142857142857
+      }
+    }
+  ],
+  "required_artifact_fields": [
+    "honest_verdict",
+    "continuous_self_learning_task",
+    "non_tautological_self_learning_ready",
+    "source_artifacts",
+    "split_checksums",
+    "leakage_check_passed",
+    "replay_policies_compared",
+    "frozen_heldout_utility",
+    "random_replay_heldout_utility",
+    "prior_utility_gated_heldout_utility",
+    "new_heldout_utility",
+    "heldout_utility_delta_vs_random",
+    "negative_control_delta",
+    "forgetting_guard_passed",
+    "rollback_triggered",
+    "update_rule",
+    "model_specs_if_live_llm_used",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "rollback_triggered": false,
+  "run_date": "20260524",
+  "schema": "carnot.fr11.non_tautological_utility_gate.v3",
+  "slice_manifest": {
+    "guard": {
+      "domains": [
+        "code",
+        "logic",
+        "threshold_policy"
+      ],
+      "item_count": 3,
+      "row_count": 10,
+      "taxonomy_counts": {
+        "logic_guard": 1,
+        "syntax_repair": 1,
+        "threshold_policy": 1,
+        "verified_pass": 7
+      }
+    },
+    "heldout": {
+      "domains": [
+        "code"
+      ],
+      "item_count": 1,
+      "row_count": 4,
+      "taxonomy_counts": {
+        "syntax_repair": 2,
+        "verified_pass": 2
+      }
+    },
+    "replay": {
+      "domains": [
+        "code",
+        "logic"
+      ],
+      "item_count": 7,
+      "row_count": 10,
+      "taxonomy_counts": {
+        "logic_repair": 6,
+        "syntax_repair": 4
+      }
+    },
+    "train": {
+      "domains": [
+        "code",
+        "logic"
+      ],
+      "item_count": 7,
+      "row_count": 10,
+      "taxonomy_counts": {
+        "logic_repair": 6,
+        "syntax_repair": 4
+      }
+    }
+  },
+  "source_artifacts": [
+    {
+      "experiment_id": "exp2954",
+      "fields_imported": [
+        "self_learning_utility_artifact_ready",
+        "final_replay_weights",
+        "heldout_utility_after",
+        "forgetting_guard_passed"
+      ],
+      "path": "results/experiment_2954_fr11_utility_gated_replay_curriculum_v2.json",
+      "present": true,
+      "required": true,
+      "role": "flagged_prior_utility_gate",
+      "sha256": "bcb412f931b7b4f6c35a6c1e5c01b65872d9cc8bef7f584b81679517c039ad1a"
+    },
+    {
+      "experiment_id": "exp2952",
+      "fields_imported": [
+        "candidate_evaluations",
+        "baseline_pass_at_1",
+        "repair_pass_at_1",
+        "candidate_manifest_sha256"
+      ],
+      "path": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "present": true,
+      "required": true,
+      "role": "code_repair_rows",
+      "sha256": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030"
+    },
+    {
+      "experiment_id": "exp2959",
+      "fields_imported": [
+        "per_item_results",
+        "failure_categories",
+        "formalization_manifest_sha256",
+        "answer_accuracy"
+      ],
+      "path": "results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json",
+      "present": true,
+      "required": true,
+      "role": "logic_execution_rows",
+      "sha256": "bce69889802aa1e8549ed2db32c90dd295136260830c9851cfe5d71e7ae33d6f"
+    },
+    {
+      "experiment_id": "exp2960",
+      "fields_imported": [
+        "matrix_v12_ready",
+        "matrix_rows",
+        "self_learning_delta_summary",
+        "code_repair_delta_summary"
+      ],
+      "path": "results/experiment_2960_cross_corpus_matrix_v12.json",
+      "present": true,
+      "required": true,
+      "role": "matrix_v12_guard_and_summary",
+      "sha256": "bc76302404a593b5092dd0a2c410a70616fcb87a30bf38079acb05d325563edd"
+    }
+  ],
+  "split_checksums": {
+    "guard_count": 3,
+    "guard_ids_sha256": "3fd334b164051ce142d4d2781c9aa34e22f7371940b0cac0005475f641639239",
+    "heldout_count": 1,
+    "heldout_ids_sha256": "902a9b680362f314da5f2bf849b0fd697ed578097aa6e43306a04942f4be68f6",
+    "heldout_target_count": 4,
+    "heldout_target_sha256": "ec137cd9d27004274b86d9132d677b9d1b2a3482964a11dc88ad271e3bc6d762",
+    "overlap_counts": {
+      "replay_vs_heldout": 0,
+      "reward_vs_heldout": 0,
+      "train_vs_heldout": 0,
+      "train_vs_replay": 0
+    },
+    "replay_count": 7,
+    "replay_ids_sha256": "7e4c40dfa93c3efb00fcb2a9cc14ee069755cc9176230e8d8458f9f41f5627c4",
+    "reward_not_from_evaluation_target": true,
+    "reward_source_count": 20,
+    "reward_source_sha256": "eb44725d4724a4589ca419d354ab849f72057bc02dfe483c76a7b58c94a20836",
+    "train_count": 7,
+    "train_ids_sha256": "268d808df6b3b4201219305d7751f06a20b7358285ba090024d7b740c3c5e2a0"
+  },
+  "tests_run": [],
+  "update_rule": {
+    "acceptance_rule": "accept only when new held-out utility beats frozen and random baselines, negative control does not improve, leakage checks pass, and every guard slice is non-degrading",
+    "baseline_policy": "random_replay",
+    "candidate_policy": "train_replay_reward_weighted_with_guard_mass_preserved",
+    "guard_domains": [
+      "stable_code",
+      "stable_logic",
+      "threshold_policy"
+    ],
+    "live_llm_invoked": false,
+    "name": "non_tautological_verifier_weighted_utility_gate_v3",
+    "negative_control": "uniform weights independent of reward signal",
+    "prior_policy": "exp2954_final_replay_weights_scored_on_new_heldout_slice",
+    "reward_signal": "Rewards come from train/replay Exp2952 repair taxonomies and Exp2959 logic failure categories; held-out utility is scored only on disjoint held-out Exp2952 target rows.",
+    "rollback_rule": "restore random replay weights when any stable guard degrades"
+  }
+}

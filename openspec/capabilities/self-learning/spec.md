@@ -6730,3 +6730,86 @@ reduces the stable forgetting-guard metric
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2954 | Implemented (`python/carnot/eval/utility_gated_replay_curriculum_v2.py`) | Implemented (`tests/python/test_experiment_2954_fr11_utility_gated_replay_curriculum_v2.py`) |
+
+## REQ-LEARN-2969: Non-Tautological FR-11 Utility-Gated Replay Re-Evaluation
+
+**Given** Exp 2954 reported a positive FR-11 utility-gated replay result but
+was flagged for possible tautological replay or held-out leakage
+**When** Exp 2969 re-evaluates the replay policy using only checked-in upstream
+artifacts
+**Then** it SHALL require Exp 2954, Exp 2952, Exp 2959, and matrix v12 artifacts
+to exist and expose enough row-level or summary metrics to define disjoint
+train, replay, held-out, and forgetting-guard slices.
+**And** it SHALL write a blocked artifact naming missing sources or fields when
+those preconditions fail.
+**And** it SHALL compare frozen baseline, random replay, prior `.278`
+utility-gated replay, and a new non-tautological utility-gated replay policy.
+**And** it SHALL mark `non_tautological_self_learning_ready=true` only when
+held-out utility improves over frozen and random baselines, the negative-control
+update does not improve held-out utility, leakage checks pass, and stable code,
+logic, and threshold-policy forgetting guards pass.
+
+The terminal artifact SHALL be
+`results/experiment_2969_fr11_non_tautological_utility_gate_v3.json` and SHALL
+include `honest_verdict`, `continuous_self_learning_task=true`,
+`non_tautological_self_learning_ready`, `source_artifacts`,
+`split_checksums`, `leakage_check_passed`, `replay_policies_compared`,
+`frozen_heldout_utility`, `random_replay_heldout_utility`,
+`prior_utility_gated_heldout_utility`, `new_heldout_utility`,
+`heldout_utility_delta_vs_random`, `negative_control_delta`,
+`forgetting_guard_passed`, `rollback_triggered`, `update_rule`,
+`model_specs_if_live_llm_used`, `inference_substrate="aggregation_from_upstream_artifacts"`,
+and measured `duration_s`.
+
+### REQ-LEARN-2969 Sub-requirements
+
+- REQ-LEARN-2969-1: The evaluator SHALL cite every required upstream artifact
+  with path, SHA256, role, required flag, presence, and imported field names.
+- REQ-LEARN-2969-2: Split checksums SHALL separately hash split IDs and reward
+  source IDs so the artifact can show that replay rewards are not computed from
+  held-out evaluation targets.
+- REQ-LEARN-2969-3: The frozen baseline, random replay baseline, prior Exp 2954
+  utility-gated policy, negative-control update, and new non-tautological update
+  SHALL be scored on the same held-out utility slice.
+- REQ-LEARN-2969-4: The negative-control reward SHALL be intentionally
+  uninformative and SHALL fail the readiness gate if it improves held-out
+  utility.
+- REQ-LEARN-2969-5: Forgetting guards SHALL cover stable code, logic, and
+  threshold-policy slices; any guard degradation SHALL roll back the candidate
+  update before reporting final readiness.
+- REQ-LEARN-2969-6: The evaluator SHALL NOT invoke a live model. If a future
+  live proposal path is used, it SHALL populate `model_specs_if_live_llm_used`
+  with exact mandated SOTA GGUF IDs.
+
+### SCENARIO-LEARN-2969: Non-Tautological Replay Passes Only With Disjoint Evidence
+
+**Given** checked-in Exp 2954, Exp 2952, Exp 2959, and matrix v12 artifacts with
+enough metrics to define disjoint slices
+**When** Exp 2969 builds the replay comparison
+**Then** it reports split checksums, passes the leakage check, scores frozen,
+random, prior utility-gated, and new non-tautological policies on the held-out
+slice, and sets `non_tautological_self_learning_ready=true` only when the new
+policy beats frozen and random while the negative control fails to improve.
+
+### SCENARIO-LEARN-2969-ROLLBACK: Forgetting Guard Rolls Back Candidate Update
+
+**Given** a candidate replay update improves held-out utility but degrades any
+stable code, logic, or threshold-policy forgetting guard
+**When** Exp 2969 evaluates the candidate
+**Then** the update is rolled back, `forgetting_guard_passed=false`,
+`rollback_triggered=true`, and readiness remains false.
+
+### SCENARIO-LEARN-2969-BLOCKED: Missing Slice Evidence Fails Closed
+
+**Given** a required upstream artifact or required split-defining metric is
+missing
+**When** Exp 2969 runs
+**Then** it writes the required artifact schema with `honest_verdict` beginning
+with `blocked_`, `non_tautological_self_learning_ready=false`,
+`leakage_check_passed=false`, and `missing_fields` naming the absent evidence.
+
+## Implementation Status (REQ-LEARN-2969)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2969 | Implemented (`python/carnot/eval/fr11_non_tautological_utility_gate_v3.py`) | Implemented (`tests/python/test_experiment_2969_fr11_non_tautological_utility_gate_v3.py`) |
