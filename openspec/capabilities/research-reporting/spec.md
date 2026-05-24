@@ -5936,3 +5936,59 @@ archive rows, `activation.used_active_roadmap_fallback=true`, and unchanged
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2949 | Implemented (`python/carnot/reporting/milestone_277_archive_278_activation.py`) | Implemented (`tests/python/test_experiment_2949_archive_v277.py`) |
+
+### REQ-REPORT-2960: Cross-Corpus Matrix V12 From .278 Artifacts
+
+The repository shall provide an Exp 2960 cross-corpus matrix v12 generator
+that writes `results/experiment_2960_cross_corpus_matrix_v12.json` using only
+checked-in upstream artifact JSON files. The generator MUST start from
+`results/experiment_2943_cross_corpus_matrix_v11.json`, carry forward the
+`.277` narrowing facts from `results/experiment_2948_capstone_v277.json`, and
+read every available completed `results/experiment_295*.json` `.278` artifact
+without rerunning live inference, verifier scoring, synthesis, board flashing,
+or hardware smoke tests.
+
+The generator MUST require Exp 2954 to report
+`self_learning_utility_artifact_ready=true`; if this precondition is not met,
+it MUST write a terminal blocked artifact rather than fabricating a self-
+learning utility row. Missing or blocked hardware branches MUST be reported in
+their own row classes instead of promoted to clean evidence.
+
+The matrix v12 artifact MUST preserve the Paper-v6 Narrowing Discipline claim
+boundary from `.277`: no KV260 speedup claim, no KV260 Boltzmann or
+thermalization claim, no TSU/Kona performance claim, and no broad verifier
+generalization beyond the measured rows. Rows added in v12 MUST include
+structured repair, threshold policy, self-learning utility, GateMate,
+PolarFire, and NL-to-Z3 evidence and each row MUST be labeled as one of
+`clean`, `flagged`, `blocked`, `gated-skipped`, `pilot-only`, or
+`aggregation-only`.
+
+The terminal artifact MUST include `honest_verdict`, `matrix_v12_ready`,
+`inference_substrate="aggregation_from_upstream_artifacts"`,
+`upstream_artifacts_read`, `upstream_checksums`, `clean_rows`, `flagged_rows`,
+`blocked_rows`, `gated_skipped_rows`, `pilot_only_rows`,
+`forbidden_claims_absent`, `code_repair_delta_summary`,
+`self_learning_delta_summary`, `hardware_state_summary`,
+`solver_state_summary`, and measured `duration_s`. It MAY include compact
+`matrix_rows`, `aggregation_only_rows`, schema, run date, and no-new-execution
+booleans as long as every value is derived from upstream JSON fields.
+
+#### SCENARIO-REPORT-2960: V12 Aggregates .278 Rows Without New Execution
+
+**Given** matrix v11 and the .277 capstone are present
+**And** Exp 2950 through Exp 2959 artifacts are present or honestly blocked
+**And** Exp 2954 reports `self_learning_utility_artifact_ready=true`
+**When** the Exp 2960 matrix v12 generator runs
+**Then** it writes `results/experiment_2960_cross_corpus_matrix_v12.json`
+with all required fields, upstream checksums for every source it read, v11 row
+buckets preserved, v12 rows added for structured repair, threshold policy,
+self-learning utility, GateMate, PolarFire, and NL-to-Z3, flagged rows kept
+separate from clean rows, blocked or gated-skipped hardware rows kept separate
+from clean rows, compact deltas relative to `.277`, and no forbidden Paper-v6
+claim phrasing.
+
+## Implementation Status (REQ-REPORT-2960)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2960 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v12_2960.py`) | Implemented (`tests/python/test_experiment_2960_cross_corpus_matrix_v12.py`) |

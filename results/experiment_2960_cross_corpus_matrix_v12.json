@@ -1,0 +1,569 @@
+{
+  "aggregation_only_rows": [
+    "exp2943_matrix_v11_carry_forward",
+    "exp2948_capstone_v277_carry_forward"
+  ],
+  "artifact": "experiment_2960_cross_corpus_matrix_v12",
+  "blocked_rows": [
+    "exp2914_gatemate_toolchain",
+    "exp2927_gatemate_himbaechel_preflight",
+    "exp2929_gatemate_flash_timing_boundary",
+    "exp2931_llmeval_logic_z3_mini",
+    "exp2957_gatemate_flash_smoke"
+  ],
+  "clean_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "corpus:TruthfulQA",
+    "exp2890_code_structural_dependency",
+    "exp2892_vericot",
+    "exp2898_kv260_hardware",
+    "exp2910_sota_codegen",
+    "exp2913_kv260_claim_boundary",
+    "exp2918_fr11_process_rewards",
+    "exp2920_state_verifier_harness",
+    "exp2924_aggregation_metadata_corrigendum",
+    "exp2925_taxonomy_corrigendum",
+    "exp2926_constraintbench_corrigendum",
+    "exp2933_kan_cl_self_learning",
+    "exp2938_kv260_mmd_corrigendum",
+    "exp2939_same_schedule_speedup_corrigendum",
+    "exp2940_code_corpus_auprc_corrigendum",
+    "exp2942_kv260_n_scaling_corrigendum",
+    "exp2953_threshold_policy",
+    "exp2955_gatemate_constraints_materialized",
+    "exp2956_gatemate_bitstream_built",
+    "exp2958_polarfire_1000_clause_hash_verified"
+  ],
+  "code_repair_delta_summary": {
+    "artifact_flagged": true,
+    "baseline_pass_at_1": 0.0,
+    "baseline_pass_at_k": 0.25,
+    "false_accept_delta": -0.125,
+    "n_tasks": 4,
+    "pass_at_1_delta": 0.25,
+    "pass_at_k_delta": 0.25,
+    "prior_277_pass_at_1_from_exp2950_upstream": 0.06,
+    "prior_277_pass_at_k_from_exp2950_upstream": 0.16,
+    "repair_pass_at_1": 0.25,
+    "repair_pass_at_k": 0.5,
+    "source_experiment_id": "exp2952",
+    "syntax_failure_rate_delta": -0.0625,
+    "taxonomy_repair_delta_pass": true
+  },
+  "delta_relative_to_277": {
+    "capstone_headline_outcome": "narrow",
+    "capstone_paper_ready": true,
+    "capstone_source_experiment_id": "exp2948",
+    "hardware_materialization_state": {
+      "claim_boundary": "Hardware rows record materialization, reachability, and hash checks only; no comparative performance claim is asserted.",
+      "gatemate": {
+        "bitstream_built": true,
+        "board_detected": false,
+        "constraints_ready": true,
+        "dirtyjtag_detected": true,
+        "flash_attempted": false,
+        "flash_state": "blocked_board_not_detected",
+        "flash_succeeded": false,
+        "timing_met": true
+      },
+      "polarfire": {
+        "board_reachable": true,
+        "clause_count": 1000,
+        "elapsed_ms": 1029.3225100031123,
+        "evaluation_cycles_per_clause": 18,
+        "hash_verified": true,
+        "remote_arch": "riscv64",
+        "remote_python": "3.12.12",
+        "transcript_total_wall_clock_s": 1.0293225100031123
+      }
+    },
+    "repair_delta": {
+      "artifact_flagged": true,
+      "baseline_pass_at_1": 0.0,
+      "baseline_pass_at_k": 0.25,
+      "false_accept_delta": -0.125,
+      "n_tasks": 4,
+      "pass_at_1_delta": 0.25,
+      "pass_at_k_delta": 0.25,
+      "prior_277_pass_at_1_from_exp2950_upstream": 0.06,
+      "prior_277_pass_at_k_from_exp2950_upstream": 0.16,
+      "repair_pass_at_1": 0.25,
+      "repair_pass_at_k": 0.5,
+      "source_experiment_id": "exp2952",
+      "syntax_failure_rate_delta": -0.0625,
+      "taxonomy_repair_delta_pass": true
+    },
+    "solver_execution_state": {
+      "answer_accuracy": 0.083333,
+      "artifact_flagged": true,
+      "failure_categories": {
+        "solver_verified_correct": 0,
+        "unparseable": 11,
+        "wrong_answer": 0,
+        "wrong_formula": 1,
+        "z3_exception": 0
+      },
+      "formalization_manifest_sha256": "5674a3157a664bc0ee7898bc0a7ad9928c69ece7cdc9c0c774ebb255ddb409e5",
+      "n_items": 12,
+      "parseability_rate": 0.083333,
+      "solver_verified_accuracy": 0.0,
+      "source_experiment_id": "exp2959",
+      "z3_execution_rate": 0.083333,
+      "z3_execution_repaired": true,
+      "z3_import_ok": true
+    },
+    "utility_delta": {
+      "artifact_flagged": true,
+      "artifact_ready": true,
+      "forgetting_guard_metric_after": 0.21875,
+      "forgetting_guard_metric_before": 0.21875,
+      "forgetting_guard_passed": true,
+      "heldout_utility_after": 0.352886467009,
+      "heldout_utility_baseline": 0.241027227723,
+      "heldout_utility_delta": 0.111859239286,
+      "live_model_invoked": false,
+      "model_weights_mutated": false,
+      "rollback_triggered": false,
+      "self_learning_utility_positive": true,
+      "source_experiment_id": "exp2954"
+    }
+  },
+  "duration_s": 1e-06,
+  "flagged_rows": [
+    "exp2911_code_hallucination_verifier",
+    "exp2919_constraintbench_mini",
+    "exp2932_citation_field_verifier",
+    "exp2934_reformulation_pipeline",
+    "exp2950_repair_prompt_manifest",
+    "exp2951_structured_candidate_manifest_adapter",
+    "exp2952_structured_repair_delta",
+    "exp2954_self_learning_utility",
+    "exp2959_nl_to_z3_execution_repair"
+  ],
+  "forbidden_claims_absent": true,
+  "gated_skipped_rows": [],
+  "hardware_state_summary": {
+    "claim_boundary": "Hardware rows record materialization, reachability, and hash checks only; no comparative performance claim is asserted.",
+    "gatemate": {
+      "bitstream_built": true,
+      "board_detected": false,
+      "constraints_ready": true,
+      "dirtyjtag_detected": true,
+      "flash_attempted": false,
+      "flash_state": "blocked_board_not_detected",
+      "flash_succeeded": false,
+      "timing_met": true
+    },
+    "polarfire": {
+      "board_reachable": true,
+      "clause_count": 1000,
+      "elapsed_ms": 1029.3225100031123,
+      "evaluation_cycles_per_clause": 18,
+      "hash_verified": true,
+      "remote_arch": "riscv64",
+      "remote_python": "3.12.12",
+      "transcript_total_wall_clock_s": 1.0293225100031123
+    }
+  },
+  "honest_verdict": "complete: matrix_v12_ready=true; clean=22; flagged=9; blocked=5; pilot_only=3",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "matrix_rows": [
+    {
+      "claim_boundary": "v11 row buckets are copied without metric recomputation.",
+      "row_class": "aggregation-only",
+      "row_id": "exp2943_matrix_v11_carry_forward",
+      "source_experiment_id": "exp2943"
+    },
+    {
+      "claim_boundary": "The .277 narrowed paper boundary is carried forward.",
+      "headline_outcome": "narrow",
+      "paper_ready": true,
+      "row_class": "aggregation-only",
+      "row_id": "exp2948_capstone_v277_carry_forward",
+      "source_experiment_id": "exp2948"
+    },
+    {
+      "claim_boundary": "Structured repair prompt manifest; no pass-rate claim is promoted.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2950_repair_prompt_manifest",
+      "source_experiment_id": "exp2950",
+      "source_honest_verdict": "complete: repair prompt manifest ready; no pass-rate improvement claimed",
+      "summary": {
+        "manifest_ready": true,
+        "upstream_pass_at_1": 0.06
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Structured candidate schema adapter with deterministic fixture validation.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2951_structured_candidate_manifest_adapter",
+      "source_experiment_id": "exp2951",
+      "source_honest_verdict": "complete: structured candidate manifest adapter ready; no live LLM call made",
+      "summary": {
+        "adapter_ready": true,
+        "preferred_backend": "llama_cpp_grammar",
+        "validation_fixture_passed": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Small code-repair pilot delta is recorded, with upstream flags preserved.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2952_structured_repair_delta",
+      "source_experiment_id": "exp2952",
+      "source_honest_verdict": "complete: taxonomy-guided repair delta passed; pass@1_delta=0.25, syntax_failure_rate_delta=-0.0625, false_accept_delta=-0.125",
+      "summary": {
+        "artifact_flagged": true,
+        "baseline_pass_at_1": 0.0,
+        "baseline_pass_at_k": 0.25,
+        "false_accept_delta": -0.125,
+        "n_tasks": 4,
+        "pass_at_1_delta": 0.25,
+        "pass_at_k_delta": 0.25,
+        "prior_277_pass_at_1_from_exp2950_upstream": 0.06,
+        "prior_277_pass_at_k_from_exp2950_upstream": 0.16,
+        "repair_pass_at_1": 0.25,
+        "repair_pass_at_k": 0.5,
+        "source_experiment_id": "exp2952",
+        "syntax_failure_rate_delta": -0.0625,
+        "taxonomy_repair_delta_pass": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "IMPLAUSIBLE_PERFECT:info",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Threshold policy is copied from the score-distribution aggregation.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2953_threshold_policy",
+      "source_experiment_id": "exp2953",
+      "source_honest_verdict": "complete: threshold policy ready; default_threshold=1.0000; ppv=0.888889; recall=1.000000; false_accept_rate=0.010135",
+      "summary": {
+        "expected_false_accept_rate_at_default": 0.010135135135,
+        "expected_ppv_at_default": 0.8888888888888888,
+        "expected_recall_at_default": 1.0,
+        "selected_default_threshold": 1.0,
+        "source_experiment_id": "exp2953",
+        "threshold_policy_ready": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "Utility-gated replay result is recorded without model-weight mutation.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2954_self_learning_utility",
+      "source_experiment_id": "exp2954",
+      "source_honest_verdict": "complete: utility_gated_replay_improved_heldout_without_forgetting",
+      "summary": {
+        "artifact_flagged": true,
+        "artifact_ready": true,
+        "forgetting_guard_metric_after": 0.21875,
+        "forgetting_guard_metric_before": 0.21875,
+        "forgetting_guard_passed": true,
+        "heldout_utility_after": 0.352886467009,
+        "heldout_utility_baseline": 0.241027227723,
+        "heldout_utility_delta": 0.111859239286,
+        "live_model_invoked": false,
+        "model_weights_mutated": false,
+        "rollback_triggered": false,
+        "self_learning_utility_positive": true,
+        "source_experiment_id": "exp2954"
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical"
+      ]
+    },
+    {
+      "claim_boundary": "GateMate constraints materialization landed; flashing was not part of this row.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2955_gatemate_constraints_materialized",
+      "source_experiment_id": "exp2955",
+      "source_honest_verdict": "complete: gatemate_constraints_materialized",
+      "summary": {
+        "constraints_ready": true,
+        "constraints_sha256": "ae31c6010f5dcd5777328ff539839a1812faee3c27de0911b24f0e84ab98bfc9",
+        "dirtyjtag_detected": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "GateMate n=16 bitstream build landed; board execution is a separate row.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2956_gatemate_bitstream_built",
+      "source_experiment_id": "exp2956",
+      "source_honest_verdict": "complete: gatemate_n16_bitstream_built",
+      "summary": {
+        "bitstream_built": true,
+        "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+        "timing_met": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "GateMate board smoke remains separate from constraints and build rows.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "blocked",
+      "row_id": "exp2957_gatemate_flash_smoke",
+      "source_experiment_id": "exp2957",
+      "source_honest_verdict": "blocked_board_not_detected",
+      "summary": {
+        "board_detected": false,
+        "flash_attempted": false,
+        "flash_succeeded": false,
+        "smoke_vector_passed": false
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "PolarFire 1000-clause scorer hash verification is copied as hardware smoke.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2958_polarfire_1000_clause_hash_verified",
+      "source_experiment_id": "exp2958",
+      "source_honest_verdict": "complete: polarfire_1000_clause_constraint_scorer_hash_verified",
+      "summary": {
+        "board_reachable": true,
+        "clause_count": 1000,
+        "elapsed_ms": 1029.3225100031123,
+        "hash_verified": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "NL-to-Z3 execution repair state is recorded without rerunning the solver.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2959_nl_to_z3_execution_repair",
+      "source_experiment_id": "exp2959",
+      "source_honest_verdict": "complete: local SOTA logic proposals accepted_or_rejected_by_z3",
+      "summary": {
+        "answer_accuracy": 0.083333,
+        "artifact_flagged": true,
+        "failure_categories": {
+          "solver_verified_correct": 0,
+          "unparseable": 11,
+          "wrong_answer": 0,
+          "wrong_formula": 1,
+          "z3_exception": 0
+        },
+        "formalization_manifest_sha256": "5674a3157a664bc0ee7898bc0a7ad9928c69ece7cdc9c0c774ebb255ddb409e5",
+        "n_items": 12,
+        "parseability_rate": 0.083333,
+        "solver_verified_accuracy": 0.0,
+        "source_experiment_id": "exp2959",
+        "z3_execution_rate": 0.083333,
+        "z3_execution_repaired": true,
+        "z3_import_ok": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    }
+  ],
+  "matrix_v12_ready": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "pilot_only_rows": [
+    "corpus:MBPP",
+    "corpus:HumanEval",
+    "exp2891_cctu"
+  ],
+  "projection_only_rows": [
+    "exp2930_kv260_scaling_projection"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.cross_corpus_matrix.v12_278_aggregation.v1",
+  "self_learning_delta_summary": {
+    "artifact_flagged": true,
+    "artifact_ready": true,
+    "forgetting_guard_metric_after": 0.21875,
+    "forgetting_guard_metric_before": 0.21875,
+    "forgetting_guard_passed": true,
+    "heldout_utility_after": 0.352886467009,
+    "heldout_utility_baseline": 0.241027227723,
+    "heldout_utility_delta": 0.111859239286,
+    "live_model_invoked": false,
+    "model_weights_mutated": false,
+    "rollback_triggered": false,
+    "self_learning_utility_positive": true,
+    "source_experiment_id": "exp2954"
+  },
+  "solver_state_summary": {
+    "answer_accuracy": 0.083333,
+    "artifact_flagged": true,
+    "failure_categories": {
+      "solver_verified_correct": 0,
+      "unparseable": 11,
+      "wrong_answer": 0,
+      "wrong_formula": 1,
+      "z3_exception": 0
+    },
+    "formalization_manifest_sha256": "5674a3157a664bc0ee7898bc0a7ad9928c69ece7cdc9c0c774ebb255ddb409e5",
+    "n_items": 12,
+    "parseability_rate": 0.083333,
+    "solver_verified_accuracy": 0.0,
+    "source_experiment_id": "exp2959",
+    "z3_execution_rate": 0.083333,
+    "z3_execution_repaired": true,
+    "z3_import_ok": true
+  },
+  "upstream_artifacts_read": [
+    {
+      "experiment_id": "exp2943",
+      "path": "results/experiment_2943_cross_corpus_matrix_v11.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "be54eae8e45a7ff27e9a77ef668f39bfd5ba4410f2b94ce0a31091ed6b153d46"
+    },
+    {
+      "experiment_id": "exp2948",
+      "path": "results/experiment_2948_capstone_v277.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "c966adafe1cc4c47d73e06dc74e9dd44399f7f9cb1cb712144b93163bc2f2d9a"
+    },
+    {
+      "experiment_id": "exp2950",
+      "path": "results/experiment_2950_code_taxonomy_repair_prompt_manifest_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "4a054e33bb5487bc4f91885bba3d172bdb1596ade969280f5cbdb1a1ad3762a5"
+    },
+    {
+      "experiment_id": "exp2951",
+      "path": "results/experiment_2951_structured_candidate_manifest_adapter_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "2cffa2b64978c49d406bf2e8d7a070de5eec76318d7d78b2cb085c335cace19c"
+    },
+    {
+      "experiment_id": "exp2952",
+      "path": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030"
+    },
+    {
+      "experiment_id": "exp2953",
+      "path": "results/experiment_2953_code_verifier_threshold_policy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a"
+    },
+    {
+      "experiment_id": "exp2954",
+      "path": "results/experiment_2954_fr11_utility_gated_replay_curriculum_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "bcb412f931b7b4f6c35a6c1e5c01b65872d9cc8bef7f584b81679517c039ad1a"
+    },
+    {
+      "experiment_id": "exp2955",
+      "path": "results/experiment_2955_gatemate_constraints_materialization_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "dd92accfd6770b5ba0b627f885032407b0d371395e6142347ef49f9982405192"
+    },
+    {
+      "experiment_id": "exp2956",
+      "path": "results/experiment_2956_gatemate_n16_bitstream_build_v4.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "45377a6aac6648a91647223d47150a8eb2e52ff0ad2ef2007fd63a6b4e910325"
+    },
+    {
+      "experiment_id": "exp2957",
+      "path": "results/experiment_2957_gatemate_flash_timing_smoke_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "2ee88a2a9149af2fd651d5ff4db84415ef195692f7013dc1108f4629252c22be"
+    },
+    {
+      "experiment_id": "exp2958",
+      "path": "results/experiment_2958_polarfire_1000_clause_scorer_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "d935c403dbb0cf0ac4c4af2bcdcc59dec07823f0c77bd389dad74ff19c4540cd"
+    },
+    {
+      "experiment_id": "exp2958_transcript",
+      "path": "results/experiment_2958_polarfire_1000_clause_transcript_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "bf7903ad55bf227d1d207558c9441ad1289715a58c8dfc25878c0f0717225768"
+    },
+    {
+      "experiment_id": "exp2959",
+      "path": "results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "bce69889802aa1e8549ed2db32c90dd295136260830c9851cfe5d71e7ae33d6f"
+    }
+  ],
+  "upstream_checksums": {
+    "results/experiment_2943_cross_corpus_matrix_v11.json": "be54eae8e45a7ff27e9a77ef668f39bfd5ba4410f2b94ce0a31091ed6b153d46",
+    "results/experiment_2948_capstone_v277.json": "c966adafe1cc4c47d73e06dc74e9dd44399f7f9cb1cb712144b93163bc2f2d9a",
+    "results/experiment_2950_code_taxonomy_repair_prompt_manifest_v1.json": "4a054e33bb5487bc4f91885bba3d172bdb1596ade969280f5cbdb1a1ad3762a5",
+    "results/experiment_2951_structured_candidate_manifest_adapter_v1.json": "2cffa2b64978c49d406bf2e8d7a070de5eec76318d7d78b2cb085c335cace19c",
+    "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030",
+    "results/experiment_2953_code_verifier_threshold_policy_v1.json": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a",
+    "results/experiment_2954_fr11_utility_gated_replay_curriculum_v2.json": "bcb412f931b7b4f6c35a6c1e5c01b65872d9cc8bef7f584b81679517c039ad1a",
+    "results/experiment_2955_gatemate_constraints_materialization_v4.json": "dd92accfd6770b5ba0b627f885032407b0d371395e6142347ef49f9982405192",
+    "results/experiment_2956_gatemate_n16_bitstream_build_v4.json": "45377a6aac6648a91647223d47150a8eb2e52ff0ad2ef2007fd63a6b4e910325",
+    "results/experiment_2957_gatemate_flash_timing_smoke_v2.json": "2ee88a2a9149af2fd651d5ff4db84415ef195692f7013dc1108f4629252c22be",
+    "results/experiment_2958_polarfire_1000_clause_scorer_v2.json": "d935c403dbb0cf0ac4c4af2bcdcc59dec07823f0c77bd389dad74ff19c4540cd",
+    "results/experiment_2958_polarfire_1000_clause_transcript_v2.json": "bf7903ad55bf227d1d207558c9441ad1289715a58c8dfc25878c0f0717225768",
+    "results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json": "bce69889802aa1e8549ed2db32c90dd295136260830c9851cfe5d71e7ae33d6f"
+  }
+}
