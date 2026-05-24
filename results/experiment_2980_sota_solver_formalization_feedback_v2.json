@@ -1132,5 +1132,18 @@
   ],
   "solver_verified_accuracy": 1.0,
   "tautology_flag_rate": 0.0,
-  "z3_execution_rate": 1.0
+  "z3_execution_rate": 1.0,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=42.854308 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
