@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.282",
+  "generated_at": "2026-05-24T21:46:00.902252Z",
+  "retro_type": "operational_in_progress",
+  "summary": "This closeout has an empty activation window: TIMING DATA lists no experiment commits for 2026.05.282, so the locked counters stay at 0 experiments, 0 wall-time minutes, and 0 compute-bound rows. There is no basis to rank slow runs, judge compute-bound GPU efficiency, or assess DualGPURunner engagement; no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No compute-bound runtime bottleneck can be identified because the timing block contains no experiment commits for this milestone.",
+    "GPU idle is not a bottleneck finding here: compute_bound_experiments_count is 0, so the GPU monitor state is not evidence of inefficient compute-bound execution."
+  ],
+  "improvements_suggested": [
+    "Emit an explicit empty-activation-window closeout when no experiment commits are found, before adding any runner or GPU guidance.",
+    "Keep GPU-idle recommendations gated on compute_bound_experiments_count > 0 and an explicit GGUF/CUDA/requires_gpu timing marker.",
+    "Require a parallel-model marker before suggesting DualGPURunner, so single-model or synthesis-only milestones do not receive parallel-runner guidance."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add a no-data closeout sentinel for empty milestone timing windows.",
+    "Gate GPU-efficiency findings on compute-bound timing evidence.",
+    "Gate DualGPURunner suggestions on 2+ parallel-model evidence."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The authoritative data supports only a negative operational conclusion: no milestone-scoped experiment timing exists to analyze. The next tooling improvement should make that absence explicit early, preventing idle-GPU monitor output from being mistaken for a compute bottleneck."
+}
