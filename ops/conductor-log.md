@@ -6168,3 +6168,5 @@ web search: site |
 | 2026-05-24 16:58 UTC | FR-11 verifier-grounded trace memory v2 | OK | 81 passed in 3.57s |
 | 2026-05-24 17:14 UTC | GateMate host-visible readback smoke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2996_gatemat |
 | 2026-05-24 17:21 UTC | GateMate host-visible readback smoke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2996_gatemat |
+| 2026-05-24 17:27 UTC | GateMate host-visible readback smoke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2996_gatemat |
+| 2026-05-24 17:29 UTC | SSQA dual-BRAM RTL PnR resource report | GATE_BLOCK | Pre-emptive skip: upstream retired (exp2996-gatemate-host-visible-readback-smoke |
