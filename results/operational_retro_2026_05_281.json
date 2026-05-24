@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.281",
+  "generated_at": "2026-05-24T18:04:30Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The milestone-scoped timing source contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Slowest-experiment ranking, compute-bound GPU efficiency, and DualGPURunner assessment have no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No measured compute-bound bottleneck identified: no data available this milestone.",
+    "Timing capture/activation-window observability is the only operational issue visible from the authoritative data: no experiment commits were found since activation."
+  ],
+  "improvements_suggested": [
+    "Add an activation-window no-data sentinel that emits an explicit no-run reason before GPU runner suggestions are considered.",
+    "Keep GPU-idle warnings gated on compute_bound_experiments_count > 0 and on GGUF/CUDA/requires_gpu timing markers.",
+    "Require operational retrospectives to record exp_range as no data available this milestone when the timing block has no experiment rows."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Fail closed on empty timing windows with a no-data artifact instead of inferring from training distribution.",
+    "Suppress DualGPURunner recommendations unless a timing row indicates 2+ parallel models.",
+    "Record the activation commit and closeout commit in the timing collector so empty windows are distinguishable from missed ingestion."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The only reliable conclusion is absence of milestone-scoped runtime evidence. Future tooling should make this state explicit early so operator attention goes to missing timing coverage, not idle-GPU recommendations that are irrelevant without compute-bound rows."
+}

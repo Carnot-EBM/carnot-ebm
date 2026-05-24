@@ -1,6 +1,10 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-24 (Milestone 2026.05.280 operational retrospective complete)
+**Last Updated:** 2026-05-24 (Milestone 2026.05.281 operational retrospective complete)
+
+## Session 2026-05-24 - Milestone 2026.05.281 Operational Retrospective Complete
+
+The authoritative milestone-scoped timing data contains 0 wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. The retrospective keeps the slowest-experiment list empty and leaves `gpu_idle_on_compute_bound_tasks: null`; idle GPUs are not a compute-bound bottleneck without a compute-bound timing row. Updated `results/operational_retro_2026_05_281.json`, `ops/changelog.md`, `docs/research-log.md`, and this status note; left operator-curated docs, `scripts/research_conductor.py`, and roadmap YAML files untouched.
 
 ## Session 2026-05-24 - Milestone 2026.05.280 Operational Retrospective Complete
 
