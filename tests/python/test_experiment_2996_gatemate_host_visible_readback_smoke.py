@@ -380,6 +380,82 @@ def test_req_hw_082_live_contact_can_use_prior_idcode_for_board_boundary(
     ]
 
 
+def test_req_hw_082_prior_board_id_field_can_anchor_contact_boundary(
+    tmp_path: Path,
+) -> None:
+    """REQ-HW-082: prior artifact board_id is enough when live contact lacks IDCODE."""
+    bitstream = _write_prior_gate_artifacts(tmp_path)
+    exp2971_path = tmp_path / "results" / EXP2971_FILENAME
+    exp2971 = json.loads(exp2971_path.read_text(encoding="utf-8"))
+    exp2971["board_id"] = "idcode 0x20000001; colognechip; GateMate Series; GM1Ax"
+    exp2971_path.write_text(json.dumps(exp2971), encoding="utf-8")
+    loader = str(tmp_path / "suite" / "bin" / "openFPGALoader")
+    results = _tool_results(loader, bitstream)
+    results[(loader, "-c", "dirtyJtag", "--detect")] = CommandResult(
+        0, "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n", ""
+    )
+    runner, _calls = _runner(results)
+
+    artifact = build_artifact(
+        repo_root=tmp_path,
+        run_command=runner,
+        which_func=_which_from({"openFPGALoader": loader}),
+        monotonic=_clock([29.0, 29.1, 29.2, 29.3, 29.4, 29.5, 29.6, 29.7]),
+    )
+
+    assert artifact["board_detected"] is True
+    assert artifact["board_id"] == "idcode 0x20000001; colognechip; GateMate Series; GM1Ax"
+    assert artifact["timing_observation"]["board_detection_basis"] == (
+        "live_dirtyjtag_contact_with_prior_gatemate_idcode"
+    )
+
+
+def test_req_hw_082_prior_precondition_transcripts_recover_idcode(
+    tmp_path: Path,
+) -> None:
+    """REQ-HW-082: nested prior transcript paths are searched without guessing."""
+    prior_detect = (
+        "COMMAND: /suite/bin/openFPGALoader -c dirtyJtag --detect\n"
+        "RETURNCODE: 0\n"
+        "STDOUT:\n"
+        "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n"
+        "index 0:\n"
+        "\tidcode 0x20000001\n"
+        "\tmanufacturer colognechip\n"
+        "\tfamily GateMate Series\n"
+        "\tmodel  GM1Ax\n"
+    )
+    bitstream = _write_prior_gate_artifacts(tmp_path)
+    transcript = tmp_path / "logs" / "nested_prior" / "detect.txt"
+    transcript.parent.mkdir(parents=True, exist_ok=True)
+    transcript.write_text(prior_detect, encoding="utf-8")
+    exp2971_path = tmp_path / "results" / EXP2971_FILENAME
+    exp2971 = json.loads(exp2971_path.read_text(encoding="utf-8"))
+    exp2971["preconditions_checked"] = [
+        "legacy string entry",
+        {"transcript_path": str(tmp_path / "logs" / "missing_prior.txt")},
+        {"transcript_paths": [str(transcript)]},
+    ]
+    exp2971_path.write_text(json.dumps(exp2971), encoding="utf-8")
+    loader = str(tmp_path / "suite" / "bin" / "openFPGALoader")
+    results = _tool_results(loader, bitstream)
+    results[(loader, "-c", "dirtyJtag", "--detect")] = CommandResult(
+        0, "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz\n", ""
+    )
+    runner, _calls = _runner(results)
+
+    artifact = build_artifact(
+        repo_root=tmp_path,
+        run_command=runner,
+        which_func=_which_from({"openFPGALoader": loader}),
+        monotonic=_clock([29.8, 29.9, 30.0, 30.1, 30.2, 30.3, 30.4, 30.5]),
+    )
+
+    assert artifact["board_detected"] is True
+    assert artifact["board_id"] == "idcode 0x20000001; colognechip; GateMate Series; GM1Ax"
+    assert artifact["timing_observation"]["prior_board_id"] == artifact["board_id"]
+
+
 def test_req_hw_082_board_detection_failure_blocks_before_flash(tmp_path: Path) -> None:
     """REQ-HW-082: failed board contact is not treated as a design IO blocker."""
     bitstream = _write_prior_gate_artifacts(tmp_path)
