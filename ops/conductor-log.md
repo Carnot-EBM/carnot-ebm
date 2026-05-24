@@ -6144,3 +6144,4 @@ web search: https://arxiv. |
 | 2026-05-24 10:58 UTC | Interwhen Partial Monitor Promotion v2 | OK | 81 passed in 3.85s |
 | 2026-05-24 11:13 UTC | FR-11 Independent Metric Continuous Self-Learning  | OK | 81 passed in 3.35s |
 | 2026-05-24 11:29 UTC | Trace-to-Skill Repair Memory Pilot v1 | OK | 81 passed in 3.63s |
+| 2026-05-24 11:43 UTC | GateMate Readback + Smoke Vector Harness v4 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2984_gatemat |
