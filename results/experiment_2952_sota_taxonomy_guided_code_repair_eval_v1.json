@@ -2081,5 +2081,48 @@
     ".venv/bin/pytest tests/python/test_experiment_2952_sota_taxonomy_guided_code_repair_eval.py -q",
     ".venv/bin/pytest tests/python -q"
   ],
-  "verifier_acceptance_rate_delta": 0.0625
+  "verifier_acceptance_rate_delta": 0.0625,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "baseline_pass_at_k=0.25 and pass_at_1_delta=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "baseline_pass_at_k=0.25 and pass_at_k_delta=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "baseline_pass_at_k=0.25 and repair_pass_at_1=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_1_delta=0.25 and pass_at_k_delta=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_1_delta=0.25 and repair_pass_at_1=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "pass_at_k_delta=0.25 and repair_pass_at_1=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable."
+    }
+  ]
 }
