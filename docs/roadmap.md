@@ -50,10 +50,10 @@ Results are labeled with provenance: **LIVE** (real model inference on GPU), **D
 | HalluGuard v3 cascade routing | 0.0pp accuracy delta with 4.4% cost savings | Cascade-routing analysis | DERIVED | Production deployment data |
 | Two-GPU parallel retrain | 2.0× speedup, identical losses | Exp 746 | LIVE | Training-infra win |
 | KV260 FPGA Ising sampler | Live on silicon | Exp 1041, 2026-04-22 | LIVE (hardware) | First AXI-Lite read and write returned from real KV260 silicon |
-| Verifier ensemble AUROC (FoVer) | 0.9857 (production config) | Exp 2546 | DERIVED | 5-seed aggregation; **pending dual-condition memory-leakage breakdown in `.265 exp2807a — see Current Milestone above** |
+| Verifier ensemble AUROC (FoVer) | 0.9131 (5-seed dual-condition production; 0.8947 architecture-only; delta +0.0185) | Exp 2837 | LIVE | Repinned downward from the v2 0.9857 (Exp 2546) after the 2026-05-23 Deep Think round. Dual-condition protocol per `docs/blog/why-two-aurocs.html`. The HIVE peer comparator (+0.0061 lead at the corrected number) is no longer load-bearing; was +0.0621 at the v2 headline. |
 | Adversarial PRM-BiasBench attacks | k=5 ensemble catches 60/60 | Exp 1133 + 1278 | LIVE | Defensible adversarial-audit result |
 
-The headline AUROC=0.9857 is currently labeled DERIVED pending the `.265 dual-condition breakdown that quantifies what portion comes from the verifier architecture vs accumulated self-learning state. Either way the final number lands, the framing improves: a multi-corpus dual-condition table gives reviewers actionable evidence that the single-corpus single-number alternative cannot.
+The earlier headline AUROC=0.9857 has been retracted to 0.9131 after the 2026-05-23 Deep Think round's dual-condition breakdown (Exp 2837): production AUROC 0.9131 (5-seed), architecture-only AUROC 0.8947, delta +0.0185. The repin is the defensible figure; the methodology that produced it (dual-condition protocol on architecture-only vs production state) is itself a paper contribution documented at `docs/blog/why-two-aurocs.html` and `docs/blog/two-retractions-and-a-rescue.html`. The multi-corpus dual-condition matrix (currently at v14, 29 clean rows) gives reviewers actionable evidence the single-corpus single-number alternative could not.
 
 ## Product Roadmap
 

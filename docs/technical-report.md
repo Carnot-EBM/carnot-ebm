@@ -15,7 +15,7 @@ Large language models generate fluent text by predicting one token at a time. Th
 
 The framework is built in Rust plus Python/JAX and installs via `pip install carnot-ebm`, with model weights mirrored on HuggingFace. Four energy-model tiers (KAN, Ising, Gibbs, Boltzmann) can be selected by task; the production verify-repair API is a handful of lines of Python. Headline benchmark numbers come from live GPU inference on real public models (Qwen 3.5, Gemma 4, Qwen3.6-35B-A3B), never simulated runs; hardware, ensemble, and adversarial-audit results are labeled by artifact provenance.
 
-This report describes the framework architecture, the verify-repair pipeline, and the production results. On HumanEval the production pipeline lifts pass@1 from 0% to 36% on a SOTA 35B model after Carnot correction; an IterativeSelfRepair loop lifts an 8% baseline to 80% (+72pp); EstimationVerifier reaches 0.90 AUC on SVAMP versus a 0.125 FoVer baseline; and the production verifier ensemble reaches AUROC 0.9857 on the FoVer step-error corpus, adversarially verified across five random seeds. A KV260 FPGA prototype runs an Ising sampler on real silicon. The full per-milestone development record lives in `docs/research-log.md` so this report can stay focused on the framework.
+This report describes the framework architecture, the verify-repair pipeline, and the production results. On HumanEval the production pipeline lifts pass@1 from 0% to 36% on a SOTA 35B model after Carnot correction; an IterativeSelfRepair loop lifts an 8% baseline to 80% (+72pp); EstimationVerifier reaches 0.90 AUC on SVAMP versus a 0.125 FoVer baseline; and the production verifier ensemble reaches AUROC 0.9131 on the FoVer step-error corpus, measured under a 5-seed dual-condition protocol (production AUROC 0.9131, architecture-only AUROC 0.8947, delta +0.0185). This number repins the earlier v2 headline of 0.9857 downward after a pre-submission adversarial audit; the dual-condition methodology is what produces the defensible figure (see `docs/blog/why-two-aurocs.html` and `docs/blog/two-retractions-and-a-rescue.html`). A KV260 FPGA prototype runs an Ising sampler on real silicon as a POC functional simulator (same-schedule apples-to-apples speedup at n=64 is 0.98x; the prior 12,788x speedup framing was retracted in the same audit). The full per-milestone development record lives in `docs/research-log.md` so this report can stay focused on the framework.
 
 ## What this report is (and isn't)
 
@@ -58,7 +58,7 @@ Each number below is backed by a checked-in experiment artifact. Model-generatio
 
 ### Production ensemble
 
-- **Verifier ensemble AUROC 0.9857** on the FoVer step-error corpus, adversarially verified across five random seeds (std 0.0175), exceeding the HIVE peer at 0.924 by +0.0621.
+- **Verifier ensemble AUROC 0.9131** on the FoVer step-error corpus, measured under a 5-seed dual-condition protocol (production 0.9131, architecture-only 0.8947, delta +0.0185, std 0.0075). Repinned downward from the v2 0.9857 number after the 2026-05-23 Deep Think round. The HIVE peer comparator (0.924) is retracted from the headline because the dual-condition number's narrow lead over HIVE is no longer the load-bearing claim; see `docs/blog/why-two-aurocs.html`.
 - **PRM-BiasBench-style attacks**: a k=5 ensemble catches 60/60 attacks.
 
 ### Cascade routing and infrastructure

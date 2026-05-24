@@ -1237,14 +1237,16 @@ arXiv NOT YET ready: formula gates met (phase1+audit+phase4\_partial) but operat
     \midrule
     Tier 0v (set-consistency) + Tier 0g (char-ngram) + Tier 0w (paraphrastic) & 0.6124708624708625 & k=18 \\
     Best .241 Ensemble & 0.9750 & [0.933, 1.017] \\
-    Best .245 Ensemble v7b & 0.9857 & $\sigma=0.0175$ \\
+    Best .245 Ensemble v7b (v2 headline, retracted) & 0.9857 & $\sigma=0.0175$ \\
+    Repinned dual-condition production (exp2837, v3 headline) & 0.9131 & $\sigma=0.0075$ \\
+    Repinned dual-condition architecture-only (exp2837) & 0.8947 & $\sigma=0.0075$ \\
     Tier 0r (exp2504) & 0.9123 & \\
     Tier 0r (real corpus) & 0.9414 & $n=6{,}548$ \\
     Tier 0s (real corpus) & 0.3758 & $n=6{,}548$ \\
     Tier 0u (real corpus) & 0.5360 & $n=6{,}548$ \\
     \bottomrule
   \end{tabular}
-  \caption{AUROC results table. The Best .241 Ensemble row is adversarially verified (5-seed group-conditional replication, exp2498). Note: the reported \texttt{best\_241\_auroc=0.975} and \texttt{group\_conditional\_replicated=0.975} refer to the exact same method and metric from the same experiment, rather than two distinct measurements. The .245 ensemble v7b row reports exp2546's 5-seed AUROC, resolving the v7 regression relative to the 0.9750 baseline. The real-corpus Tier 0r/0s/0u rows report exp2548 on the FoVer v4 corpus; all three rows have \texttt{paper\_citable=True}, while exp2548's anomaly checker separately flags the \texttt{n\_eval\_examples} / \texttt{n\_real} bookkeeping equality for audit review.}
+  \caption{AUROC results table. The Best .241 Ensemble row is adversarially verified (5-seed group-conditional replication, exp2498). Note: the reported \texttt{best\_241\_auroc=0.975} and \texttt{group\_conditional\_replicated=0.975} refer to the exact same method and metric from the same experiment, rather than two distinct measurements. The .245 ensemble v7b row reports exp2546's 5-seed AUROC under the v2 single-condition adversarial-verification protocol; this row is preserved for historical reference but is RETRACTED as the v3 headline number. The 2026-05-23 Deep Think round's dual-condition rescue measurement (exp2837) is the v3 headline: 0.9131 production AUROC (state visible to verifier ensemble) versus 0.8947 architecture-only AUROC (state files moved aside, then SHA256-verified restored), 5-seed, delta +0.0185. The dual-condition methodology -- not the 5-seed adversarial verification alone -- is what makes the v3 number defensible against reviewer concerns about self-learning leakage. The real-corpus Tier 0r/0s/0u rows report exp2548 on the FoVer v4 corpus; all three rows have \texttt{paper\_citable=True}, while exp2548's anomaly checker separately flags the \texttt{n\_eval\_examples} / \texttt{n\_real} bookkeeping equality for audit review.}
   \label{tab:auroc-results}
 \end{table}
 
