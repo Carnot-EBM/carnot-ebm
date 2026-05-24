@@ -6130,3 +6130,4 @@ web search: https://arxiv. |
 | 2026-05-24 07:29 UTC | GateMate Board Detection + Flash Harness v3 | OK | 81 passed in 3.52s |
 | 2026-05-24 07:43 UTC | Gated GateMate Post-Flash Output Hash Smoke v3 | OK | 81 passed in 3.51s |
 | 2026-05-24 07:59 UTC | Cross-Corpus Matrix v13 | OK | 81 passed in 3.75s |
+| 2026-05-24 08:14 UTC | Capstone .279 | OK | 81 passed in 3.27s |
