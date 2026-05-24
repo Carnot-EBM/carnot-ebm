@@ -308,5 +308,23 @@
     "prior_policy": "exp2954_final_replay_weights_scored_on_new_heldout_slice",
     "reward_signal": "Rewards come from train/replay Exp2952 repair taxonomies and Exp2959 logic failure categories; held-out utility is scored only on disjoint held-out Exp2952 target rows.",
     "rollback_rule": "restore random replay weights when any stable guard degrades"
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "candidate_pre_rollback_heldout_utility=0.236013686912 and new_heldout_utility=0.236013686912 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "negative_control_heldout_utility=0.142857142857 and random_replay_heldout_utility=0.142857142857 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "negative_control_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
