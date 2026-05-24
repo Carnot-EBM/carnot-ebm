@@ -6111,3 +6111,4 @@ web search:
 | 2026-05-24 02:19 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
 | 2026-05-24 02:32 UTC | PolarFire 1000-Clause Scorer Hash v2 | OK | 81 passed in 3.77s |
 | 2026-05-24 02:50 UTC | NL-to-Z3 Execution Repair Mini v2 | OK | 81 passed in 3.41s |
+| 2026-05-24 03:07 UTC | Cross-Corpus Matrix v12 | OK | 81 passed in 3.61s |
