@@ -4,48 +4,48 @@
 # docs_audit_report — 2026-05-24
 
 ## TL;DR (stranger's 30-second take)
-I am closing the tab. The page hits me with a wall of unexplained acronyms (FoVer, HIVE, CCTU), impossibly perfect "100%" result bars, and insider status updates that make it feel like an internal team dashboard leaked to the public, rather than a production-ready tool I can trust.
+I would close the tab immediately. The page is drowning in internal project jargon, raw file paths, and status-report prose that makes it feel like an internal dashboard rather than a public-facing product. 
 
 ## TOP 3 PROBLEMS
-1. Jargon avalanche in the "Evidence" grid hides any real achievements behind internal benchmark names.
-2. Suspiciously perfect 100% metrics (1.0 TP rate, 60/60 attacks) with zero immediate proof or linked artifacts.
-3. Sections like "Recent progress" and "Preprint" read exactly like internal Slack status updates instead of marketing copy.
+1. Raw artifact paths rendering in the public UI (Evidence section: SOTA 35B card).
+2. Heavy internal jargon (FoVer, HIVE, CCTU, PREM) that alienates newcomers.
+3. Suspiciously perfect numbers (1.0 TP rate, 60/60, exact 2.0x speedup) with no credibility anchors.
 
 ## DETAILED FINDINGS
 ### Bloat
-- `results-grid` (What we measured) — 12 cards — cap at 4 to 6 of the most defensible, universally understood metrics. A stranger will read zero of these if faced with 12.
-- `results-grid` (From the blog) — 7 cards — cap at 3. The page is scrolling too far into the weeds of project operations.
+- `Evidence` section — 12 result cards — cap at 6 of the most universally understandable benchmarks.
+- `Preprint` section — 41 words — cap at 20 words focused on the paper's thesis.
+- `Recent progress` card in Stats — 52 words — drop entirely or condense to a 10-word headline.
 
 ### Internal jargon
-- `Hero Stats` — "HIVE peer 0.924" — I have no idea what HIVE is.
-- `Recent progress` — "FoVer step-error corpus" — Means nothing outside the project.
-- `Results Grid` — "CCTU", "PRM-BiasBench-style", "IterativeSelfRepair", "EstimationVerifier SVAMP AUC", "VeriCoT", "HalluGuard v3", "Qwen3.6-35B-A3B" — Alphabet soup that completely dilutes the actual claims.
-- `Preprint section` — "paper-v6" — Internal versioning that means nothing to me.
+- `Hero stats bar` — "HIVE peer 0.924", "FoVer step-error corpus" — Strangers do not know these internal benchmarks or corpora.
+- `Capabilities grid` — "Test-Time Compute (TTC) & PREM", "Process-Reward Energy Model" — Undefined project acronyms.
+- `Evidence cards` — "CCTU constrained micro-benchmark", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks" — Incomprehensible to anyone outside the core team.
 
 ### Per-milestone narrative
-- `Recent progress card` — "A position paper covering the framework is in preparation..." reads like a weekly standup note.
-- `Preprint section` — "The arXiv submission is prepared but pending operator-initiated upload." A stranger does not care about your operator-upload pipeline. Just link the paper or say it's coming.
+- `Preprint` section — "The arXiv submission is prepared but pending operator-initiated upload." — This is internal operational status, not public copy.
+- `Recent progress` card — "A position paper covering the framework is in preparation..." — Reads like a weekly stand-up update.
+- `Blog descriptions` — "Three rigorous theory rounds approved the architecture..." — Reads like an internal retrospective or commit message.
 
 ### Inconsistencies
-- `Hero` claims a single "0.9857 Verifier AUROC" while the `Results Grid` claims "0.91 AUROC" (safety) and "0.90 AUC" (math) without clarifying why they differ to a casual reader.
-- `Hero` says "Carnot is installable via PyPI" but the primary "Get Started" button links to a GitHub markdown file instead of the PyPI page or actual installation instructions.
+- Claiming "No model fine-tuning required" (How it works) vs "continuous self-learning" (Features) and "Training — Two-GPU parallel retrain" (Evidence).
+- Headline claims "0.9857 Verifier AUROC" while lower cards boast "0.91 AUROC" and "0.90 AUC" for different tasks, confusing the project's primary metric of success.
 
 ### Missing essentials
-- **Trust anchors for the numbers:** You claim "Every number below is backed by a checked-in experiment artifact" but don't link a single card in the results grid to its corresponding artifact. 
-- **PyPI Link:** You tell me to `pip install carnot-ebm` but provide no clickable PyPI badge or link to verify it exists.
+- Why should I trust the numbers? The preamble says claims are "backed by a checked-in experiment artifact" but provides no clickable links to these artifacts or instructions for third-party validation.
 
 ### Fabrication signals
-- `Results Grid` — "GSM8K extraction TP rate: 0.5 -> 1.0" (100% mathematically perfect True Positive rate is an immediate red flag).
-- `Results Grid` — "k=5 ensemble catches 60/60 attacks" (Perfect catch rate on a tiny sample size of 60).
-- `Hero Stats` — "0.9857 AUROC" (Four sig-figs of precision is dangerously close to 1.0 and looks suspiciously like overfitting).
+- `1.0` — GSM8K extraction TP rate card claims a mathematically perfect 1.0.
+- `60/60` — Adversarial audit card claims 60/60 attacks caught (perfect 100% on a suspiciously small sample).
+- `2.0x` — Training card claims exactly 2.0x speedup with "identical losses", which defies standard distributed training overheads.
 
 ## WHAT'S WORKING
-- The "Extract -> Check -> Repair" mental model is clean, understandable, and tells me exactly what the framework does in 10 seconds.
-- The "Quick Start" code is short, readable, and actually delivers on the "five lines" promise.
+- The "Extract → Check → Repair" 3-step explanation is clear, concise, and effectively communicates the core value proposition.
+- The Python and Rust code snippets in the Quick Start section are excellent and demonstrate exactly how simple the API is to use.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Purge internal acronyms (FoVer, CCTU, HIVE) from the headline copy and replace them with generic, descriptive equivalents (e.g., "Math reasoning benchmark", "Tool use dataset").
-2. Cut the Results grid from 12 cards to the 4 strongest, most defensible metrics, and hyperlink them directly to the experimental artifacts.
-3. Tone down or heavily caveat the 1.0/100% claims in the Results section to avoid triggering "too good to be true" alarms.
-4. Rewrite the "Recent progress" and "Preprint" sections to focus on user value ("Read our methodology") instead of internal status reporting ("pending operator upload").
-5. Add a direct PyPI badge/link near the hero snippet.
+1. Remove the raw `@results/citation_hallucination_field_verifier_2932_raw/...` file path from the "SOTA 35B" Evidence card immediately.
+2. Scrub all internal acronyms (FoVer, CCTU, PREM, HIVE) and replace them with standard industry terms or brief, clear explanations.
+3. Trim the Evidence section to the 4-6 most compelling, standard-benchmark results (e.g., HumanEval).
+4. Add sample size (n=...) caveats to the perfect 1.0 and 60/60 claims to ground them in reality.
+5. Rewrite the "Recent progress" and "Preprint" sections to pitch the value of the project rather than reporting their operational upload status.
