@@ -7228,3 +7228,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: PolarFire 1000-Clause Scorer Hash v2 (✅ Complete) — honest_verdict=complete: polarfire_1000_clause_constraint_scorer_hash_verified; results/experiment_2958_polarfire_1000_clause_scorer_v2.json
 - 2026-05-24: NL-to-Z3 Execution Repair Mini v2 (✅ Complete) — honest_verdict=complete: local SOTA logic proposals accepted_or_rejected_by_z3; results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json
 - 2026-05-24: Cross-Corpus Matrix v12 (⚠️ Blocked) — honest_verdict=complete: matrix_v12_ready=true; clean=22; flagged=9; blocked=5; pilot_only=3; results/experiment_2960_cross_corpus_matrix_v12.json
+- 2026-05-24: Capstone .278 (⚠️ Blocked) — honest_verdict=complete: milestone_278_capstone; paper_ready=false; clean=5; flagged=5; blocked=1; missing=0; results/experiment_2961_capstone_v278.json
