@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.279",
+  "generated_at": "2026-05-24T08:21:10Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.279 has 0 completed experiments in the authoritative timing window, so total wall time and compute-bound coverage both remain 0. Slowest-experiment ranking, compute-bound GPU efficiency, and DualGPURunner assessment have no data available this milestone.",
+  "bottlenecks_identified": [
+    "no data available this milestone for compute-bound runtime bottlenecks",
+    "No GPU-idle bottleneck is identified because the timing block contains 0 compute-bound experiments."
+  ],
+  "improvements_suggested": [
+    "Add a closeout check that stops operational-retro synthesis with an explicit no-data artifact when the activation window has 0 experiment commits.",
+    "Gate GPU-monitor recommendations behind the presence of at least one compute-bound timing row.",
+    "Show the activation-window experiment count in ops status before milestone closeout so empty timing windows are visible before retrospective generation."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Emit an empty-window sentinel before retrospective analysis starts.",
+    "Require compute-bound timing evidence before GPU or DualGPURunner recommendations are generated.",
+    "Expose the activation-window commit count in the closeout preflight."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The source data only supports a no-data retrospective for compute-bound execution questions. The GPU report showed idle devices, but with 0 compute-bound timing rows that state is not evidence of inefficient execution."
+}
