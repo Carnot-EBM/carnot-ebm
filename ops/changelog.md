@@ -7243,3 +7243,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: GateMate Board Detection + Flash Harness v3 (✅ Complete) — honest_verdict=complete: gatemate_flash_preconditions_ready; results/experiment_2971_gatemate_board_detection_flash_harness_v3.json
 - 2026-05-24: Gated GateMate Post-Flash Output Hash Smoke v3 (✅ Complete) — honest_verdict=complete: gatemate_flash_contact_smoke_no_readback; results/experiment_2972_gatemate_post_flash_output_hash_v3.json
 - 2026-05-24: Cross-Corpus Matrix v13 (⚠️ Blocked) — honest_verdict=complete: matrix_v13_ready=true; clean=26; flagged=14; blocked=5; gated_skipped=0; pilot_only=4; results/experiment_2973_cross_corpus_matrix_v13.json
+- 2026-05-24: Capstone .279 (⚠️ Blocked) — honest_verdict=complete: milestone_279_capstone; paper_ready=false; clean=4; flagged=6; blocked=0; missing=0; results/experiment_2974_capstone_v279.json
