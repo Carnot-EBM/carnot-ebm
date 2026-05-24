@@ -6117,3 +6117,59 @@ from the capstone `headline_outcome`, zero duplicate `.278` archive rows,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2962 | Implemented (`python/carnot/reporting/milestone_278_archive_279_activation.py`) | Implemented (`tests/python/test_experiment_2962_archive_v278.py`) |
+
+### REQ-REPORT-2973: Cross-Corpus Matrix V13 From .279 Artifacts
+
+The repository shall provide an Exp 2973 cross-corpus matrix v13 generator
+that writes `results/experiment_2973_cross_corpus_matrix_v13.json` using only
+checked-in upstream artifact JSON files. The generator MUST start from
+`results/experiment_2960_cross_corpus_matrix_v12.json`, carry forward the
+`.278` capstone facts from `results/experiment_2961_capstone_v278.json`, and
+read every available completed `.279` artifact from Exp 2962 through Exp 2972
+without rerunning live inference, verifier scoring, solver execution, synthesis,
+board flashing, or hardware smoke tests.
+
+The generator MUST require Exp 2969 to report
+`non_tautological_self_learning_ready=true`; if this precondition is not met,
+it MUST write a terminal blocked artifact rather than fabricating self-learning
+or KAN-memory rows. Missing or blocked `.279` branches MUST be reported in
+their own row classes instead of promoted to clean evidence.
+
+The matrix v13 artifact MUST preserve the `.277` and `.278` claim boundaries:
+no KV260 speedup claim, no KV260 Boltzmann or thermalization claim, no TSU or
+Kona performance claim, and no native EBT training claim. Rows added in v13
+MUST include DCCD repair, BEAVER-style certificates, solver-frontier
+formalization, partial monitors, non-tautological FR-11, KAN forgetting guard,
+and GateMate flash state, with each row labeled as one of `clean`, `flagged`,
+`blocked`, `gated-skipped`, `pilot-only`, or `aggregation-only`.
+
+The terminal artifact MUST include `honest_verdict`, `matrix_v13_ready`,
+`inference_substrate="aggregation_from_upstream_artifacts"`,
+`upstream_artifacts_read`, `upstream_checksums`, `clean_rows`, `flagged_rows`,
+`blocked_rows`, `gated_skipped_rows`, `pilot_only_rows`,
+`forbidden_claims_absent`, `repair_replication_summary`,
+`solver_frontier_summary`, `self_learning_summary`, `kan_memory_summary`,
+`hardware_state_summary`, and measured `duration_s`. It MAY include compact
+`matrix_rows`, `aggregation_only_rows`, schema, run date, and no-new-execution
+booleans as long as every value is derived from upstream JSON fields.
+
+#### SCENARIO-REPORT-2973: V13 Aggregates .279 Rows Without New Execution
+
+**Given** matrix v12 and the .278 capstone are present
+**And** Exp 2962 through Exp 2972 artifacts are present or honestly blocked
+**And** Exp 2969 reports `non_tautological_self_learning_ready=true`
+**When** the Exp 2973 matrix v13 generator runs
+**Then** it writes `results/experiment_2973_cross_corpus_matrix_v13.json`
+with all required fields, upstream checksums for every source it read, v12 row
+buckets preserved, v13 rows added for DCCD repair, BEAVER-style certificates,
+solver-frontier formalization, partial monitors, non-tautological FR-11, KAN
+forgetting guard, and GateMate flash state, flagged rows kept separate from
+clean rows, blocked or gated-skipped hardware rows kept separate from clean
+rows, compact deltas relative to `.278`, and no forbidden Paper-v6 claim
+phrasing.
+
+## Implementation Status (REQ-REPORT-2973)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2973 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v13_2973.py`) | Implemented (`tests/python/test_experiment_2973_cross_corpus_matrix_v13.py`) |

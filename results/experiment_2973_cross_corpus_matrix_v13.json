@@ -1,0 +1,1040 @@
+{
+  "aggregation_only_rows": [
+    "exp2960_matrix_v12_carry_forward",
+    "exp2961_capstone_v278_carry_forward",
+    "exp2943_matrix_v11_carry_forward",
+    "exp2948_capstone_v277_carry_forward",
+    "exp2962_archive_activation"
+  ],
+  "artifact": "experiment_2973_cross_corpus_matrix_v13",
+  "blocked_rows": [
+    "exp2914_gatemate_toolchain",
+    "exp2927_gatemate_himbaechel_preflight",
+    "exp2929_gatemate_flash_timing_boundary",
+    "exp2931_llmeval_logic_z3_mini",
+    "exp2957_gatemate_flash_smoke"
+  ],
+  "clean_rows": [
+    "corpus:FoVer",
+    "corpus:HaluEval_FEVER",
+    "corpus:TruthfulQA",
+    "exp2890_code_structural_dependency",
+    "exp2892_vericot",
+    "exp2898_kv260_hardware",
+    "exp2910_sota_codegen",
+    "exp2913_kv260_claim_boundary",
+    "exp2918_fr11_process_rewards",
+    "exp2920_state_verifier_harness",
+    "exp2924_aggregation_metadata_corrigendum",
+    "exp2925_taxonomy_corrigendum",
+    "exp2926_constraintbench_corrigendum",
+    "exp2933_kan_cl_self_learning",
+    "exp2938_kv260_mmd_corrigendum",
+    "exp2939_same_schedule_speedup_corrigendum",
+    "exp2940_code_corpus_auprc_corrigendum",
+    "exp2942_kv260_n_scaling_corrigendum",
+    "exp2953_threshold_policy",
+    "exp2955_gatemate_constraints_materialized",
+    "exp2956_gatemate_bitstream_built",
+    "exp2958_polarfire_1000_clause_hash_verified",
+    "exp2965_beaver_style_certificates",
+    "exp2970_kan_forgetting_guard",
+    "exp2971_gatemate_flash_preflight",
+    "exp2972_gatemate_flash_contact_hash"
+  ],
+  "delta_relative_to_278": {
+    "capstone_paper_ready": false,
+    "capstone_source_experiment_id": "exp2961",
+    "hardware_state": {
+      "claim_boundary": "GateMate rows record constraints, bitstream, board contact, flash, and transcript hashes only; no sampler or comparative claim is made.",
+      "gatemate": {
+        "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+        "bitstream_sha256_verified": true,
+        "board_detected": true,
+        "flash_attempted": true,
+        "flash_command_prepared": true,
+        "flash_preconditions_ready": true,
+        "flash_succeeded": true,
+        "observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+        "post_flash_contact_detected": true,
+        "prior_278_board_detected": false,
+        "prior_278_flash_state": "blocked_board_not_detected",
+        "smoke_vector_passed": false
+      }
+    },
+    "kan_memory": {
+      "claim_boundary": "bounded_fixture_no_synthesis_or_analog_claim",
+      "current_domain_utility": {
+        "adapter_style_update": 1.0,
+        "eager_update": 1.0,
+        "frozen": 0.0,
+        "per_knot_importance_update": 1.0
+      },
+      "forgetting_delta_by_policy": {
+        "adapter_style_update": 0.0,
+        "eager_update": 0.75,
+        "frozen": 0.0,
+        "per_knot_importance_update": 0.0
+      },
+      "forgetting_threshold": 0.05,
+      "high_dimensional_claim_allowed": false,
+      "kan_forgetting_guard_ready": true,
+      "no_analog_claim": true,
+      "no_synthesis_claim": true,
+      "old_domain_utility": {
+        "adapter_style_update": 1.0,
+        "eager_update": 0.25,
+        "frozen": 1.0,
+        "per_knot_importance_update": 1.0
+      },
+      "selected_policy": "per_knot_importance_update",
+      "source_experiment_id": "exp2970"
+    },
+    "repair_replication": {
+      "artifact_flagged": true,
+      "baseline_pass_at_1": 0.2,
+      "baseline_pass_at_k": 0.3,
+      "dccd_repair_pass_at_1": 0.0,
+      "dccd_repair_pass_at_k": 0.0,
+      "dccd_repair_replication_clean": false,
+      "false_accept_delta": -0.05,
+      "headline_models_used": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "n_tasks": 20,
+      "pass_at_1_delta": -0.2,
+      "pass_at_k_delta": -0.3,
+      "prior_278_false_accept_delta": -0.125,
+      "prior_278_pass_at_1_delta": 0.25,
+      "prior_278_pass_at_k_delta": 0.25,
+      "prior_278_syntax_failure_rate_delta": -0.0625,
+      "prior_source_experiment_id": "exp2952",
+      "protocol_ready": true,
+      "schema_failure_rate_delta": 0.95,
+      "source_experiment_id": "exp2964",
+      "syntax_failure_rate_delta": 0.30000000000000004,
+      "taxonomy_repair_pass_at_1": 0.45
+    },
+    "self_learning": {
+      "artifact_flagged": true,
+      "continuous_self_learning_task": true,
+      "forgetting_guard_passed": true,
+      "frozen_heldout_utility": 0.033333333333,
+      "heldout_utility_delta_vs_random": 0.093156544055,
+      "leakage_check_passed": true,
+      "negative_control_delta": 0.0,
+      "new_heldout_utility": 0.236013686912,
+      "non_tautological_self_learning_ready": true,
+      "prior_utility_gated_heldout_utility": 0.329686371841,
+      "random_replay_heldout_utility": 0.142857142857,
+      "rollback_triggered": false,
+      "source_experiment_id": "exp2969"
+    },
+    "solver_frontier": {
+      "answer_accuracy": 0.25,
+      "artifact_flagged": true,
+      "baseline_parseability_rate": 0.083333,
+      "baseline_solver_verified_accuracy": 0.0,
+      "failure_categories": {
+        "solver_verified_correct": 5,
+        "unparseable": 18,
+        "wrong_answer": 0,
+        "wrong_formula": 0,
+        "z3_exception": 1
+      },
+      "formalization_delta_clean": false,
+      "formalization_n_items": 24,
+      "frontier_materialized": true,
+      "frontier_n_items": 24,
+      "manifest_sha256": "d85c748ec513cc957e4b559f3ad5c9e55be8d8d3064d210361b7c6460e8cf279",
+      "parseability_delta_vs_278": 0.166667,
+      "parseability_rate": 0.25,
+      "reference_solver_accuracy": 1.0,
+      "reference_z3_execution_rate": 1.0,
+      "skill_label_counts": {
+        "answer extraction": 5,
+        "countermodel construction": 4,
+        "quantifier handling": 11,
+        "satisfiability": 14,
+        "symbolization": 24,
+        "validity": 10
+      },
+      "skill_wise_metrics": {
+        "answer extraction": {
+          "answer_accuracy": 0.2,
+          "failure_categories": {
+            "solver_verified_correct": 0,
+            "unparseable": 4,
+            "wrong_answer": 0,
+            "wrong_formula": 0,
+            "z3_exception": 1
+          },
+          "n_items": 5,
+          "parseability_rate": 0.2,
+          "solver_verified_accuracy": 0.0,
+          "z3_execution_rate": 0.0
+        },
+        "countermodel construction": {
+          "answer_accuracy": 0.5,
+          "failure_categories": {
+            "solver_verified_correct": 2,
+            "unparseable": 2,
+            "wrong_answer": 0,
+            "wrong_formula": 0,
+            "z3_exception": 0
+          },
+          "n_items": 4,
+          "parseability_rate": 0.5,
+          "solver_verified_accuracy": 0.5,
+          "z3_execution_rate": 0.5
+        },
+        "quantifier handling": {
+          "answer_accuracy": 0.363636,
+          "failure_categories": {
+            "solver_verified_correct": 4,
+            "unparseable": 7,
+            "wrong_answer": 0,
+            "wrong_formula": 0,
+            "z3_exception": 0
+          },
+          "n_items": 11,
+          "parseability_rate": 0.363636,
+          "solver_verified_accuracy": 0.363636,
+          "z3_execution_rate": 0.363636
+        },
+        "satisfiability": {
+          "answer_accuracy": 0.214286,
+          "failure_categories": {
+            "solver_verified_correct": 2,
+            "unparseable": 11,
+            "wrong_answer": 0,
+            "wrong_formula": 0,
+            "z3_exception": 1
+          },
+          "n_items": 14,
+          "parseability_rate": 0.214286,
+          "solver_verified_accuracy": 0.142857,
+          "z3_execution_rate": 0.142857
+        },
+        "symbolization": {
+          "answer_accuracy": 0.25,
+          "failure_categories": {
+            "solver_verified_correct": 5,
+            "unparseable": 18,
+            "wrong_answer": 0,
+            "wrong_formula": 0,
+            "z3_exception": 1
+          },
+          "n_items": 24,
+          "parseability_rate": 0.25,
+          "solver_verified_accuracy": 0.208333,
+          "z3_execution_rate": 0.208333
+        },
+        "validity": {
+          "answer_accuracy": 0.3,
+          "failure_categories": {
+            "solver_verified_correct": 3,
+            "unparseable": 7,
+            "wrong_answer": 0,
+            "wrong_formula": 0,
+            "z3_exception": 0
+          },
+          "n_items": 10,
+          "parseability_rate": 0.3,
+          "solver_verified_accuracy": 0.3,
+          "z3_execution_rate": 0.3
+        }
+      },
+      "solver_verified_accuracy": 0.208333,
+      "solver_verified_accuracy_delta_vs_278": 0.208333,
+      "z3_execution_rate": 0.208333
+    }
+  },
+  "duration_s": 1e-06,
+  "flagged_rows": [
+    "exp2911_code_hallucination_verifier",
+    "exp2919_constraintbench_mini",
+    "exp2932_citation_field_verifier",
+    "exp2934_reformulation_pipeline",
+    "exp2950_repair_prompt_manifest",
+    "exp2951_structured_candidate_manifest_adapter",
+    "exp2952_structured_repair_delta",
+    "exp2954_self_learning_utility",
+    "exp2959_nl_to_z3_execution_repair",
+    "exp2963_dccd_repair_protocol",
+    "exp2964_dccd_repair_replication",
+    "exp2966_logic_frontier_materializer",
+    "exp2967_solver_frontier_formalization",
+    "exp2969_non_tautological_fr11"
+  ],
+  "forbidden_claims_absent": true,
+  "gated_skipped_rows": [],
+  "hardware_state_summary": {
+    "claim_boundary": "GateMate rows record constraints, bitstream, board contact, flash, and transcript hashes only; no sampler or comparative claim is made.",
+    "gatemate": {
+      "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "bitstream_sha256_verified": true,
+      "board_detected": true,
+      "flash_attempted": true,
+      "flash_command_prepared": true,
+      "flash_preconditions_ready": true,
+      "flash_succeeded": true,
+      "observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+      "post_flash_contact_detected": true,
+      "prior_278_board_detected": false,
+      "prior_278_flash_state": "blocked_board_not_detected",
+      "smoke_vector_passed": false
+    }
+  },
+  "honest_verdict": "complete: matrix_v13_ready=true; clean=26; flagged=14; blocked=5; gated_skipped=0; pilot_only=4",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "kan_memory_summary": {
+    "claim_boundary": "bounded_fixture_no_synthesis_or_analog_claim",
+    "current_domain_utility": {
+      "adapter_style_update": 1.0,
+      "eager_update": 1.0,
+      "frozen": 0.0,
+      "per_knot_importance_update": 1.0
+    },
+    "forgetting_delta_by_policy": {
+      "adapter_style_update": 0.0,
+      "eager_update": 0.75,
+      "frozen": 0.0,
+      "per_knot_importance_update": 0.0
+    },
+    "forgetting_threshold": 0.05,
+    "high_dimensional_claim_allowed": false,
+    "kan_forgetting_guard_ready": true,
+    "no_analog_claim": true,
+    "no_synthesis_claim": true,
+    "old_domain_utility": {
+      "adapter_style_update": 1.0,
+      "eager_update": 0.25,
+      "frozen": 1.0,
+      "per_knot_importance_update": 1.0
+    },
+    "selected_policy": "per_knot_importance_update",
+    "source_experiment_id": "exp2970"
+  },
+  "matrix_rows": [
+    {
+      "claim_boundary": "v12 row buckets are copied without metric recomputation.",
+      "row_class": "aggregation-only",
+      "row_id": "exp2960_matrix_v12_carry_forward",
+      "source_experiment_id": "exp2960"
+    },
+    {
+      "claim_boundary": "The .278 capstone boundary is carried forward.",
+      "paper_ready": false,
+      "row_class": "aggregation-only",
+      "row_id": "exp2961_capstone_v278_carry_forward",
+      "source_experiment_id": "exp2961"
+    },
+    {
+      "claim_boundary": "Archive/activation state is copied without reclassifying .278 evidence.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "aggregation-only",
+      "row_id": "exp2962_archive_activation",
+      "source_experiment_id": "exp2962",
+      "source_honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.278; activated_milestone=2026.05.279",
+      "summary": {
+        "archive_ready": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "DCCD protocol manifest prepares replication and makes no pass-rate claim.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2963_dccd_repair_protocol",
+      "source_experiment_id": "exp2963",
+      "source_honest_verdict": "complete: DCCD structured-repair protocol ready; no pass-rate improvement claimed",
+      "summary": {
+        "n_tasks_planned_min": 20,
+        "protocol_ready": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Live DCCD repair replication did not promote unless explicit gates passed.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2964_dccd_repair_replication",
+      "source_experiment_id": "exp2964",
+      "source_honest_verdict": "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05",
+      "summary": {
+        "artifact_flagged": true,
+        "baseline_pass_at_1": 0.2,
+        "baseline_pass_at_k": 0.3,
+        "dccd_repair_pass_at_1": 0.0,
+        "dccd_repair_pass_at_k": 0.0,
+        "dccd_repair_replication_clean": false,
+        "false_accept_delta": -0.05,
+        "headline_models_used": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "n_tasks": 20,
+        "pass_at_1_delta": -0.2,
+        "pass_at_k_delta": -0.3,
+        "prior_278_false_accept_delta": -0.125,
+        "prior_278_pass_at_1_delta": 0.25,
+        "prior_278_pass_at_k_delta": 0.25,
+        "prior_278_syntax_failure_rate_delta": -0.0625,
+        "prior_source_experiment_id": "exp2952",
+        "protocol_ready": true,
+        "schema_failure_rate_delta": 0.95,
+        "source_experiment_id": "exp2964",
+        "syntax_failure_rate_delta": 0.30000000000000004,
+        "taxonomy_repair_pass_at_1": 0.45
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Bounded deterministic repair certificates are recorded without probability-bound claims.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2965_beaver_style_certificates",
+      "source_experiment_id": "exp2965",
+      "source_honest_verdict": "complete: bounded certificate audit ready; full BEAVER probability bound not claimed",
+      "summary": {
+        "audited_candidate_count": 32,
+        "available_candidate_count": 32,
+        "certificate_ready": true,
+        "probability_bound_claimed": false,
+        "validation_fixture_count": 5,
+        "validation_fixture_passed": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "Exact skill-labeled logic frontier is copied as deterministic source evidence.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2966_logic_frontier_materializer",
+      "source_experiment_id": "exp2966",
+      "source_honest_verdict": "complete: exact skill-labeled logic frontier materialized",
+      "summary": {
+        "artifact_flagged": true,
+        "frontier_materialized": true,
+        "frontier_n_items": 24,
+        "manifest_sha256": "d85c748ec513cc957e4b559f3ad5c9e55be8d8d3064d210361b7c6460e8cf279",
+        "reference_solver_accuracy": 1.0,
+        "reference_z3_execution_rate": 1.0,
+        "skill_label_counts": {
+          "answer extraction": 5,
+          "countermodel construction": 4,
+          "quantifier handling": 11,
+          "satisfiability": 14,
+          "symbolization": 24,
+          "validity": 10
+        }
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Live NL-to-Z3 frontier formalization is recorded with parseability and solver gates.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2967_solver_frontier_formalization",
+      "source_experiment_id": "exp2967",
+      "source_honest_verdict": "complete: local SOTA DCCD formalizations did not clear .278 delta gate",
+      "summary": {
+        "answer_accuracy": 0.25,
+        "artifact_flagged": true,
+        "baseline_parseability_rate": 0.083333,
+        "baseline_solver_verified_accuracy": 0.0,
+        "failure_categories": {
+          "solver_verified_correct": 5,
+          "unparseable": 18,
+          "wrong_answer": 0,
+          "wrong_formula": 0,
+          "z3_exception": 1
+        },
+        "formalization_delta_clean": false,
+        "formalization_n_items": 24,
+        "parseability_delta_vs_278": 0.166667,
+        "parseability_rate": 0.25,
+        "skill_wise_metrics": {
+          "answer extraction": {
+            "answer_accuracy": 0.2,
+            "failure_categories": {
+              "solver_verified_correct": 0,
+              "unparseable": 4,
+              "wrong_answer": 0,
+              "wrong_formula": 0,
+              "z3_exception": 1
+            },
+            "n_items": 5,
+            "parseability_rate": 0.2,
+            "solver_verified_accuracy": 0.0,
+            "z3_execution_rate": 0.0
+          },
+          "countermodel construction": {
+            "answer_accuracy": 0.5,
+            "failure_categories": {
+              "solver_verified_correct": 2,
+              "unparseable": 2,
+              "wrong_answer": 0,
+              "wrong_formula": 0,
+              "z3_exception": 0
+            },
+            "n_items": 4,
+            "parseability_rate": 0.5,
+            "solver_verified_accuracy": 0.5,
+            "z3_execution_rate": 0.5
+          },
+          "quantifier handling": {
+            "answer_accuracy": 0.363636,
+            "failure_categories": {
+              "solver_verified_correct": 4,
+              "unparseable": 7,
+              "wrong_answer": 0,
+              "wrong_formula": 0,
+              "z3_exception": 0
+            },
+            "n_items": 11,
+            "parseability_rate": 0.363636,
+            "solver_verified_accuracy": 0.363636,
+            "z3_execution_rate": 0.363636
+          },
+          "satisfiability": {
+            "answer_accuracy": 0.214286,
+            "failure_categories": {
+              "solver_verified_correct": 2,
+              "unparseable": 11,
+              "wrong_answer": 0,
+              "wrong_formula": 0,
+              "z3_exception": 1
+            },
+            "n_items": 14,
+            "parseability_rate": 0.214286,
+            "solver_verified_accuracy": 0.142857,
+            "z3_execution_rate": 0.142857
+          },
+          "symbolization": {
+            "answer_accuracy": 0.25,
+            "failure_categories": {
+              "solver_verified_correct": 5,
+              "unparseable": 18,
+              "wrong_answer": 0,
+              "wrong_formula": 0,
+              "z3_exception": 1
+            },
+            "n_items": 24,
+            "parseability_rate": 0.25,
+            "solver_verified_accuracy": 0.208333,
+            "z3_execution_rate": 0.208333
+          },
+          "validity": {
+            "answer_accuracy": 0.3,
+            "failure_categories": {
+              "solver_verified_correct": 3,
+              "unparseable": 7,
+              "wrong_answer": 0,
+              "wrong_formula": 0,
+              "z3_exception": 0
+            },
+            "n_items": 10,
+            "parseability_rate": 0.3,
+            "solver_verified_accuracy": 0.3,
+            "z3_execution_rate": 0.3
+          }
+        },
+        "solver_verified_accuracy": 0.208333,
+        "solver_verified_accuracy_delta_vs_278": 0.208333,
+        "z3_execution_rate": 0.208333
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Partial monitor fixture harness remains pilot-only, not a full streaming verifier claim.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "pilot-only",
+      "row_id": "exp2968_partial_monitor_harness",
+      "source_experiment_id": "exp2968",
+      "source_honest_verdict": "complete: deterministic partial monitor harness ready",
+      "summary": {
+        "coverage_by_event": {
+          "assertion_or_formula_line": {
+            "checks": [
+              "parser_prefix_validity",
+              "schema_field_coverage",
+              "symbol_consistency"
+            ],
+            "count": 5,
+            "passed": true
+          },
+          "final_answer": {
+            "checks": [
+              "schema_field_coverage",
+              "symbol_consistency"
+            ],
+            "count": 5,
+            "passed": true
+          },
+          "function_sig": {
+            "checks": [
+              "parser_prefix_validity",
+              "schema_field_coverage",
+              "symbol_consistency"
+            ],
+            "count": 4,
+            "passed": true
+          },
+          "import_line": {
+            "checks": [
+              "import_allow_list",
+              "parser_prefix_validity",
+              "schema_field_coverage"
+            ],
+            "count": 1,
+            "passed": true
+          },
+          "partial_code_block": {
+            "checks": [
+              "parser_prefix_validity",
+              "schema_field_coverage"
+            ],
+            "count": 4,
+            "passed": true
+          },
+          "solver_query": {
+            "checks": [
+              "schema_field_coverage",
+              "z3_parse_check"
+            ],
+            "count": 1,
+            "passed": true
+          }
+        },
+        "fixture_checks_passed": true,
+        "fixture_trace_count": 5,
+        "full_streaming_verification_claim": false,
+        "latency_estimate_ms": 4.67,
+        "partial_monitor_harness_ready": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "FR-11 utility gate uses disjoint checked-in slices and reports flags separately.",
+      "headline_eligible": false,
+      "paper_claim_eligible": false,
+      "row_class": "flagged",
+      "row_id": "exp2969_non_tautological_fr11",
+      "source_experiment_id": "exp2969",
+      "source_honest_verdict": "complete: non_tautological_self_learning_ready",
+      "summary": {
+        "artifact_flagged": true,
+        "continuous_self_learning_task": true,
+        "forgetting_guard_passed": true,
+        "frozen_heldout_utility": 0.033333333333,
+        "heldout_utility_delta_vs_random": 0.093156544055,
+        "leakage_check_passed": true,
+        "negative_control_delta": 0.0,
+        "new_heldout_utility": 0.236013686912,
+        "non_tautological_self_learning_ready": true,
+        "prior_utility_gated_heldout_utility": 0.329686371841,
+        "random_replay_heldout_utility": 0.142857142857,
+        "rollback_triggered": false,
+        "source_experiment_id": "exp2969"
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "IMPLAUSIBLE_PERFECT:info"
+      ]
+    },
+    {
+      "claim_boundary": "KAN constraint memory is bounded to forgetting guards and local cost fields.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2970_kan_forgetting_guard",
+      "source_experiment_id": "exp2970",
+      "source_honest_verdict": "complete: kan_forgetting_guard_ready",
+      "summary": {
+        "claim_boundary": "bounded_fixture_no_synthesis_or_analog_claim",
+        "current_domain_utility": {
+          "adapter_style_update": 1.0,
+          "eager_update": 1.0,
+          "frozen": 0.0,
+          "per_knot_importance_update": 1.0
+        },
+        "forgetting_delta_by_policy": {
+          "adapter_style_update": 0.0,
+          "eager_update": 0.75,
+          "frozen": 0.0,
+          "per_knot_importance_update": 0.0
+        },
+        "forgetting_threshold": 0.05,
+        "high_dimensional_claim_allowed": false,
+        "kan_forgetting_guard_ready": true,
+        "no_analog_claim": true,
+        "no_synthesis_claim": true,
+        "old_domain_utility": {
+          "adapter_style_update": 1.0,
+          "eager_update": 0.25,
+          "frozen": 1.0,
+          "per_knot_importance_update": 1.0
+        },
+        "selected_policy": "per_knot_importance_update",
+        "source_experiment_id": "exp2970"
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "GateMate board contact preflight prepared the command but did not flash.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2971_gatemate_flash_preflight",
+      "source_experiment_id": "exp2971",
+      "source_honest_verdict": "complete: gatemate_flash_preconditions_ready",
+      "summary": {
+        "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+        "bitstream_sha256_verified": true,
+        "board_detected": true,
+        "flash_command_prepared": true,
+        "flash_preconditions_ready": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "GateMate flash/contact hash evidence is scoped to board contact only.",
+      "headline_eligible": true,
+      "paper_claim_eligible": true,
+      "row_class": "clean",
+      "row_id": "exp2972_gatemate_flash_contact_hash",
+      "source_experiment_id": "exp2972",
+      "source_honest_verdict": "complete: gatemate_flash_contact_smoke_no_readback",
+      "summary": {
+        "bitstream_sha256_verified": true,
+        "board_detected": true,
+        "flash_attempted": true,
+        "flash_succeeded": true,
+        "observed_output_sha256": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+        "post_flash_contact_detected": true,
+        "smoke_vector_passed": false
+      },
+      "upstream_flags": []
+    }
+  ],
+  "matrix_v13_ready": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "pilot_only_rows": [
+    "corpus:MBPP",
+    "corpus:HumanEval",
+    "exp2891_cctu",
+    "exp2968_partial_monitor_harness"
+  ],
+  "repair_replication_summary": {
+    "artifact_flagged": true,
+    "baseline_pass_at_1": 0.2,
+    "baseline_pass_at_k": 0.3,
+    "dccd_repair_pass_at_1": 0.0,
+    "dccd_repair_pass_at_k": 0.0,
+    "dccd_repair_replication_clean": false,
+    "false_accept_delta": -0.05,
+    "headline_models_used": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "n_tasks": 20,
+    "pass_at_1_delta": -0.2,
+    "pass_at_k_delta": -0.3,
+    "prior_278_false_accept_delta": -0.125,
+    "prior_278_pass_at_1_delta": 0.25,
+    "prior_278_pass_at_k_delta": 0.25,
+    "prior_278_syntax_failure_rate_delta": -0.0625,
+    "prior_source_experiment_id": "exp2952",
+    "protocol_ready": true,
+    "schema_failure_rate_delta": 0.95,
+    "source_experiment_id": "exp2964",
+    "syntax_failure_rate_delta": 0.30000000000000004,
+    "taxonomy_repair_pass_at_1": 0.45
+  },
+  "run_date": "20260524",
+  "schema": "carnot.cross_corpus_matrix.v13_279_aggregation.v1",
+  "self_learning_summary": {
+    "artifact_flagged": true,
+    "continuous_self_learning_task": true,
+    "forgetting_guard_passed": true,
+    "frozen_heldout_utility": 0.033333333333,
+    "heldout_utility_delta_vs_random": 0.093156544055,
+    "leakage_check_passed": true,
+    "negative_control_delta": 0.0,
+    "new_heldout_utility": 0.236013686912,
+    "non_tautological_self_learning_ready": true,
+    "prior_utility_gated_heldout_utility": 0.329686371841,
+    "random_replay_heldout_utility": 0.142857142857,
+    "rollback_triggered": false,
+    "source_experiment_id": "exp2969"
+  },
+  "solver_frontier_summary": {
+    "answer_accuracy": 0.25,
+    "artifact_flagged": true,
+    "baseline_parseability_rate": 0.083333,
+    "baseline_solver_verified_accuracy": 0.0,
+    "failure_categories": {
+      "solver_verified_correct": 5,
+      "unparseable": 18,
+      "wrong_answer": 0,
+      "wrong_formula": 0,
+      "z3_exception": 1
+    },
+    "formalization_delta_clean": false,
+    "formalization_n_items": 24,
+    "frontier_materialized": true,
+    "frontier_n_items": 24,
+    "manifest_sha256": "d85c748ec513cc957e4b559f3ad5c9e55be8d8d3064d210361b7c6460e8cf279",
+    "parseability_delta_vs_278": 0.166667,
+    "parseability_rate": 0.25,
+    "reference_solver_accuracy": 1.0,
+    "reference_z3_execution_rate": 1.0,
+    "skill_label_counts": {
+      "answer extraction": 5,
+      "countermodel construction": 4,
+      "quantifier handling": 11,
+      "satisfiability": 14,
+      "symbolization": 24,
+      "validity": 10
+    },
+    "skill_wise_metrics": {
+      "answer extraction": {
+        "answer_accuracy": 0.2,
+        "failure_categories": {
+          "solver_verified_correct": 0,
+          "unparseable": 4,
+          "wrong_answer": 0,
+          "wrong_formula": 0,
+          "z3_exception": 1
+        },
+        "n_items": 5,
+        "parseability_rate": 0.2,
+        "solver_verified_accuracy": 0.0,
+        "z3_execution_rate": 0.0
+      },
+      "countermodel construction": {
+        "answer_accuracy": 0.5,
+        "failure_categories": {
+          "solver_verified_correct": 2,
+          "unparseable": 2,
+          "wrong_answer": 0,
+          "wrong_formula": 0,
+          "z3_exception": 0
+        },
+        "n_items": 4,
+        "parseability_rate": 0.5,
+        "solver_verified_accuracy": 0.5,
+        "z3_execution_rate": 0.5
+      },
+      "quantifier handling": {
+        "answer_accuracy": 0.363636,
+        "failure_categories": {
+          "solver_verified_correct": 4,
+          "unparseable": 7,
+          "wrong_answer": 0,
+          "wrong_formula": 0,
+          "z3_exception": 0
+        },
+        "n_items": 11,
+        "parseability_rate": 0.363636,
+        "solver_verified_accuracy": 0.363636,
+        "z3_execution_rate": 0.363636
+      },
+      "satisfiability": {
+        "answer_accuracy": 0.214286,
+        "failure_categories": {
+          "solver_verified_correct": 2,
+          "unparseable": 11,
+          "wrong_answer": 0,
+          "wrong_formula": 0,
+          "z3_exception": 1
+        },
+        "n_items": 14,
+        "parseability_rate": 0.214286,
+        "solver_verified_accuracy": 0.142857,
+        "z3_execution_rate": 0.142857
+      },
+      "symbolization": {
+        "answer_accuracy": 0.25,
+        "failure_categories": {
+          "solver_verified_correct": 5,
+          "unparseable": 18,
+          "wrong_answer": 0,
+          "wrong_formula": 0,
+          "z3_exception": 1
+        },
+        "n_items": 24,
+        "parseability_rate": 0.25,
+        "solver_verified_accuracy": 0.208333,
+        "z3_execution_rate": 0.208333
+      },
+      "validity": {
+        "answer_accuracy": 0.3,
+        "failure_categories": {
+          "solver_verified_correct": 3,
+          "unparseable": 7,
+          "wrong_answer": 0,
+          "wrong_formula": 0,
+          "z3_exception": 0
+        },
+        "n_items": 10,
+        "parseability_rate": 0.3,
+        "solver_verified_accuracy": 0.3,
+        "z3_execution_rate": 0.3
+      }
+    },
+    "solver_verified_accuracy": 0.208333,
+    "solver_verified_accuracy_delta_vs_278": 0.208333,
+    "z3_execution_rate": 0.208333
+  },
+  "upstream_artifacts_read": [
+    {
+      "experiment_id": "exp2960",
+      "path": "results/experiment_2960_cross_corpus_matrix_v12.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "bc76302404a593b5092dd0a2c410a70616fcb87a30bf38079acb05d325563edd"
+    },
+    {
+      "experiment_id": "exp2961",
+      "path": "results/experiment_2961_capstone_v278.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "bec413909bccd5e7b3bcad708049f8e4253e0a014a578688ff20a19cd0eb2bae"
+    },
+    {
+      "experiment_id": "exp2962",
+      "path": "results/experiment_2962_archive_v278_activate_v279.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "df0b658cf51ce47e797b73a1552b580df0ead5a37d637aeb11228e9f335eb306"
+    },
+    {
+      "experiment_id": "exp2963",
+      "path": "results/experiment_2963_dccd_repair_protocol_manifest_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "23fa4933fff5132c84c64c0d0640499e9a982f847bb6a25dfae6fcaeb4e6d88f"
+    },
+    {
+      "experiment_id": "exp2964",
+      "path": "results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2"
+    },
+    {
+      "experiment_id": "exp2965",
+      "path": "results/experiment_2965_beaver_style_repair_certificate_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "715161b9e3214a03cc339acd1c45d2a89bc227be7fc84b28af21e952ccfe931e"
+    },
+    {
+      "experiment_id": "exp2966",
+      "path": "results/experiment_2966_logic_frontier_materializer_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "b600c83e12458633e87c6576429c4ae0bbc1d61e814abb4a4e422f9f428d2c2d"
+    },
+    {
+      "experiment_id": "exp2967",
+      "path": "results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "30ac8330b454530a5dbde826bcd00369211d375959f22d45da41c71d2357d82c"
+    },
+    {
+      "experiment_id": "exp2968",
+      "path": "results/experiment_2968_interwhen_partial_monitor_harness_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "05578eeaee612f7c7757fe8e8d7e40986d6b9f9d3a11034e13b0443005755199"
+    },
+    {
+      "experiment_id": "exp2969",
+      "path": "results/experiment_2969_fr11_non_tautological_utility_gate_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "abc6e4b4b9b383f107cac796c86b99dcd83e097db93400d8142822462c0896c9"
+    },
+    {
+      "experiment_id": "exp2970",
+      "path": "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "7779857fe0c036b85e4842e1c4b925ed84cee5a7964514b91cf9f939bf283373"
+    },
+    {
+      "experiment_id": "exp2971",
+      "path": "results/experiment_2971_gatemate_board_detection_flash_harness_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "3cb7e3dbb4cf7b4cec7b17467bc67394488e57721094804e0c4cc404be7ed07b"
+    },
+    {
+      "experiment_id": "exp2972",
+      "path": "results/experiment_2972_gatemate_post_flash_output_hash_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "db2884eb5bf3d653119e08129829bb38bf6ecb38c28173f6932c24b5513cf74e"
+    }
+  ],
+  "upstream_checksums": {
+    "results/experiment_2960_cross_corpus_matrix_v12.json": "bc76302404a593b5092dd0a2c410a70616fcb87a30bf38079acb05d325563edd",
+    "results/experiment_2961_capstone_v278.json": "bec413909bccd5e7b3bcad708049f8e4253e0a014a578688ff20a19cd0eb2bae",
+    "results/experiment_2962_archive_v278_activate_v279.json": "df0b658cf51ce47e797b73a1552b580df0ead5a37d637aeb11228e9f335eb306",
+    "results/experiment_2963_dccd_repair_protocol_manifest_v1.json": "23fa4933fff5132c84c64c0d0640499e9a982f847bb6a25dfae6fcaeb4e6d88f",
+    "results/experiment_2964_sota_dccd_repair_replication_v1.json": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2",
+    "results/experiment_2965_beaver_style_repair_certificate_v1.json": "715161b9e3214a03cc339acd1c45d2a89bc227be7fc84b28af21e952ccfe931e",
+    "results/experiment_2966_logic_frontier_materializer_v1.json": "b600c83e12458633e87c6576429c4ae0bbc1d61e814abb4a4e422f9f428d2c2d",
+    "results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json": "30ac8330b454530a5dbde826bcd00369211d375959f22d45da41c71d2357d82c",
+    "results/experiment_2968_interwhen_partial_monitor_harness_v1.json": "05578eeaee612f7c7757fe8e8d7e40986d6b9f9d3a11034e13b0443005755199",
+    "results/experiment_2969_fr11_non_tautological_utility_gate_v3.json": "abc6e4b4b9b383f107cac796c86b99dcd83e097db93400d8142822462c0896c9",
+    "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json": "7779857fe0c036b85e4842e1c4b925ed84cee5a7964514b91cf9f939bf283373",
+    "results/experiment_2971_gatemate_board_detection_flash_harness_v3.json": "3cb7e3dbb4cf7b4cec7b17467bc67394488e57721094804e0c4cc404be7ed07b",
+    "results/experiment_2972_gatemate_post_flash_output_hash_v3.json": "db2884eb5bf3d653119e08129829bb38bf6ecb38c28173f6932c24b5513cf74e"
+  }
+}
