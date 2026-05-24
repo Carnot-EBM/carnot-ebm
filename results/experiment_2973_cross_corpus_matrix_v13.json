@@ -1036,5 +1036,18 @@
     "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json": "7779857fe0c036b85e4842e1c4b925ed84cee5a7964514b91cf9f939bf283373",
     "results/experiment_2971_gatemate_board_detection_flash_harness_v3.json": "3cb7e3dbb4cf7b4cec7b17467bc67394488e57721094804e0c4cc404be7ed07b",
     "results/experiment_2972_gatemate_post_flash_output_hash_v3.json": "db2884eb5bf3d653119e08129829bb38bf6ecb38c28173f6932c24b5513cf74e"
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=1e-06 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
