@@ -783,5 +783,23 @@
     "task_success_rate": 0.55555556
   },
   "trace_to_skill_memory_ready": true,
-  "update_selection_metric": "source_failure_signature_frequency"
+  "update_selection_metric": "source_failure_signature_frequency",
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "negative_control_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.00463771 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
