@@ -2278,3 +2278,61 @@ evidence or a precise blocked diagnosis naming the missing host-visible
 interface.
 
 **Implementation status:** Planned (Exp 2996)
+
+---
+
+### REQ-HW-083
+
+**Title:** Exp 3008 GateMate host-visible IO transport gate MUST expose real output or block downstream SSQA
+
+**Description:**
+Experiment 3008 MUST produce the terminal GateMate host-visible IO transport
+artifact for milestone .282. The experiment MUST inspect the current GateMate
+RTL, CCF, test vector, prior readback artifacts, board connection evidence,
+toolchain versions, programmer command, target bitstream, and USB permission
+evidence before any programming attempt. It MUST then record board detection,
+flash, readback, smoke-vector, and IO-transport readiness as separate booleans.
+`host_visible_io_ready=true` is permitted only when a host-observable transport
+captures deterministic smoke output from the programmed GateMate design. If the
+current board, toolchain, RTL, constraints, or missing reader cannot expose a
+status byte/word, the artifact MUST set `host_visible_io_ready=false` and name
+the missing interface without making sampler, speedup, Boltzmann, or
+thermodynamic claims.
+
+**Acceptance criteria:**
+- `results/experiment_3008_gatemate_host_visible_io_transport_v2.json` is
+  generated as a terminal hardware-smoke artifact.
+- The artifact includes `host_visible_io_ready`,
+  `hardware_smoke_boundary_recorded`, `preconditions_checked`,
+  `board_detected`, `flash_attempted`, `flash_succeeded`,
+  `readback_attempted`, `readback_supported`, `smoke_vector_attempted`,
+  `smoke_vector_passed`, `io_transport_path`, `transcript_paths`,
+  `sampler_claim_made=false`, `speedup_claim_made=false`, and
+  `honest_verdict`.
+- Preconditions name the board connection, GateMate tool versions, programmer
+  command, target bitstream/RTL, USB permission evidence when available, and
+  the observed or intended IO path before downstream consumers can proceed.
+- Flash success, readback support, readback attempt, smoke-vector attempt, and
+  host-visible smoke-vector pass MUST remain independently inspectable.
+- Downstream SSQA MUST gate on `host_visible_io_ready=true`, not on board
+  detection, successful flash, or post-flash JTAG contact alone.
+
+**Implementation status:** Planned (Exp 3008)
+
+---
+
+### SCENARIO-HW-083
+
+**Scenario:** GateMate IO transport artifact blocks when no host-visible smoke output exists.
+
+**Given:** Prior GateMate artifacts show board contact and the current n=16
+GateMate bitstream, while Exp 2984/2996 show no supported readback or
+host-visible smoke vector.
+**When:** Exp 3008 checks the current RTL/CCF/test-vector package and runs the
+bounded GateMate hardware smoke boundary.
+**Then:** It writes the v2 JSON with required schema fields, replayable
+transcripts, claim flags fixed false, and either `host_visible_io_ready=true`
+from observed deterministic output or a blocked verdict naming the exact
+missing transport, reader, flash, or board-contact interface.
+
+**Implementation status:** Planned (Exp 3008)
