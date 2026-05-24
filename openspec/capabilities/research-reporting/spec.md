@@ -6417,3 +6417,68 @@ retirement recommendations for repeated failed or overclaimed scopes.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2987 | Planned (`python/carnot/reporting/capstone_v280_2987.py`) | Planned (`tests/python/test_experiment_2987_capstone_v280.py`) |
+
+### REQ-REPORT-2988: Archive Milestone 2026.05.280 and Confirm 2026.05.281 Activation
+
+The repository shall provide an Exp 2988 archive/activation generator that
+writes `results/experiment_2988_archive_v280_activate_v281.json` using only
+checked-in roadmap, archive-ledger, Exp 2987 capstone, and local upstream
+result artifacts. The generator MUST NOT modify `scripts/research_conductor.py`,
+MUST NOT push, MUST NOT call an LLM, and MUST NOT rerun live inference,
+verifier scoring, solver execution, synthesis, board flashing, readback,
+hardware smoke tests, or fresh research experiments.
+
+The generator MUST read `results/experiment_2987_capstone_v280.json` and every
+local `.280` result artifact referenced by its `artifact_audit` rows. It MUST
+summarize clean, flagged, blocked, projection-only, pilot-only, and missing
+counts without repairing or reclassifying historical artifacts. Flagged and
+blocked rows MUST be carried forward explicitly with experiment id, path,
+classification, honest verdict, upstream flags, and prior-failure outcome.
+
+The generator MUST ensure `research-complete.yaml` contains exactly one
+completed `2026.05.280` milestone archive row after the run. If the row already
+exists, it MUST leave the archive ledger unchanged. If the row is absent, it
+MUST append the completed `.280` task list and capstone outcome without
+rewriting unrelated historical milestone entries.
+
+The generator MUST confirm that milestone `2026.05.281` is activated from
+roadmap state. It MUST prefer `research-roadmap-next.yaml` when that file is
+present; when it is absent because activation has already occurred, it MUST use
+the active `research-roadmap.yaml` as a read-only fallback, require non-empty
+tasks, and record that fallback in artifact metadata.
+
+The terminal artifact MUST include `archive_ready`,
+`archived_milestone="2026.05.280"`,
+`activated_milestone="2026.05.281"`, `research_complete_updated`,
+`status_updates_written`, `n_tasks_archived`,
+`blocked_or_flagged_rows_carried_forward`, `validation_commands`, and
+`honest_verdict` with an accepted terminal prefix. It MAY include additional
+audit-trace fields such as artifact classification counts, capstone source
+metadata, source-read counts, read-only roadmap hashes, and notes, as long as
+every value is direct aggregation from local artifacts. When the conductor
+prompt directs ops-doc reconciliation to a separate step, the generator MUST
+leave `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`
+unchanged and report `status_updates_written=false` honestly.
+
+#### SCENARIO-REPORT-2988: Existing .280 Archive Confirms Active .281 Roadmap
+
+**Given** `results/experiment_2987_capstone_v280.json` exists
+**And** `research-complete.yaml` already contains a completed
+`2026.05.280` archive row with the completed `.280` task list
+**And** `research-roadmap-next.yaml` is absent because
+`research-roadmap.yaml` is already activated at `2026.05.281` with non-empty
+tasks
+**When** the Exp 2988 generator runs
+**Then** it writes `results/experiment_2988_archive_v280_activate_v281.json`
+with all required fields, `archive_ready=true`,
+`research_complete_updated=true`, `n_tasks_archived=13`,
+`activation.used_active_roadmap_fallback=true`, classification counts copied
+from the capstone audit, flagged and blocked rows carried forward, and
+unchanged `research-roadmap.yaml`, `scripts/research_conductor.py`,
+`ops/status.md`, and `ops/changelog.md`.
+
+## Implementation Status (REQ-REPORT-2988)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2988 | Implemented (`python/carnot/reporting/milestone_280_archive_281_activation.py`) | Implemented (`tests/python/test_experiment_2988_archive_v280.py`) |
