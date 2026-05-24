@@ -1,0 +1,69 @@
+{
+  "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "bitstream_sha256": "",
+  "build_log_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2956_gatemate_n16_bitstream_build_v4/synthesis.log",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2956_gatemate_n16_bitstream_build_v4/pnr.log"
+  ],
+  "duration_s": 1.450259,
+  "failure_command": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.pnr.json --freq 12.0 --vopt ccf=/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.cfg",
+  "failure_excerpt": "ERROR: Cell type 'CC_LUT3' is unsupported (instantiated as '$abc$16269$auto$blifparse.cc:557:parse_blif$16270').",
+  "gatemate_bitstream_built": false,
+  "honest_verdict": "blocked_gatemate_pnr_failed",
+  "inference_substrate": "hardware_build",
+  "no_flash_attempted": true,
+  "pack_command": "/opt/oss-cad-suite/bin/gmpack /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.cfg /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "pnr_command": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.pnr.json --freq 12.0 --vopt ccf=/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.cfg",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "constraints_file_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+      ],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2955_gatemate_constraints_materialization_v4.json",
+      "ready": true,
+      "reason": "",
+      "resource": "exp2955_constraints_package",
+      "rtl_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+      "test_vector_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json"
+      ]
+    },
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/yosys",
+      "resource": "yosys",
+      "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_output": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)",
+      "version_returncode": 0
+    },
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+      "resource": "nextpnr-himbaechel",
+      "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "version_output": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)",
+      "version_returncode": 0
+    },
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/gmpack",
+      "resource": "gmpack",
+      "version": "Open Source Tools for GateMate FPGAs Version v1.13-1-gdc48418",
+      "version_output": "Error: unrecognised option '--version'\n\nOpen Source Tools for GateMate FPGAs Version v1.13-1-gdc48418\nCopyright (C) 2024 The Project Peppercorn Authors\n\ngmpack: GateMate bitstream packer\n\nUsage: /opt/oss-cad-suite/bin/gmpack input.config [output.bit] [options]\n\nAllowed options:\n  -h [ --help ]         show help\n  -v [ --verbose ]      verbose output\n  --reset               reset all configuration latches with CMD_CFGRST\n  --crcmode arg         CRC error behaviour (check, ignore, unused)\n  --spimode arg         SPI Mode to use (single, dual, quad)\n  --reconfig            enable reconfiguration in bitstream\n  --background          enable background reconfiguration in bitstream\n  --bootaddr arg        boot address for secondary bitstream\n  --input arg           input textual configuration\n  --bit arg             output bitstream file",
+      "version_returncode": 1
+    },
+    {
+      "available": true,
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "resource": "openFPGALoader",
+      "version": "openFPGALoader v1.1.1",
+      "version_output": "openFPGALoader v1.1.1",
+      "version_returncode": 0
+    }
+  ],
+  "run_date": "20260524",
+  "synthesis_command": "/opt/oss-cad-suite/bin/yosys -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json; stat'",
+  "timing_summary": {},
+  "utilization_summary": {}
+}

@@ -1819,3 +1819,55 @@ sets `gatemate_constraints_ready=true`, and performs no flash/programming
 command.
 
 **Implementation status:** Planned (Exp 2955)
+
+---
+
+### REQ-HW-076
+
+**Title:** Exp 2956 GateMate n=16 bitstream build MUST use the exp2955 constraints package without flashing
+
+**Description:**
+Experiment 2956 MUST build the GateMate n=16 Ising top from the Exp 2955
+constraints package using the current OSS CAD Suite flow:
+`yosys synth_gatemate`, `nextpnr-himbaechel --device CCGM1A1`, and `gmpack`.
+The experiment MUST first verify that Exp 2955 reports
+`gatemate_constraints_ready=true`, the referenced RTL and constraints files
+exist, and `yosys`, `nextpnr-himbaechel`, `gmpack`, and `openFPGALoader` are
+available. The experiment MUST NOT flash or program the GateMate board. If any
+tool or build step fails, the artifact MUST preserve the exact failing command
+and the first actionable error excerpt.
+
+**Acceptance criteria:**
+- `results/experiment_2956_gatemate_n16_bitstream_build_v4.json` is generated
+  with `inference_substrate="hardware_build"`.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `gatemate_bitstream_built`, `synthesis_command`, `pnr_command`,
+  `pack_command`, `bitstream_path`, `bitstream_sha256`, `timing_summary`,
+  `utilization_summary`, `build_log_paths`, `failure_command`,
+  `failure_excerpt`, `inference_substrate`, and `duration_s`.
+- A successful build records a non-empty bitstream path whose SHA256 matches the
+  generated file, plus synthesis, place-and-route, and pack log paths.
+- The synthesis command uses `synth_gatemate` with luttree mapping so the JSON
+  handed to nextpnr avoids unsupported legacy `CC_LUT*` cells.
+- The PnR command uses `nextpnr-himbaechel --device CCGM1A1`, the Exp 2955 CCF,
+  `--freq 12.0`, and `--vopt allow-unconstrained`.
+- No `openFPGALoader` command with a board/programming flag such as
+  `-b olimex_gatemateevb` is invoked.
+
+**Implementation status:** Planned (Exp 2956)
+
+---
+
+### SCENARIO-HW-076
+
+**Scenario:** GateMate n=16 bitstream build records complete evidence or an actionable blocker.
+
+**Given:** Exp 2955 has produced a ready constraints package, the current OSS
+CAD Suite GateMate tools are present, and the n=16 GateMate RTL exists.
+**When:** Exp 2956 runs the yosys, nextpnr-himbaechel, and gmpack build flow.
+**Then:** It writes the v4 hardware-build artifact with command strings, log
+paths, timing and utilization summaries, and either
+`gatemate_bitstream_built=true` plus a bitstream SHA256 or a blocked verdict
+with the exact failing command and first actionable error.
+
+**Implementation status:** Planned (Exp 2956)
