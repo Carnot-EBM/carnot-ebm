@@ -1186,6 +1186,50 @@ checks, computes deltas as taxonomy-guided minus baseline, and sets
 `taxonomy_repair_delta_pass=true` only when `pass_at_1_delta > 0` or
 `syntax_failure_rate_delta < 0` while `false_accept_delta <= 0`.
 
+### REQ-CODE-2953: Code Verifier Threshold Policy
+
+The repository shall provide an Exp 2953 deterministic threshold-policy builder
+for the Exp 2940 code-corpus verifier evidence. The builder MUST:
+
+- require checked-in Exp 2940 and Exp 2943 artifacts before emitting a ready
+  policy;
+- use Exp 2940 score-distribution or precision-recall summary fields to derive
+  conservative, balanced, and permissive operating points without inventing
+  missing score or label rows;
+- compute expected PPV, recall, and false-accept rate for each operating point
+  from the measured Exp 2940 positive count, candidate count, and
+  precision-recall curve;
+- select a default threshold for code repair/generation filtering only when
+  the false-accept boundary is explicit; and
+- write `results/experiment_2953_code_verifier_threshold_policy_v1.json` with
+  `honest_verdict`, `threshold_policy_ready`, `source_artifacts`,
+  `operating_points`, `selected_default_threshold`,
+  `expected_ppv_at_default`, `expected_recall_at_default`,
+  `expected_false_accept_rate_at_default`, `deployment_boundary`,
+  `missing_score_distribution`,
+  `inference_substrate="aggregation_from_upstream_artifacts"`, and measured
+  `duration_s`.
+
+### SCENARIO-CODE-2953: Threshold Policy Defines Repair Filtering Boundaries
+
+Given Exp 2940 contains code-corpus AUPRC evidence, a precision-recall curve,
+candidate counts, positive counts, and score-distribution provenance, and Exp
+2943 carries the cross-corpus boundary row,
+When Exp 2953 builds the threshold-policy artifact,
+Then the artifact reports conservative, balanced, and permissive thresholds
+with PPV/recall/false-accept-rate tradeoffs, selects the conservative threshold
+as the default for automated candidate filtering, and states that the threshold
+is scoped to code-repair triage rather than standalone correctness acceptance.
+
+### SCENARIO-CODE-2953-BLOCKED: Missing Score Distribution Produces Partial Artifact
+
+Given Exp 2940 is present but omits the score-distribution field needed to audit
+threshold provenance,
+When Exp 2953 builds the threshold-policy artifact,
+Then it sets `threshold_policy_ready=false`, `missing_score_distribution=true`,
+names the missing Exp 2940 field, proposes the next local command to regenerate
+Exp 2940, and does not emit invented operating scores.
+
 ### REQ-CODE-2925: Exp 2911 Taxonomy Provenance Corrigendum v2
 
 The repository shall provide an Exp 2925 deterministic provenance corrigendum
@@ -1304,6 +1348,8 @@ generation or headline metric is claimed.
 | REQ-CODE-2946 | Implemented (`python/carnot/eval/sota_code_generation_continuation.py`) |
 | REQ-CODE-2950 | Implemented (`python/carnot/eval/code_taxonomy_repair_prompt_manifest.py`) |
 | REQ-CODE-2951 | Implemented (`python/carnot/eval/structured_candidate_manifest_adapter.py`) |
+| REQ-CODE-2952 | Implemented (`python/carnot/eval/sota_taxonomy_guided_code_repair_eval.py`) |
+| REQ-CODE-2953 | Implemented (`python/carnot/eval/code_verifier_threshold_policy.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |

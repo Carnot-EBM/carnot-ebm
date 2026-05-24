@@ -1,0 +1,111 @@
+{
+  "artifact": "experiment_2953_code_verifier_threshold_policy_v1",
+  "deployment_boundary": "Default threshold 1.0000 is scoped to deterministic candidate filtering and repair triage for Exp2910-like Python code generation rows with sandbox/test evidence. It is not a standalone correctness oracle, not a pass-rate claim, and not a deployment accept gate for non-code tasks, non-Python code, missing extraction, unseen corpora, or candidates that have not passed parser, static, sandbox, and available task-test checks.",
+  "duration_s": 0.001117,
+  "expected_false_accept_rate_at_default": 0.010135135135,
+  "expected_ppv_at_default": 0.8888888888888888,
+  "expected_recall_at_default": 1.0,
+  "honest_verdict": "complete: threshold policy ready; default_threshold=1.0000; ppv=0.888889; recall=1.000000; false_accept_rate=0.010135",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "missing_fields": [],
+  "missing_score_distribution": false,
+  "next_command": null,
+  "operating_points": [
+    {
+      "approval_rule": "Accept for downstream repair only when approval_score >= threshold.",
+      "expected_false_accept_count": 3.0,
+      "expected_false_accept_rate": 0.010135135135,
+      "expected_ppv": 0.8888888888888888,
+      "expected_recall": 1.0,
+      "expected_true_accept_count": 24.0,
+      "false_accept_limit": 0.02,
+      "policy_name": "conservative",
+      "recommended_use": "automated_candidate_filtering",
+      "threshold": 1.0
+    },
+    {
+      "approval_rule": "Prioritize for repair review; keep tests and sandbox gates mandatory.",
+      "expected_false_accept_count": 9.0,
+      "expected_false_accept_rate": 0.030405405405,
+      "expected_ppv": 0.7272727272727273,
+      "expected_recall": 1.0,
+      "expected_true_accept_count": 24.0,
+      "false_accept_limit": 0.05,
+      "policy_name": "balanced",
+      "recommended_use": "repair_queue_triage",
+      "threshold": 0.5
+    },
+    {
+      "approval_rule": "Use only to inspect failure modes; do not auto-accept repairs.",
+      "expected_false_accept_count": 131.0,
+      "expected_false_accept_rate": 0.442567567568,
+      "expected_ppv": 0.15483870967741936,
+      "expected_recall": 1.0,
+      "expected_true_accept_count": 24.0,
+      "false_accept_limit": 0.5,
+      "policy_name": "permissive",
+      "recommended_use": "diagnostic_review_only",
+      "threshold": 0.25
+    }
+  ],
+  "required_artifact_fields": [
+    "honest_verdict",
+    "threshold_policy_ready",
+    "source_artifacts",
+    "operating_points",
+    "selected_default_threshold",
+    "expected_ppv_at_default",
+    "expected_recall_at_default",
+    "expected_false_accept_rate_at_default",
+    "deployment_boundary",
+    "missing_score_distribution",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.code_verifier_threshold_policy.v1",
+  "selected_default_threshold": 1.0,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp2940",
+      "fields_imported": [
+        "code_corpus_auprc",
+        "precision_recall_curve",
+        "code_corpus_candidate_count",
+        "code_corpus_positive_count",
+        "code_status_energy_values",
+        "paper_v6_recommendation"
+      ],
+      "path": "results/experiment_2940_verifier_ensemble_auprc_code_corpora_v1.json",
+      "present": true,
+      "required": true,
+      "role": "code_corpus_precision_recall_thresholds",
+      "sha256": "3edd2cdb8f6295670aba334081230d7f60d2c42d7046e65da9fbcb25b4b9181f"
+    },
+    {
+      "experiment_id": "exp2943",
+      "fields_imported": [
+        "matrix_v11_ready",
+        "per_corpus_auprc.code_corpora",
+        "rows_clean",
+        "rows_flagged"
+      ],
+      "path": "results/experiment_2943_cross_corpus_matrix_v11.json",
+      "present": true,
+      "required": true,
+      "role": "cross_corpus_deployment_boundary",
+      "sha256": "be54eae8e45a7ff27e9a77ef668f39bfd5ba4410f2b94ce0a31091ed6b153d46"
+    }
+  ],
+  "source_summary": {
+    "baseline_random_auprc": 0.075,
+    "code_corpus_auprc": 0.8888888888888888,
+    "code_corpus_candidate_count": 320,
+    "code_corpus_positive_count": 24,
+    "exp2943_code_row_clean": true,
+    "exp2943_matrix_v11_ready": true,
+    "score_distribution_count": 320
+  },
+  "tests_run": [],
+  "threshold_policy_ready": true
+}
