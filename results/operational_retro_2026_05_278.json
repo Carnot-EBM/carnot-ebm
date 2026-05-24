@@ -8,20 +8,20 @@
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "The locked timing fields record 0 wall-time minutes, 0 completed experiments, and 0 compute-bound experiments for milestone 2026.05.278. With no timing rows, slowest-experiment, compute-bound GPU, and DualGPURunner assessments have no data available this milestone.",
+  "summary": "The activation-scoped timing query for 2026.05.278 returned no experiment commits, leaving the locked counters at 0 wall-time minutes, 0 completed experiments, and 0 compute-bound experiments. Because the compute-bound set is empty, slowest-run, GPU-utilization, and parallel-runner questions have no data available this milestone.",
   "bottlenecks_identified": [
     "no data available this milestone"
   ],
   "improvements_suggested": [
-    "Add an activation-window no-data sentinel that exits the retrospective path immediately when experiments_completed is 0.",
-    "Gate GPU utilization and DualGPURunner recommendations on compute_bound_experiments_count being greater than 0.",
-    "Emit an explicit no-data section for timing-dependent questions when slowest_experiments is empty."
+    "Teach the closeout path to produce an explicit no-data retrospective as soon as the activation-scoped timing query is empty.",
+    "Require a compute-bound timing row before the retrospective generator emits GPU-idle or parallel-runner guidance.",
+    "Show the empty activation window in operator status before retrospective synthesis so missing timing ingestion is visible early."
   ],
   "top_3_highest_leverage_actions": [
-    "Run the empty-window sentinel before retrospective synthesis.",
-    "Suppress GPU-idle bottleneck language unless a compute-bound timing row exists.",
-    "Keep artifact, changelog, and research-log updates in a dedicated closeout command for no-data milestones."
+    "Add an activation-window empty-result sentinel.",
+    "Bind GPU and DualGPURunner findings to compute-bound rows only.",
+    "Surface no-commit timing windows before retro generation starts."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "This retrospective should stay bounded to the zero-experiment timing window rather than infer efficiency from nearby milestone artifacts. The GPU monitor showed idle devices, but without compute-bound timing rows that state is not an operational bottleneck."
+  "meta_reflection": "The timing data contains no completed experiment rows, so compute-bound runtime analysis has no data available this milestone. The GPU monitor report shows idle devices, but the provided interpretation rule makes that non-actionable without a compute-bound timing row."
 }
