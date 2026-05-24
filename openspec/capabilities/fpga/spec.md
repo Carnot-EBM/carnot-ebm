@@ -2102,3 +2102,64 @@ either a successful flash/contact hash smoke or a blocked verdict with the exact
 failing command.
 
 **Implementation status:** Planned (Exp 2972)
+
+---
+
+### REQ-HW-080
+
+**Title:** Exp 2984 GateMate readback/smoke-vector artifact MUST distinguish board contact from sampler IO
+
+**Description:**
+Experiment 2984 MUST attempt to convert the Exp 2971/2972 GateMate contact
+evidence into readback-backed or smoke-vector-backed evidence without overstating
+what the board can prove. The experiment MUST read the Exp 2971 and Exp 2972
+artifacts, recover the board ID, exact flash command, bitstream path, bitstream
+SHA256, and post-flash transcript hashes, then run only non-destructive local
+tool and board probes unless a readback command is explicitly supported by the
+installed tools. If the installed GateMate tool flow exposes no SRAM readback,
+JTAG register, UART, GPIO, or physically constrained IO path for the n=16 tile,
+the artifact MUST set `readback_supported=false`, `readback_attempted=false`,
+`smoke_vector_attempted=false`, and `smoke_vector_passed=false` while explaining
+the blocker from the CCF/RTL/test-vector evidence. `smoke_vector_passed=true`
+is permitted only when an observed board output exactly matches the expected
+smoke-vector output.
+
+**Acceptance criteria:**
+- `results/experiment_2984_gatemate_readback_smoke_vector_v4.json` is generated
+  with `inference_substrate="physical_gatemate_board"`.
+- The artifact includes `honest_verdict`, `board_detected`, `board_id`,
+  `tool_versions`, `bitstream_path`, `bitstream_sha256`, `flash_succeeded`,
+  `readback_supported`, `readback_attempted`, `readback_hash`,
+  `smoke_vector_attempted`, `smoke_vector_passed`, `observed_smoke_output`,
+  `expected_smoke_output`, `timing_observation`, `sampler_claim_allowed=false`,
+  `speedup_claim_allowed=false`, `thermodynamic_claim_allowed=false`,
+  `inference_substrate`, and `duration_s`.
+- Board detection uses `openFPGALoader -c dirtyJtag --detect` and records a
+  GateMate board ID only when the transcript identifies the Cologne Chip
+  GateMate/GM1Ax IDCODE.
+- The tool-version record covers the installed GateMate-relevant tools that are
+  available locally and notes missing tools without failing the artifact.
+- Readback is attempted only when the installed tool help exposes a non-flash,
+  GateMate-compatible readback or verify path for the programmed n=16 bitstream.
+- Smoke-vector IO is attempted only when the n=16 GateMate package exposes a
+  host-visible physical IO protocol. Build-only unconstrained CCF evidence MUST
+  block sampler-output claims.
+
+**Implementation status:** Planned (Exp 2984)
+
+---
+
+### SCENARIO-HW-080
+
+**Scenario:** GateMate readback/smoke-vector artifact records evidence or a precise IO blocker.
+
+**Given:** Exp 2971 and Exp 2972 record GateMate detection, a flash command, a
+matching n=16 bitstream SHA256, and post-flash contact evidence.
+**When:** Exp 2984 probes the board and installed GateMate tooling for readback
+and host-visible smoke-vector IO.
+**Then:** It writes the v4 JSON with required schema fields, command timing
+observations, claim-allowance fields fixed false unless real sample-level
+evidence exists, and either readback/smoke-vector evidence or an exact blocker
+explaining why the current bitstream cannot expose sampler output.
+
+**Implementation status:** Planned (Exp 2984)
