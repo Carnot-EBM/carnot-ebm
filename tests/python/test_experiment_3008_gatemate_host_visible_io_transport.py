@@ -385,6 +385,33 @@ def test_req_hw_083_transport_surface_scan_is_bounded_and_includes_alt_rtl(
     assert _safe_read_text(tmp_path / "missing.txt") == ""
 
 
+def test_req_hw_083_transport_surface_scan_ignores_retro_script_mentions(
+    tmp_path: Path,
+) -> None:
+    """REQ-HW-083: narrative GateMate/JTAG mentions are not transport options."""
+    _write_prior_gate_artifacts(tmp_path)
+    scripts_dir = tmp_path / "scripts"
+    scripts_dir.mkdir(parents=True, exist_ok=True)
+    retro = scripts_dir / "experiment_retro.py"
+    retro.write_text(
+        "note = 'GateMate continuity remains blocked after JTAG contact; no AXI reader.'\n",
+        encoding="utf-8",
+    )
+    reader = scripts_dir / "gatemate_uart_reader.py"
+    reader.write_text(
+        "# GateMate host-visible smoke helper sketch: capture uart_tx bytes.\n",
+        encoding="utf-8",
+    )
+
+    scan = inspect_transport_surface(tmp_path)
+
+    assert str(retro) not in scan["surface_paths"]
+    assert str(retro) not in scan["detected_options"]["jtag"]
+    assert str(retro) not in scan["detected_options"]["axi"]
+    assert str(reader) in scan["surface_paths"]
+    assert str(reader) in scan["detected_options"]["uart"]
+
+
 def test_req_hw_083_precondition_summary_falls_back_to_interface_rtl() -> None:
     """REQ-HW-083: target RTL evidence remains explicit even for partial boundaries."""
     summary = _precondition_summary(

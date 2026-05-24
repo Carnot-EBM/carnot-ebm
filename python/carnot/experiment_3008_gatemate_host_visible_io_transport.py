@@ -58,6 +58,20 @@ TRANSPORT_KEYWORDS = {
     "axi": ("axi",),
     "logic_analyzer": ("logic_analyzer", "logic analyzer", "logic-analyzer", "ila"),
 }
+GATEMATE_SCRIPT_NAME_TOKENS = (
+    "gatemate",
+    "dirtyjtag",
+    "openfpgaloader",
+    "olimex",
+    "ccgm",
+    "gm1a",
+    "himbaechel",
+)
+GATEMATE_SCRIPT_COMMAND_TOKENS = (
+    "olimex_gatemateevb",
+    "synth_gatemate",
+    "ccgm1a1",
+)
 
 
 def _read_json(path: Path) -> dict[str, object]:
@@ -124,8 +138,15 @@ def _iter_transport_surface_files(repo_root: Path) -> list[Path]:
             ):
                 surface_paths.add(path)
             elif relative_name.startswith("scripts/"):
+                name = path.name.lower()
                 text = _safe_read_text(path).lower()
-                if "gatemate" in relative_name or "gatemate" in text:
+                script_names_gatemate = any(
+                    token in name for token in GATEMATE_SCRIPT_NAME_TOKENS
+                )
+                script_commands_gatemate = any(
+                    token in text for token in GATEMATE_SCRIPT_COMMAND_TOKENS
+                )
+                if script_names_gatemate or script_commands_gatemate:
                     surface_paths.add(path)
     return sorted(surface_paths)
 

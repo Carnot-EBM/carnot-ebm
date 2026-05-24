@@ -2317,7 +2317,7 @@ thermodynamic claims.
 - Downstream SSQA MUST gate on `host_visible_io_ready=true`, not on board
   detection, successful flash, or post-flash JTAG contact alone.
 
-**Implementation status:** Planned (Exp 3008)
+**Implementation status:** Implemented (Exp 3008)
 
 ---
 
@@ -2335,4 +2335,4 @@ transcripts, claim flags fixed false, and either `host_visible_io_ready=true`
 from observed deterministic output or a blocked verdict naming the exact
 missing transport, reader, flash, or board-contact interface.
 
-**Implementation status:** Planned (Exp 3008)
+**Implementation status:** Implemented (Exp 3008)
