@@ -7281,3 +7281,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: FR-11 verifier-grounded trace memory v2 (✅ Complete) — honest_verdict=ready: verifier_grounded_trace_memory_ready; results/experiment_2995_fr11_verifier_grounded_trace_memory_v2.json
 - 2026-05-24: GateMate host-visible readback smoke (⚠️ Blocked) — honest_verdict=blocked_board_not_detected; results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
 - 2026-05-24: GateMate host-visible readback smoke (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
+- 2026-05-24: GateMate host-visible readback smoke (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
