@@ -6126,3 +6126,4 @@ web search: https://arxiv. |
 | 2026-05-24 06:02 UTC | Gated SOTA NL-to-Z3 DCCD Formalization v1 | OK | 81 passed in 3.30s |
 | 2026-05-24 06:16 UTC | Interwhen-Style Partial Monitor Harness v1 | OK | 81 passed in 3.80s |
 | 2026-05-24 06:31 UTC | FR-11 Non-Tautological Utility Gate v3 | OK | 81 passed in 3.43s |
+| 2026-05-24 07:15 UTC | KAN Forgetting Guard + Constraint Memory Audit v1 | OK | 81 passed in 3.23s |
