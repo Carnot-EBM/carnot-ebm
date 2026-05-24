@@ -6167,3 +6167,4 @@ web search: site |
 | 2026-05-24 16:44 UTC | Prompt-to-validator dialogue schema | OK | 81 passed in 3.23s |
 | 2026-05-24 16:58 UTC | FR-11 verifier-grounded trace memory v2 | OK | 81 passed in 3.57s |
 | 2026-05-24 17:14 UTC | GateMate host-visible readback smoke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2996_gatemat |
+| 2026-05-24 17:21 UTC | GateMate host-visible readback smoke | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2996_gatemat |
