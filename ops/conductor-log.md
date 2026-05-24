@@ -6139,3 +6139,4 @@ web search: https://arxiv. |
 | 2026-05-24 09:48 UTC | Gated SOTA Intent-Preserving Code Repair Rerun v1 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2977_sota_in |
 | 2026-05-24 10:01 UTC | Gated SOTA Intent-Preserving Code Repair Rerun v1 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2977_sota_in |
 | 2026-05-24 10:16 UTC | First-Step + Semantic-Energy Repair Telemetry Pane | OK | 81 passed in 3.71s |
+| 2026-05-24 10:27 UTC | Solver Feedback Schema + MCS/MUS Frontier Upgrade  | OK | 81 passed in 3.33s |
