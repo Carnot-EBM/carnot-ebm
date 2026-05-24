@@ -6188,3 +6188,5 @@ web search: site |
 | 2026-05-24 21:00 UTC | GateMate host-visible IO transport v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3008_gatemat |
 | 2026-05-24 21:08 UTC | GateMate host-visible IO transport v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_3008_gatemat |
 | 2026-05-24 21:10 UTC | SSQA dual-BRAM RTL PnR resource report v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3008-gatemate-host-visible-io-transport-v |
+| 2026-05-24 21:27 UTC | Cross-corpus matrix v16 | OK | 81 passed in 4.23s |
+| 2026-05-24 21:29 UTC | SSQA dual-BRAM RTL PnR resource report v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3008-gatemate-host-visible-io-transport-v |
