@@ -369,6 +369,64 @@ speed, and writes the required terminal JSON artifact with
 |---|---|---|
 | REQ-VERIFY-2994 | Implemented (`python/carnot/eval/prompt_validator_dialogue_schema_v1.py`) | Implemented (`tests/python/test_experiment_2994_prompt_validator_dialogue_schema.py`) |
 
+### REQ-VERIFY-3005: Solver-To-Validator Tree Expansion Corpus
+
+The repository shall provide a deterministic Exp 3005 solver-to-validator tree
+expansion harness that consumes the Exp 2992 solver-feedback formalization
+line and the Exp 2994 prompt-validator dialogue protocol, builds a corpus of at
+least 20 small solver/formalization items, and writes
+`results/experiment_3005_solver_to_validator_tree_expansion_v1.json`.
+
+Each accepted corpus item shall have an inspectable validator tree with
+explicit exact-check nodes. Runtime nodes shall check JSON shape, required
+candidate fields, assertion list shape, query shape, and expected solver-status
+metadata. Z3 nodes shall replay the formalization and compare actual solver
+status against the candidate's expected status and the item reference status.
+Items without deterministic exact checks, with nondeterministic tests, or with
+LLM-only judgment labels shall be rejected and reported rather than silently
+included.
+
+For every accepted item, the harness shall execute full-candidate validation
+and LAVE-inspired partial-candidate viability checks. Invalid prefixes or
+partial constraints shall fail early with named rejection reasons, while valid
+prefixes that are still extendable to the reference formalization shall remain
+accepted as partial candidates. The run shall save replayable runtime and Z3
+transcripts plus hash evidence, and it shall write a JSONL validator manifest
+that downstream diagnostics can inspect without relying on LLM-as-judge
+semantics.
+
+The terminal artifact MUST include `validator_tree_expanded`,
+`validator_manifest_path`, `n_solver_items`, `n_validator_trees`,
+`all_trees_exact_checked`, `partial_viability_checked`,
+`z3_transcript_paths`, `runtime_transcript_paths`, `rejected_constraints`,
+`llm_judge_used`, and `honest_verdict`.
+
+`validator_tree_expanded` shall be true only when at least 20 solver items are
+accepted, every accepted item has exactly one validator tree, all trees execute
+runtime and Z3 exact checks, every accepted item has passing full validation,
+valid/invalid partial viability evidence is recorded for every item, transcript
+paths are present and hashable, rejected constraints are surfaced, and
+`llm_judge_used=false`.
+
+### SCENARIO-VERIFY-3005: Expanded Validator Trees Gate On Exact Checks
+
+Given Exp 2992 has reproduced solver-feedback formalization with Z3 provenance
+and Exp 2994 has produced a deterministic prompt-validator protocol,
+When the Exp 3005 expansion harness runs,
+Then it writes an inspectable validator manifest with at least 20 solver items
+and validator trees, executes every tree through runtime and Z3 authorities,
+records runtime and Z3 transcript hashes, accepts extendable valid partials,
+rejects invalid partials early with named reasons, reports rejected
+nondeterministic, missing-exact-check, or LLM-only constraints, and writes the
+terminal artifact with `validator_tree_expanded=true` only when every exact
+gate clears.
+
+## Implementation Status (REQ-VERIFY-3005)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3005 | Implemented (`python/carnot/eval/solver_to_validator_tree_expansion_v1.py`) | Implemented (`tests/python/test_experiment_3005_solver_to_validator_tree_expansion.py`) |
+
 ### REQ-VERIFY-2981: Interwhen Partial-Monitor Promotion Metrics V2
 
 The repository shall provide an Exp 2981 deterministic promotion evaluator for

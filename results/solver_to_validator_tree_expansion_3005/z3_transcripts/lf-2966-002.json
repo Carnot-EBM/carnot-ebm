@@ -1,0 +1,64 @@
+{
+  "assertions": [
+    "(declare-sort Entity 0)",
+    "(declare-const ada Entity)",
+    "(declare-fun Pilot (Entity) Bool)",
+    "(declare-fun Licensed (Entity) Bool)",
+    "(assert (forall ((x Entity)) (=> (Pilot x) (Licensed x))))",
+    "(assert (Licensed ada))",
+    "(assert (not (Pilot ada)))"
+  ],
+  "candidate_sha256": "07aae8297ad1151f9c80cbc6aed5a042be8fa21c3cedac91a6369d6ccc7db23c",
+  "expected_status": "sat",
+  "full_validation": {
+    "accepted": true,
+    "failing_node_ids": [],
+    "llm_judge_used": false,
+    "node_results": [
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "required_fields",
+        "node_id": "lf-2966-002:required_fields",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "assertion_list_shape",
+        "node_id": "lf-2966-002:assertion_list_shape",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "query_shape",
+        "node_id": "lf-2966-002:query_shape",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "expected_status_matches_reference",
+        "node_id": "lf-2966-002:expected_status_matches_reference",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "z3_solver",
+        "kind": "z3_status",
+        "node_id": "lf-2966-002:z3_status",
+        "rejection_reason": null,
+        "z3_result": {
+          "actual_solver_status": "sat",
+          "z3_error": null,
+          "z3_executed": true
+        }
+      }
+    ],
+    "rejection_reasons": []
+  },
+  "item_id": "lf-2966-002",
+  "llm_judge_used": false,
+  "z3_version": "4.16.0"
+}

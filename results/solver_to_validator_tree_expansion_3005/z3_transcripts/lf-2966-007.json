@@ -1,0 +1,62 @@
+{
+  "assertions": [
+    "(declare-const access Bool)",
+    "(declare-const badge Bool)",
+    "(assert (=> access badge))",
+    "(assert access)",
+    "(assert (not badge))"
+  ],
+  "candidate_sha256": "c9c4ae8667afbc6a91b5af1704ac4a21dc253792653a843962d5f55f6e12048d",
+  "expected_status": "unsat",
+  "full_validation": {
+    "accepted": true,
+    "failing_node_ids": [],
+    "llm_judge_used": false,
+    "node_results": [
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "required_fields",
+        "node_id": "lf-2966-007:required_fields",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "assertion_list_shape",
+        "node_id": "lf-2966-007:assertion_list_shape",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "query_shape",
+        "node_id": "lf-2966-007:query_shape",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "runtime_json_parser",
+        "kind": "expected_status_matches_reference",
+        "node_id": "lf-2966-007:expected_status_matches_reference",
+        "rejection_reason": null
+      },
+      {
+        "accepted": true,
+        "authority": "z3_solver",
+        "kind": "z3_status",
+        "node_id": "lf-2966-007:z3_status",
+        "rejection_reason": null,
+        "z3_result": {
+          "actual_solver_status": "unsat",
+          "z3_error": null,
+          "z3_executed": true
+        }
+      }
+    ],
+    "rejection_reasons": []
+  },
+  "item_id": "lf-2966-007",
+  "llm_judge_used": false,
+  "z3_version": "4.16.0"
+}
