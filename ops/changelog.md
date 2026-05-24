@@ -7297,3 +7297,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: GateMate host-visible IO transport v2 (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_3008_gatemate_host_visible_io_transport_v2.json
 - 2026-05-24: GateMate host-visible IO transport v2 (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_3008_gatemate_host_visible_io_transport_v2.json
 - 2026-05-24: Cross-corpus matrix v16 (⚠️ Blocked) — honest_verdict=complete: matrix_v16_ready=true; clean=38; flagged=23; blocked=9; gated_skipped=1; projection_only=9; pilot_only=4; missing=1; results/experiment_3010_cross_corpus_matrix_v16.json
+- 2026-05-24: Milestone .282 capstone (⚠️ Blocked) — honest_verdict=complete: capstone_ready=true; paper_ready=false; repaired=4; flagged=23; blocked=9; gated_skipped=1; missing=1; next=2026.05.283 claim-repair-v2; results/experiment_3011_capstone_v282.json
