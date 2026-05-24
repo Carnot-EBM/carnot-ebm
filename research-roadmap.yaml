@@ -1,25 +1,25 @@
-milestone: "2026.05.282"
-milestone_title: "Claim Repair + Metamorphic Validation + Attractor Memory + GateMate IO"
+milestone: "2026.05.283"
+milestone_title: "Claim Repair v2 + Feasibility-Gated Self-Learning + GateMate IO Boundary"
 milestone_doc: "openspec/change-proposals/research-roadmap-vNEXT.md"
 
 tasks:
-  - id: exp3000-archive-v281-activate-v282
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3000_archive_v281_activate_v282.json"
-    title: "Archive .281 and activate .282"
+  - id: exp3012-archive-v282-activate-v283
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3012_archive_v282_activate_v283.json"
+    title: "Archive .282 and activate .283"
     priority: critical
     max_turns: 20
     estimated_wall_time_min: 10
     track: "archive"
     inference_substrate: "aggregation_from_upstream_artifacts"
     prior_failures:
-      - experiment_id: exp2988-archive-v280-activate-v281
-        verdict: "complete: archive_ready=true; archived_milestone=2026.05.280; activated_milestone=2026.05.281; status_updates_written=false"
-        addressed_by: "Same archive pattern applied to the completed .281 artifact chain and .282 staged roadmap."
+      - experiment_id: exp3000-archive-v281-activate-v282
+        verdict: "complete: archive_ready=true; archived_milestone=2026.05.281; activated_milestone=2026.05.282; status_updates_written=false"
+        addressed_by: "Same archive pattern applied to the completed .282 artifact chain and .283 staged roadmap, with explicit carry-forward of flagged, blocked, gated-skipped, and false-positive aggregation rows."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      The current milestone 2026.05.281 has completed. The authority artifact is results/experiment_2999_capstone_v281.json, and the next staged milestone is 2026.05.282. Treat missing, flagged, blocked, and gate-skipped .281 artifacts honestly; do not repair historical results.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. The current milestone 2026.05.282 has completed. The authority artifact is results/experiment_3011_capstone_v282.json, and the next staged milestone is 2026.05.283. Treat missing, flagged, blocked, gated-skipped, and adversarially flagged .282 artifacts honestly; do not repair historical results.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
@@ -31,18 +31,18 @@ tasks:
       - scripts/research_conductor.py for archive behavior only; do not modify it
       - ops/status.md
       - ops/changelog.md
-      - results/experiment_2998_cross_corpus_matrix_v15.json
-      - results/experiment_2999_capstone_v281.json
+      - results/experiment_3010_cross_corpus_matrix_v16.json
+      - results/experiment_3011_capstone_v282.json
 
       TASK:
-      Archive milestone 2026.05.281 into research-complete.yaml, update ops/status.md and ops/changelog.md with the activation result, and emit a terminal archive artifact for .282 activation. Do not alter research-roadmap-next.yaml except through normal activation mechanics already used by the repo.
+      Archive milestone 2026.05.282 into research-complete.yaml, update ops/status.md and ops/changelog.md with the activation result, and emit a terminal archive artifact for .283 activation. Do not alter research-roadmap.yaml.
 
       CONCRETE STEPS:
-      1. Confirm research-roadmap-next.yaml declares milestone 2026.05.282 and has non-empty tasks.
-      2. Read all .281 result artifacts referenced by exp2999 and summarize clean, flagged, blocked, gate-skipped, projection-only, pilot-only, and missing counts.
-      3. Append the completed .281 task list and capstone outcome to research-complete.yaml using the existing archive style.
-      4. Update ops/status.md and ops/changelog.md with a concise .281 archive/.282 activation note.
-      5. Write results/experiment_3000_archive_v281_activate_v282.json with a terminal honest_verdict.
+      1. Confirm research-roadmap-next.yaml declares milestone 2026.05.283 and has non-empty tasks.
+      2. Read all .282 result artifacts referenced by exp3011 and summarize clean, flagged, blocked, gated-skipped, projection-only, pilot-only, missing, and adversarially flagged counts.
+      3. Append the completed .282 task list and capstone outcome to research-complete.yaml using the existing archive style.
+      4. Update ops/status.md and ops/changelog.md with a concise .282 archive/.283 activation note.
+      5. Write results/experiment_3012_archive_v282_activate_v283.json with inference_substrate=aggregation_from_upstream_artifacts and no top-level model_specs.
       6. Run YAML parsing and the relevant roadmap/pre-activation validation commands available in scripts/.
 
       REQUIRED ARTIFACT FIELDS:
@@ -53,35 +53,37 @@ tasks:
       - status_updates_written: bool (principle: ops docs must reflect milestone state)
       - n_tasks_archived: int (principle: archive completeness must be countable)
       - blocked_or_flagged_rows_carried_forward: list (principle: unresolved work must not be hidden)
+      - adversarial_flags_carried_forward: list (principle: false-positive and true-positive audit flags must remain visible)
+      - inference_substrate: str (principle: aggregation must not masquerade as live inference)
       - validation_commands: list (principle: validation claims must name the commands run)
-      - honest_verdict: str (principle: terminal verdict must use an accepted complete:/blocked:/failed: style prefix)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3001-sota-gguf-cache-carry-forward-checksum-refresh
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.json"
-    title: "SOTA GGUF cache carry-forward and checksum refresh"
+  - id: exp3013-sota-gguf-logprob-telemetry-preflight
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json"
+    title: "SOTA GGUF logprob telemetry preflight"
     priority: critical
     model: opus
     requires_claude: true
     requires_gpu: true
     max_turns: 100
-    estimated_wall_time_min: 60
+    estimated_wall_time_min: 75
     track: "infrastructure"
     inference_substrate: "live_llm_inference"
     prior_failures:
+      - experiment_id: exp3001-sota-gguf-cache-carry-forward-checksum-refresh
+        verdict: "success: at least one mandated headline SOTA GGUF produced a live transcript"
+        addressed_by: "Extends the successful cache refresh with logprob/top-k telemetry capability checks needed for Cactus-style acceptance; it does not broaden headline model claims."
+        retire_if_same_verdict: true
       - experiment_id: exp2989-sota-gguf-cache-provenance-preflight
         verdict: "success: at least one mandated headline SOTA GGUF produced a live transcript"
-        addressed_by: "Refreshes the same local SOTA cache with checksum and transcript evidence before any .282 live LLM task runs."
-        retire_if_same_verdict: true
-      - experiment_id: exp2977-sota-intent-preserving-code-repair
-        verdict: "blocked_cached_sota_pair_unavailable_cpu_smoke_only"
-        addressed_by: "Keeps model availability isolated as a prerequisite gate rather than discovering cache failure inside repair."
+        addressed_by: "Keeps SOTA runtime evidence isolated as an upstream gate, now with explicit telemetry capability fields before repair reruns."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp 2989 proved at least one mandated headline SOTA GGUF could produce a live transcript, but .282 live tasks still need fresh cache, checksum, duration, and transcript evidence. This task is the upstream gate for all .282 live local LLM claims.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Exp3001 proved at least one mandated local SOTA GGUF can run live. Exp3016 needs not only transcript readiness but also honest telemetry about whether the local loader exposes top-k/logprob data for Cactus-style constrained acceptance.
 
       MODEL_SPECS:
       - headline_models:
@@ -97,44 +99,108 @@ tasks:
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - scripts/experiment_template.py
-      - scripts/experiment_2989_sota_gguf_cache_provenance_preflight_v1.py
+      - scripts/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.py
       - python/carnot/inference/sota_models.py
       - python/carnot/inference/
-      - results/experiment_2989_sota_gguf_cache_provenance_preflight_v1.json
-      - research-hardware-wishlist.md
+      - results/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.json
+      - research-references.md
 
       TASK:
-      Refresh the mandated local SOTA GGUF cache evidence for .282. Emit a terminal blocked artifact if no headline model can run. Do not substitute legacy small models for headline readiness.
+      Refresh SOTA GGUF readiness and determine whether top-k/logprob telemetry is available from the current local loader path. Emit a terminal blocked artifact if no headline model can run. Do not substitute legacy small models for headline readiness.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: record CUDA/GPU availability, free VRAM if available, repo commit, Python environment, cache paths, and checksum feasibility before any model load.
-      1. Add a focused exp3001 script under scripts/ following scripts/experiment_template.py.
-      2. Attempt the mandated headline models in MODEL_SPECS with conservative prompts and timeouts.
-      3. For each attempted model, record exact model id, local cache path, file/checksum evidence when available, load status, generation status, duration, and transcript path/hash.
-      4. If no headline model runs, optionally run a legacy small smoke test but label it smoke_only and set sota_headline_ready=false.
-      5. Write the JSON artifact and ensure honest_verdict is terminal and explicit.
-      6. Run the new script and any relevant unit/import checks.
+      0. PRECONDITIONS: record CUDA/GPU availability, free VRAM if available, repo commit, Python environment, cache paths, and checksum feasibility before any model load. If no mandated headline model can load, write honest_verdict blocked_sota_headline_model_unavailable and stop.
+      1. Add a focused exp3013 script under scripts/ following scripts/experiment_template.py.
+      2. Attempt the mandated headline models with conservative prompts and timeouts.
+      3. For each attempted model, record exact model id, local cache path, checksum evidence when available, load status, generation status, duration, transcript path/hash, and whether logits/top-k/logprobs are exposed.
+      4. If top-k/logprob telemetry is unavailable but transcript generation works, set sota_headline_ready=true and sota_logprob_ready=false; do not fabricate telemetry.
+      5. If no headline model runs, optionally run a legacy small smoke test but label it smoke_only and set headline fields false.
+      6. Write the JSON artifact and run the new script plus any relevant import checks.
 
       REQUIRED ARTIFACT FIELDS:
       - sota_headline_ready: bool (principle: downstream headline tasks must gate on real SOTA availability)
+      - sota_logprob_ready: bool (principle: Cactus-style acceptance must know whether token telemetry exists)
       - preconditions_checked: bool (principle: compute-bound failures must distinguish environment from method failure)
       - model_specs: dict (principle: model identity must be explicit)
-      - sota_models_attempted: list (principle: failed availability must be auditable)
-      - sota_models_available: list (principle: successful availability must be auditable)
+      - headline_models_attempted: list (principle: failed availability must be auditable)
+      - headline_models_available: list (principle: successful availability must be auditable)
+      - telemetry_capabilities: dict (principle: logprob/top-k claims must be tied to observed loader behavior)
       - cache_paths: dict (principle: model provenance must be local and inspectable)
       - model_checksums: dict (principle: repeated runs must be tied to exact artifacts when feasible)
       - live_transcript_paths: list (principle: live inference claims require replayable output evidence)
       - legacy_smoke_only_used: bool (principle: small models must not become headline evidence)
       - inference_substrate: str (principle: substrate claims must match actual execution)
-      - duration_seconds: float (principle: impossible-duration artifacts must be catchable)
-      - honest_verdict: str (principle: terminal verdict must state ready or blocked)
+      - duration_s: float (principle: impossible-duration artifacts must be catchable)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3002-metamorphic-repair-oracle-audit
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3002_metamorphic_repair_oracle_audit_v1.json"
-    title: "Metamorphic repair-oracle audit for hard-set repair"
+  - id: exp3014-repair-syntax-schema-failure-taxonomy
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3014_repair_syntax_schema_failure_taxonomy_v1.json"
+    title: "Repair syntax and schema failure taxonomy"
+    priority: critical
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
+    max_turns: 50
+    estimated_wall_time_min: 45
+    track: "code_repair"
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
+    prior_failures:
+      - experiment_id: exp3003-gated-sota-repair-metamorphic-false-accept-rerun
+        verdict: "flagged: metamorphic repair rerun did not clear gates"
+        addressed_by: "Diagnoses syntax/schema regression root causes before another live rerun, separating prompt, parser, oracle, and model-output failure modes."
+        retire_if_same_verdict: true
+      - experiment_id: exp3002-metamorphic-repair-oracle-audit
+        verdict: "flagged: metamorphic oracle ready; downstream repair promotion must rerun against it"
+        addressed_by: "Uses the oracle as an audit substrate while making its gate role explicit and non-headline."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Exp3003 improved pass rate but raised syntax_failure_rate_delta and schema_failure_rate_delta by 0.5. Before rerunning live repair, classify the failures precisely. HalluGuard's data-driven versus reasoning-driven split may be used as taxonomy language only; do not claim NTK/HalluGuard implementation.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-references.md
+      - scripts/experiment_3002_metamorphic_repair_oracle_audit_v1.py
+      - scripts/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.py
+      - results/experiment_3002_metamorphic_repair_oracle_audit_v1.json
+      - results/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.json
+      - datasets/repair_hard/manifest_v1.jsonl if present
+      - python/carnot/
+      - tests/
+
+      TASK:
+      Build a deterministic repair-failure taxonomy for exp3003 candidates and validators. Classify syntax, schema, false-accept, tautology, oracle, and intent-preservation failures without running live LLM inference.
+
+      CONCRETE STEPS:
+      1. Add a focused exp3014 script following scripts/experiment_template.py.
+      2. Load exp3002/exp3003 manifests, candidate transcripts, verifier logs, and any cached patches.
+      3. Re-run deterministic parsers and validators over cached candidates only.
+      4. Classify failures by root cause: prompt-format pressure, parser/schema mismatch, invalid patch shape, oracle ambiguity, intent drift, false accept, or tautology.
+      5. Produce a minimal fix plan for exp3015/exp3016 acceptance gates; do not edit production repair code unless a tiny parser fixture is needed for deterministic reproduction.
+      6. Write the artifact and any taxonomy table under results/ or datasets/repair_hard/.
+
+      REQUIRED ARTIFACT FIELDS:
+      - repair_failure_taxonomy_ready: bool (principle: downstream controller must gate on diagnosed failure modes)
+      - taxonomy_table_path: str (principle: failure classifications must be inspectable)
+      - n_cached_candidates_audited: int (principle: sample size must be explicit)
+      - syntax_failure_count: int (principle: syntax regressions must be counted)
+      - schema_failure_count: int (principle: schema regressions must be counted)
+      - false_accept_count: int (principle: verifier safety regressions must be counted)
+      - tautology_failure_count: int (principle: vacuous wins must be counted)
+      - intent_drift_count: int (principle: repair must preserve user intent)
+      - recommended_acceptance_rules: list (principle: exp3015 needs concrete rules)
+      - halluguard_ntk_claim_made: bool (principle: taxonomy reuse must not become dishonest NTK naming)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3015-cactus-style-repair-acceptance-controller
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json"
+    title: "Cactus-style repair acceptance controller"
     priority: critical
     agent_type: codex
     model: gpt-5.5
@@ -143,90 +209,94 @@ tasks:
     estimated_wall_time_min: 60
     track: "code_repair"
     inference_substrate: "verifier_ensemble_against_cached_candidates"
+    gated_on:
+      - upstream: exp3014-repair-syntax-schema-failure-taxonomy
+        artifact_field: repair_failure_taxonomy_ready
+        op: "=="
+        value: true
     prior_failures:
+      - experiment_id: exp3003-gated-sota-repair-metamorphic-false-accept-rerun
+        verdict: "flagged: metamorphic repair rerun did not clear gates"
+        addressed_by: "Builds an offline constrained-acceptance controller before rerunning live repair, explicitly targeting syntax/schema regressions and false accepts."
+        retire_if_same_verdict: true
       - experiment_id: exp2991-gated-sota-intent-preserving-repair-hard-set
         verdict: "flagged: hard-set repair did not clear promotion gates"
-        addressed_by: "Adds metamorphic variants, tautology checks, and false-accept provenance before another live repair rerun."
-        retire_if_same_verdict: true
-      - experiment_id: exp2964-sota-dccd-repair-replication
-        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
-        addressed_by: "Audits the repair oracle and false-accept path instead of tightening output format alone."
+        addressed_by: "Adds Cactus-style bounded acceptance over verifier outcomes instead of accepting every schema-shaped candidate."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp 2991 produced a positive hard-set repair delta but remained flagged because methodology, tautology, and false-accept provenance did not clear promotion gates. Recent metamorphic-testing work in research-references.md suggests relation-preserving variants are the right next methodology repair.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Cactus frames acceptance as constrained optimization: accept more candidate tokens only under controlled divergence from the verifier distribution. Carnot's use is narrower: accept or reject repair candidates using cached deterministic verifier evidence, not speculative decoding throughput.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-references.md
-      - scripts/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1.py
-      - results/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1.json
-      - datasets/repair_hard/manifest_v1.jsonl if present
-      - tests/
+      - results/experiment_3014_repair_syntax_schema_failure_taxonomy_v1.json
+      - results/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.json
+      - results/experiment_3002_metamorphic_repair_oracle_audit_v1.json
+      - scripts/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.py
       - python/carnot/
+      - tests/
 
       TASK:
-      Build and run a deterministic metamorphic oracle audit for the hard-set repair benchmark. Produce relation-preserving variants, false-accept probes, and tautology checks. Do not run live LLM repair in this task.
+      Build an offline repair-candidate acceptance controller over cached exp3003 candidates and metamorphic variants. The controller should reject candidates that improve pass rate only by increasing syntax/schema failures, false accepts, or tautology exposure.
 
       CONCRETE STEPS:
-      1. Add a focused exp3002 script following scripts/experiment_template.py.
-      2. Load the exp2991 hard-set manifest or reconstruct the item list from exp2991 artifacts if the manifest path moved.
-      3. Define conservative metamorphic relation types such as alpha-renaming, equivalent boundary cases, input permutation where order is irrelevant, and oracle-preserving refactors.
-      4. Generate a small bounded set of variants for each eligible source item and reject variants that change the intended semantics.
-      5. Run executable validators on original and variant cases against reference, baseline, and any cached exp2991 repair candidates.
-      6. Produce false-accept and tautology probes: tests that would pass an overfit repair but fail the independent verifier, or constraints that are satisfied vacuously.
-      7. Write the artifact with manifest paths, rejected variants, verifier logs, and promotion readiness.
+      1. Add a focused exp3015 script following scripts/experiment_template.py.
+      2. Load cached candidates, taxonomy rows, verifier outcomes, and metamorphic oracle results.
+      3. Define acceptance features from deterministic evidence: syntax/schema validity, false-accept probe result, tautology probe result, intent drift class, pass/fail on original and metamorphic variants, and optional telemetry if present.
+      4. Fit or grid-search a tiny transparent accept/reject rule; no black-box LLM judge is allowed.
+      5. Evaluate against baseline accept-all and conservative accept-only-clean policies.
+      6. Write controller config, rejected-candidate table, and artifact with promotion gate fields.
 
       REQUIRED ARTIFACT FIELDS:
-      - metamorphic_oracle_ready: bool (principle: downstream repair must gate on a usable oracle)
-      - hard_set_manifest_path: str (principle: benchmark source must be inspectable)
-      - metamorphic_manifest_path: str (principle: generated variants must be inspectable)
-      - n_source_items: int (principle: source sample size must be explicit)
-      - n_metamorphic_variants: int (principle: amplification size must be explicit)
-      - relation_types: list (principle: oracle logic must be auditable)
-      - false_accept_probe_ready: bool (principle: repair promotion must account for false accepts)
-      - tautology_probe_ready: bool (principle: repair promotion must reject vacuous wins)
-      - rejected_variants: list (principle: invalid generated cases must not be hidden)
-      - verifier_transcript_paths: list (principle: oracle evidence must be replayable)
-      - honest_verdict: str (principle: terminal verdict must state ready, flagged, or blocked)
+      - acceptance_controller_ready: bool (principle: live rerun must gate on a usable controller)
+      - controller_config_path: str (principle: accept/reject policy must be inspectable)
+      - n_candidates_evaluated: int (principle: sample size must be explicit)
+      - false_accept_delta_offline: float (principle: controller must not increase false accepts)
+      - syntax_failure_delta_offline: float (principle: controller must not promote syntax regressions)
+      - schema_failure_delta_offline: float (principle: controller must not promote schema regressions)
+      - pass_at_1_delta_offline: float (principle: usefulness must be measured against baseline)
+      - rejected_candidate_table_path: str (principle: rejection decisions must be auditable)
+      - llm_judge_used: bool (principle: LLM judgments must not become verifier authority)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3003-gated-sota-repair-metamorphic-false-accept-rerun
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.json"
-    title: "Gated SOTA repair rerun with metamorphic false-accept checks"
+  - id: exp3016-sota-repair-rerun-with-acceptance-controller
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1.json"
+    title: "SOTA repair rerun with acceptance controller"
     priority: critical
     requires_gpu: true
     max_turns: 50
-    estimated_wall_time_min: 100
+    estimated_wall_time_min: 120
     track: "code_repair"
     inference_substrate: "live_llm_inference"
     gated_on:
-      - upstream: exp3001-sota-gguf-cache-carry-forward-checksum-refresh
-        artifact_field: sota_headline_ready
+      - upstream: exp3013-sota-gguf-logprob-telemetry-preflight
+        artifact_field: sota_logprob_ready
         op: "=="
         value: true
-      - upstream: exp3002-metamorphic-repair-oracle-audit
-        artifact_field: metamorphic_oracle_ready
+      - upstream: exp3015-cactus-style-repair-acceptance-controller
+        artifact_field: acceptance_controller_ready
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: exp3003-gated-sota-repair-metamorphic-false-accept-rerun
+        verdict: "flagged: metamorphic repair rerun did not clear gates"
+        addressed_by: "Reruns only after SOTA telemetry and offline acceptance-controller gates pass, with syntax/schema deltas treated as first-class blockers."
+        retire_if_same_verdict: true
       - experiment_id: exp2991-gated-sota-intent-preserving-repair-hard-set
         verdict: "flagged: hard-set repair did not clear promotion gates"
-        addressed_by: "Reruns only after SOTA cache refresh and metamorphic oracle readiness, with false-accept and tautology gates promoted to first-class fields."
+        addressed_by: "Uses a controller built from exp3014/exp3015 instead of repeating the same hard-set acceptance policy."
         retire_if_same_verdict: true
       - experiment_id: exp2977-sota-intent-preserving-code-repair
         verdict: "blocked_cached_sota_pair_unavailable_cpu_smoke_only"
-        addressed_by: "Uses the exp3001 SOTA cache gate so CPU smoke cannot become headline evidence."
-        retire_if_same_verdict: true
-      - experiment_id: exp2964-sota-dccd-repair-replication
-        verdict: "complete: DCCD repair replication did not clear promotion gates; pass@1_delta=-0.2, syntax_failure_rate_delta=0.30000000000000004, false_accept_delta=-0.05"
-        addressed_by: "Measures intent-preserving repair under independent metamorphic tests instead of repeating over-constrained DCCD repair."
+        addressed_by: "Uses exp3013 as a structured SOTA telemetry gate so CPU smoke cannot become headline evidence."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the .282 live repair claim-repair attempt. It may run only after the SOTA cache carry-forward and metamorphic oracle audit pass. The target is not just a positive delta: promotion requires clean false-accept, tautology, syntax/schema, and provenance evidence.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the .283 live repair claim-repair attempt. It may run only after exp3013 reports SOTA telemetry readiness and exp3015 reports an acceptance controller. Promotion requires clean false-accept, tautology, syntax/schema, and provenance evidence.
 
       MODEL_SPECS:
       - headline_models:
@@ -241,28 +311,29 @@ tasks:
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
-      - scripts/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1.py
+      - scripts/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.py
       - python/carnot/inference/sota_models.py
-      - results/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.json
-      - results/experiment_3002_metamorphic_repair_oracle_audit_v1.json
-      - results/experiment_2991_gated_sota_intent_preserving_repair_hard_set_v1.json
+      - results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json
+      - results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json
+      - results/experiment_3014_repair_syntax_schema_failure_taxonomy_v1.json
+      - results/experiment_3003_gated_sota_repair_metamorphic_false_accept_rerun_v1.json
       - datasets/repair_hard/manifest_v1.jsonl if present
 
       TASK:
-      Rerun SOTA local GGUF repair on the hard set plus metamorphic variants, then compute pass@1/pass@k, syntax/schema failure, false-accept, and tautology deltas. If gates or preconditions fail, emit a terminal blocked artifact.
+      Rerun local SOTA GGUF repair on the hard set and metamorphic variants using the acceptance controller. Compute pass@1/pass@k, syntax/schema failure, false-accept, and tautology deltas. If gates or preconditions fail, emit a terminal blocked artifact.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: verify exp3001.sota_headline_ready=true, exp3002.metamorphic_oracle_ready=true, CUDA/cache status, model checksum availability, and hard-set integrity.
-      1. Add a focused exp3003 script following scripts/experiment_template.py.
-      2. Load the original hard-set manifest and metamorphic manifest; run baseline validators before live LLM repair.
-      3. Generate repair candidates with at least one mandated headline model; preserve prompt, draft intent, failing trace, final patch, duration, and transcript hash.
-      4. Execute deterministic tests for original and metamorphic cases for every candidate.
-      5. Compute deltas against baseline and exp2991 where comparable, keeping small-model smoke data separate.
-      6. Set repair_rerun_clean=false if false accepts rise, tautology probes pass vacuously, schema/syntax failures rise, n_tasks is too small, or only smoke models ran.
-      7. Write candidate patches, verifier logs, transcripts, and the JSON artifact.
+      0. PRECONDITIONS: verify exp3013.sota_logprob_ready=true, exp3015.acceptance_controller_ready=true, CUDA/cache status, model checksum availability, controller config availability, and hard-set integrity. If any precondition fails, write a blocked_* artifact and stop.
+      1. Add a focused exp3016 script following scripts/experiment_template.py.
+      2. Load the original hard-set manifest, metamorphic manifest, and acceptance-controller config; run baseline validators before live LLM repair.
+      3. Generate repair candidates with at least one mandated headline model; preserve prompt, draft intent, failing trace, final patch, duration, transcript hash, and telemetry if available.
+      4. Apply the acceptance controller before final promotion; execute deterministic tests for every accepted and rejected candidate.
+      5. Compute deltas against baseline, exp3003, and accept-all where comparable, keeping small-model smoke data separate.
+      6. Set repair_controller_clean=false if false accepts rise, tautology probes pass vacuously, schema/syntax failures rise, n_tasks is too small, or only smoke models ran.
+      7. Write candidate patches, verifier logs, transcripts, telemetry summaries, and the JSON artifact.
 
       REQUIRED ARTIFACT FIELDS:
-      - repair_rerun_clean: bool (principle: the repair row must be machine-gated)
+      - repair_controller_clean: bool (principle: the repair row must be machine-gated)
       - headline_result: bool (principle: SOTA claim must be separate from smoke evidence)
       - preconditions_checked: bool (principle: compute-bound failures must distinguish setup from method failure)
       - n_tasks: int (principle: sample size must be explicit)
@@ -270,98 +341,25 @@ tasks:
       - model_specs: dict (principle: model identities must match mandated GGUFs)
       - headline_models_used: list (principle: SOTA evidence requires actual headline models)
       - model_checksums: dict (principle: live model identity must be durable)
+      - acceptance_controller_config_path: str (principle: acceptance policy must be auditable)
       - pass_at_1_delta: float (principle: usefulness must be measured against baseline)
       - pass_at_k_delta: float (principle: multiple candidates must not hide pass@1 regression)
       - false_accept_delta: float (principle: verifier safety must not regress)
       - tautology_gate_clean: bool (principle: vacuous wins must not promote)
       - syntax_failure_rate_delta: float (principle: repair must not trade correctness for parse failures)
+      - schema_failure_rate_delta: float (principle: repair must not trade correctness for schema failures)
       - live_transcript_paths: list (principle: live inference claims require replayable output)
       - verifier_log_paths: list (principle: correctness claims require executable evidence)
-      - honest_verdict: str (principle: terminal verdict must state clean, flagged, or blocked)
+      - inference_substrate: str (principle: live inference must be explicit)
+      - duration_s: float (principle: live model runs must report wall-clock duration)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3004-aquaforte-beaver-live-retry-provenance-v2
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3004_aquaforte_beaver_live_retry_provenance_v2.json"
-    title: "AquaForte/BEAVER live retry provenance v2"
-    priority: critical
-    requires_gpu: true
-    max_turns: 50
-    estimated_wall_time_min: 90
-    track: "substrate_provenance"
-    inference_substrate: "live_llm_inference"
-    gated_on:
-      - upstream: exp3001-sota-gguf-cache-carry-forward-checksum-refresh
-        artifact_field: sota_headline_ready
-        op: "=="
-        value: true
-    prior_failures:
-      - experiment_id: exp2993-aquaforte-beaver-substrate-corrigendum
-        verdict: "complete: live retry measured separately and exp2934 retry substrate relabeled"
-        addressed_by: "Adds durable model checksum, transcript, duration provenance, and two-condition replay while keeping enumerator fallback separate."
-        retire_if_same_verdict: true
-      - experiment_id: exp2934-aquaforte-beaver-live-gguf-retry
-        verdict: "complete: exp2926 live GGUF proposals reformulated and exact-verified"
-        addressed_by: "Revisits only the substrate/provenance ambiguity, not the enumerator fallback result."
-        retire_if_same_verdict: true
-    prompt: |
-      CONTEXT:
-      Exp 2993 separated live retry evidence from enumerator fallback, but the .281 matrix and capstone still require clean live retry methodology, model checksum, transcript, and durable duration provenance. This task is a narrow provenance repair, not a new BEAVER headline.
-
-      MODEL_SPECS:
-      - headline_models:
-        - unsloth/Qwen3.6-35B-A3B-GGUF
-        - unsloth/gemma-4-31B-it-GGUF
-        - unsloth/gemma-4-26B-A4B-it-GGUF
-      - smoke_only_models:
-        - Qwen/Qwen3.5-0.8B
-        - unsloth/gemma-4-E4B-it-GGUF
-      - Use cached_sota_pair() or the current repo-local SOTA cache helper.
-      - Do not label enumerator fallback as live LLM evidence.
-
-      EXISTING CODE TO READ FIRST:
-      - CLAUDE.md
-      - scripts/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1.py
-      - python/carnot/inference/sota_models.py
-      - results/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1.json
-      - results/experiment_2934_aquaforte_beaver_live_gguf_retry.json
-      - results/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.json
-      - ops/known-issues.md
-
-      TASK:
-      Run a bounded live retry provenance repair for AquaForte/BEAVER. Record live model identity, checksums, prompts, transcripts, durations, and exact verifier outcomes. Keep enumerator fallback in a separate field and refuse promotion if it contaminates live retry evidence.
-
-      CONCRETE STEPS:
-      0. PRECONDITIONS: verify exp3001.sota_headline_ready=true, CUDA/cache status, model checksum availability, and the source retry items before any live inference.
-      1. Add a focused exp3004 script following scripts/experiment_template.py.
-      2. Reconstruct the exp2934/exp2993 retry item set and explicitly mark live retry versus enumerator fallback conditions.
-      3. Run the minimal live retry with at least one mandated headline model, preserving prompts, raw outputs, durations, and transcript hashes.
-      4. Run exact validators on live outputs and separately on enumerator fallback outputs.
-      5. Record duration provenance using monotonic start/end timing and transcript write timestamps; flag impossible durations.
-      6. Write the artifact with strict substrate labels and promotion gates.
-
-      REQUIRED ARTIFACT FIELDS:
-      - live_retry_provenance_clean: bool (principle: substrate repair must be machine-gated)
-      - substrate_corrigendum_promotable: bool (principle: capstone needs a direct promotion signal)
-      - preconditions_checked: bool (principle: compute-bound failures must distinguish setup from method failure)
-      - model_specs: dict (principle: model identities must match mandated GGUFs)
-      - headline_models_used: list (principle: live retry must use actual headline local models)
-      - model_checksums: dict (principle: model provenance must be durable)
-      - duration_seconds_live: float (principle: live retry duration must be explicit)
-      - duration_provenance_path: str (principle: timing evidence must be inspectable)
-      - live_transcript_paths: list (principle: live evidence must be replayable)
-      - enumerator_fallback_separated: bool (principle: fallback cannot masquerade as live LLM evidence)
-      - enumerator_fallback_paths: list (principle: fallback evidence must remain auditable)
-      - impossible_duration_flag: bool (principle: duration artifacts must be guarded)
-      - honest_verdict: str (principle: terminal verdict must state clean, flagged, or blocked)
-
-      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
-
-  - id: exp3005-solver-to-validator-tree-expansion
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3005_solver_to_validator_tree_expansion_v1.json"
-    title: "Solver-to-validator tree expansion"
+  - id: exp3017-nsvif-instruction-validator-tree-expansion
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json"
+    title: "NSVIF instruction validator-tree expansion"
     priority: high
     agent_type: codex
     model: gpt-5.5
@@ -371,125 +369,186 @@ tasks:
     track: "solver_verification"
     inference_substrate: "verifier_ensemble_against_cached_candidates"
     prior_failures:
-      - experiment_id: exp2992-sota-solver-formalization-provenance-reproduction
-        verdict: "reproduced: solver-feedback formalization gain reproduced with stricter Z3 provenance"
-        addressed_by: "Expands the clean solver-provenance line into a larger deterministic validator-tree corpus rather than rerunning the same six-item reproduction."
+      - experiment_id: exp3005-solver-to-validator-tree-expansion
+        verdict: "ready: expanded deterministic validator-tree corpus exact-checked"
+        addressed_by: "Expands the clean validator-tree line into instruction-following constraints, keeping exact validators as authority."
         retire_if_same_verdict: true
       - experiment_id: exp2994-prompt-validator-dialogue-schema
         verdict: "complete: prompt-validator dialogue protocol ready with deterministic exact checks"
-        addressed_by: "Moves from protocol readiness to executable tree expansion and partial-viability checks."
+        addressed_by: "Moves from protocol readiness to NSVIF-style instruction constraint coverage with concrete validator trees."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp 2992 and exp2994 are the cleanest .281 technical path: solver-feedback formalization reproduced with Z3 provenance, and the prompt-validator dialogue protocol is ready. The next step is a larger deterministic validator-tree corpus with strict partial-candidate viability checks.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. NSVIF models instruction-following verification as constraint satisfaction. Carnot should test a small instruction-validator expansion using exact checks where possible and explicit semantic-boundary labels where exact checks are not possible.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-references.md
-      - scripts/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.py
+      - scripts/experiment_3005_solver_to_validator_tree_expansion_v1.py
       - scripts/experiment_2994_prompt_validator_dialogue_schema_v1.py
-      - results/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.json
+      - results/experiment_3005_solver_to_validator_tree_expansion_v1.json
       - results/experiment_2994_prompt_validator_dialogue_schema_v1.json
       - python/carnot/
       - tests/
 
       TASK:
-      Expand the solver-to-validator line into a larger deterministic exact-check corpus. Add validator trees, partial-viability checks inspired by LAVE, and Z3/runtime transcripts. Do not use LLM-as-judge semantics.
+      Expand the deterministic validator-tree corpus with at least 20 small instruction-following items. Use Z3/runtime/string/AST validators when possible; do not use LLM-as-judge labels as verifier authority.
 
       CONCRETE STEPS:
-      1. Add a focused exp3005 script following scripts/experiment_template.py.
-      2. Select or synthesize at least 20 small solver/formalization items grounded in existing fixtures, exp2992 transcripts, or deterministic generated cases.
-      3. For each item, build a validator tree with explicit constraint nodes, runtime checks where applicable, and Z3 checks where applicable.
-      4. Add partial-candidate viability checks: invalid prefixes or partial constraints should fail early, while valid extendable partials should remain accepted.
-      5. Execute all validators and save transcript/hash evidence.
-      6. Reject items with non-deterministic tests, missing exact checks, or LLM-only labels.
-      7. Write the artifact and any dataset/manifest files with clear paths.
+      1. Add a focused exp3017 script following scripts/experiment_template.py.
+      2. Select or synthesize instruction-following items with explicit constraints: required fields, forbidden tokens, ordering constraints, numeric bounds, simple transformations, and code/runtime invariants.
+      3. Build validator trees with exact-check nodes and mark any semantic-only node as non-authoritative.
+      4. Execute all validators and save transcripts/hashes.
+      5. Reject items with ambiguous instructions, nondeterministic validators, or LLM-only labels.
+      6. Write the artifact and any manifest files with clear paths.
 
       REQUIRED ARTIFACT FIELDS:
-      - validator_tree_expanded: bool (principle: downstream diagnostics must gate on a real corpus)
+      - instruction_validator_tree_ready: bool (principle: downstream frontier certificate must gate on a real corpus)
       - validator_manifest_path: str (principle: expanded corpus must be inspectable)
-      - n_solver_items: int (principle: sample size must be explicit)
+      - n_instruction_items: int (principle: sample size must be explicit)
       - n_validator_trees: int (principle: tree count must be explicit)
-      - all_trees_exact_checked: bool (principle: validators must be executable, not semantic claims)
-      - partial_viability_checked: bool (principle: prefix/partial validity must be explicit)
+      - exact_check_coverage: float (principle: semantic-only labels must not be hidden)
+      - all_authoritative_nodes_exact_checked: bool (principle: verifier authority must be executable)
       - z3_transcript_paths: list (principle: formal evidence must be replayable)
       - runtime_transcript_paths: list (principle: executable evidence must be replayable)
-      - rejected_constraints: list (principle: invalid generated checks must not be hidden)
+      - rejected_items: list (principle: invalid generated checks must not be hidden)
       - llm_judge_used: bool (principle: LLM judgments must not become verifiers)
-      - honest_verdict: str (principle: terminal verdict must state ready, flagged, or blocked)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3006-eqr-fixed-point-energy-diagnostic
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3006_eqr_fixed_point_energy_diagnostic_v1.json"
-    title: "EqR fixed-point energy diagnostic"
+  - id: exp3018-beaver-style-validator-frontier-certificate
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json"
+    title: "BEAVER-style validator frontier certificate"
     priority: high
+    agent_type: codex
+    model: gpt-5.5
+    requires_codex: true
     max_turns: 50
     estimated_wall_time_min: 60
-    track: "energy_diagnostics"
-    inference_substrate: "aggregation_from_upstream_artifacts"
-    prior_failures:
-      - experiment_id: exp1469-halt-spilled-energy-telemetry-diagnostic
-        verdict: "retired_non_headline_telemetry_flat_or_confounded"
-        addressed_by: "Uses exact solver/validator violation trajectories from exp3005 instead of token-level or HALT telemetry proxies."
-        retire_if_same_verdict: true
-      - experiment_id: exp1907-token-level-spilled-energy-diagnostic
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Avoids the blocked token-logprob telemetry substrate and computes fixed-point diagnostics from cached executable validator traces."
-        retire_if_same_verdict: true
-      - experiment_id: exp1920-token-spilled-energy
-        verdict: "blocked_gate_check_failed"
-        addressed_by: "Narrows the scope to a non-headline diagnostic over exact constraint energy rather than another token spilled-energy rerun."
-        retire_if_same_verdict: true
+    track: "solver_verification"
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
     gated_on:
-      - upstream: exp3005-solver-to-validator-tree-expansion
-        artifact_field: validator_tree_expanded
+      - upstream: exp3017-nsvif-instruction-validator-tree-expansion
+        artifact_field: instruction_validator_tree_ready
         op: "=="
         value: true
+    prior_failures:
+      - experiment_id: exp3004-aquaforte-beaver-live-retry-provenance-v2
+        verdict: "clean: live retry provenance repaired and enumerator fallback separated"
+        addressed_by: "Carries forward only the BEAVER-style deterministic-certificate idea over exact validator trees; it does not repeat the live retry."
+        retire_if_same_verdict: true
+      - experiment_id: exp2993-aquaforte-beaver-substrate-corrigendum
+        verdict: "complete: live retry measured separately and exp2934 retry substrate relabeled"
+        addressed_by: "Keeps enumerator fallback and live LLM evidence separated while producing a bounded frontier certificate."
+        retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Equilibrium Reasoners and Solve the Loop suggest that iterative reasoning can be studied as fixed-point or attractor convergence. Carnot does not have a native EqR implementation in this milestone. The goal is a bounded diagnostic over existing solver/validator trajectories, not a new model claim.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. BEAVER-style deterministic verification is useful only if prefix/frontier certificates remain separate from live LLM evidence. This task builds a small certificate over validator trees, not a new LLM run.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-references.md
+      - results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json
       - results/experiment_3005_solver_to_validator_tree_expansion_v1.json
-      - results/experiment_2992_sota_solver_formalization_provenance_reproduction_v1.json
-      - results/experiment_2994_prompt_validator_dialogue_schema_v1.json
+      - results/experiment_3004_aquaforte_beaver_live_retry_provenance_v2.json
       - python/carnot/
       - tests/
 
       TASK:
-      Build a fixed-point energy diagnostic over cached solver/validator trajectories. Measure convergence, basin sensitivity, monotonicity, and negative-control rejection. Do not claim a native Equilibrium Reasoner or attractor model implementation.
+      Build a BEAVER-style frontier certificate over the validator-tree corpus: prefix closure where applicable, bounded frontier exploration, deterministic validator outcomes, and explicit uncertainty/probability-bound placeholders where exact probability is not computed.
 
       CONCRETE STEPS:
-      1. Add a focused exp3006 script following scripts/experiment_template.py.
-      2. Load validator-tree traces and derive a scalar diagnostic energy from exact constraint violations, runtime failures, or Z3 unsat features.
-      3. For each trajectory, evaluate whether iterative repair/constraint feedback moves toward a lower-energy fixed point.
-      4. Create negative controls by permuting constraints, swapping incompatible validators, or injecting contradiction nodes.
-      5. Measure convergence rate, basin sensitivity to small perturbations, energy monotonicity, and negative-control rejection.
-      6. Save plots or tables only if generated reproducibly; the JSON artifact remains the authority.
-      7. Write the artifact with native EqR claim set to false.
+      1. Add a focused exp3018 script following scripts/experiment_template.py.
+      2. Load exp3017 validator trees and identify which constraints are prefix-closed or frontier-explorable.
+      3. Implement a small deterministic frontier explorer over finite domains or cached candidate sets.
+      4. Record certified safe, certified violating, unresolved, and non-prefix-closed rows.
+      5. Keep live LLM transcripts and enumerator fallback under separate provenance fields if cited.
+      6. Write certificate manifests, transcripts, and the JSON artifact.
 
       REQUIRED ARTIFACT FIELDS:
-      - fixed_point_diagnostic_ready: bool (principle: downstream FR-11 stability must gate on diagnostic availability)
-      - n_trajectories: int (principle: trajectory sample size must be explicit)
-      - energy_definition: str (principle: scalar diagnostic energy must be auditable)
-      - convergence_rate: float (principle: fixed-point behavior must be measured)
-      - energy_monotonicity_rate: float (principle: convergence should not be asserted from final state only)
-      - basin_sensitivity_summary: dict (principle: stability requires perturbation evidence)
-      - negative_control_rejection_rate: float (principle: diagnostic must reject invalid controls)
-      - diagnostic_table_path: str (principle: aggregate evidence must be inspectable)
-      - native_eqr_claim_made: bool (principle: external architecture inspiration must not become local capability claim)
-      - honest_verdict: str (principle: terminal verdict must state ready, flagged, or blocked)
+      - frontier_certificate_ready: bool (principle: downstream FR-11 diagnostic must gate on certificate availability)
+      - certificate_manifest_path: str (principle: certificate rows must be inspectable)
+      - n_frontier_items: int (principle: sample size must be explicit)
+      - n_prefix_closed_items: int (principle: BEAVER-style assumptions must be counted)
+      - certified_safe_count: int (principle: safe certificates must be countable)
+      - certified_violating_count: int (principle: violation certificates must be countable)
+      - unresolved_count: int (principle: incomplete certificates must not be hidden)
+      - enumerator_fallback_separated: bool (principle: fallback cannot masquerade as live LLM evidence)
+      - live_llm_evidence_used: bool (principle: certificate task should remain cached/exact unless explicitly stated)
+      - transcript_paths: list (principle: certificate evidence must be replayable)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3007-fr11-attractor-trace-memory-stability
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3007_fr11_attractor_trace_memory_stability_v1.json"
-    title: "FR-11 attractor trace-memory stability"
+  - id: exp3019-fr11-feasibility-channel-de-tautology-diagnostic
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic_v1.json"
+    title: "FR-11 feasibility-channel de-tautology diagnostic"
+    priority: critical
+    max_turns: 50
+    estimated_wall_time_min: 60
+    track: "continuous_self_learning"
+    inference_substrate: "verifier_ensemble_against_cached_candidates"
+    gated_on:
+      - upstream: exp3018-beaver-style-validator-frontier-certificate
+        artifact_field: frontier_certificate_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp3007-fr11-attractor-trace-memory-stability
+        verdict: "ready: trace_memory_stability_ready"
+        addressed_by: "Adds an independent feasibility-channel diagnostic over exact certificate rows to clear or confirm the held-out-score tautology flag."
+        retire_if_same_verdict: true
+      - experiment_id: exp3006-eqr-fixed-point-energy-diagnostic
+        verdict: "ready: fixed-point diagnostic over cached validator trajectories complete"
+        addressed_by: "Extends the diagnostic from convergence-only evidence to feasible/infeasible separation and negative-control rejection."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Exp3007 remains flagged because FR-11 trace memory readiness is too close to self-grading. Differentiable Symbolic Planning suggests an interpretable feasibility channel; Carnot should test that idea over exact validator/certificate rows.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-program.md
+      - _bmad/prd.md
+      - research-references.md
+      - results/experiment_3007_fr11_attractor_trace_memory_stability_v1.json
+      - results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json
+      - results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json
+      - python/carnot/
+      - tests/
+
+      TASK:
+      Build a feasibility-channel diagnostic over exact validator/certificate rows. Measure feasible-vs-infeasible separation, negative-control rejection, held-out correlation, and tautology risk. Do not claim native DSP or broad self-improvement.
+
+      CONCRETE STEPS:
+      1. Add a focused exp3019 script following scripts/experiment_template.py.
+      2. Load exact validator rows, certificate outcomes, and exp3007 memory traces.
+      3. Derive transparent feasibility features from exact evidence only.
+      4. Evaluate separation between feasible, violating, unresolved, and negative-control rows.
+      5. Test whether the feasibility score predicts held-out verifier success without reusing the same metric definition as the label.
+      6. Write a diagnostic table and JSON artifact with tautology risk explicit.
+
+      REQUIRED ARTIFACT FIELDS:
+      - feasibility_channel_diagnostic_ready: bool (principle: DVI-style FR-11 controller must gate on an independent diagnostic)
+      - diagnostic_table_path: str (principle: feasibility evidence must be inspectable)
+      - n_rows: int (principle: sample size must be explicit)
+      - feasible_infeasible_auc: float (principle: separation must be measured independently)
+      - negative_control_rejection_rate: float (principle: irrelevant or contradicted traces must not score as useful)
+      - heldout_metric_correlation: float (principle: usefulness must relate to held-out verifier outcomes)
+      - tautology_risk_flag: bool (principle: self-grading risk must be explicit)
+      - reused_label_as_feature: bool (principle: tautological feature leakage must be rejected)
+      - native_dsp_claim_made: bool (principle: external architecture inspiration must not become local capability claim)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3020-dvi-verifier-feedback-self-learning-controller
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3020_dvi_verifier_feedback_self_learning_controller_v1.json"
+    title: "DVI verifier-feedback self-learning controller"
     priority: critical
     max_turns: 50
     estimated_wall_time_min: 75
@@ -497,65 +556,69 @@ tasks:
     continuous_self_learning: true
     inference_substrate: "verifier_ensemble_against_cached_candidates"
     gated_on:
-      - upstream: exp3006-eqr-fixed-point-energy-diagnostic
-        artifact_field: fixed_point_diagnostic_ready
+      - upstream: exp3019-fr11-feasibility-channel-de-tautology-diagnostic
+        artifact_field: feasibility_channel_diagnostic_ready
         op: "=="
         value: true
     prior_failures:
+      - experiment_id: exp3007-fr11-attractor-trace-memory-stability
+        verdict: "ready: trace_memory_stability_ready"
+        addressed_by: "Moves from static trace-memory readiness to verifier-feedback online updates with independent feasibility and forgetting gates."
+        retire_if_same_verdict: true
       - experiment_id: exp2995-fr11-verifier-grounded-trace-memory-v2
         verdict: "ready: verifier_grounded_trace_memory_ready"
-        addressed_by: "Extends the narrow ready boundary with attractor-inspired stability, drift, negative-control, and forgetting checks."
+        addressed_by: "Extends the narrow ready boundary with DVI-style accept/reject supervision and held-out utility checks."
         retire_if_same_verdict: true
       - experiment_id: exp2983-fr11-trace-to-skill-pilot
         verdict: "complete: trace_to_skill_pilot_ready=true; independent_metric_delta=0.2; negative_control_delta=0.0; pilot_scope=true"
-        addressed_by: "Moves beyond pilot utility into stability and drift evidence using exact validators."
+        addressed_by: "Replaces pilot utility with an explicit online controller, negative controls, and forgetting checks."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the required continuous self-learning experiment for .282. Exp 2995 made verifier-grounded trace memory ready in a narrow sense. The next question is whether trace memory behaves like a stable, useful attractor: convergent, bounded in drift, resistant to negative controls, and not harmful to held-out tasks.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the required continuous self-learning experiment for .283. DVI turns verifier accept/reject decisions into online supervision. Carnot should test that pattern as a small controller over cached exact traces, not as native LLM fine-tuning.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-program.md
       - _bmad/prd.md
       - research-references.md
+      - results/experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic_v1.json
+      - results/experiment_3007_fr11_attractor_trace_memory_stability_v1.json
       - scripts/experiment_2995_fr11_verifier_grounded_trace_memory_v2.py
-      - results/experiment_2995_fr11_verifier_grounded_trace_memory_v2.json
-      - results/experiment_3006_eqr_fixed_point_energy_diagnostic_v1.json
       - python/carnot/
       - tests/
 
       TASK:
-      Stress FR-11 verifier-grounded trace memory with attractor-inspired stability tests. Use only independent exact verifier metrics for promotion; do not count self-reported memory utility as success.
+      Implement and evaluate a bounded verifier-feedback self-learning controller over cached traces. Updates must be accepted only when exact verifier evidence improves independent held-out metrics and does not harm forgetting guards.
 
       CONCRETE STEPS:
-      1. Add a focused exp3007 script following scripts/experiment_template.py.
-      2. Build a trace-memory candidate set from exp2995, exp3005, and exp3006 artifacts.
-      3. Define memory updates whose acceptance is controlled by exact verifier evidence and held-out task performance.
-      4. Evaluate convergence and drift across repeated replay/update cycles.
-      5. Add negative controls: irrelevant traces, contradicted constraints, and shuffled validator labels.
-      6. Add forgetting checks on held-out verifier tasks that should not degrade after memory updates.
-      7. Write the artifact with continuous self-learning boundaries explicit and no native attractor-model claim.
+      1. Add a focused exp3020 script following scripts/experiment_template.py.
+      2. Build a replay set from exp3017, exp3018, exp3019, and exp3007 artifacts.
+      3. Define a small transparent controller that updates weights or routing decisions from verifier accept/reject events.
+      4. Evaluate before/after utility on held-out exact-validator rows, plus negative controls and forgetting checks.
+      5. Compare against no-learning, replay-only, and random-update controls.
+      6. Write controller config, replay transcript, and artifact with continuous self-learning boundaries explicit.
 
       REQUIRED ARTIFACT FIELDS:
-      - trace_memory_stability_ready: bool (principle: FR-11 carry-forward must be machine-gated)
+      - verifier_feedback_controller_ready: bool (principle: FR-11 carry-forward must be machine-gated)
       - continuous_self_learning_task: bool (principle: milestone requirement must be explicit)
       - independent_self_learning_boundary_preserved: bool (principle: self-learning must not grade itself)
-      - n_memory_candidates: int (principle: memory set size must be explicit)
-      - convergence_guard_passed: bool (principle: attractor-style stability requires convergence evidence)
-      - drift_guard_passed: bool (principle: memory must not drift into unrelated constraints)
-      - negative_control_rejected: bool (principle: irrelevant or contradicted traces must not improve score)
-      - forgetting_guard_passed: bool (principle: new memory must not damage held-out tasks)
+      - controller_config_path: str (principle: learned update rule must be inspectable)
+      - n_replay_items: int (principle: replay sample size must be explicit)
       - heldout_delta: float (principle: usefulness must be measured on independent held-out metrics)
-      - native_attractor_model_claim_made: bool (principle: diagnostic inspiration must not become local model claim)
-      - honest_verdict: str (principle: terminal verdict must state ready, flagged, or blocked)
+      - negative_control_delta: float (principle: irrelevant or contradicted traces must not improve score)
+      - forgetting_guard_passed: bool (principle: new memory must not damage held-out tasks)
+      - drift_guard_passed: bool (principle: controller must not drift into unrelated constraints)
+      - tautology_risk_flag: bool (principle: FR-11 promotion must reject self-grading)
+      - native_llm_training_claim_made: bool (principle: DVI inspiration must not become local fine-tuning claim)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3008-gatemate-host-visible-io-transport-v2
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3008_gatemate_host_visible_io_transport_v2.json"
-    title: "GateMate host-visible IO transport v2"
+  - id: exp3021-gatemate-rtl-ccf-host-visible-transport-shim
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json"
+    title: "GateMate RTL/CCF host-visible transport shim"
     priority: critical
     model: opus
     requires_claude: true
@@ -566,147 +629,222 @@ tasks:
     track: "hardware"
     inference_substrate: "hardware_smoke"
     prior_failures:
+      - experiment_id: exp3008-gatemate-host-visible-io-transport-v2
+        verdict: "blocked_flash_failed"
+        addressed_by: "Narrows the next attempt to adding or precisely diagnosing RTL/CCF physical output binding before another board smoke claim."
+        retire_if_same_verdict: true
       - experiment_id: exp2996-gatemate-host-visible-readback-smoke
         verdict: "blocked_flash_failed"
-        addressed_by: "Focuses first on a minimal host-visible IO transport and durable blocked diagnosis instead of repeating flash/readback promotion."
+        addressed_by: "Separates design-level transport readiness from flash/readback attempts to avoid repeating bootstrap-only hardware failures."
         retire_if_same_verdict: true
       - experiment_id: exp2984-gatemate-readback-smoke-vector
         verdict: "complete: gatemate_no_readback_no_host_smoke_io"
-        addressed_by: "Requires an explicit IO path or a precise blocked reason before any SSQA or sampler-facing claim."
+        addressed_by: "Targets the exact missing interface: spin_out/done must become host-visible through pin, GPIO, UART, JTAG, status register, CSR, AXI, or logic-analyzer path."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      GateMate remains blocked: exp2996 detected the board but flash failed, readback was unsupported, and no smoke vector passed. The .282 goal is a minimal host-visible IO transport or a precise blocked diagnosis. No sampler, speedup, Boltzmann, or thermodynamic claim is allowed.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Exp3008 found that spin_out/done are internal RTL signals only: no physical Pin_in/Pin_out assignment, UART, GPIO, JTAG, status register, CSR, AXI, or logic-analyzer transport exists. This task is design/transport first, not sampler first.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-hardware-wishlist.md
       - ops/known-issues.md
+      - results/experiment_3008_gatemate_host_visible_io_transport_v2.json
       - results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
-      - results/experiment_2984_gatemate_readback_smoke_vector_v4.json
-      - hardware/, fpga/, rtl/, scripts/ GateMate files
-      - ops/conductor-log.md entries around exp2996 and exp2997
+      - hardware/gatemate/
+      - rtl/
+      - scripts/ GateMate files if present
+      - ops/conductor-log.md entries around exp3008 and exp3009
 
       TASK:
-      Add or conclusively diagnose a minimal host-visible GateMate IO transport for deterministic smoke output. If the board/toolchain/current RTL cannot expose output, document the exact missing interface and emit a terminal artifact.
+      Add or precisely diagnose a minimal host-visible GateMate transport shim at the RTL/CCF/toolchain layer. Prefer a deterministic status bit/byte for spin_out/done. If the repo lacks the board pinout or toolchain surface needed to bind output, document the exact blocker and emit a terminal artifact.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: identify board connection, toolchain versions, programmer command, target bitstream/RTL, permissions, and intended host-visible IO path before flashing.
-      1. Inspect existing GateMate RTL/scripts for UART, GPIO, JTAG, status-register, or logic-analyzer output options.
-      2. Prefer a minimal deterministic smoke vector: program or simulate a known state, expose one status word or byte, and capture host-visible output.
-      3. If flashing still fails, separate board detection, programmer failure, bitstream generation, and IO transport status in the artifact.
-      4. Add the smallest bounded IO shim only if it fits existing repo patterns; otherwise report the blocker without broad refactor.
-      5. Capture command transcripts, board identifiers, output bytes/status, and timing only for smoke/readback.
-      6. Write the artifact with strict claim boundaries and run any available hardware smoke command.
+      0. PRECONDITIONS: identify board connection, toolchain versions, programmer command availability, target RTL/CCF paths, permissions, and intended host-visible IO path before flashing or synthesis. If the board/toolchain is unavailable, write blocked_gatemate_precondition_missing and stop.
+      1. Inspect existing GateMate RTL/CCF/scripts for pin bindings and possible UART/GPIO/JTAG/status-register/logic-analyzer output options.
+      2. Add the smallest bounded output shim only if it fits existing repo patterns and does not require a broad refactor.
+      3. Run simulation, lint, or synthesis/PnR checks available without claiming board success.
+      4. Capture command transcripts, output binding paths, and exact unresolved blockers.
+      5. Write the artifact with strict claim boundaries and no sampler/speedup/thermalization claim.
 
       REQUIRED ARTIFACT FIELDS:
-      - host_visible_io_ready: bool (principle: downstream SSQA must gate on real output transport)
-      - hardware_smoke_boundary_recorded: bool (principle: downstream hardware tasks need an explicit boundary)
-      - preconditions_checked: bool (principle: board failures must distinguish setup from design failure)
-      - board_detected: bool (principle: board contact must be explicit)
-      - flash_attempted: bool (principle: programming attempt must be explicit)
-      - flash_succeeded: bool (principle: flash evidence must be separated from readback)
-      - readback_attempted: bool (principle: readback absence must be explicit)
-      - readback_supported: bool (principle: unsupported readback must block claims)
-      - smoke_vector_attempted: bool (principle: smoke output attempt must be explicit)
-      - smoke_vector_passed: bool (principle: hardware success must be observable)
+      - gatemate_transport_rtl_ready: bool (principle: board smoke must gate on an observable output path)
+      - host_visible_io_plan_ready: bool (principle: downstream smoke needs a concrete IO plan)
+      - preconditions_checked: bool (principle: board/toolchain failures must distinguish setup from design failure)
+      - board_detected: bool (principle: board contact must be explicit when hardware is used)
+      - rtl_paths: list (principle: implementation evidence must have source paths)
+      - ccf_paths: list (principle: physical binding evidence must be inspectable)
       - io_transport_path: str (principle: observed or intended IO must be inspectable)
+      - simulation_or_lint_passed: bool (principle: design readiness must be checked before flashing)
+      - pnr_or_synthesis_attempted: bool (principle: toolchain boundary must be explicit)
       - transcript_paths: list (principle: hardware evidence must be replayable)
       - sampler_claim_made: bool (principle: sampler claims are out of scope)
       - speedup_claim_made: bool (principle: speedup claims require timing/sample evidence not expected here)
-      - honest_verdict: str (principle: terminal verdict must state ready, flagged, or blocked)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3009-ssqa-dual-bram-rtl-pnr-resource-report-v2
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3009_ssqa_dual_bram_rtl_pnr_resource_report_v2.json"
-    title: "SSQA dual-BRAM RTL PnR resource report v2"
+  - id: exp3022-gatemate-transport-flash-smoke-v3
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3022_gatemate_transport_flash_smoke_v3.json"
+    title: "GateMate transport flash smoke v3"
+    priority: critical
+    model: opus
+    requires_claude: true
+    requires_hardware: true
+    hardware: "GateMate"
+    max_turns: 100
+    estimated_wall_time_min: 100
+    track: "hardware"
+    inference_substrate: "hardware_smoke"
+    gated_on:
+      - upstream: exp3021-gatemate-rtl-ccf-host-visible-transport-shim
+        artifact_field: gatemate_transport_rtl_ready
+        op: "=="
+        value: true
+    prior_failures:
+      - experiment_id: exp3008-gatemate-host-visible-io-transport-v2
+        verdict: "blocked_flash_failed"
+        addressed_by: "Runs only after exp3021 reports a concrete RTL/CCF output transport; otherwise this task is structurally skipped."
+        retire_if_same_verdict: true
+      - experiment_id: exp2996-gatemate-host-visible-readback-smoke
+        verdict: "blocked_flash_failed"
+        addressed_by: "Requires transport readiness before flash/smoke, rather than repeating failed flash/readback attempts."
+        retire_if_same_verdict: true
+    prompt: |
+      CONTEXT:
+      Project root placeholder: {project_root}. Run date placeholder: {date}. GateMate board-facing work may proceed only if exp3021 created a concrete output transport. The success criterion is a deterministic host-visible status bit/byte or a precise blocked transcript; no sampler, speedup, or Boltzmann claim is allowed.
+
+      EXISTING CODE TO READ FIRST:
+      - CLAUDE.md
+      - research-hardware-wishlist.md
+      - results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json
+      - results/experiment_3008_gatemate_host_visible_io_transport_v2.json
+      - hardware/gatemate/
+      - rtl/
+      - ops/known-issues.md
+
+      TASK:
+      Flash or otherwise run the GateMate transport smoke path from exp3021 and capture host-visible deterministic output. If flashing, permissions, readback, or output capture fail, separate each failure mode in the artifact.
+
+      CONCRETE STEPS:
+      0. PRECONDITIONS: verify exp3021.gatemate_transport_rtl_ready=true, board detection, toolchain availability, programmer command, bitstream path, output reader path, and permissions. If any precondition fails, write blocked_gatemate_transport_smoke_precondition and stop.
+      1. Run the minimal flash/smoke command sequence using existing GateMate patterns.
+      2. Capture board ID, flash result, output bytes/status, timestamps, and transcript paths.
+      3. If readback is unsupported, record readback_supported=false without treating it as success.
+      4. Verify the deterministic output against the expected smoke vector from exp3021.
+      5. Write the artifact with strict boundaries and no sampler/speedup claim.
+
+      REQUIRED ARTIFACT FIELDS:
+      - host_visible_io_ready: bool (principle: downstream SSQA must gate on real output transport)
+      - preconditions_checked: bool (principle: board failures must distinguish setup from design failure)
+      - board_detected: bool (principle: board contact must be explicit)
+      - flash_attempted: bool (principle: programming attempt must be explicit)
+      - flash_succeeded: bool (principle: flash evidence must be separated from output)
+      - readback_attempted: bool (principle: readback absence must be explicit)
+      - readback_supported: bool (principle: unsupported readback must block readback claims)
+      - smoke_vector_attempted: bool (principle: smoke output attempt must be explicit)
+      - smoke_vector_passed: bool (principle: hardware success must be observable)
+      - observed_output_hash: str (principle: host-visible output must be content-addressable)
+      - transcript_paths: list (principle: hardware evidence must be replayable)
+      - sampler_claim_made: bool (principle: sampler claims are out of scope)
+      - speedup_claim_made: bool (principle: speedup claims require timing/sample evidence not expected here)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
+
+      Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
+
+  - id: exp3023-ssqa-explicit-gate-artifact-and-rtl-report
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3023_ssqa_explicit_gate_artifact_and_rtl_report_v1.json"
+    title: "SSQA explicit gate artifact and RTL report"
     priority: high
     model: opus
     requires_claude: true
     requires_hardware: true
     hardware: "GateMate"
     max_turns: 100
-    estimated_wall_time_min: 90
+    estimated_wall_time_min: 75
     track: "hardware"
     inference_substrate: "hardware_smoke"
-    gated_on:
-      - upstream: exp3008-gatemate-host-visible-io-transport-v2
-        artifact_field: host_visible_io_ready
-        op: "=="
-        value: true
     prior_failures:
+      - experiment_id: exp3009-ssqa-dual-bram-rtl-pnr-resource-report-v2
+        verdict: "GATE_BLOCK: upstream GateMate host-visible IO did not clear the required boundary"
+        addressed_by: "Always writes an explicit SSQA artifact; if GateMate IO remains closed, the artifact records gate-skipped status instead of going missing."
+        retire_if_same_verdict: true
       - experiment_id: exp2997-ssqa-dual-bram-rtl-pnr-resource-report
         verdict: "GATE_BLOCK: upstream GateMate host-visible smoke/readback did not clear the required boundary"
-        addressed_by: "Adds a structured gate on exp3008.host_visible_io_ready so the task cleanly skips when IO is still unavailable."
+        addressed_by: "Decouples artifact emission from the structured gate so matrix/capstone can count SSQA explicitly."
         retire_if_same_verdict: true
       - experiment_id: exp2985-ssqa-dual-bram-register-map-plan
         verdict: "complete: ssqa_dual_bram_register_map_plan_ready_projection_only"
-        addressed_by: "Converts the register-map projection into bounded RTL/PnR/resource evidence only when the host-visible IO boundary is ready."
+        addressed_by: "Converts projection into bounded RTL/PnR/resource evidence only when host-visible IO exists; otherwise records a clean gate-skipped artifact."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      Exp 2997 was gate-blocked because GateMate host-visible output did not clear. This task should run only if exp3008 establishes host_visible_io_ready=true. The goal is a bounded SSQA RTL/PnR/resource artifact, not a sampler or speedup claim.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. Exp3009 was gate-skipped and missing. This task must always emit an artifact. If exp3022 does not exist or reports host_visible_io_ready=false, record explicit gate-skipped status and do not attempt sampler or speedup claims.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-hardware-wishlist.md
       - results/experiment_2985_ssqa_dual_bram_register_map_plan_v1.json
-      - results/experiment_3008_gatemate_host_visible_io_transport_v2.json
-      - hardware/, fpga/, rtl/, scripts/ GateMate or SSQA files
+      - results/experiment_3022_gatemate_transport_flash_smoke_v3.json if present
+      - results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json if present
+      - hardware/gatemate/
+      - rtl/
       - ops/known-issues.md
 
       TASK:
-      Convert the SSQA dual-BRAM register-map plan into bounded RTL/PnR/resource evidence using the host-visible IO boundary from exp3008. Do not claim sampling speedup, Boltzmann correctness, thermodynamic behavior, or FPGA acceleration.
+      Emit an explicit SSQA status artifact. If GateMate host-visible IO is ready, produce bounded RTL/PnR/resource evidence; if not, record gate-skipped with precise upstream status. Do not claim sampling speedup, Boltzmann correctness, thermodynamic behavior, or FPGA acceleration.
 
       CONCRETE STEPS:
-      0. PRECONDITIONS: verify exp3008.host_visible_io_ready=true, toolchain availability, target board, and register-map source artifact.
-      1. Locate or create minimal RTL/module files for the dual-BRAM register map using existing project layout.
+      0. PRECONDITIONS: check for exp3022 artifact and host_visible_io_ready. If false or missing, set ssqa_gate_status=gate_skipped and skip synthesis/flash steps while still writing the artifact.
+      1. If host_visible_io_ready=true, locate or create minimal RTL/module files for the dual-BRAM register map using existing project layout.
       2. Run available synthesis/PnR/resource reporting for GateMate if the toolchain is available.
-      3. Add smoke-vector hook documentation or testbench hooks that align with the exp3008 host-visible IO boundary.
+      3. Align smoke-vector hooks with the exp3022 host-visible IO boundary.
       4. Capture resource reports, PnR logs, and any smoke/testbench transcripts.
-      5. Write the artifact with projection versus implementation boundaries explicit.
+      5. Write the artifact with projection, gate-skipped, implementation, and claim boundaries explicit.
 
       REQUIRED ARTIFACT FIELDS:
+      - ssqa_artifact_written: bool (principle: SSQA must not be missing from matrix/capstone again)
+      - ssqa_gate_status: str (principle: closed hardware gates must be explicit)
       - ssqa_rtl_pnr_report_ready: bool (principle: projection-to-RTL progress must be machine-gated)
       - preconditions_checked: bool (principle: hardware/toolchain failures must be explicit)
+      - upstream_host_visible_io_ready: bool (principle: SSQA claims must name the IO boundary)
       - rtl_path: str (principle: implementation evidence must have a source path)
       - pnr_report_path: str (principle: place-and-route evidence must be inspectable)
       - resource_report_path: str (principle: resource claims require report evidence)
       - smoke_hook_paths: list (principle: future board smoke must have concrete hooks)
-      - host_visible_io_dependency: str (principle: SSQA claims must name the IO boundary)
       - projection_only: bool (principle: remaining projection status must be explicit)
       - sampler_claim_made: bool (principle: sampler claims are out of scope)
       - speedup_claim_made: bool (principle: speedup claims require sample/timing evidence)
-      - honest_verdict: str (principle: terminal verdict must state ready, projection-only, or blocked)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3010-cross-corpus-matrix-v16
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3010_cross_corpus_matrix_v16.json"
-    title: "Cross-corpus matrix v16"
+  - id: exp3024-cross-corpus-matrix-v17
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3024_cross_corpus_matrix_v17.json"
+    title: "Cross-corpus matrix v17"
     priority: critical
     max_turns: 50
     estimated_wall_time_min: 45
     track: "synthesis"
     inference_substrate: "aggregation_from_upstream_artifacts"
     prior_failures:
-      - experiment_id: exp2998-cross-corpus-matrix-v15
-        verdict: "complete: matrix_v15_ready=true; clean=34; flagged=20; blocked=8; gated_skipped=0; pilot_only=4; projection_only=8; missing=1"
-        addressed_by: "Aggregates .282 claim-repair outcomes, including metamorphic repair, AquaForte/BEAVER provenance, FR-11 stability, GateMate IO, and SSQA."
+      - experiment_id: exp3010-cross-corpus-matrix-v16
+        verdict: "complete: matrix_v16_ready=true; clean=38; flagged=23; blocked=9; gated_skipped=1; projection_only=9; pilot_only=4; missing=1"
+        addressed_by: "Aggregates .283 claim-repair outcomes and explicitly avoids top-level live-model metadata to prevent the exp3011 aggregation false-positive pattern."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This matrix must aggregate .282 honestly even if some upstream tasks were gated, blocked, or flagged. Do not require all experiments to pass before producing the matrix; the matrix is where blocked/flagged/gated outcomes become visible.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This matrix must aggregate .283 honestly even if upstream tasks are gated, blocked, flagged, or missing. The matrix is aggregation-only: do not include top-level model_specs, target_model, CUDA, or GGUF fields. Put source model details only under cited_upstream_artifacts.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - research-roadmap-next.yaml
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_2999_capstone_v281.json
-      - all available results/experiment_3000_*.json through results/experiment_3009_*.json
+      - results/experiment_3011_capstone_v282.json
+      - all available results/experiment_3012_*.json through results/experiment_3023_*.json
       - ops/status.md
       - ops/changelog.md
       - research-references.md
@@ -714,19 +852,19 @@ tasks:
       - _bmad/architecture.md
 
       TASK:
-      Produce cross-corpus matrix v16 for milestone .282. Classify each row as clean, flagged, blocked, gated-skipped, projection-only, pilot-only, or missing. Preserve claim boundaries and recommend exact next actions.
+      Produce cross-corpus matrix v17 for milestone .283. Classify each row as clean, flagged, blocked, gated-skipped, projection-only, pilot-only, or missing. Preserve claim boundaries and recommend exact next actions.
 
       CONCRETE STEPS:
-      1. Add a focused exp3010 script following scripts/experiment_template.py, or use an existing matrix script pattern if present.
-      2. Read every available .282 artifact and record missing artifacts explicitly.
-      3. Compare outcomes against the .282 roadmap acceptance criteria, PRD FR-11/FR-12, OpenSpec, hardware boundaries, and paper-v6 narrowing constraints.
-      4. Record whether exp3003 repair, exp3004 substrate provenance, exp3007 FR-11 stability, exp3008 GateMate IO, and exp3009 SSQA are promotable, flagged, blocked, or gate-skipped.
-      5. Identify any claim-boundary violations such as LLM-as-verifier, false SOTA headline use, TSU/Kona access claims, or hardware speedup claims.
-      6. Update ops/status.md and ops/changelog.md only with concise matrix/capstone-relevant state if that is the established local pattern.
-      7. Write results/experiment_3010_cross_corpus_matrix_v16.json.
+      1. Add a focused exp3024 script following scripts/experiment_template.py, or use an existing matrix script pattern if present.
+      2. Read every available .283 artifact and record missing artifacts explicitly.
+      3. Compare outcomes against the .283 roadmap acceptance criteria, PRD FR-11/FR-12, OpenSpec, hardware boundaries, and paper-v6 narrowing constraints.
+      4. Record whether exp3016 repair, exp3020 FR-11 self-learning, exp3022 GateMate IO, and exp3023 SSQA are promotable, flagged, blocked, or gate-skipped.
+      5. Identify claim-boundary violations such as LLM-as-verifier, false SOTA headline use, TSU/Kona access claims, or hardware speedup claims.
+      6. Keep top-level inference_substrate=aggregation_from_upstream_artifacts and cite model/hardware provenance only under cited_upstream_artifacts.
+      7. Write results/experiment_3024_cross_corpus_matrix_v17.json.
 
       REQUIRED ARTIFACT FIELDS:
-      - matrix_v16_ready: bool (principle: capstone needs a machine-gated matrix)
+      - matrix_v17_ready: bool (principle: capstone needs a machine-gated matrix)
       - clean_count: int (principle: outcome counts must be explicit)
       - flagged_count: int (principle: non-promotable rows must be countable)
       - blocked_count: int (principle: blocked rows must be countable)
@@ -736,42 +874,44 @@ tasks:
       - repaired_claims: list (principle: claim repair successes must be named)
       - still_blocked_claims: list (principle: unresolved blockers must carry forward)
       - claim_boundary_violations: list (principle: paper-v6 narrowing must be enforced)
+      - cited_upstream_artifacts: list (principle: aggregation provenance must be traceable without top-level live-inference metadata)
+      - inference_substrate: str (principle: aggregation must not masquerade as live inference)
       - recommended_next_actions: list (principle: next milestone design needs exact actions)
-      - honest_verdict: str (principle: terminal verdict must summarize matrix readiness and counts)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
 
-  - id: exp3011-milestone-282-capstone
-    milestone: "2026.05.282"
-    deliverable: "results/experiment_3011_capstone_v282.json"
-    title: "Milestone .282 capstone"
+  - id: exp3025-milestone-283-capstone
+    milestone: "2026.05.283"
+    deliverable: "results/experiment_3025_capstone_v283.json"
+    title: "Milestone .283 capstone"
     priority: critical
     max_turns: 50
     estimated_wall_time_min: 45
     track: "synthesis"
     inference_substrate: "aggregation_from_upstream_artifacts"
     gated_on:
-      - upstream: exp3010-cross-corpus-matrix-v16
-        artifact_field: matrix_v16_ready
+      - upstream: exp3024-cross-corpus-matrix-v17
+        artifact_field: matrix_v17_ready
         op: "=="
         value: true
     prior_failures:
-      - experiment_id: exp2999-milestone-281-capstone
-        verdict: "complete: capstone_ready=true; paper_ready=false; clean=34; flagged=20; blocked=8; missing=1; gated_skipped=0"
-        addressed_by: "Evaluates whether .282 repaired the exact .281 claim blockers before recommending the next milestone."
+      - experiment_id: exp3011-milestone-282-capstone
+        verdict: "complete: capstone_ready=true; paper_ready=false; repaired=4; flagged=23; blocked=9; gated_skipped=1; missing=1; next=2026.05.283 claim-repair-v2"
+        addressed_by: "Evaluates whether .283 repaired the exact .282 blockers and avoids top-level GGUF/CUDA fields in the aggregation-only capstone."
         retire_if_same_verdict: true
     prompt: |
       CONTEXT:
-      This is the terminal milestone .282 capstone. The goal is a go/no-go decision for claim repair, not external publication. Use matrix v16 as the authority and preserve all claim boundaries from CLAUDE.md, paper-v6 narrowing, PRD, and the roadmap.
+      Project root placeholder: {project_root}. Run date placeholder: {date}. This is the terminal milestone .283 capstone. The goal is a go/no-go decision for claim repair, not external publication. Use matrix v17 as the authority and preserve all claim boundaries from CLAUDE.md, paper-v6 narrowing, PRD, and the roadmap.
 
       EXISTING CODE TO READ FIRST:
       - CLAUDE.md
       - CODEX.md
       - research-roadmap-next.yaml
       - openspec/change-proposals/research-roadmap-vNEXT.md
-      - results/experiment_3010_cross_corpus_matrix_v16.json
-      - results/experiment_2999_capstone_v281.json
-      - all available results/experiment_3000_*.json through results/experiment_3009_*.json
+      - results/experiment_3024_cross_corpus_matrix_v17.json
+      - results/experiment_3011_capstone_v282.json
+      - all available results/experiment_3012_*.json through results/experiment_3023_*.json
       - ops/status.md
       - ops/changelog.md
       - research-complete.yaml
@@ -779,15 +919,16 @@ tasks:
       - _bmad/architecture.md
 
       TASK:
-      Produce the .282 capstone artifact. Decide whether repair, substrate provenance, FR-11 stability, GateMate IO, and SSQA are promotable. Recommend the next milestone exactly. Do not declare paper readiness unless all promotion gates are actually clean.
+      Produce the .283 capstone artifact. Decide whether repair, FR-11 self-learning, GateMate IO, and SSQA are promotable. Recommend the next milestone exactly. Do not declare paper readiness unless all promotion gates are actually clean.
 
       CONCRETE STEPS:
-      1. Read matrix v16 and all .282 artifacts needed to verify its conclusions.
-      2. Classify each .282 task as clean, flagged, blocked, gated-skipped, missing, pilot-only, or projection-only.
-      3. Decide whether `.282` repaired the .281 blockers: exp2991 methodology, exp2993 provenance, exp2996/2997 hardware, and FR-11 stability carry-forward.
-      4. Set paper_ready=false unless every claimed result has durable verifier evidence, no false SOTA substitution, no live/substrate ambiguity, and no hardware claim boundary breach.
-      5. Update ops/status.md and ops/changelog.md with concise capstone state if that is the established local pattern.
-      6. Write results/experiment_3011_capstone_v282.json with a terminal honest_verdict and exact next milestone recommendation.
+      1. Read matrix v17 and all .283 artifacts needed to verify its conclusions.
+      2. Classify each .283 task as clean, flagged, blocked, gated-skipped, missing, pilot-only, or projection-only.
+      3. Decide whether `.283` repaired the .282 blockers: exp3003 repair methodology, exp3007 FR-11 stability flags, exp3008 hardware IO, exp3009 SSQA missing artifact, and exp3011 aggregation false-positive risk.
+      4. Set paper_ready=false unless every claimed result has durable verifier evidence, no false SOTA substitution, no live/substrate ambiguity, no aggregation-live-inference false positive, and no hardware claim boundary breach.
+      5. Keep top-level inference_substrate=aggregation_from_upstream_artifacts and put source model/hardware details only under cited_upstream_artifacts.
+      6. Update ops/status.md and ops/changelog.md with concise capstone state if that is the established local pattern.
+      7. Write results/experiment_3025_capstone_v283.json with a terminal honest_verdict and exact next milestone recommendation.
 
       REQUIRED ARTIFACT FIELDS:
       - capstone_ready: bool (principle: terminal artifact must be machine-gated)
@@ -798,8 +939,10 @@ tasks:
       - blocked_rows: list (principle: blockers must carry forward)
       - gated_skipped_rows: list (principle: structured gate effects must be visible)
       - missing_rows: list (principle: absent evidence must not be hidden)
+      - cited_upstream_artifacts: list (principle: source provenance must be traceable without top-level live-inference metadata)
+      - inference_substrate: str (principle: aggregation must not masquerade as live inference)
       - publication_action_allowed: bool (principle: roadmap capstone must not imply external action)
       - next_milestone_recommendation: str (principle: planning continuity requires an exact recommendation)
-      - honest_verdict: str (principle: terminal verdict must summarize capstone readiness and paper readiness)
+      - honest_verdict: str (principle: terminal verdict must start with complete:/complete_/success:/success_/passed:/passed_/shipped:/shipped_ unless a precondition is honestly blocked)
 
       Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'
