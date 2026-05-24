@@ -4040,3 +4040,43 @@ Then it writes a terminal `complete:` artifact with an empty
 `verifier_corpus_dual_matrix`, all four classification lists empty,
 `diversity_gap_on_non_fover=true`, and methodology text explaining that no
 synthetic verifier rows were inferred.
+
+### REQ-VERIFY-2968: Deterministic Partial-Output Monitor Harness
+
+The repository shall provide an Exp 2968 deterministic partial-output monitor
+harness that replays fixture traces derived from existing code-repair and
+NL-to-Z3 artifacts without invoking a live LLM and without claiming full
+streaming verification.
+
+- REQ-VERIFY-2968-1: The harness SHALL define these monitor event names:
+  `partial_code_block`, `import_line`, `function_sig`,
+  `assertion_or_formula_line`, `solver_query`, and `final_answer`.
+- REQ-VERIFY-2968-2: The harness SHALL run deterministic checks covering parser
+  prefix validity, import allow-list membership, symbol consistency, schema
+  field coverage, and optional Z3 parse/execution checks.
+- REQ-VERIFY-2968-3: The harness SHALL evaluate at least five fixture traces
+  derived from `results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json`,
+  `results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json`, or bounded
+  synthetic records that preserve the same code/Z3 schemas.
+- REQ-VERIFY-2968-4: The terminal artifact SHALL be written to
+  `results/experiment_2968_interwhen_partial_monitor_harness_v1.json` and SHALL
+  include `honest_verdict`, `partial_monitor_harness_ready`,
+  `full_streaming_verification_claim=false`, `source_artifacts`,
+  `monitor_events`, `deterministic_checks`, `fixture_trace_count`,
+  `fixture_checks_passed`, `coverage_by_event`, `latency_estimate_ms`,
+  `escalation_policy`, `files_changed`,
+  `inference_substrate="deterministic_wiring"`, and `duration_s`.
+- REQ-VERIFY-2968-5: The artifact SHALL report false-positive notes and an
+  escalation policy that routes parser failures, disallowed imports, symbol
+  inconsistencies, schema coverage gaps, or Z3 parse/execution failures to full
+  verification.
+
+### SCENARIO-VERIFY-2968: Fixture Replay Reports Coverage And Escalation
+
+Given the Exp 2952 and Exp 2959 source artifacts exist,
+When the Exp 2968 harness builds and monitors fixture traces,
+Then it emits coverage for every required monitor event, records deterministic
+check results without any live model call, reports a latency estimate and
+false-positive notes, and sets `partial_monitor_harness_ready=true` only when
+all fixture traces pass the deterministic checks while
+`full_streaming_verification_claim` remains false.

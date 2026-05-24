@@ -1,0 +1,716 @@
+{
+  "artifact": "experiment_2968_interwhen_partial_monitor_harness_v1",
+  "coverage_by_event": {
+    "assertion_or_formula_line": {
+      "checks": [
+        "parser_prefix_validity",
+        "schema_field_coverage",
+        "symbol_consistency"
+      ],
+      "count": 5,
+      "passed": true
+    },
+    "final_answer": {
+      "checks": [
+        "schema_field_coverage",
+        "symbol_consistency"
+      ],
+      "count": 5,
+      "passed": true
+    },
+    "function_sig": {
+      "checks": [
+        "parser_prefix_validity",
+        "schema_field_coverage",
+        "symbol_consistency"
+      ],
+      "count": 4,
+      "passed": true
+    },
+    "import_line": {
+      "checks": [
+        "import_allow_list",
+        "parser_prefix_validity",
+        "schema_field_coverage"
+      ],
+      "count": 1,
+      "passed": true
+    },
+    "partial_code_block": {
+      "checks": [
+        "parser_prefix_validity",
+        "schema_field_coverage"
+      ],
+      "count": 4,
+      "passed": true
+    },
+    "solver_query": {
+      "checks": [
+        "schema_field_coverage",
+        "z3_parse_check"
+      ],
+      "count": 1,
+      "passed": true
+    }
+  },
+  "deterministic_checks": [
+    "parser_prefix_validity",
+    "import_allow_list",
+    "symbol_consistency",
+    "schema_field_coverage",
+    "z3_parse_check"
+  ],
+  "duration_s": 0.006128,
+  "escalation_policy": {
+    "escalate_when": [
+      "python_prefix_is_not_parseable",
+      "import_module_not_in_allow_list",
+      "assertion_or_final_answer_mentions_unknown_symbol",
+      "required_schema_fields_missing",
+      "formalization_fails_optional_z3_execution"
+    ],
+    "observed_triggers": [],
+    "target": "full_verify_repair_pipeline",
+    "trigger_by_failed_check": {
+      "import_allow_list": "disallowed_import",
+      "parser_prefix_validity": "parser_failure",
+      "schema_field_coverage": "schema_gap",
+      "symbol_consistency": "symbol_inconsistency",
+      "z3_parse_check": "z3_parse_failure"
+    }
+  },
+  "false_positive_notes": [
+    "Import allow-list failures may include safe standard-library modules not yet listed.",
+    "Symbol consistency is lexical and does not prove behavioral equivalence.",
+    "Z3 checks are parser/execution checks for the formalization schema, not semantic proof of the natural-language answer."
+  ],
+  "files_changed": [
+    "openspec/capabilities/verification/spec.md",
+    "python/carnot/eval/interwhen_partial_monitor_harness_v1.py",
+    "tests/python/test_experiment_2968_interwhen_partial_monitor_harness_v1.py",
+    "results/experiment_2968_interwhen_partial_monitor_harness_v1.json"
+  ],
+  "fixture_checks_passed": true,
+  "fixture_trace_count": 5,
+  "fixture_traces": [
+    {
+      "source_artifact": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "source_record_id": "MBPP:mbpp-11",
+      "trace_id": "exp2952-code-1",
+      "trace_kind": "code"
+    },
+    {
+      "source_artifact": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "source_record_id": "MBPP:mbpp-11",
+      "trace_id": "exp2952-code-2",
+      "trace_kind": "code"
+    },
+    {
+      "source_artifact": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "source_record_id": "MBPP:mbpp-12",
+      "trace_id": "exp2952-code-3",
+      "trace_kind": "code"
+    },
+    {
+      "source_artifact": "synthetic_fixture",
+      "source_record_id": "synthetic:code:allowlist",
+      "trace_id": "synthetic-code-allowlist",
+      "trace_kind": "code"
+    },
+    {
+      "source_artifact": "results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json",
+      "source_record_id": "llmlogic-2931-002",
+      "trace_id": "exp2959-logic-1",
+      "trace_kind": "logic"
+    }
+  ],
+  "full_streaming_verification_claim": false,
+  "honest_verdict": "complete: deterministic partial monitor harness ready",
+  "inference_substrate": "deterministic_wiring",
+  "latency_estimate_ms": 4.67,
+  "monitor_events": [
+    "partial_code_block",
+    "import_line",
+    "function_sig",
+    "assertion_or_formula_line",
+    "solver_query",
+    "final_answer"
+  ],
+  "monitor_results": [
+    {
+      "checks_passed": true,
+      "event_count": 4,
+      "events": [
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "code field present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "ast.parse(code)",
+              "passed": true
+            }
+          ],
+          "event_name": "partial_code_block",
+          "payload": {
+            "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    last_idx = s.rfind(char)\n    \n    if first_idx == -1:\n        return s\n    \n    if first_idx == last_idx:\n        return s[:first_idx] + s[first_idx+1:]\n    else:\n        return s[:first_idx] + s[first_idx+1:last_idx] + s[last_idx+1:]\n"
+          },
+          "trace_id": "exp2952-code-1",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "function signature fields",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "signature parses with pass body",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "signature appears in code AST",
+              "passed": true
+            }
+          ],
+          "event_name": "function_sig",
+          "payload": {
+            "function_name": "remove_Occ",
+            "line": "def remove_Occ(s, char):"
+          },
+          "trace_id": "exp2952-code-1",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "assertion line present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "assertion parses",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "assertion references known function",
+              "passed": true
+            }
+          ],
+          "event_name": "assertion_or_formula_line",
+          "payload": {
+            "line": "assert remove_Occ is not None"
+          },
+          "trace_id": "exp2952-code-1",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "final answer present",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "answer names a known function",
+              "passed": true
+            }
+          ],
+          "event_name": "final_answer",
+          "payload": {
+            "answer": "remove_Occ"
+          },
+          "trace_id": "exp2952-code-1",
+          "trace_kind": "code"
+        }
+      ],
+      "source_artifact": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "source_record_id": "MBPP:mbpp-11",
+      "trace_id": "exp2952-code-1",
+      "trace_kind": "code"
+    },
+    {
+      "checks_passed": true,
+      "event_count": 4,
+      "events": [
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "code field present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "ast.parse(code)",
+              "passed": true
+            }
+          ],
+          "event_name": "partial_code_block",
+          "payload": {
+            "code": "def remove_Occ(s, char):\n    first_idx = s.find(char)\n    last_idx = s.rfind(char)\n    \n    if first_idx == -1:\n        return s\n    \n    if first_idx == last_idx:\n        return s[:first_idx] + s[first_idx+1:]\n    else:\n        return s[:first_idx] + s[first_idx+1:last_idx] + s[last_idx+1:]\n"
+          },
+          "trace_id": "exp2952-code-2",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "function signature fields",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "signature parses with pass body",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "signature appears in code AST",
+              "passed": true
+            }
+          ],
+          "event_name": "function_sig",
+          "payload": {
+            "function_name": "remove_Occ",
+            "line": "def remove_Occ(s, char):"
+          },
+          "trace_id": "exp2952-code-2",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "assertion line present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "assertion parses",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "assertion references known function",
+              "passed": true
+            }
+          ],
+          "event_name": "assertion_or_formula_line",
+          "payload": {
+            "line": "assert remove_Occ is not None"
+          },
+          "trace_id": "exp2952-code-2",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "final answer present",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "answer names a known function",
+              "passed": true
+            }
+          ],
+          "event_name": "final_answer",
+          "payload": {
+            "answer": "remove_Occ"
+          },
+          "trace_id": "exp2952-code-2",
+          "trace_kind": "code"
+        }
+      ],
+      "source_artifact": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "source_record_id": "MBPP:mbpp-11",
+      "trace_id": "exp2952-code-2",
+      "trace_kind": "code"
+    },
+    {
+      "checks_passed": true,
+      "event_count": 4,
+      "events": [
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "code field present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "ast.parse(code)",
+              "passed": true
+            }
+          ],
+          "event_name": "partial_code_block",
+          "payload": {
+            "code": "def sort_matrix(matrix):\n    return sorted(matrix, key=lambda row: sum(row))\n"
+          },
+          "trace_id": "exp2952-code-3",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "function signature fields",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "signature parses with pass body",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "signature appears in code AST",
+              "passed": true
+            }
+          ],
+          "event_name": "function_sig",
+          "payload": {
+            "function_name": "sort_matrix",
+            "line": "def sort_matrix(matrix):"
+          },
+          "trace_id": "exp2952-code-3",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "assertion line present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "assertion parses",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "assertion references known function",
+              "passed": true
+            }
+          ],
+          "event_name": "assertion_or_formula_line",
+          "payload": {
+            "line": "assert sort_matrix is not None"
+          },
+          "trace_id": "exp2952-code-3",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "final answer present",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "answer names a known function",
+              "passed": true
+            }
+          ],
+          "event_name": "final_answer",
+          "payload": {
+            "answer": "sort_matrix"
+          },
+          "trace_id": "exp2952-code-3",
+          "trace_kind": "code"
+        }
+      ],
+      "source_artifact": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "source_record_id": "MBPP:mbpp-12",
+      "trace_id": "exp2952-code-3",
+      "trace_kind": "code"
+    },
+    {
+      "checks_passed": true,
+      "event_count": 5,
+      "events": [
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "code field present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "ast.parse(code)",
+              "passed": true
+            }
+          ],
+          "event_name": "partial_code_block",
+          "payload": {
+            "code": "from typing import Iterable\n\ndef monitored_sum(values: Iterable[int]) -> int:\n    return sum(values)\n"
+          },
+          "trace_id": "synthetic-code-allowlist",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "import line present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "ast.parse(import)",
+              "passed": true
+            },
+            {
+              "check_name": "import_allow_list",
+              "detail": "module in allow-list",
+              "passed": true
+            }
+          ],
+          "event_name": "import_line",
+          "payload": {
+            "line": "from typing import Iterable"
+          },
+          "trace_id": "synthetic-code-allowlist",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "function signature fields",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "signature parses with pass body",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "signature appears in code AST",
+              "passed": true
+            }
+          ],
+          "event_name": "function_sig",
+          "payload": {
+            "function_name": "monitored_sum",
+            "line": "def monitored_sum(values: Iterable[int]) -> int:"
+          },
+          "trace_id": "synthetic-code-allowlist",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "assertion line present",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "assertion parses",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "assertion references known function",
+              "passed": true
+            }
+          ],
+          "event_name": "assertion_or_formula_line",
+          "payload": {
+            "line": "assert monitored_sum([1, 2, 3]) == 6"
+          },
+          "trace_id": "synthetic-code-allowlist",
+          "trace_kind": "code"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "final answer present",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "answer names a known function",
+              "passed": true
+            }
+          ],
+          "event_name": "final_answer",
+          "payload": {
+            "answer": "monitored_sum"
+          },
+          "trace_id": "synthetic-code-allowlist",
+          "trace_kind": "code"
+        }
+      ],
+      "source_artifact": "synthetic_fixture",
+      "source_record_id": "synthetic:code:allowlist",
+      "trace_id": "synthetic-code-allowlist",
+      "trace_kind": "code"
+    },
+    {
+      "checks_passed": true,
+      "event_count": 3,
+      "events": [
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "logic schema fields",
+              "passed": true
+            },
+            {
+              "check_name": "parser_prefix_validity",
+              "detail": "json formalization parses",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "query symbol grounded",
+              "passed": true
+            }
+          ],
+          "event_name": "assertion_or_formula_line",
+          "payload": {
+            "formalization": {
+              "exclusions": [],
+              "facts": [
+                [
+                  "is_athlete",
+                  "Nia"
+                ],
+                [
+                  "is_student",
+                  "Nia"
+                ]
+              ],
+              "query": [
+                "is_athlete",
+                "Nia"
+              ],
+              "rules": []
+            },
+            "line": "{\"exclusions\":[],\"facts\":[[\"is_athlete\",\"Nia\"],[\"is_student\",\"Nia\"]],\"query\":[\"is_athlete\",\"Nia\"],\"rules\":[]}"
+          },
+          "trace_id": "exp2959-logic-1",
+          "trace_kind": "logic"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "query present",
+              "passed": true
+            },
+            {
+              "check_name": "z3_parse_check",
+              "detail": "z3 execution parsed formalization",
+              "passed": true
+            }
+          ],
+          "event_name": "solver_query",
+          "payload": {
+            "formalization": {
+              "exclusions": [],
+              "facts": [
+                [
+                  "is_athlete",
+                  "Nia"
+                ],
+                [
+                  "is_student",
+                  "Nia"
+                ]
+              ],
+              "query": [
+                "is_athlete",
+                "Nia"
+              ],
+              "rules": []
+            },
+            "query": [
+              "is_athlete",
+              "Nia"
+            ]
+          },
+          "trace_id": "exp2959-logic-1",
+          "trace_kind": "logic"
+        },
+        {
+          "checks": [
+            {
+              "check_name": "schema_field_coverage",
+              "detail": "logic final answer present",
+              "passed": true
+            },
+            {
+              "check_name": "symbol_consistency",
+              "detail": "answer is allowed and solver-consistent",
+              "passed": true
+            }
+          ],
+          "event_name": "final_answer",
+          "payload": {
+            "answer": "necessary",
+            "solver_answer": "necessary"
+          },
+          "trace_id": "exp2959-logic-1",
+          "trace_kind": "logic"
+        }
+      ],
+      "source_artifact": "results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json",
+      "source_record_id": "llmlogic-2931-002",
+      "trace_id": "exp2959-logic-1",
+      "trace_kind": "logic"
+    }
+  ],
+  "partial_monitor_harness_ready": true,
+  "required_artifact_fields": [
+    "honest_verdict",
+    "partial_monitor_harness_ready",
+    "full_streaming_verification_claim",
+    "source_artifacts",
+    "monitor_events",
+    "deterministic_checks",
+    "fixture_trace_count",
+    "fixture_checks_passed",
+    "coverage_by_event",
+    "latency_estimate_ms",
+    "escalation_policy",
+    "files_changed",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.interwhen_partial_monitor_harness.v1",
+  "source_artifacts": [
+    {
+      "path": "results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "present": true,
+      "sha256": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030"
+    },
+    {
+      "path": "results/experiment_2959_nl_to_z3_execution_repair_mini_v2.json",
+      "present": true,
+      "sha256": "bce69889802aa1e8549ed2db32c90dd295136260830c9851cfe5d71e7ae33d6f"
+    }
+  ]
+}
