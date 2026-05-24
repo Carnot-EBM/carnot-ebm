@@ -1,0 +1,160 @@
+{
+  "current_domain_utility": {
+    "adapter_style_update": 1.0,
+    "eager_update": 1.0,
+    "frozen": 0.0,
+    "per_knot_importance_update": 1.0
+  },
+  "duration_s": 0.009972295025,
+  "files_changed": [
+    "openspec/capabilities/self-learning/spec.md",
+    "python/carnot/eval/fr11_kan_forgetting_guard_memory_audit_v1.py",
+    "tests/python/test_experiment_2970_kan_forgetting_guard_memory_audit_v1.py",
+    "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json"
+  ],
+  "forgetting_delta_by_policy": {
+    "adapter_style_update": 0.0,
+    "eager_update": 0.75,
+    "frozen": 0.0,
+    "per_knot_importance_update": 0.0
+  },
+  "forgetting_threshold": 0.05,
+  "hardware_cost_fields": {
+    "bop_count": 96,
+    "derivable": true,
+    "field_scope": "platform_independent_accounting_only",
+    "memory_table_entries": 8,
+    "milp_constraints": 27,
+    "nabs_count": 4,
+    "no_analog_claim": true,
+    "no_synthesis_claim": true,
+    "pwa_regions": 4,
+    "rm_count": 2,
+    "source_artifact": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json"
+  },
+  "high_dimensional_claim_allowed": false,
+  "honest_verdict": "complete: kan_forgetting_guard_ready",
+  "inference_substrate": "deterministic_wiring",
+  "kan_forgetting_guard_ready": true,
+  "no_analog_claim": true,
+  "no_synthesis_claim": true,
+  "old_domain_utility": {
+    "adapter_style_update": 1.0,
+    "eager_update": 0.25,
+    "frozen": 1.0,
+    "per_knot_importance_update": 1.0
+  },
+  "out_of_scope": [
+    "high_dimensional_extrapolation",
+    "synthesis",
+    "analog_acceleration"
+  ],
+  "policies_compared": [
+    {
+      "current_domain": "logic_inverse_current",
+      "current_domain_utility": 0.0,
+      "extra_memory_tables": 0,
+      "forgetting_delta": 0.0,
+      "forgetting_guard_passed": true,
+      "forgetting_threshold": 0.05,
+      "high_dimensional_extrapolation": "out_of_scope",
+      "old_domain_utility": 1.0,
+      "old_domain_utility_before_current_update": 1.0,
+      "old_domains": [
+        "arithmetic_bounds",
+        "code_shape"
+      ],
+      "policy_name": "frozen"
+    },
+    {
+      "current_domain": "logic_inverse_current",
+      "current_domain_utility": 1.0,
+      "extra_memory_tables": 0,
+      "forgetting_delta": 0.75,
+      "forgetting_guard_passed": false,
+      "forgetting_threshold": 0.05,
+      "high_dimensional_extrapolation": "out_of_scope",
+      "old_domain_utility": 0.25,
+      "old_domain_utility_before_current_update": 1.0,
+      "old_domains": [
+        "arithmetic_bounds",
+        "code_shape"
+      ],
+      "policy_name": "eager_update"
+    },
+    {
+      "current_domain": "logic_inverse_current",
+      "current_domain_utility": 1.0,
+      "extra_memory_tables": 0,
+      "forgetting_delta": 0.0,
+      "forgetting_guard_passed": true,
+      "forgetting_threshold": 0.05,
+      "high_dimensional_extrapolation": "out_of_scope",
+      "old_domain_utility": 1.0,
+      "old_domain_utility_before_current_update": 1.0,
+      "old_domains": [
+        "arithmetic_bounds",
+        "code_shape"
+      ],
+      "policy_name": "per_knot_importance_update"
+    },
+    {
+      "current_domain": "logic_inverse_current",
+      "current_domain_utility": 1.0,
+      "extra_memory_tables": 1,
+      "forgetting_delta": 0.0,
+      "forgetting_guard_passed": true,
+      "forgetting_threshold": 0.05,
+      "high_dimensional_extrapolation": "out_of_scope",
+      "old_domain_utility": 1.0,
+      "old_domain_utility_before_current_update": 1.0,
+      "old_domains": [
+        "arithmetic_bounds",
+        "code_shape"
+      ],
+      "policy_name": "adapter_style_update"
+    }
+  ],
+  "run_date": "20260524",
+  "selected_policy": "per_knot_importance_update",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp2969",
+      "fields_imported": [
+        "non_tautological_self_learning_ready",
+        "forgetting_guard_passed"
+      ],
+      "path": "results/experiment_2969_fr11_non_tautological_utility_gate_v3.json",
+      "present": true,
+      "required": true,
+      "role": "fr11_non_tautological_readiness_gate",
+      "sha256": "abc6e4b4b9b383f107cac796c86b99dcd83e097db93400d8142822462c0896c9"
+    },
+    {
+      "experiment_id": "exp2933",
+      "fields_imported": [
+        "kan_cl_self_learning_ready",
+        "dataset_manifest",
+        "baselines"
+      ],
+      "path": "results/experiment_2933_kan_cl_per_knot_self_learning_v1.json",
+      "present": true,
+      "required": false,
+      "role": "kan_per_knot_fixture_reference",
+      "sha256": "b863133af27141847c2640a00eb3d07432049a95338992927d8293f1a4850a30"
+    },
+    {
+      "experiment_id": "exp2893",
+      "fields_imported": [
+        "complexity_metrics.rm_count",
+        "complexity_metrics.bop_count",
+        "complexity_metrics.nabs_count"
+      ],
+      "path": "results/experiment_2893_kan_hardware_complexity_accounting_v1.json",
+      "present": true,
+      "required": false,
+      "role": "rm_bop_nabs_cost_reference",
+      "sha256": "c3f455ed1b32aa5454d12e12860cc8b8d3b10d169c014cd788dbc373ef746898"
+    }
+  ]
+}

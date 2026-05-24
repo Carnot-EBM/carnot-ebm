@@ -6813,3 +6813,72 @@ with `blocked_`, `non_tautological_self_learning_ready=false`,
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2969 | Implemented (`python/carnot/eval/fr11_non_tautological_utility_gate_v3.py`) | Implemented (`tests/python/test_experiment_2969_fr11_non_tautological_utility_gate_v3.py`) |
+
+## REQ-LEARN-2970: KAN Constraint-Memory Forgetting Guard Audit
+
+**Given** Exp 2969 reports `non_tautological_self_learning_ready=true` and the
+local KAN/per-knot self-learning helpers are importable
+**When** Exp 2970 audits KAN-style constraint memory on a bounded deterministic
+fixture
+**Then** it SHALL compare frozen, eager update, per-knot importance update, and
+adapter-style update policies on the same current-domain and held-out old-domain
+slices.
+**And** it SHALL compute old-domain forgetting deltas by policy and select a
+policy only when current-domain utility improves without exceeding the declared
+forgetting threshold.
+**And** it SHALL record RM/BOP/NABS-style hardware-cost fields when they are
+derivable from checked-in KAN complexity artifacts.
+**And** it SHALL mark high-dimensional extrapolation out of scope, make no
+synthesis claim, make no analog acceleration claim, and use
+`inference_substrate="deterministic_wiring"`.
+
+The terminal artifact SHALL be
+`results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json` and SHALL
+include `honest_verdict`, `kan_forgetting_guard_ready`, `source_artifacts`,
+`policies_compared`, `current_domain_utility`, `old_domain_utility`,
+`forgetting_delta_by_policy`, `selected_policy`,
+`high_dimensional_claim_allowed=false`, `hardware_cost_fields`,
+`no_synthesis_claim=true`, `no_analog_claim=true`, `files_changed`,
+`inference_substrate="deterministic_wiring"`, and measured `duration_s`.
+
+### REQ-LEARN-2970 Sub-requirements
+
+- REQ-LEARN-2970-1: The audit SHALL fail closed with a blocked artifact when
+  Exp 2969 is missing, malformed, or not ready.
+- REQ-LEARN-2970-2: The policy comparison SHALL use the same deterministic
+  constraint-memory fixture for every policy and SHALL evaluate current-domain
+  and held-out old-domain utility separately.
+- REQ-LEARN-2970-3: The eager policy SHALL expose any old-domain utility
+  regression as a positive forgetting delta rather than hiding it in aggregate
+  utility.
+- REQ-LEARN-2970-4: The per-knot and adapter-style policies SHALL preserve
+  old-domain guard slices before they can be selected.
+- REQ-LEARN-2970-5: Hardware-cost fields SHALL be copied or derived from local
+  RM/BOP/NABS accounting artifacts only; missing cost evidence SHALL not create
+  any synthesis, timing-closure, FPGA, or analog KAN claim.
+
+### SCENARIO-LEARN-2970: Per-Knot Memory Learns Current Constraints Without Forgetting
+
+**Given** the seed-2933 KAN constraint-memory fixture split into old and current
+constraint domains
+**When** the four policy updates are evaluated
+**Then** frozen memory retains old-domain utility but does not learn the current
+domain, eager updating improves current-domain utility while reporting a
+positive forgetting delta, and the selected per-knot or adapter-style policy
+improves current-domain utility while keeping old-domain forgetting within the
+threshold.
+
+### SCENARIO-LEARN-2970-BLOCKED: Missing Readiness Evidence Fails Closed
+
+**Given** Exp 2969 is absent or `non_tautological_self_learning_ready` is not
+true
+**When** Exp 2970 runs
+**Then** it writes the required schema with `kan_forgetting_guard_ready=false`,
+an `honest_verdict` beginning with `blocked_`, no selected policy, and
+`high_dimensional_claim_allowed=false`.
+
+## Implementation Status (REQ-LEARN-2970)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2970 | Implemented (`python/carnot/eval/fr11_kan_forgetting_guard_memory_audit_v1.py`) | Implemented (`tests/python/test_experiment_2970_kan_forgetting_guard_memory_audit_v1.py`) |
