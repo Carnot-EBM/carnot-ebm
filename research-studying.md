@@ -5,8 +5,102 @@ online sources, ranks them by potential impact on Carnot's current state,
 and queues the most promising into the next roadmap milestone. Codex (inner
 loop) executes the current experiments.
 
-**Updated:** 2026-05-16 (15 sweeps; last 2 in fully-degraded state)
-**Current Focus:** Phase 1 ship-track wins holding from .196; PyPI v0.1.0b1 still awaiting operator approval (10+ milestones); 6+ milestones in Bash-failure mode. **NEW 2026-05-16T08:00Z: 2-channel-down sweep — arXiv API HTTP 429 rate-limited, fallback cs.LG/2605 listing returned 404, HN 0 hits; zero candidates fetched.**
+**Updated:** 2026-05-24 (16 sweeps; infrastructure recovered).
+**Current Focus:** Phase 1 ship-track is one external reproducer away. Paper-v6 narrowed per the 2026-05-23 Deep Think round; two retractions + one rescue + five-post operations/honesty blog series shipped. Conductor on `.282 with metamorphic repair-oracle audit and FR-11 attractor trace-memory stability as load-bearing tasks. Sweep infrastructure recovered 2026-05-24 after 8 days degraded.
+
+## Sweep 2026-05-24T15:20Z (Claude outer-loop, infrastructure recovery)
+
+**Recovery summary:**
+
+The 2026-05-16 sweep entry below reported the infrastructure as
+"2-channel-down": Bash dead, arXiv API HTTP 429, fallback URL
+returning 404. The 2026-05-24 outer-loop probe ran a direct
+verification:
+
+| Check | Pre-recovery | Post-recovery |
+|---|---|---|
+| Bash exit code | exit 1 (every shell) | exit 0 (working) |
+| arXiv listing URL (`/list/cs.LG/2605`) | HTTP 404 | still 404 — pattern was stale |
+| arXiv listing URL (`/list/cs.LG/2026-05`) | not tested | **HTTP 200 — the correct pattern** |
+| arXiv listing URL (`/list/cs.LG/recent`) | not tested | **HTTP 200 — alternate fallback** |
+| arXiv API direct (cluster URL) | HTTP 429 | HTTP 200 after redirect-follow (HTTPS, `-L`) |
+| HN Algolia API | 0 hits at search-time | HTTP 200 (channel itself live) |
+
+**The fix:** the cron-prompt URL pattern `arxiv.org/list/cs.LG/2605`
+should be replaced with `arxiv.org/list/cs.LG/2026-05` (calendar-month
+format) or `arxiv.org/list/cs.LG/recent` (alternate fallback). The
+arXiv API itself works fine via HTTPS with redirect-following; the
+earlier 429s appear to have been transient rate-limiting, not a
+permanent block. Cron-prompt URL update remains operator-owned but
+is now a documented one-line edit.
+
+**Fresh sweep results (all 5 clusters, 4 top hits each):**
+
+Cluster 0 — verifier ensemble / spec gaming / reward hacking:
+- arXiv:2605.21384 (2026-05-20) **SpecBench: Measuring Reward Hacking
+  in Long-Horizon Coding Agents.** Directly Carnot-adjacent; benchmark
+  for the exact failure mode our verifier-authenticity discipline
+  catches. **Promote to research-references.md.**
+- arXiv:2605.20744 (2026-05-20) **Hack-Verifiable Environments:
+  Towards Evaluating Reward Hacking at Scale.** Adversarial-verify
+  discipline analog at the environment level. **Promote.**
+- arXiv:2605.22620 (2026-05-21) Two is Better Than One: Collapse-free
+  Multi-Reward RLIF Training Framework. AND-composed verifier
+  ensemble structurally adjacent. Track.
+
+Cluster 1 — EBM / energy-guided LLM:
+- arXiv:2605.14558 (2026-05-14) **Resolving Action Bottleneck:
+  Agentic Reinforcement Learning Informed by Token-Level Energy.**
+  Token-level energy as RL signal; direct EBM-as-policy framework.
+  **Promote.**
+
+Cluster 2 — SAE / probes / interpretability:
+- arXiv:2605.22462 (2026-05-21) From Correlation to Cause: Five-Stage
+  Methodology for Feature Analysis in Transformer Language Models.
+  Methodology paper, could inform adversarial-verify discipline.
+- arXiv:2605.20868 (2026-05-20) Runtime-Certified Bounded-Error
+  Quantized Attention. Relevant to the RotorQuant conversation.
+
+Cluster 3 — active inference / FEP / world model:
+- arXiv:2605.22675 Self-Policy Distillation via Capability-Selective
+  Subspace Projection — possible relevance to FR-11 attractor work
+  (.282 exp3007). Track.
+- Other cluster-3 hits this round were medical imaging / video / table
+  recognition false positives. Cluster-3 narrowing may be warranted.
+
+Cluster 4 — sub-quadratic / analog / FPGA:
+- arXiv:2605.17720 (2026-05-18) **ROA-Based Subharmonic Injection
+  Locking for Oscillator-Based Ising Machines.** Hardware Ising
+  substrate evolution; future production target candidate.
+  **Promote.**
+- arXiv:2605.19399 (2026-05-19) HSCO-Bench: Agent-Driven End-to-End
+  Hardware-Software Co-design Benchmark for SoCs. Track.
+
+**Result:** 20 fetched / dedupe not yet run / 4 promoted to
+references.md / 5 watched / 11 tangential or false-positive.
+Sweep infrastructure operational again; future planner passes can
+invoke sweep_clusters.py + arXiv API directly without intervention.
+
+### Sweep takeaways
+
+1. **The URL-pattern bug was the real annoyance** — Bash recovered
+   on its own, the API was never permanently rate-limited, but the
+   stale cron-prompt URL kept producing 404s. The fix is a single
+   character class change: `2605` → `2026-05`.
+2. **The 5-cluster fan-out works at high signal-to-noise** —
+   clusters 0, 1, 4 produced highly Carnot-relevant papers; cluster
+   2 produced one solid + one tangential; cluster 3 mostly false
+   positives this round.
+3. **Cluster 3 may need re-narrowing** — "active inference" + "free
+   energy" without a strong AND-anchor surfaces too many adjacent
+   domains (medical, vision, table recognition). Worth tightening
+   when next operator-edits the cron prompt.
+4. **The planner has been pulling references organically** through
+   plan-next-milestone passes (7 new arXiv entries in research-
+   references.md since 2026-05-21 — see the metamorphic-testing
+   cluster + attractor-reasoning cluster). Sweep infrastructure
+   being broken did NOT stop literature integration; it just made
+   it less systematic.
 
 ## Sweep 2026-05-16T08:00Z (Claude outer-loop, 2-channel-down + Bash dead)
 

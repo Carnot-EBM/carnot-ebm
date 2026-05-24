@@ -10471,6 +10471,29 @@ Not content itself, but signals to prioritise what to read next.
   Training efficiency matters for foundation models, not small constraint
   models. Skip unless a specific need emerges.
 
+### Reward-Hacking Benchmark — SpecBench
+- **What (arXiv:2605.21384, 2026-05-20):** SpecBench measures reward hacking in long-horizon coding agents — exactly the failure mode Carnot's verifier-authenticity discipline (CLAUDE.md MANDATORY rule) catches at the verifier-code level.
+- **Relevance to Carnot:** Directly comparable to Carnot's `scripts/adversarial_verify.py` + `scripts/verifier_authenticity_audit.py` machinery, but at the agent/environment level instead of the artifact level. Worth citing in paper-v6's discipline-machinery section as an external benchmark for the failure mode our three-layer defense catches.
+- **When to pursue:** Tracking only. Carnot is currently producing the discipline machinery; SpecBench is producing a benchmark for it. The papers cite each other naturally.
+- **Source:** https://arxiv.org/abs/2605.21384
+
+### Hack-Verifiable Environments — Evaluating Reward Hacking at Scale
+- **What (arXiv:2605.20744, 2026-05-20):** Framework for environment-level evaluation of reward hacking. Pairs with SpecBench above.
+- **Relevance to Carnot:** Carnot's adversarial-verify discipline is the artifact-level analog; this is the environment-level analog. Different scope, same threat model. Cite as related work on reward-hacking evaluation methodology.
+- **Source:** https://arxiv.org/abs/2605.20744
+
+### Token-Level Energy as RL Signal
+- **What (arXiv:2605.14558, 2026-05-14):** "Resolving Action Bottleneck: Agentic Reinforcement Learning Informed by Token-Level Energy" — uses token-level energy as the RL signal, framing EBMs directly as the policy/value signal source for agentic RL.
+- **Relevance to Carnot:** Closest external precedent for Carnot's "verifier ensemble's energy IS the optimization target" framing in Phase 4 active-inference and FR-11 self-learning. Directly supports the verifier-grounded-generation thesis with a third-party citation, not just the Apple SSD baseline.
+- **When to pursue:** Cite in paper-v6 Phase 4 / verifier-ensemble section as a related work. No new experiment needed.
+- **Source:** https://arxiv.org/abs/2605.14558
+
+### Oscillator-Based Ising Machines — ROA Subharmonic Injection Locking
+- **What (arXiv:2605.17720, 2026-05-18):** Region-of-attraction-based subharmonic injection locking for oscillator-based Ising machines. Hardware Ising substrate evolution.
+- **Relevance to Carnot:** Future production hardware candidate per Phase 2 re-scope post Deep Think FATAL #7 (Extropic Z1 / photonic retracted; future production target re-scoped to digital ASICs + spatial FPGAs + bespoke digital Ising machines). Oscillator-based Ising machines fit the digital-Ising-machine category if the readout is discrete; the ROA framework gives a theoretical anchor for convergence guarantees.
+- **When to pursue:** Phase 2 hardware watchlist. Not actionable today; track for when GateMate / KV260 anchor measurements mature into a production-scale candidate selection.
+- **Source:** https://arxiv.org/abs/2605.17720
+
 ## Papers & Concepts
 
 ### Apple GSM8K Adversarial Variant — LLMs Can't Do Math (HIGH PRIORITY)
