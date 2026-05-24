@@ -1,6 +1,10 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-23 (Phase-3 Empirical-Readiness Deep Think complete — 7 FATAL paper-v6 claim narrowings shipped)
+**Last Updated:** 2026-05-24 (Milestone 2026.05.278 operational retrospective complete)
+
+## Session 2026-05-24 - Milestone 2026.05.278 Operational Retrospective Complete
+
+The authoritative timing block for milestone 2026.05.278 has 0 wall-time minutes, 0 completed experiments, 0 compute-bound experiments, and no slowest-experiment rows. The retrospective leaves `gpu_idle_on_compute_bound_tasks: null`; the GPU monitor state is not elevated to a bottleneck because the timing block has no compute-bound row. Updated `results/operational_retro_2026_05_278.json`, `ops/changelog.md`, `docs/research-log.md`, and this status note; left operator-curated docs, `scripts/research_conductor.py`, and roadmap YAML files untouched.
 
 ## Session 2026-05-23 - Phase-3 Empirical-Readiness Deep Think Complete (paper-v6 narrowing discipline shipped)
 
