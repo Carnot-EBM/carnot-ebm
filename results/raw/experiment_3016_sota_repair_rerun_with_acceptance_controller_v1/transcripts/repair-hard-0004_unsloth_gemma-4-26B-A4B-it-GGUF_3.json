@@ -1,0 +1,51 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "682a81dd6d457f77ca85612cf97b26b795904dc596a9381e380cbcb8978f6a9b",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0004-2"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0004-3"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0004-2",
+      "SCENARIO-CODE-2990-repair-hard-0004-3"
+    ],
+    "passed": false,
+    "test_suite_sha256": "a2082d4c1ff82cbdeced4beac7e5ea6f798868682201fa64c463ef67c3a27622",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "3f51392d0af6ac5f21fca6496f3e198f5b2785db3abbb9db8507221b951eb079",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.8036530800163746,
+  "item_id": "repair-hard-0004",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0004\nEntry point: median_sorted\nExpected behavior: Return the median of an already sorted non-empty numeric list.\nBaseline candidate:\ndef median_sorted(values):\n    return values[len(values) // 2]\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0004-2, SCENARIO-CODE-2990-repair-hard-0004-3\nFailing assertions:\nassert median_sorted([1, 2, 3, 4]) == 2.5\nassert median_sorted([-5, -1, 0, 9]) == -0.5\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "65bfb052df244976ce6ea13f4a406f7cce50fce3b96b42a810d6a798381621fd",
+  "raw_response": " old-code-base-lines-of-code:  ways-to-code-repair-2991.\nold-code-base-lines-of-code: ways-to-code-repair-2991.\nold-code-intents-of-code: ways-to-code-intents-of-code.\nold-code-base-lines-of-code: ways-to-code-repair-2991.\nold-code-base-lines-of-code: ways-to-code-repair-2991.\nold-code-base-lines-of-code: 1.\nold-code-base-lines-of-code: 2.\nold--code-base-lines-of-code: 3.\nold-code-base-lines-of-code: 0.\nold-code-base-lines-of-code: 0.\nold-code-base-lines-of-code: 1.\nold-code-base-lines-of-code: 0.\nold-code-base-lines-of-code: 5.\nold-code-base-lines-of-code: 5.\nold-code-base-lines-1.\nold-code-base-lines-1.\nold-code-base-lines-1.\nold-code-base-lines-1.\nold",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

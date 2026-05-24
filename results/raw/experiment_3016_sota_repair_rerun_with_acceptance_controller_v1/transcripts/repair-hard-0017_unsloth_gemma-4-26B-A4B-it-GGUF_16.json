@@ -1,0 +1,45 @@
+{
+  "draft_intent": "The goal is to fix the 'is_valid_parentheses' function so that it correctly identifies balanced parentheses. The current implementation only checks if the total counts of opening and closing parentheses are equal, which fails for cases like ')(' where the order is invalid. A correct implementation must ensure that at any point while iterating through the string, the number of closing parentheses never exceeds the number of opening parentheses, and that the final counts are equal.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "988c82b982d912fa99bdc991f97554c63bf249e7fd8c5a3a95b7316550061b97",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0017-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0017-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "8a19e94b3be5f3d59d6b27f535da95ef3ab62ac86ef85afcd11f41dc384f51f4",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "608a07a874aed93513b57e7dedd556e6acb165bed12a926f20f28414e3f08942",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 1.6883730930276215,
+  "item_id": "repair-hard-0017",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0017\nEntry point: is_valid_parentheses\nExpected behavior: Return True when parentheses are balanced and every prefix is valid.\nBaseline candidate:\ndef is_valid_parentheses(s):\n    return s.count('(') == s.count(')')\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0017-2\nFailing assertions:\nassert is_valid_parentheses(')(') is False\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "6e8e43179aa9a06e91aaf4fe0564c9df13760bf930de091eeb7aba199345d014",
+  "raw_response": "\n<|channel>thought\n<channel|>```json\n{\n  \"draft_intent\": \"The goal is to fix the 'is_valid_parentheses' function so that it correctly identifies balanced parentheses. The current implementation only checks if the total counts of opening and closing parentheses are equal, which fails for cases like ')(' where the order is invalid. A correct implementation must ensure that at any point while iterating through the string, the number of closing parentheses never exceeds the number of opening parentheses, and that the final counts are equal.\",\n  \"final_patch\": \"def is_valid_parentheses(s):\\n    balance = 0\\n    for char in s:\\n        if char == '(':\\n            balance += 1\\n        elif char == ')':\\n            balance -= 1\\n        if balance < 0:\\n            return False\\n    return balance == 0\"\n}\n```",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

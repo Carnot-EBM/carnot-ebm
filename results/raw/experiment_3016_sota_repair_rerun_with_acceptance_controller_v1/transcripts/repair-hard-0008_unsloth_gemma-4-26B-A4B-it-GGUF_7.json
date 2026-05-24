@@ -1,0 +1,45 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "9078c22bdcfc80f878b8f1ec4ef9773a8ba835a4906e99f92417c12bbb2ba93b",
+    "errors": [
+      {
+        "error_type": "ZeroDivisionError",
+        "message": "division by zero",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0008-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0008-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "4e25c0f82a83830c9a193668b8da3c74f1c941f7bb3a7b59d05e47c8e4d384e0",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "3722adbf9a105dd0f288fc5b7eecb520936e3e9551f2a4881d74f49e89884bdc",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.79200638004113,
+  "item_id": "repair-hard-0008",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0008\nEntry point: safe_divide\nExpected behavior: Divide a by b, returning default when b is zero.\nBaseline candidate:\ndef safe_divide(a, b, default=None):\n    return a / b\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0008-2\nFailing assertions:\nassert safe_divide(8, 0, default='n/a') == 'n/a'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "2a5e3de9e0e25fab6275a7ea1bc9f84eeb34cf7ca7b455dcca81ee9cb7140e68",
+  "raw_response": "\n\n<|channel>thought0008\n- `safe_divide(a, b, default=None)`\n- `a / b`\n- `assert safe_divide(8, 0, default='n/a') == 'n/a'`\n- The code fails when `b` is zero because it attempts division by zero.\n- The requirement is to return `default` when `b` is zero.\n\n- Check if `b` is zero.\n- If `b` is zero, return `default`.\n- Otherwise, return `a / b`.\n\n- `draft_intent`: \"Implement a safe division function that returns a specified default value if the divisor is zero, preventing a ZeroDivisionError.\"\n- `final_patch`:\n```python\ndef safe_divide(a, b, default=None):\n    if b == 0:\n        return default\n    return a / b\n```\n\n- Signature preserved? Yes.\n- Intent preserved? Yes.\n- Handles `b=0`? Yes.\n- Returns `default`? Yes.\n\nWait, let me double check the baseline.\n`def safe_divide(a, b, default=None): return a / b`\nThe failing assertion is `assert safe_divide(8, 0, default='n/a') == 'n/a'`.\nMy patch:\n```python\ndef safe_divide(a, b, default=None):\n    if b == 0:\n",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

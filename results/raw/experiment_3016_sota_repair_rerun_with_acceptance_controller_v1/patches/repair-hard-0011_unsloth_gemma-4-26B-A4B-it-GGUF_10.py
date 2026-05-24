@@ -1,0 +1,6 @@
+old-code-is-not-provided"text"
+
+```json
+{
+  "draft_intent": "The function should merge overlapping or touching intervals. The current implementation uses 'start >= out[-1][1]' which treats intervals that touch at a single point (like [1, 2] and [2, 4]) as non-overlapping, thus failing to merge them. To fix this, the change 'start > out[-1][1]' is not enough; rather, the 'start >= out[-1][1]' condition should be be changed to 'start > out[-1][1]' to ensure that touching intervals are merged. Wait, if start >= out[-1][1], it means they don't overlap. If start is 2 and out[-1][1] is 2, then 2 >= 2 is true, so it appends a new interval. To merge [1, 2] and [2, 4], we need to >= to become >. If start is 2 and end is 2, and 2 > 2 is false, it goes to the else block and merges. So the condition should be 'start > out[-1][1]'.",
+  "final_patch": "def merge_intervals(intervals):\n    intervals = sorted(intervals)\n    out = []\n    for start, end in intervals:\n        if not out or start > out[-1][1]:\n            out.append([start, end])\

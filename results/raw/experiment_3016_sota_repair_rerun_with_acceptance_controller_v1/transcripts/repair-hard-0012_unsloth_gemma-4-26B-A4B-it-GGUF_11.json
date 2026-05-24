@@ -1,0 +1,45 @@
+{
+  "draft_intent": "The goal is to implement a function 'normalize_whitespace' that takes a string and returns a version where all sequences of whitespace characters (spaces, tabs, newlines, etc.) are collapsed into a single space character, and any leading or trailing whitespace is removed.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "6e4186cb3e4e87edb397020e775362fb544c6fd067b01255962ad6a4a65959f0",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0012-1"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0012-1"
+    ],
+    "passed": false,
+    "test_suite_sha256": "c1c05fc77d5cad7288fed515d1cd166fa9978b43bc1407b31e4635f8a05068ba",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "b39b8bdd58340d813287d61586bb9f72220ab2c5902f8e7477f87310721fb610",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 1.2453182030003518,
+  "item_id": "repair-hard-0012",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0012\nEntry point: normalize_whitespace\nExpected behavior: Collapse any run of whitespace into a single space and trim the ends.\nBaseline candidate:\ndef normalize_whitespace(text):\n    return text.strip()\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0012-1\nFailing assertions:\nassert normalize_whitespace('  alpha   beta\\n gamma  ') == 'alpha beta gamma'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "d1d21992e2c9e6febb8153f0437c62b97ae83bd9c40ee4c1ab411f4187ede619",
+  "raw_response": "\n<|channel>thought\n<channel|>```json\n{\n  \"draft_intent\": \"The goal is to implement a function 'normalize_whitespace' that takes a string and returns a version where all sequences of whitespace characters (spaces, tabs, newlines, etc.) are collapsed into a single space character, and any leading or trailing whitespace is removed.\",\n  \"final_patch\": \"def normalize_whitespace(text):\\n    import re\\n    # Replace all sequences of whitespace characters with a single space\\n    collapsed = re.sub(r'\\\\s+', ' ', text)\\n    # Trim leading and trailing whitespace\\n    return collapsed.strip()\"\n}\n```",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

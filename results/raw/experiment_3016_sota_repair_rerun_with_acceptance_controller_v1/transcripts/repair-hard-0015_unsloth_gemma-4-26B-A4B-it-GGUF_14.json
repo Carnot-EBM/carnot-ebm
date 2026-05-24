@@ -1,0 +1,45 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "3896e0db7522882f38d22a9eb2d82cd5e0f8f4b735a478a63615fdaca3822a05",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0015-1"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0015-1"
+    ],
+    "passed": false,
+    "test_suite_sha256": "71e3f52f0c7b0c41dd93174607ae473f4ec62f0ab52e8c91638b627eb1b2831a",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "2024c6850ac1b7e2c3d2d9f3f943aff7dbc9ced88859d8f84d6cda8b4c317248",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.8170146079501137,
+  "item_id": "repair-hard-0015",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0015\nEntry point: binary_search_leftmost\nExpected behavior: Return the leftmost index of target in a sorted list, or -1.\nBaseline candidate:\ndef binary_search_leftmost(nums, target):\n    found = -1\n    for index, value in enumerate(nums):\n        if value == target:\n            found = index\n    return found\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0015-1\nFailing assertions:\nassert binary_search_leftmost([1, 2, 2, 2, 5], 2) == 1\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "84e637073d89eaa9f1828afb195bf83e22662b33a42cb76dbdcf0405a83ec7b4",
+  "raw_response": " old-code-trace-repair-hard-0015-1.\nold-code-trace-repair-hard-0015-1.\nassert binary_select_leftmost([1, 2, 2, 2, 5], 2) == 1\nassert binary_search_most_right_of_target(binary_search_leftmost([1,  old_index, old_index, old_index, 5], 2)) == 2\n...\n(Note: The baseline candidate is actually a O(N) linear search, linear search is not a \"binary search\" despite the name. However, the requirements state \"Return the leftmost index of target in a sorted list, or -1.\" and \"binary_search_leftmost\" is the input function. The functional requirement is the \"leftmost index\". \"binary_search_leftmost\" is the name, and[] is the target. The functional requirement is the \"expected behavior\" is \"Return the leftmost index of target in a sorted list, or -1.\" and \"expected behavior: Return the leftmost index of target in a sorted list, or -1.\"\n\nThe baseline candidate is O(N) and returns the *rightmost* index because it continues the loop.\nThe failing assertion is: `assert binary_search_leftmost([1, 2, 2, 2, 5], 2) == 1`.\nThe baseline candidate returns `3` for `[",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

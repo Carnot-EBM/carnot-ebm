@@ -1,0 +1,51 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "be621378a0942460315ecd4a40699ca520c0ef63ed1c0e2499ddd67a50838c24",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0021-1"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0021-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0021-1",
+      "SCENARIO-CODE-2990-repair-hard-0021-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "8c6aa1125287929c642123aca8d63d6c1174b2b9a4cc006434296302d544bce2",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "be621378a0942460315ecd4a40699ca520c0ef63ed1c0e2499ddd67a50838c24",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.8160148509778082,
+  "item_id": "repair-hard-0021",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0021\nEntry point: anagram_key\nExpected behavior: Return a lowercase sorted alphanumeric key for anagram grouping.\nBaseline candidate:\ndef anagram_key(text):\n    return ''.join(sorted(text))\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0021-1, SCENARIO-CODE-2990-repair-hard-0021-2\nFailing assertions:\nassert anagram_key('Dormitory!!') == anagram_key('dirty room')\nassert anagram_key('A-b') == 'ab'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "03eb802baf360ec15151d0592fa8a179164be5fe29a38a82359801f77ef8e7ea",
+  "raw_response": " old-code-style: old-code-style: old-1.0.0\n\nold-code-style: old-1.0.0\n\n```python\ndef anagram_key(text):\n    return ''.join(sorted(text))\n```\n\n```python\ndef anagram_key(text):\n    return ''.join(sorted(text.lower().replace(' ', '').replace('!', '').replace('-', '').replace('?', '').replace('.', '').replace('?', '').replace('!', '').replace('')))\n```\n```python\nimport re\nimport string\n\ndef anagram_key(text):\n        return \"\".join(sorted(re.sub(r'[^a-z0-9]', '', text.lower())))\n```py\ndef anagram_key(text):\n    return \"\".join(sorted(re.sub(r'[^a-z0-9]', '', text.lower())))\n```\n\n```python\nimport re\n\ndef anagram_key(text):\n    return \"\".join(sorted(re.sub(r'[^a-z0-9]', '', text.lower())))\n```\n\n```python\nimport re\n\ndef anagram_key(text):\n    return \"\".join(sorted(text.lower()) if isinstance(text, str) else \"\") # This is not quite right\n```\n\n```python\nimport re\n\ndef anagram_key(text):\n    return \"\".join(sorted(re.sub(r'[^a-z0-9]', '', text.",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

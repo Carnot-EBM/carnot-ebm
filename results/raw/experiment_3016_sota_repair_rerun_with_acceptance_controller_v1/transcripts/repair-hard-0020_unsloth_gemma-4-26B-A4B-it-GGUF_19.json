@@ -1,0 +1,51 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "e1c9cac5c11b9b99229dad7cc3018d41334b79417da84b1e086f07339e524778",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0020-1"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0020-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0020-1",
+      "SCENARIO-CODE-2990-repair-hard-0020-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "d07db842dcef26468ab1dab5e13bf9faf122c23b24e7a0bbfa86c485cac01a0e",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "d7cac501e9eb246f09acd0d25144ba0226d009b366ea6228fa7f279a02470ad5",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.8207803829573095,
+  "item_id": "repair-hard-0020",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0020\nEntry point: longest_common_prefix\nExpected behavior: Return the longest common prefix for a list of strings.\nBaseline candidate:\ndef longest_common_prefix(strings):\n    return strings[0] if strings else ''\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0020-1, SCENARIO-CODE-2990-repair-hard-0020-2\nFailing assertions:\nassert longest_common_prefix(['flower', 'flow', 'flight']) == 'fl'\nassert longest_common_prefix(['dog', 'racecar']) == ''\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "c14d9144767c1f1d6e9f47201fa987df7bd23aec2635ba90c409240fa7ab4e22",
+  "raw_response": " old-code-trace-trace-aware-repair-0020.\n\nold-code-trace-trace-aware-repair-0020.\n\nold-code-trace-trace-aware-repair-0020.\n\nold-code-trace-0020.\n```json\n{\n  \"draft_intent\": \"Implement a function that finds the longest common prefix among a list of strings by comparing characters at each position across all strings.\",\n  \"final_patch\": \"def longest_common_prefix(strings):\\n    if not strings:\\n        return ''\\n    \\n    prefix = strings[0]\\n    for s in strings[1:]:\\n        while not s.startswith(prefix):\\n        \\quad\\quad\\quad\\s.find(prefix) != -1\\n        \\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad\\quad",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

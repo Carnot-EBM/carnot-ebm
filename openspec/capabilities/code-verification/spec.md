@@ -1571,6 +1571,62 @@ marks the controller ready when the selected transparent rule rejects unsafe
 syntax/schema, false-accept, tautology, or intent-drift evidence without
 promoting a regression over accept-all.
 
+### REQ-CODE-3016: SOTA Repair Rerun With Acceptance Controller
+
+The repository shall provide an Exp 3016 local SOTA GGUF repair rerun that uses
+the Exp 3015 acceptance controller as a machine gate over hard-set and
+metamorphic repair candidates. The rerun MUST:
+
+- require
+  `results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json`
+  with `sota_logprob_ready=true` and
+  `results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json`
+  with `acceptance_controller_ready=true` before evaluating repair promotion;
+- verify CUDA/cache status, model checksum availability, controller-config
+  availability, hard-set integrity, and metamorphic-manifest integrity as
+  explicit preconditions, writing a terminal blocked artifact when any
+  precondition fails;
+- load the original hard-set manifest, metamorphic manifest, and acceptance
+  controller config, then run deterministic baseline validators before
+  evaluating live headline repair candidates;
+- generate or replay repair candidates from at least one mandated headline GGUF
+  model while preserving prompt, draft intent, failing trace, final patch,
+  generation duration, transcript hash, candidate patch path, verifier log path,
+  and available telemetry;
+- apply the acceptance controller before final promotion and execute
+  deterministic original plus metamorphic validators for both accepted and
+  rejected candidates;
+- compute pass@1/pass@k, syntax/schema failure, false-accept, and tautology
+  deltas against baseline, Exp 3003, and accept-all where comparable, keeping
+  smoke-only model evidence separate from headline evidence; and
+- write
+  `results/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1.json`
+  with `repair_controller_clean`, `headline_result`, `preconditions_checked`,
+  `n_tasks`, `n_metamorphic_variants`, `model_specs`,
+  `headline_models_used`, `model_checksums`,
+  `acceptance_controller_config_path`, `pass_at_1_delta`,
+  `pass_at_k_delta`, `false_accept_delta`, `tautology_gate_clean`,
+  `syntax_failure_rate_delta`, `schema_failure_rate_delta`,
+  `live_transcript_paths`, `verifier_log_paths`, `inference_substrate`,
+  `duration_s`, and `honest_verdict`.
+
+`repair_controller_clean` shall be false when false accepts rise, tautology
+probes pass vacuously, syntax/schema failures rise, `n_tasks` is below the
+headline minimum, no accepted metamorphic variants are available, no mandated
+headline model produced candidate evidence, or only smoke-only models ran.
+
+### SCENARIO-CODE-3016: Acceptance-Controlled Repair Promotion Is Replayable
+
+Given Exp 3013 reports ready SOTA telemetry and Exp 3015 reports a ready
+transparent acceptance controller,
+When Exp 3016 reruns hard-set repair over original and metamorphic validators,
+Then every candidate is deterministically tested before and after controller
+classification, accepted and rejected rows keep replayable patches,
+transcripts, verifier logs, telemetry summaries, and controller reasons, and
+the terminal artifact marks the result complete, complete-flagged, or blocked
+without allowing smoke-only, vacuous, syntax-regressed, schema-regressed, or
+false-accept-regressed evidence to promote.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for

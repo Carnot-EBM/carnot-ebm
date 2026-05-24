@@ -1,0 +1,51 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "c44cfebe2d6d4868a743da7d91714b4af0603821fb659a2c8aa4e1406cd2f8bb",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0022-1"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0022-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0022-1",
+      "SCENARIO-CODE-2990-repair-hard-0022-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "75113833f925307d9c5d30203221b6b8aace60f828ab84837abb741a41b3611b",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "98e8105d2df6e03a5449956162a3091d3431e1de13935b7e5ff0caf37238d1e8",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.8195374939823523,
+  "item_id": "repair-hard-0022",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0022\nEntry point: window_sums\nExpected behavior: Return sums of every contiguous window of the requested size.\nBaseline candidate:\ndef window_sums(nums, size):\n    return [sum(nums[i:i+size]) for i in range(len(nums) - size)]\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0022-1, SCENARIO-CODE-2990-repair-hard-0022-2\nFailing assertions:\nassert window_sums([1, 2, 3, 4], 2) == [3, 5, 7]\nassert window_sums([5], 1) == [5]\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "7acd279b6df6ec199e772c1bdc48179751ff980f53a4f730c12eabfa78580ca1",
+  "raw_response": " old-code: old-code: old-code: old-code: old-code: old-code: old-code: old-code: old-code: old-code: old-code: old-code: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001111111111111111111111111111111111111111111111111111",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

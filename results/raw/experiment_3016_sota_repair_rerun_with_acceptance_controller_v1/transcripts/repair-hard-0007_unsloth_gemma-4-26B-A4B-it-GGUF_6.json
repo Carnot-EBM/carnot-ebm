@@ -1,0 +1,45 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "15cdc066ed5c564f6af5af45e6b1ff514f44907fc78d434393a54b3d2206ea39",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0007-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0007-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "515d05b8bcee80912b3fc292ce1d2d7bea7232adc3dd6c6bb2ecb9173a2140ac",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "f74bb7fdb70fc274923feb2ac07c3a82def14468c8d9ffdab1593c0088cd2b05",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 2.757094247965142,
+  "item_id": "repair-hard-0007",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0007\nEntry point: parse_bool\nExpected behavior: Parse common boolean strings and booleans into True or False.\nBaseline candidate:\ndef parse_bool(value):\n    return bool(value)\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0007-2\nFailing assertions:\nassert parse_bool(' False ') is False\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "80481b52698dc3ceb2f10cb0f1e0b00523aaf437ecaddbaf02178c34e3c67e17",
+  "raw_response": " old-code-is-not-available-in-the-repository.\n    \nF0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001\nF000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

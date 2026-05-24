@@ -1,0 +1,45 @@
+{
+  "draft_intent": "The function should count the number of vowels in a given string, ensuring that it accounts for both lowercase and uppercase vowels (a, e, i, o, u).",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "64db33599fcc042e8900f9d4e35ee55d1edb50dd27b1b2e1b468084f95ad2b51",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0003-1"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0003-1"
+    ],
+    "passed": false,
+    "test_suite_sha256": "8025e9d15d3095d47301601ecd8d6c4c39345c5de20e56d75564023064f72e69",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "47449895f53bfb396f0ef1773f6db9ebd2a3c08fb1e778ee5cbfb5dcb5f34a9c",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 0.8107220060192049,
+  "item_id": "repair-hard-0003",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0003\nEntry point: count_vowels\nExpected behavior: Count vowels in a string, treating uppercase and lowercase equally.\nBaseline candidate:\ndef count_vowels(text):\n    return sum(1 for ch in text if ch in 'aeiou')\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0003-1\nFailing assertions:\nassert count_vowels('Education') == 5\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "56046fc7e91ea900ac455400c4502bc514fa7088a430638720eb9278d438a238",
+  "raw_response": "\n<|channel>thought\n<channel|>```json\n{\n  \"draft_intent\": \"The function should count the number of vowels in a given string, ensuring that it accounts for both lowercase and uppercase vowels (a, e, i, o, u).\",\n  \"final_patch\": \"def count_vowels(text):\\n    return sum(1 for ch in text if ch.lower() in 'aeiou')\"\n}\n```",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

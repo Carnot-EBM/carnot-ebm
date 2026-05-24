@@ -1,0 +1,69 @@
+{
+  "controller_accepted": false,
+  "controller_rejection_reasons": [
+    "schema_valid",
+    "syntax_success",
+    "entry_point_present",
+    "intent_drift",
+    "original_passed",
+    "metamorphic_passed_all"
+  ],
+  "deterministic_tests_executed": true,
+  "false_accept": false,
+  "item_id": "repair-hard-0015",
+  "metamorphic_verifier_outputs": [
+    {
+      "candidate_key": "repair_candidate",
+      "candidate_sha256": "2024c6850ac1b7e2c3d2d9f3f943aff7dbc9ced88859d8f84d6cda8b4c317248",
+      "errors": [
+        {
+          "error_type": "SyntaxError",
+          "message": "leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers",
+          "test_id": "candidate-parse"
+        }
+      ],
+      "failing_test_ids": [
+        "candidate-parse"
+      ],
+      "passed": false,
+      "test_suite_sha256": "1e5667e4845ca81000d9109c64dfde52c515ff5ce5086babf7def823e18772cd",
+      "tests_run": 0
+    },
+    {
+      "candidate_key": "repair_candidate",
+      "candidate_sha256": "2024c6850ac1b7e2c3d2d9f3f943aff7dbc9ced88859d8f84d6cda8b4c317248",
+      "errors": [
+        {
+          "error_type": "SyntaxError",
+          "message": "leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers",
+          "test_id": "candidate-parse"
+        }
+      ],
+      "failing_test_ids": [
+        "candidate-parse"
+      ],
+      "passed": false,
+      "test_suite_sha256": "36090683ee75701c422b0dc185212d0ff3737289379ee8cc3c5b228a36ad05c1",
+      "tests_run": 0
+    }
+  ],
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "original_verifier_output": {
+    "candidate_key": "repair_candidate",
+    "candidate_sha256": "2024c6850ac1b7e2c3d2d9f3f943aff7dbc9ced88859d8f84d6cda8b4c317248",
+    "errors": [
+      {
+        "error_type": "SyntaxError",
+        "message": "leading zeros in decimal integer literals are not permitted; use an 0o prefix for octal integers",
+        "test_id": "candidate-parse"
+      }
+    ],
+    "failing_test_ids": [
+      "candidate-parse"
+    ],
+    "passed": false,
+    "test_suite_sha256": "71e3f52f0c7b0c41dd93174607ae473f4ec62f0ab52e8c91638b627eb1b2831a",
+    "tests_run": 0
+  },
+  "passed": false
+}

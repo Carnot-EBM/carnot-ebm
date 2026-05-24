@@ -1,0 +1,51 @@
+{
+  "draft_intent": "Iterate through the list of values to find the first element that is not None. If no such element is found, return the default value.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "2992678845aec7c6174391dcf9db3b35eb6f12bb0cc7f41dc7245e4bf39ac982",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0013-1"
+      },
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0013-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0013-1",
+      "SCENARIO-CODE-2990-repair-hard-0013-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "dbc59b9a2e790df7480477f7e740c84820030a34a5f6e4b567aab8192e227466",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "be1fd9c30af069586a04da7eb22cd925dac795fe91ad736ea3fb2cc49c5934d1",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 0.9528471389785409,
+  "item_id": "repair-hard-0013",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0013\nEntry point: first_non_none\nExpected behavior: Return the first value that is not None, or default when none exists.\nBaseline candidate:\ndef first_non_none(values, default=None):\n    return values[0] if values else default\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0013-1, SCENARIO-CODE-2990-repair-hard-0013-2\nFailing assertions:\nassert first_non_none([None, 0, 2], default=9) == 0\nassert first_non_none([None, None], default='x') == 'x'\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "f478b9332ed72f2090febaff6f97d54110dc1fbd9789c2b3488762c6244e4194",
+  "raw_response": " old-code-trace-aware-repair-patch.\n\n```json\n{\n  \"draft_intent\": \"Iterate through the list of values to find the first element that is not None. If no such element is found, return the default value.\",\n  \"final_patch\": \"def first_non_none(values, default=None):\\n    for val in values:\\n        if val is not None:\\n            return val\\n    return default\"\n}\n```",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

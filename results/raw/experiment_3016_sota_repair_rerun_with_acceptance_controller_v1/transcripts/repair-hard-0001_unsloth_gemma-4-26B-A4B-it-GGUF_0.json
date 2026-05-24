@@ -1,0 +1,45 @@
+{
+  "draft_intent": "",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "e1c37785abda02e3dd486e4fa265020a3f697582a7c61761fac1b2ac1abde72a",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0001-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0001-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "9f1176cca0299637502cac0564807a44f2b2a8808e224cd38e3704a5d57f70f8",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "a4fb2d06d26a5dbe6c09256d33d47628db9c933512f21b8cf97de19ee09588a9",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 11.92828628292773,
+  "item_id": "repair-hard-0001",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0001\nEntry point: clamp_score\nExpected behavior: Clamp x into the inclusive [lo, hi] range.\nBaseline candidate:\ndef clamp_score(x, lo, hi):\n    return min(x, hi)\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0001-2\nFailing assertions:\nassert clamp_score(-3, 0, 10) == 0\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "7b1b68daf182f661cfc5ebc5ed84ab2d8877402864ac47b81e55419121dba503",
+  "raw_response": "\n<|channel>thought0.  **Analyze the Request:**\n    *   **Task:** Repair a Python function `clamp_score(x, lo, hi)`.\n    *   **Current Implementation:** `return min(x, hi)`.\n    *   **Expected Behavior:** Clamp `x` into the inclusive `[lo, hi]` range.\n    *   **Failing Test Case:** `clamp_score(-3, 0, 10)` should return `0`.\n    *   **Current Result for Test Case:** `min(-3, 10)` returns `-3`.\n    *   **Goal:** Fix the logic to ensure `x` is bounded by both `lo` and `hi`.\n    *   **Constraints:** Preserve signature, draft intent, return exactly one JSON object.\n\n2.  **Identify the Bug:**\n    *   The function only handles the upper bound (`hi`) using `min(x, hi)`.\n    *   It fails to handle the lower bound (`lo`).\n    *   To clamp a value between `lo` and `hi`, the logic should be: `max(lo, min(x, hi))` or `min(max(x, lo), hi)`.\n\n3.  **Develop the Fix:**\n    *   Option 1: `return max(lo, min(x, hi))`\n    *   Option 2: `return min(max(x, lo), hi)`\n    *   Both are mathematically equivalent",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}

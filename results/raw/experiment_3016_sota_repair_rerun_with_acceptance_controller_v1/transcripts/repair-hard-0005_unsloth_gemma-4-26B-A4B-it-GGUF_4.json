@@ -1,0 +1,45 @@
+{
+  "draft_intent": "The goal is to modify the `flatten_once` function so that it only flattens a single level of nesting for each element encountered in the input iterable, rather than recursively flattening all nested structures. If an element is a list or tuple, its immediate contents should be added to the output list, but those contents should not be further processed for nesting.",
+  "failing_trace": {
+    "candidate_key": "baseline_candidate",
+    "candidate_sha256": "8512d978e48184675028471601d98abb7951c59c540656fd503a1f4d362a5864",
+    "errors": [
+      {
+        "error_type": "AssertionError",
+        "message": "",
+        "test_id": "SCENARIO-CODE-2990-repair-hard-0005-2"
+      }
+    ],
+    "failing_test_ids": [
+      "SCENARIO-CODE-2990-repair-hard-0005-2"
+    ],
+    "passed": false,
+    "test_suite_sha256": "3c0f39a564f73f4c8e78b6aa3b6552bb29d9c6d467acc6170a9b84ba25d1d804",
+    "tests_run": 3
+  },
+  "final_patch_sha256": "0c149436ba6111100a7b6c599da22efa15a4f13194ec495e7cd9244aa4b84d0d",
+  "generation_backend": "llama_cpp",
+  "generation_duration_s": 1.412513812072575,
+  "item_id": "repair-hard-0005",
+  "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+  "prompt": "Exp 2991 intent-preserving trace-aware code repair.\nItem: repair-hard-0005\nEntry point: flatten_once\nExpected behavior: Flatten exactly one list/tuple nesting level.\nBaseline candidate:\ndef flatten_once(items):\n    out = []\n    for item in items:\n        if isinstance(item, (list, tuple)):\n            out.extend(flatten_once(item))\n        else:\n            out.append(item)\n    return out\n\nFailing assertion ids: SCENARIO-CODE-2990-repair-hard-0005-2\nFailing assertions:\nassert flatten_once([[1, [2]], 3]) == [1, [2], 3]\nPreserve the public function signature and draft intent. Do not hard-code the visible tests. Return exactly one JSON object with string fields \"draft_intent\" and \"final_patch\".",
+  "prompt_sha256": "a2c9fbdf48f1d9e347a3a9b2c65485f73f11b7e8514c7c3a7a7e11571e128e44",
+  "raw_response": "\n<|channel>thought\n<channel|>```json\n{\n  \"draft_intent\": \"The goal is to modify the `flatten_once` function so that it only flattens a single level of nesting for each element encountered in the input iterable, rather than recursively flattening all nested structures. If an element is a list or tuple, its immediate contents should be added to the output list, but those contents should not be further processed for nesting.\",\n  \"final_patch\": \"def flatten_once(items):\\n    out = []\\n    for item in items:\\n        if isinstance(item, (list, tuple)):\\n            out.extend(item)\\n        else:\\n            out.append(item)\\n    return out\"\n}\n```",
+  "telemetry_summary": {
+    "preflight_duration_s": 14.189461,
+    "telemetry_observation": {
+      "logits_present": true,
+      "logits_shape": [
+        384,
+        262144
+      ],
+      "token_logprob_count": 16,
+      "token_text_count": 16,
+      "top_logprob_row_count": 16
+    },
+    "token_logprobs_exposed": true,
+    "topk_logprobs_exposed": true,
+    "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json",
+    "transcript_sha256": "57cc9d3f028d6fa5c442ae0d4962ae51ac1422df3a9fa851a54cee1d16811297"
+  }
+}
