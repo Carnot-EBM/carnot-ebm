@@ -1871,3 +1871,62 @@ paths, timing and utilization summaries, and either
 with the exact failing command and first actionable error.
 
 **Implementation status:** Planned (Exp 2956)
+
+---
+
+### REQ-HW-077
+
+**Title:** Exp 2957 GateMate n=16 flash/timing smoke MUST preserve board evidence without sampler claims
+
+**Description:**
+Experiment 2957 MUST perform the first bounded GateMate n=16 flash/timing smoke
+after Exp 2956 has produced a real `.bit` artifact. The experiment MUST first
+verify `results/experiment_2956_gatemate_n16_bitstream_build_v4.json` reports
+`gatemate_bitstream_built=true`, verify the local bitstream SHA256 equals the
+Exp 2956 SHA256, locate `openFPGALoader`, and run
+`openFPGALoader -c dirtyJtag --detect` to prove the DirtyJTAG/GateMate board is
+present. It MAY flash only with the locally documented command shape
+`openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream>`. Every hardware
+command MUST be captured to a raw transcript file. If the board, bitstream, or
+flash path is unavailable, the artifact MUST use a `blocked_*` verdict and
+record the exact failing command. Because the current Exp 2955/2956 CCF is
+build-only and intentionally leaves user IO unconstrained, Exp 2957 MUST NOT
+claim sample readback, speedup, Boltzmann sampling, or thermodynamic behavior
+unless a real board-output capture path is present.
+
+**Acceptance criteria:**
+- `results/experiment_2957_gatemate_flash_timing_smoke_v2.json` is generated
+  with `inference_substrate="hardware_smoke"`.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `board_detected`, `bitstream_sha256_verified`, `flash_attempted`,
+  `flash_succeeded`, `smoke_vector_passed`, `observed_output_sha256`,
+  `timing_observation`, `transcript_paths`, `no_speedup_claim=true`,
+  `no_boltzmann_claim=true`, `inference_substrate`, and `duration_s`.
+- A successful flash records the initial detection transcript, flash transcript,
+  post-flash detection transcript, transcript SHA256 values, and measured command
+  durations, but keeps `smoke_vector_passed=false` when no readback/output
+  capture path exists.
+- Missing Exp 2956 evidence, SHA mismatch, absent `openFPGALoader`, failed board
+  detection, or failed flash yields a blocked artifact with `flash_succeeded=false`
+  and the exact failing command.
+- `no_speedup_claim=true`, `no_boltzmann_claim=true`, and
+  `inference_substrate="hardware_smoke"` are invariant for every verdict.
+
+**Implementation status:** Planned (Exp 2957)
+
+---
+
+### SCENARIO-HW-077
+
+**Scenario:** GateMate n=16 flash smoke records hardware contact or an exact blocker.
+
+**Given:** Exp 2956 reports a built n=16 GateMate bitstream and the local bitstream
+hash matches its recorded SHA256.
+**When:** Exp 2957 runs the DirtyJTAG detection and documented openFPGALoader flash
+flow.
+**Then:** It writes the v2 hardware-smoke artifact with required schema fields,
+raw transcript paths, transcript hashes, command timing observations, and either
+a successful flash/contact smoke without sampler claims or a blocked verdict with
+the exact failing command.
+
+**Implementation status:** Planned (Exp 2957)
