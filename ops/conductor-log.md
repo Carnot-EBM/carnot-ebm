@@ -6106,3 +6106,4 @@ web search:
 | 2026-05-24 01:31 UTC | GateMate Constraints Materialization v4 | OK | 81 passed in 3.87s |
 | 2026-05-24 01:44 UTC | Gated GateMate n=16 Bitstream Build v4 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2956_gatemat |
 | 2026-05-24 01:51 UTC | Gated GateMate n=16 Bitstream Build v4 | OK | cache hit: 81 passed in 2.81s |
+| 2026-05-24 02:06 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
