@@ -6104,3 +6104,4 @@ web search:
 | 2026-05-24 00:31 UTC | Code Verifier Threshold Policy v1 | OK | 81 passed in 4.74s |
 | 2026-05-24 01:15 UTC | FR-11 Utility-Gated Replay Curriculum v2 | OK | 81 passed in 3.06s |
 | 2026-05-24 01:31 UTC | GateMate Constraints Materialization v4 | OK | 81 passed in 3.87s |
+| 2026-05-24 01:44 UTC | Gated GateMate n=16 Bitstream Build v4 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2956_gatemat |
