@@ -1,0 +1,497 @@
+{
+  "acceptance_gates": {
+    "condition_coverage": {
+      "op": "contains_all",
+      "required_conditions": [
+        "baseline_no_taxonomy",
+        "schema_only_dccd",
+        "intent_preserving_dccd",
+        "trace_aware_repair"
+      ]
+    },
+    "false_accept_delta": {
+      "metric": "false_accept_delta",
+      "op": "<=",
+      "value": 0.0
+    },
+    "false_accept_rate": {
+      "metric": "intent_preserving_false_accept_rate",
+      "op": "<=",
+      "value": 0.010135135135
+    },
+    "headline_model_gate": {
+      "metric": "models_used",
+      "op": "contains_at_least_one",
+      "requires_cached_sota_pair_attempt": true,
+      "value": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ]
+    },
+    "minimum_tasks": {
+      "metric": "n_tasks",
+      "op": ">=",
+      "value": 20
+    },
+    "pass_at_1_delta": {
+      "metric": "pass_at_1_delta",
+      "op": ">",
+      "value": 0.0
+    },
+    "pass_at_k_delta": {
+      "metric": "pass_at_k_delta",
+      "op": ">=",
+      "value": 0.0
+    },
+    "per_candidate_acceptance": {
+      "requires": [
+        "draft_intent_present",
+        "schema_result.schema_valid",
+        "syntax_result.ast_parse_ok",
+        "execution_trace_present",
+        "available_tests_pass",
+        "verifier_result.score>=threshold",
+        "false_accept_audit.verifier_only_accept=false",
+        "acceptance_reason=accepted_all_deterministic_gates"
+      ]
+    },
+    "runtime_trace_coverage": {
+      "metric": "runtime_trace_coverage",
+      "op": ">=",
+      "value": 0.8
+    },
+    "schema_failure_rate_delta": {
+      "metric": "schema_failure_rate_delta",
+      "op": "<=",
+      "value": 0.0
+    },
+    "syntax_failure_rate_delta": {
+      "metric": "syntax_failure_rate_delta",
+      "op": "<=",
+      "value": 0.0
+    }
+  },
+  "artifact": "experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json",
+  "baseline_conditions": [
+    {
+      "condition_id": "baseline_no_taxonomy",
+      "role": "raw repair generation without taxonomy or DCCD structure",
+      "source": "exp2964"
+    },
+    {
+      "condition_id": "schema_only_dccd",
+      "promotion_allowed": false,
+      "role": "diagnostic reproduction of the schema-collapse failure mode",
+      "source": "exp2964"
+    },
+    {
+      "condition_id": "intent_preserving_dccd",
+      "role": "draft-first repair with constrained patching and explicit intent checks",
+      "source": "exp2977"
+    },
+    {
+      "condition_id": "trace_aware_repair",
+      "role": "intent-preserving repair with runtime traces before acceptance",
+      "source": "exp2977"
+    }
+  ],
+  "dccd_failure_correlations": {
+    "false_accepts": {
+      "baseline_rate": 0.05,
+      "correlated_dccd_fields": [
+        "false_accept=false",
+        "verifier_accepted=false",
+        "pass_at_1=0.0",
+        "pass_at_k=0.0"
+      ],
+      "dccd_rate": 0.0,
+      "delta": -0.05,
+      "interpretation": "zero false accepts in schema-only DCCD is not progress because pass@1 and pass@k are both zero"
+    },
+    "pass_rate_regression": {
+      "baseline_pass_at_1": 0.2,
+      "correlated_dccd_fields": [
+        "mode=dccd_structured",
+        "candidate_count=40",
+        "schema_failure_rate=1.0",
+        "verifier_acceptance_rate=0.0"
+      ],
+      "dccd_pass_at_1": 0.0,
+      "delta": -0.2,
+      "interpretation": "hard structure erased useful draft intent instead of repairing it"
+    },
+    "schema_failures": {
+      "baseline_rate": 0.05,
+      "correlated_dccd_fields": [
+        "mode=dccd_structured",
+        "schema_valid=false",
+        "parser_status=not_run",
+        "schema_errors_present"
+      ],
+      "dccd_rate": 1.0,
+      "delta": 0.95,
+      "interpretation": "schema-only DCCD overconstrained manifest emission before runnable code existed"
+    },
+    "syntax_failures": {
+      "baseline_rate": 0.7,
+      "correlated_dccd_fields": [
+        "mode=dccd_structured",
+        "syntax_success=false",
+        "parser_status=not_run",
+        "test_status=not_run"
+      ],
+      "dccd_rate": 1.0,
+      "delta": 0.30000000000000004,
+      "interpretation": "schema collapse prevented AST parsing, so syntax failures rose instead of being repaired"
+    }
+  },
+  "downstream_evaluation_plan": {
+    "conditions": [
+      {
+        "condition_id": "baseline_no_taxonomy",
+        "role": "raw repair generation without taxonomy or DCCD structure",
+        "source": "exp2964"
+      },
+      {
+        "condition_id": "schema_only_dccd",
+        "promotion_allowed": false,
+        "role": "diagnostic reproduction of the schema-collapse failure mode",
+        "source": "exp2964"
+      },
+      {
+        "condition_id": "intent_preserving_dccd",
+        "role": "draft-first repair with constrained patching and explicit intent checks",
+        "source": "exp2977"
+      },
+      {
+        "condition_id": "trace_aware_repair",
+        "role": "intent-preserving repair with runtime traces before acceptance",
+        "source": "exp2977"
+      }
+    ],
+    "metrics": [
+      "pass_at_1_delta",
+      "pass_at_k_delta",
+      "schema_failure_rate_delta",
+      "syntax_failure_rate_delta",
+      "false_accept_delta",
+      "runtime_trace_coverage"
+    ],
+    "n_tasks_min": 20,
+    "raw_evidence_required": [
+      "raw_draft_ref",
+      "constrained_patch_ref",
+      "execution_trace_ref",
+      "schema_errors",
+      "syntax_errors",
+      "failing_assertions"
+    ]
+  },
+  "downstream_min_tasks": 20,
+  "duration_s": 0.005743,
+  "false_accept_guard": {
+    "baseline_false_accept_rate": 0.05,
+    "blocked_prior_pattern": {
+      "experiment_id": "exp2964",
+      "mode": "dccd_structured",
+      "observed_false_accept_rate": 0.0,
+      "observed_pass_at_1": 0.0
+    },
+    "guard_id": "false_accept_reduction_cannot_mask_zero_pass_rate",
+    "max_false_accept_rate": 0.010135135135,
+    "pass_condition": "false_accept_delta <= 0, intent_preserving_false_accept_rate <= threshold policy, and pass_at_1_delta > 0",
+    "selected_default_threshold": 1.0,
+    "verifier_only_accepts_count_as_pass": false
+  },
+  "honest_verdict": "complete: intent-preserving trace-aware DCCD protocol ready for exp2977; no pass-rate improvement claimed",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "intent_preserving_repair_protocol_ready": true,
+  "legacy_model_policy": "Legacy small models are allowed only for CPU smoke tests and must never be reported as headline repair results.",
+  "mandatory_headline_model_ids": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF",
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "preconditions_checked": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2963_dccd_repair_protocol_manifest_v1.json",
+      "resource": "exp2963",
+      "role": "schema_only_dccd_protocol_manifest",
+      "sha256": "23fa4933fff5132c84c64c0d0640499e9a982f847bb6a25dfae6fcaeb4e6d88f"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "resource": "exp2964",
+      "role": "failed_live_dccd_rerun_metrics",
+      "sha256": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "resource": "exp2952",
+      "role": "taxonomy_guided_repair_reference",
+      "sha256": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2953_code_verifier_threshold_policy_v1.json",
+      "resource": "exp2953",
+      "role": "deterministic_verifier_threshold_policy",
+      "sha256": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a"
+    },
+    {
+      "available": true,
+      "missing_tokens": [],
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/research-references.md",
+      "required_tokens": [
+        "2026-05-24 Post-.279 Planning Sweep",
+        "AdapTrack",
+        "TraceCoder",
+        "Thinking Before Constraining",
+        "backtracking"
+      ],
+      "resource": "post_279_research_sweep"
+    }
+  ],
+  "prior_failure_addressed": true,
+  "repair_manifest_schema": {
+    "additionalProperties": false,
+    "properties": {
+      "acceptance_reason": {
+        "enum": [
+          "accepted_all_deterministic_gates",
+          "rejected_schema_regression",
+          "rejected_syntax_regression",
+          "rejected_false_accept_risk",
+          "rejected_intent_drift",
+          "rejected_missing_trace"
+        ],
+        "type": "string"
+      },
+      "backtracking_steps": {
+        "items": {
+          "required": [
+            "step_index",
+            "constraint_trigger",
+            "rollback_target",
+            "intent_preservation_check"
+          ],
+          "type": "object"
+        },
+        "min_items": 1,
+        "type": "array"
+      },
+      "constrained_patch": {
+        "description": "The constrained candidate plus the backend that shaped it.",
+        "required": [
+          "patch_ref",
+          "schema_backend",
+          "diff_from_draft"
+        ],
+        "type": "object"
+      },
+      "draft_intent": {
+        "description": "The unconstrained model draft and its intended algorithm before masks are applied.",
+        "required": [
+          "raw_draft_ref",
+          "intent_summary",
+          "prompt_sha256"
+        ],
+        "type": "object"
+      },
+      "execution_trace": {
+        "items": {
+          "required": [
+            "command",
+            "exit_code",
+            "stdout_ref",
+            "stderr_ref",
+            "failing_assertions"
+          ],
+          "type": "object"
+        },
+        "min_items": 1,
+        "type": "array"
+      },
+      "false_accept_audit": {
+        "required": [
+          "passed_tests",
+          "verifier_only_accept",
+          "known_false_accept_pattern"
+        ],
+        "type": "object"
+      },
+      "schema_result": {
+        "required": [
+          "schema_valid",
+          "schema_errors"
+        ],
+        "type": "object"
+      },
+      "syntax_result": {
+        "required": [
+          "ast_parse_ok",
+          "parser_status",
+          "static_checks"
+        ],
+        "type": "object"
+      },
+      "verifier_result": {
+        "required": [
+          "threshold",
+          "score",
+          "accepted_by_verifier"
+        ],
+        "type": "object"
+      }
+    },
+    "required": [
+      "draft_intent",
+      "constrained_patch",
+      "backtracking_steps",
+      "execution_trace",
+      "verifier_result",
+      "schema_result",
+      "syntax_result",
+      "false_accept_audit",
+      "acceptance_reason"
+    ],
+    "schema_version": "carnot.intent_preserving_repair_manifest.v1",
+    "type": "object"
+  },
+  "required_artifact_fields": [
+    "honest_verdict",
+    "intent_preserving_repair_protocol_ready",
+    "trace_execution_plan_ready",
+    "downstream_min_tasks",
+    "required_model_specs",
+    "mandatory_headline_model_ids",
+    "legacy_model_policy",
+    "baseline_conditions",
+    "repair_manifest_schema",
+    "acceptance_gates",
+    "schema_regression_guard",
+    "syntax_regression_guard",
+    "false_accept_guard",
+    "prior_failure_addressed",
+    "inference_substrate",
+    "duration_s"
+  ],
+  "required_model_specs": [
+    {
+      "mandatory_hf_ids": [
+        "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "unsloth/gemma-4-31B-it-GGUF",
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "minimum_headline_models": 1,
+      "required_for": "headline_results",
+      "selection_rule": "call_cached_sota_pair_first"
+    },
+    {
+      "headline_allowed": false,
+      "legacy_examples": [
+        "Qwen/Qwen3.5-0.8B",
+        "google/gemma-4-E4B-it"
+      ],
+      "selection_rule": "legacy_small_models_are_cpu_smoke_only"
+    }
+  ],
+  "run_date": "20260524",
+  "schema_regression_guard": {
+    "baseline_rate": 0.05,
+    "blocked_prior_pattern": {
+      "experiment_id": "exp2964",
+      "mode": "dccd_structured",
+      "observed_delta": 0.95,
+      "observed_rate": 1.0
+    },
+    "guard_id": "schema_failure_rate_must_not_regress",
+    "pass_condition": "schema_failure_rate_delta <= 0 and every accepted repair has schema_valid=true"
+  },
+  "source_artifacts": [
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2963_dccd_repair_protocol_manifest_v1.json",
+      "resource": "exp2963",
+      "role": "schema_only_dccd_protocol_manifest",
+      "sha256": "23fa4933fff5132c84c64c0d0640499e9a982f847bb6a25dfae6fcaeb4e6d88f"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2964_sota_dccd_repair_replication_v1.json",
+      "resource": "exp2964",
+      "role": "failed_live_dccd_rerun_metrics",
+      "sha256": "083ae3bbbb292c44178f250476178a006ca944d85687e74cc7a5aad141bc93e2"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2952_sota_taxonomy_guided_code_repair_eval_v1.json",
+      "resource": "exp2952",
+      "role": "taxonomy_guided_repair_reference",
+      "sha256": "f65ed04a461eebe8e562e9df71a9202caeecaf31bb5aadb2fc10eb1d19222030"
+    },
+    {
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2953_code_verifier_threshold_policy_v1.json",
+      "resource": "exp2953",
+      "role": "deterministic_verifier_threshold_policy",
+      "sha256": "6c10e167c64faf60e7aa84b935c0ab64cb771458d2a2a227838ca122df2cff2a"
+    }
+  ],
+  "syntax_regression_guard": {
+    "baseline_rate": 0.7,
+    "blocked_prior_pattern": {
+      "experiment_id": "exp2964",
+      "mode": "dccd_structured",
+      "observed_delta": 0.30000000000000004,
+      "observed_rate": 1.0
+    },
+    "guard_id": "syntax_failure_rate_must_not_regress",
+    "pass_condition": "syntax_failure_rate_delta <= 0 and every accepted repair parses with ast.parse"
+  },
+  "trace_execution_plan_ready": true,
+  "upstream_failure_comparison": {
+    "exp2952_taxonomy_guided_pass_at_1_delta": 0.25,
+    "exp2953_default_threshold": 1.0,
+    "exp2963_protocol_ready": true,
+    "exp2964_baseline": {
+      "candidate_count": 40,
+      "false_accept_rate": 0.05,
+      "mode": "baseline_no_taxonomy",
+      "pass_at_1": 0.2,
+      "pass_at_k": 0.3,
+      "schema_failure_rate": 0.05,
+      "syntax_failure_rate": 0.7,
+      "verifier_acceptance_rate": 0.275
+    },
+    "exp2964_dccd_structured": {
+      "candidate_count": 40,
+      "false_accept_rate": 0.0,
+      "mode": "dccd_structured",
+      "pass_at_1": 0.0,
+      "pass_at_k": 0.0,
+      "schema_failure_rate": 1.0,
+      "syntax_failure_rate": 1.0,
+      "verifier_acceptance_rate": 0.0
+    },
+    "exp2964_taxonomy_guided": {
+      "candidate_count": 40,
+      "false_accept_rate": 0.0,
+      "mode": "taxonomy_guided",
+      "pass_at_1": 0.45,
+      "pass_at_k": 0.6,
+      "schema_failure_rate": 0.1,
+      "syntax_failure_rate": 0.5,
+      "verifier_acceptance_rate": 0.5
+    },
+    "false_accept_delta": -0.05,
+    "pass_at_1_delta": -0.2,
+    "pass_at_k_delta": -0.3,
+    "schema_failure_rate_delta": 0.95,
+    "syntax_failure_rate_delta": 0.30000000000000004
+  }
+}

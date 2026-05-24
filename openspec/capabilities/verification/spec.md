@@ -12,6 +12,41 @@ claim hardware correctness.
 
 ## Requirements
 
+### REQ-VERIFY-2976: Intent-Preserving Trace-Aware DCCD Repair Protocol
+
+The repository shall provide a deterministic Exp 2976 protocol builder that
+aggregates the Exp 2963 DCCD manifest, Exp 2964 live DCCD replication, Exp
+2952 taxonomy-guided repair evaluation, Exp 2953 verifier threshold policy, and
+the 2026-05-24 post-.279 research sweep before writing
+`results/experiment_2976_dccd_adaptrack_tracecoder_protocol_v1.json`.
+
+The artifact shall include `honest_verdict`,
+`intent_preserving_repair_protocol_ready`, `trace_execution_plan_ready`,
+`downstream_min_tasks`, `required_model_specs`,
+`mandatory_headline_model_ids`, `legacy_model_policy`,
+`baseline_conditions`, `repair_manifest_schema`, `acceptance_gates`,
+`schema_regression_guard`, `syntax_regression_guard`, `false_accept_guard`,
+`prior_failure_addressed`, `inference_substrate`, and `duration_s`.
+
+The protocol must preserve draft intent before constrained decoding, represent
+AdapTrack-style backtracking, require TraceCoder-style execution traces, and
+gate downstream Exp 2977 claims on deterministic schema, syntax, false-accept,
+and pass-rate guards.
+
+### SCENARIO-VERIFY-2976: Schema-Collapse DCCD Rerun Is Converted To Gates
+
+Given the Exp 2963 protocol artifact, Exp 2964 failed live DCCD replication,
+Exp 2952 taxonomy-guided repair reference, Exp 2953 threshold policy, and the
+post-.279 research sweep are present,
+When the Exp 2976 protocol builder runs,
+Then it writes the terminal JSON artifact with a repair manifest schema
+containing `draft_intent`, `constrained_patch`, `backtracking_steps`,
+`execution_trace`, `verifier_result`, `schema_result`, `syntax_result`,
+`false_accept_audit`, and `acceptance_reason`, requires at least 20 downstream
+repair tasks across baseline, schema-only DCCD, intent-preserving DCCD, and
+trace-aware repair conditions, and sets promotion gates so the Exp 2964
+schema/syntax collapse and pass-rate regression cannot be accepted as progress.
+
 ### REQ-VERIFY-2932: Citation Hallucination Field Verifier
 
 The repository shall provide a local citation-hallucination probe that:
