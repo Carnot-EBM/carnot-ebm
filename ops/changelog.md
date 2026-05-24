@@ -7263,3 +7263,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: Gated SOTA Solver Formalization with Feedback v2 (✅ Complete) — honest_verdict=complete: feedback-aware local SOTA formalization cleared .280 Z3 gates; results/experiment_2980_sota_solver_formalization_feedback_v2.json
 - 2026-05-24: Interwhen Partial Monitor Promotion v2 (⚠️ Research Finding) — honest_verdict=complete: deterministic partial monitor promoted with measured coverage and localization; results/experiment_2981_interwhen_partial_monitor_promotion_v2.json
 - 2026-05-24: FR-11 Independent Metric Continuous Self-Learning Gate v4 (✅ Complete) — honest_verdict=complete: fr11_independent_self_learning_ready; results/experiment_2982_fr11_independent_metric_utility_gate_v4.json
+- 2026-05-24: Trace-to-Skill Repair Memory Pilot v1 (✅ Complete) — honest_verdict=complete: trace_to_skill_memory_ready; results/experiment_2983_trace_to_skill_repair_memory_pilot_v1.json
