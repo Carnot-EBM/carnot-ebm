@@ -302,6 +302,54 @@ proof.
 
 **Spec traces:** REQ-BENCH-2959, SCENARIO-BENCH-2959
 
+### REQ-BENCH-2966: Skill-Labeled Exact Logic Frontier Manifest
+
+Carnot MUST provide a deterministic exact-verifier logic frontier that
+materializes 20-30 compact logic items with known labels, reference Z3
+formalizations, and explicit skill labels for downstream live LLM tasks.  This
+frontier MUST NOT invoke a live model; it exists to separate formal reasoning
+skills before another natural-language-to-Z3 generation attempt.
+
+The materializer MUST check that Python can import Z3 before execution.  If Z3
+is unavailable, it MUST write an honest blocked artifact with
+`preconditions_checked` populated.  When Z3 is available, it MUST execute every
+reference formalization, record per-item pass/fail evidence, write a downstream
+manifest with expected solver status and labels, and write
+`results/experiment_2966_logic_frontier_materializer_v1.json` with:
+`honest_verdict`, `preconditions_checked`, `z3_import_ok`,
+`logic_frontier_materialized`, `n_items`, `skill_labels`,
+`reference_formalizations_executed`, `reference_z3_execution_rate`,
+`reference_solver_accuracy`, `manifest_path`, `manifest_sha256`,
+`model_specs_for_downstream_live_use`,
+`inference_substrate="deterministic_wiring"`, and `duration_s`.
+
+**Acceptance criteria:**
+- The frontier contains 20-30 deterministic items spanning symbolization,
+  quantifier handling, countermodel construction, satisfiability, validity,
+  and answer extraction.
+- Every item has a reference Z3 formalization, an expected solver status, a
+  known label, and one or more skill labels.
+- Z3 executes every reference formalization when the dependency is present, and
+  `reference_solver_accuracy` is computed from solver outcomes rather than
+  natural-language labels alone.
+- The manifest includes the mandated downstream model specs:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, and
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- The manifest SHA-256 is computed over the stable manifest JSON that was
+  written to disk.
+
+### SCENARIO-BENCH-2966: Reference Logic Formalizations Execute Exactly
+
+**Given** the deterministic skill-labeled logic frontier
+**When** the materializer runs with Z3 importable
+**Then** every reference formalization is parsed and checked by Z3, the
+per-item result records the actual solver status and whether it matched the
+expected status and answer-extraction fields, and the terminal artifact reports
+`logic_frontier_materialized=true` with deterministic-wiring provenance.
+
+**Spec traces:** REQ-BENCH-2966, SCENARIO-BENCH-2966
+
 ### REQ-BENCH-1536: SATQuest CNF Verifier Benchmark
 
 Carnot MUST provide a bounded SATQuest-style CNF verifier benchmark that
@@ -451,6 +499,8 @@ a blocked artifact or mock data for testing.
 | SCENARIO-BENCH-1550 | Planned (`tests/python/test_experiment_1550_satquest_sota_reeval_zero_false_accepts.py`) | Exp 1550 |
 | REQ-BENCH-2959 | Implemented (`python/carnot/eval/nl_to_z3_execution_repair_mini_v2.py`) | Exp 2959 |
 | SCENARIO-BENCH-2959 | Implemented (`tests/python/test_experiment_2959_nl_to_z3_execution_repair_mini_v2.py`) | Exp 2959 |
+| REQ-BENCH-2966 | Implemented (`python/carnot/eval/logic_frontier_materializer.py`) | Exp 2966 |
+| SCENARIO-BENCH-2966 | Implemented (`tests/python/test_experiment_2966_logic_frontier_materializer.py`) | Exp 2966 |
 
 ### REQ-DUALGPU-101: DualGPU System-2 EqM Benchmark
 

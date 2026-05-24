@@ -1,0 +1,782 @@
+{
+  "inference_substrate": "deterministic_wiring",
+  "items": [
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-001",
+      "prompt": "All cats are mammals. Milo is a cat. Therefore Milo is a mammal.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-001",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const milo Entity)\n(declare-fun Cat (Entity) Bool)\n(declare-fun Mammal (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Cat x) (Mammal x))))\n(assert (Cat milo))\n(assert (not (Mammal milo)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-002",
+      "prompt": "Every pilot is licensed. Ada is licensed. Ada need not be a pilot.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "not_entailed",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-002",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const ada Entity)\n(declare-fun Pilot (Entity) Bool)\n(declare-fun Licensed (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Pilot x) (Licensed x))))\n(assert (Licensed ada))\n(assert (not (Pilot ada)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-003",
+      "prompt": "No robot is organic. Rho is a robot. Rho cannot also be organic.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-003",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const rho Entity)\n(declare-fun Robot (Entity) Bool)\n(declare-fun Organic (Entity) Bool)\n(assert (forall ((x Entity)) (not (and (Robot x) (Organic x)))))\n(assert (Robot rho))\n(assert (Organic rho))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "satisfiable_countermodel",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-004",
+      "prompt": "Some student is an athlete, but Nia being a student does not force Nia to be one.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "satisfiable_countermodel",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-004",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const nia Entity)\n(declare-fun Student (Entity) Bool)\n(declare-fun Athlete (Entity) Bool)\n(assert (Student nia))\n(assert (exists ((x Entity)) (and (Student x) (Athlete x))))\n(assert (not (Athlete nia)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-005",
+      "prompt": "Archivists are careful; careful people are trusted; Ivo is an archivist.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-005",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const ivo Entity)\n(declare-fun Archivist (Entity) Bool)\n(declare-fun Careful (Entity) Bool)\n(declare-fun Trusted (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Archivist x) (Careful x))))\n(assert (forall ((x Entity)) (=> (Careful x) (Trusted x))))\n(assert (Archivist ivo))\n(assert (not (Trusted ivo)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-006",
+      "prompt": "If some device is encrypted and all encrypted things are audited, something is audited.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-006",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-fun Device (Entity) Bool)\n(declare-fun Encrypted (Entity) Bool)\n(declare-fun Audited (Entity) Bool)\n(assert (exists ((x Entity)) (and (Device x) (Encrypted x))))\n(assert (forall ((x Entity)) (=> (Encrypted x) (Audited x))))\n(assert (forall ((x Entity)) (not (Audited x))))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-007",
+      "prompt": "Access requires a badge; access without a badge is inconsistent.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-007",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const access Bool)\n(declare-const badge Bool)\n(assert (=> access badge))\n(assert access)\n(assert (not badge))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-008",
+      "prompt": "A token is red or blue. It is not red. It must be blue.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-008",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const red Bool)\n(declare-const blue Bool)\n(assert (or red blue))\n(assert (not red))\n(assert (not blue))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "satisfiable",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-009",
+      "prompt": "Exactly one of switch A or switch B may be on; one-on states are satisfiable.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "satisfiable",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-009",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const a_on Bool)\n(declare-const b_on Bool)\n(assert (or a_on b_on))\n(assert (not (and a_on b_on)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-010",
+      "prompt": "A flag cannot be both true and false.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-010",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const flag Bool)\n(assert flag)\n(assert (not flag))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-011",
+      "prompt": "If dry then safe. Not dry does not prove not safe.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "not_entailed",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-011",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const dry Bool)\n(declare-const safe Bool)\n(assert (=> dry safe))\n(assert (not dry))\n(assert (not safe))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "countermodel construction",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-012",
+      "prompt": "A scheduled task cannot be both queued and running.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-012",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const queued Bool)\n(declare-const running Bool)\n(assert (not (and queued running)))\n(assert queued)\n(assert running)\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "7"
+      },
+      "expected_label": "answer=7",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-013",
+      "prompt": "Three plus four gives the answer.",
+      "reference_execution": {
+        "actual_answer_values": {
+          "answer": "7"
+        },
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {
+          "answer": "7"
+        },
+        "expected_label": "answer=7",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-013",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const left Int)\n(declare-const right Int)\n(declare-const answer Int)\n(assert (= left 3))\n(assert (= right 4))\n(assert (= answer (+ left right)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "12"
+      },
+      "expected_label": "answer=12",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-014",
+      "prompt": "Three boxes with four items each produce twelve items.",
+      "reference_execution": {
+        "actual_answer_values": {
+          "answer": "12"
+        },
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {
+          "answer": "12"
+        },
+        "expected_label": "answer=12",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-014",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const boxes Int)\n(declare-const per_box Int)\n(declare-const answer Int)\n(assert (= boxes 3))\n(assert (= per_box 4))\n(assert (= answer (* boxes per_box)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "6"
+      },
+      "expected_label": "answer=6",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-015",
+      "prompt": "Ten units minus four used units leaves six.",
+      "reference_execution": {
+        "actual_answer_values": {
+          "answer": "6"
+        },
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {
+          "answer": "6"
+        },
+        "expected_label": "answer=6",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-015",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const start Int)\n(declare-const used Int)\n(declare-const answer Int)\n(assert (= start 10))\n(assert (= used 4))\n(assert (= answer (- start used)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "1"
+      },
+      "expected_label": "answer=1",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-016",
+      "prompt": "If five approvals are needed and five are present, the numeric decision is one.",
+      "reference_execution": {
+        "actual_answer_values": {
+          "answer": "1"
+        },
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {
+          "answer": "1"
+        },
+        "expected_label": "answer=1",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-016",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const needed Int)\n(declare-const present Int)\n(declare-const answer Int)\n(assert (= needed 5))\n(assert (= present 5))\n(assert (= answer (ite (>= present needed) 1 0)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-017",
+      "prompt": "A false arithmetic claim that three plus four equals eight is impossible.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-017",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const answer Int)\n(assert (= answer (+ 3 4)))\n(assert (= answer 8))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-018",
+      "prompt": "All admins are employees. Sam being an employee does not force Sam to be admin.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "not_entailed",
+        "expected_solver_status": "sat",
+        "item_id": "lf-2966-018",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const sam Entity)\n(declare-fun Admin (Entity) Bool)\n(declare-fun Employee (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Admin x) (Employee x))))\n(assert (Employee sam))\n(assert (not (Admin sam)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-019",
+      "prompt": "Some manager approves a request; all approvers are trained; no trained person is impossible.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-019",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-fun Manager (Entity) Bool)\n(declare-fun Approves (Entity) Bool)\n(declare-fun Trained (Entity) Bool)\n(assert (exists ((x Entity)) (and (Manager x) (Approves x))))\n(assert (forall ((x Entity)) (=> (Approves x) (Trained x))))\n(assert (forall ((x Entity)) (not (Trained x))))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-020",
+      "prompt": "Squares are rectangles and rectangles are polygons; a square is a polygon.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-020",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const shape Entity)\n(declare-fun Square (Entity) Bool)\n(declare-fun Rectangle (Entity) Bool)\n(declare-fun Polygon (Entity) Bool)\n(assert (forall ((x Entity)) (=> (Square x) (Rectangle x))))\n(assert (forall ((x Entity)) (=> (Rectangle x) (Polygon x))))\n(assert (Square shape))\n(assert (not (Polygon shape)))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-021",
+      "prompt": "No guest is staff. A guest marked as staff is inconsistent.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-021",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-const guest1 Entity)\n(declare-fun Guest (Entity) Bool)\n(declare-fun Staff (Entity) Bool)\n(assert (forall ((x Entity)) (not (and (Guest x) (Staff x)))))\n(assert (Guest guest1))\n(assert (Staff guest1))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-022",
+      "prompt": "Subscribed users are notified. Ben is subscribed, so Ben is notified.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-022",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const subscribed Bool)\n(declare-const notified Bool)\n(assert (=> subscribed notified))\n(assert subscribed)\n(assert (not notified))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-023",
+      "prompt": "Exactly one delivery window is selected; selecting both windows is inconsistent.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "unsatisfiable",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-023",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-const morning Bool)\n(declare-const evening Bool)\n(assert (or morning evening))\n(assert (not (and morning evening)))\n(assert morning)\n(assert evening)\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-024",
+      "prompt": "Some poet exists and all poets are writers, so at least one writer exists.",
+      "reference_execution": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_label": "entailed",
+        "expected_solver_status": "unsat",
+        "item_id": "lf-2966-024",
+        "reference_passed": true,
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      },
+      "reference_z3": {
+        "assertions": "(declare-sort Entity 0)\n(declare-fun Poet (Entity) Bool)\n(declare-fun Writer (Entity) Bool)\n(assert (exists ((x Entity)) (Poet x)))\n(assert (forall ((x Entity)) (=> (Poet x) (Writer x))))\n(assert (forall ((x Entity)) (not (Writer x))))\n",
+        "format": "smt2"
+      },
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    }
+  ],
+  "model_specs_for_downstream_live_use": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "name": "Qwen3.6-35B-A3B"
+    },
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "name": "Gemma4-31B-it"
+    },
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "n_items": 24,
+  "random_seed": 2966,
+  "run_date": "20260524",
+  "schema": "carnot.logic_frontier.v1",
+  "skill_label_counts": {
+    "answer extraction": 5,
+    "countermodel construction": 4,
+    "quantifier handling": 11,
+    "satisfiability": 14,
+    "symbolization": 24,
+    "validity": 10
+  },
+  "skill_labels": [
+    "symbolization",
+    "quantifier handling",
+    "countermodel construction",
+    "satisfiability",
+    "validity",
+    "answer extraction"
+  ]
+}
