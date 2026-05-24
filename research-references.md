@@ -15371,3 +15371,114 @@ coverage.
   (arXiv:2507.02092) and ARM-EBM (arXiv:2512.15605) items. Relevance to
   Carnot: continue treating them as theory context for energy minimization and
   ARM/EBM equivalence; do not trigger a new EBT training milestone yet.
+
+## 2026-05-24 Post-.278 Planning Sweep (Milestone 2026.05.279)
+
+This sweep was run after `.278` completed with `paper_ready=false`, clean
+threshold-policy / GateMate-bitstream / PolarFire rows, flagged code-repair,
+FR-11, and NL-to-Z3 rows, and a blocked GateMate flash smoke caused by missing
+board detection. Searches covered arXiv, OpenReview, Hugging Face papers,
+GitHub discovery, Extropic/THRML docs and writing, Semantic Scholar/EBT and
+ARM-EBM discovery paths, and Logical Intelligence Kona/Aleph updates.
+
+- **arXiv:2603.03305 - "Draft-Conditioned Constrained Decoding for Structured
+  Generation in LLMs"**: DCCD separates semantic planning from syntactic
+  enforcement by first generating an unconstrained draft, then doing constrained
+  decoding conditioned on that draft. Relevance to Carnot: this is the most
+  direct repair for `.278`'s flagged structured-repair row; use DCCD-style
+  draft-then-schema repair before another larger SOTA code run, and measure
+  whether pass@1 gains survive when `n_tasks >= 20`.
+  Source: https://arxiv.org/abs/2603.03305
+
+- **arXiv:2602.06533 - "LogicSkills" and arXiv:2605.19597 -
+  "LLMEval-Logic"**: both isolate natural-language-to-formal reasoning under
+  solver checks. LogicSkills separates symbolization, countermodel construction,
+  and validity assessment with Z3-verified instances; LLMEval-Logic provides
+  adversarially hardened items, Z3-verified formalizations, and rubric atoms.
+  Relevance to Carnot: `.278` repaired Z3 execution but parseability remained
+  0.083333 and solver-verified accuracy was 0.0. `.279` should stop treating
+  natural-language-to-Z3 as one monolithic task and instead materialize a
+  smaller skill-labeled exact-verifier set before any live local GGUF retry.
+  Sources: https://arxiv.org/abs/2602.06533 and
+  https://arxiv.org/abs/2605.19597
+
+- **Microsoft Research Interwhen (Feb 2026)**: presents test-time monitors that
+  extract verifiable properties from partial agent outputs and evaluate them
+  asynchronously with symbolic or model-based verifiers. Relevance to Carnot:
+  aligns with the PRD's FR-12 and with the pipeline's tiered verifier cascade.
+  `.279` should add a streaming/partial-response monitor harness over code and
+  logic candidates, but keep it a harness until local verifier coverage is
+  measured.
+  Source:
+  https://www.microsoft.com/en-us/research/publication/interwhen-a-generalizable-framework-for-verifiable-reasoning-with-test-time-monitors/
+
+- **BEAVER / deterministic prefix-bound verification and `llguidance` local
+  structured decoding**: BEAVER computes sound probability bounds for
+  prefix-closed semantic constraints using token-trie/frontier exploration;
+  `llguidance` provides a local CFG/JSON/regex constrained decoding engine for
+  common LLM runtimes. Relevance to Carnot: full BEAVER is too large for one
+  milestone, but `.279` can add BEAVER-style certificate fields to candidate
+  manifests and use `llguidance` or llama.cpp grammars as optional local
+  constrained-output backends.
+  Sources: https://huggingface.co/papers/2512.05439 and
+  https://github.com/guidance-ai/llguidance
+
+- **AAAI 2026 - "Catastrophic Forgetting in Kolmogorov-Arnold Networks"**:
+  shows KANs retain well in low-dimensional algorithmic settings but still
+  forget in high-dimensional domains, and introduces KAN-LoRA as a
+  parameter-efficient continual-learning adapter. Relevance to Carnot: `.278`
+  FR-11 utility was positive but flagged. `.279` should add a non-tautological
+  forgetting guard and a KAN/per-knot memory audit rather than claiming
+  scheduler-level replay as model self-learning.
+  Source: https://ojs.aaai.org/index.php/AAAI/article/view/39697
+
+- **KAN hardware context - arXiv:2604.03345 and arXiv:2602.07518**:
+  hardware-oriented KAN complexity metrics (RM, BOP, NABS) can be computed
+  before synthesis, while analog KAN work maps edge functions to reconfigurable
+  nonlinear-processing units with hardware-measured system estimates. Relevance
+  to Carnot: use these as accounting and future-substrate context for KAN memory
+  experiments; do not claim analog or FPGA KAN acceleration from local software
+  checks.
+  Sources: https://arxiv.org/abs/2604.03345 and
+  https://arxiv.org/abs/2602.07518
+
+- **arXiv:2605.07588 - "Causal Energy Minimization" plus EBT / ARM-as-EBM
+  watch**: CEM recasts Transformer layers as conditional-energy optimization
+  steps; EBT is now an ICLR 2026 oral on OpenReview; ARM-as-EBM v3 continues to
+  ground next-token models in an EBM equivalence. Relevance to Carnot: useful
+  theory support for energy-descent language, but not a trigger for native EBT
+  training. `.279` should only add diagnostics that compare local verifier
+  energy, schema feasibility, and token telemetry.
+  Sources: https://arxiv.org/abs/2605.07588,
+  https://openreview.net/forum?id=ZBj3Qp1bYg, and
+  https://arxiv.org/abs/2512.15605
+
+- **HalluHard, Semantic Energy, and entropy-production hallucination signals**:
+  HalluHard shows multi-turn groundedness remains difficult even with web
+  search; Semantic Energy and entropy-production-rate work provide
+  single-pass/logit-access signals for hallucination detection. Relevance to
+  Carnot: useful for future multi-turn verification and token-telemetry
+  diagnostics, but `.279` should prioritize fixing flagged code/logic/self-
+  learning rows before opening another factuality benchmark branch.
+  Sources: https://arxiv.org/abs/2602.01031,
+  https://openreview.net/forum?id=E5mL07Fbq8, and
+  https://arxiv.org/abs/2509.04492
+
+- **Extropic THRML / TSU current public status**: Extropic continues to frame
+  TSUs as programmable samplers for EBMs/PGMs, with THRML as the public JAX
+  simulator and public docs describing a 2026 path toward larger variable-count
+  chips. Relevance to Carnot: keep THRML/TSU as simulator/readiness context
+  only; local `.279` hardware work should stay on GateMate board detection,
+  flash, and output-hash evidence.
+  Sources:
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one and
+  https://docs.thrml.ai/en/latest/examples/00_probabilistic_computing/
+
+- **Logical Intelligence Kona / Aleph public updates**: Kona is still framed as
+  an EBM layer beneath modern AI stacks, while Aleph reports Lean-verified
+  orchestration results. Relevance to Carnot: the solver/orchestrator split is
+  a useful architecture comparison for `.279`'s Interwhen-style monitor and
+  Z3-frontier work, but Carnot must not cite Kona or Aleph performance as local
+  evidence.
+  Sources: https://logicalintelligence.com/kona-ebms-energy-based-models and
+  https://logicalintelligence.com/blog/aleph-solves-putnambench

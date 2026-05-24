@@ -1,206 +1,216 @@
-# Research Roadmap vNEXT: Milestone 2026.05.278
+# Research Roadmap vNEXT: Milestone 2026.05.279
 
-**Title:** Structured Code Repair + Utility-Gated Self-Learning + GateMate Materialization
+**Title:** DCCD Repair Replication + Solver-Frontier Formalization + GateMate Flash
 
-**Planned:** 2026-05-23
+**Planned:** 2026-05-24
 
-**Previous milestone:** 2026.05.277
+**Previous milestone:** 2026.05.278
 
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.277 Proved
+## What 2026.05.278 Proved
 
-Milestone `.277` completed the Deep Think corrigenda and made the Phase-3 /
-paper-v6 boundary sharper rather than broader. The authoritative terminal
-artifact is `results/experiment_2948_capstone_v277.json`.
+Milestone `.278` completed all scheduled tasks, but the capstone kept
+`paper_ready=false`. The authoritative terminal artifact is
+`results/experiment_2961_capstone_v278.json`.
 
-- `paper_ready=true`, but the headline is explicitly narrow.
-- KV260 samples are distinguishable from CPU sequential Gibbs; paper-v6 must not
-  claim exact Boltzmann sampling on the current KV260 path.
-- The same-schedule CPU comparator recorded `kv260_same_schedule_speedup=0.98225`
-  at n=64, so no current KV260 speedup claim survives on that basis.
-- The code-corpus verifier result is useful: AUPRC remained strong at 0.888889
-  against a low-base-rate negative corpus.
-- The SOTA code-generation continuation ran with 50 tasks but remained weak
-  (`pass@1=0.0600`, `pass@k=0.1600`), making generation/repair the main
-  product gap rather than verifier scoring.
-- FR-11 gained a nonuniform continuation replay curriculum pilot, but not yet a
-  held-out utility gate or rollback rule.
-- PolarFire reached a 500-clause constraint-scorer hash-verification artifact.
-- GateMate still has no Carnot Ising tile bitstream/flash artifact; the known
-  blocker is constraints/bitstream materialization, not the old obsolete
-  `nextpnr-gatemate` tool assumption.
+- Code verifier operating policy is now clean: `exp2953` selected a default
+  threshold with PPV 0.888889, recall 1.0, and false-accept rate 0.010135.
+- GateMate constraints and an n=16 bitstream exist: `exp2955` materialized the
+  constraints and `exp2956` built a timing-clean bitstream at 15.69 MHz.
+- PolarFire scaled from 500 to 1000 clauses with hash/transcript evidence in
+  `exp2958`.
+- Taxonomy-guided code repair produced a positive small-N result
+  (`pass@1_delta=0.25`, `false_accept_delta=-0.125`) but stayed flagged because
+  the evaluated set was only four tasks and depended on flagged manifest inputs.
+- FR-11 utility-gated replay improved held-out utility by 0.111859 without
+  triggering rollback, but stayed flagged because it did not yet prove a
+  non-tautological learning loop under stronger reset/forgetting controls.
+- NL-to-Z3 execution was repaired, but formalization quality remained too weak:
+  parseability and Z3 execution were both 0.083333, and solver-verified accuracy
+  was 0.0.
+- GateMate flash/timing smoke stayed blocked: `exp2957` ended with
+  `blocked_board_not_detected`, so there is still no board flash, output hash,
+  or post-flash timing claim.
 
 ## Three Biggest Gaps
 
-### Gap 1: Verifier Signal Has Not Improved Generation
+### Gap 1: Positive Code Repair Evidence Is Too Small and Flagged
 
-Carnot can rank or reject code candidates, but `.277` showed that local SOTA
-generation is still poor. The next milestone should turn the code hallucination
-taxonomy and AUPRC signal into repair prompts, constrained candidate manifests,
-and a measured pass@1/pass@k delta under the mandated local GGUF models.
+`.278` showed that taxonomy-guided repair can move pass@1, but the result is
+not paper-grade. `.279` must replicate the result on at least 20 tasks, make the
+structured-output path explicit, and use the mandated local SOTA GGUF models.
+DCCD and BEAVER-style certificate fields should reduce schema failure without
+turning verifier acceptance into another false-positive path.
 
-### Gap 2: FR-11 Is Still a Scheduler, Not a Proven Self-Learner
+### Gap 2: Exact Solver Reasoning Needs Skill Separation
 
-The replay curriculum pilot is useful, but it does not yet prove continuous
-self-learning as required by the PRD. `.278` needs a utility-gated replay loop
-with held-out improvement, forgetting checks, and rollback semantics before any
-"learns from verification" claim can be upgraded.
+The current NL-to-Z3 row proves Z3 can run, not that the local models can
+formalize logic. `.279` should split formal reasoning into symbolization,
+countermodel construction, validity assessment, and solver execution, then use
+structured local GGUF proposals only after the exact-verifier corpus is clean.
 
-### Gap 3: Hardware Evidence Is Narrow and Incomplete
+### Gap 3: FR-11 and Hardware Both Need Non-Tautological Proof
 
-KV260 is now bounded as a functional fixed-schedule heuristic path, not a
-Boltzmann/speedup result. GateMate remains the most actionable missing hardware
-artifact, while PolarFire has a clean 500-clause score but not a larger
-continuation. `.278` should materialize GateMate constraints/bitstream/flash
-evidence and extend PolarFire carefully, with hash/timing/smoke claims only.
+FR-11 replay remains scheduler-level evidence until it survives reset, negative
+control, and forgetting checks. GateMate remains materialized but not observed
+on board. `.279` should produce one non-tautological self-learning artifact and
+one hardware-contact/flash path; both must preserve claim boundaries.
 
 ## New Research Integrated
 
-The 2026-05-23 post-`.277` sweep appended these items to
+The 2026-05-24 post-`.278` sweep appended these items to
 `research-references.md`:
 
-- **TruncProof** (arXiv:2605.13076): LL(1)-based JSON completion under token
-  budgets; informs bounded repair manifests and certificate emission.
-- **`guidance-ai/llguidance`**: practical local-first JSON/CFG/regex
-  constrained decoding for llama.cpp, vLLM, SGLang, and related runtimes;
-  informs structured candidate manifests for local GGUF runs.
-- **MAZE adaptive constrained code generation**: supports the shift from
-  "generate then verify" to "compile constraints before decoding" for code.
-- **Energy-Guided Decoding and Spilled Energy**: useful training-free energy
-  telemetry for candidate triage, but not headline evidence given prior Carnot
-  energy-telemetry limitations.
-- **Soft-Radial Projection** (arXiv:2602.03461): informs future differentiable
-  constraint-preserving self-learning, included in `.278` as a design note for
-  utility-gated replay rather than a full new neural layer.
-- **Lagrange oscillatory neural networks** (2025 / arXiv:2505.07179): reinforces
-  feasibility-first energy accounting for hardware constraint systems.
-- **Extropic/THRML and Logical Intelligence/Kona public updates**: remain useful
-  architecture context only; no local TSU/Kona access or reproducible benchmark
-  changed Carnot's evidence base.
+- **DCCD** (arXiv:2603.03305): draft-then-constrain decoding is the direct
+  structured-generation retry path for code repair and formalization.
+- **LogicSkills and LLMEval-Logic** (arXiv:2602.06533, arXiv:2605.19597):
+  exact-verifier logic work should be skill-labeled before live local GGUF
+  retries.
+- **Interwhen** (Microsoft Research, 2026): supports a partial-response monitor
+  harness that checks verifiable properties during reasoning rather than only
+  after final output.
+- **BEAVER and `llguidance`**: deterministic prefix-bound/certificate ideas and
+  local CFG/JSON constrained-output masks should be added to candidate
+  manifests before another larger repair result is trusted.
+- **KAN forgetting and KAN hardware complexity**: KAN memory is promising in
+  low-dimensional algorithmic settings but still needs explicit forgetting
+  controls and hardware-cost accounting.
+- **CEM, EBT, ARM-as-EBM, Extropic/THRML, and Kona/Aleph**: useful theory and
+  architecture context only; no `.279` experiment may claim native EBT,
+  Extropic hardware, TSU, Kona, or Aleph-equivalent performance.
 
 ## Architecture Snapshot
 
 ```text
         +---------------------------------------------------------+
-        | Phase A: structured code repair and operating point     |
+        | Phase A: constrained repair replication                 |
         |                                                         |
-        | exp2949 archive/activate                               |
-        | exp2950 taxonomy repair prompt manifest                |
-        | exp2951 structured candidate manifest adapter           |
-        | exp2952 gated SOTA repair evaluation                    |
-        | exp2953 code verifier threshold policy                  |
+        | exp2962 archive/activate                               |
+        | exp2963 DCCD repair protocol + manifest                 |
+        | exp2964 gated SOTA DCCD repair replication              |
+        | exp2965 BEAVER-style certificate audit                  |
         +---------------------------+-----------------------------+
                                     |
                                     v
         +---------------------------------------------------------+
-        | Phase B: self-learning and exact verification            |
+        | Phase B: exact solver frontier                          |
         |                                                         |
-        | exp2954 FR-11 utility-gated replay curriculum           |
-        | exp2959 NL-to-Z3 execution repair mini                  |
+        | exp2966 LogicSkills/LLMEval materializer                |
+        | exp2967 gated SOTA NL-to-Z3 DCCD formalization          |
+        | exp2968 Interwhen-style partial monitor harness         |
         +---------------------------+-----------------------------+
                                     |
                                     v
         +---------------------------------------------------------+
-        | Phase C: hardware materialization                       |
+        | Phase C: continuous self-learning guards                |
         |                                                         |
-        | exp2955 GateMate constraints materialization            |
-        | exp2956 gated GateMate n=16 bitstream build             |
-        | exp2957 gated GateMate flash/timing smoke               |
-        | exp2958 PolarFire 1000-clause scorer continuation       |
+        | exp2969 FR-11 non-tautological utility gate             |
+        | exp2970 KAN forgetting guard + memory audit             |
         +---------------------------+-----------------------------+
                                     |
                                     v
         +---------------------------------------------------------+
-        | Phase D: matrix and closeout                            |
+        | Phase D: hardware contact and closeout                  |
         |                                                         |
-        | exp2960 cross-corpus matrix v12                         |
-        | exp2961 capstone .278                                   |
+        | exp2971 GateMate board-detection triage                 |
+        | exp2972 gated GateMate flash/output-hash smoke          |
+        | exp2973 cross-corpus matrix v13                         |
+        | exp2974 capstone .279                                   |
         +---------------------------------------------------------+
 ```
 
 ## Phase Structure
 
-### Phase A: Structured Code Repair and Operating Point
+### Phase A: Constrained Repair Replication
 
-- `exp2949` archives `.277` and activates `.278`.
-- `exp2950` converts `.277` code failures, taxonomy rows, and AUPRC results into
-  a repair-prompt manifest for the mandated local GGUF models. It is a planning
-  artifact, not a pass-rate claim.
-- `exp2951` builds a structured candidate manifest adapter around JSON schema /
-  CFG constraints, preferring `llguidance` or local grammar support when present
-  and falling back to deterministic schema validation when not.
-- `exp2952` runs the actual SOTA repair evaluation only if the repair manifest
-  and structured manifest adapter are ready. It measures pass@1/pass@k deltas,
-  syntax failures, schema failures, and verifier acceptance on the same bounded
-  code row that `.277` exposed as weak.
-- `exp2953` converts the strong code AUPRC row into a threshold policy with
-  PPV/recall/cost tradeoffs and explicit deployment boundaries.
+- `exp2962` archives `.278` and activates `.279`.
+- `exp2963` turns DCCD into a local repair protocol: unconstrained draft,
+  constrained repair, deterministic schema checks, and acceptance gates.
+- `exp2964` runs the actual live SOTA replication on at least 20 code-repair
+  tasks, gated on the protocol. It must use at least one of the mandated local
+  SOTA GGUF models through the `cached_sota_pair()` pattern.
+- `exp2965` adds BEAVER-style certificate fields over the repaired candidate
+  manifests: prefix-closed constraints, explored/blocked frontier summaries,
+  schema validity, and false-accept audit status. This is a bounded certificate
+  audit, not a full BEAVER implementation.
 
-### Phase B: Self-Learning and Exact Verification
+### Phase B: Exact Solver Frontier
 
-- `exp2954` is the required continuous self-learning task. It adds a
-  utility-gated replay update, held-out improvement metric, forgetting guard,
-  and rollback rule over the `.277` replay-curriculum lineage.
-- `exp2959` repairs the blocked LLMEval-Logic/Z3 mini path by making Z3
-  execution, parseability, solver authority, and local GGUF proposal provenance
-  explicit. It must not treat LLM answers as ground truth.
+- `exp2966` materializes a LogicSkills/LLMEval-inspired exact-verifier mini set
+  with reference Z3 formalizations and separate labels for symbolization,
+  countermodel construction, and validity assessment.
+- `exp2967` reruns NL-to-Z3 under DCCD-style structured formalization, gated on
+  `exp2966`. Z3 remains the authority; LLM text is only a proposal.
+- `exp2968` builds an Interwhen-style monitor harness that extracts and checks
+  partial verifiable properties from code/logical outputs, recording coverage
+  and latency without claiming full streaming verification.
 
-### Phase C: Hardware Materialization
+### Phase C: Continuous Self-Learning Guards
 
-- `exp2955` materializes the minimal GateMate n=16 constraints and test vectors
-  that were missing in `.276`, using the corrected himbaechel/gmpack toolchain.
-- `exp2956` builds a GateMate n=16 bitstream only if `exp2955` proves the
-  constraints and toolchain are ready.
-- `exp2957` performs a bounded flash/timing smoke only if `exp2956` produces a
-  bitstream. It may report board contact, flash transcript, timing, and output
-  hash; no speedup or thermodynamic sampling claim is allowed.
-- `exp2958` extends the PolarFire scorer from 500 to 1000 clauses with hash and
-  transcript evidence. It is a scoring/hash continuation, not a broad hardware
-  acceleration claim.
+- `exp2969` is the required continuous self-learning task. It reruns FR-11
+  utility-gated replay with reset controls, random-replay controls, held-out
+  utility, and a stricter forgetting guard.
+- `exp2970` audits KAN/per-knot memory against frozen, eager, and adapter-style
+  updates, using KAN forgetting findings to decide whether the FR-11 memory path
+  should remain low-dimensional or be retired from high-dimensional claims.
 
-### Phase D: Matrix and Closeout
+### Phase D: Hardware Contact and Closeout
 
-- `exp2960` rebuilds cross-corpus matrix v12 with `.278` code-repair,
-  self-learning, solver, hardware, and claim-boundary rows.
-- `exp2961` synthesizes `.278`, classifies every artifact, records which gaps
-  closed, and recommends the next milestone direction.
+- `exp2971` diagnoses GateMate board detection and prepares a flash harness from
+  the `.278` bitstream. It may report cable/tool/IDCODE status and precondition
+  readiness only.
+- `exp2972` flashes the `.278` GateMate bitstream and records an output hash
+  only if `exp2971` proves board detection and bitstream integrity. No speedup,
+  Boltzmann, or thermodynamic sampling claim is allowed.
+- `exp2973` rebuilds cross-corpus matrix v13 with `.279` repair, solver,
+  self-learning, KAN, monitor, and GateMate rows.
+- `exp2974` closes `.279`, classifies clean/flagged/blocked rows, and recommends
+  the next milestone.
 
 ## Dependency Graph
 
 ```text
-exp2949
+exp2962
 
-exp2950
-  -> exp2952
+exp2963
+  -> exp2964
+  -> exp2965
 
-exp2951
-  -> exp2952
+exp2966
+  -> exp2967
 
-exp2952
-exp2953
-exp2954
-exp2958
-exp2959
-  -> exp2960
+exp2968
+exp2969
+  -> exp2970
 
-exp2955
-  -> exp2956
-       -> exp2957
+exp2971
+  -> exp2972
+
+exp2964
+exp2965
+exp2967
+exp2968
+exp2969
+exp2970
+exp2972
+  -> exp2973
 
 all artifacts
-  -> exp2961
+  -> exp2974
 ```
 
 Structured gates in `research-roadmap-next.yaml`:
 
-- `exp2952` gates on:
-  - `exp2950.repair_prompt_manifest_ready == true`
-  - `exp2951.structured_decode_manifest_ready == true`
-- `exp2956` gates on `exp2955.gatemate_constraints_ready == true`.
-- `exp2957` gates on `exp2956.gatemate_bitstream_built == true`.
-- `exp2960` gates on `exp2954.self_learning_utility_artifact_ready == true`.
-- `exp2961` is intentionally ungated so the milestone can close honestly even
+- `exp2964` gates on `exp2963.dccd_repair_protocol_ready == true`.
+- `exp2965` gates on `exp2963.dccd_repair_protocol_ready == true`.
+- `exp2967` gates on `exp2966.logic_frontier_materialized == true`.
+- `exp2970` gates on `exp2969.non_tautological_self_learning_ready == true`.
+- `exp2972` gates on:
+  - `exp2971.gatemate_board_detected == true`
+  - `exp2971.bitstream_sha256_verified == true`
+- `exp2973` gates on `exp2969.non_tautological_self_learning_ready == true`.
+- `exp2974` is intentionally ungated so the milestone can close honestly even
   if a branch is blocked.
 
 ## Hardware Requirements
@@ -208,25 +218,31 @@ Structured gates in `research-roadmap-next.yaml`:
 Required for live-model tasks:
 
 - Dual RTX 3090 CUDA host through `.venv/bin/python`.
-- `llama_cpp` or an equivalent local GGUF runtime with GPU offload support.
-- Mandated headline GGUFs available through the `cached_sota_pair()` pattern:
+- `llama_cpp` or equivalent local GGUF runtime with GPU offload.
+- Mandated headline GGUFs available through `cached_sota_pair()`:
   - `unsloth/Qwen3.6-35B-A3B-GGUF`
   - `unsloth/gemma-4-31B-it-GGUF`
   - `unsloth/gemma-4-26B-A4B-it-GGUF`
-- Legacy Qwen3.5-0.8B or gemma-4-E4B-it models may appear only as CPU smoke
-  tests and cannot be headline-result models.
+- Legacy Qwen3.5-0.8B or gemma-4-E4B-it models may appear only as CPU
+  smoke tests and cannot be headline-result models.
+
+Required for exact-verifier tasks:
+
+- Python `z3` import must succeed.
+- Any local structured-output backend (`llguidance`, llama.cpp grammar, JSON
+  schema validation) should be detected and reported rather than assumed.
 
 Required for hardware tasks:
 
 - GateMate A1-EVB-2M attached through DirtyJTAG.
-- OSS CAD Suite path containing `yosys`, `nextpnr-himbaechel --device CCGM1A1`,
+- OSS CAD Suite path with `yosys`, `nextpnr-himbaechel --device CCGM1A1`,
   `gmpack`, and `openFPGALoader`.
-- PolarFire board reachable over its documented SSH path with the `.277`
-  500-clause artifact available as the baseline.
+- `.278` GateMate bitstream artifact:
+  `results/experiment_2956_gatemate_n16_bitstream_build_v4.json`.
 
 Out of scope:
 
 - KV260 speedup, Boltzmann, or thermalization claims.
-- Host-side KV260 SD-card checks.
-- Extropic TSU/Z1 hardware claims.
-- Kona performance claims.
+- Extropic TSU/Z1/XTR-0 hardware claims.
+- Kona or Aleph performance claims.
+- Native EBT training claims.
