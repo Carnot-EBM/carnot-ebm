@@ -2,10 +2,19 @@
 
 Production-ready examples showing real use cases for the Carnot EBM verification framework.
 
+## Start here
+
+If this is your first time with Carnot, walk through the
+[**tutorial project**](tutorial-project/README.md) first. It's a five-script
+narrative walkthrough that takes about 30 minutes and ends with a
+production-style verify-and-repair function you can adapt for your
+own use. Then come back here for the topical examples below.
+
 ## Examples
 
 | Example | What it does |
 |---------|-------------|
+| [**tutorial-project/**](tutorial-project/README.md) | **30-minute narrative tutorial:** build a hallucination-resistant math homework helper end-to-end (basic verify → reading violations → repair loop → custom checks → production wrap) |
 | [verify_api_responses.py](verify_api_responses.py) | Verify LLM API responses for arithmetic and logical correctness |
 | [code_review_pipeline.py](code_review_pipeline.py) | Verify LLM-generated Python code for type errors, undefined variables, and structural issues |
 | [batch_verify.py](batch_verify.py) | Batch-verify a JSON file of question/answer pairs and produce a summary report |
@@ -15,12 +24,14 @@ Production-ready examples showing real use cases for the Carnot EBM verification
 ## Prerequisites
 
 ```bash
-# Install carnot in development mode
-pip install -e ".[dev]"
+# Install from PyPI (the canonical install)
+pip install carnot-ebm
 
-# Or install from PyPI (when available)
-pip install carnot
+# Or, if you're working from a clone, install in editable mode with dev extras
+pip install -e ".[dev]"
 ```
+
+Python 3.11+ is required. All examples run CPU-only; no GPU required.
 
 ## Running
 
