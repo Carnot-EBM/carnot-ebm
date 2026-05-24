@@ -1984,3 +1984,60 @@ a successful flash/contact smoke without sampler claims or a blocked verdict wit
 the exact failing command.
 
 **Implementation status:** Planned (Exp 2957)
+
+---
+
+### REQ-HW-078
+
+**Title:** Exp 2971 GateMate board detection preflight MUST verify contact and prepare flash command without flashing
+
+**Description:**
+Experiment 2971 MUST diagnose the GateMate A1-EVB-2M DirtyJTAG contact state
+after Exp 2957 blocked at board detection. The experiment MUST check
+`openFPGALoader` availability, DirtyJTAG/GateMate USB visibility, likely
+permission/device-node evidence, Exp 2956 bitstream presence, and the local
+bitstream SHA256 before deciding whether flash preconditions are ready. It MUST
+run `openFPGALoader -c dirtyJtag --detect` and capture the raw transcript. If
+the transcript contains the GateMate IDCODE/metadata and the Exp 2956 hash
+matches, the artifact MUST prepare the exact
+`openFPGALoader -c dirtyJtag -b olimex_gatemateevb <bitstream>` command and set
+`gatemate_flash_preconditions_ready=true`, but MUST NOT execute that flash
+command or claim a successful board run. If detection or hash verification
+fails, the artifact MUST preserve the first actionable failing command and
+transcript path.
+
+**Acceptance criteria:**
+- `results/experiment_2971_gatemate_board_detection_flash_harness_v3.json` is
+  generated with `inference_substrate="hardware_preflight"`.
+- The artifact includes `honest_verdict`, `preconditions_checked`,
+  `gatemate_board_detected`, `bitstream_sha256_verified`,
+  `gatemate_flash_preconditions_ready`, `detection_commands`,
+  `detection_transcript_paths`, `bitstream_path`, `bitstream_sha256`,
+  `flash_command`, `failure_command`, `failure_excerpt`, `files_changed`,
+  `inference_substrate`, and `duration_s`.
+- Successful preflight requires a matching Exp 2956 bitstream SHA256, a
+  successful DirtyJTAG detect transcript that identifies `colognechip` /
+  `GateMate Series` / `GM1Ax`, and a flash command string only; the flash
+  command is never executed.
+- Blocked artifacts preserve the earliest actionable blocker among missing
+  `openFPGALoader`, missing USB visibility, missing or mismatched Exp 2956
+  bitstream, and failed board detection.
+
+**Implementation status:** Planned (Exp 2971)
+
+---
+
+### SCENARIO-HW-078
+
+**Scenario:** GateMate detection preflight emits a ready flash command or a precise block.
+
+**Given:** Exp 2956 reports a built n=16 GateMate bitstream and the host can run
+non-destructive DirtyJTAG discovery commands.
+**When:** Exp 2971 checks tool/USB/permission preconditions, verifies the local
+bitstream SHA256, and runs `openFPGALoader -c dirtyJtag --detect`.
+**Then:** It writes the v3 hardware-preflight JSON with raw detection
+transcripts, the exact flash command to run later when ready, and either
+`gatemate_flash_preconditions_ready=true` without flashing or a blocked verdict
+with the first failing command and transcript path.
+
+**Implementation status:** Planned (Exp 2971)

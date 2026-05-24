@@ -1,0 +1,82 @@
+{
+  "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+  "bitstream_sha256_verified": true,
+  "detection_commands": [
+    "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect",
+    "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect"
+  ],
+  "detection_transcript_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2971_gatemate_board_detection_flash_harness_v3/detect_1.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2971_gatemate_board_detection_flash_harness_v3/detect_2.txt"
+  ],
+  "duration_s": 0.037994,
+  "failure_command": "",
+  "failure_excerpt": "",
+  "files_changed": [
+    "openspec/capabilities/fpga/spec.md",
+    "python/carnot/experiment_2971_gatemate_board_detection_flash_harness.py",
+    "tests/python/test_experiment_2971_gatemate_board_detection_flash_harness.py",
+    "results/experiment_2971_gatemate_board_detection_flash_harness_v3.json"
+  ],
+  "flash_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "gatemate_board_detected": true,
+  "gatemate_flash_preconditions_ready": true,
+  "honest_verdict": "complete: gatemate_flash_preconditions_ready",
+  "inference_substrate": "hardware_preflight",
+  "preconditions_checked": [
+    {
+      "available": true,
+      "command": "command -v openFPGALoader",
+      "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+      "reason": "",
+      "resource": "openFPGALoader"
+    },
+    {
+      "available": true,
+      "command": "lsusb",
+      "output": "1d6b:0003 (bus 8, device 1)\n1d6b:0002 (bus 7, device 1)\n1d6b:0003 (bus 6, device 1)\n1d6b:0002 (bus 5, device 1)\n0bda:8153 (bus 4, device 5) path: 2.4.5\n047d:809e (bus 4, device 4) path: 2.4\n0bda:8157 (bus 4, device 3) path: 2.2\n8087:0b40 (bus 4, device 2) path: 2\n1d6b:0003 (bus 4, device 1)\n0489:e10a (bus 3, device 4) path: 5\n32ac:001c (bus 3, device 3) path: 3\n047d:809b (bus 3, device 9) path: 2.4.8\n2109:8888 (bus 3, device 13) path: 2.4.2.5\n05e3:0749 (bus 3, device 11) path: 2.4.2.4\n0bda:8153 (bus 3, device 12) path: 2.4.2.3.2\n1a40:0801 (bus 3, device 10) path: 2.4.2.3\n2109:2817 (bus 3, device 8) path: 2.4.2\n047d:809f (bus 3, device 7) path: 2.4\n1209:c0ca (bus 3, device 14) path: 2.3\n1514:2008 (bus 3, device 5) path: 2.1\n1d5c:5801 (bus 3, device 2) path: 2\n1d6b:0002 (bus 3, device 1)\n1d6b:0003 (bus 2, device 1)\n27c6:609c (bus 1, device 2) path: 1\n1d6b:0002 (bus 1, device 1)",
+      "reason": "",
+      "resource": "dirtyjtag_usb_visibility",
+      "returncode": 0
+    },
+    {
+      "available": true,
+      "current_user_rw": true,
+      "gid": 984,
+      "mode_octal": "0o660",
+      "path": "/dev/bus/usb/003/014",
+      "reason": "",
+      "resource": "dirtyjtag_usb_device_node",
+      "uid": 0
+    },
+    {
+      "available": true,
+      "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "expected_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2956_gatemate_n16_bitstream_build_v4.json",
+      "ready": true,
+      "reason": "",
+      "resource": "exp2956_gatemate_bitstream"
+    },
+    {
+      "actual_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "available": true,
+      "expected_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "resource": "exp2956_bitstream_sha256",
+      "verified": true
+    },
+    {
+      "attempts": 2,
+      "available": true,
+      "command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag --detect",
+      "resource": "gatemate_board_detection",
+      "transcript_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2971_gatemate_board_detection_flash_harness_v3/detect_1.txt",
+        "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2971_gatemate_board_detection_flash_harness_v3/detect_2.txt"
+      ]
+    }
+  ],
+  "run_date": "20260524"
+}
