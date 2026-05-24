@@ -7221,3 +7221,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: FR-11 Utility-Gated Replay Curriculum v2 (✅ Complete) — honest_verdict=complete: utility_gated_replay_improved_heldout_without_forgetting; results/experiment_2954_fr11_utility_gated_replay_curriculum_v2.json
 - 2026-05-24: GateMate Constraints Materialization v4 (✅ Complete) — honest_verdict=complete: gatemate_constraints_materialized; results/experiment_2955_gatemate_constraints_materialization_v4.json
 - 2026-05-24: Gated GateMate n=16 Bitstream Build v4 (⚠️ Blocked) — honest_verdict=blocked_gatemate_pnr_failed; results/experiment_2956_gatemate_n16_bitstream_build_v4.json
+- 2026-05-24: Gated GateMate n=16 Bitstream Build v4 (✅ Complete) — honest_verdict=complete: gatemate_n16_bitstream_built; results/experiment_2956_gatemate_n16_bitstream_build_v4.json
