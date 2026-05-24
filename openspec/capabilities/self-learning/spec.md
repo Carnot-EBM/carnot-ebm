@@ -7102,3 +7102,83 @@ an `honest_verdict` beginning with `blocked_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2995 | Implemented (`python/carnot/eval/fr11_verifier_grounded_trace_memory_v2.py`) | Implemented (`tests/python/test_experiment_2995_fr11_verifier_grounded_trace_memory_v2.py`) |
+
+## REQ-LEARN-3007: FR-11 Attractor-Inspired Trace Memory Stability
+
+**Given** Exp 2995 made verifier-grounded trace memory ready in a narrow
+machine-gated sense, Exp 3005 produced an exact-checked validator-tree corpus,
+and Exp 3006 produced a fixed-point energy diagnostic without making a native
+EqR claim
+**When** Exp 3007 stress-tests FR-11 trace memory across repeated replay/update
+cycles
+**Then** it SHALL build a trace-memory candidate set from the Exp 2995 selected
+memories, Exp 3005 exact validator rows, and Exp 3006 diagnostic rows.
+**And** it SHALL accept memory updates only when independent exact verifier
+evidence and held-out verifier-task performance support the update.
+**And** it SHALL evaluate convergence and bounded drift across repeated
+replay/update cycles without treating self-reported memory utility as success.
+**And** it SHALL include negative controls for irrelevant traces, contradicted
+constraints, and shuffled validator labels.
+**And** it SHALL include forgetting checks on held-out verifier tasks that
+should not degrade after accepted memory updates.
+**And** it SHALL state that the diagnostic is attractor-inspired only and does
+not claim a native local attractor model.
+
+The terminal artifact SHALL be
+`results/experiment_3007_fr11_attractor_trace_memory_stability_v1.json` and
+SHALL include `trace_memory_stability_ready`,
+`continuous_self_learning_task`,
+`independent_self_learning_boundary_preserved`, `n_memory_candidates`,
+`convergence_guard_passed`, `drift_guard_passed`,
+`negative_control_rejected`, `forgetting_guard_passed`, `heldout_delta`,
+`native_attractor_model_claim_made`, and `honest_verdict`.
+
+### REQ-LEARN-3007 Sub-requirements
+
+- REQ-LEARN-3007-1: The evaluator SHALL fail closed when Exp 2995, Exp 3005, or
+  Exp 3006 readiness evidence is absent or malformed.
+- REQ-LEARN-3007-2: Candidate memories SHALL record their source experiment,
+  exact verifier authorities, verifier label/signature, and whether the
+  evidence is machine-checked.  Candidate extraction SHALL exclude LLM-only
+  judgments.
+- REQ-LEARN-3007-3: Update acceptance SHALL be controlled by exact verifier
+  evidence and held-out verifier-task score.  Self-reported memory utility
+  fields SHALL be recorded as non-authoritative and SHALL NOT be counted as the
+  promotion success metric.
+- REQ-LEARN-3007-4: The convergence guard SHALL require repeated replay/update
+  cycles to stabilize their accepted memory IDs and held-out score.
+- REQ-LEARN-3007-5: The drift guard SHALL reject unrelated signatures,
+  contradicted constraints, and validator labels that no longer match the exact
+  validator evidence.
+- REQ-LEARN-3007-6: The forgetting guard SHALL compare held-out verifier-task
+  score before and after accepted memory updates and SHALL fail if the update
+  degrades the retained held-out task score.
+- REQ-LEARN-3007-7: `trace_memory_stability_ready` SHALL be true only when the
+  independent self-learning boundary is preserved, memory candidates exist,
+  convergence and drift guards pass, negative controls are rejected, the
+  forgetting guard passes, `heldout_delta > 0`, and
+  `native_attractor_model_claim_made=false`.
+
+### SCENARIO-LEARN-3007: Stable Trace Memory Attractor Diagnostic Passes
+
+**Given** ready Exp 2995, Exp 3005, and Exp 3006 artifacts
+**When** Exp 3007 builds exact-verifier memory candidates and runs repeated
+replay/update cycles
+**Then** the accepted memory set converges, drift remains bounded, negative
+controls are rejected, held-out verifier-task score improves, forgetting score
+does not degrade, and `trace_memory_stability_ready=true`.
+
+### SCENARIO-LEARN-3007-BLOCKED: Missing Stability Evidence Fails Closed
+
+**Given** any required upstream artifact is missing or not ready
+**When** Exp 3007 runs
+**Then** it writes the required artifact fields with
+`trace_memory_stability_ready=false`, `n_memory_candidates=0`,
+`heldout_delta=0.0`, failed guards, and an `honest_verdict` beginning with
+`blocked_`.
+
+## Implementation Status (REQ-LEARN-3007)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3007 | Implemented (`python/carnot/eval/fr11_attractor_trace_memory_stability_v1.py`) | Implemented (`tests/python/test_experiment_3007_fr11_attractor_trace_memory_stability_v1.py`) |
