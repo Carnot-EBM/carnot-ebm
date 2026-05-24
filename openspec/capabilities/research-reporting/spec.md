@@ -6745,3 +6745,72 @@ promotion, and an `honest_verdict` that states readiness and counts.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3010 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v16_3010.py`) | Implemented (`tests/python/test_experiment_3010_cross_corpus_matrix_v16.py`) |
+
+### REQ-REPORT-3011: Milestone 2026.05.282 Terminal Capstone
+
+The repository shall provide an Exp 3011 milestone capstone generator that
+writes `results/experiment_3011_capstone_v282.json` using only checked-in
+upstream JSON artifacts and checked-in claim-boundary documents. The generator
+MUST read `results/experiment_3010_cross_corpus_matrix_v16.json`,
+`results/experiment_2999_capstone_v281.json`, and every available `.282`
+artifact from Exp 3000 through Exp 3009. It MUST NOT rerun live inference,
+verifier scoring, solver execution, synthesis, board flashing, readback,
+hardware smoke tests, the conductor, or external publication tooling.
+
+The capstone MUST use matrix v16 as the authority for row status, while still
+counting the terminal task set explicitly. It MUST classify Exp 3000 through
+Exp 3010 as `clean`, `flagged`, `blocked`, `gated-skipped`, `missing`,
+`pilot-only`, or `projection-only`, and MUST keep carried-forward matrix
+blockers visible separately from task-scoped status rows. Missing Exp 3009
+evidence MUST remain visible even when its task row is classified
+`gated-skipped` because Exp 3008 did not open the host-visible IO gate.
+
+The capstone MUST decide whether `.282` repaired the `.281` blockers without
+promoting claim boundaries. Exp 3003 MUST repair the Exp 2991 repair-methodology
+blocker only when its matrix row is clean. Exp 3004 MAY repair only the
+AquaForte/BEAVER substrate-provenance blocker when its matrix row is clean; it
+MUST NOT be treated as solving the BEAVER task itself. Exp 3007 MUST remain
+bounded to verifier-grounded FR-11 trace-memory stability and MUST NOT promote
+flagged held-out or tautology evidence. Exp 3008 and Exp 3009 MUST remain
+bounded to GateMate host-visible IO and SSQA RTL/PnR/resource evidence without
+sampler, speedup, thermodynamic, KV260, TSU, Kona, or hardware-sovereignty
+claims.
+
+The capstone MUST set `paper_ready=false` unless every claimed result has
+durable verifier evidence, no false SOTA substitution, no live/substrate
+ambiguity, no unresolved flagged/blocked/gated-skipped/missing matrix row, and
+no hardware claim-boundary breach. External publication MUST remain disallowed
+by the artifact even if a future synthetic input makes `paper_ready=true`.
+When a conductor prompt assigns ops reconciliation to a separate step, the
+generator MUST leave `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md` unchanged.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`n_tasks_evaluated`, `repaired_rows`, `flagged_rows`, `blocked_rows`,
+`gated_skipped_rows`, `missing_rows`, `publication_action_allowed`,
+`next_milestone_recommendation`, and `honest_verdict`. It MAY include
+task-scoped rows, matrix-wide status lists, repaired and unrepaired blocker
+decisions, source checksums, paper-readiness blockers, no-new-execution
+booleans, and measured `duration_s` as long as every value is derived from
+upstream artifacts or checked-in claim-boundary documents.
+
+#### SCENARIO-REPORT-3011: Capstone Synthesizes .282 Go/No-Go Without Publication
+
+**Given** matrix v16 is present and reports `matrix_v16_ready=true`
+**And** the `.281` capstone is present
+**And** Exp 3000 through Exp 3009 artifacts are present, flagged, blocked,
+gated-skipped, projection-only, pilot-only, or honestly absent
+**When** the Exp 3011 capstone generator runs
+**Then** it writes `results/experiment_3011_capstone_v282.json` with
+`capstone_ready=true`, task classifications for Exp 3000 through Exp 3010,
+matrix-wide flagged/blocked/gated-skipped/missing row lists, Exp 3004 promoted
+only as substrate provenance, Exp 3003/3007/3008/3009 kept non-promotable,
+`paper_ready=false`, `publication_action_allowed=false`, an exact next
+milestone recommendation, no ops-doc mutations, and an `honest_verdict` that
+states capstone readiness and paper readiness.
+
+## Implementation Status (REQ-REPORT-3011)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3011 | Implemented (`python/carnot/reporting/capstone_v282_3011.py`) | Implemented (`tests/python/test_experiment_3011_capstone_v282.py`) |
