@@ -10438,6 +10438,13 @@ Not content itself, but signals to prioritise what to read next.
   unusual LLM outputs (the Exp 88 failure mode).
 - **When to pursue:** When agentic verification becomes the focus.
 
+### Sub-Quadratic Generator Substrate for Long-Context Verification — Phase 3 Watchlist
+- **What:** Use a sub-quadratic open-weight model (Mamba-2, Jamba 1.5, Codestral Mamba, Falcon Mamba, RWKV-7) as a candidate generator in place of the current Transformer GGUFs, enabling long-context verification (multi-document, full-repo code) without the O(N²) KV-cache bottleneck.
+- **Why deferred:** Carnot's current experiments are <8K tokens; the verifier ensemble is the load-bearing layer, not the generator substrate. Phase 1 ship + paper-v6 submission take priority before any architectural substrate decisions.
+- **Origin:** 2026-05-24 outer-loop analysis of detailed external assessment of SubQuadratic's ARC-AGI architecture (linear 12M-token context via state space duality + Delta Rule). The substrate-agnosticism question — does Carnot's k=15 verifier ensemble produce the same AUROC on sub-quadratic generator outputs as on Transformer outputs? — is the load-bearing empirical question to answer first.
+- **When to pursue:** AFTER Phase 1 ships (one external reproducer remaining) AND paper-v6 submits. Then becomes a Phase 3 architectural decision: pick the sub-quadratic backbone for the DAE-DEBM encoder + long-context candidate generation. Decentralization Rule 1 + 5 favor it (all candidate models above are open-weight + hardware-portable). Sibling track: RotorQuant for KV-cache compression of existing Transformer GGUFs (less invasive, but quadratic asymptote bites past ~1M tokens).
+- **Not queued as an experiment:** parallel research tracks are a tax on operator attention. This entry is the parking spot.
+
 ### Mamba / State Space Models — Constraint State Propagation
 - **What:** Linear-complexity sequence models. Fixed-size state compression
   enables practically infinite context without KV cache VRAM spikes.
