@@ -6101,3 +6101,4 @@ web search:
 | 2026-05-23 22:41 UTC | SOTA Code Failure Taxonomy Repair Prompt Manifest  | OK | 81 passed in 3.77s |
 | 2026-05-23 23:56 UTC | Structured Candidate Manifest Adapter v1 | OK | 81 passed in 3.04s |
 | 2026-05-24 00:18 UTC | Gated SOTA Taxonomy-Guided Code Repair Evaluation  | OK | 81 passed in 3.68s |
+| 2026-05-24 00:31 UTC | Code Verifier Threshold Policy v1 | OK | 81 passed in 4.74s |
