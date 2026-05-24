@@ -6361,3 +6361,59 @@ and next milestone recommendations that preserve those claim boundaries.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2986 | Planned (`python/carnot/reporting/cross_corpus_matrix_v14_2986.py`) | Planned (`tests/python/test_experiment_2986_cross_corpus_matrix_v14.py`) |
+
+### REQ-REPORT-2987: Milestone .280 Terminal Capstone
+
+The repository shall provide an Exp 2987 milestone capstone generator that
+writes `results/experiment_2987_capstone_v280.json` by aggregating only local
+upstream artifacts from milestone `2026.05.280`, including every available
+artifact from Exp 2975 through Exp 2986 and matrix v14 when present. The
+generator MUST NOT rerun live inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, or the conductor.
+
+The capstone MUST classify local artifacts as `clean`, `flagged`, `blocked`,
+`missing`, `gated-skipped`, `pilot-only`, or `projection-only`. It MUST verify
+each loaded artifact's deliverable path, `honest_verdict`, required claim
+booleans, model-compliance evidence when applicable, hardware claim-boundary
+fields when applicable, and prior-failure outcome as recorded by matrix v14.
+
+The terminal artifact MUST include `honest_verdict`, `milestone="2026.05.280"`,
+`paper_ready`, `headline_outcome`, `clean_artifacts`, `flagged_artifacts`,
+`blocked_artifacts`, `missing_artifacts`, `gated_skipped_artifacts`,
+`pilot_only_artifacts`, `projection_only_artifacts`, `gaps_closed`,
+`gaps_remaining`, `repair_ready`, `solver_ready`, `fr11_ready`,
+`hardware_ready`, `model_compliance_summary`,
+`hardware_claim_boundary_summary`, `retirement_recommendations`,
+`next_milestone_recommendations`,
+`inference_substrate="aggregation_from_upstream_artifacts"`, and measured
+`duration_s`. It MAY include artifact audit rows, source checksums, matrix row
+counts, and no-new-execution booleans as long as every value is derived from
+local artifacts.
+
+`paper_ready` MUST be true only when all of these local-evidence gates pass:
+repair is ready from a clean intent-preserving repair rerun, solver feedback is
+ready without unresolved artifact flags, FR-11 independent self-learning is
+ready, GateMate hardware readback or smoke-vector evidence is ready, no
+required capstone source is missing or blocked, and matrix v14 reports no claim
+boundary violations. Projection-only and pilot-only artifacts MUST remain out
+of headline claims.
+
+#### SCENARIO-REPORT-2987: Capstone Closes .280 Without Promoting Flagged Rows
+
+**Given** every available `.280` artifact from Exp 2975 through Exp 2986 is
+present or honestly absent
+**And** matrix v14 records clean FR-11 evidence but blocked repair and hardware
+rows plus flagged solver model-compliance evidence
+**When** the Exp 2987 capstone generator runs
+**Then** it writes `results/experiment_2987_capstone_v280.json` with all
+required fields, `paper_ready=false`, `repair_ready=false`,
+`solver_ready=false`, `fr11_ready=true`, `hardware_ready=false`, classification
+lists copied from local artifact and matrix evidence, explicit model and
+hardware claim-boundary summaries, next-milestone recommendations, and
+retirement recommendations for repeated failed or overclaimed scopes.
+
+## Implementation Status (REQ-REPORT-2987)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2987 | Planned (`python/carnot/reporting/capstone_v280_2987.py`) | Planned (`tests/python/test_experiment_2987_capstone_v280.py`) |
