@@ -1,0 +1,45 @@
+{
+  "all_baseline_candidates_fail": true,
+  "all_items_have_tests": true,
+  "all_reference_solutions_pass": true,
+  "artifact": "experiment_2990_verifier_backed_hard_code_stress_manifest_v1",
+  "duration_s": 0.011755,
+  "flaky_items": [],
+  "hard_code_stress_set_ready": true,
+  "hard_generation_sources": [
+    "research-references.md:Post-.280 HardTests/HARDTESTGEN",
+    "results/experiment_2964_sota_dccd_repair_replication_v1.json:selected_repair_set",
+    "results/experiment_2977_sota_intent_preserving_code_repair_v1.json:blocked_cpu_smoke",
+    "synthetic_edge_case_fixtures:REQ-CODE-2990"
+  ],
+  "honest_verdict": "ready: verifier-backed hard-code stress set validated",
+  "inference_substrate": "deterministic_executable_manifest_generation",
+  "manifest_path": "datasets/repair_hard/manifest_v1.jsonl",
+  "manifest_sha256": "95e6c8187ae3328ea833892395cc8eec3fe8f6e1032892146d45c3a034c710f7",
+  "n_items": 24,
+  "rejected_item_ids": [],
+  "required_artifact_fields": [
+    "hard_code_stress_set_ready",
+    "manifest_path",
+    "n_items",
+    "all_items_have_tests",
+    "all_baseline_candidates_fail",
+    "all_reference_solutions_pass",
+    "flaky_items",
+    "verifier_transcript_paths",
+    "hard_generation_sources",
+    "honest_verdict"
+  ],
+  "run_date": "20260524",
+  "schema": "carnot.verifier_backed_hard_code_stress_manifest.v1",
+  "tests_run": [],
+  "transcript_sha256": "5d7d2bd9878133bba3d425ad2c3b4d170e18f694675040c41f56fed6d3845763",
+  "validation_commands": [
+    ".venv/bin/pytest tests/python/test_experiment_2990_hard_code_stress_manifest.py -q",
+    ".venv/bin/pytest tests/python -q",
+    "python scripts/check_spec_coverage.py"
+  ],
+  "verifier_transcript_paths": [
+    "results/verifier_transcripts/experiment_2990/hard_code_stress_transcript_v1.jsonl"
+  ]
+}

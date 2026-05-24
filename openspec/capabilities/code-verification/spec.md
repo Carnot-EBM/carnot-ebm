@@ -1320,6 +1320,42 @@ computes DCCD-minus-baseline deltas, and keeps
 `dccd_repair_replication_clean=false` unless the pre-registered sample-size,
 improvement, and false-accept gates all clear.
 
+### REQ-CODE-2990: Verifier-Backed Hard-Code Stress Manifest
+
+The repository shall provide a deterministic hard-code stress manifest for the
+next SOTA repair rerun without running a headline LLM repair experiment. The
+builder MUST:
+
+- write a JSONL manifest such as `datasets/repair_hard/manifest_v1.jsonl`
+  containing 20-40 executable code-repair items;
+- include, for every item, prompt provenance, an executable test suite, a
+  baseline incorrect candidate, a reference solution or expected behavior, and
+  edge-case rationale;
+- execute each item's verifier tests against both the baseline candidate and
+  the reference solution, accepting only items where the baseline fails at
+  least one deterministic test and the reference passes every test;
+- reject flaky, nondeterministic, or non-distinguishing items instead of
+  including them in the ready set;
+- record replayable verifier transcripts or pass/fail hashes for every item;
+  and
+- write
+  `results/experiment_2990_verifier_backed_hard_code_stress_manifest_v1.json`
+  with `hard_code_stress_set_ready`, `manifest_path`, `n_items`,
+  `all_items_have_tests`, `all_baseline_candidates_fail`,
+  `all_reference_solutions_pass`, `flaky_items`,
+  `verifier_transcript_paths`, `hard_generation_sources`, `honest_verdict`,
+  validation commands, and measured `duration_s`.
+
+### SCENARIO-CODE-2990: Hard Stress Items Are Independently Executable
+
+Given a curated or synthesized set of code-repair stress items,
+When the Exp 2990 manifest builder validates the set,
+Then it writes the manifest and terminal result artifact only when every
+included item has executable deterministic tests, every baseline candidate
+fails at least one verifier assertion, every reference solution passes, no
+flaky item remains in the ready set, and the artifact points to replayable
+transcripts for the verifier evidence.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for
@@ -1488,6 +1524,7 @@ generation or headline metric is claimed.
 | REQ-CODE-2963 | Implemented (`python/carnot/eval/dccd_repair_protocol_manifest.py`) |
 | REQ-CODE-2964 | Implemented (`python/carnot/eval/sota_dccd_repair_replication.py`) |
 | REQ-CODE-2965 | Implemented (`python/carnot/eval/beaver_style_repair_certificate.py`) |
+| REQ-CODE-2990 | Implemented (`python/carnot/eval/hard_code_stress_manifest.py`) |
 | REQ-CODE-2890 | Implemented (`python/carnot/verify/code_structural_dependency_verifier.py`) |
 | REQ-REPAIR-020 | Implemented |
 | REQ-REPAIR-021 | Implemented |
