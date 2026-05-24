@@ -1,0 +1,198 @@
+{
+  "artifact": "experiment_2982_fr11_independent_metric_utility_gate_v4",
+  "continuous_self_learning_task": true,
+  "duration_s": 0.000548819895,
+  "forgetting_guard_passed": true,
+  "fr11_independent_metrics_evaluated": true,
+  "fr11_independent_self_learning_ready": true,
+  "frozen_baseline_metrics": {
+    "pass_at_1": 0.333333333333,
+    "schema_failure_rate": 0.0,
+    "solver_verified_accuracy": 0.333333333333,
+    "syntax_failure_rate": 0.0,
+    "verifier_false_accept_rate": 0.0
+  },
+  "heldout_independent_delta_vs_random": {
+    "pass_at_1": 0.178928571429,
+    "schema_failure_rate": 0.122857142857,
+    "solver_verified_accuracy": 0.098571428572,
+    "syntax_failure_rate": 0.099285714285,
+    "verifier_false_accept_rate": 0.053928571428
+  },
+  "honest_verdict": "complete: fr11_independent_self_learning_ready",
+  "independent_metrics": [
+    {
+      "direction": "higher_is_better",
+      "evidence": "code held-out execution pass rate",
+      "name": "pass_at_1"
+    },
+    {
+      "direction": "higher_is_better",
+      "evidence": "logic rows accepted by a solver-consistent guard",
+      "name": "solver_verified_accuracy"
+    },
+    {
+      "direction": "lower_is_better",
+      "evidence": "code parser/static failure rate",
+      "name": "syntax_failure_rate"
+    },
+    {
+      "direction": "lower_is_better",
+      "evidence": "structured-output failure rate",
+      "name": "schema_failure_rate"
+    },
+    {
+      "direction": "lower_is_better",
+      "evidence": "verifier acceptance risk on failing rows",
+      "name": "verifier_false_accept_rate"
+    }
+  ],
+  "inference_substrate": "aggregation_and_deterministic_replay",
+  "leakage_audit": {
+    "deterministic_reset_controls": {
+      "frozen_baseline": true,
+      "negative_control": true,
+      "random_replay": true
+    },
+    "exp2969_ready": true,
+    "exp2970_ready": true,
+    "kan_acceleration_claimed": false,
+    "kan_evidence_scope": "bounded_memory_forgetting_only",
+    "kan_selected_policy": "per_knot_importance_update",
+    "matrix_v13_exp2969_headline_eligible": false,
+    "matrix_v13_exp2969_row_class": "flagged",
+    "negative_control_improved": false,
+    "prompt_requested_exp2970_short_path_present": false,
+    "reported_metric_names": [
+      "pass_at_1",
+      "solver_verified_accuracy",
+      "syntax_failure_rate",
+      "schema_failure_rate",
+      "verifier_false_accept_rate"
+    ],
+    "selection_metric": "exp2969.replay_weighted_heldout_utility",
+    "selection_metric_reused_as_reported_metric": false,
+    "source_sha256": {
+      "exp2969": "abc6e4b4b9b383f107cac796c86b99dcd83e097db93400d8142822462c0896c9",
+      "exp2970": "7779857fe0c036b85e4842e1c4b925ed84cee5a7964514b91cf9f939bf283373",
+      "exp2973": "6c1ccc6b948effd70b496ad27016abeb5a0ba7f4968fd86833c747453a5aaf1c"
+    },
+    "used_exp2970_memory_audit_path": "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json"
+  },
+  "negative_control_delta": {
+    "pass_at_1": 0.0,
+    "schema_failure_rate": 0.0,
+    "solver_verified_accuracy": 0.0,
+    "syntax_failure_rate": 0.0,
+    "verifier_false_accept_rate": 0.0
+  },
+  "new_replay_metrics": {
+    "pass_at_1": 0.3575,
+    "schema_failure_rate": 0.02,
+    "solver_verified_accuracy": 0.27,
+    "syntax_failure_rate": 0.115,
+    "verifier_false_accept_rate": 0.0675
+  },
+  "no_identical_metric_flag": true,
+  "policy_weights": {
+    "frozen_baseline": {
+      "logic_guard": 0.333333333333,
+      "threshold_policy": 0.333333333333,
+      "verified_pass": 0.333333333333
+    },
+    "negative_control": {
+      "extraction_repair": 0.142857142857,
+      "logic_guard": 0.142857142857,
+      "logic_repair": 0.142857142857,
+      "runtime_repair": 0.142857142857,
+      "syntax_repair": 0.142857142857,
+      "threshold_policy": 0.142857142857,
+      "verified_pass": 0.142857142857
+    },
+    "new_independent_metric_replay": {
+      "extraction_repair": 0.02,
+      "logic_guard": 0.25,
+      "logic_repair": 0.1,
+      "runtime_repair": 0.03,
+      "syntax_repair": 0.1,
+      "threshold_policy": 0.15,
+      "verified_pass": 0.35
+    },
+    "prior_fr11": {
+      "logic_guard": 0.142857142857,
+      "logic_repair": 0.3250641574,
+      "syntax_repair": 0.246364414029,
+      "threshold_policy": 0.142857142857,
+      "verified_pass": 0.142857142857
+    },
+    "random_replay": {
+      "extraction_repair": 0.142857142857,
+      "logic_guard": 0.142857142857,
+      "logic_repair": 0.142857142857,
+      "runtime_repair": 0.142857142857,
+      "syntax_repair": 0.142857142857,
+      "threshold_policy": 0.142857142857,
+      "verified_pass": 0.142857142857
+    }
+  },
+  "prior_fr11_metrics": {
+    "pass_at_1": 0.142857142857,
+    "schema_failure_rate": 0.0,
+    "solver_verified_accuracy": 0.207869974337,
+    "syntax_failure_rate": 0.246364414029,
+    "verifier_false_accept_rate": 0.155688622755
+  },
+  "random_replay_metrics": {
+    "pass_at_1": 0.178571428571,
+    "schema_failure_rate": 0.142857142857,
+    "solver_verified_accuracy": 0.171428571428,
+    "syntax_failure_rate": 0.214285714285,
+    "verifier_false_accept_rate": 0.121428571428
+  },
+  "run_date": "20260524",
+  "schema": "carnot.fr11.independent_metric_utility_gate.v4",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp2969",
+      "fields_imported": [
+        "non_tautological_self_learning_ready",
+        "forgetting_guard_passed",
+        "new_heldout_utility",
+        "final_replay_weights"
+      ],
+      "path": "results/experiment_2969_fr11_non_tautological_utility_gate_v3.json",
+      "present": true,
+      "required": true,
+      "role": "prior_fr11_update_selection_gate",
+      "sha256": "abc6e4b4b9b383f107cac796c86b99dcd83e097db93400d8142822462c0896c9"
+    },
+    {
+      "experiment_id": "exp2970",
+      "fields_imported": [
+        "kan_forgetting_guard_ready",
+        "selected_policy",
+        "forgetting_delta_by_policy",
+        "no_synthesis_claim",
+        "no_analog_claim"
+      ],
+      "path": "results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "bounded_kan_memory_forgetting_guard",
+      "sha256": "7779857fe0c036b85e4842e1c4b925ed84cee5a7964514b91cf9f939bf283373"
+    },
+    {
+      "experiment_id": "exp2973",
+      "fields_imported": [
+        "matrix_rows"
+      ],
+      "path": "results/experiment_2973_cross_corpus_matrix_v13.json",
+      "present": true,
+      "required": false,
+      "role": "matrix_v13_headline_flag_context",
+      "sha256": "6c1ccc6b948effd70b496ad27016abeb5a0ba7f4968fd86833c747453a5aaf1c"
+    }
+  ],
+  "tests_run": [],
+  "update_selection_metric": "exp2969.replay_weighted_heldout_utility"
+}

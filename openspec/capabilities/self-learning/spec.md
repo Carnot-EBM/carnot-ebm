@@ -6882,3 +6882,75 @@ an `honest_verdict` beginning with `blocked_`, no selected policy, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-2970 | Implemented (`python/carnot/eval/fr11_kan_forgetting_guard_memory_audit_v1.py`) | Implemented (`tests/python/test_experiment_2970_kan_forgetting_guard_memory_audit_v1.py`) |
+
+## REQ-LEARN-2982: FR-11 Independent-Metric Utility Gate Re-Run
+
+**Given** Exp 2969 reported FR-11 replay readiness but matrix v13 still flagged
+the result because the independent held-out metric evidence was weak
+**When** Exp 2982 re-runs the continuous self-learning gate from checked-in
+artifacts
+**Then** it SHALL identify Exp 2969's update-selection metric separately from
+the reported held-out improvement metrics.
+**And** it SHALL evaluate at least three independent metrics such as pass@1,
+solver-verified accuracy, schema or syntax failure, and verifier
+false-accept rate.
+**And** it SHALL compare frozen baseline, random replay, previous FR-11 replay,
+and a new independent-metric replay policy under deterministic reset controls.
+**And** it SHALL require a negative control that does not improve, a passing
+Exp 2969 forgetting guard, and bounded Exp 2970 KAN memory evidence before it
+can set `fr11_independent_self_learning_ready=true`.
+**And** it SHALL use
+`inference_substrate="aggregation_and_deterministic_replay"` without invoking a
+live model or claiming KAN acceleration.
+
+The terminal artifact SHALL be
+`results/experiment_2982_fr11_independent_metric_utility_gate_v4.json` and
+SHALL include `honest_verdict`, `continuous_self_learning_task=true`,
+`fr11_independent_metrics_evaluated`,
+`fr11_independent_self_learning_ready`, `update_selection_metric`,
+`independent_metrics`, `frozen_baseline_metrics`, `random_replay_metrics`,
+`prior_fr11_metrics`, `new_replay_metrics`,
+`heldout_independent_delta_vs_random`, `negative_control_delta`,
+`forgetting_guard_passed`, `leakage_audit`, `no_identical_metric_flag`,
+`inference_substrate="aggregation_and_deterministic_replay"`, and measured
+`duration_s`.
+
+### REQ-LEARN-2982 Sub-requirements
+
+- REQ-LEARN-2982-1: The evaluator SHALL fail closed when Exp 2969 readiness or
+  Exp 2970 bounded forgetting-guard evidence is missing.
+- REQ-LEARN-2982-2: `update_selection_metric` SHALL name the Exp 2969 utility
+  used for update selection and SHALL NOT be identical to any reported
+  independent held-out metric name.
+- REQ-LEARN-2982-3: Held-out independent deltas SHALL be directional: higher is
+  better for accuracy metrics and lower is better for failure-rate metrics.
+- REQ-LEARN-2982-4: The negative control SHALL be deterministic, uninformative,
+  and SHALL fail readiness if it improves over random replay on any independent
+  held-out metric.
+- REQ-LEARN-2982-5: KAN evidence from Exp 2970 MAY be used only as bounded
+  memory-forgetting evidence and SHALL NOT be reported as KAN acceleration,
+  synthesis, or analog evidence.
+
+### SCENARIO-LEARN-2982: Independent Metrics Pass With Guarded Replay
+
+**Given** Exp 2969 and Exp 2970 artifacts are present and ready
+**When** Exp 2982 scores frozen, random, prior FR-11, and independent-metric
+replay policies
+**Then** it reports independent held-out deltas versus random replay
+**And** sets `fr11_independent_self_learning_ready=true` only when the new
+policy improves the independent metrics, the negative control does not improve,
+and forgetting guards pass.
+
+### SCENARIO-LEARN-2982-BLOCKED: Missing Preconditions Fail Closed
+
+**Given** Exp 2969 or Exp 2970 readiness evidence is absent or malformed
+**When** Exp 2982 runs
+**Then** it writes the required artifact schema with an `honest_verdict`
+beginning with `blocked_`, `fr11_independent_metrics_evaluated=false`, and
+`fr11_independent_self_learning_ready=false`.
+
+## Implementation Status (REQ-LEARN-2982)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-2982 | Implemented (`python/carnot/eval/fr11_independent_metric_utility_gate_v4.py`) | Implemented (`tests/python/test_experiment_2982_fr11_independent_metric_utility_gate_v4.py`) |
