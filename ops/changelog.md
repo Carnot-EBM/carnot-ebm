@@ -7292,3 +7292,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: AquaForte/BEAVER live retry provenance v2 (⚠️ Research Finding) — honest_verdict=clean: live retry provenance repaired and enumerator fallback separated; results/experiment_3004_aquaforte_beaver_live_retry_provenance_v2.json
 - 2026-05-24: Solver-to-validator tree expansion (✅ Complete) — honest_verdict=ready: expanded deterministic validator-tree corpus exact-checked; results/experiment_3005_solver_to_validator_tree_expansion_v1.json
 - 2026-05-24: EqR fixed-point energy diagnostic (✅ Complete) — honest_verdict=ready: fixed-point diagnostic over cached validator trajectories complete; results/experiment_3006_eqr_fixed_point_energy_diagnostic_v1.json
+- 2026-05-24: FR-11 attractor trace-memory stability (✅ Complete) — honest_verdict=ready: trace_memory_stability_ready; results/experiment_3007_fr11_attractor_trace_memory_stability_v1.json
