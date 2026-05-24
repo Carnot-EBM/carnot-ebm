@@ -1,0 +1,1679 @@
+{
+  "answer_accuracy": 0.25,
+  "baseline_parseability_rate": 0.083333,
+  "baseline_solver_verified_accuracy": 0.0,
+  "cached_sota_pair_used": false,
+  "duration_s": 277.1404,
+  "failure_categories": {
+    "solver_verified_correct": 5,
+    "unparseable": 18,
+    "wrong_answer": 0,
+    "wrong_formula": 0,
+    "z3_exception": 1
+  },
+  "formalization_delta_clean": false,
+  "formalization_manifest_sha256": "e62c16855f9d995eacd803c12fbb82b0b09fe8be137b5f9f0b166917f79625e3",
+  "headline_models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "honest_verdict": "complete: local SOTA DCCD formalizations did not clear .278 delta gate",
+  "inference_substrate": "live_llm_inference",
+  "item_manifest": [
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-001",
+      "prompt": "All cats are mammals. Milo is a cat. Therefore Milo is a mammal.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-002",
+      "prompt": "Every pilot is licensed. Ada is licensed. Ada need not be a pilot.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-003",
+      "prompt": "No robot is organic. Rho is a robot. Rho cannot also be organic.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "satisfiable_countermodel",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-004",
+      "prompt": "Some student is an athlete, but Nia being a student does not force Nia to be one.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-005",
+      "prompt": "Archivists are careful; careful people are trusted; Ivo is an archivist.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-006",
+      "prompt": "If some device is encrypted and all encrypted things are audited, something is audited.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-007",
+      "prompt": "Access requires a badge; access without a badge is inconsistent.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-008",
+      "prompt": "A token is red or blue. It is not red. It must be blue.",
+      "skill_labels": [
+        "symbolization",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "satisfiable",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-009",
+      "prompt": "Exactly one of switch A or switch B may be on; one-on states are satisfiable.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-010",
+      "prompt": "A flag cannot be both true and false.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-011",
+      "prompt": "If dry then safe. Not dry does not prove not safe.",
+      "skill_labels": [
+        "symbolization",
+        "countermodel construction",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-012",
+      "prompt": "A scheduled task cannot be both queued and running.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "7"
+      },
+      "expected_label": "answer=7",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-013",
+      "prompt": "Three plus four gives the answer.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "12"
+      },
+      "expected_label": "answer=12",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-014",
+      "prompt": "Three boxes with four items each produce twelve items.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "6"
+      },
+      "expected_label": "answer=6",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-015",
+      "prompt": "Ten units minus four used units leaves six.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "answer_extraction",
+      "expected_answer_values": {
+        "answer": "1"
+      },
+      "expected_label": "answer=1",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-016",
+      "prompt": "If five approvals are needed and five are present, the numeric decision is one.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-017",
+      "prompt": "A false arithmetic claim that three plus four equals eight is impossible.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "item_id": "lf-2966-018",
+      "prompt": "All admins are employees. Sam being an employee does not force Sam to be admin.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-019",
+      "prompt": "Some manager approves a request; all approvers are trained; no trained person is impossible.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-020",
+      "prompt": "Squares are rectangles and rectangles are polygons; a square is a polygon.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-021",
+      "prompt": "No guest is staff. A guest marked as staff is inconsistent.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-022",
+      "prompt": "Subscribed users are notified. Ben is subscribed, so Ben is notified.",
+      "skill_labels": [
+        "symbolization",
+        "validity"
+      ]
+    },
+    {
+      "check_kind": "satisfiability",
+      "expected_answer_values": {},
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-023",
+      "prompt": "Exactly one delivery window is selected; selecting both windows is inconsistent.",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ]
+    },
+    {
+      "check_kind": "validity",
+      "expected_answer_values": {},
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "item_id": "lf-2966-024",
+      "prompt": "Some poet exists and all poets are writers, so at least one writer exists.",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ]
+    }
+  ],
+  "legacy_models_only_for_smoke": false,
+  "model_attempts": [
+    {
+      "blocker": null,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "live_inference_duration_s": 277.07094,
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "model_used": true
+    }
+  ],
+  "model_specs": [
+    {
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it"
+    }
+  ],
+  "n_items": 24,
+  "parseability_rate": 0.25,
+  "per_item_results": [
+    {
+      "answer_correct": true,
+      "check_kind": "validity",
+      "draft_sha256": "3735599939bd60fcbee5d935ecc1a3cf2f7909de5ef871026f0ccba50e195ba9",
+      "elapsed_seconds": 6.540237,
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "failure_category": "solver_verified_correct",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-001",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "per_item_seed": 2967,
+      "prompt_hash": "dce7c072209a41bd2e63f9e1beaa4c4b770b8aa5a3b0e04f1966d2954fcd9a26",
+      "raw_output_sha256": "04dfcb11824556b0fca3a53d5727e1573eb8bf8f54a794ece6e9144da4268e5e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-001.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ],
+      "solver_formula_correct": true,
+      "structured_proposal": {
+        "answer_extraction": {
+          "symbols": [
+            "is_mammal(milo)"
+          ]
+        },
+        "assertions": [
+          "(declare-sort Entity 0)",
+          "(declare-fun is_cat (Entity) Bool)",
+          "(declare-fun is_mammal (Entity) Bool)",
+          "(declare-const milo Entity)",
+          "(assert (forall ((x Entity)) (implies (is_cat x) (is_mammal x))))",
+          "(assert (is_cat milo))",
+          "(assert (not (is_mammal milo)))"
+        ],
+        "expected_status": "unsat",
+        "predicates": [
+          {
+            "name": "is_cat",
+            "returns": "Bool",
+            "signature": "(Entity -> Bool)"
+          },
+          {
+            "name": "is_mammal",
+            "returns": "Bool",
+            "signature": "(Entity -> Bool)"
+          }
+        ],
+        "query": "(check-sat)",
+        "variables": [
+          {
+            "name": "x",
+            "sort": "Entity"
+          },
+          {
+            "name": "milo",
+            "sort": "Entity"
+          }
+        ]
+      },
+      "z3_executed": true,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_solver_status": "unsat",
+        "proposal_expected_status": "unsat",
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "check_kind": "validity",
+      "draft_sha256": "2802197c6ad66e977c2739588845f0090f840505a4ef37c55719baff1ce4ad43",
+      "elapsed_seconds": 7.780574,
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "failure_category": "solver_verified_correct",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-002",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "per_item_seed": 2968,
+      "prompt_hash": "5bff5e4375e9823bdecc432c2825bd88d93de28ccbc374b6e9b584ef79dd3f45",
+      "raw_output_sha256": "90d80f24f67fd15ec89e3124b65ef3fc61178e0b8a268734b8259ec9a3ad366d",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-002.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "validity"
+      ],
+      "solver_formula_correct": true,
+      "structured_proposal": {
+        "answer_extraction": {
+          "symbols": [
+            "is_pilot",
+            "is_licensed"
+          ]
+        },
+        "assertions": [
+          "(declare-sort Person 0)",
+          "(declare-const ada Person)",
+          "(declare-fun is_pilot (Person) Bool)",
+          "(declare-fun is_licensed (Person) Bool)",
+          "(assert (forall ((x Person)) (implies (is_pilot x) (is_licensed x))))",
+          "(assert (is_licensed ada))",
+          "(assert (not (is_pilot ada)))"
+        ],
+        "expected_status": "sat",
+        "predicates": [
+          {
+            "name": "is_pilot",
+            "returns": "Bool",
+            "signature": "(Person) Bool"
+          },
+          {
+            "name": "is_licensed",
+            "returns": "Bool",
+            "signature": "(Person) Bool"
+          }
+        ],
+        "query": "(check-sat)",
+        "variables": [
+          {
+            "name": "ada",
+            "sort": "Person"
+          }
+        ]
+      },
+      "z3_executed": true,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_solver_status": "sat",
+        "proposal_expected_status": "sat",
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "8bf20fe5e5d2cb4d90ed052f394aad42041b4dd208ba01d2fab437962de36570",
+      "elapsed_seconds": 12.814613,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-003",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2969,
+      "prompt_hash": "30b790df4a641e35d0c986f45abdd385a3869bd6932ec497be5f74e25561f9ce",
+      "raw_output_sha256": "0a2173a0cf30958cd3fffce2b2d0349f3205db43d782f5cd18bd8e63f7284446",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-003.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": true,
+      "check_kind": "satisfiability",
+      "draft_sha256": "b6fcef4edde1dbcdd668bf31127b146ed93f9a934ed9921ab3627d818494e0b4",
+      "elapsed_seconds": 6.186188,
+      "expected_label": "satisfiable_countermodel",
+      "expected_solver_status": "sat",
+      "failure_category": "solver_verified_correct",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-004",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "per_item_seed": 2970,
+      "prompt_hash": "80be71b2ef56bdd387fae3d15789d26bec9fec9e6f7fd54fc3403e9977dfe702",
+      "raw_output_sha256": "36da8017db1a7ddb2f035c732130503d44ef682fc601f5fe3f2f8bfaebd0ddce",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-004.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "satisfiability"
+      ],
+      "solver_formula_correct": true,
+      "structured_proposal": {
+        "answer_extraction": {
+          "symbols": [
+            "Nia",
+            "S",
+            "A"
+          ]
+        },
+        "assertions": [
+          "(declare-sort Person 0)",
+          "(declare-const Nia Person)",
+          "(declare-fun S (Person) Bool)",
+          "(declare-fun A (Person) Bool)",
+          "(assert (exists ((x Person)) (and (S x) (A x))))",
+          "(assert (and (S Nia) (not (A Nia))))"
+        ],
+        "expected_status": "sat",
+        "predicates": [
+          {
+            "name": "S",
+            "returns": "Bool",
+            "signature": "(Person) Bool"
+          },
+          {
+            "name": "A",
+            "returns": "Bool",
+            "signature": "(Person) Bool"
+          }
+        ],
+        "query": "(check-sat)",
+        "variables": [
+          {
+            "name": "Person",
+            "sort": "Sort"
+          },
+          {
+            "name": "Nia",
+            "sort": "Person"
+          }
+        ]
+      },
+      "z3_executed": true,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "sat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_solver_status": "sat",
+        "proposal_expected_status": "sat",
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "validity",
+      "draft_sha256": "e341a8c3a9e8745f335e6638d52bb0e8e4a16d1ddf224a2d6802786d308e6bfd",
+      "elapsed_seconds": 12.85637,
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-005",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2971,
+      "prompt_hash": "214ffca79eda9a577a7749e52b035f8b1890d206555d02286744e3a8215bfd77",
+      "raw_output_sha256": "6944b06c02e629be13cc2fff53a1d21c661733238ce3c38291718823b6819855",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-005.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "validity",
+      "draft_sha256": "a98f3bd59b94098fbacaf9a9eadd81b4a799b89ae754572bee3df6aa27c7aece",
+      "elapsed_seconds": 12.950889,
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-006",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2972,
+      "prompt_hash": "4b01d9c333a3e2734779672ec9dbd9ad59078fa1f4f2367e9352ad435f977617",
+      "raw_output_sha256": "d78f726248969101cc8f48c8eccb9b95aa7dff8707e4965a5f1f3fba2551c5ec",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-006.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "b08bb177f12664b1f125271111ad193ba3c3dca1fcc3dbf158272784cefa9be7",
+      "elapsed_seconds": 12.872442,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-007",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2973,
+      "prompt_hash": "78fb484da184539f245dc8e535b999a1b7170bf13664610f864b72981f73775d",
+      "raw_output_sha256": "8974568fae6afd67894f11aa6e06e0c40452371839c0160a858457b7686feaf5",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-007.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "validity",
+      "draft_sha256": "151258d25277dbc3d30cf750adfad190cbba935b64d1c059b13b67b70d96e3e7",
+      "elapsed_seconds": 12.863611,
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-008",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2974,
+      "prompt_hash": "eeebabdb2a58d64cf03ec9e672b673fda7a259a8f6402392e6ea5e4676ea3cab",
+      "raw_output_sha256": "1fc45f83b70b01b923618d4f11ffde330769cd38bf80a3275888ff0b63e173bc",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-008.json",
+      "skill_labels": [
+        "symbolization",
+        "validity"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "c47da09363bea5fade7fbbaa665272e658a8cc274bfb1ee8151ab5a8006d7cdc",
+      "elapsed_seconds": 12.771788,
+      "expected_label": "satisfiable",
+      "expected_solver_status": "sat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-009",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2975,
+      "prompt_hash": "779bd8fe629d73be77bd3155e23ddfa8882ea0a8ea7882ebf0b0c3953850125b",
+      "raw_output_sha256": "0e5d35f96abc0226999fb5ee58bebaff1f25e994175e45f7cc028e9bee197073",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-009.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "7fa05e09b703373544089a070d3e35711a8f72536c31cfa7fefb3035d67ff5ae",
+      "elapsed_seconds": 12.844906,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-010",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2976,
+      "prompt_hash": "181d62f3b2a8aa63f7d6eeb3ec8ad1414adfe545a81cd8af84d3e967d630424e",
+      "raw_output_sha256": "1c186decd011732da44b0b7ff8fee05d8e8c91146d14cd8075ed6bf4fb571315",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-010.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "validity",
+      "draft_sha256": "346d9d9f154ddaa92b526666b31ddf772199e77745a2a4adbece3a2eeeea4a7f",
+      "elapsed_seconds": 12.847559,
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-011",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2977,
+      "prompt_hash": "5bbfce0a83f47d1ced19f5b7355b4e3fbaa9861a71655fe4d01f30dbedd93708",
+      "raw_output_sha256": "ddd8dd754f615c0b276509892b368aba10ddabf6fed0e67162ceca6bac01c641",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-011.json",
+      "skill_labels": [
+        "symbolization",
+        "countermodel construction",
+        "validity"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "71234c4b1c821722bef97a3983e9afe51892bd0fb4cba920edd72bdb769118b8",
+      "elapsed_seconds": 12.815255,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-012",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2978,
+      "prompt_hash": "d0c56c7ddf2357cf9682de379c92dfc3a7134a55a2fc1257eade560165e3aaee",
+      "raw_output_sha256": "ba8a75e7568095befe08490ae61fc30bd08a23567da149454601f0977a4978e2",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-012.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": true,
+      "check_kind": "answer_extraction",
+      "draft_sha256": "f742d60f3343411d3f1995ed994294bfe713031c93120aa49a0132c67eb1444a",
+      "elapsed_seconds": 4.453896,
+      "expected_label": "answer=7",
+      "expected_solver_status": "sat",
+      "failure_category": "z3_exception",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-013",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "per_item_seed": 2979,
+      "prompt_hash": "1bf0c9f611a09729685dabbcb5df08c9788c794d779fbb1d0f4ab03699f23a0a",
+      "raw_output_sha256": "d407b35037c8a967f6d89caa902fed1b7f1bb0b5d0e0fd78d35ca685c7ba9e9b",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-013.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": {
+        "answer_extraction": {
+          "symbols": [
+            "z"
+          ]
+        },
+        "assertions": [
+          "(assert (= x 3))",
+          "(assert (= y 4))",
+          "(assert (= z (+ x y)))"
+        ],
+        "expected_status": "sat",
+        "predicates": [
+          {
+            "name": "is_sum",
+            "returns": "Bool",
+            "signature": "(Int Int Int)"
+          }
+        ],
+        "query": "(check-sat)",
+        "variables": [
+          {
+            "name": "x",
+            "sort": "Int"
+          },
+          {
+            "name": "y",
+            "sort": "Int"
+          },
+          {
+            "name": "z",
+            "sort": "Int"
+          }
+        ]
+      },
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "Z3Exception: b'(error \"line 1 column 12: unknown constant x\")\\n(error \"line 2 column 11: unknown constant y\")\\n(error \"line 3 column 11: unknown constant z\")\\n'",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "answer_extraction",
+      "draft_sha256": "c10227c9a5f2f39caa04bc11d2691138f6942f6feb87ca7a1ef718d75f7749e2",
+      "elapsed_seconds": 12.944941,
+      "expected_label": "answer=12",
+      "expected_solver_status": "sat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-014",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2980,
+      "prompt_hash": "bfce4ba395be2cd7a33dca533d202a148ee085f760f8ff05f260c709bd28a657",
+      "raw_output_sha256": "2c7f5feb3313fbb6e19b8d3f6707e1bf0391675a123d0f3883ac3ba4fe4f4d4f",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-014.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "answer_extraction",
+      "draft_sha256": "05e2997455d46be2ac6ba1d8ccecd6aa9af5cee6a97f90fef9e1352bea2c013f",
+      "elapsed_seconds": 12.898285,
+      "expected_label": "answer=6",
+      "expected_solver_status": "sat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-015",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2981,
+      "prompt_hash": "20bac7538c371b89edbaf1abb463277136de48ef9048875d1d840fd9f8583306",
+      "raw_output_sha256": "4487b9e6254b5e8a2d30d61c6ea9d31c5115d093b9b468f065d60cfaac7db05d",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-015.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "answer_extraction",
+      "draft_sha256": "e213049ae8826ac67be6e081115de8fa587a0bf3171f657df3c394a956df5ca9",
+      "elapsed_seconds": 12.906723,
+      "expected_label": "answer=1",
+      "expected_solver_status": "sat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-016",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2982,
+      "prompt_hash": "4b4fbf50e8c3c1519f65f6b99f9e79bcfbf141386ced92498715cceae9990d09",
+      "raw_output_sha256": "3003b86759a328524606469a5ea3f6286ff1e5dbd54968c6fdbbb4a987d3a67b",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-016.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "2dcba69f768983b1f9d75bc71202b437636f50944abec5362b92060f75397a76",
+      "elapsed_seconds": 12.889044,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-017",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2983,
+      "prompt_hash": "abc191d564561f26ff6691ba419b53ea5ee5616799cd9a276bab4218def8ebb8",
+      "raw_output_sha256": "cbce29fa9285398f7d455ea7a36b2e622dd8abd16953e2b11d25d0a83ef01f1b",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-017.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability",
+        "answer extraction"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "validity",
+      "draft_sha256": "193d9b3809e62192547e6dea0a591c9c7cbe7bcf53c4be690add8885cc6cd3be",
+      "elapsed_seconds": 12.850967,
+      "expected_label": "not_entailed",
+      "expected_solver_status": "sat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-018",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2984,
+      "prompt_hash": "e0edcff4321827390523f2d861f52b48916f5aab7da7f418c8646201f9247451",
+      "raw_output_sha256": "204e6c3c778da3a0adcd632a3f5fd017440c128538246771fc2dca37cac9f992",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-018.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "countermodel construction",
+        "validity"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "bbef811851f03cc3c3d564cd4782f4047dc42cdd5c3f35a31b6c068c1c5cc220",
+      "elapsed_seconds": 12.79803,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-019",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2985,
+      "prompt_hash": "a8e5c4b720a7c4493eca4d8f63646ed75a805968169bcc89cbd6da1e1a69d1c3",
+      "raw_output_sha256": "55bd9827406a99c7785fc33531bdac5f0aca98a93f2c85ec491aadae2998e267",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-019.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "validity",
+      "draft_sha256": "e518cbe473322ed10bcbdf4c774b51a0e6f4ad53f947b936baac91a5571902f1",
+      "elapsed_seconds": 12.859925,
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-020",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2986,
+      "prompt_hash": "979940fba34bff1cbbdf5b85309998fa7cc30af475a1459b7d285b6fb9fe19f0",
+      "raw_output_sha256": "3e51045407b122affade6e7903f5d3b30c65e119ba3bbb73264e1108102df65e",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-020.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": true,
+      "check_kind": "satisfiability",
+      "draft_sha256": "4162f470e64f62472f6aa2a8c85cf74c5b8248b1c2e95eb610bf22f436d37303",
+      "elapsed_seconds": 5.655214,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "solver_verified_correct",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-021",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "per_item_seed": 2987,
+      "prompt_hash": "444b45bb64931a4df9ee4b59e902045c89926c4b6aec3518556a726912d0499c",
+      "raw_output_sha256": "62cd8cd51aa04d3c4161114779cbbf61ae7143cc0a24d0dced8f607baf1aa098",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-021.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "satisfiability"
+      ],
+      "solver_formula_correct": true,
+      "structured_proposal": {
+        "answer_extraction": {
+          "symbols": []
+        },
+        "assertions": [
+          "(declare-sort Person 0)",
+          "(declare-fun is_guest (Person) Bool)",
+          "(declare-fun is_staff (Person) Bool)",
+          "(assert (forall ((x Person)) (=> (is_guest x) (not (is_staff x)))))",
+          "(assert (exists ((x Person)) (and (is_guest x) (is_staff x))))"
+        ],
+        "expected_status": "unsat",
+        "predicates": [
+          {
+            "name": "is_guest",
+            "returns": "Bool",
+            "signature": "(Person) Bool"
+          },
+          {
+            "name": "is_staff",
+            "returns": "Bool",
+            "signature": "(Person) Bool"
+          }
+        ],
+        "query": "(check-sat)",
+        "variables": [
+          {
+            "name": "x",
+            "sort": "Person"
+          }
+        ]
+      },
+      "z3_executed": true,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_solver_status": "unsat",
+        "proposal_expected_status": "unsat",
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": true,
+      "check_kind": "validity",
+      "draft_sha256": "847610429c9d122147eec46afe83e22e2c4e1915589c691b05fdc2d1e6d6cb0f",
+      "elapsed_seconds": 6.166466,
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "failure_category": "solver_verified_correct",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-022",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": null,
+      "parseable": true,
+      "per_item_seed": 2988,
+      "prompt_hash": "0250d12515e4a4e7257f791776e586b975a1ae2623ce89bdc76454ae9890e200",
+      "raw_output_sha256": "8259dbf2186f874218e646a8a3ead45e53567c5c57d6072a83ea13642e99741d",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-022.json",
+      "skill_labels": [
+        "symbolization",
+        "validity"
+      ],
+      "solver_formula_correct": true,
+      "structured_proposal": {
+        "answer_extraction": {
+          "symbols": [
+            "Notified(ben)"
+          ]
+        },
+        "assertions": [
+          "(declare-sort Person 0)",
+          "(declare-const ben Person)",
+          "(declare-fun Subscribed (Person) Bool)",
+          "(declare-fun Notified (Person) Bool)",
+          "(assert (forall ((x Person)) (=> (Subscribed x) (Notified x))))",
+          "(assert (Subscribed ben))",
+          "(assert (not (Notified ben)))"
+        ],
+        "expected_status": "unsat",
+        "predicates": [
+          {
+            "name": "Subscribed",
+            "returns": "Bool",
+            "signature": "(Person)"
+          },
+          {
+            "name": "Notified",
+            "returns": "Bool",
+            "signature": "(Person)"
+          }
+        ],
+        "query": "(check-sat)",
+        "variables": [
+          {
+            "name": "Person",
+            "sort": "Sort"
+          },
+          {
+            "name": "ben",
+            "sort": "Person"
+          }
+        ]
+      },
+      "z3_executed": true,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": "unsat",
+        "answer_extraction_matches_expected": true,
+        "expected_answer_values": {},
+        "expected_solver_status": "unsat",
+        "proposal_expected_status": "unsat",
+        "solver_status_matches_expected": true,
+        "z3_error": null,
+        "z3_executed": true
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "satisfiability",
+      "draft_sha256": "a822dd8b2938c9da2f4cb5001efec66499bb7df2d6946432b419523e2354d593",
+      "elapsed_seconds": 12.904419,
+      "expected_label": "unsatisfiable",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-023",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2989,
+      "prompt_hash": "4ce9ef09ead8821299f83026c0dc12e6c99b1dd2cb9aa9ce8c14939c80d3e826",
+      "raw_output_sha256": "d7f908bbf02692e9687cfad27542376dfa0f938a32e37da73ac0a5f7041dd02a",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-023.json",
+      "skill_labels": [
+        "symbolization",
+        "satisfiability"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    },
+    {
+      "answer_correct": false,
+      "check_kind": "validity",
+      "draft_sha256": "ed008442b90350f88a5a3d96564d8134c7ec4f70764707e9392482dc64107325",
+      "elapsed_seconds": 12.935191,
+      "expected_label": "entailed",
+      "expected_solver_status": "unsat",
+      "failure_category": "unparseable",
+      "generation_blocker": null,
+      "generation_source": "live_sota_dccd_structured_output",
+      "gpu_index": 0,
+      "item_id": "lf-2966-024",
+      "model_hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_name": "Gemma4-26B-A4B-it",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "parse_error": "no_json_object",
+      "parseable": false,
+      "per_item_seed": 2990,
+      "prompt_hash": "7f12878468663c34a9ce94999cb440dd5788056bbf76787c0fcc47fe01255d82",
+      "raw_output_sha256": "c70407bb519c4d518d4d57f3a62d99e76bfa71b4925855951c40a2804a832740",
+      "raw_response_path": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw/lf-2966-024.json",
+      "skill_labels": [
+        "symbolization",
+        "quantifier handling",
+        "validity"
+      ],
+      "solver_formula_correct": false,
+      "structured_proposal": null,
+      "z3_executed": false,
+      "z3_result": {
+        "actual_answer_values": {},
+        "actual_solver_status": null,
+        "answer_extraction_matches_expected": false,
+        "expected_answer_values": {},
+        "expected_solver_status": null,
+        "proposal_expected_status": null,
+        "solver_status_matches_expected": false,
+        "z3_error": "no_json_object",
+        "z3_executed": false
+      }
+    }
+  ],
+  "preconditions_checked": [
+    {
+      "detail": "24 item(s)",
+      "name": "exp2966_logic_frontier_materialized",
+      "ok": true
+    },
+    {
+      "detail": "z3-solver 4.16.0",
+      "name": "z3_import",
+      "ok": true
+    },
+    {
+      "detail": "import_ok",
+      "name": "llama_cpp_runtime",
+      "ok": true
+    },
+    {
+      "detail": "returned_0_model_spec(s)",
+      "name": "cached_sota_pair",
+      "ok": false
+    },
+    {
+      "detail": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "name": "mandated_headline_gguf_resolved",
+      "ok": true
+    }
+  ],
+  "random_seed": 2967,
+  "raw_response_dir": "/home/ianblenke/github.com/ianblenke/carnot/results/sota_nl_to_z3_dccd_2967_raw",
+  "run_date": "20260524",
+  "skill_wise_metrics": {
+    "answer extraction": {
+      "answer_accuracy": 0.2,
+      "failure_categories": {
+        "solver_verified_correct": 0,
+        "unparseable": 4,
+        "wrong_answer": 0,
+        "wrong_formula": 0,
+        "z3_exception": 1
+      },
+      "n_items": 5,
+      "parseability_rate": 0.2,
+      "solver_verified_accuracy": 0.0,
+      "z3_execution_rate": 0.0
+    },
+    "countermodel construction": {
+      "answer_accuracy": 0.5,
+      "failure_categories": {
+        "solver_verified_correct": 2,
+        "unparseable": 2,
+        "wrong_answer": 0,
+        "wrong_formula": 0,
+        "z3_exception": 0
+      },
+      "n_items": 4,
+      "parseability_rate": 0.5,
+      "solver_verified_accuracy": 0.5,
+      "z3_execution_rate": 0.5
+    },
+    "quantifier handling": {
+      "answer_accuracy": 0.363636,
+      "failure_categories": {
+        "solver_verified_correct": 4,
+        "unparseable": 7,
+        "wrong_answer": 0,
+        "wrong_formula": 0,
+        "z3_exception": 0
+      },
+      "n_items": 11,
+      "parseability_rate": 0.363636,
+      "solver_verified_accuracy": 0.363636,
+      "z3_execution_rate": 0.363636
+    },
+    "satisfiability": {
+      "answer_accuracy": 0.214286,
+      "failure_categories": {
+        "solver_verified_correct": 2,
+        "unparseable": 11,
+        "wrong_answer": 0,
+        "wrong_formula": 0,
+        "z3_exception": 1
+      },
+      "n_items": 14,
+      "parseability_rate": 0.214286,
+      "solver_verified_accuracy": 0.142857,
+      "z3_execution_rate": 0.142857
+    },
+    "symbolization": {
+      "answer_accuracy": 0.25,
+      "failure_categories": {
+        "solver_verified_correct": 5,
+        "unparseable": 18,
+        "wrong_answer": 0,
+        "wrong_formula": 0,
+        "z3_exception": 1
+      },
+      "n_items": 24,
+      "parseability_rate": 0.25,
+      "solver_verified_accuracy": 0.208333,
+      "z3_execution_rate": 0.208333
+    },
+    "validity": {
+      "answer_accuracy": 0.3,
+      "failure_categories": {
+        "solver_verified_correct": 3,
+        "unparseable": 7,
+        "wrong_answer": 0,
+        "wrong_formula": 0,
+        "z3_exception": 0
+      },
+      "n_items": 10,
+      "parseability_rate": 0.3,
+      "solver_verified_accuracy": 0.3,
+      "z3_execution_rate": 0.3
+    }
+  },
+  "solver_verified_accuracy": 0.208333,
+  "z3_execution_rate": 0.208333
+}

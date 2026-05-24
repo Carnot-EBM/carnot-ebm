@@ -350,6 +350,61 @@ expected status and answer-extraction fields, and the terminal artifact reports
 
 **Spec traces:** REQ-BENCH-2966, SCENARIO-BENCH-2966
 
+### REQ-BENCH-2967: SOTA DCCD NL-To-Z3 Frontier Formalization
+
+Carnot MUST provide a live local-SOTA NL-to-Z3 formalization runner over the
+Exp 2966 exact-verifier frontier.  The runner MUST load the materialized Exp
+2966 manifest, check that `logic_frontier_materialized=true`, verify Python Z3
+import, call `cached_sota_pair(gpu_indices=(0, 1))` before any single-model
+fallback, and use at least one mandated headline GGUF model in `MODEL_SPECS`:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+The live runner MUST use DCCD-style draft-then-structure prompting: first ask
+the model for an unconstrained formalization draft, then condition a strict
+structured output request on that draft.  The parseable structured proposal
+schema MUST contain `variables`, `predicates`, `assertions`, `query`,
+`expected_status`, and `answer_extraction`.  Carnot MUST execute Z3 on every
+parseable proposal and MUST NOT treat model prose, model self-judgment, or the
+model-provided expected status as proof.
+
+The terminal artifact MUST be written to
+`results/experiment_2967_sota_nl_to_z3_dccd_formalization_v1.json` and include:
+`honest_verdict`, `inference_substrate="live_llm_inference"`,
+`preconditions_checked`, `model_specs`, `headline_models_used`,
+`legacy_models_only_for_smoke`, `n_items`, `parseability_rate`,
+`z3_execution_rate`, `solver_verified_accuracy`, `answer_accuracy`,
+`baseline_parseability_rate`, `baseline_solver_verified_accuracy`,
+`skill_wise_metrics`, `failure_categories`, `formalization_delta_clean`,
+`formalization_manifest_sha256`, and `duration_s`.
+
+**Acceptance criteria:**
+- If Exp 2966 is not materialized, Z3 is unavailable, or no mandated headline
+  GGUF can be resolved, the runner writes a blocked artifact with populated
+  `preconditions_checked` and zero rates.
+- Every parseable proposal is compiled and checked by Z3; Z3 exceptions are
+  categorized separately from unparseable outputs.
+- Each item is categorized by failure mode and by every Exp 2966 skill label it
+  carries.
+- `formalization_delta_clean` is true only when
+  `parseability_rate>=0.50`, `z3_execution_rate>=0.50`, and
+  `solver_verified_accuracy>0.0`, compared against the .278 baseline
+  `parseability_rate=0.083333` and `solver_verified_accuracy=0.0`.
+- `formalization_manifest_sha256` is computed over the stable item manifest,
+  structured proposals, Z3 results, skill labels, and failure categories.
+
+### SCENARIO-BENCH-2967: DCCD Proposals Are Judged By Z3 Skill-Wise
+
+**Given** the Exp 2966 exact-verifier frontier and at least one resolved
+mandated local GGUF
+**When** the live runner collects DCCD-style structured formalization proposals
+**Then** every parseable proposal is executed by Z3, aggregate and skill-wise
+parseability/Z3/solver/answer metrics are recorded, and the artifact marks
+`formalization_delta_clean` only when the explicit .278 baseline gate is met.
+
+**Spec traces:** REQ-BENCH-2967, SCENARIO-BENCH-2967
+
 ### REQ-BENCH-1536: SATQuest CNF Verifier Benchmark
 
 Carnot MUST provide a bounded SATQuest-style CNF verifier benchmark that
@@ -501,6 +556,8 @@ a blocked artifact or mock data for testing.
 | SCENARIO-BENCH-2959 | Implemented (`tests/python/test_experiment_2959_nl_to_z3_execution_repair_mini_v2.py`) | Exp 2959 |
 | REQ-BENCH-2966 | Implemented (`python/carnot/eval/logic_frontier_materializer.py`) | Exp 2966 |
 | SCENARIO-BENCH-2966 | Implemented (`tests/python/test_experiment_2966_logic_frontier_materializer.py`) | Exp 2966 |
+| REQ-BENCH-2967 | Implemented (`python/carnot/eval/sota_nl_to_z3_dccd_formalization.py`) | Exp 2967 |
+| SCENARIO-BENCH-2967 | Implemented (`tests/python/test_experiment_2967_sota_nl_to_z3_dccd_formalization.py`) | Exp 2967 |
 
 ### REQ-DUALGPU-101: DualGPU System-2 EqM Benchmark
 
