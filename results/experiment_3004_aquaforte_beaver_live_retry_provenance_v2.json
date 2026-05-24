@@ -1,0 +1,332 @@
+{
+  "artifact": "experiment_3004_aquaforte_beaver_live_retry_provenance_v2",
+  "contamination_detected": false,
+  "duration_provenance": {
+    "duration_seconds_live": 10.249503,
+    "enumerator_fallback_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/enumerator_fallback__cbmini-2926-linear-001.json"
+    ],
+    "impossible_duration_flag": false,
+    "live_finished_monotonic": 716806.315754373,
+    "live_started_monotonic": 716796.066251317,
+    "live_transcript_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/live_retry__cbmini-2926-linear-001__unsloth_gemma-4-26B-A4B-it-GGUF.json"
+    ],
+    "schema": "carnot.aquaforte_beaver.duration_provenance.v1",
+    "transcript_write_timestamps": [
+      {
+        "exists": true,
+        "mtime_ns": 1779652442513900716,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/live_retry__cbmini-2926-linear-001__unsloth_gemma-4-26B-A4B-it-GGUF.json"
+      },
+      {
+        "exists": true,
+        "mtime_ns": 1779652442514503197,
+        "path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/enumerator_fallback__cbmini-2926-linear-001.json"
+      }
+    ],
+    "written_at_utc": "2026-05-24T19:54:02Z"
+  },
+  "duration_provenance_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/duration_provenance.json",
+  "duration_seconds_live": 10.249503,
+  "enumerator_fallback_condition": {
+    "condition": "enumerator_fallback",
+    "duration_seconds": 0.000544,
+    "finished_monotonic": 716806.316328801,
+    "measured": true,
+    "pass_rate": 1.0,
+    "per_task_results": [
+      {
+        "task_id": "cbmini-2926-linear-001",
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/enumerator_fallback__cbmini-2926-linear-001.json",
+        "transcript_sha256": "6c8c049e7b87640a098e119730fa1ceefe26f6cd30d300be0ab40b78806fe16d",
+        "verifier": {
+          "accepted": true,
+          "feasible": true,
+          "objective_value": 11,
+          "optimal": true,
+          "optimum_value": 11,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      }
+    ],
+    "started_monotonic": 716806.315784409,
+    "substrate_label": "enumerator_only_fallback_plus_exact_verifier",
+    "task_count": 1,
+    "transcript_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/enumerator_fallback__cbmini-2926-linear-001.json"
+    ]
+  },
+  "enumerator_fallback_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/enumerator_fallback__cbmini-2926-linear-001.json"
+  ],
+  "enumerator_fallback_separated": true,
+  "exact_verifier_outcomes": {
+    "enumerator_fallback": [
+      {
+        "task_id": "cbmini-2926-linear-001",
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/enumerator_fallback__cbmini-2926-linear-001.json",
+        "transcript_sha256": "6c8c049e7b87640a098e119730fa1ceefe26f6cd30d300be0ab40b78806fe16d",
+        "verifier": {
+          "accepted": true,
+          "feasible": true,
+          "objective_value": 11,
+          "optimal": true,
+          "optimum_value": 11,
+          "syntax_valid": true,
+          "violation_class": "none",
+          "violation_reasons": []
+        }
+      }
+    ],
+    "live_retry": [
+      {
+        "duration_seconds_reported": 9.595078,
+        "runner_inference_substrate": "llama_cpp_gpu",
+        "task_id": "cbmini-2926-linear-001",
+        "tokens_generated": 128,
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/live_retry__cbmini-2926-linear-001__unsloth_gemma-4-26B-A4B-it-GGUF.json",
+        "transcript_sha256": "005cc3e1bdc20caea5ba7e9ae74125f4da498770bcf02e50ebb7a678fdb79a07",
+        "truly_live": true,
+        "verifier": {
+          "accepted": false,
+          "feasible": false,
+          "objective_value": null,
+          "optimal": false,
+          "optimum_value": 11,
+          "syntax_valid": false,
+          "violation_class": "syntax_invalid",
+          "violation_reasons": [
+            "no_json_object"
+          ]
+        }
+      }
+    ]
+  },
+  "headline_models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "honest_verdict": "clean: live retry provenance repaired and enumerator fallback separated",
+  "impossible_duration_flag": false,
+  "live_retry_condition": {
+    "condition": "live_retry",
+    "duration_seconds": 10.249503,
+    "live_finished_monotonic": 716806.315754373,
+    "live_started_monotonic": 716796.066251317,
+    "measured": true,
+    "pass_rate": 0.0,
+    "per_task_results": [
+      {
+        "duration_seconds_reported": 9.595078,
+        "runner_inference_substrate": "llama_cpp_gpu",
+        "task_id": "cbmini-2926-linear-001",
+        "tokens_generated": 128,
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/live_retry__cbmini-2926-linear-001__unsloth_gemma-4-26B-A4B-it-GGUF.json",
+        "transcript_sha256": "005cc3e1bdc20caea5ba7e9ae74125f4da498770bcf02e50ebb7a678fdb79a07",
+        "truly_live": true,
+        "verifier": {
+          "accepted": false,
+          "feasible": false,
+          "objective_value": null,
+          "optimal": false,
+          "optimum_value": 11,
+          "syntax_valid": false,
+          "violation_class": "syntax_invalid",
+          "violation_reasons": [
+            "no_json_object"
+          ]
+        }
+      }
+    ],
+    "substrate_label": "live_llm_inference_plus_exact_verifier",
+    "task_count": 1,
+    "transcript_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/live_retry__cbmini-2926-linear-001__unsloth_gemma-4-26B-A4B-it-GGUF.json"
+    ]
+  },
+  "live_retry_provenance_clean": true,
+  "live_transcript_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/live_retry__cbmini-2926-linear-001__unsloth_gemma-4-26B-A4B-it-GGUF.json"
+  ],
+  "model_checksums": {
+    "Qwen/Qwen3.5-0.8B": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    },
+    "unsloth/Qwen3.6-35B-A3B-GGUF": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    },
+    "unsloth/gemma-4-26B-A4B-it-GGUF": {
+      "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+      "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+      "mtime_ns": 1778129415691941084,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "sha256": null,
+      "size_bytes": 16947539744,
+      "status": "available"
+    },
+    "unsloth/gemma-4-31B-it-GGUF": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    },
+    "unsloth/gemma-4-E4B-it-GGUF": {
+      "path": null,
+      "sha256": null,
+      "status": "missing"
+    }
+  },
+  "model_specs": {
+    "experiment_id": 3001,
+    "headline_models": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "preferred_quantization": "Q4_K_M",
+    "random_seed": 3001,
+    "smoke_only_models": [
+      "Qwen/Qwen3.5-0.8B",
+      "unsloth/gemma-4-E4B-it-GGUF"
+    ],
+    "source_pattern": "experiment_2989_sota_gguf_cache_provenance_preflight_v1"
+  },
+  "preconditions": {
+    "cuda_cache_status": {
+      "checksum_feasibility": {
+        "available_model_count": 1,
+        "available_models": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "bounded_sha256_model_count": 1,
+        "feasible": true,
+        "full_sha256_model_count": 0,
+        "method": "sha256_full_for_small_files_or_bounded_head_tail_for_large_files",
+        "model_count": 5
+      },
+      "gpu_inventory": {
+        "available": true,
+        "command": [
+          "nvidia-smi",
+          "--query-gpu=index,name,memory.total,memory.used,memory.free,driver_version",
+          "--format=csv,noheader,nounits"
+        ],
+        "free_vram_mib_total": 48244,
+        "gpus": [
+          {
+            "driver_version": "595.71.05",
+            "index": 0,
+            "memory_free_mib": 24122,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 5,
+            "name": "NVIDIA GeForce RTX 3090"
+          },
+          {
+            "driver_version": "595.71.05",
+            "index": 1,
+            "memory_free_mib": 24122,
+            "memory_total_mib": 24576,
+            "memory_used_mib": 5,
+            "name": "NVIDIA GeForce RTX 3090"
+          }
+        ],
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "0, NVIDIA GeForce RTX 3090, 24576, 5, 24122, 595.71.05\n1, NVIDIA GeForce RTX 3090, 24576, 5, 24122, 595.71.05\n"
+      },
+      "llama_cpp": {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "import importlib.util, json\npayload = {'llama_cpp_import_ok': False, 'llama_cpp_supports_gpu_offload': False}\ntry:\n    import llama_cpp\n    from llama_cpp import llama_cpp as low\n    payload.update({\n        'llama_cpp_import_ok': True,\n        'llama_cpp_origin': importlib.util.find_spec('llama_cpp').origin,\n        'llama_cpp_version': getattr(llama_cpp, '__version__', None),\n        'llama_cpp_supports_gpu_offload': bool(low.llama_supports_gpu_offload()),\n    })\nexcept Exception as exc:\n    payload['error'] = f'{type(exc).__name__}: {exc}'\nprint(json.dumps(payload, sort_keys=True))\n"
+        ],
+        "llama_cpp_import_ok": true,
+        "llama_cpp_origin": "/home/ianblenke/github.com/ianblenke/carnot/.venv/lib/python3.14/site-packages/llama_cpp/__init__.py",
+        "llama_cpp_supports_gpu_offload": true,
+        "llama_cpp_version": "0.3.23",
+        "returncode": 0,
+        "stderr_summary": "ggml_cuda_init: found 2 CUDA devices (Total VRAM: 48252 MiB):\n  Device 0: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\n  Device 1: NVIDIA GeForce RTX 3090, compute capability 8.6, VMM: yes, VRAM: 24126 MiB\n"
+      },
+      "ok": true,
+      "torch_cuda": {
+        "command": [
+          "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+          "-c",
+          "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.device_count())"
+        ],
+        "cuda_available": true,
+        "cuda_device_count": 2,
+        "returncode": 0,
+        "stderr_summary": "",
+        "stdout_summary": "2.11.0+cu128 True 2\n",
+        "torch_version": "2.11.0+cu128"
+      }
+    },
+    "exact_verifier_available": {
+      "exact_verifier_types": [
+        "binary_subset_exhaustive",
+        "bounded_integer_exhaustive",
+        "color_assignment_exhaustive"
+      ],
+      "ok": true
+    },
+    "exp2993_corrigendum_available": {
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1.json"
+    },
+    "exp3001_sota_headline_ready": {
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3001_sota_gguf_cache_carry_forward_checksum_refresh_v1.json"
+    },
+    "model_checksum_available": {
+      "ok": true,
+      "selected_model": {
+        "checksum": {
+          "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+          "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+          "mtime_ns": 1778129415691941084,
+          "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+          "sha256": null,
+          "size_bytes": 16947539744,
+          "status": "available"
+        },
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+      }
+    },
+    "source_retry_items_available": {
+      "exp2934_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2934_aquaforte_beaver_reformulation_pipeline_v1.json",
+      "exp2993_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_2993_aquaforte_beaver_substrate_corrigendum_v1.json",
+      "ok": true,
+      "retry_row_count": 16,
+      "source_task_ids": [
+        "cbmini-2926-linear-001"
+      ]
+    }
+  },
+  "preconditions_checked": true,
+  "random_seed": 3004,
+  "run_date": "20260524",
+  "schema": "carnot.aquaforte_beaver_live_retry_provenance.v2",
+  "source_retry_items": [
+    {
+      "condition_labels": [
+        "live_retry",
+        "enumerator_fallback"
+      ],
+      "exact_verifier_type": "bounded_integer_exhaustive",
+      "exp2934_retry_present": true,
+      "exp2993_selected": true,
+      "task_id": "cbmini-2926-linear-001"
+    }
+  ],
+  "substrate_corrigendum_promotable": true,
+  "tests_run": [
+    "tests/python/test_experiment_3004_aquaforte_beaver_live_retry_provenance.py --no-cov"
+  ]
+}

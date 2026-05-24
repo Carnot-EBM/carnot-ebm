@@ -1,0 +1,48 @@
+{
+  "condition": "live_retry",
+  "duration_seconds_reported": 9.595078,
+  "model": {
+    "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+  },
+  "model_checksum": {
+    "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+    "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+    "mtime_ns": 1778129415691941084,
+    "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "sha256": null,
+    "size_bytes": 16947539744,
+    "status": "available"
+  },
+  "prompt": "Exclude the rejected candidate and return exactly one JSON object in the task solution schema. Use the hard constraints and objective as authority: {\"rejected_candidate\":{\"parse_error\":\"no_json_object\"},\"task_data\":{\"constraints\":[{\"coefficients\":{\"x\":1,\"y\":2},\"op\":\"<=\",\"rhs\":6},{\"coefficients\":{\"x\":2,\"y\":1},\"op\":\"<=\",\"rhs\":7}],\"objective\":{\"x\":3,\"y\":2},\"variables\":{\"x\":[0,4],\"y\":[0,4]}},\"task_id\":\"cbmini-2926-linear-001\",\"task_type\":\"linear_integer\",\"violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}",
+  "raw_output": "violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_0_json_object\"]}violation_rep_reasons\":[\"no_json_object\"]}violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}violation_class\":\"syntax_invalid\",\"violation_reons\":[\"no_json_object\"]}violation_class\":\"syntax_invalid\",\"violation_reasons\":[\"no_json_object\"]}violation_class\":\"invalid_output_format\"}invalid_output_format\"}\n\n```json\n{\n  \"x\":",
+  "raw_output_sha256": "cbfb5d9e0e6993ac2558fd47a4ed215e3d4e6dca76ab81f03c1577e38985d495",
+  "runner": {
+    "attempted": true,
+    "blocker": null,
+    "generation_status": "generated",
+    "inference_substrate": "llama_cpp_gpu",
+    "load_status": "loaded",
+    "tokens_generated": 128,
+    "truly_live": true
+  },
+  "source_retry": {
+    "exp2934_retry_present": true,
+    "exp2993_selected": true
+  },
+  "substrate_label": "live_llm_inference_plus_exact_verifier",
+  "task_id": "cbmini-2926-linear-001",
+  "transcript_written_at_utc": "2026-05-24T19:54:02Z",
+  "verifier": {
+    "accepted": false,
+    "feasible": false,
+    "objective_value": null,
+    "optimal": false,
+    "optimum_value": 11,
+    "syntax_valid": false,
+    "violation_class": "syntax_invalid",
+    "violation_reasons": [
+      "no_json_object"
+    ]
+  }
+}

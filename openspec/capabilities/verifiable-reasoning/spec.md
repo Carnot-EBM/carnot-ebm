@@ -19639,3 +19639,66 @@ labels or blocks the live condition without promoting smoke-only evidence.
 **Implementation Status:** Proposed (Exp 2993)
 
 **Spec traces:** REQ-VERIFY-2993, SCENARIO-VERIFY-2993, Exp 2993
+
+## REQ-VERIFY-3004: AquaForte/BEAVER Live Retry Provenance v2
+
+**Capability:** verifiable-reasoning / durable live retry provenance for exact verifier fallback
+
+Carnot SHALL provide an Exp 3004 provenance repair for the AquaForte/BEAVER
+substrate corrigendum that records live local GGUF retry evidence separately
+from enumerator-only fallback evidence. The repair SHALL preserve model
+identity, model checksum evidence, prompts, raw transcripts, exact verifier
+outcomes, monotonic duration provenance, and promotion gates so downstream
+capstone and matrix artifacts can machine-reject contaminated live evidence.
+
+**Requirements:**
+
+- REQ-VERIFY-3004-1: Before live inference, the runner SHALL verify Exp 3001
+  `sota_headline_ready=true`, CUDA/cache/runtime status, model checksum
+  availability, Exp 2934 retry rows, Exp 2993 corrigendum evidence, and exact
+  verifier availability. Failed setup SHALL produce a blocked artifact with
+  `preconditions_checked=true` rather than live retry evidence.
+- REQ-VERIFY-3004-2: The runner SHALL reconstruct the Exp 2934/Exp 2993 retry
+  item set and SHALL label every condition as either live retry or
+  enumerator-only fallback. Enumerator fallback rows SHALL never contribute to
+  `headline_models_used`, `live_transcript_paths`, or live verifier outcomes.
+- REQ-VERIFY-3004-3: When a mandated headline GGUF is locally cached and runtime
+  preconditions pass, the runner SHALL attempt a bounded live retry with at
+  least one of `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`. It SHALL record the exact prompt, raw
+  output, transcript SHA-256, monotonic start/end timestamps, and exact verifier
+  outcome for each live retry.
+- REQ-VERIFY-3004-4: The runner SHALL run exact validators on live outputs and
+  separately on enumerator fallback outputs, recording separate transcript
+  paths and substrate labels for each condition. Promotion SHALL be refused when
+  any enumerator fallback transcript or verifier result appears in live retry
+  evidence.
+- REQ-VERIFY-3004-5: The artifact
+  `results/experiment_3004_aquaforte_beaver_live_retry_provenance_v2.json`
+  SHALL include `live_retry_provenance_clean`,
+  `substrate_corrigendum_promotable`, `preconditions_checked`,
+  `model_specs`, `headline_models_used`, `model_checksums`,
+  `duration_seconds_live`, `duration_provenance_path`,
+  `live_transcript_paths`, `enumerator_fallback_separated`,
+  `enumerator_fallback_paths`, `impossible_duration_flag`, and
+  `honest_verdict`.
+
+### SCENARIO-VERIFY-3004: Clean Live Retry Provenance Is Machine-Gated
+
+**Given** Exp 3001 reports at least one ready mandated headline GGUF and Exp
+2934/Exp 2993 contain retry rows to repair
+**When** the Exp 3004 runner executes the bounded live retry and the separated
+enumerator fallback condition
+**Then** the deliverable records model identity, checksum evidence, prompts,
+raw outputs, transcript hashes, duration provenance, and exact verifier
+outcomes for live retry evidence
+**And** enumerator fallback evidence is written only to enumerator fallback
+paths and labels
+**And** `substrate_corrigendum_promotable` is true only when live provenance is
+clean, at least one headline model was used, fallback evidence is separated,
+and no impossible duration is flagged.
+
+**Implementation Status:** Proposed (Exp 3004)
+
+**Spec traces:** REQ-VERIFY-3004, SCENARIO-VERIFY-3004, Exp 3004
