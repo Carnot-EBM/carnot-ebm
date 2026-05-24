@@ -7282,3 +7282,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: GateMate host-visible readback smoke (⚠️ Blocked) — honest_verdict=blocked_board_not_detected; results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
 - 2026-05-24: GateMate host-visible readback smoke (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
 - 2026-05-24: GateMate host-visible readback smoke (⚠️ Blocked) — honest_verdict=blocked_flash_failed; results/experiment_2996_gatemate_host_visible_readback_smoke_v1.json
+- 2026-05-24: Cross-corpus matrix v15 (⚠️ Blocked) — honest_verdict=complete: matrix_v15_ready=true; clean=34; flagged=20; blocked=8; gated_skipped=0; pilot_only=4; projection_only=8; missing=1; results/experiment_2998_cross_corpus_matrix_v15.json
