@@ -7241,3 +7241,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: FR-11 Non-Tautological Utility Gate v3 (✅ Complete) — honest_verdict=complete: non_tautological_self_learning_ready; results/experiment_2969_fr11_non_tautological_utility_gate_v3.json
 - 2026-05-24: KAN Forgetting Guard + Constraint Memory Audit v1 (✅ Complete) — honest_verdict=complete: kan_forgetting_guard_ready; results/experiment_2970_kan_forgetting_guard_memory_audit_v1.json
 - 2026-05-24: GateMate Board Detection + Flash Harness v3 (✅ Complete) — honest_verdict=complete: gatemate_flash_preconditions_ready; results/experiment_2971_gatemate_board_detection_flash_harness_v3.json
+- 2026-05-24: Gated GateMate Post-Flash Output Hash Smoke v3 (✅ Complete) — honest_verdict=complete: gatemate_flash_contact_smoke_no_readback; results/experiment_2972_gatemate_post_flash_output_hash_v3.json
