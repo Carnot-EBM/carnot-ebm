@@ -15,7 +15,10 @@ from carnot.experiment_3008_gatemate_host_visible_io_transport import (
     EXP2972_FILENAME,
     CommandResult,
     _honest_verdict,
+    _precondition_summary,
+    _safe_read_text,
     build_artifact,
+    inspect_transport_surface,
     run_experiment,
 )
 
@@ -38,6 +41,8 @@ REQUIRED_FIELDS = (
     "sampler_claim_made",
     "speedup_claim_made",
     "honest_verdict",
+    "precondition_summary",
+    "transport_surface_scan",
 )
 
 
@@ -326,6 +331,113 @@ def test_req_hw_083_uart_candidate_without_reader_is_not_ready(tmp_path: Path) -
     assert artifact["smoke_vector_passed"] is False
     assert "bounded reader" in artifact["io_transport_diagnosis"]["missing_interface"]
     assert artifact["honest_verdict"] == "blocked_io_transport_detected_but_no_bounded_reader"
+
+
+def test_req_hw_083_transport_surface_scan_covers_scripts_and_logic_analyzer(
+    tmp_path: Path,
+) -> None:
+    """REQ-HW-083: GateMate scripts/RTL scans include logic-analyzer options."""
+    _write_prior_gate_artifacts(tmp_path)
+    scripts_dir = tmp_path / "scripts"
+    scripts_dir.mkdir(parents=True, exist_ok=True)
+    probe = scripts_dir / "gatemate_logic_analyzer_probe.py"
+    probe.write_text(
+        "# GateMate helper sketch: logic analyzer capture over uart_tx is not wired.\n",
+        encoding="utf-8",
+    )
+
+    scan = inspect_transport_surface(tmp_path)
+
+    assert scan["checked"] is True
+    assert str(probe) in scan["surface_paths"]
+    assert str(probe) in scan["detected_options"]["logic_analyzer"]
+    assert str(probe) in scan["detected_options"]["uart"]
+
+
+def test_req_hw_083_transport_surface_scan_is_bounded_and_includes_alt_rtl(
+    tmp_path: Path,
+) -> None:
+    """REQ-HW-083: the diagnostic scan is bounded and includes GateMate RTL variants."""
+    _write_prior_gate_artifacts(tmp_path)
+    rtl_dir = tmp_path / "rtl"
+    rtl_dir.mkdir(parents=True, exist_ok=True)
+    alt_rtl = rtl_dir / "gatemate_status_gpio.v"
+    alt_rtl.write_text("module x(output gpio_status); endmodule\n", encoding="utf-8")
+    ignored = tmp_path / "hardware" / "gatemate" / "ignored.bin"
+    ignored.write_bytes(b"uart")
+    large = tmp_path / "scripts" / "gatemate_large.py"
+    large.parent.mkdir(parents=True, exist_ok=True)
+    large.write_text("gatemate\n" + ("x" * 263_000), encoding="utf-8")
+    false_positive = tmp_path / "scripts" / "gatemate_availability.py"
+    false_positive.write_text(
+        "# GateMate availability note; no capture transport is wired.\n",
+        encoding="utf-8",
+    )
+
+    scan = inspect_transport_surface(tmp_path)
+
+    assert str(alt_rtl) in scan["surface_paths"]
+    assert str(alt_rtl) in scan["detected_options"]["gpio"]
+    assert str(ignored) not in scan["surface_paths"]
+    assert str(large) in scan["surface_paths"]
+    assert str(large) not in scan["detected_options"]["uart"]
+    assert str(false_positive) not in scan["detected_options"]["logic_analyzer"]
+    assert _safe_read_text(tmp_path / "missing.txt") == ""
+
+
+def test_req_hw_083_precondition_summary_falls_back_to_interface_rtl() -> None:
+    """REQ-HW-083: target RTL evidence remains explicit even for partial boundaries."""
+    summary = _precondition_summary(
+        boundary={"timing_observation": "legacy", "tool_versions": {}},
+        diagnosis={
+            "io_transport_path": "blocked:no_transport",
+            "interface_evidence": {"rtl_path": "hardware/gatemate/ising_n16_gatemate.v"},
+        },
+        permission_status={"available": False},
+        bitstream_status={"available": False},
+    )
+
+    assert summary["target_rtl"]["path"] == "hardware/gatemate/ising_n16_gatemate.v"
+    assert summary["board_connection"]["detection_basis"] == ""
+
+
+def test_scenario_hw_083_blocked_artifact_names_preconditions_and_transport_scan(
+    tmp_path: Path,
+) -> None:
+    """SCENARIO-HW-083: blocked terminal artifacts name setup and IO evidence."""
+    _write_prior_boundary_artifacts(tmp_path)
+    bitstream = _write_prior_gate_artifacts(tmp_path)
+    loader = str(tmp_path / "suite" / "bin" / "openFPGALoader")
+    runner, _calls = _runner(_tool_results(loader, bitstream))
+
+    artifact = build_artifact(
+        repo_root=tmp_path,
+        run_command=runner,
+        which_func=_which_from(
+            {
+                "openFPGALoader": loader,
+                "yosys": "/suite/bin/yosys",
+                "nextpnr-himbaechel": "/suite/bin/nextpnr-himbaechel",
+                "gmpack": "/suite/bin/gmpack",
+            }
+        ),
+        monotonic=_clock([24.0, 24.1, 24.2, 24.3, 24.4, 24.5, 24.6, 24.7]),
+    )
+
+    summary = artifact["precondition_summary"]
+    assert summary["board_connection"]["board_detected"] is True
+    assert summary["programmer_command"].endswith(str(bitstream))
+    assert summary["target_bitstream"]["verified"] is True
+    assert summary["target_rtl"]["path"].endswith("hardware/gatemate/ising_n16_gatemate.v")
+    assert summary["intended_io_transport_path"].startswith("blocked:")
+    assert summary["permission"]["current_user_rw"] is True
+    assert summary["tool_versions"]["openFPGALoader"]["available"] is True
+
+    scan = artifact["transport_surface_scan"]
+    assert scan["checked"] is True
+    assert scan["detected_options"]["uart"] == []
+    assert "logic-analyzer" in artifact["io_transport_diagnosis"]["missing_interface"]
+    assert artifact["host_visible_io_ready"] is False
 
 
 def test_req_hw_083_ready_verdict_requires_ready_transport() -> None:

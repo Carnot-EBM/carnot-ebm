@@ -282,6 +282,9 @@ def inspect_host_visible_output_path(repo_root: Path) -> dict[str, object]:
         ("status_reg", "status_register"),
         ("csr", "csr_register"),
         ("axi", "axi_register"),
+        ("logic_analyzer", "logic_analyzer"),
+        ("logic analyzer", "logic_analyzer"),
+        ("ila", "logic_analyzer"),
     ]
     for token, path_name in host_tokens:
         if token in lowered_rtl and token in lowered_ccf and pin_constrained:
@@ -305,7 +308,9 @@ def inspect_host_visible_output_path(repo_root: Path) -> dict[str, object]:
             "no physical Pin_in/Pin_out assignment binds output ports to board pins"
         )
     if not any(token in lowered_rtl for token, _path_name in host_tokens):
-        missing_parts.append("no UART/GPIO/JTAG/status-register/CSR/AXI transport exists in RTL")
+        missing_parts.append(
+            "no UART/GPIO/JTAG/status-register/CSR/AXI/logic-analyzer transport exists in RTL"
+        )
     missing_parts.append("spin_out/done are RTL signals only and are not observable by the host")
     return {
         "host_visible_io_supported": False,
