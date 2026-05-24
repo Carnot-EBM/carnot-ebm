@@ -1,5 +1,5 @@
 COMMAND: /opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.pnr.json --freq 12.0 --vopt ccf=/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.cfg
-RETURNCODE: 255
+RETURNCODE: 0
 STDOUT:
 
 STDERR:
@@ -307,7 +307,7 @@ Info: Removing unused constants..
 Info:     Removed unused VCC cell.
 Info:     Removed unused GND cell.
 Info: Fix cell assigned regions..
-Info: Checksum: 0xa562ba19
+Info: Checksum: 0xec89152a
 
 Info: Device utilisation:
 Info: 	            USR_RSTN:       0/      1     0%
@@ -320,10 +320,306 @@ Info: 	              GLBOUT:       1/      1   100%
 Info: 	                 PLL:       0/      4     0%
 Info: 	            CFG_CTRL:       0/      1     0%
 Info: 	              SERDES:       0/      1     0%
-Info: 	              CPE_LT:    4418/  40960    10%
+Info: 	              CPE_LT:    4926/  40960    12%
 Info: 	              CPE_FF:    2217/  40960     5%
 Info: 	           CPE_RAMIO:      39/  40960     0%
 Info: 	            RAM_HALF:       0/     64     0%
 
-ERROR: Cell type 'CC_LUT3' is unsupported (instantiated as '$abc$16269$auto$blifparse.cc:557:parse_blif$16270').
-139 warnings, 1 error
+Info: Placed 0 cells based on constraints.
+Info: Creating initial analytic placement for 3621 cells, random placement wirelen = 440065.
+Info:     at initial placer iter 0, wirelen = 18922
+Info:     at initial placer iter 1, wirelen = 16924
+Info:     at initial placer iter 2, wirelen = 16290
+Info:     at initial placer iter 3, wirelen = 16171
+Info: Running main analytical placer, max placement attempts per cell = 7216200.
+Info:     at iteration #1, type ALL: wirelen solved = 16269, spread = 72206, legal = 106869; time = 0.48s
+Info:     at iteration #2, type ALL: wirelen solved = 18271, spread = 51936, legal = 83280; time = 0.54s
+Info:     at iteration #3, type ALL: wirelen solved = 21767, spread = 55193, legal = 78034; time = 0.33s
+Info:     at iteration #4, type ALL: wirelen solved = 24016, spread = 43452, legal = 62534; time = 0.28s
+Info:     at iteration #5, type ALL: wirelen solved = 25403, spread = 45093, legal = 60482; time = 0.21s
+Info:     at iteration #6, type ALL: wirelen solved = 26354, spread = 47679, legal = 55937; time = 0.16s
+Info:     at iteration #7, type ALL: wirelen solved = 26794, spread = 60544, legal = 66576; time = 0.13s
+Info:     at iteration #8, type ALL: wirelen solved = 28873, spread = 53893, legal = 57700; time = 0.10s
+Info:     at iteration #9, type ALL: wirelen solved = 29596, spread = 48087, legal = 53175; time = 0.11s
+Info:     at iteration #10, type ALL: wirelen solved = 30059, spread = 53074, legal = 57328; time = 0.11s
+Info:     at iteration #11, type ALL: wirelen solved = 31430, spread = 47971, legal = 57277; time = 0.15s
+Info:     at iteration #12, type ALL: wirelen solved = 32775, spread = 49280, legal = 58696; time = 0.16s
+Info:     at iteration #13, type ALL: wirelen solved = 33545, spread = 46437, legal = 53739; time = 0.13s
+Info:     at iteration #14, type ALL: wirelen solved = 33613, spread = 47074, legal = 58707; time = 0.16s
+Info: HeAP Placer Time: 3.87s
+Info:   of which solving equations: 0.94s
+Info:   of which spreading cells: 0.24s
+Info:   of which strict legalisation: 2.02s
+
+Info: Running simulated annealing placer for refinement.
+Info:   at iteration #1: temp = 0.000000, timing cost = 215, wirelen = 53175
+Info:   at iteration #5: temp = 0.000000, timing cost = 227, wirelen = 38502
+Info:   at iteration #10: temp = 0.000000, timing cost = 238, wirelen = 37058
+Info:   at iteration #15: temp = 0.000000, timing cost = 197, wirelen = 36407
+Info:   at iteration #20: temp = 0.000000, timing cost = 190, wirelen = 36016
+Info:   at iteration #20: temp = 0.000000, timing cost = 189, wirelen = 36020 
+Info: SA placement time 9.67s
+
+Info: Max frequency for clock '$iopadmap$clk': 61.72 MHz (PASS at 12.00 MHz)
+
+Info: Max delay <async> -> posedge $iopadmap$clk: 23.59 ns
+
+Info: Slack histogram:
+Info:  legend: * represents 6 endpoint(s)
+Info:          + represents [1,6) endpoint(s)
+Info: [ 67131,  67821) |+
+Info: [ 67821,  68511) |+
+Info: [ 68511,  69201) |*+
+Info: [ 69201,  69891) |*** 
+Info: [ 69891,  70581) |+
+Info: [ 70581,  71271) |+
+Info: [ 71271,  71961) |*+
+Info: [ 71961,  72651) |***+
+Info: [ 72651,  73341) |********+
+Info: [ 73341,  74031) |************+
+Info: [ 74031,  74721) |**********+
+Info: [ 74721,  75411) |***********+
+Info: [ 75411,  76101) |**************+
+Info: [ 76101,  76791) |*******************+
+Info: [ 76791,  77481) |********************+
+Info: [ 77481,  78171) |*******************+
+Info: [ 78171,  78861) |********************************************************+
+Info: [ 78861,  79551) |************************************************************ 
+Info: [ 79551,  80241) |**************************************************+
+Info: [ 80241,  80931) |****************************************************+
+Info: Checksum: 0x59ca9825
+Info: Repacking RAMs..
+Info: Repacking CPEs..
+Info: Remove unused clocking cells..
+Info: Routing multipliers...
+Info: Routing clock nets...
+Info:     routing net '$iopadmap$clk' to 2217 users
+Info: Clock router time 5.97s.
+Info: Running router2...
+Info: Setting up routing resources...
+Info: Running main router loop...
+Info:     iter=1 wires=171513 overused=8604 overuse=9130 resources=3417 overused=135 overuse=159 archfail=NA
+Info:     iter=2 wires=179465 overused=2862 overuse=2881 resources=3510 overused=26 overuse=28 archfail=NA
+Info:     iter=3 wires=182067 overused=1166 overuse=1169 resources=3813 overused=15 overuse=16 archfail=NA
+Info:     iter=4 wires=183330 overused=482 overuse=484 resources=3861 overused=6 overuse=6 archfail=NA
+Info:     iter=5 wires=183683 overused=264 overuse=264 resources=3892 overused=1 overuse=2 archfail=NA
+Info:     iter=6 wires=183532 overused=193 overuse=193 resources=3876 overused=3 overuse=4 archfail=NA
+Info:     iter=7 wires=183520 overused=79 overuse=79 resources=3881 overused=2 overuse=3 archfail=NA
+Info:     iter=8 wires=183773 overused=53 overuse=53 resources=3882 overused=2 overuse=2 archfail=NA
+Info:     iter=9 wires=183895 overused=20 overuse=20 resources=3880 overused=1 overuse=1 archfail=NA
+Info:     iter=10 wires=183918 overused=14 overuse=14 resources=3885 overused=2 overuse=2 archfail=NA
+Info:     iter=11 wires=183915 overused=11 overuse=11 resources=3885 overused=2 overuse=2 archfail=NA
+Info:     iter=12 wires=183925 overused=6 overuse=6 resources=3869 overused=1 overuse=1 archfail=NA
+Info:     iter=13 wires=183925 overused=4 overuse=4 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=14 wires=183944 overused=3 overuse=3 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=15 wires=183945 overused=2 overuse=2 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=16 wires=183944 overused=3 overuse=3 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=17 wires=183939 overused=2 overuse=2 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=18 wires=183943 overused=2 overuse=2 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=19 wires=183929 overused=2 overuse=2 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=20 wires=183937 overused=1 overuse=1 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=21 wires=183937 overused=1 overuse=1 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=22 wires=183941 overused=1 overuse=1 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=23 wires=183938 overused=1 overuse=1 resources=3871 overused=0 overuse=0 archfail=NA
+Info:     iter=24 wires=183940 overused=0 overuse=0 resources=3871 overused=0 overuse=0 archfail=0
+Info: Router2 time 10.38s
+Info: Running router1 to check that route is legal...
+
+Info: Routing..
+Info: Setting up routing queue.
+Info: Routing 0 arcs.
+Info:            |   (re-)routed arcs  |   delta    | remaining|       time spent     |
+Info:    IterCnt |  w/ripup   wo/ripup |  w/r  wo/r |      arcs| batch(sec) total(sec)|
+Info:          0 |        0          0 |    0     0 |         0|       0.61       0.61|
+Info: Routing complete.
+Info: Router1 time 0.61s
+Info: Checksum: 0x3af80020
+
+Info: Critical path report for clock '$iopadmap$clk' (posedge -> posedge):
+Info:       type curr  total name
+Info:   clk-skew  0.85  0.85 Net $iopadmap$clk (44,57) -> (22,63)
+Info:                          Sink $auto$ff.cc:337:slice$7367.CLK_INT
+Info:   clk-to-q  0.59  1.45 Source $auto$ff.cc:337:slice$7401.DOUT
+Info:    routing  7.45  8.90 Net col_idx[1] (44,57) -> (7,8)
+Info:                          Sink $auto$muxcover.cc:526:implement_best_cover$15454.D0_03
+Info:                          Defined in:
+Info:                               /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:74.11-74.23
+Info:      logic  0.47  9.37 Source $auto$muxcover.cc:526:implement_best_cover$15454.OUT1
+Info:    routing  2.18  11.56 Net $memory\j_matrix$rdmux[0][5][24]$b$2087[7] (7,8) -> (14,15)
+Info:                          Sink $auto$muxcover.cc:526:implement_best_cover$15457.IN2
+Info:      logic  0.51  12.06 Source $auto$muxcover.cc:526:implement_best_cover$15457.OUT1
+Info:    routing  1.95  14.02 Net $memory\j_matrix$rdmux[0][3][6]$a$1960[7] (14,15) -> (14,26)
+Info:                          Sink $auto$muxcover.cc:526:implement_best_cover$15473.IN1
+Info:      logic  0.52  14.54 Source $auto$muxcover.cc:526:implement_best_cover$15473.OUT1
+Info:    routing  4.30  18.84 Net $memory\j_matrix$rdmux[0][1][1]$b$1928[7] (14,26) -> (29,53)
+Info:                          Sink $auto$muxcover.cc:526:implement_best_cover$15474.IN4
+Info:      logic  0.50  19.34 Source $auto$muxcover.cc:526:implement_best_cover$15474.OUT1
+Info:    routing  2.66  22.00 Net coupling_ext[10] (29,53) -> (44,53)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16400.D0_10
+Info:                          Defined in:
+Info:                               /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:75.28-75.40
+Info:      logic  0.61  22.61 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16400.OUT
+Info:    routing  4.37  26.98 Net $auto$alumacc.cc:512:replace_alu$1401.BB[10] (44,53) -> (32,49)
+Info:                          Sink $auto$alumacc.cc:512:replace_alu$1401.slice[11].addf_i.D0_03
+Info:                          Defined in:
+Info:                               /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:98.26-98.50
+Info:                               /opt/oss-cad-suite/lib/../share/yosys/gatemate/arith_map.v:49.21-49.23
+Info:      logic  0.57  27.54 Source $auto$alumacc.cc:512:replace_alu$1401.slice[11].addf_i.OUT2
+Info:    routing  2.45  29.99 Net $auto$alumacc.cc:512:replace_alu$1401.Y[11] (32,49) -> (40,43)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16414.D1_01
+Info:                          Defined in:
+Info:                               /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:98.26-98.50
+Info:                               /opt/oss-cad-suite/lib/../share/yosys/gatemate/arith_map.v:33.26-33.27
+Info:      logic  0.60  30.59 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16414.OUT
+Info:    routing  2.91  33.51 Net field_acc_next[11] (40,43) -> (34,49)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col0$row5$a_passthru_upper.IN1
+Info:                          Defined in:
+Info:                               /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:76.28-76.42
+Info:      logic  0.61  34.11 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col0$row5$a_passthru_upper.OUT
+Info:    routing  2.43  36.54 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col0$row5$a_passthru_upper$field_acc_next[11]$a11_passthru (34,49) -> (35,50)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col1$row6$mult_lower.IN8
+Info:      logic  0.47  37.01 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col1$row6$mult_lower.COUTX
+Info:    routing  0.00  37.01 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col1$row6$mult_lower$so2 (35,50) -> (36,50)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col2$row5$mult_lower.CINX
+Info:      logic  0.58  37.59 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col2$row5$mult_lower.COUTY1
+Info:    routing  0.00  37.59 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col2$row5$mult_lower$eta_active[3]$co2 (36,50) -> (36,51)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col2$row6$mult_lower.CINY1
+Info:      logic  0.44  38.03 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col2$row6$mult_lower.COUTX
+Info:    routing  0.00  38.03 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col2$row6$mult_lower$so2 (36,51) -> (37,51)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col3$row5$mult_lower.CINX
+Info:      logic  0.58  38.61 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col3$row5$mult_lower.COUTY1
+Info:    routing  0.00  38.61 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col3$row5$mult_lower$eta_active[5]$co4 (37,51) -> (37,52)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col3$row6$mult_lower.CINY1
+Info:      logic  0.44  39.04 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col3$row6$mult_lower.COUTX
+Info:    routing  0.00  39.04 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col3$row6$mult_lower$so2 (37,52) -> (38,52)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col4$row5$mult_lower.CINX
+Info:      logic  0.58  39.62 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col4$row5$mult_lower.COUTY1
+Info:    routing  0.00  39.62 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col4$row5$mult_lower$eta_active[7]$co6 (38,52) -> (38,53)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col4$row6$mult_lower.CINY1
+Info:      logic  0.44  40.06 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col4$row6$mult_lower.COUTX
+Info:    routing  0.00  40.06 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col4$row6$mult_lower$so2 (38,53) -> (39,53)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row5$mult_lower.CINX
+Info:      logic  0.58  40.64 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row5$mult_lower.COUTY1
+Info:    routing  0.00  40.64 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row5$mult_lower$eta_active[9]$co8 (39,53) -> (39,54)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row6$mult_lower.CINY1
+Info:      logic  0.46  41.10 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row6$mult_lower.COUTY2
+Info:    routing  0.00  41.10 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row6$mult_lower$eta_active[9]$co9 (39,54) -> (39,55)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row7$mult_lower.CINY2
+Info:      logic  0.22  41.31 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row7$mult_lower.COUTX
+Info:    routing  0.00  41.31 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col5$row7$mult_lower$so2 (39,55) -> (40,55)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row6$mult_lower.CINX
+Info:      logic  0.58  41.89 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row6$mult_lower.COUTY1
+Info:    routing  0.00  41.89 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row6$mult_lower$eta_active[11]$co10 (40,55) -> (40,56)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row7$mult_lower.CINY1
+Info:      logic  0.46  42.35 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row7$mult_lower.COUTY2
+Info:    routing  0.00  42.35 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row7$mult_lower$eta_active[11]$co11 (40,56) -> (40,57)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row8$mult_lower.CINY2
+Info:      logic  0.22  42.57 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row8$mult_lower.COUTX
+Info:    routing  0.00  42.57 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col6$row8$mult_lower$so2 (40,57) -> (41,57)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row7$mult_lower.CINX
+Info:      logic  0.58  43.15 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row7$mult_lower.COUTY1
+Info:    routing  0.00  43.15 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row7$mult_lower$eta_active[13]$co12 (41,57) -> (41,58)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row8$mult_lower.CINY1
+Info:      logic  0.46  43.61 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row8$mult_lower.COUTY2
+Info:    routing  0.00  43.61 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row8$mult_lower$eta_active[13]$co13 (41,58) -> (41,59)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row9$mult_lower.CINY2
+Info:      logic  0.22  43.83 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row9$mult_lower.COUTX
+Info:    routing  0.00  43.83 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col7$row9$mult_lower$so2 (41,59) -> (42,59)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row8$mult_lower.CINX
+Info:      logic  0.58  44.40 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row8$mult_lower.COUTY1
+Info:    routing  0.00  44.40 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row8$mult_lower$eta_active[15]$co14 (42,59) -> (42,60)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row9$mult_lower.CINY1
+Info:      logic  0.46  44.87 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row9$mult_lower.COUTY2
+Info:    routing  0.00  44.87 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row9$mult_lower$eta_active[15]$co15 (42,60) -> (42,61)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row10$mult_lower.CINY2
+Info:      logic  0.22  45.08 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row10$mult_lower.COUTX
+Info:    routing  0.00  45.08 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col8$row10$mult_lower$so2 (42,61) -> (43,61)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row9$mult_lower.CINX
+Info:      logic  0.58  45.66 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row9$mult_lower.COUTY1
+Info:    routing  0.00  45.66 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row9$mult_lower$eta_active[15]$co16 (43,61) -> (43,62)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row10$mult_lower.CINY1
+Info:      logic  0.46  46.12 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row10$mult_lower.COUTY2
+Info:    routing  0.00  46.12 Net $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row10$mult_lower$eta_active[15]$co17 (43,62) -> (43,63)
+Info:                          Sink $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row11$mult_lower.CINY2
+Info:      logic  0.18  46.30 Source $mul$/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:101$268$col9$row11$mult_lower.CPOUT2
+Info:    routing  3.58  49.88 Net field_eta_q1_15[39] (43,63) -> (46,56)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16764.D0_00
+Info:                          Defined in:
+Info:                               /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:77.19-77.34
+Info:      logic  0.61  50.49 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16764.OUT
+Info:    routing  0.94  51.42 Net $abc$16269$new_n1497 (46,56) -> (46,59)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16914.D0_01
+Info:      logic  0.56  51.98 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16914.OUT
+Info:    routing  2.28  54.26 Net $auto$maccmap.cc:114:fulladd$7185.X[39] (46,59) -> (48,61)
+Info:                          Sink $auto$maccmap.cc:240:synth$7186.slice[41].addf_i.D0_03
+Info:                          Defined in:
+Info:                               /opt/oss-cad-suite/lib/../share/yosys/techmap.v:200.21-200.22
+Info:      logic  0.57  54.83 Source $auto$maccmap.cc:240:synth$7186.slice[41].addf_i.OUT2
+Info:    routing  3.44  58.27 Net candidate_q1_15[41] (48,61) -> (23,64)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16692.D0_10
+Info:                          Defined in:
+Info:                               /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v:80.19-80.34
+Info:      logic  0.61  58.88 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16692.OUT
+Info:    routing  2.55  61.43 Net $abc$16269$new_n1425 (23,64) -> (22,64)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16693.D1_01
+Info:      logic  0.50  61.93 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16693.OUT
+Info:    routing  1.20  63.12 Net $abc$16269$new_n1426 (22,64) -> (22,63)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16695.D1_01
+Info:      logic  0.50  63.63 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16695.OUT
+Info:    routing  0.00  63.63 Net $abc$16269$auto$rtlil.cc:3501:MuxGate$11534 (22,63) -> (22,63)
+Info:                          Sink $auto$ff.cc:337:slice$7367.DIN
+Info:      setup  0.10  63.73 Source $auto$ff.cc:337:slice$7367.DIN
+Info: 18.19 ns logic, 45.54 ns routing
+
+Info: Critical path report for cross-domain path '<async>' -> 'posedge $iopadmap$clk':
+Info:       type curr  total name
+Info:     source  0.00  0.00 Source $iopadmap$ising_n16_gatemate.load_coupling.Y
+Info:    routing  0.00  0.00 Net $iopadmap$ising_n16_gatemate.load_coupling$conn$Y (91,133) -> (91,133)
+Info:                          Sink $iopadmap$ising_n16_gatemate.load_coupling$iosel.GPIO_IN
+Info:      logic  0.38  0.38 Source $iopadmap$ising_n16_gatemate.load_coupling$iosel.IN1
+Info:    routing  11.96  12.34 Net $abc$16269$iopadmap$load_coupling (91,133) -> (27,34)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16943.D0_01
+Info:      logic  0.56  12.90 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16943.OUT
+Info:    routing  2.01  14.91 Net $abc$16269$new_n1676 (27,34) -> (24,34)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$16961.D1_01
+Info:      logic  0.50  15.41 Source $abc$16269$auto$blifparse.cc:397:parse_blif$16961.OUT
+Info:    routing  6.49  21.90 Net $abc$16269$new_n1694 (24,34) -> (19,11)
+Info:                          Sink $abc$16269$auto$blifparse.cc:397:parse_blif$17070.D0_10
+Info:      logic  0.61  22.50 Source $abc$16269$auto$blifparse.cc:397:parse_blif$17070.OUT
+Info:    routing  3.76  26.26 Net $abc$16269$memory\j_matrix$wren[99][0][0]$y$3386 (19,11) -> (18,14)
+Info:                          Sink $auto$ff.cc:337:slice$5938.EN_INT
+Info:      setup  0.00  26.26 Source $auto$ff.cc:337:slice$5938.EN_INT
+Info: 2.05 ns logic, 24.21 ns routing
+
+Info: Max frequency for clock '$iopadmap$clk': 15.69 MHz (PASS at 12.00 MHz)
+
+Info: Max delay <async> -> posedge $iopadmap$clk: 26.26 ns
+
+Info: Slack histogram:
+Info:  legend: * represents 17 endpoint(s)
+Info:          + represents [1,17) endpoint(s)
+Info: [ 19607,  22441) |+
+Info: [ 22441,  25275) | 
+Info: [ 25275,  28109) | 
+Info: [ 28109,  30943) | 
+Info: [ 30943,  33777) | 
+Info: [ 33777,  36611) | 
+Info: [ 36611,  39445) | 
+Info: [ 39445,  42279) | 
+Info: [ 42279,  45113) | 
+Info: [ 45113,  47947) |+
+Info: [ 47947,  50781) |+
+Info: [ 50781,  53615) |+
+Info: [ 53615,  56449) | 
+Info: [ 56449,  59283) | 
+Info: [ 59283,  62117) |+
+Info: [ 62117,  64951) |+
+Info: [ 64951,  67785) |**+
+Info: [ 67785,  70619) |************************************************************ 
+Info: [ 70619,  73453) |**********************************************************+
+Info: [ 73453,  76287) |*******+
+Info: Update configuration based on routing..
+
+139 warnings, 0 errors
+
+Info: Program finished normally.

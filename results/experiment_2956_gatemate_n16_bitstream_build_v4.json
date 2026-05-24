@@ -1,16 +1,20 @@
 {
   "bitstream_path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
-  "bitstream_sha256": "",
+  "bitstream_sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
   "build_log_paths": [
     "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2956_gatemate_n16_bitstream_build_v4/synthesis.log",
-    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2956_gatemate_n16_bitstream_build_v4/pnr.log"
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2956_gatemate_n16_bitstream_build_v4/pnr.log",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_2956_gatemate_n16_bitstream_build_v4/pack.log"
   ],
-  "duration_s": 1.450259,
-  "failure_command": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.pnr.json --freq 12.0 --vopt ccf=/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.cfg",
-  "failure_excerpt": "ERROR: Cell type 'CC_LUT3' is unsupported (instantiated as '$abc$16269$auto$blifparse.cc:557:parse_blif$16270').",
-  "gatemate_bitstream_built": false,
-  "honest_verdict": "blocked_gatemate_pnr_failed",
+  "constraints_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf",
+  "device": "CCGM1A1",
+  "duration_s": 33.730769,
+  "failure_command": "",
+  "failure_excerpt": "",
+  "gatemate_bitstream_built": true,
+  "honest_verdict": "complete: gatemate_n16_bitstream_built",
   "inference_substrate": "hardware_build",
+  "missing_toolchain": [],
   "no_flash_attempted": true,
   "pack_command": "/opt/oss-cad-suite/bin/gmpack /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.cfg /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
   "pnr_command": "/opt/oss-cad-suite/bin/nextpnr-himbaechel --device CCGM1A1 --json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json --write /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.pnr.json --freq 12.0 --vopt ccf=/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf --vopt allow-unconstrained --vopt out=/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.cfg",
@@ -62,8 +66,18 @@
       "version_returncode": 0
     }
   ],
+  "rtl_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
   "run_date": "20260524",
-  "synthesis_command": "/opt/oss-cad-suite/bin/yosys -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json; stat'",
-  "timing_summary": {},
-  "utilization_summary": {}
+  "synthesis_command": "/opt/oss-cad-suite/bin/yosys -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -luttree -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json; stat'",
+  "timing_summary": {
+    "max_frequency_mhz": 15.69,
+    "requested_frequency_mhz": 12.0,
+    "timing_met": true
+  },
+  "top_module": "ising_n16_gatemate",
+  "utilization_summary": {
+    "nextpnr_resource_lines": [],
+    "yosys_cell_counts": {},
+    "yosys_cells_total": null
+  }
 }

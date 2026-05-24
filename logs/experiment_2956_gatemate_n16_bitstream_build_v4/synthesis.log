@@ -1,4 +1,4 @@
-COMMAND: /opt/oss-cad-suite/bin/yosys -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json; stat'
+COMMAND: /opt/oss-cad-suite/bin/yosys -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -luttree -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json; stat'
 RETURNCODE: 0
 STDOUT:
 
@@ -9,7 +9,7 @@ STDOUT:
  \----------------------------------------------------------------------------/
  Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
 
--- Running command `read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json; stat' --
+-- Running command `read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; synth_gatemate -top ising_n16_gatemate -nomx8 -luttree -json /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.json; stat' --
 
 1. Executing Verilog-2005 frontend: /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v
 Parsing SystemVerilog input from `/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v' to AST representation.
@@ -2464,6 +2464,7 @@ No more expansions possible.
 2.45. Executing ABC pass (technology mapping using ABC).
 
 2.45.1. Extracting gate netlist of module `\ising_n16_gatemate' to `<abc-temp-dir>/input.blif'..
+Warning: ABC: Merged scl conversion failed, using liberty format
 
 2.45.1.1. Executed ABC.
 Extracted 1682 gates and 2129 wires to a netlist network with 445 inputs and 557 outputs.
@@ -2472,7 +2473,7 @@ ABC: UC Berkeley, ABC 1.01 (compiled Apr 24 2026 04:14:48)
 ABC: abc 01> empty
 ABC: abc 01> source <abc-temp-dir>/abc.script
 ABC: + read_blif <abc-temp-dir>/input.blif 
-ABC: + read_lut <abc-temp-dir>/lutdefs.txt 
+ABC: + read_library <yosys-exe-dir>/../share/yosys/gatemate/lut_tree_cells.genlib 
 ABC: + strash 
 ABC: + &get -n 
 ABC: + &fraig -x 
@@ -2482,136 +2483,223 @@ ABC: Warning: The network is combinational (run "fraig" or "fraig_sweep").
 ABC: + dc2 
 ABC: + dretime 
 ABC: + strash 
-ABC: + dch -f 
-ABC: + if 
-ABC: + mfs2 
-ABC: + lutpack -S 1 
-ABC: + dress <abc-temp-dir>/input.blif 
-ABC: Total number of equiv classes                =     677.
-ABC: Participating nodes from both networks       =    1358.
-ABC: Participating nodes from the first network   =     676. (  89.54 % of nodes)
-ABC: Participating nodes from the second network  =     682. (  90.33 % of nodes)
-ABC: Node pairs (any polarity)                    =     676. (  89.54 % of names can be moved)
-ABC: Node pairs (same polarity)                   =     612. (  81.06 % of names can be moved)
-ABC: Total runtime =     0.08 sec
+ABC: + &get -n 
+ABC: + &dch -f 
+ABC: + &nf 
+ABC: + &put 
 ABC: + write_blif <abc-temp-dir>/output.blif 
 ABC: 
 ABC: YOSYS_ABC_DONE 
 
 2.45.1.2. Re-integrating ABC results.
-ABC RESULTS:              $lut cells:      754
+ABC RESULTS:          $__CC2_A cells:      300
+ABC RESULTS:          $__CC2_O cells:       35
+ABC RESULTS:          $__CC2_X cells:        1
+ABC RESULTS:         $__CC3_AA cells:        7
+ABC RESULTS:         $__CC3_AO cells:       47
+ABC RESULTS:         $__CC3_OA cells:       17
+ABC RESULTS:         $__CC3_OO cells:        1
+ABC RESULTS:         $__CC3_XA cells:       39
+ABC RESULTS:         $__CC3_XX cells:       39
+ABC RESULTS:        $__CC4_AAA cells:      101
+ABC RESULTS:        $__CC4_AAO cells:        3
+ABC RESULTS:       $__CC4_AO_A cells:        4
+ABC RESULTS:       $__CC4_AO_O cells:        2
+ABC RESULTS:       $__CC4_OA_O cells:        9
+ABC RESULTS:       $__CC4_OO_A cells:        5
+ABC RESULTS:        $__CC4_XAX cells:        8
+ABC RESULTS:      $__CC5_AAA_A cells:       27
+ABC RESULTS:      $__CC5_AAA_O cells:        1
+ABC RESULTS:      $__CC5_AAO_O cells:       12
+ABC RESULTS:      $__CC5_AOA_A cells:       22
+ABC RESULTS:         $__CC_MUX cells:      194
+ABC RESULTS:         $__CC_NOT cells:      153
 ABC RESULTS:        internal signals:     1127
 ABC RESULTS:           input signals:      445
 ABC RESULTS:          output signals:      557
 Removing temp directory.
 Removing global temp directory.
-Removed 0 unused cells and 6328 unused wires.
 
 2.46. Executing TECHMAP pass (map to technology primitives).
 
-2.46.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_map.v
+2.46.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_tree_map.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_tree_map.v' to AST representation.
+Generating RTLIL representation for module `$__ZERO'.
+Generating RTLIL representation for module `$__ONE'.
+Generating RTLIL representation for module `$__CC_BUF'.
+Generating RTLIL representation for module `$__CC_MUX'.
+Generating RTLIL representation for module `$__CC2_A'.
+Generating RTLIL representation for module `$__CC3_A_O'.
+Generating RTLIL representation for module `$__CC3_A_X'.
+Generating RTLIL representation for module `$__CC2_O'.
+Generating RTLIL representation for module `$__CC3_O_A'.
+Generating RTLIL representation for module `$__CC3_O_X'.
+Generating RTLIL representation for module `$__CC2_X'.
+Generating RTLIL representation for module `$__CC3_X_A'.
+Generating RTLIL representation for module `$__CC3_X_O'.
+Generating RTLIL representation for module `$__CC3_AA'.
+Generating RTLIL representation for module `$__CC4_AA_O'.
+Generating RTLIL representation for module `$__CC4_AA_X'.
+Generating RTLIL representation for module `$__CC3_OO'.
+Generating RTLIL representation for module `$__CC4_OO_A'.
+Generating RTLIL representation for module `$__CC4_OO_X'.
+Generating RTLIL representation for module `$__CC3_XX'.
+Generating RTLIL representation for module `$__CC4_XX_A'.
+Generating RTLIL representation for module `$__CC4_XX_O'.
+Generating RTLIL representation for module `$__CC3_AO'.
+Generating RTLIL representation for module `$__CC4_AO_A'.
+Generating RTLIL representation for module `$__CC4_AO_O'.
+Generating RTLIL representation for module `$__CC4_AO_X'.
+Generating RTLIL representation for module `$__CC3_OA'.
+Generating RTLIL representation for module `$__CC4_OA_A'.
+Generating RTLIL representation for module `$__CC4_OA_O'.
+Generating RTLIL representation for module `$__CC4_OA_X'.
+Generating RTLIL representation for module `$__CC3_AX'.
+Generating RTLIL representation for module `$__CC4_AX_A'.
+Generating RTLIL representation for module `$__CC4_AX_O'.
+Generating RTLIL representation for module `$__CC4_AX_X'.
+Generating RTLIL representation for module `$__CC3_XA'.
+Generating RTLIL representation for module `$__CC4_XA_A'.
+Generating RTLIL representation for module `$__CC4_XA_O'.
+Generating RTLIL representation for module `$__CC4_XA_X'.
+Generating RTLIL representation for module `$__CC4_AAA'.
+Generating RTLIL representation for module `$__CC5_AAA_A'.
+Generating RTLIL representation for module `$__CC5_AAA_O'.
+Generating RTLIL representation for module `$__CC5_AAA_X'.
+Generating RTLIL representation for module `$__CC4_AXA'.
+Generating RTLIL representation for module `$__CC5_AXA_A'.
+Generating RTLIL representation for module `$__CC5_AXA_O'.
+Generating RTLIL representation for module `$__CC5_AXA_X'.
+Generating RTLIL representation for module `$__CC4_XAX'.
+Generating RTLIL representation for module `$__CC5_XAX_A'.
+Generating RTLIL representation for module `$__CC5_XAX_O'.
+Generating RTLIL representation for module `$__CC5_XAX_X'.
+Generating RTLIL representation for module `$__CC4_AAX'.
+Generating RTLIL representation for module `$__CC5_AAX_A'.
+Generating RTLIL representation for module `$__CC5_AAX_O'.
+Generating RTLIL representation for module `$__CC5_AAX_X'.
+Generating RTLIL representation for module `$__CC4_AXX'.
+Generating RTLIL representation for module `$__CC5_AXX_A'.
+Generating RTLIL representation for module `$__CC5_AXX_O'.
+Generating RTLIL representation for module `$__CC5_AXX_X'.
+Generating RTLIL representation for module `$__CC4_XXX'.
+Generating RTLIL representation for module `$__CC5_XXX_A'.
+Generating RTLIL representation for module `$__CC5_XXX_O'.
+Generating RTLIL representation for module `$__CC5_XXX_X'.
+Generating RTLIL representation for module `$__CC4_AAO'.
+Generating RTLIL representation for module `$__CC5_AAO_A'.
+Generating RTLIL representation for module `$__CC5_AAO_O'.
+Generating RTLIL representation for module `$__CC5_AAO_X'.
+Generating RTLIL representation for module `$__CC4_AOA'.
+Generating RTLIL representation for module `$__CC5_AOA_A'.
+Generating RTLIL representation for module `$__CC5_AOA_O'.
+Generating RTLIL representation for module `$__CC5_AOA_X'.
+Generating RTLIL representation for module `$__CC4_AOX'.
+Generating RTLIL representation for module `$__CC5_AOX_A'.
+Generating RTLIL representation for module `$__CC5_AOX_O'.
+Generating RTLIL representation for module `$__CC5_AOX_X'.
+Successfully finished Verilog frontend.
+
+2.46.2. Continuing TECHMAP pass.
+Using template $__CC_MUX for cells of type $__CC_MUX.
+Using template $__CC2_O for cells of type $__CC2_O.
+Using template $__CC3_OA for cells of type $__CC3_OA.
+Using template $__CC5_AOA_A for cells of type $__CC5_AOA_A.
+Using template $__CC4_XAX for cells of type $__CC4_XAX.
+Using template $__CC4_AAA for cells of type $__CC4_AAA.
+Using template $__CC4_AO_A for cells of type $__CC4_AO_A.
+Using template $__CC4_OA_O for cells of type $__CC4_OA_O.
+Using template $__CC4_OO_A for cells of type $__CC4_OO_A.
+Using template $__CC2_A for cells of type $__CC2_A.
+Using template $__CC3_AA for cells of type $__CC3_AA.
+Using template $__CC3_OO for cells of type $__CC3_OO.
+Using template $__CC3_AO for cells of type $__CC3_AO.
+Using template $__CC4_AAO for cells of type $__CC4_AAO.
+Using template $__CC5_AAA_A for cells of type $__CC5_AAA_A.
+Using template $__CC5_AAO_O for cells of type $__CC5_AAO_O.
+Using template $__CC4_AO_O for cells of type $__CC4_AO_O.
+Using template $__CC5_AAA_O for cells of type $__CC5_AAA_O.
+Using template $__CC3_XA for cells of type $__CC3_XA.
+Using template $__CC3_XX for cells of type $__CC3_XX.
+Using template $__CC2_X for cells of type $__CC2_X.
+No more expansions possible.
+<suppressed ~950 debug messages>
+
+2.47. Executing GATEMATE_FOLDINV pass (folding LUT tree inverters).
+
+2.48. Executing TECHMAP pass (map to technology primitives).
+
+2.48.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/inv_map.v
+Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/inv_map.v' to AST representation.
+Generating RTLIL representation for module `$__CC_NOT'.
+Successfully finished Verilog frontend.
+
+2.48.2. Continuing TECHMAP pass.
+Using template $__CC_NOT for cells of type $__CC_NOT.
+No more expansions possible.
+<suppressed ~156 debug messages>
+Removed 144 unused cells and 10175 unused wires.
+
+2.49. Executing TECHMAP pass (map to technology primitives).
+
+2.49.1. Executing Verilog-2005 frontend: /opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_map.v
 Parsing Verilog input from `/opt/oss-cad-suite/lib/../share/yosys/gatemate/lut_map.v' to AST representation.
 Generating RTLIL representation for module `$lut'.
 Successfully finished Verilog frontend.
 
-2.46.2. Continuing TECHMAP pass.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'10101100 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'11001010 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00110101 for cells of type $lut.
-Using template $paramod$89add7395f09a7f1d31ba23a20843f5b8e155407$lut for cells of type $lut.
-Using template $paramod$b4f85a6321a00b090afc4e21d68e7b99eb94d149$lut for cells of type $lut.
-Using template $paramod$b297295e19b03521716155b85537bbe86d6a9ae6$lut for cells of type $lut.
-Using template $paramod$2d07c1a6c53c7b878509360922c4fa5ebedc3011$lut for cells of type $lut.
-Using template $paramod$571404c0889eaf57f492cb5e37f8acb5df5852f9$lut for cells of type $lut.
-Using template $paramod$1bf62ab10e48d71d6497bccacf5c70420c470fe9$lut for cells of type $lut.
-Using template $paramod$f54c0ffd7b041ca43eac7710ab19c0666d826c22$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0001 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00001011 for cells of type $lut.
-Using template $paramod$e49f6e3576ef1a6d2f58c54414dbb786af8cc869$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0100 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00000001 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01110000 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01000000 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'10000000 for cells of type $lut.
-Using template $paramod$99a2a175d178a040bb1ffceb53184fb0f59423c6$lut for cells of type $lut.
-Using template $paramod$179512a187da069f3b79ef6612a41e494e7d54b6$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1000 for cells of type $lut.
-Using template $paramod$94ac66a11090dca84889e55fcf03297912a5b7ec$lut for cells of type $lut.
-Using template $paramod$272652f6c6fbe9a75eff76e45cc7e2788835518b$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'10110000 for cells of type $lut.
-Using template $paramod$f3e1547c4b47e64c590e75cf09078b2507c8cc75$lut for cells of type $lut.
-Using template $paramod$cc08dba3aac8677e797984bdf18a09dd37547dd3$lut for cells of type $lut.
-Using template $paramod$6d6beead1425af15cf78b27fd9b11b41b5d4bce8$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00010000 for cells of type $lut.
-Using template $paramod$973818279bc95792902f3c09371fd2407d04a2a5$lut for cells of type $lut.
-Using template $paramod$4da6fe9957da309dc16b8f31a6b80b19c05c808d$lut for cells of type $lut.
-Using template $paramod$82b4a585d1edcb5c6e755dc9bd3392228a1c1304$lut for cells of type $lut.
-Using template $paramod$a4df2b5be2b644499880e088a11556935f22b401$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'10010110 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00101011 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01110001 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'01101001 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'10110010 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'11010100 for cells of type $lut.
-Using template $paramod$658b9ed803f0d3d335616d3858b53e0a2522f1e8$lut for cells of type $lut.
-Using template $paramod$6e238df02989b317f10820a22773676e71120644$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'0110 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000010\LUT=4'1011 for cells of type $lut.
-Using template $paramod$965f8f2fa1a796a6c51222eabb50fbd26e97d98b$lut for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000011\LUT=8'00001101 for cells of type $lut.
-Using template $paramod$lut\WIDTH=32'00000000000000000000000000000001\LUT=2'01 for cells of type $lut.
+2.49.2. Continuing TECHMAP pass.
 No more expansions possible.
-<suppressed ~1342 debug messages>
-Removed 0 unused cells and 1581 unused wires.
+<suppressed ~3 debug messages>
 
-2.47. Executing CLKBUFMAP pass (inserting clock buffers).
+2.50. Executing CLKBUFMAP pass (inserting clock buffers).
 Inserting CC_BUFG on ising_n16_gatemate.$iopadmap$clk[0].
 
-2.48. Executing HIERARCHY pass (managing design hierarchy).
+2.51. Executing HIERARCHY pass (managing design hierarchy).
 Attribute `top' found on module `ising_n16_gatemate'. Setting top module to ising_n16_gatemate.
 
-2.48.1. Analyzing design hierarchy..
+2.51.1. Analyzing design hierarchy..
 Top module:  \ising_n16_gatemate
 
-2.48.2. Analyzing design hierarchy..
+2.51.2. Analyzing design hierarchy..
 Top module:  \ising_n16_gatemate
 Removed 0 unused modules.
 
-2.49. Printing statistics.
+2.52. Printing statistics.
 
 === ising_n16_gatemate ===
 
         +----------Local Count, excluding submodules.
         | 
-     1077 wires
-     5101 wire bits
+     1298 wires
+     4733 wire bits
       292 public wires
      2588 public wire bits
        17 ports
       139 port bits
-     3953 cells
+     4101 cells
       151   CC_ADDF
         1   CC_BUFG
      2217   CC_DFF
       101   CC_IBUF
+      262   CC_L2T4
+       82   CC_L2T5
        28   CC_LUT1
-      279   CC_LUT2
-      202   CC_LUT3
-      245   CC_LUT4
+      336   CC_LUT2
         1   CC_MULT
+      194   CC_MX2
       690   CC_MX4
        38   CC_OBUF
 
-2.50. Executing CHECK pass (checking for obvious problems).
+2.53. Executing CHECK pass (checking for obvious problems).
 Checking module ising_n16_gatemate...
 Found and reported 0 problems.
 
-2.51. Executing OPT_CLEAN pass (remove unused cells and wires).
+2.54. Executing OPT_CLEAN pass (remove unused cells and wires).
 Finding unused cells or wires in module \ising_n16_gatemate..
 Removed 0 unused cells and 3 unused wires.
 <suppressed ~3 debug messages>
 
-2.52. Executing JSON backend.
+2.55. Executing JSON backend.
 
 3. Printing statistics.
 
@@ -2619,27 +2707,29 @@ Removed 0 unused cells and 3 unused wires.
 
         +----------Local Count, excluding submodules.
         | 
-     1074 wires
-     5049 wire bits
+     1295 wires
+     4681 wire bits
       289 public wires
      2536 public wire bits
        17 ports
       139 port bits
-     3953 cells
+     4101 cells
       151   CC_ADDF
         1   CC_BUFG
      2217   CC_DFF
       101   CC_IBUF
+      262   CC_L2T4
+       82   CC_L2T5
        28   CC_LUT1
-      279   CC_LUT2
-      202   CC_LUT3
-      245   CC_LUT4
+      336   CC_LUT2
         1   CC_MULT
+      194   CC_MX2
       690   CC_MX4
        38   CC_OBUF
 
-End of script. Logfile hash: ebf1cf5979, time: 1.20s, user: 0.95s, system: 0.04s, MEM: 223.82 MB peak
+Warnings: 1 unique messages, 1 total
+End of script. Logfile hash: 4026a94364, time: 1.00s, user: 0.88s, system: 0.04s, MEM: 223.04 MB peak
 Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)
-Time spent: 22% 1x abc (0 sec), 15% 24x opt_clean (0 sec), ...
+Time spent: 15% 1x abc (0 sec), 15% 24x opt_clean (0 sec), ...
 
 STDERR:
