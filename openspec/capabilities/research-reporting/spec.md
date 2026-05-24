@@ -6053,3 +6053,67 @@ four concrete `.279` gaps.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2961 | Implemented (`python/carnot/reporting/capstone_v278_2961.py`) | Implemented (`tests/python/test_experiment_2961_capstone_v278.py`) |
+
+### REQ-REPORT-2962: Archive Milestone 2026.05.278 and Confirm 2026.05.279 Activation
+
+The repository shall provide an Exp 2962 archive/activation generator that
+writes `results/experiment_2962_archive_v278_activate_v279.json` using only
+checked-in roadmap, archive-ledger, and Exp 2961 capstone artifacts. The
+generator MUST NOT modify `research-roadmap.yaml`, MUST NOT modify
+`scripts/research_conductor.py`, MUST NOT push, MUST NOT call an LLM, and MUST
+NOT run hardware, synthesis, verifier scoring, or solver execution.
+
+The generator MUST read `results/experiment_2961_capstone_v278.json` and copy
+the `.278` archive evidence without reclassifying it: `paper_ready`,
+`headline_outcome`, clean artifacts, flagged artifacts, blocked artifacts,
+missing artifacts, artifact-classification counts, and next-gap evidence from
+`gaps_remaining` or the next-milestone recommendations. Missing optional fields
+MUST become empty strings, empty lists, or empty mappings rather than fabricated
+values.
+
+The generator MUST ensure `research-complete.yaml` contains exactly one
+completed `2026.05.278` milestone archive row after the run. If the row already
+exists, it MUST leave the archive ledger unchanged. If the row is absent, it
+MUST append a minimal archive row that cites the Exp 2961 capstone deliverable
+without rewriting unrelated historical milestone entries.
+
+The generator MUST confirm that milestone `2026.05.279` is activated from
+roadmap state. It MUST prefer `research-roadmap-next.yaml` when that file is
+present; when it is absent because activation has already occurred, it MUST use
+the active `research-roadmap.yaml` as a read-only fallback and record that
+fallback in artifact metadata.
+
+The terminal artifact MUST include `honest_verdict`,
+`archived_milestone="2026.05.278"`,
+`activated_milestone="2026.05.279"`,
+`capstone_source="results/experiment_2961_capstone_v278.json"`,
+`paper_ready_from_capstone`, `headline_outcome_from_capstone`,
+`clean_artifacts_from_capstone`, `flagged_artifacts_from_capstone`,
+`blocked_artifacts_from_capstone`, `missing_artifacts_from_capstone`,
+`archive_ready`, `inference_substrate="aggregation_from_upstream_artifacts"`,
+and measured `duration_s`. It MAY include additional audit-trace fields,
+including `next_gaps_from_capstone`, as long as they remain direct aggregation
+from upstream artifacts and document that `research-roadmap.yaml`,
+`scripts/research_conductor.py`, `ops/changelog.md`, `ops/status.md`, and
+`_bmad/traceability.md` were not modified by this task.
+
+#### SCENARIO-REPORT-2962: Existing .278 Archive Confirms Active .279 Roadmap
+
+**Given** `results/experiment_2961_capstone_v278.json` exists
+**And** `research-complete.yaml` already contains a completed
+`2026.05.278` archive row
+**And** `research-roadmap-next.yaml` is absent because
+`research-roadmap.yaml` is already activated at `2026.05.279`
+**When** the Exp 2962 generator runs
+**Then** it writes `results/experiment_2962_archive_v278_activate_v279.json`
+with all required fields, `archive_ready=true`,
+`paper_ready_from_capstone=false`, `headline_outcome_from_capstone` copied
+from the capstone `headline_outcome`, zero duplicate `.278` archive rows,
+`activation.used_active_roadmap_fallback=true`, and unchanged
+`research-roadmap.yaml` and `scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-2962)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2962 | Implemented (`python/carnot/reporting/milestone_278_archive_279_activation.py`) | Implemented (`tests/python/test_experiment_2962_archive_v278.py`) |
