@@ -6547,3 +6547,61 @@ flagged, pilot-only, projection-only, gated-skipped, or missing evidence.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-2998 | Planned (`python/carnot/reporting/cross_corpus_matrix_v15_2998.py`) | Planned (`tests/python/test_experiment_2998_cross_corpus_matrix_v15.py`) |
+
+### REQ-REPORT-2999: Milestone 2026.05.281 Terminal Capstone
+
+The repository shall provide an Exp 2999 milestone capstone generator that
+writes `results/experiment_2999_capstone_v281.json` using only checked-in
+local artifacts. The generator MUST read
+`results/experiment_2998_cross_corpus_matrix_v15.json`,
+`results/experiment_2987_capstone_v280.json`, and every available `.281`
+artifact from Exp 2988 through Exp 2997 without rerunning live inference,
+verifier scoring, solver execution, synthesis, board flashing, readback,
+hardware smoke tests, the conductor, or external publication tooling.
+
+The capstone MUST decide `paper_ready` from local evidence only. It MUST treat
+flagged repair evidence, flagged AquaForte/BEAVER substrate evidence, blocked
+GateMate readback/smoke evidence, missing SSQA evidence, unresolved matrix
+blockers, and paper-v6 claim-boundary violations as paper-readiness blockers.
+It MAY report that paper-v6 is closer to readiness when clean SOTA cache,
+hard-code manifest, solver provenance, prompt-validator, or FR-11 evidence has
+landed, but that proximity MUST NOT trigger external publication.
+
+The capstone MUST enumerate matrix rows by terminal status (`clean`,
+`flagged`, `blocked`, `missing`, and `gated-skipped`) and preserve
+pilot-only/projection-only evidence as non-headline context. It MUST state
+which `.280` gaps were closed, which remain, and the exact next-milestone
+actions required for conductor planning. Hardware rows MUST keep GateMate and
+SSQA bounded to host-visible readback/smoke, RTL/PnR/resource, and explicit
+no-speedup/no-thermodynamic-claim evidence. FR-11 rows MUST stay bounded to
+verifier-grounded trace memory rather than broad autonomous self-improvement or
+model-weight update claims.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`clean_artifacts`, `flagged_artifacts`, `blocked_artifacts`,
+`missing_artifacts`, `gated_skipped_artifacts`, `gaps_closed`,
+`gaps_remaining`, `next_milestone_recommendations`,
+`external_publication_triggered`, and `honest_verdict`. It MAY include source
+checksums, paper-readiness blockers, proof summaries, no-new-execution
+booleans, matrix counts, and measured `duration_s` as long as every value is
+derived from local artifacts.
+
+#### SCENARIO-REPORT-2999: Capstone Synthesizes .281 Without Publication
+
+**Given** matrix v15 is present and reports `matrix_v15_ready=true`
+**And** the `.280` capstone is present
+**And** Exp 2988 through Exp 2997 artifacts are present, flagged, blocked,
+gated-skipped, or honestly absent
+**When** the Exp 2999 capstone generator runs
+**Then** it writes `results/experiment_2999_capstone_v281.json` with all
+required fields, `capstone_ready=true`, `external_publication_triggered=false`,
+row-status lists copied from matrix v15, `paper_ready=false` when any required
+claim row remains flagged/blocked/missing/gated-skipped, explicit `.280` gap
+closure and remaining-gap lists, hardware and FR-11 boundaries preserved, and
+an `honest_verdict` that states capstone readiness and paper status.
+
+## Implementation Status (REQ-REPORT-2999)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-2999 | Implemented (`python/carnot/reporting/capstone_v281_2999.py`) | Implemented (`tests/python/test_experiment_2999_capstone_v281.py`) |
