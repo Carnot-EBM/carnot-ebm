@@ -6109,3 +6109,4 @@ web search:
 | 2026-05-24 02:06 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
 | 2026-05-24 02:12 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
 | 2026-05-24 02:19 UTC | Gated GateMate Flash + Timing Smoke v2 | FAIL | artifact_not_updated_past_bootstrap (deliverable=results/experiment_2957_gatemat |
+| 2026-05-24 02:32 UTC | PolarFire 1000-Clause Scorer Hash v2 | OK | 81 passed in 3.77s |
