@@ -7268,3 +7268,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-24: GateMate Readback + Smoke Vector Harness v4 (⚠️ Blocked) — honest_verdict=blocked_board_not_detected; results/experiment_2984_gatemate_readback_smoke_vector_v4.json
 - 2026-05-24: GateMate Readback + Smoke Vector Harness v4 (✅ Complete) — honest_verdict=complete: gatemate_no_readback_no_host_smoke_io; results/experiment_2984_gatemate_readback_smoke_vector_v4.json
 - 2026-05-24: SSQA Dual-BRAM Hardware Projection + Register-Map Plan v1 (✅ Complete) — honest_verdict=complete: ssqa_dual_bram_register_map_plan_ready_projection_only; results/experiment_2985_ssqa_dual_bram_register_map_plan_v1.json
+- 2026-05-24: Cross-Corpus Matrix v14 + Claim Boundary Audit (⚠️ Blocked) — honest_verdict=complete: matrix_v14_ready=true; clean=29; flagged=18; blocked=7; gated_skipped=0; pilot_only=4; projection_only=7; results/experiment_2986_cross_corpus_matrix_v14.json
