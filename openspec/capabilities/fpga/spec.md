@@ -2336,3 +2336,66 @@ from observed deterministic output or a blocked verdict naming the exact
 missing transport, reader, flash, or board-contact interface.
 
 **Implementation status:** Implemented (Exp 3008)
+
+---
+
+### REQ-HW-084
+
+**Title:** Exp 3021 GateMate RTL/CCF transport shim diagnosis MUST gate board smoke on observable output
+
+**Description:**
+Experiment 3021 MUST add or precisely diagnose the minimum GateMate
+host-visible transport shim for deterministic `done`/`spin_out` status. The
+experiment MUST inspect the current GateMate RTL, CCF constraints, generated
+GateMate build outputs, installed toolchain commands, USB/DirtyJTAG board
+connection evidence, programmer command, and intended host-visible IO path before
+any synthesis, PnR, or flashing. It MUST set `gatemate_transport_rtl_ready=true`
+only when the RTL exposes a deterministic status bit or byte and the CCF binds
+that signal to a physical output or supported host transport. It MUST set
+`host_visible_io_plan_ready=true` only when a concrete reader path can observe
+that bound status output from the host. If the repository lacks an authoritative
+board pinout, physical `Pin_out` assignment, or supported UART/GPIO/JTAG/status
+register/CSR/AXI/logic-analyzer reader, the experiment MUST emit a terminal
+blocked diagnosis and MUST NOT make sampler, speedup, Boltzmann, or
+thermalization claims.
+
+**Acceptance criteria:**
+- `results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json`
+  is generated with strict claim boundaries.
+- The artifact includes `gatemate_transport_rtl_ready`,
+  `host_visible_io_plan_ready`, `preconditions_checked`, `board_detected`,
+  `rtl_paths`, `ccf_paths`, `io_transport_path`, `simulation_or_lint_passed`,
+  `pnr_or_synthesis_attempted`, `transcript_paths`, `sampler_claim_made`,
+  `speedup_claim_made`, and `honest_verdict`.
+- Preconditions distinguish setup failures from design/interface failures by
+  recording board connection, toolchain versions, programmer availability,
+  target RTL/CCF paths, USB permission evidence, and the intended IO path before
+  any flash or synthesis action.
+- `gatemate_transport_rtl_ready=true` requires a deterministic status output in
+  RTL and a physical CCF binding or supported host transport for that signal.
+- `host_visible_io_plan_ready=true` requires a concrete host reader path; build
+  only unconstrained CCF output, internal Verilog ports, JTAG contact, or
+  successful bitstream generation are insufficient.
+- If no physical `Pin_out` or reader path exists, the artifact MUST set both
+  readiness booleans false, record exact blockers, and leave
+  `sampler_claim_made=false` and `speedup_claim_made=false`.
+
+**Implementation status:** Implemented (Exp 3021)
+
+---
+
+### SCENARIO-HW-084
+
+**Scenario:** GateMate transport shim diagnosis blocks on missing physical output binding.
+
+**Given:** The current GateMate n=16 RTL exposes internal `done` and `spin_out`
+signals, the GateMate tools and DirtyJTAG connection may be present, and the CCF
+states that no physical `Pin_in` or `Pin_out` locations are assigned.
+**When:** Exp 3021 checks preconditions, inspects RTL/CCF/toolchain transport
+surfaces, and runs only available non-flashing design checks.
+**Then:** It writes the v1 JSON with replayable transcripts, no sampler or
+speedup claims, `gatemate_transport_rtl_ready=false`,
+`host_visible_io_plan_ready=false`, and a terminal verdict naming the missing
+pinout or reader path.
+
+**Implementation status:** Implemented (Exp 3021)

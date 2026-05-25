@@ -1,0 +1,152 @@
+{
+  "blockers": [
+    "no physical Pin_out assignment binds done/spin_out/status output to a board pin or supported host transport"
+  ],
+  "board_detected": true,
+  "boltzmann_claim_made": false,
+  "ccf_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+  ],
+  "duration_s": 0.1276,
+  "field_provenance": {
+    "board_detected": "principle: board contact must be explicit when hardware is used",
+    "ccf_paths": "principle: physical binding evidence must be inspectable",
+    "gatemate_transport_rtl_ready": "principle: board smoke must gate on an observable output path",
+    "honest_verdict": "principle: terminal verdict must be prefixed unless a precondition is honestly blocked",
+    "host_visible_io_plan_ready": "principle: downstream smoke needs a concrete IO plan",
+    "io_transport_path": "principle: observed or intended IO must be inspectable",
+    "pnr_or_synthesis_attempted": "principle: toolchain boundary must be explicit",
+    "preconditions_checked": "principle: board/toolchain failures must distinguish setup from design failure",
+    "rtl_paths": "principle: implementation evidence must have source paths",
+    "sampler_claim_made": "principle: sampler claims are out of scope",
+    "simulation_or_lint_passed": "principle: design readiness must be checked before flashing",
+    "speedup_claim_made": "principle: speedup claims require timing/sample evidence not expected here",
+    "transcript_paths": "principle: hardware evidence must be replayable"
+  },
+  "gatemate_transport_rtl_ready": false,
+  "honest_verdict": "complete: blocked_gatemate_transport_pinout_missing",
+  "host_visible_io_plan_ready": false,
+  "inference_substrate": "hardware_transport_preflight",
+  "io_transport_path": "blocked:gatemate_pinout_missing_no_physical_pinout_for_done_spin_out",
+  "lint_check": {
+    "attempted": true,
+    "command": "/opt/oss-cad-suite/bin/yosys -p 'read_verilog -sv /home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v; hierarchy -top ising_n16_gatemate; proc; check'",
+    "passed": true,
+    "returncode": 0
+  },
+  "pnr_or_synthesis_attempted": false,
+  "precondition_missing": false,
+  "precondition_summary": {
+    "board_connection": {
+      "available": true,
+      "board_detected": true,
+      "board_id": "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+      "detection_basis": "dirtyjtag_usb_or_jtag_contact",
+      "dirtyjtag_contact": true,
+      "dirtyjtag_usb_enumerated": true,
+      "gatemate_id_seen": false,
+      "permission": {
+        "available": true,
+        "current_user_rw": true,
+        "gid": 984,
+        "mode_octal": "0o660",
+        "path": "/dev/bus/usb/003/014",
+        "uid": 0
+      }
+    },
+    "intended_io_transport_path": "blocked:gatemate_pinout_missing_no_physical_pinout_for_done_spin_out",
+    "programmer_command": "/opt/oss-cad-suite/bin/openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+    "target_ccf_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+    ],
+    "target_rtl_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+      "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v"
+    ],
+    "tools": {
+      "gmpack": {
+        "available": true,
+        "path": "/opt/oss-cad-suite/bin/gmpack",
+        "resource": "gmpack",
+        "returncode": 0,
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_gmpack.txt",
+        "version": "Error: input file is mandatory."
+      },
+      "nextpnr-himbaechel": {
+        "available": true,
+        "path": "/opt/oss-cad-suite/bin/nextpnr-himbaechel",
+        "resource": "nextpnr-himbaechel",
+        "returncode": 0,
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_nextpnr_himbaechel.txt",
+        "version": "\"nextpnr-himbaechel\" -- Next Generation Place and Route (Version nextpnr-0.10-45-g98c18d7f)"
+      },
+      "openFPGALoader": {
+        "available": true,
+        "path": "/opt/oss-cad-suite/bin/openFPGALoader",
+        "resource": "openFPGALoader",
+        "returncode": 0,
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_openFPGALoader.txt",
+        "version": "openFPGALoader v1.1.1"
+      },
+      "yosys": {
+        "available": true,
+        "path": "/opt/oss-cad-suite/bin/yosys",
+        "resource": "yosys",
+        "returncode": 0,
+        "transcript_path": "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_yosys.txt",
+        "version": "Yosys 0.64+149 (git sha1 2dc69a757, clang++ 18.1.8 -fPIC -O3)"
+      }
+    }
+  },
+  "preconditions_checked": true,
+  "rtl_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+    "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v"
+  ],
+  "run_date": "20260525",
+  "sampler_claim_allowed": false,
+  "sampler_claim_made": false,
+  "simulation_or_lint_passed": true,
+  "speedup_claim_allowed": false,
+  "speedup_claim_made": false,
+  "thermalization_claim_made": false,
+  "transcript_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_yosys.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_nextpnr_himbaechel.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_gmpack.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_openFPGALoader.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/lsusb_dirtyjtag.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/openfpgaloader_detect.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/yosys_lint.txt"
+  ],
+  "transcript_sha256": {
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/lsusb_dirtyjtag.txt": "a89a65902b0fd461fe67f6082b5f8fe828fafaabff253699fadee2d302dc981c",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/openfpgaloader_detect.txt": "f4e736abfb253659d06aeda37cae32334d1b16a555dd4188d28cc04c154bb75e",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_gmpack.txt": "5523ed19ff198e579e536b3887090709644b6a60c91e67f7dbcfc9af1e6eca16",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_nextpnr_himbaechel.txt": "7d5560d37c143cddd507d1e30214db668fee3aaf3e3db79f22dc2918ed145382",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_openFPGALoader.txt": "350c53cb99bd4960582a53beaa991d4ebb17a2fcda2d57da5f3514d0bbcc675a",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_yosys.txt": "888d5e7bc47d3b09a12cf162d353349a2b746c91918d276c35fad86d849dd257",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/yosys_lint.txt": "9cda0cf12d149b82e43aadfcae9558b0f9e2a243c90707ced433e394f009394e"
+  },
+  "transport_inspection": {
+    "blockers": [
+      "no physical Pin_out assignment binds done/spin_out/status output to a board pin or supported host transport"
+    ],
+    "bound_status_outputs": [],
+    "ccf_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+    ],
+    "gatemate_transport_rtl_ready": false,
+    "host_visible_io_plan_ready": false,
+    "io_transport_path": "blocked:gatemate_pinout_missing_no_physical_pinout_for_done_spin_out",
+    "reader_paths": [],
+    "rtl_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+      "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v"
+    ],
+    "rtl_status_outputs": [
+      "done",
+      "spin_out"
+    ]
+  }
+}
