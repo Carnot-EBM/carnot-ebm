@@ -6285,3 +6285,5 @@ web search: site |
 | 2026-05-25 19:21 UTC | Gated grammar-constrained SOTA repair micro-panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3072-gated-local-sota-verifier-calibratio |
 | 2026-05-25 19:35 UTC | FR-11 online soundness and completeness budget | OK | 81 passed in 2.95s |
 | 2026-05-25 19:37 UTC | Gated grammar-constrained SOTA repair micro-panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3072-gated-local-sota-verifier-calibratio |
+| 2026-05-25 19:50 UTC | FR-11 soundness-bounded online self-learning pilot | OK | 81 passed in 3.08s |
+| 2026-05-25 19:52 UTC | Gated grammar-constrained SOTA repair micro-panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3072-gated-local-sota-verifier-calibratio |
