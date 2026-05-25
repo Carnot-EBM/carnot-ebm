@@ -7357,3 +7357,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-25: SMT/SAT validator-tree exactness upgrade (✅ Complete) — honest_verdict=complete: validator_tree_exactness_ready=true; verified=1; unresolved=1; fallback_only=1; correction_sets=1; results/experiment_3044_smt_sat_validator_tree_exactness_upgrade_v1.json
 - 2026-05-25: FR-11 governed self-learning boundary (✅ Complete) — honest_verdict=complete_fr11_governance_ready_for_exp3046; results/experiment_3045_fr11_governed_self_learning_boundary_v1.json
 - 2026-05-25: FR-11 solver-feedback self-learning loop (✅ Complete) — honest_verdict=complete_fr11_solver_feedback_controller_loop_ready; results/experiment_3046_fr11_solver_feedback_self_learning_loop_v1.json
+- 2026-05-25: KAN locality nonforgetting probe v2 (✅ Complete) — honest_verdict=complete_kan_locality_controller_probe_ready; results/experiment_3047_kan_locality_nonforgetting_probe_v2.json
