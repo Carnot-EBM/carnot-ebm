@@ -7338,3 +7338,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-25: FR-11 held-out DVI replay v2 (✅ Complete) — honest_verdict=complete_fr11_heldout_replay_ready; results/experiment_3032_fr11_heldout_dvi_replay_v2.json
 - 2026-05-25: FR-11 nonforgetting and negative-control stress (✅ Complete) — honest_verdict=complete_controller_only_promotable; results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json
 - 2026-05-25: GateMate output contract and pinout decision (⚠️ Blocked) — honest_verdict=complete: blocked_gatemate_output_contract_pinout_missing; results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json
+- 2026-05-25: SSQA bounded RTL/PnR or gate artifact v2 (✅ Complete) — honest_verdict=complete: ssqa_gate_skipped_exp3036_missing; results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json
