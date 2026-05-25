@@ -1,28 +1,28 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.287",
-  "generated_at": "2026-05-25T20:42:38Z",
-  "retro_type": "operational_in_progress",
+  "generated_at": "2026-05-25T21:11:09Z",
+  "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
-  "slowest_experiments": [],
   "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
   "gpu_idle_on_compute_bound_tasks": null,
-  "summary": "For milestone 2026.05.287, the timing authority provides an empty execution window: 0 completed experiments, 0 wall-time minutes, and 0 compute-bound entries. Longest compute-bound runs, compute-bound GPU efficiency, and multi-model runner coverage are no data available this milestone.",
+  "summary": "Milestone 2026.05.287 has 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments in the locked timing fields. Compute-bound slowest-run, GPU-efficiency, and DualGPURunner assessments are no data available this milestone.",
   "bottlenecks_identified": [
-    "Compute-bound runtime bottlenecks: no data available this milestone.",
-    "GPU idle is not classified as a bottleneck because the timing data has 0 compute-bound tasks; the GPU snapshot alone cannot support a compute-bound utilization finding."
+    "No wall-time bottleneck can be attributed: no data available this milestone for completed experiment durations.",
+    "No compute-bound GPU bottleneck can be attributed: no data available this milestone for compute-bound tasks."
   ],
   "improvements_suggested": [
-    "Emit an explicit empty-timing-window note before retrospective synthesis starts when no experiment commits are found after activation.",
-    "Keep GPU-idle warnings gated on compute_bound timing rows so idle synthesis-only or empty windows do not produce false bottleneck claims.",
-    "Keep DualGPURunner recommendations conditional on timing evidence that a compute-bound task actually loaded multiple models in parallel."
+    "Add a closeout validator that leaves an explicit no-data operational note when the timing window is empty.",
+    "Gate GPU-monitor recommendations on compute_bound timing evidence before they enter the retrospective.",
+    "Record runner mode and model-count metadata with each future timing row so DualGPURunner checks can be answered directly."
   ],
   "top_3_highest_leverage_actions": [
-    "Short-circuit slowest-experiment ranking when experiments_completed is 0 and write the no-data verdict directly.",
-    "Surface compute_bound_experiments_count before GPU-state interpretation in the retrospective prompt.",
-    "Add validation that rejects GPU-idle bottleneck text unless gpu_idle_on_compute_bound_tasks is true."
+    "Keep empty timing windows on a direct no-data path instead of running slowest-experiment analysis.",
+    "Expose compute_bound_experiments_count before GPU-state text is generated.",
+    "Require a boolean guard for any GPU-idle bottleneck text: gpu_idle_on_compute_bound_tasks must be true."
   ],
   "estimated_time_savings_pct": 0,
-  "meta_reflection": "The disciplined operational conclusion is absence of timing evidence, not inferred efficiency. The idle GPU monitor state is useful context, but without a compute-bound timing row it cannot justify a GPU-utilization bottleneck claim."
+  "meta_reflection": "The correct conclusion is evidence absence, not efficiency or failure. The GPU snapshot shows idle devices, but with no compute-bound timing rows it cannot support a bottleneck claim."
 }
