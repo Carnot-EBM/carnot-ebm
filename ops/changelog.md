@@ -7359,3 +7359,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-25: FR-11 solver-feedback self-learning loop (✅ Complete) — honest_verdict=complete_fr11_solver_feedback_controller_loop_ready; results/experiment_3046_fr11_solver_feedback_self_learning_loop_v1.json
 - 2026-05-25: KAN locality nonforgetting probe v2 (✅ Complete) — honest_verdict=complete_kan_locality_controller_probe_ready; results/experiment_3047_kan_locality_nonforgetting_probe_v2.json
 - 2026-05-25: GateMate output contract operator package (⚠️ Blocked) — honest_verdict=complete: blocked_gatemate_output_contract_authority_missing; results/experiment_3048_gatemate_output_contract_operator_package_v1.json
+- 2026-05-25: Cross-corpus matrix v19 (⚠️ Blocked) — honest_verdict=complete: matrix_v19_ready=true; rows_total=25; clean=6; flagged=4; bounded=4; blocked=2; gated_skipped=4; projection_only=1; missing=2; retired=2; results/experiment_3052_cross_corpus_matrix_v19.json
