@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.283",
+  "generated_at": "2026-05-25T01:53:59Z",
+  "retro_type": "operational_in_progress",
+  "summary": "The authoritative timing source for milestone 2026.05.283 contains 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Slowest-experiment ranking, compute-bound GPU efficiency, and DualGPURunner assessment have no data available this milestone.",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "slowest_experiments": [],
+  "bottlenecks_identified": [
+    "No compute-bound experiment can be identified as slowest because the timing source contains 0 completed experiments and 0 compute-bound experiments.",
+    "GPU idle is not a bottleneck finding for this milestone because compute_bound_experiments_count is 0; the GPU monitor state is not evidence of inefficient compute-bound work."
+  ],
+  "improvements_suggested": [
+    "Add an activation-window no-data sentinel that emits an explicit no-data operational retrospective when experiments_completed is 0.",
+    "Gate GPU-idle findings on compute_bound_experiments_count > 0 plus an explicit GGUF, CUDA, or requires_gpu marker in the timing data.",
+    "Gate DualGPURunner recommendations on timing evidence that 2+ models were loaded in parallel."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Emit a no-data closeout before GPU-runner guidance when the activation window has 0 completed experiments.",
+    "Keep GPU-idle warnings out of retrospectives unless compute_bound_experiments_count is greater than 0.",
+    "Require an explicit parallel-model timing marker before recommending DualGPURunner."
+  ],
+  "compute_bound_experiments_count": 0,
+  "gpu_idle_on_compute_bound_tasks": null,
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective can only report an empty milestone-scoped timing window. The useful operational change is to make that absence explicit early, so idle GPU monitor output does not get mistaken for a compute-bound execution problem."
+}
