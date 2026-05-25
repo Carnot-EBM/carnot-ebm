@@ -7047,3 +7047,70 @@ paper readiness.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3025 | Implemented (`python/carnot/reporting/capstone_v283_3025.py`) | Implemented (`tests/python/test_experiment_3025_capstone_v283.py`) |
+
+### REQ-REPORT-3026: Archive Milestone 2026.05.283 and Confirm 2026.05.284 Activation
+
+The repository shall provide an Exp 3026 archive/activation generator that
+writes `results/experiment_3026_archive_v283_activate_v284.json` using only
+checked-in roadmap state, `research-complete.yaml`,
+`results/experiment_3024_cross_corpus_matrix_v17.json`, and
+`results/experiment_3025_capstone_v283.json`. The generator MUST NOT modify
+`research-roadmap.yaml`, MUST NOT modify `scripts/research_conductor.py`, MUST
+NOT rename roadmap files, MUST NOT push, MUST NOT call an LLM, and MUST NOT
+rerun live inference, verifier scoring, solver execution, synthesis, board
+flashing, readback, hardware smoke tests, or historical experiments.
+
+The generator MUST confirm that the Exp 3025 capstone exists, reports
+`capstone_ready=true`, and records the previous paper-readiness decision from
+the explicit `paper_ready` field. It MUST summarize `.283` clean, flagged,
+blocked, gated-skipped, projection-only, pilot-only, missing, adversarially
+flagged, and paper-ready status from Exp 3024 and Exp 3025 without repairing or
+rewriting historical rows. Blocked, flagged, gated-skipped, projection-only,
+pilot-only, missing, and adversarially flagged rows MUST be carried forward
+explicitly in the activation artifact.
+
+The generator MUST confirm that milestone `2026.05.284` is available from
+roadmap state and points to
+`openspec/change-proposals/research-roadmap-vNEXT.md`. It MUST prefer
+`research-roadmap-next.yaml` when that file is present. When
+`research-roadmap-next.yaml` is absent because activation has already occurred,
+it MUST use the active `research-roadmap.yaml` as read-only activation
+evidence, require non-empty tasks, and record the fallback honestly rather than
+recreating, renaming, or editing roadmap files.
+
+The terminal artifact MUST include `milestone_archived`,
+`next_milestone="2026.05.284"`, `next_roadmap_path`, `capstone_ready`,
+`previous_paper_ready`, `carry_forward_blockers`,
+`protected_files_unchanged`, `inference_substrate`, and `honest_verdict` with
+an accepted terminal prefix unless a precondition is honestly blocked. The
+`inference_substrate` field MUST be an object declaring aggregation-only
+evidence and MUST NOT include top-level live model metadata such as
+`model_specs`, CUDA, GGUF, or target-model fields. The artifact MAY include
+source checksums, protected-file hashes, roadmap metadata, next execution
+order, source-read summaries, and no-new-execution booleans as long as every
+value is derived from checked-in artifacts or read-only roadmap state.
+
+#### SCENARIO-REPORT-3026: Completed .283 Archive Confirms Active .284 Roadmap
+
+**Given** `results/experiment_3025_capstone_v283.json` exists and reports
+`capstone_ready=true`
+**And** `research-complete.yaml` already contains a completed `2026.05.283`
+archive row with the completed `.283` task list
+**And** `research-roadmap-next.yaml` is absent because `research-roadmap.yaml`
+is already activated at `2026.05.284` with non-empty tasks and
+`milestone_doc=openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3026 generator runs
+**Then** it writes `results/experiment_3026_archive_v283_activate_v284.json`
+with all required fields, `milestone_archived=true`,
+`next_milestone="2026.05.284"`, `next_roadmap_path="research-roadmap.yaml"`,
+`capstone_ready=true`, `previous_paper_ready=false`,
+`protected_files_unchanged=true`, explicit status summaries and carry-forward
+blockers, aggregation-only `inference_substrate`, no top-level live-model
+metadata, and unchanged `research-roadmap.yaml` and
+`scripts/research_conductor.py`.
+
+## Implementation Status (REQ-REPORT-3026)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3026 | Planned (`python/carnot/reporting/milestone_283_archive_284_activation.py`) | Planned (`tests/python/test_experiment_3026_archive_v283.py`) |
