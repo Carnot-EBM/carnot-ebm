@@ -7571,3 +7571,75 @@ model-weight mutation, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3046 | Implemented (`python/carnot/eval/fr11_solver_feedback_self_learning_loop_v1.py`) | Implemented (`tests/python/test_experiment_3046_fr11_solver_feedback_self_learning_loop_v1.py`) |
+
+## REQ-LEARN-3047: KAN-Style Locality Probe For Solver-Feedback Controller Updates
+
+**Given** Exp 3046 has produced a governed controller-only solver-feedback
+self-learning loop with a machine-readable family split and source-traced
+feedback updates
+**When** Exp 3047 probes the smallest existing locality structure
+**Then** it SHALL reuse Exp 3046's family split and feedback traces, compare
+the baseline controller weights against the governed updated controller
+weights, and report which controller anchors/weights changed versus remained
+anchored.
+**And** it SHALL compute a numeric locality metric, changed-anchor count,
+anchored-prior count, related held-out delta, prior-retention delta,
+irrelevant-control delta, and a comparator summary from a shuffled-control or
+explicitly unavailable non-local comparator.
+**And** it SHALL keep the claim bounded to controller/locality evidence, not
+base-model self-learning, KAN model-weight training, live LLM inference, or
+general KAN continual learning.
+
+The terminal artifact SHALL be
+`results/experiment_3047_kan_locality_nonforgetting_probe_v2.json` and SHALL
+include `kan_locality_probe_ready`, `locality_metric`,
+`changed_anchor_count`, `anchored_prior_count`, `heldout_delta`,
+`prior_retention_delta`, `irrelevant_control_delta`, `comparator_summary`,
+`promotion_decision`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3047 Sub-requirements
+
+- REQ-LEARN-3047-1: The probe SHALL fail closed when Exp 3046 is missing,
+  malformed, not ready, claims live LLM inference, or claims model-weight
+  training or mutation.
+- REQ-LEARN-3047-2: The probe SHALL rebuild Exp 3046's family split and
+  governed controller update from Exp 3046's cited source artifacts, rather
+  than inventing a new split.
+- REQ-LEARN-3047-3: `changed_anchor_count` SHALL count controller anchor/weight
+  keys whose post-update value differs from the baseline, while
+  `anchored_prior_count` SHALL count prior exact anchors that remain unchanged
+  and correctly retained.
+- REQ-LEARN-3047-4: `locality_metric` SHALL be numeric and non-vacuous, derived
+  from the fraction of controller anchors that remain unchanged after the
+  governed update.
+- REQ-LEARN-3047-5: `kan_locality_probe_ready` SHALL be true only when locality
+  and nonforgetting fields are present and non-vacuous, related held-out
+  performance improves, prior retention does not regress, irrelevant controls
+  are stable, a comparator is either measured or explicitly unavailable, and no
+  model-weight or live-inference claim is made.
+
+### SCENARIO-LEARN-3047: Governed Controller Update Is Local And Retains Priors
+
+**Given** ready Exp 3046, Exp 3044, and Exp 3045 artifacts
+**When** Exp 3047 runs
+**Then** it writes the required artifact fields, records positive
+`heldout_delta`, non-negative `prior_retention_delta`, stable
+`irrelevant_control_delta`, positive `changed_anchor_count`, positive
+`anchored_prior_count`, a numeric `locality_metric`, a measured comparator
+summary, `kan_locality_probe_ready=true`, and an `honest_verdict` beginning
+with `complete_`.
+
+### SCENARIO-LEARN-3047-BLOCKED: Missing Solver-Feedback Evidence Fails Closed
+
+**Given** missing or malformed Exp 3046 source evidence
+**When** Exp 3047 runs
+**Then** it writes the required artifact fields with
+`kan_locality_probe_ready=false`, zeroed locality and nonforgetting metrics, an
+explicit unavailable comparator summary, no live LLM inference, no model-weight
+mutation, and `honest_verdict="blocked_missing_solver_feedback_locality_source"`.
+
+## Implementation Status (REQ-LEARN-3047)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3047 | Implemented (`python/carnot/eval/fr11_kan_locality_nonforgetting_probe_v2.py`) | Implemented (`tests/python/test_experiment_3047_kan_locality_nonforgetting_probe_v2.py`) |
