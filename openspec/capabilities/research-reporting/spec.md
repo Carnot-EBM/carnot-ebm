@@ -7645,3 +7645,65 @@ substrate metadata, no live model or hardware execution, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3042 | Planned (`python/carnot/reporting/repair_promotion_reconciliation_3042.py`) | Planned (`tests/python/test_experiment_3042_repair_promotion_reconciliation.py`) |
+
+### REQ-REPORT-3052: Cross-Corpus Matrix V19 From .284 And .285 Artifacts
+
+The repository shall provide an Exp 3052 cross-corpus matrix v19 generator
+that writes `results/experiment_3052_cross_corpus_matrix_v19.json` using only
+checked-in `.284` and `.285` artifact JSON files. The generator MUST read the
+available matrix v18, capstone v284, flag-hygiene, repair-reconciliation,
+verified-speculation fingerprint, FR-11 solver-feedback, KAN locality,
+GateMate output-contract, GateMate host-visible smoke, and SSQA gate artifacts.
+It MUST NOT run live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, the conductor, or
+historical artifact rewrites.
+
+The generator MUST classify every emitted matrix claim row as exactly one of
+`clean`, `flagged`, `bounded`, `blocked`, `gated_skipped`, `projection_only`,
+`missing`, or `retired`. Every row MUST record its `source_artifact`, `status`,
+`evidence_class`, and `blocker_class`, and missing optional artifacts MUST be
+represented as missing rows rather than silently ignored. Repair may be
+classified as clean only when Exp 3042 reports
+`repair_promotion_candidate=true` and no required blocker remains. FR-11
+self-learning may be promoted only within Exp 3046/3047's controller-side
+scope and MUST NOT become a model-weight-learning claim. GateMate and SSQA may
+be promoted only when a host-visible transcript and SSQA gate artifact exist;
+otherwise their rows MUST remain blocked, gated-skipped, or missing.
+
+The terminal artifact MUST include `matrix_v19_ready`, `rows_total`,
+`clean_count`, `flagged_count`, `bounded_count`, `blocked_count`,
+`gated_skipped_count`, `projection_only_count`, `missing_count`,
+`retired_count`, `repair_claim_status`, `fr11_self_learning_status`,
+`gatemate_status`, `ssqa_status`, `rows`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. `matrix_v19_ready` MUST be true
+when all emitted rows have been classified, even when paper readiness remains
+false because bounded, blocked, gated-skipped, missing, flagged, projection-only,
+or retired rows remain visible. When a conductor prompt assigns ops
+reconciliation to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3052: V19 Aggregates .284 And .285 Rows Without Over-Promotion
+
+**Given** matrix v18, capstone v284, flag-hygiene, repair-reconciliation,
+verified-speculation, FR-11, KAN-locality, GateMate output-contract, and SSQA
+gate artifacts are present or honestly absent
+**And** Exp 3042 reports a bounded repair decision with remaining blockers
+**And** Exp 3046/3047 report controller-side FR-11 evidence without model-weight
+training or mutation
+**And** GateMate host-visible smoke is missing and the SSQA gate artifact
+reports a structured upstream gate failure
+**When** the Exp 3052 matrix v19 generator runs
+**Then** it writes `results/experiment_3052_cross_corpus_matrix_v19.json` with
+`matrix_v19_ready=true`, explicit counts for clean, flagged, bounded, blocked,
+gated-skipped, projection-only, missing, and retired rows, repair preserved as
+bounded, FR-11 scoped to controller-side evidence only, GateMate blocked or
+missing until host-visible transcript evidence exists, SSQA gate-skipped until
+the GateMate smoke gate passes, source provenance on every row, aggregation-only
+inference substrate metadata, no live model or hardware execution by the matrix
+task, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3052)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3052 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v19_3052.py`) | Implemented (`tests/python/test_experiment_3052_cross_corpus_matrix_v19.py`) |
