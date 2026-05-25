@@ -7707,3 +7707,67 @@ task, and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3052 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v19_3052.py`) | Implemented (`tests/python/test_experiment_3052_cross_corpus_matrix_v19.py`) |
+
+### REQ-REPORT-3053: Milestone 2026.05.285 Capstone From Matrix V19
+
+The repository shall provide an Exp 3053 milestone capstone generator that
+writes `results/experiment_3053_capstone_v285.json` using only checked-in
+matrix v19 and source artifact JSON files. The generator MUST read
+`results/experiment_3052_cross_corpus_matrix_v19.json` and the source
+artifacts cited by that matrix before deciding capstone readiness, publication
+readiness, repair claim status, FR-11 self-learning status, GateMate status,
+SSQA status, promoted claims, bounded claims, blocked claims, gated-skipped
+claims, and the exact next-milestone recommendation. It MUST NOT run live LLM
+inference, verifier scoring, solver execution, synthesis, board flashing,
+readback, hardware smoke tests, the conductor, external publication tooling, or
+historical artifact rewrites.
+
+The capstone MUST set `capstone_ready=true` only when matrix v19 exists,
+reports `matrix_v19_ready=true`, all emitted matrix rows are classified, row
+counts reconcile with their statuses, and the required matrix source artifacts
+are readable JSON objects. It MUST set `paper_ready=true` only when repair
+evidence is clean and promotable, FR-11 evidence stays within PRD-aligned claim
+boundaries, GateMate has host-visible transcript evidence, SSQA has a consumed
+GateMate smoke gate, and matrix v19 contains no non-clean publication blockers.
+Controller-only FR-11 evidence MAY be carried as bounded self-learning
+evidence, but it MUST NOT be broadened into model-weight learning or an
+unconstrained autonomous self-improvement claim.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`repair_claim_status`, `fr11_self_learning_status`, `gatemate_status`,
+`ssqa_status`, `matrix_v19_summary`, `promoted_claims`, `bounded_claims`,
+`blocked_claims`, `gated_skipped_claims`, `next_milestone_recommendation`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It MAY include
+paper-readiness checks, source checksums, missing source artifacts,
+no-new-execution booleans, ops-reconciliation booleans, and measured
+`duration_s` as long as every value is derived from checked-in artifacts or
+file presence/checksum checks. When a conductor prompt assigns ops
+reconciliation to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3053: Capstone Closes .285 Without Paper Overclaim
+
+**Given** matrix v19 is present and reports `matrix_v19_ready=true`
+**And** matrix v19 contains clean, bounded, blocked, gated-skipped, missing,
+projection-only, flagged, and retired rows with source provenance
+**And** repair is bounded rather than headline-promotable
+**And** FR-11 evidence is controller-side only without model-weight training or
+mutation
+**And** GateMate lacks a host-visible transcript while SSQA reports a
+structured upstream gate skip
+**When** the Exp 3053 capstone generator runs
+**Then** it writes `results/experiment_3053_capstone_v285.json` with
+`capstone_ready=true`, `paper_ready=false`, matrix v19 counts reconciled,
+promoted/bounded/blocked/gated-skipped claims enumerated separately, repair
+carried as bounded, FR-11 carried only as controller-side evidence, GateMate
+blocked until host-visible transcript evidence exists, SSQA gate-skipped until
+the GateMate smoke gate passes, an exact next-milestone recommendation naming
+which blockers should be retired, gated, or rerun, aggregation-only inference
+substrate metadata, no live model or hardware execution by the capstone task,
+and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3053)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3053 | Implemented (`python/carnot/reporting/capstone_v285_3053.py`) | Implemented (`tests/python/test_experiment_3053_capstone_v285.py`) |
