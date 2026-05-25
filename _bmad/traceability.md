@@ -1,6 +1,8 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.286 research planning staged; roadmap/reference/ops docs only, no new REQ-/SCENARIO-* items or implementation status changes)
+**Last Updated:** 2026-05-25 (Milestone 2026.05.287 research planning staged; roadmap/reference/ops docs only, no new REQ-/SCENARIO-* items or implementation status changes)
+
+**Planning Note:** 2026-05-25 milestone 2026.05.287 research planning updated `research-references.md`, `openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap-next.yaml`, `ops/status.md`, `ops/changelog.md`, and `ops/metrics.md` only; no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
 **Planning Note:** 2026-05-25 milestone 2026.05.286 research planning updated `research-references.md`, `openspec/change-proposals/research-roadmap-vNEXT.md`, `research-roadmap-next.yaml`, `ops/status.md`, and `ops/changelog.md` only; no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 

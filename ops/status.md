@@ -1,6 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.286 research planning staged)
+**Last Updated:** 2026-05-25 (Milestone 2026.05.287 research planning staged)
+
+## Session 2026-05-25 - Milestone 2026.05.287 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.287 as "Verifier-Gain Recovery + Soundness-Bounded FR-11 + Blocker Reconciliation" after the operator reported all `.286` tasks completed. The plan treats `results/experiment_3066_capstone_v286.json` as the authoritative closeout: `.286` completed but remained `paper_ready=false`; repair stayed bounded/gated-skipped, solver grounding was flagged for no verifier gain, FR-11 stayed controller-only delayed-regression ready but flagged, GateMate remains no-rerun blocked on operator actions, and SSQA remains gate-skipped pending host-visible smoke.
+
+Updated `research-references.md` with the post-`.286` sweep covering first-token entropy hallucination detection, Lyapunov probes, HALT-RAG abstention, energy-guided decoding, VERGE/MCS formal feedback, online CoT verifier mistake bounds, EBT/ARM-EBM theory watch, LLGuidance constrained decoding, thermodynamic/Ising hardware boundaries, Extropic updates, and Logical Intelligence Kona context. Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks (`exp3067`-`exp3080`). `exp3077-fr11-soundness-bounded-online-self-learning-pilot` is the mandatory continuous self-learning experiment, with `exp3076` defining soundness/completeness budgets. Validation passed for YAML parse, prompt section/end-line checks, roadmap schema import, prior-failure lint, exclusion-manifest lint, and roadmap-gate audit. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-25 - Milestone 2026.05.286 Research Planning Staged
 

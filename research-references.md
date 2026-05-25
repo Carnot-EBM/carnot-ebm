@@ -16085,3 +16085,115 @@ ARM-EBM context in this sweep.
   Sources: https://extropic.ai/hardware,
   https://extropic.ai/writing, and
   https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+
+## 2026-05-25 Post-.286 Planning Sweep (Milestone 2026.05.287)
+
+Scope: arXiv 2025-2026, OpenReview/ICLR 2026 pages, Hugging Face papers,
+GitHub repository discovery, Extropic hardware/writing pages, Logical
+Intelligence Kona/Aleph public pages, and Semantic Scholar-style discovery for
+EBT (2507.02092) and ARM-EBM (2512.15605). Semantic Scholar confirms the EBT
+record for 2507.02092; public discovery surfaced ARM-EBM through paper summary
+mirrors but no new planning-grade citation cluster beyond the theory anchor.
+
+- **The First Token Knows (arXiv:2605.05166; Hugging Face papers)**: reports
+  that normalized entropy of the first content-bearing answer token can match
+  or exceed multi-sample semantic self-consistency for hallucination detection
+  at much lower decode cost. Relevance to Carnot: `.287` should diagnose the
+  negative `exp3057` verifier-gain result with a cheap first-token confidence
+  and abstention panel before spending another SOTA repair rerun.
+  Sources: https://arxiv.org/abs/2605.05166 and
+  https://huggingface.co/papers/2605.05166
+
+- **Lyapunov Probes for Hallucination Detection (arXiv:2603.06081)**: frames
+  hallucination risk as instability near knowledge-transition boundaries and
+  trains lightweight probes with perturbation-stability constraints. Relevance
+  to Carnot: use perturbation monotonicity as a diagnostic for verifier false
+  negatives and confidence calibration, but do not claim a Lyapunov probe
+  implementation unless hidden-state or embedding perturbation code actually
+  runs.
+  Source: https://arxiv.org/abs/2603.06081
+
+- **HALT-RAG calibrated NLI ensembles with abstention (arXiv:2509.07475)**:
+  pairs frozen NLI features with a calibrated decision policy and explicit
+  abstention. Relevance to Carnot: `.287` verifier-gain work should separate
+  acceptance precision, rejection recall, and abstention coverage; a verifier
+  that abstains honestly is preferable to one with 100% false negatives.
+  Sources: https://arxiv.org/abs/2509.07475 and
+  https://huggingface.co/papers/2509.07475
+
+- **Energy-Guided Decoding for Object Hallucination Mitigation
+  (arXiv:2507.07731)**: selects hidden states by a minimum-energy criterion to
+  reduce VLM yes-bias and object hallucination. Relevance to Carnot: the
+  minimum-energy layer-selection idea is a useful diagnostic pattern for
+  energy-guided acceptance, but `.287` should keep scope to text/logprob
+  telemetry unless a multimodal model and dataset are explicitly available.
+  Source: https://arxiv.org/abs/2507.07731
+
+- **VERGE formal refinement and MCS feedback (arXiv:2601.20055; Hugging Face
+  papers)**: routes atomic claims to formal or soft verifiers and uses Minimal
+  Correction Subsets for localized repair feedback. Relevance to Carnot: `.287`
+  should add an MCS-style correction subset pilot over the SMT/SAT hard set so
+  solver feedback becomes actionable rather than binary pass/fail.
+  Sources: https://arxiv.org/abs/2601.20055 and
+  https://huggingface.co/papers/2601.20055
+
+- **Online Learnability of Chain-of-Thought Verifiers (arXiv:2603.03538)**:
+  formalizes soundness and completeness mistake bounds for online verifier
+  learning under prover/verifier feedback loops. Relevance to Carnot: the next
+  FR-11 experiment should report soundness mistakes, completeness mistakes,
+  mistake-budget deltas, and delayed regression separately instead of a single
+  controller-ready flag.
+  Source: https://arxiv.org/abs/2603.03538
+
+- **Energy-Based Transformers and ARM-EBM theory watch
+  (arXiv:2507.02092, arXiv:2512.15605, alexiglad/EBT)**: EBTs train a scalar
+  energy over input/candidate pairs and use iterative energy minimization at
+  inference; ARM-EBM theory gives a function-space bridge between next-token
+  models and globally scored sequence energies. Relevance to Carnot: `.287`
+  should do a feasibility audit for an adapter from local SOTA transcripts into
+  a small EBT/ARM-EBM energy diagnostic, not a foundation-model training claim.
+  Sources: https://arxiv.org/abs/2507.02092,
+  https://github.com/alexiglad/EBT,
+  https://www.semanticscholar.org/paper/Energy-Based-Transformers-are-Scalable-Learners-and-Gladstone-Nanduru/2da9163730998a4368c609972ccff0582518b36b,
+  and https://www.emergentmind.com/papers/2512.15605
+
+- **LLGuidance and structured-output constrained decoding (GitHub,
+  2025-2026)**: `guidance-ai/llguidance` enforces JSON schema, regex, and CFG
+  masks with low per-token CPU overhead and is integrated into llama.cpp/vLLM
+  style runtimes. Relevance to Carnot: `.287` repair work should test whether
+  grammar-constrained candidate emission reduces syntax/schema failures before
+  another broad repair claim, while still requiring exact semantic validation.
+  Sources: https://github.com/guidance-ai/llguidance and
+  https://guidance-ai.github.io/llguidance/llg-go-brrr
+
+- **Energy-Time-Accuracy Tradeoffs in Thermodynamic Computing
+  (arXiv:2601.04358)**: derives fundamental accuracy, energy, and time limits
+  for stochastic thermodynamic computation. Relevance to Carnot: use this as a
+  hardware claim-boundary reference; GateMate/SSQA rows need sample-quality and
+  host-visible timing evidence before any thermodynamic or speedup implication.
+  Source: https://arxiv.org/abs/2601.04358
+
+- **Current Ising hardware signals: NVIDIA Ising-Decoding, multi-state FPGA
+  Ising, higher-order neuromorphic Ising machines, and Extropic THRML/XTR/Z1**:
+  recent public work reinforces that Ising-style accelerators are active, but
+  the strongest claims rely on specific proprietary or custom hardware stacks.
+  Relevance to Carnot: `.287` should keep local hardware work in no-rerun
+  ledger mode until GateMate has operator-approved output binding and
+  host-visible smoke transcripts.
+  Sources: https://github.com/NVIDIA/Ising-Decoding,
+  https://huggingface.co/nvidia/Ising-Decoder-SurfaceCode-1-Fast,
+  https://www.nature.com/articles/s41467-025-64625-2,
+  https://www.nature.com/articles/s41467-026-71937-4,
+  https://extropic.ai/hardware,
+  https://extropic.ai/software, and
+  https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+
+- **Logical Intelligence Kona public context (January-May 2026)**: Kona is
+  publicly framed as a globally scored, continuous, editable EBM reasoning
+  layer underneath LLM interfaces, with Aleph as the orchestration/proof layer.
+  Relevance to Carnot: the architecture comparison supports Carnot's
+  solver-as-authority and trace-energy direction, but `.287` claims must remain
+  grounded in local Carnot artifacts and not borrow Kona benchmark results.
+  Sources: https://logicalintelligence.com/blog/energy-based-models-for-reasoning,
+  https://logicalintelligence.com/kona-ebms-energy-based-models, and
+  https://logicalintelligence.com/

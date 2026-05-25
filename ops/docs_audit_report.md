@@ -4,51 +4,44 @@
 # docs_audit_report — 2026-05-25
 
 ## TL;DR (stranger's 30-second take)
-I would close the tab in 10 seconds. The page is drowning in internal milestone references, unintelligible acronyms, and literal file paths bleeding into the UI, making it feel like a private internal dashboard rather than a public-facing product.
+The core concept is immediately clear and the quickstart code proves it's real, but the page is littered with raw internal file paths, conflicting metrics, and suspicious 100% perfect scores. A skeptical researcher would likely bounce due to the "spilled" raw artifact IDs and inconsistent HumanEval claims before getting to the paper.
 
 ## TOP 3 PROBLEMS
-1. File paths and internal variables leak directly into the rendered HTML/CSS (e.g., `@results/citation_hallucination_field_verifier...`).
-2. Massive Card Bloat: 36 total bento/result/blog cards overwhelm the reader; no one will skim this many.
-3. Severe Per-Milestone Narrative: Copy reads like an internal Jira ticket update ("Repinned from v2 0.9857") rather than product value propositions.
+1. INTERNAL JARGON BLEED — The SOTA 35B benchmark card literally displays a raw internal path (`@results/citation_hallucination_field_verifier...`) instead of text.
+2. INCONSISTENT METRICS — HumanEval performance is cited across three different cards as "+3.0 points", "8% → 80%", and "0% → 36%" without sufficient context to resolve the disparity.
+3. FABRICATION SIGNALS — Claiming a perfect "1.0" TP rate on GSM8K and catching "60/60 attacks" sets off immediate fake-data alarms without a sample size or credibility anchor.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Entire Page — 36 cards total (2 problem, 4 how, 7 capability, 12 result, 7 blog) — Suggested cap: 12 total cards globally.
-- Results Grid — 12 result cards — Suggested cap: 3-4 headline claims.
-- Blog Section — 7 long blog cards — Suggested cap: 3 recent posts.
+- Results Grid — 12 cards — Suggested cap: 6 max. A stranger will not read 12 distinct metric cards; the impact of the best numbers is diluted by the sheer volume.
 
 ### Internal jargon
-- `<head> CSS link` — `@results/adversarial_gsm8k_data_400.json`, `@ops/latent_deterministic_discipline_gate_1500.md` — Internal file paths leaked into the Google Fonts URL.
-- `<style> block` — `@openspec/change-proposals/paper-v5-integrity-remediation.md` — File paths injected into `@media` query declarations.
-- Live benchmark card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — Raw test fixture paths dumped into public copy.
-- Recent progress card — `FoVer`, `5-seed dual-condition` — A stranger has no idea what this corpus or these conditions mean.
-- Capabilities / Results cards — `CCTU`, `IterativeSelfRepair`, `SVAMP AUC`, `VeriCoT`, `PRM-BiasBench`, `PREM`, `TTC` — Alphabet soup without any definitions or context.
+- Live benchmark card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — This is a raw artifact string bleeding into the UI.
+- Recent progress card — "5-seed dual-condition; architecture-only 0.8947" and "FoVer" — A stranger doesn't know the FoVer corpus or what dual-condition implies.
+- TTC & PREM card — "Process-Reward Energy Model (PREM) variance" — Unexplained acronyms casually dropped in a feature card without prior context.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit"
-- Preprint section — "The current draft anchors its claims to checked-in experiment artifacts... pending operator-initiated upload."
-- Blog section — Summaries like "Three rigorous theory rounds approved the architecture. A single blind-spot audit pass found five fatal flaws..." read as internal retrospectives.
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This reads like an internal retrospective, PR description, or milestone closeout, not landing page copy.
 
 ### Inconsistencies
-- "No model fine-tuning required" (How it works section) vs "Process-Reward Energy Model (PREM)" (Capabilities section) — implies an energy model exists that likely required training/tuning, contradicting the zero-shot framing.
-- "0.9131 Verifier AUROC" (Stats bar) vs "0.91 AUROC (publication gate)" (Safety result card) — confusing whether these are the same metric or completely different tasks.
+- HumanEval pass rate vs Code pass rate vs SOTA pass rate — "Code" card (+3.0 points), "Code repair" card (8% → 80%), and "Live benchmark" card (0% → 36%). These numbers contradict each other without immediate context.
+- Verifier AUROC — The Stats bar claims `0.9131`, but the Safety card claims `0.91` and Math reasoning claims `0.90`. While they are different verifiers, it reads as imprecise and inconsistent to a skimmer.
 
 ### Missing essentials
-- Why should I trust the numbers? The page claims numbers are backed by "checked-in experiment artifacts," but a stranger cannot access local `results/` folders to verify claims like perfect 1.0 AUROCs or 60/60 catches. There are no links to external verifications or datasets on the page itself.
+- Who maintains it? — While "Ian Blenke" is in the footer copyright, there is no prominent mention of the team, institutional backing, or maintainers in the main copy to establish credibility.
 
 ### Fabrication signals
-- 1.0 TP rate — Math extraction result card. A perfect 1.0 true positive rate is a massive red flag for overfitting or a toy sample size.
-- 60/60 attacks caught — Adversarial audit result card. 100% perfect defense against adversarial attacks on a tiny sample sets off BS detectors.
-- 0% -> 36% HumanEval pass — Live benchmark result card. Claiming a SOTA model scored a literal 0% baseline is highly suspect and signals a broken testing harness rather than real model performance.
-- 2.0x speedup, identical losses — Training result card. Perfect 2.0x linear scaling with a 0.0 penalty is rarely seen in the real world.
+- Math extraction card — "TP rate: 0.5 → 1.0" — A perfect 1.0 rate looks suspicious and synthetic without a sample size.
+- Adversarial audit card — "catches 60/60 attacks" — 100% success on any benchmark triggers doubt in a skeptical ML researcher.
+- Cascade routing card — "0.0pp accuracy delta" — Perfect zero degradation is another overly-clean number.
 
 ## WHAT'S WORKING
-- The hero section's one-liner ("Catch the mistakes your LLM confidently makes up") and the "Extract -> Check -> Repair" breakdown are genuinely clear and compelling.
-- The 5-line quickstart code blocks (Python/Rust tabs) clearly show how to use the library and prove it is real, usable software.
+- The "Extract → Check → Repair" Bento grid is excellent. It explains the core mechanism clearly without getting bogged down in complex mathematics.
+- The 5-line Python/Rust Quickstart snippet is highly effective at proving the tool is real, usable, and easily integrated.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Remove all leaked `@results/...` and `@ops/...` file paths from the HTML immediately (check `<link>` tags, `<style>` queries, and the "Live benchmark" card).
-2. Delete 70% of the cards. Keep only the 3 best capabilities, 4 strongest results, and 3 most relevant blog posts.
-3. Rewrite the "Recent progress" and "Preprint" sections to pitch the product's value, not its internal development/publication status.
-4. Replace internal jargon (FoVer, CCTU, PREM) with plain-English equivalents (e.g., "Math Datasets", "Tool-use Benchmarks").
-5. Add sample sizes or context to the 1.0 TP rate and 60/60 claims, and clarify the 0% HumanEval baseline to restore credibility.
+1. Scrub the raw `@results/...` artifact path from the SOTA 35B card headline immediately.
+2. Unify the HumanEval claims into a single, cohesive narrative (pick the most representative metric and clarify the baseline).
+3. Anchor the "1.0" and "60/60" claims with explicit sample sizes, or remove them to avoid looking fabricated.
+4. Rewrite the Hero "Recent progress" card to focus on user value rather than internal audit and repinning history.
+5. Prune the Results grid down to the 6 strongest, most defensible cards.
