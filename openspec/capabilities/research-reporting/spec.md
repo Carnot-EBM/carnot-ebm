@@ -7248,3 +7248,66 @@ honest verdict that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3029 | Implemented (`python/carnot/reporting/repair_promotion_boundary_audit_3029.py`) | Implemented (`tests/python/test_experiment_3029_repair_promotion_boundary_audit.py`) |
+
+### REQ-REPORT-3030: Validator Frontier Corrigendum
+
+The repository shall provide an Exp 3030 validator-frontier corrigendum
+generator that writes
+`results/experiment_3030_validator_frontier_corrigendum_v2.json`. The
+generator MUST read Exp 3017 validator-tree evidence, Exp 3018 BEAVER-style
+frontier-certificate evidence, and Exp 3027 methodology-corrigendum evidence
+before deciding which frontier regions are verified, irrelevant, unresolved,
+fallback-only, or missing-authority. It MUST NOT run live LLM inference,
+verifier scoring, solver execution, synthesis, board flashing, readback,
+historical experiment rewrites, the conductor, or external publication tooling.
+
+The corrigendum MUST build an inspectable frontier table. Each row MUST include
+the source artifact path, source row identifier, authority type, classification,
+bound status, and allowed claim wording. Cached deterministic candidate rows
+MAY be counted as verified only when the Exp 3017 exact authority and Exp 3018
+deterministic validator outcome are present and no live LLM or fallback
+evidence was used. Non-authoritative semantic boundaries and rejected ambiguous
+space MUST be separated as irrelevant/clipped regions. Rows with unresolved
+probability bounds, nondeterministic validators, or LLM-only labels MUST remain
+visible and MUST NOT be promoted as exact BEAVER probability bounds. Enumerator
+fallback evidence MUST be reported as fallback-only and cannot be promoted as
+exact authority. Missing provenance or absent authority MUST block promotion
+instead of being folded into verified counts.
+
+Because Exp 3030 is aggregation-only, its top-level `inference_substrate` MUST
+be an object declaring aggregation-only evidence and MUST NOT include top-level
+`model_specs`, `target_model`, CUDA, GGUF, GPU inventory, headline-model, or
+live-model fields. Source model details, if any, MAY appear only under
+`cited_upstream_artifacts`.
+
+The terminal artifact MUST include `validator_frontier_corrigendum_ready`,
+`verified_region_count`, `irrelevant_region_count`,
+`unresolved_region_count`, `fallback_only_count`,
+`missing_authority_count`, `frontier_rows`, `cited_upstream_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include required source
+errors, source checksums, no-new-execution booleans, status-update booleans,
+and measured `duration_s` as long as every value is derived from upstream JSON
+artifacts, JSONL manifests, or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3030: Validator Frontier Regions Stay Inspectable
+
+**Given** Exp 3017, Exp 3018, and Exp 3027 artifacts are present
+**And** Exp 3018 contains certified candidate rows, non-prefix rows,
+unresolved source rejections, probability-bound placeholders, and separated
+enumerator fallback provenance
+**When** the Exp 3030 validator-frontier corrigendum generator runs
+**Then** it writes
+`results/experiment_3030_validator_frontier_corrigendum_v2.json` with
+`validator_frontier_corrigendum_ready=true`, every frontier row classified,
+verified exact-authority rows counted separately from irrelevant, unresolved,
+fallback-only, and missing-authority regions, unresolved rows still present in
+`frontier_rows`, fallback-only evidence prevented from promotion, source
+artifact citations for Exp 3017, Exp 3018, and Exp 3027, aggregation-only
+top-level `inference_substrate`, no top-level live-model metadata, and an
+honest verdict that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3030)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3030 | Implemented (`python/carnot/reporting/validator_frontier_corrigendum_3030.py`) | Implemented (`tests/python/test_experiment_3030_validator_frontier_corrigendum.py`) |

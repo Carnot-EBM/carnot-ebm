@@ -1,0 +1,882 @@
+{
+  "artifact": "experiment_3030_validator_frontier_corrigendum_v2",
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp3017",
+      "honest_verdict": "complete: NSVIF instruction validator-tree corpus exact-checked",
+      "inference_substrate": "deterministic_nsvif_instruction_validator_tree_corpus",
+      "path": "results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "sha256": "d9db1bcc3b53b4619a22a770e9fcafd0ca2b383bc65ff5de2e07c843cc621e8d",
+      "source_field_summary": {
+        "all_authoritative_nodes_exact_checked": true,
+        "instruction_validator_tree_ready": true,
+        "llm_judge_used": false
+      }
+    },
+    {
+      "experiment_id": "exp3017_manifest",
+      "honest_verdict": "",
+      "inference_substrate": null,
+      "path": "results/nsvif_instruction_validator_tree_expansion_3017/validator_manifest.jsonl",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "sha256": "05f441bf3fd05df31c8894b53017f8991eec8ace673e9f0420b3c274960d7a35",
+      "source_field_summary": {
+        "row_count": 20
+      }
+    },
+    {
+      "experiment_id": "exp3018",
+      "honest_verdict": "complete: validator frontier certificate ready with explicit unresolved bounds",
+      "inference_substrate": "deterministic_cached_validator_frontier",
+      "path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "sha256": "e83c45047b82d87e595881e867d3494dc1362fd32fa88ce4d25f78d11453910e",
+      "source_field_summary": {
+        "enumerator_fallback_separated": true,
+        "frontier_certificate_ready": true,
+        "live_llm_evidence_used": false,
+        "non_prefix_closed_count": 2,
+        "probability_bound_policy": {
+          "bound_type": "placeholder",
+          "exact_probability_computed": false,
+          "lower_bound": null,
+          "reason": "no token-trie or model-probability frontier was computed",
+          "upper_bound": null
+        },
+        "unresolved_count": 2
+      }
+    },
+    {
+      "experiment_id": "exp3018_manifest",
+      "honest_verdict": "",
+      "inference_substrate": null,
+      "path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "sha256": "8fc50e361ceb98bf554f7ab7739ffa3836d0eaab0f5a8459acc0cb31c01f19b8",
+      "source_field_summary": {
+        "certificate_status_counts": {
+          "certified_safe": 20,
+          "certified_violating": 20,
+          "non_prefix_closed": 2,
+          "unresolved": 2
+        },
+        "row_count": 44
+      }
+    },
+    {
+      "experiment_id": "exp3027",
+      "honest_verdict": "complete: methodology_corrigendum_ready=true; repair_decision=live_rerun_required; flagged_rows_reviewed=29; missing_metadata=2; unresolved_bound=1",
+      "inference_substrate": {
+        "kind": "aggregation_from_upstream_artifacts",
+        "no_historical_artifact_rewrite": true,
+        "no_live_llm_inference": true,
+        "no_top_level_live_model_metadata": true,
+        "source_model_metadata_location": "source_artifacts[].collected_fields"
+      },
+      "path": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "sha256": "06a8aa48db38a2c96432f26ffd544af7007b93ec96812abafeb35e35b4f0291c",
+      "source_field_summary": {
+        "methodology_corrigendum_ready": true,
+        "unresolved_bound_row_count": 1
+      }
+    }
+  ],
+  "duration_s": 0.003329,
+  "exp3027_unresolved_bound_rows": [
+    {
+      "classification": "unresolved_bound",
+      "march_audit_principle": "source_row_does_not_grade_itself",
+      "matrix_status": "flagged",
+      "rationale": "The validator frontier is useful, but unresolved probability bounds remain explicit.",
+      "row_id": "exp3018_beaver_frontier_certificate",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_experiment_id": "exp3018",
+      "supporting_fields": [
+        {
+          "field": "unresolved_count",
+          "value": 2
+        },
+        {
+          "field": "probability_bound_policy",
+          "value": {
+            "bound_type": "placeholder",
+            "exact_probability_computed": false,
+            "lower_bound": null,
+            "reason": "no token-trie or model-probability frontier was computed",
+            "upper_bound": null
+          }
+        }
+      ]
+    }
+  ],
+  "fallback_only_count": 1,
+  "frontier_rows": [
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-001",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-001:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-001",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-001:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May report this as clipped or irrelevant to exact authority, not as verified.",
+      "authority_type": "non_authoritative_semantic_boundary",
+      "bound_status": "clipped_irrelevant_to_exact_authority",
+      "certificate_status": "non_prefix_closed",
+      "classification": "irrelevant",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-001",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-001:non_prefix:if-3017-001:semantic_boundary:3",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "non_prefix_closed_node"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-002",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-002:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-002",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-002:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-003",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-003:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-003",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-003:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_string_checker"
+      ],
+      "item_id": "if-3017-004",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-004:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_string_checker"
+      ],
+      "item_id": "if-3017-004",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-004:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-005",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-005:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-005",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-005:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_string_checker"
+      ],
+      "item_id": "if-3017-006",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-006:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_string_checker"
+      ],
+      "item_id": "if-3017-006",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-006:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-007",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-007:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-007",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-007:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-008",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-008:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-008",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-008:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-009",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-009:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-009",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-009:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-010",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-010:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-010",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-010:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-011",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-011:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "runtime_json_parser"
+      ],
+      "item_id": "if-3017-011",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-011:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-012",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-012:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-012",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-012:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-013",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-013:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-013",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-013:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-014",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-014:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-014",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-014:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-015",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-015:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "z3_solver"
+      ],
+      "item_id": "if-3017-015",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-015:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-016",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-016:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-016",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-016:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-017",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-017:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-017",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-017:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-018",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-018:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-018",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-018:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-019",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-019:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-019",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-019:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_safe",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-020",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-020:known_good",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May claim this cached candidate was exact-checked. Do not claim full BEAVER probability bounds.",
+      "authority_type": "exact_validator_tree",
+      "bound_status": "exact_candidate_check_only_probability_bound_unresolved",
+      "certificate_status": "certified_violating",
+      "classification": "verified",
+      "exact_authorities": [
+        "python_ast_parser",
+        "python_runtime_executor"
+      ],
+      "item_id": "if-3017-020",
+      "probability_bound_exact": false,
+      "row_id": "if-3017-020:known_bad",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "candidate_frontier"
+    },
+    {
+      "allowed_claim_wording": "May report this as clipped or irrelevant to exact authority, not as verified.",
+      "authority_type": "ambiguous_instruction_no_deterministic_boundary",
+      "bound_status": "clipped_irrelevant_to_exact_authority",
+      "certificate_status": "non_prefix_closed",
+      "classification": "irrelevant",
+      "exact_authorities": [],
+      "item_id": "rejected-ambiguous-friendly-tone",
+      "probability_bound_exact": false,
+      "row_id": "rejected-ambiguous-friendly-tone:non_prefix_closed",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "source_rejected_item"
+    },
+    {
+      "allowed_claim_wording": "Do not promote this region; the unresolved bound remains visible.",
+      "authority_type": "nondeterministic_validator",
+      "bound_status": "unresolved_probability_or_authority_bound",
+      "certificate_status": "unresolved",
+      "classification": "unresolved",
+      "exact_authorities": [],
+      "item_id": "rejected-random-id",
+      "probability_bound_exact": false,
+      "row_id": "rejected-random-id:unresolved",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "source_rejected_item"
+    },
+    {
+      "allowed_claim_wording": "Do not promote this region; the unresolved bound remains visible.",
+      "authority_type": "live_llm_dependency",
+      "bound_status": "unresolved_probability_or_authority_bound",
+      "certificate_status": "unresolved",
+      "classification": "unresolved",
+      "exact_authorities": [],
+      "item_id": "rejected-looks-helpful-label",
+      "probability_bound_exact": false,
+      "row_id": "rejected-looks-helpful-label:unresolved",
+      "source_artifact_path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "source_manifest_path": "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl",
+      "source_row_type": "source_rejected_item"
+    },
+    {
+      "allowed_claim_wording": "Enumerator fallback is accounting evidence only and cannot be promoted as exact authority.",
+      "authority_type": "deterministic_fallback",
+      "bound_status": "fallback_only_not_promotable",
+      "certificate_status": "fallback_only",
+      "classification": "fallback_only",
+      "exact_authorities": [],
+      "item_id": "",
+      "probability_bound_exact": false,
+      "row_id": "exp3004_enumerator_fallback:0",
+      "source_artifact_path": "results/raw/experiment_3004_aquaforte_beaver_live_retry_provenance_v2/enumerator_fallback__cbmini-2926-linear-001.json",
+      "source_manifest_path": "",
+      "source_row_type": "enumerator_fallback_provenance"
+    }
+  ],
+  "honest_verdict": "complete: validator_frontier_corrigendum_ready=true; verified=40; irrelevant=2; unresolved=2; fallback_only=1; missing_authority=0",
+  "inference_substrate": {
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "no_new_solver_run": true,
+    "no_new_verifier_run": true,
+    "no_top_level_live_model_metadata": true,
+    "source_metadata_location": "cited_upstream_artifacts[].source_field_summary"
+  },
+  "irrelevant_region_count": 2,
+  "milestone": "2026.05.284",
+  "missing_authority_count": 0,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "run_date": "20260525",
+  "schema": "carnot.validator_frontier_corrigendum.v2",
+  "source_checksums": {
+    "results/beaver_style_validator_frontier_certificate_3018/certificate_manifest.jsonl": "8fc50e361ceb98bf554f7ab7739ffa3836d0eaab0f5a8459acc0cb31c01f19b8",
+    "results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json": "d9db1bcc3b53b4619a22a770e9fcafd0ca2b383bc65ff5de2e07c843cc621e8d",
+    "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json": "e83c45047b82d87e595881e867d3494dc1362fd32fa88ce4d25f78d11453910e",
+    "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json": "06a8aa48db38a2c96432f26ffd544af7007b93ec96812abafeb35e35b4f0291c",
+    "results/nsvif_instruction_validator_tree_expansion_3017/validator_manifest.jsonl": "05f441bf3fd05df31c8894b53017f8991eec8ace673e9f0420b3c274960d7a35"
+  },
+  "source_unresolved_count": 2,
+  "status_updates_written": false,
+  "unresolved_region_count": 2,
+  "validator_frontier_corrigendum_ready": true,
+  "verified_region_count": 40
+}
