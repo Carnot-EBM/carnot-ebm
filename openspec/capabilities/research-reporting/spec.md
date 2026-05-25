@@ -8564,3 +8564,67 @@ metadata, no roadmap activation performed by this task, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3081 | Implemented (`python/carnot/reporting/archive_v287_activate_v288_3081.py`) | Implemented (`tests/python/test_experiment_3081_archive_v287_activate_v288.py`) |
+
+### REQ-REPORT-3082: Publication Blocker Reduction Ledger For Matrix V22
+
+The repository shall provide an Exp 3082 publication blocker reduction ledger
+generator that writes
+`results/experiment_3082_publication_blocker_reduction_ledger_v1.json` using
+matrix v21 and the milestone .287 capstone as the authority artifacts. The
+generator MUST read `results/experiment_3079_cross_corpus_matrix_v21.json` and
+`results/experiment_3080_capstone_v287.json` before categorizing blockers. It
+MUST NOT edit any prior result artifact, run live model inference, run
+verifier scoring, run repair, execute solver work, synthesize or flash
+hardware, perform board readback, run the conductor, push, or modify
+`scripts/research_conductor.py`.
+
+The ledger MUST categorize every matrix v21 publication blocker into exactly
+one of these categories: `verifier_gain`, `repair_gate`, `fr11_budget`,
+`hardware_evidence`, `adapter_projection`, `missing_artifact`,
+`bounded_status`, or `documentation_hygiene`. Matrix v21 retired rows MUST be
+listed separately under `retired_status` so matrix v22 can keep retired claims
+out of publication-blocker counts without losing traceability. Hardware rows
+that depend on GateMate, SSQA, host-visible smoke, readback, or operator
+preconditions MUST be marked as requiring external operator evidence rather
+than conductor evidence. Bounded, gated-skipped, projection-only, missing, and
+retired rows MUST each have mechanical retire-or-promote criteria suitable for
+matrix v22 consumption.
+
+The terminal artifact MUST include `blocker_ledger_ready`,
+`publication_blocker_count_before`, `blocker_categories`,
+`reducible_in_v288`, `operator_evidence_required`,
+`retire_or_promote_criteria`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. `publication_blocker_count_before` MUST be derived from
+matrix v21, not recomputed from capstone prose. `blocker_ledger_ready` MUST be
+true only when matrix v21 and capstone .287 are readable, the matrix/capstone
+blocker counts agree, every matrix v21 publication blocker appears in exactly
+one non-retired category, all retired rows appear in `retired_status`, and the
+inference substrate declares aggregation from checked-in artifacts with no
+live inference or hardware execution. The `honest_verdict` MUST start with
+`complete:` when the ledger is ready; otherwise it MUST report the blocked
+precondition honestly.
+
+#### SCENARIO-REPORT-3082: Ledger Separates Reducible And Operator-Evidence Blockers
+
+**Given** matrix v21 exists, reports `publication_blocker_count=42`, and lists
+publication blockers covering verifier gain, repair gates, FR-11 budgets,
+hardware evidence, adapter projection, missing artifacts, bounded rows, and
+documentation hygiene
+**And** capstone .287 exists and reports the same publication blocker count
+with `paper_ready=false`
+**When** the Exp 3082 ledger generator runs
+**Then** it writes
+`results/experiment_3082_publication_blocker_reduction_ledger_v1.json` with
+`blocker_ledger_ready=true`, `publication_blocker_count_before=42`, every
+matrix v21 publication blocker assigned to exactly one blocker category,
+retired rows assigned to `retired_status`, `.288`-reducible actions listed
+separately from external operator-evidence requirements, category-level
+retire-or-promote criteria, source-artifact provenance for matrix v21 and
+capstone .287, aggregation-only inference substrate metadata, no live model or
+hardware execution, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3082)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3082 | Planned (`python/carnot/reporting/publication_blocker_reduction_ledger_3082.py`) | Planned (`tests/python/test_experiment_3082_publication_blocker_reduction_ledger.py`) |
