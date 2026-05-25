@@ -538,6 +538,75 @@ clear.
 |---|---|---|
 | REQ-VERIFY-3018 | Implemented (`python/carnot/eval/beaver_style_validator_frontier_certificate_v1.py`) | Implemented (`tests/python/test_experiment_3018_beaver_style_validator_frontier_certificate.py`) |
 
+### REQ-VERIFY-3019: FR-11 Feasibility-Channel De-Tautology Diagnostic
+
+The repository shall provide a deterministic Exp 3019 feasibility-channel
+diagnostic that consumes exact Exp 3017 validator rows, Exp 3018 certificate
+outcomes, and Exp 3007 FR-11 trace-memory evidence, then writes
+`results/experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic_v1.json`.
+
+The diagnostic shall derive transparent feasibility features only from exact
+evidence: exact validator failure counts, exact-authority coverage,
+frontier/certificate provenance, transcript presence, unresolved source
+rejections, and Exp 3007 negative-control deltas. It SHALL NOT use
+`certificate_status`, `candidate_role`, held-out success labels, or self-reported
+memory utility as feasibility-score features.
+
+The diagnostic shall write an inspectable JSONL table that includes feasible,
+violating, unresolved, non-prefix, and negative-control rows. It SHALL measure
+feasible-vs-infeasible separation, negative-control rejection, and held-out
+verifier-success correlation on a deterministic held-out item partition. The
+held-out label SHALL come from source exact verifier outcomes rather than the
+same scalar used as the feasibility score.
+
+The diagnostic shall make tautology risk explicit whenever its exact evidence is
+still too close to the verifier labels for promotion-grade FR-11 gating. It
+SHALL NOT claim a native Differentiable Symbolic Planning implementation or any
+broad self-improvement capability.
+
+The terminal artifact MUST include `feasibility_channel_diagnostic_ready`,
+`diagnostic_table_path`, `n_rows`, `feasible_infeasible_auc`,
+`negative_control_rejection_rate`, `heldout_metric_correlation`,
+`tautology_risk_flag`, `reused_label_as_feature`, `native_dsp_claim_made`, and
+`honest_verdict`.
+
+`feasibility_channel_diagnostic_ready` shall be true only when the exact source
+rows are present, the diagnostic table is written, feasible and infeasible
+certificate rows are both represented, negative controls are measured,
+held-out correlation is computed without label-feature reuse,
+`reused_label_as_feature=false`, `native_dsp_claim_made=false`, and
+`honest_verdict` starts with a terminal completion prefix. A true
+`tautology_risk_flag` is allowed only as an explicit diagnostic warning, not as
+a promotion claim.
+
+### SCENARIO-VERIFY-3019: Exact Certificate Rows Become A Feasibility Diagnostic
+
+Given Exp 3017 exact validator rows, Exp 3018 certificate rows, and Exp 3007
+trace-memory control evidence are available,
+When the Exp 3019 diagnostic runs,
+Then it writes an inspectable table covering feasible, violating, unresolved,
+non-prefix, and negative-control rows; computes feasible-vs-infeasible AUC,
+negative-control rejection rate, and held-out exact-verifier correlation; marks
+tautology risk explicitly; rejects label-as-feature reuse; makes no native DSP
+claim; and writes the terminal artifact with
+`feasibility_channel_diagnostic_ready=true`.
+
+### SCENARIO-VERIFY-3019-BLOCKED: Missing Exact Evidence Fails Closed
+
+Given any required Exp 3017, Exp 3018, or Exp 3007 source evidence is missing or
+not ready,
+When the Exp 3019 diagnostic runs,
+Then it writes the required artifact fields with
+`feasibility_channel_diagnostic_ready=false`, zero sample and metric values, no
+native DSP claim, no label-feature reuse, and an `honest_verdict` beginning with
+`blocked_`.
+
+## Implementation Status (REQ-VERIFY-3019)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3019 | Proposed (`python/carnot/eval/fr11_feasibility_channel_de_tautology_diagnostic_v1.py`) | Proposed (`tests/python/test_experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
