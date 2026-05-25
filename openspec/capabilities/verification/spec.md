@@ -656,6 +656,72 @@ evidence file are present.
 |---|---|---|
 | REQ-VERIFY-3044 | Implemented (`python/carnot/eval/smt_sat_validator_tree_exactness_upgrade_v1.py`) | Implemented (`tests/python/test_experiment_3044_smt_sat_validator_tree_exactness_upgrade.py`) |
 
+### REQ-VERIFY-3057: Local SOTA Solution-Verifier Gain Panel
+
+The repository shall provide a tiny Exp 3057 local SOTA solution-verifier
+calibration panel over deterministic SAT/SMT-style fixtures with exact solver
+ground truth. The panel shall write
+`results/experiment_3057_local_sota_solution_verifier_gain_panel_v1.json`.
+
+The panel shall build 6-12 deterministic fixtures whose exact labels are
+derived from an executable solver authority, use at least one mandated local
+SOTA GGUF model from `python/carnot/inference/sota_models.py` for live solving
+or verification when such a model can be loaded, and compare one-shot solver
+accuracy against verifier-selected accuracy over a small candidate pool. If two
+mandated GGUF model families can be loaded, the solver and verifier roles shall
+be separated across families; otherwise the artifact shall disclose
+`cross_family_used=false`. Legacy tiny models shall not satisfy calibration
+readiness and may appear only as `legacy_smoke_only_used=true` smoke evidence.
+
+The terminal artifact MUST include `solution_verifier_calibration_ready`,
+`verifier_gain_delta`, `false_positive_rate`, `false_negative_rate`,
+`exact_ground_truth_count`, `models_used`, `model_specs`,
+`legacy_smoke_only_used`, `cross_family_used`, `prompt_hashes`,
+`inference_substrate`, and `honest_verdict`. It shall also record model cache
+resolution, CUDA/GPU memory provenance, seed, prompt/decode settings,
+wall-clock duration, exact-solver agreement, and enough candidate-level rows to
+audit false acceptance and false rejection errors without embedding full
+prompts.
+
+`solution_verifier_calibration_ready` shall be true only when exact ground
+truth is present for at least six fixtures, at least one mandated local GGUF
+successfully produced live solver or verifier evidence, model specifications
+name the exact model IDs and runtime/cache paths, verifier-gain and false-error
+metrics are non-vacuous, `legacy_smoke_only_used=false`, and `honest_verdict`
+starts with a terminal success prefix. If no mandated GGUF can be loaded, the
+artifact shall fail closed with `solution_verifier_calibration_ready=false`,
+empty model evidence, zero exact-ground-truth promotion, and an
+`honest_verdict` beginning with `blocked_sota_gguf_unavailable`.
+
+### SCENARIO-VERIFY-3057: Exact Ground Truth Calibrates Verifier Selection
+
+Given deterministic SAT/SMT-style fixtures with exact solver labels and a
+mandated local GGUF runtime that can load,
+When the Exp 3057 panel runs,
+Then it obtains live local model output for solver and/or verifier roles,
+hashes every prompt, evaluates one-shot solver candidates and
+verifier-selected candidate-pool answers against exact solver authority,
+reports verifier gain, false positive rate, false negative rate,
+exact-solver agreement, cross-family usage, and legacy-smoke status, and sets
+`solution_verifier_calibration_ready=true` only when the live evidence and
+non-vacuous metrics are present.
+
+### SCENARIO-VERIFY-3057-BLOCKED: Missing Mandated GGUF Fails Closed
+
+Given the mandated local GGUF cache paths are absent or every mandated GGUF
+load attempt fails,
+When the Exp 3057 panel runs,
+Then it writes the required artifact fields, records CUDA/GPU/cache
+preconditions and decode settings, leaves model evidence empty, does not use
+legacy tiny models as headline evidence, and emits an `honest_verdict`
+beginning with `blocked_sota_gguf_unavailable`.
+
+## Implementation Status (REQ-VERIFY-3057)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3057 | Implemented (`python/carnot/eval/local_sota_solution_verifier_gain_panel_v1.py`) | Implemented (`tests/python/test_experiment_3057_local_sota_solution_verifier_gain_panel.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy

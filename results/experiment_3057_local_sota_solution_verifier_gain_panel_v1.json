@@ -1,0 +1,138 @@
+{
+  "artifact": "experiment_3057_local_sota_solution_verifier_gain_panel_v1",
+  "cross_family_used": false,
+  "decode_config": {
+    "max_tokens": 96,
+    "repeat_penalty": 1.0,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "duration_s": 29.043582,
+  "exact_ground_truth_count": 8,
+  "exact_solver_agreement": 1.0,
+  "exact_solver_authority": "z3_solver",
+  "false_negative_rate": 1.0,
+  "false_positive_rate": 0.0,
+  "honest_verdict": "complete: solution_verifier_calibration_ready=true; verifier_gain_delta=-0.125; false_positive_rate=0.0; false_negative_rate=1.0",
+  "inference_substrate": {
+    "cuda_probe": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "torch_cuda_version": "12.8",
+      "torch_version": "2.11.0+cu128"
+    },
+    "decode_config": {
+      "max_tokens": 96,
+      "repeat_penalty": 1.0,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "exact_solver": "z3",
+    "gguf_cache_resolution": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": null
+    },
+    "gpu_inventory": {
+      "available": true,
+      "free_vram_mib_total": 47638,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_free_mib": 23819,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_free_mib": 23819,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "load_config": {
+      "main_gpu": 0,
+      "n_batch": 64,
+      "n_ctx": 1024,
+      "n_gpu_layers": -1,
+      "n_ubatch": 64,
+      "verbose": false
+    },
+    "python_environment": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.0.4-1-cachyos-x86_64-with-glibc2.43",
+      "version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+      "virtual_env": null
+    },
+    "repo_commit": "e3c5d9e6563df3bd86f94a9a79296d19cb1a059d",
+    "runtime": "llama_cpp",
+    "seed": 305700,
+    "selected_model_paths": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "wall_clock_duration_s": 29.043582
+  },
+  "legacy_smoke_only_used": false,
+  "model_specs": [
+    {
+      "checksum_feasibility": {
+        "full_sha256_feasible": false,
+        "method": "bounded_head_tail_sha256",
+        "size_bytes": 16947539744
+      },
+      "family": "gemma",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "role": "moe"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "one_shot_solver_accuracy": 0.125,
+  "panel_row_count": 8,
+  "panel_rows_path": "results/local_sota_solution_verifier_gain_panel_3057/panel_rows.jsonl",
+  "panel_rows_sha256": "ee9d8608642727ae6ecfbee4568a068f82d7870db5329de2e1121643b5b3478b",
+  "prompt_hashes": [
+    "6f588f51dd689f486255d0a14b3736187e066b257bfffb6c94740604951bb058",
+    "865dc3eeae5c43cea1ebc6bbea669aef1b64cc11c45e2182817fe185057375cc",
+    "52ded9c6fd98b4c28f35c040b6c95911364b5e07fb3c67cce378f9c15c10ebdd",
+    "480454356764f78aa7357662eabab2d60498cfe13802ac5539d7ad4ed075d870",
+    "07125d51732c9ac1b22b2626f5665f3fa8deafdcdc27c6b86acc7b0cef5f0505",
+    "a0c9b8d5c85e899d8d9e7076700ae52074cc62880d6cc9a7a649eedd4228eb80",
+    "bee2a91a8f1b4d9629dfc9891830f41819ec209102cecf3fe9049c32a20c9fba",
+    "61c939bc279d097c4c1a90af2e0182f23a580f983dec671052f218b71f72c716",
+    "c3fd910a11e2518c2ca1842a89add63cc73b74948cb6d7d37b00660450bef7c4",
+    "4a053eef0e60bcff15555e021b658cbf1bc6b23e0c45a336ffba57d9d3a27f77",
+    "e047f8d41ecf2ad2a237e7d22ad8eda86d0d4053d5177c34155f0fc3824ebbb6",
+    "c1605677f49e2712c0caae8e33a6fa4a82eff76aa2dc9444b1d8b3e368060053",
+    "57a32d5596a04045f5d2412fcd051896c1fa3605c1671fc16ff659fe226759e4",
+    "41ce2fe8b540e51edeebf954634ff8d4807b37e12bf1db66317c5b86b1cf9f9a",
+    "647abaaee104db1cb0f8fce8a9c9cbdff6b783eb7959fe8730a2cc050e6df973",
+    "f41ec4c59b607509f6415067631f296d21353b5e2059401272633e2aa8bec6ed"
+  ],
+  "raw_transcript_paths": [],
+  "reproducibility_checksum": "0d3d9be47eec1791ce1d4336bfbde20a6e7099630bbd878123aed26dcfac00b5",
+  "run_date": "20260525",
+  "runtime_blocker": null,
+  "schema": "carnot.local_sota_solution_verifier_gain_panel.v1",
+  "seed": 305700,
+  "solution_verifier_calibration_ready": true,
+  "tests_or_checks_run": [
+    "focused pytest passed: tests/python/test_experiment_3057_local_sota_solution_verifier_gain_panel.py -q --no-cov -n0",
+    "new-code coverage passed: 100% for python/carnot/eval/local_sota_solution_verifier_gain_panel_v1.py"
+  ],
+  "verifier_gain_delta": -0.125,
+  "verifier_selected_accuracy": 0.0,
+  "invariant_violations": []
+}
