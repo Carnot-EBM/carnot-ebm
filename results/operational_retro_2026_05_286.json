@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.286",
+  "generated_at": "2026-05-25T16:14:25Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Milestone 2026.05.286 has an empty authoritative timing window: 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments. Compute-bound duration ranking, GPU efficiency on compute-bound work, and 2+ model DualGPURunner engagement have no data available this milestone.",
+  "bottlenecks_identified": [
+    "No compute-bound experiment rows are available, so no runtime bottleneck can be attributed to model execution this milestone.",
+    "The GPU snapshot shows idle devices, but gpu_idle_on_compute_bound_tasks is null because the timing data contains no compute-bound work; idle GPUs are therefore not counted as an operational bottleneck."
+  ],
+  "improvements_suggested": [
+    "Keep retrospective generation gated on milestone-scoped timing rows and emit 'no data available this milestone' when the window is empty.",
+    "Preserve the compute-bound gate before applying GPU-idle recommendations so synthesis-only or empty windows do not produce false bottleneck claims.",
+    "Add a closeout preflight that surfaces an empty milestone timing window before deeper operational analysis begins."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Record the empty timing-window verdict directly in the milestone closeout artifact.",
+    "Skip slowest-experiment and GPU-efficiency analysis when experiments_completed is 0.",
+    "Keep DualGPURunner recommendations conditional on timing evidence for 2+ parallel compute-bound model workloads."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The correct operational conclusion is absence of timing evidence, not inferred efficiency. The idle GPU report is useful context, but without compute-bound milestone rows it cannot support a GPU-utilization bottleneck claim."
+}
