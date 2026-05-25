@@ -6223,3 +6223,5 @@ web search: site |
 | 2026-05-25 05:04 UTC | GateMate output contract and pinout decision | OK | 81 passed in 3.84s |
 | 2026-05-25 05:06 UTC | GateMate output shim RTL/CCF simulation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3034-gatemate-output-contract-pinout-de |
 | 2026-05-25 05:08 UTC | GateMate output shim RTL/CCF simulation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3034-gatemate-output-contract-pinout-de |
+| 2026-05-25 05:10 UTC | GateMate output shim RTL/CCF simulation | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3034-gatemate-output-contract-pinout-de |
+| 2026-05-25 05:12 UTC | GateMate host-visible flash smoke v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3035-gatemate-output-shim-rtl-ccf-sim) |
