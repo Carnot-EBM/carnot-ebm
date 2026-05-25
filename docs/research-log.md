@@ -4663,3 +4663,9 @@ The critical path for milestone .250:
 - theme: Operational closeout for a milestone with no timing rows
 - key result: Timing authority found no experiment commits after activation; slowest-run, compute-bound GPU-use, and DualGPURunner checks have no data available this milestone.
 - acceptance: no data available this milestone
+
+### Milestone 2026.05.285
+- exp_range: no data available this milestone
+- theme: Empty activation-window operations audit
+- key result: The timing source contains no post-activation experiment commits; compute-bound duration, GPU utilization, and parallel-runner coverage have no data available this milestone.
+- acceptance: no data available this milestone

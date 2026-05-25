@@ -1,6 +1,8 @@
 # Carnot — Traceability Matrix
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.283 operational retrospective; results, ops, research log, and traceability docs only, no new REQ-/SCENARIO-* items or implementation status changes)
+**Last Updated:** 2026-05-25 (Milestone 2026.05.285 operational retrospective; results, ops, research log, and traceability docs only, no new REQ-/SCENARIO-* items or implementation status changes)
+
+**Operational Note:** 2026-05-25 milestone 2026.05.285 operational retrospective updated `results/operational_retro_2026_05_285.json`, `ops/changelog.md`, `docs/research-log.md`, and `ops/status.md`. Authoritative TIMING DATA reported 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
 **Operational Note:** 2026-05-25 milestone 2026.05.283 operational retrospective updated `results/operational_retro_2026_05_283.json`, `ops/changelog.md`, `docs/research-log.md`, and `ops/status.md`. Authoritative timing data contained 0 completed experiments, 0 total wall-time minutes, and 0 compute-bound experiments, so no new REQ-/SCENARIO-* items or implementation status changes were introduced.
 
