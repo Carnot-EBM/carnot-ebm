@@ -441,5 +441,13 @@
     "ruff check python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py scripts/experiment_3071_verge_mcs_smt_correction_pilot_v1.py -> passed",
     "ruff format --check python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py scripts/experiment_3071_verge_mcs_smt_correction_pilot_v1.py -> passed"
   ],
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=11.338208 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }

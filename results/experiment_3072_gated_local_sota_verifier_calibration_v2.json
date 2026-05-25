@@ -1,0 +1,42 @@
+{
+  "experiment": 3072,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-25",
+  "started_at": "2026-05-25T18:17:20.557255+00:00",
+  "finished_at": "2026-05-25T18:17:20.557255+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated local SOTA verifier calibration v2",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel.abstention_precision (actual=0.5 >= expected=0.7)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3070-first-token-abstention-sota-panel",
+      "artifact_field": "first_token_panel_ready",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    },
+    {
+      "upstream": "exp3071-verge-mcs-smt-correction-pilot",
+      "artifact_field": "mcs_feedback_ready",
+      "op": "==",
+      "expected": true,
+      "actual": true,
+      "passed": true,
+      "reason": "actual=True == expected=True"
+    },
+    {
+      "upstream": "exp3070-first-token-abstention-sota-panel",
+      "artifact_field": "abstention_precision",
+      "op": ">=",
+      "expected": 0.7,
+      "actual": 0.5,
+      "passed": false,
+      "reason": "actual=0.5 >= expected=0.7"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
