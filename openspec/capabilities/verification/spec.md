@@ -926,6 +926,59 @@ and an `honest_verdict` beginning with
 |---|---|---|
 | REQ-VERIFY-3071 | Implemented (`python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py`) |
 
+### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
+
+The repository shall provide an Exp 3073 deterministic architecture audit that
+writes `results/experiment_3073_ebt_arm_ebm_adapter_feasibility_audit_v1.json`
+without implementing, wiring, or claiming a production EBT/ARM adapter.
+
+The audit shall inspect local architecture surfaces that could host
+EBT-style latent reasoning or ARM-EBM-style recurrent/logprob energy
+refinement, including the core energy protocol, the verify-repair pipeline,
+ARM logprob energy extraction, EBT reasoning bridges, gradient refinement, and
+reasoning-energy embedding paths. It shall compare those surfaces against
+current code and specs, separate near-term adapter opportunities from
+paper-context-only references, and explicitly list the future prerequisites for
+data shape, energy objective, verifier interface, sampling path, evaluation
+metric, and rollback/claim boundaries.
+
+The terminal artifact MUST include `ebt_arm_adapter_feasibility_ready`,
+`ebt_arm_adapter_feasible`, `adapter_surface`, `required_prerequisites`,
+`blockers`, `recommended_next_experiment`, `source_refs`,
+`inference_substrate`, and `honest_verdict`. It shall also record enough
+bounded context to prevent unsupported implementation claims, including
+whether an adapter implementation is claimed, whether the audit ran live model
+inference, and which references are only theory or paper context.
+
+`ebt_arm_adapter_feasibility_ready` shall be true only when every required
+field is populated, at least four local adapter surfaces map to existing
+repository files or specs, all six prerequisite categories are present,
+paper-context-only references are separated from near-term adapter
+opportunities, `inference_substrate` declares no live model inference, and
+`honest_verdict` starts with a terminal success prefix. `ebt_arm_adapter_feasible`
+may be true only for a concrete future path with explicit local prerequisites;
+otherwise the audit must set a bounded theory-context-only state instead of a
+feasibility claim.
+
+### SCENARIO-VERIFY-3073: Feasibility Is Separated From Adapter Implementation
+
+Given Carnot contains EBM energy protocols, verifier/repair surfaces,
+ARM logprob telemetry code, EBT bridge prototypes, and EBT/ARM literature
+references,
+When the Exp 3073 audit runs,
+Then it writes the terminal JSON artifact with matrix-v21-consumable fields,
+maps each adapter surface to local code or specs, lists exact prerequisites
+for any future implementation, marks external EBT, ARM-EBM, LoopUS, and Kona
+references as bounded context unless local code and tests support the claim,
+sets `adapter_implementation_claimed=false`, declares no live model inference,
+and uses an `honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3073)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3073 | Implemented (`python/carnot/eval/ebt_arm_ebm_adapter_feasibility_audit_v1.py`) | Implemented (`tests/python/test_experiment_3073_ebt_arm_ebm_adapter_feasibility_audit.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
