@@ -7870,3 +7870,83 @@ inference, no model-weight mutation, and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3062 | Implemented (`python/carnot/eval/fr11_kan_pwa_locality_verification_audit_v1.py`) | Implemented (`tests/python/test_experiment_3062_kan_pwa_locality_verification_audit_v1.py`) |
+
+## REQ-LEARN-3076: FR-11 Online Soundness/Completeness Mistake-Budget Protocol
+
+**Given** Exp 3046 reports a controller-only solver-feedback loop, Exp 3060
+defines a solver self-model trace schema, and Exp 3061 reports a delayed-
+regression pilot with controls
+**When** Exp 3076 defines the FR-11 online controller-side learning budget
+protocol for Exp 3077
+**Then** it SHALL load and classify the prior FR-11 artifacts as
+controller-only, adversarially flagged, or out of scope.
+**And** it SHALL define soundness mistakes, completeness mistakes,
+delayed-regression mistakes, contradiction mistakes, and rollback triggers.
+**And** it SHALL define numeric tiny-pilot budget fields for maximum allowed
+soundness mistakes, maximum delayed regressions, no-feedback control,
+shuffled-feedback control, and prior-retention floor.
+**And** it SHALL forbid claims of model-weight self-learning, autonomous
+production self-modification, native KAN integration, native EBT integration,
+live model inference, or production promotion.
+
+The terminal artifact SHALL be
+`results/experiment_3076_fr11_online_soundness_completeness_budget_v1.json`
+and SHALL include `soundness_completeness_budget_ready`,
+`soundness_mistake_definition`, `completeness_mistake_definition`,
+`delayed_regression_window`, `mistake_budget`, `required_controls`,
+`forbidden_claims`, `source_artifacts`, `continuous_self_learning_task`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3076 Sub-requirements
+
+- REQ-LEARN-3076-1: The protocol SHALL fail closed when Exp 3046, Exp 3060, or
+  Exp 3061 is missing, malformed, non-terminal, not ready, or claims live model
+  inference, model-weight training, or model-weight mutation.
+- REQ-LEARN-3076-2: `soundness_mistake_definition` SHALL define unsafe accepts
+  as controller accept decisions where an independent exact authority rejects
+  the candidate, and SHALL include count key, rate key, severity, measurement
+  source, and rollback trigger fields.
+- REQ-LEARN-3076-3: `completeness_mistake_definition` SHALL define unsafe
+  rejects/abstentions as controller reject or abstain decisions where an
+  independent exact authority accepts the candidate, and SHALL include count
+  key, rate key, severity, measurement source, and rollback trigger fields.
+- REQ-LEARN-3076-4: The protocol SHALL define delayed-regression,
+  contradiction, and rollback-trigger accounting in machine-readable form.
+- REQ-LEARN-3076-5: `mistake_budget` SHALL include numeric fields named
+  `max_soundness_mistakes`, `max_delayed_regressions`,
+  `no_feedback_max_delta`, `shuffled_feedback_max_delta`, and
+  `prior_retention_floor`.
+- REQ-LEARN-3076-6: `required_controls` SHALL require both no-feedback and
+  shuffled-feedback controls, and SHALL require the learning condition to beat
+  both controls before any promotion.
+- REQ-LEARN-3076-7: `soundness_completeness_budget_ready` SHALL be true only
+  when all required definitions, controls, source traces, forbidden claims, and
+  no-live-inference/no-model-weight boundaries are directly consumable by Exp
+  3077.
+
+### SCENARIO-LEARN-3076: Mistake Budget Is Ready For Exp 3077
+
+**Given** ready Exp 3046, Exp 3060, and Exp 3061 artifacts
+**When** Exp 3076 runs
+**Then** it writes all required artifact fields, classifies Exp 3046 and Exp
+3061 as adversarially flagged but controller-only, marks model-weight learning
+and native KAN/EBT integration out of scope, defines soundness and completeness
+mistake accounting, defines numeric budget gates, requires no-feedback and
+shuffled-feedback controls, reports no live model inference in
+`inference_substrate`, sets `soundness_completeness_budget_ready=true`, and
+emits an `honest_verdict` beginning with `complete_`.
+
+### SCENARIO-LEARN-3076-BLOCKED: Missing Prior Evidence Fails Closed
+
+**Given** missing or malformed Exp 3046, Exp 3060, or Exp 3061 source evidence
+**When** Exp 3076 runs
+**Then** it writes the required artifact fields with
+`soundness_completeness_budget_ready=false`, explicit blocked source
+classification, no live model inference claim, no model-weight mutation claim,
+and `honest_verdict="blocked_missing_soundness_completeness_budget_sources"`.
+
+## Implementation Status (REQ-LEARN-3076)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3076 | Implemented (`python/carnot/eval/fr11_online_soundness_completeness_budget_v1.py`) | Implemented (`tests/python/test_experiment_3076_fr11_online_soundness_completeness_budget_v1.py`) |
