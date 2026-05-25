@@ -6280,3 +6280,4 @@ web search: site |
 | 2026-05-25 18:17 UTC | Gated local SOTA verifier calibration v2 | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel. |
 | 2026-05-25 18:19 UTC | Gated local SOTA verifier calibration v2 | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel. |
 | 2026-05-25 18:21 UTC | Gated local SOTA verifier calibration v2 | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel. |
+| 2026-05-25 19:04 UTC | EBT and ARM-EBM adapter feasibility audit | OK | 81 passed in 3.26s |
