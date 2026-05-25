@@ -1,0 +1,97 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CarnotStructuredRepairCandidateV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "task_intent_hash",
+    "patch",
+    "behavioral_tests",
+    "semantic_drift_checks",
+    "verifier_authority"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_intent_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "patch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "behavioral_tests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "command",
+          "expected"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "command": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expected": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "fail"
+            ]
+          }
+        }
+      }
+    },
+    "semantic_drift_checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "authority",
+          "must_pass"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "authority": {
+            "type": "string",
+            "enum": [
+              "deterministic_tests",
+              "exact_solver",
+              "exact_verifier"
+            ]
+          },
+          "must_pass": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "verifier_authority": {
+      "type": "string",
+      "enum": [
+        "deterministic_tests",
+        "exact_solver",
+        "exact_verifier",
+        "blocked_unavailable"
+      ]
+    }
+  }
+}

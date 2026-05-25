@@ -8711,3 +8711,61 @@ starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3083 | Planned (`python/carnot/reporting/verifier_hardness_autopsy_protocol_3083.py`) | Planned (`tests/python/test_experiment_3083_verifier_hardness_autopsy_protocol.py`) |
+
+### REQ-REPORT-3088: Structured Repair Emitter Preflight
+
+The repository shall provide an Exp 3088 local structured repair emitter
+preflight that writes
+`results/experiment_3088_xgrammar2_structured_repair_emitter_preflight_v1.json`
+before any gated repair micro-panel uses structured generation as evidence.
+The preflight MUST check local availability of XGrammar, LLGuidance, and a
+repo-native structured-output fallback without installing dependencies,
+running live LLM inference, loading local GGUF models, invoking verifier
+scoring, executing solver work, running repair generation, pushing, modifying
+`scripts/research_conductor.py`, or rewriting prior result artifacts.
+
+The preflight MUST define a compact schema or grammar contract for at least
+one Carnot repair payload type. The contract path is
+`python/carnot/schemas/structured_repair_candidate_v1.json`, and it MUST cover
+the repair-candidate fields inherited from Exp 3074: `task_id`,
+`task_intent_hash`, `patch`, `behavioral_tests`, `semantic_drift_checks`, and
+`verifier_authority`. When XGrammar and LLGuidance are unavailable, a
+repo-native fallback may satisfy the preflight only if deterministic parsing
+and schema validation accept cached valid examples, reject cached invalid
+examples, record syntax failure classes for Exp 3089, and clearly set fallback
+metadata in the artifact. Syntax validity alone MUST NOT be reported as repair
+quality.
+
+The terminal artifact MUST include `structured_generation_ready`,
+`grammar_or_schema_path`, `parser_validation_count`,
+`invalid_payload_rejection_count`, `structured_library_available`,
+`fallback_contract_used`, `tests_added_or_reused`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include dependency probe
+details, validation rows, schema checksum, syntax failure classes for Exp
+3089, and `blocked_library_missing` as long as no field implies a live repair
+quality claim. `structured_generation_ready` MUST be true only when a concrete
+contract path exists, at least one cached valid payload parses, at least one
+cached invalid payload is rejected, no live model claim is made, and
+`honest_verdict` starts with a terminal success prefix.
+
+#### SCENARIO-REPORT-3088: Cached Payloads Validate The Fallback Contract
+
+**Given** Exp 3074 defines the repair micro-panel payload fields and no live
+repair generation is allowed
+**And** XGrammar or LLGuidance may be absent on the local host
+**When** the Exp 3088 structured repair emitter preflight runs against cached
+valid and invalid repair-candidate examples
+**Then** it writes
+`results/experiment_3088_xgrammar2_structured_repair_emitter_preflight_v1.json`
+with `structured_generation_ready=true`, a concrete `grammar_or_schema_path`,
+positive parser-validation and invalid-rejection counts, explicit dependency
+probe metadata, `fallback_contract_used=true` when native structured
+generation libraries are unavailable, syntax failure classes for Exp 3089,
+artifact-only inference-substrate metadata, and an `honest_verdict` that starts
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3088)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3088 | Implemented (`python/carnot/reporting/structured_repair_emitter_preflight_3088.py`) | Implemented (`tests/python/test_experiment_3088_structured_repair_emitter_preflight.py`) |
