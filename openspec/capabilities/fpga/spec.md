@@ -2399,3 +2399,57 @@ speedup claims, `gatemate_transport_rtl_ready=false`,
 pinout or reader path.
 
 **Implementation status:** Implemented (Exp 3021)
+
+---
+
+### REQ-HW-085
+
+**Title:** Exp 3023 SSQA gate artifact MUST be written even when upstream GateMate host-visible IO is closed
+
+**Description:**
+Experiment 3023 MUST produce
+`results/experiment_3023_ssqa_explicit_gate_artifact_and_rtl_report_v1.json`
+on every run so SSQA status cannot disappear from milestone matrix or capstone
+evidence. The experiment MUST read Exp 3022 as the immediate upstream
+GateMate host-visible IO gate. If Exp 3022 is missing, blocked, or does not
+report `host_visible_io_ready=true`, Exp 3023 MUST set
+`ssqa_gate_status="gate_skipped"`, skip synthesis/PnR/flash work, name the
+upstream blocker precisely, and keep all sampler, speedup, Boltzmann,
+thermodynamic, and FPGA-acceleration claims false. Only when Exp 3022 reports
+`host_visible_io_ready=true` may Exp 3023 collect bounded RTL/PnR/resource
+evidence for the SSQA dual-BRAM register-map path.
+
+**Acceptance criteria:**
+- `results/experiment_3023_ssqa_explicit_gate_artifact_and_rtl_report_v1.json`
+  is generated on every run.
+- The artifact includes `ssqa_artifact_written`, `ssqa_gate_status`,
+  `ssqa_rtl_pnr_report_ready`, `preconditions_checked`,
+  `upstream_host_visible_io_ready`, `rtl_path`, `pnr_report_path`,
+  `resource_report_path`, `smoke_hook_paths`, `projection_only`,
+  `sampler_claim_made`, `speedup_claim_made`, and `honest_verdict`.
+- When Exp 3022 is absent, blocked, or has `host_visible_io_ready=false`, the
+  artifact records `ssqa_gate_status="gate_skipped"`,
+  `ssqa_rtl_pnr_report_ready=false`, `projection_only=true`, and a terminal
+  verdict beginning with `complete:` that names the upstream gate closure.
+- When Exp 3022 reports `host_visible_io_ready=true`, the artifact may mark
+  RTL/PnR/resource evidence ready only when source RTL and inspectable PnR and
+  resource report paths are present.
+- The artifact MUST NOT claim sampling speedup, Boltzmann correctness,
+  thermodynamic behavior, or FPGA acceleration.
+
+**Implementation status:** Implemented (Exp 3023)
+
+---
+
+### SCENARIO-HW-085
+
+**Scenario:** SSQA status is explicit when Exp 3022 blocks host-visible IO.
+
+**Given:** Exp 3022 exists but is blocked before host-visible IO is ready, and
+Exp 3021 identifies the missing GateMate physical output or reader boundary.
+**When:** Exp 3023 builds the SSQA explicit gate artifact.
+**Then:** It writes the v1 JSON with `ssqa_gate_status="gate_skipped"`, no
+synthesis/PnR/resource claims, concrete upstream status fields, and claim
+flags fixed false.
+
+**Implementation status:** Implemented (Exp 3023)

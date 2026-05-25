@@ -1,0 +1,76 @@
+{
+  "boltzmann_claim_made": false,
+  "claim_boundary": "No sampling speedup, Boltzmann correctness, thermodynamic behavior, or FPGA acceleration claim is made by this artifact.",
+  "duration_s": 0.000325,
+  "exp3021_artifact_available": true,
+  "exp3021_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json",
+  "exp3021_gatemate_transport_rtl_ready": false,
+  "exp3021_host_visible_io_plan_ready": false,
+  "exp3021_io_transport_path": "blocked:gatemate_pinout_missing_no_physical_pinout_for_done_spin_out",
+  "exp3021_rtl_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+    "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v"
+  ],
+  "exp3021_transcript_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_yosys.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_nextpnr_himbaechel.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_gmpack.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_openFPGALoader.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/lsusb_dirtyjtag.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/openfpgaloader_detect.txt",
+    "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/yosys_lint.txt"
+  ],
+  "field_provenance": {
+    "honest_verdict": "principle: terminal verdict must be prefixed unless a precondition is honestly blocked",
+    "pnr_report_path": "principle: place-and-route evidence must be inspectable",
+    "preconditions_checked": "principle: hardware/toolchain failures must be explicit",
+    "projection_only": "principle: remaining projection status must be explicit",
+    "resource_report_path": "principle: resource claims require report evidence",
+    "rtl_path": "principle: implementation evidence must have a source path",
+    "sampler_claim_made": "principle: sampler claims are out of scope",
+    "smoke_hook_paths": "principle: future board smoke must have concrete hooks",
+    "speedup_claim_made": "principle: speedup claims require sample/timing evidence",
+    "ssqa_artifact_written": "principle: SSQA must not be missing from matrix/capstone again",
+    "ssqa_gate_status": "principle: closed hardware gates must be explicit",
+    "ssqa_rtl_pnr_report_ready": "principle: projection-to-RTL progress must be machine-gated",
+    "upstream_host_visible_io_ready": "principle: SSQA claims must name the IO boundary"
+  },
+  "fpga_acceleration_claim_made": false,
+  "honest_verdict": "complete: ssqa_gate_skipped_exp3022_host_visible_io_not_ready",
+  "inference_substrate": "hardware_gate_artifact",
+  "pnr_or_synthesis_attempted": false,
+  "pnr_report_path": "",
+  "preconditions_checked": true,
+  "projection_only": true,
+  "resource_report_path": "",
+  "rtl_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+  "run_date": "20260525",
+  "sampler_claim_made": false,
+  "smoke_hook_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json"
+  ],
+  "speedup_claim_made": false,
+  "ssqa_artifact_written": true,
+  "ssqa_gate_status": "gate_skipped",
+  "ssqa_rtl_pnr_report_ready": false,
+  "thermodynamic_claim_made": false,
+  "upstream_artifact_available": true,
+  "upstream_artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3022_gatemate_transport_flash_smoke_v3.json",
+  "upstream_blocked_at_layer": "conductor_pre_gate",
+  "upstream_gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3021-gatemate-rtl-ccf-host-visible-transport-shim.gatemate_transport_rtl_ready (actual=False == expected=True)",
+  "upstream_gates_evaluated": [
+    {
+      "actual": false,
+      "artifact_field": "gatemate_transport_rtl_ready",
+      "expected": true,
+      "op": "==",
+      "passed": false,
+      "reason": "actual=False == expected=True",
+      "upstream": "exp3021-gatemate-rtl-ccf-host-visible-transport-shim"
+    }
+  ],
+  "upstream_honest_verdict": "blocked_gate_check_failed",
+  "upstream_host_visible_io_ready": false,
+  "upstream_io_transport_path": "",
+  "upstream_status": "blocked"
+}
