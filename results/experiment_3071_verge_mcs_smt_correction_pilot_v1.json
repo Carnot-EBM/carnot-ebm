@@ -1,0 +1,445 @@
+{
+  "artifact": "experiment_3071_verge_mcs_smt_correction_pilot_v1",
+  "correction_subset_useful_count": 5,
+  "decode_config": {
+    "max_tokens": 96,
+    "repeat_penalty": 1.05,
+    "stop": [
+      "\n\n"
+    ],
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "duration_s": 11.338208,
+  "exact_solver_path": "python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py::validate_candidate_with_z3",
+  "fixture_count": 6,
+  "formal_fallback_preserved": true,
+  "guidance_vs_solver_only": {
+    "guidance_helped": false,
+    "guided_minus_solver_only_success_count": 0
+  },
+  "guided_success_count": 5,
+  "honest_verdict": "complete: mcs_feedback_ready=true; mcs_count=5; guided_success_count=5; solver_only_success_count=5; invalid_llm_proposal_count=0",
+  "inference_substrate": {
+    "cuda_probe": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "torch_cuda_version": "12.8",
+      "torch_version": "2.11.0+cu128"
+    },
+    "decode_config": {
+      "max_tokens": 96,
+      "repeat_penalty": 1.05,
+      "stop": [
+        "\n\n"
+      ],
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "exact_solver": "z3",
+    "exact_solver_path": "python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py::validate_candidate_with_z3",
+    "gguf_cache_resolution": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": null
+    },
+    "gpu_inventory": {
+      "available": true,
+      "free_vram_mib_total": 47638,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_free_mib": 23819,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_free_mib": 23819,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "legacy_smoke_only_used": false,
+    "live_llm_inference": true,
+    "llm_substrate": {
+      "models_used": [
+        "unsloth/gemma-4-26B-A4B-it-GGUF"
+      ],
+      "runtime": "llama_cpp"
+    },
+    "load_config": {
+      "main_gpu": 1,
+      "n_batch": 64,
+      "n_ctx": 1024,
+      "n_gpu_layers": -1,
+      "n_ubatch": 64,
+      "verbose": false
+    },
+    "local_gguf_inference": true,
+    "python_environment": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.0.4-1-cachyos-x86_64-with-glibc2.43",
+      "version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+      "virtual_env": null
+    },
+    "repo_commit": "24a6a3db9c152c505436248c1fee8e7a07258ac6",
+    "runtime": "llama_cpp",
+    "seed": 307100,
+    "selected_model_paths": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "solver_substrate": {
+      "authority": "z3_solver",
+      "solver_only_fallback_preserved": true
+    },
+    "wall_clock_duration_s": 11.338208
+  },
+  "invalid_llm_proposal_count": 0,
+  "legacy_smoke_only_used": false,
+  "mcs_count": 5,
+  "mcs_feedback_ready": true,
+  "model_specs": [
+    {
+      "checksum_feasibility": {
+        "full_sha256_feasible": false,
+        "method": "bounded_head_tail_sha256",
+        "size_bytes": 16947539744
+      },
+      "family": "gemma",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "role": "moe"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "pilot_rows": [
+    {
+      "correction_feedback_useful": true,
+      "correction_subset": {
+        "candidate_fields": [
+          "total"
+        ],
+        "failing_constraint_ids": [
+          "sum_relation"
+        ],
+        "minimal_assignment_ids": [
+          "candidate.total"
+        ],
+        "suggested_assignments": {
+          "total": 5
+        }
+      },
+      "exact_authority": "z3_solver",
+      "feedback_type": "mcs",
+      "fixture_id": "sum-total-high",
+      "fixture_kind": "invalid_assignment",
+      "guided_success": true,
+      "guided_validation": {
+        "candidate": {
+          "a": 2,
+          "b": 3,
+          "total": 5
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "parse": {
+        "candidate": {
+          "a": 2,
+          "b": 3,
+          "total": 5
+        },
+        "parse_error": "",
+        "valid_parse": true
+      },
+      "prompt_hash": "c21297978a7873940e3273e74084b2b1d0ec66b346ad42d1775a9fd722afc822",
+      "raw_output_hash": "57f814475d75b1e75ed31bc6f2f8459467c17a8b63a05d408d3779ba617ffb7b",
+      "solver_only_fallback": {
+        "candidate": {
+          "a": 2,
+          "b": 3,
+          "total": 5
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "solver_only_success": true
+    },
+    {
+      "correction_feedback_useful": true,
+      "correction_subset": {
+        "candidate_fields": [
+          "total"
+        ],
+        "failing_constraint_ids": [
+          "sum_relation"
+        ],
+        "minimal_assignment_ids": [],
+        "refinement_reason": "missing_required_fields",
+        "suggested_assignments": {
+          "total": 5
+        }
+      },
+      "exact_authority": "z3_solver",
+      "feedback_type": "refinement",
+      "fixture_id": "sum-total-missing",
+      "fixture_kind": "underconstrained_missing_field",
+      "guided_success": true,
+      "guided_validation": {
+        "candidate": {
+          "a": 4,
+          "b": 1,
+          "total": 5
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "parse": {
+        "candidate": {
+          "a": 4,
+          "b": 1,
+          "total": 5
+        },
+        "parse_error": "",
+        "valid_parse": true
+      },
+      "prompt_hash": "061059c2c079bd793a141dfec8fde9ccbbe4508c73ec8a1eab1f7b325dfeb480",
+      "raw_output_hash": "27ed5e90e5c17dd44fa34fbacddb3669d2b5c32d8deee83fceec5df279103855",
+      "solver_only_fallback": {
+        "candidate": {
+          "a": 4,
+          "b": 1,
+          "total": 5
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "solver_only_success": true
+    },
+    {
+      "correction_feedback_useful": true,
+      "correction_subset": {
+        "candidate_fields": [
+          "x"
+        ],
+        "failing_constraint_ids": [
+          "x_bounds"
+        ],
+        "minimal_assignment_ids": [
+          "candidate.x"
+        ],
+        "suggested_assignments": {
+          "x": 0
+        }
+      },
+      "exact_authority": "z3_solver",
+      "feedback_type": "mcs",
+      "fixture_id": "bounded-x-high",
+      "fixture_kind": "overconstrained_bound",
+      "guided_success": true,
+      "guided_validation": {
+        "candidate": {
+          "x": 0
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "parse": {
+        "candidate": {
+          "x": 0
+        },
+        "parse_error": "",
+        "valid_parse": true
+      },
+      "prompt_hash": "ba74673079037950daced4dc4274ba97e6d264ffbff59d9209fb5fa6cac71fce",
+      "raw_output_hash": "e4fab821c5b6ba30c67148f8f63eeb8ea07c48a61e3283128f3ec623bdfc12e8",
+      "solver_only_fallback": {
+        "candidate": {
+          "x": 0
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "solver_only_success": true
+    },
+    {
+      "correction_feedback_useful": true,
+      "correction_subset": {
+        "candidate_fields": [
+          "delta"
+        ],
+        "failing_constraint_ids": [
+          "difference_relation"
+        ],
+        "minimal_assignment_ids": [
+          "candidate.delta"
+        ],
+        "suggested_assignments": {
+          "delta": 5
+        }
+      },
+      "exact_authority": "z3_solver",
+      "feedback_type": "mcs",
+      "fixture_id": "difference-delta-wrong",
+      "fixture_kind": "invalid_assignment",
+      "guided_success": true,
+      "guided_validation": {
+        "candidate": {
+          "delta": 5,
+          "left": 9,
+          "right": 4
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "parse": {
+        "candidate": {
+          "delta": 5,
+          "left": 9,
+          "right": 4
+        },
+        "parse_error": "",
+        "valid_parse": true
+      },
+      "prompt_hash": "bc1c47ccd582bbd457d7eb17273a6bdb859f946d2b47e3f6f2c34205be5258f3",
+      "raw_output_hash": "100be7d378c8eec968d05685a777de24bd01d2f0a838c6d32db1173af771ffb6",
+      "solver_only_fallback": {
+        "candidate": {
+          "delta": 5,
+          "left": 9,
+          "right": 4
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "solver_only_success": true
+    },
+    {
+      "correction_feedback_useful": true,
+      "correction_subset": {
+        "candidate_fields": [
+          "score"
+        ],
+        "failing_constraint_ids": [
+          "weighted_score"
+        ],
+        "minimal_assignment_ids": [
+          "candidate.score"
+        ],
+        "suggested_assignments": {
+          "score": 19
+        }
+      },
+      "exact_authority": "z3_solver",
+      "feedback_type": "mcs",
+      "fixture_id": "weighted-score-low",
+      "fixture_kind": "invalid_assignment",
+      "guided_success": true,
+      "guided_validation": {
+        "candidate": {
+          "p": 2,
+          "q": 5,
+          "score": 19
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "parse": {
+        "candidate": {
+          "p": 2,
+          "q": 5,
+          "score": 19
+        },
+        "parse_error": "",
+        "valid_parse": true
+      },
+      "prompt_hash": "d4e80da225dab26639ff1195147f0ff6ea47a687d3b7c5c55783bf193f031360",
+      "raw_output_hash": "11319d1677dac3652eef6c6915d61aeccb8eaa93b5dce3f20e031b3455caf2f9",
+      "solver_only_fallback": {
+        "candidate": {
+          "p": 2,
+          "q": 5,
+          "score": 19
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "solver_status": "sat",
+        "valid": true
+      },
+      "solver_only_success": true
+    }
+  ],
+  "pilot_rows_path": "results/verge_mcs_smt_correction_pilot_3071/pilot_rows.jsonl",
+  "pilot_rows_sha256": "a7f5f269555af4bd32badb8756ad875ba69c22712e399864f5d5bf3aacc529e2",
+  "preconditions": {
+    "exact_solver_available": true,
+    "mandated_gguf_loaded": true,
+    "mandated_gguf_resolved": true
+  },
+  "prompt_hashes": [
+    "c21297978a7873940e3273e74084b2b1d0ec66b346ad42d1775a9fd722afc822",
+    "061059c2c079bd793a141dfec8fde9ccbbe4508c73ec8a1eab1f7b325dfeb480",
+    "ba74673079037950daced4dc4274ba97e6d264ffbff59d9209fb5fa6cac71fce",
+    "bc1c47ccd582bbd457d7eb17273a6bdb859f946d2b47e3f6f2c34205be5258f3",
+    "d4e80da225dab26639ff1195147f0ff6ea47a687d3b7c5c55783bf193f031360"
+  ],
+  "reproducibility_checksum": "7644257637a36d15d73d38c9a18c916f59cabe071cb4b44c215ca0e8a0fe822a",
+  "run_date": "20260525",
+  "runtime_blocker": null,
+  "schema": "carnot.verge_mcs_smt_correction_pilot.v1",
+  "seed": 307100,
+  "solver_only_success_count": 5,
+  "source_context": {
+    "exp3044": "results/experiment_3044_smt_sat_validator_tree_exactness_upgrade_v1.json",
+    "exp3058": "results/experiment_3058_aquaforte_style_llm_guided_smt_pilot_v1.json",
+    "reference": "research-references.md#VERGE"
+  },
+  "tests_or_checks_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py -q --no-cov -n0 -> passed: 5 passed",
+    "COVERAGE_FILE=/tmp/carnot_exp3071.coverage .venv/bin/coverage run -m pytest tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py -q --no-cov -n0 && COVERAGE_FILE=/tmp/carnot_exp3071.coverage .venv/bin/coverage report --include='*/python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py' --fail-under=100 -m -> passed: 100% new-code coverage",
+    "ruff check python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py scripts/experiment_3071_verge_mcs_smt_correction_pilot_v1.py -> passed",
+    "ruff format --check python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py scripts/experiment_3071_verge_mcs_smt_correction_pilot_v1.py -> passed"
+  ],
+  "invariant_violations": []
+}

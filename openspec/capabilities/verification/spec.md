@@ -863,6 +863,69 @@ uses an `honest_verdict` beginning with the blocked precondition reason.
 |---|---|---|
 | REQ-VERIFY-3058 | Implemented (`python/carnot/eval/aquaforte_style_llm_guided_smt_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3058_aquaforte_style_llm_guided_smt_pilot.py`) |
 
+### REQ-VERIFY-3071: VERGE-Style MCS SMT Correction Feedback Pilot
+
+The repository shall provide an Exp 3071 VERGE-style correction-feedback pilot
+in which exact solvers produce minimal correction subsets or refinement
+signals for tiny SMT-encodable candidate records, and a mandated local SOTA
+GGUF proposes corrected candidates using only that correction feedback. The
+pilot shall write
+`results/experiment_3071_verge_mcs_smt_correction_pilot_v1.json`.
+
+The pilot shall first confirm that Z3 or an equivalent exact solver can run
+and that at least one mandated GGUF from
+`python/carnot/inference/sota_models.py` resolves and loads through the local
+runtime. If either precondition fails, the artifact shall fail closed with
+`mcs_feedback_ready=false` and an `honest_verdict` beginning with
+`blocked_solver_or_sota_unavailable`.
+
+When preconditions pass, the pilot shall run 4-8 tiny fixtures spanning
+already-valid, overconstrained, underconstrained, invalid, and repairable
+candidate states. For every non-valid fixture, the exact solver shall emit a
+non-empty correction subset or refinement signal before any model repair
+prompt is constructed. Every model prompt shall be represented by a SHA-256
+hash and deterministic decode settings. Every corrected candidate proposed by
+the model shall be parsed and validated with the exact solver before being
+counted as guided success. A solver-only exact repair baseline shall run on
+the same fixtures and remain separate from the model path.
+
+The terminal artifact MUST include `mcs_feedback_ready`,
+`formal_fallback_preserved`, `mcs_count`, `guided_success_count`,
+`solver_only_success_count`, `invalid_llm_proposal_count`,
+`correction_subset_useful_count`, `exact_solver_path`, `models_used`,
+`model_specs`, `legacy_smoke_only_used`, `prompt_hashes`,
+`inference_substrate`, and `honest_verdict`. `mcs_feedback_ready` shall be true
+only when correction feedback is non-vacuous, exact validation is non-vacuous,
+at least one mandated local GGUF generated live proposal text, solver-only
+fallback remains preserved and authoritative, `legacy_smoke_only_used=false`,
+and `honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3071: MCS Feedback Guides Candidate Repair
+
+Given Z3 is importable and a mandated local SOTA GGUF can load,
+When the Exp 3071 pilot runs over tiny SMT correction fixtures,
+Then it records exact correction feedback for each invalid or incomplete
+candidate, hashes every repair prompt, asks the local GGUF to propose a
+corrected candidate using only that feedback, validates each proposal with the
+exact solver, compares against a solver-only repair baseline, counts invalid
+LLM proposals separately, and writes the required terminal artifact fields.
+
+### SCENARIO-VERIFY-3071-BLOCKED: Solver Or SOTA Runtime Missing
+
+Given the exact solver cannot run, no mandated local GGUF resolves, or every
+mandated GGUF load attempt fails,
+When the Exp 3071 pilot runs,
+Then it writes a blocked terminal artifact with `mcs_feedback_ready=false`,
+empty or non-promoted model evidence, no legacy tiny-model headline evidence,
+and an `honest_verdict` beginning with
+`blocked_solver_or_sota_unavailable`.
+
+## Implementation Status (REQ-VERIFY-3071)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3071 | Implemented (`python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
