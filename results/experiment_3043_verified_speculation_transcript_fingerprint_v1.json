@@ -1,0 +1,286 @@
+{
+  "artifact": "experiment_3043_verified_speculation_transcript_fingerprint_v1",
+  "batch_context_hash": "fd73ee10622ce1fe949fce23b60bd44a07d0218cc6cb56e28fd8e20b048b1cce",
+  "decode_config": {
+    "max_tokens": 24,
+    "repeat_penalty": 1.0,
+    "temperature": 0.0,
+    "top_k": 1,
+    "top_p": 1.0
+  },
+  "deterministic_replay_passed": true,
+  "duration_s": 10.211713,
+  "fingerprint_live_ready": true,
+  "honest_verdict": "complete: fingerprint_live_ready=true; deterministic_replay_passed=true; n_prompts=3",
+  "inference_substrate": {
+    "batch_size": 3,
+    "cuda_probe": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "torch_cuda_version": "12.8",
+      "torch_version": "2.11.0+cu128"
+    },
+    "decode_config": {
+      "max_tokens": 24,
+      "repeat_penalty": 1.0,
+      "temperature": 0.0,
+      "top_k": 1,
+      "top_p": 1.0
+    },
+    "gguf_cache_resolution": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": null
+    },
+    "gpu_inventory": {
+      "available": true,
+      "free_vram_mib_total": 47638,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_free_mib": 23819,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_free_mib": 23819,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 308,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "load_config": {
+      "main_gpu": 0,
+      "n_batch": 64,
+      "n_ctx": 512,
+      "n_gpu_layers": -1,
+      "n_ubatch": 64,
+      "verbose": false
+    },
+    "model_checksum_feasibility": {
+      "bounded_sha256": "7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "exists": true,
+      "full_sha256_feasible": false,
+      "method": "bounded_head_tail_sha256",
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "mtime_ns": 1778129415691941084,
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "readable": true,
+      "sha256": null,
+      "size_bytes": 16947539744
+    },
+    "python_environment": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.0.4-1-cachyos-x86_64-with-glibc2.43",
+      "version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+      "virtual_env": null
+    },
+    "recorded_before_model_load": true,
+    "repo_commit": "d894963b45d6c3c22f04983e101c1d9781838213",
+    "seed": 304300,
+    "selected_model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+    "wall_clock_duration_s": 10.211713
+  },
+  "legacy_smoke_only_used": false,
+  "model_specs": [
+    {
+      "checksum_feasibility": {
+        "full_sha256_feasible": false,
+        "method": "bounded_head_tail_sha256",
+        "size_bytes": 16947539744
+      },
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "selection_source": "resolve_cached_gguf"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "n_prompts": 3,
+  "output_hashes": [
+    {
+      "normalized_output_hashes": [
+        "088227a88edc8c3bc399e2cf4ca0c54ef6a1ae01b53340b58f1a1f1764636331",
+        "088227a88edc8c3bc399e2cf4ca0c54ef6a1ae01b53340b58f1a1f1764636331"
+      ],
+      "prompt_index": 0,
+      "raw_output_hashes": [
+        "e94438c4dcfb854b71c3ec4681289ba0dc5956f794d0c39728e9aa264e622542",
+        "e94438c4dcfb854b71c3ec4681289ba0dc5956f794d0c39728e9aa264e622542"
+      ],
+      "run_1_normalized_output_hash": "088227a88edc8c3bc399e2cf4ca0c54ef6a1ae01b53340b58f1a1f1764636331",
+      "run_1_raw_output_hash": "e94438c4dcfb854b71c3ec4681289ba0dc5956f794d0c39728e9aa264e622542",
+      "run_2_normalized_output_hash": "088227a88edc8c3bc399e2cf4ca0c54ef6a1ae01b53340b58f1a1f1764636331",
+      "run_2_raw_output_hash": "e94438c4dcfb854b71c3ec4681289ba0dc5956f794d0c39728e9aa264e622542"
+    },
+    {
+      "normalized_output_hashes": [
+        "e29785d3e9d7ebef70cbd8f6f02d8c1518b266183122ac3741109108b49bd570",
+        "e29785d3e9d7ebef70cbd8f6f02d8c1518b266183122ac3741109108b49bd570"
+      ],
+      "prompt_index": 1,
+      "raw_output_hashes": [
+        "49bb8471dd7367c40f69f2d9632e21e0980f08d0ba7e0e1bbf8af454c53896c7",
+        "49bb8471dd7367c40f69f2d9632e21e0980f08d0ba7e0e1bbf8af454c53896c7"
+      ],
+      "run_1_normalized_output_hash": "e29785d3e9d7ebef70cbd8f6f02d8c1518b266183122ac3741109108b49bd570",
+      "run_1_raw_output_hash": "49bb8471dd7367c40f69f2d9632e21e0980f08d0ba7e0e1bbf8af454c53896c7",
+      "run_2_normalized_output_hash": "e29785d3e9d7ebef70cbd8f6f02d8c1518b266183122ac3741109108b49bd570",
+      "run_2_raw_output_hash": "49bb8471dd7367c40f69f2d9632e21e0980f08d0ba7e0e1bbf8af454c53896c7"
+    },
+    {
+      "normalized_output_hashes": [
+        "fdc83f9bb8b02bbd9ed1527f80d4e8c4427d8613043166c058193291c88b7f79",
+        "fdc83f9bb8b02bbd9ed1527f80d4e8c4427d8613043166c058193291c88b7f79"
+      ],
+      "prompt_index": 2,
+      "raw_output_hashes": [
+        "9d1b1a50e0beaf37844e0f2625ec25d4a0b3cbe350b7494ad93187044e2bb252",
+        "9d1b1a50e0beaf37844e0f2625ec25d4a0b3cbe350b7494ad93187044e2bb252"
+      ],
+      "run_1_normalized_output_hash": "fdc83f9bb8b02bbd9ed1527f80d4e8c4427d8613043166c058193291c88b7f79",
+      "run_1_raw_output_hash": "9d1b1a50e0beaf37844e0f2625ec25d4a0b3cbe350b7494ad93187044e2bb252",
+      "run_2_normalized_output_hash": "fdc83f9bb8b02bbd9ed1527f80d4e8c4427d8613043166c058193291c88b7f79",
+      "run_2_raw_output_hash": "9d1b1a50e0beaf37844e0f2625ec25d4a0b3cbe350b7494ad93187044e2bb252"
+    }
+  ],
+  "performance_or_repair_promotion_claim": false,
+  "prompt_hashes": [
+    "f607e3b37c57fca1a905cce59462f6f681d7599f2a8de5c161705f844cd64ee3",
+    "c05c5a9d795d9cfe270d2228a49abb9cff63b383bd014d79e801babff55f1266",
+    "b56043d0c0a8fe9bca9bde37e49702bffd132c12f130fdbfc543403c33017fdd"
+  ],
+  "raw_transcript_paths": [
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3043_verified_speculation_transcript_fingerprint_v1/prompt_00_run_01.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3043_verified_speculation_transcript_fingerprint_v1/prompt_01_run_01.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3043_verified_speculation_transcript_fingerprint_v1/prompt_02_run_01.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3043_verified_speculation_transcript_fingerprint_v1/prompt_00_run_02.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3043_verified_speculation_transcript_fingerprint_v1/prompt_01_run_02.json",
+    "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3043_verified_speculation_transcript_fingerprint_v1/prompt_02_run_02.json"
+  ],
+  "replay_divergences": [],
+  "reproducibility_checksum": "eee23eb2aa1d4d1d043b795ef8c4a04c3249423e715f06b4180008116b8bf00d",
+  "run_date": "20260525",
+  "runtime_blocker": null,
+  "schema": "carnot.verified_speculation_transcript_fingerprint.v1",
+  "status": "complete",
+  "transcript_fingerprints": [
+    {
+      "batch_context_hash": "fd73ee10622ce1fe949fce23b60bd44a07d0218cc6cb56e28fd8e20b048b1cce",
+      "decode_config": {
+        "max_tokens": 24,
+        "repeat_penalty": 1.0,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "normalized_output_hash": "088227a88edc8c3bc399e2cf4ca0c54ef6a1ae01b53340b58f1a1f1764636331",
+      "prompt_hash": "f607e3b37c57fca1a905cce59462f6f681d7599f2a8de5c161705f844cd64ee3",
+      "prompt_index": 0,
+      "raw_output_hash": "e94438c4dcfb854b71c3ec4681289ba0dc5956f794d0c39728e9aa264e622542",
+      "run_index": 1,
+      "seed": 304300,
+      "tokens_observed": 10
+    },
+    {
+      "batch_context_hash": "fd73ee10622ce1fe949fce23b60bd44a07d0218cc6cb56e28fd8e20b048b1cce",
+      "decode_config": {
+        "max_tokens": 24,
+        "repeat_penalty": 1.0,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "normalized_output_hash": "e29785d3e9d7ebef70cbd8f6f02d8c1518b266183122ac3741109108b49bd570",
+      "prompt_hash": "c05c5a9d795d9cfe270d2228a49abb9cff63b383bd014d79e801babff55f1266",
+      "prompt_index": 1,
+      "raw_output_hash": "49bb8471dd7367c40f69f2d9632e21e0980f08d0ba7e0e1bbf8af454c53896c7",
+      "run_index": 1,
+      "seed": 304300,
+      "tokens_observed": 5
+    },
+    {
+      "batch_context_hash": "fd73ee10622ce1fe949fce23b60bd44a07d0218cc6cb56e28fd8e20b048b1cce",
+      "decode_config": {
+        "max_tokens": 24,
+        "repeat_penalty": 1.0,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "normalized_output_hash": "fdc83f9bb8b02bbd9ed1527f80d4e8c4427d8613043166c058193291c88b7f79",
+      "prompt_hash": "b56043d0c0a8fe9bca9bde37e49702bffd132c12f130fdbfc543403c33017fdd",
+      "prompt_index": 2,
+      "raw_output_hash": "9d1b1a50e0beaf37844e0f2625ec25d4a0b3cbe350b7494ad93187044e2bb252",
+      "run_index": 1,
+      "seed": 304300,
+      "tokens_observed": 10
+    },
+    {
+      "batch_context_hash": "fd73ee10622ce1fe949fce23b60bd44a07d0218cc6cb56e28fd8e20b048b1cce",
+      "decode_config": {
+        "max_tokens": 24,
+        "repeat_penalty": 1.0,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "normalized_output_hash": "088227a88edc8c3bc399e2cf4ca0c54ef6a1ae01b53340b58f1a1f1764636331",
+      "prompt_hash": "f607e3b37c57fca1a905cce59462f6f681d7599f2a8de5c161705f844cd64ee3",
+      "prompt_index": 0,
+      "raw_output_hash": "e94438c4dcfb854b71c3ec4681289ba0dc5956f794d0c39728e9aa264e622542",
+      "run_index": 2,
+      "seed": 304300,
+      "tokens_observed": 10
+    },
+    {
+      "batch_context_hash": "fd73ee10622ce1fe949fce23b60bd44a07d0218cc6cb56e28fd8e20b048b1cce",
+      "decode_config": {
+        "max_tokens": 24,
+        "repeat_penalty": 1.0,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "normalized_output_hash": "e29785d3e9d7ebef70cbd8f6f02d8c1518b266183122ac3741109108b49bd570",
+      "prompt_hash": "c05c5a9d795d9cfe270d2228a49abb9cff63b383bd014d79e801babff55f1266",
+      "prompt_index": 1,
+      "raw_output_hash": "49bb8471dd7367c40f69f2d9632e21e0980f08d0ba7e0e1bbf8af454c53896c7",
+      "run_index": 2,
+      "seed": 304300,
+      "tokens_observed": 5
+    },
+    {
+      "batch_context_hash": "fd73ee10622ce1fe949fce23b60bd44a07d0218cc6cb56e28fd8e20b048b1cce",
+      "decode_config": {
+        "max_tokens": 24,
+        "repeat_penalty": 1.0,
+        "temperature": 0.0,
+        "top_k": 1,
+        "top_p": 1.0
+      },
+      "model_hash_or_cache_path": "bounded_sha256:7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "normalized_output_hash": "fdc83f9bb8b02bbd9ed1527f80d4e8c4427d8613043166c058193291c88b7f79",
+      "prompt_hash": "b56043d0c0a8fe9bca9bde37e49702bffd132c12f130fdbfc543403c33017fdd",
+      "prompt_index": 2,
+      "raw_output_hash": "9d1b1a50e0beaf37844e0f2625ec25d4a0b3cbe350b7494ad93187044e2bb252",
+      "run_index": 2,
+      "seed": 304300,
+      "tokens_observed": 10
+    }
+  ]
+}

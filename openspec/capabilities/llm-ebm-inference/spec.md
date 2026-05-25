@@ -1138,6 +1138,72 @@ auditable missing-cache, precondition-failure, or generation-failure status
 **And** any legacy small-model smoke context is labeled smoke-only and never
 contributes to headline readiness or logprob readiness.
 
+### REQ-INFER-SOTA-022: Exp 3043 Transcript Fingerprint Replay Preflight
+
+The system SHALL provide an Exp 3043 local-only transcript fingerprint
+preflight for deterministic repair-inference replay.  The preflight SHALL write
+`results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json`;
+SHALL resolve mandated local SOTA GGUFs through `cached_sota_pair()` or the
+shared SOTA local-cache resolver pattern; SHALL NOT use legacy small models as
+headline evidence; and SHALL attempt live llama.cpp generation on at least one
+available mandated GGUF from `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`.
+
+Before model loading, the preflight SHALL record CUDA availability, GPU free
+memory when available, repository commit, Python executable/version, cache
+resolution for every mandated GGUF, selected model path, model checksum
+feasibility, seed, batch size, decoding parameters, and wall-clock duration.
+If no mandated GGUF is locally loadable, the artifact SHALL set
+`fingerprint_live_ready=false`, preserve the precondition evidence, and emit a
+`blocked_sota_gguf_unavailable` verdict without falling back to legacy models.
+
+For a tiny fixed repair-style prompt set, the preflight SHALL record
+`prompt_hash`, `model_hash_or_cache_path`, `decode_config`, `seed`,
+`raw_output_hash`, `normalized_output_hash`, and `batch_context_hash` for each
+transcript.  It SHALL rerun the same prompt/config at least once and set
+`deterministic_replay_passed` only when the raw and normalized output hashes
+match across runs.  Runtime nondeterminism SHALL be recorded as explicit replay
+divergence rather than hidden.
+
+The artifact SHALL expose `fingerprint_live_ready`, `models_used`,
+`model_specs`, `legacy_smoke_only_used`, `n_prompts`,
+`deterministic_replay_passed`, `prompt_hashes`, `output_hashes`,
+`decode_config`, `batch_context_hash`, `reproducibility_checksum`,
+`inference_substrate`, and `honest_verdict`.  It SHALL make no repair
+pass-rate, performance, or promotion claim.
+
+### SCENARIO-INFER-SOTA-022-001: Deterministic Transcript Replay Opens Fingerprint Gate
+
+**Given** at least one mandated SOTA GGUF resolves locally
+**And** the local runtime returns identical text hashes for repeated bounded
+repair-style prompts under the same seed and decode config
+**When** Exp 3043 runs
+**Then** `fingerprint_live_ready=true`
+**And** `deterministic_replay_passed=true`
+**And** the artifact records prompt hashes, output hashes, model/cache
+identity, decode config, batch context hash, reproducibility checksum, and
+pre-load inference substrate metadata.
+
+### SCENARIO-INFER-SOTA-022-002: Replay Divergence Is Preserved
+
+**Given** a mandated SOTA GGUF resolves locally and generates text
+**But** repeated runs under the same prompt, seed, and decode config produce
+different raw or normalized output hashes
+**When** Exp 3043 completes
+**Then** `deterministic_replay_passed=false`
+**And** `fingerprint_live_ready=false`
+**And** the artifact records replay divergence rows instead of claiming
+deterministic readiness.
+
+### SCENARIO-INFER-SOTA-022-003: Missing SOTA GGUF Blocks Without Legacy Evidence
+
+**Given** no mandated SOTA GGUF resolves from local cache
+**When** Exp 3043 runs
+**Then** it writes a terminal artifact with `fingerprint_live_ready=false`
+**And** `legacy_smoke_only_used=false`
+**And** `honest_verdict` starts with `blocked_sota_gguf_unavailable`.
+
 ### REQ-INFER-018: EBT Abstraction Layer
 
 The system SHALL provide an Energy-Based Transformer (EBT) abstraction layer that bridges autoregressive LLMs (like the mandated SOTA GGUF models) to an EBT formulation. This enables System-2 gradient refinement at inference time by providing a way to calculate sequence energy.
@@ -1224,6 +1290,7 @@ instead of silently producing invalid EBM energies.
 | REQ-INFER-SOTA-017 | Implemented (`python/carnot/reporting/sota_micro_panel_clean_telemetry_v3.py`) | Implemented (`tests/python/test_experiment_2886_sota_micro_panel_clean_telemetry_v3.py`) |
 | REQ-INFER-SOTA-018 | Implemented (`python/carnot/reporting/spilled_energy_logit_detector_micro_panel_v1.py`) | Implemented (`tests/python/test_experiment_2917_spilled_energy_logit_detector_micro_panel.py`) |
 | REQ-INFER-SOTA-021 | Implemented (`scripts/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.py`) | Implemented (`tests/python/test_experiment_3013_sota_gguf_logprob_telemetry_preflight.py`) |
+| REQ-INFER-SOTA-022 | Implemented (`python/carnot/experiment_3043_verified_speculation_transcript_fingerprint.py`) | Implemented (`tests/python/test_experiment_3043_verified_speculation_transcript_fingerprint.py`) |
 | REQ-INFER-2041 | Proposed | Proposed |
 | REQ-INFER-2056 | Implemented (`crates/carnot-boltzmann/src/lib.rs`, `crates/carnot-python/src/lib.rs`) | Implemented (`crates/carnot-boltzmann/tests/soft_bellman.rs`, `tests/python/test_soft_bellman_pyo3.py`) |
 
