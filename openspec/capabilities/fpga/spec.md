@@ -2683,6 +2683,72 @@ terminal verdict beginning with `complete:`.
 
 ---
 
+### REQ-HW-090
+
+**Title:** Exp 3064 SSQA host-visible readback boundary ledger MUST gate readback on committed GateMate smoke transcript evidence
+
+**Description:**
+Experiment 3064 MUST produce
+`results/experiment_3064_ssqa_host_visible_readback_boundary_ledger_v1.json`
+as a matrix-ready SSQA boundary ledger. The ledger MUST load the checked-in
+Exp 3051 SSQA readback eligibility artifact when present under either the
+requested or bounded filename, the Exp 3053 capstone, the Exp 3063 GateMate
+no-rerun ledger, the hardware wishlist, and the changelog. It MUST inspect
+only local repository artifacts and MUST NOT attempt hardware readback, flash a
+GateMate board, run RTL/PnR, execute live model inference, or infer sampler
+behavior from board contact alone.
+
+`ssqa_readback_allowed=true` is permitted only when a committed GateMate
+host-visible smoke artifact contains a concrete host-visible transcript and the
+minimum predeclared fields needed for SSQA readback are present. Until that
+evidence exists, the ledger MUST keep `ssqa_readback_allowed=false`, set
+`ssqa_status` and `current_allowed_claim` to the bounded gate-skipped wording
+`gated_skipped_host_visible_smoke_missing`, and declare no hardware execution,
+speedup, acceleration, Boltzmann sampling, thermodynamic, or sampler-behavior
+claim.
+
+**Acceptance criteria:**
+- `results/experiment_3064_ssqa_host_visible_readback_boundary_ledger_v1.json`
+  is generated with `ssqa_boundary_ledger_ready`,
+  `ssqa_readback_allowed`, `ssqa_status`, `required_host_visible_fields`,
+  `current_allowed_claim`, `hardware_execution_claim_made`,
+  `speedup_claim_made`, `source_artifacts`, `inference_substrate`, and
+  `honest_verdict`.
+- `required_host_visible_fields` predeclares the transcript, hash, host-reader,
+  expected-output, observed-output, selected-output, flash, readback, timing,
+  and sampler-configuration evidence required before SSQA can claim readback,
+  acceleration, or sampler behavior.
+- Missing or non-passing GateMate smoke evidence keeps the SSQA status
+  matrix-ready but `gated_skipped_host_visible_smoke_missing`.
+- The artifact cites concrete local source files and declares no live model
+  inference, no board execution, no hardware readback attempt, no flash
+  attempt, and no timing or speedup claim by the boundary ledger itself.
+
+**Implementation status:** Implemented (Exp 3064)
+
+---
+
+### SCENARIO-HW-090
+
+**Scenario:** SSQA readback boundary remains gate-skipped until host-visible smoke evidence exists.
+
+**Given:** Exp 3051 is gate-blocked because Exp 3050 host-visible GateMate
+smoke is missing, Exp 3053 records
+`ssqa_status=gated_skipped_host_visible_smoke_missing`, and Exp 3063 keeps the
+SSQA branch stopped by the GateMate output-contract blocker.
+**When:** Exp 3064 builds the SSQA host-visible readback boundary ledger from
+local repo artifacts without attempting hardware readback.
+**Then:** It writes the v1 JSON with
+`ssqa_boundary_ledger_ready=true`, `ssqa_readback_allowed=false`,
+`ssqa_status=gated_skipped_host_visible_smoke_missing`,
+`current_allowed_claim=gated_skipped_host_visible_smoke_missing`, no hardware
+or speedup claims, required transcript fields predeclared, and a terminal
+verdict beginning with `complete:`.
+
+**Implementation status:** Implemented (Exp 3064)
+
+---
+
 ### SCENARIO-HW-088
 
 **Scenario:** GateMate operator package blocks cleanly when Exp 3034 still lacks pinout and reader authority.
