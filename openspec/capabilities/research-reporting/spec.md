@@ -8495,3 +8495,72 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3080 | Implemented (`python/carnot/reporting/capstone_v287_3080.py`) | Implemented (`tests/python/test_experiment_3080_capstone_v287.py`) |
+
+### REQ-REPORT-3081: Archive .287 And Confirm .288 Roadmap Handoff
+
+The repository shall provide an Exp 3081 archive/handoff generator that writes
+`results/experiment_3081_archive_v287_activate_v288.json` using only
+checked-in `.287` matrix/capstone artifacts, roadmap YAML/Markdown files, and
+file presence/checksum metadata. The generator MUST read
+`results/experiment_3080_capstone_v287.json` as the completed `.287`
+authority artifact and MUST set `prior_capstone_ready` directly from that
+artifact's `capstone_ready` field. It MUST set `prior_paper_ready` directly
+from the authority artifact's `paper_ready` field rather than inferring paper
+readiness from capstone completion, matrix readiness, or roadmap state.
+
+The generator MUST summarize `.287` `paper_ready`, `verifier_gain_status`,
+`repair_claim_status`, `fr11_self_learning_status`, `gatemate_status`,
+`ssqa_status`, `ebt_arm_status`, and `publication_blocker_count` from
+`results/experiment_3080_capstone_v287.json` and
+`results/experiment_3079_cross_corpus_matrix_v21.json`. The carry-forward
+blocker list MUST keep these unresolved claim boundaries visible: low
+abstention precision, gated calibration/repair, FR-11 completeness mistake,
+EBT/ARM projection-only, GateMate/SSQA missing operator evidence, and 42
+publication blockers.
+
+The generator MUST verify the `.288` roadmap handoff without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It MUST prefer
+`research-roadmap-next.yaml` when that staged file exists and otherwise MAY use
+the already-activated `research-roadmap.yaml` as a read-only fallback, provided
+the artifact records that the requested staged roadmap is absent. Whichever
+roadmap source is used MUST target milestone `2026.05.288`, point
+`milestone_doc` to `openspec/change-proposals/research-roadmap-vNEXT.md`, and
+contain at least one task. The generator MUST also confirm that the vNEXT
+planning Markdown file exists. It MUST NOT activate the roadmap itself, run the
+conductor, run live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, external
+publication tooling, or historical experiment rewrites.
+
+The terminal artifact MUST include `archive_v287_activate_v288_ready`,
+`prior_capstone_ready`, `prior_paper_ready`, `carry_forward_blockers`,
+`next_milestone`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include `.287` status summaries, roadmap handoff
+metadata, source checksums, no-new-execution booleans, protected-file state,
+and measured `duration_s` as long as every value is derived from upstream JSON
+artifacts, roadmap files, or file presence/checksum checks. When a conductor
+prompt assigns ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3081: Archive .287 And Audit .288 Activation Readiness
+
+**Given** `results/experiment_3080_capstone_v287.json` exists and reports
+`capstone_ready=true`
+**And** `results/experiment_3079_cross_corpus_matrix_v21.json` reports the
+`.287` matrix v21 publication blocker count
+**And** the `.288` roadmap source, either staged or already active, targets
+milestone `2026.05.288` and points to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3081 archive/handoff generator runs
+**Then** it writes `results/experiment_3081_archive_v287_activate_v288.json`
+with `archive_v287_activate_v288_ready=true`, `prior_capstone_ready=true`,
+`prior_paper_ready=false`, the `.287` capstone statuses preserved, the six
+carry-forward blocker categories visible, `next_milestone="2026.05.288"`,
+concrete source artifact provenance, aggregation-only inference substrate
+metadata, no roadmap activation performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3081)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3081 | Implemented (`python/carnot/reporting/archive_v287_activate_v288_3081.py`) | Implemented (`tests/python/test_experiment_3081_archive_v287_activate_v288.py`) |

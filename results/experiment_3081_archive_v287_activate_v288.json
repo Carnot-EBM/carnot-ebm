@@ -1,0 +1,242 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v287_activate_v288_ready": true,
+  "artifact": "experiment_3081_archive_v287_activate_v288",
+  "blocked_reasons": [],
+  "carry_forward_blockers": [
+    {
+      "blocker_id": "low_abstention_precision",
+      "description": "low abstention precision",
+      "expected_carry_forward_value": "abstention_precision_below_gate",
+      "matches_expected": true,
+      "source": "results/experiment_3080_capstone_v287.json",
+      "source_field": "next_milestone_recommendation",
+      "value": "abstention_precision_below_gate"
+    },
+    {
+      "blocker_id": "gated_calibration_repair",
+      "description": "gated calibration/repair",
+      "expected_carry_forward_value": "bounded_and_gated_skipped",
+      "matches_expected": true,
+      "related_statuses": {
+        "verifier_gain_status": "flagged_or_gated_verifier_gain_recovery_incomplete"
+      },
+      "source": "results/experiment_3080_capstone_v287.json",
+      "source_field": "repair_claim_status",
+      "value": "bounded_and_gated_skipped"
+    },
+    {
+      "blocker_id": "fr11_completeness_mistake",
+      "description": "FR-11 completeness mistake",
+      "expected_carry_forward_value": "flagged_controller_only_budget_exceeded",
+      "matches_expected": true,
+      "source": "results/experiment_3080_capstone_v287.json",
+      "source_field": "fr11_self_learning_status",
+      "value": "flagged_controller_only_budget_exceeded"
+    },
+    {
+      "blocker_id": "ebt_arm_projection_only",
+      "description": "EBT/ARM projection-only",
+      "expected_carry_forward_value": "projection_only_feasible_no_implementation",
+      "matches_expected": true,
+      "source": "results/experiment_3080_capstone_v287.json",
+      "source_field": "ebt_arm_status",
+      "value": "projection_only_feasible_no_implementation"
+    },
+    {
+      "blocker_id": "gatemate_ssqa_missing_operator_evidence",
+      "description": "GateMate/SSQA missing operator evidence",
+      "expected_carry_forward_value": {
+        "gatemate_status": "blocked_no_rerun_operator_actions_required",
+        "ssqa_status": "gated_skipped_host_visible_smoke_missing"
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3080_capstone_v287.json",
+      "source_field": "gatemate_status,ssqa_status",
+      "value": {
+        "gatemate_status": "blocked_no_rerun_operator_actions_required",
+        "ssqa_status": "gated_skipped_host_visible_smoke_missing"
+      }
+    },
+    {
+      "blocker_id": "publication_blockers_42",
+      "description": "42 publication blockers",
+      "expected_carry_forward_value": 42,
+      "matches_expected": true,
+      "source": "results/experiment_3080_capstone_v287.json",
+      "source_field": "publication_blocker_count",
+      "value": 42
+    }
+  ],
+  "duration_s": 0.019012,
+  "honest_verdict": "complete: archive_v287_activate_v288_ready=true; prior_capstone_ready=true; prior_paper_ready=false; next_milestone=2026.05.288; publication_blocker_count=42; roadmap_source=research-roadmap.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "missing_source_artifacts": [
+    "research-roadmap-next.yaml"
+  ],
+  "next_milestone": "2026.05.288",
+  "no_historical_artifact_rewrite": true,
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.287",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.288",
+    "expected_milestone": "2026.05.288",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.288",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": false,
+    "source_path": "research-roadmap.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3081-archive-v287-activate-v288",
+      "exp3082-publication-blocker-reduction-ledger",
+      "exp3083-verifier-hardness-autopsy-protocol",
+      "exp3084-resyn-exact-fixture-bank-generator",
+      "exp3085-icalm-task-abstention-sota-panel",
+      "exp3086-dafny-z3-formal-feedback-pilot",
+      "exp3087-gated-local-sota-verifier-calibration-v3",
+      "exp3088-xgrammar2-structured-repair-emitter-preflight",
+      "exp3089-gated-xgrammar-sota-repair-micro-panel",
+      "exp3090-fr11-resyn-kancl-completeness-repair",
+      "exp3091-ebt-arm-sidecar-adapter-schema-prototype",
+      "exp3092-gatemate-ssqa-operator-evidence-ingestion",
+      "exp3093-cross-corpus-matrix-v22",
+      "exp3094-capstone-v288"
+    ],
+    "used_active_roadmap_fallback": true
+  },
+  "run_date": "20260525",
+  "schema": "carnot.archive_activation.v287_to_v288.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3079_cross_corpus_matrix_v21.json",
+      "present": true,
+      "role": "matrix_v21",
+      "sha256": "7a3a8f8779cffc9484e02c0d61f585319a1e785cbd9fe1e8e56ee61a2897cdd1"
+    },
+    {
+      "path": "results/experiment_3080_capstone_v287.json",
+      "present": true,
+      "role": "capstone_v287",
+      "sha256": "18920a2d24fac41219e5874cba0a356a8fba8cae91e9eeafb76d1c667bc80bdf"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "role": "staged_roadmap",
+      "sha256": null
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "f08b5c9e5e1b350172508d4a1857610e17547d204ef162efa0902f7faf839495"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "b36b9e2ace82983133a50ec9101b3e32307b17c9c3753c363313b88f9557834d"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "role": "codex_instructions",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_instructions",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "38d2886dace26fc23fa644a0b7b03e7c6ea8b5dd9c94e6f1d187c9f30d164b27"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "78be98bf866cbe57b55db8f4189a048db2d46d820671e5c747e492509efcf1ac"
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "present": true,
+      "role": "traceability",
+      "sha256": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9"
+    }
+  ],
+  "source_checksums": {
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "_bmad/traceability.md": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "b36b9e2ace82983133a50ec9101b3e32307b17c9c3753c363313b88f9557834d",
+    "ops/changelog.md": "78be98bf866cbe57b55db8f4189a048db2d46d820671e5c747e492509efcf1ac",
+    "ops/status.md": "38d2886dace26fc23fa644a0b7b03e7c6ea8b5dd9c94e6f1d187c9f30d164b27",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "f08b5c9e5e1b350172508d4a1857610e17547d204ef162efa0902f7faf839495",
+    "results/experiment_3079_cross_corpus_matrix_v21.json": "7a3a8f8779cffc9484e02c0d61f585319a1e785cbd9fe1e8e56ee61a2897cdd1",
+    "results/experiment_3080_capstone_v287.json": "18920a2d24fac41219e5874cba0a356a8fba8cae91e9eeafb76d1c667bc80bdf",
+    "scripts/research_conductor.py": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+  },
+  "status_summary_287": {
+    "capstone_ready": true,
+    "counts": {
+      "blocked": 5,
+      "bounded": 12,
+      "clean": 14,
+      "flagged": 12,
+      "gated_skipped": 9,
+      "missing": 2,
+      "projection_only": 2,
+      "retired": 5
+    },
+    "ebt_arm_status": "projection_only_feasible_no_implementation",
+    "fr11_self_learning_status": "flagged_controller_only_budget_exceeded",
+    "gatemate_status": "blocked_no_rerun_operator_actions_required",
+    "matrix_v21_ready": true,
+    "paper_ready": false,
+    "publication_blocker_count": 42,
+    "publication_blocker_count_source": "capstone_publication_blocker_count",
+    "repair_claim_status": "bounded_and_gated_skipped",
+    "ssqa_status": "gated_skipped_host_visible_smoke_missing",
+    "verifier_gain_status": "flagged_or_gated_verifier_gain_recovery_incomplete"
+  },
+  "traceability_updated": false,
+  "invariant_violations": []
+}
