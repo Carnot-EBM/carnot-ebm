@@ -7720,3 +7720,88 @@ beginning with `blocked_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3060 | Implemented (`python/carnot/eval/fr11_solver_self_model_trace_schema_v1.py`) | Implemented (`tests/python/test_experiment_3060_fr11_solver_self_model_trace_schema_v1.py`) |
+
+## REQ-LEARN-3061: Delayed-Regression Solver Self-Model Pilot
+
+**Given** Exp 3060 exposes a directly consumable solver self-model trace schema
+and Exp 3058 preserves an exact SMT fallback
+**When** Exp 3061 runs the mandatory continuous self-learning pilot
+**Then** it SHALL verify both source artifacts before any update, build a small
+exact SAT/SMT-style split containing train/update cases, related held-out
+cases, prior cases, delayed-regression cases, no-feedback controls, and
+shuffled-feedback controls, and apply only governance-approved controller-side
+or trace-memory updates.
+**And** it SHALL store one self-model trace per attempted update using the Exp
+3060 trace schema, including exact correction set, controller edit, rollback
+decision, delayed-regression window, and source artifact provenance.
+**And** it SHALL evaluate family holdout, prior retention, no-feedback control,
+shuffled-feedback control, contradiction rate, rollback burden, and delayed
+regression deltas without live LLM inference or base model-weight mutation.
+
+The terminal artifact SHALL be
+`results/experiment_3061_fr11_delayed_regression_solver_self_model_pilot_v1.json`
+and SHALL include `fr11_delayed_regression_ready`,
+`continuous_self_learning_task`, `promotion_decision`, `edit_targets_used`,
+`self_model_trace_count`, `family_holdout_delta`, `prior_retention_delta`,
+`no_feedback_delta`, `shuffled_control_delta`, `contradiction_rate_delta`,
+`rollback_count`, `delayed_regression_delta`, `source_trace_counts`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3061 Sub-requirements
+
+- REQ-LEARN-3061-1: The evaluator SHALL fail closed with
+  `honest_verdict="blocked_missing_trace_schema_or_formal_fallback"` when Exp
+  3060 or Exp 3058 is missing, malformed, non-terminal, not ready, lacks the
+  required trace or exact-fallback fields, claims model-weight training or
+  mutation, or lacks an exact solver/fallback authority.
+- REQ-LEARN-3061-2: The split SHALL contain disjoint train/update, related
+  held-out, prior, delayed-regression, no-feedback control, and
+  shuffled-feedback control identifiers; both control groups SHALL be
+  non-vacuous.
+- REQ-LEARN-3061-3: Every attempted update SHALL produce exactly one
+  self-model trace row whose fields match the Exp 3060 `trace_schema`, whose
+  `controller_edit.target` is an allowed controller-side target, whose
+  `controller_edit.model_weight_mutation` is false, whose `correction_set`
+  names an independent exact authority, whose `rollback_decision` records
+  whether the update was applied or rolled back, and whose `source_artifact`
+  points to Exp 3058 or Exp 3060 evidence.
+- REQ-LEARN-3061-4: The pilot SHALL compute
+  `family_holdout_delta`, `prior_retention_delta`, `no_feedback_delta`,
+  `shuffled_control_delta`, `contradiction_rate_delta`, `rollback_count`, and
+  `delayed_regression_delta` from deterministic before/after controller
+  evaluations.
+- REQ-LEARN-3061-5: `fr11_delayed_regression_ready` SHALL be true only when the
+  trace schema is populated, self-model trace count is positive, source trace
+  counts are positive, controls are non-vacuous, family holdout improves,
+  prior and delayed regression do not regress, no-feedback and shuffled
+  controls do not improve, contradiction rate decreases, no live LLM inference
+  or model-weight mutation is claimed, and the honest verdict uses a terminal
+  success prefix.
+
+### SCENARIO-LEARN-3061: Self-Model Traces Support Delayed Regression Evaluation
+
+**Given** ready Exp 3060 and Exp 3058 artifacts
+**When** Exp 3061 runs
+**Then** it writes the required artifact fields, stores one self-model trace per
+update, records controller-only edit targets, reports positive
+`family_holdout_delta`, non-negative `prior_retention_delta`, non-positive
+`no_feedback_delta`, non-positive `shuffled_control_delta`, negative
+`contradiction_rate_delta`, visible rollback burden, non-negative
+`delayed_regression_delta`, non-empty source trace counts,
+`fr11_delayed_regression_ready=true`, and an `honest_verdict` beginning with
+`complete_`.
+
+### SCENARIO-LEARN-3061-BLOCKED: Missing Trace Schema Or Formal Fallback Fails Closed
+
+**Given** missing or malformed Exp 3060 or Exp 3058 source evidence
+**When** Exp 3061 runs
+**Then** it writes the required artifact fields with
+`fr11_delayed_regression_ready=false`, zeroed metric deltas, empty edit targets
+and self-model traces, no live LLM inference claim, no model-weight mutation,
+and `honest_verdict="blocked_missing_trace_schema_or_formal_fallback"`.
+
+## Implementation Status (REQ-LEARN-3061)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3061 | Implemented (`python/carnot/eval/fr11_delayed_regression_solver_self_model_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3061_fr11_delayed_regression_solver_self_model_pilot_v1.py`) |
