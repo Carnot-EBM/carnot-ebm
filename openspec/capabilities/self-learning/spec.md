@@ -7182,3 +7182,78 @@ does not degrade, and `trace_memory_stability_ready=true`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3007 | Implemented (`python/carnot/eval/fr11_attractor_trace_memory_stability_v1.py`) | Implemented (`tests/python/test_experiment_3007_fr11_attractor_trace_memory_stability_v1.py`) |
+
+## REQ-LEARN-3020: DVI Verifier-Feedback Self-Learning Controller
+
+**Given** Exp 3017 supplies exact instruction validator trees, Exp 3018
+supplies BEAVER-style cached frontier certificate rows, Exp 3019 supplies a
+feasibility-channel de-tautology diagnostic, and Exp 3007 supplies a stable
+FR-11 trace-memory forgetting guard
+**When** Exp 3020 builds a bounded Draft-Verify-Improve-inspired controller
+over cached traces
+**Then** it SHALL update only transparent controller weights or routing
+decisions from exact verifier accept/reject events.
+**And** each accepted update SHALL improve an independent held-out exact
+validator utility metric while preserving the forgetting guard.
+**And** it SHALL compare the learned controller against no-learning,
+replay-only, random-update, and negative-control conditions.
+**And** it SHALL write an inspectable controller config, replay transcript, and
+terminal artifact without claiming native LLM fine-tuning or self-graded
+promotion.
+
+The terminal artifact SHALL be
+`results/experiment_3020_dvi_verifier_feedback_self_learning_controller_v1.json`
+and SHALL include `verifier_feedback_controller_ready`,
+`continuous_self_learning_task=true`,
+`independent_self_learning_boundary_preserved`,
+`controller_config_path`, `n_replay_items`, `heldout_delta`,
+`negative_control_delta`, `forgetting_guard_passed`, `drift_guard_passed`,
+`tautology_risk_flag`, `native_llm_training_claim_made`, and
+`honest_verdict`.
+
+### REQ-LEARN-3020 Sub-requirements
+
+- REQ-LEARN-3020-1: The evaluator SHALL fail closed when any source artifact
+  or manifest/table required from Exp 3017, Exp 3018, Exp 3019, or Exp 3007 is
+  missing, malformed, or not ready.
+- REQ-LEARN-3020-2: Replay items SHALL be built from exact validator/certificate
+  evidence and SHALL record their source experiment, item ID, partition, exact
+  verifier feedback, machine-check status, and non-label feature vector.
+- REQ-LEARN-3020-3: The controller SHALL update only bounded inspectable
+  weights; it SHALL not mutate model weights and SHALL set
+  `native_llm_training_claim_made=false`.
+- REQ-LEARN-3020-4: A proposed update SHALL be accepted only when exact
+  verifier feedback is machine checked, independent held-out utility improves,
+  the forgetting score does not degrade, and drift controls reject unrelated or
+  contradicted evidence.
+- REQ-LEARN-3020-5: `verifier_feedback_controller_ready` SHALL be true only
+  when `heldout_delta > 0`, `negative_control_delta <= 0`,
+  `forgetting_guard_passed=true`, `drift_guard_passed=true`,
+  `tautology_risk_flag=false`, `native_llm_training_claim_made=false`, and the
+  independent self-learning boundary is preserved.
+
+### SCENARIO-LEARN-3020: Cached Verifier Feedback Improves Held-Out Utility
+
+**Given** ready Exp 3017, Exp 3018, Exp 3019, and Exp 3007 evidence
+**When** Exp 3020 replays exact accept/reject events through the bounded
+controller
+**Then** the controller writes its config and replay transcript, reports a
+positive held-out delta over no-learning/replay-only/random controls, reports
+non-improving negative controls, preserves forgetting and drift guards, makes
+no native LLM training claim, and sets
+`verifier_feedback_controller_ready=true`.
+
+### SCENARIO-LEARN-3020-BLOCKED: Missing Source Evidence Fails Closed
+
+**Given** any required source evidence is missing, malformed, or not ready
+**When** Exp 3020 runs
+**Then** it writes the required artifact fields with
+`verifier_feedback_controller_ready=false`, `n_replay_items=0`,
+`heldout_delta=0.0`, failed guards, `native_llm_training_claim_made=false`, and
+an `honest_verdict` beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-3020)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3020 | Implemented (`python/carnot/eval/dvi_verifier_feedback_self_learning_controller_v1.py`) | Implemented (`tests/python/test_experiment_3020_dvi_verifier_feedback_self_learning_controller_v1.py`) |
