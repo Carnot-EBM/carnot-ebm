@@ -8229,3 +8229,67 @@ that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3068 | Implemented (`python/carnot/reporting/matrix_v20_artifact_alias_blocker_normalization_3068.py`) | Implemented (`tests/python/test_experiment_3068_matrix_v20_artifact_alias_blocker_normalization.py`) |
+
+### REQ-REPORT-3069: Solver-Verifier Failure Autopsy And Recovery Protocol
+
+The repository shall provide an Exp 3069 artifact-only autopsy generator that
+writes
+`results/experiment_3069_solver_verifier_failure_autopsy_protocol_v1.json`
+before any local SOTA verifier repair, repair promotion, or LLM-guided SMT
+promotion is retried. The generator MUST read Exp 3057, Exp 3058, matrix v20
+Exp 3065, capstone v286 Exp 3066, CODEX/CLAUDE workflow instructions, and
+`research-references.md`. It MUST NOT run live LLM inference, run a fresh
+solver experiment, invoke verifier scoring, modify
+`scripts/research_conductor.py`, push, or rewrite prior result artifacts.
+
+The autopsy MUST extract the Exp 3057 and Exp 3058 metrics that explain the
+solver-grounded failure: Exp 3057 false-negative rate, false-positive rate,
+one-shot solver accuracy, verifier-selected accuracy, verifier-gain delta,
+exact-solver agreement, adversarial flags, and Exp 3058 guided success,
+solver-only success, guided-minus-solver-only lift, invalid proposal count,
+formal fallback preservation, and adversarial flags. It MUST classify failure
+modes including false negatives, no verifier gain, no SMT lift,
+self-verification risk, and solver-only equivalence. It MUST translate the
+research references into predeclared local diagnostics for first-token entropy,
+abstention precision, rejection recall, confidence coverage,
+Lyapunov-style perturbation sensitivity when logits or trajectories are
+accessible, and VERGE/MCS feedback.
+
+The terminal artifact MUST include
+`verifier_failure_autopsy_ready`, `root_cause_hypotheses`,
+`recovery_protocol`, `abstention_policy`, `candidate_signals`,
+`promotion_disqualifiers`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. The recovery protocol MUST define minimum artifact fields,
+exact-solver authority requirements, acceptance gates, and consumer-ready
+blocking conditions for Exp 3070, Exp 3071, Exp 3072, and Exp 3075.
+`verifier_failure_autopsy_ready` shall be true only when all required sources
+are present as readable artifacts or text references, all five failure modes
+are classified, candidate diagnostics are predeclared, promotion
+disqualifiers cover Exp 3070/3071/3072/3075, the recovery protocol can be
+consumed directly by next experiments, the inference substrate explicitly
+declares no live model inference, and `honest_verdict` starts with a terminal
+success prefix.
+
+#### SCENARIO-REPORT-3069: Failed Verifier Gain Blocks Promotion Until Explained
+
+**Given** Exp 3057 reports negative verifier gain with a false-negative
+failure
+**And** Exp 3058 reports zero guided SMT lift relative to solver-only fallback
+**And** matrix v20 and capstone v286 carry solver-grounded verification as
+flagged no-gain evidence
+**When** the Exp 3069 autopsy generator runs
+**Then** it writes
+`results/experiment_3069_solver_verifier_failure_autopsy_protocol_v1.json`
+with `verifier_failure_autopsy_ready=true`, root-cause hypotheses tied to
+concrete source artifacts, a bounded verifier-gain recovery protocol with
+minimum fields and exact-solver authority gates, an abstention policy that
+prevents forced accept/reject on uncertain cases, candidate diagnostic signals
+for confidence and feedback calibration, promotion disqualifiers for Exp
+3070, Exp 3071, Exp 3072, and Exp 3075, artifact-only inference-substrate
+metadata, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3069)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3069 | Implemented (`python/carnot/reporting/solver_verifier_failure_autopsy_protocol_3069.py`) | Implemented (`tests/python/test_experiment_3069_solver_verifier_failure_autopsy_protocol.py`) |
