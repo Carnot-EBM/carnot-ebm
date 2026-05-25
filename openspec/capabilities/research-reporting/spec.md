@@ -7962,3 +7962,68 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3053 | Implemented (`python/carnot/reporting/capstone_v285_3053.py`) | Implemented (`tests/python/test_experiment_3053_capstone_v285.py`) |
+
+### REQ-REPORT-3065: Cross-Corpus Matrix V20 From .285 And .286 Artifacts
+
+The repository shall provide an Exp 3065 cross-corpus matrix v20 generator
+that writes `results/experiment_3065_cross_corpus_matrix_v20.json` using only
+checked-in `.285` and `.286` artifact JSON files. The generator MUST read
+matrix v19, capstone v285, and every available milestone `.286` artifact from
+Exp 3054 through Exp 3064 before classifying rows. The generator MUST NOT run
+live repair, live LLM inference, verifier scoring, solver execution, synthesis,
+board flashing, readback, hardware smoke tests, the conductor, or historical
+artifact rewrites. Missing optional artifact paths requested by the conductor
+prompt, including the `experiment_3059_*_v1.json` alias when absent, MUST be
+recorded as missing rows and missing source-artifact records rather than
+silently ignored.
+
+The v20 artifact MUST classify rows into exactly these row-class lists:
+`clean_rows`, `flagged_rows`, `bounded_rows`, `blocked_rows`,
+`gated_skipped_rows`, `projection_only_rows`, `missing_rows`, and
+`retired_rows`. Every row in those lists MUST be machine-readable and include
+at least `row_id`, `status`, `source_artifact`, `source_field`,
+`evidence_class`, `blocker_class`, `claim_scope`, and `summary`. Repair,
+solver-grounded verification, FR-11, KAN/PWA, GateMate, and SSQA statuses MUST
+cite concrete source artifact paths and fields. Repair evidence MAY remain
+bounded or gate-skipped without requiring a live repair rerun. GateMate and
+SSQA rows MAY remain blocked or gate-skipped without requiring hardware success.
+FR-11 rows MUST preserve the controller-only boundary and MUST NOT promote
+model-weight learning without a source artifact that explicitly supports it.
+
+The terminal artifact MUST include `matrix_v20_ready`, `rows_total`,
+`clean_rows`, `flagged_rows`, `bounded_rows`, `blocked_rows`,
+`gated_skipped_rows`, `projection_only_rows`, `missing_rows`, `retired_rows`,
+`publication_blocker_count`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MUST also include a machine-readable list of
+`publication_blockers` whose length equals `publication_blocker_count`.
+`matrix_v20_ready` MUST be true only when all row-class lists exist, all rows
+have valid classes and source-field citations, required source artifacts are
+readable JSON objects, and optional missing artifacts are explicitly represented
+as missing rows and source records. When a conductor prompt assigns ops
+reconciliation to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3065: V20 Aggregates .285 And .286 Rows With Honest Gates
+
+**Given** matrix v19, capstone v285, and `.286` artifacts Exp 3054 through Exp
+3064 are present or honestly absent
+**And** the actual Exp 3059 blocked-gate artifact exists while the requested
+`experiment_3059_gated_sota_repair_de_tautology_rerun_v1.json` alias is absent
+**And** repair remains bounded or gate-skipped, solver-grounded verification has
+flagged local SOTA rows, FR-11 remains controller-only, KAN/PWA is an exact
+controller-anchor audit rather than a promoted model-weight verifier, GateMate
+does not allow rerun, and SSQA remains host-visible-smoke gated
+**When** the Exp 3065 matrix v20 generator runs
+**Then** it writes `results/experiment_3065_cross_corpus_matrix_v20.json` with
+`matrix_v20_ready=true`, all eight row-class lists populated or explicitly
+empty, source artifact and source-field citations on every row, the missing
+Exp 3059 alias recorded as a missing row, every publication blocker listed and
+counted, aggregation-only inference substrate metadata, no live repair or
+hardware execution by the matrix task, and an `honest_verdict` that starts with
+`complete:`.
+
+## Implementation Status (REQ-REPORT-3065)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3065 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v20_3065.py`) | Implemented (`tests/python/test_experiment_3065_cross_corpus_matrix_v20.py`) |
