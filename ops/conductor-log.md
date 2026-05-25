@@ -6200,3 +6200,4 @@ web search: site |
 | 2026-05-24 23:20 UTC | Cactus-style repair acceptance controller | OK | 81 passed in 3.11s |
 | 2026-05-24 23:38 UTC | SOTA repair rerun with acceptance controller | OK | 81 passed in 3.47s |
 | 2026-05-24 23:52 UTC | NSVIF instruction validator-tree expansion | OK | 81 passed in 3.80s |
+| 2026-05-25 00:09 UTC | BEAVER-style validator frontier certificate | OK | 81 passed in 3.39s |
