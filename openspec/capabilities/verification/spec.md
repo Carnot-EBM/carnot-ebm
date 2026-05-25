@@ -1051,6 +1051,76 @@ promotion metrics, no legacy tiny-model headline substitution, and an
 |---|---|---|
 | REQ-VERIFY-3085 | Implemented (`python/carnot/eval/icalm_task_abstention_sota_panel_v2.py`) | Implemented (`tests/python/test_experiment_3085_icalm_task_abstention_sota_panel.py`) |
 
+### REQ-VERIFY-3086: Dafny/Z3 Formal-Feedback Pilot
+
+The repository shall provide an Exp 3086 formal-feedback pilot that runs tiny
+verified-code repair fixtures through Dafny when available and a Z3 plus local
+execution fallback when Dafny is unavailable. The pilot shall write
+`results/experiment_3086_dafny_z3_formal_feedback_pilot_v1.json` without
+modifying `scripts/research_conductor.py`.
+
+The pilot shall first check `command -v dafny`, `command -v z3`, CUDA/GPU
+availability, and local cache/loadability for at least one mandated headline
+GGUF (`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`). If neither Dafny nor Z3 is available, it
+shall write a terminal blocked artifact with `formal_feedback_ready=false`,
+`dafny_available=false`, `z3_available=false`, and an `honest_verdict`
+beginning with `blocked_formal_toolchain_missing`. If Dafny is absent but Z3
+is present, it shall run the Z3-only path and set `dafny_available=false`.
+
+When formal tooling and a mandated local GGUF are available, the pilot shall
+evaluate 4-8 small fixtures spanning invalid candidate implementations,
+repairable malformed candidates, vacuous specifications, and weak
+postconditions. It shall generate formal diagnostics containing only verifier
+loop evidence such as counterexamples, missing fields, unsatisfiable
+preconditions, weak-postcondition witnesses, and failing constraint names. It
+shall hash every model prompt, ask the mandated GGUF for corrected candidates
+using only those diagnostics, validate every corrected candidate exactly, and
+compare guided repairs against a solver-only validation baseline that does not
+use model correction.
+
+The terminal artifact MUST include `formal_feedback_ready`,
+`formal_feedback_delta`, `dafny_available`, `z3_available`,
+`vacuity_guard_passed`, `guided_success_count`, `solver_only_success_count`,
+`exact_ground_truth_count`, `models_used`, `model_specs`,
+`legacy_smoke_only_used`, `preconditions_checked`, `prompt_hashes`,
+`inference_substrate`, and `honest_verdict`. It shall also record fixture-level
+diagnostics, guided validation results, and baseline validation results.
+
+`formal_feedback_ready` shall be true only when formal diagnostics are
+non-vacuous, the vacuity/weak-postcondition guards fire on the corresponding
+fixtures, at least one mandated GGUF produced live correction text, every
+guided success was exactly validated, `guided_success_count >
+solver_only_success_count`, `legacy_smoke_only_used=false`, and
+`honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3086: Z3 Fallback Calibrates Formal Repair Feedback
+
+Given Dafny is absent, Z3 is available, CUDA/GPU is available, and a mandated
+local GGUF resolves and loads,
+When the Exp 3086 pilot runs over tiny invalid, repairable, vacuous, and
+weak-postcondition fixtures,
+Then it records `dafny_available=false`, `z3_available=true`, produces
+counterexample and vacuity diagnostics without leaking exact repairs, hashes
+every repair prompt, validates model corrections with exact Z3 or execution
+authority, reports guided and solver-only success counts separately, and writes
+the required terminal artifact fields.
+
+### SCENARIO-VERIFY-3086-BLOCKED: Missing Formal Checker Fails Closed
+
+Given neither Dafny nor Z3 is available,
+When the Exp 3086 pilot runs,
+Then it writes a blocked terminal artifact with formal feedback readiness
+false, explicit precondition diagnostics, empty model-promotion evidence, no
+legacy tiny-model substitution, and an `honest_verdict` beginning with
+`blocked_formal_toolchain_missing`.
+
+## Implementation Status (REQ-VERIFY-3086)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3086 | Implemented (`python/carnot/eval/dafny_z3_formal_feedback_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3086_dafny_z3_formal_feedback_pilot.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
