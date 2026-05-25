@@ -1,0 +1,1267 @@
+{
+  "artifact": "experiment_3025_capstone_v283",
+  "blocked_rows": [
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2914_gatemate_toolchain",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2927_gatemate_himbaechel_preflight",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2929_gatemate_flash_timing_boundary",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2931_llmeval_logic_z3_mini",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2957_gatemate_flash_smoke",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2977_intent_preserving_repair",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2984_gatemate_readback_smoke",
+    "carry_forward_v16:carry_forward_v15:exp2996_gatemate_readback_smoke",
+    "carry_forward_v16:exp3008_gatemate_host_visible_io",
+    "exp3021_gatemate_transport_shim"
+  ],
+  "blocked_task_rows": [
+    "exp3021_gatemate_transport_shim"
+  ],
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "experiment_id": "exp3024",
+      "honest_verdict": "complete: matrix_v17_ready=true; clean=40; flagged=29; blocked=10; gated_skipped=3; projection_only=10; pilot_only=4; missing=1",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "path": "results/experiment_3024_cross_corpus_matrix_v17.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "e29028b7d7e1f74c0f497f7f95a99269395a72d7295ae91a1dfeb1144b7b9ddc"
+    },
+    {
+      "experiment_id": "exp3010",
+      "honest_verdict": "complete: matrix_v16_ready=true; clean=38; flagged=23; blocked=9; gated_skipped=1; projection_only=9; pilot_only=4; missing=1",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "path": "results/experiment_3010_cross_corpus_matrix_v16.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "c18e604bd42995dd7fdb14d7ada97b0b46c0179a3fc15d93347ff469c10f98a8"
+    },
+    {
+      "experiment_id": "exp3011",
+      "honest_verdict": "complete: capstone_ready=true; paper_ready=false; repaired=4; flagged=23; blocked=9; gated_skipped=1; missing=1; next=2026.05.283 claim-repair-v2",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "path": "results/experiment_3011_capstone_v282.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "e71f582d56b564beda25e7d67d7a9e38c2f1b26d975f57ad17ac41aeaf20a21f"
+    },
+    {
+      "experiment_id": "exp3012",
+      "honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.282; activated_milestone=2026.05.283; status_updates_written=false",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "path": "results/experiment_3012_archive_v282_activate_v283.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "e4cb189e57e7f31681276bf863c2dcb001cf68c6bc2250f4660532046ed57a12"
+    },
+    {
+      "experiment_id": "exp3013",
+      "honest_verdict": "complete: headline SOTA GGUF transcript and top-k logprob telemetry ready",
+      "inference_substrate": "llama_cpp_gpu",
+      "model_provenance": {
+        "cache_paths": {
+          "headline_models": {
+            "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+            "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "unsloth/gemma-4-31B-it-GGUF": null
+          },
+          "roots": {
+            "huggingface_hub_cache": "/home/ianblenke/.cache/huggingface/hub",
+            "huggingface_hub_cache_exists": true,
+            "local_models": "/home/ianblenke/github.com/ianblenke/carnot/models",
+            "local_models_exists": true
+          },
+          "smoke_only_models": {
+            "Qwen/Qwen3.5-0.8B": null,
+            "unsloth/gemma-4-E4B-it-GGUF": null
+          }
+        },
+        "headline_models_available": [
+          {
+            "generated": true,
+            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "status": "cache_resolved"
+          }
+        ],
+        "live_transcript_paths": [
+          "/home/ianblenke/github.com/ianblenke/carnot/results/raw/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1/unsloth_gemma-4-26B-A4B-it-GGUF.json"
+        ],
+        "model_checksums": {
+          "Qwen/Qwen3.5-0.8B": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          },
+          "unsloth/Qwen3.6-35B-A3B-GGUF": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          },
+          "unsloth/gemma-4-26B-A4B-it-GGUF": {
+            "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+            "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+            "mtime_ns": 1778129415691941084,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "sha256": null,
+            "size_bytes": 16947539744,
+            "status": "available"
+          },
+          "unsloth/gemma-4-31B-it-GGUF": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          },
+          "unsloth/gemma-4-E4B-it-GGUF": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          }
+        },
+        "model_specs": {
+          "experiment_id": 3013,
+          "headline_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "loader": "llama_cpp",
+          "preferred_quantization": "Q4_K_M",
+          "random_seed": 3013,
+          "smoke_only_models": [
+            "Qwen/Qwen3.5-0.8B",
+            "unsloth/gemma-4-E4B-it-GGUF"
+          ],
+          "source_pattern": "experiment_2989_sota_gguf_cache_provenance_preflight_v1",
+          "telemetry_request": {
+            "logits_all": true,
+            "logprobs": 5,
+            "top_k_alternatives_required": true
+          }
+        }
+      },
+      "path": "results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "4b5d393c76f9767b7b21f40fe21f839256a2828eef3e126bfee498f4c8be5af7"
+    },
+    {
+      "experiment_id": "exp3014",
+      "honest_verdict": "complete: repair failure taxonomy ready for exp3015/exp3016 gates",
+      "inference_substrate": "deterministic_cached_replay_no_live_llm",
+      "path": "results/experiment_3014_repair_syntax_schema_failure_taxonomy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "0af55959dbe13f63a9f8c73d869425b8ded2002cf424c760e335ad79b019b91a"
+    },
+    {
+      "experiment_id": "exp3015",
+      "honest_verdict": "complete: offline repair acceptance controller ready",
+      "inference_substrate": "deterministic_cached_replay_no_live_llm",
+      "path": "results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "c6992842143896bbc719e934f588594c1856f1b430db9314d46fbda73368f933"
+    },
+    {
+      "experiment_id": "exp3016",
+      "honest_verdict": "complete: acceptance-controlled SOTA repair rerun gates passed",
+      "inference_substrate": "live_sota_gguf_repair_with_acceptance_controller",
+      "model_provenance": {
+        "headline_models_used": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "live_transcript_paths": [
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0001_unsloth_gemma-4-26B-A4B-it-GGUF_0.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0002_unsloth_gemma-4-26B-A4B-it-GGUF_1.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0003_unsloth_gemma-4-26B-A4B-it-GGUF_2.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0004_unsloth_gemma-4-26B-A4B-it-GGUF_3.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0005_unsloth_gemma-4-26B-A4B-it-GGUF_4.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0006_unsloth_gemma-4-26B-A4B-it-GGUF_5.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0007_unsloth_gemma-4-26B-A4B-it-GGUF_6.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0008_unsloth_gemma-4-26B-A4B-it-GGUF_7.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0009_unsloth_gemma-4-26B-A4B-it-GGUF_8.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0010_unsloth_gemma-4-26B-A4B-it-GGUF_9.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0011_unsloth_gemma-4-26B-A4B-it-GGUF_10.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0012_unsloth_gemma-4-26B-A4B-it-GGUF_11.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0013_unsloth_gemma-4-26B-A4B-it-GGUF_12.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0014_unsloth_gemma-4-26B-A4B-it-GGUF_13.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0015_unsloth_gemma-4-26B-A4B-it-GGUF_14.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0016_unsloth_gemma-4-26B-A4B-it-GGUF_15.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0017_unsloth_gemma-4-26B-A4B-it-GGUF_16.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0018_unsloth_gemma-4-26B-A4B-it-GGUF_17.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0019_unsloth_gemma-4-26B-A4B-it-GGUF_18.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0020_unsloth_gemma-4-26B-A4B-it-GGUF_19.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0021_unsloth_gemma-4-26B-A4B-it-GGUF_20.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0022_unsloth_gemma-4-26B-A4B-it-GGUF_21.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0023_unsloth_gemma-4-26B-A4B-it-GGUF_22.json",
+          "results/raw/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1/transcripts/repair-hard-0024_unsloth_gemma-4-26B-A4B-it-GGUF_23.json"
+        ],
+        "model_checksums": {
+          "Qwen/Qwen3.5-0.8B": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          },
+          "unsloth/Qwen3.6-35B-A3B-GGUF": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          },
+          "unsloth/gemma-4-26B-A4B-it-GGUF": {
+            "bounded_sha256": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+            "checksum_algorithm": "sha256_head_tail_1mib_plus_size_mtime",
+            "mtime_ns": 1778129415691941084,
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "sha256": null,
+            "size_bytes": 16947539744,
+            "status": "available"
+          },
+          "unsloth/gemma-4-31B-it-GGUF": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          },
+          "unsloth/gemma-4-E4B-it-GGUF": {
+            "path": null,
+            "sha256": null,
+            "status": "missing"
+          }
+        },
+        "model_specs": {
+          "cache_paths": {
+            "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+            "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "unsloth/gemma-4-31B-it-GGUF": null
+          },
+          "headline_models": [
+            "unsloth/Qwen3.6-35B-A3B-GGUF",
+            "unsloth/gemma-4-31B-it-GGUF",
+            "unsloth/gemma-4-26B-A4B-it-GGUF"
+          ],
+          "preferred_quantization": "Q4_K_M",
+          "runnable_headline_models": [
+            {
+              "gpu": 0,
+              "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+              "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+              "name": "gemma-4-26B-A4B-it"
+            }
+          ],
+          "smoke_only_models": [
+            "Qwen/Qwen3.5-0.8B",
+            "unsloth/gemma-4-E4B-it-GGUF"
+          ],
+          "source_helpers": [
+            "cached_sota_pair",
+            "resolve_cached_gguf",
+            "exp3013_cache_paths"
+          ]
+        }
+      },
+      "path": "results/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "62142f63d6f6bf29d7afe5a11150f8c2b9fcef3ece1695235a780bd8e6956911"
+    },
+    {
+      "experiment_id": "exp3017",
+      "honest_verdict": "complete: NSVIF instruction validator-tree corpus exact-checked",
+      "inference_substrate": "deterministic_nsvif_instruction_validator_tree_corpus",
+      "path": "results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "d9db1bcc3b53b4619a22a770e9fcafd0ca2b383bc65ff5de2e07c843cc621e8d"
+    },
+    {
+      "experiment_id": "exp3018",
+      "hardware_provenance": {
+        "transcript_paths": [
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-001.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-002.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-003.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-004.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-005.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-006.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-007.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-008.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-009.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-010.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-011.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-012.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-013.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-014.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-015.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-016.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-017.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-018.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-019.json",
+          "results/beaver_style_validator_frontier_certificate_3018/transcripts/if-3017-020.json"
+        ]
+      },
+      "honest_verdict": "complete: validator frontier certificate ready with explicit unresolved bounds",
+      "inference_substrate": "deterministic_cached_validator_frontier",
+      "path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "e83c45047b82d87e595881e867d3494dc1362fd32fa88ce4d25f78d11453910e"
+    },
+    {
+      "experiment_id": "exp3019",
+      "honest_verdict": "complete_flagged_tautology_risk_feasibility_channel_diagnostic",
+      "inference_substrate": "cached_exact_validator_certificate_trace_replay",
+      "path": "results/experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "8484244e517f97f6bfbd88fdabb0d878ad52e21c7cfa76baf72437e2d603be60"
+    },
+    {
+      "experiment_id": "exp3020",
+      "honest_verdict": "complete: verifier_feedback_controller_ready",
+      "inference_substrate": "cached_exact_trace_replay_controller_only",
+      "path": "results/experiment_3020_dvi_verifier_feedback_self_learning_controller_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "dc03e89ed3c118b666d6a4357265748c987037f350e11218e754f235b93a0915"
+    },
+    {
+      "experiment_id": "exp3021",
+      "hardware_provenance": {
+        "board_detected": true,
+        "ccf_paths": [
+          "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+        ],
+        "gatemate_transport_rtl_ready": false,
+        "host_visible_io_plan_ready": false,
+        "io_transport_path": "blocked:gatemate_pinout_missing_no_physical_pinout_for_done_spin_out",
+        "rtl_paths": [
+          "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+          "/home/ianblenke/github.com/ianblenke/carnot/rtl/gatemate_ising_n16.v"
+        ],
+        "transcript_paths": [
+          "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_yosys.txt",
+          "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_nextpnr_himbaechel.txt",
+          "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_gmpack.txt",
+          "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/tool_openFPGALoader.txt",
+          "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/lsusb_dirtyjtag.txt",
+          "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/openfpgaloader_detect.txt",
+          "/home/ianblenke/github.com/ianblenke/carnot/logs/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1/yosys_lint.txt"
+        ]
+      },
+      "honest_verdict": "complete: blocked_gatemate_transport_pinout_missing",
+      "inference_substrate": "hardware_transport_preflight",
+      "path": "results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "d52837967d08ec9d304644546b99938a1e0504db6395132ddf3ce902f7668113"
+    },
+    {
+      "experiment_id": "exp3022",
+      "gate_provenance": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3021-gatemate-rtl-ccf-host-visible-transport-shim.gatemate_transport_rtl_ready (actual=False == expected=True)",
+        "gates_evaluated": [
+          {
+            "actual": false,
+            "artifact_field": "gatemate_transport_rtl_ready",
+            "expected": true,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=False == expected=True",
+            "upstream": "exp3021-gatemate-rtl-ccf-host-visible-transport-shim"
+          }
+        ],
+        "status": "blocked"
+      },
+      "honest_verdict": "blocked_gate_check_failed",
+      "inference_substrate": "",
+      "path": "results/experiment_3022_gatemate_transport_flash_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "3a4b3d32bcb380b06dea9c957cf4f98d5aeff99a761d37f02a30f8a4e2661ef6"
+    },
+    {
+      "experiment_id": "exp3023",
+      "gate_provenance": {
+        "ssqa_gate_status": "gate_skipped",
+        "upstream_gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3021-gatemate-rtl-ccf-host-visible-transport-shim.gatemate_transport_rtl_ready (actual=False == expected=True)",
+        "upstream_status": "blocked"
+      },
+      "hardware_provenance": {
+        "pnr_report_path": "",
+        "resource_report_path": "",
+        "rtl_path": "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v",
+        "smoke_hook_paths": [
+          "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json"
+        ]
+      },
+      "honest_verdict": "complete: ssqa_gate_skipped_exp3022_host_visible_io_not_ready",
+      "inference_substrate": "hardware_gate_artifact",
+      "path": "results/experiment_3023_ssqa_explicit_gate_artifact_and_rtl_report_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "8d6f269b9a1698db06812eabaf78b25c73d687e3c0c0b64aa30a76e8f87c45a9"
+    }
+  ],
+  "claim_boundary_violations": [],
+  "claim_promotion_decisions": {
+    "aggregation_metadata": {
+      "claim_boundary": "Aggregation metadata is clean only when top-level substrate is aggregation-only and model/hardware provenance remains nested under cited upstream artifacts.",
+      "promotable": true,
+      "repaired_282_blocker": true,
+      "row_id": "exp3024_cross_corpus_matrix_v17",
+      "source_honest_verdict": "complete: matrix_v17_ready=true; clean=40; flagged=29; blocked=10; gated_skipped=3; projection_only=10; pilot_only=4; missing=1",
+      "status": "clean",
+      "summary": {
+        "inference_substrate": "aggregation_from_upstream_artifacts",
+        "matrix_v17_ready": true
+      },
+      "upstream_flags": []
+    },
+    "fr11_self_learning": {
+      "claim_boundary": "FR-11 promotion is bounded to verifier-feedback controller utility over exact cached traces only.",
+      "promotable": true,
+      "repaired_282_blocker": true,
+      "row_id": "exp3020_fr11_verifier_feedback_controller",
+      "source_honest_verdict": "complete: verifier_feedback_controller_ready",
+      "status": "clean",
+      "summary": {
+        "continuous_self_learning_task": true,
+        "drift_guard_passed": true,
+        "forgetting_guard_passed": true,
+        "heldout_delta": 0.5,
+        "independent_self_learning_boundary_preserved": true,
+        "n_replay_items": 68,
+        "negative_control_delta": 0.0,
+        "tautology_risk_flag": false,
+        "verifier_feedback_controller_ready": true
+      },
+      "upstream_flags": []
+    },
+    "gatemate_io": {
+      "claim_boundary": "GateMate IO is promotable only with deterministic host-visible output and no sampler or speedup claim.",
+      "promotable": false,
+      "repaired_282_blocker": false,
+      "row_id": "exp3022_gatemate_transport_flash_smoke",
+      "source_honest_verdict": "blocked_gate_check_failed",
+      "status": "gated-skipped",
+      "summary": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "board_detected": false,
+        "flash_attempted": false,
+        "flash_succeeded": false,
+        "host_visible_io_ready": false,
+        "observed_output_hash_present": false,
+        "smoke_vector_attempted": false,
+        "smoke_vector_passed": false,
+        "status": "blocked",
+        "structured_gate_failed": true
+      },
+      "upstream_flags": []
+    },
+    "repair": {
+      "claim_boundary": "Exp 3016 repair is promotable only when matrix v17 is clean and adversarial/methodology flags are absent.",
+      "promotable": false,
+      "repaired_282_blocker": false,
+      "row_id": "exp3016_repair_acceptance_controller",
+      "source_honest_verdict": "complete: acceptance-controlled SOTA repair rerun gates passed",
+      "status": "flagged",
+      "summary": {
+        "false_accept_delta": 0.0,
+        "headline_result": true,
+        "model_boundary_status": "flagged_mandated_model_evidence",
+        "n_live_transcripts": 24,
+        "n_metamorphic_variants": 59,
+        "n_tasks": 24,
+        "n_verifier_logs": 24,
+        "pass_at_1_delta": 0.375,
+        "pass_at_k_delta": 0.375,
+        "repair_controller_clean": true,
+        "schema_failure_rate_delta": 0.0,
+        "syntax_failure_rate_delta": 0.0,
+        "tautology_gate_clean": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "IMPLAUSIBLE_PERFECT:info",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    "ssqa": {
+      "claim_boundary": "SSQA is promotable only after GateMate host-visible IO opens and bounded RTL/PnR/resource evidence exists.",
+      "promotable": false,
+      "repaired_282_blocker": true,
+      "row_id": "exp3023_ssqa_explicit_gate_artifact",
+      "source_honest_verdict": "complete: ssqa_gate_skipped_exp3022_host_visible_io_not_ready",
+      "status": "gated-skipped",
+      "summary": {
+        "projection_only": true,
+        "resource_report_present": false,
+        "ssqa_artifact_written": true,
+        "ssqa_gate_status": "gate_skipped",
+        "ssqa_rtl_pnr_report_ready": false,
+        "upstream_host_visible_io_ready": false,
+        "upstream_status": "blocked"
+      },
+      "upstream_flags": []
+    }
+  },
+  "clean_rows": [
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:corpus:FoVer",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:corpus:HaluEval_FEVER",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:corpus:TruthfulQA",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2890_code_structural_dependency",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2892_vericot",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2898_kv260_hardware",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2910_sota_codegen",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2913_kv260_claim_boundary",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2918_fr11_process_rewards",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2920_state_verifier_harness",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2924_aggregation_metadata_corrigendum",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2925_taxonomy_corrigendum",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2926_constraintbench_corrigendum",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2933_kan_cl_self_learning",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2938_kv260_mmd_corrigendum",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2939_same_schedule_speedup_corrigendum",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2940_code_corpus_auprc_corrigendum",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2942_kv260_n_scaling_corrigendum",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2953_threshold_policy",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2955_gatemate_constraints_materialized",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2956_gatemate_bitstream_built",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2958_polarfire_1000_clause_hash_verified",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2965_beaver_style_certificates",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2970_kan_forgetting_guard",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2971_gatemate_flash_preflight",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2972_gatemate_flash_contact_hash",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2979_solver_feedback_frontier",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2981_partial_monitor_promotion",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2982_fr11_independent_metric_gate",
+    "carry_forward_v16:carry_forward_v15:exp2989_sota_cache",
+    "carry_forward_v16:carry_forward_v15:exp2990_hard_code_manifest",
+    "carry_forward_v16:carry_forward_v15:exp2992_solver_provenance",
+    "carry_forward_v16:carry_forward_v15:exp2994_prompt_validator_protocol",
+    "carry_forward_v16:carry_forward_v15:exp2995_fr11_trace_memory",
+    "carry_forward_v16:exp3001_sota_cache",
+    "carry_forward_v16:exp3004_aquaforte_beaver_provenance",
+    "carry_forward_v16:exp3005_validator_tree_expansion",
+    "carry_forward_v16:exp3006_fixed_point_diagnostic",
+    "exp3017_instruction_validator_tree",
+    "exp3020_fr11_verifier_feedback_controller"
+  ],
+  "clean_task_rows": [
+    "exp3017_instruction_validator_tree",
+    "exp3020_fr11_verifier_feedback_controller",
+    "exp3024_cross_corpus_matrix_v17"
+  ],
+  "document_inputs_read": [
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "sha256": "f9652ffc057e65ea7a567359d908c8fa552cfb29b156f88c10a117b9e7fba543"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "sha256": null
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "sha256": "02d9a1e70de154a6ce947527cc389a744995239558adc8db9f8f15d9855e552e"
+    },
+    {
+      "path": "research-complete.yaml",
+      "present": true,
+      "sha256": "74cefc12fe75b55c0e929d3f33029d515b9125154b8363b8a175fec83ec97312"
+    },
+    {
+      "path": "_bmad/prd.md",
+      "present": true,
+      "sha256": "f30221385c65d3c0b405daa1f650e0f560247b714c949adb66f10162a6e7652a"
+    },
+    {
+      "path": "_bmad/architecture.md",
+      "present": true,
+      "sha256": "fac018fbeced4ca30944e5093e7e072e5c55723e11955db8a1930d810e45469c"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "sha256": "53391e8a3ccee38916d0f2071f9c5a162195a1330fa3bd273eea1fe7de5e16bb"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "sha256": "d2d4cdd1c726582c5fb39261c63a0e56defa7192f07aa0db686d2928274acdf8"
+    }
+  ],
+  "duration_s": 0.004916,
+  "external_publication_triggered": false,
+  "flagged_rows": [
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2911_code_hallucination_verifier",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2919_constraintbench_mini",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2932_citation_field_verifier",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2934_reformulation_pipeline",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2950_repair_prompt_manifest",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2951_structured_candidate_manifest_adapter",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2952_structured_repair_delta",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2954_self_learning_utility",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2959_nl_to_z3_execution_repair",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2963_dccd_repair_protocol",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2964_dccd_repair_replication",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2966_logic_frontier_materializer",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2967_solver_frontier_formalization",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2969_non_tautological_fr11",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2976_repair_protocol",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2978_semantic_energy_telemetry",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2980_solver_formalization_feedback",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2983_trace_to_skill_memory_pilot",
+    "carry_forward_v16:carry_forward_v15:exp2991_intent_preserving_repair",
+    "carry_forward_v16:carry_forward_v15:exp2993_aquaforte_beaver_substrate",
+    "carry_forward_v16:exp3002_metamorphic_oracle",
+    "carry_forward_v16:exp3003_metamorphic_repair",
+    "carry_forward_v16:exp3007_fr11_trace_memory_stability",
+    "exp3013_sota_logprob_telemetry",
+    "exp3014_repair_failure_taxonomy",
+    "exp3015_acceptance_controller",
+    "exp3016_repair_acceptance_controller",
+    "exp3018_beaver_frontier_certificate",
+    "exp3019_fr11_feasibility_channel"
+  ],
+  "flagged_task_rows": [
+    "exp3013_sota_logprob_telemetry",
+    "exp3014_repair_failure_taxonomy",
+    "exp3015_acceptance_controller",
+    "exp3016_repair_acceptance_controller",
+    "exp3018_beaver_frontier_certificate",
+    "exp3019_fr11_feasibility_channel"
+  ],
+  "gated_skipped_rows": [
+    "carry_forward_v16:exp3009_ssqa_dual_bram_report",
+    "exp3022_gatemate_transport_flash_smoke",
+    "exp3023_ssqa_explicit_gate_artifact"
+  ],
+  "gated_skipped_task_rows": [
+    "exp3022_gatemate_transport_flash_smoke",
+    "exp3023_ssqa_explicit_gate_artifact"
+  ],
+  "honest_verdict": "complete: capstone_ready=true; paper_ready=false; repaired=3; flagged=29; blocked=10; gated_skipped=3; missing=1; next=2026.05.284 repair-corrigendum-and-gatemate-output-contract",
+  "inference_substrate": "aggregation_from_upstream_artifacts",
+  "matrix_recommended_next_actions": [
+    "Exp3016: do not promote the repair row until adversarial TAUTOLOGY/METHODOLOGY flags are cleared or explained by a dedicated corrigendum while preserving positive repair deltas.",
+    "Exp3020: carry FR-11 forward only as verifier-feedback controller utility over exact cached traces; do not claim native LLM fine-tuning or broad autonomous self-improvement.",
+    "Exp3021/3022: obtain a physical GateMate pinout or supported host-visible transport for done/spin_out/status, then rerun flash/smoke and capture deterministic output bytes.",
+    "Exp3023: keep SSQA as explicit gate-skipped evidence until Exp3022 reports host_visible_io_ready=true, then produce bounded RTL/PnR/resource evidence without speedup claims.",
+    "Paper-v6: keep no false SOTA headline, no LLM-as-verifier authority, no TSU/Kona access claim, and no GateMate/KV260 speedup, sampler, Boltzmann, or thermodynamic claim.",
+    "Exp3025: treat Exp3020 as the only clean .283 promotion candidate among repair/FR-11/GateMate/SSQA target claims."
+  ],
+  "matrix_repaired_claims": [
+    "exp3001_sota_headline_cache_ready",
+    "exp3004_aquaforte_beaver_substrate_provenance",
+    "exp3005_validator_tree_expansion",
+    "exp3006_fixed_point_energy_diagnostic",
+    "exp3020_fr11_verifier_feedback_controller",
+    "exp3023_ssqa_artifact_presence_repaired_gate_skipped_not_promotable"
+  ],
+  "matrix_row_count": 97,
+  "matrix_status_counts": {
+    "blocked": 10,
+    "clean": 40,
+    "flagged": 29,
+    "gated-skipped": 3,
+    "missing": 1,
+    "pilot-only": 4,
+    "projection-only": 10
+  },
+  "matrix_still_blocked_claims": [
+    "exp3002_metamorphic_oracle_flagged",
+    "exp3003_metamorphic_repair_flagged",
+    "exp3007_fr11_trace_memory_stability_flagged",
+    "exp3008_gatemate_host_visible_io_blocked",
+    "exp3009_ssqa_gate_skipped_until_gatemate_io_ready",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2911_code_hallucination_verifier:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2919_constraintbench_mini:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2932_citation_field_verifier:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2934_reformulation_pipeline:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2950_repair_prompt_manifest:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2951_structured_candidate_manifest_adapter:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2952_structured_repair_delta:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2954_self_learning_utility:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2959_nl_to_z3_execution_repair:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2963_dccd_repair_protocol:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2964_dccd_repair_replication:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2966_logic_frontier_materializer:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2967_solver_frontier_formalization:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2969_non_tautological_fr11:flagged",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2914_gatemate_toolchain:blocked",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2927_gatemate_himbaechel_preflight:blocked",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2929_gatemate_flash_timing_boundary:blocked",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2931_llmeval_logic_z3_mini:blocked",
+    "carry_forward_v15:carry_forward_v14:carry_forward:exp2957_gatemate_flash_smoke:blocked",
+    "carry_forward_v15:carry_forward_v14:exp2976_repair_protocol:flagged",
+    "carry_forward_v15:carry_forward_v14:exp2977_intent_preserving_repair:blocked",
+    "carry_forward_v15:carry_forward_v14:exp2978_semantic_energy_telemetry:flagged",
+    "carry_forward_v15:carry_forward_v14:exp2980_solver_formalization_feedback:flagged",
+    "carry_forward_v15:carry_forward_v14:exp2983_trace_to_skill_memory_pilot:flagged",
+    "carry_forward_v15:carry_forward_v14:exp2984_gatemate_readback_smoke:blocked",
+    "carry_forward_v15:exp2991_intent_preserving_repair:flagged",
+    "carry_forward_v15:exp2993_aquaforte_beaver_substrate:flagged",
+    "carry_forward_v15:exp2996_gatemate_readback_smoke:blocked",
+    "carry_forward_v15:exp2997_ssqa_dual_bram_rtl_pnr:missing",
+    "exp3014_repair_failure_taxonomy_flagged",
+    "exp3015_acceptance_controller_flagged",
+    "exp3016_repair_acceptance_controller_flagged",
+    "exp3018_frontier_certificate_flagged",
+    "exp3019_fr11_feasibility_channel_flagged",
+    "exp3021_gatemate_transport_pinout_missing_blocked",
+    "exp3022_gatemate_transport_flash_smoke_gated_skipped",
+    "exp3023_ssqa_gate_skipped_until_host_visible_io_ready",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2911_code_hallucination_verifier:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2919_constraintbench_mini:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2932_citation_field_verifier:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2934_reformulation_pipeline:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2950_repair_prompt_manifest:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2951_structured_candidate_manifest_adapter:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2952_structured_repair_delta:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2954_self_learning_utility:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2959_nl_to_z3_execution_repair:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2963_dccd_repair_protocol:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2964_dccd_repair_replication:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2966_logic_frontier_materializer:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2967_solver_frontier_formalization:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2969_non_tautological_fr11:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2914_gatemate_toolchain:blocked",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2927_gatemate_himbaechel_preflight:blocked",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2929_gatemate_flash_timing_boundary:blocked",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2931_llmeval_logic_z3_mini:blocked",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2957_gatemate_flash_smoke:blocked",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2976_repair_protocol:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2977_intent_preserving_repair:blocked",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2978_semantic_energy_telemetry:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2980_solver_formalization_feedback:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2983_trace_to_skill_memory_pilot:flagged",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2984_gatemate_readback_smoke:blocked",
+    "carry_forward_v16:carry_forward_v15:exp2991_intent_preserving_repair:flagged",
+    "carry_forward_v16:carry_forward_v15:exp2993_aquaforte_beaver_substrate:flagged",
+    "carry_forward_v16:carry_forward_v15:exp2996_gatemate_readback_smoke:blocked",
+    "carry_forward_v16:carry_forward_v15:exp2997_ssqa_dual_bram_rtl_pnr:missing",
+    "carry_forward_v16:exp3002_metamorphic_oracle:flagged",
+    "carry_forward_v16:exp3003_metamorphic_repair:flagged",
+    "carry_forward_v16:exp3007_fr11_trace_memory_stability:flagged",
+    "carry_forward_v16:exp3008_gatemate_host_visible_io:blocked",
+    "carry_forward_v16:exp3009_ssqa_dual_bram_report:gated-skipped"
+  ],
+  "matrix_v17_honest_verdict": "complete: matrix_v17_ready=true; clean=40; flagged=29; blocked=10; gated_skipped=3; projection_only=10; pilot_only=4; missing=1",
+  "matrix_v17_ready": true,
+  "milestone": "2026.05.283",
+  "missing_artifacts": [],
+  "missing_documents": [
+    "research-roadmap-next.yaml"
+  ],
+  "missing_rows": [
+    "carry_forward_v16:carry_forward_v15:exp2997_ssqa_dual_bram_rtl_pnr"
+  ],
+  "missing_task_rows": [],
+  "n_tasks_evaluated": 13,
+  "next_milestone_recommendation": "2026.05.284: repair-corrigendum-and-gatemate-output-contract - clear Exp3016 TAUTOLOGY/METHODOLOGY flags before promoting repair, preserve Exp3020 only as bounded FR-11 verifier-feedback controller evidence, obtain GateMate host-visible output before rerunning SSQA, and keep paper_ready=false until repair, hardware IO, SSQA, and carry-forward matrix blockers are clean.",
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_llm_call": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "paper_ready": false,
+  "paper_ready_blockers": [
+    "repair row exp3016_repair_acceptance_controller is flagged",
+    "GateMate IO row exp3022_gatemate_transport_flash_smoke is gated-skipped",
+    "SSQA row exp3023_ssqa_explicit_gate_artifact is gated-skipped",
+    "durable verifier evidence is not clean for every claimed result",
+    "not every promotion gate is clean",
+    "matrix contains non-clean rows: flagged=29, blocked=10, gated_skipped=3, missing=1"
+  ],
+  "pilot_only_rows": [
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:corpus:MBPP",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:corpus:HumanEval",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2891_cctu",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2968_partial_monitor_harness"
+  ],
+  "pilot_only_task_rows": [],
+  "projection_only_rows": [
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2960_matrix_v12_carry_forward",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2961_capstone_v278_carry_forward",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2943_matrix_v11_carry_forward",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2948_capstone_v277_carry_forward",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:carry_forward:exp2962_archive_activation",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2975_archive_activation",
+    "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2985_ssqa_register_map_plan",
+    "carry_forward_v16:carry_forward_v15:exp2988_archive_activation",
+    "carry_forward_v16:exp3000_archive_activation",
+    "exp3012_archive_activation"
+  ],
+  "projection_only_task_rows": [
+    "exp3012_archive_activation"
+  ],
+  "publication_action_allowed": false,
+  "publication_gate_checks": {
+    "durable_verifier_evidence_for_every_claimed_result": false,
+    "every_promotion_gate_clean": false,
+    "no_aggregation_live_inference_false_positive": true,
+    "no_false_sota_substitution": true,
+    "no_hardware_claim_boundary_breach": true,
+    "no_live_substrate_ambiguity": true
+  },
+  "repaired_282_blockers": [
+    "exp3007_fr11_stability_repaired_by_exp3020_bounded_controller",
+    "exp3009_ssqa_missing_artifact_repaired_by_exp3023_artifact_presence_only",
+    "exp3011_aggregation_false_positive_risk_repaired_by_exp3024_nested_provenance"
+  ],
+  "repaired_rows": [
+    "exp3020_fr11_verifier_feedback_controller",
+    "exp3023_ssqa_explicit_gate_artifact_presence_only",
+    "exp3024_cross_corpus_matrix_v17"
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.milestone_capstone.v283_claim_repair_terminal_go_no_go.v1",
+  "source_artifacts_read": [
+    {
+      "experiment_id": "exp3024",
+      "path": "results/experiment_3024_cross_corpus_matrix_v17.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "e29028b7d7e1f74c0f497f7f95a99269395a72d7295ae91a1dfeb1144b7b9ddc"
+    },
+    {
+      "experiment_id": "exp3011",
+      "path": "results/experiment_3011_capstone_v282.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "e71f582d56b564beda25e7d67d7a9e38c2f1b26d975f57ad17ac41aeaf20a21f"
+    },
+    {
+      "experiment_id": "exp3012",
+      "path": "results/experiment_3012_archive_v282_activate_v283.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "e4cb189e57e7f31681276bf863c2dcb001cf68c6bc2250f4660532046ed57a12"
+    },
+    {
+      "experiment_id": "exp3013",
+      "path": "results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "4b5d393c76f9767b7b21f40fe21f839256a2828eef3e126bfee498f4c8be5af7"
+    },
+    {
+      "experiment_id": "exp3014",
+      "path": "results/experiment_3014_repair_syntax_schema_failure_taxonomy_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "0af55959dbe13f63a9f8c73d869425b8ded2002cf424c760e335ad79b019b91a"
+    },
+    {
+      "experiment_id": "exp3015",
+      "path": "results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "c6992842143896bbc719e934f588594c1856f1b430db9314d46fbda73368f933"
+    },
+    {
+      "experiment_id": "exp3016",
+      "path": "results/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "62142f63d6f6bf29d7afe5a11150f8c2b9fcef3ece1695235a780bd8e6956911"
+    },
+    {
+      "experiment_id": "exp3017",
+      "path": "results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "d9db1bcc3b53b4619a22a770e9fcafd0ca2b383bc65ff5de2e07c843cc621e8d"
+    },
+    {
+      "experiment_id": "exp3018",
+      "path": "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "e83c45047b82d87e595881e867d3494dc1362fd32fa88ce4d25f78d11453910e"
+    },
+    {
+      "experiment_id": "exp3019",
+      "path": "results/experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "8484244e517f97f6bfbd88fdabb0d878ad52e21c7cfa76baf72437e2d603be60"
+    },
+    {
+      "experiment_id": "exp3020",
+      "path": "results/experiment_3020_dvi_verifier_feedback_self_learning_controller_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "dc03e89ed3c118b666d6a4357265748c987037f350e11218e754f235b93a0915"
+    },
+    {
+      "experiment_id": "exp3021",
+      "path": "results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "d52837967d08ec9d304644546b99938a1e0504db6395132ddf3ce902f7668113"
+    },
+    {
+      "experiment_id": "exp3022",
+      "path": "results/experiment_3022_gatemate_transport_flash_smoke_v3.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "3a4b3d32bcb380b06dea9c957cf4f98d5aeff99a761d37f02a30f8a4e2661ef6"
+    },
+    {
+      "experiment_id": "exp3023",
+      "path": "results/experiment_3023_ssqa_explicit_gate_artifact_and_rtl_report_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "8d6f269b9a1698db06812eabaf78b25c73d687e3c0c0b64aa30a76e8f87c45a9"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3011_capstone_v282.json": "e71f582d56b564beda25e7d67d7a9e38c2f1b26d975f57ad17ac41aeaf20a21f",
+    "results/experiment_3012_archive_v282_activate_v283.json": "e4cb189e57e7f31681276bf863c2dcb001cf68c6bc2250f4660532046ed57a12",
+    "results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json": "4b5d393c76f9767b7b21f40fe21f839256a2828eef3e126bfee498f4c8be5af7",
+    "results/experiment_3014_repair_syntax_schema_failure_taxonomy_v1.json": "0af55959dbe13f63a9f8c73d869425b8ded2002cf424c760e335ad79b019b91a",
+    "results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json": "c6992842143896bbc719e934f588594c1856f1b430db9314d46fbda73368f933",
+    "results/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1.json": "62142f63d6f6bf29d7afe5a11150f8c2b9fcef3ece1695235a780bd8e6956911",
+    "results/experiment_3017_nsvif_instruction_validator_tree_expansion_v1.json": "d9db1bcc3b53b4619a22a770e9fcafd0ca2b383bc65ff5de2e07c843cc621e8d",
+    "results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json": "e83c45047b82d87e595881e867d3494dc1362fd32fa88ce4d25f78d11453910e",
+    "results/experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic_v1.json": "8484244e517f97f6bfbd88fdabb0d878ad52e21c7cfa76baf72437e2d603be60",
+    "results/experiment_3020_dvi_verifier_feedback_self_learning_controller_v1.json": "dc03e89ed3c118b666d6a4357265748c987037f350e11218e754f235b93a0915",
+    "results/experiment_3021_gatemate_rtl_ccf_host_visible_transport_shim_v1.json": "d52837967d08ec9d304644546b99938a1e0504db6395132ddf3ce902f7668113",
+    "results/experiment_3022_gatemate_transport_flash_smoke_v3.json": "3a4b3d32bcb380b06dea9c957cf4f98d5aeff99a761d37f02a30f8a4e2661ef6",
+    "results/experiment_3023_ssqa_explicit_gate_artifact_and_rtl_report_v1.json": "8d6f269b9a1698db06812eabaf78b25c73d687e3c0c0b64aa30a76e8f87c45a9",
+    "results/experiment_3024_cross_corpus_matrix_v17.json": "e29028b7d7e1f74c0f497f7f95a99269395a72d7295ae91a1dfeb1144b7b9ddc"
+  },
+  "status_updates_written": false,
+  "task_classification_counts": {
+    "blocked": 1,
+    "clean": 3,
+    "flagged": 6,
+    "gated-skipped": 2,
+    "missing": 0,
+    "pilot-only": 0,
+    "projection-only": 1
+  },
+  "task_rows": [
+    {
+      "claim_boundary": "Archive/activation is milestone bookkeeping and not paper-v6 claim evidence.",
+      "claim_class": "archive_activation",
+      "evidence_type": "aggregation_only_archive_state",
+      "experiment_id": "exp3012",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "row_id": "exp3012_archive_activation",
+      "source_honest_verdict": "complete: archive_ready=true; archived_milestone=2026.05.282; activated_milestone=2026.05.283; status_updates_written=false",
+      "status": "projection-only",
+      "summary": {
+        "activated_milestone": "2026.05.283",
+        "archive_ready": true,
+        "research_complete_updated": true,
+        "status_updates_written": false
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "SOTA telemetry is a source gate; model identity is cited only under upstream provenance.",
+      "claim_class": "sota_telemetry_provenance",
+      "evidence_type": "live_llm_telemetry_source",
+      "experiment_id": "exp3013",
+      "inference_substrate": "llama_cpp_gpu",
+      "row_id": "exp3013_sota_logprob_telemetry",
+      "source_honest_verdict": "complete: headline SOTA GGUF transcript and top-k logprob telemetry ready",
+      "status": "flagged",
+      "summary": {
+        "legacy_smoke_only_used": false,
+        "model_boundary_status": "flagged_mandated_model_evidence",
+        "n_live_transcripts": 1,
+        "sota_headline_ready": true,
+        "sota_logprob_ready": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Repair taxonomy is diagnostic support and cannot be promoted as live repair quality.",
+      "claim_class": "repair_taxonomy",
+      "evidence_type": "deterministic_cached_replay",
+      "experiment_id": "exp3014",
+      "inference_substrate": "deterministic_cached_replay_no_live_llm",
+      "row_id": "exp3014_repair_failure_taxonomy",
+      "source_honest_verdict": "complete: repair failure taxonomy ready for exp3015/exp3016 gates",
+      "status": "flagged",
+      "summary": {
+        "false_accept_count": 0,
+        "halluguard_ntk_claim_made": false,
+        "n_cached_candidates_audited": 24,
+        "repair_failure_taxonomy_ready": true,
+        "schema_failure_count": 12,
+        "syntax_failure_count": 12,
+        "tautology_failure_count": 1
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Acceptance-controller readiness is offline support; adversarial flags block promotion.",
+      "claim_class": "repair_acceptance_controller",
+      "evidence_type": "deterministic_cached_replay",
+      "experiment_id": "exp3015",
+      "inference_substrate": "deterministic_cached_replay_no_live_llm",
+      "row_id": "exp3015_acceptance_controller",
+      "source_honest_verdict": "complete: offline repair acceptance controller ready",
+      "status": "flagged",
+      "summary": {
+        "acceptance_controller_ready": true,
+        "false_accept_delta_offline": 0.0,
+        "llm_judge_used": false,
+        "n_candidates_evaluated": 24,
+        "pass_at_1_delta_offline": 0.583333333333,
+        "schema_failure_delta_offline": -0.5,
+        "syntax_failure_delta_offline": -0.5
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "IMPLAUSIBLE_PERFECT:info",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Repair promotion requires clean deltas and clean adversarial/methodology flags.",
+      "claim_class": "repair_eval",
+      "evidence_type": "live_llm_repair_source",
+      "experiment_id": "exp3016",
+      "inference_substrate": "live_sota_gguf_repair_with_acceptance_controller",
+      "row_id": "exp3016_repair_acceptance_controller",
+      "source_honest_verdict": "complete: acceptance-controlled SOTA repair rerun gates passed",
+      "status": "flagged",
+      "summary": {
+        "false_accept_delta": 0.0,
+        "headline_result": true,
+        "model_boundary_status": "flagged_mandated_model_evidence",
+        "n_live_transcripts": 24,
+        "n_metamorphic_variants": 59,
+        "n_tasks": 24,
+        "n_verifier_logs": 24,
+        "pass_at_1_delta": 0.375,
+        "pass_at_k_delta": 0.375,
+        "repair_controller_clean": true,
+        "schema_failure_rate_delta": 0.0,
+        "syntax_failure_rate_delta": 0.0,
+        "tautology_gate_clean": true
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "TAUTOLOGY:critical",
+        "IMPLAUSIBLE_PERFECT:info",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Instruction validators are promotable only when authoritative nodes are exact-checked.",
+      "claim_class": "validator_tree_expansion",
+      "evidence_type": "deterministic_instruction_validator_tree",
+      "experiment_id": "exp3017",
+      "inference_substrate": "deterministic_nsvif_instruction_validator_tree_corpus",
+      "row_id": "exp3017_instruction_validator_tree",
+      "source_honest_verdict": "complete: NSVIF instruction validator-tree corpus exact-checked",
+      "status": "clean",
+      "summary": {
+        "all_authoritative_nodes_exact_checked": true,
+        "exact_check_coverage": 0.97561,
+        "instruction_validator_tree_ready": true,
+        "llm_judge_used": false,
+        "n_instruction_items": 20,
+        "n_validator_trees": 20
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "BEAVER-style frontier evidence is exact/cached and does not promote live retry success.",
+      "claim_class": "validator_frontier_certificate",
+      "evidence_type": "deterministic_cached_validator_frontier",
+      "experiment_id": "exp3018",
+      "inference_substrate": "deterministic_cached_validator_frontier",
+      "row_id": "exp3018_beaver_frontier_certificate",
+      "source_honest_verdict": "complete: validator frontier certificate ready with explicit unresolved bounds",
+      "status": "flagged",
+      "summary": {
+        "certified_safe_count": 20,
+        "certified_violating_count": 20,
+        "enumerator_fallback_separated": true,
+        "frontier_certificate_ready": true,
+        "live_llm_evidence_used": false,
+        "n_frontier_items": 44,
+        "n_prefix_closed_items": 8,
+        "unresolved_count": 2
+      },
+      "upstream_flags": [
+        "flagged_adversarial=true",
+        "DURATION_TOO_SHORT:critical",
+        "METHODOLOGY_MISSING:warn"
+      ]
+    },
+    {
+      "claim_boundary": "Feasibility diagnostics remain non-promotable while tautology risk is flagged.",
+      "claim_class": "fr11_feasibility_diagnostic",
+      "evidence_type": "cached_exact_validator_certificate_trace_replay",
+      "experiment_id": "exp3019",
+      "inference_substrate": "cached_exact_validator_certificate_trace_replay",
+      "row_id": "exp3019_fr11_feasibility_channel",
+      "source_honest_verdict": "complete_flagged_tautology_risk_feasibility_channel_diagnostic",
+      "status": "flagged",
+      "summary": {
+        "feasibility_channel_diagnostic_ready": true,
+        "feasible_infeasible_auc": 1.0,
+        "heldout_metric_correlation": 0.964526,
+        "n_rows": 47,
+        "negative_control_rejection_rate": 1.0,
+        "reused_label_as_feature": false,
+        "tautology_risk_flag": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "FR-11 is bounded to verifier-feedback controller utility, not native LLM training.",
+      "claim_class": "fr11_self_learning_controller",
+      "evidence_type": "cached_exact_trace_replay_controller_only",
+      "experiment_id": "exp3020",
+      "inference_substrate": "cached_exact_trace_replay_controller_only",
+      "row_id": "exp3020_fr11_verifier_feedback_controller",
+      "source_honest_verdict": "complete: verifier_feedback_controller_ready",
+      "status": "clean",
+      "summary": {
+        "continuous_self_learning_task": true,
+        "drift_guard_passed": true,
+        "forgetting_guard_passed": true,
+        "heldout_delta": 0.5,
+        "independent_self_learning_boundary_preserved": true,
+        "n_replay_items": 68,
+        "negative_control_delta": 0.0,
+        "tautology_risk_flag": false,
+        "verifier_feedback_controller_ready": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "GateMate transport is blocked until done/spin_out/status has a host-visible path.",
+      "claim_class": "gatemate_transport",
+      "evidence_type": "hardware_transport_preflight",
+      "experiment_id": "exp3021",
+      "inference_substrate": "hardware_transport_preflight",
+      "row_id": "exp3021_gatemate_transport_shim",
+      "source_honest_verdict": "complete: blocked_gatemate_transport_pinout_missing",
+      "status": "blocked",
+      "summary": {
+        "board_detected": true,
+        "gatemate_transport_rtl_ready": false,
+        "host_visible_io_plan_ready": false,
+        "io_transport_status": "blocked",
+        "pnr_or_synthesis_attempted": false,
+        "preconditions_checked": true,
+        "simulation_or_lint_passed": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "GateMate IO remains gated until transport readiness permits board smoke.",
+      "claim_class": "gatemate_host_visible_io",
+      "evidence_type": "hardware_smoke",
+      "experiment_id": "exp3022",
+      "inference_substrate": "hardware_smoke",
+      "row_id": "exp3022_gatemate_transport_flash_smoke",
+      "source_honest_verdict": "blocked_gate_check_failed",
+      "status": "gated-skipped",
+      "summary": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "board_detected": false,
+        "flash_attempted": false,
+        "flash_succeeded": false,
+        "host_visible_io_ready": false,
+        "observed_output_hash_present": false,
+        "smoke_vector_attempted": false,
+        "smoke_vector_passed": false,
+        "status": "blocked",
+        "structured_gate_failed": true
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "SSQA artifact presence is repaired, but SSQA remains gated until GateMate IO is host-visible.",
+      "claim_class": "ssqa_gate_artifact",
+      "evidence_type": "hardware_gate_artifact",
+      "experiment_id": "exp3023",
+      "inference_substrate": "hardware_gate_artifact",
+      "row_id": "exp3023_ssqa_explicit_gate_artifact",
+      "source_honest_verdict": "complete: ssqa_gate_skipped_exp3022_host_visible_io_not_ready",
+      "status": "gated-skipped",
+      "summary": {
+        "projection_only": true,
+        "resource_report_present": false,
+        "ssqa_artifact_written": true,
+        "ssqa_gate_status": "gate_skipped",
+        "ssqa_rtl_pnr_report_ready": false,
+        "upstream_host_visible_io_ready": false,
+        "upstream_status": "blocked"
+      },
+      "upstream_flags": []
+    },
+    {
+      "claim_boundary": "matrix v17 authority row",
+      "claim_class": "matrix_synthesis",
+      "evidence_type": "aggregation_only_matrix",
+      "experiment_id": "exp3024",
+      "inference_substrate": "aggregation_from_upstream_artifacts",
+      "row_id": "exp3024_cross_corpus_matrix_v17",
+      "source_honest_verdict": "complete: matrix_v17_ready=true; clean=40; flagged=29; blocked=10; gated_skipped=3; projection_only=10; pilot_only=4; missing=1",
+      "status": "clean",
+      "summary": {
+        "matrix_v17_ready": true
+      },
+      "upstream_flags": []
+    }
+  ],
+  "unrepaired_282_blockers": [
+    "exp3003_repair_methodology_still_flagged_by_exp3016",
+    "exp3008_hardware_io_still_gated_skipped_by_exp3022",
+    "exp3009_ssqa_promotion_still_gated_skipped_by_exp3023"
+  ],
+  "invariant_violations": []
+}

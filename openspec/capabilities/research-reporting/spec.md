@@ -6965,3 +6965,85 @@ and an `honest_verdict` that states readiness and counts.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3024 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v17_3024.py`) | Implemented (`tests/python/test_experiment_3024_cross_corpus_matrix_v17.py`) |
+
+### REQ-REPORT-3025: Milestone 2026.05.283 Terminal Capstone
+
+The repository shall provide an Exp 3025 milestone capstone generator that
+writes `results/experiment_3025_capstone_v283.json` using only checked-in
+upstream JSON artifacts and checked-in claim-boundary documents. The generator
+MUST read `results/experiment_3024_cross_corpus_matrix_v17.json`,
+`results/experiment_3011_capstone_v282.json`, every available `.283` artifact
+from Exp 3012 through Exp 3023, the active `.283` roadmap or recorded
+activation fallback, and the paper-v6/OpenSpec/PRD/roadmap claim-boundary
+documents needed to make the go/no-go decision. It MUST NOT rerun live
+inference, verifier scoring, solver execution, synthesis, board flashing,
+readback, hardware smoke tests, the conductor, or external publication tooling.
+
+The capstone MUST use matrix v17 as the authority for row status. It MUST
+classify Exp 3012 through Exp 3024 as `clean`, `flagged`, `blocked`,
+`gated-skipped`, `missing`, `pilot-only`, or `projection-only`, while keeping
+matrix-wide carried-forward flagged, blocked, gated-skipped, missing,
+pilot-only, and projection-only rows visible separately from task-scoped rows.
+The capstone MUST decide whether repair, FR-11 self-learning, GateMate IO, and
+SSQA are promotable from matrix v17 claim rows without broadening their claim
+boundaries.
+
+The capstone MUST decide whether `.283` repaired the `.282` blockers. Exp 3016
+MUST repair the Exp 3003 repair-methodology blocker only when the matrix row is
+clean and no adversarial/methodology flags remain. Exp 3020 MAY repair the Exp
+3007 FR-11 stability blocker only as verifier-feedback controller utility over
+exact cached traces; it MUST NOT promote native LLM training, broad autonomous
+self-improvement, or tautological feasibility evidence. Exp 3022 MUST repair
+the Exp 3008 hardware IO blocker only when host-visible deterministic output is
+captured. Exp 3023 MAY repair only the Exp 3009 missing-artifact blocker when
+the explicit SSQA artifact is written; SSQA remains non-promotable until
+GateMate host-visible IO is ready and bounded RTL/PnR/resource evidence exists.
+Exp 3024 MAY repair the Exp 3011 aggregation false-positive risk only when the
+capstone keeps top-level `inference_substrate` equal to
+`aggregation_from_upstream_artifacts` and keeps source model/hardware details
+under cited upstream-artifact provenance rather than top-level live-inference
+metadata.
+
+The capstone MUST set `paper_ready=false` unless every claimed result has
+durable verifier evidence, no false SOTA substitution, no live/substrate
+ambiguity, no aggregation-live-inference false positive, no unresolved
+flagged/blocked/gated-skipped/missing matrix row, and no hardware
+claim-boundary breach. External publication MUST remain disallowed by the
+artifact even if a future synthetic input makes `paper_ready=true`. When a
+conductor prompt assigns ops reconciliation to a separate step, the generator
+MUST leave `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`
+unchanged.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`n_tasks_evaluated`, `repaired_rows`, `flagged_rows`, `blocked_rows`,
+`gated_skipped_rows`, `missing_rows`, `cited_upstream_artifacts`,
+`inference_substrate`, `publication_action_allowed`,
+`next_milestone_recommendation`, and `honest_verdict`. It MAY include
+task-scoped rows, promotion decisions, repaired/unrepaired blocker decisions,
+source checksums, paper-readiness blockers, no-new-execution booleans, ops-doc
+mutation flags, and measured `duration_s` as long as every value is derived
+from upstream artifacts or checked-in claim-boundary documents.
+
+#### SCENARIO-REPORT-3025: Capstone Synthesizes .283 Go/No-Go Without Publication
+
+**Given** matrix v17 is present and reports `matrix_v17_ready=true`
+**And** the `.282` capstone is present
+**And** Exp 3012 through Exp 3023 artifacts are present, flagged, blocked,
+gated-skipped, projection-only, pilot-only, or honestly absent
+**When** the Exp 3025 capstone generator runs
+**Then** it writes `results/experiment_3025_capstone_v283.json` with
+`capstone_ready=true`, task classifications for Exp 3012 through Exp 3024,
+matrix-wide flagged/blocked/gated-skipped/missing row lists, repair kept
+non-promotable while adversarial/methodology flags remain, Exp 3020 promoted
+only as bounded verifier-feedback controller utility, GateMate and SSQA kept
+non-promotable until host-visible IO exists, `paper_ready=false`,
+`publication_action_allowed=false`, source model/hardware details only under
+`cited_upstream_artifacts`, an exact next milestone recommendation, no
+ops-doc mutations, and an `honest_verdict` that states capstone readiness and
+paper readiness.
+
+## Implementation Status (REQ-REPORT-3025)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3025 | Implemented (`python/carnot/reporting/capstone_v283_3025.py`) | Implemented (`tests/python/test_experiment_3025_capstone_v283.py`) |
