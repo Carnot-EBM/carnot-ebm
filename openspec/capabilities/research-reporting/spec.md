@@ -7114,3 +7114,81 @@ metadata, and unchanged `research-roadmap.yaml` and
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3026 | Planned (`python/carnot/reporting/milestone_283_archive_284_activation.py`) | Planned (`tests/python/test_experiment_3026_archive_v283.py`) |
+
+### REQ-REPORT-3027: Adversarial Flag Methodology Corrigendum
+
+The repository shall provide an Exp 3027 methodology-corrigendum generator
+that writes
+`results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json`
+using only checked-in upstream artifacts. The generator MUST read Exp 3013
+SOTA GGUF preflight evidence, Exp 3014 repair taxonomy, Exp 3015 acceptance
+controller, Exp 3016 acceptance-controlled repair rerun, Exp 3018 validator
+frontier certificate, Exp 3024 matrix v17, and Exp 3025 capstone v283. It MUST
+NOT run live LLM inference, verifier scoring, solver execution, synthesis,
+board flashing, readback, historical experiment rewrites, the conductor, or
+external publication tooling.
+
+The corrigendum MUST collect and cite source fields for duration,
+`model_specs`, inference substrate, transcript paths or hashes, seeds,
+checksums, adversarial flags, SOTA headline readiness, and paper readiness. It
+MUST apply a MARCH-style information-asymmetry rule: a source row may not grade
+itself. Classifications MUST cite direct source-artifact fields when available,
+and matrix/capstone fields may only supply aggregation context or row counts.
+
+The corrigendum MUST classify all matrix/capstone flagged rows that affect
+`.283` paper readiness into exactly one primary class from:
+`true_methodology_blocker`, `aggregation_false_positive`, `missing_metadata`,
+`unresolved_bound`, `hardware_blocked`, or `clean_but_not_headline`. It MUST
+keep prior carry-forward aggregation rows visible without treating them as new
+live-repair failures. It MUST separately expose real methodology blockers,
+aggregation/substrate-schema false positives, missing metadata rows,
+unresolved-bound rows, hardware-blocked rows, and clean-but-not-headline rows.
+
+The Exp 3028 decision MUST be conservative. If Exp 3016 lacks any required
+live transcript, live model specification, random seed, or model/transcript
+checksum evidence needed to reconstruct clean repair evidence, then Exp 3027
+MUST set `repair_rerun_required=true`; otherwise it MAY allow transcript
+reconstruction. Exp 3027 MUST carry forward Exp 3013's explicit
+`sota_headline_ready` field for downstream live-repair gates while still
+reporting any metadata caveats.
+
+Because Exp 3027 is aggregation-only, its terminal artifact MUST set
+`inference_substrate` to an object declaring aggregation-only evidence and
+MUST NOT include top-level `model_specs`, `target_model`, CUDA, GGUF, or
+live-model fields. Source model details MAY appear only inside cited source
+artifact summaries.
+
+The terminal artifact MUST include `methodology_corrigendum_ready`,
+`sota_headline_ready`, `repair_rerun_required`, `flagged_rows_reviewed`,
+`true_methodology_blockers`, `aggregation_false_positive_rows`,
+`missing_metadata_rows`, `unresolved_bound_rows`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include row
+classifications, repair-rerun decision details, hardware-blocked rows,
+clean-but-not-headline rows, source checksums, no-new-execution booleans, and
+measured `duration_s` as long as every value is derived from upstream JSON
+artifacts or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3027: Corrigendum Gates Exp 3028 Without Live Inference
+
+**Given** Exp 3013, Exp 3014, Exp 3015, Exp 3016, Exp 3018, Exp 3024, and Exp
+3025 artifacts are present
+**And** matrix v17 reports flagged, blocked, gated-skipped, and missing rows
+**And** Exp 3016 has live transcript paths and model checksum evidence but no
+required random seed
+**When** the Exp 3027 corrigendum generator runs
+**Then** it writes
+`results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json`
+with `methodology_corrigendum_ready=true`, `sota_headline_ready` copied from
+Exp 3013, `repair_rerun_required=true`, `flagged_rows_reviewed` matching the
+matrix/capstone flagged-row count, direct citations for every classification,
+Exp 3016 in `missing_metadata_rows`, Exp 3018 in
+`unresolved_bound_rows`, deterministic cached-replay duration flags separated
+as aggregation/substrate false positives, hardware gate blockers preserved
+outside repair evidence, aggregation-only `inference_substrate`, no top-level
+live-model metadata, and an honest verdict that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3027)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3027 | Implemented (`python/carnot/reporting/adversarial_flag_methodology_corrigendum_3027.py`) | Implemented (`tests/python/test_experiment_3027_adversarial_flag_methodology_corrigendum.py`) |
