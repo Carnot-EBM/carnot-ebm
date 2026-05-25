@@ -6890,3 +6890,78 @@ gated-skipped, and adversarially flagged rows carried forward, no top-level
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3012 | Implemented (`python/carnot/reporting/milestone_282_archive_283_activation.py`) | Implemented (`tests/python/test_experiment_3012_archive_v282.py`) |
+
+### REQ-REPORT-3024: Cross-Corpus Matrix V17 From .283 Artifacts
+
+The repository shall provide an Exp 3024 cross-corpus matrix v17 generator
+that writes `results/experiment_3024_cross_corpus_matrix_v17.json` using only
+checked-in upstream artifact JSON files and checked-in claim-boundary
+documents. The generator MUST read
+`results/experiment_3011_capstone_v282.json`, every available `.283` artifact
+from Exp 3012 through Exp 3023, the active `.283` roadmap or recorded
+activation fallback, and the paper-v6/OpenSpec/PRD hardware-boundary documents
+needed to classify claims. It MUST NOT rerun live inference, verifier scoring,
+solver execution, synthesis, board flashing, readback, hardware smoke tests,
+the conductor, or external publication tooling.
+
+The generator MUST build a terminal aggregation artifact even when upstream
+`.283` tasks are flagged, blocked, gated-skipped, projection-only, pilot-only,
+or missing. Missing artifacts and missing roadmap documents MUST remain
+explicit in source-read metadata. Rows MUST separately track `.283` archive
+activation, SOTA GGUF telemetry, repair taxonomy, acceptance controller,
+acceptance-controlled repair, NSVIF validator trees, BEAVER-style frontier
+certificates, FR-11 feasibility diagnostics, FR-11 verifier-feedback
+self-learning, GateMate transport, GateMate flash/smoke, and SSQA explicit
+gate status.
+
+The generator MUST preserve claim-boundary distinctions across PRD FR-11 and
+FR-12, OpenSpec reporting requirements, paper-v6 narrowing, hardware
+boundaries, and the `.283` roadmap acceptance criteria. Rows MUST NOT promote
+flagged, blocked, gated-skipped, projection-only, pilot-only, or missing
+evidence into paper-v6 headline claims. The matrix MUST report whether Exp
+3016 repair, Exp 3020 FR-11 self-learning, Exp 3022 GateMate IO, and Exp 3023
+SSQA are promotable, flagged, blocked, or gate-skipped. The matrix MUST detect
+and report unsupported boundary claims including LLM-as-verifier authority,
+false SOTA headline use, TSU/Kona access or parity claims, and GateMate/KV260
+hardware speedup, sampler, Boltzmann, or thermodynamic claims.
+
+Because Exp 3024 is aggregation-only, the terminal artifact MUST set
+`inference_substrate=aggregation_from_upstream_artifacts` and MUST NOT include
+top-level `model_specs`, `target_model`, CUDA, or GGUF fields. Source model and
+hardware provenance MAY be cited only under `cited_upstream_artifacts`.
+
+The terminal artifact MUST include `matrix_v17_ready`, `clean_count`,
+`flagged_count`, `blocked_count`, `gated_skipped_count`, `missing_count`,
+`projection_only_count`, `repaired_claims`, `still_blocked_claims`,
+`claim_boundary_violations`, `cited_upstream_artifacts`,
+`inference_substrate`, `recommended_next_actions`, and `honest_verdict`. It
+MAY include `pilot_only_count`, `rows`, row-count metadata, claim-row
+summaries, source checksums, missing-artifact metadata, paper-v6/PRD/OpenSpec
+boundary summaries, no-new-execution booleans, and measured `duration_s` as
+long as every value is derived from upstream JSON fields or checked-in
+claim-boundary documents. When a conductor prompt assigns ops reconciliation
+to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3024: V17 Aggregates .283 Rows Without Live Metadata Leakage
+
+**Given** the `.282` capstone is present
+**And** Exp 3012 through Exp 3023 artifacts are present, flagged, blocked,
+gated-skipped, projection-only, pilot-only, or honestly absent
+**And** Exp 3022 is blocked by a structured GateMate transport gate
+**When** the Exp 3024 matrix v17 generator runs
+**Then** it writes `results/experiment_3024_cross_corpus_matrix_v17.json`
+with `matrix_v17_ready=true`, explicit counts for every terminal status
+bucket, explicit source-read metadata for missing artifacts and missing
+roadmap documents, claim rows for Exp 3016, Exp 3020, Exp 3022, and Exp 3023,
+repaired-claim names for clean or explicitly repaired non-headline claim
+repairs, still-blocked claim names for unresolved rows, exact recommended next
+actions, no unsupported paper-v6/hardware/Kona/TSU/LLM-verifier claim
+promotion, source model/hardware details only under `cited_upstream_artifacts`,
+and an `honest_verdict` that states readiness and counts.
+
+## Implementation Status (REQ-REPORT-3024)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3024 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v17_3024.py`) | Implemented (`tests/python/test_experiment_3024_cross_corpus_matrix_v17.py`) |
