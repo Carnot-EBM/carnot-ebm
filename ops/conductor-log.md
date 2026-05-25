@@ -6230,3 +6230,5 @@ web search: site |
 | 2026-05-25 05:40 UTC | Cross-corpus matrix v18 | OK | 81 passed in 3.79s |
 | 2026-05-25 05:42 UTC | GateMate host-visible flash smoke v4 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3035-gatemate-output-shim-rtl-ccf-sim) |
 | 2026-05-25 05:59 UTC | Capstone .284 | OK | 81 passed in 3.55s |
+| 2026-05-25 06:44 UTC | Plan milestone 2026.05.285 | OK | 14 tasks proposed |
+| 2026-05-25 06:46 UTC | Milestone 2026.05.285 activated | OK | 14 tasks queued |
