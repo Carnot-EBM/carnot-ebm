@@ -2618,6 +2618,71 @@ downstream Exp 3049/3050 gates can skip cleanly.
 
 ---
 
+### REQ-HW-089
+
+**Title:** Exp 3063 GateMate no-rerun operator-action ledger MUST keep downstream hardware branches blocked until host-visible output evidence exists
+
+**Description:**
+Experiment 3063 MUST produce
+`results/experiment_3063_gatemate_no_rerun_operator_action_ledger_v1.json`
+as a no-rerun ledger for GateMate hardware work. The ledger MUST load the
+checked-in Exp 3048 output-contract operator package, Exp 3049 blocked gate
+artifact, Exp 3051 SSQA readback eligibility artifact when present under either
+the requested or checked-in bounded filename, the conductor log, and the
+hardware wishlist. It MUST inspect only local repository documents and
+artifacts. It MUST NOT invent a physical pinout, CCF binding, host reader
+command, expected transcript, safety limit, hardware execution result, or
+speedup claim.
+
+`gatemate_rerun_allowed=true` is permitted only when the repository contains
+all evidence needed to make a selected GateMate output host-visible: an
+authoritative CCF `Pin_out` binding for the selected signal, a concrete host
+reader command, an expected transcript, and safety limits that allow the
+downstream branch to run. Otherwise the ledger MUST set
+`gatemate_rerun_allowed=false`, mark every downstream RTL, flash, and SSQA
+branch `allowed_to_rerun=false`, and name the exact operator actions still
+missing before any rerun can proceed.
+
+**Acceptance criteria:**
+- `results/experiment_3063_gatemate_no_rerun_operator_action_ledger_v1.json`
+  is generated with `gatemate_no_rerun_ledger_ready`,
+  `gatemate_rerun_allowed`, `missing_operator_actions`,
+  `required_evidence_before_rerun`, `downstream_tasks_blocked`,
+  `hardware_execution_claim_made`, `speedup_claim_made`,
+  `source_artifacts`, `inference_substrate`, and `honest_verdict`.
+- Missing evidence is machine-readable and includes the authoritative pinout or
+  CCF binding, selected output signal, host reader command, expected
+  transcript, and safety limits when any are absent.
+- Each downstream row records the task id, branch type, upstream blocker,
+  `allowed_to_rerun=false` unless every required evidence item is concrete, and
+  a matrix-ready status such as `blocked` or `gate_skipped`.
+- The artifact cites concrete local source files and declares no model
+  inference, no board execution, no flash attempt, and no timing or speedup
+  claim.
+
+**Implementation status:** Implemented (Exp 3063)
+
+---
+
+### SCENARIO-HW-089
+
+**Scenario:** GateMate no-rerun ledger blocks RTL, flash, and SSQA rows when the output contract remains missing.
+
+**Given:** Exp 3048 reports `gatemate_output_contract_ready=false`, Exp 3049
+is gate-blocked on Exp 3048, and Exp 3051 is gate-blocked because the
+GateMate host-visible smoke artifact is absent.
+**When:** Exp 3063 builds the operator-action ledger from local repo artifacts
+without flashing hardware or running RTL as if the contract exists.
+**Then:** It writes the v1 JSON with
+`gatemate_no_rerun_ledger_ready=true`,
+`gatemate_rerun_allowed=false`, exact missing operator actions, downstream
+rows marked `allowed_to_rerun=false`, no hardware or speedup claims, and a
+terminal verdict beginning with `complete:`.
+
+**Implementation status:** Implemented (Exp 3063)
+
+---
+
 ### SCENARIO-HW-088
 
 **Scenario:** GateMate operator package blocks cleanly when Exp 3034 still lacks pinout and reader authority.
