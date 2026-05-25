@@ -6236,3 +6236,4 @@ web search: site |
 | 2026-05-25 07:18 UTC | Matrix/capstone adversarial flag hygiene | OK | 81 passed in 3.49s |
 | 2026-05-25 07:34 UTC | Repair promotion reconciliation v3 | OK | 81 passed in 3.78s |
 | 2026-05-25 07:54 UTC | Verified speculation transcript fingerprint prefli | OK | 81 passed in 3.12s |
+| 2026-05-25 08:22 UTC | SMT/SAT validator-tree exactness upgrade | OK | 81 passed in 2.88s |
