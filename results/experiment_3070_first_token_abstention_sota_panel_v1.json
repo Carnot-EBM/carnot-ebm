@@ -161,5 +161,43 @@
     "new-code coverage passed: 100% for python/carnot/eval/first_token_abstention_sota_panel_v1.py"
   ],
   "verifier_gain_delta_with_abstention": 0.5,
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "abstention_coverage=0.5 and abstention_precision=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "abstention_coverage=0.5 and verifier_gain_delta_with_abstention=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "abstention_precision=0.5 and verifier_gain_delta_with_abstention=0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "false_negative_rate=0.25 and false_positive_rate=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "false_negative_rate=0.25 and rejection_recall=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "false_positive_rate=0.25 and rejection_recall=0.25 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=20.072029 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    }
+  ]
 }

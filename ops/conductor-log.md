@@ -6275,3 +6275,4 @@ web search: site |
 | 2026-05-25 17:08 UTC | Archive .286 and activate .287 | OK | 81 passed in 4.10s |
 | 2026-05-25 17:25 UTC | Matrix v20 artifact alias and blocker normalizatio | OK | 81 passed in 3.99s |
 | 2026-05-25 17:37 UTC | Solver-verifier failure autopsy and recovery proto | OK | 81 passed in 3.37s |
+| 2026-05-25 17:58 UTC | First-token entropy and abstention SOTA panel | OK | 81 passed in 3.77s |
