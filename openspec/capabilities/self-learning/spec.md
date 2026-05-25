@@ -7950,3 +7950,87 @@ and `honest_verdict="blocked_missing_soundness_completeness_budget_sources"`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3076 | Implemented (`python/carnot/eval/fr11_online_soundness_completeness_budget_v1.py`) | Implemented (`tests/python/test_experiment_3076_fr11_online_soundness_completeness_budget_v1.py`) |
+
+## REQ-LEARN-3077: FR-11 Soundness-Bounded Online Self-Learning Pilot
+
+**Given** Exp 3076 exposes a complete FR-11 online soundness/completeness
+mistake budget for a tiny controller-side pilot
+**When** Exp 3077 runs a governed online self-learning update
+**Then** it SHALL verify the Exp 3076 budget before any update, run a tiny
+exact SAT/SMT-style family split with update cases, related holdout cases,
+prior cases, delayed-regression cases, no-feedback controls, and shuffled-
+feedback controls, and write
+`results/experiment_3077_fr11_soundness_bounded_online_self_learning_pilot_v1.json`.
+**And** it SHALL update only governance-approved controller state or trace
+memory, never base model weights.
+**And** it SHALL store Exp 3060-shaped self-model traces for online decisions
+and label decisions as correct, soundness mistake, completeness mistake,
+abstention, rollback, or delayed regression.
+**And** it SHALL measure family holdout, prior retention, no-feedback control,
+shuffled-feedback control, contradiction-rate, rollback burden, delayed-
+regression, soundness-mistake, and completeness-mistake deltas.
+**And** it SHALL refuse stronger promotion whenever any Exp 3076 budget gate is
+exceeded or controls are vacuous.
+
+The terminal artifact SHALL include `fr11_soundness_bounded_ready`,
+`continuous_self_learning_task`, `promotion_decision`, `edit_targets_used`,
+`self_model_trace_count`, `soundness_mistakes`, `completeness_mistakes`,
+`mistake_budget_delta`, `family_holdout_delta`, `prior_retention_delta`,
+`no_feedback_delta`, `shuffled_control_delta`,
+`contradiction_rate_delta`, `rollback_count`, `delayed_regression_delta`,
+`source_trace_counts`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3077 Sub-requirements
+
+- REQ-LEARN-3077-1: The pilot SHALL fail closed with
+  `honest_verdict="blocked_missing_soundness_budget"` when Exp 3076 is missing,
+  malformed, non-terminal, not ready, missing a numeric mistake budget, missing
+  no-feedback or shuffled-feedback controls, or claims live model inference,
+  model-weight training, or model-weight mutation.
+- REQ-LEARN-3077-2: The split SHALL contain non-empty disjoint update, related
+  holdout, prior, delayed-regression, no-feedback control, and shuffled-feedback
+  control partitions, all labeled by independent exact authority.
+- REQ-LEARN-3077-3: Every online decision SHALL produce an Exp 3060-shaped
+  self-model trace with `controller_edit.model_weight_mutation=false` and a
+  decision label in the set `{correct, soundness_mistake,
+  completeness_mistake, abstention, rollback, delayed_regression}`.
+- REQ-LEARN-3077-4: The artifact SHALL count `soundness_mistakes` as exact-
+  rejected cases accepted by the controller and `completeness_mistakes` as
+  exact-accepted cases rejected or abstained by the controller.
+- REQ-LEARN-3077-5: `mistake_budget_delta` SHALL compare observed mistakes,
+  delayed regressions, controls, and prior retention against the Exp 3076
+  budget gates in machine-readable form.
+- REQ-LEARN-3077-6: `promotion_decision` SHALL remain controller-only and SHALL
+  refuse stronger promotion unless all budget gates pass and no-feedback plus
+  shuffled-feedback controls are non-vacuous.
+- REQ-LEARN-3077-7: `fr11_soundness_bounded_ready` SHALL be true for a complete
+  bounded pilot result even when stronger promotion is refused, and false only
+  for precondition-blocked artifacts.
+
+### SCENARIO-LEARN-3077: Budgeted Pilot Refuses Stronger Promotion
+
+**Given** a complete Exp 3076 budget with zero allowed soundness and
+completeness mistakes
+**When** Exp 3077 applies a tiny exact controller update that improves related
+holdout behavior but abstains on one exact-valid online case
+**Then** it records zero soundness mistakes, one completeness mistake, a
+positive family-holdout delta, non-vacuous no-feedback and shuffled-feedback
+controls, one rolled-back shuffled-control candidate, no model-weight update,
+`fr11_soundness_bounded_ready=true`, and a bounded controller-only
+`promotion_decision` that refuses stronger promotion because the completeness
+budget is exceeded.
+
+### SCENARIO-LEARN-3077-BLOCKED: Missing Soundness Budget Fails Closed
+
+**Given** missing or malformed Exp 3076 source evidence
+**When** Exp 3077 runs
+**Then** it writes the required artifact fields with zeroed metrics,
+`fr11_soundness_bounded_ready=false`, no live model inference claim, no
+model-weight mutation claim, and
+`honest_verdict="blocked_missing_soundness_budget"`.
+
+## Implementation Status (REQ-LEARN-3077)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3077 | Implemented (`python/carnot/eval/fr11_soundness_bounded_online_self_learning_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3077_fr11_soundness_bounded_online_self_learning_pilot_v1.py`) |
