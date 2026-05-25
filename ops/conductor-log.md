@@ -6243,3 +6243,5 @@ web search: site |
 | 2026-05-25 09:37 UTC | GateMate output contract operator package | OK | 81 passed in 2.89s |
 | 2026-05-25 09:39 UTC | GateMate output shim RTL/CCF simulation v2 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3048-gatemate-output-contract-operator- |
 | 2026-05-25 09:41 UTC | GateMate output shim RTL/CCF simulation v2 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3048-gatemate-output-contract-operator- |
+| 2026-05-25 09:43 UTC | GateMate output shim RTL/CCF simulation v2 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3048-gatemate-output-contract-operator- |
+| 2026-05-25 09:45 UTC | GateMate host-visible flash smoke v5 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3049-gatemate-output-shim-rtl-ccf-sim-v2) |
