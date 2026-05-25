@@ -15842,3 +15842,96 @@ hardware/software pages, and Logical Intelligence Kona/Aleph public pages.
   repair headlines; no local Carnot performance claim should cite Aleph/Kona
   numbers.
   Source: https://logicalintelligence.com/blog/aleph-prover-tops-leading-benchmarks
+
+## 2026-05-25 Post-.283 Planning Sweep (Milestone 2026.05.284)
+
+Scope: arXiv 2025-2026, OpenReview NeurIPS/ICLR 2025-2026 pages, Hugging Face
+papers, GitHub discovery, Extropic hardware/software pages, Logical
+Intelligence public pages, and Semantic Scholar-style citation discovery for
+EBT (2507.02092) and ARM-EBM (2512.15605). Semantic Scholar public API calls
+for those two citation lists returned HTTP 429 during this sweep, so the
+citation check falls back to public web discovery and direct paper pages.
+
+- **MARCH: Multi-Agent Reinforced Self-Check for LLM Hallucination
+  (arXiv:2603.24579)**: separates a Solver, Proposer, and Checker so that the
+  checker validates atomic propositions without seeing the original generated
+  answer, reducing confirmation bias. Relevance to Carnot: `.284` should adapt
+  the information-asymmetry pattern to repair/FR-11 audits by forcing
+  independent checker inputs and reporting whether any "self-learning" claim is
+  merely self-confirming.
+  Sources: https://arxiv.org/abs/2603.24579 and
+  https://github.com/Qwen-Applications/MARCH
+
+- **Draft-Conditioned Constrained Decoding for Structured Generation
+  (arXiv:2603.03305)**: decouples semantic planning from syntactic enforcement
+  by conditioning constrained decoding on an unconstrained draft, reducing the
+  projection tax that can make locally valid generations semantically wrong.
+  Relevance to Carnot: repair reruns should preserve unconstrained draft intent,
+  then apply syntax/schema/metamorphic gates, rather than promoting parse-valid
+  but intent-drifted patches.
+  Source: https://arxiv.org/abs/2603.03305
+
+- **STATIC / Vectorizing the Trie (arXiv:2602.22647)**: flattens trie-based
+  constrained decoding into sparse matrix operations, reporting production-scale
+  constrained retrieval with minimal accelerator overhead. Relevance to Carnot:
+  this is a future path for accelerator-friendly masks, but `.284` should use it
+  only as a design reference for constraint-mask accounting; no kernel or
+  production throughput claim is justified locally.
+  Sources: https://arxiv.org/abs/2602.22647 and
+  https://github.com/youtube/static-constraint-decoding
+
+- **Enforcing Hard Linear Constraints with Decision Rules (OpenReview,
+  NeurIPS 2025)**: combines a task network with a safe network derived from
+  robust/stochastic decision rules so predictions satisfy input-dependent linear
+  constraints during training and inference. Relevance to Carnot: use the
+  "feasible by construction" framing for FR-11 promotion controls and
+  methodology artifacts, not as a claim that Carnot has implemented that model.
+  Source: https://openreview.net/forum?id=gjiCml2CNG
+
+- **Clip-and-Verify (OpenReview, NeurIPS 2025)**: uses linear constraints
+  already available during branch-and-bound verification to clip irrelevant or
+  verified input regions and tighten bounds without expensive LP solves.
+  Relevance to Carnot: `.284` validator-frontier work should tighten claim
+  bounds by separating verified, irrelevant, unresolved, and fallback-only
+  regions instead of collapsing them into a single "clean" row.
+  Source: https://openreview.net/forum?id=HuSSR12Yot
+
+- **Self-Distillation Enables Continual Learning (arXiv:2601.19897)**:
+  turns demonstrations into on-policy self-distillation signals and reports
+  sequential skill accumulation with reduced forgetting versus SFT. Relevance to
+  Carnot: `.284` continuous self-learning must include nonforgetting and
+  held-out replay gates before any FR-11 promotion; cached verifier feedback can
+  be treated as demonstrations, but no local weight-training claim should be
+  made unless an experiment actually trains.
+  Source: https://arxiv.org/abs/2601.19897
+
+- **KAN-CL: Per-Knot Importance Regularization for Continual Learning with
+  Kolmogorov-Arnold Networks (arXiv:2605.12306)**: exploits KAN spline locality
+  for per-knot anchoring and reports large forgetting reductions with a KAN head
+  plus backbone EWC. Relevance to Carnot: use this as a design hint for
+  nonforgetting probes over existing KAN/feasibility artifacts; `.284` should
+  first measure whether the current controller forgets exact prior cases before
+  adding KAN training.
+  Source: https://arxiv.org/abs/2605.12306
+
+- **Decomposing Large-Scale Ising Problems on FPGAs (arXiv:2602.15985)**:
+  offloads Ising problem decomposition to FPGA logic tightly coupled with a
+  custom 28nm Ising solver, reducing host-device latency. Relevance to Carnot:
+  this reinforces that GateMate value begins with a host-visible output and
+  decomposition contract; `.284` should finish the pinout/output artifact before
+  any speedup or annealer claim.
+  Source: https://arxiv.org/abs/2602.15985
+
+- **Extropic XTR-0/Z1 and THRML status**: official pages continue to describe
+  XTR-0 as the testing platform, Z1 as early-access 2026, and THRML as a JAX
+  simulator for PGMs/EBMs intended for TSU-style hardware. Relevance to Carnot:
+  TSU remains architecture context only; `.284` hardware work stays on local
+  GateMate host-visible output and must not imply Extropic access.
+  Sources: https://extropic.ai/hardware and https://extropic.ai/software
+
+- **Logical Intelligence Kona/Aleph public surface**: the current public page
+  still positions Kona 1.0 as an EBM for critical systems and highlights Aleph
+  formal-reasoning updates. Relevance to Carnot: this supports exact verifier
+  and proof-bound emphasis, but Carnot results must remain local artifacts and
+  should not borrow Kona/Aleph benchmark claims.
+  Source: https://logicalintelligence.com/

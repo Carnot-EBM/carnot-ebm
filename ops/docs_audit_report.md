@@ -4,48 +4,47 @@
 # docs_audit_report — 2026-05-24
 
 ## TL;DR (stranger's 30-second take)
-Close the tab. It reads like an internal project dashboard masquerading as a landing page; it's drowning in over 30 UI cards, opaque acronyms, leaked file paths, and suspiciously perfect 100% claims that undermine all trust.
+I would close this tab in 15 seconds. The page reads like an internal lab notebook that accidentally got published to the web, complete with leaked file paths in the headlines and weirdly defensive internal drama about "hostile audits" and "repinning." It claims to be an open-source tool, but it's drowning in unresolved academic acronyms and suspiciously perfect evaluation numbers that scream "overfitted."
 
 ## TOP 3 PROBLEMS
-1. Death by cards: The page has 33 UI cards (12 in Results alone), guaranteeing visitors will get card fatigue and skim none of them.
-2. Impenetrable jargon: Rampant use of unexplained acronyms (FoVer, CCTU, PREM, SVAMP) and raw leaked file paths (`@results/citation...`) alienates strangers.
-3. Internal status leaking: Passages read like retrospective commit logs ("Repinned from v2 0.9857 after pre-submission adversarial audit", "pending operator-initiated upload").
+1. **Raw file paths leaked in headlines** — The "Live benchmark" card literally has `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` as its title.
+2. **Internal drama used as marketing copy** — The "Recent progress" card and the entire "From the blog" section read like defensive retrospective reports ("Repinned from v2 0.9857 after pre-submission adversarial audit"), not a pitch to a new user.
+3. **Suspiciously perfect 1.0 metrics** — Claiming a perfect 1.0 true positive rate, 60/60 attacks caught, and "Zero false positives" on 639 experiments sets off immediate fabrication/overfitting alarms for any ML practitioner.
 
 ## DETAILED FINDINGS
+
 ### Bloat
-- Entire Page — 33 UI cards — Cap at ~12-15 total. The Results grid alone has 12 cards, plus 7 feature cards and 7 blog cards. Visitors will skim none of it.
-- Stats Bar — 5 elements — Contains 4 stats plus an entire nested 49-word "Recent progress" result card crammed into the hero section.
+- **Results Grid** — 12 cards — Suggested cap: 4-6 cards. A stranger will not read 12 different benchmark claims.
+- **Recent progress card** — 66 words — Suggested cap: 60 words. It's a wall of text shoved into the stats bar.
+- **Overall Card Count** — 30+ distinct UI cards (bento, results, blog) — Way too many. Cognitive overload hits before I even reach the code snippets.
 
 ### Internal jargon
-- "Results" section (SOTA 35B card) — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — A literal internal file path leaked into the UI headline.
-- "Recent progress" card — `FoVer`, `5-seed dual-condition`, `v2 0.9857` — Strangers have no idea what your datasets or historical versions mean.
-- "Features" section (TTC & PREM card) — `PREM` — "Process-Reward Energy Model" is dropped without context.
-- "Results" section — `SVAMP AUC`, `IterativeSelfRepair`, `VeriCoT`, `PRM-BiasBench-style`, `HalluGuard v3`, `CCTU` — Alphabet soup. Strangers do not care about internal experiment variants.
+- **Stats Bar / Recent Progress** — `FoVer`, `5-seed dual-condition`, `architecture-only 0.8947` — I don't know what corpus FoVer is or why I should care about your seeding strategy before I even know how the software works.
+- **Results Grid** — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)`, `EstimationVerifier SVAMP AUC`, `VeriCoT equation-style CoT fix`, `PRM-BiasBench-style attacks`, `CCTU constrained micro-benchmark` — Unexplained acronyms and internal feature names. 
+- **Results Grid Title** — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — You dumped a raw test harness file path directly into a headline.
 
 ### Per-milestone narrative
-- "Recent progress" card — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads like a Jira ticket comment or milestone retrospective.
-- "Preprint" section — "The arXiv submission is prepared but pending operator-initiated upload." Strangers don't care about your operator runbook status.
-- "Stats bar" — "382 Completed milestones" and "2,477 Experiment runs" are internal velocity metrics, not product value propositions.
+- **Recent Progress Card** — "Repinned from v2 0.9857 after pre-submission adversarial audit; see Why We Report Two AUROCs Now." — Pure internal status reporting.
+- **Blog Section** — "We paid for a hostile audit...", "The narrower paper we ended up with...", "A verifier with a docstring citing arXiv:2601.18753 NTK turned out to be 56 lines of regex." — This sounds like a project team confessing their engineering sins to each other, not a product pitch.
 
 ### Inconsistencies
-- The AUROC claim vs The AUROC claim — The stats bar claims `0.9131 Verifier AUROC`, but the Results grid lists `0.91 AUROC (publication gate)` and `0.90 AUC`.
-- Code repair results vs Code repair results — The Features "Code" card claims `+3.0 points on pass-rate`, but the Results "Code repair" card says `8% -> 80% pass rate (+72pp)`. These contradict each other wildly.
+- **Model mismatch in Results** — The "Live benchmark" tag claims "SOTA 35B (Qwen3.6-35B-A3B...)" but the spilled file path in the very next line says `real_Gemma4-26B-A4B-it.txt`. Which model did you actually evaluate?
 
 ### Missing essentials
-- Who maintains it? The footer says "Ian Blenke · Carnot Project" but there is no context on what the Carnot Project is, its backing, or team size. No credibility anchor for the author.
+- **Maintainer Credibility** — The footer mentions "Ian Blenke & Carnot Project", but the page lacks a clear "Who built this" section. When making massive claims about overriding SOTA LLMs and catching 60/60 attacks, you need a credibility anchor (an organization, a lab, a known maintainer profile) up front. 
 
 ### Fabrication signals
-- 1.0 (100%) — "Math extraction" result card claims `GSM8K extraction TP rate: 0.5 -> 1.0`. A suspiciously perfect 1.0 on a messy dataset.
-- 60/60 (100%) — "Adversarial audit" result card claims `k=5 ensemble catches 60/60 attacks`. A 100% catch rate on adversarial attacks triggers immediate skepticism.
-- Identical losses — "Training" result card claims `2.0x speedup, identical losses`. Literally identical losses in distributed training is mathematically suspicious without a credibility anchor.
+- **Perfect 1.0 True Positive Rate** — "Math extraction / GSM8K extraction TP rate: 0.5 → 1.0" — 1.0 extraction on LLM text output is highly suspect.
+- **Perfect 60/60 catch rate** — "Adversarial audit / k=5 ensemble catches 60/60 attacks" — Zero failures.
+- **Zero False Positives claim** — "Dogfooding by the numbers" blog card claims "Zero false positives" over 639 experiments and 26 days. In real-world parsing/verification, 0.0 FPR is almost always a sign of a broken harness or a trivial dataset.
 
 ## WHAT'S WORKING
-- The one-sentence hero pitch "Catch the mistakes your LLM confidently makes up." is excellent, grounded, and immediately understandable.
-- The Quickstart section effectively proves the project is real by showing clean, 3-line Python vs. Rust examples.
+- The hero section is actually very strong: "Catch the mistakes your LLM confidently makes up" immediately tells me what this does.
+- The "Quick Start" code tabs (Python vs Rust) are clean, visually appealing, and prove the product actually exists and has an API.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Ruthlessly prune the Results grid from 12 cards down to the 3 or 4 strongest, most defensible claims.
-2. Purge the leaked file path (`@results/...`) and opaque dataset acronyms (FoVer, CCTU, SVAMP) from all copy, replacing them with plain English descriptions.
-3. Delete the "Recent progress" card from the hero stats bar; move valid news to a blog post.
-4. Contextualize or soften the perfect "1.0" and "60/60" claims so they don't look fabricated.
-5. Reconcile the contradicting AUROC numbers and Code Repair (+3 vs +72pp) claims to establish a single, coherent narrative.
+1. **Fix the leaked file path:** Immediately remove the `@results/...txt` raw path from the "Live benchmark" results card title. Reconcile whether it was Qwen or Gemma.
+2. **Purge the internal drama:** Rewrite the "Recent progress" card to focus on the 0.9131 AUROC achievement without the "Repinned from v2" confessional. 
+3. **Cull the Results Grid:** Drop the grid from 12 cards to your strongest 4-6 cards. Remove heavy internal jargon like `VeriCoT equation-style CoT fix` and `EstimationVerifier SVAMP AUC`.
+4. **Anchor the perfect numbers:** If you really got 1.0 TP and 60/60 catches, add a one-line caveat explaining *why* (e.g., "on closed grammar set"). Otherwise, strangers will assume you evaluated on your training data.
+5. **Translate the blog descriptions:** Rewrite the blog card summaries so they focus on the *value* of the finding to the reader, not the project's internal pain in discovering it.

@@ -1,6 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.283 operational retrospective complete)
+**Last Updated:** 2026-05-25 (Milestone 2026.05.284 research planning staged)
+
+## Session 2026-05-25 - Milestone 2026.05.284 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.284 as "Repair Corrigendum + FR-11 Held-Out Learning + GateMate Output Contract" after the operator reported all `.283` tasks completed. The plan treats `results/experiment_3025_capstone_v283.json` as the authoritative closeout: `.283` completed but remained `paper_ready=false`; repair deltas improved under the acceptance controller, the DVI self-learning controller completed cleanly, and GateMate/SSQA correctly exposed the unresolved host-visible output blocker.
+
+Updated `research-references.md` with the post-`.283` sweep covering MARCH information-asymmetric self-check, Draft-Conditioned Constrained Decoding, STATIC vectorized trie constrained decoding, hard linear constraints with decision rules, Clip-and-Verify, SDFT continual learning, KAN-CL, FPGA Ising decomposition, Extropic TSU/THRML status, and Logical Intelligence Kona/Aleph public context. Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks (`exp3026`-`exp3039`). `exp3032-fr11-heldout-dvi-replay-v2` and `exp3033-fr11-nonforgetting-negative-control-stress` cover the mandatory continuous self-learning requirement. Validation passed for YAML parse, prompt-section/end-line checks, prior-failure lint, exclusion-manifest lint, gate audit, and whitespace diff checks. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-25 - Milestone 2026.05.283 Operational Retrospective Complete
 
