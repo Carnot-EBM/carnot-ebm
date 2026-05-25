@@ -8628,3 +8628,86 @@ hardware execution, and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3082 | Planned (`python/carnot/reporting/publication_blocker_reduction_ledger_3082.py`) | Planned (`tests/python/test_experiment_3082_publication_blocker_reduction_ledger.py`) |
+
+### REQ-REPORT-3083: Verifier-Hardness Autopsy And Recovery Protocol
+
+The repository shall provide an Exp 3083 verifier-hardness autopsy generator
+that writes
+`results/experiment_3083_verifier_hardness_autopsy_protocol_v1.json` before
+any `.288` exact-fixture, abstention, formal-feedback, or repair experiment is
+promoted. The generator MUST read AGENTS, CODEX or OPENCODE, CLAUDE workflow
+instructions, `research-references.md`, Exp 3057 verifier-gain evidence, Exp
+3070 first-token abstention evidence, Exp 3071 VERGE/MCS formal-feedback
+evidence, and Exp 3080 capstone evidence. It MUST NOT run live LLM inference,
+invoke verifier scoring, execute solver work, run repair, synthesize or flash
+hardware, run the conductor, push, modify `scripts/research_conductor.py`, or
+rewrite prior result artifacts.
+
+The protocol MUST compare the prior verifier failures against the current
+research-reference findings on verifier hardness, I-CALM-style confidence
+abstention, task abstention, self-verification asymmetry, and formal feedback.
+It MUST classify known failure modes including negative verifier gain, exact
+good-solution false negatives, low abstention precision, tautological
+abstention metrics, solver-only parity without formal-feedback lift,
+duration/provenance contamination, and capstone-level publication blockers.
+It MUST define perturbation categories that separate solving, verifying,
+abstaining, and repairing rather than allowing one metric to stand in for the
+others.
+
+The protocol MUST define non-vacuous metric contracts for Exp 3084 through Exp
+3089. Each contract MUST include separate acceptance, rejection, abstention,
+and formal-feedback measurements when the experiment touches that axis, and
+MUST include exact-label provenance, solver-only baselines, row-level
+decision counts, false-accept and false-reject accounting, abstention
+coverage/precision, and guided-minus-solver-only lift where formal feedback is
+claimed. It MUST define disqualifiers for label leakage, solver-only parity
+without lift, tautological repair, syntax-only success, and tiny-model
+headline substitution. Formal-feedback success MUST NOT be counted when a
+solver fallback alone reaches the same result, when the feedback only copies a
+known label, or when localized counterexample/MCS evidence is absent. Repair
+success MUST NOT be counted when only parsing, JSON schema, syntax, or
+formatting improves without exact semantic validation.
+
+The terminal artifact MUST include
+`verifier_hardness_protocol_ready`, `prior_failure_modes`,
+`perturbation_categories`, `abstention_metrics_required`,
+`formal_feedback_disqualifiers`, `repair_disqualifiers`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It MAY
+include research-reference comparisons, experiment metric contracts, global
+disqualifiers, source checksums, blocked reasons, no-new-execution booleans,
+and measured `duration_s` as long as every value is derived from checked-in
+artifacts or text sources. `verifier_hardness_protocol_ready` MUST be true
+only when required source artifacts are readable, the required prior failures
+are represented, perturbation categories cover solving/verifying/abstaining/
+repairing separately, Exp 3084-3089 contracts include non-vacuous metrics,
+disqualifiers cover label leakage, solver-only parity, tautological repair,
+syntax-only success, and tiny-model substitution, the inference substrate
+declares no live model inference, and `honest_verdict` starts with a terminal
+success prefix.
+
+#### SCENARIO-REPORT-3083: Verifier Reruns Receive A Failure-Aware Protocol
+
+**Given** Exp 3057 reports negative verifier gain and exact-good false
+negatives
+**And** Exp 3070 reports low abstention precision with adversarial tautology
+flags
+**And** Exp 3071 reports formal feedback with zero lift over solver-only
+fallback
+**And** Exp 3080 carries verifier recovery, repair, and FR-11 blockers into
+`.288`
+**When** the Exp 3083 verifier-hardness protocol generator runs
+**Then** it writes
+`results/experiment_3083_verifier_hardness_autopsy_protocol_v1.json` with
+`verifier_hardness_protocol_ready=true`, prior failure modes tied to concrete
+source artifacts, perturbation categories that separate solving, verifying,
+abstaining, and repairing, abstention metrics that report accept/reject/
+abstain behavior separately, formal-feedback and repair disqualifiers that
+prevent vacuous lift, metric contracts for Exp 3084 through Exp 3089,
+aggregation-only inference-substrate metadata, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3083)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3083 | Planned (`python/carnot/reporting/verifier_hardness_autopsy_protocol_3083.py`) | Planned (`tests/python/test_experiment_3083_verifier_hardness_autopsy_protocol.py`) |
