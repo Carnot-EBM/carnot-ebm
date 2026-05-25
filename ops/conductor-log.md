@@ -6295,3 +6295,4 @@ web search: site |
 | 2026-05-25 21:59 UTC | Archive .287 and activate .288 | OK | 81 passed in 3.18s |
 | 2026-05-25 22:14 UTC | Publication blocker reduction ledger v1 | OK | 81 passed in 3.12s |
 | 2026-05-25 22:27 UTC | Verifier-as-harder-than-solving autopsy protocol | OK | 81 passed in 2.93s |
+| 2026-05-25 22:43 UTC | ReSyn-style exact fixture bank generator | OK | 81 passed in 3.04s |
