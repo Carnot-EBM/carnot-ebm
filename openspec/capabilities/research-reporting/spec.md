@@ -8027,3 +8027,67 @@ hardware execution by the matrix task, and an `honest_verdict` that starts with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3065 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v20_3065.py`) | Implemented (`tests/python/test_experiment_3065_cross_corpus_matrix_v20.py`) |
+
+### REQ-REPORT-3066: Milestone 2026.05.286 Capstone From Matrix V20
+
+The repository shall provide an Exp 3066 milestone capstone generator that
+writes `results/experiment_3066_capstone_v286.json` using only checked-in
+matrix v20 and source artifact JSON files. The generator MUST read
+`results/experiment_3065_cross_corpus_matrix_v20.json` and the source
+artifacts cited by that matrix before deciding capstone readiness, paper
+readiness, repair claim status, solver-grounded verification status, FR-11
+self-learning status, KAN/PWA status, GateMate status, SSQA status,
+publication blockers, and the exact next-milestone recommendation. It MUST NOT
+run live repair, live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, the conductor,
+external publication tooling, or historical artifact rewrites.
+
+The capstone MUST set `capstone_ready=true` only when matrix v20 exists,
+reports `matrix_v20_ready=true`, all eight row-class lists are present, row
+counts reconcile with their statuses, publication blockers are counted
+consistently, and required source artifacts are readable JSON objects. It MUST
+set `paper_ready=true` only when matrix v20 has zero publication blockers and
+every promoted clean claim has a concrete present source artifact and source
+field. Controller-side FR-11 evidence MAY be carried as bounded self-learning
+evidence, but it MUST NOT be broadened into model-weight learning without a
+source artifact that explicitly trained and verified model weights. GateMate,
+SSQA, and hardware speedup claims MUST remain blocked or gate-skipped unless
+host-visible output evidence exists.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`repair_claim_status`, `solver_grounding_status`, `fr11_self_learning_status`,
+`kan_pwa_status`, `gatemate_status`, `ssqa_status`, `publication_blockers`,
+`next_milestone_recommendation`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include matrix-v20 summaries, paper-readiness checks,
+promoted or blocked claim rows, source checksums, missing source artifacts,
+no-new-execution booleans, ops-reconciliation booleans, and measured
+`duration_s` as long as every value is derived from checked-in artifacts or
+file presence/checksum checks. When a conductor prompt assigns ops
+reconciliation to a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3066: Capstone Closes .286 From Matrix V20 Without Paper Overclaim
+
+**Given** matrix v20 is present and reports `matrix_v20_ready=true`
+**And** matrix v20 contains clean, flagged, bounded, blocked, gated-skipped,
+missing, projection-only, and retired row-class lists with source provenance
+**And** matrix v20 reports nonzero publication blockers for bounded repair,
+flagged solver-grounded verification, controller-only FR-11, bounded KAN/PWA,
+blocked GateMate, and host-visible-smoke-gated SSQA
+**When** the Exp 3066 capstone generator runs
+**Then** it writes `results/experiment_3066_capstone_v286.json` with
+`capstone_ready=true`, `paper_ready=false`, matrix v20 counts reconciled,
+repair carried as bounded, solver-grounded verification carried as flagged
+solver-authority evidence with no positive gain, FR-11 carried only as
+controller-side evidence, KAN/PWA carried as bounded controller-anchor audit
+evidence, GateMate blocked until host-visible output evidence exists, SSQA
+gate-skipped until the GateMate smoke gate passes, every publication blocker
+listed and counted, aggregation-only inference substrate metadata, no live
+model or hardware execution by the capstone task, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3066)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3066 | Implemented (`python/carnot/reporting/capstone_v286_3066.py`) | Implemented (`tests/python/test_experiment_3066_capstone_v286.py`) |
