@@ -1,0 +1,74 @@
+{
+  "artifact": "experiment_outer_loop_gatemate_first_flash_v1",
+  "schema": "carnot.gatemate_first_flash.v1",
+  "honest_verdict": "success: gatemate_n16_ising_bitstream_flashed_first_time",
+  "inference_substrate": "hardware_smoke",
+  "milestone_at_run": "2026.05.287",
+  "run_date": "20260525",
+  "duration_s": 4.5,
+  "author": "outer_loop_after_operator_reattach",
+  "preconditions_checked": [
+    {
+      "resource": "gatemate_board_reachable",
+      "available": true,
+      "command": "openFPGALoader -c dirtyJtag --detect",
+      "detail": "IDCODE 0x20000001, manufacturer colognechip, family GateMate Series, model GM1Ax, irlength 6"
+    },
+    {
+      "resource": "exp2956_bitstream_present",
+      "available": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+      "sha256": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+      "size_bytes": 458302
+    },
+    {
+      "resource": "dirtyjtag_probe_enumerated",
+      "available": true,
+      "detail": "1209:c0ca on bus 3 device 15 (new device-id confirms fresh reattach; was device 14 on 2026-05-24, device 6 on 2026-05-22)"
+    }
+  ],
+  "flash_invocation": "openFPGALoader -c dirtyJtag -b olimex_gatemateevb /home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "flash_succeeded": true,
+  "flash_exit_code": 0,
+  "flash_transcript": [
+    "Board default cable overridden with dirtyJtag",
+    "Jtag frequency : requested 6000000 Hz -> real 6000000 Hz",
+    "Load SRAM via JTAG: [==================================================] 100.00%",
+    "",
+    "Done"
+  ],
+  "bitstream_sha256_flashed": "36c432759549b7e2df52a279e7a8c4d521ebc2158364e19d00f1ac56995230eb",
+  "bitstream_path_flashed": "/home/ianblenke/github.com/ianblenke/carnot/build/gatemate/experiment_2956_gatemate_n16/ising_n16_gatemate.bit",
+  "board_state_after_flash": "sram_loaded_no_readback_attempted",
+  "methodology_note": "Outer-loop manual flash attempt invoked after the operator power-cycle-reattached the GateMate A1-EVB-2M. The conductor had hit blocked_flash_failed across four consecutive autonomous iterations (exp2972, exp2984, exp2996, exp3008) plus exp3048's blocked_gatemate_output_contract_authority_missing. The direct command-line invocation, post-reattach, completed in under 5 seconds with openFPGALoader exit code 0 and the canonical Load SRAM via JTAG: 100.00% / Done success signal. This is the first successful GateMate bitstream flash recorded in the project. The bitstream is SRAM-based (volatile) and will be lost on power-cycle; a sample-level smoke test against /dev/uio or the equivalent host-visible IO path is the next step to close the Hardware-Task Continuity Discipline boundary.",
+  "field_principles": {
+    "honest_verdict": "Must start with success: prefix per Verdict Terminal-Prefix Discipline. The flash succeeded; the smoke test that would unlock the matrix-row promotion is downstream.",
+    "inference_substrate": "hardware_smoke per the Inference-Substrate Declaration Discipline. No LLM was invoked; the flash is a JTAG SRAM load.",
+    "bitstream_sha256_flashed": "Anchors what specifically was loaded; matches exp2956's recorded build sha256 exactly.",
+    "duration_s": "Wall-clock of the openFPGALoader invocation; ~4.5s is consistent with a 458KB SRAM load over 6MHz JTAG. The conductor's prior blocked_flash_failed verdicts likely hit before this stage.",
+    "board_state_after_flash": "openFPGALoader does not perform readback verification on this GateMate flow; the 100% load + Done status is the standard success signal. Downstream host-IO smoke test is required for stronger evidence."
+  },
+  "what_changed_vs_prior_attempts": "The operator power-cycle-reattached the board between exp3048 (.285) and this run. The DirtyJTAG re-enumerated at bus 3 device 15 (was device 6 on 2026-05-22, device 14 on 2026-05-23, no detection at exp3048 time). Whether the prior failures were USB-state-related, conductor-harness-invocation-related, or some combination is not determined by this single success; the diagnostic value of this artifact is that the direct invocation post-reattach works, establishing the upper bound on what success looks like.",
+  "next_steps": [
+    "Run a host-IO smoke test against the flashed n=16 Ising tile: write spins via the bitstream's exposed I/O contract, read back the energy, measure per-sample wall-clock. This is the analog of what exp2898 did for KV260.",
+    "If the host-IO path is not yet implemented in the n=16 bitstream design, the GateMate continuity boundary remains open at the smoke-test stage even though the flash boundary is now closed.",
+    "Update research-hardware-wishlist.md's GateMate Active track entry to reflect 'flashed' status."
+  ],
+  "cross_references": {
+    "bitstream_build_artifact": "results/experiment_2956_gated_gatemate_n16_bitstream_build_v4.json",
+    "prior_blocked_attempts": [
+      "results/experiment_2972_gated_gatemate_flash_timing_smoke_v2.json",
+      "results/experiment_2984_gatemate_readback_smoke_vector_v4.json",
+      "results/experiment_2996_gatemate_host_visible_readback_smoke.json",
+      "results/experiment_3008_gatemate_host_visible_io_transport_v2.json",
+      "results/experiment_3048_gatemate_blocked_output_contract.json"
+    ],
+    "discipline_references": [
+      "CLAUDE.md 'Pre-Launch Preconditions Discipline' GateMate board row",
+      "CLAUDE.md 'Inference-Substrate Declaration Discipline'",
+      "CLAUDE.md 'Verdict Terminal-Prefix Discipline'",
+      "CLAUDE.md 'Hardware-Task Continuity Discipline'",
+      "research-hardware-wishlist.md GateMate Active track"
+    ]
+  }
+}
