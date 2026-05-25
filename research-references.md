@@ -16006,3 +16006,82 @@ citation check falls back to public web discovery and direct paper pages.
   must not imply access to TSU or Kona internals.
   Sources: https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
   and https://logicalintelligence.com/kona-ebms-energy-based-models
+
+## 2026-05-25 Post-.285 Planning Sweep (Milestone 2026.05.286)
+
+Scope: arXiv 2025-2026, OpenReview NeurIPS/ICLR 2025-2026 pages,
+Hugging Face papers, GitHub discovery, Extropic hardware/writing pages,
+Logical Intelligence Kona/Aleph public pages, and Semantic Scholar-style
+discovery for EBT (2507.02092) and ARM-EBM (2512.15605). Semantic Scholar did
+not surface a new planning-grade citation cluster beyond the existing EBT and
+ARM-EBM context in this sweep.
+
+- **Beyond Solving: A Closer Look at LLMs as Solution Verifiers
+  (OpenReview, ICLR 2026 Workshop)**: studies solver-verifier interactions
+  across 37 LLMs and 9 datasets and introduces verifier gain as a metric for
+  when rejection sampling through a verifier improves solver performance.
+  Relevance to Carnot: `.286` should measure a tiny local SOTA solver-verifier
+  panel before using verifier-selected repair candidates, and should report
+  false positives separately from solver accuracy.
+  Source: https://openreview.net/forum?id=Hv5hDfbhuB
+
+- **Approximately Aligned Decoding / AprAD (OpenReview NeurIPS 2025;
+  arXiv:2410.01103 revised 2025)**: balances constraint satisfaction,
+  compute, and output-distribution distortion using a speculative-decoding
+  style backtracking rule. Relevance to Carnot: `.286` repair reruns should use
+  AprAD as a design reference for preserving draft intent while applying hard
+  verifier gates; no new decoder claim is justified unless a local experiment
+  actually implements the acceptance rule.
+  Sources: https://openreview.net/forum?id=0mOBdNsI3L and
+  https://arxiv.org/abs/2410.01103
+
+- **LLM-Guided Quantified SMT Solving over Uninterpreted Functions /
+  AquaForte (arXiv:2601.04675; Hugging Face papers)**: uses an LLM to propose
+  semantic instantiations for quantified SMT formulas, while SAT answers are
+  systematically validated and solver fallback preserves completeness.
+  Relevance to Carnot: this is the clean pattern for `.286`: local SOTA LLMs
+  may propose SMT candidates, but Z3/CVC5-style validation remains the only
+  authority. It should inform a tiny LLM-guided SMT pilot and repair
+  de-tautology protocol.
+  Sources: https://arxiv.org/abs/2601.04675 and
+  https://huggingface.co/papers/2601.04675
+
+- **StepORLM: A Self-Evolving Framework With Generative Process Supervision
+  For Operations Research Language Models (arXiv:2509.22558)**: combines
+  external solver outcome verification with a generative process reward model
+  in a co-evolution loop for operations-research tasks. Relevance to Carnot:
+  `.286` FR-11 should add solver self-model traces and delayed-regression
+  windows, but still stay controller-only unless an experiment actually trains
+  model weights.
+  Source: https://arxiv.org/abs/2509.22558
+
+- **KAN verification and continual-learning caveats (arXiv:2602.06737,
+  arXiv:2605.12306, arXiv:2511.12828)**: KAN properties can be verified through
+  piecewise-affine MILP abstractions; KAN-CL reports per-knot anchoring for
+  reduced forgetting; a separate AAAI 2026 paper shows KANs still forget in
+  higher-dimensional settings. Relevance to Carnot: `.286` should audit whether
+  KAN locality evidence is verifiable with bounded PWA/MILP abstractions and
+  should avoid escalating controller locality into native KAN self-learning
+  without a real training and nonforgetting experiment.
+  Sources: https://arxiv.org/abs/2602.06737,
+  https://arxiv.org/abs/2605.12306, and https://arxiv.org/abs/2511.12828
+
+- **Probabilistic Computers for Neural Quantum States (arXiv:2512.24558,
+  v2 May 2026)**: maps sparse Boltzmann-machine sampling onto FPGA-based
+  probabilistic computers and reports large Ising-lattice sampling scaleups in
+  a custom multi-FPGA cluster. Relevance to Carnot: supports the long-term
+  hardware-sampling thesis, but `.286` local work must remain claim-bounded:
+  GateMate needs a host-visible output contract before any sampler, speedup, or
+  thermodynamic-computing claim.
+  Source: https://arxiv.org/abs/2512.24558
+
+- **Extropic XTR-0/XTR-1 and Logical Intelligence Kona public updates**:
+  Extropic now presents XTR-0 as a testing platform, XTR-1 as the next hardware
+  step, and THRML as the software route to TSU-style execution; Logical
+  Intelligence continues to frame Kona as a globally scored, continuous,
+  editable EBM reasoning layer and Aleph as the orchestration layer. Relevance
+  to Carnot: both should stay as architecture context in `.286`; local claims
+  must cite Carnot artifacts, not external benchmark or access assumptions.
+  Sources: https://extropic.ai/hardware,
+  https://extropic.ai/writing, and
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning

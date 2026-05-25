@@ -1,6 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.285 operational retrospective complete)
+**Last Updated:** 2026-05-25 (Milestone 2026.05.286 research planning staged)
+
+## Session 2026-05-25 - Milestone 2026.05.286 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.286 as "Retire Gate-Rerun Blockers + Solver-Grounded Verification + FR-11 Promotion Boundary" after the operator reported all `.285` tasks completed. The plan treats `results/experiment_3053_capstone_v285.json` as the authoritative closeout: `.285` completed but remained `paper_ready=false`; repair stayed bounded, FR-11 is controller-only solver-feedback/locality ready, GateMate is blocked on output-contract authority, and SSQA remains gate-skipped pending host-visible smoke.
+
+Updated `research-references.md` with the post-`.285` sweep covering solver-verifier gain, AprAD, AquaForte LLM-guided SMT with formal fallback, StepORLM solver-backed self-evolution, KAN verification/continual-learning caveats, FPGA probabilistic sampling, and current Extropic/Kona public context. Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 13 tasks (`exp3054`-`exp3066`). `exp3061-fr11-delayed-regression-solver-self-model-pilot` is the mandatory continuous self-learning experiment. Validation passed for YAML parse, prompt section/end-line checks, roadmap schema import, prior-failure lint, exclusion-manifest lint, roadmap-gate audit, and whitespace diff checks. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-25 - Milestone 2026.05.285 Operational Retrospective Complete
 

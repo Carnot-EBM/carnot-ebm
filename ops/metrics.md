@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-25 Milestone 2026.05.286 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-25T11:18:01Z | 2026-05-25T11:36:44Z | Planned milestone 2026.05.286 after reading required project context, .285 capstone/matrix/conductor evidence, exclusion manifest, hardware notes, and current research references. Added Post-.285 research sweep to `research-references.md` (Beyond Solving verifier gain, AprAD, AquaForte, StepORLM, KAN verification/forgetting caveats, FPGA probabilistic sampling, Extropic/Kona context). Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 13 tasks exp3054-exp3066, including repair headline retirement, de-tautology protocol, local SOTA verifier-gain panel, AquaForte-style SMT pilot, gated SOTA repair rerun, FR-11 solver self-model/delayed regression, KAN/PWA audit, GateMate no-rerun ledger, SSQA boundary, matrix v20, and capstone. Validation: YAML parse OK; prompt checks OK; roadmap schema import OK; prior-failure validator OK; exclusion-manifest lint OK; roadmap gate audit OK with 7 gate checks and 0 failures; diff whitespace check clean. | ~170k |
+
+---
+
 ## Session: 2026-05-24 Milestone 2026.05.283 Research Planning
 
 ### Turn Log

@@ -4,45 +4,51 @@
 # docs_audit_report — 2026-05-25
 
 ## TL;DR (stranger's 30-second take)
-A stranger would likely close the tab after being hit with an overwhelming alphabet soup of internal acronyms (FoVer, PREM, CCTU) and wildly inconsistent benchmark claims. While the core value proposition is clear, the page quickly devolves from a product introduction into a dumping ground for internal experiment logs.
+I would close the tab in 10 seconds. The page is drowning in internal milestone references, unintelligible acronyms, and literal file paths bleeding into the UI, making it feel like a private internal dashboard rather than a public-facing product.
 
 ## TOP 3 PROBLEMS
-1. Contradictory HumanEval Claims — Code card (+3.0 points) vs Results cards (+72pp and +36pp).
-2. Incomprehensible Jargon — "FoVer", "PREM", "CCTU", and "VeriCoT" are thrown at the reader without definition.
-3. Suspiciously Perfect Scores — Claims of "1.0 TP rate" and "60/60 attacks" scream synthetic or fabricated without immediate anchors.
+1. File paths and internal variables leak directly into the rendered HTML/CSS (e.g., `@results/citation_hallucination_field_verifier...`).
+2. Massive Card Bloat: 36 total bento/result/blog cards overwhelm the reader; no one will skim this many.
+3. Severe Per-Milestone Narrative: Copy reads like an internal Jira ticket update ("Repinned from v2 0.9857") rather than product value propositions.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — suggested cap: 6 cards
-- From the blog — 7 cards — suggested cap: 3 cards
+- Entire Page — 36 cards total (2 problem, 4 how, 7 capability, 12 result, 7 blog) — Suggested cap: 12 total cards globally.
+- Results Grid — 12 result cards — Suggested cap: 3-4 headline claims.
+- Blog Section — 7 long blog cards — Suggested cap: 3 recent posts.
 
 ### Internal jargon
-- Hero recent progress card — "FoVer", "5-seed dual-condition" — a stranger does not know the project's internal benchmark dataset names or experimental configurations.
-- Test-Time Compute bento card — "PREM" — acronym introduced without explanation.
-- Results grid — "CCTU", "SVAMP AUC", "VeriCoT", "PRM-BiasBench-style", "HalluGuard v3" — an outsider doesn't know these specific internal benchmarks, tool names, or routing layers.
+- `<head> CSS link` — `@results/adversarial_gsm8k_data_400.json`, `@ops/latent_deterministic_discipline_gate_1500.md` — Internal file paths leaked into the Google Fonts URL.
+- `<style> block` — `@openspec/change-proposals/paper-v5-integrity-remediation.md` — File paths injected into `@media` query declarations.
+- Live benchmark card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — Raw test fixture paths dumped into public copy.
+- Recent progress card — `FoVer`, `5-seed dual-condition` — A stranger has no idea what this corpus or these conditions mean.
+- Capabilities / Results cards — `CCTU`, `IterativeSelfRepair`, `SVAMP AUC`, `VeriCoT`, `PRM-BiasBench`, `PREM`, `TTC` — Alphabet soup without any definitions or context.
 
 ### Per-milestone narrative
-- Hero recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" reads exactly like an internal issue tracker comment or retrospective note, not landing page copy.
+- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit"
+- Preprint section — "The current draft anchors its claims to checked-in experiment artifacts... pending operator-initiated upload."
+- Blog section — Summaries like "Three rigorous theory rounds approved the architecture. A single blind-spot audit pass found five fatal flaws..." read as internal retrospectives.
 
 ### Inconsistencies
-- "Code" card claims "+3.0 points on pass-rate" on HumanEval vs Results grid claiming "8% -> 80% pass rate (+72pp)" on HumanEval-50 vs another Results grid card claiming "0% -> 36%" on HumanEval.
-- "How it works" claims "No model fine-tuning required" vs Results grid highlighting "Training — Two-GPU parallel retrain".
+- "No model fine-tuning required" (How it works section) vs "Process-Reward Energy Model (PREM)" (Capabilities section) — implies an energy model exists that likely required training/tuning, contradicting the zero-shot framing.
+- "0.9131 Verifier AUROC" (Stats bar) vs "0.91 AUROC (publication gate)" (Safety result card) — confusing whether these are the same metric or completely different tasks.
 
 ### Missing essentials
-- Why should I trust the numbers? The text claims "Every number below is backed by a checked-in experiment artifact" but provides zero links, reproducibility instructions, or ways for a stranger to actually verify these artifacts.
+- Why should I trust the numbers? The page claims numbers are backed by "checked-in experiment artifacts," but a stranger cannot access local `results/` folders to verify claims like perfect 1.0 AUROCs or 60/60 catches. There are no links to external verifications or datasets on the page itself.
 
 ### Fabrication signals
-- Math extraction Result card — "TP rate: 0.5 -> 1.0" (a perfect 1.0 on an extraction task is a huge red flag).
-- Adversarial audit Result card — "k=5 ensemble catches 60/60 attacks" (100% success rate on adversarial attacks looks suspiciously perfect and synthetic).
-- Code bento card — "99.3% of wrong code flagged" (suspiciously high precision for a 164-problem benchmark).
+- 1.0 TP rate — Math extraction result card. A perfect 1.0 true positive rate is a massive red flag for overfitting or a toy sample size.
+- 60/60 attacks caught — Adversarial audit result card. 100% perfect defense against adversarial attacks on a tiny sample sets off BS detectors.
+- 0% -> 36% HumanEval pass — Live benchmark result card. Claiming a SOTA model scored a literal 0% baseline is highly suspect and signals a broken testing harness rather than real model performance.
+- 2.0x speedup, identical losses — Training result card. Perfect 2.0x linear scaling with a 0.0 penalty is rarely seen in the real world.
 
 ## WHAT'S WORKING
-- The hero section clearly states what the product does in one sentence: "Catch the mistakes your LLM confidently makes up."
-- The three-step "Extract -> Check -> Repair" flow is conceptually clean and easy to follow.
+- The hero section's one-liner ("Catch the mistakes your LLM confidently makes up") and the "Extract -> Check -> Repair" breakdown are genuinely clear and compelling.
+- The 5-line quickstart code blocks (Python/Rust tabs) clearly show how to use the library and prove it is real, usable software.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Unify the code repair performance numbers into a single, defensible claim across all cards.
-2. Purge all internal acronyms (FoVer, CCTU, PREM) and replace them with generic descriptive terms (e.g., "internal math dataset").
-3. Remove the internal audit/milestone narrative from the Hero section's "Recent progress" card.
-4. Add clear caveats or sample sizes to the perfect 1.0 / 100% / 60/60 claims, or remove them entirely to preserve credibility.
-5. Trim the Results grid to the 4-6 most impressive, easy-to-understand metrics.
+1. Remove all leaked `@results/...` and `@ops/...` file paths from the HTML immediately (check `<link>` tags, `<style>` queries, and the "Live benchmark" card).
+2. Delete 70% of the cards. Keep only the 3 best capabilities, 4 strongest results, and 3 most relevant blog posts.
+3. Rewrite the "Recent progress" and "Preprint" sections to pitch the product's value, not its internal development/publication status.
+4. Replace internal jargon (FoVer, CCTU, PREM) with plain-English equivalents (e.g., "Math Datasets", "Tool-use Benchmarks").
+5. Add sample sizes or context to the 1.0 TP rate and 60/60 claims, and clarify the 0% HumanEval baseline to restore credibility.
