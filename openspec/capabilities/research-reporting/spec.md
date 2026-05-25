@@ -7595,6 +7595,79 @@ metadata, no roadmap activation performed by this task, and an
 |---|---|---|
 | REQ-REPORT-3054 | Implemented (`python/carnot/reporting/archive_v285_activate_v286_3054.py`) | Implemented (`tests/python/test_experiment_3054_archive_v285_activate_v286.py`) |
 
+### REQ-REPORT-3067: Archive .286 And Confirm .287 Roadmap Handoff
+
+The repository shall provide an Exp 3067 archive/handoff generator that writes
+`results/experiment_3067_archive_v286_activate_v287.json` using only checked-in
+aggregation artifacts, roadmap YAML/Markdown files, and file presence/checksum
+metadata. The generator MUST read
+`results/experiment_3066_capstone_v286.json` as the authority artifact for the
+completed `.286` milestone and MUST set `prior_capstone_ready` directly from
+that artifact's `capstone_ready` field. It MUST set `prior_paper_ready`
+directly from the authority artifact's `paper_ready` field rather than
+inferring paper readiness from capstone completion, matrix cleanliness, roadmap
+status, or publication recommendations.
+
+The generator MUST read `results/experiment_3065_cross_corpus_matrix_v20.json`
+and summarize `.286` `paper_ready`, `repair_claim_status`,
+`solver_grounding_status`, `fr11_self_learning_status`, `gatemate_status`,
+`ssqa_status`, and `publication_blocker_count` from the matrix/capstone chain.
+If `publication_blocker_count` is absent as a top-level JSON field but present
+in the authority artifact's terminal verdict, the generator MAY recover the
+integer from that verdict and MUST mark the recovery source explicitly. The
+carry-forward blocker list MUST keep these unresolved claim boundaries visible:
+negative verifier gain, repair gated skipped, FR-11 controller-only flagged,
+KAN/PWA not promoted, GateMate operator actions missing, and SSQA host-visible
+smoke missing.
+
+The generator MUST verify the `.287` roadmap handoff without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It MUST prefer
+`research-roadmap-next.yaml` when that staged file exists and otherwise MAY use
+the already-activated `research-roadmap.yaml` as a read-only fallback, provided
+the artifact records that the requested staged roadmap is absent. Whichever
+roadmap source is used MUST target milestone `2026.05.287`, point
+`milestone_doc` to `openspec/change-proposals/research-roadmap-vNEXT.md`, and
+contain at least one task. The generator MUST also confirm that the vNEXT
+planning Markdown file exists. It MUST NOT activate the roadmap itself, run the
+conductor, run live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, external
+publication tooling, or historical experiment rewrites.
+
+The terminal artifact MUST include `archive_v286_activate_v287_ready`,
+`prior_capstone_ready`, `prior_paper_ready`, `carry_forward_blockers`,
+`next_milestone`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include `.286` status summaries, roadmap handoff
+metadata, source checksums, no-new-execution booleans, protected-file state,
+and measured `duration_s` as long as every value is derived from upstream JSON
+artifacts, roadmap files, or file presence/checksum checks. When a conductor
+prompt assigns ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3067: Archive .286 And Audit .287 Activation Readiness
+
+**Given** `results/experiment_3066_capstone_v286.json` exists and reports
+`capstone_ready=true`
+**And** `results/experiment_3065_cross_corpus_matrix_v20.json` reports the
+`.286` paper, repair, solver-grounding, FR-11, GateMate, SSQA, and blocker
+statuses
+**And** the `.287` roadmap source, either staged or already active, targets
+milestone `2026.05.287` and points to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3067 archive/handoff generator runs
+**Then** it writes `results/experiment_3067_archive_v286_activate_v287.json`
+with `archive_v286_activate_v287_ready=true`, `prior_capstone_ready=true`,
+`prior_paper_ready=false`, the `.286` matrix/capstone statuses preserved, the
+six carry-forward blocker categories visible, `next_milestone="2026.05.287"`,
+concrete source artifact provenance, aggregation-only inference substrate
+metadata, no roadmap activation performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3067)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3067 | Implemented (`python/carnot/reporting/archive_v286_activate_v287_3067.py`) | Implemented (`tests/python/test_experiment_3067_archive_v286_activate_v287.py`) |
+
 ### REQ-REPORT-3055: Repair Headline Retirement And Blocker Ledger
 
 The repository shall provide an Exp 3055 repair headline retirement and
