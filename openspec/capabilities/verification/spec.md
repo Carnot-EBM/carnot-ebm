@@ -607,6 +607,55 @@ native DSP claim, no label-feature reuse, and an `honest_verdict` beginning with
 |---|---|---|
 | REQ-VERIFY-3019 | Proposed (`python/carnot/eval/fr11_feasibility_channel_de_tautology_diagnostic_v1.py`) | Proposed (`tests/python/test_experiment_3019_fr11_feasibility_channel_de_tautology_diagnostic.py`) |
 
+### REQ-VERIFY-3044: SMT/SAT Validator-Tree Exactness Upgrade
+
+The repository shall provide a deterministic Exp 3044 SMT/SAT validator-tree
+exactness upgrade that runs tiny local solver-backed fixtures without live LLM
+inference and writes
+`results/experiment_3044_smt_sat_validator_tree_exactness_upgrade_v1.json`.
+
+The upgrade shall expose an explicit exact-validator implementation path,
+write inspectable evidence rows, and distinguish verified, irrelevant,
+unresolved, fallback-only, and correction-set rows. Verified rows shall come
+only from exact solver satisfiability checks over executable validator-tree
+constraints. Unsatisfiable exact rows shall report minimal correction sets
+that localize the candidate field or assertion to change. Irrelevant rows shall
+remain clipped to non-authoritative or out-of-scope validator regions.
+Unresolved rows shall remain visible when a row is not exactly decidable by the
+implemented SMT/SAT path. Fallback-only rows shall never be promoted as exact
+authority.
+
+The terminal artifact MUST include `validator_tree_exactness_ready`,
+`exact_validator_path`, `tests_or_checks_run`, `verified_count`,
+`unresolved_count`, `fallback_only_count`, `correction_sets`, `spec_updates`,
+`model_specs`, `inference_substrate`, and `honest_verdict`. It shall also
+record the evidence row path and enough row counts for downstream
+self-learning controllers to gate on exact feedback availability.
+
+`validator_tree_exactness_ready` shall be true only when the exact-validator
+implementation path exists, the evidence row file exists, at least one
+verified row is counted, at least one correction set is emitted, unresolved
+and fallback-only rows remain visible, no live LLM inference was used, and
+`honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3044: Exact Rows Gate Downstream Self-Learning
+
+Given deterministic validator-tree fixtures with satisfiable, unsatisfiable,
+irrelevant, unresolved, and fallback-only cases,
+When the Exp 3044 exactness upgrade runs,
+Then it writes an evidence row file and terminal artifact, classifies the
+satisfiable exact row as verified, converts the unsatisfiable exact row into a
+minimal correction-set row, preserves irrelevant and unresolved rows as
+non-promotable, keeps fallback-only rows separate from exact authority, and
+sets `validator_tree_exactness_ready=true` only when the exact path and
+evidence file are present.
+
+## Implementation Status (REQ-VERIFY-3044)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3044 | Implemented (`python/carnot/eval/smt_sat_validator_tree_exactness_upgrade_v1.py`) | Implemented (`tests/python/test_experiment_3044_smt_sat_validator_tree_exactness_upgrade.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
