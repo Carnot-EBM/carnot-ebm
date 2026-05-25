@@ -283,5 +283,18 @@
     ".venv/bin/pytest tests/python -q -> failed: 20 failed, 7738 passed, 38 skipped, 1 error; unrelated xdist internal error in tests/python/test_experiment_295_apple_verify_repair.py::test_partial_artifact_has_stall_at hit tokenizer MemoryError",
     ".venv/bin/python scripts/check_spec_coverage.py -> failed: 444 pre-existing tests missing spec references"
   ],
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.000219 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
