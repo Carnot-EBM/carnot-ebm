@@ -1,0 +1,29 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.284",
+  "generated_at": "2026-05-25T06:03:41Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The locked timing fields report 0 completed experiments over 0 wall-time minutes, with 0 compute-bound experiments. Slowest compute-bound runs, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone.",
+  "bottlenecks_identified": [
+    "No runtime bottleneck can be identified from the authoritative timing block because experiments_completed is 0.",
+    "no data available this milestone for compute-bound slowest-experiment analysis",
+    "no data available this milestone for GPU utilization efficiency on compute-bound tasks"
+  ],
+  "improvements_suggested": [
+    "Emit an explicit no-experiment-commits sentinel at milestone close so retrospective generation distinguishes an empty execution window from missing timing telemetry.",
+    "Add a pre-retro timing-manifest check that reports experiments_completed, total_wall_time_minutes, and compute_bound_experiments_count before any narrative is drafted.",
+    "Keep GPU-idle alerts gated on compute-bound timing rows so synthesis-only retrospectives do not create false operations work."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Record the empty timing-window sentinel as soon as activation closes.",
+    "Print the locked timing counters in the conductor closeout log before invoking retrospective generation.",
+    "Preserve the compute-bound gate on GPU-idle and DualGPURunner recommendations."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "This retrospective has to stay narrow because the authoritative timing block contains no completed experiment rows. The useful operational lesson is to make empty timing windows explicit enough that the next closeout cannot be confused with a GPU-utilization failure."
+}
