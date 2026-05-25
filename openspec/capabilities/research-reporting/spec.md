@@ -7384,3 +7384,76 @@ and counts.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3038 | Planned (`python/carnot/reporting/cross_corpus_matrix_v18_3038.py`) | Planned (`tests/python/test_experiment_3038_cross_corpus_matrix_v18.py`) |
+
+### REQ-REPORT-3039: Milestone 2026.05.284 Capstone
+
+The repository shall provide an Exp 3039 milestone capstone generator that
+writes `results/experiment_3039_capstone_v284.json` using only checked-in
+upstream JSON artifacts, the active `.284` roadmap, and matrix v18. The
+generator MUST read `results/experiment_3038_cross_corpus_matrix_v18.json`
+and every available `.284` artifact from Exp 3026 through Exp 3037 before
+deciding paper readiness, repair promotion, FR-11 self-learning promotion,
+GateMate status, SSQA status, and the natural `.285` milestone focus. It MUST
+NOT run live LLM inference, verifier scoring, solver execution, synthesis,
+board flashing, readback, hardware smoke tests, the conductor, external
+publication tooling, or historical experiment rewrites.
+
+The capstone MUST set `capstone_ready=true` only when matrix v18 exists,
+reports `matrix_v18_ready=true`, and represents all 14 `.284` task rows from
+Exp 3026 through Exp 3039. It MUST reconcile the matrix counts for `clean`,
+`flagged`, `blocked`, `gated_skipped`, `projection_only`, `pilot_only`,
+`missing`, and `retired` against the matrix rows, preserving non-clean rows
+instead of converting them into milestone success.
+
+The capstone MUST set `paper_ready=true` only when repair evidence is clean and
+promotable, FR-11 self-learning is non-tautological and explicitly scoped, and
+hardware blockers are either resolved or explicitly bounded without unsupported
+speedup, sampler, thermodynamic, annealing, latency, energy, or board
+performance claims. Bounded controller-only FR-11 evidence MAY be promoted only
+as verifier-feedback controller utility; it MUST NOT be broadened into native
+LLM weight learning or unconstrained autonomous self-improvement. GateMate and
+SSQA statuses MUST remain blocked or gate-skipped when the output contract,
+host-visible transcript, or bounded resource evidence is absent.
+
+Because Exp 3039 is aggregation-only, the terminal artifact MUST expose no
+top-level live-model metadata such as `model_specs`, `target_model`, CUDA,
+GGUF, GPU inventory, headline-model, or live-model fields. Source model and
+hardware details MAY appear only under cited upstream-artifact provenance. When
+a conductor prompt assigns ops reconciliation to a separate step, the generator
+MUST leave `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`
+unchanged.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`repair_claim_status`, `fr11_self_learning_status`, `gatemate_status`,
+`ssqa_status`, `matrix_v18_summary`, `blockers_remaining`,
+`next_milestone_focus`, `recommended_next_actions`, `inference_substrate`, and
+`honest_verdict`. It MAY include source checksums, cited upstream artifacts,
+paper-readiness checks, what-the-milestone-proved summaries, no-new-execution
+booleans, status-update booleans, and measured `duration_s` as long as every
+value is derived from upstream JSON artifacts, roadmap metadata, or file
+presence/checksum checks.
+
+#### SCENARIO-REPORT-3039: Capstone Closes .284 Without Paper Overclaim
+
+**Given** matrix v18 is present and reports `matrix_v18_ready=true`
+**And** Exp 3026 through Exp 3037 artifacts are present, flagged, blocked,
+gated-skipped, projection-only, pilot-only, retired, or honestly absent
+**And** matrix v18 reports bounded repair evidence, controller-only FR-11
+self-learning, a missing GateMate output contract, missing host-visible output,
+and gate-skipped SSQA
+**When** the Exp 3039 capstone generator runs
+**Then** it writes `results/experiment_3039_capstone_v284.json` with
+`capstone_ready=true`, `paper_ready=false`, repair carried forward as bounded
+rather than headline-promotable, FR-11 carried forward only as controller-only
+non-tautological self-learning, GateMate bounded as blocked on the missing
+pinout/output contract, SSQA bounded as gate-skipped without performance
+claims, reconciled matrix v18 counts, visible blockers, three to five concrete
+`.285` actions, source model/hardware details only under
+`cited_upstream_artifacts`, no top-level live-model metadata, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3039)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3039 | Implemented (`python/carnot/reporting/capstone_v284_3039.py`) | Implemented (`tests/python/test_experiment_3039_capstone_v284.py`) |

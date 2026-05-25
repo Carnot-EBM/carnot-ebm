@@ -1,0 +1,740 @@
+{
+  "artifact": "experiment_3039_capstone_v284",
+  "blockers_remaining": [
+    {
+      "area": "matrix_nonclean",
+      "counts": {
+        "blocked": 1,
+        "flagged": 4,
+        "gated_skipped": 3,
+        "missing": 1
+      },
+      "next_action": "Drive matrix v19 to zero unresolved publication blockers.",
+      "status": "publication_blocking"
+    },
+    {
+      "area": "repair",
+      "evidence": {
+        "exp3028_flags": [
+          {
+            "detail": "pass_at_1_delta=0.375 and pass_at_k_delta=0.375 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+            "kind": "TAUTOLOGY",
+            "severity": "critical"
+          },
+          {
+            "detail": "false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          {
+            "detail": "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          {
+            "detail": "syntax_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+            "kind": "IMPLAUSIBLE_PERFECT",
+            "severity": "info"
+          },
+          {
+            "detail": "duration_s=0.103766 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+            "kind": "DURATION_TOO_SHORT",
+            "severity": "critical"
+          },
+          {
+            "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+            "kind": "METHODOLOGY_MISSING",
+            "severity": "warn"
+          }
+        ],
+        "exp3029_honest_verdict": "complete: repair_claim_status=bounded; promotable=0; bounded=1; retired_or_blocked=2"
+      },
+      "next_action": "Clear or explicitly retire the remaining repair adversarial flags.",
+      "status": "bounded"
+    },
+    {
+      "area": "gatemate",
+      "evidence": [
+        "Provide an authoritative GateMate A1-EVB-2M output pinout and commit a CCF Pin_out binding for done or a deterministic status bit.",
+        "Choose and commit the matching host reader command: GPIO/LED read, UART serial decode, or JTAG-readable status command.",
+        "Keep downstream flash smoke gated until the reader command has an expected pass/fail transcript."
+      ],
+      "next_action": "Commit a host-visible output contract and reader command.",
+      "status": "blocked_pinout_missing_bounded"
+    },
+    {
+      "area": "ssqa",
+      "evidence": [
+        "Exp 3036 artifact missing: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json was not present, so no GateMate host-visible flash-smoke output was observed.",
+        "Upstream Exp 3035 status=blocked honest_verdict=blocked_gate_check_failed.",
+        "Provide an authoritative GateMate A1-EVB-2M output pinout and commit a CCF Pin_out binding for done or a deterministic status bit.",
+        "Choose and commit the matching host reader command: GPIO/LED read, UART serial decode, or JTAG-readable status command.",
+        "Keep downstream flash smoke gated until the reader command has an expected pass/fail transcript.",
+        "Re-run Exp 3036 only after Exp 3034/3035 expose a host-visible output path and record a real transcript."
+      ],
+      "next_action": "Collect bounded RTL/PnR evidence only after host-visible output exists.",
+      "status": "gate_skipped_bounded_no_performance_claim"
+    },
+    {
+      "area": "exp3036",
+      "next_action": "Run GateMate flash smoke after Exp3034/Exp3035 pass their gates.",
+      "status": "missing_or_gated_skipped"
+    }
+  ],
+  "capstone_ready": true,
+  "cited_upstream_artifacts": [
+    {
+      "actual_path": "results/experiment_3026_archive_v283_activate_v284.json",
+      "experiment_id": "exp3026",
+      "honest_verdict": "complete: milestone_archived=true; next_milestone=2026.05.284; capstone_ready=true; previous_paper_ready=false; protected_files_unchanged=true",
+      "planned_path": "results/experiment_3026_archive_v283_activate_v284.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "79d48b777f64ec818c5e166ed26afeedc753636c77dc0b58de8ec85b3b32e4e1",
+      "source_model_details": {
+        "inference_substrate": {
+          "mode": "aggregation"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "experiment_id": "exp3027",
+      "honest_verdict": "complete: methodology_corrigendum_ready=true; repair_decision=live_rerun_required; flagged_rows_reviewed=29; missing_metadata=2; unresolved_bound=1",
+      "planned_path": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "06a8aa48db38a2c96432f26ffd544af7007b93ec96812abafeb35e35b4f0291c",
+      "source_model_details": {
+        "inference_substrate": {
+          "kind": "aggregation_from_upstream_artifacts"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "experiment_id": "exp3028",
+      "honest_verdict": "complete: clean_repair_rerun_ready=true; n_tasks=24",
+      "planned_path": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "f06b97b130d4ce01c2cfa2c38090e27e7b6840b7e561dc3e35e5f45b717b2215",
+      "source_model_details": {
+        "headline_models_used": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ],
+        "inference_substrate": {
+          "gguf_cache_paths": {
+            "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+            "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+            "unsloth/gemma-4-31B-it-GGUF": null
+          },
+          "gpu_inventory": {
+            "available": true,
+            "free_vram_mib_total": 48244,
+            "gpus": [
+              {
+                "driver_version": "595.71.05",
+                "index": 0,
+                "memory_free_mib": 24122,
+                "memory_total_mib": 24576,
+                "memory_used_mib": 5,
+                "name": "NVIDIA GeForce RTX 3090"
+              },
+              {
+                "driver_version": "595.71.05",
+                "index": 1,
+                "memory_free_mib": 24122,
+                "memory_total_mib": 24576,
+                "memory_used_mib": 5,
+                "name": "NVIDIA GeForce RTX 3090"
+              }
+            ]
+          },
+          "kind": "clean_repair_reconstruction",
+          "model_checksum_feasibility": {
+            "available_model_count": 1,
+            "available_models": [
+              "unsloth/gemma-4-26B-A4B-it-GGUF"
+            ],
+            "bounded_sha256_model_count": 1,
+            "feasible": true,
+            "full_sha256_model_count": 0,
+            "method": "sha256_full_for_small_files_or_bounded_head_tail_for_large_files",
+            "model_count": 5
+          },
+          "model_load_attempted": false
+        },
+        "model_specs": [
+          {
+            "checksum": "3098fa8e9a753392f81c5d9a409a24704c743208874064816856bc8aca6080e0",
+            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+          }
+        ]
+      }
+    },
+    {
+      "actual_path": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "experiment_id": "exp3029",
+      "honest_verdict": "complete: repair_claim_status=bounded; promotable=0; bounded=1; retired_or_blocked=2",
+      "planned_path": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "d0f73723e02c53b934326e8ceabea5214af953851d333a631861646350ed9131",
+      "source_model_details": {
+        "inference_substrate": {
+          "kind": "aggregation_from_upstream_artifacts"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3030_validator_frontier_corrigendum_v2.json",
+      "experiment_id": "exp3030",
+      "honest_verdict": "complete: validator_frontier_corrigendum_ready=true; verified=40; irrelevant=2; unresolved=2; fallback_only=1; missing_authority=0",
+      "planned_path": "results/experiment_3030_validator_frontier_corrigendum_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "6ca047eedb515ff63387281a573076b1b4f583bda7f09c60e210ab2e94c84eec",
+      "source_model_details": {
+        "inference_substrate": {
+          "kind": "aggregation_from_upstream_artifacts"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3031_dccd_structured_repair_panel_v1.json",
+      "experiment_id": "exp3031",
+      "honest_verdict": "complete: dccd structured repair panel ready; n_cases=3",
+      "planned_path": "results/experiment_3031_dccd_structured_repair_panel_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "feafb6d6d9df11f67c97903db9146b1903a06ff4887313c43e275234715ba63a",
+      "source_model_details": {
+        "inference_substrate": {
+          "kind": "live_llm_inference",
+          "loader": "llama_cpp",
+          "model_load_attempted": true,
+          "selected_headline_model": {
+            "available": true,
+            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-MXFP4_MOE.gguf",
+            "source": "huggingface_cache"
+          }
+        },
+        "model_specs": [
+          {
+            "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+            "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-MXFP4_MOE.gguf",
+            "role": "headline_live_generation"
+          }
+        ]
+      }
+    },
+    {
+      "actual_path": "results/experiment_3032_fr11_heldout_dvi_replay_v2.json",
+      "experiment_id": "exp3032",
+      "honest_verdict": "complete_fr11_heldout_replay_ready",
+      "planned_path": "results/experiment_3032_fr11_heldout_dvi_replay_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "ffb95f1279f7f7d16957375f27cfafa8d710c92aae23c5408cac59441a80d7a8",
+      "source_model_details": {
+        "inference_substrate": {
+          "mode": "cached_exact_trace_replay"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json",
+      "experiment_id": "exp3033",
+      "honest_verdict": "complete_controller_only_promotable",
+      "planned_path": "results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "725e8bdf57be9a72f0ad718346ddf2bc5b268e123810a6f38c050b9bd7030d9d",
+      "source_model_details": {
+        "inference_substrate": {
+          "mode": "cached_feedback_controller_stress"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json",
+      "experiment_id": "exp3034",
+      "honest_verdict": "complete: blocked_gatemate_output_contract_pinout_missing",
+      "planned_path": "results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "fbdfa4e00be6ae45a1ab7baa9bcf1f431eed85866f4ca91ea901a52f9a490483",
+      "source_hardware_details": {
+        "exact_operator_action_required": [
+          "Provide an authoritative GateMate A1-EVB-2M output pinout and commit a CCF Pin_out binding for done or a deterministic status bit.",
+          "Choose and commit the matching host reader command: GPIO/LED read, UART serial decode, or JTAG-readable status command.",
+          "Keep downstream flash smoke gated until the reader command has an expected pass/fail transcript."
+        ],
+        "gatemate_output_contract_ready": false,
+        "host_reader_command": "blocked_no_host_reader_command: explicit_no_ready_contract",
+        "host_visible_io_plan_ready": false,
+        "selected_output_path": "explicit_no_ready_contract"
+      },
+      "source_model_details": {
+        "inference_substrate": {
+          "kind": "gatemate_design_audit"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3035_gatemate_output_shim_rtl_ccf_sim.json",
+      "experiment_id": "exp3035",
+      "honest_verdict": "blocked_gate_check_failed",
+      "planned_path": "results/experiment_3035_gatemate_output_shim_rtl_ccf_sim_v1.json",
+      "planned_path_present": false,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "18b925adcc6f2bf1b6e43647228909796101210a9da74153d68242dd79d91943",
+      "source_gate_details": {
+        "blocked_at_layer": "conductor_pre_gate",
+        "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3034-gatemate-output-contract-pinout-decision.gatemate_output_contract_ready (actual=False == expected=True)",
+        "gates_evaluated": [
+          {
+            "actual": false,
+            "artifact_field": "gatemate_output_contract_ready",
+            "expected": true,
+            "op": "==",
+            "passed": false,
+            "reason": "actual=False == expected=True",
+            "upstream": "exp3034-gatemate-output-contract-pinout-decision"
+          }
+        ],
+        "status": "blocked"
+      }
+    },
+    {
+      "actual_path": "results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json",
+      "experiment_id": "exp3036",
+      "honest_verdict": "",
+      "planned_path": "results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json",
+      "planned_path_present": false,
+      "present": false,
+      "readable_json_object": false,
+      "sha256": null
+    },
+    {
+      "actual_path": "results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json",
+      "experiment_id": "exp3037",
+      "honest_verdict": "complete: ssqa_gate_skipped_exp3036_missing",
+      "planned_path": "results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "1b9a181d573ea1f16a786c72c8a8ba2a6aa5675296524bbf351a494747013571",
+      "source_hardware_details": {
+        "exact_blocker_or_next_action": [
+          "Exp 3036 artifact missing: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json was not present, so no GateMate host-visible flash-smoke output was observed.",
+          "Upstream Exp 3035 status=blocked honest_verdict=blocked_gate_check_failed.",
+          "Provide an authoritative GateMate A1-EVB-2M output pinout and commit a CCF Pin_out binding for done or a deterministic status bit.",
+          "Choose and commit the matching host reader command: GPIO/LED read, UART serial decode, or JTAG-readable status command.",
+          "Keep downstream flash smoke gated until the reader command has an expected pass/fail transcript.",
+          "Re-run Exp 3036 only after Exp 3034/3035 expose a host-visible output path and record a real transcript."
+        ],
+        "ssqa_gate_status": "gate_skipped",
+        "ssqa_performance_claim_allowed": false
+      },
+      "source_model_details": {
+        "inference_substrate": {
+          "kind": "ssqa_hardware_boundary_artifact"
+        }
+      }
+    },
+    {
+      "actual_path": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "experiment_id": "exp3038",
+      "honest_verdict": "complete: matrix_v18_ready=true; rows_total=14; clean=4; flagged=4; blocked=1; gated_skipped=3; projection_only=1; pilot_only=0; missing=1; retired=0",
+      "planned_path": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "sha256": "d550bef950aa502eb1a899103f071cd903ad3170911428febffebd26ac450ccd",
+      "source_model_details": {
+        "inference_substrate": {
+          "kind": "aggregation_from_upstream_artifacts"
+        }
+      }
+    }
+  ],
+  "duration_s": 0.004271,
+  "fr11_self_learning_status": "controller_only_promotable",
+  "gatemate_status": "blocked_pinout_missing_bounded",
+  "honest_verdict": "complete: capstone_ready=true; paper_ready=false; repair_claim_status=bounded; fr11_self_learning_status=controller_only_promotable; gatemate_status=blocked_pinout_missing_bounded; ssqa_status=gate_skipped_bounded_no_performance_claim; next=2026.05.285_gatemate_output_contract_repair_flag_cleanup",
+  "inference_substrate": {
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "source": "checked_in_artifacts"
+  },
+  "matrix_v18_summary": {
+    "all_284_tasks_represented": true,
+    "baseline_v17_summary": {
+      "blocked": 10,
+      "clean": 40,
+      "flagged": 29,
+      "gated_skipped": 3,
+      "matrix_v17_ready": true,
+      "missing": 1,
+      "pilot_only": 4,
+      "projection_only": 10
+    },
+    "blocked": 1,
+    "clean": 4,
+    "counts_from_rows": {
+      "blocked": 1,
+      "clean": 4,
+      "flagged": 4,
+      "gated_skipped": 3,
+      "missing": 1,
+      "pilot_only": 0,
+      "projection_only": 1,
+      "retired": 0
+    },
+    "counts_match_rows": true,
+    "flagged": 4,
+    "gated_skipped": 3,
+    "matrix_v18_ready": true,
+    "missing": 1,
+    "missing_task_rows": [],
+    "pilot_only": 0,
+    "projection_only": 1,
+    "retired": 0,
+    "row_count_observed": 14,
+    "rows_total": 14,
+    "status_by_experiment": {
+      "exp3026": "projection_only",
+      "exp3027": "flagged",
+      "exp3028": "flagged",
+      "exp3029": "flagged",
+      "exp3030": "clean",
+      "exp3031": "flagged",
+      "exp3032": "clean",
+      "exp3033": "clean",
+      "exp3034": "blocked",
+      "exp3035": "gated_skipped",
+      "exp3036": "gated_skipped",
+      "exp3037": "gated_skipped",
+      "exp3038": "clean",
+      "exp3039": "missing"
+    }
+  },
+  "milestone": "2026.05.284",
+  "missing_artifacts": [
+    "results/experiment_3035_gatemate_output_shim_rtl_ccf_sim_v1.json",
+    "results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json"
+  ],
+  "next_milestone_focus": "2026.05.285: GateMate host-visible output contract closure, SSQA bounded resource evidence, and repair-flag cleanup before paper-promotion work.",
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "paper_ready": false,
+  "paper_ready_checks": [
+    {
+      "check": "capstone_ready",
+      "passed": true,
+      "reason": "matrix v18 is present, complete, and count-reconciled"
+    },
+    {
+      "check": "repair_promotable",
+      "passed": false,
+      "reason": "repair_claim_status=bounded"
+    },
+    {
+      "check": "fr11_non_tautological",
+      "passed": true,
+      "reason": "fr11_self_learning_status=controller_only_promotable"
+    },
+    {
+      "check": "hardware_resolved_or_bounded",
+      "passed": true,
+      "reason": "gatemate_status=blocked_pinout_missing_bounded; ssqa_status=gate_skipped_bounded_no_performance_claim"
+    },
+    {
+      "check": "matrix_has_no_nonclean_publication_blockers",
+      "passed": false,
+      "reason": "flagged=4; blocked=1; gated_skipped=3; missing=1"
+    }
+  ],
+  "publication_action_allowed": false,
+  "recommended_next_actions": [
+    "Resolve the GateMate output pinout and commit a CCF binding plus host reader command.",
+    "Rerun the GateMate output shim and flash smoke only after the output contract is ready.",
+    "Convert SSQA from gate-skipped to bounded RTL/PnR/resource evidence without speedup claims.",
+    "Clear or retire the repair adversarial flags before any headline repair wording.",
+    "Carry FR-11 forward only as controller-weight verifier-feedback learning until broader training is measured."
+  ],
+  "repair_claim_status": "bounded",
+  "run_date": "20260525",
+  "schema": "carnot.milestone_capstone.v284_aggregation.v1",
+  "source_artifacts_read": [
+    {
+      "actual_path": "results/experiment_3026_archive_v283_activate_v284.json",
+      "alternate_path": null,
+      "experiment_id": "exp3026",
+      "planned_path": "results/experiment_3026_archive_v283_activate_v284.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "79d48b777f64ec818c5e166ed26afeedc753636c77dc0b58de8ec85b3b32e4e1"
+    },
+    {
+      "actual_path": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "alternate_path": null,
+      "experiment_id": "exp3027",
+      "planned_path": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "06a8aa48db38a2c96432f26ffd544af7007b93ec96812abafeb35e35b4f0291c"
+    },
+    {
+      "actual_path": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "alternate_path": null,
+      "experiment_id": "exp3028",
+      "planned_path": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "f06b97b130d4ce01c2cfa2c38090e27e7b6840b7e561dc3e35e5f45b717b2215"
+    },
+    {
+      "actual_path": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "alternate_path": null,
+      "experiment_id": "exp3029",
+      "planned_path": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "d0f73723e02c53b934326e8ceabea5214af953851d333a631861646350ed9131"
+    },
+    {
+      "actual_path": "results/experiment_3030_validator_frontier_corrigendum_v2.json",
+      "alternate_path": null,
+      "experiment_id": "exp3030",
+      "planned_path": "results/experiment_3030_validator_frontier_corrigendum_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "6ca047eedb515ff63387281a573076b1b4f583bda7f09c60e210ab2e94c84eec"
+    },
+    {
+      "actual_path": "results/experiment_3031_dccd_structured_repair_panel_v1.json",
+      "alternate_path": null,
+      "experiment_id": "exp3031",
+      "planned_path": "results/experiment_3031_dccd_structured_repair_panel_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "feafb6d6d9df11f67c97903db9146b1903a06ff4887313c43e275234715ba63a"
+    },
+    {
+      "actual_path": "results/experiment_3032_fr11_heldout_dvi_replay_v2.json",
+      "alternate_path": null,
+      "experiment_id": "exp3032",
+      "planned_path": "results/experiment_3032_fr11_heldout_dvi_replay_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "ffb95f1279f7f7d16957375f27cfafa8d710c92aae23c5408cac59441a80d7a8"
+    },
+    {
+      "actual_path": "results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json",
+      "alternate_path": null,
+      "experiment_id": "exp3033",
+      "planned_path": "results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "725e8bdf57be9a72f0ad718346ddf2bc5b268e123810a6f38c050b9bd7030d9d"
+    },
+    {
+      "actual_path": "results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json",
+      "alternate_path": null,
+      "experiment_id": "exp3034",
+      "planned_path": "results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "fbdfa4e00be6ae45a1ab7baa9bcf1f431eed85866f4ca91ea901a52f9a490483"
+    },
+    {
+      "actual_path": "results/experiment_3035_gatemate_output_shim_rtl_ccf_sim.json",
+      "alternate_path": "results/experiment_3035_gatemate_output_shim_rtl_ccf_sim.json",
+      "experiment_id": "exp3035",
+      "planned_path": "results/experiment_3035_gatemate_output_shim_rtl_ccf_sim_v1.json",
+      "planned_path_present": false,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "18b925adcc6f2bf1b6e43647228909796101210a9da74153d68242dd79d91943"
+    },
+    {
+      "actual_path": "results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json",
+      "alternate_path": null,
+      "experiment_id": "exp3036",
+      "planned_path": "results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json",
+      "planned_path_present": false,
+      "present": false,
+      "readable_json_object": false,
+      "required": false,
+      "sha256": null
+    },
+    {
+      "actual_path": "results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json",
+      "alternate_path": null,
+      "experiment_id": "exp3037",
+      "planned_path": "results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": false,
+      "sha256": "1b9a181d573ea1f16a786c72c8a8ba2a6aa5675296524bbf351a494747013571"
+    },
+    {
+      "actual_path": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "alternate_path": null,
+      "experiment_id": "exp3038",
+      "planned_path": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "planned_path_present": true,
+      "present": true,
+      "readable_json_object": true,
+      "required": true,
+      "sha256": "d550bef950aa502eb1a899103f071cd903ad3170911428febffebd26ac450ccd"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3026_archive_v283_activate_v284.json": "79d48b777f64ec818c5e166ed26afeedc753636c77dc0b58de8ec85b3b32e4e1",
+    "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json": "06a8aa48db38a2c96432f26ffd544af7007b93ec96812abafeb35e35b4f0291c",
+    "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json": "f06b97b130d4ce01c2cfa2c38090e27e7b6840b7e561dc3e35e5f45b717b2215",
+    "results/experiment_3029_repair_promotion_boundary_audit_v2.json": "d0f73723e02c53b934326e8ceabea5214af953851d333a631861646350ed9131",
+    "results/experiment_3030_validator_frontier_corrigendum_v2.json": "6ca047eedb515ff63387281a573076b1b4f583bda7f09c60e210ab2e94c84eec",
+    "results/experiment_3031_dccd_structured_repair_panel_v1.json": "feafb6d6d9df11f67c97903db9146b1903a06ff4887313c43e275234715ba63a",
+    "results/experiment_3032_fr11_heldout_dvi_replay_v2.json": "ffb95f1279f7f7d16957375f27cfafa8d710c92aae23c5408cac59441a80d7a8",
+    "results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json": "725e8bdf57be9a72f0ad718346ddf2bc5b268e123810a6f38c050b9bd7030d9d",
+    "results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json": "fbdfa4e00be6ae45a1ab7baa9bcf1f431eed85866f4ca91ea901a52f9a490483",
+    "results/experiment_3035_gatemate_output_shim_rtl_ccf_sim.json": "18b925adcc6f2bf1b6e43647228909796101210a9da74153d68242dd79d91943",
+    "results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json": null,
+    "results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json": "1b9a181d573ea1f16a786c72c8a8ba2a6aa5675296524bbf351a494747013571",
+    "results/experiment_3038_cross_corpus_matrix_v18.json": "d550bef950aa502eb1a899103f071cd903ad3170911428febffebd26ac450ccd"
+  },
+  "ssqa_status": "gate_skipped_bounded_no_performance_claim",
+  "status_updates_written": false,
+  "what_284_proved": {
+    "fr11_self_learning": {
+      "heldout_trace_count": 8,
+      "information_asymmetry_enforced": true,
+      "model_weight_training": false,
+      "promotion_decision": "controller_only_promotable",
+      "tautology_risk_cleared": true
+    },
+    "gatemate": {
+      "gatemate_output_contract_ready": false,
+      "host_visible_output_observed": false,
+      "operator_action_count": 3
+    },
+    "matrix_accounting": {
+      "all_284_tasks_represented": true,
+      "baseline_v17_summary": {
+        "blocked": 10,
+        "clean": 40,
+        "flagged": 29,
+        "gated_skipped": 3,
+        "matrix_v17_ready": true,
+        "missing": 1,
+        "pilot_only": 4,
+        "projection_only": 10
+      },
+      "blocked": 1,
+      "clean": 4,
+      "counts_from_rows": {
+        "blocked": 1,
+        "clean": 4,
+        "flagged": 4,
+        "gated_skipped": 3,
+        "missing": 1,
+        "pilot_only": 0,
+        "projection_only": 1,
+        "retired": 0
+      },
+      "counts_match_rows": true,
+      "flagged": 4,
+      "gated_skipped": 3,
+      "matrix_v18_ready": true,
+      "missing": 1,
+      "missing_task_rows": [],
+      "pilot_only": 0,
+      "projection_only": 1,
+      "retired": 0,
+      "row_count_observed": 14,
+      "rows_total": 14,
+      "status_by_experiment": {
+        "exp3026": "projection_only",
+        "exp3027": "flagged",
+        "exp3028": "flagged",
+        "exp3029": "flagged",
+        "exp3030": "clean",
+        "exp3031": "flagged",
+        "exp3032": "clean",
+        "exp3033": "clean",
+        "exp3034": "blocked",
+        "exp3035": "gated_skipped",
+        "exp3036": "gated_skipped",
+        "exp3037": "gated_skipped",
+        "exp3038": "clean",
+        "exp3039": "missing"
+      }
+    },
+    "repair": {
+      "clean_repair_rerun_ready": true,
+      "false_accept_delta": 0.0,
+      "matrix_status": "flagged",
+      "n_live_transcripts": 24,
+      "n_tasks": 24,
+      "pass_at_1_delta": 0.375,
+      "repair_claim_status": "bounded"
+    },
+    "ssqa": {
+      "performance_claim_allowed": false,
+      "resource_report_count": 0,
+      "ssqa_boundary_ready": true,
+      "ssqa_gate_status": "gate_skipped"
+    },
+    "validator_frontier": {
+      "fallback_only_count": 1,
+      "irrelevant_region_count": 2,
+      "missing_authority_count": 0,
+      "unresolved_region_count": 2,
+      "verified_region_count": 40
+    }
+  },
+  "invariant_violations": []
+}
