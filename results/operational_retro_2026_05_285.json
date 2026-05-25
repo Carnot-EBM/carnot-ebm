@@ -1,13 +1,14 @@
 {
   "schema": "carnot.operational_retro.v64",
   "milestone": "2026.05.285",
-  "generated_at": "2026-05-25T10:26:05.654576Z",
-  "retro_type": "operational_in_progress",
-  "summary": "Authoritative TIMING DATA reports 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments for milestone 2026.05.285. Slowest compute-bound experiments, GPU efficiency on compute-bound work, and DualGPURunner engagement have no data available this milestone; the idle GPU snapshot is not a compute-bound bottleneck without compute-bound timing rows.",
+  "generated_at": "2026-05-25T10:55:45Z",
+  "retro_type": "operational_full",
   "total_wall_time_minutes": 0,
   "experiments_completed": 0,
   "compute_bound_experiments_count": 0,
   "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "Authoritative TIMING DATA reports 0 total wall-time minutes, 0 completed experiments, and 0 compute-bound experiments for milestone 2026.05.285. Slowest compute-bound experiments, GPU efficiency on compute-bound work, and DualGPURunner engagement have no data available this milestone; the idle GPU snapshot is not a compute-bound bottleneck without compute-bound timing rows.",
   "bottlenecks_identified": [
     "Timing-source coverage gap: no milestone-scoped experiment commits were available after activation, so operational bottlenecks cannot be ranked from TIMING DATA.",
     "Compute-bound slow-run analysis has no data available this milestone because compute_bound_experiments_count is 0.",
@@ -23,7 +24,6 @@
     "Require the retrospective generator to preserve locked timing fields and separate them from interpretive process notes.",
     "Retain the compute-bound gate for GPU-idle and DualGPURunner claims in future milestone retrospectives."
   ],
-  "gpu_idle_on_compute_bound_tasks": null,
   "estimated_time_savings_pct": 0,
   "meta_reflection": "This retrospective treats the empty timing window as missing execution evidence, not proof of efficient execution. The GPU STATE block is useful as a snapshot, but without compute-bound rows it cannot support a GPU-waste or runner-enforcement claim."
 }
