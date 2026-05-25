@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-25 Milestone 2026.05.288 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-25T21:26:00Z | 2026-05-25T21:45:46Z | Planned milestone 2026.05.288 after reading required project context, `.287` capstone/matrix/conductor evidence, exclusion manifest, hardware notes, prior roadmap docs, and current references. Added Post-.287 research sweep to `research-references.md` (I-CALM/task abstention, verifier-hardness, ReSyn, self-verification, Dafny/Z3 feedback, XGrammar-2, KAN-CL/COOL-KAN, Extropic THRML/XTR, Logical Intelligence Aleph/Kona). Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks exp3081-exp3094, including exact-fixture generation, abstention-calibrated verifier recovery, gated structured repair, FR-11 ReSyn/KAN-CL continuous self-learning, EBT/ARM sidecar adapter schema, hardware evidence ingestion, matrix v22, and capstone. Validation: YAML parse OK; prompt checks OK; roadmap schema import OK; prior-failure validator OK; exclusion-manifest lint OK; roadmap gate audit OK with 10 gate checks and 0 failures; touched-file whitespace checks OK. | ~160k |
+
+---
+
 ## Session: 2026-05-25 Milestone 2026.05.287 Research Planning
 
 ### Turn Log

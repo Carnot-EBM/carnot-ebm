@@ -1,321 +1,290 @@
-# Research Roadmap vNEXT - Milestone 2026.05.287
+# Research Roadmap vNEXT - Milestone 2026.05.288
 
-**Title:** Verifier-Gain Recovery + Soundness-Bounded FR-11 + Blocker Reconciliation
+**Title:** Abstention-Calibrated Verifier Recovery + Exact Fixtures + FR-11 Completeness Repair
 **Created:** 2026-05-25
 **Status:** Planned
-**Supersedes:** 2026.05.286 "Retire Gate-Rerun Blockers + Solver-Grounded Verification + FR-11 Promotion Boundary"
+**Supersedes:** 2026.05.287 "Verifier-Gain Recovery + Soundness-Bounded FR-11 + Blocker Reconciliation"
 **Execution queue:** `research-roadmap-next.yaml`
 
-## What 2026.05.286 Proved
+## What 2026.05.287 Proved
 
-Milestone `.286` completed all planned tasks, but the authoritative capstone
-kept the research program below paper-ready status. The authority artifact is
-`results/experiment_3066_capstone_v286.json`:
+Milestone `.287` completed its runnable work, but its authority artifacts still
+do not support a paper-ready claim. The capstone authority is
+`results/experiment_3080_capstone_v287.json`:
 
 - `capstone_ready=true`
 - `paper_ready=false`
+- `publication_blocker_count=42`
+- `verifier_gain_status=flagged_or_gated_verifier_gain_recovery_incomplete`
 - `repair_claim_status=bounded_and_gated_skipped`
-- `solver_grounding_status=flagged_solver_grounded_no_gain`
-- `fr11_self_learning_status=controller_only_delayed_regression_ready_flagged`
-- `kan_pwa_status=bounded_controller_anchor_audit_not_promoted`
+- `fr11_self_learning_status=flagged_controller_only_budget_exceeded`
 - `gatemate_status=blocked_no_rerun_operator_actions_required`
 - `ssqa_status=gated_skipped_host_visible_smoke_missing`
-- `publication_blocker_count=33`
-- `next_milestone_recommendation=2026.05.287_verifier_gain_recovery_and_blocker_reconciliation`
+- `ebt_arm_status=projection_only_feasible_no_implementation`
 
-The positive result is that `.286` stopped several bad loops. It retired
-unsupported repair headline wording, built a de-tautology protocol, preserved
-formal SMT fallback, added FR-11 trace and delayed-regression artifacts, kept
-KAN/PWA bounded, and converted GateMate/SSQA into no-rerun ledgers until
-operator evidence exists.
+The useful result is that `.287` made the failure modes explicit. The
+first-token abstention panel used a mandated local SOTA GGUF and measured a
+positive abstention-adjusted delta, but `abstention_precision=0.5` failed the
+`>=0.7` gate. The formal correction pilot preserved exact solver fallback but
+matched solver-only success, so it did not establish lift. The repair branch
+correctly stayed blocked by gates. FR-11 showed controller-side rollback and
+zero soundness mistakes, but one completeness mistake exceeded the budget. The
+EBT/ARM audit stayed projection-only, and GateMate/SSQA remained bounded by
+missing operator evidence.
 
-The hard negative result is that the core paper claim still lacks a measured
-gain. `exp3057` produced a local SOTA solution-verifier panel, but
-`verifier_gain_delta=-0.125`, `false_positive_rate=0.0`, and
-`false_negative_rate=1.0`. `exp3058` showed LLM-guided SMT proposals matching
-solver-only success with no measurable improvement. The gated repair rerun
-`exp3059` correctly did not run because the verifier-gain gate failed.
-Matrix v20 also surfaced blocker hygiene problems, including artifact aliasing
-around `exp3059`, remaining missing-source rows, and 33 publication blockers.
-
-| Area | `.286` result | `.287` consequence |
+| Area | `.287` result | `.288` consequence |
 | --- | --- | --- |
-| Verifier gain | Local SOTA verifier panel was calibrated but negative | Diagnose confidence/entropy/abstention before another repair gate |
-| Solver guidance | AquaForte-style SMT preserved fallback but showed no lift | Add MCS/refinement feedback and keep exact solvers authoritative |
-| Repair | De-tautology protocol exists; gated rerun skipped | Try grammar-constrained repair only after positive verifier-gain evidence |
-| FR-11 | Controller-side delayed regression worked but remained flagged | Add explicit soundness/completeness mistake budgets before promotion |
-| KAN/EBM theory | KAN/PWA stayed controller-anchor only | Audit EBT/ARM-EBM adapter feasibility without implementation claims |
-| Hardware | GateMate/SSQA no-rerun ledgers are correct | Refresh operator-action ledgers only; no flash/timing/speedup reruns |
-| Matrix/capstone | Matrix v20 ready, capstone not paper-ready | Normalize aliases/blockers and build matrix v21 as the capstone authority |
+| Verifier gain | Abstention precision was too low to unlock calibration | Build a larger exact fixture bank, add I-CALM/task-abstention prompts, and retest |
+| Formal feedback | Solver fallback preserved but no measured lift | Add Dafny/Z3 structural feedback and vacuity checks before calibration |
+| Repair | Structured repair protocol ready; micro-panel gate blocked | Add XGrammar/LLGuidance-style emitter preflight before a gated repair run |
+| FR-11 | Soundness passed, completeness budget failed | Target completeness repair with ReSyn-style fixtures and KAN-CL anchoring |
+| EBM bridge | EBT/ARM path feasible only as projection | Prototype sidecar schema and replay scorer without weight-update claims |
+| Hardware | GateMate/SSQA still operator-evidence blocked | Ingest only host-visible evidence if it exists; no hardware rerun or speedup claim |
+| Matrix/capstone | Matrix v21 ready but 42 blockers remain | Build a blocker-reduction ledger, matrix v22, and capstone with strict claim boundaries |
 
 ## Three Biggest Gaps To PRD Vision
 
-1. **Verifier-gain and abstention gap.** The PRD requires verifiable reasoning
-   gains, but the latest local SOTA verifier made selection worse and missed all
-   wrong cases. `.287` must treat confidence, first-token entropy, abstention,
-   and formal correction feedback as calibration signals before repair can run.
+1. **Verifiable reasoning evidence gap.** The PRD requires measured
+   verification and repair gains under exact authority. Current evidence is
+   negative or gated: low abstention precision, no formal-feedback lift, and
+   skipped repair. `.288` must widen exact labels and separate solving,
+   verifying, abstaining, and repairing.
 
-2. **Continuous self-learning soundness gap.** FR-11 has controller-side delayed
-   regression evidence, but not a soundness/completeness accounting model. `.287`
-   must define mistake budgets, delayed-regression windows, no-feedback controls,
-   shuffled-feedback controls, and rollback criteria before claiming any
-   continuous self-learning improvement.
+2. **Continuous self-learning completeness gap.** FR-11 now has a controller
+   loop with rollback, but it still failed a zero-completeness-mistake budget.
+   `.288` must test whether synthetic exact families plus lightweight
+   KAN-style anchoring improve retention and family holdout without soundness
+   regressions.
 
-3. **Claim-blocker reconciliation gap.** The framework is improving its
-   honesty, but matrix v20 still has alias, missing, bounded, blocked, and
-   projection-only rows that prevent a paper-ready capstone. `.287` must reduce
-   ambiguity by evidence, retirement, or explicit bounded status, not by wording.
+3. **Architecture-claim bridge gap.** Carnot's long-term architecture points
+   toward EBT/ARM-style energy refinement and hardware-accelerated sampling,
+   but local code and hardware evidence do not justify those claims yet. `.288`
+   must create adapter schemas and evidence-ingestion contracts while keeping
+   implementation, timing, and speedup claims bounded.
 
 ## New Research Integrated
 
-The post-`.286` sweep was added to `research-references.md` before this
-milestone was designed. The findings that materially shape `.287` are:
+The post-`.287` planning sweep was appended to `research-references.md` before
+this milestone was designed. Findings that shape `.288`:
 
 | Finding | Source | Milestone use |
 | --- | --- | --- |
-| First-token entropy can flag hallucination risk | arXiv:2605.05166 / Hugging Face Papers | Add first-token confidence and abstention to the verifier-gain recovery panel |
-| Lyapunov probes expose hallucination sensitivity | arXiv:2603.06081 | Use as a diagnostic design reference; no probe implementation claim without hidden-state access |
-| HALT-RAG separates abstention, acceptance, and rejection | arXiv:2509.07475 / Hugging Face Papers | Require separate acceptance precision, rejection recall, and abstention coverage fields |
-| Energy-guided decoding can suppress hallucinated objects | arXiv:2507.07731 | Treat energy-guided decoding as a repair/selection design pattern, not a multimodal local claim |
-| VERGE combines formal refinement with MCS-style feedback | arXiv:2601.20055 / Hugging Face Papers | Add correction-subset SMT/SAT feedback instead of only solver success/failure |
-| Online CoT verifier learnability needs mistake bounds | arXiv:2603.03538 | Define FR-11 soundness and completeness mistake budgets |
-| EBT and ARM-EBM provide relevant theory but not local integration | arXiv:2507.02092, arXiv:2512.15605, `alexiglad/EBT` | Add a feasibility audit before any adapter implementation |
-| LLGuidance supports grammar-constrained decoding | `guidance-ai/llguidance` | Add syntax-constrained repair candidate emission before a repair micro-panel |
-| Ising/thermodynamic hardware remains promising but externally scoped | NVIDIA Ising-Decoding, Extropic writing, arXiv:2601.04358 | Keep hardware as future architecture context until local host-visible evidence exists |
-| Kona and thermodynamic accelerators are architecture signals only | logicalintelligence.com, extropic.ai/writing | Compare architecture boundaries without borrowing external performance claims |
+| I-CALM and task-abstention work separate confidence, humility, and abstention behavior in code generation | arXiv:2604.03904 and arXiv:2605.17029 | Redesign the abstention panel around calibrated reject/accept boundaries |
+| LLM verification can be harder than solving | OpenReview `4jnJjSgQC1` | Add an autopsy protocol before trusting verifier gain |
+| ReSyn-style synthetic environments can scale exact generators and verifiers | arXiv:2602.20117 / OpenReview `YcrOuJRVGh` | Build an exact fixture bank with solver/execution labels |
+| Self-verification training helps reasoning only when verification is grounded | arXiv:2602.07594 | Keep self-verification under exact labels and perturbation tests |
+| Dafny feedback and uDebug-style vacuity checks improve verified-code loops | arXiv:2604.22601 | Add structural formal feedback and vacuity guards |
+| XGrammar-2 improves structured generation throughput and custom grammars | arXiv:2601.04426 / `mlc-ai/xgrammar` | Preflight structured repair emission before a repair micro-panel |
+| KAN-CL and COOL-KAN show continual/on-device KAN adaptation paths | arXiv:2605.12306 / Springer 2026 | Try KAN-style anchors for FR-11 completeness and retention |
+| Extropic THRML/XTR-0 and Logical Intelligence Aleph/Kona remain architecture signals | Extropic writing/GitHub and logicalintelligence.com | Keep hardware and Kona claims as bounded architecture context until local evidence exists |
 
 ## Architecture Snapshot
 
 ```text
-                           +----------------------------------+
-                           | Mandated local SOTA GGUF models  |
-                           | Qwen3.6-35B-A3B, Gemma-4-31B,   |
-                           | Gemma-4-26B-A4B                 |
-                           +----------------+-----------------+
-                                            |
-                                            v
- +----------------------+      +----------------------------+      +----------------------+
- | exp3069 failure      | ---> | exp3070 confidence, first- | ---> | exp3072 verifier    |
- | autopsy and protocol |      | token entropy, abstention  |      | calibration v2      |
- +----------------------+      +----------------------------+      +----------+-----------+
-              |                              |                               |
-              |                              v                               v
-              |                 +----------------------------+      +----------------------+
-              |                 | exp3071 VERGE/MCS formal   | ---> | exp3075 repair only |
-              |                 | correction feedback        |      | if gates pass       |
-              |                 +----------------------------+      +----------------------+
-              |
-              v
- +----------------------+      +----------------------------+      +----------------------+
- | exp3073 EBT/ARM-EBM  | ---> | future adapter backlog,    |      | no implementation   |
- | feasibility audit    |      | no local claim             |      | claim in .287       |
- +----------------------+      +----------------------------+      +----------------------+
+                         +----------------------------------+
+                         | Mandated local SOTA GGUF models  |
+                         | Qwen3.6-35B-A3B, Gemma-4-31B,   |
+                         | Gemma-4-26B-A4B                 |
+                         +----------------+-----------------+
+                                          |
+                                          v
++---------------------+      +----------------------------+      +----------------------+
+| exp3083 verifier    | ---> | exp3084 ReSyn exact        | ---> | exp3085 I-CALM /    |
+| hardness autopsy    |      | fixture bank               |      | task-abstention     |
++----------+----------+      +-------------+--------------+      +----------+-----------+
+           |                               |                                |
+           |                               v                                v
+           |                 +----------------------------+      +----------------------+
+           |                 | exp3086 Dafny/Z3 formal    | ---> | exp3087 gated       |
+           |                 | feedback and vacuity guard |      | verifier calib v3   |
+           |                 +----------------------------+      +----------+-----------+
+           |                                                              |
+           v                                                              v
++---------------------+      +----------------------------+      +----------------------+
+| exp3088 XGrammar /  | ---> | exp3089 gated structured   | <--- | positive verifier   |
+| LLGuidance emitter  |      | repair micro-panel         |      | gain required       |
++---------------------+      +----------------------------+      +----------------------+
 
- +----------------------+      +----------------------------+      +----------------------+
- | exp3076 FR-11        | ---> | exp3077 online self-       | ---> | bounded promotion   |
- | mistake-budget spec  |      | learning pilot with exact  |      | only if controls    |
- |                      |      | feedback and rollback      |      | pass                |
- +----------------------+      +----------------------------+      +----------------------+
++---------------------+      +----------------------------+      +----------------------+
+| exp3084 exact       | ---> | exp3090 FR-11 ReSyn +      | ---> | controller-only or  |
+| fixture families    |      | KAN-CL completeness repair |      | bounded promotion   |
++---------------------+      +----------------------------+      +----------------------+
 
- +----------------------+      +----------------------------+      +----------------------+
- | exp3078 GateMate/    | ---> | no-rerun operator-action   | ---> | no speedup or       |
- | SSQA refresh         |      | ledger                     |      | hardware claim      |
- +----------------------+      +----------------------------+      +----------------------+
++---------------------+      +----------------------------+      +----------------------+
+| exp3091 EBT/ARM     | ---> | sidecar schema + replay    | ---> | no weight-update    |
+| adapter prototype   |      | scorer tests               |      | implementation claim|
++---------------------+      +----------------------------+      +----------------------+
 
-                                            |
-                                            v
-                           +----------------------------------+
-                           | exp3079 matrix v21               |
-                           | exp3080 capstone .287            |
-                           +----------------------------------+
++---------------------+      +----------------------------+      +----------------------+
+| exp3092 GateMate /  | ---> | operator evidence ledger   | ---> | no rerun unless     |
+| SSQA evidence       |      | and allowed next actions   |      | evidence exists     |
++---------------------+      +----------------------------+      +----------------------+
+
+                                          |
+                                          v
+                         +----------------------------------+
+                         | exp3093 matrix v22               |
+                         | exp3094 capstone .288            |
+                         +----------------------------------+
 ```
 
 ## Phase Plan
 
-### Phase A - Archive, Matrix Hygiene, and Failure Autopsy
+### Phase A - Archive, Blockers, and Verifier-Hardness Grounding
 
-Tasks: `exp3067`-`exp3069`
+Tasks: `exp3081`-`exp3083`
 
-- Archive `.286` and pre-stage `.287` without modifying the active roadmap.
-- Normalize matrix v20 source-artifact aliases, especially the `exp3059`
-  `_v1` mismatch, and separate missing artifacts from bounded artifacts.
-- Turn the negative verifier and no-lift SMT results into a calibration
-  protocol with explicit abstention and disqualifier fields.
+- Archive `.287` without modifying the active roadmap.
+- Convert matrix v21's 42 blockers into a reduction ledger with explicit
+  research, artifact-hygiene, bounded, gated, and operator-evidence buckets.
+- Apply the "verification is harder than solving" warning to Carnot's local
+  verifier failures before another calibration or repair attempt.
 
-Exit condition: `.287` starts from a clean blocker ledger and a concrete
-verifier-gain recovery protocol.
+Exit condition: `.288` starts from an auditable blocker ledger and a stricter
+verifier/abstention protocol.
 
-### Phase B - Verifier-Gain Recovery and EBM Feasibility
+### Phase B - Exact Fixtures, Abstention Calibration, and Formal Feedback
 
-Tasks: `exp3070`-`exp3073`
+Tasks: `exp3084`-`exp3087`
 
-- Run a local SOTA first-token entropy and abstention panel using the mandated
-  GGUF models.
-- Add VERGE/MCS-style formal correction feedback while preserving solver
-  authority.
-- Run a gated verifier calibration v2 only after the confidence and formal
-  correction artifacts exist.
-- Audit EBT/ARM-EBM adapter feasibility without claiming implementation or
-  benchmark performance.
+- Build a ReSyn-inspired exact fixture bank with solver/execution labels across
+  SAT/SMT/code-style constraints.
+- Run an I-CALM/task-abstention local SOTA panel on at least one mandated GGUF.
+- Add Dafny/Z3 feedback and vacuity guards, falling back to Z3-only only when
+  Dafny is unavailable and recording that boundary.
+- Run gated verifier calibration v3 only if abstention and formal-feedback
+  gates pass.
 
-Exit condition: Carnot either has positive verifier-gain evidence under exact
-ground truth, or the repair branch remains mechanically blocked.
+Exit condition: Carnot either has positive, exact-grounded verifier gain or the
+repair branch remains mechanically blocked.
 
-### Phase C - Grammar-Constrained Repair and Soundness-Bounded FR-11
+### Phase C - Structured Repair and Continuous Self-Learning
 
-Tasks: `exp3074`-`exp3077`
+Tasks: `exp3088`-`exp3090`
 
-- Define a grammar-constrained repair protocol based on LLGuidance-style
-  syntax control and AprAD-style intent preservation.
-- Run a tiny SOTA repair micro-panel only if verifier-gain recovery is positive.
-- Define FR-11 soundness/completeness mistake budgets.
-- Run the mandatory continuous self-learning pilot with exact feedback,
-  delayed-regression checks, no-feedback controls, shuffled-feedback controls,
-  and rollback.
+- Preflight a structured repair emitter using XGrammar/LLGuidance design
+  patterns without claiming grammar decoding if local libraries are missing.
+- Run a tiny structured repair panel only after verifier calibration is
+  positive.
+- Run the mandatory continuous self-learning experiment with ReSyn families,
+  KAN-CL-inspired anchors, exact delayed-regression checks, and rollback.
 
-Exit condition: repair is either cleanly improved under strict gates or skipped,
-and FR-11 has a soundness-bounded controller-side result.
+Exit condition: repair is either cleanly improved under gates or skipped, and
+FR-11 has an updated soundness/completeness budget with explicit retention.
 
-### Phase D - Hardware Boundaries, Matrix v21, and Capstone
+### Phase D - Adapter/Hardware Boundaries, Matrix v22, and Capstone
 
-Tasks: `exp3078`-`exp3080`
+Tasks: `exp3091`-`exp3094`
 
-- Refresh GateMate and SSQA operator-action ledgers without rerunning hardware
-  or making speedup claims.
-- Build cross-corpus matrix v21 from `.286` and `.287` artifacts.
-- Write the `.287` capstone, preserving `paper_ready=false` unless every
-  required matrix row is clean.
+- Prototype an EBT/ARM sidecar adapter schema and replay scorer with tests,
+  without claiming model integration or weight updates.
+- Ingest GateMate/SSQA operator evidence only if host-visible artifacts exist;
+  otherwise keep the no-rerun ledger.
+- Build matrix v22 and capstone `.288` from the new artifacts.
 
-Exit condition: matrix v21 is the authority for paper readiness, and the next
-milestone inherits fewer ambiguous blockers.
+Exit condition: matrix v22 is the authority for paper readiness, and the
+capstone preserves every remaining blocker without inflated wording.
 
 ## Dependency Graph
 
 ```text
-exp3067 archive
+exp3081 archive .287
   |
   v
-exp3068 matrix v20 alias/blocker normalization
+exp3082 publication blocker ledger
   |
   v
-exp3069 solver-verifier failure autopsy
+exp3083 verifier-hardness autopsy
 
-exp3069
-  |
-  +--> exp3070 first-token abstention SOTA panel
-  |        |
-  |        v
-  |    exp3072 verifier calibration v2
-  |
-  +--> exp3071 VERGE/MCS SMT correction pilot
-           |
-           v
-       exp3072 verifier calibration v2
-
-exp3073 EBT/ARM-EBM feasibility audit
-
-exp3074 grammar-constrained repair protocol
+exp3083
   |
   v
-exp3075 repair micro-panel
-
-exp3072(verifier_gain_delta > 0) + exp3074(protocol ready)
+exp3084 ReSyn exact fixture bank
+  |      |
+  |      +--> exp3090 FR-11 ReSyn/KAN-CL completeness repair
   |
   v
-exp3075 repair micro-panel
-
-exp3076 FR-11 soundness/completeness budget
+exp3085 I-CALM/task-abstention SOTA panel
   |
-  v
-exp3077 FR-11 soundness-bounded online self-learning pilot
+  +------------------------+
+                           v
+exp3086 Dafny/Z3 feedback ---> exp3087 gated verifier calibration v3
+                                      |
+                                      v
+exp3088 structured emitter ------> exp3089 gated structured repair
 
-exp3078 GateMate/SSQA no-rerun refresh
+exp3091 EBT/ARM sidecar adapter schema prototype
+exp3092 GateMate/SSQA operator evidence ingestion
 
-exp3068, exp3072, exp3073, exp3075, exp3077, exp3078
-  |
+exp3093 cross-corpus matrix v22
+  ^
+  | depends on all completed or gated-skipped .288 artifacts
   v
-exp3079 matrix v21
-  |
-  v
-exp3080 capstone .287
+exp3094 capstone .288
 ```
-
-Structured conductor gates:
-
-- `exp3072` gates on `exp3070.first_token_panel_ready == true` and
-  `exp3071.mcs_feedback_ready == true`.
-- `exp3075` gates on `exp3074.grammar_constrained_repair_protocol_ready == true`
-  and `exp3072.verifier_gain_delta > 0.0`.
-- `exp3077` gates on `exp3076.soundness_completeness_budget_ready == true`.
-- `exp3080` gates on `exp3079.matrix_v21_ready == true`.
 
 ## Hardware Requirements
 
-| Task group | Requirement | Claim boundary |
-| --- | --- | --- |
-| `exp3070`, `exp3071`, `exp3072`, `exp3075` | Local GPU capable of mandated SOTA GGUF inference; dual RTX 3090 preferred | These tasks may claim local model transcript evidence only if model ID, quantization, prompt hash, seed, timing, and output path are recorded |
-| `exp3078` | No hardware execution required | Must not flash GateMate, run SSQA, claim Boltzmann sampling, or claim speedup unless operator-provided host-visible evidence already exists |
-| KV260, PolarFire, Extropic/TSU, Kona | Context only | No local benchmark, dispatch, sampling, or thermodynamic claim in `.287` |
-
-All compute-bound tasks must check preconditions before generation and must
-write an honest gate-blocked artifact if the required local model, GPU, or
-prompt-output path is unavailable.
+- **Local SOTA GGUF inference:** `exp3085`, `exp3086`, `exp3087`, and
+  `exp3089` need at least one mandated local GGUF available:
+  `unsloth/Qwen3.6-35B-A3B-GGUF`,
+  `unsloth/gemma-4-31B-it-GGUF`, or
+  `unsloth/gemma-4-26B-A4B-it-GGUF`.
+- **Exact solvers:** `exp3084`, `exp3086`, `exp3087`, `exp3089`, and `exp3090`
+  need local exact labeling through existing validators, Z3, execution tests,
+  or documented blocked status.
+- **Dafny/Z3:** `exp3086` should use Dafny when installed; if Dafny is absent
+  but Z3 exists, it may run a Z3-only pilot and set the boundary fields.
+- **GPU:** live SOTA GGUF tasks should declare CUDA/GPU/model-cache
+  preconditions. Legacy tiny models are smoke tests only.
+- **GateMate/SSQA:** `exp3092` must not flash boards, rerun timing, or claim
+  speedups. It may only ingest operator-provided pinout, command, transcript,
+  and safety evidence already present in the repo.
 
 ## Required SOTA Model Policy
 
-Every `.287` experiment that invokes an LLM must include at least one mandated
-local GGUF model in `MODEL_SPECS`:
+Any `.288` task that uses an LLM must include a `MODEL_SPECS` section naming at
+least one mandated local SOTA GGUF:
 
 - `unsloth/Qwen3.6-35B-A3B-GGUF`
 - `unsloth/gemma-4-31B-it-GGUF`
 - `unsloth/gemma-4-26B-A4B-it-GGUF`
 
-Legacy small models may appear only as fast CPU smoke tests and never as
-headline-result models.
+Legacy small models such as Qwen3.5-0.8B and gemma-4-E4B-it may appear only as
+CPU smoke tests with `legacy_smoke_only_used=true`; they cannot satisfy
+headline-result fields.
 
 ## Failed-Experiment Rerun Compliance
 
-The roadmap deliberately avoids retired hardware and repair rerun scopes. Tasks
-that touch failed or bounded areas include explicit `prior_failures` entries
-with `retire_if_same_verdict: true`:
+The roadmap explicitly includes `prior_failures` for tasks that continue scopes
+from `.287` and earlier, including verifier calibration, formal feedback,
+repair, FR-11 self-learning, EBT/ARM bridging, hardware evidence, matrix, and
+capstone. Every prior entry includes `retire_if_same_verdict: true` so a repeated
+negative result can be mechanically retired instead of carried forward.
 
-- `exp3068` covers matrix/capstone blocker carryforward from `exp3065` and
-  `exp3066`.
-- `exp3069`, `exp3070`, and `exp3072` address the negative verifier-gain result
-  from `exp3057`.
-- `exp3071` addresses the no-lift LLM-guided SMT result from `exp3058`.
-- `exp3075` addresses the gate-blocked repair rerun from `exp3059` and the
-  bounded repair lineage.
-- `exp3076` and `exp3077` address the flagged controller-only FR-11 lineage from
-  `exp3061`.
-- `exp3078` addresses the GateMate/SSQA no-rerun ledgers from `exp3063` and
-  `exp3064`.
-
-No task depends on a retired upstream experiment ID. Hardware tasks remain
-ledger-only unless operator evidence changes the preconditions.
+No task reuses a retired experiment id. No task depends on a retired upstream
+through `requires:`. KV260/GateMate/SSQA work avoids retired host-SD-card
+preconditions and uses evidence-ingestion only.
 
 ## Acceptance Criteria
 
-- `research-roadmap-next.yaml` validates against the roadmap schema.
-- `scripts/validate_prior_failures.py research-roadmap-next.yaml` passes.
-- `scripts/exclusion_manifest_lint.py research-roadmap-next.yaml` passes.
-- `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` passes.
-- Every prompt contains `CONTEXT`, `EXISTING CODE TO READ FIRST`, `TASK`, and
-  `CONCRETE STEPS`.
-- Every prompt ends with `Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'`
-- Every LLM-using experiment includes mandated SOTA GGUF `MODEL_SPECS`.
-- At least one experiment targets continuous self-learning with exact feedback,
-  controls, delayed regression, and rollback.
-- Repair runs only after a positive verifier-gain gate.
-- Hardware remains no-rerun/no-claim unless host-visible operator evidence is
-  already present.
+- `research-roadmap-next.yaml` validates with the roadmap schema, prior-failure
+  validator, exclusion-manifest linter, and gate audit.
+- Every live LLM task includes mandated `MODEL_SPECS`, `model_specs` artifact
+  fields, precondition checks, prompt hashes, and `legacy_smoke_only_used`.
+- Every gated task has a structured `gated_on` block matching upstream required
+  artifact fields.
+- At least one experiment targets continuous self-learning: `exp3090`.
+- No task modifies `research-roadmap.yaml` or `scripts/research_conductor.py`.
+- Capstone `.288` keeps `paper_ready=false` unless matrix v22 has no blocker
+  rows and all headline claims have exact-grounded evidence.
 
 ## Out Of Scope
 
-- Updating the active `research-roadmap.yaml`.
-- Modifying `scripts/research_conductor.py`.
-- Pushing branches or tags.
-- Claiming GateMate, SSQA, KV260, PolarFire, Extropic, Kona, Ising, or
-  thermodynamic speedups.
-- Claiming native KAN/PWA, EBT, ARM-EBM, or model-weight FR-11 integration
-  without a dedicated implementation and verification milestone.
+- No broad WOPR/gallery work.
+- No GRPO/VPRM revival.
+- No GateMate/SSQA flashing, timing, or speedup rerun without operator evidence.
+- No EBT/ARM model integration or weight update claim before a tested adapter
+  schema and replay scorer exist.
+- No repair headline claim unless verifier calibration v3 passes its positive
+  gain gate.

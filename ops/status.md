@@ -1,6 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.287 operational retrospective complete)
+**Last Updated:** 2026-05-25 (Milestone 2026.05.288 research planning staged)
+
+## Session 2026-05-25 - Milestone 2026.05.288 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.288 as "Abstention-Calibrated Verifier Recovery + Exact Fixtures + FR-11 Completeness Repair" after the operator reported all `.287` tasks completed. The plan treats `results/experiment_3080_capstone_v287.json` as the authoritative closeout: `.287` completed but remained `paper_ready=false`; verifier-gain recovery stayed incomplete because abstention precision was below gate, repair stayed bounded/gated-skipped, FR-11 stayed controller-only with a completeness-budget failure, EBT/ARM remained projection-only, and GateMate/SSQA stayed blocked on operator evidence.
+
+Updated `research-references.md` with the post-`.287` sweep covering I-CALM/task abstention, verifier-hardness findings, ReSyn synthetic verifier environments, grounded self-verification, Dafny/Z3 feedback and vacuity guards, XGrammar-2 structured generation, KAN-CL/COOL-KAN continual learning, Extropic THRML/XTR context, and Logical Intelligence Aleph/Kona context. Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks (`exp3081`-`exp3094`). `exp3090-fr11-resyn-kancl-completeness-repair` is the mandatory continuous self-learning experiment. Validation passed for YAML parse, prompt section/end-line checks, roadmap schema import, prior-failure lint, exclusion-manifest lint, roadmap-gate audit, and whitespace checks on touched planning files. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-25 - Milestone 2026.05.287 Operational Retrospective Complete
 

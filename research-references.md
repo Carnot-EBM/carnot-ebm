@@ -16197,3 +16197,106 @@ mirrors but no new planning-grade citation cluster beyond the theory anchor.
   Sources: https://logicalintelligence.com/blog/energy-based-models-for-reasoning,
   https://logicalintelligence.com/kona-ebms-energy-based-models, and
   https://logicalintelligence.com/
+
+---
+
+## 2026-05-25 Post-.287 Planning Sweep (Milestone 2026.05.288)
+
+Scope: arXiv 2025-2026, OpenReview ICLR/LLM-reasoning pages, Hugging Face
+papers, GitHub repository discovery, Extropic public hardware/software pages,
+Logical Intelligence Kona/Aleph pages, and citation-watch context around EBT
+(2507.02092) and ARM-as-EBM (2512.15605). This sweep was run after `.287`
+completed with `paper_ready=false`, `publication_blocker_count=42`,
+`abstention_precision=0.5`, `exp3072` gate-skipped, `exp3075` gate-skipped,
+and FR-11 still controller-only because completeness mistakes exceeded budget.
+
+- **I-CALM confidence-aware abstention (arXiv:2604.03904)**: prompt-only
+  reward framing and humility/norm prompts move models along a coverage versus
+  reliability frontier without weight updates. Relevance to Carnot: `.288`
+  should retry the low-precision first-token panel with verbal confidence,
+  answer/abstain reward schedules, and explicit coverage accounting rather than
+  relying on token entropy alone.
+  Sources: https://arxiv.org/abs/2604.03904 and
+  https://github.com/binzeli/hallucinationControl
+
+- **Task Abstention for code generation (arXiv:2605.17029)**: introduces a
+  distribution-free abstention rule based on consistency of execution outcomes
+  rather than oracle tests. Relevance to Carnot: code-repair and verifier-gain
+  panels should report execution-consistency abstention separately from factual
+  confidence, especially before a repair rerun is allowed.
+  Source: https://arxiv.org/abs/2605.17029
+
+- **Rethinking LLMs as Verifiers (OpenReview ICLR 2026 Workshop)**: finds that
+  verification can be harder than solving for LLM judges, with epistemic bias,
+  perturbation insensitivity, and improved behavior under rubric conditioning.
+  Relevance to Carnot: the failed verifier-gain line needs rubric-conditioned
+  rejection tests and localized perturbation fixtures before treating any LLM
+  verifier as correctness evidence.
+  Source: https://openreview.net/forum?id=4jnJjSgQC1
+
+- **ReSyn synthetic verifier environments (arXiv:2602.20117; OpenReview ICLR
+  2026 submission)**: scales reasoning training by generating environments with
+  instance generators and verifiers across constraint satisfaction, puzzles, and
+  spatial reasoning. Relevance to Carnot: `.288` should expand the exact-labeled
+  fixture bank from `.287`'s tiny N=8 panel to generated families with solver
+  labels before another SOTA verifier calibration gate.
+  Sources: https://arxiv.org/abs/2602.20117 and
+  https://openreview.net/forum?id=YcrOuJRVGh
+
+- **Learning to Self-Verify Makes Language Models Better Reasoners
+  (arXiv:2602.07594; Hugging Face papers)**: shows a generation-verification
+  asymmetry where improving generation does not automatically improve
+  self-verification, but explicit self-verification training can improve both.
+  Relevance to Carnot: FR-11 should keep the verifier objective separate from
+  generator/repair success and measure self-verification improvement as its own
+  held-out signal.
+  Sources: https://arxiv.org/abs/2602.07594 and
+  https://huggingface.co/papers/2602.07594
+
+- **Dafny-based natural-language-to-verified-code feedback
+  (arXiv:2604.22601)**: reports that structural signatures plus iterative Dafny
+  verifier feedback can turn near-universal failure into strong verified-code
+  performance for open-weight models, while uDebug catches vacuous
+  specifications. Relevance to Carnot: `.288` should test structural anchors and
+  self-healing formal feedback on a tiny exact-code subset, with functional
+  tests as a vacuity guard.
+  Sources: https://arxiv.org/abs/2604.22601 and
+  https://www.preprints.org/manuscript/202604.1772
+
+- **XGrammar-2 structured generation (arXiv:2601.04426; GitHub May 2026
+  release)**: adds tag-triggered dynamic structure switching, cross-grammar
+  caching, and low-overhead structured generation for agent/tool protocols.
+  Relevance to Carnot: `.288` repair work should compare LLGuidance-style
+  grammar control against XGrammar-2 for syntax/schema failure reduction before
+  semantic repair claims.
+  Sources: https://arxiv.org/abs/2601.04426,
+  https://github.com/mlc-ai/xgrammar, and
+  https://blog.mlc.ai/2026/05/04/xgrammar-2-fast-customizable-structured-generation
+
+- **KAN-CL and COOL-KAN continual/on-device learning (arXiv:2605.12306;
+  Springer 2026)**: KAN-CL uses per-knot importance anchoring to reduce
+  forgetting, and COOL-KAN reports on-device continual adaptation under hardware
+  constraints. Relevance to Carnot: FR-11 controller-side learning should test
+  per-constraint/per-knot locality anchors and retention metrics before any
+  stronger self-learning claim.
+  Sources: https://arxiv.org/abs/2605.12306 and
+  https://link.springer.com/article/10.1007/s42486-026-00229-z
+
+- **Extropic XTR-0/THRML public context (2025-2026)**: Extropic's public
+  materials frame TSUs as samplers from programmable distributions, while THRML
+  remains the practical JAX software path for block Gibbs and sparse graph
+  experiments. Relevance to Carnot: `.288` may keep THRML/TSU in architecture
+  context, but no TSU latency, Z1, or hardware-access claim belongs in a
+  milestone artifact without authenticated execution evidence.
+  Sources: https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://extropic.ai/hardware, and https://github.com/extropic-ai/thrml
+
+- **Logical Intelligence Aleph/Kona May 2026 updates**: Aleph is publicly
+  framed as a machine-checkable proof/orchestration layer and Kona as a
+  non-autoregressive EBM reasoning substrate. Relevance to Carnot: the near-term
+  lesson is not to borrow benchmarks, but to emulate the architecture boundary:
+  exact verifier authority, globally scored traces, and actionable localized
+  failure feedback.
+  Sources: https://logicalintelligence.com/blog/aleph-leading-benchmarks,
+  https://logicalintelligence.com/blog/aleph-prover-tops-leading-benchmarks,
+  and https://logicalintelligence.com/kona-ebms-energy-based-models

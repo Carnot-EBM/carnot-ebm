@@ -4,44 +4,46 @@
 # docs_audit_report — 2026-05-25
 
 ## TL;DR (stranger's 30-second take)
-The core concept is immediately clear and the quickstart code proves it's real, but the page is littered with raw internal file paths, conflicting metrics, and suspicious 100% perfect scores. A skeptical researcher would likely bounce due to the "spilled" raw artifact IDs and inconsistent HumanEval claims before getting to the paper.
+I would close this tab within 15 seconds. While the core hook is incredibly strong and clear, the page quickly devolves into an impenetrable wall of leaked file paths, internal experiment acronyms, and status-report babble that makes it feel like a private dashboard rather than a public product.
 
 ## TOP 3 PROBLEMS
-1. INTERNAL JARGON BLEED — The SOTA 35B benchmark card literally displays a raw internal path (`@results/citation_hallucination_field_verifier...`) instead of text.
-2. INCONSISTENT METRICS — HumanEval performance is cited across three different cards as "+3.0 points", "8% → 80%", and "0% → 36%" without sufficient context to resolve the disparity.
-3. FABRICATION SIGNALS — Claiming a perfect "1.0" TP rate on GSM8K and catching "60/60 attacks" sets off immediate fake-data alarms without a sample size or credibility anchor.
+1. Leaked File Paths in UI (Results: Live Benchmark) — You are rendering a literal raw file path (`@results/citation_hallucination...`) into the public UI.
+2. Incomprehensible Jargon (Hero: Recent Progress) — The reader is assaulted with "FoVer", "5-seed dual-condition", and "Repinned from v2 0.9857" before they even understand what the framework does.
+3. Fabrication Signals (Results) — Claims of a perfect "1.0 TP rate" and "60/60 attacks" look like overfitted toy metrics without immediate credibility anchors.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results Grid — 12 cards — Suggested cap: 6 max. A stranger will not read 12 distinct metric cards; the impact of the best numbers is diluted by the sheer volume.
+- Results grid — 12 cards — Cap at 6. A stranger will not read 12 different granular benchmark results.
+- Total conceptual cards — 23 floating cards across the page. Fatigue sets in early; the reader will skim and retain nothing.
 
 ### Internal jargon
-- Live benchmark card — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — This is a raw artifact string bleeding into the UI.
-- Recent progress card — "5-seed dual-condition; architecture-only 0.8947" and "FoVer" — A stranger doesn't know the FoVer corpus or what dual-condition implies.
-- TTC & PREM card — "Process-Reward Energy Model (PREM) variance" — Unexplained acronyms casually dropped in a feature card without prior context.
+- Hero Recent Progress — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — Absolute gibberish to an outsider. 
+- Results Live benchmark — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — This is a raw internal artifact path.
+- Results grid (various) — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)`, `EstimationVerifier SVAMP AUC`, `VeriCoT equation-style CoT fix`, `PRM-BiasBench-style attacks`, `HalluGuard v3`. All of these are internal framework nouns that mean nothing to the public.
+- Features TTC & PREM — `Process-Reward Energy Model (PREM)` — Undefined project-specific acronym.
 
 ### Per-milestone narrative
-- Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit" — This reads like an internal retrospective, PR description, or milestone closeout, not landing page copy.
+- Hero Recent Progress — `Repinned from v2 0.9857 after pre-submission adversarial audit...` — This is an internal retrospective or commit message, not value proposition copy.
+- Preprint section — `The arXiv submission is prepared but pending operator-initiated upload.` — Internal status reporting that a stranger does not care about.
 
 ### Inconsistencies
-- HumanEval pass rate vs Code pass rate vs SOTA pass rate — "Code" card (+3.0 points), "Code repair" card (8% → 80%), and "Live benchmark" card (0% → 36%). These numbers contradict each other without immediate context.
-- Verifier AUROC — The Stats bar claims `0.9131`, but the Safety card claims `0.91` and Math reasoning claims `0.90`. While they are different verifiers, it reads as imprecise and inconsistent to a skimmer.
+- Qwen vs Gemma — The "Live benchmark" card title claims `SOTA 35B (Qwen3.6-35B-A3B)`, but the leaked file path right below it says `Gemma4-26B-A4B-it.txt`.
+- AUROC numbers — The Hero stats bar claims `0.9131` Verifier AUROC, the Safety card claims `0.91` AUROC, and the Math reasoning card claims `0.90` AUC. It is unclear to a stranger if these are the same metric drifting or different metrics entirely.
 
 ### Missing essentials
-- Who maintains it? — While "Ian Blenke" is in the footer copyright, there is no prominent mention of the team, institutional backing, or maintainers in the main copy to establish credibility.
+- Why should I trust the numbers? — "Backed by a checked-in experiment artifact" relies on the reader understanding your repository's internal operational standards. There are no links to these artifacts or instructions on how to reproduce the numbers.
 
 ### Fabrication signals
-- Math extraction card — "TP rate: 0.5 → 1.0" — A perfect 1.0 rate looks suspicious and synthetic without a sample size.
-- Adversarial audit card — "catches 60/60 attacks" — 100% success on any benchmark triggers doubt in a skeptical ML researcher.
-- Cascade routing card — "0.0pp accuracy delta" — Perfect zero degradation is another overly-clean number.
+- Math extraction card — `TP rate: 0.5 -> 1.0` — A perfect 1.0 True Positive rate is a massive red flag for overfitting or cherry-picking.
+- Adversarial audit card — `catches 60/60 attacks` — A perfect 100% success rate on exactly 60 samples screams "we stopped testing the moment it worked."
 
 ## WHAT'S WORKING
-- The "Extract → Check → Repair" Bento grid is excellent. It explains the core mechanism clearly without getting bogged down in complex mathematics.
-- The 5-line Python/Rust Quickstart snippet is highly effective at proving the tool is real, usable, and easily integrated.
+- The main headline ("Catch the mistakes your LLM confidently makes up") and the "Extract -> Check -> Repair" bento flow are phenomenal. They immediately and clearly convey the value proposition.
+- The dual Python/Rust code snippet tabs in the Quick Start brilliantly demonstrate how easy the framework is to use.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Scrub the raw `@results/...` artifact path from the SOTA 35B card headline immediately.
-2. Unify the HumanEval claims into a single, cohesive narrative (pick the most representative metric and clarify the baseline).
-3. Anchor the "1.0" and "60/60" claims with explicit sample sizes, or remove them to avoid looking fabricated.
-4. Rewrite the Hero "Recent progress" card to focus on user value rather than internal audit and repinning history.
-5. Prune the Results grid down to the 6 strongest, most defensible cards.
+1. Delete the raw file path from the "Live benchmark" result card immediately and clarify whether the evaluation was run on Qwen or Gemma.
+2. Rewrite the "Recent progress" card in the hero to remove internal jargon (FoVer, repinning, dual-condition) and state the progress in plain English.
+3. Prune the Results section from 12 cards down to the 4-6 most impressive, externally understandable metrics.
+4. Remove or qualify the perfect "1.0" and "60/60" cards to avoid looking like fabricated or overfitted data.
+5. Scrub internal framework names (IterativeSelfRepair, EstimationVerifier, PREM, HalluGuard) from the capability and result cards, replacing them with generic, descriptive terms.
