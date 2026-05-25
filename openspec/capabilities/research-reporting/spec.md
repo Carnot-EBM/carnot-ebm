@@ -8354,3 +8354,74 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3074 | Planned (`python/carnot/reporting/llguidance_aprad_repair_protocol_3074.py`) | Planned (`tests/python/test_experiment_3074_llguidance_aprad_repair_protocol.py`) |
+
+### REQ-REPORT-3079: Cross-Corpus Matrix V21 From .286 And .287 Artifacts
+
+The repository shall provide an Exp 3079 cross-corpus matrix v21 generator
+that writes `results/experiment_3079_cross_corpus_matrix_v21.json` using only
+checked-in `.286` and `.287` artifact JSON files plus the conductor log. The
+generator MUST read matrix v20, capstone v286, the Exp 3068 artifact-alias and
+blocker-normalization ledger, and every available `.287` artifact before
+classifying rows. It MUST apply Exp 3068 artifact aliases non-destructively:
+alias normalization MAY retire the resolved artifact-hygiene missing row, but
+MUST NOT mark the underlying research gate, repair, verifier, FR-11, or
+hardware claim clean solely because a filename mismatch was resolved. The
+generator MUST NOT modify any prior result file, run live model inference, run
+repair, invoke verifier scoring, run solver execution, run synthesis, flash
+hardware, perform readback, run the conductor, push, or modify
+`scripts/research_conductor.py`.
+
+The v21 artifact MUST classify evidence-first rows into exactly these row
+statuses: `clean`, `flagged`, `bounded`, `blocked`, `gated_skipped`,
+`projection_only`, `missing`, and `retired`. Every row in the top-level `rows`
+list MUST include at least `row_id`, `status`, `source_artifact`,
+`source_field`, `evidence_class`, `blocker_class`, `claim_scope`, and
+`summary`. Matrix v20 unresolved publication blockers MUST be carried forward
+unless Exp 3068 explicitly resolves them as artifact-hygiene aliases. New
+`.287` rows MUST add blockers when conductor gates fail, adversarial flags are
+present, methodology corrigenda remain open, verifier-gain or abstention
+metrics fail gates, FR-11 soundness/completeness budgets are exceeded, repair
+micro-panel execution is gate-skipped, or GateMate/SSQA operator preconditions
+remain absent. Future-context audits such as EBT/ARM adapter feasibility MUST
+remain `projection_only` or bounded unless a checked-in implementation and
+test evidence support a stronger row.
+
+The terminal artifact MUST include `matrix_v21_ready`, `rows_total`,
+`clean_rows`, `flagged_rows`, `bounded_rows`, `blocked_rows`,
+`gated_skipped_rows`, `projection_only_rows`, `missing_rows`, `retired_rows`,
+`publication_blocker_count`, `rows`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. The row-count fields MUST be
+integers, not row lists. `matrix_v21_ready` MUST be true only when all required
+sources are readable, all row statuses are valid, row counts reconcile with
+`rows_total`, `publication_blocker_count` reconciles with all non-clean and
+non-retired rows, every row traces to a source artifact or conductor-log
+source field, and the inference substrate declares aggregation from upstream
+artifacts with no live model or hardware execution.
+
+#### SCENARIO-REPORT-3079: V21 Aggregates .287 Evidence Without Alias Overclaim
+
+**Given** matrix v20, capstone v286, and the Exp 3068 normalization ledger are
+present
+**And** Exp 3068 maps the requested Exp 3059 `_v1` artifact alias to the actual
+gate-blocked artifact without changing the research status
+**And** available `.287` artifacts include archive activation, normalization,
+failure autopsy, first-token and VERGE/MCS panels, the Exp 3072 blocked gate
+record, EBT/ARM adapter feasibility, repair protocol, FR-11 budget and pilot
+artifacts, and the GateMate/SSQA refresh
+**And** Exp 3075 is absent but the conductor log records it as a structured
+gate skip because the verifier-gain precondition failed
+**When** the Exp 3079 matrix v21 generator runs
+**Then** it writes `results/experiment_3079_cross_corpus_matrix_v21.json` with
+`matrix_v21_ready=true`, the Exp 3059 artifact-hygiene row retired rather than
+cleaned, all unresolved v20 blockers carried forward, new flagged/gated/
+blocked/projection-only `.287` blockers added from the checked-in evidence,
+integer status counts that sum to `rows_total`, `publication_blocker_count`
+equal to the non-clean/non-retired row count, source citations for every row,
+aggregation-only inference substrate metadata, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3079)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3079 | Planned (`python/carnot/reporting/cross_corpus_matrix_v21_3079.py`) | Planned (`tests/python/test_experiment_3079_cross_corpus_matrix_v21.py`) |
