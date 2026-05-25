@@ -7311,3 +7311,76 @@ honest verdict that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3030 | Implemented (`python/carnot/reporting/validator_frontier_corrigendum_3030.py`) | Implemented (`tests/python/test_experiment_3030_validator_frontier_corrigendum.py`) |
+
+### REQ-REPORT-3038: Cross-Corpus Matrix V18 From .284 Artifacts
+
+The repository shall provide an Exp 3038 cross-corpus matrix v18 generator
+that writes `results/experiment_3038_cross_corpus_matrix_v18.json` using only
+checked-in upstream artifact JSON files, the active `.284` roadmap, and the
+Exp 3024 matrix v17 baseline. The generator MUST read every available `.284`
+artifact from Exp 3026 through Exp 3037, represent Exp 3038 itself as the
+current aggregation task, and represent Exp 3039 as missing until the capstone
+artifact exists. It MUST NOT run live LLM inference, verifier scoring, solver
+execution, synthesis, board flashing, readback, hardware smoke tests, the
+conductor, external publication tooling, or historical experiment rewrites.
+
+The generator MUST classify each of the 14 `.284` tasks as exactly one of
+`clean`, `flagged`, `blocked`, `gated_skipped`, `projection_only`,
+`pilot_only`, `missing`, or `retired`. Missing, gated, blocked, flagged,
+projection-only, pilot-only, and retired evidence MUST remain visible instead
+of being collapsed into successful rows. The Exp 3035 gate-check artifact MAY
+be read from the actual gate-check path when the planned deliverable path is
+absent, but the missing planned path MUST remain inspectable in the source
+metadata. Exp 3036 MUST remain `gated_skipped` when the Exp 3035 shim gate did
+not pass, even when the Exp 3036 deliverable is absent.
+
+The matrix rows MUST include specialized columns for `repair_claim_status`,
+`fr11_self_learning_promotable`, `gatemate_output_contract_ready`,
+`host_visible_output_observed`, and `ssqa_gate_status`. The matrix MUST keep
+repair evidence bounded when Exp 3029 reports `repair_claim_status="bounded"`,
+MUST keep FR-11 promotion controller-only unless the held-out and
+nonforgetting controls are clean, MUST keep GateMate output-contract and
+host-visible smoke evidence distinct, and MUST keep SSQA as gate-skipped when
+host-visible GateMate output is absent.
+
+Because Exp 3038 is aggregation-only, the terminal artifact MUST expose
+top-level live-model metadata only as absence: no top-level `model_specs`,
+`target_model`, CUDA, GGUF, GPU inventory, headline-model, or live-model fields
+are allowed. Source model and hardware details MAY appear only under
+`cited_upstream_artifacts`. The top-level `inference_substrate` MUST be a
+small aggregation dictionary that does not claim model execution.
+
+The terminal artifact MUST include `matrix_v18_ready`, `rows_total`, `clean`,
+`flagged`, `blocked`, `gated_skipped`, `projection_only`, `pilot_only`,
+`missing`, `retired`, `matrix_rows`, `cited_upstream_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include baseline v17
+status summaries, source checksums, missing planned artifacts, no-new-execution
+booleans, status-update booleans, recommended next actions, and measured
+`duration_s` as long as every value is derived from upstream JSON artifacts,
+roadmap task metadata, or file presence/checksum checks. When a conductor
+prompt assigns ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3038: V18 Represents All .284 Tasks Without Live Metadata Leakage
+
+**Given** matrix v17 is present and reports `matrix_v17_ready=true`
+**And** Exp 3026 through Exp 3037 artifacts are present, flagged, blocked,
+gated-skipped, projection-only, pilot-only, retired, or honestly absent
+**And** the Exp 3035 planned deliverable is absent but a conductor gate-check
+artifact records the failed Exp 3034 output-contract gate
+**When** the Exp 3038 matrix v18 generator runs
+**Then** it writes `results/experiment_3038_cross_corpus_matrix_v18.json`
+with `matrix_v18_ready=true`, `rows_total=14`, explicit counts for every
+terminal status bucket, one `matrix_rows` entry for each `.284` task from Exp
+3026 through Exp 3039, Exp 3036 classified as `gated_skipped` rather than
+silently missing, Exp 3039 classified as `missing`, repair, FR-11, GateMate,
+host-visible output, and SSQA specialized columns filled from upstream
+evidence, source model/hardware details only under `cited_upstream_artifacts`,
+no top-level live-model metadata, and an `honest_verdict` that states readiness
+and counts.
+
+## Implementation Status (REQ-REPORT-3038)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3038 | Planned (`python/carnot/reporting/cross_corpus_matrix_v18_3038.py`) | Planned (`tests/python/test_experiment_3038_cross_corpus_matrix_v18.py`) |
