@@ -6299,3 +6299,4 @@ web search: site |
 | 2026-05-25 23:19 UTC | I-CALM and task-abstention SOTA panel v2 | OK | 81 passed in 3.10s |
 | 2026-05-25 23:38 UTC | Dafny/Z3 formal feedback and vacuity pilot | OK | 81 passed in 3.03s |
 | 2026-05-25 23:40 UTC | Gated local SOTA verifier calibration v3 | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp3085-icalm-task-abstention-sota-panel.a |
+| 2026-05-25 23:42 UTC | Gated local SOTA verifier calibration v3 | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp3085-icalm-task-abstention-sota-panel.a |
