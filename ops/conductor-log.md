@@ -6267,3 +6267,4 @@ web search: site |
 | 2026-05-25 14:28 UTC | FR-11 delayed-regression solver self-model pilot | OK | 81 passed in 3.21s |
 | 2026-05-25 15:12 UTC | KAN/PWA locality verification audit | OK | 81 passed in 3.19s |
 | 2026-05-25 15:26 UTC | GateMate no-rerun operator-action ledger | OK | 81 passed in 3.21s |
+| 2026-05-25 15:39 UTC | SSQA host-visible readback boundary ledger | OK | 81 passed in 3.14s |
