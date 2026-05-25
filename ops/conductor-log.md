@@ -6261,3 +6261,4 @@ web search: site |
 | 2026-05-25 12:38 UTC | Local SOTA solution-verifier gain panel | OK | 81 passed in 3.68s |
 | 2026-05-25 12:58 UTC | AquaForte-style LLM-guided SMT pilot | OK | 81 passed in 3.90s |
 | 2026-05-25 13:00 UTC | Gated SOTA repair de-tautology rerun | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3057-local-sota-solution-verifier-gain- |
+| 2026-05-25 13:02 UTC | Gated SOTA repair de-tautology rerun | GATE_BLOCK | 1 of 2 gate(s) failed; first failure: exp3057-local-sota-solution-verifier-gain- |
