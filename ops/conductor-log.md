@@ -6202,3 +6202,4 @@ web search: site |
 | 2026-05-24 23:52 UTC | NSVIF instruction validator-tree expansion | OK | 81 passed in 3.80s |
 | 2026-05-25 00:09 UTC | BEAVER-style validator frontier certificate | OK | 81 passed in 3.39s |
 | 2026-05-25 00:24 UTC | FR-11 feasibility-channel de-tautology diagnostic | OK | 81 passed in 3.75s |
+| 2026-05-25 00:42 UTC | DVI verifier-feedback self-learning controller | OK | 81 passed in 4.04s |
