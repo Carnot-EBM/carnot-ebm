@@ -6209,3 +6209,4 @@ web search: site |
 | 2026-05-25 01:02 UTC | GateMate transport flash smoke v3 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3021-gatemate-rtl-ccf-host-visible-tran |
 | 2026-05-25 01:12 UTC | SSQA explicit gate artifact and RTL report | OK | 81 passed in 3.93s |
 | 2026-05-25 01:32 UTC | Cross-corpus matrix v17 | OK | 81 passed in 3.27s |
+| 2026-05-25 01:48 UTC | Milestone .283 capstone | OK | 81 passed in 3.50s |
