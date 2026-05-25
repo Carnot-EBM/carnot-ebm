@@ -7336,3 +7336,4 @@ ModuleNotFoundError: No module named 'torch'; results/experiment_2828_fover_memo
 - 2026-05-25: Validator frontier corrigendum v2 (✅ Complete) — honest_verdict=complete: validator_frontier_corrigendum_ready=true; verified=40; irrelevant=2; unresolved=2; fallback_only=1; missing_authority=0; results/experiment_3030_validator_frontier_corrigendum_v2.json
 - 2026-05-25: Draft-conditioned constrained repair panel (✅ Complete) — honest_verdict=complete: dccd structured repair panel ready; n_cases=3; results/experiment_3031_dccd_structured_repair_panel_v1.json
 - 2026-05-25: FR-11 held-out DVI replay v2 (✅ Complete) — honest_verdict=complete_fr11_heldout_replay_ready; results/experiment_3032_fr11_heldout_dvi_replay_v2.json
+- 2026-05-25: FR-11 nonforgetting and negative-control stress (✅ Complete) — honest_verdict=complete_controller_only_promotable; results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json
