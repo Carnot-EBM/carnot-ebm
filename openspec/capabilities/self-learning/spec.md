@@ -7805,3 +7805,68 @@ and `honest_verdict="blocked_missing_trace_schema_or_formal_fallback"`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3061 | Implemented (`python/carnot/eval/fr11_delayed_regression_solver_self_model_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3061_fr11_delayed_regression_solver_self_model_pilot_v1.py`) |
+
+## REQ-LEARN-3062: KAN/PWA Locality Verification Audit
+
+**Given** Exp 3047 reports controller-side KAN-style locality/nonforgetting
+evidence and Exp 3061 reports a delayed-regression solver self-model pilot
+**When** Exp 3062 audits whether that evidence can support a stronger KAN
+verification claim
+**Then** it SHALL load both source artifacts, identify the smallest locality
+object available for bounding, and report numeric `locality_bound`,
+`prior_retention_bound`, and `approximation_error_bound` fields.
+**And** it SHALL set `kan_pwa_verification_ready=true` only when an exact or
+bounded PWA/MILP-style check is actually available for the audited locality
+object.
+**And** it SHALL keep `promotion_decision="controller_locality_evidence_only"`
+when the available evidence is limited to controller anchors or process traces
+rather than trained KAN model weights.
+
+The terminal artifact SHALL be
+`results/experiment_3062_kan_pwa_locality_verification_audit_v1.json` and
+SHALL include `kan_pwa_verification_ready`, `locality_bound`,
+`approximation_error_bound`, `prior_retention_bound`, `verification_path`,
+`tests_or_checks_run`, `promotion_decision`, `spec_updates`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3062 Sub-requirements
+
+- REQ-LEARN-3062-1: The audit SHALL fail closed when Exp 3047 or Exp 3061 is
+  missing, malformed, non-terminal, not ready, or claims live inference or
+  model-weight training/mutation.
+- REQ-LEARN-3062-2: `locality_bound` SHALL be derived from Exp 3047's numeric
+  locality evidence, and `prior_retention_bound` SHALL be the tighter
+  nonnegative prior-retention evidence shared by Exp 3047 and Exp 3061.
+- REQ-LEARN-3062-3: `approximation_error_bound` SHALL be finite and explicit;
+  it MAY be `0.0` only when the audit path is an exact controller-anchor audit
+  rather than a PWA abstraction of trained KAN model weights.
+- REQ-LEARN-3062-4: `verification_path` SHALL distinguish
+  `exact_controller_anchor_audit` from a true PWA/MILP KAN model-weight path.
+- REQ-LEARN-3062-5: `promotion_decision` SHALL NOT promote controller-only
+  evidence into a model-weight learning or general KAN verification claim.
+
+### SCENARIO-LEARN-3062: Controller Locality Evidence Is Bounded But Not Promoted
+
+**Given** ready Exp 3047 and Exp 3061 artifacts
+**When** Exp 3062 runs
+**Then** it writes all required artifact fields, records positive numeric
+`locality_bound`, nonnegative `prior_retention_bound`, finite
+`approximation_error_bound`, explicit `verification_path`, no live LLM
+inference, no model-weight mutation, `promotion_decision` bounded to
+controller-locality evidence, `kan_pwa_verification_ready=false`, and an
+`honest_verdict` beginning with `complete_`.
+
+### SCENARIO-LEARN-3062-BLOCKED: Missing Locality Or Delayed-Regression Evidence Fails Closed
+
+**Given** missing or malformed Exp 3047 or Exp 3061 source evidence
+**When** Exp 3062 runs
+**Then** it writes the required artifact fields with zeroed bounds,
+`kan_pwa_verification_ready=false`, an explicit blocked reason, no live LLM
+inference, no model-weight mutation, and
+`honest_verdict="blocked_missing_kan_locality_or_delayed_regression_source"`.
+
+## Implementation Status (REQ-LEARN-3062)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3062 | Implemented (`python/carnot/eval/fr11_kan_pwa_locality_verification_audit_v1.py`) | Implemented (`tests/python/test_experiment_3062_kan_pwa_locality_verification_audit_v1.py`) |
