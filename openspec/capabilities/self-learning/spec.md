@@ -7495,3 +7495,79 @@ weight-learning claim, and an `honest_verdict` beginning with `blocked_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3045 | Implemented (`python/carnot/eval/fr11_governed_self_learning_boundary_v1.py`) | Implemented (`tests/python/test_experiment_3045_fr11_governed_self_learning_boundary_v1.py`) |
+
+## REQ-LEARN-3046: FR-11 Solver-Feedback Self-Learning Loop
+
+**Given** Exp 3044 exposes exact SMT/SAT correction-set feedback and Exp 3045
+exposes governed controller-only self-learning edit rights
+**When** Exp 3046 runs the `.285` governed controller-side self-learning loop
+**Then** it SHALL verify both source artifacts before any update, build a small
+SAT/SMT-style family split containing train/update cases, related held-out
+cases, prior exact cases, no-feedback controls, and shuffled-feedback controls,
+and apply only governance-approved controller-side updates.
+**And** it SHALL not run live LLM inference, not mutate base model weights, and
+not promote shuffled or no-feedback control behavior as learning.
+**And** it SHALL compute family held-out improvement, prior retention,
+no-feedback delta, shuffled-control delta, contradiction-rate delta, rollback
+count, delayed-regression delta, and source-trace coverage.
+
+The terminal artifact SHALL be
+`results/experiment_3046_fr11_solver_feedback_self_learning_loop_v1.json` and
+SHALL include `fr11_solver_feedback_ready`,
+`continuous_self_learning_task`, `promotion_decision`, `edit_targets_used`,
+`family_holdout_delta`, `prior_retention_delta`, `no_feedback_delta`,
+`shuffled_control_delta`, `contradiction_rate_delta`, `rollback_count`,
+`delayed_regression_delta`, `source_trace_counts`, `inference_substrate`, and
+`honest_verdict`.
+
+### REQ-LEARN-3046 Sub-requirements
+
+- REQ-LEARN-3046-1: The evaluator SHALL fail closed with
+  `honest_verdict="blocked_missing_governance_or_exact_feedback"` when Exp 3044
+  or Exp 3045 is missing, malformed, not ready, lacks correction sets, claims
+  live LLM inference, or claims model-weight training or mutation.
+- REQ-LEARN-3046-2: The family split SHALL contain disjoint train/update and
+  held-out case identifiers, at least one prior exact case, at least one
+  no-feedback control case, and at least one shuffled-feedback control case.
+- REQ-LEARN-3046-3: The update SHALL consume Exp 3044 correction-set feedback
+  and mutate only governed controller-side targets such as `controller_weights`
+  or `trace_memory`; it SHALL record `edit_targets_used` and source traces.
+- REQ-LEARN-3046-4: The loop SHALL compute
+  `family_holdout_delta`, `prior_retention_delta`, `no_feedback_delta`,
+  `shuffled_control_delta`, `contradiction_rate_delta`, `rollback_count`, and
+  `delayed_regression_delta` from deterministic before/after controller
+  evaluations.
+- REQ-LEARN-3046-5: `fr11_solver_feedback_ready` SHALL be true only when the
+  governed loop completes with non-vacuous controls, no train/held-out leakage,
+  positive held-out improvement, no prior or delayed regression, zero
+  no-feedback improvement, no shuffled-control improvement, reduced
+  contradiction rate, source-trace coverage, no live LLM inference, and no
+  model-weight mutation.
+
+### SCENARIO-LEARN-3046: Exact Solver Feedback Improves Held-Out Family
+
+**Given** ready Exp 3044 and Exp 3045 artifacts
+**When** Exp 3046 runs
+**Then** it writes the required artifact fields, records controller-only edit
+targets, reports positive `family_holdout_delta`, zero
+`prior_retention_delta`, zero `no_feedback_delta`, non-positive
+`shuffled_control_delta`, negative `contradiction_rate_delta`, a visible
+rollback count, non-negative `delayed_regression_delta`, non-empty source trace
+counts, `fr11_solver_feedback_ready=true`, and an `honest_verdict` beginning
+with `complete_`.
+
+### SCENARIO-LEARN-3046-BLOCKED: Missing Governance Or Exact Feedback Fails Closed
+
+**Given** missing or malformed Exp 3044 or Exp 3045 source evidence
+**When** Exp 3046 runs
+**Then** it writes the required artifact fields with
+`fr11_solver_feedback_ready=false`, zeroed metric deltas, empty edit targets,
+source trace counts showing the missing evidence, no live LLM inference, no
+model-weight mutation, and
+`honest_verdict="blocked_missing_governance_or_exact_feedback"`.
+
+## Implementation Status (REQ-LEARN-3046)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3046 | Implemented (`python/carnot/eval/fr11_solver_feedback_self_learning_loop_v1.py`) | Implemented (`tests/python/test_experiment_3046_fr11_solver_feedback_self_learning_loop_v1.py`) |
