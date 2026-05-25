@@ -513,5 +513,18 @@
     "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json": "06a8aa48db38a2c96432f26ffd544af7007b93ec96812abafeb35e35b4f0291c",
     "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json": "f06b97b130d4ce01c2cfa2c38090e27e7b6840b7e561dc3e35e5f45b717b2215"
   },
-  "status_updates_written": false
+  "status_updates_written": false,
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.006022 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
