@@ -2572,3 +2572,67 @@ claim allowed, a concrete blocker or next action, and a terminal verdict
 beginning with `complete:`.
 
 **Implementation status:** Implemented (Exp 3037)
+
+---
+
+### REQ-HW-088
+
+**Title:** Exp 3048 GateMate output contract operator package MUST gate downstream flash work on concrete pinout and reader authority
+
+**Description:**
+Experiment 3048 MUST produce
+`results/experiment_3048_gatemate_output_contract_operator_package_v1.json`
+as an operator-ready package for the GateMate output contract. The package MUST
+load Exp 3034, extract its candidate output signals, blocked pinout table, and
+operator actions, then inspect only local repository documentation, committed
+`hardware/gatemate/` files, and tool availability. It MUST NOT invent a
+physical pinout, flash hardware, or claim board execution. If a deterministic
+status output has both a concrete CCF `Pin_out` binding and a concrete host
+reader command, the package may set
+`gatemate_output_contract_ready=true` and
+`host_visible_io_plan_ready=true`; otherwise both readiness fields MUST remain
+false and the package MUST name the exact missing operator actions so
+downstream Exp 3049/3050 gates can skip cleanly.
+
+**Acceptance criteria:**
+- `results/experiment_3048_gatemate_output_contract_operator_package_v1.json`
+  is generated with `gatemate_output_contract_ready`,
+  `host_visible_io_plan_ready`, `selected_output_signal`, `ccf_binding`,
+  `host_reader_command`, `expected_transcript`,
+  `missing_operator_actions`, `hardware_execution_claim_made`,
+  `speedup_claim_made`, `inference_substrate`, and `honest_verdict`.
+- `selected_output_signal` is chosen from the Exp 3034 candidate output
+  signals, preferring `done` when present, so later RTL/CCF work has a named
+  status output even when the package is blocked.
+- `ccf_binding` is populated only from committed GateMate CCF `Pin_out`
+  evidence for the selected signal; otherwise it is an empty dict.
+- `host_visible_io_plan_ready=true` is forbidden unless both the selected
+  signal has a concrete physical CCF binding and the package has a concrete
+  host reader command plus expected pass/fail transcript.
+- When authority is missing, the package records the missing authoritative
+  GateMate A1-EVB-2M output pinout, CCF binding, host reader command, or
+  expected transcript without hardware execution, speedup, sampler, Boltzmann,
+  or thermodynamic claims.
+
+**Implementation status:** Implemented (Exp 3048)
+
+---
+
+### SCENARIO-HW-088
+
+**Scenario:** GateMate operator package blocks cleanly when Exp 3034 still lacks pinout and reader authority.
+
+**Given:** Exp 3034 reports `done` and `spin_out[15:0]` as candidate outputs
+but blocks because the current GateMate CCF is build-only and no concrete host
+reader command exists.
+**When:** Exp 3048 inspects local docs, committed GateMate files, and tool
+availability without flashing the board.
+**Then:** It writes the v1 operator package with
+`selected_output_signal="done"`,
+`gatemate_output_contract_ready=false`,
+`host_visible_io_plan_ready=false`, empty `ccf_binding`, empty
+`host_reader_command`, empty `expected_transcript`, explicit missing operator
+actions, no hardware or speedup claims, and a terminal verdict beginning with
+`complete:`.
+
+**Implementation status:** Implemented (Exp 3048)
