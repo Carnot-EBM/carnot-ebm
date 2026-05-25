@@ -7525,3 +7525,60 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3040 | Implemented (`python/carnot/reporting/archive_v284_activate_v285_3040.py`) | Implemented (`tests/python/test_experiment_3040_archive_v284_activate_v285.py`) |
+
+### REQ-REPORT-3041: Matrix/Capstone Adversarial Flag Hygiene
+
+The repository shall provide an Exp 3041 flag-hygiene generator that writes
+`results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json`
+using only checked-in Exp 3027, Exp 3028, Exp 3029, Exp 3038, and Exp 3039
+artifacts. The generator MUST NOT run live LLM inference, verifier scoring,
+solver execution, synthesis, board flashing, readback, hardware smoke tests,
+the conductor, or historical artifact rewrites.
+
+The generator MUST collect every adversarial flag, methodology flag, missing
+row, blocked row, and gate-skipped row visible in the .284 repair, matrix, and
+capstone artifacts. Every emitted classification row MUST cite the exact source
+artifact path and source field that supports the classification. Aggregation
+false positives MAY be emitted only when the cited source artifact explicitly
+declares aggregation-only semantics and the flag came from treating that
+aggregation artifact as a compute-bound live model run. Missing metadata and
+unresolved verifier bounds MUST remain blockers; they MUST NOT be converted to
+clean rows. Hardware-blocked and gate-skipped rows MUST remain bounded and MUST
+NOT become performance claims.
+
+The terminal artifact MUST include `flag_hygiene_ready`, `rows_reviewed`,
+`true_blocker_rows`, `aggregation_false_positive_rows`,
+`missing_metadata_rows`, `unresolved_bound_rows`, `hardware_blocked_rows`,
+`gate_skipped_rows`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include grouped summaries, downstream consumer
+metadata, source checksums, no-new-execution booleans, status-update booleans,
+and measured `duration_s` as long as every value is derived from upstream JSON
+artifacts or file presence/checksum checks. `flag_hygiene_ready` MUST be true
+only when downstream Exp 3042 and Exp 3043 can mechanically consume the
+classification lists by row id, classification, source artifact, source field,
+and blocking status. When a conductor prompt assigns ops reconciliation to a
+separate step, the generator MUST leave `ops/status.md`, `ops/changelog.md`,
+and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3041: Flag Hygiene Separates Aggregation False Positives From Blockers
+
+**Given** Exp 3027, Exp 3028, Exp 3029, Exp 3038, and Exp 3039 artifacts exist
+and the matrix/capstone report flagged, blocked, missing, bounded, and
+gate-skipped .284 rows
+**When** the Exp 3041 flag-hygiene generator runs
+**Then** it writes
+`results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json`
+with aggregation-only duration/methodology flags classified separately from
+true blockers, missing metadata, unresolved bounds, hardware blocks, and
+gate-skipped rows; preserves the capstone `paper_ready=false` blockers;
+records source artifact and field citations for every classification row;
+declares aggregation-only inference substrate with no live model or hardware
+execution; sets `flag_hygiene_ready=true` only when the rows are mechanically
+consumable by Exp 3042 and Exp 3043; and emits an `honest_verdict` starting
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3041)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3041 | Implemented (`python/carnot/reporting/matrix_capstone_adversarial_flag_hygiene_3041.py`) | Implemented (`tests/python/test_experiment_3041_matrix_capstone_adversarial_flag_hygiene.py`) |
