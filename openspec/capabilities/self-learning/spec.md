@@ -7257,3 +7257,90 @@ an `honest_verdict` beginning with `blocked_`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3020 | Implemented (`python/carnot/eval/dvi_verifier_feedback_self_learning_controller_v1.py`) | Implemented (`tests/python/test_experiment_3020_dvi_verifier_feedback_self_learning_controller_v1.py`) |
+
+## REQ-LEARN-3032: FR-11 Held-Out DVI Replay Must Reject Tautological Gains
+
+**Given** Exp 3019 reports a feasibility-channel de-tautology diagnostic with
+known tautology risk and Exp 3020 reports a bounded DVI verifier-feedback
+controller over cached exact traces
+**When** Exp 3032 replays the learned controller on held-out exact verifier
+traces that were not used for controller updates
+**Then** it SHALL measure held-out feasible/infeasible separation, false
+positive rate, false negative rate, and tautology exposure without live LLM
+inference.
+**And** the proposer/controller-update role SHALL receive only the verifier
+feedback history or the persisted bounded controller weights.
+**And** the checker role SHALL receive only held-out exact claim features,
+expected exact authorities, and expected verifier labels, not the controller's
+original rationale or training transcript rows as grading evidence.
+**And** at least one negative control SHALL shuffle verifier feedback labels or
+withhold exact authority features.
+**And** it SHALL not claim model-weight learning unless model weights are
+actually trained.
+
+The terminal artifact SHALL be
+`results/experiment_3032_fr11_heldout_dvi_replay_v2.json` and SHALL include
+`fr11_heldout_replay_ready`, `continuous_self_learning_tested`,
+`heldout_trace_count`, `feasible_infeasible_auc_delta`,
+`shuffled_feedback_delta`, `false_positive_delta`, `false_negative_delta`,
+`tautology_risk_cleared`, `information_asymmetry_enforced`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3032 Sub-requirements
+
+- REQ-LEARN-3032-1: The evaluator SHALL fail closed when Exp 3019 or Exp 3020
+  artifacts are missing, malformed, or not terminal, or when their diagnostic
+  table, controller config, or replay transcript cannot be loaded.
+- REQ-LEARN-3032-2: Held-out traces SHALL be exact candidate-frontier rows from
+  the Exp 3019 held-out partition and SHALL exclude row IDs that appear in the
+  Exp 3020 controller update transcript.
+- REQ-LEARN-3032-3: Checker inputs SHALL include exact claim IDs, non-label
+  controller features, expected exact authorities, and expected feasible versus
+  infeasible labels; they SHALL exclude `candidate_role`, `certificate_status`,
+  `heldout_success_label`, original controller rationale text, and update
+  acceptance decisions.
+- REQ-LEARN-3032-4: The replay SHALL compute AUC improvement over a no-learning
+  baseline, shuffled-feedback delta, false-positive delta, false-negative
+  delta, and an inspectable tautology exposure report.
+- REQ-LEARN-3032-5: `fr11_heldout_replay_ready` SHALL be true only when the
+  held-out replay improves separation, does not improve under shuffled feedback
+  or withheld-authority controls, does not increase false positives or false
+  negatives, enforces information asymmetry, clears tautology risk, and makes no
+  live-inference or model-weight-learning claim.
+
+### SCENARIO-LEARN-3032: Held-Out Replay Clears FR-11 DVI Tautology Risk
+
+**Given** terminal Exp 3019 and Exp 3020 artifacts plus their inspectable tables
+and controller files
+**When** Exp 3032 evaluates the bounded controller on held-out exact traces
+excluded from the update transcript
+**Then** it writes the required artifact fields, reports a positive
+`feasible_infeasible_auc_delta`, reports non-positive
+`shuffled_feedback_delta`, does not increase false positives or false
+negatives, enforces information asymmetry, and sets
+`fr11_heldout_replay_ready=true` only when `tautology_risk_cleared=true`.
+
+### SCENARIO-LEARN-3032-BOUNDED: Held-Out Replay May Complete Without Promotion
+
+**Given** terminal Exp 3019 and Exp 3020 artifacts but the held-out replay still
+exposes tautological scoring or a negative control improvement
+**When** Exp 3032 evaluates the bounded controller
+**Then** it SHALL still write a complete terminal artifact with
+`fr11_heldout_replay_ready=false`, the measured deltas, and an
+`honest_verdict` beginning with `complete_`, because the preconditions were not
+blocked even though FR-11 promotion was not justified.
+
+### SCENARIO-LEARN-3032-BLOCKED: Missing Replay Evidence Fails Closed
+
+**Given** missing or malformed Exp 3019 or Exp 3020 evidence
+**When** Exp 3032 runs
+**Then** it writes the required artifact fields with
+`fr11_heldout_replay_ready=false`, `heldout_trace_count=0`, zeroed deltas,
+`tautology_risk_cleared=false`, `information_asymmetry_enforced=false`, and an
+`honest_verdict` beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-3032)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3032 | Implemented (`python/carnot/eval/fr11_heldout_dvi_replay_v2.py`) | Implemented (`tests/python/test_experiment_3032_fr11_heldout_dvi_replay_v2.py`) |
