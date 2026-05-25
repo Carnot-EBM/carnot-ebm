@@ -14515,7 +14515,7 @@ This sweep was run during the planning phase for milestone `.152`. The literatur
 
 ### Hard Constraint Enforcement Architectures
 - **Papers:** "HardNet++: Differentiable nonlinear constraint layers" (arXiv:2604.19669); "PiNet: Operator Splitting for Convex Sets" (arXiv:2601.12134).
-- **What:** Transitions from penalty-based soft constraints to guaranteed-feasible differentiable projection layers using damped local linearizations and operator splitting. 
+- **What:** Transitions from penalty-based soft constraints to guaranteed-feasible differentiable projection layers using damped local linearizations and operator splitting.
 - **Relevance to Carnot:** Upgrades the reliability of the grammar/inference tiers, eliminating false-accept violations by making constraints physically impossible to breach.
 
 ### Continuous Latent Verification & EBM-CoT
@@ -15935,3 +15935,74 @@ citation check falls back to public web discovery and direct paper pages.
   and proof-bound emphasis, but Carnot results must remain local artifacts and
   should not borrow Kona/Aleph benchmark claims.
   Source: https://logicalintelligence.com/
+
+## 2026-05-25 Post-.284 Planning Sweep (Milestone 2026.05.285)
+
+- **LLM-42 / Verified Speculation (arXiv:2601.17768)**: introduces a
+  verify-rollback schedule for deterministic LLM inference under dynamic
+  batching, with replay under fixed-shape reductions before committing tokens.
+  Relevance to Carnot: `.285` should add a transcript fingerprint preflight for
+  mandated local GGUF repair runs so clean SOTA claims include replay hashes,
+  batch context, seeds, and deterministic acceptance evidence instead of only
+  pass-rate deltas.
+  Source: https://arxiv.org/abs/2601.17768
+
+- **VERGE: Formal Refinement and Guidance Engine (arXiv:2601.20055)**:
+  combines LLM claim decomposition, SMT/theorem-prover checks, semantic routing,
+  and Minimal Correction Subsets for localized repair feedback. Relevance to
+  Carnot: `.285` should convert validator failures into exact, source-traced
+  correction subsets before another repair or self-learning promotion claim.
+  Source: https://arxiv.org/abs/2601.20055
+
+- **Distilling SMT Solver Reasoning into Compact Language Models
+  (OpenReview, ICLR 2026 Workshop)**: studies whether compact models can learn
+  SMT-style reasoning through solver-trace distillation and distinguishes
+  natural-language-to-SMT translation from solver execution imitation.
+  Relevance to Carnot: use this as a design reference for exact validator-tree
+  artifacts and do not claim small-model solver reasoning unless translation
+  validity and execution validity are reported separately.
+  Source: https://openreview.net/forum?id=ptvQjhlfUn
+
+- **SATQuest (OpenReview, ICLR 2026 Workshop; arXiv:2509.00930)**: generates
+  SAT-based reasoning tasks from CNF instances and checks answers objectively
+  with PySAT across instance scale, problem type, and question format.
+  Relevance to Carnot: `.285` continuous self-learning should use verifier-
+  backed SAT/SMT feedback with held-out family checks and cross-format controls,
+  rather than self-confirming accuracy on a single prompt format.
+  Sources: https://openreview.net/forum?id=Qc2lUJsgOt and
+  https://arxiv.org/abs/2509.00930
+
+- **Governed Self-Improvement for Logical Reasoning (OpenReview, ICLR 2026
+  Workshop)**: frames self-improvement as commitment management over related
+  questions, using contradiction graphs, solver-grounded edit-time validation,
+  rollback, and non-regression metrics. Relevance to Carnot: this directly
+  matches the `.284` FR-11 state, where controller-only self-learning is
+  promotable but must not be escalated to model-weight learning without
+  governance, family contradiction rate, rollback burden, and delayed-regression
+  evidence.
+  Source: https://openreview.net/forum?id=akaD2tFpHO
+
+- **Graph Energy Matching (arXiv:2603.23398)**: learns graph energy functions
+  with a transport-aligned sampling protocol that switches from rapid transport
+  toward high-likelihood regions to a mixing regime for exploration. Relevance
+  to Carnot: this is a medium-term reference for graph-shaped constraint
+  energies and cross-corpus topology, but `.285` should first clean matrix
+  evidence and exact validator feedback before adding a new graph EBM backend.
+  Source: https://arxiv.org/abs/2603.23398
+
+- **Ontology-Constrained Neural Reasoning (arXiv:2604.00555)**: formalizes
+  ontology-constrained input/tool selection and output-side validation for
+  domain-grounded agents. Relevance to Carnot: the semantic-routing and
+  ontology-output validation framing is useful for separating exact logical
+  claims, commonsense claims, and out-of-scope assertions in the matrix, but it
+  remains architecture context until Carnot has a local ontology benchmark.
+  Source: https://arxiv.org/abs/2604.00555
+
+- **Extropic TSU/XTR-0 public status and Logical Intelligence Kona public
+  status**: Extropic continues to present TSU/XTR-0 as thermodynamic-sampling
+  hardware and Logical Intelligence continues to position Kona as an EBM
+  reasoning substrate. Relevance to Carnot: both are still context only for
+  `.285`; local hardware work should remain GateMate host-visible output and
+  must not imply access to TSU or Kona internals.
+  Sources: https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one
+  and https://logicalintelligence.com/kona-ebms-energy-based-models

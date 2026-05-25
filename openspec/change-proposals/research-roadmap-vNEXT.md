@@ -1,183 +1,266 @@
-# Carnot Research Roadmap vNEXT: Repair Corrigendum, FR-11 Held-Out Learning, GateMate Output Contract
+# Research Roadmap vNEXT - Milestone 2026.05.285
 
+**Title:** GateMate Output Unblock + Repair Flag Hygiene + Governed FR-11 Self-Learning
 **Created:** 2026-05-25
-**Milestone:** 2026.05.284
 **Status:** Planned
-**Supersedes:** 2026.05.283 ("Claim Repair v2 + Feasibility-Gated Self-Learning + GateMate IO Boundary")
-**Execution file:** `research-roadmap-next.yaml`
-**Primary evidence inputs:** `results/experiment_3012_*.json` through `results/experiment_3025_*.json`
+**Supersedes:** 2026.05.284 "Repair Corrigendum + FR-11 Held-Out Learning + GateMate Output Contract"
+**Execution queue:** `research-roadmap-next.yaml`
 
-## What .283 Proved
+## What 2026.05.284 Proved
 
-| Area | Experiments | Finding |
-|---|---:|---|
-| SOTA GGUF readiness | 3013 | Local SOTA telemetry preflight is available for the mandated GGUF set. |
-| Repair diagnosis | 3014-3016 | Syntax/schema taxonomy and Cactus-style acceptance gates produced a SOTA repair rerun with `pass_at_1_delta=0.375`, `syntax_failure_rate_delta=0`, `schema_failure_rate_delta=0`, `false_accept_delta=0`, and `tautology_gate_clean=true`. |
-| Validator tree | 3017-3018 | NSVIF-style validator expansion and a BEAVER-style frontier certificate are available, but unresolved bounds remain visible. |
-| FR-11 self-learning | 3019-3020 | The feasibility-channel diagnostic remains flagged for tautology risk, while the DVI verifier-feedback controller itself completed cleanly. |
-| GateMate | 3021-3023 | GateMate RTL/CCF work isolated the real blocker: host-visible output pinout/transport is not ready. The downstream flash smoke and SSQA path correctly gate-skipped. |
-| Matrix/capstone | 3024-3025 | Matrix v17 is complete (`clean=40`, `flagged=29`, `blocked=10`, `gated_skipped=3`, `missing=1`). Capstone is ready but `paper_ready=false`; next focus is repair corrigendum plus GateMate output contract. |
+Milestone `.284` completed its planned diagnostic arc but did not produce a
+paper-ready capstone. The authoritative capstone is
+`results/experiment_3039_capstone_v284.json`:
 
-**Main conclusion:** .283 created useful positive evidence, but not a paper-ready or PRD-ready milestone. The next milestone must distinguish true methodology defects from adversarial false positives, promote FR-11 only with held-out nonforgetting controls, and resolve the GateMate output contract before any hardware smoke claim.
+- `capstone_ready=true`
+- `paper_ready=false`
+- `repair_claim_status=bounded`
+- `fr11_self_learning_status=controller_only_promotable`
+- `gatemate_status=blocked_pinout_missing_bounded`
+- `ssqa_status=gate_skipped_bounded_no_performance_claim`
+- `next=2026.05.285_gatemate_output_contract_repair_flag_cleanup`
 
-## Three Biggest Gaps
+The positive result is narrow but useful: `exp3028` produced a clean SOTA repair
+candidate row over 24 tasks, and `exp3033` promoted FR-11 only as a
+controller-side self-learning result with nonforgetting and negative-control
+checks. The blocked result is equally important: `exp3034` showed that GateMate
+cannot advance without a physical output contract and host reader command.
 
-1. **Evidence promotion gap:** repair deltas are positive, but matrix/capstone still carry adversarial and methodology flags. The system needs a corrigendum artifact that replays source transcripts, duration/provenance fields, model specs, seeds, checksums, and claim boundaries before any headline repair claim.
+| Area | `.284` result | `.285` consequence |
+| --- | --- | --- |
+| SOTA repair | Clean rerun candidate from `exp3028`, but `exp3029` kept promotion bounded | Clean methodology and matrix/capstone flag hygiene must happen before headline promotion |
+| Validator frontier | `exp3030` split verified, irrelevant, unresolved, and fallback-only rows | Add exact SMT/SAT feedback and avoid collapsing unresolved into clean |
+| FR-11 | `exp3033` was controller-only promotable with held-out and negative-control checks | Add governed self-learning metrics: family contradictions, rollback, delayed regression |
+| GateMate | `exp3034` blocked on missing output pinout and host read command | Produce an operator-ready contract package, then gate RTL/flash work structurally |
+| SSQA | `exp3037` remained gate-skipped because GateMate had no host-visible output | Keep SSQA bounded unless host-visible smoke passes |
+| Matrix/capstone | `exp3038` and `exp3039` remained bounded | Run matrix v19 after repair, FR-11, and hardware gates resolve or skip cleanly |
 
-2. **FR-11 autonomy gap:** the DVI controller is promising, but the feasibility channel still has tautology risk. FR-11 needs held-out replay, information-asymmetric checking, negative controls, and nonforgetting stress before it can count as continuous self-learning instead of cached self-confirmation.
+## Three Biggest Gaps To PRD Vision
 
-3. **Hardware observability gap:** GateMate cannot proceed from RTL to smoke until the output path is host-visible. The next step is not speedup; it is a concrete pinout/output contract, simulation evidence, and a flash/smoke gate that fails fast when the contract is still unavailable.
+1. **Evidence hygiene gap.** The PRD requires verifiable reasoning claims, but
+   `.284` still left repair promotion bounded by adversarial/methodology
+   aggregation flags. `.285` must distinguish real blockers from
+   aggregation-substrate false positives, then either promote or keep the repair
+   row bounded with exact citations.
+
+2. **Continuous self-learning gap.** FR-11 is no longer a smoke test, but it is
+   still controller-only. The next useful step is not model-weight training; it
+   is governed self-learning over related constraint families with rollback,
+   non-regression, and solver-grounded edit rights.
+
+3. **Hardware observability gap.** GateMate toolchain presence is not enough.
+   Carnot needs a host-visible output contract before any FPGA timing, SSQA, or
+   hardware-accelerated sampler claim. `.285` should make this an explicit
+   operator contract and gate all downstream work on it.
 
 ## New Research Integrated
 
-The 2026-05-25 sweep added these planning inputs to `research-references.md`:
+The post-`.284` sweep was added to `research-references.md` before this
+milestone was designed. The findings that materially shape `.285` are:
 
-| Source | Use in .284 |
-|---|---|
-| MARCH (arXiv:2603.24579) | Information-asymmetric checker/proposer split for repair and FR-11 audits. |
-| Draft-Conditioned Constrained Decoding (arXiv:2603.03305) | Preserve unconstrained draft intent before syntax/schema constrained repair acceptance. |
-| STATIC vectorized trie (arXiv:2602.22647) | Future accelerator-ready mask design; only accounting/design reference in .284. |
-| Hard linear constraints with decision rules (OpenReview, NeurIPS 2025) | Feasible-by-construction framing for FR-11 promotion controls. |
-| Clip-and-Verify (OpenReview, NeurIPS 2025) | Separate verified, irrelevant, unresolved, and fallback-only validator regions. |
-| Self-Distillation Enables Continual Learning (arXiv:2601.19897) | Held-out and nonforgetting requirements for continuous self-learning. |
-| KAN-CL (arXiv:2605.12306) | Per-locality nonforgetting probe design before any new KAN training. |
-| FPGA Ising decomposition (arXiv:2602.15985) | Reinforces GateMate host-visible decomposition/output contract as the near-term hardware deliverable. |
-| Extropic/Logical Intelligence public updates | Architecture context only; no borrowed hardware or benchmark claims. |
+| Finding | Source | Milestone use |
+| --- | --- | --- |
+| LLM-42 / verified speculation | arXiv:2601.17768 | Add transcript fingerprint and replay discipline for local GGUF repair evidence |
+| VERGE / MCS feedback | arXiv:2601.20055 | Convert verifier failures into exact correction subsets |
+| SMT solver distillation | OpenReview ICLR 2026 Workshop | Separate NL-to-SMT translation validity from solver-execution validity |
+| SATQuest | OpenReview ICLR 2026 Workshop and arXiv:2509.00930 | Use objective SAT/SMT families for self-learning and cross-format checks |
+| Governed self-improvement | OpenReview ICLR 2026 Workshop | Add contradiction graph, rollback, and delayed-regression metrics to FR-11 |
+| Graph Energy Matching | arXiv:2603.23398 | Keep as medium-term graph-energy context; do not add a new backend yet |
+| Ontology-constrained neural reasoning | arXiv:2604.00555 | Use semantic-routing language for matrix claim classes |
 
 ## Architecture Snapshot
 
-```
-                         ┌──────────────────────────────┐
-                         │ .283 source artifacts         │
-                         │ 3013-3025 JSON + logs         │
-                         └──────────────┬───────────────┘
-                                        │
-         ┌──────────────────────────────┼──────────────────────────────┐
-         │                              │                              │
-         ▼                              ▼                              ▼
-┌──────────────────┐          ┌──────────────────┐          ┌──────────────────┐
-│ Repair Evidence  │          │ FR-11 Controller │          │ GateMate Output  │
-│ Corrigendum      │          │ Held-Out Replay  │          │ Contract         │
-│                  │          │                  │          │                  │
-│ - provenance     │          │ - DVI feedback   │          │ - pinout audit   │
-│ - duration       │          │ - asym checker   │          │ - RTL/CCF shim   │
-│ - model specs    │          │ - nonforgetting  │          │ - flash smoke    │
-│ - DCCD/MARCH     │          │ - neg controls   │          │ - SSQA gate      │
-└────────┬─────────┘          └────────┬─────────┘          └────────┬─────────┘
-         │                              │                              │
-         ▼                              ▼                              ▼
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ Validator Frontier / Claim Boundary                                           │
-│ verified rows, unresolved rows, fallback-only rows, blocked hardware rows      │
-└──────────────────────────────────────┬───────────────────────────────────────┘
-                                       │
-                                       ▼
-┌──────────────────────────────────────────────────────────────────────────────┐
-│ Matrix v18 + Capstone .284                                                   │
-│ paper_ready only if repair evidence is clean, FR-11 is non-tautological,      │
-│ and GateMate blocker is either resolved or explicitly bounded.                │
-└──────────────────────────────────────────────────────────────────────────────┘
+```text
+                      +-------------------------------+
+                      |  Mandated local SOTA GGUFs     |
+                      |  Qwen3.6-35B-A3B, Gemma dense |
+                      |  Gemma MoE                    |
+                      +---------------+---------------+
+                                      |
+                                      v
++----------------------+     +-------------------------+     +----------------------+
+| Repair evidence      | --> | Transcript fingerprint  | --> | Repair promotion    |
+| exp3028 clean row    |     | verified-speculation    |     | boundary + matrix   |
++----------------------+     +-------------------------+     +----------------------+
+
++----------------------+     +-------------------------+     +----------------------+
+| Validator frontier   | --> | SMT/SAT exact feedback  | --> | Governed FR-11      |
+| verified/unresolved  |     | MCS-like correction set |     | self-learning loop  |
++----------------------+     +-------------------------+     +----------------------+
+
++----------------------+     +-------------------------+     +----------------------+
+| GateMate A1-EVB      | --> | Output pinout + host    | --> | RTL sim -> flash    |
+| toolchain present    |     | reader contract         |     | smoke -> SSQA gate  |
++----------------------+     +-------------------------+     +----------------------+
+
+                                      |
+                                      v
+                      +-------------------------------+
+                      | Cross-corpus matrix v19       |
+                      | Capstone .285                 |
+                      +-------------------------------+
 ```
 
-## Phase Structure
+## Phase Plan
 
-### Phase A: Evidence Corrigendum and Repair Promotion (Exp3026-Exp3031)
+### Phase A - Archive, Flag Hygiene, Deterministic Repair Evidence
 
-Goal: turn .283's positive repair deltas into clean, bounded evidence or explicitly retire the claim path.
+Tasks: `exp3040`-`exp3043`
 
-- Exp3026 archives .283 and activates .284 without modifying `research-roadmap.yaml`.
-- Exp3027 audits adversarial flags and writes a methodology corrigendum manifest.
-- Exp3028 reruns or reconstructs SOTA repair evidence under clean metadata and information-asymmetric checking.
-- Exp3029 decides the repair promotion boundary from actual artifacts, not optimism.
-- Exp3030 tightens validator frontier bounds using Clip-and-Verify-style region separation.
-- Exp3031 tests draft-conditioned constrained repair on a tiny SOTA panel to see whether intent preservation improves without false accepts.
+- Archive `.284` and stage `.285`.
+- Audit matrix/capstone adversarial flags and separate real blockers from
+  aggregation false positives.
+- Reconcile the repair promotion boundary using `exp3028`, `exp3029`,
+  `exp3038`, and `exp3039`.
+- Add a verified-speculation-style transcript fingerprint preflight using at
+  least one mandated local GGUF when live LLM inference is needed.
 
-### Phase B: FR-11 Held-Out Continuous Self-Learning (Exp3032-Exp3033)
+Exit condition: repair is either a clean promotable candidate with reproducible
+metadata or remains bounded with exact blockers.
 
-Goal: promote self-learning only if it survives held-out replay, nonforgetting, and negative controls.
+### Phase B - Solver-Guided Verification and Governed Self-Learning
 
-- Exp3032 replays DVI verifier feedback on held-out exact traces with independent checker inputs.
-- Exp3033 stress-tests nonforgetting and drift, using KAN-CL/SDFT as design references but not claiming weight learning unless actually performed.
+Tasks: `exp3044`-`exp3047`
 
-### Phase C: GateMate Output Contract and SSQA Boundary (Exp3034-Exp3037)
+- Add an exact SMT/SAT validator-tree upgrade with correction-set evidence.
+- Define FR-11 governance boundaries from the `.284` controller-only result.
+- Run a solver-feedback self-learning loop with family holdouts, nonforgetting,
+  rollback, and negative controls.
+- Probe KAN locality/nonforgetting only as a bounded controller/locality result.
 
-Goal: resolve the host-visible output blocker or convert it into an exact operator-action artifact.
+Exit condition: FR-11 can be promoted only as governed controller-side
+self-learning unless a task actually produces stronger evidence.
 
-- Exp3034 audits GateMate pinout/toolchain/output choices and decides the contract.
-- Exp3035 implements and simulates the RTL/CCF output shim only if the contract is ready.
-- Exp3036 flashes and reads host-visible output only if simulation passes.
-- Exp3037 writes the SSQA bounded RTL/PnR or explicit gate artifact.
+### Phase C - GateMate Output Contract and SSQA Gate
 
-### Phase D: Synthesis (Exp3038-Exp3039)
+Tasks: `exp3048`-`exp3051`
 
-Goal: close the milestone with a matrix and capstone that do not hide blocked or flagged work.
+- Convert the `exp3034` blocker into an operator-ready output contract package.
+- Gate RTL/CCF simulation on the contract being ready.
+- Gate flash smoke on the simulation passing.
+- Gate SSQA readback eligibility on a host-visible smoke transcript.
 
-- Exp3038 builds matrix v18 with no top-level live-model metadata.
-- Exp3039 writes the .284 capstone and decides whether .285 should be paper-promotion, GateMate operator action, or FR-11 expansion.
+Exit condition: GateMate either reaches host-visible output evidence or remains
+explicitly bounded without consuming downstream agent turns.
+
+### Phase D - Matrix and Capstone
+
+Tasks: `exp3052`-`exp3053`
+
+- Build cross-corpus matrix v19 from `.284` and `.285` artifacts.
+- Write a capstone that can be paper-ready only if repair, FR-11, GateMate, and
+  SSQA claims are clean under the new matrix.
+
+Exit condition: capstone reports `paper_ready=true` only if every promoted claim
+has source artifacts, methodology, and claim boundaries.
 
 ## Dependency Graph
 
+```text
+exp3040 archive
+  |
+  v
+exp3041 flag hygiene
+  |----------------------.
+  v                      v
+exp3042 repair boundary  exp3043 transcript fingerprint
+
+exp3044 SMT/SAT validator exactness
+  |
+  v
+exp3046 solver-feedback self-learning
+  ^
+  |
+exp3045 FR-11 governance
+  |
+  v
+exp3047 KAN locality probe (gated on exp3046)
+
+exp3048 GateMate output contract
+  |
+  v
+exp3049 RTL/CCF shim sim
+  |
+  v
+exp3050 host-visible flash smoke
+  |
+  v
+exp3051 SSQA readback eligibility
+
+exp3042, exp3043, exp3046, exp3047, exp3051
+  |
+  v
+exp3052 matrix v19
+  |
+  v
+exp3053 capstone .285
 ```
-exp3026 archive
-   └─ exp3027 methodology-corrigendum
-        ├─ exp3028 SOTA repair clean-methodology rerun
-        │    └─ exp3029 repair promotion boundary
-        │         └─ exp3038 matrix v18
-        ├─ exp3030 validator frontier corrigendum
-        │    └─ exp3038 matrix v18
-        └─ exp3031 draft-conditioned constrained repair panel
-             └─ exp3038 matrix v18
 
-exp3032 FR-11 held-out DVI replay
-   └─ exp3033 FR-11 nonforgetting stress
-        └─ exp3038 matrix v18
+Structured conductor gates are present for the hard dependencies:
 
-exp3034 GateMate output contract
-   └─ exp3035 GateMate output shim sim
-        └─ exp3036 GateMate flash smoke
-             └─ exp3037 SSQA bounded RTL/PnR or gate artifact
-                  └─ exp3038 matrix v18
+- `exp3042` and `exp3043` gate on `exp3041.flag_hygiene_ready`.
+- `exp3046` gates on `exp3044.validator_tree_exactness_ready` and
+  `exp3045.fr11_governance_ready`.
+- `exp3047` gates on `exp3046.fr11_solver_feedback_ready`.
+- `exp3049` gates on `exp3048.gatemate_output_contract_ready`.
+- `exp3050` gates on `exp3049.gatemate_shim_sim_passed`.
+- `exp3051` gates on `exp3050.gatemate_host_visible_smoke_passed`.
+- `exp3053` gates on `exp3052.matrix_v19_ready`.
 
-exp3038 matrix v18
-   └─ exp3039 capstone .284
-```
+`exp3052` is intentionally not gated on hardware success; it must be able to
+record bounded and gate-skipped rows.
 
 ## Hardware Requirements
 
-| Requirement | Experiments | Notes |
-|---|---:|---|
-| Dual RTX 3090 / local CUDA GGUF cache | 3028, 3031 | Any live LLM task must use at least one mandated SOTA local GGUF: `unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or `unsloth/gemma-4-26B-A4B-it-GGUF`. Legacy small models are smoke tests only. |
-| CPU-only artifact aggregation | 3026, 3027, 3029, 3030, 3032, 3033, 3038, 3039 | Aggregation artifacts must not include top-level `model_specs`, `target_model`, CUDA, or GGUF fields. |
-| GateMate A1 + DirtyJTAG | 3034-3037 | Required command: `openFPGALoader -c dirtyJtag --detect`; board target remains `-b olimex_gatemateevb`. No speedup claim without host-visible output transcript. |
-| Extropic TSU / Z1 | none | Architecture context only; no local access assumed. |
-| KV260 / PolarFire / NPU | none | Out of scope for .284 unless an operator separately reopens those tracks. |
+| Resource | Required by | Requirement | Claim boundary |
+| --- | --- | --- | --- |
+| Dual RTX 3090 CUDA host | `exp3043`, optional live LLM in `exp3044` | At least one mandated GGUF loadable through the repo's SOTA cache path | No SOTA headline if only legacy smoke models run |
+| GateMate A1-EVB-2M | `exp3048`-`exp3051` | Physical output pinout plus host reader command before flash smoke | No latency, sampler, Boltzmann, or speedup claim without host-visible transcript |
+| KV260 | none in `.285` | Available but not part of this milestone | Do not use host SD-card preconditions |
+| PolarFire | none in `.285` | Available but out of scope | No PolarFire claims |
+| Extropic TSU/XTR-0 | none | Public context only | No access or performance implication |
 
 ## Acceptance Criteria
 
-- `research-roadmap-next.yaml` validates with the roadmap schema and prior-failure linter.
-- Every rerun-scope task includes complete `prior_failures` entries with `retire_if_same_verdict: true`.
-- Every natural-language gate has a matching structured `gated_on` block using supported operators.
-- Every live LLM experiment includes the mandated SOTA GGUF `MODEL_SPECS`.
-- Exp3032 or Exp3033 satisfies the required continuous self-learning coverage.
-- GateMate tasks either produce host-visible output artifacts or a precise blocked artifact with the missing pinout/operator action.
-- Matrix v18 and capstone .284 preserve flagged, blocked, gated-skipped, projection-only, pilot-only, and missing rows honestly.
+1. `research-roadmap-next.yaml` validates against schema and prior-failure
+   linters.
+2. Every task has a concrete JSON deliverable path.
+3. Every prompt includes CONTEXT, EXISTING CODE TO READ FIRST, TASK, and
+   CONCRETE STEPS.
+4. Every prompt ends with: `Run command, 'Do NOT push. Do NOT modify scripts/research_conductor.py.'`
+5. All LLM-using tasks name at least one mandated local SOTA GGUF in
+   `MODEL_SPECS`.
+6. `exp3046` satisfies the mandatory continuous self-learning requirement.
+7. GateMate downstream tasks use structured `gated_on` fields so blocked
+   hardware contracts skip before expensive agent calls.
+8. Prior-failure metadata includes `retire_if_same_verdict: true` for all
+   carry-forward scopes.
+9. The matrix records clean, flagged, bounded, blocked, gated-skipped,
+   projection-only, missing, and retired rows separately.
+10. The capstone does not promote repair, FR-11, GateMate, or SSQA beyond the
+    evidence in matrix v19.
 
 ## Failed-Experiment Rerun Compliance
 
-This milestone intentionally carries forward unresolved scope from .283:
+The milestone intentionally revisits scopes from `.284`. Every carry-forward
+task in `research-roadmap-next.yaml` includes `prior_failures` with the four
+mandatory fields:
 
-- Repair rerun lineage: exp2977, exp2991, exp3003, exp3014-exp3016.
-- Validator frontier lineage: exp3017-exp3018.
-- FR-11 lineage: exp2983, exp2995, exp3007, exp3019-exp3020.
-- GateMate/SSQA lineage: exp2984, exp2996, exp3008, exp3021-exp3023.
-- Matrix/capstone lineage: exp3011, exp3024-exp3025.
+- `experiment_id`
+- `verdict`
+- `addressed_by`
+- `retire_if_same_verdict: true`
 
-The YAML declares `prior_failures` for those scopes. If a task repeats the same verdict after the stated change, it should retire the scope instead of becoming another carry-over.
+The GateMate chain avoids referencing retired upstream experiments in `requires`
+fields. Instead, it uses same-milestone structured gates.
 
-## Out of Scope
+## Out Of Scope
 
-- Editing `scripts/research_conductor.py`.
-- Modifying `research-roadmap.yaml` during planning.
-- Publishing, blog posts, public docs, README refreshes, or external submission.
-- Claiming GateMate, Extropic, KV260, or NPU speedups without host-visible hardware transcripts.
-- Treating small legacy GGUF smoke tests as headline SOTA evidence.
+- No modification to `research-roadmap.yaml`.
+- No modification to `scripts/research_conductor.py`.
+- No public submission, arXiv action, PyPI action, or external publication.
+- No Extropic, Kona, KV260, or PolarFire performance claim.
+- No model-weight self-learning claim unless an experiment actually trains and
+  verifies model weights, which this milestone does not plan.
+- No hardware speedup, Boltzmann sampling, or SSQA performance claim without
+  host-visible GateMate output.

@@ -1,5 +1,13 @@
 # Carnot — Changelog
 
+## 2026-05-25 (Milestone 2026.05.285 Research Planning)
+
+- [outer-loop] Planned milestone 2026.05.285 as "GateMate Output Unblock + Repair Flag Hygiene + Governed FR-11 Self-Learning" after the operator confirmed all `.284` tasks completed. Used `results/experiment_3039_capstone_v284.json` as the authoritative closeout: `.284` completed but remained `paper_ready=false` because repair promotion stayed bounded, FR-11 stayed controller-only, GateMate stayed blocked on missing output contract/pinout, and SSQA stayed gate-skipped.
+- [outer-loop] Updated `research-references.md` before experiment design with a post-`.284` sweep covering LLM-42 verified speculation, VERGE/MCS feedback, SMT solver distillation, SATQuest, governed self-improvement, Graph Energy Matching, ontology-constrained neural reasoning, Extropic TSU/XTR-0 context, and Logical Intelligence Kona public context.
+- [outer-loop] Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` for milestone `.285` with the `.284` findings, three biggest PRD gaps, new research integration, architecture diagram, four-phase plan, dependency graph, hardware requirements, failed-rerun compliance, and out-of-scope boundaries.
+- [outer-loop] Created `research-roadmap-next.yaml` with 14 conductor tasks (`exp3040`-`exp3053`): archive/activate, flag hygiene, repair reconciliation, verified-speculation fingerprint, SMT/SAT validator exactness, FR-11 governance, FR-11 solver-feedback self-learning, KAN locality probe, GateMate output contract, GateMate RTL/CCF sim, GateMate flash smoke, SSQA bounded gate, matrix v19, and capstone.
+- [outer-loop] Validation passed: YAML parse OK; prompt section/end-line checks OK; `scripts/validate_prior_failures.py research-roadmap-next.yaml` OK; `scripts/exclusion_manifest_lint.py research-roadmap-next.yaml` OK; `scripts/audit_roadmap_gates.py research-roadmap-next.yaml` returned `all_checks_pass` with 9 gate checks and 0 failures. Did NOT modify `research-roadmap.yaml` or `scripts/research_conductor.py`. Did NOT push.
+
 ## 2026-05-25 (Milestone 2026.05.284 Research Planning)
 
 - [outer-loop] Planned milestone 2026.05.284 as "Repair Corrigendum + FR-11 Held-Out Learning + GateMate Output Contract" after the operator confirmed all `.283` tasks completed. Used `results/experiment_3025_capstone_v283.json` as the authoritative closeout: `.283` completed but remained `paper_ready=false` because repair evidence still needed methodology/adversarial-flag cleanup, FR-11 needed held-out nonforgetting controls, and GateMate/SSQA remained blocked or gate-skipped by missing host-visible output.

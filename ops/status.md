@@ -1,6 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-25 (Milestone 2026.05.284 research planning staged)
+**Last Updated:** 2026-05-25 (Milestone 2026.05.285 research planning staged)
+
+## Session 2026-05-25 - Milestone 2026.05.285 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.285 as "GateMate Output Unblock + Repair Flag Hygiene + Governed FR-11 Self-Learning" after the operator reported all `.284` tasks completed. The plan treats `results/experiment_3039_capstone_v284.json` as the authoritative closeout: `.284` completed but remained `paper_ready=false`; SOTA repair is bounded pending flag/matrix reconciliation, FR-11 is controller-only promotable, GateMate is blocked on missing output pinout/host reader contract, and SSQA remains gate-skipped without host-visible output.
+
+Updated `research-references.md` with the post-`.284` sweep covering verified-speculation transcript replay, VERGE/MCS feedback, SMT solver distillation, SATQuest, governed self-improvement, Graph Energy Matching, ontology-constrained neural reasoning, and current Extropic/Kona public context. Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks (`exp3040`-`exp3053`). `exp3046-fr11-solver-feedback-self-learning-loop` is the mandatory continuous self-learning experiment, with `exp3045` and `exp3047` providing governance and locality bounds. Validation passed for YAML parse, prompt section/end-line checks, prior-failure lint, exclusion-manifest lint, and roadmap-gate audit. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-25 - Milestone 2026.05.284 Research Planning Staged
 
@@ -1061,7 +1067,7 @@ Key results from .250:
 
 ## Session 2026-05-19 - Milestone 2026.05.237 Research Planning Complete
 
-**Milestone 2026.05.236 COMPLETED: 10/13 tasks completed (1 failed, 1 blocked, 1 missing).** 
+**Milestone 2026.05.236 COMPLETED: 10/13 tasks completed (1 failed, 1 blocked, 1 missing).**
 - **Phase 1 ship gate: FINALLY MET** (exp2441) — PyPI, HF mirror, MCP docs, CLI docs, external reproducer all satisfied.
 - **Conformal Ensemble AUROC: 0.9167** (exp2438, 7 verifiers fused) — gap to HIVE peer now only **0.0069** (down from 0.034).
 - **Critical gaps**: exp2438 JSON malformed (blocking capstone exp2445), exp2440 KV260 RTL MISSING (never ran), exp2444 NCO AUROC=0.500 tautology.
