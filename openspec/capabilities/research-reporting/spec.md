@@ -7192,3 +7192,59 @@ live-model metadata, and an honest verdict that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3027 | Implemented (`python/carnot/reporting/adversarial_flag_methodology_corrigendum_3027.py`) | Implemented (`tests/python/test_experiment_3027_adversarial_flag_methodology_corrigendum.py`) |
+
+### REQ-REPORT-3029: Repair Promotion Boundary Audit
+
+The repository shall provide an Exp 3029 aggregation-only repair promotion
+boundary audit that writes
+`results/experiment_3029_repair_promotion_boundary_audit_v2.json`. The audit
+MUST read Exp 3027, Exp 3028, Exp 3016, matrix v17, and capstone v283 before
+deciding whether the repair claim is promotable, bounded, blocked, or retired.
+It MUST NOT run live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, historical experiment rewrites, the
+conductor, or external publication tooling.
+
+The audit MUST build a claim-boundary table. Each row MUST include the proposed
+repair claim, required support fields, observed support fields, blockers, and
+allowed wording. A repair claim may be promotable only when the evidence has
+clean deltas, clean metadata, non-vacuous tautology gates, no false-accept
+increase, no intent drift, no legacy smoke-only model use, and enough live or
+reconstructed evidence. Partial evidence MUST be bounded in wording, and
+unsupported headline language MUST be retired or blocked so failed reruns do not
+recur as public claims.
+
+Because Exp 3029 is aggregation-only, its top-level `inference_substrate` MUST
+be an object declaring aggregation-only evidence and MUST NOT include top-level
+`model_specs`, `target_model`, CUDA, GGUF, GPU inventory, headline-model, or
+live-model fields. Source model details MAY appear only under
+`cited_upstream_artifacts`.
+
+The terminal artifact MUST include `repair_promotion_boundary_ready`,
+`repair_claim_status`, `promotable_claims`, `bounded_claims`,
+`retired_or_blocked_claims`, `cited_upstream_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include the
+claim-boundary table, required source errors, source checksums, no-new-execution
+booleans, status-update booleans, and measured `duration_s` as long as every
+value is derived from upstream JSON artifacts or file presence/checksum checks.
+
+#### SCENARIO-REPORT-3029: Clean Repair Evidence Is Bounded Against Prior Matrix Flags
+
+**Given** Exp 3027 reports the prior repair metadata gap and Exp 3028 reports
+clean reconstructed repair evidence
+**And** matrix v17 and capstone v283 still contain older flagged repair
+promotion decisions from before Exp 3028
+**When** the Exp 3029 repair promotion boundary audit runs
+**Then** it writes
+`results/experiment_3029_repair_promotion_boundary_audit_v2.json` with
+`repair_promotion_boundary_ready=true`, `repair_claim_status="bounded"`, clean
+artifact-level repair claims only in `bounded_claims`, unsupported headline
+language in `retired_or_blocked_claims`, an explicit claim-boundary table,
+source model details only under `cited_upstream_artifacts`, aggregation-only
+top-level `inference_substrate`, no top-level live-model metadata, and an
+honest verdict that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3029)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3029 | Implemented (`python/carnot/reporting/repair_promotion_boundary_audit_3029.py`) | Implemented (`tests/python/test_experiment_3029_repair_promotion_boundary_audit.py`) |
