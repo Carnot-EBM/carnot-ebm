@@ -722,6 +722,76 @@ beginning with `blocked_sota_gguf_unavailable`.
 |---|---|---|
 | REQ-VERIFY-3057 | Implemented (`python/carnot/eval/local_sota_solution_verifier_gain_panel_v1.py`) | Implemented (`tests/python/test_experiment_3057_local_sota_solution_verifier_gain_panel.py`) |
 
+### REQ-VERIFY-3070: First-Token Abstention SOTA Panel
+
+The repository shall provide a tiny Exp 3070 first-token confidence and
+abstention panel over deterministic SAT/SMT-style fixtures with exact solver
+ground truth. The panel shall write
+`results/experiment_3070_first_token_abstention_sota_panel_v1.json`.
+
+The panel shall reuse the Exp 3057 exact-labeled fixtures or rebuild 6-12
+deterministic fixtures with known valid/invalid outcomes, use at least one
+mandated local SOTA GGUF model from
+`python/carnot/inference/sota_models.py` to score candidate solutions, capture
+first-token entropy or the closest available first-token confidence proxy, and
+record any limitation when true top-k logprobs are unavailable. The panel
+shall define an abstention threshold using only a calibration split and then
+evaluate acceptance precision, rejection recall, abstention coverage, false
+positives, false negatives, first-token AUC, and verifier selection gain on a
+held-out tiny split.
+
+The terminal artifact MUST include `first_token_panel_ready`,
+`confidence_signal`, `first_token_auc`, `abstention_precision`,
+`rejection_recall`, `abstention_coverage`,
+`verifier_gain_delta_with_abstention`, `false_positive_rate`,
+`false_negative_rate`, `exact_ground_truth_count`, `models_used`,
+`model_specs`, `legacy_smoke_only_used`, `prompt_hashes`,
+`inference_substrate`, and `honest_verdict`. It shall also record CUDA
+availability, GPU memory, GGUF cache paths, model IDs, quantization, seed,
+prompt hashes, decode settings, logprob support, calibration threshold, split
+sizes, and wall-clock duration without embedding full prompts.
+
+`first_token_panel_ready` shall be true only when exact labels are present for
+at least six fixtures, at least one mandated local GGUF produced live scoring
+evidence, `model_specs` name exact model IDs and cache/runtime paths,
+confidence fields are non-vacuous, abstention metrics are computed on the
+held-out split, `legacy_smoke_only_used=false`, and `honest_verdict` starts
+with a terminal success prefix. If no mandated GGUF can be loaded or no
+first-token confidence signal can be captured, the artifact shall fail closed
+with `first_token_panel_ready=false`, empty or non-promoted model evidence,
+zero exact-ground-truth promotion, and an `honest_verdict` beginning with
+`blocked_sota_confidence_unavailable`.
+
+### SCENARIO-VERIFY-3070: First-Token Confidence Calibrates Abstention
+
+Given deterministic SAT/SMT-style fixtures with exact solver labels and a
+mandated local GGUF runtime that can load,
+When the Exp 3070 panel scores candidate solutions,
+Then it hashes every prompt, records first-token entropy or an explicit proxy
+for each scored row, derives the abstention threshold from calibration rows
+only, evaluates held-out accepted/rejected/abstained decisions against exact
+labels, reports first-token AUC, acceptance precision, rejection recall,
+abstention coverage, false-positive rate, false-negative rate, and verifier
+gain delta with abstention, and sets `first_token_panel_ready=true` only when
+the live evidence and non-vacuous metrics are present.
+
+### SCENARIO-VERIFY-3070-BLOCKED: Missing Confidence Fails Closed
+
+Given the mandated local GGUF cache paths are absent, every mandated GGUF load
+attempt fails, or the runtime returns no first-token logprob or confidence
+proxy,
+When the Exp 3070 panel runs,
+Then it writes the required artifact fields, records CUDA/GPU/cache
+preconditions and decode settings, leaves headline model evidence unpromoted,
+does not use legacy tiny models as headline evidence, and emits an
+`honest_verdict` beginning with `blocked_sota_confidence_unavailable`.
+
+## Implementation Status (REQ-VERIFY-3070)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3070 | Implemented (`python/carnot/eval/first_token_abstention_sota_panel_v1.py`) | Implemented (`tests/python/test_experiment_3070_first_token_abstention_sota_panel.py`) |
+
 ### REQ-VERIFY-3058: AquaForte-Style LLM-Guided SMT Instantiation Pilot
 
 The repository shall provide a tiny Exp 3058 AquaForte-style pilot in which a
