@@ -2453,3 +2453,65 @@ synthesis/PnR/resource claims, concrete upstream status fields, and claim
 flags fixed false.
 
 **Implementation status:** Implemented (Exp 3023)
+
+---
+
+### REQ-HW-086
+
+**Title:** Exp 3034 GateMate output contract decision MUST either name an observable host path or a precise operator blocker
+
+**Description:**
+Experiment 3034 MUST produce
+`results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json`
+before downstream GateMate RTL shim or flash-smoke work proceeds. The
+experiment MUST inspect the current GateMate RTL, CCF, build evidence, Exp 3021
+transport diagnosis, and non-flashing toolchain/DirtyJTAG preconditions. It MUST
+choose one output path from UART, LED/GPIO pattern, JTAG-readable status, or
+explicit no-ready-contract. `gatemate_output_contract_ready=true` and
+`host_visible_io_plan_ready=true` are permitted only when a deterministic RTL
+status output has a physical CCF binding and a concrete host reader command with
+an expected pass/fail transcript. If the repository lacks an authoritative
+physical pinout, CCF `Pin_out`, or supported reader command, the artifact MUST
+set both readiness booleans false and record the exact operator action required
+to unblock the contract.
+
+**Acceptance criteria:**
+- `results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json`
+  is generated with `gatemate_output_contract_ready`,
+  `host_visible_io_plan_ready`, `selected_output_path`, `pinout_table`,
+  `host_reader_command`, `exact_operator_action_required`,
+  `board_detect_command`, `toolchain_preconditions`, `inference_substrate`, and
+  `honest_verdict`.
+- The non-flashing preconditions record availability/version evidence for
+  `openFPGALoader`, `yosys`, `nextpnr-himbaechel`, and the GateMate packer
+  command, the DirtyJTAG detection command shape
+  `openFPGALoader -c dirtyJtag --detect`, target board
+  `olimex_gatemateevb`, and USB permission evidence when available.
+- The pinout table maps each candidate pass/fail signal to RTL source, CCF
+  binding, host read command, expected transcript, and blocker status.
+- If no physical `Pin_out` or supported reader exists, the selected output path
+  is `explicit_no_ready_contract`, both readiness booleans are false, and the
+  operator action list names the missing board pinout or reader decision.
+- The artifact MUST NOT claim hardware execution, timing, speedup, sampling
+  quality, Boltzmann correctness, or thermodynamic behavior.
+
+**Implementation status:** Implemented (Exp 3034)
+
+---
+
+### SCENARIO-HW-086
+
+**Scenario:** GateMate output contract blocks on missing pinout and reader.
+
+**Given:** The current GateMate n=16 RTL exposes `done` and `spin_out`, the CCF
+contains only build-only unconstrained comments, and Exp 3021 reports
+`host_visible_io_plan_ready=false` because no physical output binding exists.
+**When:** Exp 3034 audits the candidate UART, LED/GPIO, and JTAG/status paths
+without flashing the board.
+**Then:** It writes the v1 JSON with
+`selected_output_path="explicit_no_ready_contract"`,
+`gatemate_output_contract_ready=false`,
+`host_visible_io_plan_ready=false`, a blocked pinout table, explicit operator
+actions, and a terminal verdict beginning with `complete:`.
+
+**Implementation status:** Implemented (Exp 3034)
