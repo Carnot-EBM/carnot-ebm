@@ -7653,6 +7653,70 @@ starts with `complete:`.
 |---|---|---|
 | REQ-REPORT-3055 | Implemented (`python/carnot/reporting/repair_headline_blocker_ledger_3055.py`) | Implemented (`tests/python/test_experiment_3055_repair_headline_blocker_ledger.py`) |
 
+### REQ-REPORT-3056: Repair De-Tautology Protocol
+
+The repository shall provide an Exp 3056 repair de-tautology protocol
+generator that writes
+`results/experiment_3056_repair_de_tautology_protocol_v1.json` using only
+checked-in Exp 3028, Exp 3042, Exp 3043, Exp 3055, and research-reference
+metadata. The generator MUST NOT run live LLM inference, model loading,
+verifier scoring, solver execution, synthesis, board flashing, readback,
+hardware smoke tests, the conductor, or historical artifact rewrites.
+
+The protocol MUST extract the exact prior repair blocker fields for Exp 3028
+and Exp 3042: tautological pass@1/pass@k evidence, implausible exact-zero
+repair side effects, too-short live-run duration, missing seed metadata, and
+unresolved methodology or bounded-promotion blockers. Each extracted blocker
+MUST cite source artifact, source field, blocker kind or classification, and
+the observed field names that a future run must clear.
+
+The protocol MUST define mechanically checkable acceptance checks for all
+future local SOTA repair runs before live rerun execution: separate pass@1 and
+pass@k derivation, non-vacuous per-task outcomes, wall-clock sanity,
+top-level and per-transcript seed/logging, model_specs identity and checksum
+evidence, transcript fingerprint linkage, and named checker authority. The
+intent-preservation requirement MAY cite Approximately Aligned Decoding
+(AprAD) as design inspiration for preserving draft intent while applying hard
+verifier gates, but it MUST NOT claim AprAD was implemented unless a later
+artifact records an actual local implementation.
+
+The terminal artifact MUST include
+`repair_de_tautology_protocol_ready`, `blocked_prior_fields`,
+`required_live_run_fields`, `intent_preservation_checks`,
+`duration_sanity_rule`, `fingerprint_requirements`,
+`promotion_disqualifiers`, `inference_substrate`, and `honest_verdict`. It MAY
+include an Exp 3059 matrix-v20 field contract, source artifact provenance,
+source checksums, blocked reasons, no-new-execution booleans, and measured
+`duration_s` as long as every value is derived from checked-in artifacts or
+file presence/checksum checks. `repair_de_tautology_protocol_ready` MUST be
+true only when Exp 3059 can consume the protocol without live inference, using
+machine-readable fields that declare every live-run JSON field required for
+matrix v20 promotion.
+
+#### SCENARIO-REPORT-3056: Future Repair Rerun Is Gated By Predeclared Protocol
+
+**Given** Exp 3028, Exp 3042, Exp 3043, Exp 3055, and research-reference
+metadata exist
+**And** Exp 3028 and Exp 3042 preserve repair blockers for tautology,
+implausible perfect deltas, duration sanity, missing seed metadata, and
+unresolved methodology
+**When** the Exp 3056 repair de-tautology protocol generator runs
+**Then** it writes
+`results/experiment_3056_repair_de_tautology_protocol_v1.json` with
+`repair_de_tautology_protocol_ready=true`, every prior blocker mapped to an
+explicit future-run check, Exp 3059 live-run JSON fields listed for matrix v20
+promotion eligibility, AprAD-inspired intent-preservation checks that do not
+claim an AprAD implementation, transcript fingerprint requirements, promotion
+disqualifiers, aggregation-only inference substrate metadata, no live model or
+hardware execution by the protocol task, and an `honest_verdict` that starts
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3056)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3056 | Implemented (`python/carnot/reporting/repair_de_tautology_protocol_3056.py`) | Implemented (`tests/python/test_experiment_3056_repair_de_tautology_protocol.py`) |
+
 ### REQ-REPORT-3041: Matrix/Capstone Adversarial Flag Hygiene
 
 The repository shall provide an Exp 3041 flag-hygiene generator that writes
