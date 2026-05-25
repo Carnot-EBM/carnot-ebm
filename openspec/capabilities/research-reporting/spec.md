@@ -8164,3 +8164,68 @@ starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3066 | Implemented (`python/carnot/reporting/capstone_v286_3066.py`) | Implemented (`tests/python/test_experiment_3066_capstone_v286.py`) |
+
+### REQ-REPORT-3068: Matrix V20 Artifact-Alias And Blocker Normalization Ledger
+
+The repository shall provide an Exp 3068 normalization-ledger generator that
+writes
+`results/experiment_3068_matrix_v20_artifact_alias_blocker_normalization_v1.json`
+using only checked-in matrix v20, capstone v286, conductor-log, ops-status,
+ops-changelog, and result-filename evidence. The generator MUST read
+`results/experiment_3065_cross_corpus_matrix_v20.json`,
+`results/experiment_3066_capstone_v286.json`, the actual
+`results/experiment_3059_gated_sota_repair_de_tautology_rerun.json`, conductor
+log entries for Exp 3054 through Exp 3066, and actual result filenames before
+writing the ledger. It MUST NOT rewrite any prior result artifact, run live
+model inference, run repair, invoke verifier scoring, run solver execution,
+run synthesis, flash hardware, perform readback, run the conductor, or mark any
+research claim clean solely because a filename alias was resolved.
+
+The ledger MUST identify source-artifact path mismatches, missing-source rows,
+duplicate rows, bounded rows, blocked rows, retired rows, and projection-only
+rows from matrix v20. The Exp 3059 requested
+`experiment_3059_gated_sota_repair_de_tautology_rerun_v1.json` path MUST be
+recorded as an explicit non-destructive alias to the actual checked-in
+gate-blocked artifact
+`experiment_3059_gated_sota_repair_de_tautology_rerun.json` when that artifact
+is present. This alias MAY remove only the artifact-hygiene missing-file
+blocker; it MUST preserve the Exp 3059 gate-blocked/gated-skipped research
+status and all other missing evidence.
+
+The terminal artifact MUST include
+`matrix_v20_normalization_ready`, `artifact_aliases`,
+`missing_artifacts_after_aliasing`, `blocker_categories`,
+`exp3059_alias_status`, `publication_blocker_count_before`,
+`normalized_blocker_count_estimate`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. `blocker_categories` MUST separate
+research blockers, artifact hygiene blockers, true missing evidence, honest
+bounded rows, retired rows, duplicate rows, blocked rows, and projection-only
+rows. `normalized_blocker_count_estimate` MUST be auditable from matrix v20's
+publication-blocker count minus only the resolved artifact-hygiene alias
+blockers; bounded, flagged, blocked, gated-skipped, projection-only, and true
+missing evidence rows MUST remain visible for matrix v21.
+
+#### SCENARIO-REPORT-3068: Exp 3059 Alias Does Not Clean Research Blockers
+
+**Given** matrix v20 and capstone v286 are present
+**And** matrix v20 reports the requested Exp 3059 `_v1` artifact path as
+missing while the actual gate-blocked Exp 3059 artifact exists
+**And** matrix v20 has bounded, blocked, retired, projection-only, duplicate,
+and true missing-evidence rows
+**When** the Exp 3068 normalization-ledger generator runs
+**Then** it writes
+`results/experiment_3068_matrix_v20_artifact_alias_blocker_normalization_v1.json`
+with `matrix_v20_normalization_ready=true`, an Exp 3059 alias record mapping
+the requested `_v1` path to the actual gate-blocked artifact without rewriting
+either path, the true missing artifacts still listed after aliasing, blocker
+categories separated into research, artifact-hygiene, and honest
+bounded/retired groups, `publication_blocker_count_before` copied from matrix
+v20, `normalized_blocker_count_estimate` reduced only by the resolved alias
+blocker, aggregation-only inference-substrate metadata, and an `honest_verdict`
+that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3068)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3068 | Implemented (`python/carnot/reporting/matrix_v20_artifact_alias_blocker_normalization_3068.py`) | Implemented (`tests/python/test_experiment_3068_matrix_v20_artifact_alias_blocker_normalization.py`) |
