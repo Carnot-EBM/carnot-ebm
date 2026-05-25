@@ -1627,6 +1627,60 @@ the terminal artifact marks the result complete, complete-flagged, or blocked
 without allowing smoke-only, vacuous, syntax-regressed, schema-regressed, or
 false-accept-regressed evidence to promote.
 
+### REQ-CODE-3028: Clean-Methodology SOTA Repair Evidence Rerun
+
+The repository shall provide an Exp 3028 clean-methodology repair evidence
+builder that writes
+`results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json`. The
+builder MUST:
+
+- read Exp 3013, Exp 3015, Exp 3016, Exp 3027, the repair-hard manifest, and
+  metamorphic oracle evidence before deciding whether existing live transcripts
+  are reconstructable or a small live panel is required;
+- record CUDA/GPU availability, free VRAM, repo commit, Python environment,
+  GGUF cache paths, model checksum feasibility, and the Exp 3027
+  `repair_rerun_required` decision before any model load;
+- preserve draft intent, failing trace, candidate patch path and hash, final
+  patch text/hash, validator output, generation duration, transcript path/hash,
+  random seed, reproducibility checksum, and headline GGUF model specs for every
+  reconstructed or live repair task;
+- apply the Exp 3015 acceptance controller with MARCH-style information
+  asymmetry, keeping repair candidate collection separate from deterministic
+  syntax/schema, original-test, metamorphic, false-accept, tautology, and intent
+  checks;
+- reject candidates whose repair gain depends on schema drift, syntax drift,
+  false accepts, tautology exposure, missing checker evidence, legacy smoke-only
+  models, or non-headline model provenance; and
+- write `clean_repair_rerun_ready`, `repair_controller_clean`,
+  `clean_repair_claim_promotable_candidate`, `n_tasks`,
+  `n_live_transcripts`, `model_specs`, `legacy_smoke_only_used`,
+  `pass_at_1_delta`, `pass_at_k_delta`, `syntax_failure_rate_delta`,
+  `schema_failure_rate_delta`, `false_accept_delta`, `tautology_gate_clean`,
+  `intent_drift_count`, `reproducibility_checksum`, `inference_substrate`, and
+  `honest_verdict`.
+
+`clean_repair_rerun_ready` shall be true only when at least one mandated
+headline GGUF supplied the repair candidates, every accepted candidate has
+independent checker evidence, pass-rate deltas are positive or non-negative as
+appropriate, syntax/schema/false-accept deltas do not rise, tautology checks
+are non-vacuous, and intent drift is zero. If neither complete transcript
+reconstruction nor a local headline GGUF path is available, the artifact SHALL
+block with `blocked_sota_headline_model_unavailable`.
+
+### SCENARIO-CODE-3028: Clean Reconstruction Produces Promotion Candidate
+
+Given Exp 3027 reports the Exp 3016 top-level metadata gap and the Exp 3016
+candidate rows, transcripts, patch files, verifier logs, model checksums, and
+seeds are otherwise present,
+When Exp 3028 reconstructs evidence with the Exp 3015 controller and independent
+deterministic checks,
+Then it writes the v2 artifact with all required methodology fields, records
+the Exp 3027 rerun decision, counts live transcripts separately from
+reconstruction, uses only mandated headline GGUF model specs for headline
+evidence, reports clean repair deltas, sets
+`clean_repair_rerun_ready=true`, and emits an honest verdict starting with
+`complete:`.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for
