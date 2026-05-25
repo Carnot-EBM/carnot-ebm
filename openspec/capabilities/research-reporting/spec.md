@@ -7526,6 +7526,75 @@ with `complete:`.
 |---|---|---|
 | REQ-REPORT-3040 | Implemented (`python/carnot/reporting/archive_v284_activate_v285_3040.py`) | Implemented (`tests/python/test_experiment_3040_archive_v284_activate_v285.py`) |
 
+### REQ-REPORT-3054: Archive .285 And Confirm .286 Roadmap Handoff
+
+The repository shall provide an Exp 3054 archive/handoff generator that writes
+`results/experiment_3054_archive_v285_activate_v286.json` using only checked-in
+aggregation artifacts, roadmap YAML/Markdown files, and file presence/checksum
+metadata. The generator MUST read
+`results/experiment_3053_capstone_v285.json` as the authority artifact for the
+completed `.285` milestone and MUST set `prior_capstone_ready` directly from
+that artifact's `capstone_ready` field. It MUST set `prior_paper_ready`
+directly from the authority artifact's `paper_ready` field rather than
+inferring paper readiness from capstone completion, matrix cleanliness, roadmap
+status, or publication recommendations.
+
+The generator MUST read `results/experiment_3052_cross_corpus_matrix_v19.json`
+and summarize `.285` `paper_ready`, `repair_claim_status`,
+`fr11_self_learning_status`, `gatemate_status`, and `ssqa_status` from the
+matrix/capstone chain. The carry-forward blocker list MUST keep these unresolved
+claim boundaries visible: repair remains bounded, GateMate remains blocked on
+the output contract, SSQA remains blocked or gate-skipped until host-visible
+smoke exists, and model-weight self-learning remains out of scope when FR-11
+evidence is controller-only.
+
+The generator MUST verify the `.286` roadmap handoff without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It MUST prefer
+`research-roadmap-next.yaml` when that staged file exists and otherwise MAY use
+the already-activated `research-roadmap.yaml` as a read-only fallback, provided
+the artifact records that the requested staged roadmap is absent. Whichever
+roadmap source is used MUST target milestone `2026.05.286`, point
+`milestone_doc` to `openspec/change-proposals/research-roadmap-vNEXT.md`, and
+contain at least one task. The generator MUST also confirm that the vNEXT
+planning Markdown file exists. It MUST NOT activate the roadmap itself, run the
+conductor, run live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, external
+publication tooling, or historical experiment rewrites.
+
+The terminal artifact MUST include `archive_v285_activate_v286_ready`,
+`prior_capstone_ready`, `prior_paper_ready`, `carry_forward_blockers`,
+`next_milestone`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include `.285` status summaries, roadmap handoff
+metadata, source checksums, no-new-execution booleans, protected-file state,
+and measured `duration_s` as long as every value is derived from upstream JSON
+artifacts, roadmap files, or file presence/checksum checks. When a conductor
+prompt assigns ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3054: Archive .285 And Audit .286 Activation Readiness
+
+**Given** `results/experiment_3053_capstone_v285.json` exists and reports
+`capstone_ready=true`
+**And** `results/experiment_3052_cross_corpus_matrix_v19.json` reports the
+`.285` paper, repair, FR-11, GateMate, and SSQA statuses
+**And** the `.286` roadmap source, either staged or already active, targets
+milestone `2026.05.286` and points to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3054 archive/handoff generator runs
+**Then** it writes `results/experiment_3054_archive_v285_activate_v286.json`
+with `archive_v285_activate_v286_ready=true`, `prior_capstone_ready=true`,
+`prior_paper_ready=false`, the `.285` matrix/capstone statuses preserved, the
+four carry-forward blocker categories visible, `next_milestone="2026.05.286"`,
+concrete source artifact provenance, aggregation-only inference substrate
+metadata, no roadmap activation performed by this task, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3054)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3054 | Implemented (`python/carnot/reporting/archive_v285_activate_v286_3054.py`) | Implemented (`tests/python/test_experiment_3054_archive_v285_activate_v286.py`) |
+
 ### REQ-REPORT-3041: Matrix/Capstone Adversarial Flag Hygiene
 
 The repository shall provide an Exp 3041 flag-hygiene generator that writes
