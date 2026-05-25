@@ -7425,3 +7425,73 @@ zeroed deltas, `drift_failures` containing the blocker, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3033 | Implemented (`python/carnot/eval/fr11_nonforgetting_negative_control_stress_v1.py`) | Implemented (`tests/python/test_experiment_3033_fr11_nonforgetting_negative_control_stress_v1.py`) |
+
+## REQ-LEARN-3045: FR-11 Governed Self-Learning Claim Boundary
+
+**Given** Exp 3032 reports held-out DVI replay evidence and Exp 3033 reports
+nonforgetting negative-control stress evidence for a bounded FR-11 controller
+update
+**When** Exp 3045 prepares the `.285` governed self-learning boundary artifact
+**Then** it SHALL summarize the controller-only evidence, separate
+controller-side edit rights from model-weight learning, predeclare the metrics
+that Exp 3046 must measure, and predeclare automatic non-promotion criteria.
+**And** it SHALL mark model weights out of scope unless a later experiment
+actually trains model weights.
+**And** it SHALL not claim live LLM inference, native model retraining, or broad
+continuous self-learning beyond the cached controller/trace governance boundary.
+
+The terminal artifact SHALL be
+`results/experiment_3045_fr11_governed_self_learning_boundary_v1.json` and
+SHALL include `fr11_governance_ready`, `allowed_edit_targets`,
+`forbidden_claims`, `required_metrics`, `non_promotion_criteria`,
+`prior_evidence_summary`, `continuous_self_learning_scope`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3045 Sub-requirements
+
+- REQ-LEARN-3045-1: The evaluator SHALL fail closed when Exp 3032 or Exp 3033
+  artifacts are missing, malformed, or not terminal.
+- REQ-LEARN-3045-2: `prior_evidence_summary` SHALL identify Exp 3032 as
+  held-out cached exact-trace replay and Exp 3033 as controller-only
+  nonforgetting negative-control stress, including the measured deltas and
+  their limits.
+- REQ-LEARN-3045-3: `allowed_edit_targets` SHALL enumerate controller weights,
+  trace memory, validator thresholds, KAN/locality anchors, and model weights,
+  with model weights marked out of scope unless an experiment actually trains
+  them.
+- REQ-LEARN-3045-4: `required_metrics` SHALL require Exp 3046 to measure
+  family holdout delta, prior retention delta, no-feedback delta,
+  shuffled-control delta, contradiction graph size/rate, rollback count,
+  delayed-regression delta, and source-trace completeness.
+- REQ-LEARN-3045-5: `non_promotion_criteria` SHALL automatically deny
+  promotion for tautology, self-confirming labels, family leakage, or missing
+  negative controls.
+- REQ-LEARN-3045-6: `fr11_governance_ready` SHALL be true only when the
+  artifact contains all required edit-target, metric, forbidden-claim,
+  non-promotion, source-trace, and inference-substrate declarations needed for
+  a gated Exp 3046 self-learning experiment.
+
+### SCENARIO-LEARN-3045: Governed Boundary Is Complete Enough For Exp 3046
+
+**Given** terminal Exp 3032 and Exp 3033 artifacts that report cached
+controller-only evidence with rejected negative controls
+**When** Exp 3045 builds the governed boundary artifact
+**Then** it writes all required artifact fields, sets
+`fr11_governance_ready=true`, marks model weights out of scope, lists the Exp
+3046 metrics, lists the automatic non-promotion criteria, reports no live model
+inference in `inference_substrate`, and emits an `honest_verdict` beginning
+with `complete_`.
+
+### SCENARIO-LEARN-3045-BLOCKED: Missing Governance Evidence Fails Closed
+
+**Given** missing or malformed Exp 3032 or Exp 3033 evidence
+**When** Exp 3045 runs
+**Then** it writes the required artifact fields with
+`fr11_governance_ready=false`, empty or blocked evidence summaries, no model
+weight-learning claim, and an `honest_verdict` beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-3045)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3045 | Implemented (`python/carnot/eval/fr11_governed_self_learning_boundary_v1.py`) | Implemented (`tests/python/test_experiment_3045_fr11_governed_self_learning_boundary_v1.py`) |
