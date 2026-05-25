@@ -6281,3 +6281,5 @@ web search: site |
 | 2026-05-25 18:19 UTC | Gated local SOTA verifier calibration v2 | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel. |
 | 2026-05-25 18:21 UTC | Gated local SOTA verifier calibration v2 | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel. |
 | 2026-05-25 19:04 UTC | EBT and ARM-EBM adapter feasibility audit | OK | 81 passed in 3.26s |
+| 2026-05-25 19:19 UTC | LLGuidance/AprAD grammar-constrained repair protoc | OK | 81 passed in 3.94s |
+| 2026-05-25 19:21 UTC | Gated grammar-constrained SOTA repair micro-panel | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3072-gated-local-sota-verifier-calibratio |
