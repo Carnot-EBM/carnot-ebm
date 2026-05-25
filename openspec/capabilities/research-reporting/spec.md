@@ -7582,3 +7582,66 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3041 | Implemented (`python/carnot/reporting/matrix_capstone_adversarial_flag_hygiene_3041.py`) | Implemented (`tests/python/test_experiment_3041_matrix_capstone_adversarial_flag_hygiene.py`) |
+
+### REQ-REPORT-3042: Repair Promotion Reconciliation For Matrix V19
+
+The repository shall provide an Exp 3042 repair-promotion reconciliation
+generator that writes
+`results/experiment_3042_repair_promotion_reconciliation_v3.json` using only
+checked-in Exp 3028, Exp 3029, Exp 3038, Exp 3039, and Exp 3041 artifacts. The
+generator MUST NOT run live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, the conductor, or
+historical artifact rewrites.
+
+The generator MUST verify that Exp 3028 contains model specifications,
+transcript counts, repair deltas, checker fields, and clean
+acceptance-controller evidence before considering any repair row candidate for
+matrix v19. The generator MUST remove only aggregation false positives that Exp
+3041 explicitly classified as `aggregation_false_positive`. Missing metadata,
+unresolved bounds, intent drift, false accepts, syntax/schema regressions,
+source gaps, and non-aggregation adversarial flags MUST remain visible blockers
+and MUST NOT be converted into clean repair evidence.
+
+The generator MUST emit exactly one repair decision for matrix v19:
+`clean_candidate`, `bounded`, `blocked`, or `retired`. It MAY classify the row
+as `clean_candidate` only when Exp 3028's clean-evidence gates pass and no
+repair-relevant blockers remain after the Exp 3041 false-positive removal.
+Candidate repair promotion MUST remain separate from final capstone or paper
+promotion: a clean candidate decision is not a paper-ready decision, and a
+bounded decision MUST keep the residual blocker citations attached.
+
+The terminal artifact MUST include `repair_reconciliation_ready`,
+`repair_promotion_candidate`, `repair_claim_status`,
+`accepted_source_artifacts`, `remaining_blockers`,
+`aggregation_false_positives_removed`, `repair_delta_summary`,
+`inference_substrate`, and `honest_verdict`. It MAY include source checksums,
+Exp 3028 evidence checks, prior matrix/capstone status, no-new-execution
+booleans, status-update booleans, and measured `duration_s` as long as every
+value is derived from upstream JSON artifacts or file presence/checksum checks.
+When a conductor prompt assigns ops reconciliation to a separate step, the
+generator MUST leave `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3042: Repair Row Remains Bounded After False-Positive Cleanup
+
+**Given** Exp 3028, Exp 3029, Exp 3038, Exp 3039, and Exp 3041 artifacts exist
+**And** Exp 3028 reports clean acceptance-controlled repair deltas but still
+has non-aggregation repair flags or missing metadata
+**And** Exp 3041 reports aggregation false positives for aggregation-only
+matrix/capstone artifacts
+**When** the Exp 3042 repair-promotion reconciliation generator runs
+**Then** it writes
+`results/experiment_3042_repair_promotion_reconciliation_v3.json` with
+`repair_reconciliation_ready=true`, only Exp 3041-confirmed aggregation false
+positives in `aggregation_false_positives_removed`, the remaining repair
+blockers still cited by exact source artifact and source field,
+`repair_claim_status="bounded"`, `repair_promotion_candidate=false`, Exp 3028
+deltas preserved in `repair_delta_summary`, aggregation-only inference
+substrate metadata, no live model or hardware execution, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3042)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3042 | Planned (`python/carnot/reporting/repair_promotion_reconciliation_3042.py`) | Planned (`tests/python/test_experiment_3042_repair_promotion_reconciliation.py`) |
