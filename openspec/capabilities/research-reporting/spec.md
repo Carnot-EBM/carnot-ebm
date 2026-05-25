@@ -8293,3 +8293,64 @@ metadata, and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3069 | Implemented (`python/carnot/reporting/solver_verifier_failure_autopsy_protocol_3069.py`) | Implemented (`tests/python/test_experiment_3069_solver_verifier_failure_autopsy_protocol.py`) |
+
+### REQ-REPORT-3074: LLGuidance/AprAD Repair Micro-Panel Protocol
+
+The repository shall provide an Exp 3074 artifact-only repair micro-panel
+protocol generator that writes
+`results/experiment_3074_llguidance_aprad_repair_protocol_v1.json` before any
+Exp 3075 SOTA repair generation is attempted. The generator MUST read Exp 3056
+and Exp 3059, and SHOULD also cite capstone v286 and research-reference
+metadata when present. It MUST preserve all de-tautology disqualifiers from Exp
+3056, preserve the Exp 3059 verifier-gain gate-blocking reason, and MUST NOT
+run live LLM inference, model loading, verifier scoring, solver execution,
+synthesis, board flashing, the conductor, pushes, or historical artifact
+rewrites.
+
+The protocol MUST translate LLGuidance-style grammar constraints into local
+protocol fields for grammar source, constrained syntax target, schema
+validation, parse failures, and fallback behavior. It MUST translate
+AprAD-style intent preservation into local protocol fields for task intent
+hash, behavioral tests, semantic drift checks, and verifier authority. Syntax
+validity alone MUST NOT authorize a repair: the protocol must require exact
+semantic validation by deterministic tests, exact solver or verifier authority,
+or an explicitly blocked outcome when that authority is unavailable.
+
+The terminal artifact MUST include
+`grammar_constrained_repair_protocol_ready`,
+`schema_syntax_failure_targets`, `exact_semantic_validation_required`,
+`aprad_intent_preservation_rules`, `llguidance_runtime_plan`,
+`de_tautology_disqualifiers`, `exp3075_required_fields`,
+`inference_substrate`, and `honest_verdict`. The Exp 3075 field contract MUST
+include a clean blocked outcome for verifier-gain gate failures so matrix v21
+can distinguish "not run because a required verifier-gain gate failed" from a
+failed or missing repair artifact. `grammar_constrained_repair_protocol_ready`
+shall be true only when Exp 3075 can consume the protocol directly from
+machine-readable field lists, failure targets, grammar runtime plan,
+intent-preservation rules, carried-forward disqualifiers, and no-live-inference
+substrate metadata.
+
+#### SCENARIO-REPORT-3074: Grammar And Intent Gates Precede SOTA Repair
+
+**Given** Exp 3056 reports a ready de-tautology protocol with promotion
+disqualifiers
+**And** Exp 3059 reports a gate-blocked SOTA repair rerun because verifier gain
+failed
+**When** the Exp 3074 protocol generator runs
+**Then** it writes
+`results/experiment_3074_llguidance_aprad_repair_protocol_v1.json` with
+`grammar_constrained_repair_protocol_ready=true`, all Exp 3056 de-tautology
+disqualifiers preserved, schema and syntax failure targets declared for
+matrix-v21 measurement, an explicit LLGuidance runtime plan with deterministic
+schema fallback, AprAD-inspired intent-preservation rules that require task
+intent hashes, behavioral tests, semantic-drift checks, and independent
+verifier authority, `exact_semantic_validation_required=true`, an Exp 3075
+required-field contract including clean blocked verifier-gain outcomes,
+artifact-only inference-substrate metadata, and an `honest_verdict` that starts
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3074)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3074 | Planned (`python/carnot/reporting/llguidance_aprad_repair_protocol_3074.py`) | Planned (`tests/python/test_experiment_3074_llguidance_aprad_repair_protocol.py`) |

@@ -1,0 +1,338 @@
+{
+  "aprad_intent_preservation_rules": [
+    {
+      "field": "task_intent_hash",
+      "id": "task_intent_hash_required",
+      "reference_available": true,
+      "required": true,
+      "rule": "Hash the original prompt, entry point, tests, and expected behavior before repair."
+    },
+    {
+      "field": "behavioral_tests",
+      "id": "behavioral_tests_required",
+      "required": true,
+      "rule": "Run original and independent behavioral tests before accepting a syntax-valid patch."
+    },
+    {
+      "field": "semantic_drift_checks",
+      "id": "semantic_drift_checks_required",
+      "required": true,
+      "rule": "Reject repairs that pass tests by changing requested behavior or dropping constraints."
+    },
+    {
+      "field": "verifier_authority",
+      "id": "independent_verifier_authority_required",
+      "required": true,
+      "rule": "Use deterministic tests or exact verifier authority; the generator cannot grade itself."
+    }
+  ],
+  "artifact": "experiment_3074_llguidance_aprad_repair_protocol_v1",
+  "blocked_reasons": [],
+  "clean_blocked_outcome": {
+    "blocked_at_layer": "conductor_pre_gate",
+    "exp3075_action": "write terminal blocked artifact without live repair generation",
+    "gate_check_summary": "1 of 2 gate(s) failed; first failure: exp3057-local-sota-solution-verifier-gain-panel.verifier_gain_delta (actual=-0.125 > expected=0.0)",
+    "outcome": "blocked_verifier_gain_gate_failed",
+    "repair_generation_blocked": true,
+    "triggered_by_exp3059": true,
+    "verifier_gain_gate": {
+      "actual": -0.125,
+      "artifact_field": "verifier_gain_delta",
+      "expected": 0.0,
+      "op": ">",
+      "passed": false,
+      "upstream": "exp3057-local-sota-solution-verifier-gain-panel"
+    }
+  },
+  "de_tautology_disqualifier_count": 12,
+  "de_tautology_disqualifiers": [
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "prior_tautology_not_cleared",
+      "required_clearance": "TAUTOLOGY remains in blocked_prior_fields_checked.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "pass_at_1_pass_at_k_delta_bit_identical_without_k1_declaration",
+      "required_clearance": "pass@1 and pass@k deltas match exactly while k>1 or candidate ordering is missing.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "implausible_perfect_delta_without_per_case_evidence",
+      "required_clearance": "Exact-zero false-accept, syntax, or schema deltas lack per-case checker support.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "duration_too_short_for_live_compute",
+      "required_clearance": "Live compute markers appear but duration_s is below the sanity rule.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "missing_random_seed_or_seed_log",
+      "required_clearance": "Top-level seed or per-transcript seed log is missing.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "missing_model_specs_identity",
+      "required_clearance": "model_specs lacks model identity, path/cache id, checksum/hash, or GPU assignment.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "missing_transcript_fingerprints",
+      "required_clearance": "Raw transcript paths or transcript fingerprints are missing.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "checker_authority_missing_or_self_graded",
+      "required_clearance": "Accepted repair was graded by the generator or lacks exact deterministic checker authority.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "intent_drift_detected",
+      "required_clearance": "Any accepted repair changes task intent or drops required constraints.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "false_accept_or_syntax_schema_regression",
+      "required_clearance": "False accepts, syntax failures, or schema failures increase versus baseline.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "legacy_smoke_or_non_headline_model_used",
+      "required_clearance": "Evidence uses smoke-only or non-headline models for a headline local SOTA claim.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    },
+    {
+      "carried_forward_to": "exp3075_matrix_v21",
+      "id": "unresolved_methodology_blocker_present",
+      "required_clearance": "Exp 3042/3055 methodology, bounded, or retirement blockers remain attached.",
+      "source_artifact": "results/experiment_3056_repair_de_tautology_protocol_v1.json"
+    }
+  ],
+  "duration_s": 0.005913,
+  "exact_semantic_validation_required": true,
+  "exp3075_consumer_contract": {
+    "blocked_outcome_rule": "If verifier_gain_delta <= 0 or a verifier-gain gate is failed, Exp 3075 must write repair_generation_blocked=true and skip live repair generation.",
+    "clean_blocked_outcome_required": true,
+    "consumer_experiment": "exp3075",
+    "consumer_ready": true,
+    "matrix_version": "v21",
+    "required_fields": [
+      "schema",
+      "artifact",
+      "run_date",
+      "started_at",
+      "finished_at",
+      "duration_s",
+      "status",
+      "matrix_version",
+      "protocol_source_artifact",
+      "grammar_constrained_repair_protocol_ready",
+      "schema_syntax_failure_targets",
+      "exact_semantic_validation_required",
+      "aprad_intent_preservation_rules",
+      "llguidance_runtime_plan",
+      "de_tautology_disqualifiers",
+      "exp3075_required_fields",
+      "blocked_prior_fields_checked",
+      "task_intent_hash",
+      "behavioral_tests",
+      "semantic_drift_checks",
+      "verifier_authority",
+      "checker_authority",
+      "verifier_gain_gate_passed",
+      "repair_generation_blocked",
+      "clean_blocked_outcome",
+      "gate_check_summary",
+      "blocked_at_layer",
+      "n_tasks",
+      "candidate_count",
+      "model_specs",
+      "decode_config",
+      "live_repair_generation_attempted",
+      "inference_substrate",
+      "tests_run",
+      "honest_verdict"
+    ]
+  },
+  "exp3075_required_fields": [
+    "schema",
+    "artifact",
+    "run_date",
+    "started_at",
+    "finished_at",
+    "duration_s",
+    "status",
+    "matrix_version",
+    "protocol_source_artifact",
+    "grammar_constrained_repair_protocol_ready",
+    "schema_syntax_failure_targets",
+    "exact_semantic_validation_required",
+    "aprad_intent_preservation_rules",
+    "llguidance_runtime_plan",
+    "de_tautology_disqualifiers",
+    "exp3075_required_fields",
+    "blocked_prior_fields_checked",
+    "task_intent_hash",
+    "behavioral_tests",
+    "semantic_drift_checks",
+    "verifier_authority",
+    "checker_authority",
+    "verifier_gain_gate_passed",
+    "repair_generation_blocked",
+    "clean_blocked_outcome",
+    "gate_check_summary",
+    "blocked_at_layer",
+    "n_tasks",
+    "candidate_count",
+    "model_specs",
+    "decode_config",
+    "live_repair_generation_attempted",
+    "inference_substrate",
+    "tests_run",
+    "honest_verdict"
+  ],
+  "grammar_constrained_repair_protocol_ready": true,
+  "honest_verdict": "complete: grammar_constrained_repair_protocol_ready=true; de_tautology_disqualifiers=12; exp3075_fields=35",
+  "inference_substrate": {
+    "conductor_invoked": false,
+    "fresh_solver_execution": false,
+    "fresh_verifier_scoring": false,
+    "live_llm_inference": false,
+    "local_gguf_inference": false,
+    "mode": "artifact_only_repair_protocol",
+    "model_load_attempted": false,
+    "protocol_only": true,
+    "source_artifacts_only": true
+  },
+  "llguidance_runtime_plan": {
+    "backend_order": [
+      "llguidance",
+      "llama_cpp_gbnf",
+      "deterministic_schema_validation"
+    ],
+    "claims_llguidance_implementation": false,
+    "constrained_syntax_target": "single_repair_candidate_json",
+    "fallback_behavior": {
+      "on_backend_unavailable": "emit unconstrained draft to deterministic JSON-schema validator only; do not promote",
+      "on_parse_failure": "record parse failure and block candidate acceptance",
+      "on_schema_failure": "record schema failure and block candidate acceptance"
+    },
+    "grammar_source": "exp3074_json_schema_to_llguidance_or_gbnf",
+    "live_generation_allowed_by_this_protocol": false,
+    "parse_failures": {
+      "must_block_promotion": true,
+      "record_examples_field": "parse_failure_examples",
+      "record_field": "parse_failure_count"
+    },
+    "schema_validation": {
+      "required": true,
+      "required_fields": [
+        "task_id",
+        "task_intent_hash",
+        "patch",
+        "behavioral_tests",
+        "semantic_drift_checks",
+        "verifier_authority"
+      ],
+      "validator": "deterministic_json_schema_validation"
+    }
+  },
+  "milestone": "2026.05.287",
+  "missing_source_artifacts": [],
+  "no_historical_artifact_rewrite": true,
+  "no_live_llm_inference": true,
+  "no_new_board_flash": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "run_date": "20260525",
+  "schema": "carnot.llguidance_aprad_repair_protocol.v1",
+  "schema_syntax_failure_targets": {
+    "grammar_backend_failures": {
+      "artifact_field": "grammar_backend_failure_count",
+      "measured": true,
+      "promotion_target": "0 for live grammar-constrained headline repair"
+    },
+    "parse_failures": {
+      "artifact_field": "parse_failure_count",
+      "fallback_behavior": "deterministic_schema_validation",
+      "measured": true,
+      "principle": "grammar backend failures stay visible in matrix v21"
+    },
+    "schema_errors": {
+      "artifact_field": "schema_failure_rate_delta",
+      "measured": true,
+      "principle": "schema-invalid repairs cannot promote",
+      "promotion_target": "<= 0 versus baseline"
+    },
+    "syntax_errors": {
+      "artifact_field": "syntax_failure_rate_delta",
+      "measured": true,
+      "principle": "parser-invalid code cannot promote",
+      "promotion_target": "<= 0 versus baseline"
+    }
+  },
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3056",
+      "kind": "json",
+      "path": "results/experiment_3056_repair_de_tautology_protocol_v1.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "repair_de_tautology_protocol",
+      "sha256": "b5a049429c7f2e4c545f93491cd25d0a60511bbf81305f7590754923f7bf38da"
+    },
+    {
+      "experiment_id": "exp3059",
+      "kind": "json",
+      "path": "results/experiment_3059_gated_sota_repair_de_tautology_rerun.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "gated_sota_repair_gate_result",
+      "sha256": "179d5f7c08de3e84da11046b38b3428e9024a2bd9315364e1707ed65650241ed"
+    },
+    {
+      "experiment_id": "exp3066",
+      "kind": "json",
+      "path": "results/experiment_3066_capstone_v286.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "capstone_v286_boundary_context",
+      "sha256": "348903dcff4edafe7d13a7d6e259fe587838fe36073c58677fcc6931fec9b12e"
+    },
+    {
+      "experiment_id": "research_references",
+      "kind": "text",
+      "path": "research-references.md",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "llguidance_aprad_reference_context",
+      "sha256": "af6d8111797d17dd705a77dde73d1856a2e8ced3b2b5b96b66858e6434631112"
+    }
+  ],
+  "source_checksums": {
+    "research-references.md": "af6d8111797d17dd705a77dde73d1856a2e8ced3b2b5b96b66858e6434631112",
+    "results/experiment_3056_repair_de_tautology_protocol_v1.json": "b5a049429c7f2e4c545f93491cd25d0a60511bbf81305f7590754923f7bf38da",
+    "results/experiment_3059_gated_sota_repair_de_tautology_rerun.json": "179d5f7c08de3e84da11046b38b3428e9024a2bd9315364e1707ed65650241ed",
+    "results/experiment_3066_capstone_v286.json": "348903dcff4edafe7d13a7d6e259fe587838fe36073c58677fcc6931fec9b12e"
+  },
+  "invariant_violations": []
+}
