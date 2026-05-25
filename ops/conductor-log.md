@@ -6250,3 +6250,4 @@ web search: site |
 | 2026-05-25 09:47 UTC | SSQA readback eligibility bounded gate v3 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3050-gatemate-host-visible-flash-smoke- |
 | 2026-05-25 09:49 UTC | GateMate host-visible flash smoke v5 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3049-gatemate-output-shim-rtl-ccf-sim-v2) |
 | 2026-05-25 09:49 UTC | SSQA readback eligibility bounded gate v3 | GATE_BLOCK | 1 of 1 gate(s) failed; first failure: exp3050-gatemate-host-visible-flash-smoke- |
+| 2026-05-25 10:09 UTC | Cross-corpus matrix v19 | OK | 81 passed in 3.81s |
