@@ -6278,3 +6278,4 @@ web search: site |
 | 2026-05-25 17:58 UTC | First-token entropy and abstention SOTA panel | OK | 81 passed in 3.77s |
 | 2026-05-25 18:15 UTC | VERGE/MCS SMT correction feedback pilot | OK | 81 passed in 4.25s |
 | 2026-05-25 18:17 UTC | Gated local SOTA verifier calibration v2 | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel. |
+| 2026-05-25 18:19 UTC | Gated local SOTA verifier calibration v2 | GATE_BLOCK | 1 of 3 gate(s) failed; first failure: exp3070-first-token-abstention-sota-panel. |
