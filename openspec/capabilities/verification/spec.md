@@ -722,6 +722,77 @@ beginning with `blocked_sota_gguf_unavailable`.
 |---|---|---|
 | REQ-VERIFY-3057 | Implemented (`python/carnot/eval/local_sota_solution_verifier_gain_panel_v1.py`) | Implemented (`tests/python/test_experiment_3057_local_sota_solution_verifier_gain_panel.py`) |
 
+### REQ-VERIFY-3058: AquaForte-Style LLM-Guided SMT Instantiation Pilot
+
+The repository shall provide a tiny Exp 3058 AquaForte-style pilot in which a
+mandated local SOTA GGUF proposes quantified-SMT or uninterpreted-function
+instantiations and an exact solver decides whether each proposal proves the
+target claim. The pilot shall write
+`results/experiment_3058_aquaforte_style_llm_guided_smt_pilot_v1.json`.
+
+The pilot shall first confirm that Exp 3057 reports
+`solution_verifier_calibration_ready=true`, that the exact solver path can
+import Z3 or CVC5, and that at least one mandated GGUF from
+`python/carnot/inference/sota_models.py` resolves and loads through the local
+runtime. If any precondition fails, the artifact shall fail closed with
+`llm_guided_smt_pilot_ready=false`, empty or non-promoted model evidence, and
+an `honest_verdict` beginning with the matching blocked precondition.
+
+When preconditions pass, the pilot shall run 4-8 tiny fixtures, preferring
+quantified or uninterpreted-function-inspired fixtures when Z3 UF support is
+available. For each fixture the local GGUF shall propose instantiations or
+variable/function mappings, every prompt shall be represented by a SHA-256
+hash and deterministic decode settings, and every proposal shall be validated
+by the exact solver before being counted as guided success. Invalid,
+unparseable, or non-proving LLM proposals shall remain visible. The solver-only
+fallback shall remain available, be counted separately, and stay authoritative.
+Guidance may reduce unresolved or fallback-only cases, but the artifact shall
+report no reduction when the solver-only baseline already succeeds.
+
+The terminal artifact MUST include `llm_guided_smt_pilot_ready`,
+`formal_fallback_preserved`, `guided_success_count`,
+`solver_only_success_count`, `unresolved_count`,
+`invalid_llm_proposal_count`, `models_used`, `model_specs`,
+`legacy_smoke_only_used`, `exact_solver_path`, `prompt_hashes`,
+`inference_substrate`, and `honest_verdict`. It shall also record fixture rows,
+model cache/runtime paths, decode settings, solver-only comparison metrics,
+and enough row-level hashes to audit the run without embedding full prompts.
+
+`llm_guided_smt_pilot_ready` shall be true only when Exp 3057 is ready, an
+exact solver validates every fixture row, at least one mandated GGUF generated
+live proposal text, at least one proposal is accepted by exact validation,
+solver-only fallback remains preserved and authoritative,
+`legacy_smoke_only_used=false`, and `honest_verdict` starts with a terminal
+success prefix.
+
+### SCENARIO-VERIFY-3058: Local GGUF Proposals Are Exact-Solver Checked
+
+Given Exp 3057 is ready, Z3 is importable, and a mandated local SOTA GGUF can
+load,
+When the Exp 3058 pilot runs over tiny quantified or
+uninterpreted-function-inspired fixtures,
+Then it hashes each prompt, records decode and runtime provenance, parses the
+local GGUF proposal as instantiations or mappings, validates each proposal with
+the exact solver, counts only solver-confirmed proposals as guided successes,
+counts invalid LLM proposals separately, runs the solver-only fallback over the
+same fixtures, and writes the required terminal artifact fields.
+
+### SCENARIO-VERIFY-3058-BLOCKED: Missing Preconditions Fail Closed
+
+Given Exp 3057 is not ready, the exact solver cannot import, or no mandated
+local GGUF resolves or loads,
+When the Exp 3058 pilot runs,
+Then it writes a blocked terminal artifact with
+`llm_guided_smt_pilot_ready=false`, preserves solver-only authority when the
+solver exists, does not promote legacy tiny models as headline evidence, and
+uses an `honest_verdict` beginning with the blocked precondition reason.
+
+## Implementation Status (REQ-VERIFY-3058)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3058 | Implemented (`python/carnot/eval/aquaforte_style_llm_guided_smt_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3058_aquaforte_style_llm_guided_smt_pilot.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
