@@ -6233,3 +6233,4 @@ web search: site |
 | 2026-05-25 06:44 UTC | Plan milestone 2026.05.285 | OK | 14 tasks proposed |
 | 2026-05-25 06:46 UTC | Milestone 2026.05.285 activated | OK | 14 tasks queued |
 | 2026-05-25 07:01 UTC | Archive .284 and activate .285 | OK | 81 passed in 3.34s |
+| 2026-05-25 07:18 UTC | Matrix/capstone adversarial flag hygiene | OK | 81 passed in 3.49s |
