@@ -7457,3 +7457,71 @@ claims, reconciled matrix v18 counts, visible blockers, three to five concrete
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3039 | Implemented (`python/carnot/reporting/capstone_v284_3039.py`) | Implemented (`tests/python/test_experiment_3039_capstone_v284.py`) |
+
+### REQ-REPORT-3040: Archive .284 And Confirm .285 Roadmap Handoff
+
+The repository shall provide an Exp 3040 archive/handoff generator that writes
+`results/experiment_3040_archive_v284_activate_v285.json` using only checked-in
+aggregation artifacts, roadmap YAML/Markdown files, and file presence/checksum
+metadata. The generator MUST read
+`results/experiment_3039_capstone_v284.json` as the authority artifact for the
+completed `.284` milestone and MUST set `prior_capstone_ready` directly from
+that artifact's `capstone_ready` field. It MUST set `prior_paper_ready`
+directly from the authority artifact's `paper_ready` field rather than
+inferring paper readiness from capstone completion, matrix cleanliness, or
+roadmap status.
+
+The generator MUST read `results/experiment_3038_cross_corpus_matrix_v18.json`
+and summarize `.284` `clean`, `flagged`, `blocked`, `gated_skipped`,
+`missing`, and bounded carry-forward status. The bounded carry-forward status
+MUST keep the unresolved claims visible as exactly these three blockers when
+they are present in the capstone: `repair_claim_status=bounded`,
+`fr11_self_learning_status=controller_only_promotable`, and
+`gatemate_status=blocked_pinout_missing_bounded`.
+
+The generator MUST verify the `.285` roadmap handoff without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It MUST prefer
+`research-roadmap-next.yaml` when that staged file exists and otherwise MAY use
+the already-activated `research-roadmap.yaml` as a read-only fallback, provided
+the artifact records that the requested staged roadmap is absent. Whichever
+roadmap source is used MUST target milestone `2026.05.285`, point
+`milestone_doc` to `openspec/change-proposals/research-roadmap-vNEXT.md`, and
+contain at least one task. The generator MUST also confirm that the vNEXT
+planning Markdown file exists. It MUST NOT activate the roadmap itself, run the
+conductor, run live LLM inference, verifier scoring, solver execution,
+synthesis, board flashing, readback, hardware smoke tests, external
+publication tooling, or historical experiment rewrites.
+
+The terminal artifact MUST include `archive_v284_activate_v285_ready`,
+`prior_capstone_ready`, `prior_paper_ready`, `carry_forward_blockers`,
+`next_milestone`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include `.284` status summaries, roadmap handoff
+metadata, source checksums, no-new-execution booleans, protected-file state,
+and measured `duration_s` as long as every value is derived from upstream JSON
+artifacts, roadmap files, or file presence/checksum checks. When a conductor
+prompt assigns ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3040: Archive .284 And Audit .285 Activation Readiness
+
+**Given** `results/experiment_3039_capstone_v284.json` exists and reports
+`capstone_ready=true`
+**And** `results/experiment_3038_cross_corpus_matrix_v18.json` reports matrix
+v18 counts for `clean`, `flagged`, `blocked`, `gated_skipped`, and `missing`
+**And** the `.285` roadmap source, either staged or already active, targets
+milestone `2026.05.285` and points to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3040 archive/handoff generator runs
+**Then** it writes `results/experiment_3040_archive_v284_activate_v285.json`
+with `archive_v284_activate_v285_ready=true`, `prior_capstone_ready=true`,
+`prior_paper_ready=false`, `.284` status counts preserved, the three
+carry-forward blockers visible, `next_milestone="2026.05.285"`, concrete
+source artifact provenance, aggregation-only inference substrate metadata, no
+roadmap activation performed by this task, and an `honest_verdict` that starts
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3040)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3040 | Implemented (`python/carnot/reporting/archive_v284_activate_v285_3040.py`) | Implemented (`tests/python/test_experiment_3040_archive_v284_activate_v285.py`) |
