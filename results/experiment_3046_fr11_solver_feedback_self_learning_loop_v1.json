@@ -86,5 +86,28 @@
     "/usr/bin/ruff check python/carnot/eval/fr11_solver_feedback_self_learning_loop_v1.py tests/python/test_experiment_3046_fr11_solver_feedback_self_learning_loop_v1.py scripts/experiment_3046_fr11_solver_feedback_self_learning_loop_v1.py -> passed",
     "/usr/bin/ruff format --check python/carnot/eval/fr11_solver_feedback_self_learning_loop_v1.py tests/python/test_experiment_3046_fr11_solver_feedback_self_learning_loop_v1.py scripts/experiment_3046_fr11_solver_feedback_self_learning_loop_v1.py -> passed"
   ],
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "contradiction_rate_delta=-0.5 and shuffled_control_delta=-0.5 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "delayed_regression_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "no_feedback_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "prior_retention_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }

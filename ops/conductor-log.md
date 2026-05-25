@@ -6238,3 +6238,4 @@ web search: site |
 | 2026-05-25 07:54 UTC | Verified speculation transcript fingerprint prefli | OK | 81 passed in 3.12s |
 | 2026-05-25 08:22 UTC | SMT/SAT validator-tree exactness upgrade | OK | 81 passed in 2.88s |
 | 2026-05-25 08:53 UTC | FR-11 governed self-learning boundary | OK | 81 passed in 3.41s |
+| 2026-05-25 09:08 UTC | FR-11 solver-feedback self-learning loop | OK | 81 passed in 3.66s |
