@@ -284,6 +284,26 @@ retired_extras:
     retired_by_artifact: "results/experiment_1458_hardnet_dsp_repair_stack_consolidation.json"
     operator_reopen_required: true
     retire_if_same_verdict: true
+  # Added by Exp 3055 - repair headline wording retirement and rerun gate ledger.
+  - id: repair_headline_wording_retired_v285
+    reason: |
+      Unsupported repair headline wording is retired after matrix v19 and capstone
+      v285 preserved repair as bounded, retained two retired repair headline rows,
+      and required explicit rerun gates before any future repair promotion attempt.
+      Future repair-headline or Exp 3016/3028 promotion reruns are blocked unless
+      an operator explicitly reopens the scope with deterministic fingerprints,
+      seeds, duration sanity, de-tautology metrics, verifier gain, and exact
+      checker authority.
+    blocked_patterns:
+      - "headline SOTA repair"
+      - "repair result is promotable as a headline SOTA repair claim"
+      - "original Exp 3016 headline repair claim"
+      - "Exp 3016 headline repair claim is promotable"
+      - "Exp 3028 supplies clean acceptance-controlled SOTA repair evidence"
+    retired_milestone: "2026.05.285"
+    retired_by_artifact: "results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json"
+    operator_reopen_required: true
+    retire_if_same_verdict: true
   # Added by Exp 1560 - THRML scaling sweep lineage retirement.
   - id: thrml_scaling_sweep_lineage_retired_after_vendoring
     reason: |

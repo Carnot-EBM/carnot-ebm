@@ -7595,6 +7595,64 @@ metadata, no roadmap activation performed by this task, and an
 |---|---|---|
 | REQ-REPORT-3054 | Implemented (`python/carnot/reporting/archive_v285_activate_v286_3054.py`) | Implemented (`tests/python/test_experiment_3054_archive_v285_activate_v286.py`) |
 
+### REQ-REPORT-3055: Repair Headline Retirement And Blocker Ledger
+
+The repository shall provide an Exp 3055 repair headline retirement and
+blocker ledger generator that writes
+`results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json`
+using only checked-in Exp 3041, Exp 3042, matrix v19, capstone v285, and the
+exclusion manifest. The generator MUST NOT run live LLM inference, verifier
+scoring, solver execution, synthesis, board flashing, readback, hardware smoke
+tests, the conductor, external publication tooling, or historical artifact
+rewrites.
+
+The ledger MUST extract every repair-related blocker and retired or bounded
+repair row visible in the four source artifacts. Unsupported repair headline
+wording that lacks support under matrix v19 and capstone v285 MUST be marked
+`retired_for_headline_use` in a machine-readable retired-claim list. Bounded
+repair evidence MUST remain in a separate bounded-claim list and MUST NOT be
+promoted by wording. Future repair reruns MUST be gated by explicit evidence:
+deterministic fingerprint, seed, duration sanity, de-tautology metrics,
+verifier gain, and exact checker authority. Manifest changes, if required by
+CLAUDE.md failed-rerun and exclusion-manifest discipline, MUST be minimal and
+cited by entry id and path.
+
+The terminal artifact MUST include `repair_headline_retirement_ready`,
+`retired_repair_claims`, `still_bounded_repair_claims`,
+`rerun_prerequisites`, `manifest_updates`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include extracted blocker
+rows, source checksums, no-new-execution booleans, status-update booleans, and
+measured `duration_s` as long as every value is derived from checked-in
+artifacts, manifest fields, or file presence/checksum checks. The
+`repair_headline_retirement_ready` field MUST be true only when matrix v20 can
+consume the retired and bounded repair decisions by claim id, row id, status,
+source artifact, source field, and required evidence.
+
+#### SCENARIO-REPORT-3055: Unsupported Repair Headlines Retire Before Rerun
+
+**Given** Exp 3041, Exp 3042, matrix v19, and capstone v285 are present
+**And** matrix v19 and capstone v285 preserve repair as bounded with two
+retired repair headline rows
+**And** CLAUDE.md discipline requires retired headline-rerun scope to be
+traceable in the exclusion manifest
+**When** the Exp 3055 ledger generator runs
+**Then** it writes
+`results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json`
+with `repair_headline_retirement_ready=true`, retired repair claims marked
+`retired_for_headline_use`, bounded repair claims still separate from retired
+claims, rerun prerequisites covering deterministic fingerprint, seed, duration
+sanity, de-tautology metrics, verifier gain, and exact checker authority, the
+manifest update cited by id and source file, source artifact provenance for all
+four source artifacts, aggregation-only inference substrate metadata, no live
+model or hardware execution by the ledger task, and an `honest_verdict` that
+starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3055)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3055 | Implemented (`python/carnot/reporting/repair_headline_blocker_ledger_3055.py`) | Implemented (`tests/python/test_experiment_3055_repair_headline_blocker_ledger.py`) |
+
 ### REQ-REPORT-3041: Matrix/Capstone Adversarial Flag Hygiene
 
 The repository shall provide an Exp 3041 flag-hygiene generator that writes

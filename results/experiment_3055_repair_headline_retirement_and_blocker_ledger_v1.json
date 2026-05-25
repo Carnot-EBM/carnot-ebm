@@ -1,0 +1,789 @@
+{
+  "artifact": "experiment_3055_repair_headline_retirement_and_blocker_ledger_v1",
+  "blocked_reasons": [],
+  "duration_s": 0.00204,
+  "extracted_repair_blockers": [
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": [
+        {
+          "detail": "pass_at_1_delta=0.375 and pass_at_k_delta=0.375 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+          "kind": "TAUTOLOGY",
+          "severity": "critical"
+        },
+        {
+          "detail": "false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "syntax_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+          "kind": "IMPLAUSIBLE_PERFECT",
+          "severity": "info"
+        },
+        {
+          "detail": "duration_s=0.103766 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+          "kind": "DURATION_TOO_SHORT",
+          "severity": "critical"
+        }
+      ],
+      "matrix_v20_consumable": true,
+      "rationale": "Non-aggregation adversarial flags remain blockers until separately cleared.",
+      "row_id": "exp3028:adversarial_flags",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending",
+      "status": "true_blocker"
+    },
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": {
+        "classification": "true_methodology_blocker",
+        "march_audit_principle": "source_row_does_not_grade_itself",
+        "matrix_status": "blocked",
+        "rationale": "No independent source field resolves the adversarial flag.",
+        "row_id": "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2977_intent_preserving_repair",
+        "source_artifact_path": "results/experiment_3024_cross_corpus_matrix_v17.json",
+        "source_experiment_id": "exp2977",
+        "supporting_fields": [
+          {
+            "field": "rows[].upstream_flags",
+            "value": []
+          },
+          {
+            "field": "rows[].status",
+            "value": "blocked"
+          }
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "No independent source field resolves the adversarial flag.",
+      "row_id": "carry_forward_v16:carry_forward_v15:carry_forward_v14:exp2977_intent_preserving_repair",
+      "source_artifact": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "source_field": "true_methodology_blockers[1]",
+      "status": "true_blocker"
+    },
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": {
+        "classification": "true_methodology_blocker",
+        "march_audit_principle": "source_row_does_not_grade_itself",
+        "matrix_status": "flagged",
+        "rationale": "No independent source field resolves the adversarial flag.",
+        "row_id": "exp3013_sota_logprob_telemetry",
+        "source_artifact_path": "results/experiment_3013_sota_gguf_logprob_telemetry_preflight_v1.json",
+        "source_experiment_id": "exp3013",
+        "supporting_fields": [
+          {
+            "field": "rows[].upstream_flags",
+            "value": [
+              "flagged_adversarial=true",
+              "DURATION_TOO_SHORT:critical",
+              "METHODOLOGY_MISSING:warn"
+            ]
+          },
+          {
+            "field": "rows[].status",
+            "value": "flagged"
+          }
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "No independent source field resolves the adversarial flag.",
+      "row_id": "exp3013_sota_logprob_telemetry",
+      "source_artifact": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "source_field": "true_methodology_blockers[2]",
+      "status": "true_blocker"
+    },
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": {
+        "allowed_wording": "Do not use headline SOTA repair wording; cite the bounded Exp 3028 evidence and name the unresolved matrix/capstone blockers.",
+        "blockers": [
+          "matrix repair row is flagged",
+          "capstone repair decision is not promotable",
+          "capstone still lists repair paper-ready blocker"
+        ],
+        "claim_id": "headline_sota_repair_clean_methodology",
+        "classification": "retired",
+        "observed_support_fields": {
+          "capstone_ready": true,
+          "capstone_repair_promotable": false,
+          "capstone_repair_status": "flagged",
+          "claim_boundary_violation_count": 0,
+          "exp3028_clean": true,
+          "matrix_repair_row_status": "flagged",
+          "matrix_repair_row_upstream_flag_count": 4,
+          "matrix_v17_ready": true,
+          "repair_paper_ready_blocker_count": 1
+        },
+        "proposed_repair_claim": "The repair result is promotable as a headline SOTA repair claim.",
+        "required_support_fields": [
+          "all Exp 3028 clean-evidence gates pass",
+          "matrix_v17 repair row status == clean",
+          "capstone repair promotion decision promotable == true",
+          "capstone paper-ready blockers contain no repair blocker",
+          "no claim-boundary violations are present"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "Exp 3029 retired or blocked this claim boundary.",
+      "row_id": "exp3029:headline_sota_repair_clean_methodology",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[headline_sota_repair_clean_methodology]",
+      "status": "true_blocker"
+    },
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": {
+        "allowed_wording": "Retire this wording; cite Exp 3028's bounded clean-methodology evidence instead.",
+        "blockers": [
+          "Exp 3027 requires repair rerun or reconstruction",
+          "Exp 3016 random_seed missing",
+          "Exp 3016 transcript_sha256s missing"
+        ],
+        "claim_id": "unsupported_exp3016_headline_repair_promotion",
+        "classification": "retired",
+        "observed_support_fields": {
+          "exp3016_random_seed_present": false,
+          "exp3016_reproducibility_checksum_present": true,
+          "exp3016_transcript_sha256s_present": false,
+          "exp3027_methodology_corrigendum_ready": true,
+          "exp3027_repair_rerun_decision": "live_rerun_required",
+          "exp3027_repair_rerun_required": true
+        },
+        "proposed_repair_claim": "The original Exp 3016 headline repair claim is promotable without the Exp 3028 boundary.",
+        "required_support_fields": [
+          "Exp 3027 does not require repair rerun or reconstruction",
+          "Exp 3016 top-level random_seed is present",
+          "Exp 3016 top-level transcript hashes are present",
+          "Exp 3016 source metadata is sufficient without later repair"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "Exp 3029 retired or blocked this claim boundary.",
+      "row_id": "exp3029:unsupported_exp3016_headline_repair_promotion",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[unsupported_exp3016_headline_repair_promotion]",
+      "status": "true_blocker"
+    },
+    {
+      "blocking": true,
+      "classification": "true_blocker",
+      "evidence": {
+        "actual_path": "results/experiment_3031_dccd_structured_repair_panel_v1.json",
+        "actual_path_present": true,
+        "experiment_id": "exp3031",
+        "fr11_self_learning_promotable": null,
+        "gatemate_output_contract_ready": null,
+        "host_visible_output_observed": null,
+        "milestone": "2026.05.284",
+        "planned_path": "results/experiment_3031_dccd_structured_repair_panel_v1.json",
+        "planned_path_present": true,
+        "repair_claim_status": "pilot_panel_flagged",
+        "source_honest_verdict": "complete: dccd structured repair panel ready; n_cases=3",
+        "ssqa_gate_status": null,
+        "status": "flagged",
+        "summary": {
+          "dccd_panel_ready": true,
+          "false_accept_delta": 0.0,
+          "intent_drift_delta": 0.0,
+          "n_cases": 3
+        },
+        "task_class": "dccd_structured_repair_panel",
+        "upstream_flags": [
+          "flagged_adversarial=true",
+          "IMPLAUSIBLE_PERFECT:info",
+          "IMPLAUSIBLE_PERFECT:info",
+          "DURATION_TOO_SHORT:critical",
+          "METHODOLOGY_MISSING:warn"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "Matrix v18 marks this row flagged and no aggregation false-positive source clears it.",
+      "row_id": "exp3031:matrix_flagged",
+      "source_artifact": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "source_field": "matrix_rows[exp3031].upstream_flags",
+      "status": "true_blocker"
+    },
+    {
+      "blocking": true,
+      "classification": "missing_metadata",
+      "evidence": [
+        {
+          "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+          "kind": "METHODOLOGY_MISSING",
+          "severity": "warn"
+        }
+      ],
+      "matrix_v20_consumable": true,
+      "rationale": "Methodology metadata is missing and remains a downstream blocker.",
+      "row_id": "exp3028:methodology_missing",
+      "source_artifact": "results/experiment_3028_sota_repair_clean_methodology_rerun_v2.json",
+      "source_field": "corrigendum_pending[METHODOLOGY_MISSING]",
+      "status": "missing_metadata"
+    },
+    {
+      "blocking": true,
+      "classification": "missing_metadata",
+      "evidence": {
+        "classification": "missing_metadata",
+        "march_audit_principle": "source_row_does_not_grade_itself",
+        "matrix_status": "flagged",
+        "rationale": "The live repair row is positive but cannot be reconstructed cleanly while required metadata is absent.",
+        "row_id": "exp3016_repair_acceptance_controller",
+        "source_artifact_path": "results/experiment_3016_sota_repair_rerun_with_acceptance_controller_v1.json",
+        "source_experiment_id": "exp3016",
+        "supporting_fields": [
+          {
+            "field": "random_seed",
+            "value": null
+          },
+          {
+            "field": "transcript_sha256s",
+            "value": null
+          }
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "The live repair row is positive but cannot be reconstructed cleanly while required metadata is absent.",
+      "row_id": "exp3016_repair_acceptance_controller",
+      "source_artifact": "results/experiment_3027_adversarial_flag_methodology_corrigendum_v1.json",
+      "source_field": "missing_metadata_rows[1]",
+      "status": "missing_metadata"
+    },
+    {
+      "blocking": true,
+      "classification": "missing_metadata",
+      "evidence": {
+        "actual_path": "results/experiment_3039_capstone_v284.json",
+        "actual_path_present": false,
+        "experiment_id": "exp3039",
+        "fr11_self_learning_promotable": null,
+        "gatemate_output_contract_ready": null,
+        "host_visible_output_observed": null,
+        "milestone": "2026.05.284",
+        "planned_path": "results/experiment_3039_capstone_v284.json",
+        "planned_path_present": false,
+        "repair_claim_status": "not_applicable",
+        "source_honest_verdict": "",
+        "ssqa_gate_status": null,
+        "status": "missing",
+        "summary": {},
+        "task_class": "capstone",
+        "upstream_flags": []
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "Matrix v18 reports an absent source row; the gap remains blocking metadata.",
+      "row_id": "exp3039:matrix_missing",
+      "source_artifact": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "source_field": "matrix_rows[exp3039].status",
+      "status": "missing_metadata"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": {
+        "allowed_wording": "Use bounded wording: Exp 3028 provides clean reconstructed repair evidence, but headline repair promotion waits for matrix/capstone reconciliation.",
+        "blockers": [
+          "matrix repair row is flagged",
+          "capstone repair decision is not promotable",
+          "capstone still lists repair paper-ready blocker"
+        ],
+        "claim_id": "exp3028_clean_repair_candidate",
+        "classification": "bounded",
+        "observed_support_fields": {
+          "clean_repair_claim_promotable_candidate": true,
+          "clean_repair_rerun_ready": true,
+          "false_accept_delta": 0.0,
+          "headline_models_used_count": 1,
+          "intent_drift_count": 0,
+          "legacy_smoke_only_used": false,
+          "model_specs_count": 1,
+          "n_live_transcripts": 24,
+          "n_tasks": 24,
+          "pass_at_1_delta": 0.375,
+          "pass_at_k_delta": 0.375,
+          "repair_controller_clean": true,
+          "reproducibility_checksum_present": true,
+          "schema_failure_rate_delta": 0.0,
+          "syntax_failure_rate_delta": 0.0,
+          "tautology_gate_clean": true
+        },
+        "proposed_repair_claim": "Exp 3028 supplies clean acceptance-controlled SOTA repair evidence.",
+        "required_support_fields": [
+          "exp3028.clean_repair_rerun_ready == true",
+          "exp3028.repair_controller_clean == true",
+          "exp3028.clean_repair_claim_promotable_candidate == true",
+          "exp3028.n_tasks >= 20",
+          "exp3028.n_live_transcripts >= exp3028.n_tasks",
+          "exp3028.pass_at_1_delta > 0",
+          "exp3028.pass_at_k_delta >= 0",
+          "exp3028.syntax_failure_rate_delta <= 0",
+          "exp3028.schema_failure_rate_delta <= 0",
+          "exp3028.false_accept_delta <= 0",
+          "exp3028.tautology_gate_clean == true",
+          "exp3028.intent_drift_count == 0",
+          "exp3028.legacy_smoke_only_used == false",
+          "exp3028.reproducibility_checksum present"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "Bounded repair evidence is not a clean headline-promotion row.",
+      "row_id": "exp3029:exp3028_clean_repair_candidate",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "bounded_claims[exp3028_clean_repair_candidate]",
+      "status": "unresolved_bound"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": {
+        "area": "repair",
+        "evidence": {
+          "exp3028_flags": [
+            {
+              "detail": "pass_at_1_delta=0.375 and pass_at_k_delta=0.375 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding.",
+              "kind": "TAUTOLOGY",
+              "severity": "critical"
+            },
+            {
+              "detail": "false_accept_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+              "kind": "IMPLAUSIBLE_PERFECT",
+              "severity": "info"
+            },
+            {
+              "detail": "schema_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+              "kind": "IMPLAUSIBLE_PERFECT",
+              "severity": "info"
+            },
+            {
+              "detail": "syntax_failure_rate_delta=0.0 (exactly zero). Confirm this is not a stub default.",
+              "kind": "IMPLAUSIBLE_PERFECT",
+              "severity": "info"
+            },
+            {
+              "detail": "duration_s=0.103766 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model.",
+              "kind": "DURATION_TOO_SHORT",
+              "severity": "critical"
+            },
+            {
+              "detail": "Compute-bound artifact missing: random_seed. Methodology unverifiable.",
+              "kind": "METHODOLOGY_MISSING",
+              "severity": "warn"
+            }
+          ],
+          "exp3029_honest_verdict": "complete: repair_claim_status=bounded; promotable=0; bounded=1; retired_or_blocked=2"
+        },
+        "next_action": "Clear or explicitly retire the remaining repair adversarial flags.",
+        "status": "bounded"
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "Capstone repair status remains bounded rather than promotable.",
+      "row_id": "capstone:repair_bounded",
+      "source_artifact": "results/experiment_3039_capstone_v284.json",
+      "source_field": "blockers_remaining[repair]",
+      "status": "unresolved_bound"
+    },
+    {
+      "blocking": true,
+      "classification": "unresolved_bound",
+      "evidence": {
+        "check": "repair_promotable",
+        "passed": false,
+        "reason": "repair_claim_status=bounded"
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "Capstone paper-readiness check explicitly rejects repair promotion.",
+      "row_id": "capstone:repair_promotable_check_failed",
+      "source_artifact": "results/experiment_3039_capstone_v284.json",
+      "source_field": "paper_ready_checks[repair_promotable]",
+      "status": "unresolved_bound"
+    },
+    {
+      "blocking": true,
+      "classification": "flagged",
+      "evidence": {
+        "experiment_id": "exp3027",
+        "source_status": "flagged",
+        "summary": {
+          "flagged_rows_reviewed": 29,
+          "methodology_corrigendum_ready": true,
+          "repair_rerun_required": true
+        },
+        "task_class": "methodology_corrigendum",
+        "upstream_flags": [
+          "flagged_adversarial=true",
+          "DURATION_TOO_SHORT:critical",
+          "METHODOLOGY_MISSING:warn"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "",
+      "row_id": "v18:exp3027",
+      "source_artifact": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "source_field": "matrix_rows[exp3027]",
+      "status": "flagged"
+    },
+    {
+      "blocking": true,
+      "classification": "flagged",
+      "evidence": {
+        "experiment_id": "exp3028",
+        "source_status": "flagged",
+        "summary": {
+          "clean_repair_claim_promotable_candidate": true,
+          "clean_repair_rerun_ready": true,
+          "false_accept_delta": 0.0,
+          "n_live_transcripts": 24,
+          "n_tasks": 24,
+          "pass_at_1_delta": 0.375,
+          "pass_at_k_delta": 0.375,
+          "tautology_gate_clean": true
+        },
+        "task_class": "repair_rerun",
+        "upstream_flags": [
+          "flagged_adversarial=true",
+          "TAUTOLOGY:critical",
+          "IMPLAUSIBLE_PERFECT:info",
+          "IMPLAUSIBLE_PERFECT:info",
+          "IMPLAUSIBLE_PERFECT:info",
+          "DURATION_TOO_SHORT:critical",
+          "METHODOLOGY_MISSING:warn"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "",
+      "row_id": "v18:exp3028",
+      "source_artifact": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "source_field": "matrix_rows[exp3028]",
+      "status": "flagged"
+    },
+    {
+      "blocking": true,
+      "classification": "flagged",
+      "evidence": {
+        "experiment_id": "exp3029",
+        "source_status": "flagged",
+        "summary": {
+          "bounded_claim_count": 1,
+          "promotable_claim_count": 0,
+          "repair_claim_status": "bounded",
+          "repair_promotion_boundary_ready": true,
+          "retired_or_blocked_claim_count": 2
+        },
+        "task_class": "repair_boundary_audit",
+        "upstream_flags": [
+          "flagged_adversarial=true",
+          "DURATION_TOO_SHORT:critical",
+          "METHODOLOGY_MISSING:warn"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "",
+      "row_id": "v18:exp3029",
+      "source_artifact": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "source_field": "matrix_rows[exp3029]",
+      "status": "flagged"
+    },
+    {
+      "blocking": true,
+      "classification": "flagged",
+      "evidence": {
+        "experiment_id": "exp3031",
+        "source_status": "flagged",
+        "summary": {
+          "dccd_panel_ready": true,
+          "false_accept_delta": 0.0,
+          "intent_drift_delta": 0.0,
+          "n_cases": 3
+        },
+        "task_class": "dccd_structured_repair_panel",
+        "upstream_flags": [
+          "flagged_adversarial=true",
+          "IMPLAUSIBLE_PERFECT:info",
+          "IMPLAUSIBLE_PERFECT:info",
+          "DURATION_TOO_SHORT:critical",
+          "METHODOLOGY_MISSING:warn"
+        ]
+      },
+      "matrix_v20_consumable": true,
+      "rationale": "",
+      "row_id": "v18:exp3031",
+      "source_artifact": "results/experiment_3038_cross_corpus_matrix_v18.json",
+      "source_field": "matrix_rows[exp3031]",
+      "status": "flagged"
+    }
+  ],
+  "honest_verdict": "complete: repair_headline_retirement_ready=true; retired=2; bounded=5; rerun_prerequisites=6",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "kind": "aggregation_from_upstream_artifacts",
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "manifest_updates": [
+    {
+      "applied": true,
+      "id": "repair_headline_wording_retired_v285",
+      "path": "ops/exclusion_manifest.yaml",
+      "reason": "CLAUDE.md failed-rerun and exclusion-manifest discipline requires retired headline scope to be traceable.",
+      "retired_by_artifact": "results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json"
+    }
+  ],
+  "matrix_v20_consumability_errors": [],
+  "milestone": "2026.05.285",
+  "missing_source_artifacts": [],
+  "no_historical_artifact_rewrite": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "repair_claim_status": "bounded",
+  "repair_headline_retirement_ready": true,
+  "rerun_prerequisites": [
+    {
+      "checker_authority": "checked-in fingerprint artifact with SHA-256 per transcript",
+      "exact_evidence_needed": "Stable transcript/content fingerprint for every before/after repair case.",
+      "gate": "deterministic_fingerprint",
+      "required": true
+    },
+    {
+      "checker_authority": "artifact metadata and reproducibility checksum",
+      "exact_evidence_needed": "Top-level random_seed plus per-tool seed policy used by the repair run.",
+      "gate": "seed",
+      "required": true
+    },
+    {
+      "checker_authority": "scripts/adversarial_verify.py duration and methodology checks",
+      "exact_evidence_needed": "Wall-clock duration consistent with the declared inference substrate.",
+      "gate": "duration_sanity",
+      "required": true
+    },
+    {
+      "checker_authority": "non-self-grading metric derivation with no bit-identical distinct deltas",
+      "exact_evidence_needed": "Independently derived pass@1, pass@k, false-accept, syntax, and schema deltas.",
+      "gate": "de_tautology_metrics",
+      "required": true
+    },
+    {
+      "checker_authority": "independent verifier/checker comparison against source transcripts",
+      "exact_evidence_needed": "Repair improves verifier outcome without increasing false accepts or intent drift.",
+      "gate": "verifier_gain",
+      "required": true
+    },
+    {
+      "checker_authority": "exact checker code and artifact field citations",
+      "exact_evidence_needed": "Named checker implementation, version or checksum, and source field for every pass/fail.",
+      "gate": "exact_checker_authority",
+      "required": true
+    }
+  ],
+  "retired_repair_claims": [
+    {
+      "allowed_wording": "Do not use headline SOTA repair wording; cite the bounded Exp 3028 evidence and name the unresolved matrix/capstone blockers.",
+      "blockers": [
+        "matrix repair row is flagged",
+        "capstone repair decision is not promotable",
+        "capstone still lists repair paper-ready blocker"
+      ],
+      "claim_id": "headline_sota_repair_clean_methodology",
+      "matrix_v20_consumable": true,
+      "observed_support_fields": {
+        "capstone_ready": true,
+        "capstone_repair_promotable": false,
+        "capstone_repair_status": "flagged",
+        "claim_boundary_violation_count": 0,
+        "exp3028_clean": true,
+        "matrix_repair_row_status": "flagged",
+        "matrix_repair_row_upstream_flag_count": 4,
+        "matrix_v17_ready": true,
+        "repair_paper_ready_blocker_count": 1
+      },
+      "required_support_fields": [
+        "all Exp 3028 clean-evidence gates pass",
+        "matrix_v17 repair row status == clean",
+        "capstone repair promotion decision promotable == true",
+        "capstone paper-ready blockers contain no repair blocker",
+        "no claim-boundary violations are present"
+      ],
+      "row_id": "exp3029:headline_sota_repair_clean_methodology",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[headline_sota_repair_clean_methodology]",
+      "status": "retired_for_headline_use",
+      "unsupported_headline_wording": "The repair result is promotable as a headline SOTA repair claim."
+    },
+    {
+      "allowed_wording": "Retire this wording; cite Exp 3028's bounded clean-methodology evidence instead.",
+      "blockers": [
+        "Exp 3027 requires repair rerun or reconstruction",
+        "Exp 3016 random_seed missing",
+        "Exp 3016 transcript_sha256s missing"
+      ],
+      "claim_id": "unsupported_exp3016_headline_repair_promotion",
+      "matrix_v20_consumable": true,
+      "observed_support_fields": {
+        "exp3016_random_seed_present": false,
+        "exp3016_reproducibility_checksum_present": true,
+        "exp3016_transcript_sha256s_present": false,
+        "exp3027_methodology_corrigendum_ready": true,
+        "exp3027_repair_rerun_decision": "live_rerun_required",
+        "exp3027_repair_rerun_required": true
+      },
+      "required_support_fields": [
+        "Exp 3027 does not require repair rerun or reconstruction",
+        "Exp 3016 top-level random_seed is present",
+        "Exp 3016 top-level transcript hashes are present",
+        "Exp 3016 source metadata is sufficient without later repair"
+      ],
+      "row_id": "exp3029:unsupported_exp3016_headline_repair_promotion",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "retired_or_blocked_claims[unsupported_exp3016_headline_repair_promotion]",
+      "status": "retired_for_headline_use",
+      "unsupported_headline_wording": "The original Exp 3016 headline repair claim is promotable without the Exp 3028 boundary."
+    }
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.repair_headline_retirement.blocker_ledger.v1",
+  "source_artifacts": [
+    {
+      "experiment_id": "exp3041",
+      "path": "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "flag_hygiene_authority",
+      "sha256": "f04733c1ecd3457cf8d24492a090bc0f0a4b5d90c1a086b5aae4d77c3de1df1e"
+    },
+    {
+      "experiment_id": "exp3042",
+      "path": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "repair_reconciliation_authority",
+      "sha256": "719629fe3029d2cce757e1b95d31a84aac3ca832120d5d3334c4a4764e5af323"
+    },
+    {
+      "experiment_id": "exp3052",
+      "path": "results/experiment_3052_cross_corpus_matrix_v19.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "matrix_v19_authority",
+      "sha256": "aa94d185271baef1162f818d291698a5281352102315ff173a94dd1f5b49b8c9"
+    },
+    {
+      "experiment_id": "exp3053",
+      "path": "results/experiment_3053_capstone_v285.json",
+      "present": true,
+      "readable": true,
+      "readable_json_object": true,
+      "required": true,
+      "role": "capstone_v285_authority",
+      "sha256": "24f8ad67639b78308eafbcd77579b76c49db61167c1dad11e2677634ed64823f"
+    },
+    {
+      "experiment_id": "manifest",
+      "path": "ops/exclusion_manifest.yaml",
+      "present": true,
+      "readable": true,
+      "readable_json_object": null,
+      "required": true,
+      "role": "exclusion_manifest",
+      "sha256": "02b7c979e2f4e5b75313d66a5f58556c3288a930d60c66c162c7ac406515d8c0"
+    }
+  ],
+  "source_checksums": {
+    "ops/exclusion_manifest.yaml": "02b7c979e2f4e5b75313d66a5f58556c3288a930d60c66c162c7ac406515d8c0",
+    "results/experiment_3041_matrix_capstone_adversarial_flag_hygiene_v1.json": "f04733c1ecd3457cf8d24492a090bc0f0a4b5d90c1a086b5aae4d77c3de1df1e",
+    "results/experiment_3042_repair_promotion_reconciliation_v3.json": "719629fe3029d2cce757e1b95d31a84aac3ca832120d5d3334c4a4764e5af323",
+    "results/experiment_3052_cross_corpus_matrix_v19.json": "aa94d185271baef1162f818d291698a5281352102315ff173a94dd1f5b49b8c9",
+    "results/experiment_3053_capstone_v285.json": "24f8ad67639b78308eafbcd77579b76c49db61167c1dad11e2677634ed64823f"
+  },
+  "status_updates_written": false,
+  "still_bounded_repair_claims": [
+    {
+      "allowed_wording": "Bounded repair evidence only; do not promote to headline wording.",
+      "blockers": [],
+      "claim_id": "v284_paper_readiness",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "bounded",
+      "repair_promotion_candidate": false,
+      "row_id": "capstone:v284_paper_readiness",
+      "source_artifact": "results/experiment_3039_capstone_v284.json",
+      "source_field": "paper_ready",
+      "status": "bounded_evidence_not_headline"
+    },
+    {
+      "allowed_wording": "Bounded repair evidence only; do not promote to headline wording.",
+      "blockers": [],
+      "claim_id": "headline_status",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "bounded",
+      "repair_promotion_candidate": false,
+      "row_id": "repair:headline_status",
+      "source_artifact": "results/experiment_3042_repair_promotion_reconciliation_v3.json",
+      "source_field": "repair_claim_status",
+      "status": "bounded_evidence_not_headline"
+    },
+    {
+      "allowed_wording": "Use bounded wording: Exp 3028 provides clean reconstructed repair evidence, but headline repair promotion waits for matrix/capstone reconciliation.",
+      "blockers": [
+        "matrix repair row is flagged",
+        "capstone repair decision is not promotable",
+        "capstone still lists repair paper-ready blocker"
+      ],
+      "claim_id": "exp3028_clean_repair_candidate",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "bounded",
+      "repair_promotion_candidate": false,
+      "row_id": "exp3029:exp3028_clean_repair_candidate",
+      "source_artifact": "results/experiment_3029_repair_promotion_boundary_audit_v2.json",
+      "source_field": "bounded_claims[exp3028_clean_repair_candidate]",
+      "status": "bounded_evidence_not_headline"
+    },
+    {
+      "allowed_wording": "Bounded repair evidence only; do not promote to headline wording.",
+      "blockers": [],
+      "claim_id": "repair_bounded",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "unresolved_bound",
+      "repair_promotion_candidate": false,
+      "row_id": "capstone:repair_bounded",
+      "source_artifact": "results/experiment_3039_capstone_v284.json",
+      "source_field": "blockers_remaining[repair]",
+      "status": "bounded_evidence_not_headline"
+    },
+    {
+      "allowed_wording": "Bounded repair evidence only; do not promote to headline wording.",
+      "blockers": [],
+      "claim_id": "repair_promotable_check_failed",
+      "matrix_v20_consumable": true,
+      "repair_claim_status": "unresolved_bound",
+      "repair_promotion_candidate": false,
+      "row_id": "capstone:repair_promotable_check_failed",
+      "source_artifact": "results/experiment_3039_capstone_v284.json",
+      "source_field": "paper_ready_checks[repair_promotable]",
+      "status": "bounded_evidence_not_headline"
+    }
+  ],
+  "invariant_violations": []
+}
