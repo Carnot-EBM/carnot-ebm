@@ -6210,3 +6210,5 @@ web search: site |
 | 2026-05-25 01:12 UTC | SSQA explicit gate artifact and RTL report | OK | 81 passed in 3.93s |
 | 2026-05-25 01:32 UTC | Cross-corpus matrix v17 | OK | 81 passed in 3.27s |
 | 2026-05-25 01:48 UTC | Milestone .283 capstone | OK | 81 passed in 3.50s |
+| 2026-05-25 02:29 UTC | Plan milestone 2026.05.284 | OK | 14 tasks proposed |
+| 2026-05-25 02:31 UTC | Milestone 2026.05.284 activated | OK | 14 tasks queued |
