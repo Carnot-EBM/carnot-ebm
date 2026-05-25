@@ -2749,6 +2749,75 @@ verdict beginning with `complete:`.
 
 ---
 
+### REQ-HW-091
+
+**Title:** Exp 3078 GateMate/SSQA no-rerun refresh MUST provide a matrix v21 hardware boundary without executing hardware
+
+**Description:**
+Experiment 3078 MUST produce
+`results/experiment_3078_gatemate_ssqa_no_rerun_operator_refresh_v1.json`
+as the current GateMate/SSQA hardware boundary for matrix v21. The refresh
+MUST load the hardware wishlist, the Exp 3048 output-contract operator
+package, the Exp 3063 GateMate no-rerun ledger, the Exp 3064 SSQA readback
+ledger, and local GateMate/SSQA evidence candidates. It MUST inspect only
+checked-in artifacts and already-present operator evidence. It MUST NOT flash a
+GateMate board, rerun RTL/PnR as if output evidence exists, execute SSQA
+readback, claim board execution, claim sampler behavior, or claim speedup.
+
+`gatemate_rerun_allowed=true` is permitted only when committed evidence
+contains an authoritative CCF `Pin_out` binding for the selected GateMate
+output, a concrete host reader command, an expected transcript, and safety
+limits that open the downstream rerun. `ssqa_readback_allowed=true` is
+permitted only when committed host-visible smoke evidence contains the required
+transcript, checksum, command, expected/observed transcript, CCF binding,
+flash/readback fields, timing fields, and sampler configuration. If either
+evidence set is missing, the refresh MUST fail closed, keep the corresponding
+allowed field false, cite missing operator actions, and define the exact next
+operator-owned hardware task instead of executing it.
+
+**Acceptance criteria:**
+- `results/experiment_3078_gatemate_ssqa_no_rerun_operator_refresh_v1.json`
+  is generated with `gatemate_ssqa_refresh_ready`,
+  `gatemate_rerun_allowed`, `ssqa_readback_allowed`,
+  `missing_operator_actions`, `operator_ready_artifacts`,
+  `next_allowed_hardware_task`, `hardware_execution_claim_made`,
+  `speedup_claim_made`, `source_artifacts`, `inference_substrate`, and
+  `honest_verdict`.
+- Missing GateMate output-contract evidence keeps
+  `gatemate_rerun_allowed=false` and records the missing pinout/CCF binding,
+  host reader command, expected transcript, or safety-limit action.
+- Missing or non-passing host-visible smoke evidence keeps
+  `ssqa_readback_allowed=false` and records the missing smoke transcript fields
+  needed before SSQA readback can run.
+- When all committed evidence exists, the artifact records the concrete source
+  file paths in `operator_ready_artifacts` and sets
+  `next_allowed_hardware_task` to the precise next gated hardware action, while
+  still declaring no hardware execution or speedup claim by Exp 3078 itself.
+
+**Implementation status:** Pending (Exp 3078)
+
+---
+
+### SCENARIO-HW-091
+
+**Scenario:** Matrix v21 GateMate/SSQA refresh carries forward no-rerun blockers when operator evidence is absent.
+
+**Given:** Exp 3048 reports `gatemate_output_contract_ready=false`, Exp 3063
+reports `gatemate_rerun_allowed=false`, Exp 3064 reports
+`ssqa_readback_allowed=false`, and no committed Exp 3050 host-visible smoke
+artifact is present.
+**When:** Exp 3078 builds the matrix v21 GateMate/SSQA refresh from local
+artifacts only.
+**Then:** It writes the v1 JSON with
+`gatemate_ssqa_refresh_ready=true`, `gatemate_rerun_allowed=false`,
+`ssqa_readback_allowed=false`, explicit missing operator actions, empty
+hardware execution and speedup claims, and a terminal verdict beginning with
+`complete:`.
+
+**Implementation status:** Pending (Exp 3078)
+
+---
+
 ### SCENARIO-HW-088
 
 **Scenario:** GateMate operator package blocks cleanly when Exp 3034 still lacks pinout and reader authority.
