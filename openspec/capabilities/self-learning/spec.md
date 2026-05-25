@@ -7344,3 +7344,84 @@ blocked even though FR-11 promotion was not justified.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3032 | Implemented (`python/carnot/eval/fr11_heldout_dvi_replay_v2.py`) | Implemented (`tests/python/test_experiment_3032_fr11_heldout_dvi_replay_v2.py`) |
+
+## REQ-LEARN-3033: FR-11 Nonforgetting And Negative-Control Stress
+
+**Given** Exp 3032 reports held-out DVI replay readiness and Exp 3020 provides
+the bounded verifier-feedback controller state, replay transcript, and exact
+prior feedback traces
+**When** Exp 3033 applies the held-out feedback as a cached controller update
+**Then** it SHALL measure whether prior exact traces are retained under a
+declared tolerance while held-out behavior improves.
+**And** it SHALL run shuffled-feedback, adversarially irrelevant feedback, and
+no-feedback replay controls so gains cannot be attributed to label leakage or
+replay noise.
+**And** it SHALL report whether any KAN-style locality probe is actually
+available before making locality claims; if no such probe is present, it SHALL
+set `kan_locality_probe_available=false`.
+**And** it SHALL not claim live LLM inference or model-weight training because
+this is a cached-feedback controller stress.
+
+The terminal artifact SHALL be
+`results/experiment_3033_fr11_nonforgetting_negative_control_stress_v1.json`
+and SHALL include `fr11_nonforgetting_stress_ready`,
+`fr11_self_learning_promotable`, `prior_retention_delta`,
+`heldout_delta_after_update`, `shuffled_control_delta`,
+`no_feedback_delta`, `drift_failures`, `kan_locality_probe_available`,
+`inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3033 Sub-requirements
+
+- REQ-LEARN-3033-1: The evaluator SHALL fail closed when Exp 3032, Exp 3020,
+  the held-out replay rows, controller config, or replay transcript are missing
+  or malformed.
+- REQ-LEARN-3033-2: Prior exact traces SHALL be drawn from machine-checked
+  Exp 3020 controller replay rows and held-out traces SHALL be drawn from the
+  Exp 3032 held-out replay rows.
+- REQ-LEARN-3033-3: The held-out feedback update SHALL mutate only bounded
+  inspectable controller weights and SHALL report
+  `inference_substrate.live_llm_inference=false` and
+  `inference_substrate.model_weight_training=false`.
+- REQ-LEARN-3033-4: The stress SHALL compute prior retention delta,
+  held-out delta after update, shuffled-feedback control delta,
+  adversarially irrelevant control delta, no-feedback delta, and visible
+  `drift_failures`.
+- REQ-LEARN-3033-5: `fr11_self_learning_promotable` SHALL be true only when
+  `heldout_delta_after_update > 0`, shuffled and irrelevant controls do not
+  improve, no-feedback replay has zero delta, and `prior_retention_delta`
+  remains within the declared retention tolerance.
+
+### SCENARIO-LEARN-3033: Held-Out Feedback Improves Without Forgetting
+
+**Given** terminal Exp 3032 and Exp 3020 controller artifacts plus replay rows
+**When** Exp 3033 applies the held-out feedback update to the bounded
+controller
+**Then** it writes the required artifact fields, reports positive held-out
+delta, reports prior retention within tolerance, rejects shuffled and
+irrelevant controls, reports zero no-feedback delta, records no drift failures,
+and sets `fr11_nonforgetting_stress_ready=true`.
+
+### SCENARIO-LEARN-3033-BOUNDED: Stress Completes Without Promotion
+
+**Given** the source artifacts are present but the stress exposes forgetting,
+drift, control improvement, or no positive held-out update effect
+**When** Exp 3033 runs
+**Then** it SHALL still write a complete terminal artifact with measured
+deltas, `fr11_nonforgetting_stress_ready=true`,
+`fr11_self_learning_promotable=false`, visible `drift_failures`, and an
+`honest_verdict` beginning with `complete_`.
+
+### SCENARIO-LEARN-3033-BLOCKED: Missing Stress Evidence Fails Closed
+
+**Given** missing or malformed Exp 3032 or Exp 3020 evidence
+**When** Exp 3033 runs
+**Then** it writes the required artifact fields with
+`fr11_nonforgetting_stress_ready=false`, `fr11_self_learning_promotable=false`,
+zeroed deltas, `drift_failures` containing the blocker, and an
+`honest_verdict` beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-3033)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3033 | Implemented (`python/carnot/eval/fr11_nonforgetting_negative_control_stress_v1.py`) | Implemented (`tests/python/test_experiment_3033_fr11_nonforgetting_negative_control_stress_v1.py`) |
