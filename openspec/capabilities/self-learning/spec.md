@@ -7643,3 +7643,80 @@ mutation, and `honest_verdict="blocked_missing_solver_feedback_locality_source"`
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3047 | Implemented (`python/carnot/eval/fr11_kan_locality_nonforgetting_probe_v2.py`) | Implemented (`tests/python/test_experiment_3047_kan_locality_nonforgetting_probe_v2.py`) |
+
+## REQ-LEARN-3060: Solver Self-Model Trace Schema For Governed FR-11 Learning
+
+**Given** Exp 3045 defines the governed controller-only edit boundary, Exp 3046
+reports a solver-feedback controller update, and Exp 3047 reports locality and
+nonforgetting evidence over that update
+**When** Exp 3060 defines the solver self-model trace schema for Exp 3061
+**Then** it SHALL load and summarize the current controller-only evidence from
+Exp 3045, Exp 3046, and Exp 3047, including any adversarial flags or claim
+limits.
+**And** it SHALL define machine-readable trace fields for solver prompt/input,
+exact constraint family, correction set, contradiction graph update, controller
+edit, rollback decision, delayed-regression window, and source artifact.
+**And** it SHALL define controller-side edit rights, forbidden claims, validation
+rules, delayed-regression requirements, source artifacts, and an inference
+substrate that explicitly excludes live model inference and model-weight
+learning.
+
+The terminal artifact SHALL be
+`results/experiment_3060_fr11_solver_self_model_trace_schema_v1.json` and SHALL
+include `solver_self_model_trace_ready`, `trace_schema`,
+`allowed_edit_targets`, `forbidden_claims`, `validation_rules`,
+`delayed_regression_window`, `source_artifacts`,
+`continuous_self_learning_scope`, `inference_substrate`, and
+`honest_verdict`.
+
+### REQ-LEARN-3060 Sub-requirements
+
+- REQ-LEARN-3060-1: The evaluator SHALL fail closed when Exp 3045, Exp 3046, or
+  Exp 3047 is missing, malformed, non-terminal, not ready, claims live LLM
+  inference, or claims model-weight training or mutation.
+- REQ-LEARN-3060-2: `trace_schema` SHALL be directly consumable by Exp 3061 and
+  SHALL require `solver_prompt_input`, `exact_constraint_family`,
+  `correction_set`, `contradiction_graph_update`, `controller_edit`,
+  `rollback_decision`, `delayed_regression_window`, and `source_artifact`.
+- REQ-LEARN-3060-3: `allowed_edit_targets` SHALL include only controller-side
+  targets such as controller weights, trace memory, contradiction graph,
+  rollback policy, validation thresholds, and delayed-regression manifest.
+- REQ-LEARN-3060-4: `forbidden_claims` SHALL explicitly forbid model-weight
+  learning, live LLM inference, native solver/model retraining, and broad
+  autonomous self-learning beyond controller-side protocol work.
+- REQ-LEARN-3060-5: `validation_rules` SHALL include automatic detectors named
+  `self_confirming_labels`, `family_leakage`, `missing_exact_authority`, and
+  `missing_delayed_regression_evaluation`.
+- REQ-LEARN-3060-6: `solver_self_model_trace_ready` SHALL be true only when all
+  source artifacts are ready, the schema has every required trace field, the
+  validation rules cover the required failure modes, delayed regression is
+  mandatory and measurable, no allowed edit target mutates model weights, and
+  the inference substrate declares no live model inference or model-weight
+  learning.
+
+### SCENARIO-LEARN-3060: Schema Is Ready For Exp 3061 Consumption
+
+**Given** ready Exp 3045, Exp 3046, and Exp 3047 artifacts
+**When** Exp 3060 runs
+**Then** it writes all required artifact fields, summarizes controller-only
+evidence and limits, marks `solver_self_model_trace_ready=true`, exposes every
+required trace field in `trace_schema`, predeclares all required validation
+rules, makes delayed-regression evaluation mandatory, excludes model weights
+from allowed edit targets, reports no live model inference in
+`inference_substrate`, and emits an `honest_verdict` beginning with
+`complete_`.
+
+### SCENARIO-LEARN-3060-BLOCKED: Missing Source Evidence Fails Closed
+
+**Given** missing or malformed Exp 3045, Exp 3046, or Exp 3047 source evidence
+**When** Exp 3060 runs
+**Then** it writes the required artifact fields with
+`solver_self_model_trace_ready=false`, an explicit blocked reason, no model
+weight-learning claim, no live inference claim, and an `honest_verdict`
+beginning with `blocked_`.
+
+## Implementation Status (REQ-LEARN-3060)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3060 | Implemented (`python/carnot/eval/fr11_solver_self_model_trace_schema_v1.py`) | Implemented (`tests/python/test_experiment_3060_fr11_solver_self_model_trace_schema_v1.py`) |
