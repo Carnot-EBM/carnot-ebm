@@ -972,6 +972,85 @@ verifier, abstention, and repair tasks.
 |---|---|---|
 | REQ-VERIFY-3084 | Implemented (`python/carnot/eval/resyn_exact_fixture_bank_generator_v1.py`) | Implemented (`tests/python/test_experiment_3084_resyn_exact_fixture_bank_generator.py`) |
 
+### REQ-VERIFY-3085: I-CALM Task-Abstention SOTA Panel V2
+
+The repository shall provide an Exp 3085 local SOTA GGUF abstention panel that
+reruns first-token abstention evidence on the Exp 3084 exact fixture bank with
+baseline prompts and I-CALM/task-abstention prompts. The panel shall write
+`results/experiment_3085_icalm_task_abstention_sota_panel_v2.json` and a
+row-level JSONL transcript without modifying the Exp 3084 fixture manifest or
+`scripts/research_conductor.py`.
+
+The panel shall first check CUDA/GPU availability, local GGUF cache resolution,
+actual loadability for at least one mandated headline model
+(`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, or
+`unsloth/gemma-4-26B-A4B-it-GGUF`), and readability of
+`results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl`. If any
+precondition fails, it shall write a terminal blocked artifact with
+`abstention_panel_v2_ready=false`, `first_token_panel_ready=false`, no
+headline model promotion, zero promotion metrics, explicit precondition
+diagnostics, and an `honest_verdict` beginning with
+`blocked_sota_or_fixture_precondition_failed`.
+
+When preconditions pass, the panel shall sample a balanced, deterministic
+subset across fixture families without including exact labels, expected
+answers, or authority payloads in model prompts. It shall run each selected
+fixture with a baseline answer prompt and an I-CALM/task-abstention prompt,
+record prompt hashes, decode settings, exact model IDs, runtime/cache paths,
+hardware substrate metadata, first-token confidence when available, verbal
+confidence, parsed answer correctness, abstention, rejection, and
+overacceptance. Acceptance, rejection, and abstention behavior shall be
+reported separately, and Exp 3070 abstention metrics shall be loaded for
+comparison.
+
+The terminal artifact MUST include `abstention_panel_v2_ready`,
+`first_token_panel_ready`, `abstention_precision`, `rejection_recall`,
+`abstention_coverage`, `overacceptance_rate`, `exact_ground_truth_count`,
+`fixture_manifest_path`, `models_used`, `model_specs`,
+`legacy_smoke_only_used`, `preconditions_checked`, `prompt_hashes`,
+`inference_substrate`, and `honest_verdict`. It shall also report baseline
+and task-abstention row counts, accepted/rejected/abstained counts, verbal
+confidence coverage, first-token confidence coverage, prompt hashes, row
+transcript checksum, and whether `abstention_precision >= 0.7`.
+
+`abstention_panel_v2_ready` shall be true only when the exact fixture manifest
+is readable, at least one mandated local GGUF produced live output for both
+prompt policies, exact ground truth is available for every selected row,
+accept/reject/abstain denominators are reported separately, legacy tiny models
+are not promoted, and the `honest_verdict` starts with a terminal success
+prefix. `first_token_panel_ready` shall additionally require at least one
+captured first-token confidence signal.
+
+### SCENARIO-VERIFY-3085: I-CALM Prompt Separates Accept Reject And Abstain
+
+Given the Exp 3084 exact fixture manifest is readable, CUDA/GPU is available,
+and a mandated local GGUF can load,
+When the Exp 3085 panel runs,
+Then it samples fixtures across every manifest family, hashes every baseline
+and I-CALM/task-abstention prompt, records model/cache/runtime provenance,
+parses first-token and verbal confidence where available, evaluates answer
+correctness against exact labels only after generation, reports accepted,
+rejected, and abstained counts separately, computes abstention precision,
+rejection recall, abstention coverage, overacceptance rate, compares against
+Exp 3070, and writes the required artifact fields.
+
+### SCENARIO-VERIFY-3085-BLOCKED: Missing SOTA Or Fixtures Fail Closed
+
+Given CUDA/GPU is unavailable, no mandated headline GGUF resolves and loads,
+or the Exp 3084 fixture manifest is missing or unreadable,
+When the Exp 3085 panel runs,
+Then it writes the required artifact fields with readiness flags false, empty
+or unpromoted headline evidence, explicit precondition diagnostics, zero
+promotion metrics, no legacy tiny-model headline substitution, and an
+`honest_verdict` beginning with
+`blocked_sota_or_fixture_precondition_failed`.
+
+## Implementation Status (REQ-VERIFY-3085)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3085 | Implemented (`python/carnot/eval/icalm_task_abstention_sota_panel_v2.py`) | Implemented (`tests/python/test_experiment_3085_icalm_task_abstention_sota_panel.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

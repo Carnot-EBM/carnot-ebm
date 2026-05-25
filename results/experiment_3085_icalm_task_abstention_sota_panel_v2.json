@@ -1,0 +1,225 @@
+{
+  "abstained_count": 7,
+  "abstention_coverage": 0.777778,
+  "abstention_panel_v2_ready": true,
+  "abstention_precision": 0.0,
+  "abstention_precision_reaches_0_7": false,
+  "accepted_count": 0,
+  "artifact": "experiment_3085_icalm_task_abstention_sota_panel_v2",
+  "baseline_answer_accuracy": 0.222222,
+  "baseline_overacceptance_rate": 0.166667,
+  "baseline_row_count": 9,
+  "decode_config": {
+    "max_tokens": 16,
+    "repeat_penalty": 1.0,
+    "stop": [
+      "\n"
+    ],
+    "temperature": 0.0,
+    "top_k": 40,
+    "top_p": 1.0
+  },
+  "duration_s": 65.158717,
+  "exact_ground_truth_count": 9,
+  "exp3070_comparison": {
+    "abstention_precision_delta": -0.5,
+    "exp3070_abstention_coverage": 0.5,
+    "exp3070_abstention_precision": 0.5,
+    "exp3070_first_token_panel_ready": true,
+    "exp3070_rejection_recall": 0.25,
+    "reaches_0_7_gate": false,
+    "source_path": "results/experiment_3070_first_token_abstention_sota_panel_v1.json"
+  },
+  "first_token_confidence_coverage": 1.0,
+  "first_token_panel_ready": true,
+  "fixture_manifest_path": "results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+  "fixture_manifest_sha256": "b3de61dd3a3f197edc9d88431f46bd1fbadc5e6de0aea995d38db75c830bdab1",
+  "honest_verdict": "complete_below_gate: abstention_panel_v2_ready=true; abstention_precision=0.0; rejection_recall=0.333333; abstention_coverage=0.777778; overacceptance_rate=0.0",
+  "inference_substrate": {
+    "confidence_support": {
+      "chosen_token_logprob": true,
+      "first_token_available": true,
+      "top_logprobs": true,
+      "verbal_confidence": true
+    },
+    "cuda_probe": {
+      "cuda_available": true,
+      "gpu_count": 2,
+      "torch_cuda_version": "12.8",
+      "torch_version": "2.11.0+cu128"
+    },
+    "decode_config": {
+      "max_tokens": 16,
+      "repeat_penalty": 1.0,
+      "stop": [
+        "\n"
+      ],
+      "temperature": 0.0,
+      "top_k": 40,
+      "top_p": 1.0
+    },
+    "fixture_manifest_path": "results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+    "gguf_cache_resolution": {
+      "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+      "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "unsloth/gemma-4-31B-it-GGUF": null
+    },
+    "gpu_inventory": {
+      "available": true,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_free_mib": 24123,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_free_mib": 24123,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 4,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "load_config": {
+      "logits_all": true,
+      "main_gpu": 0,
+      "n_batch": 64,
+      "n_ctx": 2048,
+      "n_gpu_layers": -1,
+      "n_ubatch": 64,
+      "verbose": false
+    },
+    "logprobs_requested": 5,
+    "model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "prompt_policies": [
+      "baseline",
+      "task_abstention"
+    ],
+    "python_environment": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "platform": "Linux-7.0.4-1-cachyos-x86_64-with-glibc2.43",
+      "version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+      "virtual_env": "/home/ianblenke/github.com/ianblenke/carnot/.venv"
+    },
+    "quantization": "Q4_K_M",
+    "repo_commit": "3a16e07f1b3cac08a617d53cc94ad0d5531c5abb",
+    "runtime": "llama_cpp",
+    "seed": 308500,
+    "selected_model_paths": [
+      "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+    ],
+    "wall_clock_duration_s": 65.158717
+  },
+  "legacy_smoke_only_used": false,
+  "load_config": {
+    "logits_all": true,
+    "main_gpu": 0,
+    "n_batch": 64,
+    "n_ctx": 2048,
+    "n_gpu_layers": -1,
+    "n_ubatch": 64,
+    "verbose": false
+  },
+  "model_specs": [
+    {
+      "checksum_feasibility": {
+        "full_sha256_feasible": false,
+        "method": "bounded_head_tail_sha256",
+        "size_bytes": 16947539744
+      },
+      "family": "gemma",
+      "gpu": 1,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "bounded_sha256:79272ad80fa6062f8d37edb798ecc93e0b9afe8d850e72210b161d7f5d7cd9dd",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "quantization": "Q4_K_M",
+      "role": "moe"
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "overacceptance_rate": 0.0,
+  "panel_row_count": 18,
+  "panel_rows_path": "results/icalm_task_abstention_sota_panel_3085/rows.jsonl",
+  "panel_rows_sha256": "9acf5d9bb1d4f723001cf828a96c4ccde6867c1b2b4186495a27e71442e16ebd",
+  "preconditions_checked": {
+    "cuda_gpu": {
+      "detail": {
+        "cuda_available": true,
+        "gpu_count": 2,
+        "torch_cuda_version": "12.8",
+        "torch_version": "2.11.0+cu128"
+      },
+      "ok": true
+    },
+    "fixture_manifest": {
+      "detail": "readable",
+      "ok": true,
+      "path": "/home/ianblenke/github.com/ianblenke/carnot/results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl",
+      "row_count": 72
+    },
+    "gguf_cache": {
+      "detail": {
+        "unsloth/Qwen3.6-35B-A3B-GGUF": null,
+        "unsloth/gemma-4-26B-A4B-it-GGUF": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+        "unsloth/gemma-4-31B-it-GGUF": null
+      },
+      "ok": true
+    },
+    "selected_model_load": {
+      "detail": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "ok": true
+    }
+  },
+  "prompt_hash_count": 18,
+  "prompt_hashes": [
+    "99794689dfda7544a71124f0b1cb94d60f2ffd4dc3445b632273a38d7f29fbc1",
+    "fcc5e6515464e36ef0451116a21efaa41934a491b62fe245d20a5ee4ee6fdb97",
+    "d455a8fc4f9cfb89f0313b63f9dafe148a1ea1db5c96dd4e3878d07c49573831",
+    "0e0ec10b5e23f06e10ec316e23e716e2bf82560830e034423c35853b81971cba",
+    "fd9028eb668fa413bf0126f90d86992a4eda266efa0a51a75eea524442cb21ad",
+    "81941b1a42315e1ee3c85a36bbdb91ae3e35a4390f11aa6c3afe51d22392ed87",
+    "c24bfd58e56fc7ce4e258e66f0984c925de1e15473c3fb9ee6f9124f53ca5f3c",
+    "6e509de219cab7d91e376739019bb5afb2caa58192152be2a1628e3e1c6b8017",
+    "087e0e6711d6f19b4fd215cad100b2ef63ac89a42f0ab9b401c9af0fd0a53a47",
+    "2c71ec4523794ccc48f3fbe99a71c93a1500eac9ed0543e1def4496e88a377cf",
+    "45b63d2b4d7a244ecba0a520f1e68539605614d5052859b1b24a902d84b48ec4",
+    "4dc3fd3151c03eaba447c4683d596cd2d69c52fdcf64d1341bb1cf23784bf193",
+    "360e2d4aaf151dbd561819c7aaf52636a1bff8a458203d3bf06a5a4ed3146bb1",
+    "ad1d1d78c40bc1f9fbaef896e3a0eaa958da350f690da0e2e76483579b079aa4",
+    "ee243c9388f2a8961d501860f887a42393bc875eb76b9c58833b75971e0659c4",
+    "4235217a6403cc7a85532908803945fb940aedc5dddf0974dbe80bd8ceeb5a1e",
+    "1635fabeb914dde854fa904275a8b08ca1abd54f937b062f68aa756ef82d6ea2",
+    "37fb18f37fd8f8adba3cbfeb1d89dcd00327d78416b842a4b2693c0fae344c29"
+  ],
+  "prompt_policies": [
+    "baseline",
+    "task_abstention"
+  ],
+  "rejected_count": 2,
+  "rejection_recall": 0.333333,
+  "reproducibility_checksum": "9f077b5658295c194bd1f949b64f3f3fb1f3abcfbf30829339aa65aa07277ec6",
+  "run_date": "20260525",
+  "runtime_blocker": null,
+  "schema": "carnot.icalm_task_abstention_sota_panel.v2",
+  "seed": 308500,
+  "task_abstention_row_count": 9,
+  "task_answer_accuracy": 0.222222,
+  "tests_or_checks_run": [
+    "focused pytest passed: tests/python/test_experiment_3085_icalm_task_abstention_sota_panel.py -q -n0 --no-cov",
+    "new-code coverage passed: 100% for python/carnot/eval/icalm_task_abstention_sota_panel_v2.py"
+  ],
+  "verbal_confidence_coverage": 0.444444
+}
