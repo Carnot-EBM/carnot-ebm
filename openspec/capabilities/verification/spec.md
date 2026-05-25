@@ -485,6 +485,59 @@ clears.
 |---|---|---|
 | REQ-VERIFY-3017 | Implemented (`python/carnot/eval/nsvif_instruction_validator_tree_expansion_v1.py`) | Implemented (`tests/python/test_experiment_3017_nsvif_instruction_validator_tree_expansion.py`) |
 
+### REQ-VERIFY-3018: BEAVER-Style Validator Frontier Certificate
+
+The repository shall provide a deterministic Exp 3018 frontier-certificate
+harness that consumes the Exp 3017 instruction validator-tree manifest, keeps
+live LLM evidence and enumerator fallback provenance separate, and writes
+`results/experiment_3018_beaver_style_validator_frontier_certificate_v1.json`.
+
+The harness shall identify which authoritative validator-tree constraints are
+prefix-closed, which constraints are only bounded-frontier explorable through
+finite or cached candidate sets, and which rows are non-prefix-closed or
+unresolved. It SHALL execute a small deterministic frontier explorer over the
+cached Exp 3017 known-good and known-bad candidates, record deterministic
+validator outcomes, and write a JSONL certificate manifest whose rows are
+inspectable without re-running live inference.
+
+The certificate SHALL NOT claim exact BEAVER probability bounds unless a full
+token-trie/model-probability frontier is implemented. Every certificate row
+shall include explicit uncertainty/probability-bound placeholders stating
+whether exact probability was computed, and unresolved or non-prefix-closed
+rows shall remain visible rather than being folded into pass/fail counts.
+
+The terminal artifact MUST include `frontier_certificate_ready`,
+`certificate_manifest_path`, `n_frontier_items`, `n_prefix_closed_items`,
+`certified_safe_count`, `certified_violating_count`, `unresolved_count`,
+`enumerator_fallback_separated`, `live_llm_evidence_used`,
+`transcript_paths`, and `honest_verdict`.
+
+`frontier_certificate_ready` shall be true only when the Exp 3017 manifest is
+available and ready, at least one safe and one violating deterministic frontier
+row are certified, prefix-closed assumptions are counted, unresolved and
+non-prefix-closed rows are explicitly represented, certificate transcripts are
+written, `live_llm_evidence_used=false`, and enumerator fallback evidence is
+not mixed into live LLM evidence.
+
+### SCENARIO-VERIFY-3018: Validator Trees Become Inspectable Frontier Certificates
+
+Given Exp 3017 has written an exact-checked instruction validator-tree manifest,
+When the Exp 3018 certificate harness runs without fresh live inference,
+Then it classifies prefix-closed, bounded-frontier, non-prefix-closed, and
+unresolved rows; validates cached known-good and known-bad candidates through
+the deterministic validator trees; writes replayable certificate manifests and
+transcripts; records probability-bound placeholders where exact probability is
+not computed; keeps live LLM transcript provenance separate from enumerator
+fallback provenance; and writes the terminal artifact with
+`frontier_certificate_ready=true` only when the cached/exact certificate gates
+clear.
+
+## Implementation Status (REQ-VERIFY-3018)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3018 | Implemented (`python/carnot/eval/beaver_style_validator_frontier_certificate_v1.py`) | Implemented (`tests/python/test_experiment_3018_beaver_style_validator_frontier_certificate.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
