@@ -2515,3 +2515,60 @@ without flashing the board.
 actions, and a terminal verdict beginning with `complete:`.
 
 **Implementation status:** Implemented (Exp 3034)
+
+---
+
+### REQ-HW-087
+
+**Title:** Exp 3037 SSQA bounded RTL/PnR gate artifact MUST distinguish run, blocked, and gate-skipped states
+
+**Description:**
+Experiment 3037 MUST produce
+`results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json` for
+milestone .284 so the capstone has an explicit SSQA hardware boundary row. The
+artifact MUST load Exp 3034, Exp 3035, and Exp 3036 GateMate artifacts when they
+exist, inspect the current `hardware/gatemate/` package, and set
+`ssqa_gate_status="gate_skipped"` when Exp 3036 is missing, blocked, or lacks
+observed host-visible output. Only when Exp 3036 reports
+`gatemate_flash_smoke_ready=true` may Exp 3037 run bounded RTL/PnR/resource
+commands, and those commands MUST be recorded as reproducible command lines and
+report paths without implying latency, energy, annealing quality, or speedup.
+
+**Acceptance criteria:**
+- `results/experiment_3037_ssqa_bounded_rtl_pnr_gate_artifact_v2.json` is
+  generated with `ssqa_boundary_ready`, `ssqa_gate_status`,
+  `upstream_gatemate_status`, `rtl_or_pnr_commands_run`,
+  `resource_report_paths`, `ssqa_performance_claim_allowed`,
+  `exact_blocker_or_next_action`, `inference_substrate`, and
+  `honest_verdict`.
+- `ssqa_gate_status` uses distinct values for successful bounded evidence
+  collection (`"run"`), bounded-command precondition failure (`"blocked"`),
+  and upstream hardware gate closure (`"gate_skipped"`).
+- If Exp 3036 is missing, blocked, or has no host-visible output transcript,
+  the artifact records `ssqa_gate_status="gate_skipped"`, runs no RTL/PnR
+  commands, cites the exact upstream blocker, and keeps
+  `ssqa_performance_claim_allowed=false`.
+- If Exp 3036 reports `gatemate_flash_smoke_ready=true`, the artifact runs only
+  bounded RTL/PnR/resource commands for the current GateMate RTL package and
+  records the command lines, return codes, and output/report paths.
+- The artifact MUST NOT invent latency, energy, annealing, speedup,
+  thermodynamic, or board-performance results.
+
+**Implementation status:** Implemented (Exp 3037)
+
+---
+
+### SCENARIO-HW-087
+
+**Scenario:** SSQA .284 boundary emits an explicit gate skip when Exp 3036 is absent or lacks host-visible output.
+
+**Given:** Exp 3034 blocks the output contract, Exp 3035 is blocked by that
+contract gate, and Exp 3036 is missing or does not report a host-visible flash
+smoke transcript.
+**When:** Exp 3037 builds the SSQA bounded RTL/PnR gate artifact.
+**Then:** It writes the v2 JSON with `ssqa_boundary_ready=true`,
+`ssqa_gate_status="gate_skipped"`, no RTL/PnR commands run, no performance
+claim allowed, a concrete blocker or next action, and a terminal verdict
+beginning with `complete:`.
+
+**Implementation status:** Implemented (Exp 3037)

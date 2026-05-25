@@ -1,0 +1,106 @@
+{
+  "annealing_claim_made": false,
+  "claim_boundary": "No latency, energy, annealing, speedup, thermodynamic, or board-performance claim is made by this SSQA boundary artifact.",
+  "duration_s": 0.000471,
+  "energy_claim_made": false,
+  "exact_blocker_or_next_action": [
+    "Exp 3036 artifact missing: /home/ianblenke/github.com/ianblenke/carnot/results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json was not present, so no GateMate host-visible flash-smoke output was observed.",
+    "Upstream Exp 3035 status=blocked honest_verdict=blocked_gate_check_failed.",
+    "Provide an authoritative GateMate A1-EVB-2M output pinout and commit a CCF Pin_out binding for done or a deterministic status bit.",
+    "Choose and commit the matching host reader command: GPIO/LED read, UART serial decode, or JTAG-readable status command.",
+    "Keep downstream flash smoke gated until the reader command has an expected pass/fail transcript.",
+    "Re-run Exp 3036 only after Exp 3034/3035 expose a host-visible output path and record a real transcript."
+  ],
+  "field_provenance": {
+    "exact_blocker_or_next_action": "principle: skipped hardware work must be actionable",
+    "honest_verdict": "principle: terminal verdict must be prefixed unless a precondition is honestly blocked",
+    "inference_substrate": "principle: boundary artifacts must not overclaim board performance",
+    "resource_report_paths": "principle: PnR evidence must cite files",
+    "rtl_or_pnr_commands_run": "principle: resource evidence must be reproducible",
+    "ssqa_boundary_ready": "principle: capstone needs explicit SSQA row",
+    "ssqa_gate_status": "principle: run, blocked, and gate-skipped states must be distinct",
+    "ssqa_performance_claim_allowed": "principle: no performance claim without observed hardware evidence",
+    "upstream_gatemate_status": "principle: SSQA depends on host-visible hardware state"
+  },
+  "hardware_gatemate_files": {
+    "ccf_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+    ],
+    "rtl_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v"
+    ],
+    "test_vector_paths": [
+      "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json"
+    ]
+  },
+  "hardware_performance_claim_made": false,
+  "honest_verdict": "complete: ssqa_gate_skipped_exp3036_missing",
+  "inference_substrate": {
+    "annealing_claim": false,
+    "board_performance_claim": false,
+    "bounded_resource_evidence_collected": false,
+    "energy_claim": false,
+    "gatemate_flash_smoke_ready": false,
+    "hardware_gatemate_files": {
+      "ccf_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.ccf"
+      ],
+      "rtl_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate.v"
+      ],
+      "test_vector_paths": [
+        "/home/ianblenke/github.com/ianblenke/carnot/hardware/gatemate/ising_n16_gatemate_test_vector.json"
+      ]
+    },
+    "host_visible_output_observed": false,
+    "kind": "ssqa_hardware_boundary_artifact",
+    "latency_claim": false,
+    "speedup_claim": false,
+    "upstream_artifacts": [
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3035_gatemate_output_shim_rtl_ccf_sim.json",
+      "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json"
+    ]
+  },
+  "preconditions_checked": true,
+  "resource_report_paths": [],
+  "rtl_or_pnr_commands_run": [],
+  "run_date": "20260525",
+  "sampler_claim_made": false,
+  "speedup_claim_made": false,
+  "ssqa_boundary_ready": true,
+  "ssqa_gate_status": "gate_skipped",
+  "ssqa_performance_claim_allowed": false,
+  "thermodynamic_claim_made": false,
+  "upstream_gatemate_status": {
+    "exp3034": {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3034_gatemate_output_contract_pinout_decision_v1.json",
+      "available": true,
+      "blocked_at_layer": "",
+      "gate_check_summary": "",
+      "gatemate_output_contract_ready": false,
+      "honest_verdict": "complete: blocked_gatemate_output_contract_pinout_missing",
+      "host_visible_io_plan_ready": false,
+      "status": "present"
+    },
+    "exp3035": {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3035_gatemate_output_shim_rtl_ccf_sim.json",
+      "available": true,
+      "blocked_at_layer": "conductor_pre_gate",
+      "gate_check_summary": "1 of 1 gate(s) failed; first failure: exp3034-gatemate-output-contract-pinout-decision.gatemate_output_contract_ready (actual=False == expected=True)",
+      "honest_verdict": "blocked_gate_check_failed",
+      "status": "blocked"
+    },
+    "exp3036": {
+      "artifact_path": "/home/ianblenke/github.com/ianblenke/carnot/results/experiment_3036_gatemate_host_visible_flash_smoke_v4.json",
+      "available": false,
+      "blocked_at_layer": "",
+      "gate_check_summary": "",
+      "gatemate_flash_smoke_ready": false,
+      "honest_verdict": "",
+      "host_visible_output_observed": false,
+      "host_visible_transcript_path": "",
+      "status": "missing"
+    }
+  }
+}
