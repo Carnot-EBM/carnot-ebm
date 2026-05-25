@@ -509,5 +509,18 @@
   "source_artifacts_read": [
     "results/experiment_3025_capstone_v283.json",
     "results/experiment_3024_cross_corpus_matrix_v17.json"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=1.249237 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
