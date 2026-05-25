@@ -6293,3 +6293,4 @@ web search: site |
 | 2026-05-25 21:46 UTC | Plan milestone 2026.05.288 | OK | 14 tasks proposed |
 | 2026-05-25 21:48 UTC | Milestone 2026.05.288 activated | OK | 14 tasks queued |
 | 2026-05-25 21:59 UTC | Archive .287 and activate .288 | OK | 81 passed in 3.18s |
+| 2026-05-25 22:14 UTC | Publication blocker reduction ledger v1 | OK | 81 passed in 3.12s |
