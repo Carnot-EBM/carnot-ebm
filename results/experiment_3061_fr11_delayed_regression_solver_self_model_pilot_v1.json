@@ -470,5 +470,23 @@
     "schema_id": "carnot.fr11.solver_self_model_trace.v1",
     "schema_version": "1.0"
   },
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "delayed_regression_delta=0.4 and family_holdout_delta=0.4 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "no_feedback_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "prior_retention_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    }
+  ]
 }
