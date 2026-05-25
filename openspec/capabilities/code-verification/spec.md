@@ -1681,6 +1681,52 @@ evidence, reports clean repair deltas, sets
 `clean_repair_rerun_ready=true`, and emits an honest verdict starting with
 `complete:`.
 
+### REQ-CODE-3031: Tiny DCCD Structured Repair Panel
+
+The repository shall provide an Exp 3031 tiny DCCD-style structured repair
+panel over repair-hard cases. The panel builder MUST:
+
+- record GPU status, model-cache status, repo commit, selected headline GGUF,
+  and repair-hard fixture availability before any model load;
+- block honestly with an `honest_verdict` starting with
+  `blocked_sota_headline_model_unavailable` when no mandated headline GGUF can
+  be loaded for live generation;
+- select a small fixed repair-hard panel with known failing baseline traces and
+  executable validators, preserving item ids, prompts, expected behavior,
+  failing test ids, and validator evidence;
+- capture an unconstrained semantic draft from at least one mandated headline
+  GGUF before applying schema or syntax constraints;
+- compare three conditions: unconstrained draft repair, acceptance-only
+  constrained acceptance using the Exp 3015 controller rule, and a simple
+  draft-conditioned constrained repair pass that emits a schema-bearing patch
+  candidate conditioned on the draft;
+- measure strict validity, pass rate, syntax failures, schema failures, false
+  accepts, and intent drift for every condition, with explicit deltas for
+  draft-conditioned repair versus the acceptance-only baseline;
+- keep legacy small-model evidence smoke-only and exclude it from headline
+  panel metrics; and
+- write `results/experiment_3031_dccd_structured_repair_panel_v1.json` with
+  `dccd_panel_ready`, `n_cases`, `model_specs`, `legacy_smoke_only_used`,
+  `baseline_acceptance_metrics`, `dccd_metrics`, `intent_drift_delta`,
+  `false_accept_delta`, `changed_files`, `tests_run`, `inference_substrate`,
+  and `honest_verdict`.
+
+`dccd_panel_ready` shall be true only when at least one mandated headline GGUF
+generated live drafts for the fixed panel, every selected case has executable
+validators, the acceptance-only baseline and draft-conditioned condition are
+both measured, and false-accept delta does not increase.
+
+### SCENARIO-CODE-3031: Draft-Conditioned Panel Compares Against Acceptance Baseline
+
+Given repair-hard fixtures, Exp 3015 controller evidence, and at least one
+loadable mandated headline GGUF are available,
+When Exp 3031 runs the fixed DCCD panel,
+Then the artifact records preconditions, the selected headline model, live
+draft transcript evidence, per-condition validity metrics, acceptance-only
+baseline metrics, draft-conditioned metrics, intent-drift and false-accept
+deltas, changed files, tests run, and an honest verdict starting with
+`complete:` or `complete_flagged:`.
+
 ### REQ-CODE-2965: BEAVER-Style Structured-Repair Certificate Audit
 
 The repository shall provide an Exp 2965 deterministic certificate audit for

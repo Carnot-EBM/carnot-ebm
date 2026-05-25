@@ -1,0 +1,1112 @@
+{
+  "artifact": "experiment_3031_dccd_structured_repair_panel_v1",
+  "baseline_acceptance_metrics": {
+    "accepted_count": 0,
+    "accepted_item_ids": [],
+    "candidate_count": 3,
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "intent_drift_count": 0,
+    "intent_drift_rate": 0.0,
+    "pass_count": 0,
+    "pass_rate": 0.0,
+    "rejected_count": 3,
+    "schema_failure_count": 0,
+    "schema_failure_rate": 0.0,
+    "strict_valid_count": 0,
+    "strict_validity_rate": 0.0,
+    "syntax_failure_count": 0,
+    "syntax_failure_rate": 0.0
+  },
+  "case_results": [
+    {
+      "acceptance_only": {
+        "accepted": false,
+        "condition": "acceptance_only_constrained_acceptance",
+        "draft_intent": "5, 0, 10) == 5\n5, 0, 10) == 5\n5, 10, 5) == 5 # This is a even more extreme case where lo > hi\nlo, hi) == 5\n5, 0, 10) == 10\n5, 0, 10) == 10\n5, 10, 5) == 5\n5, 10, 5) == 10\n10, 10, 10) == 10\n10, 10, 10)0 == 10\n10, 10, 10) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 10) == 10\n10",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "",
+        "final_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "intent_drift": true,
+        "item_id": "repair-hard-0001",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 3,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "d75621f5f3f224961fb4aa92b996e08be4aafb983cc31dc0d7d85c1c37eae874",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "fd9ede2115498bb2110fc55df17a47e47c251f8b59ea409d116bc5332d24c1ff",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "ceaace45a0a3ffeb6192f83a78ca97791ff63d80d32b23564e60bf8d6bdce6e6",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "9f1176cca0299637502cac0564807a44f2b2a8808e224cd38e3704a5d57f70f8",
+          "tests_run": 0
+        },
+        "passed": false,
+        "rejection_reasons": [
+          "schema_valid",
+          "syntax_success",
+          "entry_point_present",
+          "intent_drift",
+          "original_passed",
+          "metamorphic_passed_all"
+        ],
+        "schema_errors": [
+          "candidate patch missing"
+        ],
+        "schema_valid": false,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "draft_conditioned_constrained": {
+        "accepted": false,
+        "condition": "draft_conditioned_constrained_repair",
+        "draft_intent": "5, 0, 10) == 5\n5, 0, 10) == 5\n5, 10, 5) == 5 # This is a even more extreme case where lo > hi\nlo, hi) == 5\n5, 0, 10) == 10\n5, 0, 10) == 10\n5, 10, 5) == 5\n5, 10, 5) == 10\n10, 10, 10) == 10\n10, 10, 10)0 == 10\n10, 10, 10) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 10) == 10\n10",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "",
+        "final_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "intent_drift": true,
+        "item_id": "repair-hard-0001",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 3,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "d75621f5f3f224961fb4aa92b996e08be4aafb983cc31dc0d7d85c1c37eae874",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "fd9ede2115498bb2110fc55df17a47e47c251f8b59ea409d116bc5332d24c1ff",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "ceaace45a0a3ffeb6192f83a78ca97791ff63d80d32b23564e60bf8d6bdce6e6",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "9f1176cca0299637502cac0564807a44f2b2a8808e224cd38e3704a5d57f70f8",
+          "tests_run": 0
+        },
+        "passed": false,
+        "rejection_reasons": [
+          "schema_valid",
+          "syntax_success",
+          "entry_point_present",
+          "intent_drift",
+          "original_passed",
+          "metamorphic_passed_all"
+        ],
+        "schema_errors": [
+          "json object missing"
+        ],
+        "schema_valid": false,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "draft_conditioned_generation": {
+        "duration_s": 2.301186,
+        "error": null,
+        "raw_text": "5, 0,10) == 5\n5, 10, 5) == 5\n5, 10, 5) == 5\n5, 10, 5) == thought process: 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, process: 10\n10, 10, 5) == 0\n10, 10, 5) == 10\n10, 10, 10) == 10\n10, 10, 10) == 10\n10, 10, 10) == 10\n10, 10, 10) == 10\n10, 10,",
+        "tokens_generated": 256
+      },
+      "entry_point": "clamp_score",
+      "expected_behavior": "Clamp x into the inclusive [lo, hi] range.",
+      "failing_test_ids": [
+        "SCENARIO-CODE-2990-repair-hard-0001-2"
+      ],
+      "item_id": "repair-hard-0001",
+      "prompt": "Clamp x into the inclusive [lo, hi] range.",
+      "unconstrained_draft": {
+        "accepted": true,
+        "condition": "unconstrained_draft_repair",
+        "draft_intent": "5, 0, 10) == 5\n5, 0, 10) == 5\n5, 10, 5) == 5 # This is a even more extreme case where lo > hi\nlo, hi) == 5\n5, 0, 10) == 10\n5, 0, 10) == 10\n5, 10, 5) == 5\n5, 10, 5) == 10\n10, 10, 10) == 10\n10, 10, 10)0 == 10\n10, 10, 10) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 10) == 10\n10",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "",
+        "final_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "intent_drift": true,
+        "item_id": "repair-hard-0001",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 3,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "d75621f5f3f224961fb4aa92b996e08be4aafb983cc31dc0d7d85c1c37eae874",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "fd9ede2115498bb2110fc55df17a47e47c251f8b59ea409d116bc5332d24c1ff",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "ceaace45a0a3ffeb6192f83a78ca97791ff63d80d32b23564e60bf8d6bdce6e6",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "9f1176cca0299637502cac0564807a44f2b2a8808e224cd38e3704a5d57f70f8",
+          "tests_run": 0
+        },
+        "passed": false,
+        "schema_errors": [
+          "unconstrained draft has no schema envelope"
+        ],
+        "schema_valid": false,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "unconstrained_generation": {
+        "duration_s": 23.952226,
+        "error": null,
+        "raw_text": "5, 0, 10) == 5\n5, 0, 10) == 5\n5, 10, 5) == 5 # This is a even more extreme case where lo > hi\nlo, hi) == 5\n5, 0, 10) == 10\n5, 0, 10) == 10\n5, 10, 5) == 5\n5, 10, 5) == 10\n10, 10, 10) == 10\n10, 10, 10)0 == 10\n10, 10, 10) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 5) == 10\n10, 10, 10) == 10\n10",
+        "tokens_generated": 256
+      }
+    },
+    {
+      "acceptance_only": {
+        "accepted": false,
+        "condition": "acceptance_only_constrained_acceptance",
+        "draft_intent": "```\n\n```python\ndef unique_preserve_order(items):\n    return sorted(set(items))\n```\n\n<|channel>\"\"\"\nThe intended semantic fix is to replace the sorting mechanism with a method that tracks seen elements and maintains their original insertion order.\n\n```python\ndef unique_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n        seen.add(item)\n        result.append(item)\n    return result\n```\n\"\"\"\n```python\ndef unique_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n```",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "\n",
+        "final_patch_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "intent_drift": false,
+        "item_id": "repair-hard-0002",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 2,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "217c5fb4c6ef5f3ff80e0e780269443073754befee759459105fe80baa4c961c",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "9aace85767cb26908b7dae8591c07b3fc1a83644d1e39ec07c463134c6635612",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "39de7b6a1cfce8f7915cb2eda92aa8d19ed70717a04ccd339ab70ad2fa8f0f5a",
+          "tests_run": 0
+        },
+        "passed": false,
+        "rejection_reasons": [
+          "syntax_success",
+          "entry_point_present",
+          "original_passed",
+          "metamorphic_passed_all"
+        ],
+        "schema_errors": [],
+        "schema_valid": true,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "draft_conditioned_constrained": {
+        "accepted": true,
+        "condition": "draft_conditioned_constrained_repair",
+        "draft_intent": "Replace the sorting-based approach with a loop that uses a set to track seen elements and a list to maintain the original order of first occurrences.",
+        "entry_point_present": true,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "def unique_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n",
+        "final_patch_sha256": "e6b58f2762a5a250deb46a3a105bc63debe155e3d7df731395059d69ce730f46",
+        "intent_drift": false,
+        "item_id": "repair-hard-0002",
+        "metamorphic_passed_all": true,
+        "metamorphic_variant_count": 2,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "ebd4c35d594968b57fc70be1ec0cb33672ec090b52848bebb1a5fe7912950c68",
+            "errors": [],
+            "failing_test_ids": [],
+            "passed": true,
+            "test_suite_sha256": "217c5fb4c6ef5f3ff80e0e780269443073754befee759459105fe80baa4c961c",
+            "tests_run": 3
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e6b58f2762a5a250deb46a3a105bc63debe155e3d7df731395059d69ce730f46",
+            "errors": [],
+            "failing_test_ids": [],
+            "passed": true,
+            "test_suite_sha256": "9aace85767cb26908b7dae8591c07b3fc1a83644d1e39ec07c463134c6635612",
+            "tests_run": 3
+          }
+        ],
+        "original_passed": true,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "e6b58f2762a5a250deb46a3a105bc63debe155e3d7df731395059d69ce730f46",
+          "errors": [],
+          "failing_test_ids": [],
+          "passed": true,
+          "test_suite_sha256": "39de7b6a1cfce8f7915cb2eda92aa8d19ed70717a04ccd339ab70ad2fa8f0f5a",
+          "tests_run": 3
+        },
+        "passed": true,
+        "rejection_reasons": [],
+        "schema_errors": [],
+        "schema_valid": true,
+        "strict_valid": true,
+        "syntax_errors": [],
+        "syntax_success": true,
+        "tautology_probe_clean": true
+      },
+      "draft_conditioned_generation": {
+        "duration_s": 1.064768,
+        "error": null,
+        "raw_text": "\"\"\"\n\n```json\n{\n  \"draft_intent\": \"Replace the sorting-based approach with a loop that uses a set to track seen elements and a list to maintain the original order of first occurrences.\",\n  \"final_patch\": \"def unique_preserve_order(items):\\n    seen = set()\\n    result = []\\n    for item in items:\\n        if item not in seen:\\n            seen.add(item)\\n            result.append(item)\\n    return result\"\n}\n```",
+        "tokens_generated": 112
+      },
+      "entry_point": "unique_preserve_order",
+      "expected_behavior": "Return each distinct input value once, preserving first-seen order.",
+      "failing_test_ids": [
+        "SCENARIO-CODE-2990-repair-hard-0002-1",
+        "SCENARIO-CODE-2990-repair-hard-0002-3"
+      ],
+      "item_id": "repair-hard-0002",
+      "prompt": "Return each distinct input value once, preserving first-seen order.",
+      "unconstrained_draft": {
+        "accepted": true,
+        "condition": "unconstrained_draft_repair",
+        "draft_intent": "```\n\n```python\ndef unique_preserve_order(items):\n    return sorted(set(items))\n```\n\n<|channel>\"\"\"\nThe intended semantic fix is to replace the sorting mechanism with a method that tracks seen elements and maintains their original insertion order.\n\n```python\ndef unique_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n        seen.add(item)\n        result.append(item)\n    return result\n```\n\"\"\"\n```python\ndef unique_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n```",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "\n",
+        "final_patch_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+        "intent_drift": false,
+        "item_id": "repair-hard-0002",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 2,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "217c5fb4c6ef5f3ff80e0e780269443073754befee759459105fe80baa4c961c",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "9aace85767cb26908b7dae8591c07b3fc1a83644d1e39ec07c463134c6635612",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "39de7b6a1cfce8f7915cb2eda92aa8d19ed70717a04ccd339ab70ad2fa8f0f5a",
+          "tests_run": 0
+        },
+        "passed": false,
+        "schema_errors": [
+          "unconstrained draft has no schema envelope"
+        ],
+        "schema_valid": false,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "unconstrained_generation": {
+        "duration_s": 1.554674,
+        "error": null,
+        "raw_text": "```\n\n```python\ndef unique_preserve_order(items):\n    return sorted(set(items))\n```\n\n<|channel>\"\"\"\nThe intended semantic fix is to replace the sorting mechanism with a method that tracks seen elements and maintains their original insertion order.\n\n```python\ndef unique_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n        seen.add(item)\n        result.append(item)\n    return result\n```\n\"\"\"\n```python\ndef unique_preserve_order(items):\n    seen = set()\n    result = []\n    for item in items:\n        if item not in seen:\n            seen.add(item)\n            result.append(item)\n    return result\n```",
+        "tokens_generated": 178
+      }
+    },
+    {
+      "acceptance_only": {
+        "accepted": false,
+        "condition": "acceptance_only_constrained_acceptance",
+        "draft_intent": "2.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and avoid a `ZeroDivisionError`.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "",
+        "final_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "intent_drift": false,
+        "item_id": "repair-hard-0008",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 3,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "023313c75e9a7f39ea16c3592d6f6d5d20d99e0ce339b63b2b52ca0ef532e67d",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "09f05150bc81eab539598012bb6d12695eaf3cd7d140543eb0a8725434f5e139",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "6f89a0d51f57aec415bdde6d173c5f2d7446e8423ca34e1908eb751a08804c75",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "4e25c0f82a83830c9a193668b8da3c74f1c941f7bb3a7b59d05e47c8e4d384e0",
+          "tests_run": 0
+        },
+        "passed": false,
+        "rejection_reasons": [
+          "schema_valid",
+          "syntax_success",
+          "entry_point_present",
+          "original_passed",
+          "metamorphic_passed_all"
+        ],
+        "schema_errors": [
+          "candidate patch missing"
+        ],
+        "schema_valid": false,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "draft_conditioned_constrained": {
+        "accepted": false,
+        "condition": "draft_conditioned_constrained_repair",
+        "draft_intent": "2.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and avoid a `ZeroDivisionError`.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "",
+        "final_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "intent_drift": false,
+        "item_id": "repair-hard-0008",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 3,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "023313c75e9a7f39ea16c3592d6f6d5d20d99e0ce339b63b2b52ca0ef532e67d",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "09f05150bc81eab539598012bb6d12695eaf3cd7d140543eb0a8725434f5e139",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "6f89a0d51f57aec415bdde6d173c5f2d7446e8423ca34e1908eb751a08804c75",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "4e25c0f82a83830c9a193668b8da3c74f1c941f7bb3a7b59d05e47c8e4d384e0",
+          "tests_run": 0
+        },
+        "passed": false,
+        "rejection_reasons": [
+          "schema_valid",
+          "syntax_success",
+          "entry_point_present",
+          "original_passed",
+          "metamorphic_passed_all"
+        ],
+        "schema_errors": [
+          "json object missing"
+        ],
+        "schema_valid": false,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "draft_conditioned_generation": {
+        "duration_s": 2.306596,
+        "error": null,
+        "raw_text": "assert safe_a(safe_divide(10, 0, default=0) == 0\nassert safe_a(safe_divide(10, 0, default=0) == 0\n\nassert safe_divide(10, -2) == -5\nassert safe_divide(10, 0, default=None) == None\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\nimport sys\n\nimport os\nimport json\n\nimport math\n-9, 3) == -3\n\nimport math\nimport sys\n\nimport os\nimport sys\n\nimport os\nimport json\n\nimport os\nimport sys\n\nimport sys\n\nimport os\nimport sys\n\nimport os\nimport sys\n\nimport os\nimport sys\n\nimport sys\n\nimport os\nimport sys\n\nimport sys\n\nimport sys\n\nimport sys\nimport os\nimport",
+        "tokens_generated": 256
+      },
+      "entry_point": "safe_divide",
+      "expected_behavior": "Divide a by b, returning default when b is zero.",
+      "failing_test_ids": [
+        "SCENARIO-CODE-2990-repair-hard-0008-2"
+      ],
+      "item_id": "repair-hard-0008",
+      "prompt": "Divide a by b, returning default when b is zero.",
+      "unconstrained_draft": {
+        "accepted": true,
+        "condition": "unconstrained_draft_repair",
+        "draft_intent": "2.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and avoid a `ZeroDivisionError`.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid",
+        "entry_point_present": false,
+        "false_accept": false,
+        "false_accept_probe_clean": true,
+        "final_patch": "",
+        "final_patch_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "intent_drift": false,
+        "item_id": "repair-hard-0008",
+        "metamorphic_passed_all": false,
+        "metamorphic_variant_count": 3,
+        "metamorphic_verifier_outputs": [
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "023313c75e9a7f39ea16c3592d6f6d5d20d99e0ce339b63b2b52ca0ef532e67d",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "09f05150bc81eab539598012bb6d12695eaf3cd7d140543eb0a8725434f5e139",
+            "tests_run": 0
+          },
+          {
+            "candidate_key": "repair_candidate",
+            "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+            "errors": [
+              {
+                "error_type": "missing_candidate",
+                "message": "repair_candidate",
+                "test_id": "candidate-load"
+              }
+            ],
+            "failing_test_ids": [
+              "candidate-load"
+            ],
+            "passed": false,
+            "test_suite_sha256": "6f89a0d51f57aec415bdde6d173c5f2d7446e8423ca34e1908eb751a08804c75",
+            "tests_run": 0
+          }
+        ],
+        "original_passed": false,
+        "original_verifier_output": {
+          "candidate_key": "repair_candidate",
+          "candidate_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "errors": [
+            {
+              "error_type": "missing_candidate",
+              "message": "repair_candidate",
+              "test_id": "candidate-load"
+            }
+          ],
+          "failing_test_ids": [
+            "candidate-load"
+          ],
+          "passed": false,
+          "test_suite_sha256": "4e25c0f82a83830c9a193668b8da3c74f1c941f7bb3a7b59d05e47c8e4d384e0",
+          "tests_run": 0
+        },
+        "passed": false,
+        "schema_errors": [
+          "unconstrained draft has no schema envelope"
+        ],
+        "schema_valid": false,
+        "strict_valid": false,
+        "syntax_errors": [
+          "candidate patch missing"
+        ],
+        "syntax_success": false,
+        "tautology_probe_clean": true
+      },
+      "unconstrained_generation": {
+        "duration_s": 2.216538,
+        "error": null,
+        "raw_text": "2.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and avoid a `ZeroDivisionError`.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid a `ZeroDivisionError` and return the `default` value instead.\n\nThe function should check if b is zero before performing the division to avoid",
+        "tokens_generated": 256
+      }
+    }
+  ],
+  "changed_files": [
+    "openspec/capabilities/code-verification/spec.md",
+    "python/carnot/eval/dccd_structured_repair_panel_3031.py",
+    "scripts/experiment_3031_dccd_structured_repair_panel_v1.py",
+    "tests/python/test_experiment_3031_dccd_structured_repair_panel.py",
+    "results/experiment_3031_dccd_structured_repair_panel_v1.json"
+  ],
+  "dccd_metrics": {
+    "accepted_count": 1,
+    "accepted_item_ids": [
+      "repair-hard-0002"
+    ],
+    "candidate_count": 3,
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "intent_drift_count": 0,
+    "intent_drift_rate": 0.0,
+    "pass_count": 1,
+    "pass_rate": 0.333333333333,
+    "rejected_count": 2,
+    "schema_failure_count": 0,
+    "schema_failure_rate": 0.0,
+    "strict_valid_count": 1,
+    "strict_validity_rate": 0.333333333333,
+    "syntax_failure_count": 0,
+    "syntax_failure_rate": 0.0
+  },
+  "dccd_panel_ready": true,
+  "duration_s": 33.445716,
+  "false_accept_delta": 0.0,
+  "honest_verdict": "complete: dccd structured repair panel ready; n_cases=3",
+  "inference_substrate": {
+    "generation_errors": [],
+    "gpu_status": {
+      "available": true,
+      "free_vram_mib_total": 48244,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "kind": "live_llm_inference",
+    "live_generation_succeeded": true,
+    "loader": "llama_cpp",
+    "model_load_attempted": true,
+    "recorded_before_model_load": true,
+    "repo_commit": "de49336dcc25bda6f3a813b13af35019a0277675",
+    "selected_headline_model": {
+      "available": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-MXFP4_MOE.gguf",
+      "source": "huggingface_cache"
+    }
+  },
+  "intent_drift_delta": 0.0,
+  "legacy_smoke_only_used": false,
+  "metric_deltas": {
+    "false_accept_delta": 0.0,
+    "intent_drift_delta": 0.0,
+    "pass_rate_delta": 0.333333333333,
+    "schema_failure_delta": 0.0,
+    "strict_validity_delta": 0.333333333333,
+    "syntax_failure_delta": 0.0
+  },
+  "model_specs": [
+    {
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-MXFP4_MOE.gguf",
+      "role": "headline_live_generation"
+    }
+  ],
+  "n_cases": 3,
+  "preconditions_checked": {
+    "acceptance_controller": {
+      "config_path": "results/raw/experiment_3015_cactus_style_repair_acceptance_controller_v1/controller_config.json",
+      "config_present": true,
+      "rule_loaded": true
+    },
+    "gpu_status": {
+      "available": true,
+      "free_vram_mib_total": 48244,
+      "gpus": [
+        {
+          "driver_version": "595.71.05",
+          "index": 0,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "driver_version": "595.71.05",
+          "index": 1,
+          "memory_free_mib": 24122,
+          "memory_total_mib": 24576,
+          "memory_used_mib": 5,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "recorded_before_model_load": true,
+    "repair_hard_fixture_availability": {
+      "baseline_failures_verified": 3,
+      "manifest_path": "datasets/repair_hard/manifest_v1.jsonl",
+      "manifest_present": true,
+      "n_manifest_items": 24,
+      "reference_passes_verified": 3,
+      "requested_item_ids": [
+        "repair-hard-0001",
+        "repair-hard-0002",
+        "repair-hard-0008"
+      ]
+    },
+    "repo_commit": "de49336dcc25bda6f3a813b13af35019a0277675",
+    "selected_headline_model": {
+      "available": true,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/04028bd1aa552ebf46a986375418cb92ffeae774/gemma-4-26B-A4B-it-MXFP4_MOE.gguf",
+      "source": "huggingface_cache"
+    }
+  },
+  "reproducibility_checksum": "af630da9d447338e",
+  "required_artifact_fields": [
+    "dccd_panel_ready",
+    "n_cases",
+    "model_specs",
+    "legacy_smoke_only_used",
+    "baseline_acceptance_metrics",
+    "dccd_metrics",
+    "intent_drift_delta",
+    "false_accept_delta",
+    "changed_files",
+    "tests_run",
+    "inference_substrate",
+    "honest_verdict"
+  ],
+  "run_date": "20260525",
+  "schema": "carnot.dccd_structured_repair_panel.v1",
+  "selected_panel_item_ids": [
+    "repair-hard-0001",
+    "repair-hard-0002",
+    "repair-hard-0008"
+  ],
+  "source_artifacts": [
+    {
+      "path": "datasets/repair_hard/manifest_v1.jsonl",
+      "present": true,
+      "sha256": "95e6c8187ae3328ea833892395cc8eec3fe8f6e1032892146d45c3a034c710f7"
+    },
+    {
+      "path": "results/raw/experiment_3002_metamorphic_repair_oracle_audit_v1/metamorphic_manifest.jsonl",
+      "present": true,
+      "sha256": "3eff58c5272bed4956c4b2ea9b9941b4c544d61afcfd5257bd650579af853ec1"
+    },
+    {
+      "path": "results/experiment_3015_cactus_style_repair_acceptance_controller_v1.json",
+      "present": true,
+      "sha256": "c6992842143896bbc719e934f588594c1856f1b430db9314d46fbda73368f933"
+    },
+    {
+      "path": "results/raw/experiment_3015_cactus_style_repair_acceptance_controller_v1/controller_config.json",
+      "present": true,
+      "sha256": "0c3ec24037ea38d9d18b8c28811ab046d891be377a360e8e062b260efcaee918"
+    }
+  ],
+  "tests_run": [
+    "focused-exp3031",
+    "coverage-exp3031"
+  ],
+  "unconstrained_metrics": {
+    "accepted_count": 3,
+    "accepted_item_ids": [
+      "repair-hard-0001",
+      "repair-hard-0002",
+      "repair-hard-0008"
+    ],
+    "candidate_count": 3,
+    "false_accept_count": 0,
+    "false_accept_rate": 0.0,
+    "intent_drift_count": 1,
+    "intent_drift_rate": 0.333333333333,
+    "pass_count": 0,
+    "pass_rate": 0.0,
+    "rejected_count": 0,
+    "schema_failure_count": 3,
+    "schema_failure_rate": 1.0,
+    "strict_valid_count": 0,
+    "strict_validity_rate": 0.0,
+    "syntax_failure_count": 3,
+    "syntax_failure_rate": 1.0
+  }
+}
