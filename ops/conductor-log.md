@@ -6257,3 +6257,4 @@ web search: site |
 | 2026-05-25 11:40 UTC | Milestone 2026.05.286 activated | OK | 13 tasks queued |
 | 2026-05-25 11:52 UTC | Archive .285 and activate .286 | OK | 81 passed in 3.89s |
 | 2026-05-25 12:06 UTC | Repair headline retirement and blocker ledger | OK | 81 passed in 3.88s |
+| 2026-05-25 12:22 UTC | Repair de-tautology protocol | OK | 81 passed in 4.20s |

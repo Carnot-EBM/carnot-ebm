@@ -543,5 +543,18 @@
     "results/experiment_3043_verified_speculation_transcript_fingerprint_v1.json": "93dbc5b6a34e9e861ba9e3178dda495d4f94f0f829ea0c8b167510d38ffdf5fb",
     "results/experiment_3055_repair_headline_retirement_and_blocker_ledger_v1.json": "a00a3f889a701273d18501e555409d7bba430e217e24f0dfac89c588f58be0ca"
   },
-  "invariant_violations": []
+  "invariant_violations": [],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.009139 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
