@@ -8425,3 +8425,73 @@ starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3079 | Planned (`python/carnot/reporting/cross_corpus_matrix_v21_3079.py`) | Planned (`tests/python/test_experiment_3079_cross_corpus_matrix_v21.py`) |
+
+### REQ-REPORT-3080: Milestone 2026.05.287 Capstone From Matrix V21
+
+The repository shall provide an Exp 3080 milestone capstone generator that
+writes `results/experiment_3080_capstone_v287.json` using matrix v21 as the
+authoritative evidence table. The generator MUST read
+`results/experiment_3079_cross_corpus_matrix_v21.json`,
+`results/experiment_3066_capstone_v286.json`, and the row-level statuses from
+matrix v21 before deciding capstone readiness, paper readiness,
+verifier-gain recovery, repair status, FR-11 soundness-bounded self-learning,
+EBT/ARM-EBM feasibility, GateMate status, SSQA status, publication blockers,
+and the concrete next-milestone recommendation. It MUST NOT run live model
+inference, verifier scoring, repair, solver execution, synthesis, board
+flashing, hardware smoke tests, the conductor, pushes, or
+`scripts/research_conductor.py` edits.
+
+The capstone MUST set `capstone_ready=true` only when matrix v21 exists,
+reports `matrix_v21_ready=true`, all eight integer status counts reconcile
+with the loaded row statuses, publication blockers are counted consistently,
+and required authority artifacts are readable JSON objects. It MUST set
+`paper_ready=true` only when matrix v21 has zero publication blockers and no
+required claim row is `flagged`, `bounded`, `blocked`, `gated_skipped`,
+`projection_only`, or `missing`. Projection-only EBT/ARM-EBM rows MAY support
+future-context feasibility wording, but MUST NOT imply a checked-in adapter
+implementation or live inference. FR-11 rows MAY be carried as controller-only
+evidence, but MUST NOT be broadened into model-weight learning while matrix
+v21 flags the soundness/completeness budget or pilot. GateMate, SSQA, repair,
+and verifier claims MUST remain blocked, gated, bounded, or flagged unless
+matrix v21 rows are clean.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`verifier_gain_status`, `repair_claim_status`,
+`fr11_self_learning_status`, `ebt_arm_status`, `gatemate_status`,
+`ssqa_status`, `publication_blocker_count`, `publication_blockers`,
+`next_milestone_recommendation`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include matrix-v21
+summaries, paper-readiness checks, status rollups, blocker-reduction paths,
+source checksums, missing source artifacts, no-new-execution booleans, and
+measured `duration_s` as long as every value is derived from checked-in
+artifacts or file presence/checksum checks. When a conductor prompt assigns
+ops reconciliation to a separate step, the generator MUST leave
+`ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3080: Capstone Closes .287 Without Promoting Dirty Rows
+
+**Given** matrix v21 is present and reports `matrix_v21_ready=true`
+**And** matrix v21 contains clean, flagged, bounded, blocked, gated-skipped,
+projection-only, missing, and retired row counts that reconcile with all row
+statuses
+**And** matrix v21 reports nonzero publication blockers for verifier-gain
+recovery, repair, FR-11 soundness/completeness, EBT/ARM-EBM projection-only
+feasibility, GateMate, and SSQA rows
+**When** the Exp 3080 capstone generator runs
+**Then** it writes `results/experiment_3080_capstone_v287.json` with
+`capstone_ready=true`, `paper_ready=false`, matrix v21 counts reconciled,
+verifier recovery flagged or gated until the calibration gates pass, repair
+bounded or gated-skipped until the verifier-gain gate and repair micro-panel
+clear, FR-11 carried only as controller-only budget-exceeded evidence,
+EBT/ARM-EBM carried as projection-only feasibility with no implementation
+claim, GateMate blocked until host-visible evidence exists, SSQA gate-skipped
+until the GateMate smoke gate passes, every publication blocker listed and
+counted, aggregation-only inference substrate metadata, no live model or
+hardware execution by the capstone task, and an `honest_verdict` that starts
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3080)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3080 | Implemented (`python/carnot/reporting/capstone_v287_3080.py`) | Implemented (`tests/python/test_experiment_3080_capstone_v287.py`) |
