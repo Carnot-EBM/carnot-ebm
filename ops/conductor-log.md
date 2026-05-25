@@ -6272,3 +6272,4 @@ web search: site |
 | 2026-05-25 16:09 UTC | Capstone .286 | OK | 81 passed in 3.39s |
 | 2026-05-25 16:55 UTC | Plan milestone 2026.05.287 | OK | 14 tasks proposed |
 | 2026-05-25 16:57 UTC | Milestone 2026.05.287 activated | OK | 14 tasks queued |
+| 2026-05-25 17:08 UTC | Archive .286 and activate .287 | OK | 81 passed in 4.10s |
