@@ -6216,3 +6216,4 @@ web search: site |
 | 2026-05-25 03:00 UTC | Adversarial flag methodology corrigendum | OK | 81 passed in 3.47s |
 | 2026-05-25 03:19 UTC | SOTA repair clean-methodology rerun v2 | OK | 81 passed in 3.20s |
 | 2026-05-25 03:34 UTC | Repair promotion boundary audit v2 | OK | 81 passed in 3.72s |
+| 2026-05-25 03:49 UTC | Validator frontier corrigendum v2 | OK | 81 passed in 3.54s |
