@@ -6218,3 +6218,4 @@ web search: site |
 | 2026-05-25 03:34 UTC | Repair promotion boundary audit v2 | OK | 81 passed in 3.72s |
 | 2026-05-25 03:49 UTC | Validator frontier corrigendum v2 | OK | 81 passed in 3.54s |
 | 2026-05-25 04:10 UTC | Draft-conditioned constrained repair panel | OK | 81 passed in 3.07s |
+| 2026-05-25 04:26 UTC | FR-11 held-out DVI replay v2 | OK | 81 passed in 4.09s |
