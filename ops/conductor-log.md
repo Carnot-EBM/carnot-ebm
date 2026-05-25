@@ -6297,3 +6297,4 @@ web search: site |
 | 2026-05-25 22:27 UTC | Verifier-as-harder-than-solving autopsy protocol | OK | 81 passed in 2.93s |
 | 2026-05-25 22:43 UTC | ReSyn-style exact fixture bank generator | OK | 81 passed in 3.04s |
 | 2026-05-25 23:19 UTC | I-CALM and task-abstention SOTA panel v2 | OK | 81 passed in 3.10s |
+| 2026-05-25 23:38 UTC | Dafny/Z3 formal feedback and vacuity pilot | OK | 81 passed in 3.03s |

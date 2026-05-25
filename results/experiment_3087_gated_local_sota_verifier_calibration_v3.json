@@ -1,0 +1,42 @@
+{
+  "experiment": 3087,
+  "schema": "blocked_gate_check_v1",
+  "run_date": "2026-05-25",
+  "started_at": "2026-05-25T23:40:01.314351+00:00",
+  "finished_at": "2026-05-25T23:40:01.314351+00:00",
+  "duration_s": 0.0,
+  "status": "blocked",
+  "title": "Gated local SOTA verifier calibration v3",
+  "honest_verdict": "blocked_gate_check_failed",
+  "gate_check_summary": "3 of 3 gate(s) failed; first failure: exp3085-icalm-task-abstention-sota-panel.abstention_precision (actual=0.0 >= expected=0.7)",
+  "gates_evaluated": [
+    {
+      "upstream": "exp3085-icalm-task-abstention-sota-panel",
+      "artifact_field": "abstention_precision",
+      "op": ">=",
+      "expected": 0.7,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 >= expected=0.7"
+    },
+    {
+      "upstream": "exp3085-icalm-task-abstention-sota-panel",
+      "artifact_field": "rejection_recall",
+      "op": ">=",
+      "expected": 0.5,
+      "actual": 0.333333,
+      "passed": false,
+      "reason": "actual=0.333333 >= expected=0.5"
+    },
+    {
+      "upstream": "exp3086-dafny-z3-formal-feedback-pilot",
+      "artifact_field": "formal_feedback_delta",
+      "op": ">",
+      "expected": 0.0,
+      "actual": 0.0,
+      "passed": false,
+      "reason": "actual=0.0 > expected=0.0"
+    }
+  ],
+  "blocked_at_layer": "conductor_pre_gate"
+}
