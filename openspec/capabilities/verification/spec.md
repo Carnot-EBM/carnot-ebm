@@ -926,6 +926,52 @@ and an `honest_verdict` beginning with
 |---|---|---|
 | REQ-VERIFY-3071 | Implemented (`python/carnot/eval/verge_mcs_smt_correction_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3071_verge_mcs_smt_correction_pilot.py`) |
 
+### REQ-VERIFY-3084: ReSyn Exact Fixture Bank Generator
+
+The repository shall provide an Exp 3084 deterministic exact fixture-bank
+generator that writes
+`results/experiment_3084_resyn_exact_fixture_bank_generator_v1.json` and the
+downstream JSONL fixture manifest
+`results/resyn_exact_fixture_bank_3084/fixture_manifest.jsonl` without invoking
+live LLM inference.
+
+The generator shall first check that exact-label tooling is viable through Z3
+and local Python/runtime validation. If exact labeling cannot be supported, it
+shall write a terminal blocked artifact with `resyn_fixture_bank_ready=false`
+and an `honest_verdict` beginning with `blocked_exact_label_tooling_missing`.
+
+When preconditions pass, the generator shall create at least 64 exact fixtures
+across at least three perturbation families that include SMT/SAT constraints,
+arithmetic or code assertions, and repairable invalid candidates. Every
+fixture row shall include an exact label, exact label source, perturbation
+family, family name, leakage-safe prompt payload or prompt hash, and no
+LLM-derived label. The terminal artifact MUST include
+`resyn_fixture_bank_ready`, `exact_fixture_count`, `family_count`,
+`fixture_manifest_path`, `exact_label_sources`, `perturbation_families`,
+`tests_added_or_reused`, `preconditions_checked`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`.
+
+`resyn_fixture_bank_ready` shall be true only when the manifest exists, at
+least 64 rows validate against exact local authorities, at least three
+families are represented, every row has leakage-safe prompt metadata, and
+`inference_substrate` declares no live LLM inference.
+
+### SCENARIO-VERIFY-3084: Exact Fixtures Feed Downstream Verifier Tasks
+
+Given Z3 and local Python/runtime validation are available,
+When the Exp 3084 generator runs,
+Then it writes the terminal JSON artifact and fixture manifest, reports family
+counts and exact label sources, keeps solving, verification, abstention, and
+repair perturbations separable, records Exp 3070 and Exp 3083 as source
+protocol artifacts, and exposes a concrete manifest path for downstream .288
+verifier, abstention, and repair tasks.
+
+## Implementation Status (REQ-VERIFY-3084)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3084 | Implemented (`python/carnot/eval/resyn_exact_fixture_bank_generator_v1.py`) | Implemented (`tests/python/test_experiment_3084_resyn_exact_fixture_bank_generator.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
