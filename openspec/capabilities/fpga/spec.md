@@ -3166,6 +3166,86 @@ inference, and a terminal verdict beginning with `complete:`.
 
 ---
 
+### REQ-HW-097
+
+**Title:** Exp 3160 hardware sampler evidence boundary v7 MUST separate local evidence from public architecture context
+
+**Description:**
+Experiment 3160 MUST produce
+`results/experiment_3160_hardware_sampler_evidence_boundary_v7.json` as an
+evidence-ingestion-only update to the hardware and sampler claim boundary. The
+ledger MUST ingest checked-in repository artifacts and documentation for CUDA,
+KV260, GateMate, PolarFire, THRML/Extropic, and Kona/Aleph. It MUST separate
+operator-supplied local evidence from public vendor/project pages, prior matrix
+or capstone carry-forward rows, and hardware wishlist intent. It MUST NOT run
+board commands, GPU probes, synthesis, place-and-route, hardware readback, or
+live model inference while building the boundary.
+
+Any hardware, GPU, TSU, Kona/Aleph, or sampler speedup claim MUST remain
+blocked unless checked-in local evidence records at least a command transcript,
+board or device identity, baseline comparator, source artifact checksum,
+workload definition, and reproducibility notes. Public vendor/project pages,
+architecture blog posts, roadmap/wishlist text, simulator parity, local runtime
+readiness, and historical board smoke artifacts MAY be cited as bounded context
+but MUST NOT promote a fresh speedup claim. THRML/Extropic and Kona/Aleph MUST
+be treated as architecture references only unless authenticated local execution
+evidence exists.
+
+**Acceptance criteria:**
+- `results/experiment_3160_hardware_sampler_evidence_boundary_v7.json` is
+  generated with `hardware_sampler_evidence_boundary_v7_ready`,
+  `authenticated_speedup_claim_allowed`, `no_hardware_commands_run`,
+  `evidence_sources`, `missing_operator_evidence`, `cuda_status`,
+  `kv260_status`, `gatemate_status`, `polarfire_status`,
+  `extropic_thrml_status`, `kona_status`, `source_artifacts`,
+  `inference_substrate`, and `honest_verdict`.
+- `no_hardware_commands_run=true`, `authenticated_speedup_claim_allowed=false`,
+  and `inference_substrate` declares no live inference, no hardware execution,
+  no board flash, no readback, no synthesis, and no live model execution for Exp
+  3160 itself.
+- `evidence_sources` classifies source rows as local operator evidence, checked
+  in local artifacts, public architecture references, wishlist intent, or ops
+  documentation rather than mixing those classes.
+- `missing_operator_evidence` records the missing command transcript, device or
+  board identity, baseline, artifact checksum, workload, and reproducibility
+  notes required before any speedup claim can be promoted.
+- CUDA status is explicit: local runtime or GPU-offload readiness is not a
+  hardware sampler speedup claim, and adversarially flagged runtime evidence
+  cannot become headline evidence.
+- KV260 and PolarFire statuses may cite authenticated historical local
+  artifacts/transcripts, but must stay scoped to the recorded workloads and keep
+  speedup promotion blocked.
+- GateMate remains blocked until host-visible smoke/readback evidence and
+  operator output-contract fields are present.
+- THRML/Extropic and Kona/Aleph remain architecture-reference-only rows unless
+  authenticated local TSU, XTR/Z1, Kona, or Aleph execution evidence exists.
+
+**Implementation status:** Planned (Exp 3160)
+
+---
+
+### SCENARIO-HW-097
+
+**Scenario:** Hardware sampler evidence boundary v7 writes a blocked/no-claim ledger without touching hardware.
+
+**Given:** The repository contains the Exp 3146 v6 boundary, CUDA runtime
+artifacts, local hardware artifacts for KV260 and PolarFire, GateMate/SSQA
+operator-evidence ledgers, THRML simulator parity artifacts, Kona/Aleph public
+architecture references, and hardware wishlist/status documents.
+**When:** Exp 3160 builds the v7 ledger from checked-in files only.
+**Then:** It writes the v7 JSON with
+`hardware_sampler_evidence_boundary_v7_ready=true`,
+`authenticated_speedup_claim_allowed=false`,
+`no_hardware_commands_run=true`, separate status strings for CUDA, KV260,
+GateMate, PolarFire, THRML/Extropic, and Kona/Aleph, evidence-source
+classification, actionable missing speedup-evidence fields, local
+source-artifact provenance, no-live-inference substrate metadata, and a
+terminal verdict beginning with `complete:`.
+
+**Implementation status:** Planned (Exp 3160)
+
+---
+
 ### SCENARIO-HW-091
 
 **Scenario:** Matrix v21 GateMate/SSQA refresh carries forward no-rerun blockers when operator evidence is absent.

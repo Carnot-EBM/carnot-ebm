@@ -6407,3 +6407,4 @@ web search: |
 | 2026-05-26 21:07 UTC | FR-11 ledger consistency closure | OK | 81 passed in 3.90s |
 | 2026-05-26 21:20 UTC | FR-11 attractor residual memory audit | OK | 81 passed in 3.83s |
 | 2026-05-26 21:37 UTC | Energy constraint sidecar calibration | OK | 81 passed in 4.07s |
+| 2026-05-26 22:24 UTC | KAN proof-carrying monitor expansion | OK | 81 passed in 2.23s |

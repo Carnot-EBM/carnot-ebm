@@ -1,0 +1,471 @@
+{
+  "artifact": "experiment_3160_hardware_sampler_evidence_boundary_v7",
+  "authenticated_speedup_claim_allowed": false,
+  "cuda_status": "runtime_ready_no_sampler_speedup_claim_flagged_adversarial",
+  "evidence_inventory": {
+    "cuda": {
+      "flagged_adversarial": true,
+      "runtime_ready": true,
+      "source_artifacts": [
+        "results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json",
+        "results/experiment_2872_capstone_v271.json"
+      ]
+    },
+    "extropic_thrml": {
+      "architecture_reference_only": true,
+      "status": "architecture_reference_only_no_local_tsu_or_xtr_execution"
+    },
+    "gatemate": {
+      "missing_operator_actions": 5,
+      "status": "blocked_operator_evidence_incomplete_no_speedup_claim"
+    },
+    "kona_aleph": {
+      "architecture_reference_only": true,
+      "status": "architecture_reference_only_no_local_kona_or_aleph_execution"
+    },
+    "kv260": {
+      "source_artifacts": [
+        "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+        "results/experiment_2898_kv260_transcript.log"
+      ],
+      "status": "authenticated_historical_board_evidence_scoped_no_fresh_speedup_claim"
+    },
+    "polarfire": {
+      "source_artifacts": [
+        "results/experiment_2958_polarfire_1000_clause_scorer_v2.json",
+        "results/experiment_2958_polarfire_1000_clause_transcript_v2.json"
+      ],
+      "status": "authenticated_historical_dispatch_evidence_no_speedup_claim"
+    }
+  },
+  "evidence_sources": [
+    {
+      "claim_use": "prior boundary; not fresh hardware evidence",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_3146_hardware_sampler_evidence_boundary_v6.json",
+      "present": true,
+      "readable": true,
+      "role": "exp3146_hardware_sampler_boundary_v6"
+    },
+    {
+      "claim_use": "runtime readiness only; not sampler speedup evidence",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json",
+      "present": true,
+      "readable": true,
+      "role": "cuda_runtime_exp2862"
+    },
+    {
+      "claim_use": "adversarial flag carry-forward for CUDA runtime evidence",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2872_capstone_v271.json",
+      "present": true,
+      "readable": true,
+      "role": "cuda_capstone_flag_boundary"
+    },
+    {
+      "claim_use": "operator action ledger; missing fields remain blocking",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "present": true,
+      "readable": true,
+      "role": "gatemate_operator_evidence_v4"
+    },
+    {
+      "claim_use": "historical board timing evidence scoped to recorded workload",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "present": true,
+      "readable": true,
+      "role": "kv260_latency_artifact"
+    },
+    {
+      "claim_use": "historical command transcript; not a fresh run",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2898_kv260_transcript.log",
+      "present": true,
+      "readable": true,
+      "role": "kv260_latency_transcript"
+    },
+    {
+      "claim_use": "historical claim boundary; speedup not promoted by v7",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "present": true,
+      "readable": true,
+      "role": "kv260_claim_boundary"
+    },
+    {
+      "claim_use": "historical dispatch/readback evidence scoped to hash workload",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2958_polarfire_1000_clause_scorer_v2.json",
+      "present": true,
+      "readable": true,
+      "role": "polarfire_1000_clause_artifact"
+    },
+    {
+      "claim_use": "historical transcript; not a fresh run",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2958_polarfire_1000_clause_transcript_v2.json",
+      "present": true,
+      "readable": true,
+      "role": "polarfire_1000_clause_transcript"
+    },
+    {
+      "claim_use": "simulator parity only; not TSU/XTR/Z1 execution",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "present": true,
+      "readable": true,
+      "role": "thrml_kv260_simulator_parity"
+    },
+    {
+      "claim_use": "local claim boundary for external Kona context",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json",
+      "present": true,
+      "readable": true,
+      "role": "kona_claim_boundary"
+    },
+    {
+      "claim_use": "planning intent; never execution evidence",
+      "evidence_class": "wishlist_intent",
+      "path": "research-hardware-wishlist.md",
+      "present": true,
+      "readable": true,
+      "role": "hardware_wishlist"
+    },
+    {
+      "claim_use": "vendor/project pages and related work; never local execution evidence",
+      "evidence_class": "public_architecture_reference",
+      "path": "research-references.md",
+      "present": true,
+      "readable": true,
+      "role": "research_references_public_architecture_pages"
+    },
+    {
+      "claim_use": "operational status context",
+      "evidence_class": "ops_documentation",
+      "path": "ops/status.md",
+      "present": true,
+      "readable": true,
+      "role": "ops_status"
+    },
+    {
+      "claim_use": "operational changelog context",
+      "evidence_class": "ops_documentation",
+      "path": "ops/changelog.md",
+      "present": true,
+      "readable": true,
+      "role": "ops_changelog"
+    }
+  ],
+  "extropic_thrml_status": "architecture_reference_only_no_local_tsu_or_xtr_execution",
+  "gatemate_status": "blocked_operator_evidence_incomplete_no_speedup_claim",
+  "hardware_commands_run": [],
+  "hardware_sampler_evidence_boundary_v7_ready": true,
+  "honest_verdict": "complete: hardware_sampler_evidence_boundary_v7_ready=true; authenticated_speedup_claim_allowed=false; no_hardware_commands_run=true; cuda_status=runtime_ready_no_sampler_speedup_claim_flagged_adversarial; gatemate_status=blocked_operator_evidence_incomplete_no_speedup_claim; extropic_thrml_status=architecture_bounded; kona_status=architecture_bounded",
+  "inference_substrate": {
+    "board_flash_attempted": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "hardware_commands_run": [],
+    "hardware_readback_attempted": false,
+    "kind": "hardware_sampler_evidence_boundary_v7",
+    "local_repo_only": true,
+    "no_live_model_inference": true,
+    "source": "checked_in_local_artifacts",
+    "synthesis_or_pnr_run": false
+  },
+  "kona_status": "architecture_reference_only_no_local_kona_or_aleph_execution",
+  "kv260_status": "authenticated_historical_board_evidence_scoped_no_fresh_speedup_claim",
+  "milestone": "2026.05.293",
+  "missing_operator_evidence": [
+    {
+      "checked_paths": [],
+      "missing_item": "authenticated_speedup_claim:complete_local_evidence_bundle",
+      "missing_required_fields": [
+        "command_transcript",
+        "board_or_device_identity",
+        "baseline",
+        "artifact_checksum",
+        "workload",
+        "reproducibility_notes"
+      ],
+      "operator_action": "Before any speedup claim, commit a local evidence bundle with transcript, identity, baseline, checksum, workload, and reproducibility notes.",
+      "source_artifact": ""
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json",
+        "hardware/gatemate/ising_n16_gatemate.ccf"
+      ],
+      "missing_item": "gatemate:authoritative_pinout_ccf_binding",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "ccf_binding_for_done"
+      ],
+      "operator_action": "Provide an authoritative GateMate A1-EVB-2M output pinout and commit a CCF Pin_out binding for done.",
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "gatemate:host_reader_command",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "host_reader_command"
+      ],
+      "operator_action": "Commit a concrete host reader command for done.",
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "gatemate:expected_transcript",
+      "missing_required_fields": [
+        "gatemate_output_contract_ready",
+        "host_visible_io_plan_ready",
+        "expected_transcript"
+      ],
+      "operator_action": "Record the expected pass/fail transcript for the done host reader command.",
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+      ],
+      "missing_item": "gatemate:safety_limits",
+      "missing_required_fields": [
+        "safety_limits.downstream_flash_gate_open",
+        "safety_limits.max_flash_attempts_without_operator_review"
+      ],
+      "operator_action": "Open the downstream flash safety gate only after the output contract is authoritative.",
+      "source_artifact": "results/experiment_3048_gatemate_output_contract_operator_package_v1.json"
+    },
+    {
+      "checked_paths": [
+        "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json",
+        "."
+      ],
+      "missing_item": "ssqa:host_visible_smoke_evidence",
+      "missing_required_fields": [
+        "gatemate_host_visible_smoke_passed",
+        "host_visible_transcript_path",
+        "transcript_sha256",
+        "host_reader_command",
+        "expected_transcript",
+        "observed_transcript",
+        "transcript_matched",
+        "selected_output_signal",
+        "ccf_binding",
+        "flash_succeeded",
+        "flash_command",
+        "readback_supported",
+        "readback_attempted",
+        "readback_hash",
+        "sample_count",
+        "wall_clock_duration_s",
+        "per_sample_latency_s",
+        "sampler_configuration",
+        "host_visible_transcript_file"
+      ],
+      "operator_action": "Commit a passing GateMate host-visible smoke transcript with checksum, expected and observed output, CCF binding, flash/readback fields, timing fields, sampler configuration, and a local transcript file.",
+      "source_artifact": "results/experiment_3050_gatemate_host_visible_flash_smoke_v5.json"
+    },
+    {
+      "checked_paths": [],
+      "missing_item": "extropic_thrml:authenticated_tsu_xtr_z1_execution_evidence",
+      "missing_required_fields": [
+        "authenticated_tsu_hardware_evidence"
+      ],
+      "operator_action": "Keep THRML/Extropic bounded to simulator and architecture context until local TSU/XTR/Z1 evidence exists.",
+      "source_artifact": ""
+    },
+    {
+      "checked_paths": [],
+      "missing_item": "kona_aleph:authenticated_local_kona_or_aleph_execution_evidence",
+      "missing_required_fields": [
+        "authenticated_local_kona_or_aleph_execution_evidence"
+      ],
+      "operator_action": "Keep Kona/Aleph bounded to architecture context until authenticated local execution evidence exists.",
+      "source_artifact": ""
+    }
+  ],
+  "missing_required_source_artifacts": [],
+  "no_hardware_commands_run": true,
+  "polarfire_status": "authenticated_historical_dispatch_evidence_no_speedup_claim",
+  "run_date": "20260526",
+  "schema": "carnot.hardware_sampler_evidence_boundary.v7",
+  "source_artifacts": [
+    {
+      "claim_use": "prior boundary; not fresh hardware evidence",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_3146_hardware_sampler_evidence_boundary_v6.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "exp3146_hardware_sampler_boundary_v6",
+      "sha256": "1dcaf2648d59be20b8621547d7f8c04c6ff069249b2ac363c04f4e950160dfb7",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "runtime readiness only; not sampler speedup evidence",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2862_sota_runtime_cache_offload_resolver_v3.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "cuda_runtime_exp2862",
+      "sha256": "c6a04eb68bb8d8a288768a2f1f0807ca6b86c63f29422ccfa4ac3968acf134d9",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "adversarial flag carry-forward for CUDA runtime evidence",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2872_capstone_v271.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "cuda_capstone_flag_boundary",
+      "sha256": "52b8e1b260fce1362fa0f6c0b596d2d35e8918c01e904857942f28f80b725673",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "operator action ledger; missing fields remain blocking",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_3119_gatemate_ssqa_operator_evidence_ingestion_v4.json",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "gatemate_operator_evidence_v4",
+      "sha256": "fc0f711666ea046c03774a76b935dd6b022f4b7dcc61dd884672c2aa21d42430",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "historical board timing evidence scoped to recorded workload",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kv260_latency_artifact",
+      "sha256": "d4a29484b51331c07db25c9ffab5ca61406a022311c78006258e6b42acd60060",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "historical command transcript; not a fresh run",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2898_kv260_transcript.log",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kv260_latency_transcript",
+      "sha256": "d48afff9348ba2ba4339eaabc4529addcb546260f6515003120cb61e7f423f4a",
+      "source_type": "text"
+    },
+    {
+      "claim_use": "historical claim boundary; speedup not promoted by v7",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2913_kv260_hardware_cpu_claim_boundary_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kv260_claim_boundary",
+      "sha256": "23c6808bf40b663ee437d2641d9abfa3478b188c9d38a87c80691abec29cbbff",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "historical dispatch/readback evidence scoped to hash workload",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2958_polarfire_1000_clause_scorer_v2.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "polarfire_1000_clause_artifact",
+      "sha256": "d935c403dbb0cf0ac4c4af2bcdcc59dec07823f0c77bd389dad74ff19c4540cd",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "historical transcript; not a fresh run",
+      "evidence_class": "local_operator_evidence",
+      "path": "results/experiment_2958_polarfire_1000_clause_transcript_v2.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "polarfire_1000_clause_transcript",
+      "sha256": "bf7903ad55bf227d1d207558c9441ad1289715a58c8dfc25878c0f0717225768",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "simulator parity only; not TSU/XTR/Z1 execution",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_2916_thrml_kv260_sampler_parity_v1.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "thrml_kv260_simulator_parity",
+      "sha256": "aff8275c9b45021f8b3b2dda300eb2ac9c3ae84ed020ff991f6e6fea89dc9fcd",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "local claim boundary for external Kona context",
+      "evidence_class": "checked_in_local_artifact",
+      "path": "results/experiment_1362_publication_hold_ebt_arm_kona_claim_boundary.json",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "kona_claim_boundary",
+      "sha256": "7f3ad803529210d93304663beac49000cf1d424dc20dc7d0ee823d7a6a8106da",
+      "source_type": "json"
+    },
+    {
+      "claim_use": "planning intent; never execution evidence",
+      "evidence_class": "wishlist_intent",
+      "path": "research-hardware-wishlist.md",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "hardware_wishlist",
+      "sha256": "ca40501890c4cb5f2a3ea835bd3661976107eafc91a100e02a00c9023f7baaee",
+      "source_type": "text"
+    },
+    {
+      "claim_use": "vendor/project pages and related work; never local execution evidence",
+      "evidence_class": "public_architecture_reference",
+      "path": "research-references.md",
+      "present": true,
+      "readable": true,
+      "required": true,
+      "role": "research_references_public_architecture_pages",
+      "sha256": "5cc1392a6901a4a13c796e64ba3c57100f5b1c2bea0c664875da30ae7256c79b",
+      "source_type": "text"
+    },
+    {
+      "claim_use": "operational status context",
+      "evidence_class": "ops_documentation",
+      "path": "ops/status.md",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "ops_status",
+      "sha256": "68c1b0718f3634f6947d64c9b419aecedc8b31841f9ee8e3ac6ae80fb60436dd",
+      "source_type": "text"
+    },
+    {
+      "claim_use": "operational changelog context",
+      "evidence_class": "ops_documentation",
+      "path": "ops/changelog.md",
+      "present": true,
+      "readable": true,
+      "required": false,
+      "role": "ops_changelog",
+      "sha256": "c73b34d2f3a1f317fa8c015ad2737f2db81f4eb90d192478826950ff9c2bf011",
+      "source_type": "text"
+    }
+  ]
+}
