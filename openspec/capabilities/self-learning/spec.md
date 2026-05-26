@@ -8588,3 +8588,86 @@ claim, explicit failed-precondition diagnostics, and a blocked
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3143 | Implemented (`python/carnot/eval/fr11_experience_driven_verifier_memory_v1.py`) | Implemented (`tests/python/test_experiment_3143_fr11_experience_driven_verifier_memory_v1.py`) |
+
+## REQ-LEARN-3156: FR-11 Ledger Consistency Closure Replay
+
+**Given** Exp 3128 records admitted executable EvoEnv environments, Exp 3129
+records the prior FR-11 constraint-memory ledger blocker, Exp 3142 records
+VeRA/EvoEnv equivalent and hardened variants, Exp 3143 records
+experience-driven verifier memory, and Exp 3136 records historical
+false-accept families
+**When** Exp 3156 runs the FR-11 ledger-consistency closure replay
+**Then** it SHALL build a replay panel that covers admitted environments,
+equivalent variants, hardened variants, historical false-accept families, and
+any residual inconsistent monitor rows without using tautological stored
+consistency booleans as the measured ledger outcome.
+**And** it SHALL recompute the ledger consistency numerator and denominator
+from exact environment replay, exact variant replay, monitor ledger actions,
+exact expected actions, and observed verifier decisions.
+**And** it SHALL classify every residual mismatch as exactly one of
+`missing_label`, `stale_memory`, `contradictory_memory`,
+`variant_generation_error`, or `monitor_replay_error`.
+**And** it SHALL promote controller/environment memory only when
+`ledger_consistency_rate == 1.0`, `soundness_errors == 0`, and
+`completeness_errors == 0`; otherwise it SHALL block promotion while preserving
+`no_weight_update_claim=true`.
+
+The terminal artifact SHALL be
+`results/experiment_3156_fr11_ledger_consistency_closure_v1.json` and SHALL
+include `fr11_ledger_consistency_closure_v1_ready`,
+`continuous_self_learning_targeted`, `replay_panel_count`,
+`ledger_consistency_rate`, `soundness_errors`, `completeness_errors`,
+`residual_mismatch_rows`, `promotion_recommendation`,
+`no_weight_update_claim`, `methodology_complete`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3156 Sub-requirements
+
+- REQ-LEARN-3156-1: The replay panel SHALL include one row per admitted
+  Exp 3128 environment, one row per Exp 3142 equivalent variant, one row per
+  Exp 3142 hardened variant, every Exp 3136 verifier row from a historical
+  false-accept source family, and every additional observed Exp 3126 monitor
+  row that remains inconsistent and is not already represented by Exp 3136.
+- REQ-LEARN-3156-2: Environment and variant rows SHALL be replayed from their
+  executable constraint systems; stored pass/fail summaries SHALL NOT be the
+  sole source of truth for ledger consistency.
+- REQ-LEARN-3156-3: Historical verifier rows SHALL recompute consistency by
+  comparing monitor `constraint_ledger` actions, exact expected actions, and
+  observed verifier decisions; stored fields such as
+  `final_answer_consistent_with_ledger` and `ledger_consistent` SHALL NOT be
+  used as the measured outcome.
+- REQ-LEARN-3156-4: `residual_mismatch_rows` SHALL include enough row id,
+  source artifact, fixture family, expected action, observed action, ledger
+  action, and mismatch-class evidence to replay each counterexample.
+- REQ-LEARN-3156-5: `promotion_recommendation` SHALL block all FR-11 promotion
+  when ledger consistency is below 1.0 or soundness/completeness checks fail;
+  only a perfect ledger with zero soundness and completeness errors may promote
+  controller/environment memory, and no artifact may claim model-weight
+  learning.
+
+### SCENARIO-LEARN-3156: Closure Replay Preserves A Residual Ledger Gap
+
+**Given** ready Exp 3128, 3129, 3136, 3142, and 3143 source artifacts
+**When** Exp 3156 replays environment memory and experience memory against
+their exact variants
+**Then** it writes a complete terminal artifact with an explicit replay-panel
+denominator, a recomputed ledger consistency rate, zero soundness and
+completeness errors for safe controller memory, residual mismatch
+counterexamples for any non-perfect ledger rows, an explicit blocked promotion
+recommendation when the rate is below 1.0, `no_weight_update_claim=true`, and
+an `honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3156-BLOCKED: Missing Closure Sources Fail Closed
+
+**Given** missing Exp 3128, 3129, 3136, 3142, or 3143 source evidence
+**When** Exp 3156 runs
+**Then** it writes the required artifact fields with a zero replay denominator,
+`fr11_ledger_consistency_closure_v1_ready=false`, a blocking promotion
+recommendation, no model-weight mutation claim, explicit failed-precondition
+diagnostics, and a blocked `honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3156)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3156 | Implemented (`python/carnot/eval/fr11_ledger_consistency_closure_v1.py`) | Implemented (`tests/python/test_experiment_3156_fr11_ledger_consistency_closure_v1.py`) |
