@@ -1932,6 +1932,73 @@ introduced.
 |---|---|---|
 | REQ-VERIFY-3138 | Implemented (`python/carnot/verify/canonical_answer_vericot_grounding_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3138_canonical_answer_vericot_grounding_pilot_v1.py`) |
 
+### REQ-VERIFY-3139: Live SOTA Verifier Rerun V7 With Exact-Safe Contract
+
+The repository shall provide an Exp 3139 live SOTA verifier rerun builder that
+writes `results/experiment_3139_live_sota_verifier_rerun_v7.json` after the
+Exp 3136 false-accept autopsy, Exp 3137 exact-safe accept/abstain/reject
+contract, and Exp 3138 canonical grounding pilot are available. The rerun MUST
+build its row set from all known .291 false-accept regression rows plus
+balanced exact fixtures covering contradiction, satisfiable drift, medium or
+hard difficulty, and fragment-code families. Exact solver/test labels remain
+the sole scoring authority.
+
+The rerun MUST select models only from the mandated local SOTA GGUF policy:
+`unsloth/Qwen3.6-35B-A3B-GGUF`, `unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. The builder SHALL use `cached_sota_pair()`
+or the Exp 3123 cache manifest to resolve local GGUF paths and SHALL NOT use
+legacy small models for headline evidence. If no mandated model is locally
+usable, or the live runtime fails before producing bounded calls, the builder
+MUST write a complete blocked diagnostic artifact with `live_call_count=0`,
+`headline_claim_allowed=false`, preserved row metadata, model/cache substrate
+diagnostics, and an honest blocked verdict.
+
+For every live row, the rerun SHALL record the prompt hash, selected model ID,
+model path or cache-path evidence, raw output hash, extracted answer,
+canonical exact and candidate answers, exact label, raw live decision, and
+exact-safe contract decision. Metrics SHALL be computed from the exact-safe
+contract decisions against exact labels, while also preserving raw live
+baseline metrics so the false-accept reduction is auditable. `false_accept_rate`
+SHALL be zero before a repair-gate candidate can be reported as ready.
+
+The terminal artifact MUST include `live_verifier_rerun_v7_ready`,
+`model_specs`, `selected_model_ids`, `live_call_count`,
+`headline_claim_allowed`, `regression_rows_included`,
+`exact_ground_truth_count`, `false_accept_rate`, `false_reject_rate`,
+`abstention_rate`, `verifier_gain_delta`, `repair_gate_candidate_state`,
+`false_accept_gate_passed`, `tests_run`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also include rerun
+rows, raw live metrics, exact-safe metrics, prompt/canonicalization evidence,
+source checksums, and deterministic self-checks.
+
+`live_verifier_rerun_v7_ready` shall be true only when all required source
+artifacts are present, Exp 3137 and Exp 3138 are ready, every known regression
+row is included, at least one mandated model produces bounded live output, the
+exact-safe contract yields `false_accept_rate=0.0`, metrics are finite rates in
+`[0, 1]`, the repair-gate candidate state is not blocked, no legacy model is
+used for headline evidence, and `honest_verdict` starts with a terminal
+success prefix.
+
+### SCENARIO-VERIFY-3139: Exact-Safe Rerun Reduces False Accepts
+
+Given Exp 3123 exposes mandated local SOTA cache evidence, Exp 3136 lists the
+.291 false-accept regression rows, Exp 3137 defines the exact-safe contract,
+and Exp 3138 reports canonical grounding readiness,
+When Exp 3139 runs the bounded live verifier rerun,
+Then it writes the required terminal JSON artifact, includes the known
+regression rows in the live rerun set, records model and prompt provenance for
+each live call, applies the exact-safe contract to each extracted answer,
+reports false-accept, false-reject, abstention, and gain metrics from exact
+labels, and sets `false_accept_gate_passed=true` and
+`live_verifier_rerun_v7_ready=true` only when exact-safe decisions reduce
+false accepts to zero without relying on legacy small-model evidence.
+
+## Implementation Status (REQ-VERIFY-3139)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3139 | Planned (`python/carnot/verify/live_sota_verifier_rerun_v7.py`) | Planned (`tests/python/test_experiment_3139_live_sota_verifier_rerun_v7.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
