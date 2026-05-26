@@ -4,46 +4,48 @@
 # docs_audit_report — 2026-05-25
 
 ## TL;DR (stranger's 30-second take)
-I would close this tab within 15 seconds. While the core hook is incredibly strong and clear, the page quickly devolves into an impenetrable wall of leaked file paths, internal experiment acronyms, and status-report babble that makes it feel like a private dashboard rather than a public product.
+The page starts strong with a clear value proposition and quickstart, but immediately descends into a chaotic wall of internal project telemetry and jargon. I would close the tab at the "Results" section because I can't read raw experiment paths and undefined acronyms, making the project look like a disorganized lab notebook rather than a usable tool.
 
 ## TOP 3 PROBLEMS
-1. Leaked File Paths in UI (Results: Live Benchmark) — You are rendering a literal raw file path (`@results/citation_hallucination...`) into the public UI.
-2. Incomprehensible Jargon (Hero: Recent Progress) — The reader is assaulted with "FoVer", "5-seed dual-condition", and "Repinned from v2 0.9857" before they even understand what the framework does.
-3. Fabrication Signals (Results) — Claims of a perfect "1.0 TP rate" and "60/60 attacks" look like overfitted toy metrics without immediate credibility anchors.
+1. **Raw file path in headline result** — "Live benchmark" card uses a literal `@results/...` file path instead of a readable label.
+2. **Extreme acronym and jargon density** — The page assumes I know what FoVer, CCTU, SVAMP, VeriCoT, NTK, and PREM mean without explanation.
+3. **Card Bloat** — There are 31 separate boxed items (bento + results + blog) competing for attention, far exceeding the threshold where a stranger will read any of them.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — Cap at 6. A stranger will not read 12 different granular benchmark results.
-- Total conceptual cards — 23 floating cards across the page. Fatigue sets in early; the reader will skim and retain nothing.
+- **Entire Page** — 31 total cards (1 progress, 7 bento, 12 results, 7 blog) — *Suggested cap: ~15-20 max, curate the best ones.*
+- **Stats bar + Recent Progress** — Shoves a dense paragraph of internal release-notes immediately after the clean hero section before even explaining how the tool works.
 
 ### Internal jargon
-- Hero Recent Progress — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — Absolute gibberish to an outsider. 
-- Results Live benchmark — `@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt` — This is a raw internal artifact path.
-- Results grid (various) — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)`, `EstimationVerifier SVAMP AUC`, `VeriCoT equation-style CoT fix`, `PRM-BiasBench-style attacks`, `HalluGuard v3`. All of these are internal framework nouns that mean nothing to the public.
-- Features TTC & PREM — `Process-Reward Energy Model (PREM)` — Undefined project-specific acronym.
+- **Stats Bar & Progress Card** — "FoVer (5-seed dual-condition; architecture-only 0.8947)" — What is FoVer? What is a dual-condition?
+- **Features Section** — "CCTU constrained tool-use micro-benchmark" — CCTU is unexplained.
+- **Features Section** — "PREM" — Process-Reward Energy Model is expanded, but what it actually means in context is pure jargon.
+- **Results Grid** — "HumanEval pass @results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt" — A literal raw file path used as a metric label.
+- **Results Grid** — "IterativeSelfRepair", "EstimationVerifier SVAMP AUC", "VeriCoT equation-style CoT fix", "PRM-BiasBench-style attacks", "HalluGuard v3" — Rapid-fire insider terminology with zero context.
 
 ### Per-milestone narrative
-- Hero Recent Progress — `Repinned from v2 0.9857 after pre-submission adversarial audit...` — This is an internal retrospective or commit message, not value proposition copy.
-- Preprint section — `The arXiv submission is prepared but pending operator-initiated upload.` — Internal status reporting that a stranger does not care about.
+- **Recent progress card** — "Repinned from v2 0.9857 after pre-submission adversarial audit..." — This reads like an internal commit message or a team status update, not a product pitch.
+- **Preprint section** — "The arXiv submission is prepared but pending operator-initiated upload." — Internal operational status that a stranger does not care about.
 
 ### Inconsistencies
-- Qwen vs Gemma — The "Live benchmark" card title claims `SOTA 35B (Qwen3.6-35B-A3B)`, but the leaked file path right below it says `Gemma4-26B-A4B-it.txt`.
-- AUROC numbers — The Hero stats bar claims `0.9131` Verifier AUROC, the Safety card claims `0.91` AUROC, and the Math reasoning card claims `0.90` AUC. It is unclear to a stranger if these are the same metric drifting or different metrics entirely.
+- **No fine-tuning vs Training** — "No model fine-tuning required" (How it works) vs "Training — Two-GPU parallel retrain" (Results). If no tuning is required, why is there a 2-GPU retrain result featured? It's confusing whether the user has to train something or not.
+- **AUROC Claims** — "0.9131 AUROC", "architecture-only 0.8947", "v2 0.9857", "0.91 AUROC (publication gate)", "0.90 AUC". Throwing 5 different AUROC numbers at the user across different cards dilutes the headline metric and creates confusion.
 
 ### Missing essentials
-- Why should I trust the numbers? — "Backed by a checked-in experiment artifact" relies on the reader understanding your repository's internal operational standards. There are no links to these artifacts or instructions on how to reproduce the numbers.
+- All 5 essentials (What it does, trust anchor, install, license, maintainer) are actually present. The problem is they are buried under the noise and jargon.
 
 ### Fabrication signals
-- Math extraction card — `TP rate: 0.5 -> 1.0` — A perfect 1.0 True Positive rate is a massive red flag for overfitting or cherry-picking.
-- Adversarial audit card — `catches 60/60 attacks` — A perfect 100% success rate on exactly 60 samples screams "we stopped testing the moment it worked."
+- **Math extraction card** — "GSM8K extraction TP rate: 0.5 → 1.0" — 1.0 (100%) true positive rate is suspiciously perfect.
+- **Adversarial audit card** — "k=5 ensemble catches 60/60 attacks" — 100% catch rate on exactly 60 attacks without a credibility anchor or failure example.
+- **Dogfooding blog card** — "Zero false positives." — 0.0 FPR across 639 experiments is suspiciously perfect and screams overfitting or broken telemetry to an outside researcher.
 
 ## WHAT'S WORKING
-- The main headline ("Catch the mistakes your LLM confidently makes up") and the "Extract -> Check -> Repair" bento flow are phenomenal. They immediately and clearly convey the value proposition.
-- The dual Python/Rust code snippet tabs in the Quick Start brilliantly demonstrate how easy the framework is to use.
+- The hero section ("Catch the mistakes your LLM confidently makes up.") and the three-step "How it works" are clear, punchy, and instantly communicate the value.
+- The Python/Rust Quickstart tabs are excellent and show exactly what the developer experience looks like in just a few lines of code.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Delete the raw file path from the "Live benchmark" result card immediately and clarify whether the evaluation was run on Qwen or Gemma.
-2. Rewrite the "Recent progress" card in the hero to remove internal jargon (FoVer, repinning, dual-condition) and state the progress in plain English.
-3. Prune the Results section from 12 cards down to the 4-6 most impressive, externally understandable metrics.
-4. Remove or qualify the perfect "1.0" and "60/60" cards to avoid looking like fabricated or overfitted data.
-5. Scrub internal framework names (IterativeSelfRepair, EstimationVerifier, PREM, HalluGuard) from the capability and result cards, replacing them with generic, descriptive terms.
+1. Delete the literal file path `@results/citation_hallucination_...` from the Live benchmark result card and replace it with a readable description.
+2. Purge the "Recent progress" card from the hero section; move release notes and repinning context to a dedicated changelog or blog post.
+3. Trim the 12 result cards down to the 6 most impactful, comprehensible metrics. Remove all mentions of SVAMP, FoVer, VeriCoT, CCTU unless explicitly defined.
+4. Soften the "1.0", "60/60", and "Zero false positives" claims by either adding the sample size/caveats directly or discussing the known limitations.
+5. Resolve the contradiction between "No model fine-tuning required" and the "Training" results card so users know exactly what Carnot handles out-of-the-box.

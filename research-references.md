@@ -16300,3 +16300,61 @@ and FR-11 still controller-only because completeness mistakes exceeded budget.
   Sources: https://logicalintelligence.com/blog/aleph-leading-benchmarks,
   https://logicalintelligence.com/blog/aleph-prover-tops-leading-benchmarks,
   and https://logicalintelligence.com/kona-ebms-energy-based-models
+
+---
+
+## 2026-05-26 Post-.288 Planning Sweep (Milestone 2026.05.289)
+
+Scope: arXiv 2025-2026, OpenReview ICLR/LLM-reasoning pages, Hugging Face
+paper discovery, GitHub discovery for EBM/constraint/KAN tooling, Extropic
+public hardware/software pages, Logical Intelligence Kona/Aleph pages, and
+citation-watch context around EBT (2507.02092) and ARM-as-EBM (2512.15605).
+This sweep was run after `.288` completed with `paper_ready=false`,
+`publication_blocker_count=36`, `abstention_precision=0.0`,
+`rejection_recall=0.333333`, a gate-blocked verifier calibration and repair
+micro-panel, clean controller-only FR-11 evidence, EBT/ARM sidecar evidence
+still projection-only, and GateMate/SSQA still blocked on operator-visible
+hardware evidence.
+
+- **LLM Routing as Reasoning: A MaxSAT View (OpenReview ICLR 2026 Workshop,
+  `Qmr9VbwRaB`)**: formulates language-conditioned LLM routing as weighted
+  MaxSAT/MaxSMT over hard and soft constraints. Relevance to Carnot: `.289`
+  should stop treating accept/reject/abstain thresholds as scattered ad hoc
+  gates and instead define an auditable MaxSAT policy over exact fixture labels,
+  model cache availability, formal-feedback lift, and safety constraints. This
+  is a routing/policy layer, not a correctness claim by itself.
+  Source: https://openreview.net/forum?id=Qmr9VbwRaB
+
+- **Stochastic Thermodynamics for Autoregressive Generative Models: A
+  Non-Markovian Perspective (arXiv:2604.07867)**: analyzes autoregressive
+  generation with entropy-production-style diagnostics over token and sentence
+  traces. Relevance to Carnot: `.289` can add optional decode telemetry for
+  local SOTA traces and test whether entropy-production/free-energy-style
+  summaries correlate with exact verifier failures, while keeping the result as
+  diagnostic evidence only unless local data proves a gateable signal.
+  Source: https://arxiv.org/abs/2604.07867
+
+- **Energy-Efficient Random Variate Generation via Compressed Lookup Tables
+  (OpenReview ICLR 2026, `hRY0ytSnM0`)**: introduces compressed lookup-table
+  random variate generation for fast, low-energy sampling from arbitrary
+  distributions. Relevance to Carnot: `.289` should prototype a CPU cLUT
+  sampler microbench for Bernoulli/logistic choices used by Ising-style or
+  thermodynamic sampling paths, with distribution-error checks and FPGA mapping
+  notes. It must not make a hardware speedup claim without board execution.
+  Source: https://openreview.net/forum?id=hRY0ytSnM0
+
+- **MiniF2F-Dafny: LLM-Guided Mathematical Theorem Proving via Auto-Active
+  Verification (arXiv:2512.10187)**: adapts formal math problems to Dafny and
+  highlights both auto-active verification opportunities and empty-proof
+  baselines. Relevance to Carnot: because `.288` found Dafny unavailable
+  locally, `.289` formal-feedback work should use Z3/test-oracle feedback now,
+  record Dafny absence honestly, and treat MiniF2F-Dafny as a corpus/schema
+  target for a future toolchain-installed run rather than a current benchmark.
+  Source: https://arxiv.org/abs/2512.10187
+
+- **Formal annotation generation with test oracles (arXiv:2601.12845, carried
+  forward)**: automatic formal-specification generation is promising only when
+  paired with execution/test oracles that reject vacuous annotations. Relevance
+  to Carnot: `.289` should keep functional tests and solver-only baselines as
+  mandatory vacuity guards for any formal-feedback lift claim.
+  Source: https://arxiv.org/abs/2601.12845

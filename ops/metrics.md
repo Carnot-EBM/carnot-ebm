@@ -1,5 +1,15 @@
 # Carnot — Session Metrics
 
+## Session: 2026-05-26 Milestone 2026.05.289 Research Planning
+
+### Turn Log
+
+| Turn | Start | End | Description | Tokens (est) |
+|------|-------|-----|-------------|------|
+| 1 | 2026-05-26T01:25:00Z | 2026-05-26T01:57:02Z | Planned milestone 2026.05.289 after reading required project context, `.288` capstone/matrix/conductor evidence, exclusion manifest, hardware notes, prior roadmap docs, current references, and recent 2025-2026 research. Added Post-.288 research sweep to `research-references.md` (MaxSAT/MaxSMT LLM routing, stochastic-thermodynamic decode telemetry, compressed lookup-table random variate generation, MiniF2F-Dafny, formal annotation/test-oracle vacuity guards). Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks exp3095-exp3108, including exact fixture protocol audit, MaxSAT abstention routing, local SOTA verifier recovery, gated structured repair, FR-11 stress/promotion boundary, EBT/ARM sidecar boundary, cLUT sampler microbench, hardware evidence ingestion, matrix v23, and capstone. Validation: YAML parse OK; prompt checks OK; roadmap schema import OK; prior-failure validator OK; exclusion-manifest lint OK; roadmap gate audit OK with 9 gate checks and 0 failures; touched-file whitespace checks OK. | ~150k |
+
+---
+
 ## Session: 2026-05-25 Milestone 2026.05.288 Research Planning
 
 ### Turn Log

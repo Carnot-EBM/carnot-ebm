@@ -1,6 +1,12 @@
 # Carnot — Operational Status
 
-**Last Updated:** 2026-05-26 (Milestone 2026.05.288 operational retrospective complete)
+**Last Updated:** 2026-05-26 (Milestone 2026.05.289 research planning staged)
+
+## Session 2026-05-26 - Milestone 2026.05.289 Research Planning Staged
+
+Outer-loop staged milestone 2026.05.289 as "Verifier/Repair Recovery + MaxSAT Routing + Sidecar Boundaries" after the operator reported all `.288` tasks completed. The plan treats `results/experiment_3094_capstone_v288.json` as the authoritative closeout: `.288` completed but remained `paper_ready=false`; publication blockers dropped from 42 to 36, FR-11 recovered as clean controller-only evidence, verifier/repair remained blocked by low abstention precision, no formal-feedback lift, a gate-blocked calibration, and a missing repair micro-panel, EBT/ARM remained projection-only, and GateMate/SSQA stayed blocked on operator evidence.
+
+Updated `research-references.md` with the post-`.288` sweep covering MaxSAT/MaxSMT LLM routing, stochastic-thermodynamic decode telemetry, compressed lookup-table random variate generation, MiniF2F-Dafny, and formal annotation/test-oracle vacuity guards. Rewrote `openspec/change-proposals/research-roadmap-vNEXT.md` and created `research-roadmap-next.yaml` with 14 tasks (`exp3095`-`exp3108`). `exp3103-fr11-resyn-kancl-stress-promotion-boundary` is the mandatory continuous self-learning experiment. Validation passed for YAML parse, prompt section/end-line checks, roadmap schema import, prior-failure lint, exclusion-manifest lint, roadmap-gate audit, and whitespace checks on touched planning files. Did not modify `research-roadmap.yaml` or `scripts/research_conductor.py`; did not push.
 
 ## Session 2026-05-26 - Milestone 2026.05.288 Operational Retrospective Complete
 
