@@ -6341,3 +6341,4 @@ web search: site |
 | 2026-05-26 07:45 UTC | Explicit repair gate and micro-panel artifact v4 | OK | 81 passed in 2.60s |
 | 2026-05-26 08:02 UTC | FR-11 unsolvable curriculum and retention guard | OK | 81 passed in 3.14s |
 | 2026-05-26 08:21 UTC | EBT/ARM sidecar score-correlation boundary v3 | OK | 81 passed in 2.84s |
+| 2026-05-26 08:33 UTC | cLUT sampler backend integration boundary v2 | OK | 97 passed in 5.65s |
