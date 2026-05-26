@@ -6397,3 +6397,5 @@ web search: |
 | 2026-05-26 20:44 UTC | Clean live SOTA verifier rerun v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3151-live-inference-authenticity-prefligh |
 | 2026-05-26 20:44 UTC | Repair gate unlock decision v2 | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp3152-clean-live-sota-verifier-rerun-v8. |
 | 2026-05-26 20:46 UTC | Clean live SOTA verifier rerun v8 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3151-live-inference-authenticity-prefligh |
+| 2026-05-26 20:46 UTC | Repair gate unlock decision v2 | GATE_BLOCK | 3 of 3 gate(s) failed; first failure: exp3152-clean-live-sota-verifier-rerun-v8. |
+| 2026-05-26 20:48 UTC | Multi-turn repair ladder v3 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3153-repair-gate-unlock-decision-v2) |
