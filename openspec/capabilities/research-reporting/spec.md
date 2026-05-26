@@ -8909,3 +8909,76 @@ starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3094 | Implemented (`python/carnot/reporting/capstone_v288_3094.py`) | Implemented (`tests/python/test_experiment_3094_capstone_v288.py`) |
+
+### REQ-REPORT-3095: Archive .288 And Confirm .289 Roadmap Handoff
+
+The repository shall provide an Exp 3095 archive/handoff generator that writes
+`results/experiment_3095_archive_v288_activate_v289.json` using only checked-in
+`.288` matrix/capstone artifacts, roadmap YAML/Markdown files, and file
+presence/checksum evidence. It MUST treat
+`results/experiment_3094_capstone_v288.json` as the completed `.288`
+authority artifact and MUST set `prior_capstone_ready` directly from that
+artifact's `capstone_ready` field. It MUST set `prior_paper_ready` directly
+from that artifact's `paper_ready` field and MUST NOT infer paper readiness
+from capstone completion, matrix readiness, roadmap state, or reduced blocker
+counts.
+
+The generator MUST summarize `.288` status fields from the capstone authority:
+`paper_ready`, `verifier_gain_status`, `repair_claim_status`,
+`fr11_self_learning_status`, `ebt_arm_status`, `gatemate_status`,
+`ssqa_status`, `publication_blocker_count`,
+`missing_capstone_input_artifacts`, and `headline_model_spec_gaps`. Its
+carry-forward blocker list MUST preserve the unresolved `.288` blockers:
+36 publication blockers, 17 verifier/repair blockers, missing repair
+micro-panel evidence, local SOTA headline model-spec gaps, EBT/ARM
+projection-only status, and GateMate/SSQA missing operator evidence.
+
+The generator MUST verify the `.289` roadmap handoff without modifying
+`research-roadmap.yaml` or `scripts/research_conductor.py`. It MUST prefer
+`research-roadmap-next.yaml` when that staged file exists and otherwise MAY use
+the already-active `research-roadmap.yaml` as a read-only fallback, provided
+the artifact records that the requested staged roadmap is absent. Whichever
+roadmap source is used MUST target milestone `2026.05.289`, point
+`milestone_doc` to `openspec/change-proposals/research-roadmap-vNEXT.md`, and
+contain at least one task. The workflow MUST NOT activate the roadmap itself,
+run the conductor, push commits, rewrite historical result artifacts, run live
+model inference, run verifier scoring, run repair generation, run solvers, run
+synthesis, flash hardware, or collect hardware readback.
+
+The terminal artifact MUST include `archive_v288_activate_v289_ready`,
+`prior_capstone_ready`, `prior_paper_ready`, `carry_forward_blockers`,
+`next_milestone`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include `.288` status summaries, roadmap handoff
+metadata, no-new-execution booleans, protected-file modification flags,
+missing source artifacts, source checksums, and measured `duration_s` as long
+as every value is derived from checked-in artifacts or file presence/checksum
+checks. When a conductor prompt assigns ops reconciliation to a separate step,
+the generator MUST leave `ops/status.md`, `ops/changelog.md`, and
+`_bmad/traceability.md` unchanged. `honest_verdict` MUST start with
+`complete:` only when the prior capstone is ready and the `.289` roadmap
+handoff evidence is valid; otherwise it MUST report the blocked precondition.
+
+#### SCENARIO-REPORT-3095: Archive .288 Without Activating Roadmap
+
+**Given** `results/experiment_3094_capstone_v288.json` exists and reports
+`capstone_ready=true`
+**And** the capstone reports `paper_ready=false`, 36 publication blockers,
+17 verifier/repair blockers, one missing repair micro-panel input, local SOTA
+headline model-spec gaps, EBT/ARM projection-only status, and missing
+GateMate/SSQA operator evidence
+**And** the `.289` roadmap source, either staged or already active, targets
+`2026.05.289` and points `milestone_doc` to
+`openspec/change-proposals/research-roadmap-vNEXT.md`
+**When** the Exp 3095 archive/handoff generator runs
+**Then** it writes `results/experiment_3095_archive_v288_activate_v289.json`
+with `archive_v288_activate_v289_ready=true`, `prior_capstone_ready=true`,
+`prior_paper_ready=false`, the `.288` capstone status summary preserved, the
+six carry-forward blocker classes visible, aggregation-only
+inference-substrate metadata, no roadmap activation performed by this task,
+and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3095)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3095 | Implemented (`python/carnot/reporting/archive_v288_activate_v289_3095.py`) | Implemented (`tests/python/test_experiment_3095_archive_v288_activate_v289.py`) |
