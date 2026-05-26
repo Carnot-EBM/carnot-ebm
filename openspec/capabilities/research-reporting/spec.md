@@ -9286,3 +9286,65 @@ and an `honest_verdict` that starts with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3109 | Planned (`python/carnot/reporting/archive_v289_activate_v290_3109.py`) | Planned (`tests/python/test_experiment_3109_archive_v289_activate_v290.py`) |
+
+### REQ-REPORT-3110: SOTA Model-Spec Cache Manifest Corrigendum
+
+The repository shall provide an Exp 3110 model-spec/cache manifest
+corrigendum that writes
+`results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json`
+from checked-in `.289` SOTA and formal-feedback artifacts, matrix v23,
+capstone .289, and the local `cached_sota_pair()` policy documented by
+`scripts/experiment_template.py`. The manifest MUST be machine-readable and
+MUST NOT run live model inference, run solvers, probe hardware, activate the
+conductor, push commits, rewrite historical artifacts, or modify
+`scripts/research_conductor.py`.
+
+The manifest MUST explicitly list all mandated headline model IDs:
+`unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. It MUST derive local cache availability
+from upstream artifact `model_specs`, `cached_sota_pair`, and
+`cached_sota_pair_status` fields, separating `present_model_ids`,
+`missing_model_ids`, `cached_sota_pair_available`,
+`selected_headline_model_ids`, `smoke_test_model_ids`, and
+`headline_claim_allowed`. Legacy tiny models MAY be listed only under
+`smoke_test_model_ids` and MUST NOT be eligible for headline claims.
+
+The terminal artifact MUST include `sota_model_manifest_ready`,
+`mandatory_headline_model_ids`, `present_model_ids`, `missing_model_ids`,
+`cached_sota_pair_available`, `selected_headline_model_ids`,
+`smoke_test_model_ids`, `headline_claim_allowed`, `downstream_usage`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. The
+`downstream_usage` rules MUST state that solver-only tasks may proceed when
+`cached_sota_pair_available=false`, because exact solver/test-oracle evidence
+does not require live LLM inference. Live LLM headline tasks MUST either use
+at least one selected mandated cached model or set
+`headline_claim_allowed=false`; pair/comparison claims MUST remain blocked
+when `cached_sota_pair_available=false`.
+
+#### SCENARIO-REPORT-3110: Manifest Clears Model-Spec Metadata Gap Without Pair Overclaim
+
+**Given** Exp 3099 lists the mandated SOTA model specs, selects the cached
+`unsloth/gemma-4-26B-A4B-it-GGUF` model, and reports
+`cached_sota_pair.ready=false`
+**And** Exp 3100 reports `cached_sota_pair_available=false` while retaining
+exact solver/test-oracle feedback evidence
+**And** matrix v23 and capstone .289 report a model-spec metadata gap because
+`mandatory_headline_model_ids` was missing from the live LLM artifact
+**When** the Exp 3110 manifest generator runs
+**Then** it writes
+`results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json`
+with all three mandatory headline IDs, cached present and missing model IDs
+derived from upstream cache metadata, `cached_sota_pair_available=false`,
+the selected cached mandated model listed under `selected_headline_model_ids`,
+legacy tiny models listed only as smoke-test options, downstream solver-only
+rules that permit exact tasks without a cached SOTA pair, live-LLM headline
+rules that require at least one selected mandated cached model, aggregation-
+only inference-substrate metadata, source-artifact provenance, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3110)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3110 | Implemented (`python/carnot/reporting/sota_model_spec_cache_manifest_corrigendum_3110.py`) | Implemented (`tests/python/test_experiment_3110_sota_model_spec_cache_manifest_corrigendum.py`) |
