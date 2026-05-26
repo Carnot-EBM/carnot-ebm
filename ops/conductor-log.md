@@ -6339,3 +6339,4 @@ web search: site |
 | 2026-05-26 07:11 UTC | Diagnostic local SOTA verifier calibration v5 | OK | 81 passed in 2.46s |
 | 2026-05-26 07:28 UTC | Fragment-level code/constraint verification pilot | OK | 81 passed in 2.29s |
 | 2026-05-26 07:45 UTC | Explicit repair gate and micro-panel artifact v4 | OK | 81 passed in 2.60s |
+| 2026-05-26 08:02 UTC | FR-11 unsolvable curriculum and retention guard | OK | 81 passed in 3.14s |
