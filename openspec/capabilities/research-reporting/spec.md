@@ -10000,3 +10000,75 @@ inference-substrate metadata, and an `honest_verdict` that starts with
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3147 | Implemented (`python/carnot/reporting/cross_corpus_matrix_v26_3147.py`) | Implemented (`tests/python/test_experiment_3147_cross_corpus_matrix_v26.py`) |
+
+### REQ-REPORT-3148: Milestone .292 Capstone From Matrix V26
+
+The repository shall provide an Exp 3148 milestone .292 capstone generator
+that writes `results/experiment_3148_capstone_v292.json` using
+`results/experiment_3147_cross_corpus_matrix_v26.json` as the primary
+authority and all available `.292` source artifacts from Exp 3135 through Exp
+3146 as traced evidence. The generator MUST summarize what `.292` proved,
+what stayed blocked, what must remain bounded, and which paper-facing claims
+are allowed from checked-in artifacts only. It MUST NOT run live model
+inference, verifier scoring, repair generation, solver execution, synthesis,
+board flashing, hardware readback, the conductor, pushes, or modify
+`scripts/research_conductor.py`.
+
+The capstone MUST explicitly determine `capstone_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v25`, and `next_top_gap`.
+`paper_ready` MUST NOT be inferred from matrix completion; it is true only
+when the capstone is ready, matrix v26 reports zero publication blockers, and
+the matrix has no blocked headline claims. The capstone MUST report status
+strings for false-accept recovery, the live verifier, the repair gate, the
+repair ladder, FR-11 VeRA/EvoEnv, FR-11 experience memory, combined FR-11
+self-learning, EBT/ARM, KAN, sampler/hardware, and local SOTA cache coverage.
+The capstone MUST preserve matrix v26 boundaries: exact contract and canonical
+grounding evidence may be allowed as replay-bounded recovery evidence, but a
+flagged live-verifier rerun MUST NOT become a headline verifier claim; a
+blocked repair gate or missing repair ladder MUST NOT become repair promotion;
+controller-only FR-11 evidence MUST NOT become model-weight learning; EBT/ARM
+sidecars MUST NOT imply live integration; KAN proof-carrying monitor records
+MUST NOT imply a deployed verifier; and sampler/hardware rows MUST NOT imply
+authenticated speedup, readback, board execution, Kona, or THRML/TSU claims
+unless source artifacts say so.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v25`, `next_top_gap`,
+`false_accept_recovery_status`, `verifier_claim_status`,
+`repair_gate_status`, `repair_claim_status`, `fr11_self_learning_status`,
+`ebt_arm_status`, `kan_status`, `sampler_hardware_status`,
+`next_recommendation`, `source_artifacts`, `inference_substrate`, and
+`honest_verdict`. It MAY include matrix summaries, source checksums,
+paper-readiness checks, proof statements, blocked evidence lists, bounded claim
+lists, allowed claim lists, and measured `duration_s` as long as every value is
+derived from checked-in artifacts or file presence/checksum checks. When a
+conductor prompt assigns ops reconciliation to a separate step, the generator
+MUST leave `ops/status.md`, `ops/changelog.md`, and `_bmad/traceability.md`
+unchanged.
+
+#### SCENARIO-REPORT-3148: Capstone .292 Closes Without Overclaiming
+
+**Given** matrix v26 exists and reports `matrix_v26_ready=true`
+**And** matrix v26 reports 55 publication blockers,
+`blocker_delta_from_v25=9`, one missing Exp 3141 repair-ladder artifact, exact
+safe accept/abstain and canonical grounding rows as clean, false-accept
+autopsy and live verifier rerun rows as flagged, repair gate blocked with the
+repair ladder gated-skipped, FR-11 VeRA/EvoEnv and experience memory rows
+flagged and controller-only, EBT/ARM as projection-only, KAN as bounded, and
+hardware/sampler boundary as blocked
+**When** the Exp 3148 capstone generator runs
+**Then** it writes `results/experiment_3148_capstone_v292.json` with
+`capstone_ready=true`, `paper_ready=false`, `publication_blocker_count=55`,
+`blocker_delta_from_v25=9`, `next_top_gap` naming the false-accept recovery /
+live-verifier corrigendum / repair-gate blocker, required status fields
+derived from matrix v26, source-artifact provenance, aggregation-only
+inference-substrate metadata, a recommendation that targets the largest
+residual gap from evidence rather than ambition, no ops/status/traceability
+reconciliation performed by this task, and an `honest_verdict` that starts
+with `complete:`.
+
+## Implementation Status (REQ-REPORT-3148)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3148 | Implemented (`python/carnot/reporting/capstone_v292_3148.py`) | Implemented (`tests/python/test_experiment_3148_capstone_v292.py`) |

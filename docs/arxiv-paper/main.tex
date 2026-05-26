@@ -1713,6 +1713,140 @@ Carnot uses Qwen3.6 as one of three mandatory SOTA local models. However, \cite{
     \item \textbf{Tier 0y:} Additional verifier.
 \end{itemize}
 
+% kv260-hardware-portfolio-update-start
+\subsection{Hardware portfolio update (Milestones .243--.292)}
+\label{sec:hardware-portfolio-update}
+
+The Hardware-Task Continuity paragraph in the Milestone .239 retro
+(Section~\ref{sec:milestone-239-update}, lines around the
+\texttt{kv260-bitstream-generated-not-flashed} note) was honest at
+the time it was written: at .239, exp2477 had produced a
+$7{,}797{,}830$-byte Vivado bitstream but the board was not
+USB-attached and the flash leg of KV260 graduation was deferred.
+That state has since changed; we record the post-.243 hardware
+portfolio for the v6 reader rather than rewriting the .239
+historical paragraph.
+
+\paragraph{KV260: flashed, reachable, anchored.}
+The board has been continuously reachable via SSH (network-attached
+to host \texttt{kria}) since approximately 2026-05-20; at the time
+of this writing the board has been up for 6 days 5 hours
+continuously, with two users active and the JTAG load average
+essentially zero. The active overlay is
+\texttt{carnot\_ising\_v2\_n64} (loading the
+\texttt{carnot\_ising\_v4} XDC-constrained bitstream), with
+\path{/dev/uio0} through \path{/dev/uio4} exposed.
+
+The headline KV260 latency measurement that paper-v6 cites should
+be exp2898 (2026-05-22) rather than the earlier exp1068 reference
+in Section~\ref{sec:hardware-fpga-latency-singlepoint}. exp2898
+recorded a per-sample wall-clock of $24.05\,\mu s$ median (p95
+$24.38\,\mu s$, within 1.5\% of median) at $n=64$ across three
+independent random Ising problems (seeds 42, 137, 271) with 10{,}000
+samples each. The bitstream sha256
+(\texttt{a90028a7931de505edd38caadfccfc1d7d5aa21e8abca5ae48bfb8a63a9876cb})
+is recorded in the artifact, anchoring the measurement to a
+specific flashed bitstream. Source artifact:
+\path{results/experiment_2898_kv260_ising_sampler_hardware_latency_benchmark_v1.json}.
+
+\paragraph{KV260: same-schedule CPU comparator measured; speedup framing retracted.}
+The Unsupported Future Work appendix
+(Section~\ref{app:unsupported-future-work}) listed
+``same-basis CPU-vs-FPGA speedup'' as future work because the
+.239-era CPU reference (exp1081) was not measured on a per-sample
+basis matching the FPGA. exp2939 (2026-05-22) closed that gap. A CPU
+implementation running the same synchronous-parallel Glauber
+schedule the KV260 fabric runs produced
+$23.574\,\mu s$ median (p95 $33.833\,\mu s$) per sample at $n=64$,
+giving an apples-to-apples KV260-vs-CPU speedup of
+$0.982\times$~--- the FPGA is approximately two percent
+\emph{slower} than the same-schedule CPU baseline at this $n$. The
+$24.83\,\mu s$ versus $\sim 290$\,ms style speedup framing is
+retracted (the CPU reference had been on a different per-sample
+basis). The honest claim is that the KV260 is a proof-of-concept
+functional simulator for the discrete sampler, not a production
+accelerator at $d \in \{128, 256\}$. The crossover at which
+constant-latency FPGA dispatch overtakes linear-cost CPU iteration
+is estimated to lie near $n \approx 240$ spins; we do not currently
+operate above that point. Source artifact:
+\path{results/experiment_2939_cpu_synchronous_parallel_same_schedule_baseline_v1.json}.
+
+\paragraph{KV260: synchronous Glauber distinguishable from Boltzmann.}
+A companion measurement, exp2938 (2026-05-22), ran an MMD test
+between exact CPU sequential Gibbs energies and the KV260's
+synchronous parallel Glauber energies on identical $n=64$ Ising
+problems across three seeds. The MMD$^2$ p-values landed at the
+permutation-test noise floor (0.001 across all three seeds), and
+the Kolmogorov-Smirnov statistic reached 0.998--0.999. The two
+energy distributions are statistically distinguishable; the FPGA's
+synchronous parallel update schedule is not producing samples from
+the target Boltzmann distribution. We therefore frame the KV260
+outputs as \emph{fixed-compute heuristic samples}, not
+Boltzmann-thermalized samples, and remove the implicit ``exact
+sampling on FPGA'' framing from the deployment story. Source
+artifact:
+\path{results/experiment_2938_kv260_mmd_vs_cpu_sequential_gibbs_v1.json}.
+
+\paragraph{GateMate A1-EVB-2M: bitstream flashed (operator evidence).}
+The Cologne Chip GateMate A1-EVB-2M is USB-attached via the on-board
+DirtyJTAG MCU (\texttt{1209:c0ca}). exp2956 (.275-era) generated a
+$458{,}302$-byte n=16 Ising tile bitstream
+(sha256 \texttt{36c43275\ldots}) via the
+\texttt{yosys synth\_gatemate} $\rightarrow$ \texttt{nextpnr-himbaechel
+--device CCGM1A1} $\rightarrow$ \texttt{gmpack} chain. Four
+consecutive autonomous conductor flash attempts hit
+\texttt{blocked\_flash\_failed} (exp2972, exp2984, exp2996, exp3008)
+plus exp3048's \texttt{blocked\_gatemate\_output\_contract\_authority\_missing}.
+After a power-cycle reattach (operator action) on 2026-05-25, a
+direct \texttt{openFPGALoader -c dirtyJtag -b olimex\_gatemateevb}
+invocation completed in under 5 seconds with the canonical
+\texttt{Load SRAM via JTAG: 100\%~/~Done} success transcript. The
+conductor's exp3092 (.288) ingested the operator-evidence artifact
+and set \texttt{gatemate\_rerun\_allowed=false} as policy, locking
+the operator flash as the canonical record. Host-IO smoke-test
+(write spins, read energy, time per-sample analog of exp2898) is
+queued but not yet landed. Source artifacts:
+\path{results/experiment_outer_loop_gatemate_first_flash_v1.json},
+\path{results/experiment_3092_gatemate_ssqa_operator_evidence_ingestion_v2.json}.
+
+\paragraph{Microchip PolarFire SoC Discovery Kit: scaling validated to 1000 clauses.}
+The PolarFire SoC is SSH-attached (\texttt{ssh polarfire}) on
+riscv64 Linux. exp2900 (.274) anchored a 50-clause SAT scorer
+with hash-verified output. exp2941 (.277) extended to 500 clauses;
+exp2958 (.278) extended to 1000 clauses. All three runs
+hash-verified the scorer output against locally-computed
+expectations, with wall-clock scaling roughly linearly with
+clause count. Source artifacts:
+\path{results/experiment_2900_polarfire_carnot_dispatch_smoke_v1.json},
+\path{results/experiment_2941_polarfire_continuation_v1.json},
+\path{results/experiment_2958_polarfire_1000_clause_scorer_hash_verified.json}.
+
+\paragraph{Net hardware portfolio state.}
+At the time of writing (post-.292 milestone), the hardware portfolio
+is three physically operational substrates with real measurements:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+Board & Reachable & Measured \\
+\midrule
+KV260 & Yes (SSH, 6d uptime) & 24.0 $\mu s$ / sample, $n=64$, three-seed \\
+GateMate A1 & Yes (USB DirtyJTAG) & Flash transcript only; smoke pending \\
+PolarFire SoC & Yes (SSH) & 1000-clause scorer, hash-verified \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Phase-2 hardware track has matured from the .239-era
+``honest-deferred'' state to ``three substrates with anchored
+artifacts.'' The speedup-claim narrowing (KV260 at $0.98\times$ vs
+same-schedule CPU at $n=64$) reframes the KV260 as a POC functional
+simulator anchoring future high-$N$ deployment trajectory, not as a
+production accelerator at current latent dimensions; this matches
+the Paper-v6 Narrowing Discipline reset documented in the project's
+operations notes.
+% kv260-hardware-portfolio-update-end
+
 \section{Conclusion \& Roadmap}
 \label{sec:roadmap}
 \label{sec:conclusion}

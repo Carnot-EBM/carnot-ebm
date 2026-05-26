@@ -6381,3 +6381,4 @@ web search: site |
 | 2026-05-26 17:09 UTC | EBT/ARM false-accept calibration boundary v3 | OK | 81 passed in 2.91s |
 | 2026-05-26 17:28 UTC | KAN proof-carrying monitor boundary v2 | OK | 81 passed in 3.41s |
 | 2026-05-26 17:41 UTC | Hardware and sampler evidence boundary v6 | OK | 81 passed in 3.39s |
+| 2026-05-26 17:58 UTC | Cross-corpus matrix v26 | OK | 81 passed in 2.73s |
