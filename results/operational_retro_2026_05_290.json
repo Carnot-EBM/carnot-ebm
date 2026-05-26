@@ -1,0 +1,28 @@
+{
+  "schema": "carnot.operational_retro.v64",
+  "milestone": "2026.05.290",
+  "generated_at": "2026-05-26T09:27:11Z",
+  "retro_type": "operational_full",
+  "total_wall_time_minutes": 0,
+  "experiments_completed": 0,
+  "compute_bound_experiments_count": 0,
+  "slowest_experiments": [],
+  "gpu_idle_on_compute_bound_tasks": null,
+  "summary": "The activation-scoped timing source for milestone 2026.05.290 contains no experiment commits: experiments_completed=0, total_wall_time_minutes=0, and compute_bound_experiments_count=0. Because the compute-bound set is empty, slowest-run ranking, GPU-efficiency judgment, and multi-model DualGPURunner review are no data available this milestone.",
+  "bottlenecks_identified": [
+    "No experiment-duration evidence is present, so execution bottlenecks cannot be ranked from this milestone's timing source; no data available this milestone.",
+    "The observed idle GPUs are not an operational fault for this retrospective because compute_bound_experiments_count is 0."
+  ],
+  "improvements_suggested": [
+    "Add a closeout warning when a milestone reaches retrospective generation with 0 completed experiment rows.",
+    "Keep GPU-efficiency guidance gated on compute_bound TIMING DATA tags so synthesis-only closeouts do not report false GPU bottlenecks.",
+    "Emit a first-experiment-required checkpoint after milestone activation so empty execution windows are visible before closeout."
+  ],
+  "top_3_highest_leverage_actions": [
+    "Add an activation-to-first-experiment watchdog for the next milestone.",
+    "Keep DualGPURunner recommendations conditional on 2+ parallel model entries in TIMING DATA.",
+    "Preserve the no-data retrospective path so empty milestones close honestly without importing prior experiment numbers."
+  ],
+  "estimated_time_savings_pct": 0,
+  "meta_reflection": "The longest compute-bound experiment question has no data available this milestone because the timing source has no compute-bound rows. The GPU monitor reports idle devices, but the prompt's rule requires at least one compute-bound timing entry before treating idle GPU state as inefficient execution."
+}
