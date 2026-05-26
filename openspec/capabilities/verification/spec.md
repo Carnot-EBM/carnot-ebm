@@ -1121,6 +1121,58 @@ legacy tiny-model substitution, and an `honest_verdict` beginning with
 |---|---|---|
 | REQ-VERIFY-3086 | Implemented (`python/carnot/eval/dafny_z3_formal_feedback_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3086_dafny_z3_formal_feedback_pilot.py`) |
 
+### REQ-VERIFY-3097: Exact-Fixture Stratified Evaluation Protocol Audit
+
+The repository shall provide an Exp 3097 exact-fixture evaluation protocol
+audit for milestone `.289` that writes
+`results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json` without
+modifying `scripts/research_conductor.py` or invoking live model inference.
+
+The audit shall load the Exp 3084 terminal artifact, the checked-in Exp 3084
+fixture manifest, Exp 3085 abstention-panel evidence, Exp 3086 formal-feedback
+evidence, and the Exp 3094 `.288` capstone. It shall validate exact fixture
+rows against local authority metadata, detect malformed rows and duplicate
+fixture identities or prompt hashes, and report why Exp 3085 evaluated only a
+tiny exact panel when the fixture bank exposed more usable rows.
+
+When fixture authority is sufficient, the audit shall write a derived
+stratified JSONL manifest or an equivalent manifest specification with at
+least `task_family`, `expected_answer`, `solver_label`, `perturbation_type`,
+`verifier_target`, and `repair_target` for each usable fixture. The terminal
+artifact MUST include `eval_protocol_ready`, `usable_fixture_count`,
+`rejected_fixture_count`, `stratified_eval_manifest_path`,
+`minimum_live_eval_count`, `fixture_family_counts`, `downstream_usage`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+`eval_protocol_ready` shall be true only when at least 48 usable exact fixtures
+are available, the derived manifest includes all usable exact fixtures, every
+required manifest field is populated, rejected fixture accounting is explicit,
+and downstream `.289` SOTA tasks define honest skip gates instead of promoting
+tiny panels. Abstention and verifier-calibration reruns SHALL honestly skip
+headline claims when fewer than 48 unique exact fixtures are selected. Formal
+feedback and repair-gating reruns SHALL honestly skip when fewer than 18 and
+24 repair-target fixtures respectively are selected. FR-11 stress reruns SHALL
+honestly skip when fewer than 48 exact fixtures spanning accept, reject, and
+repair targets are selected.
+
+### SCENARIO-VERIFY-3097: Stratified Manifest Replaces Tiny Abstention Panel
+
+Given the ready Exp 3084 exact fixture bank and the checked-in Exp 3085 panel
+artifact,
+When the Exp 3097 audit runs,
+Then it reports the full usable/rejected fixture count, explains that Exp 3085
+used only 9 unique exact fixtures because its row transcript contains two
+prompt-policy rows for each of 3 fixtures per family, writes the `.289`
+stratified manifest with exact post-generation targets, records no live model
+inference, and requires downstream tasks to skip rather than headline results
+below the minimum live-evaluation counts.
+
+## Implementation Status (REQ-VERIFY-3097)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3097 | Implemented (`python/carnot/eval/exact_fixture_eval_protocol_audit_v1.py`) | Implemented (`tests/python/test_experiment_3097_exact_fixture_eval_protocol_audit.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
