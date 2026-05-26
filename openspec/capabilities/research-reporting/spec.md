@@ -9698,3 +9698,74 @@ traceability, aggregation-only inference-substrate metadata, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3133 | Planned (`python/carnot/reporting/cross_corpus_matrix_v25_3133.py`) | Planned (`tests/python/test_experiment_3133_cross_corpus_matrix_v25.py`) |
+
+### REQ-REPORT-3134: Milestone .291 Capstone From Matrix V25
+
+The repository shall provide an Exp 3134 milestone .291 capstone generator
+that writes `results/experiment_3134_capstone_v291.json` using
+`results/experiment_3133_cross_corpus_matrix_v25.json` as the primary
+authority and the available `.291` source artifacts from Exp 3122 through Exp
+3132 as traced evidence. The generator MUST summarize what .291 proved, what
+stayed blocked, what must remain bounded, and which paper-facing claims are
+allowed from checked-in artifacts only. It MUST NOT run live model inference,
+verifier scoring, repair generation, solver execution, synthesis, board
+flashing, hardware readback, the conductor, pushes, or modify
+`scripts/research_conductor.py`.
+
+The capstone MUST explicitly determine `capstone_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v24`, and `next_top_gap`.
+`paper_ready` MUST NOT be inferred from matrix completion; it is true only when
+the capstone is ready and matrix v25 reports zero publication blockers, unless
+the matrix provides an explicit all-blockers-downgraded policy that removes all
+remaining blockers from headline scope. The capstone MUST report status strings
+for SOTA cache coverage, live verifier claims, prefix bounds,
+fragment-time monitors, repair, FR-11 EvoEnv, FR-11 memory, ARM/EBT, KAN,
+cLUT/sampler, GateMate/SSQA, and hardware. SOTA cache, verifier, repair,
+FR-11, ARM/EBT, KAN, sampler, and hardware claims MUST preserve the matrix v25
+boundaries: single-model cache availability does not become comparative SOTA
+coverage; live verifier evidence with false accepts does not become headline
+lift; a gate-blocked repair ladder does not become repair promotion;
+controller-only FR-11 evidence does not become model-weight learning; ARM/EBT
+sidecars do not imply live integration; KAN PWA/MILP abstraction does not imply
+general verifier soundness; and cLUT/GateMate/SSQA/hardware rows do not imply
+authenticated speedup, readback, or board execution unless source artifacts say
+so.
+
+The terminal artifact MUST include `capstone_ready`, `paper_ready`,
+`publication_blocker_count`, `blocker_delta_from_v24`, `next_top_gap`,
+`sota_cache_status`, `verifier_claim_status`, `repair_claim_status`,
+`fr11_self_learning_status`, `ebt_arm_status`, `kan_status`,
+`sampler_hardware_status`, `next_recommendation`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It MAY include matrix summaries,
+source checksums, paper-readiness checks, proof statements, blocked evidence
+lists, bounded claim lists, allowed claim lists, and measured `duration_s` as
+long as every value is derived from checked-in artifacts or file
+presence/checksum checks. When a conductor prompt assigns ops reconciliation to
+a separate step, the generator MUST leave `ops/status.md`,
+`ops/changelog.md`, and `_bmad/traceability.md` unchanged.
+
+#### SCENARIO-REPORT-3134: Capstone .291 Closes Without Overclaiming
+
+**Given** matrix v25 exists and reports `matrix_v25_ready=true`
+**And** matrix v25 reports 46 publication blockers,
+`blocker_delta_from_v24=10`, no missing artifacts, bounded SOTA cache coverage,
+a blocked live verifier claim with `false_accept_rate=0.5`, bounded prefix
+bounds, bounded fragment-time monitor evidence, a gate-blocked repair ladder,
+bounded controller-only FR-11 EvoEnv and memory evidence, projection-only
+ARM/EBT sidecar evidence, bounded KAN PWA/MILP abstraction evidence, and
+blocked hardware/sampler boundaries
+**When** the Exp 3134 capstone generator runs
+**Then** it writes `results/experiment_3134_capstone_v291.json` with
+`capstone_ready=true`, `paper_ready=false`, `publication_blocker_count=46`,
+`blocker_delta_from_v24=10`, `next_top_gap` naming the live verifier
+false-accept / repair-gate blocker, required status fields derived from matrix
+v25, source-artifact provenance, aggregation-only inference-substrate metadata,
+a recommendation that targets the largest residual gap from evidence rather
+than ambition, no ops/status/traceability reconciliation performed by this
+task, and an `honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3134)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3134 | Implemented (`python/carnot/reporting/capstone_v291_3134.py`) | Implemented (`tests/python/test_experiment_3134_capstone_v291.py`) |

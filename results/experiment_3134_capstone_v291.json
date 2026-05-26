@@ -1,0 +1,327 @@
+{
+  "allowed_claims": [
+    "matrix_v25_aggregation_complete",
+    "single_cached_gemma26_available",
+    "fr11_controller_environment_memory_evaluated",
+    "no_sampler_speedup_claim_allowed"
+  ],
+  "artifact": "experiment_3134_capstone_v291",
+  "blocker_delta_from_v24": 10,
+  "bounded_claims": [
+    "bounded_prefix_frontier_only",
+    "fragment_monitor_fixture_ledger_only",
+    "fr11_controller_memory_only_no_weight_update",
+    "arm_ebt_sidecar_projection_only",
+    "kan_two_unit_pwa_milp_abstraction_only",
+    "clut_cpu_simulation_only"
+  ],
+  "capstone_ready": true,
+  "claim_allowance_summary": {
+    "blocked_headline_claims": [
+      "comparative_sota_pair",
+      "live_verifier_lift"
+    ],
+    "cached_sota_pair_available": false,
+    "comparative_sota_pair_allowed": false,
+    "false_accept_rate": 0.5,
+    "live_verifier_headline_allowed": false,
+    "missing_model_ids": [
+      "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "unsloth/gemma-4-31B-it-GGUF"
+    ],
+    "present_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "repair_gate_state": "blocked_false_accept",
+    "selected_headline_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "sota_cache_headline_allowed": true
+  },
+  "clut_sampler_status": "bounded_cpu_simulation_no_authenticated_hardware_execution",
+  "duration_s": 0.005464,
+  "ebt_arm_status": "projection_only_sidecar_diagnostic_no_live_integration",
+  "fr11_evoenv_status": "bounded",
+  "fr11_memory_status": "bounded",
+  "fr11_self_learning_status": "bounded_controller_environment_memory_only_no_weight_update_ledger_0.666667",
+  "gatemate_status": "blocked_operator_evidence_incomplete",
+  "hardware_status": "blocked_no_commands_no_speedup_claim",
+  "honest_verdict": "complete: capstone_ready=true; paper_ready=false; publication_blocker_count=46; blocker_delta_from_v24=10; next_top_gap=live_verifier_false_accept_repair_gate",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run_by_capstone": [],
+    "kind": "aggregation_from_checked_in_matrix_v25_and_dot291_artifacts",
+    "live_model_calls_run_by_capstone": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "results/experiment_3133_cross_corpus_matrix_v25.json"
+  },
+  "invariant_violations": [],
+  "kan_status": "bounded_pwa_milp_abstraction_no_deployed_verifier_claim",
+  "live_verifier_status": "blocked",
+  "matrix_v25_summary": {
+    "blocker_delta_from_v24": 10,
+    "matrix_v25_ready": true,
+    "missing_artifacts_count": 0,
+    "prior_publication_blocker_count": 36,
+    "publication_blocker_count": 46,
+    "rows_total": 113,
+    "status_counts": {
+      "blocked": 8,
+      "bounded": 19,
+      "clean": 32,
+      "diagnostic_only": 4,
+      "flagged": 7,
+      "gated_skipped": 7,
+      "missing": 2,
+      "model_spec_gap": 0,
+      "projection_only": 3,
+      "retired": 31
+    }
+  },
+  "milestone": "2026.05.291",
+  "monitor_status": "bounded_fragment_monitor_ledger_consistency_0.666667",
+  "next_recommendation": "Next milestone should target the live verifier false-accept / repair-gate blocker first: Exp 3124 records false_accept_rate=0.5 and blocks Exp 3127 repair. Cache-pair and hardware evidence remain important, but they do not unblock the central verifier/repair paper claim until the false-accept gate is clean.",
+  "next_top_gap": "live_verifier_false_accept_repair_gate",
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "ops_reconciliation_decision": {
+    "capstone_artifact_alone_is_deliverable": true,
+    "ops_changelog_updated": false,
+    "ops_status_updated": false,
+    "reason": "task stop rule delegates ops/status/changelog/traceability reconciliation to conductor",
+    "traceability_updated_after_spec": false
+  },
+  "paper_readiness_assessment": "not_closer_blockers_increased_by_10",
+  "paper_readiness_checks": [
+    {
+      "check": "capstone_ready",
+      "passed": true,
+      "reason": "matrix v25 authority loaded and required invariants reconciled"
+    },
+    {
+      "check": "publication_blocker_count_zero",
+      "passed": false,
+      "reason": "publication_blocker_count=46"
+    },
+    {
+      "check": "headline_claims_unblocked",
+      "passed": false,
+      "reason": "comparative_sota_pair,live_verifier_lift"
+    },
+    {
+      "check": "hardware_boundary_clear",
+      "passed": false,
+      "reason": "speedup, GateMate, and SSQA evidence must all be authenticated"
+    }
+  ],
+  "paper_ready": false,
+  "prefix_bounds_status": "bounded_finite_fixture_conditioned_prefix_frontier",
+  "publication_blocker_count": 46,
+  "repair_claim_status": "blocked_repair_ladder_gate_failed_by_live_verifier_gate",
+  "repair_ladder_status": "blocked",
+  "required_source_errors": [],
+  "run_date": "20260526",
+  "sampler_hardware_status": "blocked_hardware_sampler_boundary_no_speedup_claim",
+  "schema": "carnot.milestone_capstone.v291_matrix_v25_aggregation.v1",
+  "scripts_research_conductor_modified": false,
+  "sota_cache_status": "bounded_missing_comparative_sota_pair",
+  "source_artifacts": [
+    {
+      "experiment_id": "experiment_3133_cross_corpus_matrix_v25",
+      "path": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v25_ready",
+      "required": true,
+      "role": "matrix_v25_authority",
+      "sha256": "046265e2d3ee17b6af44e135de493a2b16f15f403a5f682d1eb55093e788fd75",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3120_cross_corpus_matrix_v24",
+      "path": "results/experiment_3120_cross_corpus_matrix_v24.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "matrix_v24_ready",
+      "required": true,
+      "role": "matrix_v24_authority",
+      "sha256": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3121_capstone_v290",
+      "path": "results/experiment_3121_capstone_v290.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "capstone_ready",
+      "required": true,
+      "role": "capstone_v290_authority",
+      "sha256": "895cf16d93c6fb1101705f8f23b951b1cdbb0bfea3afce5d35da888762bac1d6",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3122_archive_v290_activate_v291",
+      "path": "results/experiment_3122_archive_v290_activate_v291.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "archive_v290_activate_v291_ready",
+      "required": false,
+      "role": "archive_v290_activate_v291",
+      "sha256": "f49848bb758d3906a7da30baff356504b49750da19f62b5083c71bdda4a682e6",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3123_sota_cache_preconditions_manifest_v2",
+      "path": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "sota_cache_manifest_v2_ready",
+      "required": false,
+      "role": "sota_cache_coverage",
+      "sha256": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6",
+      "path": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "difficulty_stratified_live_sota_panel_v6_ready",
+      "required": false,
+      "role": "live_verifier_lift",
+      "sha256": "963cc66acca8f5014871f5c612f14daa7f582132e06f25b4ef916fccefbc2772",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1",
+      "path": "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "prefix_closed_bound_pilot_ready",
+      "required": false,
+      "role": "prefix_closed_bounds",
+      "sha256": "ef98144322fea9ca99a1f63f4e1c3d8513c0015bea4a61c5b4ad62c82dc43e3e",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1",
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "fragment_time_monitor_v1_ready",
+      "required": false,
+      "role": "fragment_time_monitors",
+      "sha256": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "exp3127",
+      "path": "results/experiment_3127_multi_turn_monitored_repair_ladder_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "status",
+      "required": false,
+      "role": "repair_ladder",
+      "sha256": "a19c072298fbe115402c671690ba1dbe8408f9a47b9552d2d0bb30045fcde034",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1",
+      "path": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_evoenv_pilot_v1_ready",
+      "required": false,
+      "role": "fr11_evoenv",
+      "sha256": "faa36b912ec0a67d9a4afa426c6a0d2ae0656fd122c89bbf18e66fef53b22f6d",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3129_fr11_constraint_memory_retention_drift_audit_v1",
+      "path": "results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "fr11_constraint_memory_audit_v1_ready",
+      "required": false,
+      "role": "fr11_constraint_memory",
+      "sha256": "7882052da4f0151faae241769bedf074878060a11f4e386e499b0a05527530a5",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2",
+      "path": "results/experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "arm_ebt_energy_budget_sidecar_v2_ready",
+      "required": false,
+      "role": "arm_ebt_energy_budget",
+      "sha256": "878b6d120fab272383d210a9e85f36631fd0d4c97fc3423fc35cddb7df448be6",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1",
+      "path": "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "kan_pwa_milp_audit_v1_ready",
+      "required": false,
+      "role": "kan_pwa_milp",
+      "sha256": "b5d162c9c40c6aeb4cab2fc23048182a111dba37b7db456bc4ec09680f6c37ca",
+      "source_type": "json"
+    },
+    {
+      "experiment_id": "experiment_3132_hardware_evidence_sampler_boundary_v5",
+      "path": "results/experiment_3132_hardware_evidence_sampler_boundary_v5.json",
+      "present": true,
+      "readable_json_object": true,
+      "ready_field": "hardware_evidence_sampler_boundary_v5_ready",
+      "required": false,
+      "role": "hardware_sampler_boundary",
+      "sha256": "3c3036de5b3520a034ffd78c908d71555bacd93dd1ab93ebad32d07373a5eb65",
+      "source_type": "json"
+    }
+  ],
+  "source_checksums": {
+    "results/experiment_3120_cross_corpus_matrix_v24.json": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8",
+    "results/experiment_3121_capstone_v290.json": "895cf16d93c6fb1101705f8f23b951b1cdbb0bfea3afce5d35da888762bac1d6",
+    "results/experiment_3122_archive_v290_activate_v291.json": "f49848bb758d3906a7da30baff356504b49750da19f62b5083c71bdda4a682e6",
+    "results/experiment_3123_sota_cache_preconditions_manifest_v2.json": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950",
+    "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json": "963cc66acca8f5014871f5c612f14daa7f582132e06f25b4ef916fccefbc2772",
+    "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json": "ef98144322fea9ca99a1f63f4e1c3d8513c0015bea4a61c5b4ad62c82dc43e3e",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9",
+    "results/experiment_3127_multi_turn_monitored_repair_ladder_v1.json": "a19c072298fbe115402c671690ba1dbe8408f9a47b9552d2d0bb30045fcde034",
+    "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json": "faa36b912ec0a67d9a4afa426c6a0d2ae0656fd122c89bbf18e66fef53b22f6d",
+    "results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json": "7882052da4f0151faae241769bedf074878060a11f4e386e499b0a05527530a5",
+    "results/experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.json": "878b6d120fab272383d210a9e85f36631fd0d4c97fc3423fc35cddb7df448be6",
+    "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json": "b5d162c9c40c6aeb4cab2fc23048182a111dba37b7db456bc4ec09680f6c37ca",
+    "results/experiment_3132_hardware_evidence_sampler_boundary_v5.json": "3c3036de5b3520a034ffd78c908d71555bacd93dd1ab93ebad32d07373a5eb65",
+    "results/experiment_3133_cross_corpus_matrix_v25.json": "046265e2d3ee17b6af44e135de493a2b16f15f403a5f682d1eb55093e788fd75"
+  },
+  "ssqa_status": "blocked_host_visible_readback_missing",
+  "status_updates_written": false,
+  "verifier_claim_status": "blocked_false_accept_rate_0.5_no_headline_lift",
+  "what_291_proved": [
+    "matrix v25 is complete over 113 rows with 46 publication blockers.",
+    "The live verifier panel executed only as artifact evidence and exposed false_accept_rate=0.5.",
+    "FR-11 admitted 3 controller environments with ledger_consistency_rate=0.666667.",
+    "Architecture-side evidence stayed bounded: ARM/EBT=projection_only, KAN=bounded, hardware=blocked."
+  ],
+  "what_stayed_blocked": [
+    "comparative_sota_pair",
+    "live_verifier_headline_lift",
+    "repair_ladder_promotion",
+    "gatemate_operator_evidence",
+    "ssqa_host_visible_readback"
+  ]
+}
