@@ -6343,3 +6343,4 @@ web search: site |
 | 2026-05-26 08:21 UTC | EBT/ARM sidecar score-correlation boundary v3 | OK | 81 passed in 2.84s |
 | 2026-05-26 08:33 UTC | cLUT sampler backend integration boundary v2 | OK | 97 passed in 5.65s |
 | 2026-05-26 08:47 UTC | GateMate/SSQA operator evidence ingestion v4 | OK | 81 passed in 2.33s |
+| 2026-05-26 09:07 UTC | Cross-corpus matrix v24 | OK | 81 passed in 2.46s |
