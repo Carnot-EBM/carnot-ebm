@@ -235,6 +235,44 @@ property-check pass/fail counts, source artifact provenance, no live inference
 substrate, no implementation blockers, and an honest terminal verdict with no
 deployed verifier improvement claim.
 
+## REQ-KAN-3145: KAN Proof-Carrying Monitor Boundary V2
+
+The KAN verification tier SHALL provide a bounded Exp 3145 proof-carrying
+monitor boundary that attaches replayable KAN PWA/MILP proof records to a tiny
+subset of existing fragment-time monitor fixtures. The boundary MUST reuse the
+local Exp 3131 KAN abstraction evidence when code is present and MUST keep
+`deployed_verifier_claim=false`.
+
+The artifact MUST be written to
+`results/experiment_3145_kan_proof_carrying_monitor_boundary_v2.json` with
+the following schema fields: `kan_proof_carrying_monitor_v2_ready`,
+`kan_code_present`, `monitor_record_schema`, `attached_monitor_record_count`,
+`local_error_bound_summary`, `global_error_bound_summary`,
+`milp_property_check_count`, `false_accept_relevance`,
+`deployed_verifier_claim`, `implementation_blockers`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+Each attached monitor record MUST carry the exact monitor fixture link,
+piecewise-affine abstraction parameters, local and global error-bound
+summaries, one MILP-compatible property result, and a deterministic checksum.
+If KAN/PWA code or monitor fixture evidence is missing, the artifact MUST fail
+closed with exact missing modules, schemas, tests, or source artifacts. The
+artifact MUST NOT claim trained-network soundness, generation-path integration,
+hardware execution, live LLM inference, model-weight mutation, or deployed
+verifier improvement.
+
+### SCENARIO-KAN-3145: Tiny Proof-Carrying Monitor Records Are Attached
+
+Given the completed Exp 3131 KAN PWA/MILP abstraction audit and the Exp 3126
+fragment-time monitor artifact,
+When the Exp 3145 boundary builder runs on CPU,
+Then it attaches proof-carrying KAN monitor records to the known `.291`
+false-accept fixture subset when those fixtures are available, validates that
+each record contains a fixture link, PWA abstraction parameters, local/global
+error bounds, a MILP property result, and a checksum, reports whether the
+records would have prevented or only audited the `.291` false-accept families,
+and writes every required schema field with `deployed_verifier_claim=false`.
+
 ## REQ-KAN-1384: EBM-CoT Hinge Calibration Probe on FoVer Pairs
 
 The KAN energy tier SHALL support a CPU-only FoVer calibration probe that
