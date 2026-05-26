@@ -156,5 +156,18 @@
     "results/experiment_3107_cross_corpus_matrix_v23.json": "503c48fa6773196d0baa16860a73d626e0e8abad5d49d25d32c6c33486c21ac1",
     "results/experiment_3108_capstone_v289.json": "87c626dfacdcf488d00fb07da2ab97ca3d3d428bd305aaacf6940b8e798882f0",
     "scripts/experiment_template.py": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f"
-  }
+  },
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.001594 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: model_specs/target_model, random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
+  ]
 }
