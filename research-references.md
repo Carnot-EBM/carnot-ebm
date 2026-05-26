@@ -16641,3 +16641,111 @@ source-limited to public search/arXiv pages unless a keyed API query is run.
   not replace exact semantic checks, prefix-closed bounds, or solver authority.
   Sources: https://github.com/mlc-ai/xgrammar and
   https://github.com/guidance-ai/llguidance
+
+## 2026-05-26 Post-.291 Planning Sweep (Milestone 2026.05.292)
+
+Milestone `.291` completed but regressed the publication blocker count from 36
+to 46. The live SOTA verifier panel used the locally cached
+`unsloth/gemma-4-26B-A4B-it-GGUF` for 6 live calls and found
+`false_accept_rate=0.5`, `verifier_gain_delta=0.0`, and
+`repair_gate_state=blocked_false_accept`, which conductor-gate-blocked the
+multi-turn repair ladder. FR-11 produced useful solver-only environment memory
+but stayed controller/environment-memory-only with `ledger_consistency_rate=0.666667`
+and no model-weight update claim. The next milestone should therefore attack
+false accepts and ledger inconsistency before any broader paper claim.
+
+- **Rethinking LLMs as Verifiers: When Verification is Harder Than Solving
+  (OpenReview ICLR 2026 Workshop LLM Reasoning)**: reports that LLM-as-judge
+  verification can be less accurate than solving across multiple domains, so
+  "just ask a larger verifier" is not a safe recovery path. Relevance to
+  Carnot: `.292` should treat every SOTA accept as suspect unless exact
+  solvers/tests, answer canonicalization, and uncertainty/abstention contracts
+  agree. The immediate experiment hook is a row-level autopsy of `.291` false
+  accepts before another repair rerun.
+  Source: https://openreview.net/submissions?page=2&venue=ICLR.cc%2F2026%2FWorkshop%2FLLM_Reasoning
+
+- **VeriCoT: Neuro-symbolic Chain-of-Thought Validation via Logical
+  Consistency Checks (ICLR 2026 Poster)**: formalizes CoT steps into first-order
+  logic, grounds premises, and uses automated solvers to detect flawed or
+  ungrounded reasoning. Relevance to Carnot: `.292` should upgrade false-accept
+  diagnosis from final-token labels to premise/step grounding, especially for
+  the contradiction and SMT rows that `.291` accepted incorrectly.
+  Source: https://openreview.net/forum?id=zHuV3Vatov
+
+- **Learning to Self-Verify Makes Language Models Better Reasoners
+  (arXiv:2602.07594)**: finds a generation/self-verification asymmetry; training
+  generation alone does not necessarily improve verification, while explicit
+  self-verification training can improve both. Relevance to Carnot: do not
+  promote local SOTA generation quality as verifier quality. Use `.292` to
+  isolate verification-specific calibration and to keep any learning claim tied
+  to solver-labeled verifier outcomes rather than generated-answer accuracy.
+  Source: https://arxiv.org/abs/2602.07594
+
+- **VeRA: Verified Reasoning Data Augmentation at Scale (arXiv:2602.13217)**:
+  converts benchmark problems into executable specifications with coherent
+  generators and deterministic verifiers, including equivalent and hardened
+  variants. Relevance to Carnot: `.292` FR-11 should harden the EvoEnv pilot by
+  generating fresh solver-labeled variants and requiring ledger consistency to
+  reach 1.0 before any promotion beyond controller/environment memory.
+  Source: https://arxiv.org/abs/2602.13217
+
+- **Self-Verification Dilemma: Experience-Driven Suppression of Overused
+  Checking in LLM Reasoning (Hugging Face paper page for arXiv:2602.03485)**:
+  uses an experience pool of past verification outcomes to suppress redundant
+  rechecks while preserving accuracy. Relevance to Carnot: this is a practical
+  FR-11 Tier-1/Tier-2 target. `.292` can turn prior verifier traces into a
+  memory-backed routing rule that suppresses low-value checks but escalates
+  historically false-accept-prone families.
+  Source: https://huggingface.co/papers/2602.03485
+
+- **AdaDec: A Uncertainty-Guided Lookahead Decoding Framework for LLM-Based
+  Code Generation (arXiv:2506.08980 v5, revised 2026-04-24)**: shows that many
+  code-generation errors arise at high-uncertainty token decisions and uses a
+  pause-then-rerank mechanism to improve code benchmarks. Relevance to Carnot:
+  once `.292` false-accept gates are clean, the repair ladder should use
+  uncertainty-triggered candidate generation only as proposal machinery; exact
+  tests/Z3 remain authority.
+  Source: https://arxiv.org/abs/2506.08980
+
+- **CRANE: Reasoning with Constrained LLM Generation (arXiv:2502.09061,
+  ICML 2025)**: argues that overly restrictive grammars can reduce reasoning
+  capability, and that reasoning-augmented grammars can preserve flexibility
+  while enforcing syntax/semantics. Relevance to Carnot: `.292` structured
+  repair should not collapse to final-answer-only JSON. It should preserve
+  reasoning and tool-feedback fields while exact semantic checks decide
+  acceptance.
+  Source: https://arxiv.org/abs/2502.09061
+
+- **GroundedPRM: Tree-Guided and Fidelity-Aware Process Reward Modeling
+  (OpenReview NeurIPS 2025 SEA)**: combines MCTS-derived step structure with
+  external tool verification to avoid hallucinated process supervision.
+  Relevance to Carnot: useful for future process-level repair, but `.292` should
+  keep this as a small step-feedback aggregation experiment rather than training
+  a process reward model.
+  Source: https://openreview.net/forum?id=tmUP8BNyJB
+
+- **LLM hallucinations in the wild: Large-scale evidence from non-existent
+  citations (arXiv:2605.07723)**: audits 111 million references and reports a
+  large rise in non-existent citations after LLM adoption. Relevance to Carnot:
+  citation existence is a highly verifiable hallucination domain. It is worth a
+  future benchmark row, but `.292` should not add a new product lane until the
+  current false-accept verifier gate is repaired.
+  Source: https://arxiv.org/abs/2605.07723
+
+- **Trajectory Bellman Residual Minimization (NeurIPS 2025 Poster)**: adapts
+  value-based Bellman residual minimization to LLM reasoning using the model's
+  own logits as Q-values. Relevance to Carnot: not a `.292` training task, but
+  a useful FR-11 design cue: replay memory can learn value/risk estimates from
+  solver-labeled trajectories without mutating model weights.
+  Source: https://openreview.net/forum?id=7Eh2SK6Mo7
+
+- **Extropic THRML/XTR/Z1 and Logical Intelligence Aleph/Kona status
+  re-check (May 2026)**: Extropic continues to expose THRML as the practical
+  simulation path for TSU-style probabilistic hardware, while Logical
+  Intelligence frames Aleph/Kona around machine-checkable proof and
+  constraint-enforcing EBM layers. Relevance to Carnot: `.292` should keep
+  hardware and Kona references as architecture boundaries only. Local claims
+  still require authenticated board/TSU evidence, not vendor pages.
+  Sources: https://extropic.ai/software, https://extropic.ai/hardware,
+  https://logicalintelligence.com/blog/aleph-leading-benchmarks, and
+  https://logicalintelligence.com/kona-ebms-energy-based-models
