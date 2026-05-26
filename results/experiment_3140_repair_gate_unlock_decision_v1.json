@@ -1,0 +1,161 @@
+{
+  "artifact": "experiment_3140_repair_gate_unlock_decision_v1",
+  "duration_s": 0.004879,
+  "exact_authority_ready": true,
+  "false_accept_gate_passed": true,
+  "false_accept_rate": 0.0,
+  "gate_criteria": {
+    "bounded_live_model_rerun_required": true,
+    "exact_labels_required": true,
+    "headline_disqualifiers_allowed": false,
+    "known_false_accepts_must_be_blocked": true,
+    "max_false_accept_rate": 0.1,
+    "monitor_ledger_replay_required": true,
+    "regression_rows_required": true
+  },
+  "headline_disqualifiers": [
+    "exp3139 flagged_adversarial=true",
+    "exp3139 corrigendum_pending=true",
+    "exp3125 flagged_adversarial=true",
+    "exp3125 corrigendum_pending=true",
+    "exp3115 flagged_adversarial=true",
+    "exp3115 corrigendum_pending=true"
+  ],
+  "honest_verdict": "blocked_other: exp3139 flagged_adversarial=true",
+  "inference_substrate": {
+    "aggregation_only": true,
+    "executes_models": false,
+    "executes_repairs": false,
+    "kind": "deterministic_repair_gate_decision_v1",
+    "live_model_calls": 0,
+    "no_live_inference": true,
+    "repair_calls": 0,
+    "source_live_model_calls_reused": 6,
+    "source_repair_run_executed": true
+  },
+  "known_false_accepts_blocked": true,
+  "live_model_ready": true,
+  "monitor_ledger_ready": true,
+  "regression_rows_included": true,
+  "repair_blockers": [
+    "exp3139 flagged_adversarial=true",
+    "exp3139 corrigendum_pending=true",
+    "exp3125 flagged_adversarial=true",
+    "exp3125 corrigendum_pending=true",
+    "exp3115 flagged_adversarial=true",
+    "exp3115 corrigendum_pending=true"
+  ],
+  "repair_gate_decision_v1_ready": true,
+  "repair_gate_state": "blocked_other",
+  "repair_rows_available": true,
+  "run_date": "20260526",
+  "schema": "carnot.repair_gate_unlock_decision.v1",
+  "selected_repair_rows": [],
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "openspec/capabilities/verification/spec.md",
+      "present": true,
+      "required": true,
+      "role": "verification_openspec",
+      "sha256": "942728e27340c32453dfba2bb5645fc29c3ae2313e16b709b68dc2d41dbf4adf"
+    },
+    {
+      "path": "results/experiment_3139_live_sota_verifier_rerun_v7.json",
+      "present": true,
+      "required": true,
+      "role": "exp3139_live_verifier_rerun",
+      "sha256": "46f11dcddbbad66590691de7b2e8f615d94f39f0c0dbb05bcc552c4021d1a0f8"
+    },
+    {
+      "path": "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3137_exact_safe_contract",
+      "sha256": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e"
+    },
+    {
+      "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3126_monitor_ledger",
+      "sha256": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9"
+    },
+    {
+      "path": "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3125_prefix_bound",
+      "sha256": "ef98144322fea9ca99a1f63f4e1c3d8513c0015bea4a61c5b4ad62c82dc43e3e"
+    },
+    {
+      "path": "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json",
+      "present": true,
+      "required": true,
+      "role": "exp3115_prior_repair_panel",
+      "sha256": "d1acea99957f3189e8196b6bce70138bc9712215bf742f9913b51a19a360fbe5"
+    },
+    {
+      "path": "python/carnot/verify/repair_gate_unlock_decision_v1.py",
+      "present": true,
+      "required": false,
+      "role": "exp3140_module",
+      "sha256": "49db3ae00168ba329e3b7bb0151ec465a360db07249df1c062b6090149504812"
+    },
+    {
+      "path": "tests/python/test_experiment_3140_repair_gate_unlock_decision_v1.py",
+      "present": true,
+      "required": false,
+      "role": "exp3140_tests",
+      "sha256": "65d94b43fee7931aeaf939138bfdcb613afb6e648413ae2287bbc7736e26e4a6"
+    },
+    {
+      "path": "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl",
+      "present": true,
+      "required": true,
+      "role": "exp3115_repair_target_manifest",
+      "sha256": "46f6c7cc4286b04ebed79b77d255c5ddd4b8084fc77201b73682f53ea3e53748"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "openspec/capabilities/verification/spec.md": "942728e27340c32453dfba2bb5645fc29c3ae2313e16b709b68dc2d41dbf4adf",
+    "python/carnot/verify/repair_gate_unlock_decision_v1.py": "49db3ae00168ba329e3b7bb0151ec465a360db07249df1c062b6090149504812",
+    "results/experiment_3115_explicit_repair_gate_micro_panel_v4.json": "d1acea99957f3189e8196b6bce70138bc9712215bf742f9913b51a19a360fbe5",
+    "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json": "ef98144322fea9ca99a1f63f4e1c3d8513c0015bea4a61c5b4ad62c82dc43e3e",
+    "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9",
+    "results/experiment_3137_exact_safe_accept_abstain_contract_v1.json": "c8d23896f879ceb1e912989e2ba13db0a43cd195a8ff5e8fb18a7be1b4582f2e",
+    "results/experiment_3139_live_sota_verifier_rerun_v7.json": "46f11dcddbbad66590691de7b2e8f615d94f39f0c0dbb05bcc552c4021d1a0f8",
+    "results/fragment_verification_pilot_3114/repair_target_manifest.jsonl": "46f6c7cc4286b04ebed79b77d255c5ddd4b8084fc77201b73682f53ea3e53748",
+    "tests/python/test_experiment_3140_repair_gate_unlock_decision_v1.py": "65d94b43fee7931aeaf939138bfdcb613afb6e648413ae2287bbc7736e26e4a6"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3140_repair_gate_unlock_decision_v1.py -q --no-cov",
+    ".venv/bin/coverage erase && .venv/bin/coverage run --source=python/carnot/verify -m pytest -o addopts='' tests/python/test_experiment_3140_repair_gate_unlock_decision_v1.py -q",
+    ".venv/bin/coverage report --include='python/carnot/verify/repair_gate_unlock_decision_v1.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ]
+}

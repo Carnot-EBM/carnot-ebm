@@ -1999,6 +1999,61 @@ false accepts to zero without relying on legacy small-model evidence.
 |---|---|---|
 | REQ-VERIFY-3139 | Planned (`python/carnot/verify/live_sota_verifier_rerun_v7.py`) | Planned (`tests/python/test_experiment_3139_live_sota_verifier_rerun_v7.py`) |
 
+### REQ-VERIFY-3140: Repair-Gate Unlock Decision V1
+
+The repository shall provide an Exp 3140 deterministic repair-gate unlock
+decision builder that writes
+`results/experiment_3140_repair_gate_unlock_decision_v1.json` from checked-in
+artifacts only. The builder MUST consume the Exp 3139 live verifier rerun,
+Exp 3137 exact-safe accept/abstain/reject contract, Exp 3126 fragment-time
+monitor ledger, Exp 3125 prefix-closed deterministic bound pilot, and Exp 3115
+prior repair micro-panel evidence. It MUST NOT call live models, execute repair
+generation, modify `scripts/research_conductor.py`, push commits, or rely on a
+headline claim when a gate precondition is missing.
+
+The decision gate shall require `false_accept_rate <= 0.10`,
+`regression_rows_included=true`, known false-accept rows blocked from accept,
+exact labels present, replayable monitor-ledger evidence, a bounded live-model
+rerun substrate, repair rows with explicit constraints, and no headline-claim
+disqualifier. The decision state SHALL be exactly one of `unblocked`,
+`blocked_false_accept`, `blocked_missing_live_model`,
+`blocked_missing_exact_labels`, or `blocked_other`. If any false accepts remain
+above the gate, the state MUST be `blocked_false_accept` and the builder MUST
+leave `selected_repair_rows=[]`.
+
+The terminal artifact MUST include `repair_gate_decision_v1_ready`,
+`repair_gate_state`, `false_accept_rate`, `false_accept_gate_passed`,
+`regression_rows_included`, `exact_authority_ready`, `monitor_ledger_ready`,
+`selected_repair_rows`, `repair_blockers`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It SHOULD also preserve the
+known-false-accept, live-model, headline-disqualifier, and repair-row
+availability checks that determined the state.
+
+`repair_gate_decision_v1_ready` shall be true when the artifact reaches one of
+the allowed terminal gate states with source provenance and an honest verdict.
+For `repair_gate_state=unblocked`, `honest_verdict` MUST start with a terminal
+success prefix and `selected_repair_rows` MUST list the explicit repair
+denominator and constraints. For blocked states, `honest_verdict` may start
+with the blocked state and `repair_blockers` MUST be non-empty and actionable.
+
+### SCENARIO-VERIFY-3140: Repair Calls Stay Blocked Until The Gate Is Safe
+
+Given Exp 3139 has rerun the live verifier with exact-safe decisions, Exp 3137
+has blocked the known false-accept regression rows, Exp 3126 provides ledger
+replay evidence, Exp 3125 exposes exact-label boundary coverage, and Exp 3115
+identifies repair rows,
+When Exp 3140 builds the repair-gate unlock decision,
+Then it writes the required terminal JSON artifact without live inference,
+sets `repair_gate_state=unblocked` only when every gate criterion passes,
+lists selected repair rows with constraints for the unblocked case, and
+otherwise preserves exact blockers while avoiding repair execution.
+
+## Implementation Status (REQ-VERIFY-3140)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3140 | Implemented (`python/carnot/verify/repair_gate_unlock_decision_v1.py`) | Implemented (`tests/python/test_experiment_3140_repair_gate_unlock_decision_v1.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
