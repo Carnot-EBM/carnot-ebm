@@ -503,5 +503,38 @@
     ".venv/bin/coverage run --source=python/carnot/eval -m pytest -o addopts='' tests/python/test_experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.py -q (passed: 6 passed)",
     ".venv/bin/coverage report --include='python/carnot/eval/fr11_evoenv_verifiable_environment_synthesis_v1.py' --fail-under=100 --show-missing (passed: 100%)",
     ".venv/bin/pytest tests/python -q (failed: pytest-xdist internal error after 20 failed, 7811 passed, 38 skipped, 1 error; MemoryError in scripts/experiment_295_apple_verify_repair.py tokenizer prewarm)"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "no_answer_leakage_pass_rate=0.8 and solve_verify_asymmetry_pass_rate=0.8 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "completeness_errors=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "retention_delta=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "IMPLAUSIBLE_PERFECT",
+      "severity": "info",
+      "detail": "soundness_errors=0.0 (exactly zero). Confirm this is not a stub default."
+    },
+    {
+      "kind": "DURATION_TOO_SHORT",
+      "severity": "critical",
+      "detail": "duration_s=0.002908 but artifact references compute-bound markers (GGUF / CUDA / live model). Loading and running a real model takes >=60.0s minimum; this completed too fast to have invoked the model."
+    },
+    {
+      "kind": "METHODOLOGY_MISSING",
+      "severity": "warn",
+      "detail": "Compute-bound artifact missing: random_seed, reproducibility_checksum. Methodology unverifiable."
+    }
   ]
 }
