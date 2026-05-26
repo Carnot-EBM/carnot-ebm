@@ -614,5 +614,13 @@
     ".venv/bin/coverage run -m pytest -o addopts='' tests/python/test_experiment_3143_fr11_experience_driven_verifier_memory_v1.py -q",
     ".venv/bin/coverage report --include='*/python/carnot/eval/fr11_experience_driven_verifier_memory_v1.py' --fail-under=100 --show-missing",
     ".venv/bin/pytest tests/python -q"
+  ],
+  "flagged_adversarial": true,
+  "corrigendum_pending": [
+    {
+      "kind": "TAUTOLOGY",
+      "severity": "critical",
+      "detail": "estimated_check_savings_rate=0.166667 and residual_false_reject_risk=0.166667 agree to >5 sig figs. Two distinct metrics matching this precisely is more likely a bug than a finding."
+    }
   ]
 }

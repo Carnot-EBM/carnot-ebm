@@ -2257,6 +2257,68 @@ complete or `blocked_` when mandated preconditions are missing.
 |---|---|---|
 | REQ-VERIFY-3130 | Implemented (`python/carnot/eval/arm_ebt_energy_budget_sidecar_diagnostic_v2.py`) | Implemented (`tests/python/test_experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.py`) |
 
+### REQ-VERIFY-3144: EBT/ARM False-Accept Calibration Boundary v3
+
+The repository shall provide an Exp 3144 offline calibration generator that
+writes
+`results/experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.json`
+from checked-in `.291` evidence only. It MUST load the Exp 3130 ARM/EBT
+energy-budget sidecar diagnostic, the Exp 3124 live verifier rows and exact
+labels, the Exp 3136 false-accept row IDs and autopsy rows, and the Exp 3117
+row-level sidecar diagnostics needed to reconstruct deterministic constraint
+penalty, proxy quality, uncertainty, and approximation-gap fields per live
+row. It MUST NOT run live model inference, train an EBT/ARM model, integrate
+the sidecar into generation, mutate model weights, run verifier scoring,
+generate repairs, push commits, or modify `scripts/research_conductor.py`.
+
+The calibration MUST compare false-accept rows against non-false-accept live
+rows for deterministic constraint penalties, sidecar energy proxies, proxy
+quality, uncertainty, and approximation gaps to exact reject/repair authority.
+It MUST quantify separation metrics, identify whether any sidecar field could
+serve as an abstention feature under exact-safe contract rules, and explain
+which required contract conditions are still missing before that feature can
+be used online. It MUST audit model-identity confounds, including single-model
+trace coverage, mandated local model policy visibility, and whether selected
+model IDs or model hashes can shortcut the row classification.
+
+The terminal artifact MUST include
+`ebt_arm_false_accept_calibration_v3_ready`, `model_specs`,
+`selected_model_ids`, `live_call_count`, `false_accept_rows_evaluated`,
+`abstention_feature_candidates`, `false_accept_separation_metrics`,
+`approximation_gap_summary`, `model_identity_confound_audit`,
+`live_integration`, `integration_blockers`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. `live_integration` MUST remain
+false unless real generation-path sidecar integration code and tests are
+implemented in the same change.
+
+`ebt_arm_false_accept_calibration_v3_ready` may be true only when the
+checked-in source artifacts are present, at least one false-accept row is
+joined to sidecar diagnostics, every false-accept row named by Exp 3136 is
+evaluated, separation metrics are finite, the mandated model policy is visible
+in `model_specs`, `live_call_count` is copied from upstream evidence rather
+than inferred, `live_integration=false`, and concrete integration blockers are
+reported.
+
+### SCENARIO-VERIFY-3144: Sidecar Fields Are Calibrated Against .291 False Accepts
+
+Given Exp 3124 contains live verifier rows and exact labels, Exp 3130 contains
+the ARM/EBT sidecar diagnostic boundary, Exp 3136 identifies the `.291`
+false-accept row IDs, and Exp 3117 contains row-level sidecar diagnostics,
+When the Exp 3144 calibration generator runs,
+Then it writes the terminal JSON artifact, consumes only checked-in artifacts,
+evaluates the named false accepts directly, compares sidecar fields on false
+accepts versus non-false-accept live rows, reports abstention feature
+candidates with exact-safe contract limitations, audits model-identity
+confounds and missing integration tests, leaves `live_integration=false`, and
+uses an `honest_verdict` beginning with `complete:` when the offline
+calibration is complete or `blocked_` when required source evidence is missing.
+
+## Implementation Status (REQ-VERIFY-3144)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3144 | Implemented (`python/carnot/eval/ebt_arm_false_accept_calibration_boundary_v3.py`) | Implemented (`tests/python/test_experiment_3144_ebt_arm_false_accept_calibration_boundary_v3.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
