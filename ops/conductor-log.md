@@ -6351,3 +6351,4 @@ web search: site |
 | 2026-05-26 11:00 UTC | Archive .290 and activate .291 planning | OK | 81 passed in 3.26s |
 | 2026-05-26 11:15 UTC | Local SOTA cache and precondition manifest v2 | OK | 81 passed in 2.95s |
 | 2026-05-26 11:34 UTC | Difficulty-stratified live SOTA verifier panel v6 | OK | 81 passed in 3.45s |
+| 2026-05-26 11:47 UTC | Prefix-closed deterministic verifier bound pilot | OK | 81 passed in 2.67s |
