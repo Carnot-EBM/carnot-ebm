@@ -8769,3 +8769,75 @@ with `complete:`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3088 | Implemented (`python/carnot/reporting/structured_repair_emitter_preflight_3088.py`) | Implemented (`tests/python/test_experiment_3088_structured_repair_emitter_preflight.py`) |
+
+### REQ-REPORT-3093: Cross-Corpus Matrix V22 From .288 Artifacts
+
+The repository shall provide an Exp 3093 cross-corpus matrix v22 generator
+that writes `results/experiment_3093_cross_corpus_matrix_v22.json` using
+matrix v21, the milestone .287 capstone, the Exp 3082 blocker ledger, and all
+available `.288` result artifacts as checked-in evidence. The generator MUST
+read `results/experiment_3079_cross_corpus_matrix_v21.json`,
+`results/experiment_3080_capstone_v287.json`, and
+`results/experiment_3082_publication_blocker_reduction_ledger_v1.json` as
+authority inputs before classifying rows. It MUST NOT run live model
+inference, verifier scoring, repair generation, solver execution, synthesis,
+board flashing, hardware readback, the conductor, pushes, or modify
+`scripts/research_conductor.py`.
+
+The matrix MUST normalize every row into exactly one of these statuses:
+`clean`, `flagged`, `bounded`, `blocked`, `gated_skipped`, `missing`,
+`retired`, or `projection_only`. Completed `.288` preflight, protocol,
+fixture-bank, and aggregation rows MAY be clean only when their own terminal
+artifacts are present and ready. Live LLM headline rows MUST NOT be marked
+clean unless the artifact carries mandated model IDs and corresponding
+`model_specs` for every mandated model. Gated, bounded, projection-only,
+operator-evidence, and missing rows MUST remain visible instead of being
+promoted by downstream prose or by unrelated successful preflights.
+
+The generator MUST compare the v22 publication blocker count against Exp
+3082's `publication_blocker_count_before` and explain every blocker increase
+or decrease. FR-11 rows MAY be reduced only when `.288` evidence shows zero
+soundness mistakes, zero completeness mistakes, and non-vacuous controls while
+preserving a controller-only claim boundary. GateMate and SSQA rows MUST
+remain blocked or gated-skipped until operator-owned host-visible evidence is
+present. EBT/ARM rows MUST remain `projection_only` unless checked-in adapter
+implementation and live-inference integration evidence exist. Missing Exp
+3089 repair micro-panel evidence MUST remain visible as missing rather than
+being inferred from the Exp 3088 structured-emitter preflight.
+
+The terminal artifact MUST include `matrix_v22_ready`, `rows_total`,
+`status_counts`, `publication_blocker_count`, `blocker_delta_from_v21`,
+`missing_artifacts`, `headline_model_spec_gaps`, `capstone_input_artifacts`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It MAY
+include row-level details, blocker reconciliation details, source checksums,
+and invariant violations. `matrix_v22_ready` MUST be true only when authority
+inputs are readable, all row statuses are valid, `status_counts` reconciles
+with `rows_total`, `publication_blocker_count` reconciles with all non-clean
+and non-retired rows, every required source is cited, and the inference
+substrate declares aggregation-only work with no live model or hardware
+execution. The `honest_verdict` MUST start with a terminal success prefix when
+the matrix is ready; otherwise it MUST report the blocked precondition.
+
+#### SCENARIO-REPORT-3093: V22 Computes Blockers Without Gated Overclaim
+
+**Given** matrix v21, capstone .287, and the Exp 3082 blocker ledger are
+present
+**And** `.288` artifacts include completed protocol, fixture-bank, structured
+emitter preflight, FR-11 controller-only repair, EBT/ARM sidecar prototype,
+GateMate/SSQA operator-ingestion evidence, blocked verifier calibration, and
+flagged live-LLM verifier/formal-feedback rows
+**And** Exp 3089 repair micro-panel evidence is absent
+**When** the Exp 3093 matrix v22 generator runs
+**Then** it writes `results/experiment_3093_cross_corpus_matrix_v22.json`
+with `matrix_v22_ready=true`, status counts for clean, flagged, bounded,
+blocked, gated-skipped, missing, retired, and projection-only rows, blocker
+movement reconciled against Exp 3082's ledger, missing Exp 3089 evidence kept
+visible, live-LLM model-spec gaps listed rather than promoted, aggregation-only
+inference-substrate metadata, capstone input artifacts for Exp 3094, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3093)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3093 | Planned (`python/carnot/reporting/cross_corpus_matrix_v22_3093.py`) | Planned (`tests/python/test_experiment_3093_cross_corpus_matrix_v22.py`) |
