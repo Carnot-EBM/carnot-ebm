@@ -4705,3 +4705,9 @@ The critical path for milestone .250:
 - theme: Empty scoped timing ledger operational review
 - key result: The supplied timing ledger has no experiment rows for this activation window, so compute-bound duration, GPU-efficiency, and multi-model runner questions have no data available this milestone.
 - acceptance: no data available this milestone
+
+### Milestone 2026.05.292
+- exp_range: no data available this milestone
+- theme: Operations retro for a milestone ledger without experiment commits
+- key result: Authoritative timing contains 0 completed experiments and 0 compute-bound experiments; longest compute-bound tasks, compute-bound GPU efficiency, and 2+ model DualGPURunner coverage are no data available this milestone.
+- acceptance: no data available this milestone
