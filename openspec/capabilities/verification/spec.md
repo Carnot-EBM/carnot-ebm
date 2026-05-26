@@ -1307,6 +1307,84 @@ blocked precondition reason.
 |---|---|---|
 | REQ-VERIFY-3099 | Implemented (`python/carnot/eval/local_sota_confidence_abstention_panel_v3.py`) | Implemented (`tests/python/test_experiment_3099_local_sota_confidence_abstention_panel_v3.py`) |
 
+### REQ-VERIFY-3100: Z3/Test-Oracle Formal-Feedback V2 Pilot
+
+The repository shall provide an Exp 3100 Z3/test-oracle formal-feedback v2
+pilot for milestone `.289` that consumes the Exp 3097 exact-fixture protocol
+and writes `results/experiment_3100_z3_oracle_feedback_v2.json` without
+modifying `scripts/research_conductor.py`, without pushing, and without
+claiming Dafny execution when Dafny is unavailable.
+
+The pilot shall preflight Z3, Dafny, local mandated SOTA GGUF cache status, the
+`cached_sota_pair()` readiness signal or local equivalent, Exp 3097 protocol
+readiness, and the derived stratified exact-fixture manifest. If Dafny is
+unavailable but Z3 and Python test-oracle checks are available, the pilot shall
+continue with `dafny_available=false` and `z3_available=true`. If Z3 or the
+exact protocol is unavailable, the pilot shall still write a terminal blocked
+artifact with explicit precondition diagnostics and no promoted headline
+evidence.
+
+When exact repair fixtures are available, the pilot shall select a small
+deterministic panel from the `.289` protocol and evaluate three conditions
+where feasible: no-feedback candidate reuse, solver-only fallback repair, and
+LLM-guided repair. Every candidate counted as a success must pass the exact
+execution/test-oracle check for its fixture. Z3-based numeric repairs must also
+pass solver checks. JSON syntax repairs and Python assertion repairs must pass
+local execution/test-oracle checks. Vacuous successes, empty repairs, and
+candidate outputs that avoid the required repaired field or specification must
+be disqualified using guards inspired by MiniF2F-Dafny empty-proof rejection and
+formal annotation work.
+
+The terminal artifact MUST include `formal_feedback_v2_ready`, `model_specs`,
+`z3_available`, `dafny_available`, `exact_ground_truth_count`,
+`formal_feedback_delta`, `guided_success_count`,
+`solver_only_success_count`, `vacuity_guard_passed`, `test_oracle_count`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`. It shall also
+record selected fixture rows, per-condition success counts, cache status for
+every mandated model ID, whether headline live LLM execution was blocked, and
+which test-oracle or Z3 authority validated every accepted row.
+
+`formal_feedback_v2_ready` shall be true only when the Exp 3097 protocol is
+ready, at least one exact repair fixture is evaluated, Z3 and execution
+test-oracles run, vacuity guards pass, model cache preconditions permit
+headline guided execution, at least one mandated SOTA GGUF generated live
+guided repair text, and `guided_success_count > solver_only_success_count`.
+When the model-cache precondition blocks headline execution, the artifact shall
+start `honest_verdict` with `complete_` or another terminal success prefix only
+as an honest blocked-headline/pilot artifact, while keeping
+`formal_feedback_v2_ready=false`.
+
+### SCENARIO-VERIFY-3100: Z3 Oracle Feedback Runs Without Dafny
+
+Given Exp 3097 is ready, the stratified manifest contains repair-target
+fixtures, Z3 is importable, Dafny is unavailable, and local test-oracle checks
+can execute,
+When Exp 3100 runs,
+Then it writes the terminal artifact with `dafny_available=false`,
+`z3_available=true`, selected exact repair fixtures, no-feedback,
+solver-only, and guided condition rows where feasible, explicit
+`test_oracle_count`, vacuity disqualification evidence, source artifact
+checksums, and an honest readiness signal that does not claim Dafny execution.
+
+### SCENARIO-VERIFY-3100-BLOCKED-HEADLINE: Missing SOTA Pair Does Not Promote
+
+Given Z3 and the exact protocol are available but `cached_sota_pair()` or the
+local equivalent cannot resolve enough mandated GGUF models for headline guided
+execution,
+When Exp 3100 runs,
+Then it still writes `results/experiment_3100_z3_oracle_feedback_v2.json`,
+records per-model cache status and any solver/test-oracle pilot rows, keeps
+`formal_feedback_v2_ready=false`, sets promoted guided counts only for live
+model validated successes, and uses an `honest_verdict` beginning with a
+terminal complete or blocked-headline prefix rather than claiming a clean
+formal-feedback lift.
+
+## Implementation Status (REQ-VERIFY-3100)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3100 | Implemented (`python/carnot/eval/z3_oracle_feedback_v2.py`) | Implemented (`tests/python/test_experiment_3100_z3_oracle_feedback_v2.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

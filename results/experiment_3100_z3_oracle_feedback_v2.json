@@ -1,0 +1,578 @@
+{
+  "artifact": "experiment_3100_z3_oracle_feedback_v2",
+  "cached_sota_pair_status": {
+    "available": false,
+    "error": null,
+    "models": []
+  },
+  "dafny_available": false,
+  "dafny_path": null,
+  "duration_s": 12.569525,
+  "exact_ground_truth_count": 6,
+  "exp3097_protocol_ready": true,
+  "fixture_results": [
+    {
+      "empty_repair_validation": {
+        "diagnostics": {
+          "required_fields": [
+            "limit",
+            "mode"
+          ]
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "empty_repair_or_spec",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-000",
+      "guided_candidate": null,
+      "guided_parse": {
+        "parse_error": "",
+        "repair": null,
+        "valid_parse": false
+      },
+      "guided_prompt_hash": null,
+      "guided_raw_output_hash": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {
+          "reason": "cached_sota_pair_unavailable"
+        },
+        "exact_authority": "not_checked_guided_infeasible",
+        "exact_checked": false,
+        "failure_reason": "cached_sota_pair_unavailable",
+        "valid": false
+      },
+      "no_feedback_candidate": {
+        "candidate": "{\"mode\": \"bounded\" \"limit\": 2}"
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "json_decode_error",
+        "valid": false
+      },
+      "perturbation_type": "json_syntax_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": null,
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "json_decode_error",
+        "valid": false
+      },
+      "source_prompt_payload_sha256": "c638d4e70174b8d6290698e9ecbf98e48071ce5bb7778b97a0c714a816c97a24",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "empty_repair_validation": {
+        "diagnostics": {
+          "variables": [
+            "rx_1",
+            "ry_1"
+          ]
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "empty_or_incomplete_assignment",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-001",
+      "guided_candidate": null,
+      "guided_parse": {
+        "parse_error": "",
+        "repair": null,
+        "valid_parse": false
+      },
+      "guided_prompt_hash": null,
+      "guided_raw_output_hash": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {
+          "reason": "cached_sota_pair_unavailable"
+        },
+        "exact_authority": "not_checked_guided_infeasible",
+        "exact_checked": false,
+        "failure_reason": "cached_sota_pair_unavailable",
+        "valid": false
+      },
+      "no_feedback_candidate": {
+        "candidate_assignment": {
+          "rx_1": 2,
+          "ry_1": 1
+        }
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "assignment": {
+            "rx_1": 2,
+            "ry_1": 1
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "constraint_violation",
+        "valid": false
+      },
+      "perturbation_type": "numeric_bound_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": {
+        "candidate_assignment": {
+          "rx_1": 10,
+          "ry_1": 1
+        }
+      },
+      "solver_only_success": true,
+      "solver_only_validation": {
+        "diagnostics": {
+          "assignment": {
+            "rx_1": 10,
+            "ry_1": 1
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "valid": true
+      },
+      "source_prompt_payload_sha256": "06169e28bdc723f627d5405dd689b2593f435b18e120f28f94a7002475f9bb1b",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "empty_repair_validation": {
+        "diagnostics": {},
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "empty_assertion",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-002",
+      "guided_candidate": null,
+      "guided_parse": {
+        "parse_error": "",
+        "repair": null,
+        "valid_parse": false
+      },
+      "guided_prompt_hash": null,
+      "guided_raw_output_hash": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {
+          "reason": "cached_sota_pair_unavailable"
+        },
+        "exact_authority": "not_checked_guided_infeasible",
+        "exact_checked": false,
+        "failure_reason": "cached_sota_pair_unavailable",
+        "valid": false
+      },
+      "no_feedback_candidate": {
+        "candidate_assertion": "assert ((7 * 2) - 2) == 13"
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "left": 12,
+          "right": 13
+        },
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "assertion_failure",
+        "valid": false
+      },
+      "perturbation_type": "python_assertion_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": null,
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "left": 12,
+          "right": 13
+        },
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "assertion_failure",
+        "valid": false
+      },
+      "source_prompt_payload_sha256": "28cabe1f4ed5d20077333d8a9ada9f0e3eb8bc5070683ee3a2243d78e17bc2c1",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "empty_repair_validation": {
+        "diagnostics": {
+          "required_fields": [
+            "limit",
+            "mode"
+          ]
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "empty_repair_or_spec",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-003",
+      "guided_candidate": null,
+      "guided_parse": {
+        "parse_error": "",
+        "repair": null,
+        "valid_parse": false
+      },
+      "guided_prompt_hash": null,
+      "guided_raw_output_hash": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {
+          "reason": "cached_sota_pair_unavailable"
+        },
+        "exact_authority": "not_checked_guided_infeasible",
+        "exact_checked": false,
+        "failure_reason": "cached_sota_pair_unavailable",
+        "valid": false
+      },
+      "no_feedback_candidate": {
+        "candidate": "{\"mode\": \"bounded\" \"limit\": 5}"
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "json_decode_error",
+        "valid": false
+      },
+      "perturbation_type": "json_syntax_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": null,
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+        },
+        "exact_authority": "python_json_test_oracle",
+        "exact_checked": true,
+        "failure_reason": "json_decode_error",
+        "valid": false
+      },
+      "source_prompt_payload_sha256": "9869705c3ae857f521de4ec6994e56c6dd709d82dc6a72f9fb218576611e5220",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "empty_repair_validation": {
+        "diagnostics": {
+          "variables": [
+            "rx_4",
+            "ry_4"
+          ]
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "empty_or_incomplete_assignment",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-004",
+      "guided_candidate": null,
+      "guided_parse": {
+        "parse_error": "",
+        "repair": null,
+        "valid_parse": false
+      },
+      "guided_prompt_hash": null,
+      "guided_raw_output_hash": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {
+          "reason": "cached_sota_pair_unavailable"
+        },
+        "exact_authority": "not_checked_guided_infeasible",
+        "exact_checked": false,
+        "failure_reason": "cached_sota_pair_unavailable",
+        "valid": false
+      },
+      "no_feedback_candidate": {
+        "candidate_assignment": {
+          "rx_4": 5,
+          "ry_4": 1
+        }
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "assignment": {
+            "rx_4": 5,
+            "ry_4": 1
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "constraint_violation",
+        "valid": false
+      },
+      "perturbation_type": "numeric_bound_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": {
+        "candidate_assignment": {
+          "rx_4": 13,
+          "ry_4": 1
+        }
+      },
+      "solver_only_success": true,
+      "solver_only_validation": {
+        "diagnostics": {
+          "assignment": {
+            "rx_4": 13,
+            "ry_4": 1
+          }
+        },
+        "exact_authority": "z3_solver",
+        "exact_checked": true,
+        "failure_reason": "",
+        "valid": true
+      },
+      "source_prompt_payload_sha256": "ea47868738b80be280f5807fc4fc0a198c1d61c52ac0131c04719c8b04d5b165",
+      "task_family": "repairable_invalid_candidates"
+    },
+    {
+      "empty_repair_validation": {
+        "diagnostics": {},
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "empty_assertion",
+        "valid": false
+      },
+      "expected_answer": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-005",
+      "guided_candidate": null,
+      "guided_parse": {
+        "parse_error": "",
+        "repair": null,
+        "valid_parse": false
+      },
+      "guided_prompt_hash": null,
+      "guided_raw_output_hash": null,
+      "guided_success": false,
+      "guided_validation": {
+        "diagnostics": {
+          "reason": "cached_sota_pair_unavailable"
+        },
+        "exact_authority": "not_checked_guided_infeasible",
+        "exact_checked": false,
+        "failure_reason": "cached_sota_pair_unavailable",
+        "valid": false
+      },
+      "no_feedback_candidate": {
+        "candidate_assertion": "assert ((10 * 2) - 2) == 19"
+      },
+      "no_feedback_success": false,
+      "no_feedback_validation": {
+        "diagnostics": {
+          "left": 18,
+          "right": 19
+        },
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "assertion_failure",
+        "valid": false
+      },
+      "perturbation_type": "python_assertion_repair",
+      "solver_label": "repairable",
+      "solver_only_candidate": null,
+      "solver_only_success": false,
+      "solver_only_validation": {
+        "diagnostics": {
+          "left": 18,
+          "right": 19
+        },
+        "exact_authority": "python_ast_execution_oracle",
+        "exact_checked": true,
+        "failure_reason": "assertion_failure",
+        "valid": false
+      },
+      "source_prompt_payload_sha256": "4b4d36bc4b9d678223ea510020b6c205a39db778cacce719946e7c9026d98d99",
+      "task_family": "repairable_invalid_candidates"
+    }
+  ],
+  "formal_feedback_delta": -0.333333,
+  "formal_feedback_v2_ready": false,
+  "guided_evaluation_feasible": false,
+  "guided_success_count": 0,
+  "headline_blocked_reason": "cached_sota_pair_unavailable",
+  "honest_verdict": "complete_blocked_headline: formal_feedback_v2_ready=false; reason=cached_sota_pair_unavailable; z3_available=True; dafny_available=False; guided_success_count=0; solver_only_success_count=2",
+  "inference_substrate": {
+    "cached_sota_pair_available": false,
+    "cached_sota_pair_models": [],
+    "dafny_available": false,
+    "formal_feedback_backend": "z3_and_python_test_oracle",
+    "kind": "z3_test_oracle_pilot_without_live_guided_llm",
+    "legacy_small_models_promoted": false,
+    "live_llm_inference": false,
+    "model_cache_status": [
+      {
+        "cached": false,
+        "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+        "model_path": null
+      },
+      {
+        "cached": true,
+        "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+        "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf"
+      },
+      {
+        "cached": false,
+        "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+        "model_path": null
+      }
+    ],
+    "python_environment": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "version": "3.14.4 (main, May  3 2026, 17:15:39) [GCC 16.1.1 20260430]",
+      "virtual_env": "/home/ianblenke/github.com/ianblenke/carnot/.venv"
+    },
+    "repo_commit": "d5f64466564b5bb577b09bc26528727b487f0c37",
+    "selected_model": {},
+    "z3_available": true
+  },
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "cached": false,
+      "checksum_feasibility": {
+        "method": "missing_file"
+      },
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_hash_or_cache_path": null,
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "cache_status": "cached",
+      "cached": true,
+      "checksum_feasibility": {
+        "full_sha256_feasible": true,
+        "method": "full_sha256",
+        "size_bytes": 16947539744
+      },
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_hash_or_cache_path": "sha256:34c746b1d50ab813e29cd46c4796e3f43c741901a582f93a67b55b9fc9687b35",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "moe"
+    },
+    {
+      "cache_status": "missing",
+      "cached": false,
+      "checksum_feasibility": {
+        "method": "missing_file"
+      },
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_hash_or_cache_path": null,
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "role": "dense"
+    }
+  ],
+  "no_feedback_success_count": 0,
+  "reproducibility_checksum": "072db764a1ddb4fe44efeb214b26f89d9cda0e69a3b2792fa6fdc17f6e0803fe",
+  "run_date": "20260526",
+  "runtime_blocker": null,
+  "schema": "carnot.z3_oracle_feedback.v2",
+  "selected_fixture_count": 6,
+  "selected_fixture_ids": [
+    "resyn-3084-repair-json-000",
+    "resyn-3084-repair-smt-001",
+    "resyn-3084-repair-py-002",
+    "resyn-3084-repair-json-003",
+    "resyn-3084-repair-smt-004",
+    "resyn-3084-repair-py-005"
+  ],
+  "solver_only_success_count": 2,
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "codex",
+      "path": "CODEX.md",
+      "role": "repo spec-first workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude",
+      "path": "CLAUDE.md",
+      "role": "artifact authenticity and formal-tool discipline",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "role": "formal-feedback context",
+      "sha256": "a86412e8f1a39713a296ea54e765d5f089b842b9589b967ec81a1a5736ab54cc"
+    },
+    {
+      "exists": true,
+      "id": "experiment_template",
+      "path": "scripts/experiment_template.py",
+      "role": "SOTA cache helper context",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f"
+    },
+    {
+      "exists": true,
+      "id": "exp3071",
+      "path": "results/experiment_3071_verge_mcs_smt_correction_pilot_v1.json",
+      "role": "prior MCS/Z3 feedback baseline",
+      "sha256": "b3bb50cabc3eb41d29d4ce05200d038afd68f46081e7a2ff84dac7cec46fb563"
+    },
+    {
+      "exists": true,
+      "id": "exp3086",
+      "path": "results/experiment_3086_dafny_z3_formal_feedback_pilot_v1.json",
+      "role": "prior Dafny/Z3 formal-feedback pilot",
+      "sha256": "56fabfefc6c5b29b8c7150577637f12a1d6b2d10569932b7d1d2ed6ac0990c96"
+    },
+    {
+      "exists": true,
+      "id": "exp3094",
+      "path": "results/experiment_3094_capstone_v288.json",
+      "role": ".288 capstone noting absent formal-feedback lift",
+      "sha256": "cee5c519c79e8f52561f5f74b0d5d4daf078ca7c50d4c44816b6e758d14dba98"
+    },
+    {
+      "exists": true,
+      "id": "exp3097",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "role": ".289 exact-fixture protocol",
+      "sha256": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_manifest",
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "role": ".289 stratified exact manifest",
+      "sha256": "c5c3c243042cb9ad3dbe2ff4149e467548fe89f213be348c49373d548392333f"
+    }
+  ],
+  "stratified_eval_manifest_path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+  "test_oracle_count": 18,
+  "tests_or_checks_run": [],
+  "vacuity_guard_passed": true,
+  "z3_available": true,
+  "z3_path": "/opt/oss-cad-suite/bin/z3"
+}
