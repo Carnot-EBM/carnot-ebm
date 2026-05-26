@@ -1616,6 +1616,73 @@ while preserving mandated SOTA model/cache provenance.
 |---|---|---|
 | REQ-VERIFY-3115 | Implemented (`python/carnot/eval/explicit_repair_gate_micro_panel_v4.py`) | Implemented (`tests/python/test_experiment_3115_explicit_repair_gate_micro_panel_v4.py`) |
 
+### REQ-VERIFY-3124: Difficulty-Stratified Live SOTA Verifier Panel V6
+
+The repository shall provide an Exp 3124 difficulty-stratified live SOTA
+verifier-panel builder that writes
+`results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json`
+from the Exp 3123 mandated-model cache/precondition manifest and the .290
+exact-verifier artifacts, including Exp 3097 exact fixtures, Exp 3099 cached
+local-SOTA route rows, Exp 3111 certified-coherence certificates, Exp 3112
+logic-regularized verifier rows, Exp 3113 diagnostic calibration, Exp 3114
+fragment/code verification rows, and Exp 3115 repair-gate evidence. The
+builder MUST NOT modify `scripts/research_conductor.py`, push commits, or
+substitute legacy small models for headline evidence.
+
+The panel shall preserve exact solver/test labels as the sole authority. It
+shall label rows by difficulty bucket, fixture family, generator family, and
+answer-extraction format. The difficulty stratification MUST include stable
+keys for `easy`, `medium`, `hard`, `contradiction`, `satisfiable_drift`, and
+`fragment_code` even when a bucket has no live call. When at least one mandated
+local SOTA model is usable, the builder shall run a bounded number of live
+verifier calls, record prompt hashes, bounded model hashes or cache-path
+evidence, raw outputs, extracted answers, exact labels, decisions, and failure
+mechanisms. When no mandated model is locally usable or the live runtime cannot
+load one, it shall write a complete diagnostic artifact with
+`live_call_count=0`, `headline_claim_allowed=false`, preserved fixture
+metadata, and an explicit blocked repair gate.
+
+The terminal artifact MUST include
+`difficulty_stratified_live_sota_panel_v6_ready`, `model_specs`,
+`selected_model_ids`, `live_call_count`, `headline_claim_allowed`,
+`exact_ground_truth_count`, `difficulty_buckets`, `fixture_family_metrics`,
+`answer_extraction_metrics`, `failure_mechanism_counts`,
+`false_accept_rate`, `false_reject_rate`, `verifier_gain_delta`,
+`repair_gate_state`, `tests_run`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`. It SHOULD also record live rows, panel fixture metadata,
+generator-family metrics, source checksums, and validation notes so downstream
+repair tasks can audit why the gate is open or blocked.
+
+`difficulty_stratified_live_sota_panel_v6_ready` shall be true only when
+required source artifacts are present, exact labels are available, at least one
+mandated model produced live bounded calls, and all finite metrics were computed
+from live rows. `headline_claim_allowed` shall remain false when
+`live_call_count=0`, when only legacy small models are available, when the
+runtime fails before live evidence is produced, or when the panel is too small
+or unsafe for headline wording. `repair_gate_state` shall block repair when
+inputs are missing, no mandated live model ran, the panel is tiny, any false
+accept occurs, or measured verifier gain is not positive.
+
+### SCENARIO-VERIFY-3124: Stratified Live Panel Blocks Headline Lift Without Live Mandated Evidence
+
+Given Exp 3123 and the .290 exact-verifier artifacts are present,
+When Exp 3124 builds the difficulty-stratified panel,
+Then it writes the required terminal JSON artifact, preserves every selected
+fixture's exact authority metadata, reports difficulty, fixture-family,
+generator-family, and extraction-format metrics, records live local SOTA
+outputs only from mandated models, and sets headline and repair gates from the
+observed false-accept, false-reject, precision, recall, panel-size, and lift
+metrics. If no mandated local model can produce live verifier output, it still
+writes the diagnostic artifact with `live_call_count=0`,
+`headline_claim_allowed=false`, preserved fixture metadata, and an honest
+blocked verdict.
+
+## Implementation Status (REQ-VERIFY-3124)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3124 | Implemented (`python/carnot/eval/difficulty_stratified_live_sota_verifier_panel_v6.py`) | Implemented (`tests/python/test_experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
