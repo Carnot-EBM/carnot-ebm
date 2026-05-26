@@ -1,0 +1,448 @@
+{
+  "activation_performed_by_this_task": false,
+  "archive_v291_activate_v292_ready": true,
+  "artifact": "experiment_3135_archive_v291_activate_v292",
+  "blocked_reasons": [],
+  "blocker_delta_from_v24": 10,
+  "blocker_delta_from_v24_source": "capstone_blocker_delta_from_v24",
+  "carry_forward_blockers": [
+    {
+      "blocker_id": "publication_blockers_46",
+      "description": "46 publication blockers",
+      "expected_carry_forward_value": 46,
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "publication_blocker_count",
+      "value": 46
+    },
+    {
+      "blocker_id": "missing_comparative_sota_pair",
+      "description": "missing Qwen3.6/Gemma-4-31B comparative SOTA pair",
+      "expected_carry_forward_value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      },
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "claim_allowance_summary.missing_model_ids",
+      "value": {
+        "missing_model_ids": [
+          "unsloth/Qwen3.6-35B-A3B-GGUF",
+          "unsloth/gemma-4-31B-it-GGUF"
+        ],
+        "present_model_ids": [
+          "unsloth/gemma-4-26B-A4B-it-GGUF"
+        ]
+      }
+    },
+    {
+      "blocker_id": "false_accept_rate_0_5",
+      "description": "false_accept_rate=0.5",
+      "expected_carry_forward_value": 0.5,
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "claim_allowance_summary.false_accept_rate",
+      "value": 0.5
+    },
+    {
+      "blocker_id": "zero_verifier_gain",
+      "description": "zero verifier gain",
+      "expected_carry_forward_value": 0.0,
+      "matches_expected": true,
+      "source": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "source_field": "verifier_repair_summary.verifier_gain_delta",
+      "value": 0.0
+    },
+    {
+      "blocker_id": "repair_gate_blocked",
+      "description": "repair gate blocked",
+      "expected_carry_forward_value": "blocked_false_accept",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "claim_allowance_summary.repair_gate_state",
+      "value": "blocked_false_accept"
+    },
+    {
+      "blocker_id": "fr11_ledger_consistency_0_666667",
+      "description": "FR-11 ledger_consistency_rate=0.666667",
+      "expected_carry_forward_value": 0.666667,
+      "matches_expected": true,
+      "source": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "source_field": "fr11_summary.ledger_consistency_rate",
+      "value": 0.666667
+    },
+    {
+      "blocker_id": "ebt_arm_projection_only",
+      "description": "EBT/ARM projection-only",
+      "expected_carry_forward_value": "projection_only_sidecar_diagnostic_no_live_integration",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "ebt_arm_status",
+      "value": "projection_only_sidecar_diagnostic_no_live_integration"
+    },
+    {
+      "blocker_id": "kan_bounded_only",
+      "description": "KAN bounded only",
+      "expected_carry_forward_value": "bounded_pwa_milp_abstraction_no_deployed_verifier_claim",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "kan_status",
+      "value": "bounded_pwa_milp_abstraction_no_deployed_verifier_claim"
+    },
+    {
+      "blocker_id": "no_authenticated_hardware_speedup",
+      "description": "no authenticated hardware speedup",
+      "expected_carry_forward_value": "blocked_hardware_sampler_boundary_no_speedup_claim",
+      "matches_expected": true,
+      "source": "results/experiment_3134_capstone_v291.json",
+      "source_field": "sampler_hardware_status",
+      "value": "blocked_hardware_sampler_boundary_no_speedup_claim"
+    }
+  ],
+  "duration_s": 0.047422,
+  "honest_verdict": "complete: archive_v291_activate_v292_ready=true; prior_capstone_ready=true; prior_paper_ready=false; prior_publication_blocker_count=46; blocker_delta_from_v24=10; next_milestone=2026.05.292; roadmap_source=research-roadmap.yaml",
+  "inference_substrate": {
+    "executes_conductor": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_repairs": false,
+    "executes_solvers": false,
+    "executes_verifiers": false,
+    "hardware_commands_run": [],
+    "kind": "aggregation_from_upstream_artifacts",
+    "live_model_calls": 0,
+    "local_repo_only": true,
+    "no_live_llm_inference": true,
+    "source": "checked_in_artifacts"
+  },
+  "missing_source_artifacts": [
+    "research-roadmap-next.yaml"
+  ],
+  "next_milestone": "2026.05.292",
+  "no_historical_artifact_rewrite": true,
+  "no_live_repair_rerun": true,
+  "no_new_board_flash": true,
+  "no_new_hardware_run": true,
+  "no_new_model_execution": true,
+  "no_new_solver_run": true,
+  "no_new_synthesis_run": true,
+  "no_new_verifier_run": true,
+  "no_push": true,
+  "ops_changelog_updated": false,
+  "ops_docs_reconciliation_left_to_conductor": true,
+  "ops_status_updated": false,
+  "prior_capstone_ready": true,
+  "prior_milestone": "2026.05.291",
+  "prior_paper_ready": false,
+  "prior_paper_ready_source_field_present": true,
+  "prior_publication_blocker_count": 46,
+  "prior_publication_blocker_count_source": "capstone_publication_blocker_count",
+  "research_roadmap_next_yaml_modified": false,
+  "research_roadmap_yaml_modified": false,
+  "roadmap_handoff": {
+    "active_roadmap_milestone": "2026.05.292",
+    "expected_milestone": "2026.05.292",
+    "expected_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "milestone_doc_matches": true,
+    "milestone_matches": true,
+    "non_empty_tasks": true,
+    "observed_milestone": "2026.05.292",
+    "observed_milestone_doc": "openspec/change-proposals/research-roadmap-vNEXT.md",
+    "requested_staged_roadmap_path": "research-roadmap-next.yaml",
+    "requested_staged_roadmap_present": false,
+    "source_path": "research-roadmap.yaml",
+    "source_present": true,
+    "task_ids": [
+      "exp3135-archive-v291-activate-v292",
+      "exp3136-false-accept-root-cause-autopsy",
+      "exp3137-exact-safe-accept-abstain-contract",
+      "exp3138-canonical-answer-vericot-grounding-pilot",
+      "exp3139-live-sota-verifier-rerun-v7",
+      "exp3140-repair-gate-unlock-decision",
+      "exp3141-multi-turn-repair-ladder-v2",
+      "exp3142-fr11-vera-evoenv-hardening-v2",
+      "exp3143-fr11-experience-driven-verifier-memory",
+      "exp3144-ebt-arm-false-accept-calibration-boundary-v3",
+      "exp3145-kan-proof-carrying-monitor-boundary-v2",
+      "exp3146-hardware-sampler-evidence-boundary-v6",
+      "exp3147-cross-corpus-matrix-v26",
+      "exp3148-capstone-v292"
+    ],
+    "used_active_roadmap_fallback": true
+  },
+  "run_date": "20260526",
+  "schema": "carnot.archive_activation.v291_to_v292.v1",
+  "scripts_research_conductor_modified": false,
+  "source_artifacts": [
+    {
+      "path": "results/experiment_3133_cross_corpus_matrix_v25.json",
+      "present": true,
+      "role": "matrix_v25",
+      "sha256": "046265e2d3ee17b6af44e135de493a2b16f15f403a5f682d1eb55093e788fd75"
+    },
+    {
+      "path": "results/experiment_3134_capstone_v291.json",
+      "present": true,
+      "role": "capstone_v291",
+      "sha256": "c15a76e3f2d41bb52ae345c67529a411815457f14d9d1628a97b6a22d7684bca"
+    },
+    {
+      "path": "research-roadmap-next.yaml",
+      "present": false,
+      "role": "staged_roadmap",
+      "sha256": null
+    },
+    {
+      "path": "research-roadmap.yaml",
+      "present": true,
+      "role": "active_roadmap",
+      "sha256": "fab4eba4e1444bbf1c72e7aecab4d3182f8c4d021bad5f4d79f3aab16a72608d"
+    },
+    {
+      "path": "openspec/change-proposals/research-roadmap-vNEXT.md",
+      "present": true,
+      "role": "vnext_doc",
+      "sha256": "036230a3e730d914e2b40262a73ec87673f82614e2e7929f5ef05185e2e8df3a"
+    },
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "role": "agents_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "role": "codex_instructions",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "role": "claude_instructions",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "scripts/research_conductor.py",
+      "present": true,
+      "role": "research_conductor",
+      "sha256": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+    },
+    {
+      "path": "ops/status.md",
+      "present": true,
+      "role": "ops_status",
+      "sha256": "555f5e7f8a39d90032b96825b7fe1a575d1508f951b97be5618baca94a0063e6"
+    },
+    {
+      "path": "ops/changelog.md",
+      "present": true,
+      "role": "ops_changelog",
+      "sha256": "c57ba32657ae1acccb9a1489d5ab29e23588f96581a97b1c22afb70287fe518e"
+    },
+    {
+      "path": "_bmad/traceability.md",
+      "present": true,
+      "role": "traceability",
+      "sha256": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "_bmad/traceability.md": "7cb816027fe6978ff861a799d83de610c1a10d5efeab36f07cd18904485fe2a9",
+    "openspec/change-proposals/research-roadmap-vNEXT.md": "036230a3e730d914e2b40262a73ec87673f82614e2e7929f5ef05185e2e8df3a",
+    "ops/changelog.md": "c57ba32657ae1acccb9a1489d5ab29e23588f96581a97b1c22afb70287fe518e",
+    "ops/status.md": "555f5e7f8a39d90032b96825b7fe1a575d1508f951b97be5618baca94a0063e6",
+    "research-roadmap-next.yaml": null,
+    "research-roadmap.yaml": "fab4eba4e1444bbf1c72e7aecab4d3182f8c4d021bad5f4d79f3aab16a72608d",
+    "results/experiment_3133_cross_corpus_matrix_v25.json": "046265e2d3ee17b6af44e135de493a2b16f15f403a5f682d1eb55093e788fd75",
+    "results/experiment_3134_capstone_v291.json": "c15a76e3f2d41bb52ae345c67529a411815457f14d9d1628a97b6a22d7684bca",
+    "scripts/research_conductor.py": "293d09f47a3aa965a1a4785f8db278db4364f8d93c11ebbf465c99448e20c5e2"
+  },
+  "status_summary_291": {
+    "blocker_delta_from_v24": 10,
+    "blocker_delta_source": "capstone_blocker_delta_from_v24",
+    "capstone_ready": true,
+    "ebt_arm_status": "projection_only_sidecar_diagnostic_no_live_integration",
+    "false_accept_rate": 0.5,
+    "fr11_ledger_consistency_rate": 0.666667,
+    "fr11_self_learning_status": "bounded_controller_environment_memory_only_no_weight_update_ledger_0.666667",
+    "kan_status": "bounded_pwa_milp_abstraction_no_deployed_verifier_claim",
+    "live_verifier_status": "blocked",
+    "matrix_v25_ready": true,
+    "next_top_gap": "live_verifier_false_accept_repair_gate",
+    "paper_ready": false,
+    "publication_blocker_count": 46,
+    "publication_blocker_count_source": "capstone_publication_blocker_count",
+    "repair_claim_status": "blocked_repair_ladder_gate_failed_by_live_verifier_gate",
+    "repair_gate_status": "blocked_false_accept",
+    "sampler_hardware_status": "blocked_hardware_sampler_boundary_no_speedup_claim",
+    "sota_cache_status": "bounded_missing_comparative_sota_pair",
+    "source_artifacts": [
+      {
+        "experiment_id": "experiment_3133_cross_corpus_matrix_v25",
+        "path": "results/experiment_3133_cross_corpus_matrix_v25.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "matrix_v25_ready",
+        "required": true,
+        "role": "matrix_v25_authority",
+        "sha256": "046265e2d3ee17b6af44e135de493a2b16f15f403a5f682d1eb55093e788fd75",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3120_cross_corpus_matrix_v24",
+        "path": "results/experiment_3120_cross_corpus_matrix_v24.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "matrix_v24_ready",
+        "required": true,
+        "role": "matrix_v24_authority",
+        "sha256": "df3d0d5018f69abb78d51925dce2c3188818e8434ff3babd027b9aa13ee4d9a8",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3121_capstone_v290",
+        "path": "results/experiment_3121_capstone_v290.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "capstone_ready",
+        "required": true,
+        "role": "capstone_v290_authority",
+        "sha256": "895cf16d93c6fb1101705f8f23b951b1cdbb0bfea3afce5d35da888762bac1d6",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3122_archive_v290_activate_v291",
+        "path": "results/experiment_3122_archive_v290_activate_v291.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "archive_v290_activate_v291_ready",
+        "required": false,
+        "role": "archive_v290_activate_v291",
+        "sha256": "f49848bb758d3906a7da30baff356504b49750da19f62b5083c71bdda4a682e6",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3123_sota_cache_preconditions_manifest_v2",
+        "path": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "sota_cache_manifest_v2_ready",
+        "required": false,
+        "role": "sota_cache_coverage",
+        "sha256": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6",
+        "path": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "difficulty_stratified_live_sota_panel_v6_ready",
+        "required": false,
+        "role": "live_verifier_lift",
+        "sha256": "963cc66acca8f5014871f5c612f14daa7f582132e06f25b4ef916fccefbc2772",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1",
+        "path": "results/experiment_3125_prefix_closed_deterministic_verifier_bound_pilot_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "prefix_closed_bound_pilot_ready",
+        "required": false,
+        "role": "prefix_closed_bounds",
+        "sha256": "ef98144322fea9ca99a1f63f4e1c3d8513c0015bea4a61c5b4ad62c82dc43e3e",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1",
+        "path": "results/experiment_3126_fragment_time_monitor_satisfiable_drift_audit_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "fragment_time_monitor_v1_ready",
+        "required": false,
+        "role": "fragment_time_monitors",
+        "sha256": "e072b70780360c2d5f3255d49712434d3b4a517d8f63348e02c49bbaba1656f9",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "exp3127",
+        "path": "results/experiment_3127_multi_turn_monitored_repair_ladder_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "status",
+        "required": false,
+        "role": "repair_ladder",
+        "sha256": "a19c072298fbe115402c671690ba1dbe8408f9a47b9552d2d0bb30045fcde034",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1",
+        "path": "results/experiment_3128_fr11_evoenv_verifiable_environment_synthesis_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "fr11_evoenv_pilot_v1_ready",
+        "required": false,
+        "role": "fr11_evoenv",
+        "sha256": "faa36b912ec0a67d9a4afa426c6a0d2ae0656fd122c89bbf18e66fef53b22f6d",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3129_fr11_constraint_memory_retention_drift_audit_v1",
+        "path": "results/experiment_3129_fr11_constraint_memory_retention_drift_audit_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "fr11_constraint_memory_audit_v1_ready",
+        "required": false,
+        "role": "fr11_constraint_memory",
+        "sha256": "7882052da4f0151faae241769bedf074878060a11f4e386e499b0a05527530a5",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2",
+        "path": "results/experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "arm_ebt_energy_budget_sidecar_v2_ready",
+        "required": false,
+        "role": "arm_ebt_energy_budget",
+        "sha256": "878b6d120fab272383d210a9e85f36631fd0d4c97fc3423fc35cddb7df448be6",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1",
+        "path": "results/experiment_3131_kan_pwa_milp_verifier_abstraction_audit_v1.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "kan_pwa_milp_audit_v1_ready",
+        "required": false,
+        "role": "kan_pwa_milp",
+        "sha256": "b5d162c9c40c6aeb4cab2fc23048182a111dba37b7db456bc4ec09680f6c37ca",
+        "source_type": "json"
+      },
+      {
+        "experiment_id": "experiment_3132_hardware_evidence_sampler_boundary_v5",
+        "path": "results/experiment_3132_hardware_evidence_sampler_boundary_v5.json",
+        "present": true,
+        "readable_json_object": true,
+        "ready_field": "hardware_evidence_sampler_boundary_v5_ready",
+        "required": false,
+        "role": "hardware_sampler_boundary",
+        "sha256": "3c3036de5b3520a034ffd78c908d71555bacd93dd1ab93ebad32d07373a5eb65",
+        "source_type": "json"
+      }
+    ],
+    "verifier_claim_status": "blocked_false_accept_rate_0.5_no_headline_lift",
+    "verifier_gain_delta": 0.0
+  },
+  "traceability_updated": false
+}
