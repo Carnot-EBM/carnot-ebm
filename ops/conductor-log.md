@@ -6308,3 +6308,4 @@ web search: site |
 | 2026-05-26 00:27 UTC | EBT/ARM sidecar adapter schema prototype | OK | 81 passed in 2.88s |
 | 2026-05-26 00:29 UTC | Gated XGrammar SOTA repair micro-panel v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3087-gated-local-sota-verifier-calibratio |
 | 2026-05-26 00:41 UTC | GateMate/SSQA operator evidence ingestion v2 | OK | 81 passed in 3.23s |
+| 2026-05-26 00:58 UTC | Cross-corpus matrix v22 | OK | 81 passed in 2.72s |
