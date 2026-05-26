@@ -6329,3 +6329,4 @@ web search: site |
 | 2026-05-26 04:26 UTC | cLUT random-variate sampler microbench | OK | 97 passed in 5.23s |
 | 2026-05-26 04:40 UTC | GateMate and SSQA operator evidence ingestion v3 | OK | 81 passed in 2.55s |
 | 2026-05-26 04:56 UTC | Cross-corpus matrix v23 | OK | 81 passed in 3.28s |
+| 2026-05-26 05:10 UTC | Capstone .289 | OK | 81 passed in 3.29s |
