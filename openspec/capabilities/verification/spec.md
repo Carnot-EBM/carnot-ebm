@@ -1227,6 +1227,86 @@ accept/reject route violates a hard constraint or ties with a safer route.
 |---|---|---|
 | REQ-VERIFY-3098 | Implemented (`python/carnot/eval/maxsat_abstention_routing_policy_v1.py`) | Implemented (`tests/python/test_experiment_3098_maxsat_abstention_routing_policy.py`) |
 
+### REQ-VERIFY-3099: Local SOTA Confidence Abstention Panel V3
+
+The repository shall provide an Exp 3099 local SOTA confidence and abstention
+panel for milestone `.289` that consumes the Exp 3097 exact-fixture evaluation
+protocol and the Exp 3098 MaxSAT-style routing policy. The panel shall write
+`results/experiment_3099_local_sota_confidence_abstention_panel_v3.json` and
+a row-level transcript without modifying `scripts/research_conductor.py` or
+substituting legacy tiny models for headline evidence.
+
+The panel shall first verify that Exp 3097 reports `eval_protocol_ready=true`,
+that the stratified exact-fixture manifest is readable, that Exp 3098 reports
+`maxsat_policy_ready=true`, that
+`results/maxsat_abstention_routing_policy_3098/policy.json` is loaded, that
+CUDA/GPU runtime metadata is recorded, and that mandated local GGUF cache
+status is measured for `unsloth/Qwen3.6-35B-A3B-GGUF`,
+`unsloth/gemma-4-31B-it-GGUF`, and
+`unsloth/gemma-4-26B-A4B-it-GGUF`. If cache, runtime, protocol, policy, or
+minimum exact-count preconditions fail, it shall write a terminal blocked
+artifact with readiness false and explicit blocked, skipped, and
+cache-missing outcomes.
+
+When preconditions pass, the panel shall run at least the Exp 3097
+`minimum_live_eval_count` exact fixtures using only cached mandated local
+SOTA GGUF models. Every prompt shall be represented by a SHA-256 hash and
+shall use only leakage-safe prompt payloads before exact labels are consulted.
+Every generated row shall be routed through the loaded MaxSAT policy and shall
+record the raw parsed answer, confidence signal, policy route decision,
+exact-answer match, expected action, and route audit details.
+
+The terminal artifact MUST include `abstention_panel_v3_ready`, `model_specs`,
+`exact_ground_truth_count`, `abstention_precision`, `rejection_recall`,
+`abstention_coverage`, `false_accept_rate`, `false_reject_rate`,
+`solve_accuracy`, `verification_accuracy`, `maxsat_policy_used`,
+`thermodynamic_decode_telemetry`, `prompt_hashes`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It shall also record route
+decision counts, cache status for every mandated model, selected model IDs,
+prompt-hash count, exact fixture counts, row transcript checksum, and any
+optional entropy-production or free-energy-style token telemetry as
+diagnostic-only evidence.
+
+`abstention_panel_v3_ready` shall be true only when the exact protocol and
+MaxSAT policy are both ready, at least `minimum_live_eval_count` exact
+fixtures are evaluated, at least one cached mandated local SOTA GGUF produced
+live output, legacy tiny models are not promoted, `maxsat_policy_used=true`,
+and the `honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3099: MaxSAT Routes A Minimum Exact Abstention Panel
+
+Given the Exp 3097 exact-fixture protocol is ready, the Exp 3098 routing
+policy is ready, CUDA/GPU metadata can be recorded, and a mandated local SOTA
+GGUF can load,
+When Exp 3099 runs the confidence and abstention panel,
+Then it evaluates at least `minimum_live_eval_count` exact fixtures, hashes
+every leakage-safe prompt, parses model answers and confidence, routes every
+row through the loaded MaxSAT policy, computes solve accuracy, verification
+accuracy, abstention precision, rejection recall, abstention coverage, false
+accept rate, false reject rate, and route-decision counts, records optional
+token-telemetry diagnostics without making them a gate, and writes the
+required terminal artifact fields.
+
+### SCENARIO-VERIFY-3099-BLOCKED: Missing Protocol Policy Or SOTA Runtime Fails Closed
+
+Given the exact protocol is not ready, the MaxSAT policy is absent or not
+ready, fewer than `minimum_live_eval_count` exact fixtures are available,
+CUDA/GPU runtime checks fail, or no mandated local SOTA GGUF resolves and
+loads,
+When Exp 3099 runs,
+Then it writes the required artifact fields with
+`abstention_panel_v3_ready=false`, `maxsat_policy_used` reflecting whether the
+policy was actually loaded, zero promoted exact-ground-truth count, empty
+prompt hashes, explicit blocked/skipped/cache-missing outcomes, no legacy
+tiny-model headline substitution, and an `honest_verdict` beginning with the
+blocked precondition reason.
+
+## Implementation Status (REQ-VERIFY-3099)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3099 | Implemented (`python/carnot/eval/local_sota_confidence_abstention_panel_v3.py`) | Implemented (`tests/python/test_experiment_3099_local_sota_confidence_abstention_panel_v3.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that

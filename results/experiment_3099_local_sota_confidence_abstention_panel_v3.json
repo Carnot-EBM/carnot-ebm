@@ -1,0 +1,249 @@
+{
+  "abstention_coverage": 0.0,
+  "abstention_panel_v3_ready": true,
+  "abstention_precision": 0.0,
+  "artifact": "experiment_3099_local_sota_confidence_abstention_panel_v3",
+  "available_exact_fixture_count": 72,
+  "blocked_outcomes": [],
+  "cache_missing_outcomes": [
+    "unsloth/Qwen3.6-35B-A3B-GGUF",
+    "unsloth/gemma-4-31B-it-GGUF"
+  ],
+  "cached_sota_pair": {
+    "called": true,
+    "error": null,
+    "model_ids": [],
+    "ready": false,
+    "result": null
+  },
+  "decode_config": {
+    "logprobs": null,
+    "max_tokens": 16,
+    "seed": 3099,
+    "stop": [
+      "\n\n",
+      "</s>"
+    ],
+    "temperature": 0.0
+  },
+  "duration_s": 18.799640525947325,
+  "evaluated_fixture_count": 48,
+  "exact_ground_truth_count": 48,
+  "exact_protocol_ready": true,
+  "false_accept_rate": 0.0,
+  "false_reject_rate": 0.0,
+  "honest_verdict": "complete: abstention_panel_v3_ready=true; exact_ground_truth_count=48; abstention_precision=0.0; rejection_recall=1.0; false_accept_rate=0.0",
+  "inference_substrate": {
+    "cuda": {
+      "cuda_available": true,
+      "gpu_count": 2
+    },
+    "executes_models": true,
+    "gpu_inventory": {
+      "available": true,
+      "gpus": [
+        {
+          "index": 0,
+          "memory_free_mib": 24123,
+          "memory_total_mib": 24576,
+          "name": "NVIDIA GeForce RTX 3090"
+        },
+        {
+          "index": 1,
+          "memory_free_mib": 24123,
+          "memory_total_mib": 24576,
+          "name": "NVIDIA GeForce RTX 3090"
+        }
+      ]
+    },
+    "kind": "local_sota_gguf_llama_cpp_or_blocked_preflight",
+    "legacy_tiny_models_promoted": false,
+    "live_llm_calls_planned": 48,
+    "python": {
+      "executable": "/home/ianblenke/github.com/ianblenke/carnot/.venv/bin/python",
+      "version": "3.14.4"
+    },
+    "repo_commit": "7160d9f274a5d110faa0fb4f3aede7b9941a6f85"
+  },
+  "legacy_smoke_only_used": false,
+  "maxsat_policy_path": "results/maxsat_abstention_routing_policy_3098/policy.json",
+  "maxsat_policy_ready": true,
+  "maxsat_policy_used": true,
+  "minimum_live_eval_count": 48,
+  "model_specs": [
+    {
+      "cache_present": false,
+      "cache_status": "cache_missing",
+      "file_size_bytes": null,
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "model_path": null,
+      "name": "Qwen3.6-35B-A3B",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selected": false
+    },
+    {
+      "cache_present": true,
+      "cache_status": "cached",
+      "file_size_bytes": 16947539744,
+      "gpu": 0,
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "name": "Gemma4-26B-A4B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "moe",
+      "selected": true
+    },
+    {
+      "cache_present": false,
+      "cache_status": "cache_missing",
+      "file_size_bytes": null,
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "model_path": null,
+      "name": "Gemma4-31B-it",
+      "preferred_quant": "Q4_K_M",
+      "quantization": "Q4_K_M",
+      "role": "dense",
+      "selected": false
+    }
+  ],
+  "models_used": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "negative_outcomes": [
+    "solver_answer_errors_observed",
+    "no_correct_abstentions_observed"
+  ],
+  "panel_rows_path": "results/local_sota_confidence_abstention_panel_3099/rows.jsonl",
+  "panel_rows_sha256": "64bdfa895b2e6f4753502d56f3a25a8747be3d72a6e23add5a1f88d8242643a2",
+  "prompt_hash_count": 48,
+  "prompt_hashes": [
+    "8e9594b4be7d229f2ca4e5d5f0fc5392cd46f998f3940efecb430cb6e9b6fd0e",
+    "18448660bc32d787b60922e6bab3112cc9de6f41d994aa037357b3c2276a8e0c",
+    "854eee3061049e206cbf78e87571a4017c8390868e5133fca7c690edb458bcb1",
+    "2ad023d0843b7d2a0b1d82d7fc4ae381ad21258c90f9d62506f1d957bc434850",
+    "fc4d9951e277dff1ba60c0ed1ae57c6ec7f4c370f14f8a1ef6a7cc1ca2b89ab3",
+    "57967fa5c96fc934007db32ecae23e1fb95b9f0c4cacf5c0499ae071347f051e",
+    "329badcf7865e91ce3c53791ca7876996a516c6ace6692f5c8b5aeabefda31e8",
+    "eeb052f87c496e03469b13fceac0ceae795e8b213531c422772cba1baddfb881",
+    "8fe07045856d608d890f58771e0dfa68e2594589134c8fbf3647c960eefc6bac",
+    "c34cd4ad857d02d86a685151704e21d61fd22364526b3d77cddda70049e54ede",
+    "f644808401f0addb428699f3fa78135dfec7da5dadb5be48c3096e43585fc846",
+    "b2a50b521039d6beca11a137b66a64b2e3569791bb4f5b6b7abafd033f79f6a5",
+    "b7f831b4ad04f4717aa75132722850010846f40a2f58a953eb4fcfc026cb8a71",
+    "effbede9019af714740b1d754e4751133d2e7891ac70dfe6436600772260fba6",
+    "e2f152692e462255d83c3eab2c6d41688867de492d3c90831cbd86cc1371817f",
+    "08127bf30240b07fdbce03541d1986d4214c470d1313f78cfd5f18a6968a8d00",
+    "b239d707822e3ed2bd306ecda1710fcba763efae3a627b6c703a6e9f3b9352ae",
+    "92e8b70e7fe45bf47c2dc99a9c3cfbbe0bbd737296b0ffb098b5fc433c8591c4",
+    "acdb85b80c5bc2bd7f36e70ded0206d69288276aa059974013aac960f09d4dd9",
+    "f2bd0f1c8be8f85f559290e2995803a2682854f441b2ff17cf9747a92b95e46d",
+    "d0a5810c0a86812f454bd77e509434078564ec40afb31f6a73dae50f79f1021f",
+    "c6d1c1351c4e88648d0b0387e58bd8b8e85746f6e955b3887ba48229c33d824a",
+    "f50ad7887d834d93fb3d0281e35836d7f05a7beb981b4107056b06350478217a",
+    "0e08aaba4b362e74a984450bd39f8f13a6c51a029d4a0702d13e00b227669b40",
+    "8d91128b5303b33eafe8a6fa55cf5c3ace8624a9e14a23e656335276eacc2380",
+    "10274ef5a31c4f0ce7e5ca4805363017b551828053aabbe18e28b31a1d3865f7",
+    "7c1b3b7defcf2daeee47d17b89966006f434aff0ba6123e7228d01b1ea41f894",
+    "0cd0459c6e9560c1e18cff2535882655f19eb96d5bbbafb9290b305fe7e9a16c",
+    "9a6d21f56ffb13de87cd7d4d4e851cac0cf193575ab48a5ad0c288d580e8cafb",
+    "2fcc345ddb450e04c90f481a455fc1a79536e9a027d6fcf154ac045f1f7ac0f5",
+    "dffd2d8f5e5a1cd75739a9e5c37779c12f18909210d342603b7199a3dab070af",
+    "ad5e7e2c7120e4fdb935ee37ae2c9af8fa613249c0355240c8cd383711b2674a",
+    "68d4f43c65d8607f6c8e1f70b834d6fa078b31ddac2269842e5b5112454378bf",
+    "55ff92b7e80db10b87e57d5c3f7cb8fe6f8c4549d97df4e4a3ed0187379bbfb1",
+    "d4f199d12a1e51912d2a25b89b19b75f1aab9b8a1116cc5015edd02ff9968de2",
+    "cfbaf415e5e0f77f54f8f2584a8219c63e0b311909ca80f47d45f7dd0c24f14e",
+    "c9c7fbc9f03aa07159e61c022d260c3bafa7c2beb6e89ec009a4c55aa40ddc47",
+    "675fa7ec5476a87bd17534e2c111b822a6b731c1c0d7d48ff067df9c15e1a67f",
+    "b6c812695d53638b06f186683171598268eb140a2a7cc7dcbb509007d01d336e",
+    "9c304a86274ac718b0eb60006058c7e2b34845377a696aa3ba27755ebaa2af06",
+    "6e0070ff98b93c3111f17b5e323957deb91d8f8db9807c483c737c58c3916de3",
+    "1bd00e5f01c357055be6780b1d56ff4886613589ccffd6f2a9eeacd53d31f0c8",
+    "57bc4fc2afad75310bf49764509b0fea3f419d60f9b43a655bcc7edfff0e7414",
+    "b60b83cba5b14ef97dec6b6130ef54c689ce1eaaf597febbe1f6e9f9d5bd973f",
+    "175a95f9bc6afe157fafb1d1cab4828440f522ac2cfcd36d945b119ecc95f997",
+    "f65ba874b0fde0778a5f1660030ee832ce86475930928020aa358fbe0ee84312",
+    "e919134afc9c9330d9791e98d4b6dcbed0fa340b426bb752b4a20d543cdb9c61",
+    "422d243c661c2117fc19a562666f050237cbb43d685ba4f6ce2ecc8105263efc"
+  ],
+  "rejection_recall": 1.0,
+  "route_decision_counts": {
+    "abstain": 0,
+    "accept": 0,
+    "reject": 48
+  },
+  "run_date": "20260526",
+  "runtime_blocker": null,
+  "schema": "carnot.local_sota_confidence_abstention_panel.v3",
+  "selected_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "skipped_outcomes": [],
+  "solve_accuracy": 0.020833,
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "codex",
+      "path": "CODEX.md",
+      "role": "repo spec-first workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude",
+      "path": "CLAUDE.md",
+      "role": "artifact-authenticity and tiny-panel discipline",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "role": "diagnostic telemetry context",
+      "sha256": "a86412e8f1a39713a296ea54e765d5f089b842b9589b967ec81a1a5736ab54cc"
+    },
+    {
+      "exists": true,
+      "id": "experiment_template",
+      "path": "scripts/experiment_template.py",
+      "role": "SOTA cache helper context",
+      "sha256": "86559064fcfb0e0f06cb021609f1e82342c9d8464dc86b654d30d889f787de9f"
+    },
+    {
+      "exists": true,
+      "id": "exp3097_protocol",
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "role": ".289 exact-fixture protocol authority",
+      "sha256": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace"
+    },
+    {
+      "exists": true,
+      "id": "exp3098_policy_artifact",
+      "path": "results/experiment_3098_maxsat_abstention_routing_policy_v1.json",
+      "role": ".289 MaxSAT policy artifact",
+      "sha256": "fab629b6f9f5bbb19f48be7dfc21e3e168ad10fbc6f49869f73076027505b696"
+    },
+    {
+      "exists": true,
+      "id": "exp3098_policy_json",
+      "path": "results/maxsat_abstention_routing_policy_3098/policy.json",
+      "role": "machine-readable MaxSAT routing policy",
+      "sha256": "48db5dd2348986a7cea8e64a06ad5f8d48841dfc42db52fd136f761e4ff0d268"
+    }
+  ],
+  "tests_or_checks_run": [],
+  "thermodynamic_decode_telemetry": {
+    "available": false,
+    "diagnostic_only": true,
+    "free_energy_proxy": 0.0,
+    "gate_used": false,
+    "mean_first_token_entropy": 0.0,
+    "mean_first_token_negative_logprob": 0.0,
+    "reference": "arXiv:2604.07867",
+    "row_count": 48
+  },
+  "verification_accuracy": 0.708333
+}
