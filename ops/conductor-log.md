@@ -6379,3 +6379,4 @@ web search: site |
 | 2026-05-26 16:57 UTC | FR-11 experience-driven verifier memory | OK | 81 passed in 3.50s |
 | 2026-05-26 16:59 UTC | Multi-turn repair ladder v2 | GATE_BLOCK | Pre-emptive skip: upstream retired (exp3140-repair-gate-unlock-decision) |
 | 2026-05-26 17:09 UTC | EBT/ARM false-accept calibration boundary v3 | OK | 81 passed in 2.91s |
+| 2026-05-26 17:28 UTC | KAN proof-carrying monitor boundary v2 | OK | 81 passed in 3.41s |

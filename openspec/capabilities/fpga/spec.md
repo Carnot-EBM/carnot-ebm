@@ -3081,6 +3081,91 @@ inference-substrate metadata, and a terminal verdict beginning with
 
 ---
 
+### REQ-HW-096
+
+**Title:** Exp 3146 hardware sampler evidence boundary v6 MUST refresh .292 hardware status from checked-in evidence only
+
+**Description:**
+Experiment 3146 MUST produce
+`results/experiment_3146_hardware_sampler_evidence_boundary_v6.json` as the
+`.292` hardware and sampler evidence boundary ledger. The ledger MUST ingest
+only existing operator-provided or checked-in artifacts, including the Exp 3132
+v5 boundary, current cLUT sampler evidence, GateMate/SSQA operator-evidence
+ledgers, hardware status documentation, and available local result/transcript
+artifacts. It MUST search checked-in artifacts created after Exp 3132 for new
+operator-provided transcripts, hashes, pinouts, readbacks, timing artifacts, or
+host-visible hardware evidence. It MUST NOT flash boards, synthesize or place
+and route designs, execute board commands, perform hardware readback, run live
+model inference, or promote speedup claims from unauthenticated evidence.
+
+The ledger MUST record the current evidence state for GateMate, SSQA, KV260,
+PolarFire, THRML/TSU, Kona, and cLUT separately. GateMate evidence is complete
+only when operator-visible output contract evidence, host-reader command,
+expected transcript, safety limits, and host-visible smoke evidence are all
+complete in checked-in artifacts. SSQA readback is ready only when host-visible
+readback evidence exists. KV260 and PolarFire rows MAY report authenticated
+historical hardware evidence when matching local artifact/transcript files are
+present, but they MUST keep those rows scoped to their recorded workload and
+MUST NOT turn historical timing or dispatch evidence into a fresh sampler
+speedup claim. THRML/TSU and Kona rows MUST disallow hardware or access claims
+unless authenticated local hardware evidence exists; public architecture pages
+or simulator parity artifacts are context only. cLUT rows MUST remain CPU-only
+unless authenticated hardware execution evidence exists.
+
+**Acceptance criteria:**
+- `results/experiment_3146_hardware_sampler_evidence_boundary_v6.json` is
+  generated with `hardware_sampler_evidence_boundary_v6_ready`,
+  `hardware_commands_run`, `gatemate_evidence_complete`,
+  `ssqa_readback_ready`, `kv260_evidence_status`,
+  `polarfire_evidence_status`, `thrml_tsu_claim_allowed`,
+  `kona_claim_allowed`, `clut_sampler_boundary`,
+  `missing_operator_evidence`, `speedup_claim_allowed`, `source_artifacts`,
+  `inference_substrate`, and `honest_verdict`.
+- `hardware_commands_run` is an empty list for Exp 3146 itself unless an
+  existing checked-in command transcript is explicitly summarized as historical
+  evidence.
+- The post-Exp 3132 scan records which checked-in artifacts were searched and
+  distinguishes direct operator-provided hardware evidence from matrix,
+  capstone, or carry-forward references.
+- Missing GateMate/SSQA evidence remains actionable in
+  `missing_operator_evidence`; no GateMate, SSQA, sampler, readback, timing, or
+  speedup claim is allowed while those fields remain incomplete.
+- KV260 and PolarFire statuses cite local artifact/transcript paths when
+  authenticated historical evidence exists, and otherwise report a blocked or
+  missing status without probing devices.
+- THRML/TSU and Kona statuses disallow hardware claims when only software
+  simulator evidence, public pages, or architecture signals exist.
+- cLUT status records CPU-only sampler integration from Exp 3118 and preserves
+  `hardware_claim_made=false`, empty hardware commands, and no hardware speedup
+  promotion.
+
+**Implementation status:** Planned (Exp 3146)
+
+---
+
+### SCENARIO-HW-096
+
+**Scenario:** Hardware sampler evidence boundary v6 refreshes .292 status without running hardware.
+
+**Given:** Exp 3132 records the v5 hardware boundary, Exp 3118 records CPU-only
+cLUT backend integration, and Exp 3119 records incomplete GateMate/SSQA
+operator evidence.
+**When:** Exp 3146 scans checked-in local hardware/status/result artifacts for
+new transcripts, hashes, pinouts, readbacks, timing evidence, and hardware
+commands since Exp 3132.
+**Then:** It writes the v6 JSON with
+`hardware_sampler_evidence_boundary_v6_ready=true`,
+`hardware_commands_run=[]`, `gatemate_evidence_complete=false`,
+`ssqa_readback_ready=false`, per-substrate hardware statuses, CPU-only cLUT
+boundary metadata, THRML/TSU and Kona claims disallowed, actionable missing
+operator evidence, no speedup claim allowed, local source-artifact provenance,
+evidence-ingestion inference-substrate metadata that declares no live
+inference, and a terminal verdict beginning with `complete:`.
+
+**Implementation status:** Planned (Exp 3146)
+
+---
+
 ### SCENARIO-HW-091
 
 **Scenario:** Matrix v21 GateMate/SSQA refresh carries forward no-rerun blockers when operator evidence is absent.
