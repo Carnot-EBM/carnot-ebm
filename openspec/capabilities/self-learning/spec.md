@@ -8513,3 +8513,78 @@ failed-precondition diagnostics, and a blocked `honest_verdict`.
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-LEARN-3142 | Implemented (`python/carnot/eval/fr11_vera_evoenv_hardening_v2.py`) | Implemented (`tests/python/test_experiment_3142_fr11_vera_evoenv_hardening_v2.py`) |
+
+## REQ-LEARN-3143: FR-11 Experience-Driven Verifier Memory
+
+**Given** Exp 3136 records false-accept mechanisms and prior verifier rows,
+Exp 3142 records FR-11 VeRA/EvoEnv variant replay outcomes, and Exp 3129
+records the prior constraint-memory ledger blocker
+**When** Exp 3143 builds an experience-driven verifier memory policy
+**Then** it SHALL load those checked-in artifacts, derive replayable memory keys
+from fixture family, difficulty, answer format, failure mechanism, and contract
+decision, and simulate a deterministic routing policy over the historical rows.
+**And** it SHALL suppress checks only for exact low-risk memory keys with no
+false-accept, false-reject, soundness, completeness, or ledger inconsistency
+history while escalating families with historical false accepts or replay
+errors.
+**And** it SHALL report efficiency and safety metrics including suppressed
+checks, escalated checks, check savings, residual false-accept risk, residual
+false-reject risk, and ledger consistency without claiming model-weight
+learning.
+
+The terminal artifact SHALL be
+`results/experiment_3143_fr11_experience_driven_verifier_memory_v1.json` and
+SHALL include `fr11_experience_verifier_memory_v1_ready`,
+`continuous_self_learning_targeted`, `memory_key_schema`, `replay_row_count`,
+`suppressed_check_count`, `escalated_check_count`,
+`estimated_check_savings_rate`, `residual_false_accept_risk`,
+`residual_false_reject_risk`, `ledger_consistency_rate`,
+`no_weight_update_claim`, `promotion_recommendation`, `tests_run`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+### REQ-LEARN-3143 Sub-requirements
+
+- REQ-LEARN-3143-1: The memory key schema SHALL be machine-readable and SHALL
+  include fixture family, difficulty, answer format, failure mechanism, and
+  contract decision fields so learned experience can be replayed exactly.
+- REQ-LEARN-3143-2: The replay denominator SHALL combine Exp 3136 verifier
+  rows and Exp 3142 variant replay rows, with every replay row assigned exactly
+  one routing decision: `suppress`, `normal`, or `escalate`.
+- REQ-LEARN-3143-3: A check SHALL be suppressed only when exact memory history
+  for that key has no false accepts, no false rejects, no replay errors, and a
+  ledger consistency rate of 1.0.
+- REQ-LEARN-3143-4: A check SHALL be escalated when its exact key or broader
+  family has false-accept history, ledger inconsistency, soundness errors, or
+  completeness errors.
+- REQ-LEARN-3143-5: Residual false-accept and false-reject risk SHALL be
+  computed from simulated routing outcomes and SHALL remain visible even when
+  suppression creates estimated check savings.
+- REQ-LEARN-3143-6: The artifact SHALL set `no_weight_update_claim=true` and
+  SHALL distinguish controller/routing memory from base-model, KAN-model, or
+  LLM-weight learning.
+
+### SCENARIO-LEARN-3143: Experience Memory Suppresses Safe Keys And Escalates False-Accept Families
+
+**Given** ready Exp 3136, Exp 3142, and Exp 3129 source artifacts
+**When** Exp 3143 simulates the experience-driven verifier memory policy
+**Then** it writes a complete terminal artifact with a nonzero replay
+denominator, at least one suppressed check, at least one escalated check,
+nonzero estimated check savings, zero residual false-accept risk for
+suppressed rows, explicit false-reject risk, the inherited ledger consistency
+rate, `no_weight_update_claim=true`, an explicit promotion recommendation, and
+an `honest_verdict` beginning with `complete:`.
+
+### SCENARIO-LEARN-3143-BLOCKED: Missing Experience Sources Fail Closed
+
+**Given** missing Exp 3136, Exp 3142, or Exp 3129 source evidence
+**When** Exp 3143 runs
+**Then** it writes the required artifact fields with zeroed routing metrics,
+`fr11_experience_verifier_memory_v1_ready=false`, no model-weight mutation
+claim, explicit failed-precondition diagnostics, and a blocked
+`honest_verdict`.
+
+## Implementation Status (REQ-LEARN-3143)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-LEARN-3143 | Implemented (`python/carnot/eval/fr11_experience_driven_verifier_memory_v1.py`) | Implemented (`tests/python/test_experiment_3143_fr11_experience_driven_verifier_memory_v1.py`) |
