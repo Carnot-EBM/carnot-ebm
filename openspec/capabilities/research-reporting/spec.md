@@ -9348,3 +9348,65 @@ only inference-substrate metadata, source-artifact provenance, and an
 | Requirement | Implementation | Tests |
 |---|---|---|
 | REQ-REPORT-3110 | Implemented (`python/carnot/reporting/sota_model_spec_cache_manifest_corrigendum_3110.py`) | Implemented (`tests/python/test_experiment_3110_sota_model_spec_cache_manifest_corrigendum.py`) |
+
+### REQ-REPORT-3111: Certified Coherence Feedback V3 From Exact Fixtures
+
+The repository shall provide an Exp 3111 certified coherence-feedback
+generator that writes
+`results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json` from the
+Exp 3097 exact fixture protocol, the Exp 3098 MaxSAT abstention/routing policy,
+the Exp 3100 Z3/test-oracle feedback baseline, and the Exp 3110 SOTA
+model-spec/cache manifest. The generator MUST use deterministic solver/test
+authority only; it MUST NOT run live LLM inference, require
+`cached_sota_pair_available=true`, push commits, activate the conductor, modify
+`scripts/research_conductor.py`, or rewrite prior result artifacts.
+
+The generator MUST emit one certificate for every exact fixture row carrying a
+formal label. Each certificate MUST include the fixture id, fixture family,
+perturbation type, exact label, solver/test authority, coherence status,
+MaxSAT-style hard/soft routing metadata, contradiction localization, an unsat
+core or minimal correction set where available, and a computable
+`repair_distance` or `coherence_gap` when the fixture family provides enough
+structure. SMT and numeric-assignment certificates MUST use Z3 when it is
+available. Arithmetic and JSON certificates MAY use exact Python parser/runtime
+oracles, but MUST keep that authority explicit.
+
+The terminal artifact MUST include
+`certified_coherence_feedback_v3_ready`, `z3_available`,
+`exact_ground_truth_count`, `certificate_count`, `unsat_core_count`,
+`minimal_repair_distance_summary`, `solver_only_success_count`,
+`guided_success_count`, `formal_feedback_delta`, `vacuity_guard_passed`,
+`tests_run`, `source_artifacts`, `inference_substrate`, and `honest_verdict`.
+It MAY include certificate rows, policy summaries, source checksums,
+run metadata, and measured `duration_s`. `certified_coherence_feedback_v3_ready`
+shall be true only when Z3 is importable, Exp 3097 and Exp 3098 are ready, the
+exact fixture count is non-tiny, every formal-label fixture has a nonempty
+certificate, at least one contradiction-localization certificate contains an
+unsat core or minimal correction set, repair-distance summary statistics are
+computed, and the vacuity guard passes. Readiness MUST NOT depend on
+`cached_sota_pair_available`; live LLM lift MUST remain unclaimed unless live
+mandated SOTA traces are actually used.
+
+#### SCENARIO-REPORT-3111: Solver-Certified Feedback Is Ready Without SOTA Pair
+
+**Given** Exp 3097 reports 72 usable exact fixtures, Exp 3098 reports a ready
+MaxSAT routing policy, Exp 3100 reports `z3_available=true`,
+`solver_only_success_count=2`, `guided_success_count=0`, and
+`formal_feedback_v2_ready=false` only because the cached SOTA pair was absent,
+**And** Exp 3110 states solver-only tasks may proceed when
+`cached_sota_pair_available=false`
+**When** the Exp 3111 certified coherence-feedback generator runs
+**Then** it writes
+`results/experiment_3111_certified_coherence_z3_mcs_feedback_v3.json` with
+`certified_coherence_feedback_v3_ready=true`, explicit Z3 availability, a
+certificate count equal to the exact ground-truth count, auditable unsat-core
+or minimal-correction evidence, localized repair-distance summary statistics,
+the Exp 3100 solver-only and guided counts preserved separately, no live-LLM
+inference claim, a passed vacuity guard, source-artifact provenance, and an
+`honest_verdict` that starts with `complete:`.
+
+## Implementation Status (REQ-REPORT-3111)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-REPORT-3111 | Planned (`python/carnot/reporting/certified_coherence_feedback_v3_3111.py`) | Planned (`tests/python/test_experiment_3111_certified_coherence_z3_mcs_feedback_v3.py`) |

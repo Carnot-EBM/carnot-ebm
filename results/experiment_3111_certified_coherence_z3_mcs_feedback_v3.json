@@ -1,0 +1,4204 @@
+{
+  "artifact": "experiment_3111_certified_coherence_z3_mcs_feedback_v3",
+  "baseline_comparison": {
+    "guided_minus_solver_only": -2,
+    "guided_success_count": 0,
+    "live_llm_lift_claimed": false,
+    "solver_only_success_count": 2,
+    "source": "results/experiment_3100_z3_oracle_feedback_v2.json"
+  },
+  "certificate_count": 72,
+  "certificates": [
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 5
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-000",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 2,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 16,
+        "computed_value": 14
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-001",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 16,
+        "kind": "replace_claimed_value",
+        "to": 14
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 2,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 27
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-002",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 4,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 47,
+        "computed_value": 43
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-003",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 47,
+        "kind": "replace_claimed_value",
+        "to": 43
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 4,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 64
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-004",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 2,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 16,
+        "computed_value": 14
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-005",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 16,
+        "kind": "replace_claimed_value",
+        "to": 14
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 2,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 32
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-006",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 4,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 38,
+        "computed_value": 34
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-007",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 38,
+        "kind": "replace_claimed_value",
+        "to": 34
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 4,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 54
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-008",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 2,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 79,
+        "computed_value": 77
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-009",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 79,
+        "kind": "replace_claimed_value",
+        "to": 77
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 2,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 15
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-010",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 4,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 41,
+        "computed_value": 37
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-011",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 41,
+        "kind": "replace_claimed_value",
+        "to": 37
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 4,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 62
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-012",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 2,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 94,
+        "computed_value": 92
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-013",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 94,
+        "kind": "replace_claimed_value",
+        "to": 92
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 2,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 91
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-014",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 4,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 20,
+        "computed_value": 16
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-015",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 20,
+        "kind": "replace_claimed_value",
+        "to": 16
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 4,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 41
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-016",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 2,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 72,
+        "computed_value": 70
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-017",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 72,
+        "kind": "replace_claimed_value",
+        "to": 70
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 2,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 102
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-018",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 4,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 143,
+        "computed_value": 139
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-019",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 143,
+        "kind": "replace_claimed_value",
+        "to": 139
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 4,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 25
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-020",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 2,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 47,
+        "computed_value": 45
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-021",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 47,
+        "kind": "replace_claimed_value",
+        "to": 45
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 2,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {
+        "computed_value": 77
+      },
+      "exact_label": "VALID",
+      "fixture_id": "resyn-3084-arith-022",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {},
+      "perturbation_type": "arithmetic_true_verification",
+      "repair_distance": 0,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_passes",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 4,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 117,
+        "computed_value": 113
+      },
+      "exact_label": "INVALID",
+      "fixture_id": "resyn-3084-arith-023",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 117,
+        "kind": "replace_claimed_value",
+        "to": 113
+      },
+      "model": {},
+      "perturbation_type": "arithmetic_false_verification",
+      "repair_distance": 4,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "assertion_fails",
+      "task_family": "arithmetic_code_assertions",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-000",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-003",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-006",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-009",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-012",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-015",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-018",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "json_error": "Expecting ',' delimiter: line 1 column 20 (char 19)"
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-json-021",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "edits": [
+          {
+            "operation": "insert_delimiter",
+            "token": ","
+          }
+        ],
+        "kind": "json_token_edit"
+      },
+      "model": {},
+      "perturbation_type": "json_syntax_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_json_parser",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 13,
+        "computed_value": 12
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-002",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 13,
+        "kind": "replace_claimed_value",
+        "to": 12
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 19,
+        "computed_value": 18
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-005",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 19,
+        "kind": "replace_claimed_value",
+        "to": 18
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 25,
+        "computed_value": 24
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-008",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 25,
+        "kind": "replace_claimed_value",
+        "to": 24
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 31,
+        "computed_value": 30
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-011",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 31,
+        "kind": "replace_claimed_value",
+        "to": 30
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "computed_value",
+        "claimed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 37,
+        "computed_value": 36
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-014",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 37,
+        "kind": "replace_claimed_value",
+        "to": 36
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 43,
+        "computed_value": 42
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-017",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 43,
+        "kind": "replace_claimed_value",
+        "to": 42
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 49,
+        "computed_value": 48
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-020",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 49,
+        "kind": "replace_claimed_value",
+        "to": 48
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "claimed_value": 55,
+        "computed_value": 54
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-py-023",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "from": 55,
+        "kind": "replace_claimed_value",
+        "to": 54
+      },
+      "model": {},
+      "perturbation_type": "python_assertion_repair",
+      "repair_distance": 1,
+      "solver_authority": "python_ast_runtime_execution",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "claimed_value",
+        "computed_value"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_1": 2,
+          "ry_1": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-001",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_1": 10,
+          "ry_1": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "constraint_2",
+        "assign_rx_1",
+        "assign_ry_1"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_4": 5,
+          "ry_4": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-004",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_4": 13,
+          "ry_4": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "assign_rx_4",
+        "constraint_2",
+        "assign_ry_4"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_7": 8,
+          "ry_7": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-007",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_7": 16,
+          "ry_7": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "assign_ry_7",
+        "assign_rx_7",
+        "constraint_2"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_10": 11,
+          "ry_10": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-010",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_10": 19,
+          "ry_10": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "assign_rx_10",
+        "constraint_2",
+        "assign_ry_10"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_13": 14,
+          "ry_13": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-013",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_13": 22,
+          "ry_13": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "assign_rx_13",
+        "constraint_2",
+        "assign_ry_13"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_16": 17,
+          "ry_16": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-016",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_16": 25,
+          "ry_16": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "assign_ry_16",
+        "assign_rx_16",
+        "constraint_2"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_19": 20,
+          "ry_19": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-019",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_19": 28,
+          "ry_19": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "constraint_2",
+        "assign_ry_19",
+        "assign_rx_19"
+      ]
+    },
+    {
+      "coherence_gap": 8,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "candidate_assignment": {
+          "rx_22": 23,
+          "ry_22": 1
+        }
+      },
+      "exact_label": "REPAIRABLE",
+      "fixture_id": "resyn-3084-repair-smt-022",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_2"
+        ],
+        "kind": "relax_assignment",
+        "repair_assignment": {
+          "rx_22": 31,
+          "ry_22": 1
+        }
+      },
+      "model": {},
+      "perturbation_type": "numeric_bound_repair",
+      "repair_distance": 8,
+      "solver_authority": "z3_solver",
+      "solver_label": "repairable",
+      "task_family": "repairable_invalid_candidates",
+      "unsat_core": [
+        "assign_rx_22",
+        "assign_ry_22",
+        "constraint_2"
+      ]
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_0 >= 2",
+          "x_0 <= 1",
+          "y_0 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-000",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-001",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_1": 1,
+        "y_1": 3
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_2 >= 4",
+          "x_2 <= 3",
+          "y_2 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-002",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_1",
+        "constraint_0"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-003",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_3": 3,
+        "y_3": 3
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_4 >= 6",
+          "x_4 <= 5",
+          "y_4 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-004",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-005",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_5": 0,
+        "y_5": 3
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_6 >= 8",
+          "x_6 <= 7",
+          "y_6 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-006",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_1",
+        "constraint_0"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-007",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_7": 5,
+        "y_7": 0
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_8 >= 10",
+          "x_8 <= 9",
+          "y_8 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-008",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-009",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_9": 4,
+        "y_9": 3
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_10 >= 12",
+          "x_10 <= 11",
+          "y_10 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-010",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-011",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_11": 4,
+        "y_11": 0
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_12 >= 14",
+          "x_12 <= 13",
+          "y_12 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-012",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-013",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_13": 6,
+        "y_13": 0
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_14 >= 16",
+          "x_14 <= 15",
+          "y_14 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-014",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_1",
+        "constraint_0"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-015",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_15": 3,
+        "y_15": 0
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_16 >= 18",
+          "x_16 <= 17",
+          "y_16 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-016",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_1",
+        "constraint_0"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-017",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_17": 5,
+        "y_17": 0
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_18 >= 20",
+          "x_18 <= 19",
+          "y_18 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-018",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-019",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_19": 4,
+        "y_19": 3
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_20 >= 22",
+          "x_20 <= 21",
+          "y_20 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-020",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-021",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_21": 4,
+        "y_21": 0
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    },
+    {
+      "coherence_gap": 1,
+      "coherence_status": "incoherent",
+      "diagnostics": {
+        "constraints": [
+          "x_22 >= 24",
+          "x_22 <= 23",
+          "y_22 >= 0"
+        ]
+      },
+      "exact_label": "UNSAT",
+      "fixture_id": "resyn-3084-smt-022",
+      "maxsat_route": {
+        "action": "reject",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": true,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 175
+      },
+      "minimal_correction_set": {
+        "constraints_to_relax": [
+          "constraint_0"
+        ],
+        "kind": "remove_conflicting_constraint"
+      },
+      "model": {},
+      "perturbation_type": "smt_unsat_abstention",
+      "repair_distance": 1,
+      "solver_authority": "z3_solver",
+      "solver_label": "unsat",
+      "task_family": "smt_constraints",
+      "unsat_core": [
+        "constraint_0",
+        "constraint_1"
+      ]
+    },
+    {
+      "coherence_gap": 0,
+      "coherence_status": "coherent",
+      "diagnostics": {},
+      "exact_label": "SAT",
+      "fixture_id": "resyn-3084-smt-023",
+      "maxsat_route": {
+        "action": "accept",
+        "hard_constraints": [
+          {
+            "id": "HC_EXACT_LABEL_PRESENT",
+            "satisfied": true
+          },
+          {
+            "id": "HC_SOLVER_OR_TEST_AUTHORITY",
+            "satisfied": true
+          }
+        ],
+        "policy_style": "weighted_maxsat_reference_evaluator",
+        "soft_constraints": [
+          {
+            "id": "SC_EXACT_LABEL_MATCH",
+            "satisfied": true,
+            "weight": 100
+          },
+          {
+            "id": "SC_LOCALIZED_FEEDBACK",
+            "satisfied": false,
+            "weight": 40
+          },
+          {
+            "id": "SC_MINIMAL_DISTANCE",
+            "satisfied": true,
+            "weight": 35
+          }
+        ],
+        "soft_score": 135
+      },
+      "minimal_correction_set": {},
+      "model": {
+        "x_23": 6,
+        "y_23": 0
+      },
+      "perturbation_type": "smt_sat_solving",
+      "repair_distance": 0,
+      "solver_authority": "z3_solver",
+      "solver_label": "sat",
+      "task_family": "smt_constraints",
+      "unsat_core": []
+    }
+  ],
+  "certified_coherence_feedback_v3_ready": true,
+  "duration_s": 0.110616,
+  "exact_ground_truth_count": 72,
+  "formal_feedback_delta": -0.333333,
+  "guided_success_count": 0,
+  "honest_verdict": "complete: certified_coherence_feedback_v3_ready=true; certificate_count=72; unsat_core_count=40; cached_sota_pair_not_required",
+  "inference_substrate": {
+    "cached_sota_pair_available": false,
+    "cached_sota_pair_required_for_readiness": false,
+    "executes_hardware": false,
+    "executes_models": false,
+    "executes_solvers": true,
+    "kind": "deterministic_z3_and_python_test_oracle_certificates",
+    "live_llm_inference": false,
+    "solver_only_tasks_allowed_without_cached_sota_pair": true
+  },
+  "maxsat_policy_summary": {
+    "hard_constraint_count": 6,
+    "maxsat_policy_ready": true,
+    "objective_terms": {
+      "abstention_confidence_floor": 0.7,
+      "hard_constraint_penalty": "infinite",
+      "maximize": "sum of satisfied weighted soft constraints after hard filtering",
+      "tie_break_order": [
+        "abstain",
+        "reject",
+        "accept"
+      ],
+      "weights": {
+        "abstain_on_uncertainty": 70,
+        "accept_exact_consistent": 100,
+        "minimize_false_accept": 120,
+        "minimize_false_reject": 60,
+        "minimize_unnecessary_abstention": 20,
+        "prefer_formal_feedback_lift": 40,
+        "preserve_repair_intent": 35,
+        "reject_exact_inconsistent": 100
+      }
+    },
+    "soft_constraint_count": 8
+  },
+  "milestone": "2026.05.290",
+  "minimal_correction_set_count": 48,
+  "minimal_repair_distance_summary": {
+    "count": 48,
+    "max": 8.0,
+    "mean": 2.666667,
+    "min": 1.0
+  },
+  "missing_source_artifacts": [],
+  "no_conductor_execution": true,
+  "no_live_llm_inference": true,
+  "no_new_model_execution": true,
+  "readiness_checks": {
+    "all_formal_rows_certified": true,
+    "cached_sota_pair_not_required": true,
+    "contradiction_localization_nonempty": true,
+    "exact_ground_truth_non_tiny": true,
+    "exp3097_protocol_ready": true,
+    "exp3098_maxsat_policy_ready": true,
+    "minimal_repair_distance_summary_computed": true,
+    "required_sources_present": true,
+    "solver_only_allowed_without_cached_pair": true,
+    "vacuity_guard_passed": true,
+    "z3_available": true
+  },
+  "run_date": "20260526",
+  "schema": "carnot.certified_coherence_feedback.v3",
+  "scripts_research_conductor_modified": false,
+  "solver_only_success_count": 2,
+  "source_artifacts": [
+    {
+      "path": "AGENTS.md",
+      "present": true,
+      "required": false,
+      "role": "agents_repo_instructions",
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "path": "CODEX.md",
+      "present": true,
+      "required": false,
+      "role": "codex_repo_workflow",
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "path": "CLAUDE.md",
+      "present": true,
+      "required": false,
+      "role": "claude_authenticity_rules",
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "path": "research-references.md",
+      "present": true,
+      "required": false,
+      "role": "research_references",
+      "sha256": "18f276c52b068074cf9e0cce9d57fc8217ea698f1df5168a48cf7761004a6fc1"
+    },
+    {
+      "path": "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3097_exact_fixture_protocol",
+      "sha256": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace"
+    },
+    {
+      "path": "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl",
+      "present": true,
+      "required": true,
+      "role": "exp3097_stratified_manifest",
+      "sha256": "c5c3c243042cb9ad3dbe2ff4149e467548fe89f213be348c49373d548392333f"
+    },
+    {
+      "path": "results/experiment_3098_maxsat_abstention_routing_policy_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3098_maxsat_policy",
+      "sha256": "fab629b6f9f5bbb19f48be7dfc21e3e168ad10fbc6f49869f73076027505b696"
+    },
+    {
+      "path": "results/experiment_3100_z3_oracle_feedback_v2.json",
+      "present": true,
+      "required": true,
+      "role": "exp3100_z3_oracle_feedback_v2",
+      "sha256": "4cbb97238842b9d0ad5144bb71596b66aaa01747146cccddd86fb25337cdd84e"
+    },
+    {
+      "path": "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json",
+      "present": true,
+      "required": true,
+      "role": "exp3110_sota_model_manifest_corrigendum",
+      "sha256": "1707ec755287b47f7e205200e2787e8eac93e33a8d1490515748c0ce3b2acb24"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "research-references.md": "18f276c52b068074cf9e0cce9d57fc8217ea698f1df5168a48cf7761004a6fc1",
+    "results/exact_fixture_eval_protocol_3097/stratified_eval_manifest.jsonl": "c5c3c243042cb9ad3dbe2ff4149e467548fe89f213be348c49373d548392333f",
+    "results/experiment_3097_exact_fixture_eval_protocol_audit_v1.json": "92954fc69cc0209268b626c9af9fb8554c62f89503ad52b3ad583d588ee1dace",
+    "results/experiment_3098_maxsat_abstention_routing_policy_v1.json": "fab629b6f9f5bbb19f48be7dfc21e3e168ad10fbc6f49869f73076027505b696",
+    "results/experiment_3100_z3_oracle_feedback_v2.json": "4cbb97238842b9d0ad5144bb71596b66aaa01747146cccddd86fb25337cdd84e",
+    "results/experiment_3110_sota_model_spec_cache_manifest_corrigendum_v1.json": "1707ec755287b47f7e205200e2787e8eac93e33a8d1490515748c0ce3b2acb24"
+  },
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3111_certified_coherence_z3_mcs_feedback_v3.py -q",
+    ".venv/bin/pytest tests/python/test_experiment_3111_certified_coherence_z3_mcs_feedback_v3.py -q --cov-reset --cov=python/carnot/reporting/certified_coherence_feedback_v3_3111.py --cov-report=term-missing --cov-fail-under=100",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "unsat_core_count": 40,
+  "vacuity_guard_passed": true,
+  "z3_available": true,
+  "z3_version": "4.16.0"
+}
