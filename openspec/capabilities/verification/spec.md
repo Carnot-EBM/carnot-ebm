@@ -1715,6 +1715,55 @@ keeps EBT/ARM training and runtime integration out of scope, and uses an
 |---|---|---|
 | REQ-VERIFY-3091 | Implemented (`python/carnot/inference/ebt_arm_sidecar_adapter.py`; `python/carnot/eval/ebt_arm_sidecar_adapter_schema_prototype_v1.py`; `python/carnot/schemas/ebt_arm_sidecar_adapter_v1.json`) | Implemented (`tests/python/test_experiment_3091_ebt_arm_sidecar_adapter_schema_prototype.py`) |
 
+### REQ-VERIFY-3117: EBT/ARM Sidecar Score Correlation Boundary v3
+
+The repository shall provide an Exp 3117 deterministic sidecar score
+correlation diagnostic that writes
+`results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json`
+from checked-in exact fixture artifacts only. The diagnostic MUST NOT invoke
+live model inference, integrate sidecar scores into a live model path, mutate
+model weights, train an EBT/ARM model, or claim benchmark speedup.
+
+The diagnostic shall load the Exp 3097 stratified exact-fixture manifest and
+build replay-compatible sidecar records for accepted, rejected, and repairable
+cases. It shall compute existing sidecar replay scores and label-blind feature
+summaries, then report rank correlation, calibration bins, separability, and
+failure cases against exact fixture labels. Any score that uses exact label
+references shall be named as label-aware replay evidence and shall not be
+promoted as a live pre-label scoring claim.
+
+The terminal artifact MUST include
+`sidecar_score_correlation_boundary_v3_ready`, `exact_fixture_count`,
+`score_correlation_summary`, `calibration_summary`, `failure_cases`,
+`no_live_model_integration_claim`, `no_weight_update_claim`,
+`no_speedup_claim`, `tests_run`, `source_artifacts`, `inference_substrate`,
+and `honest_verdict`.
+
+`sidecar_score_correlation_boundary_v3_ready` may be true only when at least
+48 exact fixture rows are loaded, accepted/rejected/repairable counts are
+non-zero, finite rank-correlation and separability summaries are present,
+calibration bins account for every scored row, failure-case accounting is
+explicit, the no-live/no-training/no-speedup boundary is recorded, and
+`honest_verdict` starts with a terminal success prefix.
+
+### SCENARIO-VERIFY-3117: Sidecar Scores Stay Diagnostic Against Exact Fixtures
+
+Given the Exp 3091 sidecar schema/replay scorer and the Exp 3097 exact fixture
+protocol are available,
+When the Exp 3117 diagnostic builds replay-compatible sidecar rows from the
+checked-in exact fixture manifest,
+Then it scores accepted, rejected, and repairable cases, reports rank
+correlation/calibration/separability/failure diagnostics against exact labels,
+records that label-aware replay is not a live pre-label score, declares no live
+model integration, no model-weight update, and no speedup claim, and uses an
+`honest_verdict` beginning with `complete:`.
+
+## Implementation Status (REQ-VERIFY-3117)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3117 | Implemented (`python/carnot/eval/ebt_arm_sidecar_score_correlation_boundary_v3.py`) | Implemented (`tests/python/test_experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy
