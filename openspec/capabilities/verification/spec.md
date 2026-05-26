@@ -1439,6 +1439,69 @@ separately, and keeps promotion disabled while exact labels remain authority.
 |---|---|---|
 | REQ-VERIFY-3112 | Implemented (`python/carnot/eval/logic_regularized_verifier_pilot_v1.py`) | Implemented (`tests/python/test_experiment_3112_logic_regularized_verifier_pilot.py`) |
 
+### REQ-VERIFY-3113: Diagnostic Local SOTA Verifier Calibration V5
+
+The repository shall provide an Exp 3113 diagnostic local SOTA verifier
+calibration builder that writes
+`results/experiment_3113_diagnostic_local_sota_verifier_calibration_v5.json`
+from the Exp 3097 exact-fixture protocol, Exp 3098 MaxSAT routing policy, Exp
+3099 cached/live local SOTA abstention rows, Exp 3110 mandated model-cache
+manifest, Exp 3111 certified coherence feedback v3, and Exp 3112
+logic-regularized verifier pilot signals. The builder MUST NOT modify
+`scripts/research_conductor.py`, push commits, substitute legacy tiny models
+for headline evidence, or conflate reused cached traces with fresh live
+inference.
+
+The calibration shall select fixture rows with exact solver/test labels,
+MaxSAT route decisions, certified coherence certificates, and
+logic-regularized pilot decisions where available. It shall compute the raw
+verifier-gain delta against the cached local SOTA MaxSAT route decisions, the
+verifier-gain delta after certified-coherence adjudication, false-accept rate,
+false-reject rate, calibration error, abstention precision, and rejection
+recall. Calibration evidence MUST be emitted even when the measured lift is
+zero or negative; repair promotion is controlled separately by
+`repair_gate_state`.
+
+The terminal artifact MUST include
+`diagnostic_verifier_calibration_v5_ready`, `model_specs`,
+`mandatory_headline_model_ids`, `selected_headline_model_ids`,
+`live_llm_inference`, `exact_ground_truth_count`, `verifier_gain_delta`,
+`verifier_gain_delta_with_certified_coherence`, `false_accept_rate`,
+`false_reject_rate`, `calibration_error`, `abstention_precision`,
+`rejection_recall`, `repair_gate_state`, `source_artifacts`,
+`inference_substrate`, and `honest_verdict`. It shall also include a
+machine-readable Exp 3115 repair-gate explanation that records the delta sign,
+blocking reason, and downstream action.
+
+`repair_gate_state` shall be one of `unblocked`, `blocked_negative_delta`,
+`blocked_model_cache`, `blocked_tiny_panel`, or `blocked_missing_inputs`.
+Missing required source artifacts or unreadable row evidence shall produce
+`blocked_missing_inputs`. A below-floor exact calibration panel shall produce
+`blocked_tiny_panel`. Missing selected mandated local SOTA cache evidence
+shall produce `blocked_model_cache` while preserving any solver-only
+diagnostics. Non-positive certified-coherence verifier gain shall produce
+`blocked_negative_delta`. Only a non-tiny diagnostic panel with at least one
+selected mandated cached headline model and positive certified-coherence gain
+may set `repair_gate_state=unblocked`.
+
+### SCENARIO-VERIFY-3113: Certified Diagnostic Calibration Gates Repair Without Positive-Lift Assumption
+
+Given Exp 3097, Exp 3098, Exp 3099, Exp 3110, Exp 3111, and Exp 3112 source
+artifacts are present,
+When Exp 3113 builds the diagnostic calibration,
+Then it writes the required machine-readable artifact, reuses cached/live
+mandated SOTA traces without claiming fresh live inference, compares route,
+logic-pilot, and certified-coherence decisions against exact labels, reports
+the required safety and calibration metrics, and sets the repair gate to
+`unblocked` only when the measured certified-coherence lift is positive and
+model-cache and panel-size gates also pass.
+
+## Implementation Status (REQ-VERIFY-3113)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3113 | Implemented (`python/carnot/eval/diagnostic_local_sota_verifier_calibration_v5.py`) | Implemented (`tests/python/test_experiment_3113_diagnostic_local_sota_verifier_calibration_v5.py`) |
+
 ### REQ-VERIFY-3073: EBT/ARM-EBM Adapter Feasibility Audit
 
 The repository shall provide an Exp 3073 deterministic architecture audit that
