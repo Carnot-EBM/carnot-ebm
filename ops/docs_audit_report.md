@@ -4,48 +4,49 @@
 # docs_audit_report — 2026-05-26
 
 ## TL;DR (stranger's 30-second take)
-The page looks visually polished and has a strong hook, but it quickly devolves into an internal project dashboard with broken code. A stranger would bounce because they are hit with literal file paths leaking into the UI and CSS, dense academic jargon, and internal status updates instead of a clear, coherent value proposition.
+I would close the tab. While the initial hook is clear and compelling, the page quickly devolves into a dense, impenetrable list of internal experiment jargon, raw file paths, and contradictory metrics that read more like an internal sprint review than a public landing page.
 
 ## TOP 3 PROBLEMS
-1. Raw file paths leaked into the code and UI — HTML `<head>` and Results `Live benchmark` card.
-2. Dense academic and internal jargon without context — Hero `Recent progress` and Results cards.
-3. Contradictory claims regarding HumanEval improvements — Features `Code` vs Results cards.
+1. **Raw internal paths as headlines:** The "Live benchmark" result card literally uses an internal artifact path (`@results/citation_hallucination_field_verifier_2932_raw/spilled-energy-2602-18671:real_Gemma4-26B-A4B-it.txt`) as its H3 title.
+2. **Inconsistent capabilities:** Code repair is claimed to add "+3.0 points" on pass-rate in two places, but then inexplicably jumps to "+72pp" (8% → 80%) in another result card. 
+3. **Impenetrable jargon and internal narrative:** Terms like "FoVer (5-seed dual-condition)", "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)", and "SVAMP AUC" are dropped with zero context, making the results meaningless to outsiders.
 
 ## DETAILED FINDINGS
 ### Bloat
-- Results grid — 12 cards — cap at 6.
-- Blog grid — 7 cards — cap at 3 or 4.
+- Entire Page — 28 cards total — Although individual cards stay under their word limits, 28 total cards (7 Bento, 12 Results, 7 Blog, 2 Problem) creates immense visual bloat. The 12-card results grid in particular dilutes the impact of your best metrics; if a section has more than ~20 cards overall, a stranger will skim none of them.
 
 ### Internal jargon
-- HTML `<head>` and CSS — `@openspec/change-proposals/...`, `@results/adversarial_gsm8k_data_400.json` — A stranger will see literal workspace file paths breaking CSS syntax and font URLs.
-- Hero Recent progress card — "FoVer (5-seed dual-condition; architecture-only 0.8947)", "v2 0.9857" — Meaningless experiment parameters and model versions without context.
-- Results: Math reasoning — "EstimationVerifier SVAMP AUC", "FoVer baseline" — Unexplained internal architectures and datasets.
-- Results: Code repair — "IterativeSelfRepair (HumanEval-50, execute-feedback-retry)" — Reads like an internal configuration flag rather than a product benefit.
-- Results: Live benchmark — `@results/citation_hallucination_field_verifier_2932_raw/...` — Literal file path syntax rendered directly in the UI.
+- "Live benchmark" card — `@results/citation_hallucination_field_verifier_2932_raw/...txt` — This is a raw internal artifact path leaked into the public UI.
+- "Recent progress" card — `FoVer (5-seed dual-condition; architecture-only 0.8947)` — A stranger does not know what the FoVer dataset is or what these condition flags mean.
+- "Code repair" card — `IterativeSelfRepair (HumanEval-50, execute-feedback-retry)` — Flag/internal method syntax that means nothing externally.
+- "Math reasoning" card — `EstimationVerifier SVAMP AUC (vs 0.125 FoVer baseline)` — Stacked acronyms (SVAMP, FoVer) with no explanation.
+- "Test-Time Compute (TTC) & PREM" card — `Process-Reward Energy Model (PREM)` — Acronym introduced without explanation.
 
 ### Per-milestone narrative
-- Hero Recent progress card — "Repinned from v2 0.9857 after pre-submission adversarial audit"
-- Preprint section — "The arXiv submission is prepared but pending operator-initiated upload."
+- "Recent progress" card — `Repinned from v2 0.9857 after pre-submission adversarial audit` — Reads like a Jira ticket comment or a commit message.
+- "Stats bar" — `382 Completed milestones` — Internal project-management telemetry that provides zero value to a potential user.
 
 ### Inconsistencies
-- Features Code card claims HumanEval "+3 points" vs Results Live benchmark claims "0% -> 36%" vs Results Code repair card claims "8% -> 80% pass rate (+72pp)".
+- Code pass-rate claims: The "Code" bento card and first Code result card claim repair adds **+3.0 points** to pass-rate. Later, the "Code repair" result card claims a massive **+72pp** jump (8% → 80%).
+- AUROC metrics: The hero text claims **0.9131** AUROC, the Safety card claims **0.91**, and the Math card claims **0.90**. 
 
 ### Missing essentials
-- Who maintains it? The footer mentions "Ian Blenke" and "Carnot Project", but there is no clear team/about section establishing credibility for an open-source security tool.
+- Why should I trust the numbers?: The page states "Every number below is backed by a checked-in experiment artifact." But to a stranger, "trust my private internal JSON files" is not a credibility anchor.
 
 ### Fabrication signals
-- 60/60 (perfect 100%) — Results: Adversarial audit card.
-- 1.0 TP rate (perfect 100%) — Results: Math extraction card.
-- 2.0x speedup (suspiciously exact) — Results: Training card.
-- 100% progress bar without anchor — Results: Hardware card.
+- `GSM8K extraction TP rate: 0.5 → 1.0` (A perfectly clean 1.0 looks suspiciously flawless)
+- `k=5 ensemble catches 60/60 attacks` (100% success on a suspiciously even/small N=60)
+- `2.0× speedup, identical losses` (Exactly 2.0× and perfectly identical losses triggers skepticism)
+- `Zero false positives` (In the Dogfooding blog summary, this sounds suspiciously perfect)
 
 ## WHAT'S WORKING
-- The hero messaging ("Catch the mistakes your LLM confidently makes up" -> "Extract -> Check -> Repair") is punchy and immediately sets expectations.
-- Quickstart provides clear, understandable code snippets in both Python and Rust, proving the tool is real and usable.
+- The hero messaging ("Catch the mistakes your LLM confidently makes up.") and the three-step "Extract → Check → Repair" explanation are excellent and highly accessible.
+- The Quickstart section with the Python/Rust code toggle is exactly what developers want to see immediately.
 
 ## RECOMMENDED OPERATOR ACTIONS
-1. Fix the CSS and HTML template injection errors immediately (remove `@openspec/...` and `@results/...` from media queries, fonts, and result cards).
-2. Reconcile the conflicting HumanEval claims (+3 vs +36 vs +72) and present one coherent metric.
-3. Rewrite the Hero "Recent progress" card to focus strictly on the value of the 0.9131 AUROC, stripping out internal jargon.
-4. Prune the Results grid from 12 cards down to the 6 strongest, most defensible claims, and add sample-size caveats to perfect scores (e.g., 60/60).
-5. Rewrite the Preprint section to be an abstract of the paper rather than a status update on its submission process.
+1. Remove the raw `@results/...txt` artifact path from the Live benchmark card immediately.
+2. Reconcile the Code repair numbers: clarify whether the improvement is +3.0 points or +72pp, and use consistent baselines.
+3. Prune the Results grid from 12 cards down to 4-6 of the most defensible, easily understood metrics.
+4. Rewrite the "Recent progress" card to remove internal milestone status ("Repinned from v2") and unexplained dataset acronyms ("FoVer").
+5. Add a brief sentence explicitly explaining what "FoVer" and "SVAMP" are, or replace them with general terms like "internal constraint benchmark."
+6. Soften or contextualize the perfect "1.0" and "60/60" scores to avoid triggering fabrication skepticism.

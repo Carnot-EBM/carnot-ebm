@@ -1,3 +1,130 @@
+## 2026-05-26 Post-.293 Planning Sweep (Milestone 2026.05.294)
+
+This sweep was run after milestone `.293` completed. `.293` moved the evidence
+quality layer forward but did not unblock the headline path: the local SOTA
+authenticity preflight produced one real `llama_cpp` call on
+`unsloth/gemma-4-26B-A4B-it-GGUF`, then honestly blocked because the measured
+duration was far below the milestone's fixed 60 s plausibility floor. The clean
+live verifier rerun and repair ladder were therefore gate-skipped; matrix v27
+rose to 65 publication blockers with 3 inherited adversarial flags and 4 missing
+artifacts. FR-11 remains controller-memory only at `ledger_consistency_rate=0.857143`.
+The next milestone should not simply repeat the same preflight. It should repair
+the authenticity contract so measured work, token counts, model-load evidence,
+and repetition controls replace an arbitrary wall-clock floor, then generate
+gated-skip artifacts for downstream repair tasks when gates do not pass.
+
+### Controlled-Invariance Sanity Checks for Verifier Evidence
+
+- **Papers:** "Sanity Checks for Long-Form Hallucination Detection"
+  (arXiv:2605.08346) and "When Reasoning Traces Become Performative:
+  Step-Level Evidence that Chain-of-Thought Is an Imperfect Oversight Channel"
+  (arXiv:2605.11746).
+- **What:** The sanity-check paper introduces `Force` and `Remove` oracle tests
+  to distinguish detectors that read answer-level artifacts from detectors that
+  actually score intermediate reasoning structure. The CoT performativity paper
+  reports that visible traces can continue producing deliberative-looking text
+  after answer commitment has stabilized, so trace length and step text are not
+  reliable authenticity evidence by themselves.
+- **Relevance to Carnot:** `.294` should add controlled-invariance checks to the
+  verifier evidence contract: forced-answer, removed-answer, shuffled-trace, and
+  transcript-hash controls. These controls are useful before another live rerun
+  because `.293` showed the danger of trusting a superficially complete artifact.
+- **Sources:** https://papers.cool/arxiv/2605.08346 and
+  https://arxiv.org/abs/2605.11746
+
+### Token-Level Hallucination Signals Are Triage, Not Acceptance Authority
+
+- **Papers:** "Scalable Token-Level Hallucination Detection in Large Language
+  Models" (arXiv:2605.12384), "The First Token Knows: Single-Decode Confidence
+  for Hallucination Detection" (arXiv:2605.05166), and "Before the First Token:
+  Scale-Dependent Emergence of Hallucination Signals in Autoregressive Language
+  Models" (arXiv:2604.13068).
+- **What:** TokenHD trains token-level detectors directly over free-form text,
+  avoiding fragile step segmentation. First-token and pre-generation work show
+  low-cost uncertainty signals can emerge before or at the first content token.
+- **Relevance to Carnot:** These are cheap suspicion features for the local SOTA
+  rerun, especially when only one mandated GGUF is present locally. They should
+  route or prioritize exact checks, not accept outputs. Exact solvers,
+  canonical answers, and regression rows remain the only authority.
+- **Sources:** https://arxiv.org/abs/2605.12384,
+  https://huggingface.co/papers/2605.05166, and
+  https://arxiv.org/abs/2604.13068
+
+### Constrained Decoding Can Preserve Structure While Losing Semantics
+
+- **Papers/tools:** "From Hallucination to Structure Snowballing" (arXiv:2604.06066),
+  "Constrained Sampling for Language Models Should Be Easy: An MCMC Perspective"
+  (NeurIPS 2025 OpenReview), "Approximately Aligned Decoding" (NeurIPS 2025
+  OpenReview), XGrammar-2, and llguidance.
+- **What:** Structure Snowballing warns that strict output constraints can
+  produce near-perfect syntactic alignment while failing deeper semantic repair.
+  XGrammar-2 and llguidance are current high-performance structured-output
+  engines, while constrained MCMC/AprAD give distribution-aware alternatives to
+  hard rejection.
+- **Relevance to Carnot:** `.294` can use constrained decoding to make
+  transcripts and repair candidates parseable, but must score semantic repair
+  with exact tests and counterexamples. A useful experiment is a schema-valid
+  repair candidate generator whose success metric is semantic exactness, not
+  JSON validity.
+- **Sources:** https://arxiv.org/abs/2604.06066,
+  https://openreview.net/forum?id=M1b7IuY6Co,
+  https://openreview.net/forum?id=0mOBdNsI3L,
+  https://arxiv.org/abs/2601.04426,
+  https://github.com/mlc-ai/xgrammar, and
+  https://github.com/guidance-ai/llguidance
+
+### Deterministic Bounds and Counterexample Repair Remain the Repair Path
+
+- **Papers:** "BEAVER: An Efficient Deterministic LLM Verifier" (OpenReview /
+  HF paper page) and "TraceFix: Repairing Agent Coordination Protocols with
+  TLA+ Counterexamples" (arXiv:2605.07935).
+- **What:** BEAVER computes sound probability bounds for semantic constraint
+  satisfaction via frontier exploration. TraceFix repairs structured agent
+  protocols from TLA+ counterexamples until TLC verification succeeds.
+- **Relevance to Carnot:** The next repair task should be certificate-first:
+  select rows with exact counterexamples, produce gated-skip artifacts when
+  upstream verifier evidence is blocked, and avoid spending local SOTA calls
+  until exact authority and authenticity gates are clean.
+- **Sources:** https://openreview.net/forum?id=xO3efBXHM9,
+  https://huggingface.co/papers/2512.05439, and
+  https://arxiv.org/abs/2605.07935
+
+### Continuous Self-Learning Needs Nonforgetting and Environment Separation
+
+- **Papers:** "Towards Understanding Self-play for LLM Reasoning"
+  (arXiv:2510.27072), "Boosting LLM Reasoning via Spontaneous Self-Correction"
+  (arXiv:2506.06923), and "Catastrophic Forgetting in Kolmogorov-Arnold Networks"
+  (arXiv:2511.12828).
+- **What:** Self-play and spontaneous self-correction can improve reasoning when
+  rewards are verifiable, but the KAN continual-learning study warns that local
+  spline structure does not eliminate forgetting in higher-dimensional settings.
+- **Relevance to Carnot:** FR-11 should stay controller-memory only until ledger
+  replay reaches 1.0 and negative controls pass. `.294` should target the single
+  failing ledger family from `.293`, add an environment/variant split, and record
+  nonforgetting before any promotion.
+- **Sources:** https://arxiv.org/abs/2510.27072,
+  https://arxiv.org/abs/2506.06923, and https://arxiv.org/abs/2511.12828
+
+### Hardware and Ecosystem Boundary Updates
+
+- **Sources:** Extropic's TSU/XTR-0/THRML pages, THRML documentation and GitHub,
+  and Logical Intelligence's Kona/EBRM public pages.
+- **What:** Extropic publicly positions THRML as a JAX simulator for
+  thermodynamic hypergraphical models and TSU-style probabilistic hardware.
+  Logical Intelligence continues to frame Kona as an energy-scored reasoning
+  layer over partial and complete traces.
+- **Relevance to Carnot:** These remain architecture and simulation references,
+  not local hardware evidence. `.294` can run a THRML import/API boundary check
+  if local packages exist, but must not make TSU, Kona, KV260, GateMate, or
+  sampler speedup claims without authenticated command transcripts.
+- **Sources:** https://extropic.ai/writing/thermodynamic-computing-from-zero-to-one,
+  https://extropic.ai/software, https://docs.thrml.ai/en/latest/examples/00_probabilistic_computing/,
+  https://github.com/extropic-ai/thrml,
+  https://logicalintelligence.com/kona-ebms-energy-based-models, and
+  https://logicalintelligence.com/blog/energy-based-models-for-reasoning
+
+---
+
 ## 2026-05-22 Post-.270 Planning Sweep (Milestone 2026.05.271)
 
 This sweep was run after milestone `.270` completed. `.270` fixed part of the local evidence chain
