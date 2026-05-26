@@ -1944,6 +1944,61 @@ model integration, no model-weight update, and no speedup claim, and uses an
 |---|---|---|
 | REQ-VERIFY-3117 | Implemented (`python/carnot/eval/ebt_arm_sidecar_score_correlation_boundary_v3.py`) | Implemented (`tests/python/test_experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.py`) |
 
+### REQ-VERIFY-3130: ARM/EBT Energy-Budget Sidecar Diagnostic v2
+
+The repository shall provide an Exp 3130 ARM/EBT energy-budget sidecar
+diagnostic that writes
+`results/experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.json`
+from checked-in exact fixture outcomes, the Exp 3123 mandated-SOTA cache
+precondition manifest, the Exp 3117 sidecar correlation rows, and any available
+Exp 3124 local mandated-SOTA trace rows. The diagnostic MUST NOT call a live
+model, integrate the sidecar into generation, train an EBT/ARM model, mutate
+model weights, claim architecture improvement, or modify
+`scripts/research_conductor.py`.
+
+The diagnostic shall separate deterministic constraint penalties from
+learned/proxy quality scores and uncertainty estimates. It shall summarize
+prefix and final energy proxies, exact fixture verdicts, correlation with
+reject/repair labels, approximation gaps between proxy energies and exact
+authority, model-identity shortcuts/confounds, and fixture-family separation.
+When no mandated model or usable trace source exists, it shall still write a
+complete blocked diagnostic artifact with `live_call_count=0` and
+`live_integration=false`.
+
+The terminal artifact MUST include
+`arm_ebt_energy_budget_sidecar_v2_ready`, `model_specs`,
+`selected_model_ids`, `live_call_count`, `exact_fixture_count`,
+`deterministic_constraint_penalty_summary`,
+`learned_quality_proxy_summary`, `uncertainty_summary`,
+`approximation_gap_summary`, `model_identity_confound_audit`,
+`correlation_metrics`, `live_integration`, `integration_blockers`,
+`source_artifacts`, `inference_substrate`, and `honest_verdict`.
+
+`arm_ebt_energy_budget_sidecar_v2_ready` may be true only when exact fixture
+labels are present, proxy/penalty/uncertainty summaries are finite, correlation
+metrics are computed from exact labels, model provenance is auditable, live
+integration remains false, and the artifact names concrete blockers for any
+future architecture integration. It MUST NOT become true by inferring live
+generation from cache presence alone.
+
+### SCENARIO-VERIFY-3130: Energy-Budget Sidecar Separates Proxies From Exact Authority
+
+Given Exp 3123, Exp 3117, and optionally Exp 3124 are present,
+When Exp 3130 builds the ARM/EBT energy-budget sidecar diagnostic,
+Then it writes the terminal JSON artifact, consumes only checked-in artifacts,
+reports exact fixture counts and selected mandated model IDs, separates
+deterministic constraint penalties from quality proxies and uncertainty,
+quantifies correlations and approximation gaps against exact reject/repair
+labels, audits model-identity confounds, leaves `live_integration=false`, and
+uses an `honest_verdict` beginning with `complete:` when the diagnostic is
+complete or `blocked_` when mandated preconditions are missing.
+
+## Implementation Status (REQ-VERIFY-3130)
+
+| Requirement | Implementation | Tests |
+|---|---|---|
+| REQ-VERIFY-3130 | Implemented (`python/carnot/eval/arm_ebt_energy_budget_sidecar_diagnostic_v2.py`) | Implemented (`tests/python/test_experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.py`) |
+
 ### REQ-VERIFY-3006: EqR Fixed-Point Energy Diagnostic Over Cached Validator Trajectories
 
 The repository shall provide a deterministic Exp 3006 fixed-point energy

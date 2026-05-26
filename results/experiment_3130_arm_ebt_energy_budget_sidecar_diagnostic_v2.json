@@ -1,0 +1,322 @@
+{
+  "approximation_gap_summary": {
+    "accept_boundary_false_safe_count": 0,
+    "accept_boundary_false_safe_fixture_ids": [],
+    "accepted_energy_boundary": 0.347221,
+    "gap_definition": "absolute gap between min-max scaled proxy energy and exact reject/repair label",
+    "live_false_accept_rate": 0.5,
+    "live_false_accept_rate_available": true,
+    "mean_abs_gap_to_exact_binary": {
+      "count": 72,
+      "finite": true,
+      "max": 0.483746,
+      "mean": 0.23404,
+      "median": 0.436785,
+      "min": 0.0
+    }
+  },
+  "arm_ebt_energy_budget_sidecar_v2_ready": true,
+  "artifact": "experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2",
+  "blocked_reasons": [],
+  "correlation_metrics": {
+    "by_fixture_family": {
+      "arithmetic_code_assertions": {
+        "count": 24,
+        "mean_final_energy_proxy": 1.503057,
+        "mean_quality_proxy": 0.566043,
+        "reject_or_repair_rate": 0.5
+      },
+      "repairable_invalid_candidates": {
+        "count": 24,
+        "mean_final_energy_proxy": 2.676421,
+        "mean_quality_proxy": 0.419379,
+        "reject_or_repair_rate": 1.0
+      },
+      "smt_constraints": {
+        "count": 24,
+        "mean_final_energy_proxy": 2.540633,
+        "mean_quality_proxy": 0.499084,
+        "reject_or_repair_rate": 0.5
+      }
+    },
+    "deterministic_constraint_penalty": {
+      "count": 72,
+      "finite": true,
+      "pearson_reject_or_repair": 0.8677394251,
+      "spearman_reject_or_repair": 0.8363616097
+    },
+    "quality_proxy": {
+      "count": 72,
+      "finite": true,
+      "pearson_reject_or_repair": -0.9608216095,
+      "spearman_reject_or_repair": -0.8185320206
+    },
+    "sidecar_energy": {
+      "count": 72,
+      "finite": true,
+      "pearson_reject_or_repair": 0.8795236244,
+      "spearman_reject_or_repair": 0.8184923525
+    }
+  },
+  "deterministic_constraint_penalty_summary": {
+    "authority_boundary": "deterministic penalties are exact-fixture feature checks, not learned quality",
+    "by_exact_outcome": {
+      "accepted": {
+        "count": 24,
+        "finite": true,
+        "max": 0.0,
+        "mean": 0.0,
+        "median": 0.0,
+        "min": 0.0
+      },
+      "rejected": {
+        "count": 24,
+        "finite": true,
+        "max": 2.0,
+        "mean": 1.515,
+        "median": 2.0,
+        "min": 1.02
+      },
+      "repairable": {
+        "count": 24,
+        "finite": true,
+        "max": 1.08,
+        "mean": 1.03,
+        "median": 1.01,
+        "min": 1.0
+      }
+    },
+    "exact_verdict_counts": {
+      "accepted": 24,
+      "rejected": 24,
+      "repairable": 24
+    },
+    "final_penalty": {
+      "count": 72,
+      "finite": true,
+      "max": 2.0,
+      "mean": 0.848333,
+      "median": 1.01,
+      "min": 0.0
+    },
+    "nonzero_penalty_count": 48,
+    "prefix_penalty": {
+      "count": 72,
+      "finite": true,
+      "max": 1.0,
+      "mean": 0.424167,
+      "median": 0.505,
+      "min": 0.0
+    }
+  },
+  "duration_s": 0.005053,
+  "exact_fixture_count": 72,
+  "honest_verdict": "complete: arm_ebt_energy_budget_sidecar_v2_ready=true; exact_fixture_count=72; live_call_count=6; live_integration=false",
+  "inference_substrate": {
+    "executes_models": false,
+    "exp3123_gpu_count": 2,
+    "exp3123_gpu_cuda_available": true,
+    "generation_performed": false,
+    "kind": "checked_in_artifact_energy_budget_sidecar_diagnostic",
+    "live_integration": false,
+    "loads_model_weights": false,
+    "new_live_model_calls": 0,
+    "training_performed": false,
+    "upstream_live_trace_count": 6,
+    "uses_exp3124_cached_live_traces": true
+  },
+  "integration_blockers": [
+    "no generation-path sidecar hook exercised under tests",
+    "no trained EBT/ARM learned quality head available",
+    "no per-token live energy budget or logprob trace in Exp3130",
+    "exact fixture labels are offline authority, not online supervision",
+    "exp3124 false_accept_rate=0.5",
+    "single selected-model trace confound"
+  ],
+  "learned_quality_proxy_summary": {
+    "learned_model_score_available": false,
+    "posthoc_boundary": "live trace correctness is audit evidence, not a score available before exact labels",
+    "posthoc_live_exact_answer_match_rate": 0.6666666667,
+    "posthoc_live_trace_accuracy": 0.6666666667,
+    "quality_proxy": {
+      "count": 72,
+      "finite": true,
+      "max": 0.721501,
+      "mean": 0.494835,
+      "median": 0.430293,
+      "min": 0.296384
+    },
+    "quality_proxy_source": "cached replay confidence metadata; no trained EBT/ARM quality head"
+  },
+  "live_call_count": 6,
+  "live_integration": false,
+  "model_identity_confound_audit": {
+    "audit_note": "energy proxies use fixture fields and replay confidence, not model id",
+    "confound_risk": "high_single_model_trace",
+    "legacy_small_model_selected": false,
+    "live_trace_model_counts": {
+      "unsloth/gemma-4-26B-A4B-it-GGUF": 6
+    },
+    "model_id_used_in_energy_features": false,
+    "selected_model_count": 1,
+    "selected_model_ids": [
+      "unsloth/gemma-4-26B-A4B-it-GGUF"
+    ],
+    "single_model_trace_only": true
+  },
+  "model_specs": [
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/Qwen3.6-35B-A3B-GGUF",
+      "legacy_small_model": false,
+      "model_hash": null,
+      "model_path": null,
+      "present": false,
+      "role": "moe",
+      "selected": false
+    },
+    {
+      "cache_status": "missing",
+      "hf_id": "unsloth/gemma-4-31B-it-GGUF",
+      "legacy_small_model": false,
+      "model_hash": null,
+      "model_path": null,
+      "present": false,
+      "role": "dense",
+      "selected": false
+    },
+    {
+      "cache_status": "resolved",
+      "hf_id": "unsloth/gemma-4-26B-A4B-it-GGUF",
+      "legacy_small_model": false,
+      "model_hash": "7b42e1402003cd09ae1ba4afc532a93eec670a1787da9ef81a1f53da2ae5d306",
+      "model_path": "/home/ianblenke/.cache/huggingface/hub/models--unsloth--gemma-4-26B-A4B-it-GGUF/snapshots/3365c68df1a83799b846d05324ebfadbb8cc70b3/gemma-4-26B-A4B-it-UD-Q4_K_M.gguf",
+      "present": true,
+      "role": "moe",
+      "selected": true
+    }
+  ],
+  "readiness_checks": {
+    "exact_fixture_rows_present": true,
+    "exp3123_manifest_ready": true,
+    "integration_blockers_present": true,
+    "live_integration_false": true,
+    "mandated_model_policy_visible": true,
+    "required_sources_present": true,
+    "summaries_finite": true
+  },
+  "run_date": "20260526",
+  "schema": "carnot.arm_ebt_energy_budget_sidecar_diagnostic.v2",
+  "selected_model_ids": [
+    "unsloth/gemma-4-26B-A4B-it-GGUF"
+  ],
+  "source_artifacts": [
+    {
+      "exists": true,
+      "id": "agents_repo_instructions",
+      "path": "AGENTS.md",
+      "required": false,
+      "sha256": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619"
+    },
+    {
+      "exists": true,
+      "id": "codex_repo_workflow",
+      "path": "CODEX.md",
+      "required": false,
+      "sha256": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe"
+    },
+    {
+      "exists": true,
+      "id": "claude_authenticity_rules",
+      "path": "CLAUDE.md",
+      "required": false,
+      "sha256": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224"
+    },
+    {
+      "exists": true,
+      "id": "research_references",
+      "path": "research-references.md",
+      "required": false,
+      "sha256": "8ae0ab58477345b0454e016874dda1736a02f2f716f939f1dc3836faa1717632"
+    },
+    {
+      "exists": true,
+      "id": "exp3123_sota_cache_preconditions_manifest_v2",
+      "path": "results/experiment_3123_sota_cache_preconditions_manifest_v2.json",
+      "required": true,
+      "sha256": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950"
+    },
+    {
+      "exists": true,
+      "id": "exp3124_difficulty_stratified_live_sota_verifier_panel_v6",
+      "path": "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json",
+      "required": false,
+      "sha256": "963cc66acca8f5014871f5c612f14daa7f582132e06f25b4ef916fccefbc2772"
+    },
+    {
+      "exists": true,
+      "id": "exp3117_ebt_arm_sidecar_score_correlation_boundary_v3",
+      "path": "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json",
+      "required": true,
+      "sha256": "c22911a80d1ca2119850b6e1a220f0accba6931b9ee243e489b660bae7100680"
+    }
+  ],
+  "source_checksums": {
+    "AGENTS.md": "b3d6581b04f16b85f77defb2837c98dc3b60ed51e10b347ecb36e609f318b619",
+    "CLAUDE.md": "cdc00581d37d1bd3c77a69b058787f74ecc71545a97c1eab31c48961637b3224",
+    "CODEX.md": "1db7ebc1009714f872db83447828a8957c3abb72061832cc1bc307735cd96bbe",
+    "research-references.md": "8ae0ab58477345b0454e016874dda1736a02f2f716f939f1dc3836faa1717632",
+    "results/experiment_3117_ebt_arm_sidecar_score_correlation_boundary_v3.json": "c22911a80d1ca2119850b6e1a220f0accba6931b9ee243e489b660bae7100680",
+    "results/experiment_3123_sota_cache_preconditions_manifest_v2.json": "93701a360f686883fa035e96be0a32f93acafa151f9245bd37bf7d4a92a20950",
+    "results/experiment_3124_difficulty_stratified_live_sota_verifier_panel_v6.json": "963cc66acca8f5014871f5c612f14daa7f582132e06f25b4ef916fccefbc2772"
+  },
+  "spec_refs": [
+    "REQ-VERIFY-3130",
+    "SCENARIO-VERIFY-3130"
+  ],
+  "tests_run": [
+    ".venv/bin/pytest tests/python/test_experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.py -q --no-cov",
+    ".venv/bin/coverage run --source=python/carnot/eval/arm_ebt_energy_budget_sidecar_diagnostic_v2.py -m pytest -o addopts='' tests/python/test_experiment_3130_arm_ebt_energy_budget_sidecar_diagnostic_v2.py -q",
+    ".venv/bin/coverage report --include='python/carnot/eval/arm_ebt_energy_budget_sidecar_diagnostic_v2.py' --fail-under=100 --show-missing",
+    ".venv/bin/python scripts/check_spec_coverage.py",
+    ".venv/bin/pytest tests/python -q"
+  ],
+  "uncertainty_summary": {
+    "by_exact_outcome": {
+      "accepted": {
+        "count": 24,
+        "finite": true,
+        "max": 0.303621,
+        "mean": 0.289817,
+        "median": 0.293785,
+        "min": 0.278499
+      },
+      "rejected": {
+        "count": 24,
+        "finite": true,
+        "max": 0.703616,
+        "mean": 0.645056,
+        "median": 0.702381,
+        "min": 0.584718
+      },
+      "repairable": {
+        "count": 24,
+        "finite": true,
+        "max": 0.604117,
+        "mean": 0.580621,
+        "median": 0.569707,
+        "min": 0.568966
+      }
+    },
+    "distributional_ebm_boundary": "uncertainty is reported as a sidecar diagnostic only",
+    "uncertainty_proxy": {
+      "count": 72,
+      "finite": true,
+      "max": 0.703616,
+      "mean": 0.505165,
+      "median": 0.569707,
+      "min": 0.278499
+    },
+    "uncertainty_proxy_source": "1 - cached replay confidence"
+  }
+}
